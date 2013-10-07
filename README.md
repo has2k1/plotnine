@@ -24,13 +24,13 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - come up with better name
 - geoms:
     - geom_abline (DONE)
-    - geom_area
+    - geom_area (DONE)
     - geom_bar (IN PROGRESS)
     - geom_boxplot
     - geom_hline (DONE)
-    - geom_ribbon
+    - geom_ribbon (same as geom_ribbon?)
     - geom_vline (DONE)
-    - stat_bin2d
+    - stat_bin2d (DONE)
 - scales:
     - scale_colour_brewer
     - scale_colour_gradient

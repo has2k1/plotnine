@@ -99,7 +99,7 @@ class ggplot(object):
         keys = [ae for ae in self.DISCRETE if ae in mapping]
         layers = []
         if len(keys)==0:
-            layers.append(mapping)
+            layers.append(mapping.to_dict('list'))
         else:
             for name, frame in mapping.groupby(keys):
                 frame = frame.to_dict('list')
