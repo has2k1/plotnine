@@ -14,8 +14,14 @@ class ggplot(object):
     DISCRETE = ['color', 'shape', 'marker', 'alpha']
 
     def __init__(self, aesthetics, data):
+        # ggplot should just 'figure out' which is which
+        if not isinstance(aesthetics, dict):
+            aesthetics, data = data, aesthetics
+            
         self.aesthetics = aesthetics
         self.data = data
+
+        # defaults
         self.geoms= []
         self.n_dim_x = 1
         self.n_dim_y = 1
@@ -36,13 +42,21 @@ class ggplot(object):
                 for layer in self._get_layers(frame):
                     for geom in self.geoms:
                         plt.subplot(self.n_dim_x, self.n_dim_y, cntr)
-                        geom.plot_layer(layer)
+                        callbacks = geom.plot_layer(layer)
+                        if callbacks:
+                            for callback in callbacks:
+                                fn = getattr(axs[cntr], callback['function'])
+                                fn(*callback['args'])
                 cntr += 1
         else:
             for layer in self._get_layers(self.data):
                 for geom in self.geoms:
                     plt.subplot(1, 1, 1)
-                    geom.plot_layer(layer)
+                    callbacks = geom.plot_layer(layer)
+                    if callbacks:
+                        for callback in callbacks:
+                            fn = getattr(axs, callback['function'])
+                            fn(*callback['args'])
         
         if self.title:
             plt.title(self.title)

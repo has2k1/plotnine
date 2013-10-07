@@ -23,14 +23,13 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - distribute on PyPi
 - come up with better name
 - geoms:
-    - geom_abline
+    - geom_abline (DONE)
     - geom_area
-    - geom_bar
+    - geom_bar (IN PROGRESS)
     - geom_boxplot
-    - geom_hline
-    - geom_vline
+    - geom_hline (DONE)
     - geom_ribbon
-    - geom_vline
+    - geom_vline (DONE)
     - stat_bin2d
 - scales:
     - scale_colour_brewer

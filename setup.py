@@ -5,7 +5,7 @@ from setuptools import find_packages
 required = []
 
 setup(
-    name="yagg",
+    name="ggplot",
     version="0.1.0",
     author="Greg Lamp",
     author_email="greg@yhathq.com",
