@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import pylab as pl
 import matplotlib.pyplot as plt
 
 # ggplot stuff
@@ -25,6 +24,7 @@ class ggplot(object):
         self.title = None
         self.xlab = None
         self.ylab = None
+        self.legend = True
 
     def __repr__(self):
         fig, axs = plt.subplots(self.n_dim_x, self.n_dim_y)
@@ -50,6 +50,10 @@ class ggplot(object):
             plt.xlabel(self.xlab)
         if self.ylab:
             plt.ylabel(self.ylab)
+        if self.legend==True:
+            pass
+            # plt.legend()
+
         return "ggplot" 
 
     def _get_layers(self, data=None):
@@ -60,17 +64,21 @@ class ggplot(object):
                 for ae, key in self.aesthetics.iteritems()
         })
 
+        rev_color_mapping = {}
         if 'color' in mapping:
             possible_colors = np.unique(mapping.color)
             if set(possible_colors).issubset(set(colors.COLORS))==False:
                 color = colors.color_gen()
                 color_mapping = {value: color.next() for value in possible_colors}
+                rev_color_mapping = {v: k for k, v in color_mapping.iteritems()}
                 mapping.color = mapping.color.replace(color_mapping)
 
+        rev_shape_mapping = {}
         if 'shape' in mapping:
             possible_shapes = np.unique(mapping['shape'])
             shape = shapes.shape_gen()
             shape_mapping = {value: shape.next() for value in possible_shapes}
+            rev_shape_mapping = {v: k for k, v in shape_mapping.iteritems()}
             mapping['marker'] = mapping['shape'].replace(shape_mapping)
             del mapping['shape']
 
@@ -84,6 +92,11 @@ class ggplot(object):
                 for ae in self.DISCRETE:
                     if ae in frame:
                         frame[ae] = frame[ae][0]
+                        if ae=="color":
+                            label = rev_color_mapping.get(name[0], name[0])
+                        elif ae=="shape":
+                            label = rev_shape_mapping.get(name[0], name[0])
+                        frame['label'] = label
                 layers.append(frame)
         return layers
 

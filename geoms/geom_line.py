@@ -3,7 +3,7 @@ from copy import deepcopy
 from geom import geom
 
 class geom_line(geom):
-    VALID_AES = ['x', 'y', 'color', 'alpha']
+    VALID_AES = ['x', 'y', 'color', 'alpha', 'label']
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
         layer.update(self.manual_aes)

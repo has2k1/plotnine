@@ -4,7 +4,7 @@ from geom import geom
 import pandas as pd
 
 class stat_smooth(geom):
-    VALID_AES = ['x', 'y', 'color', 'alpha']
+    VALID_AES = ['x', 'y', 'color', 'alpha', 'label']
 
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}

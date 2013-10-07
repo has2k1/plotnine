@@ -23,3 +23,4 @@ print gg + geom_point() + facet_wrap(y="cat2") + ggtitle("My Single Facet")
 print gg + stat_smooth(color="blue") + ggtitle("My Smoothed Chart")
 print gg + geom_hist() + ggtitle("My Histogram")
 print gg + geom_point()
+
