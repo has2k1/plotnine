@@ -20,18 +20,20 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - finish README
 - geoms:
     - geom_abline
+    - geom_area
     - geom_bar
     - geom_boxplot
     - geom_hline
     - geom_vline
     - geom_ribbon
+    - geom_vline
     - stat_bin2d
 - scales:
     - scale_colour_brewer
     - scale_colour_gradient
     - scale_colour_gradient2
     - scale_x_continuous
-    - scale_y_continuous
     - scale_x_discrete
+    - scale_y_continuous
 - facets:
     - facet_grid
