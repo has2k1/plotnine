@@ -15,3 +15,23 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     $ pip install yagg
 
 ### Examples
+
+### TODO
+- finish README
+- geoms:
+    - geom_abline
+    - geom_bar
+    - geom_boxplot
+    - geom_hline
+    - geom_vline
+    - geom_ribbon
+    - stat_bin2d
+- scales:
+    - scale_colour_brewer
+    - scale_colour_gradient
+    - scale_colour_gradient2
+    - scale_x_continuous
+    - scale_y_continuous
+    - scale_x_discrete
+- facets:
+    - facet_grid
