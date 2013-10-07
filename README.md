@@ -11,13 +11,17 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - pip installable
 
 ### Getting Started
-
+    # unzip the matplotlibrc
+    $ unzip matplotlibrc.zip ~/
     $ pip install yagg
 
 ### Examples
 
 ### TODO
 - finish README
+- add matplotlibrc to build script
+- distribute on PyPi
+- come up with better name
 - geoms:
     - geom_abline
     - geom_area
