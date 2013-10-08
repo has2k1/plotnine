@@ -1,5 +1,16 @@
 # {ggplot}
+```
+from ggplot import *
+from pandasql import load_meat
+meat = load_meat()
 
+ggplot(aes(x='date', y='beef'), data=meat) + \
+    geom_point() + \
+    geom_line(color='lightblue') + \
+    ggtitle("Beef: It's What's for Dinner") + \
+    xlab("Date") + \
+    ylab("Head of Cattle Slaughtered")
+```
 <img src="public/img/ggplot_demo_beef.png" style="max-height: 300px">
 
 ### What is it?
