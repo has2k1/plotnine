@@ -26,6 +26,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - aes:
     - size
     - se for stat_smooth
+    - fix fill/colour
 - geoms:
     - geom_abline (DONE)
     - geom_area (DONE)
@@ -44,5 +45,5 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     - scale_x_discrete
     - scale_y_continuous
 - facets:
-    - facet_grid (might not be possible)
+    - facet_grid (DONE)
 

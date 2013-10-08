@@ -3,10 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # ggplot stuff
-from components import colors, shapes
+from components import colors, shapes, aes
 from geoms import *
 
-aes = dict
 
 class ggplot(object):
 
@@ -15,7 +14,7 @@ class ggplot(object):
 
     def __init__(self, aesthetics, data):
         # ggplot should just 'figure out' which is which
-        if not isinstance(aesthetics, dict):
+        if not isinstance(data, pd.DataFrame):
             aesthetics, data = data, aesthetics
             
         self.aesthetics = aesthetics
