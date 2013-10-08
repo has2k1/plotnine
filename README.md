@@ -16,6 +16,14 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     $ pip install ggplot
 
 ### Examples
+####`geom_point`
+```
+from ggplot import *
+p = ggplot(aes(x='x', y='y', alpha=1/20.0), data=diamonds)
+ggplot(diamonds, aes('carat', 'price')) + \
+    geom_point(alpha=1/20.)
+```
+<img src="public/img/diamonds_geom_point_alpha.png">
 
 ### TODO
 - finish README
