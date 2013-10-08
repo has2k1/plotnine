@@ -10,7 +10,7 @@ aes = dict
 
 class ggplot(object):
 
-    CONTINUOUS = ['x', 'y']
+    CONTINUOUS = ['x', 'y', 'size']
     DISCRETE = ['color', 'shape', 'marker', 'alpha']
 
     def __init__(self, aesthetics, data):
@@ -47,6 +47,7 @@ class ggplot(object):
                             for callback in callbacks:
                                 fn = getattr(axs[cntr], callback['function'])
                                 fn(*callback['args'])
+                plt.title(facet)
                 cntr += 1
         else:
             for layer in self._get_layers(self.data):
@@ -65,8 +66,7 @@ class ggplot(object):
         if self.ylab:
             plt.ylabel(self.ylab)
         if self.legend==True:
-            pass
-            # plt.legend()
+            plt.legend()
 
         return "ggplot" 
 
@@ -108,8 +108,13 @@ class ggplot(object):
                         frame[ae] = frame[ae][0]
                         if ae=="color":
                             label = rev_color_mapping.get(name[0], name[0])
-                        elif ae=="shape":
-                            label = rev_shape_mapping.get(name[0], name[0])
+                        elif ae=="shape" or ae=="marker":
+                            if isinstance(name, (str, unicode, list)):
+                                key = name[0]
+                            else:
+                                key = name
+                                raise Exception("Cannot have numeric shape!")
+                            label = rev_shape_mapping.get(key, key)
                         frame['label'] = label
                 layers.append(frame)
         return layers

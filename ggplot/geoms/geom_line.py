@@ -11,4 +11,4 @@ class geom_line(geom):
             x = layer.pop('x')
         if 'y' in layer:
             y = layer.pop('y')
-        pl.plot(x, y, **layer)
+        plt.plot(x, y, **layer)

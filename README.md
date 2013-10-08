@@ -22,6 +22,10 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - add matplotlibrc to build script
 - distribute on PyPi
 - come up with better name
+- make `aes` guess what the user actually means
+- aes:
+    - size
+    - se for stat_smooth
 - geoms:
     - geom_abline (DONE)
     - geom_area (DONE)
@@ -31,6 +35,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     - geom_ribbon (same as geom_ribbon?)
     - geom_vline (DONE)
     - stat_bin2d (DONE)
+    - geom_jitter
 - scales:
     - scale_colour_brewer
     - scale_colour_gradient
@@ -39,4 +44,5 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     - scale_x_discrete
     - scale_y_continuous
 - facets:
-    - facet_grid
+    - facet_grid (might not be possible)
+
