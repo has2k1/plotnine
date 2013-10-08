@@ -1,5 +1,7 @@
 # {ggplot}
 
+<img src="public/img/ggplot_demo_beef.png" style="max-height: 300px">
+
 ### What is it?
 Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot2). One of the biggest reasons why I continue to reach for `R` instead of `Python` for data analysis is the lack of an easy to use, high level plotting package like `ggplot`. I've tried other libraries like `Bockah` and `d3py` but what I really want is `ggplot2`.
 

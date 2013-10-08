@@ -35,3 +35,11 @@ df['y'] = np.random.randint(0, 10, 100)
 gg = ggplot(aes(x='x', y='y'), data=df)
 #print gg + stat_bin2d()
 
+
+# p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
+
+# meat_lng = pd.melt(meat, id_vars=['date'])
+# p = ggplot(aes(x="date", y="value", color="variable"), meat_lng)
+# p + geom_line()
+# p + geom_point() + stat_smooth()
+
