@@ -19,11 +19,25 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 ####`geom_point`
 ```
 from ggplot import *
-p = ggplot(aes(x='x', y='y', alpha=1/20.0), data=diamonds)
 ggplot(diamonds, aes('carat', 'price')) + \
     geom_point(alpha=1/20.)
 ```
 <img src="public/img/diamonds_geom_point_alpha.png">
+
+####`geom_hist`
+```
+p = ggplot(aes(x='carat'), data=diamonds)
+p + geom_hist() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
+```
+<img src="public/img/diamonds_carat_hist.png">
+
+####`geom_bar`
+```
+p = ggplot(mtcars, aes('cyl'))
+p + geom_bar()
+```
+<img src="public/img/mtcars_geom_bar_cyl.png">
+
 
 ### TODO
 - finish README
