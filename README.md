@@ -1,4 +1,4 @@
-# y{et}a{nother}gg{plot}
+# {ggplot}
 
 ### What is it?
 Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot2). One of the biggest reasons why I continue to reach for `R` instead of `Python` for data analysis is the lack of an easy to use, high level plotting package like `ggplot`. I've tried other libraries like `Bockah` and `d3py` but what I really want is `ggplot2`.
@@ -22,7 +22,8 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - add matplotlibrc to build script
 - distribute on PyPi
 - come up with better name
-- make `aes` guess what the user actually means
+- handle NAs gracefully
+- make `aes` guess what the user actually means (DONE)
 - aes:
     - size
     - se for stat_smooth
@@ -37,6 +38,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     - geom_vline (DONE)
     - stat_bin2d (DONE)
     - geom_jitter
+    - stat_smooth (bug)
 - scales:
     - scale_colour_brewer
     - scale_colour_gradient

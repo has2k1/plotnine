@@ -7,6 +7,7 @@ from .geom_hline import geom_hline
 from .geom_line import geom_line
 from .geom_point import geom_point
 from .geom_vline import geom_vline
+from .facet_grid import facet_grid
 from .facet_wrap import facet_wrap
 from .stat_bin2d import stat_bin2d
 from .stat_smooth import stat_smooth
