@@ -3,7 +3,7 @@
 ### What is it?
 Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot2). One of the biggest reasons why I continue to reach for `R` instead of `Python` for data analysis is the lack of an easy to use, high level plotting package like `ggplot`. I've tried other libraries like `Bockah` and `d3py` but what I really want is `ggplot2`.
 
-`yagg` is just that. It's an extremely un-pythonic package for doing exactly what `ggplot2` does. The goal of the package is to mimic the `ggplot2` API. This makes it super easy for people coming over from `R` to use, and prevents you from having to re-learn how to plot stuff.
+`ggplot` is just that. It's an extremely un-pythonic package for doing exactly what `ggplot2` does. The goal of the package is to mimic the `ggplot2` API. This makes it super easy for people coming over from `R` to use, and prevents you from having to re-learn how to plot stuff.
 
 ### Goals
 - same API as `ggplot2` for `R`
@@ -13,7 +13,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 ### Getting Started
     # unzip the matplotlibrc
     $ unzip matplotlibrc.zip ~/
-    $ pip install yagg
+    $ pip install ggplot
 
 ### Examples
 
