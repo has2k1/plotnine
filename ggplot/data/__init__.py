@@ -1,5 +1,9 @@
 import pandas as pd
+import os
 
-diamonds = pd.read_csv("ggplot/data/diamonds.csv")
-mtcars = pd.read_csv("ggplot/data/mtcars.csv")
+
+_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+diamonds = pd.read_csv(os.path.join(_ROOT, "diamonds.csv"))
+mtcars = pd.read_csv(os.path.join(_ROOT, "mtcars.csv"))
 
