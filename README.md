@@ -30,10 +30,14 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - `scipy`
 - `statsmodels`
 
-    # unzip the matplotlibrc
+#### Installation
+
+    # matplotlibrc from Huy Nguyen (http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/)
+    # curl https://github.com/yhat/ggplot/raw/master/matplotlibrc.zip > matplotlibrc.zip 
     $ unzip matplotlibrc.zip -d ~/
     # install ggplot using pip
     $ pip install ggplot
+
 
 ### Examples
 ```
@@ -42,7 +46,7 @@ ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng) + \
     geom_point() + \
     stat_smooth()
 ```
-<img src="public/img/ggplot_meat.csv">
+<img src="public/img/ggplot_meat.png">
 
 ####`geom_point`
 ```
