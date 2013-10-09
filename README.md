@@ -33,7 +33,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 #### Installation
 
     # matplotlibrc from Huy Nguyen (http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/)
-    # curl https://github.com/yhat/ggplot/raw/master/matplotlibrc.zip > matplotlibrc.zip 
+    $ curl https://github.com/yhat/ggplot/raw/master/matplotlibrc.zip > matplotlibrc.zip 
     $ unzip matplotlibrc.zip -d ~/
     # install ggplot using pip
     $ pip install ggplot
