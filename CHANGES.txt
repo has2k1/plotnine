@@ -2,6 +2,7 @@
 =====
 - continuous color scales
 - better legends
+- adding basic docstrings
 
 0.1.1
 ======
