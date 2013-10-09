@@ -4,8 +4,6 @@
 ::
 
     from ggplot import *
-    from pandasql import load_meat
-    meat = load_meat()
 
     ggplot(aes(x='date', y='beef'), data=meat) + \
         geom_point() + \
@@ -87,15 +85,15 @@ TODO
 
 -  finish README
 -  add matplotlibrc to build script
--  distribute on PyPi
--  come up with better name
--  handle NAs gracefully
+-  distribute on PyPi (DONE)
+-  come up with better name (DONE)
+-  handle NAs gracefully (DONE)
 -  make ``aes`` guess what the user actually means (DONE)
 -  aes:
 
    -  size
-   -  se for stat\_smooth
-   -  fix fill/colour
+   -  se for stat\_smooth (DONE)
+   -  fix fill/colour (color DONE)
 
 -  geoms:
 
