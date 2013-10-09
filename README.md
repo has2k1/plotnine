@@ -63,6 +63,13 @@ p + geom_hist() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq"
 ```
 <img src="public/img/diamonds_carat_hist.png">
 
+####`geom_density`
+```
+ggplot(diamonds, aes(x='price', color='cut')) + \
+    geom_density()
+```
+<img src="public/img/geom_density_example.png">
+
 ####`geom_bar`
 ```
 p = ggplot(mtcars, aes('cyl'))
