@@ -3,8 +3,9 @@
 from ggplot import *
 
 ggplot(aes(x='date', y='beef'), data=meat) + \
-    geom_point() + \
-    geom_line(color='lightblue') + \
+    geom_point(color='lightblue') + \
+    geom_line(alpha=0.25) + \
+    stat_smooth(span=.05, color='black') + \
     ggtitle("Beef: It's What's for Dinner") + \
     xlab("Date") + \
     ylab("Head of Cattle Slaughtered")
@@ -35,6 +36,14 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     $ pip install ggplot
 
 ### Examples
+```
+meat_lng = pd.melt(meat[['date', 'beef', 'pork', 'broilers']], id_vars='date')
+ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng) + \
+    geom_point() + \
+    stat_smooth()
+```
+<img src="public/img/ggplot_meat.csv">
+
 ####`geom_point`
 ```
 from ggplot import *
