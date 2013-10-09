@@ -1,5 +1,4 @@
-# {ggplot}
-### Maintained by [Yhat](http://yhathq.com)
+# {ggplot} from [Yhat](http://yhathq.com)
 ```
 from ggplot import *
 
