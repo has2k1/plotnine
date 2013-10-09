@@ -1,6 +1,10 @@
-0.1.4
+0.1.5
 =====
 - better colors
+
+0.1.4
+=====
+- added support for colour
 
 0.1.3
 =====
