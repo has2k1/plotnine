@@ -27,9 +27,11 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - `pandas`
 - `numpy`
 - `scipy`
+- `statsmodels`
 
     # unzip the matplotlibrc
-    $ unzip matplotlibrc.zip ~/
+    $ unzip matplotlibrc.zip
+    # install ggplot using pip
     $ pip install ggplot
 
 ### Examples
