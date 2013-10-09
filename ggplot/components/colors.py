@@ -1,12 +1,12 @@
 
 
 COLORS = [
+    "black",
 	"red",
 	"green",
 	"blue",
 	"orange",
 	"cyan",
-	"black",
 	"white"
 ]
 

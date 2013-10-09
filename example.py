@@ -34,16 +34,27 @@ gg = ggplot(aes(x='x', ymax='y', ymin='z', color="cat2"), data=df)
 #print gg + geom_area()
 df['x'] = np.random.randint(0, 10, 100)
 df['y'] = np.random.randint(0, 10, 100)
-gg = ggplot(aes(x='x', y='y'), data=df)
+gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
+#print df.head()
+#print gg + geom_point()
+
 #print gg + stat_bin2d()
+
 
 
 # p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
 
-# meat_lng = pd.melt(meat, id_vars=['date'])
-# p = ggplot(aes(x="date", y="value", color="variable"), meat_lng)
-# p + geom_line()
-# p + geom_point() + stat_smooth()
+meat_lng = pd.melt(meat, id_vars=['date'])
+p = ggplot(aes(x="date", y="value", color="variable", shape="variable"), meat_lng)
+#print p + geom_point() + facet_grid(y="variable")
+p = p + stat_smooth(se=True, span=12.) + geom_point()
+# print p
+#ggsave(p, "gregsplot.png")
 
-gg = ggplot(aes(x='date', y='beef'), data=meat)
-print gg + stat_smooth(se=True)
+p = ggplot(aes(x='date', y='beef', color='beef'), data=meat)
+print p + geom_point()
+
+
+
+#gg = ggplot(aes(x='date', y='beef'), data=meat)
+#print gg + stat_smooth(se=True)

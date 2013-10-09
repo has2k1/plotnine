@@ -4,7 +4,7 @@ from geom import geom
 import pandas as pd
 
 class stat_smooth(geom):
-    VALID_AES = ['x', 'y', 'color', 'alpha', 'label', 'se', 'method']
+    VALID_AES = ['x', 'y', 'color', 'alpha', 'label', 'se', 'method', 'span']
 
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
@@ -18,6 +18,10 @@ class stat_smooth(geom):
             se = layer.pop('se')
         else:
             se = None
+        if 'span' in layer:
+            span = layer.pop('span')
+        else:
+            span = 1.0
         if 'method' in layer:
             method = layer.pop('method')
         else:
@@ -29,8 +33,8 @@ class stat_smooth(geom):
             pass
         else:
             y = pd.Series(y)
-            std_err = pd.expanding_std(y, 10.)
-            y = pd.rolling_mean(y, 10.)
+            std_err = pd.expanding_std(y, span)
+            y = pd.rolling_mean(y, span)
             idx = pd.isnull(y)
             x = pd.Series(x)[idx==False]
             y = pd.Series(y)[idx==False]
