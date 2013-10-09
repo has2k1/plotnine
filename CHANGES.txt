@@ -1,5 +1,9 @@
 0.1.2
 =====
+- fixing example data import issue
+
+0.1.2
+=====
 - continuous color scales
 - better legends
 - adding basic docstrings
