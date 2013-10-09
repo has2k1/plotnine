@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 from ggplot import *
+from pandasql import load_meat
 
+meat = load_meat()
 
 df = pd.DataFrame({
     "x": np.arange(0, 100),
@@ -43,3 +45,5 @@ gg = ggplot(aes(x='x', y='y'), data=df)
 # p + geom_line()
 # p + geom_point() + stat_smooth()
 
+gg = ggplot(aes(x='date', y='beef'), data=meat)
+print gg + stat_smooth(se=True)
