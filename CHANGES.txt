@@ -1,0 +1,12 @@
+0.1.2
+=====
+- continuous color scales
+- better legends
+
+0.1.1
+======
+- better stat_smooth
+
+0.1.0
+======
+- basic working version
