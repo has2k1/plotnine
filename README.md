@@ -30,7 +30,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - `statsmodels`
 
     # unzip the matplotlibrc
-    $ unzip matplotlibrc.zip
+    $ unzip matplotlibrc.zip -d ~/
     # install ggplot using pip
     $ pip install ggplot
 
