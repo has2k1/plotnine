@@ -1,8 +1,6 @@
 # {ggplot}
 ```
 from ggplot import *
-from pandasql import load_meat
-meat = load_meat()
 
 ggplot(aes(x='date', y='beef'), data=meat) + \
     geom_point() + \
