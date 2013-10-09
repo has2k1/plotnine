@@ -124,6 +124,7 @@ class ggplot(object):
             if set(possible_colors).issubset(set(colors.COLORS))==False:
                 if "color" in mapping._get_numeric_data().columns:
                     # continuous
+                    # TODO: add support for more colors
                     mapping['cmap'] = gradients.Blues
                 else:
                     # discrete
@@ -150,15 +151,10 @@ class ggplot(object):
             frame = mapping.to_dict('list')
             if "cmap" in frame:
                 frame["cmap"] = frame["cmap"][0]
-                # should turn these into quantiles and evaluate
-                # the color at each quantile
-                legend["color"] = {
-                    "white": 0,
-                    "lightblue": 1,
-                    "skyblue": 2,
-                    "blue": 3,
-                    "navy": 4
-                }
+                quantiles = np.percentile(mapping.color, [0, 25, 50, 75, 100])
+                # TODO: add support for more colors
+                key_colors = ["white", "lightblue", "skyblue", "blue", "navy"]
+                legend["color"] = dict(zip(key_colors, quantiles))
             layers.append(frame)
         else:
             legend = {"color": {}, "marker": {}}
