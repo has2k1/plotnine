@@ -24,6 +24,12 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - pip installable
 
 ### Getting Started
+#### Dependencies
+- `matplotlib`
+- `pandas`
+- `numpy`
+- `scipy`
+
     # unzip the matplotlibrc
     $ unzip matplotlibrc.zip ~/
     $ pip install ggplot
