@@ -1,13 +1,14 @@
-{ggplot}
-========
+{ggplot} from `Yhat <http://yhathq.com>`__
+==========================================
 
 ::
 
     from ggplot import *
 
     ggplot(aes(x='date', y='beef'), data=meat) + \
-        geom_point() + \
-        geom_line(color='lightblue') + \
+        geom_point(color='lightblue') + \
+        geom_line(alpha=0.25) + \
+        stat_smooth(span=.05, color='black') + \
         ggtitle("Beef: It's What's for Dinner") + \
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
@@ -48,14 +49,37 @@ Dependencies
 -  ``scipy``
 -  ``statsmodels``
 
-   unzip the matplotlibrc
-   ======================
+Installation
+^^^^^^^^^^^^
 
-   $ unzip matplotlibrc.zip # install ggplot using pip $ pip install
-   ggplot
+::
+
+    # matplotlibrc from Huy Nguyen (http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/)
+    $ curl https://github.com/yhat/ggplot/raw/master/matplotlibrc.zip > matplotlibrc.zip 
+    $ unzip matplotlibrc.zip -d ~/
+    # install ggplot using pip
+    $ pip install ggplot
+
+Loading ``ggplot``
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    # run an Ipython shell (or don't)
+    $ ipython
+    In [1]: from ggplot import *
+
+That's it! You're ready to go!
 
 Examples
 ~~~~~~~~
+
+::
+
+    meat_lng = pd.melt(meat[['date', 'beef', 'pork', 'broilers']], id_vars='date')
+    ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng) + \
+        geom_point() + \
+        stat_smooth()
 
 ``geom_point``
 ^^^^^^^^^^^^^^
@@ -73,6 +97,14 @@ Examples
 
     p = ggplot(aes(x='carat'), data=diamonds)
     p + geom_hist() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
+
+``geom_density``
+^^^^^^^^^^^^^^^^
+
+::
+
+    ggplot(diamonds, aes(x='price', color='cut')) + \
+        geom_density()
 
 ``geom_bar``
 ^^^^^^^^^^^^
