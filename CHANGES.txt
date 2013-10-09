@@ -3,6 +3,7 @@
 - continuous color scales
 - better legends
 - adding basic docstrings
+- adding meat example dataset
 
 0.1.1
 ======
