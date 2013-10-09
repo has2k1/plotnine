@@ -38,6 +38,12 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
     # install ggplot using pip
     $ pip install ggplot
 
+#### Loading `ggplot`
+
+    # run an Ipython shell (or don't)
+    $ ipython
+    In [1]: from ggplot import *
+That's it! You're ready to go!
 
 ### Examples
 ```
