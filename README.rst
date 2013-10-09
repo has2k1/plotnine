@@ -1,6 +1,19 @@
 {ggplot}
 ========
 
+::
+
+    from ggplot import *
+    from pandasql import load_meat
+    meat = load_meat()
+
+    ggplot(aes(x='date', y='beef'), data=meat) + \
+        geom_point() + \
+        geom_line(color='lightblue') + \
+        ggtitle("Beef: It's What's for Dinner") + \
+        xlab("Date") + \
+        ylab("Head of Cattle Slaughtered")
+
 What is it?
 ~~~~~~~~~~~
 
@@ -28,14 +41,46 @@ Goals
 Getting Started
 ~~~~~~~~~~~~~~~
 
-::
+Dependencies
+^^^^^^^^^^^^
 
-    # unzip the matplotlibrc
-    $ unzip matplotlibrc.zip ~/
-    $ pip install ggplot
+-  ``matplotlib``
+-  ``pandas``
+-  ``numpy``
+-  ``scipy``
+
+   unzip the matplotlibrc
+   ======================
+
+   $ unzip matplotlibrc.zip ~/ $ pip install ggplot
 
 Examples
 ~~~~~~~~
+
+``geom_point``
+^^^^^^^^^^^^^^
+
+::
+
+    from ggplot import *
+    ggplot(diamonds, aes('carat', 'price')) + \
+        geom_point(alpha=1/20.)
+
+``geom_hist``
+^^^^^^^^^^^^^
+
+::
+
+    p = ggplot(aes(x='carat'), data=diamonds)
+    p + geom_hist() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
+
+``geom_bar``
+^^^^^^^^^^^^
+
+::
+
+    p = ggplot(mtcars, aes('cyl'))
+    p + geom_bar()
 
 TODO
 ~~~~

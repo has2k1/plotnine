@@ -11,6 +11,24 @@ from utils import *
 
 
 class ggplot(object):
+    """
+    ggplot is the base layer or object that you use to define
+    the components of your chart (x and y axis, shapes, colors, etc.).
+    You can combine it with layers (or geoms) to make complex graphics
+    with minimal effort.
+
+    Parameters
+    -----------
+    aesthetics:  aes (ggplot.components.aes.aes)
+        aesthetics of your plot
+    data:  pandas DataFrame (pd.DataFrame)
+        a DataFrame with the data you want to plot
+
+    Examples
+    ----------
+    p = ggplot(aes(x='x', y='y'), data=diamonds)
+    print p + geom_point()
+    """
 
     # TODO: make color discrete and continuous
     CONTINUOUS = ['x', 'y', 'size']
