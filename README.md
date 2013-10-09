@@ -61,14 +61,14 @@ p + geom_bar()
 ### TODO
 - finish README
 - add matplotlibrc to build script
-- distribute on PyPi
-- come up with better name
-- handle NAs gracefully
+- distribute on PyPi (DONE)
+- come up with better name (DONE)
+- handle NAs gracefully (DONE)
 - make `aes` guess what the user actually means (DONE)
 - aes:
     - size
-    - se for stat_smooth
-    - fix fill/colour
+    - se for stat_smooth (DONE)
+    - fix fill/colour (color DONE)
 - geoms:
     - geom_abline (DONE)
     - geom_area (DONE)
