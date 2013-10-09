@@ -13,8 +13,4 @@ class stat_bin2d(geom):
         x = layer.pop('x')
         y = layer.pop('y')
 
-        plt.hist2d(x, y, **layer)
-        plt.colorbar()
-        #return [
-        #    { "function": "", "args": ""}
-        #]
+        plt.hist2d(x, y, cmap=plt.cm.Blues, **layer)

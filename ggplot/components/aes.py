@@ -48,4 +48,7 @@ class aes(UserDict):
             self.data = dict(zip(self.DEFAULT_ARGS, args))
         else:
             self.data = kwargs
+        if 'colour' in self.data:
+            self.data['color'] = self.data['colour']
+            del self.data['colour']
 

@@ -130,6 +130,10 @@ class ggplot(object):
             ae: data.get(key, key)
                 for ae, key in self.aesthetics.iteritems()
         })
+        if "x" in self.aesthetics and self.xlab is None:
+            self.xlab = self.aesthetics['x']
+        if "y" in self.aesthetics and self.ylab is None:
+            self.ylab = self.aesthetics['y']
         mapping = mapping.dropna()
 
         # Here we're mapping discrete values to colors/shapes. For colors
@@ -201,7 +205,6 @@ class ggplot(object):
                     frame["cmap"] = frame["cmap"][0]
                 layers.append(frame)
         # adding legends back to the plot
-        # scatterpoints=1
         self.legend = legend
         return layers
 

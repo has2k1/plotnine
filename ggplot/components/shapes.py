@@ -1,19 +1,15 @@
 
 SHAPES = [
-    '.',
-    'v',
-    '^',
-    '<',
-    '>',
-    '1',
-    'o',
-    '2', 
-    '3',
-    '4',
-    '8', 
-    's',
-    'p', 
-    '*'
+    'o',#circle
+    '^',#triangle up
+    'D',#diamond
+    'v',#triangle down
+    '+',#plus
+    'x',#x
+    's',#square
+    '*',#star
+    'p',#pentagon
+    '*'#octagon
 ]
 
 def shape_gen():
