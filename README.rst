@@ -46,11 +46,13 @@ Dependencies
 -  ``pandas``
 -  ``numpy``
 -  ``scipy``
+-  ``statsmodels``
 
    unzip the matplotlibrc
    ======================
 
-   $ unzip matplotlibrc.zip ~/ $ pip install ggplot
+   $ unzip matplotlibrc.zip # install ggplot using pip $ pip install
+   ggplot
 
 Examples
 ~~~~~~~~
