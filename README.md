@@ -86,4 +86,4 @@ p + geom_bar()
 
 
 ### TODO
-see [TODO](https://github.com/yhat/ggplot/blob/master/TODO.md)
+The list is long, but distinguished.[TODO](https://github.com/yhat/ggplot/blob/master/TODO.md)
