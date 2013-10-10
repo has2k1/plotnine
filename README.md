@@ -21,6 +21,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 - same API as `ggplot2` for `R`
 - tight integration with [`pandas`](https://github.com/pydata/pandas)
 - pip installable
+- never use matplotlib again
 
 ### Getting Started
 #### Dependencies
