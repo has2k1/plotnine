@@ -51,7 +51,7 @@ That's it! You're ready to go!
 meat_lng = pd.melt(meat[['date', 'beef', 'pork', 'broilers']], id_vars='date')
 ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng) + \
     geom_point() + \
-    stat_smooth()
+    stat_smooth(color='red')
 ```
 <img src="public/img/ggplot_meat.png">
 
