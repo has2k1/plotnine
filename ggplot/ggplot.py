@@ -7,6 +7,7 @@ import matplotlib.cm as gradients
 from components import colors, shapes, aes
 from components.legend import draw_legend
 from geoms import *
+from scales import *
 from utils import *
 
 import re
@@ -79,6 +80,8 @@ class ggplot(object):
         self.title = None
         self.xlab = None
         self.ylab = None
+        self.xlimits = None
+        self.ylimits = None
         self.legend = {}
 
     def __repr__(self):
@@ -121,6 +124,11 @@ class ggplot(object):
             plt.xlabel(self.xlab)
         if self.ylab:
             plt.ylabel(self.ylab)
+        if self.xlimits:
+            plt.xlim(self.xlimits)
+        if self.ylimits:
+            plt.ylim(self.ylimits)
+
         # TODO: Having some issues here with things that shouldn't have a legend
         # or at least shouldn't get shrunk to accomodate one. Need some sort of
         # test in place to prevent this OR prevent legend getting set to True.

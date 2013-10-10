@@ -1,3 +1,13 @@
+
+0.1.7
+=====
+- geom_jitter
+- basic version of scales
+     - scale_x_continuous
+     - scale_y_continuous
+     - xlim
+     - ylim
+
 0.1.6
 =====
 - improved readme 

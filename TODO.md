@@ -30,7 +30,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - stat_bin2d
         - strange color scheme (bug)
     - geom_jitter
-        - TODO
+        - basic version working; need better integration w/ geom_point
     - stat_smooth
         - something strange going on with se bands (bug)
         - implement method="lm"
@@ -42,11 +42,13 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - scale_colour_gradient2
         - TODO
     - scale_x_continuous
-        - TODO
+        - label and limits working
+        - breaks
     - scale_x_discrete
         - TODO
     - scale_y_continuous
-        - TODO
+        - label and limits working
+        - breaks
 - facets:
     - facet_grid
         - order facets
@@ -65,6 +67,4 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - theme_bw()
         - TODO
     - theme_xkcd()
-
-
 

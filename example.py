@@ -54,9 +54,12 @@ p = p + stat_smooth(se=False) + geom_point()
 p = ggplot(aes(x='date', y='beef'), data=meat)
 # print p + geom_point() + stat_smooth(se=True)
 
+p = ggplot(aes(x='x', y='y'), data=diamonds)
+print p + geom_point() + geom_jitter()
 
-p = ggplot(aes(x='date', y='beef**10'), data=meat)
-print p + geom_point()
 
+p = ggplot(aes(x='date', y='beef'), data=meat)
+#print p + geom_point() + scale_x_continuous("This is the X") + scale_y_continuous("Squared", limits=[0, 1500])
+#print p + geom_point() + ylim(0, 1500)
 #gg = ggplot(aes(x='date', y='beef'), data=meat)
 #print gg + stat_smooth(se=True)

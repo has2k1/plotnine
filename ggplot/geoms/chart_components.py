@@ -18,6 +18,24 @@ class xlab(object):
         gg.xlab = self.xlab
         return gg
 
+class xlim(object):
+    def __init__(self, low, high):
+        self.low, self.high = low, high
+
+    def __radd__(self, gg):
+        gg = deepcopy(gg)
+        gg.xlimits = [self.low, self.high]
+        return gg
+
+class ylim(object):
+    def __init__(self, low, high):
+        self.low, self.high = low, high
+
+    def __radd__(self, gg):
+        gg = deepcopy(gg)
+        gg.ylimits = [self.low, self.high]
+        return gg
+
 class ylab(object):
     def __init__(self, ylab):
         self.ylab = ylab
