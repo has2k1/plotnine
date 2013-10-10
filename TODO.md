@@ -1,0 +1,69 @@
+# TODO
+We're looking for contributors! Email greg at yhathq.com for more info.
+- finish README
+- add matplotlibrc to build script
+- handle timestamps and dates for abline() and other geoms
+- aes:
+    - size
+    - fill
+    - lambda columns
+        - done for now
+    - lambda functions as columns
+        - TODO
+- geoms:
+    - geom_abline
+        - fix issue w/ timestamps as x (bug)
+    - geom_area
+        - done for now
+    - geom_bar
+        - add weight option
+    - geom_boxplot
+        - TODO
+    - geom_hline
+        - done for now
+    - geom_ribbon
+        - implement as geom_area alias
+    - geom_vline
+        - done for now
+    - stat_bin2d
+        - strange color scheme (bug)
+    - geom_jitter
+        - TODO
+    - stat_smooth
+        - something strange going on with se bands (bug)
+        - implement method="lm"
+    - add __density__ option
+- scales:
+    - scale_colour_brewer
+        - TODO
+    - scale_colour_gradient
+        - TODO
+    - scale_colour_gradient2
+        - TODO
+    - scale_x_continuous
+        - TODO
+    - scale_x_discrete
+        - TODO
+    - scale_y_continuous
+        - TODO
+- facets:
+    - facet_grid
+        - order facets
+        - combine so it looks like one chart (doable?)
+        - add support for uniform or free scales
+    - facet_wrap
+        - remove extra axs from figure
+        - add support for uniform or free scales
+- legends:
+    - make more consistent / fix spacing
+    - add support for non-blue continuous colors
+    - make the title of each legend the variable, not the aes
+    - make the title of the legend configurable
+- themes:
+    - look for better ggplot theme
+    - theme_bw()
+        - TODO
+    - theme_xkcd()
+
+
+
