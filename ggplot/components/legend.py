@@ -13,13 +13,13 @@ def make_marker_key(label, marker):
     pad = 20 - idx
     lab = label[:max(idx, 20)]
     pad = " "*pad
-    label = TextArea("%s %s: " % (pad, lab), textprops=dict(color="k"))
-    viz = DrawingArea(30, 20, 0, 0)
+    label = TextArea(": %s" % lab, textprops=dict(color="k"))
+    viz = DrawingArea(15, 20, 0, 0)
     fontsize = 10
     key = mlines.Line2D([0.5*fontsize], [0.75*fontsize], marker=marker, 
                                markersize=(0.5*fontsize), c="k")
     viz.add_artist(key)
-    return HPacker(children=[label, viz], align="center", pad=0, sep=0)
+    return HPacker(children=[viz, label], align="center", pad=5, sep=0)
 
 def make_line_key(label, color):
     label = str(label)
@@ -27,10 +27,10 @@ def make_line_key(label, color):
     pad = 20 - idx
     lab = label[:max(idx, 20)]
     pad = " "*pad
-    label = TextArea("%s %s: " % (pad, lab), textprops=dict(color="k"))
-    viz = DrawingArea(30, 20, 0, 0)
+    label = TextArea(": %s" % lab, textprops=dict(color="k"))
+    viz = DrawingArea(20, 20, 0, 0)
     viz.add_artist(Rectangle((0, 5), width=16, height=5, fc=color))
-    return HPacker(children=[label, viz], align="center", pad=0, sep=0)
+    return HPacker(children=[viz, label], height=25, align="center", pad=5, sep=0)
 
 legend_viz = {
     "color": make_line_key,
@@ -43,7 +43,7 @@ def draw_legend(ax, legend, legend_type, ith_legend):
     viz_handler = legend_viz[legend_type]
     legend_items = sorted(legend.iteritems(), key=operator.itemgetter(1))
     children += [viz_handler(lab, col) for col, lab in legend_items]
-    box = VPacker(children=children, align="center", pad=0, sep=5)
+    box = VPacker(children=children, align="left", pad=0, sep=5)
 
     anchored_box = AnchoredOffsetbox(loc=6,
                                      child=box, pad=0.,
