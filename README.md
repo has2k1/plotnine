@@ -85,34 +85,4 @@ p + geom_bar()
 
 
 ### TODO
-- finish README
-- add matplotlibrc to build script
-- distribute on PyPi (DONE)
-- come up with better name (DONE)
-- handle NAs gracefully (DONE)
-- make `aes` guess what the user actually means (DONE)
-- aes:
-    - size
-    - se for stat_smooth (DONE)
-    - fix fill/colour (color DONE)
-- geoms:
-    - geom_abline (DONE)
-    - geom_area (DONE)
-    - geom_bar (IN PROGRESS)
-    - geom_boxplot
-    - geom_hline (DONE)
-    - geom_ribbon (same as geom_ribbon?)
-    - geom_vline (DONE)
-    - stat_bin2d (DONE)
-    - geom_jitter
-    - stat_smooth (bug)
-- scales:
-    - scale_colour_brewer
-    - scale_colour_gradient
-    - scale_colour_gradient2
-    - scale_x_continuous
-    - scale_x_discrete
-    - scale_y_continuous
-- facets:
-    - facet_grid (DONE)
-
+see [TODO](https://github.com/yhat/ggplot/blob/master/TODO.md)
