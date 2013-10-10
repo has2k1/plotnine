@@ -48,13 +48,15 @@ meat_lng = pd.melt(meat, id_vars=['date'])
 p = ggplot(aes(x="date", y="value", colour="variable", shape="variable"), meat_lng)
 #print p + geom_point() + facet_grid(y="variable")
 p = p + stat_smooth(se=False) + geom_point()
-print p
+#print p
 #ggsave(p, "gregsplot.png")
 
 p = ggplot(aes(x='date', y='beef'), data=meat)
-print p + geom_point() + stat_smooth(se=True)
+# print p + geom_point() + stat_smooth(se=True)
 
 
+p = ggplot(aes(x='date', y='beef**10'), data=meat)
+print p + geom_point()
 
 #gg = ggplot(aes(x='date', y='beef'), data=meat)
 #print gg + stat_smooth(se=True)

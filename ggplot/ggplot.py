@@ -9,6 +9,18 @@ from components.legend import draw_legend
 from geoms import *
 from utils import *
 
+import re
+
+
+def is_identity(x):
+    if x in colors.COLORS:
+        return True
+    elif x in shapes.SHAPES:
+        return True
+    elif isinstance(x, (float, int)):
+        return True
+    else:
+        return False
 
 class ggplot(object):
     """
@@ -41,6 +53,22 @@ class ggplot(object):
             
         self.aesthetics = aesthetics
         self.data = data
+
+        # Look for alias/lambda functions
+        # The test criteria could use some work
+        for ae, name in self.aesthetics.iteritems():
+            if name not in self.data and not is_identity(name):
+                result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
+                lambda_column = ""
+                for item in result:
+                    if re.match("[/*+_=\(\)-]", item):
+                        pass
+                    elif re.match("^[0-9.]+$", item):
+                        pass
+                    else:
+                        item = "self.data.get('%s')" % item
+                    lambda_column += item 
+                self.data[name] = eval(lambda_column)
 
         # defaults
         self.geoms= []
