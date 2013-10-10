@@ -17,6 +17,8 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - done for now
     - geom_bar
         - add weight option
+        - add \__density__ option (a la ..density..)
+        - add \__count__ option (a la ..count..)
     - geom_boxplot
         - TODO
     - geom_hline
@@ -32,7 +34,6 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - stat_smooth
         - something strange going on with se bands (bug)
         - implement method="lm"
-    - add __density__ option
 - scales:
     - scale_colour_brewer
         - TODO
