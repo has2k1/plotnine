@@ -36,7 +36,8 @@ painless. You should be able to `apt-get` or `yum` all of these.
 - `statsmodels`
 
 #### Installation
-
+Ok the hard part is over. Installing `ggplot` is really easy. Just use `pip`! An item on the TODO
+is to add the matplotlibrc files to the pip installable (let me know if you'd like to help!).
     # matplotlibrc from Huy Nguyen (http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/)
     $ curl https://github.com/yhat/ggplot/raw/master/matplotlibrc.zip > matplotlibrc.zip 
     $ unzip matplotlibrc.zip -d ~/
