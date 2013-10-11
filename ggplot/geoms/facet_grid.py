@@ -11,20 +11,21 @@ class facet_grid(object):
         x = gg.data.get(self.x)
         y = gg.data.get(self.y)
         if x is None:
-            n_dim_x = 1
+            n_wide = 1
         else:
-            n_dim_x = x.nunique()
+            n_wide = x.nunique()
         if y is None:
-            n_dim_y = 1
+            n_high = 1
         else:
-            n_dim_y = y.nunique()
+            n_high = y.nunique()
         
-        gg.n_dim_x, gg.n_dim_y = n_dim_x, n_dim_y
+        gg.n_wide, gg.n_high = n_wide, n_high
         facets = []
         if self.x:
             facets.append(self.x)
         if self.y:
             facets.append(self.y)
         gg.facets = facets
+        gg.facet_type = "grid"
 
         return deepcopy(gg)

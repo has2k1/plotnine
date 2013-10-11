@@ -9,19 +9,23 @@ class facet_wrap(object):
 
         x = gg.data.get(self.x)
         if x is None:
-            n_dim_x = 1
+            n_wide = 1
         else:
-            n_dim_x = x.nunique()
+            n_wide = x.nunique()
+            gg.n_dim_x = x.nunique()
+
         
         if len(x)==1:
-            n_dim_y = 1
+            n_high = 1
         else:
-            n_dim_y = n_dim_x - (n_dim_x / 2)
-            n_dim_x = n_dim_x / 2
+            n_high = 1
+            n_high = n_wide - (n_wide / 2)
+            n_wide = n_wide / 2
 
-        gg.n_dim_x, gg.n_dim_y = n_dim_x, n_dim_y
+        gg.n_wide, gg.n_high = n_wide, n_high
         facets = []
         facets.append(self.x)
         gg.facets = facets
+        gg.facet_type = "wrap"
 
         return deepcopy(gg)

@@ -54,12 +54,19 @@ p = p + stat_smooth(se=False) + geom_point()
 p = ggplot(aes(x='date', y='beef'), data=meat)
 # print p + geom_point() + stat_smooth(se=True)
 
-p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(100))
+#p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(4))
+#print p + geom_point() + \
+#    scale_colour_gradient(low="white", high="red") + \
+#    facet_wrap("cut")
+#plt.show(block=True)
+
+p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(1000))
 print p + geom_point() + \
-    scale_colour_gradient(low="white", high="red")
+    scale_colour_gradient(low="white", high="red") + \
+    facet_grid("cut", "clarity")
+plt.show(block=True)
 
-
-p = ggplot(aes(x='date', y='beef'), data=meat)
+#p = ggplot(aes(x='date', y='beef'), data=meat)
 #print p + geom_point() + scale_x_continuous("This is the X") + scale_y_continuous("Squared", limits=[0, 1500])
 #print p + geom_point() + ylim(0, 1500)
 #gg = ggplot(aes(x='date', y='beef'), data=meat)

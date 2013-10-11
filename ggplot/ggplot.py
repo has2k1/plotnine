@@ -72,9 +72,12 @@ class ggplot(object):
 
         # defaults
         self.geoms= []
-        self.n_dim_x = 1
-        self.n_dim_y = 1
+        self.n_wide = 1
+        self.n_high = 1
+        self.n_dim_x = None
+        self.n_dim_y = None
         self.facets = []
+        self.facet_type = None
         # components
         self.title = None
         self.xlab = None
@@ -91,9 +94,30 @@ class ggplot(object):
         # TODO: Handle facet_wrap better so that we only have
         # as many plots as we do discrete values. Currently it
         # creates a grid of plots but doesn't use all of them
-        fig, axs = plt.subplots(self.n_dim_x, self.n_dim_y)
-        plt.subplot(self.n_dim_x, self.n_dim_y, 1)
-        
+        if self.facet_type=="grid":
+            fig, axs = plt.subplots(self.n_wide, self.n_high, 
+                    sharex=True, sharey=True)
+        elif self.facet_type=="wrap":
+            subplots_available = self.n_wide * self.n_high
+            extra_subplots = subplots_available - self.n_dim_x
+
+            fig, axs = plt.subplots(self.n_wide, self.n_high)
+            for extra_plot in axs.flatten()[-extra_subplots:]:
+                extra_plot.axis('off')
+
+            plots = [None for i in range(self.n_dim_x)]
+            for i in range(self.n_dim_x):
+                idx = (i % self.n_high) * self.n_wide + (i % self.n_wide)
+                plots[idx] = (i % self.n_wide, i % self.n_high)
+
+            plots = [plot for plot in plots if plot is not None]
+            plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
+
+        else:
+            fig, axs = plt.subplots(self.n_wide, self.n_high)
+
+        plt.subplot(self.n_wide, self.n_high, 1)
+
         # Faceting just means doing an additional groupby. The
         # dimensions of the plot remain the same
         if self.facets:
@@ -101,7 +125,23 @@ class ggplot(object):
             for facet, frame in self.data.groupby(self.facets):
                 for layer in self._get_layers(frame):
                     for geom in self.geoms:
-                        plt.subplot(self.n_dim_x, self.n_dim_y, cntr)
+                        if self.facet_type=="wrap":
+                            if cntr+1 > len(plots):
+                                continue
+                            pos = plots[cntr]
+                            if pos is None:
+                                continue
+                            y_i, x_i = pos
+                            pos = x_i + y_i * self.n_high + 1
+                            plt.subplot(self.n_wide, self.n_high, pos) 
+                        else:
+                            plt.subplot(self.n_wide, self.n_high, cntr)
+                            # TODO: this needs some work
+                            if (cntr % self.n_high)!=0:
+                                plt.tick_params(axis='y', which='both', 
+                                        bottom='off', top='off',
+                                        labelbottom='off')
+
                         callbacks = geom.plot_layer(layer)
                         if callbacks:
                             for callback in callbacks:
@@ -137,15 +177,15 @@ class ggplot(object):
         # test in place to prevent this OR prevent legend getting set to True.
         if self.legend:
             if self.facets:
-                pass
-                ax_to_use = [ax for ax in axs if not isinstance(ax, np.ndarray)]
-                ax = axs[-1]
-                box = ax.get_position()
-                ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                cntr = 0
-                for name, legend in self.legend.iteritems():
-                    ax.add_artist(draw_legend(ax, legend, name, cntr))
-                    cntr += 1
+                if 1==2:
+                    ax_to_use = [ax for ax in axs if not isinstance(ax, np.ndarray)]
+                    ax = axs[-1]
+                    box = ax.get_position()
+                    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+                    cntr = 0
+                    for name, legend in self.legend.iteritems():
+                        ax.add_artist(draw_legend(ax, legend, name, cntr))
+                        cntr += 1
             else:
                 box = axs.get_position()
                 axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
