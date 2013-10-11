@@ -45,18 +45,18 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - scale_colour_brewer
         - TODO
     - scale_colour_continuous
-        - ~basic version~
+        - ~~basic version~~
     - scale_colour_gradient
-        - ~basic version~
+        - ~~basic version~~
     - scale_colour_gradient2
-        - ~basic version~
+        - ~~basic version~~
     - scale_x_continuous
-        - ~label and limits~
+        - ~~label and limits~~
         - breaks
     - scale_x_discrete
         - TODO
     - scale_y_continuous
-        - ~label and limits~
+        - ~~label and limits~~
         - breaks
 - facets:
     - facet_grid
@@ -64,11 +64,11 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - combine so it looks like one chart (doable?)
         - add support for uniform or free scales
     - facet_wrap
-        - ~remove extra axs from figure~
+        - ~~remove extra axs from figure~~
         - add support for uniform or free scales
 - legends:
-    - ~make more consistent / fix spacing~
-    - ~add support for non-blue continuous colors~
+    - ~~make more consistent / fix spacing~~
+    - ~~add support for non-blue continuous colors~~
     - make the title of each legend the variable, not the aes
     - make the title of the legend configurable
 - themes:
