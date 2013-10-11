@@ -59,17 +59,20 @@ class ggplot(object):
         for ae, name in self.aesthetics.iteritems():
             if name not in self.data and not is_identity(name):
                 result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
-                lambda_column = ""
-                for item in result:
-                    if re.match("[/*+_=\(\)-]", item):
-                        pass
-                    elif re.match("^[0-9.]+$", item):
-                        pass
-                    else:
-                        item = "self.data.get('%s')" % item
-                    lambda_column += item 
-                self.data[name] = eval(lambda_column)
-
+                if re.match("factor[(][A-Za-z_0-9]+[)]", name):
+                    m = re.search("factor[(]([A-Za-z_0-9]+)[)]", name)
+                    self.data[name] = self.data[m.group(1)].apply(str)
+                else:
+                    lambda_column = ""
+                    for item in result:
+                        if re.match("[/*+_=\(\)-]", item):
+                            pass
+                        elif re.match("^[0-9.]+$", item):
+                            pass
+                        else:
+                            item = "self.data.get('%s')" % item
+                        lambda_column += item 
+                    self.data[name] = eval(lambda_column)
         # defaults
         self.geoms= []
         self.n_wide = 1
@@ -214,6 +217,14 @@ class ggplot(object):
         if "y" in self.aesthetics and self.ylab is None:
             self.ylab = self.aesthetics['y']
         mapping = mapping.dropna()
+
+        # We need to normalize size so that the points aren't really big or
+        # really small.
+        # TODO: add different types of normalization
+        if "size" in mapping:
+            mapping.size = mapping.size.astype(np.float)
+            mapping.size = 200.0 * (mapping.size - mapping.size.min()) / \
+                    (mapping.size.max() - mapping.size.min())
 
         # Here we're mapping discrete values to colors/shapes. For colors
         # we're also checking to see if we don't need to map them (i.e. if vars

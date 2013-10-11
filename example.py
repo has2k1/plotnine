@@ -41,6 +41,9 @@ gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
 #print gg + stat_bin2d()
 
 
+p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='qsec'))
+print p + geom_point()
+plt.show(block=True)
 
 # p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
 
@@ -60,11 +63,11 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #    facet_wrap("cut")
 #plt.show(block=True)
 
-p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(1000))
-print p + geom_point() + \
-    scale_colour_gradient(low="white", high="red") + \
-    facet_grid("cut", "clarity")
-plt.show(block=True)
+#p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(1000))
+#print p + geom_point() + \
+#    scale_colour_gradient(low="white", high="red") + \
+#    facet_grid("cut", "clarity")
+#plt.show(block=True)
 
 #p = ggplot(aes(x='date', y='beef'), data=meat)
 #print p + geom_point() + scale_x_continuous("This is the X") + scale_y_continuous("Squared", limits=[0, 1500])
