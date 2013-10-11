@@ -19,9 +19,10 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 
 ### Goals
 - same API as `ggplot2` for `R`
+- never use matplotlib again
+- ability to use both American and British English spellings of aesthetics
 - tight integration with [`pandas`](https://github.com/pydata/pandas)
 - pip installable
-- never use matplotlib again
 
 ### Getting Started
 #### Dependencies
@@ -41,7 +42,7 @@ Yes, it's another implementation of [`ggplot2`](https://github.com/hadley/ggplot
 
 #### Loading `ggplot`
 
-    # run an Ipython shell (or don't)
+    # run an IPython shell (or don't)
     $ ipython
     In [1]: from ggplot import *
 That's it! You're ready to go!
