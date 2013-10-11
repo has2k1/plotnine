@@ -10,7 +10,7 @@ def colors_at_breaks(cmap, breaks=[0, 0.25, 0.5, 0.75, 1.]):
 
 
 class scale_colour_gradient(scale):
-    VALID_SCALES = ['label', 'limits', 'low', 'high']
+    VALID_SCALES = ['label', 'limits', 'low', 'mid', 'high']
     
     def __radd__(self, gg):
         gg = deepcopy(gg)
@@ -18,9 +18,16 @@ class scale_colour_gradient(scale):
             gg.color_label = self.label
         if self.limits:
             gg.color_limits = self.limits
+        color_spectrum = []
+        if self.low:
+            color_spectrum.append(self.low)
+        if self.mid:
+            color_spectrum.append(self.mid)
+        if self.high:
+            color_spectrum.append(self.high)
+
         if self.low and self.high:
-            gradient2n = LinearSegmentedColormap.from_list('gradient2n',
-                    [self.low, self.high])
+            gradient2n = LinearSegmentedColormap.from_list('gradient2n', color_spectrum)
             plt.cm.register_cmap(cmap=gradient2n)
             # add them back to ggplot
             gg.color_scale = colors_at_breaks(gradient2n)

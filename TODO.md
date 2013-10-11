@@ -39,10 +39,12 @@ We're looking for contributors! Email greg at yhathq.com for more info.
 - scales:
     - scale_colour_brewer
         - TODO
+    - scale_colour_continuous
+        - ~basic version~
     - scale_colour_gradient
         - TODO
     - scale_colour_gradient2
-        - TODO
+        - ~basic version~
     - scale_x_continuous
         - label and limits working
         - breaks
