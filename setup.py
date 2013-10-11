@@ -6,7 +6,7 @@ required = []
 
 setup(
     name="ggplot",
-    version="0.1.7",
+    version="0.1.8",
     author="Greg Lamp",
     author_email="greg@yhathq.com",
     url="https://github.com/yhat/ggplot/",

@@ -1,3 +1,10 @@
+0.1.8
+=====
+- better facet_wrap
+- size aes now working for geom_point
+- simple DSL for aes
+- better stat_smooth
+- initial version of scales
 
 0.1.7
 =====
