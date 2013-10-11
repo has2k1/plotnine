@@ -2,6 +2,7 @@ from scale import scale
 from copy import deepcopy
 
 class scale_x_continuous(scale):
+    VALID_SCALES = ['label', 'limits', 'breaks', 'trans']
     def __radd__(self, gg):
         gg = deepcopy(gg)
         if self.label:

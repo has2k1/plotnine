@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.cm as gradients
 
 # ggplot stuff
 from components import colors, shapes, aes
@@ -83,6 +82,10 @@ class ggplot(object):
         self.xlimits = None
         self.ylimits = None
         self.legend = {}
+
+        # continuous color configs
+        self.color_scale = None
+        self.colormap = plt.cm.Blues
 
     def __repr__(self):
         # TODO: Handle facet_wrap better so that we only have
@@ -181,9 +184,7 @@ class ggplot(object):
             possible_colors = np.unique(mapping.color)
             if set(possible_colors).issubset(set(colors.COLORS))==False:
                 if "color" in mapping._get_numeric_data().columns:
-                    # continuous
-                    # TODO: add support for more colors
-                    mapping['cmap'] = gradients.Blues
+                    mapping['cmap'] = self.colormap
                 else:
                     # discrete
                     color = colors.color_gen()
@@ -211,7 +212,10 @@ class ggplot(object):
                 frame["cmap"] = frame["cmap"][0]
                 quantiles = np.percentile(mapping.color, [0, 25, 50, 75, 100])
                 # TODO: add support for more colors
-                key_colors = ["white", "lightblue", "skyblue", "blue", "navy"]
+                if self.color_scale:
+                    key_colors = self.color_scale
+                else:
+                    key_colors = ["white", "lightblue", "skyblue", "blue", "navy"]
                 legend["color"] = dict(zip(key_colors, quantiles))
             layers.append(frame)
         else:
@@ -226,10 +230,6 @@ class ggplot(object):
                         else:
                             aes_name = name
                         if ae=="color":
-                            # TODO: Handle discrete vs. continuous colors here
-                            # import matplotlib as mpl 
-                            # cmap=mpl.cm.Blues
-                            # plt.scatter(x, y, c=y, s=500, cmap=mpl.cm.gray)
                             label = rev_color_mapping.get(aes_name, aes_name)
                             legend[ae][frame[ae]] = label
                         elif ae=="shape" or ae=="marker":

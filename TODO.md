@@ -1,6 +1,8 @@
 # TODO
 We're looking for contributors! Email greg at yhathq.com for more info.
-- finish README
+- docs
+     - basic README
+     - github static pages
 - add matplotlibrc to build script
 - handle timestamps and dates for abline() and other geoms
 - aes:
@@ -58,7 +60,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - remove extra axs from figure
         - add support for uniform or free scales
 - legends:
-    - make more consistent / fix spacing
+    - ~make more consistent / fix spacing~
     - add support for non-blue continuous colors
     - make the title of each legend the variable, not the aes
     - make the title of the legend configurable

@@ -54,8 +54,9 @@ p = p + stat_smooth(se=False) + geom_point()
 p = ggplot(aes(x='date', y='beef'), data=meat)
 # print p + geom_point() + stat_smooth(se=True)
 
-p = ggplot(aes(x='x', y='y', shape='cut', colour='cut'), data=diamonds.head(100))
-print p + geom_point() + geom_jitter()
+p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(100))
+print p + geom_point() + \
+    scale_colour_gradient(low="white", high="red")
 
 
 p = ggplot(aes(x='date', y='beef'), data=meat)
