@@ -1,7 +1,11 @@
 import matplotlib.pyplot as plt
+from matplotlib.dates import drange, date2num
+from pandas.lib import Timestamp
+from datetime import timedelta
 import numpy as np
 from copy import deepcopy
 from geom import geom
+import pandas as pd
 
 class geom_abline(geom):
     VALID_AES = ['x', 'slope', 'intercept', 'color', 'alpha', 'label']
@@ -18,7 +22,14 @@ class geom_abline(geom):
             intercept = layer.pop('intercept')
         else:
             intercept = 0.0
-        step = (np.max(x) - np.min(x)) / 100.0
-        x_rng = np.arange(np.min(x), np.max(x), step)
-        y_rng = x_rng * slope + intercept
-        plt.plot(x_rng, y_rng, **layer)
+        if isinstance(x[0], Timestamp):
+            gca = plt.gca()
+            gca.set_autoscale_on(False)
+            gca.plot(gca.get_xlim(),gca.get_ylim())
+        else:
+            start, stop = np.max(x), np.min(x)
+            step = ((stop-start))  / 100.0
+            x_rng = np.arange(start, stop, step)
+            y_rng = x_rng * slope + intercept
+            plt.plot(x_rng, y_rng, **layer)
+
