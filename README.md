@@ -83,6 +83,13 @@ ggplot(diamonds, aes(x='price', color='cut')) + \
 ```
 <img src="public/img/geom_density_example.png">
 
+```
+meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
+p = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
+p + geom_density()
+```
+<img src="public/img/density_with_fill.png">
+
 ####`geom_bar`
 ```
 p = ggplot(mtcars, aes('cyl'))
