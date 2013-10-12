@@ -53,8 +53,8 @@ meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
 
 
 p = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
-print p + geom_density()
-plt.show(block=True)
+ggsave(p + geom_density(), "densityplot.png")
+
 
 p = ggplot(aes(x="date", y="value", colour="variable", shape="variable"), meat_lng)
 #print p + geom_point() + facet_grid(y="variable")
