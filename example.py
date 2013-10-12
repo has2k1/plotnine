@@ -40,19 +40,25 @@ gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
 
 #print gg + stat_bin2d()
 
+#print ggplot(aes(x='mpg', fill=True, alpha=0.3), data=mtcars) + \
+ #       geom_density()
+#plt.show(block=True)
 
-p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
-print p + geom_line() + geom_point()
-plt.show(block=True)
+#p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
+#print p + geom_line() + geom_point()
 
 # p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
 
-meat_lng = pd.melt(meat, id_vars=['date'])
+meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
+
+
+p = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
+print p + geom_density()
+plt.show(block=True)
+
 p = ggplot(aes(x="date", y="value", colour="variable", shape="variable"), meat_lng)
 #print p + geom_point() + facet_grid(y="variable")
 p = p + stat_smooth(se=False) + geom_point()
-#print p
-#ggsave(p, "gregsplot.png")
 
 p = ggplot(aes(x='date', y='beef'), data=meat)
 # print p + geom_point() + stat_smooth(se=True)

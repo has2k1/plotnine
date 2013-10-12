@@ -43,7 +43,7 @@ class ggplot(object):
     """
 
     # TODO: make color discrete and continuous
-    CONTINUOUS = ['x', 'y', 'size']
+    CONTINUOUS = ['x', 'y', 'size', 'alpha']
     DISCRETE = ['color', 'shape', 'marker', 'alpha', 'linestyle']
 
     def __init__(self, aesthetics, data):
@@ -298,7 +298,8 @@ class ggplot(object):
                         elif ae=="linestyle":
                             legend[ae][frame[ae]] = rev_linetype_mapping.get(aes_name, aes_name)
                             label = rev_linetype_mapping.get(aes_name, aes_name)
-                            pass
+                        elif ae=="alpha":
+                            label = ""
                         frame['label'] = label
                 if "cmap" in frame:
                     frame["cmap"] = frame["cmap"][0]
