@@ -36,3 +36,4 @@ nosetests.xml
 .pydevproject
 
 *.swp
+*.rst
