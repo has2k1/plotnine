@@ -6,7 +6,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
 - add matplotlibrc to build script
 - handle timestamps and dates for abline() and other geoms
 - aes:
-    - size
+    - ~~size~~
     - fill
     - lambda columns
         - done for now
@@ -14,11 +14,11 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - TODO
 - geoms:
     - geom_abline
-        - fix issue w/ timestamps as x (bug)
+        - ~~fix issue w/ timestamps as x (bug)~~
     - geom_area
         - done for now
     - geom_bar
-        - add weight option
+        - ~~add weight option~~
         - add \__density__ option (a la ..density..)
         - add \__count__ option (a la ..count..)
     - geom_boxplot
@@ -29,18 +29,19 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - implement as geom_area alias
     - geom_line
         - size
-        - line style (marker)
-        - color scale
+        - ~~line style (marker)~~
+        - ~~color scale~~
     - geom_point
     - geom_vline
         - done for now
     - stat_bin2d
         - strange color scheme (bug)
     - geom_jitter
-        - basic version working; need better integration w/ geom_point
+        - ~~basic version working~~
+        - need better integration w/ geom_point
     - stat_smooth
         - something strange going on with se bands (bug)
-        - implement method="lm"
+        - ~~implement method="lm"~~
 - scales:
     - scale_colour_brewer
         - TODO
