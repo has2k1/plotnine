@@ -20,8 +20,8 @@ gg = ggplot(aes(x="x", y="z", color="cat", alpha=0.2), data=df)
 gg = ggplot(aes(x="x", color="c"), data=pd.DataFrame({"x": np.random.normal(0, 1, 10000), "c": ["blue" if i%2==0 else "red" for i in range(10000)]}))
 #print gg + geom_density() + xlab("x label") + ylab("y label")
 gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
-#print gg + geom_point() + facet_wrap(x="cat", y="cat2") 
-#print gg + geom_point() + facet_wrap(y="cat2") + ggtitle("My Single Facet") 
+#print gg + geom_point() + facet_wrap(x="cat", y="cat2")
+#print gg + geom_point() + facet_wrap(y="cat2") + ggtitle("My Single Facet")
 #print gg + stat_smooth(color="blue") + ggtitle("My Smoothed Chart")
 #print gg + geom_hist() + ggtitle("My Histogram")
 #print gg + geom_point() + geom_vline(x=50, ymin=-10, ymax=10)
@@ -53,7 +53,7 @@ meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
 
 
 p = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
-ggsave(p + geom_density(), "densityplot.png")
+# ggsave(p + geom_density(), "densityplot.png")
 
 
 p = ggplot(aes(x="date", y="value", colour="variable", shape="variable"), meat_lng)
@@ -80,3 +80,8 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #print p + geom_point() + ylim(0, 1500)
 #gg = ggplot(aes(x='date', y='beef'), data=meat)
 #print gg + stat_smooth(se=True)
+
+
+print ggplot(aes(x='date', y='beef'), data=meat) + geom_line() + \
+    scale_x_date(labels="%Y-%m-%d")
+plt.show(block=True)

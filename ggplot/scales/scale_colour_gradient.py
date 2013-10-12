@@ -10,12 +10,12 @@ def colors_at_breaks(cmap, breaks=[0, 0.25, 0.5, 0.75, 1.]):
 
 
 class scale_colour_gradient(scale):
-    VALID_SCALES = ['label', 'limits', 'low', 'mid', 'high']
-    
+    VALID_SCALES = ['name', 'limits', 'low', 'mid', 'high']
+
     def __radd__(self, gg):
         gg = deepcopy(gg)
-        if self.label:
-            gg.color_label = self.label
+        if self.name:
+            gg.color_label = self.name
         if self.limits:
             gg.color_limits = self.limits
         color_spectrum = []
