@@ -82,6 +82,13 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #print gg + stat_smooth(se=True)
 
 
-print ggplot(aes(x='date', y='beef'), data=meat) + geom_line() + \
-    scale_x_date(labels="%Y-%m-%d")
+#print ggplot(aes(x='date', y='beef'), data=meat) + geom_line() + \
+#    scale_x_date(labels="%Y-%m-%d")
+#plt.show(block=True)
+
+p = ggplot(aes(x='carat', y='price'), data=diamonds)
+print p + geom_now_its_art() 
 plt.show(block=True)
+
+
+

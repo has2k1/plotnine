@@ -6,6 +6,7 @@ from .geom_hist import geom_hist
 from .geom_hline import geom_hline
 from .geom_jitter import geom_jitter
 from .geom_line import geom_line
+from .geom_now_its_art import geom_now_its_art
 from .geom_point import geom_point
 from .geom_vline import geom_vline
 from .facet_grid import facet_grid
