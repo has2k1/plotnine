@@ -51,4 +51,7 @@ class aes(UserDict):
         if 'colour' in self.data:
             self.data['color'] = self.data['colour']
             del self.data['colour']
+        if 'linetype' in self.data:
+            self.data['linestyle'] = self.data['linetype']
+            del self.data['linetype']
 

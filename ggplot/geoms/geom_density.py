@@ -6,7 +6,7 @@ import numpy as np
 
 
 class geom_density(geom):
-    VALID_AES = ['x', 'color', 'alpha', 'label']
+    VALID_AES = ['x', 'color', 'alpha', 'linestyle', 'label']
 
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}

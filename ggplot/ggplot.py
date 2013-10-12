@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # ggplot stuff
-from components import colors, shapes, aes
+from components import colors, shapes, linestyles, aes
 from components.legend import draw_legend
 from geoms import *
 from scales import *
@@ -44,7 +44,7 @@ class ggplot(object):
 
     # TODO: make color discrete and continuous
     CONTINUOUS = ['x', 'y', 'size']
-    DISCRETE = ['color', 'shape', 'marker', 'alpha']
+    DISCRETE = ['color', 'shape', 'marker', 'alpha', 'linestyle']
 
     def __init__(self, aesthetics, data):
         # ggplot should just 'figure out' which is which
@@ -94,9 +94,8 @@ class ggplot(object):
         self.colormap = plt.cm.Blues
 
     def __repr__(self):
-        # TODO: Handle facet_wrap better so that we only have
-        # as many plots as we do discrete values. Currently it
-        # creates a grid of plots but doesn't use all of them
+        # TODO: Handle facet_grid better. Currently facet_grid doesn't
+        # fuse the plots together, they're individual subplots.
         if self.facet_type=="grid":
             fig, axs = plt.subplots(self.n_wide, self.n_high, 
                     sharex=True, sharey=True)
@@ -252,6 +251,15 @@ class ggplot(object):
             mapping['marker'] = mapping['shape'].replace(shape_mapping)
             del mapping['shape']
 
+        rev_linetype_mapping = {}
+        if 'linestyle' in mapping:
+            mapping['linestyle'] = mapping['linestyle'].apply(str)
+            possible_styles = np.unique(mapping['linestyle'])
+            linestyle = linestyles.line_gen()
+            line_mapping = {value: linestyle.next() for value in possible_styles}
+            rev_linetype_mapping = {v: k for k, v in line_mapping.iteritems()}
+            mapping['linestyle'] = mapping['linestyle'].replace(line_mapping)
+
         keys = [ae for ae in self.DISCRETE if ae in mapping]
         if "cmap" in mapping:
             keys.remove("color")
@@ -270,7 +278,7 @@ class ggplot(object):
                 legend["color"] = dict(zip(key_colors, quantiles))
             layers.append(frame)
         else:
-            legend = {"color": {}, "marker": {}}
+            legend = {"color": {}, "marker": {}, "linestyle": {}}
             for name, frame in mapping.groupby(keys):
                 frame = frame.to_dict('list')
                 for ae in self.DISCRETE:
@@ -287,10 +295,18 @@ class ggplot(object):
                             legend[ae][frame[ae]] = rev_shape_mapping.get(aes_name, aes_name)
                             # raise Exception("Cannot have numeric shape!")
                             label = rev_shape_mapping.get(aes_name, aes_name)
+                        elif ae=="linestyle":
+                            legend[ae][frame[ae]] = rev_linetype_mapping.get(aes_name, aes_name)
+                            label = rev_linetype_mapping.get(aes_name, aes_name)
+                            pass
                         frame['label'] = label
                 if "cmap" in frame:
                     frame["cmap"] = frame["cmap"][0]
                 layers.append(frame)
+        if "size" in mapping:
+            labels = np.percentile(mapping['size'], [5, 25, 50, 75, 95])
+            quantiles = np.percentile(self.data[self.aesthetics['size']], [5, 25, 50, 75, 95])
+            legend["size"] = dict(zip(labels, quantiles))
         # adding legends back to the plot
         self.legend = legend
         return layers

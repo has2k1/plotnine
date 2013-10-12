@@ -3,7 +3,7 @@ from copy import deepcopy
 from geom import geom
 
 class geom_hline(geom):
-    VALID_AES = ['y', 'xmin', 'xmax', 'color', 'alpha', 'label']
+    VALID_AES = ['y', 'xmin', 'xmax', 'color', 'linestyle', 'alpha', 'label']
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
         layer.update(self.manual_aes)

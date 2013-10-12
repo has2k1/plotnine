@@ -41,8 +41,8 @@ gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
 #print gg + stat_bin2d()
 
 
-p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='qsec'))
-print p + geom_point()
+p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
+print p + geom_line() + geom_point()
 plt.show(block=True)
 
 # p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
