@@ -50,7 +50,7 @@ class ggplot(object):
         # ggplot should just 'figure out' which is which
         if not isinstance(data, pd.DataFrame):
             aesthetics, data = data, aesthetics
-            
+
         self.aesthetics = aesthetics
         self.data = data
 
@@ -71,7 +71,7 @@ class ggplot(object):
                             pass
                         else:
                             item = "self.data.get('%s')" % item
-                        lambda_column += item 
+                        lambda_column += item
                     self.data[name] = eval(lambda_column)
         # defaults
         self.geoms= []
@@ -85,6 +85,9 @@ class ggplot(object):
         self.title = None
         self.xlab = None
         self.ylab = None
+        # format for x/y major ticks
+        self.xtick_formatter = None
+        self.ytick_formatter = None
         self.xlimits = None
         self.ylimits = None
         self.legend = {}
@@ -97,7 +100,7 @@ class ggplot(object):
         # TODO: Handle facet_grid better. Currently facet_grid doesn't
         # fuse the plots together, they're individual subplots.
         if self.facet_type=="grid":
-            fig, axs = plt.subplots(self.n_wide, self.n_high, 
+            fig, axs = plt.subplots(self.n_wide, self.n_high,
                     sharex=True, sharey=True)
         elif self.facet_type=="wrap":
             subplots_available = self.n_wide * self.n_high
@@ -135,12 +138,12 @@ class ggplot(object):
                                 continue
                             y_i, x_i = pos
                             pos = x_i + y_i * self.n_high + 1
-                            plt.subplot(self.n_wide, self.n_high, pos) 
+                            plt.subplot(self.n_wide, self.n_high, pos)
                         else:
                             plt.subplot(self.n_wide, self.n_high, cntr)
                             # TODO: this needs some work
                             if (cntr % self.n_high)!=0:
-                                plt.tick_params(axis='y', which='both', 
+                                plt.tick_params(axis='y', which='both',
                                         bottom='off', top='off',
                                         labelbottom='off')
 
@@ -160,7 +163,7 @@ class ggplot(object):
                         for callback in callbacks:
                             fn = getattr(axs, callback['function'])
                             fn(*callback['args'])
-        
+
         # Handling the details of the chart here; might be a better
         # way to do this...
         if self.title:
@@ -169,6 +172,11 @@ class ggplot(object):
             plt.xlabel(self.xlab)
         if self.ylab:
             plt.ylabel(self.ylab)
+        if self.xtick_formatter:
+            plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
+            fig.autofmt_xdate()
+        if self.ytick_formatter:
+            plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
         if self.xlimits:
             plt.xlim(self.xlimits)
         if self.ylimits:
@@ -198,7 +206,7 @@ class ggplot(object):
                         cntr += 1
 
         # TODO: We can probably get pretty sugary with this
-        return "<ggplot: (%d)>" % self.__hash__() 
+        return "<ggplot: (%d)>" % self.__hash__()
 
     def _get_layers(self, data=None):
         # This is handy because... (something to do w/ facets?)
