@@ -87,6 +87,8 @@ class ggplot(object):
         self.ylab = None
         # format for x/y major ticks
         self.xtick_formatter = None
+        self.xmajor_locator = None
+        self.xminor_locator = None
         self.ytick_formatter = None
         self.xlimits = None
         self.ylimits = None
@@ -172,6 +174,8 @@ class ggplot(object):
             plt.xlabel(self.xlab)
         if self.ylab:
             plt.ylabel(self.ylab)
+        if self.xmajor_locator:
+            plt.gca().xaxis.set_major_locator(self.xmajor_locator)
         if self.xtick_formatter:
             plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
             fig.autofmt_xdate()
