@@ -3,6 +3,16 @@ from copy import deepcopy
 import matplotlib.dates as mdates
 
 class scale_x_date(scale):
+    """
+    args:
+        TODO
+
+    example:
+        print ggplot(meat, aes('date','beef')) + \
+            geom_line() + \
+            scale_x_date(breaks=date_breaks('10 years'),
+                labels='%b-%y')
+    """
     # include all valid scale_x_continuous scales
     VALID_SCALES = ['name', 'labels', 'limits', 'breaks', 'trans']
     def __radd__(self, gg):
