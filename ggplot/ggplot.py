@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+from matplotlib.dates import DateFormatter
 # ggplot stuff
 from components import colors, shapes, linestyles, aes
 from components.legend import draw_legend
@@ -87,6 +87,8 @@ class ggplot(object):
         self.ylab = None
         # format for x/y major ticks
         self.xtick_formatter = None
+        self.xbreaks = None
+        self.xtick_labels = None
         self.xmajor_locator = None
         self.xminor_locator = None
         self.ytick_formatter = None
@@ -179,6 +181,10 @@ class ggplot(object):
         if self.xtick_formatter:
             plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
             fig.autofmt_xdate()
+        if self.xbreaks: # xbreaks is a list manually provided
+            plt.gca().xaxis.set_ticks(self.xbreaks)
+        if self.xtick_labels:
+            plt.gca().xaxis.set_ticklabels(self.xtick_labels)
         if self.ytick_formatter:
             plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
         if self.xlimits:

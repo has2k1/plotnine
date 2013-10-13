@@ -3,7 +3,7 @@ from matplotlib.dates import DayLocator, WeekdayLocator, MonthLocator
 class YearLocator(MonthLocator):
     """
     unclear why this is even necessary. if you know, please explain
-    it to me => austin at yhathq dot com.
+    it to me => a [at] yhathq [dot] com.
     """
     def __init__(self, interval):
         "show ticks ever n years."
@@ -28,8 +28,17 @@ LOCATORS = {
     'year': YearLocator
 }
 
-def date_breaks(breaks):
-    period, units = parse_break_str(breaks)
+def date_breaks(width):
+    "Regularly spaced dates."
+    """
+    width:
+        an interval specification. must be one of [day, week, month, year]
+    usage:
+        date_breaks(width = '1 year')
+        date_breaks(width = '6 weeks')
+        date_breaks('months')
+    """
+    period, units = parse_break_str(width)
     Locator = LOCATORS.get(units)
     locator = Locator(interval=period)
     return locator
