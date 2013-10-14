@@ -92,7 +92,7 @@ p + geom_density()
 
 ####`geom_bar`
 ```
-p = ggplot(mtcars, aes('cyl'))
+p = ggplot(mtcars, aes('factor(cyl)'))
 p + geom_bar()
 ```
 <img src="public/img/mtcars_geom_bar_cyl.png">
