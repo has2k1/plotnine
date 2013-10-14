@@ -216,7 +216,6 @@ class ggplot(object):
                 fig.text(0.025, 0.5, self.ylab, rotation='vertical')
             else:
                 plt.ylabel(self.ylab)
-            plt.ylabel(self.ylab)
         if self.xmajor_locator:
             plt.gca().xaxis.set_major_locator(self.xmajor_locator)
         if self.xtick_formatter:
@@ -239,8 +238,7 @@ class ggplot(object):
         if self.legend:
             if self.facets:
                 if 1==2:
-                    ax_to_use = [ax for ax in axs if not isinstance(ax, np.ndarray)]
-                    ax = axs[-1]
+                    ax = axs[0][self.n_wide]
                     box = ax.get_position()
                     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                     cntr = 0
