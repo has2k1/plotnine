@@ -1,4 +1,5 @@
 # {ggplot} from [Yhat](http://yhathq.com)
+read more on our [blog](http://blog.yhathq.com/posts/ggplot-for-python.html)
 ```
 from ggplot import *
 
