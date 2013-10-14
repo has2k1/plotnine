@@ -1,5 +1,6 @@
 from ggplot import *
 
-ggplot(aes(x='date', y='beef'), data=meat) + \
+print ggplot(aes(x='date', y='beef'), data=meat) + \
     geom_line()
 
+plt.show(1)
