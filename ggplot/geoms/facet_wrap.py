@@ -1,5 +1,5 @@
 from copy import deepcopy
-
+import math
 
 class facet_wrap(object):
     def __init__(self, x=None):
@@ -20,9 +20,10 @@ class facet_wrap(object):
         else:
             n_high = 1
             n_high = n_wide - (n_wide / 2)
-            n_wide = n_wide / 2
+            n_wide = math.ceil(math.sqrt(float(n_wide)))
+            n_high = gg.n_dim_x / n_wide
 
-        gg.n_wide, gg.n_high = n_wide, n_high
+        gg.n_wide, gg.n_high = int(n_wide), int(n_high)
         facets = []
         facets.append(self.x)
         gg.facets = facets

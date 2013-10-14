@@ -115,6 +115,7 @@ class ggplot(object):
             for extra_plot in axs.flatten()[-extra_subplots:]:
                 extra_plot.axis('off')
 
+            # TODO: This isn't working
             plots = [None for i in range(self.n_dim_x)]
             for i in range(self.n_dim_x):
                 idx = (i % self.n_high) * self.n_wide + (i % self.n_wide)
@@ -151,14 +152,19 @@ class ggplot(object):
                         x = max(plt.xticks()[0])
                         y = max(plt.yticks()[0])
                         ax = axs[pos % self.n_wide][pos % self.n_high]
-                        #plt.table(cellText=[[facets[0]]], loc='right', 
-                        #    cellLoc='center', cellColours=[['lightgrey']])
                         plt.text(x*1.025, y/2., facets[0],
                                 bbox=dict(facecolor='lightgrey', color='black'), 
                                 fontdict=dict(rotation=-90, verticalalignment="center")
                                 )
                     plt.subplot(self.n_wide, self.n_high, pos)
 
+                    # TODO: Something is wrong w/ facet_grid colors
+
+                    # TODO: We need to add in scales="free|free_y|free_x" for faceting.
+                    # We can throw this in here. Loop thru and find the smallest/biggest
+                    # for x and y. Then loop back thru and set xticks() and yticks() for
+                    # each to the min/max values. We can create a range that goes between
+                    # the min and max w/ the same number of ticks as the other axes.
                     if pos % self.n_high!=1:
                         ticks = plt.yticks()
                         plt.yticks(ticks[0], [])

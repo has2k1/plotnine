@@ -50,9 +50,13 @@ gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
 # p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
 
 meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
+meat_lng = pd.melt(meat, id_vars=['date'])
 
 
-p = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
+p = ggplot(aes(x='date', y='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
+#print p + geom_density() + facet_wrap("variable")
+print p + geom_line() + facet_wrap("variable")
+plt.show(1)
 # ggsave(p + geom_density(), "densityplot.png")
 
 
@@ -86,10 +90,10 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #    scale_x_date(labels="%Y-%m-%d")
 #plt.show(block=True)
 
-p = ggplot(aes(x='carat', y='price', colour='cut'), data=diamonds)
+#p = ggplot(aes(x='carat'), data=diamonds)
 #print p + geom_now_its_art() 
-print p + geom_point() + facet_grid("cut", "clarity")
-plt.show(block=True)
+#print p + geom_density() + facet_grid("cut", "clarity")
+#plt.show(block=True)
 
 #p = ggplot(aes(x='factor(cyl)'), data=mtcars)
 #print p + geom_bar()
