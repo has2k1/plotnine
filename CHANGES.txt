@@ -1,3 +1,9 @@
+0.1.9
+=====
+- improved facet_grid
+- better scales
+- geom_now_its_art
+
 0.1.8
 =====
 - better facet_wrap
