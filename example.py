@@ -94,6 +94,6 @@ p = ggplot(aes(x='carat', y='price'), data=diamonds)
 p = ggplot(aes(x='factor(cyl)'), data=mtcars)
 print p + geom_bar()
 plt.show(block=True)
-
+ggsave(p + geom_bar(), "public/img/mtcars_geom_bar_cyl.png")
 
 
