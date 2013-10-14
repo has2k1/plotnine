@@ -1,5 +1,6 @@
 from ggplot import *
 
 p = ggplot(mtcars, aes('cyl'))
-p + geom_bar()
+print p + geom_bar()
 
+plt.show(1)

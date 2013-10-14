@@ -1,4 +1,6 @@
 from ggplot import *
 
-ggplot(diamonds, aes(x='price', color='cut')) + \
+print ggplot(diamonds, aes(x='price', color='cut')) + \
         geom_density()
+
+plt.show(1)
