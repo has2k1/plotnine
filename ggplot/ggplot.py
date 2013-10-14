@@ -151,8 +151,12 @@ class ggplot(object):
                         x = max(plt.xticks()[0])
                         y = max(plt.yticks()[0])
                         ax = axs[pos % self.n_wide][pos % self.n_high]
-                        plt.table(cellText=[[facets[0]]], loc='right', 
-                            cellLoc='center', cellColours=[['lightgrey']])
+                        #plt.table(cellText=[[facets[0]]], loc='right', 
+                        #    cellLoc='center', cellColours=[['lightgrey']])
+                        plt.text(x*1.025, y/2., facets[0],
+                                bbox=dict(facecolor='lightgrey', color='black'), 
+                                fontdict=dict(rotation=-90, verticalalignment="center")
+                                )
                     plt.subplot(self.n_wide, self.n_high, pos)
 
                     if pos % self.n_high!=1:
