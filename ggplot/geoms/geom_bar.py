@@ -29,11 +29,15 @@ class geom_bar(geom):
                 ts = ts.fillna(0)
                 weights = ts.values.tolist()
                 labels = ts.index.to_pydatetime().tolist()
-        indentation = np.arange(len(labels))
+        indentation = np.arange(len(labels)) + 0.2
         width = 0.35
+        idx = np.argsort(labels)
+        labels, weights = np.array(labels)[idx], np.array(weights)[idx]
+        labels = sorted(labels)
+
         plt.bar(indentation, weights, width, **layer)
         plt.autoscale()
         return [
-                {"function": "set_xticks", "args": [indentation+width]},
+                {"function": "set_xticks", "args": [indentation+width/2]},
                 {"function": "set_xticklabels", "args": [labels]}
             ]
