@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from matplotlib.dates import DateFormatter
 # ggplot stuff
 from components import colors, shapes, linestyles, aes
@@ -42,7 +43,6 @@ class ggplot(object):
     print p + geom_point()
     """
 
-    # TODO: make color discrete and continuous
     CONTINUOUS = ['x', 'y', 'size', 'alpha']
     DISCRETE = ['color', 'shape', 'marker', 'alpha', 'linestyle']
 
@@ -106,6 +106,7 @@ class ggplot(object):
         if self.facet_type=="grid":
             fig, axs = plt.subplots(self.n_wide, self.n_high,
                     sharex=True, sharey=True)
+            plt.subplots_adjust(wspace=.05, hspace=.05)
         elif self.facet_type=="wrap":
             subplots_available = self.n_wide * self.n_high
             extra_subplots = subplots_available - self.n_dim_x
@@ -131,33 +132,66 @@ class ggplot(object):
         # dimensions of the plot remain the same
         if self.facets:
             cntr = 0
-            for facet, frame in self.data.groupby(self.facets):
-                for layer in self._get_layers(frame):
-                    for geom in self.geoms:
-                        if self.facet_type=="wrap":
-                            if cntr+1 > len(plots):
-                                continue
-                            pos = plots[cntr]
-                            if pos is None:
-                                continue
-                            y_i, x_i = pos
-                            pos = x_i + y_i * self.n_high + 1
-                            plt.subplot(self.n_wide, self.n_high, pos)
-                        else:
-                            plt.subplot(self.n_wide, self.n_high, cntr)
-                            # TODO: this needs some work
-                            if (cntr % self.n_high)!=0:
-                                plt.tick_params(axis='y', which='both',
-                                        bottom='off', top='off',
-                                        labelbottom='off')
+            if len(self.facets)==2:
+                for facets, frame in self.data.groupby(self.facets):
+                    pos = self.facet_pairs.index(facets) + 1
+                    plt.subplot(self.n_wide, self.n_high, pos)
+                    for layer in self._get_layers(frame):
+                        for geom in self.geoms:
+                            callbacks = geom.plot_layer(layer)
+                # This needs to enumerate all possibilities
+                for pos, facets in enumerate(self.facet_pairs):
+                    pos += 1
+                    if pos <= self.n_high:
+                        plt.subplot(self.n_wide, self.n_high, pos)
+                        plt.table(cellText=[[facets[1]]], loc='top',
+                                cellLoc='center', cellColours=[['lightgrey']])
+                    if pos % self.n_high==0:
+                        plt.subplot(self.n_wide, self.n_high, pos)
+                        x = max(plt.xticks()[0])
+                        y = max(plt.yticks()[0])
+                        ax = axs[pos % self.n_wide][pos % self.n_high]
+                        plt.table(cellText=[[facets[0]]], loc='right', 
+                            cellLoc='center', cellColours=[['lightgrey']])
+                    plt.subplot(self.n_wide, self.n_high, pos)
 
-                        callbacks = geom.plot_layer(layer)
-                        if callbacks:
-                            for callback in callbacks:
-                                fn = getattr(axs[cntr], callback['function'])
-                                fn(*callback['args'])
-                plt.title(facet)
-                cntr += 1
+                    if pos % self.n_high!=1:
+                        ticks = plt.yticks()
+                        plt.yticks(ticks[0], [])
+
+                    if pos <= (len(self.facet_pairs) - self.n_high):
+                        ticks = plt.xticks()
+                        plt.xticks(ticks[0], [])
+
+                    
+            else:
+                for facet, frame in self.data.groupby(self.facets):
+                    for layer in self._get_layers(frame):
+                        for geom in self.geoms:
+                            if self.facet_type=="wrap":
+                                if cntr+1 > len(plots):
+                                    continue
+                                pos = plots[cntr]
+                                if pos is None:
+                                    continue
+                                y_i, x_i = pos
+                                pos = x_i + y_i * self.n_high + 1
+                                plt.subplot(self.n_wide, self.n_high, pos)
+                            else:
+                                plt.subplot(self.n_wide, self.n_high, cntr)
+                                # TODO: this needs some work
+                                if (cntr % self.n_high)==-1:
+                                    plt.tick_params(axis='y', which='both',
+                                            bottom='off', top='off',
+                                            labelbottom='off')
+                            callbacks = geom.plot_layer(layer)
+                            if callbacks:
+                                for callback in callbacks:
+                                    fn = getattr(axs[cntr], callback['function'])
+                                    fn(*callback['args'])
+                    #TODO: selective titles
+                    plt.title(facet)
+                    cntr += 1
         else:
             for layer in self._get_layers(self.data):
                 for geom in self.geoms:
@@ -168,13 +202,20 @@ class ggplot(object):
                             fn = getattr(axs, callback['function'])
                             fn(*callback['args'])
 
-        # Handling the details of the chart here; might be a better
+        # Handling the details of the chart here; probably be a better
         # way to do this...
         if self.title:
             plt.title(self.title)
         if self.xlab:
-            plt.xlabel(self.xlab)
+            if self.facet_type=="grid":
+                fig.text(0.5, 0.025, self.xlab)
+            else:
+                plt.xlabel(self.xlab)
         if self.ylab:
+            if self.facet_type=="grid":
+                fig.text(0.025, 0.5, self.ylab, rotation='vertical')
+            else:
+                plt.ylabel(self.ylab)
             plt.ylabel(self.ylab)
         if self.xmajor_locator:
             plt.gca().xaxis.set_major_locator(self.xmajor_locator)
@@ -215,7 +256,7 @@ class ggplot(object):
                         axs.add_artist(draw_legend(axs, legend, name, cntr))
                         cntr += 1
 
-        # TODO: We can probably get pretty sugary with this
+        # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
 
     def _get_layers(self, data=None):

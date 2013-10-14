@@ -3,6 +3,9 @@ from ggplot.components import aes
 
 class geom(object):
     def __init__(self, *args, **kwargs):
+        if "colour" in kwargs:
+            kwargs["color"] = kwargs["colour"]
+            del kwargs["colour"]
         if len(args)==1:
             if isinstance(args[0], aes):
                 self.manual_aes = {k: v for k, v in kwargs.iteritems() if k in self.VALID_AES}

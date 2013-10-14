@@ -28,4 +28,10 @@ class facet_grid(object):
         gg.facets = facets
         gg.facet_type = "grid"
 
+        combos = []
+        for x_i in sorted(x.unique()):
+            for y_i in sorted(y.unique()):
+                combos.append((x_i, y_i))
+        gg.facet_pairs = combos
+
         return deepcopy(gg)

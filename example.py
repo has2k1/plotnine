@@ -87,7 +87,8 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #plt.show(block=True)
 
 p = ggplot(aes(x='carat', y='price'), data=diamonds)
-print p + geom_now_its_art() 
+#print p + geom_now_its_art() 
+print p + geom_point() + facet_grid("cut", "clarity")
 plt.show(block=True)
 
 
