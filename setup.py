@@ -16,7 +16,7 @@ setup(
     package_data={"ggplot": ["exampledata/*.csv", "geoms/*.png"]},
     description="ggplot for python",
     # run pandoc --from=markdown --to=rst --output=README.rst README.md
-    long_description=open("README.md").read(),
+    long_description=open("README.rst").read(),
     install_requires=required,
 )
 
