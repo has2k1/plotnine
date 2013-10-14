@@ -95,9 +95,9 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #print p + geom_density() + facet_grid("cut", "clarity")
 #plt.show(block=True)
 
-#p = ggplot(aes(x='factor(cyl)'), data=mtcars)
-#print p + geom_bar()
-#plt.show(block=True)
+p = ggplot(aes(x='factor(cyl)'), data=mtcars)
+print p + geom_bar()
+plt.show(block=True)
 #ggsave(p + geom_bar(), "public/img/mtcars_geom_bar_cyl.png")
 
 
