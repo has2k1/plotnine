@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
 def ggsave(plot, filename):
-    print plot
+    print (plot)
     plt.savefig(filename)
 
