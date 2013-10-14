@@ -27,7 +27,7 @@ Yes, it's another port of [`ggplot2`](https://github.com/hadley/ggplot2). One of
 ### Getting Started
 #### Dependencies
 I realize that these are not fun to install. My best luck has always been using `brew` if you're on a Mac
-or just using the binaries if you're on Windows. If you're using Linux then this should be relatively
+or just using [the binaries](http://www.lfd.uci.edu/~gohlke/pythonlibs/) if you're on Windows. If you're using Linux then this should be relatively
 painless. You should be able to `apt-get` or `yum` all of these.
 - `matplotlib`
 - `pandas`
