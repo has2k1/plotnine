@@ -100,4 +100,9 @@ print p + geom_bar()
 plt.show(block=True)
 #ggsave(p + geom_bar(), "public/img/mtcars_geom_bar_cyl.png")
 
+p = ggplot(aes(x='date_hour', y='pageviews'), data=pageviews)
+print p + geom_point()
+plt.show(1)
+
+
 
