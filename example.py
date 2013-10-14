@@ -53,10 +53,10 @@ meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
 meat_lng = pd.melt(meat, id_vars=['date'])
 
 
-#p = ggplot(aes(x='date', y='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
+p = ggplot(aes(x='date', y='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
 #print p + geom_density() + facet_wrap("variable")
-#print p + geom_line() + facet_wrap("variable")
-#plt.show(1)
+print p + geom_line() + facet_wrap("variable")
+plt.show(1)
 # ggsave(p + geom_density(), "densityplot.png")
 
 
@@ -73,11 +73,11 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #    facet_wrap("cut")
 #plt.show(block=True)
 
-p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(1000))
-print p + geom_point() + \
-    scale_colour_gradient(low="white", high="red") + \
-    facet_grid("cut", "clarity")
-plt.show(block=True)
+#p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(1000))
+#print p + geom_point() + \
+#    scale_colour_gradient(low="white", high="red") + \
+#    facet_grid("cut", "clarity")
+#plt.show(block=True)
 
 #p = ggplot(aes(x='date', y='beef'), data=meat)
 #print p + geom_point() + scale_x_continuous("This is the X") + scale_y_continuous("Squared", limits=[0, 1500])
@@ -95,14 +95,14 @@ plt.show(block=True)
 #print p + geom_density() + facet_grid("cut", "clarity")
 #plt.show(block=True)
 
-#p = ggplot(aes(x='factor(cyl)'), data=mtcars)
-#print p + geom_bar()
-#plt.show(block=True)
+p = ggplot(aes(x='factor(cyl)'), data=mtcars)
+print p + geom_bar()
+plt.show(block=True)
 #ggsave(p + geom_bar(), "public/img/mtcars_geom_bar_cyl.png")
 
-#p = ggplot(aes(x='date_hour', y='pageviews'), data=pageviews)
-#print p + geom_point()
-#plt.show(1)
+p = ggplot(aes(x='date_hour', y='pageviews'), data=pageviews)
+print p + geom_point()
+plt.show(1)
 
 
 

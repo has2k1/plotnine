@@ -81,7 +81,6 @@ class ggplot(object):
         self.n_dim_y = None
         self.facets = []
         self.facet_type = None
-        self.facet_scales = None
         # components
         self.title = None
         self.xlab = None
@@ -157,6 +156,15 @@ class ggplot(object):
                                 bbox=dict(facecolor='lightgrey', color='black'), 
                                 fontdict=dict(rotation=-90, verticalalignment="center")
                                 )
+                    plt.subplot(self.n_wide, self.n_high, pos)
+
+                    # TODO: Something is wrong w/ facet_grid colors
+
+                    # TODO: We need to add in scales="free|free_y|free_x" for faceting.
+                    # We can throw this in here. Loop thru and find the smallest/biggest
+                    # for x and y. Then loop back thru and set xticks() and yticks() for
+                    # each to the min/max values. We can create a range that goes between
+                    # the min and max w/ the same number of ticks as the other axes.
                     if pos % self.n_high!=1:
                         ticks = plt.yticks()
                         plt.yticks(ticks[0], [])
@@ -165,17 +173,7 @@ class ggplot(object):
                         ticks = plt.xticks()
                         plt.xticks(ticks[0], [])
 
-                    plt.subplot(self.n_wide, self.n_high, pos)
-
-                # TODO: Something is wrong w/ facet_grid colors
-
-                # TODO: We need to add in scales="free|free_y|free_x" for faceting.
-                # We can throw this in here. Loop thru and find the smallest/biggest
-                # for x and y. Then loop back thru and set xticks() and yticks() for
-                # each to the min/max values. We can create a range that goes between
-                # the min and max w/ the same number of ticks as the other axes.
-                positions = [i + 1 for i in range(len(self.facet_pairs))]
-                scale_facet(self.facet_scales, positions, self.n_wide, self.n_high) 
+                    
             else:
                 for facet, frame in self.data.groupby(self.facets):
                     for layer in self._get_layers(frame):
@@ -201,12 +199,8 @@ class ggplot(object):
                                 for callback in callbacks:
                                     fn = getattr(axs[cntr], callback['function'])
                                     fn(*callback['args'])
-                    if isinstance(facet, tuple):
-                        title = " ".join(facet)
-                    else:
-                        title = facet
                     #TODO: selective titles
-                    plt.title(title)
+                    plt.title(facet)
                     cntr += 1
         else:
             for layer in self._get_layers(self.data):

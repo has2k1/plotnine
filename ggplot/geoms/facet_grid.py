@@ -2,10 +2,9 @@ from copy import deepcopy
 
 
 class facet_grid(object):
-    def __init__(self, x=None, y=None, scales="free"):
+    def __init__(self, x=None, y=None):
         self.x = x
         self.y = y
-        self.scales = scales
 
     def __radd__(self, gg):
 
@@ -28,7 +27,6 @@ class facet_grid(object):
             facets.append(self.y)
         gg.facets = facets
         gg.facet_type = "grid"
-        gg.facet_scales = self.scales
 
         combos = []
         for x_i in sorted(x.unique()):
