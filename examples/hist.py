@@ -1,5 +1,6 @@
 from ggplot import *
 
-ggplot(diamonds, aes(x='carat')) + \
+print ggplot(diamonds, aes(x='carat')) + \
     geom_hist()
 
+plt.show(1)
