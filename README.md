@@ -65,7 +65,8 @@ ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng) + \
 ```
 from ggplot import *
 ggplot(diamonds, aes('carat', 'price')) + \
-    geom_point(alpha=1/20.)
+    geom_point(alpha=1/20.) + \
+    ylim(0, 20000)
 ```
 <img src="public/img/diamonds_geom_point_alpha.png">
 
