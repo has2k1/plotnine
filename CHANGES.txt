@@ -1,3 +1,10 @@
+0.2.6
+=====
+fastforwarding a bit...
+- dependencies now specified in setup.py
+- matplotlibrc for windows and macosx
+- better support for python3
+
 0.1.9
 =====
 - improved facet_grid

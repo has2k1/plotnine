@@ -56,7 +56,8 @@ been using ``brew`` if you're on a Mac or just using `the
 binaries <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`__ if you're on
 Windows. If you're using Linux then this should be relatively painless.
 You should be able to ``apt-get`` or ``yum`` all of these. -
-``matplotlib`` - ``pandas`` - ``numpy`` - ``scipy`` - ``statsmodels``
+``matplotlib`` - ``pandas`` - ``numpy`` - ``scipy`` - ``statsmodels`` -
+``patsy``
 
 Installation
 ^^^^^^^^^^^^
