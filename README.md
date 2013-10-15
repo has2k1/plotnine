@@ -35,6 +35,7 @@ painless. You should be able to `apt-get` or `yum` all of these.
 - `numpy`
 - `scipy`
 - `statsmodels`
+- `patsy`
 
 #### Installation
 Ok the hard part is over. Installing `ggplot` is really easy. Just use `pip`! An item on the TODO
