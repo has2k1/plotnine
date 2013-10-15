@@ -2,11 +2,11 @@ from distutils.core import setup
 from setuptools import find_packages
 
 
-required = ['numpy', 'scipy', 'pandas', 'patsy', 'statsmodels', 'matplotlib']
+required = []
 
 setup(
     name="ggplot",
-    version="0.2.6",
+    version="0.2.7",
     author="Greg Lamp",
     author_email="greg@yhathq.com",
     url="https://github.com/yhat/ggplot/",
