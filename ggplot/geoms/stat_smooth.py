@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from copy import deepcopy
-from geom import geom
+from .geom import geom
 import pandas as pd
 import numpy as np
 from ggplot.components import smoothers
@@ -9,7 +9,7 @@ class stat_smooth(geom):
     VALID_AES = ['x', 'y', 'color', 'alpha', 'label', 'se', 'linestyle', 'method', 'span']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
+        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
         layer.update(self.manual_aes)
 
         if 'x' in layer:

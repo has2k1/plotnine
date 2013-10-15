@@ -1,2 +1,2 @@
 from .ggplot import *
-from exampledata import *
+from .exampledata import *

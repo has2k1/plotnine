@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from copy import deepcopy
-from geom import geom
+from .geom import geom
 from scipy.stats import gaussian_kde
 import numpy as np
 
@@ -9,7 +9,7 @@ class geom_density(geom):
     VALID_AES = ['x', 'color', 'alpha', 'linestyle', 'fill', 'label']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
+        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
         layer.update(self.manual_aes)
         if 'x' in layer:
             x = layer.pop('x')

@@ -1,4 +1,9 @@
-from UserDict import UserDict
+import sys
+if sys.hexversion > 0x03000000:
+    # UserDict moved in python3 standard library
+    from collections import UserDict
+else:
+    from UserDict import UserDict
 
 class aes(UserDict):
     """
@@ -42,7 +47,7 @@ class aes(UserDict):
     """
 
     DEFAULT_ARGS = ['x', 'y', 'color']
-    
+
     def __init__(self, *args, **kwargs):
         if args:
             self.data = dict(zip(self.DEFAULT_ARGS, args))
