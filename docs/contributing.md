@@ -61,6 +61,26 @@ our plot operations are done using the same type of object.
 from .geom import geom
 ```
 
+### Defining the `aes`
+A core concept of `ggplot` is the aesthetics, or attributes and properties, of your plot.
+There are many types of `aes` and not all will be available for each type of plot. Here
+is a working list of valid `aes`:
+
+- x: x-axis value
+- y: y-axis value
+- color (colour): color of a layer
+- shape: shape of a point
+- size: size of a point or line
+- alpha: transparency level of a point
+- xintercept
+- ymin: min value for a vertical line or a range of points
+- ymax: max value for a vertical line or a range of points
+- xmin: min value for a horizonal line
+- xmax: max value for a horizonal line
+- slope: slope of an abline
+- intercept: intercept of an abline
+
+For each geom, you must define the `VALID_AES`.
 
 ### Handling Layers
 This is the only method you need to implement when you're creating a new geom. It's 
@@ -115,4 +135,9 @@ We need to map each of these arguments to a named argument for the `plt.scatter`
 Once we've done that, we're going to pass in these arguments using `*args`. Note that for some
 plotting methods (such as `plt.plot`), you can't specify certain arguments using `*args` (for 
 example x and y).
+
+### That's It
+That's really all you have to do to add a geom! It's actually fairly simple. The core `ggplot` 
+functions will take care of the layering, faceting, etc. neccessary for advanced plotting.
+
 
