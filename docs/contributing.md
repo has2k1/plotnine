@@ -102,6 +102,7 @@ if "cmap" in layer:
 Making the plot is oftentimes the easiest part of building a geom. The key is the know
 which arguments are important for the particular plot you're making. In this case, in order
 to make a `geom_point` we need a few basic things:
+
     - x coordinates
     - y coordinates
     - [optional] color / cmap -- cmap is used for color gradients
