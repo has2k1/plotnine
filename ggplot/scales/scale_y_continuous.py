@@ -1,4 +1,4 @@
-from scale import scale
+from .scale import scale
 from copy import deepcopy
 from matplotlib.pyplot import FuncFormatter
 

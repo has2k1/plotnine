@@ -1,9 +1,12 @@
+from __future__ import print_function
+import os
+
 import pandas as pd
 import numpy as np
 from ggplot import *
-from pandasql import load_meat
 
-meat = load_meat()
+meat = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ggplot', 'exampledata', 'meat.csv'))
+meat['date'] = pd.to_datetime(meat.date)
 
 df = pd.DataFrame({
     "x": np.arange(0, 100),
@@ -55,7 +58,7 @@ meat_lng = pd.melt(meat, id_vars=['date'])
 
 p = ggplot(aes(x='date', y='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
 #print p + geom_density() + facet_wrap("variable")
-print p + geom_line() + facet_wrap("variable")
+print(p + geom_line() + facet_wrap("variable"))
 plt.show(1)
 # ggsave(p + geom_density(), "densityplot.png")
 
@@ -91,17 +94,17 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 #plt.show(block=True)
 
 #p = ggplot(aes(x='carat'), data=diamonds)
-#print p + geom_now_its_art() 
+#print p + geom_now_its_art()
 #print p + geom_density() + facet_grid("cut", "clarity")
 #plt.show(block=True)
 
 p = ggplot(aes(x='factor(cyl)'), data=mtcars)
-print p + geom_bar()
+print(p + geom_bar())
 plt.show(block=True)
 #ggsave(p + geom_bar(), "public/img/mtcars_geom_bar_cyl.png")
 
 p = ggplot(aes(x='date_hour', y='pageviews'), data=pageviews)
-print p + geom_point()
+print(p + geom_point())
 plt.show(1)
 
 

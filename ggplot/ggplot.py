@@ -1,14 +1,16 @@
+import sys # need this for sys.hexversion to see if its py3
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.dates import DateFormatter
 # ggplot stuff
-from components import colors, shapes, linestyles, aes
-from components.legend import draw_legend
-from geoms import *
-from scales import *
-from utils import *
+from .components import colors, shapes, linestyles, aes
+from .components.legend import draw_legend
+from .geoms import *
+from .scales import *
+from .utils import *
 
 import re
 
@@ -56,7 +58,9 @@ class ggplot(object):
 
         # Look for alias/lambda functions
         # The test criteria could use some work
-        for ae, name in self.aesthetics.iteritems():
+        # py3 doesnt have iteritems(), iterator should be
+        # small enough that we lose nothing by using items() in py2
+        for ae, name in self.aesthetics.items():
             if name not in self.data and not is_identity(name):
                 result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
                 if re.match("factor[(][A-Za-z_0-9]+[)]", name):
@@ -153,7 +157,7 @@ class ggplot(object):
                         y = max(plt.yticks()[0])
                         ax = axs[pos % self.n_wide][pos % self.n_high]
                         plt.text(x*1.025, y/2., facets[0],
-                                bbox=dict(facecolor='lightgrey', color='black'), 
+                                bbox=dict(facecolor='lightgrey', color='black'),
                                 fontdict=dict(rotation=-90, verticalalignment="center")
                                 )
                     plt.subplot(self.n_wide, self.n_high, pos)
@@ -173,7 +177,7 @@ class ggplot(object):
                         ticks = plt.xticks()
                         plt.xticks(ticks[0], [])
 
-                    
+
             else:
                 for facet, frame in self.data.groupby(self.facets):
                     for layer in self._get_layers(frame):
@@ -252,14 +256,14 @@ class ggplot(object):
                     box = ax.get_position()
                     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                     cntr = 0
-                    for name, legend in self.legend.iteritems():
+                    for name, legend in self.legend.items():
                         ax.add_artist(draw_legend(ax, legend, name, cntr))
                         cntr += 1
             else:
                 box = axs.get_position()
                 axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                 cntr = 0
-                for name, legend in self.legend.iteritems():
+                for name, legend in self.legend.items():
                     if legend:
                         axs.add_artist(draw_legend(axs, legend, name, cntr))
                         cntr += 1
@@ -276,7 +280,7 @@ class ggplot(object):
         # (i.e. alpha=0.6)
         mapping = pd.DataFrame({
             ae: data.get(key, key)
-                for ae, key in self.aesthetics.iteritems()
+                for ae, key in self.aesthetics.items()
         })
         if "x" in self.aesthetics and self.xlab is None:
             self.xlab = self.aesthetics['x']
@@ -305,8 +309,11 @@ class ggplot(object):
                 else:
                     # discrete
                     color = colors.color_gen()
-                    color_mapping = {value: color.next() for value in possible_colors}
-                    rev_color_mapping = {v: k for k, v in color_mapping.iteritems()}
+                    if sys.hexversion > 0x03000000:
+                        color_mapping = {value: color.__next__() for value in possible_colors}
+                    else:
+                        color_mapping = {value: color.next() for value in possible_colors}
+                    rev_color_mapping = {v: k for k, v in color_mapping.items()}
                     mapping.color = mapping.color.replace(color_mapping)
 
         rev_shape_mapping = {}
@@ -314,7 +321,7 @@ class ggplot(object):
             possible_shapes = np.unique(mapping['shape'])
             shape = shapes.shape_gen()
             shape_mapping = {value: shape.next() for value in possible_shapes}
-            rev_shape_mapping = {v: k for k, v in shape_mapping.iteritems()}
+            rev_shape_mapping = {v: k for k, v in shape_mapping.items()}
             mapping['marker'] = mapping['shape'].replace(shape_mapping)
             del mapping['shape']
 
@@ -324,7 +331,7 @@ class ggplot(object):
             possible_styles = np.unique(mapping['linestyle'])
             linestyle = linestyles.line_gen()
             line_mapping = {value: linestyle.next() for value in possible_styles}
-            rev_linetype_mapping = {v: k for k, v in line_mapping.iteritems()}
+            rev_linetype_mapping = {v: k for k, v in line_mapping.items()}
             mapping['linestyle'] = mapping['linestyle'].replace(line_mapping)
 
         keys = [ae for ae in self.DISCRETE if ae in mapping]

@@ -1,5 +1,5 @@
 from copy import deepcopy
-from geom import geom
+from .geom import geom
 import numpy as np
 import pandas as pd
 

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from copy import deepcopy
-from geom import geom
+from .geom import geom
 from pandas.lib import Timestamp
 
 
@@ -10,7 +10,7 @@ class geom_bar(geom):
     VALID_AES = ['x', 'color', 'alpha', 'fill', 'label', 'weight']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
+        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
         layer.update(self.manual_aes)
         x = layer.pop('x')
         if 'weight' not in layer:

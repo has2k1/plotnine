@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from scale import scale
 from ..utils import date_breaks, date_format
+from .scale import scale
 from copy import deepcopy
 
 

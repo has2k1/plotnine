@@ -9,7 +9,7 @@ class scale(object):
         if args:
             self.name = args[0]
 
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             if k in self.VALID_SCALES:
                 setattr(self, k, v)
 

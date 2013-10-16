@@ -8,9 +8,9 @@ class geom(object):
             del kwargs["colour"]
         if len(args)==1:
             if isinstance(args[0], aes):
-                self.manual_aes = {k: v for k, v in kwargs.iteritems() if k in self.VALID_AES}
+                self.manual_aes = {k: v for k, v in kwargs.items() if k in self.VALID_AES}
                 return
-        self.manual_aes = {k: v for k, v in kwargs.iteritems() if k in self.VALID_AES}
+        self.manual_aes = {k: v for k, v in kwargs.items() if k in self.VALID_AES}
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
