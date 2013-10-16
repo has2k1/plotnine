@@ -80,7 +80,9 @@ is a working list of valid `aes`:
 - slope: slope of an abline
 - intercept: intercept of an abline
 
-For each geom, you must define the `VALID_AES`.
+For each geom, you must define the `VALID_AES`. This tells `ggplot` which aesthetics to
+ignore for a particular geom -- which makes it super easy to combine plots that have
+different aesthetics.
 
 ### Handling Layers
 This is the only method you need to implement when you're creating a new geom. It's 
