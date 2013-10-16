@@ -103,13 +103,13 @@ Making the plot is oftentimes the easiest part of building a geom. The key is th
 which arguments are important for the particular plot you're making. In this case, in order
 to make a `geom_point` we need a few basic things:
 
-    - x coordinates
-    - y coordinates
-    - [optional] color / cmap -- cmap is used for color gradients
-    - [optional] marker / shape
-    - [optional] label -- what appears in the legend
-    - [optional] alpha -- level of transparency
-    - [optional] size -- size of the point
+- x coordinates
+- y coordinates
+- [optional] color / cmap -- cmap is used for color gradients
+- [optional] marker / shape
+- [optional] label -- what appears in the legend
+- [optional] alpha -- level of transparency
+- [optional] size -- size of the point
 
 We need to map each of these arguments to a named argument for the `plt.scatter` function.
 Once we've done that, we're going to pass in these arguments using `*args`. Note that for some
