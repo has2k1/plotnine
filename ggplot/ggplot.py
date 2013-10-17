@@ -10,6 +10,7 @@ from .components import colors, shapes, linestyles, aes
 from .components.legend import draw_legend
 from .geoms import *
 from .scales import *
+from .themes import *
 from .utils import *
 
 import re

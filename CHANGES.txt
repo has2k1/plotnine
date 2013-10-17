@@ -1,3 +1,8 @@
+0.2.9
+=====
+- scale_x_reverse and scale_y_reverse - @ocefpaf
+- better python3 support - @bwillers
+
 0.2.6
 =====
 fastforwarding a bit...
