@@ -98,6 +98,8 @@ class ggplot(object):
         self.ytick_formatter = None
         self.xlimits = None
         self.ylimits = None
+        self.scale_y_reverse = None
+        self.scale_x_reverse = None
         self.legend = {}
 
         # continuous color configs
@@ -245,6 +247,10 @@ class ggplot(object):
             plt.xlim(self.xlimits)
         if self.ylimits:
             plt.ylim(self.ylimits)
+        if self.scale_y_reverse:
+            plt.gca().invert_yaxis()
+        if self.scale_x_reverse:
+            plt.gca().invert_xaxis()
 
         # TODO: Having some issues here with things that shouldn't have a legend
         # or at least shouldn't get shrunk to accomodate one. Need some sort of
