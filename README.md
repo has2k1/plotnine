@@ -75,10 +75,10 @@ ggplot(diamonds, aes('carat', 'price')) + \
 ```
 <img src="public/img/diamonds_geom_point_alpha.png">
 
-####`geom_hist`
+####`geom_histogram`
 ```
 p = ggplot(aes(x='carat'), data=diamonds)
-p + geom_hist() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
+p + geom_histogram() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
 ```
 <img src="public/img/diamonds_carat_hist.png">
 
