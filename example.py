@@ -26,7 +26,7 @@ gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
 #print gg + geom_point() + facet_wrap(x="cat", y="cat2")
 #print gg + geom_point() + facet_wrap(y="cat2") + ggtitle("My Single Facet")
 #print gg + stat_smooth(color="blue") + ggtitle("My Smoothed Chart")
-#print gg + geom_hist() + ggtitle("My Histogram")
+#print gg + geom_histogram() + ggtitle("My Histogram")
 #print gg + geom_point() + geom_vline(x=50, ymin=-10, ymax=10)
 #print gg + geom_point() + geom_hline(y=50, xmin=-10, xmax=10)
 df['z'] = df['y'] + 100

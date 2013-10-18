@@ -63,7 +63,7 @@ I realize that these are not fun to install. My best luck has always been using 
 
 - - -
 
-#### geom_hist
+#### geom_histogram
 ###### Aesthetics
 - `x`
 - `color`
