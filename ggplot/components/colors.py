@@ -11,7 +11,7 @@ COLORS = [
 ]
 
 COLORS = [
-    "black"
+    "black",
     "#000000",
     "#E69F00", 
     "#56B4E9", 
