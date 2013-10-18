@@ -41,6 +41,8 @@ painless. You should be able to `apt-get` or `yum` all of these.
 Ok the hard part is over. Installing `ggplot` is really easy. Just use `pip`! An item on the TODO
 is to add the matplotlibrc files to the pip installable (let me know if you'd like to help!).
 
+*`matplotlibrc` will be replaced with themes in the 0.3 release*
+
     # matplotlibrc from Huy Nguyen (http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/)
     $ curl -O https://raw.github.com/yhat/ggplot/master/matplotlibrcs/matplotlibrc-osx.zip
     $ unzip matplotlibrc-osx.zip -d ~/
