@@ -6,7 +6,7 @@ import numpy as np
 from ggplot.components import smoothers
 
 class stat_smooth(geom):
-    VALID_AES = ['x', 'y', 'color', 'alpha', 'label', 'se', 'linestyle', 'method', 'span']
+    VALID_AES = ['x', 'y', 'color', 'alpha', 'label', 'se', 'linestyle', 'method', 'span', 'level']
 
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
@@ -24,17 +24,20 @@ class stat_smooth(geom):
             span = layer.pop('span')
         else:
             span = 2/3.
+        if 'level' in layer:
+            level = layer.pop('level')
+        else:
+            level = 0.95
         if 'method' in layer:
             method = layer.pop('method')
         else:
             method = None
-
         if method == "lm":
-            y, y1, y2 = smoothers.lm(x, y)
+            y, y1, y2 = smoothers.lm(x, y, 1-level)
         elif method == "ma":
             y, y1, y2 = smoothers.mavg(x, y)
         else:
-            y, y1, y2 = smoothers.lowess(x, y)
+            y, y1, y2 = smoothers.lowess(x, y, span=span)
         idx = np.argsort(x)
         x = np.array(x)[idx]
         y = np.array(y)[idx]

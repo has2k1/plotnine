@@ -2,29 +2,41 @@ import numpy as np
 from pandas.lib import Timestamp
 import pandas as pd
 import statsmodels.api as sm
-from statsmodels.sandbox.regression.predstd import wls_prediction_std
 from statsmodels.nonparametric.smoothers_lowess import lowess as smlowess
+from statsmodels.sandbox.regression.predstd import wls_prediction_std
+from statsmodels.stats.outliers_influence import summary_table
 import scipy.stats as stats
 
 _isdate = lambda x: isinstance(x, Timestamp)
 SPAN = 2/3.
+ALPHA = 0.05 # significance level for confidence interval
 
-def _plot_friendly(value):
+def snakify(txt):
+    txt = txt.strip().lower()
+    return '_'.join(txt.split())
+
+def plot_friendly(value):
     if not isinstance(value, (np.ndarray, pd.Series)):
         value = pd.Series(value)
     return value
 
-def lm(x, y):
+def lm(x, y, alpha=ALPHA):
     "fits an OLS from statsmodels. returns tuple."
-    x, y = map(_plot_friendly, [x,y])
+    x, y = map(plot_friendly, [x,y])
     if _isdate(x[0]):
         x = np.array([i.toordinal() for i in x])
-    df = pd.DataFrame({'x': x, 'y':y})
-    df['const'] = 1.
-    fit = sm.OLS(df.y,df[['x','const']]).fit()
-    df['predicted_y'] = fit.fittedvalues
-    df['predstd'],df['interval_l'],df['interval_u'] = wls_prediction_std(fit)
-    return (df.predicted_y, df.interval_l, df.interval_u)
+    X = sm.add_constant(x)
+    fit = sm.OLS(y, X).fit()
+    prstd, iv_l, iv_u = wls_prediction_std(fit)
+    _, summary_values, summary_names = summary_table(fit, alpha=alpha)
+    df = pd.DataFrame(summary_values, columns=map(snakify, summary_names))
+    fittedvalues        = df['predicted_value']
+    predict_mean_se     = df['std_error_mean_predict']
+    predict_mean_ci_low = df['mean_ci_95%_low']
+    predict_mean_ci_upp = df['mean_ci_95%_upp']
+    predict_ci_low      = df['predict_ci_95%_low']
+    predict_ci_upp      = df['predict_ci_95%_upp']
+    return (fittedvalues, predict_mean_ci_low, predict_mean_ci_upp)
 
 def lowess(x, y, span=SPAN):
     "returns y-values estimated using the lowess function in statsmodels."
@@ -32,7 +44,8 @@ def lowess(x, y, span=SPAN):
     for more see
         statsmodels.nonparametric.smoothers_lowess.lowess
     """
-    x, y = map(_plot_friendly, [x,y])
+    print span
+    x, y = map(plot_friendly, [x,y])
     if _isdate(x[0]):
         x = np.array([i.toordinal() for i in x])
     result = smlowess(np.array(y), np.array(x), frac=span)
