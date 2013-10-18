@@ -1,11 +1,9 @@
-import sys # need this for sys.hexversion to see if its py3
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.dates import DateFormatter
-# ggplot stuff
+
 from .components import colors, shapes, linestyles, aes
 from .components.legend import draw_legend
 from .geoms import *
@@ -13,6 +11,7 @@ from .scales import *
 from .themes import *
 from .utils import *
 
+import sys
 import re
 
 
@@ -25,6 +24,13 @@ def is_identity(x):
         return True
     else:
         return False
+
+
+# TODO: This should be more compartmentalized. Themes should
+# not be globalized each time.
+
+# Setting the default theme here.
+theme_gray()
 
 class ggplot(object):
     """
@@ -57,10 +63,8 @@ class ggplot(object):
         self.aesthetics = aesthetics
         self.data = data
 
+        # TODO: This should probably be modularized
         # Look for alias/lambda functions
-        # The test criteria could use some work
-        # py3 doesnt have iteritems(), iterator should be
-        # small enough that we lose nothing by using items() in py2
         for ae, name in self.aesthetics.items():
             if name not in self.data and not is_identity(name):
                 result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
@@ -108,8 +112,7 @@ class ggplot(object):
         self.colormap = plt.cm.Blues
 
     def __repr__(self):
-        # TODO: Handle facet_grid better. Currently facet_grid doesn't
-        # fuse the plots together, they're individual subplots.
+        # TODO: Currently plotting the wrong number of facets.
         if self.facet_type=="grid":
             fig, axs = plt.subplots(self.n_wide, self.n_high,
                     sharex=True, sharey=True)
@@ -297,7 +300,7 @@ class ggplot(object):
 
         # We need to normalize size so that the points aren't really big or
         # really small.
-        # TODO: add different types of normalization
+        # TODO: add different types of normalization (log, inverse, etc.)
         if "size" in mapping:
             mapping.size = mapping.size.astype(np.float)
             mapping.size = 200.0 * (mapping.size - mapping.size.min()) / \
@@ -351,7 +354,6 @@ class ggplot(object):
             if "cmap" in frame:
                 frame["cmap"] = frame["cmap"][0]
                 quantiles = np.percentile(mapping.color, [0, 25, 50, 75, 100])
-                # TODO: add support for more colors
                 if self.color_scale:
                     key_colors = self.color_scale
                 else:
@@ -360,6 +362,7 @@ class ggplot(object):
             layers.append(frame)
         else:
             legend = {"color": {}, "marker": {}, "linestyle": {}}
+            # TODO: This can probably be generalized to some extent.
             for name, frame in mapping.groupby(keys):
                 frame = frame.to_dict('list')
                 for ae in self.DISCRETE:
@@ -374,7 +377,6 @@ class ggplot(object):
                             legend[ae][frame[ae]] = label
                         elif ae=="shape" or ae=="marker":
                             legend[ae][frame[ae]] = rev_shape_mapping.get(aes_name, aes_name)
-                            # raise Exception("Cannot have numeric shape!")
                             label = rev_shape_mapping.get(aes_name, aes_name)
                         elif ae=="linestyle":
                             legend[ae][frame[ae]] = rev_linetype_mapping.get(aes_name, aes_name)
