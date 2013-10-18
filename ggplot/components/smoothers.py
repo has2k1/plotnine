@@ -44,7 +44,6 @@ def lowess(x, y, span=SPAN):
     for more see
         statsmodels.nonparametric.smoothers_lowess.lowess
     """
-    print span
     x, y = map(plot_friendly, [x,y])
     if _isdate(x[0]):
         x = np.array([i.toordinal() for i in x])
