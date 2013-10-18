@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 
-class theme_base(object):
+class theme_gray(object):
     def __radd__(self, gg):
         mpl.rcParams['figure.facecolor'] = '1.0'
         mpl.rcParams['axes.facecolor'] = '#E5E5E5'
