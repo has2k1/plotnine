@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.dates import DateFormatter
+from matplotlib.ticker import MultipleLocator
 
 from .components import colors, shapes, linestyles, aes
 from .components.legend import draw_legend
@@ -26,10 +27,6 @@ def is_identity(x):
         return False
 
 
-# TODO: This should be more compartmentalized. Themes should
-# not be globalized each time.
-
-# Setting the default theme here.
 theme_gray()
 
 class ggplot(object):
@@ -88,8 +85,10 @@ class ggplot(object):
         self.n_high = 1
         self.n_dim_x = None
         self.n_dim_y = None
+        # facets
         self.facets = []
         self.facet_type = None
+        self.facet_scales = None
         # components
         self.title = None
         self.xlab = None
@@ -114,14 +113,14 @@ class ggplot(object):
     def __repr__(self):
         # TODO: Currently plotting the wrong number of facets.
         if self.facet_type=="grid":
-            fig, axs = plt.subplots(self.n_wide, self.n_high,
+            fig, axs = plt.subplots(self.n_high, self.n_wide,
                     sharex=True, sharey=True)
             plt.subplots_adjust(wspace=.05, hspace=.05)
         elif self.facet_type=="wrap":
             subplots_available = self.n_wide * self.n_high
             extra_subplots = subplots_available - self.n_dim_x
 
-            fig, axs = plt.subplots(self.n_wide, self.n_high)
+            fig, axs = plt.subplots(self.n_high, self.n_wide)
             for extra_plot in axs.flatten()[-extra_subplots:]:
                 extra_plot.axis('off')
 
@@ -135,7 +134,7 @@ class ggplot(object):
             plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
 
         else:
-            fig, axs = plt.subplots(self.n_wide, self.n_high)
+            fig, axs = plt.subplots(self.n_high, self.n_wide)
 
         plt.subplot(self.n_wide, self.n_high, 1)
 
@@ -157,32 +156,21 @@ class ggplot(object):
                         plt.subplot(self.n_wide, self.n_high, pos)
                         plt.table(cellText=[[facets[1]]], loc='top',
                                 cellLoc='center', cellColours=[['lightgrey']])
-                    if pos % self.n_high==0:
+                    if (pos % self.n_high)==0:
                         plt.subplot(self.n_wide, self.n_high, pos)
                         x = max(plt.xticks()[0])
                         y = max(plt.yticks()[0])
-                        ax = axs[pos % self.n_wide][pos % self.n_high]
+                        ax = axs[pos % self.n_high][pos % self.n_wide]
                         plt.text(x*1.025, y/2., facets[0],
-                                bbox=dict(facecolor='lightgrey', color='black'),
-                                fontdict=dict(rotation=-90, verticalalignment="center")
-                                )
+                            bbox=dict(facecolor='lightgrey', color='black'),
+                            fontdict=dict(rotation=-90, verticalalignment="center")
+                        )
                     plt.subplot(self.n_wide, self.n_high, pos)
 
-                    # TODO: Something is wrong w/ facet_grid colors
-
-                    # TODO: We need to add in scales="free|free_y|free_x" for faceting.
-                    # We can throw this in here. Loop thru and find the smallest/biggest
-                    # for x and y. Then loop back thru and set xticks() and yticks() for
-                    # each to the min/max values. We can create a range that goes between
-                    # the min and max w/ the same number of ticks as the other axes.
-                    if pos % self.n_high!=1:
-                        ticks = plt.yticks()
-                        plt.yticks(ticks[0], [])
-
-                    if pos <= (len(self.facet_pairs) - self.n_high):
-                        ticks = plt.xticks()
-                        plt.xticks(ticks[0], [])
-
+                # Handle the different scale types here (free|free_y|free_x|None) and 
+                # also make sure that only the left column gets y scales and the bottom
+                # row gets x scales
+                scale_facet(self.n_wide, self.n_high, self.facet_pairs, self.facet_scales)
 
             else:
                 for facet, frame in self.data.groupby(self.facets):

@@ -21,3 +21,4 @@ class geom_now_its_art(geom):
         img = mpimg.imread(os.path.join(_ROOT, 'bird.png'))
         # plt.imshow(img, alpha=0.5, extent=[x.min(), x.max(), y.min(), y.max()])
         plt.imshow(img, alpha=0.5)
+        print "Put a bird on it!"
