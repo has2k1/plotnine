@@ -5,7 +5,9 @@ import pandas as pd
 import numpy as np
 from ggplot import *
 
-meat = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ggplot', 'exampledata', 'meat.csv'))
+import ggplot as gg
+os.path.join(os.path.dirname(gg.__file__),   'exampledata', 'meat.csv')
+meat = pd.read_csv(os.path.join(os.path.dirname(gg.__file__),   'exampledata', 'meat.csv'))
 meat['date'] = pd.to_datetime(meat.date)
 
 df = pd.DataFrame({
@@ -100,7 +102,11 @@ p = ggplot(aes(x='date', y='beef'), data=meat)
 
 p = ggplot(aes(x='factor(cyl)'), data=mtcars)
 print(p + geom_bar())
-plt.show(block=True)
+try:
+    __IPYTHON__ 
+    plt.show()
+except: 
+    plt.show(block=True)
 #ggsave(p + geom_bar(), "public/img/mtcars_geom_bar_cyl.png")
 
 p = ggplot(aes(x='date_hour', y='pageviews'), data=pageviews)
