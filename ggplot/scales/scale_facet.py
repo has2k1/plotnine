@@ -1,9 +1,9 @@
-
 # TODO: This is fairly repetiive and can definitely be
 # condensed into a lot less code, but it's working for now
 
 import numpy as np
 import matplotlib.pyplot as plt
+from utils import calc_axis_breaks
 
 def scale_facet(xdim, ydim, facet_pairs, scaletype):
     # everyone gets the same scales
@@ -22,14 +22,14 @@ def scale_facet(xdim, ydim, facet_pairs, scaletype):
             pos += 1
             plt.subplot(xdim, ydim, pos)
             
-            y_scale = np.linspace(min_y, max_y, 4)
+            y_scale = calc_axis_breaks(min_y, max_y, 4)
             y_scale = np.round(y_scale, 2)
             y_labs = y_scale
             if pos % ydim!=1:
                 y_labs = []
             plt.yticks(y_scale, y_labs)
             
-            x_scale = np.linspace(min_x, max_x, 4)
+            x_scale = calc_axis_breaks(min_x, max_x, 4)
             x_scale = np.round(x_scale, 2)
             x_labs = x_scale
             if pos <= (len(facet_pairs) - ydim):
@@ -60,14 +60,14 @@ def scale_facet(xdim, ydim, facet_pairs, scaletype):
             
             y_bucket = int((pos-1) / ydim)
 
-            y_scale = np.linspace(min_ys[y_bucket], max_ys[y_bucket], 4)
+            y_scale = calc_axis_breaks(min_ys[y_bucket], max_ys[y_bucket], 4)
             y_scale = np.round(y_scale, 2)
             y_labs = y_scale
             if pos % ydim!=1:
                 y_labs = []
             plt.yticks(y_scale, y_labs)
             
-            x_scale = np.linspace(min_x, max_x, 4)
+            x_scale = calc_axis_breaks(min_x, max_x, 4)
             x_scale = np.round(x_scale, 2)
             x_labs = x_scale
             if pos <= (len(facet_pairs) - ydim):
@@ -98,14 +98,14 @@ def scale_facet(xdim, ydim, facet_pairs, scaletype):
             
             x_bucket = int((pos-1) / xdim)
 
-            x_scale = np.linspace(min_xs[x_bucket], max_xs[x_bucket], 4)
+            x_scale = calc_axis_breaks(min_xs[x_bucket], max_xs[x_bucket], 4)
             x_scale = np.round(x_scale, 2)
             x_labs = x_scale
             if pos <= ((len(facet_pairs) - ydim)):
                 x_labs = []
             plt.xticks(x_scale, x_labs)
             
-            y_scale = np.linspace(min_y, max_y, 4)
+            y_scale = calc_axis_breaks(min_y, max_y, 4)
             y_scale = np.round(y_scale, 2)
             y_labs = y_scale
             if pos % ydim!=1:
@@ -140,7 +140,7 @@ def scale_facet(xdim, ydim, facet_pairs, scaletype):
             
             x_bucket = int((pos-1) / xdim)
 
-            x_scale = np.linspace(min_xs[x_bucket], max_xs[x_bucket], 4)
+            x_scale = calc_axis_breaks(min_xs[x_bucket], max_xs[x_bucket], 4)
             x_scale = np.round(x_scale, 2)
             x_labs = x_scale
             if pos <= ((len(facet_pairs) - ydim)):
@@ -148,7 +148,7 @@ def scale_facet(xdim, ydim, facet_pairs, scaletype):
             plt.xticks(x_scale, x_labs)
             y_bucket = int((pos-1) / ydim)
 
-            y_scale = np.linspace(min_ys[y_bucket], max_ys[y_bucket], 4)
+            y_scale = calc_axis_breaks(min_ys[y_bucket], max_ys[y_bucket], 4)
             y_scale = np.round(y_scale, 2)
             y_labs = y_scale
             if pos % ydim!=1:

@@ -1,16 +1,12 @@
 import matplotlib as mpl
+from theme_gray import theme_gray
 
+class theme(theme_gray):
+    def __init__(self, params):
+        # Load the default gray theme then customize on top of it
+        super(theme_gray, self).__init__()
+        for param, value in params.items():
+            mpl.rcParams[param] = str(value)
 
-class theme_gray(object):
     def __radd__(self, gg):
-        mpl.rcParams['figure.facecolor'] = '1.0'
-        mpl.rcParams['axes.facecolor'] = '#E5E5E5'
-        mpl.rcParams['grid.color'] = 'white'
-        mpl.rcParams['grid.linewidth'] = '1'
-        mpl.rcParams['grid.linestyle'] = 'solid'
-
-        mpl.rcParams['axes.labelcolor'] =  'black'
-        mpl.rcParams['xtick.color'] = 'black'
-        mpl.rcParams['ytick.color'] = 'black'
-
         return gg

@@ -2,11 +2,11 @@ from copy import deepcopy
 import math
 
 class facet_grid(object):
-    def __init__(self, x=None, y=None, ncol=None, nrow=None, scales=None):
+    def __init__(self, x=None, y=None, scales=None):
         self.x = x
         self.y = y
-        self.ncol = ncol
-        self.nrow = nrow
+        self.ncol = None
+        self.nrow = None
         self.scales = scales
 
     def __radd__(self, gg):
