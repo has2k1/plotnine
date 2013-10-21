@@ -24,8 +24,9 @@ def make_marker_key(label, marker):
     return HPacker(children=[viz, label], align="center", pad=5, sep=0)
 
 def make_size_key(label, size):
-    label = round(label, 2)
-    label = str(label)
+    if not isinstance(label, (type(""), type(u""))):
+        label = round(label, 2)
+        label = str(label)
     idx = len(label)
     pad = 20 - idx
     lab = label[:max(idx, 20)]
