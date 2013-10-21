@@ -114,3 +114,37 @@ def test_smoke():
 
 
 
+def test_aes_positional_args():
+    result = aes("weight", "hp")
+    expected = {"x": "weight", "y": "hp"}
+    print("result:", result)
+    print("expected:", expected)
+    assert result == expected
+
+    result3 = aes("weight", "hp", "qsec")
+    expected3 =  {"x": "weight", "y": "hp", "color": "qsec"}
+    print("result (3 args):", result3)
+    print("expected (3 args):", expected3)
+    assert result3 == expected3
+
+
+def test_aes_keyword_args():
+    result = aes(x="weight", y="hp")
+    expected = {"x": "weight", "y": "hp"}
+    print("result:", result)
+    print("expected:", expected)
+    assert result == expected
+
+    result3 = aes(x="weight", y="hp", color="qsec")
+    expected3 =  {"x": "weight", "y": "hp", "color": "qsec"}
+    print("result (3 args):", result3)
+    print("expected (3 args):", expected3)
+    assert result3 == expected3
+
+
+def test_aes_mixed_args():
+    result = aes("weight", "hp", color="qsec")
+    expected = {"x": "weight", "y": "hp", "color": "qsec"}
+    print("result:", result)
+    print("expected:", expected)
+    assert result == expected
