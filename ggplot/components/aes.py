@@ -52,11 +52,12 @@ class aes(UserDict):
         if args:
             self.data = dict(zip(self.DEFAULT_ARGS, args))
         else:
-            self.data = kwargs
+            self.data = {}
+        if kwargs:
+            self.data.update(kwargs)
         if 'colour' in self.data:
             self.data['color'] = self.data['colour']
             del self.data['colour']
         if 'linetype' in self.data:
             self.data['linestyle'] = self.data['linetype']
             del self.data['linetype']
-
