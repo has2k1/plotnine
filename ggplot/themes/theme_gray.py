@@ -1,58 +1,68 @@
-from .theme import theme
+import matplotlib as mpl
 
-def _set_default_theme_rcparams(gg):
-    """helper method to set the default rcParams"""
-    gg.rcParams["interactive"] = "True"
-    gg.rcParams["toolbar"] = "toolbar2"
-    gg.rcParams["timezone"] = "UTC"
-    gg.rcParams["lines.linewidth"] = "1.0"
-    gg.rcParams["lines.antialiased"] = True
-    gg.rcParams["patch.linewidth"] = 0.5
-    gg.rcParams["patch.facecolor"] = "#348ABD"
-    gg.rcParams["patch.edgecolor"] = "#E5E5E5"
-    gg.rcParams["patch.antialiased"] = True
-    gg.rcParams["font.family"] = "monospace"
-    gg.rcParams["font.size"] = 12.0
-    gg.rcParams["font.monospace"] = [ "Andale Mono", "Nimbus Mono L", "Courier New", "Courier", "Fixed", "Terminal", "monospace" ]
-    gg.rcParams["axes.facecolor"] = "#eeeeee"
-    gg.rcParams["axes.edgecolor"] = "#bcbcbc"
-    gg.rcParams["axes.linewidth"] = 1
-    gg.rcParams["axes.grid"] = True
-    gg.rcParams["axes.titlesize"] = "x-large"
-    gg.rcParams["axes.labelsize"] = "large"
-    gg.rcParams["axes.labelcolor"] = "black"
-    gg.rcParams["axes.axisbelow"] = True
-    gg.rcParams["axes.color_cycle"] = [ "#348ABD", "#7A68A6", "#A60628", "#467821", "#CF4457", "#188487", "#E24A33" ]
-    gg.rcParams["grid.color"] = "white"
-    gg.rcParams["grid.linewidth"] = 1
-    gg.rcParams["grid.linestyle"] = "solid"
-    gg.rcParams["xtick.major.size"] = 0
-    gg.rcParams["xtick.minor.size"] = 0
-    gg.rcParams["xtick.major.pad"] = 6
-    gg.rcParams["xtick.minor.pad"] = 6
-    gg.rcParams["xtick.color"] = "black"
-    gg.rcParams["xtick.direction"] = "in"
-    gg.rcParams["ytick.major.size"] = 0
-    gg.rcParams["ytick.minor.size"] = 0
-    gg.rcParams["ytick.major.pad"] = 6
-    gg.rcParams["ytick.minor.pad"] = 6
-    gg.rcParams["ytick.color"] = "black"
-    gg.rcParams["ytick.direction"] = "in"
-    gg.rcParams["legend.fancybox"] = True
-    gg.rcParams["figure.figsize"] = 11, 8
-    gg.rcParams["figure.facecolor"] = "1.0"
-    gg.rcParams["figure.edgecolor"] = "0.50"
-    gg.rcParams["figure.subplot.hspace"] = 0.5
 
-class theme_gray(theme):
+class theme_gray(object):
     """
     Standard theme for ggplot. Gray background w/ white gridlines.
 
     Copied from the the ggplot2 codebase:
         https://github.com/hadley/ggplot2/blob/master/R/theme-defaults.r
     """
+    def __init__(self):
 
+        mpl.rcParams["backend"] = "MacOSX"
+        mpl.rcParams["interactive"] = "True"
+        mpl.rcParams["toolbar"] = "toolbar2"
+        mpl.rcParams["timezone"] = "UTC"
+        mpl.rcParams["lines.linewidth"] = "1.0"
+        mpl.rcParams["lines.antialiased"] = "True"
+        mpl.rcParams["patch.linewidth"] = "0.5"
+        mpl.rcParams["patch.facecolor"] = "348ABD"
+        mpl.rcParams["patch.edgecolor"] = "#E5E5E5"
+        mpl.rcParams["patch.antialiased"] = "True"
+        mpl.rcParams["font.family"] = "monospace"
+        mpl.rcParams["font.size"] = "12.0"
+        mpl.rcParams["font.monospace"] = [ "Andale Mono", "Nimbus Mono L", "Courier New", "Courier", "Fixed", "Terminal", "monospace" ]
+        mpl.rcParams["axes.facecolor"] = "eeeeee"
+        mpl.rcParams["axes.edgecolor"] = "bcbcbc"
+        mpl.rcParams["axes.linewidth"] = "1"
+        mpl.rcParams["axes.grid"] = "True"
+        mpl.rcParams["axes.titlesize"] = "x-large"
+        mpl.rcParams["axes.labelsize"] = "large"
+        mpl.rcParams["axes.labelcolor"] = "black"
+        mpl.rcParams["axes.axisbelow"] = "True"
+        mpl.rcParams["axes.color_cycle"] = [ "348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33" ]
+        mpl.rcParams["grid.color"] = "white"
+        mpl.rcParams["grid.linewidth"] = "1"
+        mpl.rcParams["grid.linestyle"] = "solid"
+        mpl.rcParams["xtick.major.size"] = "0"
+        mpl.rcParams["xtick.minor.size"] = "0"
+        mpl.rcParams["xtick.major.pad"] = "6"
+        mpl.rcParams["xtick.minor.pad"] = "6"
+        mpl.rcParams["xtick.color"] = "black"
+        mpl.rcParams["xtick.direction"] = "in"
+        mpl.rcParams["ytick.major.size"] = "0"
+        mpl.rcParams["ytick.minor.size"] = "0"
+        mpl.rcParams["ytick.major.pad"] = "6"
+        mpl.rcParams["ytick.minor.pad"] = "6"
+        mpl.rcParams["ytick.color"] = "black"
+        mpl.rcParams["ytick.direction"] = "in"
+        mpl.rcParams["legend.fancybox"] = "True"
+        mpl.rcParams["figure.figsize"] = "11, 8"
+        mpl.rcParams["figure.facecolor"] = "1.0"
+        mpl.rcParams["figure.edgecolor"] = "0.50"
+        mpl.rcParams["figure.subplot.hspace"] = "0.5"
+        mpl.rcParams["keymap.fullscreen"] = "f"
+        mpl.rcParams["keymap.home"] = [ "h", "r", "home" ]
+        mpl.rcParams["keymap.back"] = [ "left", "c", "backspace" ]
+        mpl.rcParams["keymap.forward"] = [ "right", "v" ]
+        mpl.rcParams["keymap.pan"] = "p"
+        mpl.rcParams["keymap.zoom"] = "o"
+        mpl.rcParams["keymap.save"] = "s"
+        mpl.rcParams["keymap.grid"] = "g"
+        mpl.rcParams["keymap.yscale"] = "l"
+        mpl.rcParams["keymap.xscale"] = [ "L", "k" ]
+        mpl.rcParams["keymap.all_axes"] = "a"
+    
     def __radd__(self, gg):
-        gg = super(theme_gray, self).__radd__(gg)
-        _set_default_theme_rcparams(gg)
         return gg
