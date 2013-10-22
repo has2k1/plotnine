@@ -71,9 +71,9 @@ legend_viz = {
     "size": make_size_key,
 }
 
-def draw_legend(ax, legend, legend_type, ith_legend):
+def draw_legend(ax, legend, legend_type, legend_title, ith_legend):
     children = []
-    children.append(make_title(legend_type))
+    children.append(make_title(legend_title))
     viz_handler = legend_viz[legend_type]
     legend_items = sorted(legend.items(), key=operator.itemgetter(1))
     children += [viz_handler(lab, col) for col, lab in legend_items]
