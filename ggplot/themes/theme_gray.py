@@ -20,9 +20,10 @@ class theme_gray(object):
         mpl.rcParams["patch.facecolor"] = "348ABD"
         mpl.rcParams["patch.edgecolor"] = "#E5E5E5"
         mpl.rcParams["patch.antialiased"] = "True"
-        mpl.rcParams["font.family"] = "monospace"
+        mpl.rcParams["font.family"] = "serif"
         mpl.rcParams["font.size"] = "12.0"
-        mpl.rcParams["font.monospace"] = [ "Andale Mono", "Nimbus Mono L", "Courier New", "Courier", "Fixed", "Terminal", "monospace" ]
+        mpl.rcParams["font.serif"] = ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman"]
+        mpl.rcParams["font.sans-serif"] = ["Helvetica", "Avant Garde", "Computer Modern Sans serif"]
         mpl.rcParams["axes.facecolor"] = "eeeeee"
         mpl.rcParams["axes.edgecolor"] = "bcbcbc"
         mpl.rcParams["axes.linewidth"] = "1"
@@ -31,7 +32,7 @@ class theme_gray(object):
         mpl.rcParams["axes.labelsize"] = "large"
         mpl.rcParams["axes.labelcolor"] = "black"
         mpl.rcParams["axes.axisbelow"] = "True"
-        mpl.rcParams["axes.color_cycle"] = [ "black", "348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33" ]
+        mpl.rcParams["axes.color_cycle"] = [ "#333333", "348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33" ]
         mpl.rcParams["grid.color"] = "white"
         mpl.rcParams["grid.linewidth"] = "1"
         mpl.rcParams["grid.linestyle"] = "solid"
@@ -39,13 +40,13 @@ class theme_gray(object):
         mpl.rcParams["xtick.minor.size"] = "0"
         mpl.rcParams["xtick.major.pad"] = "6"
         mpl.rcParams["xtick.minor.pad"] = "6"
-        mpl.rcParams["xtick.color"] = "black"
+        mpl.rcParams["xtick.color"] = "#7F7F7F"
         mpl.rcParams["xtick.direction"] = "in"
         mpl.rcParams["ytick.major.size"] = "0"
         mpl.rcParams["ytick.minor.size"] = "0"
         mpl.rcParams["ytick.major.pad"] = "6"
         mpl.rcParams["ytick.minor.pad"] = "6"
-        mpl.rcParams["ytick.color"] = "black"
+        mpl.rcParams["ytick.color"] = "#7F7F7F"
         mpl.rcParams["ytick.direction"] = "in"
         mpl.rcParams["legend.fancybox"] = "True"
         mpl.rcParams["figure.figsize"] = "11, 8"
