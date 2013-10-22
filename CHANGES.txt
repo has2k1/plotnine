@@ -4,6 +4,11 @@
 - better python3 support - @bwillers
 - initial version of themes
 - white gridlines
+- improved colors
+- geom_tile
+- allow string keys in size legend
+- Hide legend borders and don't use colons in their labels
+- var names in legends
 
 0.2.6
 =====
