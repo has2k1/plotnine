@@ -11,6 +11,7 @@ from .geoms import *
 from .scales import *
 from .themes import *
 from .utils import *
+from .themes.theme_gray import _set_default_theme_rcparams
 
 import sys
 import re
@@ -105,166 +106,169 @@ class ggplot(object):
         self.scale_y_reverse = None
         self.scale_x_reverse = None
         self.legend = {}
+        self.rcParams = {}
+        _set_default_theme_rcparams(self)
 
         # continuous color configs
         self.color_scale = None
         self.colormap = plt.cm.Blues
 
     def __repr__(self):
-        # TODO: Currently plotting the wrong number of facets.
-        if self.facet_type=="grid":
-            fig, axs = plt.subplots(self.n_high, self.n_wide,
-                    sharex=True, sharey=True)
-            plt.subplots_adjust(wspace=.05, hspace=.05)
-        elif self.facet_type=="wrap":
-            subplots_available = self.n_wide * self.n_high
-            extra_subplots = subplots_available - self.n_dim_x
-
-            fig, axs = plt.subplots(self.n_high, self.n_wide)
-            for extra_plot in axs.flatten()[-extra_subplots:]:
-                extra_plot.axis('off')
-
-            # TODO: This isn't working
-            plots = [None for i in range(self.n_dim_x)]
-            for i in range(self.n_dim_x):
-                idx = (i % self.n_high) * self.n_wide + (i % self.n_wide)
-                plots[idx] = (i % self.n_wide, i % self.n_high)
-
-            plots = [plot for plot in plots if plot is not None]
-            plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
-
-        else:
-            fig, axs = plt.subplots(self.n_high, self.n_wide)
-
-        plt.subplot(self.n_wide, self.n_high, 1)
-
-        # Faceting just means doing an additional groupby. The
-        # dimensions of the plot remain the same
-        if self.facets:
-            cntr = 0
-            if len(self.facets)==2:
-                for facets, frame in self.data.groupby(self.facets):
-                    pos = self.facet_pairs.index(facets) + 1
-                    plt.subplot(self.n_wide, self.n_high, pos)
-                    for layer in self._get_layers(frame):
-                        for geom in self.geoms:
-                            callbacks = geom.plot_layer(layer)
-                # This needs to enumerate all possibilities
-                for pos, facets in enumerate(self.facet_pairs):
-                    pos += 1
-                    if pos <= self.n_high:
-                        plt.subplot(self.n_wide, self.n_high, pos)
-                        plt.table(cellText=[[facets[1]]], loc='top',
-                                cellLoc='center', cellColours=[['lightgrey']])
-                    if (pos % self.n_high)==0:
-                        plt.subplot(self.n_wide, self.n_high, pos)
-                        x = max(plt.xticks()[0])
-                        y = max(plt.yticks()[0])
-                        ax = axs[pos % self.n_high][pos % self.n_wide]
-                        plt.text(x*1.025, y/2., facets[0],
-                            bbox=dict(facecolor='lightgrey', color='black'),
-                            fontdict=dict(rotation=-90, verticalalignment="center")
-                        )
-                    plt.subplot(self.n_wide, self.n_high, pos)
-
-                # Handle the different scale types here (free|free_y|free_x|None) and 
-                # also make sure that only the left column gets y scales and the bottom
-                # row gets x scales
-                scale_facet(self.n_wide, self.n_high, self.facet_pairs, self.facet_scales)
-
-            else:
-                for facet, frame in self.data.groupby(self.facets):
-                    for layer in self._get_layers(frame):
-                        for geom in self.geoms:
-                            if self.facet_type=="wrap":
-                                if cntr+1 > len(plots):
-                                    continue
-                                pos = plots[cntr]
-                                if pos is None:
-                                    continue
-                                y_i, x_i = pos
-                                pos = x_i + y_i * self.n_high + 1
-                                plt.subplot(self.n_wide, self.n_high, pos)
-                            else:
-                                plt.subplot(self.n_wide, self.n_high, cntr)
-                                # TODO: this needs some work
-                                if (cntr % self.n_high)==-1:
-                                    plt.tick_params(axis='y', which='both',
-                                            bottom='off', top='off',
-                                            labelbottom='off')
-                            callbacks = geom.plot_layer(layer)
-                            if callbacks:
-                                for callback in callbacks:
-                                    fn = getattr(axs[cntr], callback['function'])
-                                    fn(*callback['args'])
-                    #TODO: selective titles
-                    plt.title(facet)
-                    cntr += 1
-        else:
-            for layer in self._get_layers(self.data):
-                for geom in self.geoms:
-                    plt.subplot(1, 1, 1)
-                    callbacks = geom.plot_layer(layer)
-                    if callbacks:
-                        for callback in callbacks:
-                            fn = getattr(axs, callback['function'])
-                            fn(*callback['args'])
-
-        # Handling the details of the chart here; probably be a better
-        # way to do this...
-        if self.title:
-            plt.title(self.title)
-        if self.xlab:
+        with mpl.rc_context(rc=self.rcParams):
+            # TODO: Currently plotting the wrong number of facets.
             if self.facet_type=="grid":
-                fig.text(0.5, 0.025, self.xlab)
-            else:
-                plt.xlabel(self.xlab)
-        if self.ylab:
-            if self.facet_type=="grid":
-                fig.text(0.025, 0.5, self.ylab, rotation='vertical')
-            else:
-                plt.ylabel(self.ylab)
-        if self.xmajor_locator:
-            plt.gca().xaxis.set_major_locator(self.xmajor_locator)
-        if self.xtick_formatter:
-            plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
-            fig.autofmt_xdate()
-        if self.xbreaks: # xbreaks is a list manually provided
-            plt.gca().xaxis.set_ticks(self.xbreaks)
-        if self.xtick_labels:
-            plt.gca().xaxis.set_ticklabels(self.xtick_labels)
-        if self.ytick_formatter:
-            plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
-        if self.xlimits:
-            plt.xlim(self.xlimits)
-        if self.ylimits:
-            plt.ylim(self.ylimits)
-        if self.scale_y_reverse:
-            plt.gca().invert_yaxis()
-        if self.scale_x_reverse:
-            plt.gca().invert_xaxis()
+                fig, axs = plt.subplots(self.n_high, self.n_wide,
+                        sharex=True, sharey=True)
+                plt.subplots_adjust(wspace=.05, hspace=.05)
+            elif self.facet_type=="wrap":
+                subplots_available = self.n_wide * self.n_high
+                extra_subplots = subplots_available - self.n_dim_x
 
-        # TODO: Having some issues here with things that shouldn't have a legend
-        # or at least shouldn't get shrunk to accomodate one. Need some sort of
-        # test in place to prevent this OR prevent legend getting set to True.
-        if self.legend:
+                fig, axs = plt.subplots(self.n_high, self.n_wide)
+                for extra_plot in axs.flatten()[-extra_subplots:]:
+                    extra_plot.axis('off')
+
+                # TODO: This isn't working
+                plots = [None for i in range(self.n_dim_x)]
+                for i in range(self.n_dim_x):
+                    idx = (i % self.n_high) * self.n_wide + (i % self.n_wide)
+                    plots[idx] = (i % self.n_wide, i % self.n_high)
+
+                plots = [plot for plot in plots if plot is not None]
+                plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
+
+            else:
+                fig, axs = plt.subplots(self.n_high, self.n_wide)
+
+            plt.subplot(self.n_wide, self.n_high, 1)
+
+            # Faceting just means doing an additional groupby. The
+            # dimensions of the plot remain the same
             if self.facets:
-                if 1==2:
-                    ax = axs[0][self.n_wide]
-                    box = ax.get_position()
-                    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+                cntr = 0
+                if len(self.facets)==2:
+                    for facets, frame in self.data.groupby(self.facets):
+                        pos = self.facet_pairs.index(facets) + 1
+                        plt.subplot(self.n_wide, self.n_high, pos)
+                        for layer in self._get_layers(frame):
+                            for geom in self.geoms:
+                                callbacks = geom.plot_layer(layer)
+                    # This needs to enumerate all possibilities
+                    for pos, facets in enumerate(self.facet_pairs):
+                        pos += 1
+                        if pos <= self.n_high:
+                            plt.subplot(self.n_wide, self.n_high, pos)
+                            plt.table(cellText=[[facets[1]]], loc='top',
+                                    cellLoc='center', cellColours=[['lightgrey']])
+                        if (pos % self.n_high)==0:
+                            plt.subplot(self.n_wide, self.n_high, pos)
+                            x = max(plt.xticks()[0])
+                            y = max(plt.yticks()[0])
+                            ax = axs[pos % self.n_high][pos % self.n_wide]
+                            plt.text(x*1.025, y/2., facets[0],
+                                bbox=dict(facecolor='lightgrey', color='black'),
+                                fontdict=dict(rotation=-90, verticalalignment="center")
+                            )
+                        plt.subplot(self.n_wide, self.n_high, pos)
+
+                    # Handle the different scale types here (free|free_y|free_x|None) and 
+                    # also make sure that only the left column gets y scales and the bottom
+                    # row gets x scales
+                    scale_facet(self.n_wide, self.n_high, self.facet_pairs, self.facet_scales)
+
+                else:
+                    for facet, frame in self.data.groupby(self.facets):
+                        for layer in self._get_layers(frame):
+                            for geom in self.geoms:
+                                if self.facet_type=="wrap":
+                                    if cntr+1 > len(plots):
+                                        continue
+                                    pos = plots[cntr]
+                                    if pos is None:
+                                        continue
+                                    y_i, x_i = pos
+                                    pos = x_i + y_i * self.n_high + 1
+                                    plt.subplot(self.n_wide, self.n_high, pos)
+                                else:
+                                    plt.subplot(self.n_wide, self.n_high, cntr)
+                                    # TODO: this needs some work
+                                    if (cntr % self.n_high)==-1:
+                                        plt.tick_params(axis='y', which='both',
+                                                bottom='off', top='off',
+                                                labelbottom='off')
+                                callbacks = geom.plot_layer(layer)
+                                if callbacks:
+                                    for callback in callbacks:
+                                        fn = getattr(axs[cntr], callback['function'])
+                                        fn(*callback['args'])
+                        #TODO: selective titles
+                        plt.title(facet)
+                        cntr += 1
+            else:
+                for layer in self._get_layers(self.data):
+                    for geom in self.geoms:
+                        plt.subplot(1, 1, 1)
+                        callbacks = geom.plot_layer(layer)
+                        if callbacks:
+                            for callback in callbacks:
+                                fn = getattr(axs, callback['function'])
+                                fn(*callback['args'])
+
+            # Handling the details of the chart here; probably be a better
+            # way to do this...
+            if self.title:
+                plt.title(self.title)
+            if self.xlab:
+                if self.facet_type=="grid":
+                    fig.text(0.5, 0.025, self.xlab)
+                else:
+                    plt.xlabel(self.xlab)
+            if self.ylab:
+                if self.facet_type=="grid":
+                    fig.text(0.025, 0.5, self.ylab, rotation='vertical')
+                else:
+                    plt.ylabel(self.ylab)
+            if self.xmajor_locator:
+                plt.gca().xaxis.set_major_locator(self.xmajor_locator)
+            if self.xtick_formatter:
+                plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
+                fig.autofmt_xdate()
+            if self.xbreaks: # xbreaks is a list manually provided
+                plt.gca().xaxis.set_ticks(self.xbreaks)
+            if self.xtick_labels:
+                plt.gca().xaxis.set_ticklabels(self.xtick_labels)
+            if self.ytick_formatter:
+                plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
+            if self.xlimits:
+                plt.xlim(self.xlimits)
+            if self.ylimits:
+                plt.ylim(self.ylimits)
+            if self.scale_y_reverse:
+                plt.gca().invert_yaxis()
+            if self.scale_x_reverse:
+                plt.gca().invert_xaxis()
+
+            # TODO: Having some issues here with things that shouldn't have a legend
+            # or at least shouldn't get shrunk to accomodate one. Need some sort of
+            # test in place to prevent this OR prevent legend getting set to True.
+            if self.legend:
+                if self.facets:
+                    if 1==2:
+                        ax = axs[0][self.n_wide]
+                        box = ax.get_position()
+                        ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+                        cntr = 0
+                        for name, legend in self.legend.items():
+                            ax.add_artist(draw_legend(ax, legend, name, cntr))
+                            cntr += 1
+                else:
+                    box = axs.get_position()
+                    axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                     cntr = 0
                     for name, legend in self.legend.items():
-                        ax.add_artist(draw_legend(ax, legend, name, cntr))
-                        cntr += 1
-            else:
-                box = axs.get_position()
-                axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                cntr = 0
-                for name, legend in self.legend.items():
-                    if legend:
-                        axs.add_artist(draw_legend(axs, legend, name, cntr))
-                        cntr += 1
+                        if legend:
+                            axs.add_artist(draw_legend(axs, legend, name, cntr))
+                            cntr += 1
 
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
