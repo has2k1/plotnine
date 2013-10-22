@@ -3,7 +3,7 @@ from copy import deepcopy
 from .geom import geom
 
 
-class geom_hist(geom):
+class geom_histogram(geom):
     VALID_AES = ['x', 'color', 'alpha', 'label']
 
     def plot_layer(self, layer):

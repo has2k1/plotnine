@@ -105,13 +105,13 @@ Examples
         geom_point(alpha=1/20.) + \
         ylim(0, 20000)
 
-``geom_hist``
+``geom_histogram``
 ^^^^^^^^^^^^^
 
 ::
 
     p = ggplot(aes(x='carat'), data=diamonds)
-    p + geom_hist() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
+    p + geom_histogram() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq") 
 
 ``geom_density``
 ^^^^^^^^^^^^^^^^

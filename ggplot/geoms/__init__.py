@@ -2,7 +2,7 @@ from .geom_abline import geom_abline
 from .geom_area import geom_area
 from .geom_bar import geom_bar
 from .geom_density import geom_density
-from .geom_hist import geom_hist
+from .geom_histogram import geom_histogram
 from .geom_hline import geom_hline
 from .geom_jitter import geom_jitter
 from .geom_line import geom_line
