@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from ..utils import date_breaks, date_format
+from ..utils import date_breaks, date_format, six
 from .scale import scale
 from copy import deepcopy
 
@@ -34,13 +34,13 @@ class scale_x_date(scale):
         if self.name:
             gg.xlab = self.name.title()
         if self.labels:
-            if isinstance(self.labels, basestring):
+            if isinstance(self.labels, six.string_types):
                 self.labels = date_format(self.labels)
             gg.xtick_formatter = self.labels
         if self.limits:
             gg.xlimits = self.limits
         if self.breaks:
-            if isinstance(self.breaks, basestring):
+            if isinstance(self.breaks, six.string_types):
                 self.breaks = date_breaks(self.breaks)
             gg.xmajor_locator = self.breaks
         return gg
