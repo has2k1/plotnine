@@ -104,6 +104,10 @@ class ggplot(object):
         self.ylimits = None
         self.scale_y_reverse = None
         self.scale_x_reverse = None
+        # legend is a dictionary of { legend_type: { visual_value: legend_key } },
+        # where legend_type is one of "color", "linestyle", "marker", "size";
+        # visual_value is color value, line style, marker character, or size value;
+        # and legend_key is usually a quantile (???).
         self.legend = {}
 
         # continuous color configs
