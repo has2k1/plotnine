@@ -15,7 +15,7 @@ def make_marker_key(label, marker):
     pad = 20 - idx
     lab = label[:max(idx, 20)]
     pad = " "*pad
-    label = TextArea(": %s" % lab, textprops=dict(color="k"))
+    label = TextArea("  %s" % lab, textprops=dict(color="k"))
     viz = DrawingArea(15, 20, 0, 0)
     fontsize = 10
     key = mlines.Line2D([0.5*fontsize], [0.75*fontsize], marker=marker,
@@ -31,7 +31,7 @@ def make_size_key(label, size):
     pad = 20 - idx
     lab = label[:max(idx, 20)]
     pad = " "*pad
-    label = TextArea(": %s" % lab, textprops=dict(color="k"))
+    label = TextArea("  %s" % lab, textprops=dict(color="k"))
     viz = DrawingArea(15, 20, 0, 0)
     fontsize = 10
     key = mlines.Line2D([0.5*fontsize], [0.75*fontsize], marker="o",
@@ -45,7 +45,7 @@ def make_line_key(label, color):
     pad = 20 - idx
     lab = label[:max(idx, 20)]
     pad = " "*pad
-    label = TextArea(": %s" % lab, textprops=dict(color="k"))
+    label = TextArea("  %s" % lab, textprops=dict(color="k"))
     viz = DrawingArea(20, 20, 0, 0)
     viz.add_artist(Rectangle((0, 5), width=16, height=5, fc=color))
     return HPacker(children=[viz, label], height=25, align="center", pad=5, sep=0)
@@ -55,7 +55,7 @@ def make_linestyle_key(label, style):
     pad = 20 - idx
     lab = label[:max(idx, 20)]
     pad = " "*pad
-    label = TextArea(": %s" % lab, textprops=dict(color="k"))
+    label = TextArea("  %s" % lab, textprops=dict(color="k"))
     viz = DrawingArea(30, 20, 0, 0)
     fontsize = 10
     x = np.arange(0.5, 2.25, 0.25) * fontsize
@@ -84,7 +84,7 @@ def draw_legend(ax, legend, legend_type, legend_title, ith_legend):
     # padded consistently
     anchored_box = AnchoredOffsetbox(loc=6,
                                      child=box, pad=0.,
-                                     frameon=True,
+                                     frameon=False,
                                      #bbox_to_anchor=(0., 1.02),
                                      # Spacing goes here
                                      bbox_to_anchor=(1, 0.8 - 0.35 * ith_legend),
@@ -99,7 +99,3 @@ if __name__=="__main__":
 
     ax.add_artist(draw_legend(ax,{1: "blah", 2: "blah2", 15: "blah4"}, "size", 1))
     plt.show(block=True)
-
-
-
-
