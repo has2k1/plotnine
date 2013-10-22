@@ -83,7 +83,7 @@ def draw_legend(ax, legend, legend_type, ith_legend):
     # padded consistently
     anchored_box = AnchoredOffsetbox(loc=6,
                                      child=box, pad=0.,
-                                     frameon=True,
+                                     frameon=False,
                                      #bbox_to_anchor=(0., 1.02),
                                      # Spacing goes here
                                      bbox_to_anchor=(1, 0.8 - 0.35 * ith_legend),

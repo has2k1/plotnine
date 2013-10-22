@@ -72,7 +72,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - ~~add support for non-blue continuous colors~~
     - make the title of each legend the variable, not the aes
     - make the title of the legend configurable
-    - hide the border around the legend (like in R's ggplot2)
+    - ~~hide the border around the legend (like in R's ggplot2)~~
     - remove colons before labels (R doesn't use them)
     - use better ticks placement (sizes, colors) algorithm (like in R)
     - fix: minimal size is too small (invisible) (R uses bigger markers)
@@ -84,4 +84,3 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - theme_bw()
         - TODO
     - theme_xkcd()
-
