@@ -70,7 +70,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
 - legends:
     - ~~make more consistent / fix spacing~~
     - ~~add support for non-blue continuous colors~~
-    - make the title of each legend the variable, not the aes
+    - ~~make the title of each legend the variable, not the aes~~
     - make the title of the legend configurable
 - themes:
     - look for better ggplot theme

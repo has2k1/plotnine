@@ -104,6 +104,10 @@ class ggplot(object):
         self.ylimits = None
         self.scale_y_reverse = None
         self.scale_x_reverse = None
+        # legend is a dictionary of { legend_type: { visual_value: legend_key } },
+        # where legend_type is one of "color", "linestyle", "marker", "size";
+        # visual_value is color value, line style, marker character, or size value;
+        # and legend_key is usually a quantile (???).
         self.legend = {}
 
         # continuous color configs
@@ -254,16 +258,18 @@ class ggplot(object):
                     box = ax.get_position()
                     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                     cntr = 0
-                    for name, legend in self.legend.items():
-                        ax.add_artist(draw_legend(ax, legend, name, cntr))
+                    for ltype, legend in self.legend.items():
+                        lname = self.aesthetics.get(ltype, ltype)
+                        ax.add_artist(draw_legend(ax, legend, ltype, lname, cntr))
                         cntr += 1
             else:
                 box = axs.get_position()
                 axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                 cntr = 0
-                for name, legend in self.legend.items():
+                for ltype, legend in self.legend.items():
                     if legend:
-                        axs.add_artist(draw_legend(axs, legend, name, cntr))
+                        lname = self.aesthetics.get(ltype, ltype)
+                        axs.add_artist(draw_legend(axs, legend, ltype, lname, cntr))
                         cntr += 1
 
         # TODO: We can probably get more sugary with this
