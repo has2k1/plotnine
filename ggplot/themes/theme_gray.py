@@ -31,7 +31,7 @@ class theme_gray(object):
         mpl.rcParams["axes.labelsize"] = "large"
         mpl.rcParams["axes.labelcolor"] = "black"
         mpl.rcParams["axes.axisbelow"] = "True"
-        mpl.rcParams["axes.color_cycle"] = [ "348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33" ]
+        mpl.rcParams["axes.color_cycle"] = [ "black", "348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33" ]
         mpl.rcParams["grid.color"] = "white"
         mpl.rcParams["grid.linewidth"] = "1"
         mpl.rcParams["grid.linestyle"] = "solid"
