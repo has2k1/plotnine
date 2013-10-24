@@ -17,7 +17,7 @@ class aes(UserDict):
         Can be used for continuous (point, line) charts and for
         discrete (bar, histogram) charts.
     y: y-axis value
-        Can be usedf or continuous charts only
+        Can be used for continuous charts only
     color (colour): color of a layer
         Can be continuous or discrete. If continuous, this will be
         given a color gradient between 2 colors.
