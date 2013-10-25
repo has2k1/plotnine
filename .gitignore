@@ -37,3 +37,6 @@ nosetests.xml
 .pydevproject
 
 *.swp
+
+# Testing
+result_images
