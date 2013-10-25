@@ -5,8 +5,7 @@ from ggplot import *
 
 ggplot(aes(x='date', y='beef'), data=meat) + \
     geom_point(color='lightblue') + \
-    geom_line(alpha=0.25) + \
-    stat_smooth(span=.05, color='black') + \
+    stat_smooth(span=.15, color='black') + \
     ggtitle("Beef: It's What's for Dinner") + \
     xlab("Date") + \
     ylab("Head of Cattle Slaughtered")
