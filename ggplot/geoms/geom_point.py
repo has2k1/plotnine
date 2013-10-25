@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from matplotlib.colors import Normalize
 import numpy as np
 from copy import deepcopy
@@ -18,5 +19,11 @@ class geom_point(geom):
         if "cmap" in layer:
             layer["c"] = layer["color"]
             del layer["color"]
+        
+        # for some reason, scatter doesn't default to the same color styles
+        # as the axes.color_cycle
+        if "color" not in layer and "cmap" not in layer:
+            layer["color"] = mpl.rcParams.get("axes.color_cycle", ["#333333"])[0]
+
         plt.scatter(**layer)
 

@@ -1,15 +1,3 @@
-
-
-COLORS = [
-    "black",
-	"red",
-	"green",
-	"blue",
-	"orange",
-	"cyan",
-	"white"
-]
-
 COLORS = [
     "#000000",
     "#E69F00", 
