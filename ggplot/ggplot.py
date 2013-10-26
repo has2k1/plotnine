@@ -120,19 +120,20 @@ class ggplot(object):
                     sharex=True, sharey=True)
             plt.subplots_adjust(wspace=.05, hspace=.05)
         elif self.facet_type=="wrap":
+            # add (more than) the needed number of subplots
+            fig, axs = plt.subplots(self.n_high, self.n_wide)
+            # there are some extra, remove the plots
             subplots_available = self.n_wide * self.n_high
             extra_subplots = subplots_available - self.n_dim_x
-
-            fig, axs = plt.subplots(self.n_high, self.n_wide)
             for extra_plot in axs.flatten()[-extra_subplots:]:
                 extra_plot.axis('off')
 
+            # plots is a mapping from xth-plot -> subplot position
             plots = []
             for x in range(self.n_wide):
                 for y in range(self.n_high):
                     plots.append((x, y))
             plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
-
         else:
             fig, axs = plt.subplots(self.n_high, self.n_wide)
 
@@ -141,6 +142,7 @@ class ggplot(object):
         # Faceting just means doing an additional groupby. The
         # dimensions of the plot remain the same
         if self.facets:
+            # the current subplot in the axs and plots
             cntr = 0
             if len(self.facets)==2 and self.facet_type!="wrap":
                 # store the extreme x and y coordinates of each pair of axes			
