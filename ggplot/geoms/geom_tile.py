@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from geom import geom
+from .geom import geom
 
 
 class geom_tile(geom):
