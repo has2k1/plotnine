@@ -120,19 +120,20 @@ class ggplot(object):
                     sharex=True, sharey=True)
             plt.subplots_adjust(wspace=.05, hspace=.05)
         elif self.facet_type=="wrap":
+            # add (more than) the needed number of subplots
+            fig, axs = plt.subplots(self.n_high, self.n_wide)
+            # there are some extra, remove the plots
             subplots_available = self.n_wide * self.n_high
             extra_subplots = subplots_available - self.n_dim_x
-
-            fig, axs = plt.subplots(self.n_high, self.n_wide)
             for extra_plot in axs.flatten()[-extra_subplots:]:
                 extra_plot.axis('off')
 
+            # plots is a mapping from xth-plot -> subplot position
             plots = []
             for x in range(self.n_wide):
                 for y in range(self.n_high):
                     plots.append((x, y))
             plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
-
         else:
             fig, axs = plt.subplots(self.n_high, self.n_wide)
 
@@ -141,6 +142,7 @@ class ggplot(object):
         # Faceting just means doing an additional groupby. The
         # dimensions of the plot remain the same
         if self.facets:
+            # the current subplot in the axs and plots
             cntr = 0
             if len(self.facets)==2 and self.facet_type!="wrap":
                 # store the extreme x and y coordinates of each pair of axes			
@@ -331,10 +333,15 @@ class ggplot(object):
                     else:
                         color_mapping = {value: color.next() for value in possible_colors}
                     rev_color_mapping = {v: k for k, v in color_mapping.items()}
-                    mapping.color = mapping.color.replace(color_mapping)
+                    # replace does not work in some cases: https://github.com/pydata/pandas/issues/5338
+                    # "6" -> "#123456" would end up like "#12345#123456"
+                    # Use a workaround which is hopefully not too bad when we only have a few unique values
+                    #mapping.color = mapping.color.replace(color_mapping)
+                    mapping.color = mapping.color.apply(lambda x: color_mapping[x])
 
         rev_shape_mapping = {}
         if 'shape' in mapping:
+            #Todo: also look if the shapes are already useable like in the color case?
             possible_shapes = np.unique(mapping['shape'])
             shape = shapes.shape_gen()
             shape_mapping = {value: shape.next() for value in possible_shapes}
@@ -344,6 +351,7 @@ class ggplot(object):
 
         rev_linetype_mapping = {}
         if 'linestyle' in mapping:
+            #Todo: also look if the linestyles are already useable like in the color case?
             mapping['linestyle'] = mapping['linestyle'].apply(str)
             possible_styles = np.unique(mapping['linestyle'])
             linestyle = linestyles.line_gen()

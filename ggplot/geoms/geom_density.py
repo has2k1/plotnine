@@ -13,10 +13,21 @@ class geom_density(geom):
         layer.update(self.manual_aes)
         if 'x' in layer:
             x = layer.pop('x')
+        else:
+            raise Exception("geom_density(): Need a aesthetic x mapping!")
+            
         if 'fill' in layer:
             fill = layer.pop('fill')
         else:
             fill = None
+        try:
+            float(x[0])
+        except:
+            try:
+                # try to use it as a pandas.tslib.Timestamp
+                x = [ts.toordinal() for ts in x]
+            except:
+                raise Exception("geom_density(): aesthetic x mapping needs to be convertable to float!")         
         kde = gaussian_kde(x)
         bottom = np.min(x)
         top = np.max(x)
