@@ -3,7 +3,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import calc_axis_breaks
+from .utils import calc_axis_breaks
 
 def scale_facet(xdim, ydim, facet_pairs, scaletype):
     # everyone gets the same scales

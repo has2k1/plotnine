@@ -1,5 +1,5 @@
 import matplotlib as mpl
-from theme_gray import theme_gray
+from .theme_gray import theme_gray
 
 class theme(theme_gray):
     def __init__(self, params):
