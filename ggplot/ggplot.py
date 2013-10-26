@@ -331,10 +331,15 @@ class ggplot(object):
                     else:
                         color_mapping = {value: color.next() for value in possible_colors}
                     rev_color_mapping = {v: k for k, v in color_mapping.items()}
-                    mapping.color = mapping.color.replace(color_mapping)
+                    # replace does not work in some cases: https://github.com/pydata/pandas/issues/5338
+                    # "6" -> "#123456" would end up like "#12345#123456"
+                    # Use a workaround which is hopefully not too bad when we only have a few unique values
+                    #mapping.color = mapping.color.replace(color_mapping)
+                    mapping.color = mapping.color.apply(lambda x: color_mapping[x])
 
         rev_shape_mapping = {}
         if 'shape' in mapping:
+            #Todo: also look if the shapes are already useable like in the color case?
             possible_shapes = np.unique(mapping['shape'])
             shape = shapes.shape_gen()
             shape_mapping = {value: shape.next() for value in possible_shapes}
@@ -344,6 +349,7 @@ class ggplot(object):
 
         rev_linetype_mapping = {}
         if 'linestyle' in mapping:
+            #Todo: also look if the linestyles are already useable like in the color case?
             mapping['linestyle'] = mapping['linestyle'].apply(str)
             possible_styles = np.unique(mapping['linestyle'])
             linestyle = linestyles.line_gen()
