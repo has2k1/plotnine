@@ -1,7 +1,5 @@
 *.py[cod]
 *.pyc
-test.py
-test.R
 # C extensions
 *.so
 
@@ -37,3 +35,6 @@ nosetests.xml
 .pydevproject
 
 *.swp
+
+# Testing
+result_images

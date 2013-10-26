@@ -18,6 +18,7 @@ class geom_bar(geom):
             labels = counts.index.tolist()
             weights = counts.tolist()
         else:
+            # TODO: pretty sure this isn't right
             weights = layer.pop('weight')
             if not isinstance(x[0], Timestamp):
                 labels = x

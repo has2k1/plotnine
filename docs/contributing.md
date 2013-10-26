@@ -98,7 +98,7 @@ example_layer = {
 There are a few things you should know about layers;
     - You can expect that incoming discrete variables (i.e. shape or color), will
     come in with only 1 value.
-    - You can excpet that incoming continuous variables (i.e. x, y) will come in
+    - You can expect that incoming continuous variables (i.e. x, y) will come in
     as a lists of equal length. 
 
 Unfortunately if you're reading this then you're interested in contributing to
