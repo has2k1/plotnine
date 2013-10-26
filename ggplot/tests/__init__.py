@@ -1,6 +1,7 @@
 import matplotlib as mpl
     
 default_test_modules = [
+    'ggplot.tests.test_basic',
     'ggplot.tests.test_reverse',
     ]
 
