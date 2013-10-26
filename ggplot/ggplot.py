@@ -147,12 +147,23 @@ class ggplot(object):
         if self.facets:
             cntr = 0
             if len(self.facets)==2:
-                for facets, frame in self.data.groupby(self.facets):
+                # store the extreme x and y coordinates of each pair of axes			
+                axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
+                xlab_offset = .15
+                for iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
                     pos = self.facet_pairs.index(facets) + 1
                     plt.subplot(self.n_wide, self.n_high, pos)
                     for layer in self._get_layers(frame):
                         for geom in self.geoms:
                             callbacks = geom.plot_layer(layer)
+                    axis_extremes[iter] = [min(plt.xlim()), max(plt.xlim()), 
+                        min(plt.ylim()), max(plt.ylim())]
+                # find the grid wide data extremeties
+                xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0,2]] 
+                xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1,3]]
+                # position of vertical labels for facet grid 
+                xlab_pos = xlab_max + xlab_offset
+                ylab_pos = ylab_max - float(ylab_max-ylab_min)/2
                 # This needs to enumerate all possibilities
                 for pos, facets in enumerate(self.facet_pairs):
                     pos += 1
@@ -165,9 +176,10 @@ class ggplot(object):
                         x = max(plt.xticks()[0])
                         y = max(plt.yticks()[0])
                         ax = axs[pos % self.n_high][pos % self.n_wide]
-                        plt.text(x*1.025, y/2., facets[0],
-                            bbox=dict(facecolor='lightgrey', color='black'),
-                            fontdict=dict(rotation=-90, verticalalignment="center")
+                        plt.text(xlab_pos, ylab_pos, facets[0],
+                            bbox=dict(facecolor='lightgrey', edgecolor='lightgray', color='black', 
+                                width=mpl.rcParams['font.size']*1.65),
+                            fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                         )
                     plt.subplot(self.n_wide, self.n_high, pos)
 
