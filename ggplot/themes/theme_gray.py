@@ -9,7 +9,7 @@ def _set_default_theme_rcparams(gg):
     gg.rcParams["patch.facecolor"] = "348ABD"
     gg.rcParams["patch.edgecolor"] = "#E5E5E5"
     gg.rcParams["patch.antialiased"] = "True"
-    gg.rcParams["font.family"] = "serif"
+    gg.rcParams["font.family"] = "sans-serif"
     gg.rcParams["font.size"] = "12.0"
     gg.rcParams["font.serif"] = ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman", "Times New Roman"]
     gg.rcParams["font.sans-serif"] = ["Helvetica", "Avant Garde", "Computer Modern Sans serif", "Arial"]
