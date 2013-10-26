@@ -4,8 +4,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from .utils import calc_axis_breaks
+import sys
 
-def scale_facet(xdim, ydim, facet_pairs, scaletype):
+
+def scale_facet_wrap(xdim, ydim, positions, scaletype):
+    if scaletype is not None:
+        sys.stderr.write("facet_wrap scales not yet implemented!\n")
+
+
+def scale_facet_grid(xdim, ydim, facet_pairs, scaletype):
     # everyone gets the same scales
     if scaletype is None:
         min_x, max_x = 999999999, -999999999

@@ -115,7 +115,6 @@ class ggplot(object):
         self.colormap = plt.cm.Blues
 
     def __repr__(self):
-        # TODO: Currently plotting the wrong number of facets.
         if self.facet_type=="grid":
             fig, axs = plt.subplots(self.n_high, self.n_wide,
                     sharex=True, sharey=True)
@@ -128,13 +127,10 @@ class ggplot(object):
             for extra_plot in axs.flatten()[-extra_subplots:]:
                 extra_plot.axis('off')
 
-            # TODO: This isn't working
-            plots = [None for i in range(self.n_dim_x)]
-            for i in range(self.n_dim_x):
-                idx = (i % self.n_high) * self.n_wide + (i % self.n_wide)
-                plots[idx] = (i % self.n_wide, i % self.n_high)
-
-            plots = [plot for plot in plots if plot is not None]
+            plots = []
+            for x in range(self.n_wide):
+                for y in range(self.n_high):
+                    plots.append((x, y))
             plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
 
         else:
@@ -146,7 +142,7 @@ class ggplot(object):
         # dimensions of the plot remain the same
         if self.facets:
             cntr = 0
-            if len(self.facets)==2:
+            if len(self.facets)==2 and self.facet_type!="wrap":
                 # store the extreme x and y coordinates of each pair of axes			
                 axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
                 xlab_offset = .15
@@ -183,10 +179,11 @@ class ggplot(object):
                         )
                     plt.subplot(self.n_wide, self.n_high, pos)
 
-                # Handle the different scale types here (free|free_y|free_x|None) and 
-                # also make sure that only the left column gets y scales and the bottom
-                # row gets x scales
-                scale_facet(self.n_wide, self.n_high, self.facet_pairs, self.facet_scales)
+                # Handle the different scale types here 
+                # (free|free_y|free_x|None) and also make sure that only the
+                # left column gets y scales and the bottom row gets x scales
+                scale_facet_grid(self.n_wide, self.n_high, 
+                        self.facet_pairs, self.facet_scales)
 
             else:
                 for facet, frame in self.data.groupby(self.facets):
@@ -213,9 +210,13 @@ class ggplot(object):
                                 for callback in callbacks:
                                     fn = getattr(axs[cntr], callback['function'])
                                     fn(*callback['args'])
-                    #TODO: selective titles
-                    plt.title(facet)
+                    title = facet
+                    if isinstance(facet, tuple):
+                        title = ", ".join(facet)
+                    plt.table(cellText=[[title]], loc='top',
+                            cellLoc='center', cellColours=[['lightgrey']])
                     cntr += 1
+                scale_facet_wrap(self.n_wide, self.n_high, [], self.facet_scales)
         else:
             for layer in self._get_layers(self.data):
                 for geom in self.geoms:

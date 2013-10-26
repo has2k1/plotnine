@@ -2,8 +2,9 @@ from copy import deepcopy
 import math
 
 class facet_wrap(object):
-    def __init__(self, x=None, ncol=None, nrow=None, scales="free"):
+    def __init__(self, x=None, y=None, ncol=None, nrow=None, scales="free"):
         self.x = x
+        self.y = y
         self.ncol = ncol
         self.nrow = nrow
         self.scales = scales
@@ -11,11 +12,11 @@ class facet_wrap(object):
     def __radd__(self, gg):
 
         x = gg.data.get(self.x)
-        if x is None:
-            n_wide = 1
-        else:
-            n_wide = x.nunique()
+        y = gg.data.get(self.y)
+        if x is not None:
             gg.n_dim_x = x.nunique()
+        if y is not None:
+            gg.n_dim_x *= y.nunique()
 
         n_wide = self.ncol
         n_high = self.nrow
@@ -34,6 +35,8 @@ class facet_wrap(object):
         gg.n_wide, gg.n_high = int(n_wide), int(n_high)
         facets = []
         facets.append(self.x)
+        if self.y:
+            facets.append(self.y)
         gg.facets = facets
         gg.facet_type = "wrap"
         gg.facet_scales = self.scales

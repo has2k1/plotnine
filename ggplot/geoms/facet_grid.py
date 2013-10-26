@@ -49,8 +49,11 @@ class facet_grid(object):
 
         combos = []
         for x_i in sorted(x.unique()):
-            for y_i in sorted(y.unique()):
-                combos.append((x_i, y_i))
+            if y is not None:
+                for y_i in sorted(y.unique()):
+                    combos.append((x_i, y_i))
+            else:
+                combos.append((x_i, 1))
         gg.facet_pairs = combos
 
         return deepcopy(gg)
