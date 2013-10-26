@@ -1,3 +1,14 @@
+0.3.0
+=====
+- theme_bw, theme_gray
+- facet bugfixes
+- improved python3 support
+- string keys in size legend
+- legend improvements:
+    - hide legend borders
+    - don't use colons in their labels
+    - var names in legends
+
 0.2.9
 =====
 - scale_x_reverse and scale_y_reverse - @ocefpaf

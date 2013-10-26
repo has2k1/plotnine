@@ -10,8 +10,7 @@ read more on our
 
     ggplot(aes(x='date', y='beef'), data=meat) + \
         geom_point(color='lightblue') + \
-        geom_line(alpha=0.25) + \
-        stat_smooth(span=.05, color='black') + \
+        stat_smooth(span=.15, color='black', se=True) + \
         ggtitle("Beef: It's What's for Dinner") + \
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
@@ -66,13 +65,18 @@ Ok the hard part is over. Installing ``ggplot`` is really easy. Just use
 ``pip``! An item on the TODO is to add the matplotlibrc files to the pip
 installable (let me know if you'd like to help!).
 
+*``matplotlibrc`` will be replaced with themes in the 0.3 release*
+
 ::
 
     # matplotlibrc from Huy Nguyen (http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/)
-    $ curl https://github.com/yhat/ggplot/raw/master/matplotlibrc.zip > matplotlibrc.zip 
-    $ unzip matplotlibrc.zip -d ~/
+    $ curl -O https://raw.github.com/yhat/ggplot/master/matplotlibrcs/matplotlibrc-osx.zip
+    $ unzip matplotlibrc-osx.zip -d ~/
     # install ggplot using pip
     $ pip install ggplot
+
+NOTE: You might want to install matplotlibrc files for other platforms
+(e.g., Windows). See ``matplotlibrcs``.
 
 Loading ``ggplot``
 ^^^^^^^^^^^^^^^^^^
@@ -106,7 +110,7 @@ Examples
         ylim(0, 20000)
 
 ``geom_histogram``
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -138,5 +142,8 @@ Examples
 TODO
 ~~~~
 
-The list is long, but
-distinguished.\ `TODO <https://github.com/yhat/ggplot/blob/master/TODO.md>`__
+`The list is long, but
+distinguished. <https://github.com/yhat/ggplot/blob/master/TODO.md>`__
+We're looking for contributors! Email greg at yhathq.com for more info.
+For getting started with contributing, check out `these
+docs <https://github.com/yhat/ggplot/blob/master/docs/contributing.md>`__
