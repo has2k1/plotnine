@@ -126,7 +126,9 @@ class ggplot(object):
                 # there is a bug in matplotlib which does not allow None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543
                 try:
-                   mpl.rcParams[key] = val if not val is None else "none"
+                    if key == 'text.dvipnghack' and val is None:
+                        val = "none"
+                    mpl.rcParams[key] = val
                 except Exception as e:
                     msg = """Setting "mpl.rcParams['%s']=%s" raised an Exception: %s""" % (key, str(val), str(e))
                     warnings.warn(msg, RuntimeWarning)
