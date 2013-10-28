@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from matplotlib.dates import DayLocator, WeekdayLocator, MonthLocator, YearLocator
 
