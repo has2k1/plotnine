@@ -113,6 +113,7 @@ class ggplot(object):
         # continuous color configs
         self.color_scale = None
         self.colormap = plt.cm.Blues
+        self.manual_color_list = None
 
     def __repr__(self):
         if self.facet_type=="grid":
@@ -145,7 +146,7 @@ class ggplot(object):
             # the current subplot in the axs and plots
             cntr = 0
             if len(self.facets)==2 and self.facet_type!="wrap":
-                # store the extreme x and y coordinates of each pair of axes			
+                # store the extreme x and y coordinates of each pair of axes
                 axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
                 xlab_offset = .15
                 for iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
@@ -154,12 +155,12 @@ class ggplot(object):
                     for layer in self._get_layers(frame):
                         for geom in self.geoms:
                             callbacks = geom.plot_layer(layer)
-                    axis_extremes[iter] = [min(plt.xlim()), max(plt.xlim()), 
+                    axis_extremes[iter] = [min(plt.xlim()), max(plt.xlim()),
                         min(plt.ylim()), max(plt.ylim())]
                 # find the grid wide data extremeties
-                xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0,2]] 
+                xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0,2]]
                 xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1,3]]
-                # position of vertical labels for facet grid 
+                # position of vertical labels for facet grid
                 xlab_pos = xlab_max + xlab_offset
                 ylab_pos = ylab_max - float(ylab_max-ylab_min)/2
                 # This needs to enumerate all possibilities
@@ -175,16 +176,16 @@ class ggplot(object):
                         y = max(plt.yticks()[0])
                         ax = axs[pos % self.n_high][pos % self.n_wide]
                         plt.text(xlab_pos, ylab_pos, facets[0],
-                            bbox=dict(facecolor='lightgrey', edgecolor='lightgray', color='black', 
+                            bbox=dict(facecolor='lightgrey', edgecolor='lightgray', color='black',
                                 width=mpl.rcParams['font.size']*1.65),
                             fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                         )
                     plt.subplot(self.n_wide, self.n_high, pos)
 
-                # Handle the different scale types here 
+                # Handle the different scale types here
                 # (free|free_y|free_x|None) and also make sure that only the
                 # left column gets y scales and the bottom row gets x scales
-                scale_facet_grid(self.n_wide, self.n_high, 
+                scale_facet_grid(self.n_wide, self.n_high,
                         self.facet_pairs, self.facet_scales)
 
             else:
@@ -322,12 +323,16 @@ class ggplot(object):
         rev_color_mapping = {}
         if 'color' in mapping:
             possible_colors = np.unique(mapping.color)
+            # print len(self.manual_color_list)
+            # print len(colors.COLORS)
             if set(possible_colors).issubset(set(colors.COLORS))==False:
                 if "color" in mapping._get_numeric_data().columns:
                     mapping['cmap'] = self.colormap
                 else:
-                    # discrete
-                    color = colors.color_gen()
+                    if self.manual_color_list:
+                        color = colors.color_gen(self.manual_color_list)
+                    else:
+                        color = colors.color_gen()
                     if sys.hexversion > 0x03000000:
                         color_mapping = {value: color.__next__() for value in possible_colors}
                     else:
