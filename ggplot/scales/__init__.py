@@ -1,6 +1,7 @@
 from .scale_colour_gradient import scale_colour_gradient
 from .scale_colour_gradient import scale_colour_gradient as scale_color_gradient
 from .scale_colour_gradient import scale_colour_gradient as scale_colour_gradient2
+from .scale_colour_manual import scale_colour_manual
 from .scale_facet import scale_facet_grid
 from .scale_facet import scale_facet_wrap
 from .scale_x_continuous import scale_x_continuous

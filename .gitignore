@@ -38,3 +38,4 @@ nosetests.xml
 
 # Testing
 result_images
+tmp
