@@ -10,7 +10,7 @@ from .components.legend import draw_legend
 from .geoms import *
 from .scales import *
 from .themes import *
-from .themes.theme_gray import _set_default_theme_rcparams
+from .themes.theme_gray import _set_default_theme_rcparams, _theme_grey_post_plot_callback
 from .utils import *
 import utils.six as six
 
@@ -109,19 +109,24 @@ class ggplot(object):
         # visual_value is color value, line style, marker character, or size value;
         # and legend_key is usually a quantile (???).
         self.legend = {}
+        # Theme releated options
+        self.theme_applied = False # this must be set by any theme to prevent addig teh default theme 
         self.rcParams = {}
-        _set_default_theme_rcparams(self)
+        # Callbacks to change aspects of each axis 
+        self.post_plot_callbacks = []
 
         # continuous color configs
         self.color_scale = None
         self.colormap = plt.cm.Blues
         self.manual_color_list = None
-
+    
     def __repr__(self):
         # Adding rc=self.rcParams does not validate/parses the params which then
         # throws an error during plotting!
         with mpl.rc_context():
-            for key in six.iterkeys(self.rcParams):
+            if not self.theme_applied:
+                _set_default_theme_rcparams(mpl)
+            for key in six.iterkeys(self.rcParams): # will be empty if no theme was applied
                 val = self.rcParams[key]
                 # there is a bug in matplotlib which does not allow None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543
@@ -303,6 +308,14 @@ class ggplot(object):
                             lname = self.aesthetics.get(ltype, ltype)
                             axs.add_artist(draw_legend(axs, legend, ltype, lname, cntr))
                             cntr += 1
+            # Finaly apply any post plot callbacks (theming, etc)
+            if self.theme_applied:
+                for ax in plt.gcf().axes:
+                    self._apply_post_plot_callbacks(ax)
+            else:
+                for ax in plt.gcf().axes:
+                    _theme_grey_post_plot_callback(ax)
+                
 
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
@@ -430,4 +443,7 @@ class ggplot(object):
         # adding legends back to the plot
         self.legend = legend
         return layers
-
+        
+    def _apply_post_plot_callbacks(self, axis):
+        for cb in self.post_plot_callbacks:
+            cb(axis)

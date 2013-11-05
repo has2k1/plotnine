@@ -1,7 +1,10 @@
 from .theme import theme
 
+import matplotlib
+import matplotlib.pyplot as plt
+
 def _set_default_theme_rcparams(gg):
-    """helper method to set the default rcParams"""
+    """helper method to set the default rcParams and other theming relevant things"""
     gg.rcParams["timezone"] = "UTC"
     gg.rcParams["lines.linewidth"] = "1.0"
     gg.rcParams["lines.antialiased"] = "True"
@@ -30,18 +33,19 @@ def _set_default_theme_rcparams(gg):
     gg.rcParams["xtick.major.pad"] = "6"
     gg.rcParams["xtick.minor.pad"] = "6"
     gg.rcParams["xtick.color"] = "#7F7F7F"
-    gg.rcParams["xtick.direction"] = "in"
+    gg.rcParams["xtick.direction"] = "out" #pointing out of axis
     gg.rcParams["ytick.major.size"] = "0"
     gg.rcParams["ytick.minor.size"] = "0"
     gg.rcParams["ytick.major.pad"] = "6"
     gg.rcParams["ytick.minor.pad"] = "6"
     gg.rcParams["ytick.color"] = "#7F7F7F"
-    gg.rcParams["ytick.direction"] = "in"
+    gg.rcParams["ytick.direction"] = "out" #pointing out of axis
     gg.rcParams["legend.fancybox"] = "True"
     gg.rcParams["figure.figsize"] = "11, 8"
     gg.rcParams["figure.facecolor"] = "1.0"
     gg.rcParams["figure.edgecolor"] = "0.50"
     gg.rcParams["figure.subplot.hspace"] = "0.5"
+    
 
 
 class theme_gray(theme):
@@ -54,4 +58,27 @@ class theme_gray(theme):
     def __radd__(self, gg):
         gg = super(theme_gray, self).__radd__(gg)
         _set_default_theme_rcparams(gg)
+        gg.post_plot_callbacks.append(_theme_grey_post_plot_callback)
         return gg
+
+def _theme_grey_post_plot_callback(ax):
+    '''Styles x,y axes to appear like ggplot2
+    Must be called after all plot and axis manipulation operations have been 
+    carried out (needs to know final tick spacing)
+    
+    From: https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
+    '''    
+    #Remove axis border
+    for child in ax.get_children():
+        if isinstance(child, matplotlib.spines.Spine):
+            child.set_alpha(0)
+       
+    #Restyle the tick lines
+    for line in ax.get_xticklines() + ax.get_yticklines():
+        line.set_markersize(5)
+        line.set_color("gray")
+        line.set_markeredgewidth(1.4)
+   
+    #Only show bottom left ticks
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
