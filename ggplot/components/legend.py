@@ -77,7 +77,7 @@ def draw_legend(ax, legend, legend_type, legend_title, ith_legend):
     children.append(make_title(legend_title))
     viz_handler = legend_viz[legend_type]
     legend_items = sorted(legend.items(), key=operator.itemgetter(1))
-    children += [viz_handler(lab, col) for col, lab in legend_items]
+    children += [viz_handler(str(lab), col) for col, lab in legend_items]
     box = VPacker(children=children, align="left", pad=0, sep=5)
 
     # TODO: The vertical spacing between the legends isn't consistent. Should be

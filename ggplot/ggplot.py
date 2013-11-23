@@ -5,7 +5,8 @@ import matplotlib as mpl
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import MultipleLocator
 
-from .components import colors, shapes, linestyles, aes
+from .components import colors, linestyles, shapes, size, linestyles
+from .components import aes
 from .components.legend import draw_legend
 from .geoms import *
 from .scales import *
@@ -79,6 +80,7 @@ class ggplot(object):
                             item = "self.data.get('%s')" % item
                         lambda_column += item
                     self.data[name] = eval(lambda_column)
+
         # defaults
         self.geoms= []
         self.n_wide = 1
@@ -138,7 +140,15 @@ class ggplot(object):
         else:
             fig, axs = plt.subplots(self.n_high, self.n_wide)
 
+        # Set the default plot to the first one
         plt.subplot(self.n_wide, self.n_high, 1)
+
+        # Aes need to be initialized BEFORE we start faceting. This is b/c
+        # we want to have a consistent aes mapping across facets.
+        self = colors.assign_colors(self)
+        self = size.assign_sizes(self)
+        self = linestyles.assign_linestyles(self)
+        self = shapes.assign_shapes(self)
 
         # Faceting just means doing an additional groupby. The
         # dimensions of the plot remain the same
@@ -269,24 +279,22 @@ class ggplot(object):
         # test in place to prevent this OR prevent legend getting set to True.
         if self.legend:
             if self.facets:
-                if 1==2:
-                    ax = axs[0][self.n_wide]
-                    box = ax.get_position()
-                    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                    cntr = 0
-                    for ltype, legend in self.legend.items():
-                        lname = self.aesthetics.get(ltype, ltype)
-                        ax.add_artist(draw_legend(ax, legend, ltype, lname, cntr))
-                        cntr += 1
+                ax = axs[0][self.n_wide - 1]
+                ax = axs[1][1]
+                print axs
+                box = ax.get_position()
+                print box.x0, box.y0, box.width * 0.8, box.height
+                ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
             else:
                 box = axs.get_position()
                 axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                cntr = 0
-                for ltype, legend in self.legend.items():
-                    if legend:
-                        lname = self.aesthetics.get(ltype, ltype)
-                        axs.add_artist(draw_legend(axs, legend, ltype, lname, cntr))
-                        cntr += 1
+                ax = axs
+            
+            cntr = 0
+            for ltype, legend in self.legend.items():
+                lname = self.aesthetics.get(ltype, ltype)
+                ax.add_artist(draw_legend(ax, legend, ltype, lname, cntr))
+                cntr += 1
 
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
@@ -302,116 +310,37 @@ class ggplot(object):
             ae: data.get(key, key)
                 for ae, key in self.aesthetics.items()
         })
+        if "color" in mapping:
+            mapping['color'] = data['color_mapping']
+        if "size" in mapping:
+            mapping['size'] = data['size_mapping']
+        if "shape" in mapping:
+            mapping['marker'] = data['shape_mapping']
+            del mapping['shape']
+        if "linestyle" in mapping:
+            mapping['linestyle'] = data['linestyle_mapping']
+
+        # Default the x and y axis labels to the name of the column
         if "x" in self.aesthetics and self.xlab is None:
             self.xlab = self.aesthetics['x']
         if "y" in self.aesthetics and self.ylab is None:
             self.ylab = self.aesthetics['y']
+
+        # Automatically drop any row that has an NA value
         mapping = mapping.dropna()
 
-        # We need to normalize size so that the points aren't really big or
-        # really small.
-        # TODO: add different types of normalization (log, inverse, etc.)
-        if "size" in mapping:
-            mapping.size = mapping.size.astype(np.float)
-            mapping.size = 200.0 * (mapping.size - mapping.size.min()) / \
-                    (mapping.size.max() - mapping.size.min())
-
-        # Here we're mapping discrete values to colors/shapes. For colors
-        # we're also checking to see if we don't need to map them (i.e. if vars
-        # are 'blue', 'green', etc.). The reverse mapping allows us to convert
-        # from the colors/shapes to the original values.
-        rev_color_mapping = {}
-        if 'color' in mapping:
-            possible_colors = np.unique(mapping.color)
-            # print len(self.manual_color_list)
-            # print len(colors.COLORS)
-            if set(possible_colors).issubset(set(colors.COLORS))==False:
-                if "color" in mapping._get_numeric_data().columns:
-                    mapping['cmap'] = self.colormap
-                else:
-                    if self.manual_color_list:
-                        color = colors.color_gen(self.manual_color_list)
-                    else:
-                        color = colors.color_gen()
-                    if sys.hexversion > 0x03000000:
-                        color_mapping = {value: color.__next__() for value in possible_colors}
-                    else:
-                        color_mapping = {value: color.next() for value in possible_colors}
-                    rev_color_mapping = {v: k for k, v in color_mapping.items()}
-                    # replace does not work in some cases: https://github.com/pydata/pandas/issues/5338
-                    # "6" -> "#123456" would end up like "#12345#123456"
-                    # Use a workaround which is hopefully not too bad when we only have a few unique values
-                    #mapping.color = mapping.color.replace(color_mapping)
-                    mapping.color = mapping.color.apply(lambda x: color_mapping[x])
-
-        rev_shape_mapping = {}
-        if 'shape' in mapping:
-            #Todo: also look if the shapes are already useable like in the color case?
-            possible_shapes = np.unique(mapping['shape'])
-            shape = shapes.shape_gen()
-            shape_mapping = {value: shape.next() for value in possible_shapes}
-            rev_shape_mapping = {v: k for k, v in shape_mapping.items()}
-            mapping['marker'] = mapping['shape'].replace(shape_mapping)
-            del mapping['shape']
-
-        rev_linetype_mapping = {}
-        if 'linestyle' in mapping:
-            #Todo: also look if the linestyles are already useable like in the color case?
-            mapping['linestyle'] = mapping['linestyle'].apply(str)
-            possible_styles = np.unique(mapping['linestyle'])
-            linestyle = linestyles.line_gen()
-            line_mapping = {value: linestyle.next() for value in possible_styles}
-            rev_linetype_mapping = {v: k for k, v in line_mapping.items()}
-            mapping['linestyle'] = mapping['linestyle'].replace(line_mapping)
-
-        keys = [ae for ae in self.DISCRETE if ae in mapping]
-        if "cmap" in mapping:
-            keys.remove("color")
+        discrete_aes = [ae for ae in self.DISCRETE if ae in mapping]
         layers = []
-        if len(keys)==0:
-            legend = {}
+        if len(discrete_aes)==0:
             frame = mapping.to_dict('list')
-            if "cmap" in frame:
-                frame["cmap"] = frame["cmap"][0]
-                quantiles = np.percentile(mapping.color, [0, 25, 50, 75, 100])
-                if self.color_scale:
-                    key_colors = self.color_scale
-                else:
-                    key_colors = ["white", "lightblue", "skyblue", "blue", "navy"]
-                legend["color"] = dict(zip(key_colors, quantiles))
             layers.append(frame)
         else:
-            legend = {"color": {}, "marker": {}, "linestyle": {}}
-            # TODO: This can probably be generalized to some extent.
-            for name, frame in mapping.groupby(keys):
+            for name, frame in mapping.groupby(discrete_aes):
                 frame = frame.to_dict('list')
                 for ae in self.DISCRETE:
                     if ae in frame:
                         frame[ae] = frame[ae][0]
-                        if len(keys) > 1:
-                            aes_name = name[keys.index(ae)]
-                        else:
-                            aes_name = name
-                        if ae=="color":
-                            label = rev_color_mapping.get(aes_name, aes_name)
-                            legend[ae][frame[ae]] = label
-                        elif ae=="shape" or ae=="marker":
-                            legend[ae][frame[ae]] = rev_shape_mapping.get(aes_name, aes_name)
-                            label = rev_shape_mapping.get(aes_name, aes_name)
-                        elif ae=="linestyle":
-                            legend[ae][frame[ae]] = rev_linetype_mapping.get(aes_name, aes_name)
-                            label = rev_linetype_mapping.get(aes_name, aes_name)
-                        elif ae=="alpha":
-                            label = ""
-                        frame['label'] = label
-                if "cmap" in frame:
-                    frame["cmap"] = frame["cmap"][0]
                 layers.append(frame)
-        if "size" in mapping:
-            labels = np.percentile(mapping['size'], [5, 25, 50, 75, 95])
-            quantiles = np.percentile(self.data[self.aesthetics['size']], [5, 25, 50, 75, 95])
-            legend["size"] = dict(zip(labels, quantiles))
-        # adding legends back to the plot
-        self.legend = legend
+
         return layers
 

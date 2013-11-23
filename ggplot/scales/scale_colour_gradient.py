@@ -6,7 +6,7 @@ import numpy as np
 
 
 def colors_at_breaks(cmap, breaks=[0, 0.25, 0.5, 0.75, 1.]):
-        return [rgb2hex(cmap(bb)[:3]) for bb in breaks]
+    return [rgb2hex(cmap(bb)[:3]) for bb in breaks]
 
 
 class scale_colour_gradient(scale):
