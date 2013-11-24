@@ -186,7 +186,7 @@ class ggplot(object):
                         y = max(plt.yticks()[0])
                         ax = axs[pos % self.n_high][pos % self.n_wide]
                         plt.text(xlab_pos, ylab_pos, facets[0],
-                            bbox=dict(facecolor='lightgrey', edgecolor='lightgray', color='black',
+                            bbox=dict(facecolor='lightgrey', edgecolor='black', color='black',
                                 width=mpl.rcParams['font.size']*1.65),
                             fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                         )
@@ -280,10 +280,7 @@ class ggplot(object):
         if self.legend:
             if self.facets:
                 ax = axs[0][self.n_wide - 1]
-                ax = axs[1][1]
-                print axs
                 box = ax.get_position()
-                print box.x0, box.y0, box.width * 0.8, box.height
                 ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
             else:
                 box = axs.get_position()
@@ -293,7 +290,8 @@ class ggplot(object):
             cntr = 0
             for ltype, legend in self.legend.items():
                 lname = self.aesthetics.get(ltype, ltype)
-                ax.add_artist(draw_legend(ax, legend, ltype, lname, cntr))
+                new_legend = draw_legend(ax, legend, ltype, lname, cntr)
+                ax.add_artist(new_legend)
                 cntr += 1
 
         # TODO: We can probably get more sugary with this

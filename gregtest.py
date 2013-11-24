@@ -6,10 +6,9 @@ print p + geom_point()
 print p + geom_point() + facet_wrap("gear")
 print p + geom_point() + facet_grid("gear", "cyl")
 plt.show(block=True)
-sys.exit()
 
 p = ggplot(aes(x='wt', y='cyl', color='mpg'), data=mtcars)
-#print p + geom_point() + scale_color_gradient(low="gray", high="red")
+print p + geom_point() + scale_color_gradient(low="gray", high="red")
 
 p = ggplot(aes(x='wt', y='mpg', shape='factor(cyl)'), data=mtcars)
 print p + geom_point() + facet_wrap('cyl')
