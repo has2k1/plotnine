@@ -15,7 +15,8 @@ class theme_matplotlib(theme):
     fname:  Filename (str)
         a filename to a matplotlibrc file
     matplotlib_defaults: bool (default: True)
-        if True resets the plot setting to the (current) matplotlib.rcParams values
+        if True resets the plot setting to the (current) matplotlib.rcParams
+        values
     """
         
     def __init__(self, rc=None, fname=None,  matplotlib_defaults=True):
@@ -28,7 +29,8 @@ class theme_matplotlib(theme):
         fname:  Filename (str)
             a filename to a matplotlibrc file  
         matplotlib_defaults: bool
-            if True resets the plot setting to the (current) matplotlib.rcParams values
+            if True resets the plot setting to the (current) 
+            matplotlib.rcParams values
         """
         self._rcParams={}
         if matplotlib_defaults:

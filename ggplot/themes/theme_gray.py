@@ -14,8 +14,10 @@ def _set_default_theme_rcparams(gg):
     gg.rcParams["patch.antialiased"] = "True"
     gg.rcParams["font.family"] = "sans-serif"
     gg.rcParams["font.size"] = "12.0"
-    gg.rcParams["font.serif"] = ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman", "Times New Roman"]
-    gg.rcParams["font.sans-serif"] = ["Helvetica", "Avant Garde", "Computer Modern Sans serif", "Arial"]
+    gg.rcParams["font.serif"] = ["Times","Palatino","New Century Schoolbook",
+                                 "Bookman","Computer Modern Roman","Times New Roman"]
+    gg.rcParams["font.sans-serif"] = ["Helvetica","Avant Garde",
+                                      "Computer Modern Sans serif","Arial"]
     gg.rcParams["axes.facecolor"] = "eeeeee"
     gg.rcParams["axes.edgecolor"] = "bcbcbc"
     gg.rcParams["axes.linewidth"] = "1"
@@ -24,7 +26,8 @@ def _set_default_theme_rcparams(gg):
     gg.rcParams["axes.labelsize"] = "large"
     gg.rcParams["axes.labelcolor"] = "black"
     gg.rcParams["axes.axisbelow"] = "True"
-    gg.rcParams["axes.color_cycle"] = [ "#333333", "348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33" ]
+    gg.rcParams["axes.color_cycle"] = ["#333333","348ABD","7A68A6","A60628",
+                                       "467821","CF4457","188487", "E24A33" ]
     gg.rcParams["grid.color"] = "white"
     gg.rcParams["grid.linewidth"] = "1"
     gg.rcParams["grid.linestyle"] = "solid"
