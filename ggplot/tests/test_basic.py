@@ -35,7 +35,7 @@ def _build_meat_df():
     meat['date'] = pd.to_datetime(meat.date)
     return meat
 
-@image_comparison(baseline_images=['geom_density', 'geom_hist', 'geom_hist_title', 'geom_point', 'geom_point_vline', 'geom_area'])
+@image_comparison(baseline_images=['geom_density', 'geom_hist', 'geom_hist_title', 'geom_point', 'geom_point_vline', 'geom_area', 'geom_text'])
 def test_geoms():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", color="c"), data=df)
@@ -47,6 +47,8 @@ def test_geoms():
     print(gg + geom_point() + geom_vline(x=50, ymin=-10, ymax=10))
     gg = ggplot(aes(x='x', ymax='y', ymin='z', color="cat2"), data=df)
     print(gg + geom_area())
+    print(ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text())
+    
 
 @image_comparison(baseline_images=['factor_geom_line', 'factor_geom_point', 'factor_geom_point_line', 'factor_complicated', 'factor_geom_bar' ])
 def test_factor():

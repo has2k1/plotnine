@@ -10,6 +10,7 @@ from .geom_line import geom_line
 from .geom_now_its_art import geom_now_its_art
 from .geom_point import geom_point
 from .geom_step import geom_step
+from .geom_text import geom_text
 from .geom_tile import geom_tile
 from .geom_vline import geom_vline
 # stats
