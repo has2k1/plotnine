@@ -35,7 +35,7 @@ def _build_meat_df():
     meat['date'] = pd.to_datetime(meat.date)
     return meat
 
-@image_comparison(baseline_images=['geom_density', 'geom_hist', 'geom_hist_title', 'geom_point', 'geom_point_vline', 'geom_area'])
+@image_comparison(baseline_images=['geom_density', 'geom_hist', 'geom_hist_title', 'geom_point', 'geom_point_vline', 'geom_area', 'geom_text'])
 def test_geoms():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", color="c"), data=df)
