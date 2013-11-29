@@ -3,6 +3,7 @@ import matplotlib as mpl
 default_test_modules = [
     'ggplot.tests.test_basic',
     'ggplot.tests.test_reverse',
+    'ggplot.tests.test_ggsave',
     'ggplot.tests.test_theme_mpl',
     'ggplot.tests.test_readme_examples',
     ]
