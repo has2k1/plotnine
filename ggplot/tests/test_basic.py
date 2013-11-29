@@ -35,7 +35,7 @@ def _build_meat_df():
     meat['date'] = pd.to_datetime(meat.date)
     return meat
 
-@image_comparison(baseline_images=['geom_density', 'geom_hist', 'geom_hist_title', 'geom_point', 'geom_point_vline', 'geom_area', 'geom_text'])
+@image_comparison(baseline_images=['geom_density', 'geom_hist', 'geom_hist_title', 'geom_point', 'geom_point_vline', 'geom_area', 'geom_text'], extensions=["png"])
 def test_geoms():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", color="c"), data=df)
@@ -50,7 +50,7 @@ def test_geoms():
     print(ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text())
     
 
-@image_comparison(baseline_images=['factor_geom_line', 'factor_geom_point', 'factor_geom_point_line', 'factor_complicated', 'factor_geom_bar' ])
+@image_comparison(baseline_images=['factor_geom_line', 'factor_geom_point', 'factor_geom_point_line', 'factor_complicated', 'factor_geom_bar' ], extensions=["png"])
 def test_factor():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
     print(p + geom_line())
@@ -60,7 +60,7 @@ def test_factor():
     p = ggplot(aes(x='factor(cyl)'), data=mtcars)
     print(p + geom_bar())
     
-@image_comparison(baseline_images=['stat_smooth',  'stat_bin2d'])
+@image_comparison(baseline_images=['stat_smooth',  'stat_bin2d'], extensions=["png"])
 def test_stats():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
@@ -68,20 +68,20 @@ def test_stats():
     gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
     print(gg + stat_bin2d())
     
-@image_comparison(baseline_images=[ 'geom_density_alpha' ])
+@image_comparison(baseline_images=[ 'geom_density_alpha' ], extensions=["png"])
 def test_alpha():
     df = _build_testing_df()
     gg = ggplot(aes(x='mpg', fill=True, alpha=0.3), data=mtcars)
     print(gg + geom_density())
 
-@image_comparison(baseline_images=['geom_bar_facet', 'geom_area_facet' ])   
+@image_comparison(baseline_images=['geom_bar_facet', 'geom_area_facet' ], extensions=["png"])   
 def test_facet_wrap():
     df = _build_testing_df()
     gg = ggplot(aes(x='x', ymax='y', ymin='z'), data=df)
     print(gg + geom_bar() + facet_wrap(x="cat2"))
     print(gg + geom_area() + facet_wrap(x="cat2"))
 
-@image_comparison(baseline_images=['geom_density_facet', 'geom_line_facet' ])   
+@image_comparison(baseline_images=['geom_density_facet', 'geom_line_facet' ], extensions=["png"])   
 def test_facet_wrap2():
     meat = _build_meat_df()
     meat_lng = pd.melt(meat, id_vars=['date'])
@@ -105,14 +105,14 @@ def test_facet_grid():
     # Todo: real testcase for facet_grid
     
 
-@image_comparison(baseline_images=['point_smooth_se', 'smooth_se'])   
+@image_comparison(baseline_images=['point_smooth_se', 'smooth_se'], extensions=["png"])   
 def test_smooth_se():
     meat = _build_meat_df()
     p = ggplot(aes(x='date', y='beef'), data=meat)
     print(p + geom_point() + stat_smooth(se=True))
     print(p + stat_smooth(se=True))
     
-@image_comparison(baseline_images=['scale1', 'ylim',  'scale_date'])   
+@image_comparison(baseline_images=['scale1', 'ylim',  'scale_date'], extensions=["png"])   
 def test_scale():
     meat = _build_meat_df()
     p = ggplot(aes(x='date', y='beef'), data=meat)
@@ -121,7 +121,7 @@ def test_scale():
     gg = ggplot(aes(x='date', y='beef'), data=meat) + geom_line() 
     print(gg+scale_x_date(labels="%Y-%m-%d"))
 
-@image_comparison(baseline_images=['diamonds_small', 'diamonds_big', 'diamonds_facet'])   
+@image_comparison(baseline_images=['diamonds_small', 'diamonds_big', 'diamonds_facet'], extensions=["png"])   
 def test_diamond():    
     p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(4))
     p = p + geom_point() + scale_colour_gradient(low="white", high="red") 
