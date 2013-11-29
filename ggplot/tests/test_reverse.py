@@ -13,7 +13,7 @@ import pandas as DataFrame
 from ggplot import *
 
 
-@image_comparison(baseline_images=['scale_reverse', 'scale_y_reverse', 'scale_x_reverse'], extensions=["png"])
+@image_comparison(baseline_images=['scale_without_reverse', 'scale_y_reverse', 'scale_x_reverse', 'scale_both_reverse'], extensions=["png"])
 def test_scale_reverse():
 
     df = pd.DataFrame({"x": np.arange(0, 100),
@@ -33,3 +33,4 @@ def test_scale_reverse():
     print(gg)
     print(gg + scale_y_reverse())
     print(gg + scale_x_reverse())
+    print(gg + scale_x_reverse()+ scale_y_reverse())
