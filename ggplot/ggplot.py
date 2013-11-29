@@ -19,6 +19,8 @@ import sys
 import re
 import warnings
 
+if sys.flags.interactive:
+    plt.ion()
 
 def is_identity(x):
     if x in colors.COLORS:
@@ -114,8 +116,7 @@ class ggplot(object):
         # Theme releated options
         # this must be set by any theme to prevent addig the default theme
         self.theme_applied = False
-        # We're going to default to making the plot appear when __repr__ is called.
-        self.rcParams = {"interactive": "True"}
+        self.rcParams = {}
         # Callbacks to change aspects of each axis 
         self.post_plot_callbacks = []
 
@@ -123,8 +124,16 @@ class ggplot(object):
         self.color_scale = None
         self.colormap = plt.cm.Blues
         self.manual_color_list = None
-    
+
     def __repr__(self):
+        """Print/show the plot"""
+        figure = self.draw()
+        # We're going to default to making the plot appear when __repr__ is called.
+        figure.show()
+        # TODO: We can probably get more sugary with this
+        return "<ggplot: (%d)>" % self.__hash__()
+
+    def draw(self):
         # Adding rc=self.rcParams does not validate/parses the params which then
         # throws an error during plotting!
         with mpl.rc_context():
@@ -141,6 +150,9 @@ class ggplot(object):
                 except Exception as e:
                     msg = """Setting "mpl.rcParams['%s']=%s" raised an Exception: %s""" % (key, str(val), str(e))
                     warnings.warn(msg, RuntimeWarning)
+            # draw is not allowed to show a plot, so we can use to result for ggsave 
+            # This sets a rcparam, so we don't have to undo it after plotting
+            mpl.interactive(False)
             if self.facet_type=="grid":
                 fig, axs = plt.subplots(self.n_high, self.n_wide,
                         sharex=True, sharey=True)
@@ -349,8 +361,7 @@ class ggplot(object):
                 for ax in plt.gcf().axes:
                     _theme_grey_post_plot_callback(ax)
 
-        # TODO: We can probably get more sugary with this
-        return "<ggplot: (%d)>" % self.__hash__()
+        return plt.gcf()
 
     def _get_layers(self, data=None):
         # This is handy because... (something to do w/ facets?)
