@@ -276,6 +276,11 @@ class ggplot(object):
                         plt.table(cellText=[[title]], loc='top',
                                 cellLoc='center', cellColours=[['lightgrey']])
                         cntr += 1
+
+                    # NOTE: Passing n_high for cols (instead of n_wide) and
+                    # n_wide for rows because in all previous calls to
+                    # plt.subplot, n_wide is passed as the number of rows, not
+                    # columns.
                     scale_facet_wrap(self.n_wide, self.n_high, range(cntr), self.facet_scales)
             else:
                 for layer in self._get_layers(self.data):

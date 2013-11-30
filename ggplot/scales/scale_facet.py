@@ -7,13 +7,13 @@ from .utils import calc_axis_breaks
 import sys
 
 
-def scale_facet_wrap(xdim, ydim, positions, scaletype):
+def scale_facet_wrap(rows, cols, positions, scaletype):
     """Set the scales on each subplot for wrapped faceting.
 
     Arguments:
-    xdim -- number of rows in the faceted plot
-    ydim -- number of columns in the faceted plot
-    positions -- list of faceted plots
+    rows -- number of rows in the faceted plot
+    cols -- number of columns in the faceted plot
+    positions -- zero-indexed list of faceted plot positions
     scaletype -- string indicating the type of scaling to apply to the rows and columns
 
     Scale Types:
@@ -29,15 +29,16 @@ def scale_facet_wrap(xdim, ydim, positions, scaletype):
     for pos in positions:
         # Work on the subplot at the current position (adding 1 to pos because
         # matplotlib 1-indexes their subplots)
-        plt.subplot(xdim, ydim, pos + 1)
+        
+        plt.subplot(rows, cols, pos + 1)
 
         # Update the x extents for each column
 
         column, row = 0, 0
         if scaletype in ["free", "free_x"]:
             # If the x scale is free, all plots get their own x scale
-            column = pos % ydim
-            row = int(pos / ydim)
+            column = pos % cols
+            row = int(pos / cols)
 
         limits = plt.xlim()
 
@@ -54,8 +55,8 @@ def scale_facet_wrap(xdim, ydim, positions, scaletype):
         column, row = 0, 0
         if scaletype in ["free", "free_y"]:
             # If the y scale is free, all plots get their own y scale
-            column = pos % ydim
-            row = int(pos / ydim)
+            column = pos % cols
+            row = int(pos / cols)
 
         limits = plt.ylim()
 
@@ -70,10 +71,10 @@ def scale_facet_wrap(xdim, ydim, positions, scaletype):
         y_extents[(column, row)] = (lower, upper)
 
     for pos in positions:
-        plt.subplot(xdim, ydim, pos + 1)
+        plt.subplot(rows, cols, pos + 1)
         
-        row = int(pos / ydim)
-        column = pos % ydim
+        row = int(pos / cols)
+        column = pos % cols
 
         # Find the extents for this position. Default to the extents at
         # position column 0, row 0, in case all plots use the same scale
@@ -94,7 +95,7 @@ def scale_facet_wrap(xdim, ydim, positions, scaletype):
         # Only apply x labels to plots if each plot has its own scale or the
         # plot is in the bottom row of each column.
         x_labs = []
-        if scaletype in ["free", "free_x"] or pos in positions[-ydim:]:
+        if scaletype in ["free", "free_x"] or pos in positions[-cols:]:
             x_labs = x_scale
 
         plt.xticks(x_scale, x_labs)
