@@ -8,9 +8,108 @@ import sys
 
 
 def scale_facet_wrap(xdim, ydim, positions, scaletype):
-    if scaletype is not None:
-        sys.stderr.write("facet_wrap scales not yet implemented!\n")
+    """Set the scales on each subplot for wrapped faceting.
 
+    Arguments:
+    xdim -- number of rows in the faceted plot
+    ydim -- number of columns in the faceted plot
+    positions -- list of faceted plots
+    scaletype -- string indicating the type of scaling to apply to the rows and columns
+
+    Scale Types:
+    None -- All plots get the same scale
+    'free_x' -- each plot is free to determine its own x-scale, all plots have the same y-scale
+    'free_y' -- each plot is free to determine its own y-scale, all plots have the same x-scale
+    'free' -- plots are free to determine their own x- and y-scales
+
+    """
+    x_extents, y_extents = {}, {}
+
+    # Calculate the extents for the plots
+    for pos in positions:
+        # Work on the subplot at the current position (adding 1 to pos because
+        # matplotlib 1-indexes their subplots)
+        plt.subplot(xdim, ydim, pos + 1)
+
+        # Update the x extents for each column
+
+        column, row = 0, 0
+        if scaletype in ["free", "free_x"]:
+            # If the x scale is free, all plots get their own x scale
+            column = pos % ydim
+            row = int(pos / ydim)
+
+        limits = plt.xlim()
+
+        # Get the current bounds for this column. Default lower limit is
+        # infinity (because all values < infinity) and the default upper limit
+        # is -infinity (because all values > -infinity).
+        lower, upper = x_extents.get((column, row), (float("inf"), float("-inf")))
+
+        lower = min(limits[0], lower)
+        upper = max(limits[1], upper)
+
+        x_extents[(column, row)] = (lower, upper)
+
+        column, row = 0, 0
+        if scaletype in ["free", "free_y"]:
+            # If the y scale is free, all plots get their own y scale
+            column = pos % ydim
+            row = int(pos / ydim)
+
+        limits = plt.ylim()
+
+        # Get the current bounds for this column. Default lower limit is
+        # infinity (because all values < infinity) and the default upper limit
+        # is -infinity (because all values > -infinity).
+        lower, upper = y_extents.get((column, row), (float("inf"), float("-inf")))
+
+        lower = min(limits[0], lower)
+        upper = max(limits[1], upper)
+
+        y_extents[(column, row)] = (lower, upper)
+
+    for pos in positions:
+        plt.subplot(xdim, ydim, pos + 1)
+        
+        row = int(pos / ydim)
+        column = pos % ydim
+
+        # Find the extents for this position. Default to the extents at
+        # position column 0, row 0, in case all plots use the same scale
+        xmin, xmax = x_extents[(0, 0)]
+        ymin, ymax = y_extents[(0, 0)]
+        
+        if scaletype in ["free", "free_x"]:
+            # If the x scale is free, look up the extents for this column and row
+            xmin, xmax = x_extents[(column, row)]
+
+        if scaletype in ["free", "free_y"]:
+            # If the y scale is free, look up the extents for this column and row
+            ymin, ymax = y_extents[(column, row)]
+
+        x_scale = calc_axis_breaks(xmin, xmax, 4)
+        x_scale = np.round(x_scale, 2)
+
+        # Only apply x labels to plots if each plot has its own scale or the
+        # plot is in the bottom row of each column.
+        x_labs = []
+        if scaletype in ["free", "free_x"] or pos in positions[-ydim:]:
+            x_labs = x_scale
+
+        plt.xticks(x_scale, x_labs)
+
+        # Set the y-axis scale and labels
+        y_scale = calc_axis_breaks(ymin, ymax, 4)
+        y_scale = np.round(y_scale, 2)
+
+        # Only apply y labels to plots if each plot has its own scale or the
+        # plot is in the left column.
+        y_labs = []
+        if scaletype in ["free", "free_y"] or column == 0:
+            y_labs = y_scale
+
+        plt.yticks(y_scale, y_labs)
 
 def scale_facet_grid(xdim, ydim, facet_pairs, scaletype):
     # everyone gets the same scales

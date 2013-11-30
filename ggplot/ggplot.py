@@ -276,7 +276,7 @@ class ggplot(object):
                         plt.table(cellText=[[title]], loc='top',
                                 cellLoc='center', cellColours=[['lightgrey']])
                         cntr += 1
-                    scale_facet_wrap(self.n_wide, self.n_high, [], self.facet_scales)
+                    scale_facet_wrap(self.n_wide, self.n_high, range(cntr), self.facet_scales)
             else:
                 for layer in self._get_layers(self.data):
                     for geom in self.geoms:
