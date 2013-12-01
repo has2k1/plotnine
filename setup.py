@@ -16,9 +16,7 @@ def get_package_data():
         [
             "exampledata/*.csv", 
             "geoms/*.png"
-        ]}
-
-    
+        ]} 
 
 setup(
     name="ggplot",
