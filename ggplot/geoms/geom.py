@@ -1,6 +1,8 @@
 from copy import deepcopy
 from ggplot.components import aes
 
+__ALL__ = ["geom"]
+
 class geom(object):
     def __init__(self, *args, **kwargs):
         if "colour" in kwargs:

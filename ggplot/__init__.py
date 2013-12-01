@@ -12,4 +12,9 @@ def _set_mpl_backend():
 _set_mpl_backend()
 
 from .ggplot import *
+from components import aes
+from .geoms import *
+from .scales import *
+from .themes import *
+from .utils import *
 from .exampledata import *

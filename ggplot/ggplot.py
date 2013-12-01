@@ -16,6 +16,8 @@ from .themes.theme_gray import _theme_grey_post_plot_callback
 from .utils import *
 import utils.six as six
 
+__ALL__ = ["ggplot"]
+
 import sys
 import re
 import warnings
