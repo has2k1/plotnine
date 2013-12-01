@@ -6,6 +6,7 @@ default_test_modules = [
     'ggplot.tests.test_ggsave',
     'ggplot.tests.test_theme_mpl',
     'ggplot.tests.test_readme_examples',
+    'ggplot.tests.test_scale_facet_wrap',
     ]
 
 
