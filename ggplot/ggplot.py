@@ -11,7 +11,8 @@ from .components.legend import draw_legend
 from .geoms import *
 from .scales import *
 from .themes import *
-from .themes.theme_gray import _set_default_theme_rcparams, _theme_grey_post_plot_callback
+from .themes.theme_gray import _set_default_theme_rcparams
+from .themes.theme_gray import _theme_grey_post_plot_callback
 from .utils import *
 import utils.six as six
 
@@ -108,10 +109,10 @@ class ggplot(object):
         self.ylimits = None
         self.scale_y_reverse = None
         self.scale_x_reverse = None
-        # legend is a dictionary of { legend_type: { visual_value: legend_key } },
+        # legend is a dictionary of {legend_type: {visual_value: legend_key}},
         # where legend_type is one of "color", "linestyle", "marker", "size";
-        # visual_value is color value, line style, marker character, or size value;
-        # and legend_key is a quantile.
+        # visual_value is color value, line style, marker character, or size
+        # value; and legend_key is a quantile.
         self.legend = {}
         # Theme releated options
         # this must be set by any theme to prevent addig the default theme
@@ -128,7 +129,8 @@ class ggplot(object):
     def __repr__(self):
         """Print/show the plot"""
         figure = self.draw()
-        # We're going to default to making the plot appear when __repr__ is called.
+        # We're going to default to making the plot appear when __repr__ is
+        # called.
         figure.show()
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
@@ -139,7 +141,8 @@ class ggplot(object):
         with mpl.rc_context():
             if not self.theme_applied:
                 _set_default_theme_rcparams(mpl)
-            for key in six.iterkeys(self.rcParams): # will be empty if no theme was applied
+            # will be empty if no theme was applied
+            for key in six.iterkeys(self.rcParams): 
                 val = self.rcParams[key]
                 # there is a bug in matplotlib which does not allow None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543
@@ -237,19 +240,15 @@ class ggplot(object):
                             y = max(plt.yticks()[0])
                             ax = axs[pos % self.n_high][pos % self.n_wide]
                             plt.text(xlab_pos, ylab_pos, facets[0],
-                                bbox=dict(facecolor='lightgrey', edgecolor='lightgray', color='black',
-                                    width=mpl.rcParams['font.size']*1.65),
+                                bbox=dict(
+                                    facecolor='lightgrey',
+                                    edgecolor='black',
+                                    color='black',
+                                    width=mpl.rcParams['font.size']*1.65
+                                ),
                                 fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                             )
-                        plt.subplot(self.n_wide, self.n_high, pos)
-                        x = max(plt.xticks()[0])
-                        y = max(plt.yticks()[0])
-                        ax = axs[pos % self.n_high][pos % self.n_wide]
-                        plt.text(xlab_pos, ylab_pos, facets[0],
-                            bbox=dict(facecolor='lightgrey', edgecolor='black', color='black',
-                                width=mpl.rcParams['font.size']*1.65),
-                            fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
-                        )
+
                     plt.subplot(self.n_wide, self.n_high, pos)
                     # Handle the different scale types here
                     # (free|free_y|free_x|None) and also make sure that only the
