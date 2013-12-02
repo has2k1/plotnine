@@ -10,17 +10,20 @@ import sys
 def scale_facet_wrap(rows, cols, positions, scaletype):
     """Set the scales on each subplot for wrapped faceting.
 
-    Arguments:
-    rows -- number of rows in the faceted plot
-    cols -- number of columns in the faceted plot
-    positions -- zero-indexed list of faceted plot positions
-    scaletype -- string indicating the type of scaling to apply to the rows and columns
-
-    Scale Types:
-    None -- All plots get the same scale
-    'free_x' -- each plot is free to determine its own x-scale, all plots have the same y-scale
-    'free_y' -- each plot is free to determine its own y-scale, all plots have the same x-scale
-    'free' -- plots are free to determine their own x- and y-scales
+    Parameters
+    ----------
+    rows : int 
+        number of rows in the faceted plot
+    cols : int
+        number of columns in the faceted plot
+    positions : list of int
+        zero-indexed list of faceted plot positions
+    scaletype : str or None
+        string indicating the type of scaling to apply to the rows and columns
+        - None : All plots get the same scale
+        - 'free_x' : each plot is free to determine its own x-scale, all plots have the same y-scale
+        - 'free_y' : each plot is free to determine its own y-scale, all plots have the same x-scale
+        - 'free' : plots are free to determine their own x- and y-scales
 
     """
     x_extents, y_extents = {}, {}

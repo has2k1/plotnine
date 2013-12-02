@@ -22,27 +22,52 @@ def ggsave(filename = None, plot = None, device = None, format = None,
     graphics device from the extension.  This means the only argument you 
     need to supply is the filename.
 
-    Kwargs: 
-        filename (str or file): file name or file to write the plot to
-        plot (ggplot): plot to save, defaults to last plot displayed
-        format (str): image format to use, automatically extract from 
-                             file name extension
-        path (str): path to save plot to (if you just want to set path and 
-                    not filename)
-        scale (number): scaling factor
-        width (number): width (defaults to the width of current plotting window)
-        height (number): height (defaults to the height of current plotting window)
-        units (str): units for width and height when either one is explicitly 
-                     specified (in, cm, or mm)
-        dpi (number): dpi to use for raster graphics
-        limitsize (bool): when `True` (the default), ggsave will not save images 
-                          larger than 50x50 inches, to prevent the common error 
-                          of specifying dimensions in pixels.
-        kwargs: additional arguments to pass to matplotlib `savefig()`
+    Parameters
+    ----------
+    filename : str or file
+        file name or file to write the plot to
+    plot : ggplot
+        plot to save, defaults to last plot displayed
+    format : str
+        image format to use, automatically extract from 
+        file name extension
+    path : str
+        path to save plot to (if you just want to set path and 
+        not filename)
+    scale : number
+        scaling factor
+    width : number
+        width (defaults to the width of current plotting window)
+    height : number
+        height (defaults to the height of current plotting window)
+    units : str
+        units for width and height when either one is explicitly 
+        specified (in, cm, or mm)
+    dpi : number
+        dpi to use for raster graphics
+    limitsize : bool
+        when `True` (the default), ggsave will not save images 
+        larger than 50x50 inches, to prevent the common error 
+        of specifying dimensions in pixels.
+    kwargs : dict 
+        additional arguments to pass to matplotlib `savefig()`
     
+    Returns
+    -------
+    None
+    
+    Examples
+    --------
+    >>> from ggplot import *
+    >>> gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
+    >>> ggsave("filename.png", gg)
+
+    Notes
+    -----
     Incompatibilities to ggplot2:
-        `format` can be use as a alternative to `device`
-        ggsave will happily save matplotlib plots, if that was the last plot
+    
+    - `format` can be use as a alternative to `device`
+    - ggsave will happily save matplotlib plots, if that was the last plot
     """
     fig_kwargs = {}
     fig_kwargs.update(kwargs)

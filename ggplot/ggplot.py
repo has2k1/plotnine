@@ -44,15 +44,15 @@ class ggplot(object):
 
     Parameters
     -----------
-    aesthetics:  aes (ggplot.components.aes.aes)
+    aesthetics :  aes (ggplot.components.aes.aes)
         aesthetics of your plot
-    data:  pandas DataFrame (pd.DataFrame)
+    data :  pandas DataFrame (pd.DataFrame)
         a DataFrame with the data you want to plot
 
     Examples
     ----------
-    p = ggplot(aes(x='x', y='y'), data=diamonds)
-    print p + geom_point()
+    >>> p = ggplot(aes(x='x', y='y'), data=diamonds)
+    >>> print(p + geom_point())
     """
 
     CONTINUOUS = ['x', 'y', 'size', 'alpha']
