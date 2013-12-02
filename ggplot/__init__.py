@@ -11,6 +11,11 @@ def _set_mpl_backend():
 
 _set_mpl_backend()
 
+# This is the only place the version is specified and 
+# used in both setup.py and docs/conf.py to set the 
+# version of ggplot.
+__version__ = '0.4.2'
+
 from .ggplot import *
 from components import aes
 from .geoms import *

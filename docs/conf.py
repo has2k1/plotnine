@@ -80,10 +80,19 @@ copyright = u'2013, yhat'
 #
 # The short X.Y version.
 
-# version = '%s r%s' % (pandas.__version__, svn_version())
-#import ggplot
-#version = '%s' % (ggplot.__version__)
-version = '0.4'
+# importing ggplot here has some sideeffects (plots pop up during 
+# doc building), so use theversion extract from setup.py here as well.
+def extract_version():
+    """
+    Extracts version values from the main matplotlib __init__.py and
+    returns them as a dictionary.
+    """
+    with open('../ggplot/__init__.py') as fd:
+        for line in fd.readlines():
+            if (line.startswith('__version__')):
+                exec(line.strip())
+    return locals()["__version__"]
+version = '%s' % extract_version()
 
 # The full version, including alpha/beta/rc tags.
 release = version
