@@ -39,3 +39,8 @@ nosetests.xml
 # Testing
 result_images
 tmp
+
+# docs
+docs/_static/*.png
+docs/generated/
+    
