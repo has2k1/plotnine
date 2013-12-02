@@ -1,3 +1,14 @@
+0.4.0
+- theme context manager (huge improvement; allows for themes to be used on an 
+ad hoc basis; implements theme_xkcd)
+- greatly improved facets: aesthetics fix, label issues corrected
+- ggsave that mimics ggplot2
+- geom_step
+- geom_text
+- group aes added to geom_line
+- better tests
+
+=====
 0.3.0
 =====
 - theme_bw, theme_gray
