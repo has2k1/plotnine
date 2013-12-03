@@ -102,7 +102,7 @@ def ggsave(filename = None, plot = None, device = None, format = None,
         height = h
         issue_size = True
     else:
-        height = to_inch[unit](height)
+        height = to_inch[units](height)
     
     try:
         scale = float(scale)
