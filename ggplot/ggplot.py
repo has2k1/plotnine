@@ -131,7 +131,8 @@ class ggplot(object):
         figure = self.draw()
         # We're going to default to making the plot appear when __repr__ is
         # called.
-        figure.show()
+        #figure.show() # doesn't work in ipython notebook
+        plt.show()
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
 
