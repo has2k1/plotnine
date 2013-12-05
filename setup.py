@@ -20,7 +20,7 @@ def get_package_data():
 
 setup(
     name="ggplot",
-    version="0.4.1",
+    version="0.4.2",
     author="Greg Lamp",
     author_email="greg@yhathq.com",
     url="https://github.com/yhat/ggplot/",
