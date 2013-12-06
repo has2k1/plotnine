@@ -1,30 +1,59 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from matplotlib.testing.decorators import image_comparison
-from nose.tools import assert_true
+from matplotlib.testing.decorators import image_comparison, cleanup
+from nose.tools import assert_true, assert_raises
 
 from ggplot import *
 
 import matplotlib.pyplot as plt
 
 @image_comparison(baseline_images=["free", "free_x", "free_y", "none"], extensions=["png"])
-def test_scale_facet_wrap():
+def test_scale_facet_wrap_visual():
+    p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
+    print(p + facet_wrap("cut", scales="free"))
+    print(p + facet_wrap("cut", scales="free_x"))
+    print(p + facet_wrap("cut", scales="free_y"))
+    print(p + facet_wrap("cut", scales=None))
+
+def test_scale_facet_wrap_exception():
+    with assert_raises(Exception):
+        # need at least one variable
+        facet_wrap()
+
+def test_add_scale_returns_new_ggplot_object():
+    # an older implementation set values on the original ggplot object and only made a deepcopy on the last step.
+    # Actually all geoms/... should have such a test...
+    p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
+    h, w = p.n_high, p.n_wide
+    p2 = p + facet_wrap("cut", scales="free")
+    hn, wn = p.n_high, p.n_wide
+    h2, w2 = p2.n_high, p2.n_wide
+    assert_true(h==hn and w==wn, "Original object changed!")
+    assert_true(h!=h2 or w!=w2, "New object not changed!")
+
+@cleanup            
+def test_scale_facet_wrap_internals():
     def convertText(t):
         """Return a float for the text value of a matplotlib Text object."""
-        return float(t.get_text())
-
+        try:
+            return float(t.get_text())
+        except:
+            # don't mask the error, just let the assert raise the test failure
+            return 0
+            
     def empty(t):
         """Return True if the Text object is an empty string."""
         return len(t.get_text().strip()) == 0
 
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
-
-    print(p + facet_wrap("cut", scales="free"))
+    # Only p2 has the new measures for column!
+    p2 = p + facet_wrap("cut", scales="free")
+    print(p2)
 
     # FIXME: n_high is the number of columns, not rows, because n_high and
     # n_wide are being passed backwards to plt.subplot in ggplot.py
-    columns = p.n_high
+    columns = p2.n_high
 
     fig = plt.gcf()
 
