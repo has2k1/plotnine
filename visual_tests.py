@@ -26,7 +26,7 @@ def run():
     </head><body>\n"""
     _subdirs = [name for name in os.listdir(image_dir) if os.path.isdir(os.path.join(image_dir, name))]
     # loop over all pictures
-    _row = '<tr><td>{0} {1}</td><td><a href="{2}"><img src="{2}"></a></td><td><a href="{3}"><img src="{3}"></a></td><td>{4}</td>\n'
+    _row = '<tr><td>{0} {1}</td><td>{2}</td><td><a href="{3}"><img src="{3}"></a></td><td>{4}</td>\n'
     _failed = ""
     _failed += "<h2>Only Failed</h2>"
     _failed += "<table>\n<thead><td>name</td><td>actual</td><td>expected</td><td>diff</td></thead>\n"
@@ -51,14 +51,24 @@ def run():
         _body += "<table>\n<thead><td>name</td><td>actual</td><td>expected</td><td>diff</td></thead>\n"
         for name, test in six.iteritems(pictures):
             if test.get("f", None):
+                # a real failure in the image generation, resulting in different images
                 _has_failure = True
                 s = "(failed)"
                 failed = '<a href="{0}">diff</a>'.format(test.get("f", ""))
-                _failed += _row.format(name, "", test.get("c", ""), test.get("e", ""), failed)
+                current = '<a href="{0}"><img src="{0}"></a>'.format(test.get("c", ""))
+                _failed += _row.format(name, "", current, test.get("e", ""), failed)
+            elif test.get("c", None) is None:
+                # A failure in the test, resulting in no current image
+                _has_failure = True
+                s = "(failed)"
+                failed = '--'
+                current = '(Failure in test, no image produced)'
+                _failed += _row.format(name, "", current, test.get("e", ""), failed)
             else:
                 s = "(passed)"
                 failed = '--'
-            _body += _row.format(name, s, test.get("c", ""), test.get("e", ""), failed)
+                current = '<a href="{0}"><img src="{0}"></a>'.format(test.get("c", ""))
+            _body += _row.format(name, "", current, test.get("e", ""), failed)
         _body += "</table>\n"
     _failed += "</table>\n"
     if _has_failure:
