@@ -9,7 +9,7 @@ class TestGeomHistogram(unittest.TestCase):
         print gghist
 
     def test_binwidth(self):
-        gghist = ggplot(meat, aes(x='veal') + geom_histogram(binwidth=10)
+        gghist = ggplot(meat, aes(x='veal')) + geom_histogram(binwidth=10)
         print gghist
 
 if __name__ == '__main__':
