@@ -40,11 +40,24 @@ class geom_text(geom):
 
         margin = 0.1
         xmargin = (xmax - xmin) * margin
-        ymargin = (ymax - ymin) * margin 
+        ymargin = (ymax - ymin) * margin
         xmax = xmax + xmargin
         xmin = xmin - xmargin
         ymax = ymax + ymargin
         ymin = ymin - ymargin
+
+        # Take current plotting dimension in account for the case that we
+        # work on a special dataframe just for this geom!
+        if not self.data is None:
+            ax = plt.gca()
+            cxmin, cxmax = ax.get_xlim()
+            cymin, cymax = ax.get_ylim()
+            # there is a problem if geom_text is the first plot, as
+            # then the dimension are 0-1 for all axis :-(
+            xmax = max(xmax, cxmax)
+            xmin = min(xmin, cxmin)
+            ymax = max(ymax, cymax)
+            ymin = min(ymin, cymin)
 
         if 'hjust' in layer:
             x = (np.array(x) + int(layer['hjust'])).tolist()

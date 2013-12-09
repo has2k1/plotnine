@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import ggplot.utils.six as six
 
 
 SHAPES = [
@@ -21,16 +22,28 @@ def shape_gen():
             yield shape
 
 
-def assign_shapes(gg):
-    if 'shape' in gg.aesthetics:
-        shape_col = gg.aesthetics['shape']
-        possible_shapes = np.unique(gg.data[shape_col])
+def assign_shapes(data, aes, gg):
+    """Assigns shapes to the given data based on the aes and adds the right legend
+
+    Parameters
+    ----------
+    data : DataFrame
+        dataframe which should have shapes assigned to
+    aes : aesthetic
+        mapping, including a mapping from shapes to variable
+    gg : ggplot
+        object, which holds information and gets a legend assigned
+
+    Returns
+    -------
+    data : DataFrame
+        the changed dataframe
+    """
+    if 'shape' in aes:
+        shape_col = aes['shape']
+        possible_shapes = np.unique(data[shape_col])
         shape = shape_gen()
-        if sys.hexversion > 0x03000000:
-            shape_mapping = {value: shape.__next__() for value in possible_shapes}
-        else:
-            shape_mapping = {value: shape.next() for value in possible_shapes}
-        #mapping['marker'] = mapping['shape'].replace(shape_mapping)
-        gg.data['shape_mapping'] = gg.data[shape_col].apply(lambda x: shape_mapping[x])
-        gg.legend["marker"] = { v: k for k, v in shape_mapping.items() }
-    return gg
+        shape_mapping = {value: six.next(shape) for value in possible_shapes}
+        data['shape_mapping'] = data[shape_col].apply(lambda x: shape_mapping[x])
+        gg.add_to_legend("marker", {v: k for k, v in shape_mapping.items()})
+    return data
