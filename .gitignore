@@ -1,5 +1,6 @@
 *.py[cod]
 *.pyc
+
 # C extensions
 *.so
 
@@ -18,6 +19,10 @@ develop-eggs
 lib
 lib64
 
+# generated docs
+docs/_static/
+docs/generated/
+
 # Installer logs
 pip-log.txt
 
@@ -33,6 +38,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+#pycharm
+.idea/
 
 *.swp
 
