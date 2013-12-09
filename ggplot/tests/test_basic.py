@@ -13,6 +13,8 @@ import pandas as pd
 import numpy as np
 
 from ggplot import *
+from ggplot.exampledata import diamonds
+
 
 def _build_testing_df():
     df = pd.DataFrame({
@@ -140,11 +142,16 @@ def test_facet_grid_exceptions():
 
 @image_comparison(baseline_images=['diamonds_big', 'diamonds_facet' ], extensions=["png"])  
 def test_facet_grid():
-    p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(1000))
+    # only use a small subset of the data to speedup tests
+    # N=53940 -> N=7916 and only 2x2 facets
+    _mask1 = (diamonds.cut == "Ideal") | (diamonds.cut == "Good")
+    _mask2 = (diamonds.clarity == "SI2") | (diamonds.clarity == "VS1")
+    _df = diamonds[_mask1 & _mask2]
+    p = ggplot(aes(x='x', y='y', colour='z'), data=_df)
     p = p + geom_point() + scale_colour_gradient(low="white", high="red") 
     p = p + facet_grid("cut", "clarity")
     print(p)   
-    p = ggplot(aes(x='carat'), data=diamonds)
+    p = ggplot(aes(x='carat'), data=_df)
     print(p + geom_density() + facet_grid("cut", "clarity"))    
 
 @image_comparison(baseline_images=['point_smooth_se', 'smooth_se'], extensions=["png"])   
