@@ -116,8 +116,8 @@ def ggsave(filename = None, plot = None, device = None, format = None,
         msg = "Saving {0} x {1} {2} image.\n".format(from_inch[units](width), from_inch[units](height), units)
         sys.stderr.write(msg)
     
-    if limitsize and (width > 50 or height > 50):
-        msg = "Dimensions exceed 50 inches (height and width are specified in inches/cm/mm, not pixels)." + \
+    if limitsize and (width > 25 or height > 25):
+        msg = "Dimensions exceed 25 inches (height and width are specified in inches/cm/mm, not pixels)." + \
               " If you are sure you want these dimensions, use 'limitsize=False'."
         raise Exception(msg)
     

@@ -84,15 +84,25 @@ def test_ggsave_arguments():
     ggsave(fn, gg, width=1, height=1)
     assert_exist_and_clean(fn, "both height and width")
     assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after both")
-    ggsave(fn, gg, width=100, height=100, limitsize=False)
-    assert_exist_and_clean(fn, "both height and width big")
-    assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after both")
     ggsave(fn, gg, width=1, height=1, units="cm")
     assert_exist_and_clean(fn, "units = cm")
     assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after units=cm")
     ggsave(fn, gg, dpi=100)
     assert_exist_and_clean(fn, "dpi=100")
 
+@cleanup 
+def test_ggsave_big():
+    gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
+    # supplying the ggplot object will work without printing it first!
+    fn = "filename.png"
+    # draw() needs to be done once to get the sizes of *this* plot and not some default value
+    gg.draw()
+    orig = plt.gcf().get_size_inches()
+    # 26 is the current limit, just go over it to not use too much memory
+    ggsave(fn, gg, width=26, height=26, limitsize=False)
+    assert_exist_and_clean(fn, "both height and width big")
+    assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after both")
+    
 @cleanup 
 def test_ggsave_exceptions():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()

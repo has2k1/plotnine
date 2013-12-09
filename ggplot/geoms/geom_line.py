@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from itertools import groupby
 from operator import itemgetter
 from copy import deepcopy
+import sys
 from .geom import geom
 
 
@@ -15,6 +16,14 @@ class geom_line(geom):
         if 'y' in layer:
             y = layer.pop('y')
         if 'size' in layer:
+            # ggplot also supports aes(size=...) but the current mathplotlib is not. See 
+            # https://github.com/matplotlib/matplotlib/issues/2658
+            if isinstance(layer['size'], list):
+                layer['size'] = 4
+                msg = "'geom_line()' currenty does not support the mapping of " +\
+                      "size ('aes(size=<var>'), using size=4 as a replacement.\n" +\
+                      "Use 'geom_line(size=x)' to set the size for the whole line.\n"
+                sys.stderr.write(msg)
             layer['linewidth'] = layer['size']
             del layer['size']
         if 'linestyle' in layer and 'color' not in layer:
