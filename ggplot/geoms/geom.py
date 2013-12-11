@@ -2,6 +2,8 @@ from copy import deepcopy
 from ggplot.components import aes
 from pandas import DataFrame
 
+__ALL__ = ["geom"]
+
 class geom(object):
     """Base class of all Geoms"""
     VALID_AES = []

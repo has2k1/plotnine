@@ -21,3 +21,11 @@ from .facet_grid import facet_grid
 from .facet_wrap import facet_wrap
 from .chart_components import *
 
+__facet__ = ['facet_grid', 'facet_wrap']
+__geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_density',
+             'geom_histogram', 'geom_hline', 'geom_jitter', 'geom_line', 
+             'geom_now_its_art', 'geom_point', 'geom_step', 'geom_text', 
+             'geom_tile', 'geom_vline']
+__stats__ = ['stat_bin2d', 'stat_smooth']
+__components__ = ['ylab', 'xlab', 'ylim', 'xlim', 'labs', 'ggtitle']
+__ALL__ = __geoms__ + __facet__ + __stats__ + __components__

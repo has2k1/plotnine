@@ -10,28 +10,16 @@ class theme_matplotlib(theme):
     
     Parameters
     -----------
-    rc:  dict of rcParams
+    rc :  dict of rcParams
         rcParams which should be aplied on top of mathplotlib default
-    fname:  Filename (str)
+    fname :  Filename (str)
         a filename to a matplotlibrc file
-    matplotlib_defaults: bool (default: True)
-        if True resets the plot setting to the (current) matplotlib.rcParams
-        values
+    matplotlib_defaults : bool 
+        if True (the default) resets the plot setting to the (current) 
+        matplotlib.rcParams values
     """
         
     def __init__(self, rc=None, fname=None,  matplotlib_defaults=True):
-        """Initialize the theme
-        
-        Parameters
-        -----------
-        rc:  dict of rcParams
-            rcParams which should be aplied on top of mathplotlib default
-        fname:  Filename (str)
-            a filename to a matplotlibrc file  
-        matplotlib_defaults: bool
-            if True resets the plot setting to the (current) 
-            matplotlib.rcParams values
-        """
         self._rcParams={}
         if matplotlib_defaults:
             _copy = mpl.rcParams.copy()

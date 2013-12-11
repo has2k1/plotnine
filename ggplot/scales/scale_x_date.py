@@ -6,27 +6,27 @@ from copy import deepcopy
 
 class scale_x_date(scale):
     """
-    args:
-        breaks => One of:
-            1) a string specifying the width between breaks.
-            2) the result of a valid call to `date_breaks`
-            # TODO: third option not implemented yet
-            3) a vector of breaks
+    Position scale, date
 
-    example:
-        # 1) manually pass in breaks=date_breaks()
+    Parameters
+    ----------
+    breaks : string / list of breaks
+        1) a string specifying the width between breaks.
+        2) the result of a valid call to `date_breaks`
+        3) a vector of breaks (TODO: not implemented yet!)
 
-        print ggplot(meat, aes('date','beef')) + \
-            geom_line() + \
-            scale_x_date(breaks=date_breaks('10 years'),
-                labels=date_format('%B %-d, %Y'))
-
-        # 2) or breaks as just a string
-
-        print ggplot(meat, aes('date','beef')) + \
-            geom_line() + \
-            scale_x_date(breaks='10 years',
-                labels=date_format('%B %-d, %Y'))
+    Examples
+    --------
+    >>> # 1) manually pass in breaks=date_breaks()
+    >>> print(ggplot(meat, aes('date','beef')) + \\
+    ...       geom_line() + \\
+    ...       scale_x_date(breaks=date_breaks('10 years'),
+    ...           labels=date_format('%B %-d, %Y')))
+    >>> # 2) or breaks as just a string
+    >>> print(ggplot(meat, aes('date','beef')) + \\
+    ...       geom_line() + \\
+    ...       scale_x_date(breaks='10 years',
+    ...           labels=date_format('%B %-d, %Y')))
     """
     VALID_SCALES = ['name', 'labels', 'limits', 'breaks', 'trans']
     def __radd__(self, gg):

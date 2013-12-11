@@ -5,6 +5,17 @@ import os
 
 required = ["pandas"]
 
+def extract_version():
+    """
+    Extracts version values from the main matplotlib __init__.py and
+    returns them as a dictionary.
+    """
+    with open('ggplot/__init__.py') as fd:
+        for line in fd.readlines():
+            if (line.startswith('__version__')):
+                exec(line.strip())
+    return locals()["__version__"]
+
 def get_package_data():
     baseline_images = [
         'tests/baseline_images/%s/*' % x
@@ -20,7 +31,8 @@ def get_package_data():
 
 setup(
     name="ggplot",
-    version="0.4.2",
+    # Increase the version in ggplot/__init__.py
+    version=extract_version(),
     author="Greg Lamp",
     author_email="greg@yhathq.com",
     url="https://github.com/yhat/ggplot/",

@@ -5,26 +5,23 @@ import numpy as np
 class scale_colour_manual(scale):
     """
     Specify a list of colors to use manually.
-    args:
-        values:
-            List of colors with length greater than or equal to the number
-            of unique discrete items to which you want to apply color.
-    examples:
-        from ggplot import *
-
-        color_list = ['#FFAAAA', '#ff5b00', '#c760ff', '#f43605', '#00FF00', '#0000FF', '#4c9085']
-        lng = pd.melt(meat, ['date'])
-
-        print ggplot(lng, aes('date', 'value', color='variable')) + \
-            geom_point() + \
-            scale_colour_manual(values=color_list) + \
-            ggtitle('With manual colors')
-
-        print ggplot(lng, aes('date', 'value', color='variable')) + \
-            geom_point() + \
-            ggtitle('Without manual colors')
-
-        plt.show(1)
+    
+    Parameters
+    ----------
+    values : list of colors/strings
+        List of colors with length greater than or equal to the number
+        of unique discrete items to which you want to apply color.
+        
+    Examples
+    --------
+    >>> from ggplot import *
+    >>> color_list = ['#FFAAAA', '#ff5b00', '#c760ff', '#f43605', '#00FF00', '#0000FF', '#4c9085']
+    >>> lng = pd.melt(meat, ['date'])
+    >>> gg = ggplot(lng, aes('date', 'value', color='variable')) + \\
+    ...     geom_point()
+    >>> print(gg + scale_colour_manual(values=color_list) + \\
+    ...     ggtitle('With manual colors'))
+    >>> print(gg + ggtitle('Without manual colors'))
     """
     VALID_SCALES = ['values']
     def __radd__(self, gg):
