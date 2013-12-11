@@ -1,37 +1,27 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from matplotlib.dates import DateFormatter
-from matplotlib.ticker import MultipleLocator
 
-from .components import colors, linestyles, shapes, size, linestyles
-from .components import aes
+from .components import aes, assign_visual_mapping
+from .components import colors, shapes
 from .components.legend import draw_legend
 from .geoms import *
 from .scales import *
-from .themes import *
 from .themes.theme_gray import _set_default_theme_rcparams
 from .themes.theme_gray import _theme_grey_post_plot_callback
-from .utils import *
-import utils.six as six
+import ggplot.utils.six as six
 
 import sys
 import re
 import warnings
 
+# Show plots if in interactive mode
 if sys.flags.interactive:
     plt.ion()
-
-def is_identity(x):
-    if x in colors.COLORS:
-        return True
-    elif x in shapes.SHAPES:
-        return True
-    elif isinstance(x, (float, int)):
-        return True
-    else:
-        return False
 
 class ggplot(object):
     """
@@ -64,28 +54,10 @@ class ggplot(object):
         self.aesthetics = aesthetics
         self.data = data
 
-        # TODO: This should probably be modularized
-        # Look for alias/lambda functions
-        for ae, name in self.aesthetics.items():
-            if name not in self.data and not is_identity(name):
-                result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
-                if re.match("factor[(][A-Za-z_0-9]+[)]", name):
-                    m = re.search("factor[(]([A-Za-z_0-9]+)[)]", name)
-                    self.data[name] = self.data[m.group(1)].apply(str)
-                else:
-                    lambda_column = ""
-                    for item in result:
-                        if re.match("[/*+_=\(\)-]", item):
-                            pass
-                        elif re.match("^[0-9.]+$", item):
-                            pass
-                        else:
-                            item = "self.data.get('%s')" % item
-                        lambda_column += item
-                    self.data[name] = eval(lambda_column)
+        self.data = _build_df_from_transforms(self.data, self.aesthetics)
 
         # defaults
-        self.geoms= []
+        self.geoms = []
         self.n_wide = 1
         self.n_high = 1
         self.n_dim_x = None
@@ -94,6 +66,7 @@ class ggplot(object):
         self.facets = []
         self.facet_type = None
         self.facet_scales = None
+        self.facet_pairs = [] # used by facet_grid
         # components
         self.title = None
         self.xlab = None
@@ -142,8 +115,8 @@ class ggplot(object):
         with mpl.rc_context():
             if not self.theme_applied:
                 _set_default_theme_rcparams(mpl)
-            # will be empty if no theme was applied
-            for key in six.iterkeys(self.rcParams): 
+                # will be empty if no theme was applied
+            for key in six.iterkeys(self.rcParams):
                 val = self.rcParams[key]
                 # there is a bug in matplotlib which does not allow None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543
@@ -154,14 +127,14 @@ class ggplot(object):
                 except Exception as e:
                     msg = """Setting "mpl.rcParams['%s']=%s" raised an Exception: %s""" % (key, str(val), str(e))
                     warnings.warn(msg, RuntimeWarning)
-            # draw is not allowed to show a plot, so we can use to result for ggsave 
-            # This sets a rcparam, so we don't have to undo it after plotting
+                    # draw is not allowed to show a plot, so we can use to result for ggsave
+                # This sets a rcparam, so we don't have to undo it after plotting
             mpl.interactive(False)
-            if self.facet_type=="grid":
+            if self.facet_type == "grid":
                 fig, axs = plt.subplots(self.n_high, self.n_wide,
-                        sharex=True, sharey=True)
+                                        sharex=True, sharey=True)
                 plt.subplots_adjust(wspace=.05, hspace=.05)
-            elif self.facet_type=="wrap":
+            elif self.facet_type == "wrap":
                 # add (more than) the needed number of subplots
                 fig, axs = plt.subplots(self.n_high, self.n_wide)
                 # there are some extra, remove the plots
@@ -184,70 +157,67 @@ class ggplot(object):
 
             # Aes need to be initialized BEFORE we start faceting. This is b/c
             # we want to have a consistent aes mapping across facets.
-            self = colors.assign_colors(self)
-            self = size.assign_sizes(self)
-            self = linestyles.assign_linestyles(self)
-            self = shapes.assign_shapes(self)
+            self.data = assign_visual_mapping(self.data, self.aesthetics, self)
 
             # Faceting just means doing an additional groupby. The
             # dimensions of the plot remain the same
             if self.facets:
                 # the current subplot in the axs and plots
                 cntr = 0
-                if len(self.facets)==2 and self.facet_type!="wrap":
+                if len(self.facets) == 2 and self.facet_type != "wrap":
                     # store the extreme x and y coordinates of each pair of axes
                     axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
                     xlab_offset = .15
-                    for iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
+                    for _iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
                         pos = self.facet_pairs.index(facets) + 1
                         plt.subplot(self.n_wide, self.n_high, pos)
                         for layer in self._get_layers(frame):
                             for geom in self.geoms:
                                 callbacks = geom.plot_layer(layer)
-                        axis_extremes[iter] = [min(plt.xlim()), max(plt.xlim()),
-                            min(plt.ylim()), max(plt.ylim())]
-                    # find the grid wide data extremeties
-                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0,2]]
-                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1,3]]
+                        axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
+                                                min(plt.ylim()), max(plt.ylim())]
+                        # find the grid wide data extremeties
+                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
+                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
                     # position of vertical labels for facet grid
                     xlab_pos = xlab_max + xlab_offset
-                    ylab_pos = ylab_max - float(ylab_max-ylab_min)/2
+                    ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
                     # This needs to enumerate all possibilities
-                    for pos, facets in enumerate(self.facet_pairs):
-                        pos += 1
+                    for _iter, facets in enumerate(self.facet_pairs):
+                        pos = _iter + 1
                         if pos <= self.n_high:
                             plt.subplot(self.n_wide, self.n_high, pos)
-                        for layer in self._get_layers(frame):
+                        for layer in self._get_layers(self.data):
                             for geom in self.geoms:
                                 callbacks = geom.plot_layer(layer)
-                        axis_extremes[iter] = [min(plt.xlim()), max(plt.xlim()),
-                            min(plt.ylim()), max(plt.ylim())]
-                    # find the grid wide data extremeties
-                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0,2]]
-                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1,3]]
+                        axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
+                                                min(plt.ylim()), max(plt.ylim())]
+                        # find the grid wide data extremeties
+                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
+                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
                     # position of vertical labels for facet grid
                     xlab_pos = xlab_max + xlab_offset
-                    ylab_pos = ylab_max - float(ylab_max-ylab_min)/2
+                    ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
                     # This needs to enumerate all possibilities
                     for pos, facets in enumerate(self.facet_pairs):
                         pos += 1
                         if pos <= self.n_high:
                             plt.subplot(self.n_wide, self.n_high, pos)
                             plt.table(cellText=[[facets[1]]], loc='top',
-                                    cellLoc='center', cellColours=[['lightgrey']])
-                        if (pos % self.n_high)==0:
+                                      cellLoc='center', cellColours=[['lightgrey']])
+                        if (pos % self.n_high) == 0:
                             plt.subplot(self.n_wide, self.n_high, pos)
                             x = max(plt.xticks()[0])
                             y = max(plt.yticks()[0])
                             ax = axs[pos % self.n_high][pos % self.n_wide]
                             plt.text(xlab_pos, ylab_pos, facets[0],
-                                bbox=dict(
-                                    facecolor='lightgrey',
-                                    edgecolor='black',
-                                    color='black',
-                                    width=mpl.rcParams['font.size']*1.65
-                                ),
-                                fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
+                                     bbox=dict(
+                                         facecolor='lightgrey',
+                                         edgecolor='black',
+                                         color='black',
+                                         width=mpl.rcParams['font.size'] * 1.65
+                                     ),
+                                     fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                             )
 
                     plt.subplot(self.n_wide, self.n_high, pos)
@@ -255,14 +225,14 @@ class ggplot(object):
                     # (free|free_y|free_x|None) and also make sure that only the
                     # left column gets y scales and the bottom row gets x scales
                     scale_facet_grid(self.n_wide, self.n_high,
-                            self.facet_pairs, self.facet_scales)
+                                     self.facet_pairs, self.facet_scales)
 
-                else:
+                else: # now facet_wrap > 2
                     for facet, frame in self.data.groupby(self.facets):
                         for layer in self._get_layers(frame):
                             for geom in self.geoms:
-                                if self.facet_type=="wrap":
-                                    if cntr+1 > len(plots):
+                                if self.facet_type == "wrap":
+                                    if cntr + 1 > len(plots):
                                         continue
                                     pos = plots[cntr]
                                     if pos is None:
@@ -273,10 +243,10 @@ class ggplot(object):
                                 else:
                                     plt.subplot(self.n_wide, self.n_high, cntr)
                                     # TODO: this needs some work
-                                    if (cntr % self.n_high)==-1:
+                                    if (cntr % self.n_high) == -1:
                                         plt.tick_params(axis='y', which='both',
-                                                bottom='off', top='off',
-                                                labelbottom='off')
+                                                        bottom='off', top='off',
+                                                        labelbottom='off')
                                 callbacks = geom.plot_layer(layer)
                                 if callbacks:
                                     for callback in callbacks:
@@ -286,7 +256,7 @@ class ggplot(object):
                         if isinstance(facet, tuple):
                             title = ", ".join(facet)
                         plt.table(cellText=[[title]], loc='top',
-                                cellLoc='center', cellColours=[['lightgrey']])
+                                  cellLoc='center', cellColours=[['lightgrey']])
                         cntr += 1
 
                     # NOTE: Passing n_high for cols (instead of n_wide) and
@@ -294,9 +264,19 @@ class ggplot(object):
                     # plt.subplot, n_wide is passed as the number of rows, not
                     # columns.
                     scale_facet_wrap(self.n_wide, self.n_high, range(cntr), self.facet_scales)
-            else:
-                for layer in self._get_layers(self.data):
-                    for geom in self.geoms:
+            else: # no faceting
+                for geom in self.geoms:
+                    _aes = self.aesthetics
+                    if geom.aes:
+                        # update the default mapping with the geom specific one
+                        _aes = _aes.copy()
+                        _aes.update(geom.aes)
+                    if not geom.data is None:
+                        data = _build_df_from_transforms(geom.data, _aes)
+                        data = assign_visual_mapping(data, _aes, self)
+                    else:
+                        data = self.data
+                    for layer in self._get_layers(data, _aes):
                         plt.subplot(1, 1, 1)
                         callbacks = geom.plot_layer(layer)
                         if callbacks:
@@ -309,12 +289,12 @@ class ggplot(object):
             if self.title:
                 plt.title(self.title)
             if self.xlab:
-                if self.facet_type=="grid":
+                if self.facet_type == "grid":
                     fig.text(0.5, 0.025, self.xlab)
                 else:
                     plt.xlabel(self.xlab)
             if self.ylab:
-                if self.facet_type=="grid":
+                if self.facet_type == "grid":
                     fig.text(0.025, 0.5, self.ylab, rotation='vertical')
                 else:
                     plt.ylabel(self.ylab)
@@ -350,7 +330,7 @@ class ggplot(object):
                     box = axs.get_position()
                     axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                     ax = axs
-                
+
                 cntr = 0
                 for ltype, legend in self.legend.items():
                     lname = self.aesthetics.get(ltype, ltype)
@@ -368,16 +348,18 @@ class ggplot(object):
 
         return plt.gcf()
 
-    def _get_layers(self, data=None):
+    def _get_layers(self, data=None, aes=None):
         # This is handy because... (something to do w/ facets?)
         if data is None:
             data = self.data
-        # We want everything to be a DataFrame. We're going to default
+        if aes is None:
+            aes = self.aesthetics
+            # We want everything to be a DataFrame. We're going to default
         # to key to handle items where the user hard codes a aesthetic
         # (i.e. alpha=0.6)
         mapping = pd.DataFrame({
             ae: data.get(key, key)
-                for ae, key in self.aesthetics.items()
+            for ae, key in aes.items()
         })
         if "color" in mapping:
             mapping['color'] = data['color_mapping']
@@ -390,17 +372,17 @@ class ggplot(object):
             mapping['linestyle'] = data['linestyle_mapping']
 
         # Default the x and y axis labels to the name of the column
-        if "x" in self.aesthetics and self.xlab is None:
-            self.xlab = self.aesthetics['x']
-        if "y" in self.aesthetics and self.ylab is None:
-            self.ylab = self.aesthetics['y']
+        if "x" in aes and self.xlab is None:
+            self.xlab = aes['x']
+        if "y" in aes and self.ylab is None:
+            self.ylab = aes['y']
 
         # Automatically drop any row that has an NA value
         mapping = mapping.dropna()
 
         discrete_aes = [ae for ae in self.DISCRETE if ae in mapping]
         layers = []
-        if len(discrete_aes)==0:
+        if len(discrete_aes) == 0:
             frame = mapping.to_dict('list')
             layers.append(frame)
         else:
@@ -412,7 +394,84 @@ class ggplot(object):
                 layers.append(frame)
 
         return layers
-        
+
+
+    def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
+        """Adds the the specified legend to the legend
+
+        Parameter
+        ---------
+        legend_type : str
+            type of legend, one of "color", "linestyle", "marker", "size"
+        legend_dict : dict
+            a dictionary of {visual_value: legend_key} where visual_value
+            is color value, line style, marker character, or size value;
+            and legend_key is a quantile.
+        scale_type : str
+            either "discrete" (default) or "continuous"; usually only color
+            needs to specify which kind of legend should be drawn, all
+            other scales will get a discrete scale.
+        """
+        # scale_type is up to now unused
+        # TODO: what happens if we add a second color mapping?
+        # Currently the color mapping in the legend is overwritten.
+        # What does ggplot do in such a case?
+        if legend_type in self.legend:
+            pass
+            #msg = "Adding a secondary mapping of {0} is unsupported and no legend for this mapping is added.\n"
+            #sys.stderr.write(msg.format(str(legend_type)))
+        self.legend[legend_type] = legend_dict
+
     def _apply_post_plot_callbacks(self, axis):
         for cb in self.post_plot_callbacks:
             cb(axis)
+
+
+def _is_identity(x):
+    if x in colors.COLORS:
+        return True
+    elif x in shapes.SHAPES:
+        return True
+    elif isinstance(x, (float, int)):
+        return True
+    else:
+        return False
+
+
+def _build_df_from_transforms(data, aes):
+    """Adds columns from the in aes included transformations
+
+    Possible transformations are "factor(<col>)" and
+    expresions which can be used with eval.
+
+    Parameters
+    ----------
+    data : DataFrame
+        the original dataframe
+    aes : aesthetics
+        the aesthetic
+
+    Returns
+    -------
+    data : DateFrame
+        Transformend DataFrame
+    """
+    for ae, name in aes.items():
+        if name not in data and not _is_identity(name):
+            # Look for alias/lambda functions
+            result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
+            if re.match("factor[(][A-Za-z_0-9]+[)]", name):
+                m = re.search("factor[(]([A-Za-z_0-9]+)[)]", name)
+                data[name] = data[m.group(1)].apply(str)
+            else:
+                lambda_column = ""
+                for item in result:
+                    if re.match("[/*+_=\(\)-]", item):
+                        pass
+                    elif re.match("^[0-9.]+$", item):
+                        pass
+                    else:
+                        item = "data.get('%s')" % item
+                    lambda_column += item
+                data[name] = eval(lambda_column)
+    return data

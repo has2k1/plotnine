@@ -1,5 +1,5 @@
 import numpy as np
-import pandas as DataFrame
+import pandas as pd
 
 from ggplot import *
 
