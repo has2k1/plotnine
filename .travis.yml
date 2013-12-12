@@ -14,11 +14,14 @@ before_install:
   - sudo ln -s /run/shm /dev/shm
 # Install packages
 install:
-  - conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels
+  # Install dependencies
+  - conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=1.1.1 nose dateutil pandas=0.12 statsmodels
   - pip install python-coveralls --use-mirrors
   - pip install nose-cov --use-mirrors
   - python setup.py install
   - export MATPLOTLIB_BACKEND=agg
+  # List all conda and pip packages
+  - conda list
 
 # Run test
 script:
