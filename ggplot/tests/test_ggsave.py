@@ -64,8 +64,9 @@ def test_ggsave_arguments():
     assert_exist_and_clean(os.path.join(".", fn), "both fn, plot and path")
     ggsave(gg, format="png")
     assert_exist_and_clean(str(gg.__hash__())+".png", "format png")
-    ggsave(fn, gg, device="tiff")
-    assert_exist_and_clean(fn, "device tiff")
+    # travis setup has not tiff support
+    #ggsave(fn, gg, device="tiff")
+    #assert_exist_and_clean(fn, "device tiff")
     ggsave(fn, gg)
     assert_exist_and_clean(fn, "both fn and plot")
     orig = plt.gcf().get_size_inches()
