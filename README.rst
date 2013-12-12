@@ -15,7 +15,7 @@ read more on our
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/ggplot_demo_beef.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/ggplot_demo_beef.png
    :height: 300px
 
 What is it?
@@ -94,7 +94,7 @@ Examples
         geom_point() + \
         stat_smooth(color='red')
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/ggplot_meat.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/ggplot_meat.png
 
 ``geom_point``
 ^^^^^^^^^^^^^^
@@ -106,7 +106,7 @@ Examples
         geom_point(alpha=1/20.) + \
         ylim(0, 20000)
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/diamonds_geom_point_alpha.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/diamonds_geom_point_alpha.png
 
 ``geom_histogram``
 ^^^^^^^^^^^^^^^^^^
@@ -116,7 +116,7 @@ Examples
     p = ggplot(aes(x='carat'), data=diamonds)
     p + geom_histogram() + ggtitle("Histogram of Diamond Carats") + labs("Carats", "Freq")
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/diamonds_carat_hist.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/diamonds_carat_hist.png
 
 ``geom_density``
 ^^^^^^^^^^^^^^^^
@@ -126,7 +126,7 @@ Examples
     ggplot(diamonds, aes(x='price', color='cut')) + \
         geom_density()
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/geom_density_example.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/geom_density_example.png
 
 ::
 
@@ -134,7 +134,7 @@ Examples
     p = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
     p + geom_density()
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/density_with_fill.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/density_with_fill.png
 
 
 ``geom_bar``
@@ -145,7 +145,7 @@ Examples
     p = ggplot(mtcars, aes('factor(cyl)'))
     p + geom_bar()
 
-.. image:: http://github.com/yhat/ggplot/raw/master/public/img/mtcars_geom_bar_cyl.png
+.. image:: https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/mtcars_geom_bar_cyl.png
 
 
 TODO
