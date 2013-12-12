@@ -15,7 +15,7 @@ before_install:
 # Install packages
 install:
   # Install dependencies
-  - conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=1.1.1 nose dateutil pandas=0.12 statsmodels
+  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=1.1.1 nose dateutil pandas=0.12 statsmodels; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels; fi
   - pip install python-coveralls --use-mirrors
   - pip install nose-cov --use-mirrors
   - python setup.py install
