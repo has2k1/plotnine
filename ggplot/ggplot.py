@@ -178,7 +178,7 @@ class ggplot(object):
                 plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
             else:
                 fig, axs = plt.subplots(self.n_high, self.n_wide)
-
+            axs = np.atleast_2d(axs)
             # Set the default plot to the first one
             plt.subplot(self.n_wide, self.n_high, 1)
 
