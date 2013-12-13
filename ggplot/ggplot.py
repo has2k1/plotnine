@@ -301,7 +301,7 @@ class ggplot(object):
                         callbacks = geom.plot_layer(layer)
                         if callbacks:
                             for callback in callbacks:
-                                fn = getattr(axs, callback['function'])
+                                fn = getattr(axs[0][0], callback['function'])
                                 fn(*callback['args'])
 
             # Handling the details of the chart here; probably be a better
