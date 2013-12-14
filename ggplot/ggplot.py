@@ -291,7 +291,12 @@ class ggplot(object):
             # Handling the details of the chart here; probably be a better
             # way to do this...
             if self.title:
-                plt.title(self.title)
+                if self.facets:
+                    # This is currently similar what plt.title uses
+                    plt.gcf().suptitle(self.title, verticalalignment='baseline',
+                                       fontsize=mpl.rcParams['axes.titlesize'])
+                else:
+                    plt.title(self.title)
             if self.xlab:
                 if self.facet_type == "grid":
                     fig.text(0.5, 0.025, self.xlab)
