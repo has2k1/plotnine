@@ -46,14 +46,17 @@ class ylab(object):
         return gg
 
 class labs(object):
-    def __init__(self, xlab=None, ylab=None):
-        self.xlab = xlab
-        self.ylab = ylab
+    def __init__(self, x=None, y=None, title=None):
+        self.x = x
+        self.y = y
+        self.title = title
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
-        if self.xlab:
-            gg.xlab = self.xlab
-        if self.ylab:
-            gg.ylab = self.ylab
+        if self.x:
+            gg.xlab = self.x
+        if self.y:
+            gg.ylab = self.y
+        if self.title:
+            gg.title = self.title
         return gg
