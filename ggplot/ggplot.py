@@ -269,9 +269,9 @@ class ggplot(object):
                                         continue
                                     y_i, x_i = pos
                                     pos = x_i + y_i * self.n_high + 1
-                                    plt.subplot(self.n_wide, self.n_high, pos)
+                                    ax = plt.subplot(self.n_wide, self.n_high, pos)
                                 else:
-                                    plt.subplot(self.n_wide, self.n_high, cntr)
+                                    ax = plt.subplot(self.n_wide, self.n_high, cntr)
                                     # TODO: this needs some work
                                     if (cntr % self.n_high)==-1:
                                         plt.tick_params(axis='y', which='both',
@@ -280,7 +280,7 @@ class ggplot(object):
                                 callbacks = geom.plot_layer(layer)
                                 if callbacks:
                                     for callback in callbacks:
-                                        fn = getattr(axs[cntr], callback['function'])
+                                        fn = getattr(ax, callback['function'])
                                         fn(*callback['args'])
                         title = facet
                         if isinstance(facet, tuple):
