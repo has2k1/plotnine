@@ -342,14 +342,11 @@ class ggplot(object):
             # or at least shouldn't get shrunk to accomodate one. Need some sort of
             # test in place to prevent this OR prevent legend getting set to True.
             if self.legend:
-                if self.facets:
-                    ax = axs[0][self.n_wide - 1]
-                    box = ax.get_position()
-                    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                else:
-                    box = axs.get_position()
-                    axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                    ax = axs
+
+                # works with faceted and non-faceted plots
+                ax = axs[0][self.n_wide - 1]
+                box = ax.get_position()
+                ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                 
                 cntr = 0
                 for ltype, legend in self.legend.items():
