@@ -87,6 +87,11 @@ def test_factor_geom_point_line():
 def test_factor_point_line_title_lab():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
     print(p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered"))
+
+@image_comparison(baseline_images=['labs' ], extensions=["png"])
+def test_labs():
+    p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
+    print(p + geom_point() + geom_line(color='lightblue') + labs(title="Beef: It's What's for Dinner", x="Date", y="Head of Cattle Slaughtered"))
   
 @image_comparison(baseline_images=['factor_geom_bar' ], extensions=["png"])
 def test_factor_bar():
