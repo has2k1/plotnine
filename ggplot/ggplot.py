@@ -283,7 +283,7 @@ class ggplot(object):
                         callbacks = geom.plot_layer(layer)
                         if callbacks:
                             for callback in callbacks:
-                                fn = getattr(axs[0][0], callback['function'])
+                                fn = getattr(ax, callback['function'])
                                 fn(*callback['args'])
 
             # Handling the details of the chart here; probably be a better
@@ -324,14 +324,11 @@ class ggplot(object):
             # or at least shouldn't get shrunk to accomodate one. Need some sort of
             # test in place to prevent this OR prevent legend getting set to True.
             if self.legend:
-                if self.facets:
-                    ax = axs[0][self.n_wide - 1]
-                    box = ax.get_position()
-                    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                else:
-                    box = axs.get_position()
-                    axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                    ax = axs
+                # works with faceted and non-faceted plots
+                ax = axs[0][self.n_wide - 1]
+                box = ax.get_position()
+                ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+                
                 cntr = 0
                 for ltype, legend in self.legend.items():
                     lname = self.aesthetics.get(ltype, ltype)
