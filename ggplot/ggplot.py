@@ -153,7 +153,7 @@ class ggplot(object):
                 plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
             else:
                 fig, axs = plt.subplots(self.n_high, self.n_wide)
-
+            axs = np.atleast_2d(axs)
             # Set the default plot to the first one
             plt.subplot(self.n_wide, self.n_high, 1)
 
@@ -241,9 +241,9 @@ class ggplot(object):
                                         continue
                                     y_i, x_i = pos
                                     pos = x_i + y_i * self.n_high + 1
-                                    plt.subplot(self.n_wide, self.n_high, pos)
+                                    ax = plt.subplot(self.n_wide, self.n_high, pos)
                                 else:
-                                    plt.subplot(self.n_wide, self.n_high, cntr)
+                                    ax = plt.subplot(self.n_wide, self.n_high, cntr)
                                     # TODO: this needs some work
                                     if (cntr % self.n_high) == -1:
                                         plt.tick_params(axis='y', which='both',
@@ -252,7 +252,7 @@ class ggplot(object):
                                 callbacks = geom.plot_layer(layer)
                                 if callbacks:
                                     for callback in callbacks:
-                                        fn = getattr(axs[cntr], callback['function'])
+                                        fn = getattr(ax, callback['function'])
                                         fn(*callback['args'])
                         title = facet
                         if isinstance(facet, tuple):
@@ -283,7 +283,7 @@ class ggplot(object):
                         callbacks = geom.plot_layer(layer)
                         if callbacks:
                             for callback in callbacks:
-                                fn = getattr(axs, callback['function'])
+                                fn = getattr(axs[0][0], callback['function'])
                                 fn(*callback['args'])
 
             # Handling the details of the chart here; probably be a better
@@ -332,7 +332,6 @@ class ggplot(object):
                     box = axs.get_position()
                     axs.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                     ax = axs
-
                 cntr = 0
                 for ltype, legend in self.legend.items():
                     lname = self.aesthetics.get(ltype, ltype)
