@@ -21,6 +21,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - ~~add weight option~~
         - add \__density__ option (a la ..density..)
         - add \__count__ option (a la ..count..)
+        - add `position` argument for dodge, stack, etc.
     - geom_boxplot
         - TODO
     - geom_hline
