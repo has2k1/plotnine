@@ -98,4 +98,4 @@ p + geom_bar()
 ### TODO
 [The list is long, but distinguished.](https://github.com/yhat/ggplot/blob/master/TODO.md)
 We're looking for contributors! Email greg at yhathq.com for more info. For 
-getting started with contributing, check out [these docs](https://github.com/yhat/ggplot/blob/master/docs/contributing.md)
+getting started with contributing, check out [these docs](https://github.com/yhat/ggplot/blob/master/docs/contributing.rst)
