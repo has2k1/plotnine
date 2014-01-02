@@ -91,5 +91,8 @@ def _theme_grey_post_plot_callback(ax):
 
     #Set minor grid lines
     ax.grid(True, 'minor', color='#F2F2F2', linestyle='-', linewidth=0.7)
-    ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
-    ax.yaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
+
+    if not isinstance(ax.xaxis.get_major_locator(), mpl.ticker.LogLocator):
+        ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
+    if not isinstance(ax.yaxis.get_major_locator(), mpl.ticker.LogLocator):
+        ax.yaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
