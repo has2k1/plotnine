@@ -279,7 +279,7 @@ class ggplot(object):
                     else:
                         data = self.data
                     for layer in self._get_layers(data, _aes):
-                        plt.subplot(1, 1, 1)
+                        ax = plt.subplot(1, 1, 1)
                         callbacks = geom.plot_layer(layer)
                         if callbacks:
                             for callback in callbacks:
