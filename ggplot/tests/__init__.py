@@ -8,6 +8,7 @@ default_test_modules = [
     'ggplot.tests.test_readme_examples',
     'ggplot.tests.test_scale_facet_wrap',
     'ggplot.tests.test_geom',
+    'ggplot.tests.test_scale_log',
     ]
 
 
