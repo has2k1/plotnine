@@ -85,3 +85,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - theme_bw()
         - TODO
     - theme_xkcd()
+
+
+
+[![Analytics](https://ga-beacon.appspot.com/UA-46996803-1/ggplot/TODO.md)](https://github.com/yhat/ggplot)
