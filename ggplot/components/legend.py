@@ -91,6 +91,9 @@ def draw_legend(ax, legend, legend_type, legend_title, ith_legend):
                                      bbox_transform=ax.transAxes,
                                      borderpad=1.,
                                      )
+    # Workaround for a bug in matplotlib up to 1.3.1
+    # https://github.com/matplotlib/matplotlib/issues/2530
+    anchored_box.set_clip_on(False)
     return anchored_box
 
 if __name__=="__main__":
