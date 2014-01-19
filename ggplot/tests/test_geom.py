@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from nose.tools import assert_equal, assert_is, assert_is_not
-from matplotlib.testing.decorators import image_comparison
+from ggplot.tests import image_comparison
 
 from ggplot import *
 from ggplot.geoms.geom import geom

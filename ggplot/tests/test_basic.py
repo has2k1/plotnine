@@ -1,16 +1,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
 from six.moves import xrange
 
 from nose.tools import assert_equal, assert_true, assert_raises
-from matplotlib.testing.decorators import image_comparison, cleanup
 
-import os
-
-import pandas as pd
-import numpy as np
+from . import get_assert_same_ggplot, cleanup
+assert_same_ggplot = get_assert_same_ggplot(__file__)
 
 from ggplot import *
 from ggplot.exampledata import diamonds
@@ -32,104 +28,110 @@ def _build_testing_df():
     return df
 
 def _build_meat_df():
-    meat = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                     '..', 'exampledata', 'meat.csv'))
     meat['date'] = pd.to_datetime(meat.date)
     return meat
 
-@image_comparison(baseline_images=['geom_density'], extensions=["png"])
+@cleanup
 def test_geom_density():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", color="c"), data=df)
-    print(gg + geom_density() + xlab("x label") + ylab("y label"))
+    gg = gg + geom_density() + xlab("x label") + ylab("y label")
+    assert_same_ggplot(gg, "geom_density")
 
-@image_comparison(baseline_images=['geom_hist', 'geom_hist_title'], extensions=["png"])
+@cleanup
 def test_geom_histogram():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
-    print(gg + geom_histogram())
-    print(gg + geom_histogram() + ggtitle("My Histogram"))
-    
-@image_comparison(baseline_images=['geom_point', 'geom_point_vline'], extensions=["png"])
+    assert_same_ggplot(gg + geom_histogram(), "geom_hist")
+    assert_same_ggplot(gg + geom_histogram() + ggtitle("My Histogram"), "geom_hist_title")
+
+@cleanup
 def test_geom_point():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
-    print(gg + geom_point())
-    print(gg + geom_point() + geom_vline(x=50, ymin=-10, ymax=10))
-    
-@image_comparison(baseline_images=[ 'geom_area'], extensions=["png"])
+    assert_same_ggplot(gg + geom_point(), "geom_point")
+    gg = gg + geom_point() + geom_vline(x=50, ymin=-10, ymax=10)
+    assert_same_ggplot(gg, "geom_point_vline")
+
+@cleanup
 def test_geom_area():
     df = _build_testing_df()
     gg = ggplot(aes(x='x', ymax='y', ymin='z', color="cat2"), data=df)
-    print(gg + geom_area())
+    assert_same_ggplot(gg + geom_area(), "geom_area")
 
-@image_comparison(baseline_images=['geom_text'], extensions=["png"])
+@cleanup
 def test_geom_text():
-    print(ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text())
-    
+    gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
+    assert_same_ggplot(gg, "geom_text")
 
-@image_comparison(baseline_images=['factor_geom_line' ], extensions=["png"])
+
+@cleanup
 def test_geom_line():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
-    print(p + geom_line())
-    
-@image_comparison(baseline_images=['factor_geom_point' ], extensions=["png"])
+    assert_same_ggplot(p + geom_line(), "factor_geom_line")
+
+@cleanup
 def test_factor_geom_point():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
-    print(p + geom_point())
-    
-@image_comparison(baseline_images=['factor_geom_point_line'], extensions=["png"])
+    assert_same_ggplot(p + geom_point(), "factor_geom_point")
+
+@cleanup
 def test_factor_geom_point_line():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
-    print(p + geom_line() + geom_point())
-    
-@image_comparison(baseline_images=['factor_complicated' ], extensions=["png"])
+    assert_same_ggplot(p + geom_line() + geom_point(), "factor_geom_point_line")
+
+@cleanup
 def test_factor_point_line_title_lab():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
-    print(p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered"))
+    p = p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner")
+    p = p + xlab("Date") + ylab("Head of Cattle Slaughtered")
+    assert_same_ggplot(p, "factor_complicated")
 
-@image_comparison(baseline_images=['labs' ], extensions=["png"])
+@cleanup
 def test_labs():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
-    print(p + geom_point() + geom_line(color='lightblue') + labs(title="Beef: It's What's for Dinner", x="Date", y="Head of Cattle Slaughtered"))
-  
-@image_comparison(baseline_images=['factor_geom_bar' ], extensions=["png"])
+    p = p + geom_point() + geom_line(color='lightblue')
+    p = p + labs(title="Beef: It's What's for Dinner", x="Date", y="Head of Cattle Slaughtered")
+    assert_same_ggplot(p, "labs")
+
+@cleanup
 def test_factor_bar():
     p = ggplot(aes(x='factor(cyl)'), data=mtcars)
-    print(p + geom_bar())
-    
-@image_comparison(baseline_images=['stat_smooth'], extensions=["png"])
+    assert_same_ggplot(p + geom_bar(), "factor_geom_bar")
+
+@cleanup
 def test_stats_smooth():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
-    print(gg + stat_smooth(color="blue") + ggtitle("My Smoothed Chart"))
-    
-@image_comparison(baseline_images=['stat_bin2d'], extensions=["png"])
+    gg = gg + stat_smooth(color="blue") + ggtitle("My Smoothed Chart")
+    assert_same_ggplot(gg, "stat_smooth")
+
+@cleanup
 def test_stats_bin2d():
     df = _build_testing_df()
     gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
-    print(gg + stat_bin2d())
-    
-@image_comparison(baseline_images=[ 'geom_density_alpha' ], extensions=["png"])
+    assert_same_ggplot(gg + stat_bin2d(), "stat_bin2d")
+
+@cleanup
 def test_alpha_density():
     df = _build_testing_df()
     gg = ggplot(aes(x='mpg', fill=True, alpha=0.3), data=mtcars)
-    print(gg + geom_density())
+    assert_same_ggplot(gg + geom_density(), "geom_density_alpha")
 
-@image_comparison(baseline_images=['geom_bar_facet', 'geom_area_facet' ], extensions=["png"])   
+@cleanup
 def test_facet_wrap():
     df = _build_testing_df()
     gg = ggplot(aes(x='x', ymax='y', ymin='z'), data=df)
-    print(gg + geom_bar() + facet_wrap(x="cat2"))
-    print(gg + geom_area() + facet_wrap(x="cat2"))
+    assert_same_ggplot(gg + geom_bar() + facet_wrap(x="cat2"), "geom_bar_facet")
+    assert_same_ggplot(gg + geom_area() + facet_wrap(x="cat2"), "geom_area_facet")
 
-@image_comparison(baseline_images=['geom_density_facet', 'geom_line_facet' ], extensions=["png"])   
+@cleanup
 def test_facet_wrap2():
     meat = _build_meat_df()
     meat_lng = pd.melt(meat, id_vars=['date'])
     p = ggplot(aes(x='date', y='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
-    print(p + geom_density() + facet_wrap("variable"))
-    print(p + geom_line() + facet_wrap("variable"))
+    assert_same_ggplot(p + geom_density() + facet_wrap("variable"), "geom_density_facet")
+    assert_same_ggplot(p + geom_line() + facet_wrap("variable"), "geom_line_facet")
 
 @cleanup 
 def test_facet_grid_exceptions():
@@ -142,10 +144,8 @@ def test_facet_grid_exceptions():
         print(p + geom_point() + facet_grid(y="variable", x="NOT_AVAILABLE"))
     with assert_raises(Exception):
         print(p + geom_point() + facet_grid(y="NOT_AVAILABLE", x="variable"))
-    #print(p + geom_point() + facet_grid(y="variable", x=))
-    # Todo: real testcase for facet_grid
 
-@image_comparison(baseline_images=['diamonds_big', 'diamonds_facet' ], extensions=["png"])  
+@cleanup
 def test_facet_grid():
     # only use a small subset of the data to speedup tests
     # N=53940 -> N=7916 and only 2x2 facets
@@ -155,63 +155,66 @@ def test_facet_grid():
     p = ggplot(aes(x='x', y='y', colour='z'), data=_df)
     p = p + geom_point() + scale_colour_gradient(low="white", high="red") 
     p = p + facet_grid("cut", "clarity")
-    print(p)   
+    assert_same_ggplot(p, "diamonds_big")
     p = ggplot(aes(x='carat'), data=_df)
-    print(p + geom_density() + facet_grid("cut", "clarity"))    
+    p = p + geom_density() + facet_grid("cut", "clarity")
+    assert_same_ggplot(p, "diamonds_facet")
 
-@image_comparison(baseline_images=['point_smooth_se', 'smooth_se'], extensions=["png"])   
+@cleanup
 def test_smooth_se():
     meat = _build_meat_df()
     p = ggplot(aes(x='date', y='beef'), data=meat)
-    print(p + geom_point() + stat_smooth(se=True))
-    print(p + stat_smooth(se=True))
-    
-@image_comparison(baseline_images=['scale1'], extensions=["png"])   
+    assert_same_ggplot(p + geom_point() + stat_smooth(se=True), "point_smooth_se")
+    assert_same_ggplot(p + stat_smooth(se=True), "smooth_se")
+
+@cleanup
 def test_scale_xy_continous():
     meat = _build_meat_df()
     p = ggplot(aes(x='date', y='beef'), data=meat)
-    print(p + geom_point() + scale_x_continuous("This is the X") + scale_y_continuous("Squared", limits=[0, 1500]))
-    
-@image_comparison(baseline_images=['ylim'], extensions=["png"])   
+    p = p + geom_point() + scale_x_continuous("This is the X")
+    p = p + scale_y_continuous("Squared", limits=[0, 1500])
+    assert_same_ggplot(p, "scale1")
+
+@cleanup
 def test_ylim():
     meat = _build_meat_df()
     p = ggplot(aes(x='date', y='beef'), data=meat)
-    print(p + geom_point() + ylim(0, 1500))
-    
-@image_comparison(baseline_images=['scale_date'], extensions=["png"])   
+    assert_same_ggplot(p + geom_point() + ylim(0, 1500), "ylim")
+
+@cleanup
 def test_scale_date():
     meat = _build_meat_df()
     gg = ggplot(aes(x='date', y='beef'), data=meat) + geom_line() 
-    print(gg+scale_x_date(labels="%Y-%m-%d"))
+    assert_same_ggplot(gg+scale_x_date(labels="%Y-%m-%d"), "scale_date")
 
-@image_comparison(baseline_images=['diamonds_small'], extensions=["png"])   
+@cleanup
 def test_diamond():    
     p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(4))
     p = p + geom_point() + scale_colour_gradient(low="white", high="red") 
     p = p + facet_wrap("cut")
-    print(p)
+    assert_same_ggplot(p, "diamonds_small")
 
 def test_aes_positional_args():
     result = aes("weight", "hp")
     expected = {"x": "weight", "y": "hp"}
-    assert_equal(result,expected)
+    assert_equal(result, expected)
 
     result3 = aes("weight", "hp", "qsec")
-    expected3 =  {"x": "weight", "y": "hp", "color": "qsec"}
-    assert_equal(result3,expected3)
+    expected3 = {"x": "weight", "y": "hp", "color": "qsec"}
+    assert_equal(result3, expected3)
 
 
 def test_aes_keyword_args():
     result = aes(x="weight", y="hp")
     expected = {"x": "weight", "y": "hp"}
-    assert_equal(result,expected)
+    assert_equal(result, expected)
 
     result3 = aes(x="weight", y="hp", color="qsec")
-    expected3 =  {"x": "weight", "y": "hp", "color": "qsec"}
+    expected3 = {"x": "weight", "y": "hp", "color": "qsec"}
     assert_equal(result3,expected3)
 
 
 def test_aes_mixed_args():
     result = aes("weight", "hp", color="qsec")
     expected = {"x": "weight", "y": "hp", "color": "qsec"}
-    assert_equal(result,expected)
+    assert_equal(result, expected)

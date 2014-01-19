@@ -1,27 +1,24 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
 from six.moves import xrange
 
 from nose.tools import assert_equal, assert_true, assert_raises
-from matplotlib.testing.decorators import image_comparison, cleanup
-
-import numpy as np
-import pandas as DataFrame
+from ggplot.tests import image_comparison
 
 from ggplot import *
 
-def _diff(a,b):
+
+def _diff(a, b):
     ret = {}
-    for key,val in a.items():
-        if b.has_key(key):
+    for key, val in a.items():
+        if key in b:
             if b[key] != val:
                 ret[key] = "%s: %s -> %s" % (key, val, b[key])
         else:
             ret[key] = "%s: %s -> %s" % (key, val, "--")
-    for key,val in b.items():
-        if not a.has_key(key):
+    for key, val in b.items():
+        if key in a:
             ret[key] = "%s: %s -> %s" % (key, "--", val)
     return ret
 
