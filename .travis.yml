@@ -2,6 +2,18 @@ language: python
 python:
   - 2.7
   - 3.3
+
+env:
+  - MPL=1.1.1 PANDAS=0.12
+  - MPL= PANDAS=
+
+matrix:
+  exclude:
+    # we don't want to test old versions agains newer python
+    - python: 3.3
+      env: MPL=1.1.1 PANDAS=0.12
+
+  
 notifications:
   email: false
 
@@ -15,7 +27,7 @@ before_install:
 # Install packages
 install:
   # Install dependencies
-  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=1.1.1 nose dateutil pandas=0.12 statsmodels; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels; fi
+  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=$MPL nose dateutil pandas=$PANDAS statsmodels pil; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels pil; fi
   - pip install python-coveralls --use-mirrors
   - pip install nose-cov --use-mirrors
   - python setup.py install
@@ -31,3 +43,4 @@ script:
 # Calculate coverage
 after_success:
   - coveralls --config_file .coveragerc
+  
