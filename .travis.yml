@@ -4,14 +4,15 @@ python:
   - 3.3
 
 env:
-  - MPL=1.1.1 PANDAS=0.12
-  - MPL= PANDAS=
+  - MPL=1.1.1 PANDAS=0.12 PIL=pil
+  - MPL= PANDAS= PIL=
 
 matrix:
   exclude:
     # we don't want to test old versions agains newer python
+    # also pil is only needed with matplotlib 1.1.1
     - python: 3.3
-      env: MPL=1.1.1 PANDAS=0.12
+      env: MPL=1.1.1 PANDAS=0.12 PIL=pil
 
   
 notifications:
@@ -27,7 +28,7 @@ before_install:
 # Install packages
 install:
   # Install dependencies
-  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=$MPL nose dateutil pandas=$PANDAS statsmodels pil; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels pil; fi
+  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=$MPL nose dateutil pandas=$PANDAS statsmodels $PIL; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels; fi
   - pip install python-coveralls --use-mirrors
   - pip install nose-cov --use-mirrors
   - python setup.py install
