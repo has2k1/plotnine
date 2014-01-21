@@ -1,0 +1,46 @@
+language: python
+python:
+  - 2.7
+  - 3.3
+
+env:
+  - MPL=1.1.1 PANDAS=0.12
+  - MPL= PANDAS=
+
+matrix:
+  exclude:
+    # we don't want to test old versions agains newer python
+    - python: 3.3
+      env: MPL=1.1.1 PANDAS=0.12
+
+  
+notifications:
+  email: false
+
+# Setup anaconda
+before_install:
+  - travis/miniconda.sh -b
+  - export PATH=/home/travis/anaconda/bin:$PATH
+  # The next couple lines fix a crash with multiprocessing on Travis
+  - sudo rm -rf /dev/shm
+  - sudo ln -s /run/shm /dev/shm
+# Install packages
+install:
+  # Install dependencies
+  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=$MPL nose dateutil pandas=$PANDAS statsmodels pil; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels pil; fi
+  - pip install python-coveralls --use-mirrors
+  - pip install nose-cov --use-mirrors
+  - python setup.py install
+  - export MATPLOTLIB_BACKEND=agg
+  # List all conda and pip packages
+  - conda list
+
+# Run test
+script:
+  # only use the unittests under ggplot/tests/ and not the manual tests in tests/
+  - nosetests ggplot --with-cov --cov ggplot --cov-config .coveragerc --logging-level=INFO
+
+# Calculate coverage
+after_success:
+  - coveralls --config_file .coveragerc
+  

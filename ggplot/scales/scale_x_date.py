@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from ..utils import date_breaks, date_format, six
 from .scale import scale
 from copy import deepcopy

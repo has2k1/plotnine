@@ -64,8 +64,9 @@ def test_ggsave_arguments():
     assert_exist_and_clean(os.path.join(".", fn), "both fn, plot and path")
     ggsave(gg, format="png")
     assert_exist_and_clean(str(gg.__hash__())+".png", "format png")
-    ggsave(fn, gg, device="tiff")
-    assert_exist_and_clean(fn, "device tiff")
+    # travis setup has not tiff support
+    #ggsave(fn, gg, device="tiff")
+    #assert_exist_and_clean(fn, "device tiff")
     ggsave(fn, gg)
     assert_exist_and_clean(fn, "both fn and plot")
     orig = plt.gcf().get_size_inches()
@@ -129,6 +130,14 @@ def test_ggsave_exceptions():
     with assert_raises(Exception):
         ggsave(fn, gg, dpi="xxx")
     assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after unknown dpi")
+
+@cleanup 
+def test_ggsave_close_plot():
+    gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
+    fn = "filename.png"
+    ggsave(fn, gg)
+    assert_exist_and_clean(fn, "exist")
+    assert_true(plt.get_fignums() == [], "ggsave did not close the plot")
     
 
 def test_aes_mixed_args():

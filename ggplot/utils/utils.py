@@ -158,3 +158,6 @@ def ggsave(filename = None, plot = None, device = None, format = None,
     finally:
         # restore the sizes
         figure.set_size_inches(w,h)
+    # close figure, if it was drawn by ggsave
+    if not plot is None:
+        plt.close(figure)

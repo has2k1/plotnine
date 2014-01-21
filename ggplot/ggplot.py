@@ -25,6 +25,11 @@ import warnings
 if sys.flags.interactive:
     plt.ion()
 
+# Workaround for matplotlib 1.1.1 not having a rc_context 
+if not hasattr(mpl, 'rc_context'):
+    from .utils import _rc_context
+    mpl.rc_context = _rc_context
+
 class ggplot(object):
     """
     ggplot is the base layer or object that you use to define

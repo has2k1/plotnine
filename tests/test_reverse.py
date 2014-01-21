@@ -1,3 +1,5 @@
+from __future__ import print_function, unicode_literals
+
 import numpy as np
 import pandas as pd
 
@@ -17,6 +19,6 @@ gg = ggplot(aes(x="x", color="c"), data=pd.DataFrame({"x": np.random.normal(0, 1
 
 gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
 
-print gg + geom_line()
-print gg + geom_line() + scale_y_reverse()
-print gg + geom_line() + scale_x_reverse()
+print(gg + geom_line())
+print(gg + geom_line() + scale_y_reverse())
+print(gg + geom_line() + scale_x_reverse())

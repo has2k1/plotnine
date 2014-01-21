@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from matplotlib.testing.decorators import image_comparison, cleanup
+from ggplot.tests import image_comparison, cleanup
 from nose.tools import assert_true, assert_raises
 
 from ggplot import *
