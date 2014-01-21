@@ -25,7 +25,8 @@ install:
 
 # Run test
 script:
-  - nosetests --with-cov --cov ggplot --cov-config .coveragerc --logging-level=INFO
+  # only use the unittests under ggplot/tests/ and not the manual tests in tests/
+  - nosetests ggplot --with-cov --cov ggplot --cov-config .coveragerc --logging-level=INFO
 
 # Calculate coverage
 after_success:
