@@ -1,0 +1,12 @@
+# requirements for doc building
+sphinx
+pygments
+IPython
+numpydoc
+# normal requirements
+numpy
+pandas
+matplotlib
+scipy
+patsy
+statsmodels

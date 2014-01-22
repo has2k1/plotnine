@@ -39,8 +39,10 @@ setup(
     description="ggplot for python",
     # run pandoc --from=markdown --to=rst --output=README.rst README.md
     long_description=open("README.rst").read(),
-    install_requires=["pandas", "matplotlib", "scipy", "statsmodels",
-                      "patsy"],
+    # numpy is here to make installing easier... Needs to be at the last position,
+    # as thats the first installed with "python setup.py install"
+    install_requires=["statsmodels", "matplotlib", "scipy", 
+                      "patsy", "pandas", "numpy"],
     classifiers=['Intended Audience :: Science/Research',
                  'Intended Audience :: Developers',
                  'Programming Language :: Python',
