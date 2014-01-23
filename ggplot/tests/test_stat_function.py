@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from matplotlib.testing.decorators import image_comparison, cleanup
 from nose.tools import assert_true, assert_raises
+from ggplot.tests import image_comparison
 
 from ggplot import *
 
@@ -11,8 +11,7 @@ import numpy as np
 import scipy.stats
 from pandas import DataFrame
 
-@image_comparison(baseline_images=["fun_dnorm","fun_sin_vs_cos","fun_args","fun_dict_args"],
-                   extensions=["png"])
+@image_comparison(baseline_images=["fun_dnorm","fun_sin_vs_cos","fun_args","fun_dict_args"])
 def test_stat_function():
     np.random.seed(7776)
     dnorm = lambda x : (1.0 / np.sqrt(2 * np.pi)) * (np.e ** (-.5 * (x ** 2)))
