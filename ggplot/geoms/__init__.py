@@ -15,6 +15,7 @@ from .geom_tile import geom_tile
 from .geom_vline import geom_vline
 # stats
 from .stat_bin2d import stat_bin2d
+from .stat_function import stat_function
 from .stat_smooth import stat_smooth
 # misc
 from .facet_grid import facet_grid
