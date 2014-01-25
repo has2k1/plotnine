@@ -413,8 +413,8 @@ class ggplot(object):
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         legend_type : str
             type of legend, one of "color", "linestyle", "marker", "size"
         legend_dict : dict
