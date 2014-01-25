@@ -22,7 +22,9 @@ To start, let's reimplement a geom that we all know and love `geom_point`. It's 
 straightforward - it's going to take some x and y coordinates and make a
 scatterplot. You can look at the code here:
 
-.. ipython:: python
+.. code-block:: python
+    :linenos:
+
 
     import matplotlib.pyplot as plt
     from ggplot.geoms import geom
@@ -51,7 +53,8 @@ thing.
 The second thing we import is the `geom` object. We'll go into more detail on this in a
 second.
 
-.. ipython:: python
+.. code-block:: python
+    :linenos:
 
     import matplotlib.pyplot as plt
     from ggplot.geoms import geom
@@ -68,7 +71,8 @@ it the delightful `+` properties that make it possible to magically add layers t
 In addition, it keeps things easy so that when it comes time to render the plot, all of
 our plot operations are done using the same type of object.
 
-.. ipython:: python
+.. code-block:: python
+    :linenos:
 
     from ggplot.geoms import geom
 
@@ -105,7 +109,8 @@ This is the only method you need to implement when you're creating a new geom. I
 actually quite a simple method. `plot_layer` accepts a `layer` object which is just
 a dictionary of data that looks like this:
 
-.. ipython:: python
+.. code-block:: python
+    :linenos:
 
     example_layer = {
       "x": [1, 2, 3, 4],
@@ -129,7 +134,8 @@ have to edit names of the variables in your layer in order to accomodate `matplo
 You can see here that we're changing the name of the `size` variable to `s` and the 
 `color` variable to `c`.
 
-.. ipython:: python
+.. code-block:: python
+    :linenos:
 
     if "size" in layer:
       layer["s"] = layer["size"]
@@ -209,7 +215,7 @@ Some git
 This assumes that you cloned from the original ggplot repository (`origin`) and added your
 own fork (`mine`) like this:
 
-.. ipython::
+.. code-block:: bash
 
     git clone https://github.com/yhat/ggplot.git # becomes "origin"
     git remote add mine git@github.com:YourName/ggplot.git
