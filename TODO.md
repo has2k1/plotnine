@@ -1,14 +1,13 @@
 # TODO
 We're looking for contributors! Email greg at yhathq.com for more info.
-- docs
-     - basic README
-     - github static pages
-- add matplotlibrc to build script
+- ~~docs~~
+     - now on readthedocs.org
+- ~~add matplotlibrc to build script~~
 - handle timestamps and dates for abline() and other geoms
 - aes:
     - ~~size~~
     - fill
-    - lambda columns
+    - ~~lambda columns~~
         - done for now
     - lambda functions as columns
         - TODO
@@ -80,11 +79,10 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - fix: colormap starts from almost white (invisible) (R uses darker tint)
     - use colorbar and sequential colormaps for continuous data (see brewer2mpl)
     - use color swatches and diverging colormaps for discrete data (see brewer2mpl)
-- themes:
+- ~~themes~~:
     - look for better ggplot theme
-    - theme_bw()
-        - TODO
-    - theme_xkcd()
+    - ~~theme_bw~~()
+    - ~~theme_xkcd~~()
 
 
 
