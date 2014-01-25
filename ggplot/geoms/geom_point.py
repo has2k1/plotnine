@@ -6,7 +6,7 @@ from copy import deepcopy
 from .geom import geom
 
 class geom_point(geom):
-    VALID_AES = ['x', 'y', 'size', 'color', 'alpha', 'shape', 'marker', 'label', 'cmap']
+    VALID_AES = ['x', 'y', 'size', 'color', 'alpha', 'shape', 'label', 'cmap']
 
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
@@ -15,6 +15,10 @@ class geom_point(geom):
         if "size" in layer:
             layer["s"] = layer["size"]
             del layer["size"]
+
+        if "shape" in layer:
+            layer["marker"] = layer["shape"]
+            del layer["shape"]
 
         # for some reason, scatter doesn't default to the same color styles
         # as the axes.color_cycle
