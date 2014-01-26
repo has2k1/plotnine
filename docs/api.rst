@@ -36,6 +36,7 @@ Geoms, statistics and faceting
    geom_tile
    geom_vline
    stat_bin2d
+   stat_function
    stat_smooth
    facet_grid
    facet_wrap
