@@ -73,7 +73,7 @@ def test_scale_facet_wrap_internals():
 
         if pos % columns == 0:
             # Only plots in the first column should have y labels
-            assert_true(all(map(convertText, ax.get_yticklabels()) == yticks))
+            assert_true(all(list(map(convertText, ax.get_yticklabels())) == yticks))
         else:
             # Plots in all other columns should have no labels
             assert_true(all(map(empty, ax.get_yticklabels())))
@@ -94,7 +94,7 @@ def test_scale_facet_wrap_internals():
             # last N plots (where N = number of columns) get labels.
             assert_true(all(map(empty, ax.get_xticklabels())))
         else:
-            assert_true(all(map(convertText, ax.get_xticklabels()) == xticks))
+            assert_true(all(list(map(convertText, ax.get_xticklabels())) == xticks))
 
         # All plots should have y labels
         assert_true(len(ax.get_yticklabels()) > 0)
@@ -113,9 +113,9 @@ def test_scale_facet_wrap_internals():
         if subplots - pos > columns:
             assert_true(all(map(empty, ax.get_xticklabels())))
         else:
-            assert_true(all(map(convertText, ax.get_xticklabels()) == xticks))
+            assert_true(all(list(map(convertText, ax.get_xticklabels())) == xticks))
 
         if pos % columns == 0:
-            assert_true(all(map(convertText, ax.get_yticklabels()) == yticks))
+            assert_true(all(list(map(convertText, ax.get_yticklabels())) == yticks))
         else:
             assert_true(all(map(empty, ax.get_yticklabels())))
