@@ -1,20 +1,22 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ggplot.tests import image_comparison, cleanup
+from . import cleanup, get_assert_same_ggplot
+assert_same_ggplot = get_assert_same_ggplot(__file__)
+
 from nose.tools import assert_true, assert_raises
 
 from ggplot import *
 
 import matplotlib.pyplot as plt
 
-@image_comparison(baseline_images=["free", "free_x", "free_y", "none"], extensions=["png"])
+@cleanup
 def test_scale_facet_wrap_visual():
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
-    print(p + facet_wrap("cut", scales="free"))
-    print(p + facet_wrap("cut", scales="free_x"))
-    print(p + facet_wrap("cut", scales="free_y"))
-    print(p + facet_wrap("cut", scales=None))
+    assert_same_ggplot(p + facet_wrap("cut", scales="free"), "free")
+    assert_same_ggplot(p + facet_wrap("cut", scales="free_x"), "free_x")
+    assert_same_ggplot(p + facet_wrap("cut", scales="free_y"), "free_y")
+    assert_same_ggplot(p + facet_wrap("cut", scales=None), "none")
 
 def test_scale_facet_wrap_exception():
     with assert_raises(Exception):

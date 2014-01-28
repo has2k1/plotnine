@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from six.moves import xrange
 
 from nose.tools import assert_equal, assert_true, assert_raises
-from ggplot.tests import image_comparison
+from ggplot.tests import image_comparison, cleanup
 
 from ggplot import *
 
@@ -22,7 +22,7 @@ def _diff(a, b):
             ret[key] = "%s: %s -> %s" % (key, "--", val)
     return ret
 
-
+@cleanup
 def test_theme_matplotlib():
     gg = ggplot(aes(x='date', y='beef'), data=meat)
     a= gg.rcParams.copy()
