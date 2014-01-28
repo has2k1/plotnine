@@ -1,3 +1,6 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, DrawingArea, HPacker, VPacker
@@ -5,6 +8,7 @@ import matplotlib.lines as mlines
 import operator
 import numpy as np
 
+from ggplot.utils import six
 
 def make_title(title):
     title = title.title()
@@ -24,7 +28,7 @@ def make_marker_key(label, marker):
     return HPacker(children=[viz, label], align="center", pad=5, sep=0)
 
 def make_size_key(label, size):
-    if not isinstance(label, (type(""), type(u""))):
+    if not isinstance(label, six.string_types):
         label = round(label, 2)
         label = str(label)
     idx = len(label)

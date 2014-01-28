@@ -369,7 +369,9 @@ class ggplot(object):
                 ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                 
                 cntr = 0
-                for ltype, legend in self.legend.items():
+                # py3 and py2 have different sorting order in dics, so make that consistent
+                for ltype in sorted(self.legend.keys()):
+                    legend = self.legend[ltype]
                     lname = self.aesthetics.get(ltype, ltype)
                     new_legend = draw_legend(ax, legend, ltype, lname, cntr)
                     ax.add_artist(new_legend)

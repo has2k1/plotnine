@@ -1,3 +1,5 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 from .scale_colour_brewer import scale_colour_brewer
 from .scale_colour_brewer import scale_colour_brewer as scale_color_brewer
 from .scale_colour_gradient import scale_colour_gradient

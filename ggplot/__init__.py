@@ -1,3 +1,5 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 # For testing purposes we might need to set mpl backend before any
 # other import of matplotlib.
 def _set_mpl_backend():
