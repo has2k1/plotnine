@@ -16,15 +16,16 @@ import os
 # included here.
 default_test_modules = [
     'ggplot.tests.test_basic',
+    'ggplot.tests.test_readme_examples',
+    'ggplot.tests.test_ggplot_internals',
+    'ggplot.tests.test_geom',
+    'ggplot.tests.test_geom_rect',
+    'ggplot.tests.test_stat_function', 
+    'ggplot.tests.test_scale_facet_wrap',
+    'ggplot.tests.test_scale_log',
     'ggplot.tests.test_reverse',
     'ggplot.tests.test_ggsave',
     'ggplot.tests.test_theme_mpl',
-    'ggplot.tests.test_readme_examples',
-    'ggplot.tests.test_scale_facet_wrap',
-    'ggplot.tests.test_stat_function', 
-    'ggplot.tests.test_geom',
-    'ggplot.tests.test_geom_rect',
-    'ggplot.tests.test_scale_log',
     ]
 
 

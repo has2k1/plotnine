@@ -310,53 +310,57 @@ class ggplot(object):
                 if self.facet_type == "grid":
                     fig.text(0.5, 0.025, self.xlab)
                 else:
-                    plt.xlabel(self.xlab)
+                    for ax in plt.gcf().axes:
+                        ax.set_xlabel(self.xlab)
             if self.ylab:
                 if self.facet_type == "grid":
                     fig.text(0.025, 0.5, self.ylab, rotation='vertical')
                 else:
-                    plt.ylabel(self.ylab)
-            if self.xmajor_locator:
-                plt.gca().xaxis.set_major_locator(self.xmajor_locator)
-            if self.xtick_formatter:
-                plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
-                fig.autofmt_xdate()
-            if self.xbreaks: # xbreaks is a list manually provided
-                plt.gca().xaxis.set_ticks(self.xbreaks)
-            if self.xtick_labels:
-                if isinstance(self.xtick_labels, dict):
-                    labs = []
-                    for lab in plt.xticks()[1]:
-                        lab = lab.get_text()
-                        lab = self.xtick_labels.get(lab)
-                        labs.append(lab)
-                    plt.gca().xaxis.set_ticklabels(labs)
-                elif isinstance(self.xtick_labels, list):
-                    plt.gca().xaxis.set_ticklabels(self.xtick_labels)
-            if self.ytick_labels:
-                if isinstance(self.ytick_labels, dict):
-                    labs = []
-                    for lab in plt.yticks()[1]:
-                        lab = lab.get_text()
-                        lab = self.ytick_labels.get(lab)
-                        labs.append(lab)
-                    plt.gca().yaxis.set_ticklabels(labs)
-                elif isinstance(self.ytick_labels, list):
-                    plt.gca().yaxis.set_ticklabels(self.ytick_labels)
-            if self.ytick_formatter:
-                plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
-            if self.xlimits:
-                plt.xlim(self.xlimits)
-            if self.ylimits:
-                plt.ylim(self.ylimits)
-            if self.scale_y_reverse:
-                plt.gca().invert_yaxis()
-            if self.scale_x_reverse:
-                plt.gca().invert_xaxis()
-            if self.scale_y_log:
-                plt.gca().set_yscale('log', basey=self.scale_y_log)
-            if self.scale_x_log:
-                plt.gca().set_xscale('log', basex=self.scale_x_log)
+                    for ax in plt.gcf().axes:
+                        ax.set_ylabel(self.ylab)
+            # in case of faceting, this should be applied to all axis!
+            for ax in plt.gcf().axes:
+                if self.xmajor_locator:
+                    ax.xaxis.set_major_locator(self.xmajor_locator)
+                if self.xtick_formatter:
+                    ax.xaxis.set_major_formatter(self.xtick_formatter)
+                    fig.autofmt_xdate()
+                if self.xbreaks: # xbreaks is a list manually provided
+                    ax.xaxis.set_ticks(self.xbreaks)
+                if self.xtick_labels:
+                    if isinstance(self.xtick_labels, dict):
+                        labs = []
+                        for lab in plt.xticks()[1]:
+                            lab = lab.get_text()
+                            lab = self.xtick_labels.get(lab)
+                            labs.append(lab)
+                        ax.xaxis.set_ticklabels(labs)
+                    elif isinstance(self.xtick_labels, list):
+                        ax.xaxis.set_ticklabels(self.xtick_labels)
+                if self.ytick_labels:
+                    if isinstance(self.ytick_labels, dict):
+                        labs = []
+                        for lab in plt.yticks()[1]:
+                            lab = lab.get_text()
+                            lab = self.ytick_labels.get(lab)
+                            labs.append(lab)
+                        ax.yaxis.set_ticklabels(labs)
+                    elif isinstance(self.ytick_labels, list):
+                        ax.yaxis.set_ticklabels(self.ytick_labels)
+                if self.ytick_formatter:
+                    ax.yaxis.set_major_formatter(self.ytick_formatter)
+                if self.xlimits:
+                    ax.set_xlim(self.xlimits)
+                if self.ylimits:
+                    ax.set_ylim(self.ylimits)
+                if self.scale_y_reverse:
+                    ax.invert_yaxis()
+                if self.scale_x_reverse:
+                    ax.invert_xaxis()
+                if self.scale_y_log:
+                    ax.set_yscale('log', basey=self.scale_y_log)
+                if self.scale_x_log:
+                    ax.set_xscale('log', basex=self.scale_x_log)
 
             # TODO: Having some issues here with things that shouldn't have a
             # legend or at least shouldn't get shrunk to accomodate one. Need
