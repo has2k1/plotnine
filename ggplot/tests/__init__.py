@@ -59,7 +59,7 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
         name = name+".png"
 
     basedir = os.path.abspath(os.path.dirname(test_file))
-    subdir = os.path.basename(test_file)[:-3]
+    subdir = os.path.basename(test_file).split('.')[0]
 
     baseline_dir = os.path.join(basedir, 'baseline_images', subdir)
     result_dir = os.path.abspath(os.path.join('result_images', subdir))
