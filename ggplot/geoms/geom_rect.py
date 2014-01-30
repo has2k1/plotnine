@@ -8,8 +8,9 @@ class geom_rect(geom):
     """
     Draw a rectangle on a plot.
 
-    Aesthetics (* - required)
-    ----------
+    Notes
+    -----
+    geom_rect accepts the following aesthetics (* - required):
     xmax *
     xmin *
     ymax *
@@ -54,11 +55,6 @@ class geom_rect(geom):
             layer['height'] = height
             del layer['ymax']
 
-        if 'colour' in layer:
-            layer['edgecolor'] = layer['colour']
-            del layer['colour']
-            del layer['color']
-
         if 'color' in layer:
             layer['edgecolor'] = layer['color']
             del layer['color']
@@ -74,5 +70,7 @@ class geom_rect(geom):
         if 'fill' in layer:
             layer['color'] = layer['fill']
             del layer['fill']
+        else:
+            layer['color'] = '#333333'
 
         plt.bar(**layer)
