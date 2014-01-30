@@ -64,11 +64,42 @@ def test_geom_text():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
     assert_same_ggplot(gg, "geom_text")
 
-
 @cleanup
 def test_geom_line():
     p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
     assert_same_ggplot(p + geom_line(), "factor_geom_line")
+
+@cleanup
+def test_geom_rect():
+    df = pd.DataFrame({
+        'xmin': [1,3,5],
+        'xmax': [2, 3.5, 7],
+        'ymin': [1, 4, 6],
+        'ymax': [5, 5, 9],
+        'fill': ['blue', 'red', 'green'],
+        'quality': ['good', 'bad', 'ugly'],
+        'alpha': [0.1, 0.5, 0.9],
+        'texture': ['hard', 'soft', 'medium']})
+    p = ggplot(df, aes(xmin='xmin', xmax='xmax', ymin='ymin', ymax='ymax',
+               colour='quality', fill='fill', alpha='alpha',
+               linetype='texture'))
+    p += geom_rect(size=5)
+    assert_same_ggplot(p, 'geom_rect')
+
+    p = ggplot(df, aes(xmin='xmin', xmax='xmin + 1', ymin='ymin',
+               ymax='ymin + 1'))
+    p += geom_rect()
+    assert_same_ggplot(p, 'geom_rect_plus')
+
+    p = ggplot(df, aes(x='xmin', y='ymin'))
+    p += geom_point(size=100, colour='red', alpha=0.5)
+    p += geom_rect(aes(fill='fill', xmin='xmin', xmax='xmin + 1', ymin=0,
+                   ymax='ymax'), alpha=0.1)
+    assert_same_ggplot(p, 'geom_rect_with_point')
+
+def test_geom_rect_exception():
+    with assert_raises(Exception):
+        print(ggplot(diamonds, aes(x=x, y=y)) + geom_point() + geom_rect())
 
 @cleanup
 def test_factor_geom_point():
