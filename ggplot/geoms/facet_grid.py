@@ -21,6 +21,9 @@ class facet_grid(object):
 
         if x is None and y is None:
             raise Exception("No facets provided!")
+        
+        # only do the deepcopy after the check
+        gg = deepcopy(gg)
 
         if x is None:
             n_dim_x = 1
@@ -65,4 +68,4 @@ class facet_grid(object):
                 combos.append((x_i, 1))
         gg.facet_pairs = combos
 
-        return deepcopy(gg)
+        return gg
