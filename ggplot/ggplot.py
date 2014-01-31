@@ -409,8 +409,7 @@ class ggplot(object):
         if "size" in mapping:
             mapping['size'] = data['size_mapping']
         if "shape" in mapping:
-            mapping['marker'] = data['shape_mapping']
-            del mapping['shape']
+            mapping['shape'] = data['shape_mapping']
         if "linestyle" in mapping:
             mapping['linestyle'] = data['linestyle_mapping']
 
