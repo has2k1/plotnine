@@ -196,22 +196,6 @@ class ggplot(object):
                     xlab_pos = xlab_max + xlab_offset
                     ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
                     # This needs to enumerate all possibilities
-                    for _iter, facets in enumerate(self.facet_pairs):
-                        pos = _iter + 1
-                        if pos <= self.n_high:
-                            plt.subplot(self.n_wide, self.n_high, pos)
-                        for layer in self._get_layers(self.data):
-                            for geom in self.geoms:
-                                callbacks = geom.plot_layer(layer)
-                        axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
-                                                min(plt.ylim()), max(plt.ylim())]
-                    # find the grid wide data extremeties
-                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
-                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
-                    # position of vertical labels for facet grid
-                    xlab_pos = xlab_max + xlab_offset
-                    ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
-                    # This needs to enumerate all possibilities
                     for pos, facets in enumerate(self.facet_pairs):
                         pos += 1
                         if pos <= self.n_high:
