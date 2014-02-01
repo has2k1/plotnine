@@ -22,7 +22,7 @@ class geom_rect(geom):
     size
     """
 
-    VALID_AES = ['xmax', 'xmin', 'ymax', 'ymin', 'colour', 'color', 'fill',
+    VALID_AES = ['xmax', 'xmin', 'ymax', 'ymin', 'color', 'fill',
                  'linetype', 'size', 'alpha']
     REQUIRED_AES = ['xmax', 'xmin', 'ymax', 'ymin']
 
@@ -40,8 +40,11 @@ class geom_rect(geom):
             del layer['xmin']
 
         if 'xmax' in layer:
-            xcoords = zip(layer['left'], layer['xmax'])
-            width = [xmax - xmin for xmin, xmax in xcoords]
+            if isinstance(layer['xmax'], list):
+                xcoords = zip(layer['left'], layer['xmax'])
+                width = [xmax - xmin for xmin, xmax in xcoords]
+            else:
+                width = layer['xmax'] - layer['left']
             layer['width'] = width
             del layer['xmax']
 
@@ -50,14 +53,19 @@ class geom_rect(geom):
             del layer['ymin']
 
         if 'ymax' in layer:
-            ycoords = zip(layer['bottom'], layer['ymax'])
-            height = [ymax - ymin for ymin, ymax in ycoords]
+            if isinstance(layer['ymax'], list):
+                ycoords = zip(layer['bottom'], layer['ymax'])
+                height = [ymax - ymin for ymin, ymax in ycoords]
+            else:
+                height = layer['ymax'] - layer['bottom']
             layer['height'] = height
             del layer['ymax']
 
         if 'color' in layer:
             layer['edgecolor'] = layer['color']
             del layer['color']
+        else:
+            layer['edgecolor'] = '#333333'
 
         if 'linetype' in layer:
             layer['linestyle'] = layer['linetype']
