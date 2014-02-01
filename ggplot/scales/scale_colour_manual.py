@@ -1,6 +1,6 @@
 from .scale import scale
 from copy import deepcopy
-import numpy as np
+
 
 class scale_colour_manual(scale):
     """
@@ -15,7 +15,8 @@ class scale_colour_manual(scale):
     Examples
     --------
     >>> from ggplot import *
-    >>> color_list = ['#FFAAAA', '#ff5b00', '#c760ff', '#f43605', '#00FF00', '#0000FF', '#4c9085']
+    >>> color_list = ['#FFAAAA', '#ff5b00', '#c760ff', '#f43605', '#00FF00',
+    ...               '#0000FF', '#4c9085']
     >>> lng = pd.melt(meat, ['date'])
     >>> gg = ggplot(lng, aes('date', 'value', color='variable')) + \\
     ...     geom_point()
@@ -27,7 +28,7 @@ class scale_colour_manual(scale):
     def __radd__(self, gg):
         gg = deepcopy(gg)
         if self.values:
-            n_colors_needed   = gg.data[gg.aesthetics['color']].nunique()
+            n_colors_needed = gg.data[gg.aesthetics['color']].nunique()
             n_colors_provided = len(self.values)
             if n_colors_provided < n_colors_needed:
                 msg = 'Error: Insufficient values in manual scale. {0} needed but only {1} provided.'
