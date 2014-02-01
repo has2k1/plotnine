@@ -41,7 +41,7 @@ setup(
     long_description=open("README.rst").read(),
     # numpy is here to make installing easier... Needs to be at the last position,
     # as thats the first installed with "python setup.py install"
-    install_requires=["statsmodels", "matplotlib", "scipy", 
+    install_requires=["statsmodels", "brewer2mpl", "matplotlib", "scipy", 
                       "patsy", "pandas", "numpy"],
     classifiers=['Intended Audience :: Science/Research',
                  'Intended Audience :: Developers',
