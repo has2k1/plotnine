@@ -1,10 +1,12 @@
 from copy import deepcopy
 import math
+from ..utils.utils import add_ggplotrc_params
 
 class facet_wrap(object):
     def __init__(self, x=None, y=None, ncol=None, nrow=None, scales="free"):
         if x is None and y is None:
             raise Exception("You need to specify a variable name: facet_wrap('var')")
+        add_ggplotrc_params(self)
         self.x = x
         self.y = y
         self.ncol = ncol

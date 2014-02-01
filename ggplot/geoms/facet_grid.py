@@ -1,8 +1,11 @@
 from copy import deepcopy
 import math
+from ..utils.utils import add_ggplotrc_params
+
 
 class facet_grid(object):
     def __init__(self, x=None, y=None, scales=None):
+        add_ggplotrc_params(self)
         self.x = x
         self.y = y
         if self.x is None or self.y is None:

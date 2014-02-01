@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
                         
 import matplotlib.pyplot as plt
+import json
 import os
 import sys
 
@@ -161,3 +162,18 @@ def ggsave(filename = None, plot = None, device = None, format = None,
     # close figure, if it was drawn by ggsave
     if not plot is None:
         plt.close(figure)
+
+def add_ggplotrc_params(obj):
+    # ggplotrc defaults
+    if "HOME" in os.environ:
+        ggrc = os.path.join(os.environ["HOME"], ".ggplotrc")
+        try:
+            klass = obj.__class__.__name__
+            ggrc = json.load(open(ggrc, 'r'))
+            if klass in ggrc:
+                for k, v in ggrc[klass].items():
+                    setattr(obj, k, v)
+        except:
+            pass
+
+
