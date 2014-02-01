@@ -25,12 +25,12 @@ What is it?
 ~~~~~~~~~~~
 
 Yes, it's another port of
-```ggplot2`` <https://github.com/hadley/ggplot2>`__. One of the biggest
+`ggplot2 <https://github.com/hadley/ggplot2>`__. One of the biggest
 reasons why I continue to reach for ``R`` instead of ``Python`` for data
 analysis is the lack of an easy to use, high level plotting package like
 ``ggplot2``. I've tried other libraries like
-```bokeh`` <https://github.com/continuumio/bokeh>`__ and
-```d3py`` <https://github.com/mikedewar/d3py>`__ but what I really want
+`bokeh <https://github.com/continuumio/bokeh>`__ and
+`d3py <https://github.com/mikedewar/d3py>`__ but what I really want
 is ``ggplot2``.
 
 ``ggplot`` is just that. It's an extremely un-pythonic package for doing
@@ -47,7 +47,7 @@ Goals
 -  ability to use both American and British English spellings of
    aesthetics
 -  tight integration with
-   ```pandas`` <https://github.com/pydata/pandas>`__
+   `pandas <https://github.com/pydata/pandas>`__
 -  pip installable
 
 Getting Started
