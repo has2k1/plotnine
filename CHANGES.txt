@@ -1,4 +1,13 @@
+=====
+0.5.0
+=====
+- geom_rect
+- scale_colour_brewer
+- better geom_bar defaults
+
+=====
 0.4.0
+=====
 - theme context manager (huge improvement; allows for themes to be used on an 
 ad hoc basis; implements theme_xkcd)
 - greatly improved facets: aesthetics fix, label issues corrected
