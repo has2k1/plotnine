@@ -2,7 +2,6 @@ from .scale import scale
 from copy import deepcopy
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex, ColorConverter
-import numpy as np
 
 
 def colors_at_breaks(cmap, breaks=[0, 0.25, 0.5, 0.75, 1.]):
