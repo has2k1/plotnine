@@ -6,7 +6,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
 - handle timestamps and dates for abline() and other geoms
 - aes:
     - ~~size~~
-    - fill
+    - ~~fill~~
     - ~~lambda columns~~
         - done for now
     - lambda functions as columns
@@ -43,8 +43,7 @@ We're looking for contributors! Email greg at yhathq.com for more info.
         - something strange going on with se bands (bug)
         - ~~implement method="lm"~~
 - scales:
-    - scale_colour_brewer
-        - TODO
+    - ~~scale_colour_brewer~~
     - scale_colour_continuous
         - ~~basic version~~
     - scale_colour_gradient
@@ -80,9 +79,9 @@ We're looking for contributors! Email greg at yhathq.com for more info.
     - use colorbar and sequential colormaps for continuous data (see brewer2mpl)
     - use color swatches and diverging colormaps for discrete data (see brewer2mpl)
 - ~~themes~~:
-    - look for better ggplot theme
-    - ~~theme_bw~~()
-    - ~~theme_xkcd~~()
+    - ~~look for better ggplot theme~~
+    - ~~theme_bw~~
+    - ~~theme_xkcd~~
 
 
 
