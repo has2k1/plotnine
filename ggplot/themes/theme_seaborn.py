@@ -179,15 +179,15 @@ class theme_seaborn(theme):
 
     Parameters
     ----------
-    style : darkgrid | whitegrid | nogrid | ticks
+    style: whitegrid | darkgrid | nogrid | ticks
         Style of axis background.
     context: notebook | talk | paper | poster
         Intended context for resulting figures.
-    gridweight : extra heavy | heavy | medium | light
+    gridweight: extra heavy | heavy | medium | light
         Width of the grid lines. None
     """
 
-    def __init__(self, style="darkgrid", gridweight=None, context="notebook"):
+    def __init__(self, style="whitegrid", gridweight=None, context="notebook"):
         self.style = style
         self.gridweight = gridweight
         self.context = context
@@ -228,3 +228,4 @@ def _theme_grey_post_plot_callback(ax):
         ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
     if not isinstance(ax.yaxis.get_major_locator(), mpl.ticker.LogLocator):
         ax.yaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
+
