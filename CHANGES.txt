@@ -4,6 +4,7 @@
 - geom_rect
 - scale_colour_brewer
 - better geom_bar defaults
+- theme_seaborn
 
 =====
 0.4.0
