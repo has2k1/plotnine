@@ -27,7 +27,7 @@ class geom_rect(geom):
     REQUIRED_AES = ['xmax', 'xmin', 'ymax', 'ymin']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.iteritems() if k in self.VALID_AES}
+        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
         layer.update(self.manual_aes)
 
         missing_aes = [aes for aes in self.REQUIRED_AES if aes not in layer]
