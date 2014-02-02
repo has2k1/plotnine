@@ -175,8 +175,15 @@ class ggplot(object):
             # Faceting just means doing an additional groupby. The
             # dimensions of the plot remain the same
             if self.facets:
+                # geom_bar does not work with faceting yet
+                _check_geom_bar = lambda x :isinstance(x, geom_bar)
+                if any(map(_check_geom_bar, self.geoms)):
+                    msg = """Facetting is currently not supported with geom_bar. See
+                    https://github.com/yhat/ggplot/issues/196 for more information"""
+                    warnings.warn(msg, RuntimeWarning)
                 # the current subplot in the axs and plots
                 cntr = 0
+                #first grids: faceting with two variables and defined positions
                 if len(self.facets) == 2 and self.facet_type != "wrap":
                     # store the extreme x and y coordinates of each pair of axes
                     axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
@@ -198,22 +205,25 @@ class ggplot(object):
                     # This needs to enumerate all possibilities
                     for pos, facets in enumerate(self.facet_pairs):
                         pos += 1
-                        if pos <= self.n_high:
+                        # Plot the top and right boxes
+                        if pos <= self.n_high: # first row
                             plt.subplot(self.n_wide, self.n_high, pos)
                             plt.table(cellText=[[facets[1]]], loc='top',
                                       cellLoc='center', cellColours=[['lightgrey']])
-                        if (pos % self.n_high) == 0:
+                        if (pos % self.n_high) == 0: # last plot in a row
                             plt.subplot(self.n_wide, self.n_high, pos)
                             x = max(plt.xticks()[0])
                             y = max(plt.yticks()[0])
                             ax = axs[pos % self.n_high][pos % self.n_wide]
-                            plt.text(xlab_pos, ylab_pos, facets[0],
+                            ax = plt.gca()
+                            ax.text(1, 0.5, facets[0],
                                      bbox=dict(
                                          facecolor='lightgrey',
                                          edgecolor='black',
                                          color='black',
                                          width=mpl.rcParams['font.size'] * 1.65
                                      ),
+                                     transform=ax.transAxes,
                                      fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                             )
 
