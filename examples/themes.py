@@ -14,3 +14,6 @@ plt.show(1)
 print "theme_matplotlib()"
 print(p + theme_matplotlib())
 plt.show(1)
+print "theme_seaborn()"
+print(p + theme_seaborn())
+plt.show(1)
