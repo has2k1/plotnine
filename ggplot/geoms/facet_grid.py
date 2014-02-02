@@ -1,6 +1,7 @@
 from copy import deepcopy
 import math
 from ..utils.utils import add_ggplotrc_params
+from .facet_wrap import facet_wrap
 
 
 class facet_grid(object):
@@ -8,23 +9,17 @@ class facet_grid(object):
         add_ggplotrc_params(self)
         self.x = x
         self.y = y
-        if self.x is None or self.y is None:
-            raise Exception("facet_grid(): need both x and y mapping! Use facet_wrap() for only one dimension.")
         self.ncol = None
         self.nrow = None
         self.scales = scales
 
     def __radd__(self, gg):
-        x = None
-        y = None
-        try:
-            x = gg.data.get(self.x)
-        except:
-            raise Exception("facet_grid(): mapping for x (\"%s\") is not available in the DataFrame" % self.x)
-        try:
-            y = gg.data.get(self.y)
-        except:
-            raise Exception("facet_grid(): mapping for y (\"%s\") is not available in the DataFrame" % self.y)
+        x = gg.data.get(self.x)
+        y = gg.data.get(self.y)
+
+        if x is None and y is None:
+            raise Exception("No facets provided!")
+
         if x is None:
             n_dim_x = 1
         else:

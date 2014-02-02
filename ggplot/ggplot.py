@@ -140,16 +140,19 @@ class ggplot(object):
                     # draw is not allowed to show a plot, so we can use to result for ggsave
                 # This sets a rcparam, so we don't have to undo it after plotting
             mpl.interactive(False)
-            if self.facet_type == "grid":
+            if self.facet_type == "grid" and len(self.facets) > 1:
                 fig, axs = plt.subplots(self.n_high, self.n_wide,
                                         sharex=True, sharey=True)
                 plt.subplots_adjust(wspace=.05, hspace=.05)
-            elif self.facet_type == "wrap":
+            elif self.facet_type == "wrap" or len(self.facets)==1:
                 # add (more than) the needed number of subplots
                 fig, axs = plt.subplots(self.n_high, self.n_wide)
                 # there are some extra, remove the plots
                 subplots_available = self.n_wide * self.n_high
-                extra_subplots = subplots_available - self.n_dim_x
+                if self.n_dim_x:
+                    extra_subplots = subplots_available - self.n_dim_x
+                else:
+                    extra_subplots = 0
                 for extra_plot in axs.flatten()[-extra_subplots:]:
                     extra_plot.axis('off')
 
@@ -186,7 +189,7 @@ class ggplot(object):
                                 callbacks = geom.plot_layer(layer)
                         axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
                                                 min(plt.ylim()), max(plt.ylim())]
-                        # find the grid wide data extremeties
+                    # find the grid wide data extremeties
                     xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
                     xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
                     # position of vertical labels for facet grid
@@ -202,7 +205,7 @@ class ggplot(object):
                                 callbacks = geom.plot_layer(layer)
                         axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
                                                 min(plt.ylim()), max(plt.ylim())]
-                        # find the grid wide data extremeties
+                    # find the grid wide data extremeties
                     xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
                     xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
                     # position of vertical labels for facet grid
@@ -237,11 +240,11 @@ class ggplot(object):
                     scale_facet_grid(self.n_wide, self.n_high,
                                      self.facet_pairs, self.facet_scales)
 
-                else: # now facet_wrap > 2
+                else: # now facet_wrap > 2 or facet_grid w/ only 1 facet
                     for facet, frame in self.data.groupby(self.facets):
                         for layer in self._get_layers(frame):
                             for geom in self.geoms:
-                                if self.facet_type == "wrap":
+                                if self.facet_type == "wrap" or 1==1:
                                     if cntr + 1 > len(plots):
                                         continue
                                     pos = plots[cntr]

@@ -17,7 +17,7 @@ class facet_wrap(object):
         # deepcopy must be the first thing to not change the original object
         gg = deepcopy(gg)
         
-        x,y = None, None
+        x, y = None, None
         gg.n_dim_x = 1
         facets = []
         if self.x:
