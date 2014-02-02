@@ -130,12 +130,12 @@ def test_alpha_density():
     gg = ggplot(aes(x='mpg', fill=True, alpha=0.3), data=mtcars)
     assert_same_ggplot(gg + geom_density(), "geom_density_alpha")
 
-@cleanup
-def test_facet_wrap():
-    df = _build_testing_df()
-    gg = ggplot(aes(x='x', ymax='y', ymin='z'), data=df)
-    assert_same_ggplot(gg + geom_bar() + facet_wrap(x="cat2"), "geom_bar_facet")
-    assert_same_ggplot(gg + geom_area() + facet_wrap(x="cat2"), "geom_area_facet")
+# @cleanup
+# def test_facet_wrap():
+    # df = _build_testing_df()
+    # gg = ggplot(aes(x='x', ymax='y', ymin='z'), data=df)
+    # assert_same_ggplot(gg + geom_bar() + facet_wrap(x="cat2"), "geom_bar_facet")
+    # assert_same_ggplot(gg + geom_area() + facet_wrap(x="cat2"), "geom_area_facet")
 
 @cleanup
 def test_facet_wrap2():
