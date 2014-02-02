@@ -1,22 +1,12 @@
 from copy import deepcopy
-from .geom import geom
+from .geom_point import geom_point
 import numpy as np
 import pandas as pd
 
-class geom_jitter(geom):
-    VALID_AES = ['jitter']
+class geom_jitter(geom_point):
+    def __init__(self, *args, **kwargs):
+        # jitter is just a special case of geom_point, so we'll just use
+        # geom_point and then enforce jitter
+        super(geom_point, self).__init__()
+        self.manual_aes['position'] = "jitter"
 
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
-        xcol = gg.aesthetics.get("x")
-        ycol = gg.aesthetics.get("y")
-        x = gg.data[xcol]
-        y = gg.data[ycol]
-        x = x * np.random.uniform(.9, 1.1, len(x))
-        y = y * np.random.uniform(.9, 1.1, len(y))
-        gg.data[xcol] = x
-        gg.data[ycol] = y
-        return gg
-
-    def plot_layer(self, layer):
-        pass
