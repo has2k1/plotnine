@@ -30,6 +30,7 @@ install:
   # Install dependencies
   - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=$MPL nose dateutil pandas=$PANDAS statsmodels $PIL; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels; fi
   - pip install python-coveralls --use-mirrors
+  - pip install brewer2mpl --use-mirrors
   - pip install nose-cov --use-mirrors
   - python setup.py install
   - export MATPLOTLIB_BACKEND=agg
