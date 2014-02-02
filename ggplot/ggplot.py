@@ -87,6 +87,7 @@ class ggplot(object):
         self.ytick_formatter = None
         self.xlimits = None
         self.ylimits = None
+        self.ytick_labels = None
         self.scale_y_reverse = None
         self.scale_x_reverse = None
         self.scale_y_log = None
@@ -320,7 +321,25 @@ class ggplot(object):
             if self.xbreaks: # xbreaks is a list manually provided
                 plt.gca().xaxis.set_ticks(self.xbreaks)
             if self.xtick_labels:
-                plt.gca().xaxis.set_ticklabels(self.xtick_labels)
+                if isinstance(self.xtick_labels, dict):
+                    labs = []
+                    for lab in plt.xticks()[1]:
+                        lab = lab.get_text()
+                        lab = self.xtick_labels.get(lab)
+                        labs.append(lab)
+                    plt.gca().xaxis.set_ticklabels(labs)
+                elif isinstance(self.xtick_labels, list):
+                    plt.gca().xaxis.set_ticklabels(self.xtick_labels)
+            if self.ytick_labels:
+                if isinstance(self.ytick_labels, dict):
+                    labs = []
+                    for lab in plt.yticks()[1]:
+                        lab = lab.get_text()
+                        lab = self.ytick_labels.get(lab)
+                        labs.append(lab)
+                    plt.gca().yaxis.set_ticklabels(labs)
+                elif isinstance(self.ytick_labels, list):
+                    plt.gca().yaxis.set_ticklabels(self.ytick_labels)
             if self.ytick_formatter:
                 plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
             if self.xlimits:
@@ -336,9 +355,10 @@ class ggplot(object):
             if self.scale_x_log:
                 plt.gca().set_xscale('log', basex=self.scale_x_log)
 
-            # TODO: Having some issues here with things that shouldn't have a legend
-            # or at least shouldn't get shrunk to accomodate one. Need some sort of
-            # test in place to prevent this OR prevent legend getting set to True.
+            # TODO: Having some issues here with things that shouldn't have a
+            # legend or at least shouldn't get shrunk to accomodate one. Need
+            # some sort of test in place to prevent this OR prevent legend
+            # getting set to True.
             if self.legend:
                 # works with faceted and non-faceted plots
                 ax = axs[0][self.n_wide - 1]
