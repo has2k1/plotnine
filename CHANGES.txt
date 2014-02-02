@@ -5,6 +5,10 @@
 - scale_colour_brewer
 - better geom_bar defaults
 - theme_seaborn
+- scale_x_discrete
+- scale_y_discrete
+- jitter is now just a special case of geom_point
+- basic ggplotrc
 
 =====
 0.4.0
