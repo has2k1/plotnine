@@ -16,15 +16,17 @@ import os
 # included here.
 default_test_modules = [
     'ggplot.tests.test_basic',
+    'ggplot.tests.test_readme_examples',
+    'ggplot.tests.test_ggplot_internals',
+    'ggplot.tests.test_geom',
+    'ggplot.tests.test_geom_rect',
+    'ggplot.tests.test_faceting',
+    'ggplot.tests.test_stat_function',
+    'ggplot.tests.test_scale_facet_wrap',
+    'ggplot.tests.test_scale_log',
     'ggplot.tests.test_reverse',
     'ggplot.tests.test_ggsave',
     'ggplot.tests.test_theme_mpl',
-    'ggplot.tests.test_readme_examples',
-    'ggplot.tests.test_scale_facet_wrap',
-    'ggplot.tests.test_stat_function', 
-    'ggplot.tests.test_geom',
-    'ggplot.tests.test_geom_rect',
-    'ggplot.tests.test_scale_log',
     ]
 
 
@@ -129,11 +131,18 @@ def image_comparison(baseline_images=None, tol=17, extensions=None):
         import inspect
         _file = inspect.getfile(func)
         def decorated():
+            # make sure we don't carry over bad images from former tests.
+            assert len(plt.get_fignums()) == 0, "no of open figs: %s -> find the last test with ' " \
+                                        "python tests.py -v' and add a '@cleanup' decorator." % \
+                                        str(plt.get_fignums())
             func()
+            assert len(plt.get_fignums()) == len(baseline_images), "different number of " \
+                                                                   "baseline_images and actuall " \
+                                                                   "plots."
             for fignum, baseline in zip(plt.get_fignums(), baseline_images):
                 figure = plt.figure(fignum)
                 _assert_same_figure_images(figure, baseline, _file, tol=tol)
-        # also use the cleanup decorator!
+        # also use the cleanup decorator to close any open figures!
         return make_decorator(cleanup(func))(decorated)
     return compare_images_decorator
 
@@ -190,6 +199,11 @@ def _setup():
     backend_agg.RendererAgg._fontd.clear()
     backend_pdf.RendererPdf.truetype_font_cache.clear()
     backend_svg.RendererSVG.fontd.clear()
+    # make sure we don't carry over bad plots from former tests
+    assert len(plt.get_fignums()) == 0, "no of open figs: %s -> find the last test with ' " \
+                                        "python tests.py -v' and add a '@cleanup' decorator." % \
+                                        str(plt.get_fignums())
+
 
 # This is here to run it like "from ggplot.tests import test; test()"
 def test(verbosity=1):

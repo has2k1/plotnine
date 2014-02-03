@@ -175,8 +175,15 @@ class ggplot(object):
             # Faceting just means doing an additional groupby. The
             # dimensions of the plot remain the same
             if self.facets:
+                # geom_bar does not work with faceting yet
+                _check_geom_bar = lambda x :isinstance(x, geom_bar)
+                if any(map(_check_geom_bar, self.geoms)):
+                    msg = """Facetting is currently not supported with geom_bar. See
+                    https://github.com/yhat/ggplot/issues/196 for more information"""
+                    warnings.warn(msg, RuntimeWarning)
                 # the current subplot in the axs and plots
                 cntr = 0
+                #first grids: faceting with two variables and defined positions
                 if len(self.facets) == 2 and self.facet_type != "wrap":
                     # store the extreme x and y coordinates of each pair of axes
                     axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
@@ -196,40 +203,27 @@ class ggplot(object):
                     xlab_pos = xlab_max + xlab_offset
                     ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
                     # This needs to enumerate all possibilities
-                    for _iter, facets in enumerate(self.facet_pairs):
-                        pos = _iter + 1
-                        if pos <= self.n_high:
-                            plt.subplot(self.n_wide, self.n_high, pos)
-                        for layer in self._get_layers(self.data):
-                            for geom in self.geoms:
-                                callbacks = geom.plot_layer(layer)
-                        axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
-                                                min(plt.ylim()), max(plt.ylim())]
-                    # find the grid wide data extremeties
-                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
-                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
-                    # position of vertical labels for facet grid
-                    xlab_pos = xlab_max + xlab_offset
-                    ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
-                    # This needs to enumerate all possibilities
                     for pos, facets in enumerate(self.facet_pairs):
                         pos += 1
-                        if pos <= self.n_high:
+                        # Plot the top and right boxes
+                        if pos <= self.n_high: # first row
                             plt.subplot(self.n_wide, self.n_high, pos)
                             plt.table(cellText=[[facets[1]]], loc='top',
                                       cellLoc='center', cellColours=[['lightgrey']])
-                        if (pos % self.n_high) == 0:
+                        if (pos % self.n_high) == 0: # last plot in a row
                             plt.subplot(self.n_wide, self.n_high, pos)
                             x = max(plt.xticks()[0])
                             y = max(plt.yticks()[0])
                             ax = axs[pos % self.n_high][pos % self.n_wide]
-                            plt.text(xlab_pos, ylab_pos, facets[0],
+                            ax = plt.gca()
+                            ax.text(1, 0.5, facets[0],
                                      bbox=dict(
                                          facecolor='lightgrey',
                                          edgecolor='black',
                                          color='black',
                                          width=mpl.rcParams['font.size'] * 1.65
                                      ),
+                                     transform=ax.transAxes,
                                      fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                             )
 
@@ -310,53 +304,57 @@ class ggplot(object):
                 if self.facet_type == "grid":
                     fig.text(0.5, 0.025, self.xlab)
                 else:
-                    plt.xlabel(self.xlab)
+                    for ax in plt.gcf().axes:
+                        ax.set_xlabel(self.xlab)
             if self.ylab:
                 if self.facet_type == "grid":
                     fig.text(0.025, 0.5, self.ylab, rotation='vertical')
                 else:
-                    plt.ylabel(self.ylab)
-            if self.xmajor_locator:
-                plt.gca().xaxis.set_major_locator(self.xmajor_locator)
-            if self.xtick_formatter:
-                plt.gca().xaxis.set_major_formatter(self.xtick_formatter)
-                fig.autofmt_xdate()
-            if self.xbreaks: # xbreaks is a list manually provided
-                plt.gca().xaxis.set_ticks(self.xbreaks)
-            if self.xtick_labels:
-                if isinstance(self.xtick_labels, dict):
-                    labs = []
-                    for lab in plt.xticks()[1]:
-                        lab = lab.get_text()
-                        lab = self.xtick_labels.get(lab)
-                        labs.append(lab)
-                    plt.gca().xaxis.set_ticklabels(labs)
-                elif isinstance(self.xtick_labels, list):
-                    plt.gca().xaxis.set_ticklabels(self.xtick_labels)
-            if self.ytick_labels:
-                if isinstance(self.ytick_labels, dict):
-                    labs = []
-                    for lab in plt.yticks()[1]:
-                        lab = lab.get_text()
-                        lab = self.ytick_labels.get(lab)
-                        labs.append(lab)
-                    plt.gca().yaxis.set_ticklabels(labs)
-                elif isinstance(self.ytick_labels, list):
-                    plt.gca().yaxis.set_ticklabels(self.ytick_labels)
-            if self.ytick_formatter:
-                plt.gca().yaxis.set_major_formatter(self.ytick_formatter)
-            if self.xlimits:
-                plt.xlim(self.xlimits)
-            if self.ylimits:
-                plt.ylim(self.ylimits)
-            if self.scale_y_reverse:
-                plt.gca().invert_yaxis()
-            if self.scale_x_reverse:
-                plt.gca().invert_xaxis()
-            if self.scale_y_log:
-                plt.gca().set_yscale('log', basey=self.scale_y_log)
-            if self.scale_x_log:
-                plt.gca().set_xscale('log', basex=self.scale_x_log)
+                    for ax in plt.gcf().axes:
+                        ax.set_ylabel(self.ylab)
+            # in case of faceting, this should be applied to all axis!
+            for ax in plt.gcf().axes:
+                if self.xmajor_locator:
+                    ax.xaxis.set_major_locator(self.xmajor_locator)
+                if self.xtick_formatter:
+                    ax.xaxis.set_major_formatter(self.xtick_formatter)
+                    fig.autofmt_xdate()
+                if self.xbreaks: # xbreaks is a list manually provided
+                    ax.xaxis.set_ticks(self.xbreaks)
+                if self.xtick_labels:
+                    if isinstance(self.xtick_labels, dict):
+                        labs = []
+                        for lab in plt.xticks()[1]:
+                            lab = lab.get_text()
+                            lab = self.xtick_labels.get(lab)
+                            labs.append(lab)
+                        ax.xaxis.set_ticklabels(labs)
+                    elif isinstance(self.xtick_labels, list):
+                        ax.xaxis.set_ticklabels(self.xtick_labels)
+                if self.ytick_labels:
+                    if isinstance(self.ytick_labels, dict):
+                        labs = []
+                        for lab in plt.yticks()[1]:
+                            lab = lab.get_text()
+                            lab = self.ytick_labels.get(lab)
+                            labs.append(lab)
+                        ax.yaxis.set_ticklabels(labs)
+                    elif isinstance(self.ytick_labels, list):
+                        ax.yaxis.set_ticklabels(self.ytick_labels)
+                if self.ytick_formatter:
+                    ax.yaxis.set_major_formatter(self.ytick_formatter)
+                if self.xlimits:
+                    ax.set_xlim(self.xlimits)
+                if self.ylimits:
+                    ax.set_ylim(self.ylimits)
+                if self.scale_y_reverse:
+                    ax.invert_yaxis()
+                if self.scale_x_reverse:
+                    ax.invert_xaxis()
+                if self.scale_y_log:
+                    ax.set_yscale('log', basey=self.scale_y_log)
+                if self.scale_x_log:
+                    ax.set_xscale('log', basex=self.scale_x_log)
 
             # TODO: Having some issues here with things that shouldn't have a
             # legend or at least shouldn't get shrunk to accomodate one. Need
@@ -369,7 +367,9 @@ class ggplot(object):
                 ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
                 
                 cntr = 0
-                for ltype, legend in self.legend.items():
+                # py3 and py2 have different sorting order in dics, so make that consistent
+                for ltype in sorted(self.legend.keys()):
+                    legend = self.legend[ltype]
                     lname = self.aesthetics.get(ltype, ltype)
                     new_legend = draw_legend(ax, legend, ltype, lname, cntr)
                     ax.add_artist(new_legend)
@@ -403,8 +403,7 @@ class ggplot(object):
         if "size" in mapping:
             mapping['size'] = data['size_mapping']
         if "shape" in mapping:
-            mapping['marker'] = data['shape_mapping']
-            del mapping['shape']
+            mapping['shape'] = data['shape_mapping']
         if "linestyle" in mapping:
             mapping['linestyle'] = data['linestyle_mapping']
 

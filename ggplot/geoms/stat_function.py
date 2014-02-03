@@ -1,3 +1,5 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 from .geom import geom
@@ -128,7 +130,7 @@ class stat_function(geom):
         x_min = min(x)
         x_max = max(x)
         x_values = np.linspace(x_min,x_max,n)
-        y_values = map(fun,x_values)
+        y_values = list(map(fun,x_values))
 
         if color:
             plt.plot(x_values,y_values,color=color)

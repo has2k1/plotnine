@@ -1,3 +1,5 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 import sys
 if sys.hexversion > 0x03000000:
     # UserDict moved in python3 standard library

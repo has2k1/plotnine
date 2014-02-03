@@ -120,6 +120,10 @@ def test_stats_smooth():
 
 @cleanup
 def test_stats_bin2d():
+    import matplotlib.pyplot as plt
+    if not hasattr(plt, "hist2d"):
+        import nose
+        raise nose.SkipTest("stat_bin2d only works with newer matplotlib (1.3) versions.")
     df = _build_testing_df()
     gg = ggplot(aes(x='x', y='y', shape='cat', color='cat2'), data=df)
     assert_same_ggplot(gg + stat_bin2d(), "stat_bin2d")
@@ -130,12 +134,12 @@ def test_alpha_density():
     gg = ggplot(aes(x='mpg', fill=True, alpha=0.3), data=mtcars)
     assert_same_ggplot(gg + geom_density(), "geom_density_alpha")
 
-# @cleanup
-# def test_facet_wrap():
-    # df = _build_testing_df()
-    # gg = ggplot(aes(x='x', ymax='y', ymin='z'), data=df)
-    # assert_same_ggplot(gg + geom_bar() + facet_wrap(x="cat2"), "geom_bar_facet")
-    # assert_same_ggplot(gg + geom_area() + facet_wrap(x="cat2"), "geom_area_facet")
+@cleanup
+def test_facet_wrap():
+    df = _build_testing_df()
+    gg = ggplot(aes(x='x', ymax='y', ymin='z'), data=df)
+    #assert_same_ggplot(gg + geom_bar() + facet_wrap(x="cat2"), "geom_bar_facet")
+    assert_same_ggplot(gg + geom_area() + facet_wrap(x="cat2"), "geom_area_facet")
 
 @cleanup
 def test_facet_wrap2():
