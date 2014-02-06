@@ -7,6 +7,10 @@ if sys.hexversion > 0x03000000:
 else:
     from UserDict import UserDict
 
+from copy import deepcopy
+
+from patsy.eval import EvalEnvironment
+
 class aes(UserDict):
     """
     Creates a dictionary that is used to evaluate
@@ -62,3 +66,20 @@ class aes(UserDict):
         if 'linetype' in self.data:
             self.data['linestyle'] = self.data['linetype']
             del self.data['linetype']
+        self.__eval_env__ = EvalEnvironment.capture(1)
+
+    def __deepcopy__(self, memo):
+        '''deepcopy support for ggplot'''
+        result = aes()
+        for key, item in self.__dict__.items():
+            # don't make a deepcopy of the env!
+            if key == "__eval_env__":
+                result.__dict__[key] = self.__dict__[key]
+                continue
+            try:
+                result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+            except:
+                print(key)
+                raise
+
+        return result

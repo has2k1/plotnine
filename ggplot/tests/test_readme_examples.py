@@ -49,8 +49,8 @@ def test_geom_density_example():
 @cleanup
 def test_density_with_fill():
     meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
-    gg = ggplot(aes(x='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
-    gg = gg + geom_density()
+    gg = ggplot(aes(x='value', colour='variable'), data=meat_lng)
+    gg = gg + geom_density(fill=True, alpha=0.3)
     assert_same_ggplot(gg, 'density_with_fill')
 
 @cleanup

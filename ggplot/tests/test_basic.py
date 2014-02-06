@@ -130,9 +130,8 @@ def test_stats_bin2d():
 
 @cleanup
 def test_alpha_density():
-    df = _build_testing_df()
-    gg = ggplot(aes(x='mpg', fill=True, alpha=0.3), data=mtcars)
-    assert_same_ggplot(gg + geom_density(), "geom_density_alpha")
+    gg = ggplot(aes(x='mpg'), data=mtcars)
+    assert_same_ggplot(gg + geom_density(fill=True, alpha=0.3), "geom_density_alpha")
 
 @cleanup
 def test_facet_wrap():
@@ -145,9 +144,9 @@ def test_facet_wrap():
 def test_facet_wrap2():
     meat = _build_meat_df()
     meat_lng = pd.melt(meat, id_vars=['date'])
-    p = ggplot(aes(x='date', y='value', colour='variable', fill=True, alpha=0.3), data=meat_lng)
-    assert_same_ggplot(p + geom_density() + facet_wrap("variable"), "geom_density_facet")
-    assert_same_ggplot(p + geom_line() + facet_wrap("variable"), "geom_line_facet")
+    p = ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng)
+    assert_same_ggplot(p + geom_density(fill=True, alpha=0.3) + facet_wrap("variable"), "geom_density_facet")
+    assert_same_ggplot(p + geom_line(alpha=0.3) + facet_wrap("variable"), "geom_line_facet")
 
 @cleanup 
 def test_facet_grid_exceptions():

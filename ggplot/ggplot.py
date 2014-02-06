@@ -18,8 +18,8 @@ import ggplot.utils.six as six
 __ALL__ = ["ggplot"]
 
 import sys
-import re
 import warnings
+from copy import deepcopy
 
 # Show plots if in interactive mode
 if sys.flags.interactive:
@@ -59,9 +59,7 @@ class ggplot(object):
             aesthetics, data = data, aesthetics
 
         self.aesthetics = aesthetics
-        self.data = data
-
-        self.data = _build_df_from_transforms(self.data, self.aesthetics)
+        self.data = _apply_transforms(data, self.aesthetics)
 
         # defaults
         self.geoms = []
@@ -118,6 +116,22 @@ class ggplot(object):
         plt.show()
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
+
+    def __deepcopy__(self, memo):
+        '''deepcopy support for ggplot'''
+        # This is a workaround as ggplot(None, None) does not really work :-(
+        class _empty(object):
+            pass
+        result = _empty()
+        result.__class__ = self.__class__
+        for key, item in self.__dict__.items():
+            # don't make a deepcopy of data!
+            if key == "data":
+                result.__dict__[key] = self.__dict__[key]
+                continue
+            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+
+        return result
 
     def draw(self):
         # Adding rc=self.rcParams does not validate/parses the params which then
@@ -279,7 +293,7 @@ class ggplot(object):
                         _aes = _aes.copy()
                         _aes.update(geom.aes)
                     if not geom.data is None:
-                        data = _build_df_from_transforms(geom.data, _aes)
+                        data = _apply_transforms(geom.data, _aes)
                         data = assign_visual_mapping(data, _aes, self)
                     else:
                         data = self.data
@@ -386,18 +400,35 @@ class ggplot(object):
         return plt.gcf()
 
     def _get_layers(self, data=None, aes=None):
-        # This is handy because... (something to do w/ facets?)
+        """Get a layer to be plotted."""
+        # Use the default data and aestetics in case no specific ones are supplied
         if data is None:
             data = self.data
         if aes is None:
             aes = self.aesthetics
-            # We want everything to be a DataFrame. We're going to default
-        # to key to handle items where the user hard codes a aesthetic
-        # (i.e. alpha=0.6)
-        mapping = pd.DataFrame({
-            ae: data.get(key, key)
-            for ae, key in aes.items()
-        })
+        
+        mapping = {}
+        extra = {}
+        for ae, key in aes.items():
+            if isinstance(key, list) or hasattr(key, "__array__"):
+                # direct assignment of a list/array to the aes -> it's done in the get_layer step
+                mapping[ae] = key
+            elif key in data:
+                # a column or a transformed column
+                mapping[ae] = data[key]
+            else:
+                # now we have a single value. ggplot2 treats that as if all rows should be this
+                # value, so lets do the same. To ensure that all rows get this value, we have to
+                # do that after we constructed the dataframe.
+                # See also the _apply_transform function below, which does this already for
+                # string values.
+                extra[ae] = key
+        mapping = pd.DataFrame(mapping)
+        for ae, key in extra.items():
+            mapping[ae] = key
+
+        # Overwrite the already done mappings to matplotlib understandable
+        # values for color/size/etc
         if "color" in mapping:
             mapping['color'] = data['color_mapping']
         if "size" in mapping:
@@ -417,6 +448,10 @@ class ggplot(object):
         mapping = mapping.dropna()
 
         discrete_aes = [ae for ae in self.DISCRETE if ae in mapping]
+        # TODO: it think this infomation should better be passed in to the plot_layer() and should be based whether the variable is a factor or not
+        # -> Use dtypes = object/string or in case we use a proper "factor" function -> compute the levels over the whole dataframe in case of faceting!
+        # TODO: It would be nice if the plot_layer() methods could get a dataframe in case some munging is required
+        # TODO: maybe change this to pass in the complete dataframe for the layer and let the plot_layer function work out that it has to plot each series differently.
         layers = []
         if len(discrete_aes) == 0:
             frame = mapping.to_dict('list')
@@ -474,11 +509,11 @@ def _is_identity(x):
         return False
 
 
-def _build_df_from_transforms(data, aes):
-    """Adds columns from the in aes included transformations
+def _apply_transforms(data, aes):
+    """Adds columns from the aes included transformations
 
     Possible transformations are "factor(<col>)" and
-    expresions which can be used with eval.
+    expressions which can be used with eval.
 
     Parameters
     ----------
@@ -490,24 +525,35 @@ def _build_df_from_transforms(data, aes):
     Returns
     -------
     data : DateFrame
-        Transformend DataFrame
+        Transformed DataFrame
     """
+    data = data.copy()
     for ae, name in aes.items():
-        if name not in data and not _is_identity(name):
-            # Look for alias/lambda functions
-            result = re.findall(r'(?:[A-Z])|(?:[A-Za_-z0-9]+)|(?:[/*+_=\(\)-])', name)
-            if re.match("factor[(][A-Za-z_0-9]+[)]", name):
-                m = re.search("factor[(]([A-Za-z_0-9]+)[)]", name)
-                data[name] = data[m.group(1)].apply(str)
-            else:
-                lambda_column = ""
-                for item in result:
-                    if re.match("[/*+_=\(\)-]", item):
-                        pass
-                    elif re.match("^[0-9.]+$", item):
-                        pass
-                    else:
-                        item = "data.get('%s')" % item
-                    lambda_column += item
-                data[name] = eval(lambda_column)
+        if (isinstance(name, six.string_types) and (name not in data)):
+            # here we assume that it is a transformation
+            # if the mapping is to a single value (color="red"), this will be handled by pandas and 
+            # assigned to the whole index. See also the last case in mapping building in get_layer!
+            from patsy.eval import EvalEnvironment
+            def factor(s, levels=None, labels=None):
+                # TODO: This factor implementation needs improvements...
+                # probably only gonna happen after https://github.com/pydata/pandas/issues/5313 is 
+                # implemented in pandas ...
+                if levels or labels:
+                    print("factor levels or labels are not yet implemented.")
+                return s.apply(str)
+            # use either the captured eval_env from aes or use the env one steps up
+            env = EvalEnvironment.capture(eval_env=(aes.__eval_env__ or 1))
+            # add factor as a special case
+            env.add_outer_namespace({"factor":factor})
+            try:
+                new_val = env.eval(name, inner_namespace=data)
+            except Exception as e:
+                msg = "Could not evaluate the '%s' mapping: '%s' (original error: %s)"
+                raise Exception(msg % (ae, name, str(e)))
+            try:
+                data[name] = new_val
+            except Exception as e:
+                msg = """The '%s' mapping: '%s' produced a value of type '%s', but only single items
+                and lists/arrays can be used. (original error: %s)"""
+                raise Exception(msg % (ae, name, str(type(_new_val)), str(e)))
     return data
