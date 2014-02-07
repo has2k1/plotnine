@@ -37,6 +37,7 @@ def test_geom_with_data_visual():
 
 def test_geom_with_data():
     gg = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
+    cols_before = gg.data.columns.copy()
     _text = geom_text(aes(label="name"), data=mtcars[mtcars.cyl == 6])
     g2 = gg + _text
-    assert_is_not(g2.data, gg.data, "Adding a dataset to a geom changed the data in ggplot")
+    assert_is_not(g2.data, _text.data, "Adding a dataset to a geom replaced the data in ggplot")
