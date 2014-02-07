@@ -1,12 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from . import get_assert_same_ggplot, cleanup
+from . import get_assert_same_ggplot, cleanup, assert_same_elements
 assert_same_ggplot = get_assert_same_ggplot(__file__)
 
 
-from nose.tools import (assert_true, assert_raises, assert_is, assert_is_not, assert_equal,
-    assert_items_equal)
+from nose.tools import (assert_true, assert_raises, assert_is, assert_is_not, assert_equal)
 
 from ggplot import *
 
@@ -27,7 +26,7 @@ def test_no_data_leak():
     import numpy as np
     p = ggplot(aes(x="np.log(price)"), data=diamonds)
     cols_after = diamonds.columns.copy()
-    assert_items_equal(cols_before, cols_after)
+    assert_same_elements(cols_before, cols_after)
     assert_is_not(diamonds, p.data)
 
 def test_geom_with_data():
@@ -38,7 +37,7 @@ def test_geom_with_data():
     # Datasets are shared between ggplot objects but it is not allowed to change the columns in a
     # dataset after the initial ggplot(aes) call.
     assert_is_not(g2.data, mtcars, "Adding a dataset to a geom changed the data in ggplot")
-    assert_items_equal(cols_before, g2.data.columns)
+    assert_same_elements(cols_before, g2.data.columns)
 
 
 def test_deepcopy():

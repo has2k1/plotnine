@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from nose.tools import with_setup, make_decorator
+from nose.tools import with_setup, make_decorator, assert_true
 import warnings
 
 
@@ -98,6 +98,12 @@ def get_assert_same_ggplot(test_file):
         return _assert_same_ggplot_image(*args, **kwargs)
     curried.__doc__ = _assert_same_ggplot_image.__doc__
     return curried
+
+
+def assert_same_elements(first,second, msg=None):
+    assert_true(len(first) == len(second), "different length")
+    assert_true(all([a==b for a,b in zip(first,second)]), "Unequal: %s vs %s" % (first, second))
+
 
 def image_comparison(baseline_images=None, tol=17, extensions=None):
     """

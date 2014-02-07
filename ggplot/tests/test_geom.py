@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from nose.tools import assert_equal, assert_is, assert_is_not, assert_items_equal
+from nose.tools import assert_equal, assert_is, assert_is_not
 from ggplot.tests import image_comparison
 
 from ggplot import *
