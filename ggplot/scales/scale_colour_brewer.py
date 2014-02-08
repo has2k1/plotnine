@@ -57,7 +57,7 @@ class scale_colour_brewer(scale):
         else:
             palette = _number_to_palette(ctype, 1)
         if isinstance(palette, int):
-            palette = _number_to_palette(palette)
+            palette = _number_to_palette(ctype, palette)
 
         n_colors = gg.data[gg.aesthetics['color']].nunique()
         bmap = brewer2mpl.get_map(palette, ctype, n_colors)
