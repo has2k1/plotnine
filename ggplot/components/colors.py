@@ -5,28 +5,19 @@ import numpy as np
 from matplotlib.colors import rgb2hex
 import ggplot.utils.six as six
 
+COLORS = [
+    "#000000",
+    "#E69F00",
+    "#56B4E9",
+    "#009E73",
+    "#F0E442",
+    "#0072B2",
+    "#D55E00",
+    "#CC79A7"
+]
 
-def to_hex(r, g, b):
-    return rgb2hex((r/255., g/255., b/255.))
 
-hue = 65
-COLORS = []
-for i in range(max(hue, 90), 256):
-    COLORS.append(to_hex(255, i, hue))
-for i in range(hue, 256):
-    COLORS.append(to_hex(255-i, 255, hue))
-for i in range(hue, 256):
-    COLORS.append(to_hex(hue, 255, i))
-for i in range(hue, 256):
-    COLORS.append(to_hex(hue, 255-i, 255))
-for i in range(hue, 256):
-    COLORS.append(to_hex(i, hue, 255))
-for i in range(hue, 256):
-    COLORS.append(to_hex(255, hue, 255-i))
-for i in range(hue, max(hue, 90)):
-    COLORS.append(to_hex(255, i, hue))
-
-def color_gen(n_colors, colors=None):
+def color_gen(colors=COLORS):
     """
     Generator that will infinitely produce colors when asked politely
     TODO: This needs to be updated with better colors, but it will do for now.
@@ -35,12 +26,8 @@ def color_gen(n_colors, colors=None):
         colors - a list of colors. can be hex or actual names
     """
     while True:
-        if colors is None:
-            for idx in range(0, len(COLORS), len(COLORS)/n_colors):
-                yield COLORS[idx]
-        else:
-            for color in colors:
-                yield color
+        for color in colors:
+            yield color
 
 
 def assign_colors(data, aes, gg):
@@ -91,9 +78,9 @@ def assign_colors(data, aes, gg):
         else:
             possible_colors = np.unique(data[color_col])
             if gg.manual_color_list:
-                color = color_gen(len(possible_colors), gg.manual_color_list)
+                color = color_gen(gg.manual_color_list)
             else:
-                color = color_gen(len(possible_colors))
+                color = color_gen()
             color_mapping = {value: six.next(color) for value in possible_colors}
             data["color_mapping"] = data[color_col].apply(lambda x: color_mapping[x])
             gg.add_to_legend("color", {v: k for k, v in color_mapping.items()})
