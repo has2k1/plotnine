@@ -95,8 +95,8 @@ def assign_colors(data, aes, gg):
                 color = color_gen(len(possible_colors), gg.manual_color_list)
             else:
                 color = color_gen(len(possible_colors))
-            color_mapping = {value: six.next(color) for value in possible_colors}
+            color_mapping = dict((value, six.next(color)) for value in possible_colors)
             data["color_mapping"] = data[color_col].apply(lambda x: color_mapping[x])
-            gg.add_to_legend("color", {v: k for k, v in color_mapping.items()})
+            gg.add_to_legend("color", dict((v, k) for k, v in color_mapping.items()))
 
     return data

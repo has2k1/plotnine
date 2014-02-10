@@ -10,7 +10,7 @@ from .geom import geom
 class geom_line(geom):
     VALID_AES = ['x', 'y', 'color', 'alpha', 'group', 'linestyle', 'linewidth' 'label', 'size']
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'x' in layer:
             x = layer.pop('x')

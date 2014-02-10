@@ -12,7 +12,7 @@ class geom_point(geom):
                  'position']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
         if "size" in layer:

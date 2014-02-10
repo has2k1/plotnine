@@ -13,7 +13,7 @@ class geom_now_its_art(geom):
     VALID_AES = ['x', 'y']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
         x = np.array(layer['x'])

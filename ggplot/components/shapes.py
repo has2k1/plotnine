@@ -46,7 +46,7 @@ def assign_shapes(data, aes, gg):
         possible_shapes = np.unique(data[shape_col])
         shape = shape_gen()
         # marker in matplotlib are not unicode ready in 1.3.1 :-( -> use explicit str()...
-        shape_mapping = {value: str(six.next(shape)) for value in possible_shapes}
+        shape_mapping = dict((value, str(six.next(shape))) for value in possible_shapes)
         data['shape_mapping'] = data[shape_col].apply(lambda x: shape_mapping[x])
-        gg.add_to_legend("marker", {v: k for k, v in shape_mapping.items()})
+        gg.add_to_legend("marker", dict((v, k) for k, v in shape_mapping.items()))
     return data
