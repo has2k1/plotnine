@@ -58,13 +58,13 @@ def lowess(x, y, span=SPAN):
     y2 = pd.Series(upper * std +  y)
     return (y, y1, y2)
 
-def mavg(x,y, span=SPAN):
+def mavg(x,y, window):
     "compute moving average"
-    x, y = map(_plot_friendly, [x,y])
+    x, y = map(plot_friendly, [x,y])
     if _isdate(x[0]):
         x = np.array([i.toordinal() for i in x])
-    std_err = pd.expanding_std(y, span)
-    y = pd.rolling_mean(y, span)
+    std_err = pd.rolling_std(y, window)
+    y = pd.rolling_mean(y, window)
     y1 = y - std_err
     y2 = y + std_err
     return (y, y1, y2)
