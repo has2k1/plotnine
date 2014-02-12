@@ -359,17 +359,15 @@ class ggplot(object):
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
                 if self.xlimits:
                     if not self.xbreaks and not self.xtick_labels:
-                        tick_num = len(ax.xaxis.get_ticklocs())
-                        new_ticks = np.linspace(self.xlimits[0], self.xlimits[1], tick_num)
-                        ax.xaxis.set_ticks(new_ticks)
-                        ax.xaxis.set_ticklabels(map(str, new_ticks))
+                        labs, minval, maxval= utils.calc_axis_breaks_and_limits(self.xlimits[0], self.xlimits[1])
+                        ax.xaxis.set_ticks(labs)
+                        ax.xaxis.set_ticklabels(labs)
                     ax.set_xlim(self.xlimits)
                 if self.ylimits:
                     if not self.ytick_labels:
-                        tick_num = len(ax.yaxis.get_ticklocs())
-                        new_ticks = np.linspace(self.ylimits[0], self.ylimits[1], tick_num)
-                        ax.yaxis.set_ticks(new_ticks)
-                        ax.yaxis.set_ticklabels(map(str, new_ticks))
+                        labs, minval, maxval= utils.calc_axis_breaks_and_limits(self.ylimits[0], self.ylimits[1])
+                        ax.yaxis.set_ticks(labs)
+                        ax.yaxis.set_ticklabels(labs)
                     ax.set_ylim(self.ylimits)
                 if self.scale_y_reverse:
                     ax.invert_yaxis()
