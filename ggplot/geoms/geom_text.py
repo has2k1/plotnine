@@ -62,13 +62,13 @@ class geom_text(geom):
             ymin = min(ymin, cymin)
 
         if 'hjust' in layer:
-            x = (np.array(x) + int(layer['hjust'])).tolist()
+            x = (np.array(x) + layer['hjust']).tolist()
             del layer['hjust']
         else:
             layer['horizontalalignment'] = 'center'
 
         if 'vjust' in layer:
-            y = (np.array(y) + int(layer['vjust'])).tolist()
+            y = (np.array(y) + layer['vjust']).tolist()
             del layer['vjust']
         else:
             layer['verticalalignment'] = 'center'
