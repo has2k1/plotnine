@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from numpy import isreal
 
-def _set_default_theme_rcparams(gg, style, gridweight, context):
+def _set_theme_seaborn_rcparams(rcParams, style, gridweight, context):
     """helper method to set the default rcParams and other theming relevant
     things
     """
@@ -71,7 +71,7 @@ def _set_default_theme_rcparams(gg, style, gridweight, context):
                      "ytick.major.size": ticksize,
                      "ytick.minor.size": ticksize / 2}
 
-    gg.rcParams.update(ax_params)
+    rcParams.update(ax_params)
 
     # Determine the font sizes
     if context == "talk":
@@ -106,10 +106,10 @@ def _set_default_theme_rcparams(gg, style, gridweight, context):
                        "legend.fontsize": 8,
                        }
 
-    gg.rcParams.update(font_params)
+    rcParams.update(font_params)
 
     # Set other parameters
-    gg.rcParams.update({
+    rcParams.update({
         "lines.linewidth": 1.1 if context == "paper" else 1.4,
         "patch.linewidth": .1 if context == "paper" else .3,
         "xtick.major.pad": 3.5 if context == "paper" else 7,
@@ -124,50 +124,50 @@ def _set_default_theme_rcparams(gg, style, gridweight, context):
     # mpl.rc("image", cmap="cubehelix")
 
 
-    gg.rcParams["timezone"] = "UTC"
-    # gg.rcParams["lines.linewidth"] = "1.0"
-    # gg.rcParams["lines.antialiased"] = "True"
-    # gg.rcParams["patch.linewidth"] = "0.5"
-    # gg.rcParams["patch.facecolor"] = "348ABD"
-    # gg.rcParams["patch.edgecolor"] = "#E5E5E5"
-    gg.rcParams["patch.antialiased"] = "True"
-    gg.rcParams["font.family"] = "sans-serif"
-    gg.rcParams["font.size"] = "12.0"
-    gg.rcParams["font.serif"] = ["Times", "Palatino", "New Century Schoolbook",
+    rcParams["timezone"] = "UTC"
+    # rcParams["lines.linewidth"] = "1.0"
+    # rcParams["lines.antialiased"] = "True"
+    # rcParams["patch.linewidth"] = "0.5"
+    # rcParams["patch.facecolor"] = "348ABD"
+    # rcParams["patch.edgecolor"] = "#E5E5E5"
+    rcParams["patch.antialiased"] = "True"
+    rcParams["font.family"] = "sans-serif"
+    rcParams["font.size"] = "12.0"
+    rcParams["font.serif"] = ["Times", "Palatino", "New Century Schoolbook",
             "Bookman", "Computer Modern Roman",
             "Times New Roman"]
-    gg.rcParams["font.sans-serif"] = ["Helvetica", "Avant Garde",
+    rcParams["font.sans-serif"] = ["Helvetica", "Avant Garde",
             "Computer Modern Sans serif", "Arial"]
-    # gg.rcParams["axes.facecolor"] = "#E5E5E5"
-    # gg.rcParams["axes.edgecolor"] = "bcbcbc"
-    # gg.rcParams["axes.linewidth"] = "1"
-    # gg.rcParams["axes.grid"] = "True"
-    # gg.rcParams["axes.titlesize"] = "x-large"
-    # gg.rcParams["axes.labelsize"] = "large"
-    # gg.rcParams["axes.labelcolor"] = "black"
-    # gg.rcParams["axes.axisbelow"] = "True"
-    gg.rcParams["axes.color_cycle"] = ["#333333", "348ABD", "7A68A6", "A60628",
+    # rcParams["axes.facecolor"] = "#E5E5E5"
+    # rcParams["axes.edgecolor"] = "bcbcbc"
+    # rcParams["axes.linewidth"] = "1"
+    # rcParams["axes.grid"] = "True"
+    # rcParams["axes.titlesize"] = "x-large"
+    # rcParams["axes.labelsize"] = "large"
+    # rcParams["axes.labelcolor"] = "black"
+    # rcParams["axes.axisbelow"] = "True"
+    rcParams["axes.color_cycle"] = ["#333333", "348ABD", "7A68A6", "A60628",
             "467821", "CF4457", "188487", "E24A33"]
-    # gg.rcParams["grid.color"] = "white"
-    # gg.rcParams["grid.linewidth"] = "1.4"
-    # gg.rcParams["grid.linestyle"] = "solid"
-    # gg.rcParams["xtick.major.size"] = "0"
-    # gg.rcParams["xtick.minor.size"] = "0"
-    # gg.rcParams["xtick.major.pad"] = "6"
-    # gg.rcParams["xtick.minor.pad"] = "6"
-    # gg.rcParams["xtick.color"] = "#7F7F7F"
-    # gg.rcParams["xtick.direction"] = "out"  # pointing out of axis
-    # gg.rcParams["ytick.major.size"] = "0"
-    # gg.rcParams["ytick.minor.size"] = "0"
-    # gg.rcParams["ytick.major.pad"] = "6"
-    # gg.rcParams["ytick.minor.pad"] = "6"
-    # gg.rcParams["ytick.color"] = "#7F7F7F"
-    # gg.rcParams["ytick.direction"] = "out"  # pointing out of axis
-    gg.rcParams["legend.fancybox"] = "True"
-    gg.rcParams["figure.figsize"] = "11, 8"
-    gg.rcParams["figure.facecolor"] = "1.0"
-    gg.rcParams["figure.edgecolor"] = "0.50"
-    gg.rcParams["figure.subplot.hspace"] = "0.5"
+    # rcParams["grid.color"] = "white"
+    # rcParams["grid.linewidth"] = "1.4"
+    # rcParams["grid.linestyle"] = "solid"
+    # rcParams["xtick.major.size"] = "0"
+    # rcParams["xtick.minor.size"] = "0"
+    # rcParams["xtick.major.pad"] = "6"
+    # rcParams["xtick.minor.pad"] = "6"
+    # rcParams["xtick.color"] = "#7F7F7F"
+    # rcParams["xtick.direction"] = "out"  # pointing out of axis
+    # rcParams["ytick.major.size"] = "0"
+    # rcParams["ytick.minor.size"] = "0"
+    # rcParams["ytick.major.pad"] = "6"
+    # rcParams["ytick.minor.pad"] = "6"
+    # rcParams["ytick.color"] = "#7F7F7F"
+    # rcParams["ytick.direction"] = "out"  # pointing out of axis
+    rcParams["legend.fancybox"] = "True"
+    rcParams["figure.figsize"] = "11, 8"
+    rcParams["figure.facecolor"] = "1.0"
+    rcParams["figure.edgecolor"] = "0.50"
+    rcParams["figure.subplot.hspace"] = "0.5"
 
 
 class theme_seaborn(theme):
@@ -188,16 +188,17 @@ class theme_seaborn(theme):
     """
 
     def __init__(self, style="whitegrid", gridweight=None, context="notebook"):
+        super(theme_seaborn, self).__init__(complete=True)
         self.style = style
         self.gridweight = gridweight
         self.context = context
 
-    def __radd__(self, gg):
-        gg = super(theme_seaborn, self).__radd__(gg)
-        _set_default_theme_rcparams(gg, self.style, self.gridweight,
-                self.context)
-        gg.post_plot_callbacks.append(_theme_grey_post_plot_callback)
-        return gg
+    def apply_rcparams(self, rcParams):
+        _set_theme_seaborn_rcparams(rcParams, self.style, self.gridweight,
+                                    self.context)
+
+    def apply_theme(self, ax):
+        _theme_grey_post_plot_callback(ax)
 
 
 def _theme_grey_post_plot_callback(ax):
