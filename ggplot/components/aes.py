@@ -49,6 +49,8 @@ class aes(UserDict):
     Examples
     --------
     >>> aes(x='x', y='y')
+    >>> aes('x', 'y')
+    >>> aes(x='weight', y='height', color='salary')
     """
 
     DEFAULT_ARGS = ['x', 'y', 'color']
