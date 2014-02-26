@@ -1,6 +1,8 @@
 =====
 0.5.0
 =====
+- prevent copying data
+- improved color selection
 - geom_rect
 - scale_colour_brewer
 - better geom_bar defaults
