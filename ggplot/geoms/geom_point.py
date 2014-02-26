@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.colors import Normalize
 import numpy as np
-from copy import deepcopy
 from .geom import geom
 import numpy as np
 

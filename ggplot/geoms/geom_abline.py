@@ -5,7 +5,6 @@ from matplotlib.dates import drange, date2num
 from pandas.lib import Timestamp
 from datetime import timedelta
 import numpy as np
-from copy import deepcopy
 from .geom import geom
 import pandas as pd
 

@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 import matplotlib.pyplot as plt
 from itertools import groupby
 from operator import itemgetter
-from copy import deepcopy
 import sys
 from .geom import geom
 

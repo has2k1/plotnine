@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
-from copy import deepcopy
 from .geom import geom
 import os
 

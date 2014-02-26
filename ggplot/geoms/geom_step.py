@@ -3,12 +3,12 @@ from __future__ import (absolute_import, division, print_function,
 import matplotlib.pyplot as plt
 from itertools import groupby
 from operator import itemgetter
-from copy import deepcopy
 from .geom import geom
 
 
 class geom_step(geom):
-    VALID_AES = ['x', 'y', 'color', 'alpha', 'linestyle', 'label', 'size', 'group']
+    VALID_AES = ['x', 'y', 'color', 'alpha', 'linestyle', 'label', 'size',
+                 'group']
     def plot_layer(self, layer):
         layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
         layer.update(self.manual_aes)

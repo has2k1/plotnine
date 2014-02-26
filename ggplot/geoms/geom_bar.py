@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from copy import deepcopy
 from .geom import geom
 from pandas.lib import Timestamp
 
