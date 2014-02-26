@@ -38,7 +38,8 @@ def lm(x, y, alpha=ALPHA):
     predict_mean_ci_upp = df['mean_ci_95%_upp']
     predict_ci_low      = df['predict_ci_95%_low']
     predict_ci_upp      = df['predict_ci_95%_upp']
-    return (fittedvalues, predict_mean_ci_low, predict_mean_ci_upp)
+    return (fittedvalues.tolist(), predict_mean_ci_low.tolist(),
+            predict_mean_ci_upp.tolist())
 
 def lowess(x, y, span=SPAN):
     "returns y-values estimated using the lowess function in statsmodels."
@@ -54,8 +55,8 @@ def lowess(x, y, span=SPAN):
     y = pd.Series(result[::,1])
     lower, upper = stats.t.interval(span, len(x), loc=0, scale=2)
     std = np.std(y)
-    y1 = pd.Series(lower * std +  y)
-    y2 = pd.Series(upper * std +  y)
+    y1 = pd.Series(lower * std +  y).tolist()
+    y2 = pd.Series(upper * std +  y).tolist()
     return (y, y1, y2)
 
 def mavg(x,y, window):
@@ -67,4 +68,4 @@ def mavg(x,y, window):
     y = pd.rolling_mean(y, window)
     y1 = y - std_err
     y2 = y + std_err
-    return (y, y1, y2)
+    return (y, y1.tolist(), y2.tolist())
