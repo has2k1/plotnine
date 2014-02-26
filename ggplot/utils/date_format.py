@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from matplotlib.dates import DateFormatter
 
 def date_format(format='%Y-%m-%d'):
