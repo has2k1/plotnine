@@ -5,13 +5,13 @@ import numpy as np
 import ggplot.utils.six as six
 
 LINESTYLES = [
-    '-', #solid
+    '-',  #solid
     '--', #dashed
     '-.', #dash-dot
-    ':', #dotted
-    '.', #point
-    '|', #vline
-    '_', #hline
+    ':',  #dotted
+    '.',  #point
+    '|',  #vline
+    '_',  #hline
 ]
 
 LINESTYLES = [
@@ -29,7 +29,9 @@ def line_gen():
 
 
 def assign_linestyles(data, aes, gg):
-    """Assigns line styles to the given data based on the aes and adds the right legend
+    """
+    Assigns line styles to the given data based on the aes and adds the right 
+    legend.
 
     Parameters
     ----------
