@@ -31,8 +31,9 @@ class facet_wrap(object):
             gg.n_dim_x *= y.nunique()
             facets.append(self.y)
 
-        n_wide = self.ncol
-        n_high = self.nrow
+        # TODO: for some reason this is backwards
+        n_wide = self.nrow
+        n_high = self.ncol
 
         if n_wide is None and n_high is None:
             # calculate both on the fly
