@@ -1,48 +1,35 @@
 import sys
 import numpy as np
 from matplotlib.colors import rgb2hex
+from ..utils.color import ColorHCL
 import ggplot.utils.six as six
 
 
-def to_hex(r, g, b):
-    return rgb2hex((r/255., g/255., b/255.))
-
-hue = 65
-COLORS = []
-for i in range(max(hue, 90), 256):
-    COLORS.append(to_hex(255, i, hue))
-for i in range(hue, 256):
-    COLORS.append(to_hex(255-i, 255, hue))
-for i in range(hue, 256):
-    COLORS.append(to_hex(hue, 255, i))
-for i in range(hue, 256):
-    COLORS.append(to_hex(hue, 255-i, 255))
-for i in range(hue, 256):
-    COLORS.append(to_hex(i, hue, 255))
-for i in range(hue, 256):
-    COLORS.append(to_hex(255, hue, 255-i))
-for i in range(hue, max(hue, 90)):
-    COLORS.append(to_hex(255, i, hue))
 
 def color_gen(n_colors, colors=None):
     """
-    Generator that will infinitely produce colors when asked politely
-    TODO: This needs to be updated with better colors, but it will do for now.
+    Generator that will infinitely produce colors when asked politely. Colors
+    are based on the color wheel and the default colors will be chosen by
+    maximizing the distance between each color (based on the color wheel).
 
     params:
         colors - a list of colors. can be hex or actual names
     """
     while True:
         if colors is None:
-            for idx in range(0, len(COLORS), len(COLORS)/n_colors):
-                yield COLORS[idx]
+            hcl = ColorHCL()
+            c = 100 / 100.0
+            l = 65 / 100.0
+            for idx in np.linspace(0, 360-15, n_colors):
+                yield rgb2hex(hcl(idx, c, l))
         else:
             for color in colors:
                 yield color
 
 
 def assign_colors(data, aes, gg):
-    """Assigns colors to the given data based on the aes and adds the right legend
+    """
+    Assigns colors to the given data based on the aes and adds the right legend
 
     We need to take a value an convert it into colors that we can actually
     plot. This means checking to see if we're colorizing a discrete or
