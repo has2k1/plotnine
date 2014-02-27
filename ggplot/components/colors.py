@@ -2,9 +2,28 @@ import sys
 import numpy as np
 from matplotlib.colors import rgb2hex
 from ..utils.color import ColorHCL
+from copy import deepcopy
 import ggplot.utils.six as six
 
 
+def hue_pal(h=(0, 360), c=100, l=65, h_start=0, direction=1):
+    """
+    Utility for making hue palettes for color schemes.
+    """
+    c /= 100.
+    l /= 100.
+    hcl = ColorHCL()
+    def func(n):
+        y = deepcopy(h)
+        if (y[1] - y[0]) % 360 < 1:
+            y = (y[0], y[1] - 360. / n)
+        rotate = lambda x: ((x + h_start) % 360) * direction
+        hues = map(rotate, np.linspace(y[0], y[1], n))
+        hcls = []
+        for hue in hues:
+            hcls.append(rgb2hex(hcl(hue, c, l)))
+        return hcls
+    return func
 
 def color_gen(n_colors, colors=None):
     """
@@ -17,11 +36,8 @@ def color_gen(n_colors, colors=None):
     """
     while True:
         if colors is None:
-            hcl = ColorHCL()
-            c = 100 / 100.0
-            l = 65 / 100.0
-            for idx in np.linspace(0, 360-15, n_colors):
-                yield rgb2hex(hcl(idx, c, l))
+            for color in hue_pal()(n_colors):
+                yield color
         else:
             for color in colors:
                 yield color
