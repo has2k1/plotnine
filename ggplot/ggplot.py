@@ -25,7 +25,7 @@ from copy import deepcopy
 if sys.flags.interactive:
     plt.ion()
 
-# Workaround for matplotlib 1.1.1 not having a rc_context 
+# Workaround for matplotlib 1.1.1 not having a rc_context
 if not hasattr(mpl, 'rc_context'):
     from .utils import _rc_context
     mpl.rc_context = _rc_context
@@ -99,7 +99,7 @@ class ggplot(object):
         # this must be set by any theme to prevent addig the default theme
         self.theme_applied = False
         self.rcParams = {}
-        # Callbacks to change aspects of each axis 
+        # Callbacks to change aspects of each axis
         self.post_plot_callbacks = []
 
         # continuous color configs
@@ -358,8 +358,16 @@ class ggplot(object):
                 if self.ytick_formatter:
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
                 if self.xlimits:
+                    if not self.xbreaks and not self.xtick_labels:
+                        labs, minval, maxval= utils.calc_axis_breaks_and_limits(self.xlimits[0], self.xlimits[1])
+                        ax.xaxis.set_ticks(labs)
+                        ax.xaxis.set_ticklabels(labs)
                     ax.set_xlim(self.xlimits)
                 if self.ylimits:
+                    if not self.ytick_labels:
+                        labs, minval, maxval= utils.calc_axis_breaks_and_limits(self.ylimits[0], self.ylimits[1])
+                        ax.yaxis.set_ticks(labs)
+                        ax.yaxis.set_ticklabels(labs)
                     ax.set_ylim(self.ylimits)
                 if self.scale_y_reverse:
                     ax.invert_yaxis()
@@ -379,7 +387,7 @@ class ggplot(object):
                 ax = axs[0][self.n_wide - 1]
                 box = ax.get_position()
                 ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                
+
                 cntr = 0
                 # py3 and py2 have different sorting order in dics, so make that consistent
                 for ltype in sorted(self.legend.keys()):
@@ -406,7 +414,7 @@ class ggplot(object):
             data = self.data
         if aes is None:
             aes = self.aesthetics
-        
+
         mapping = {}
         extra = {}
         for ae, key in aes.items():
@@ -531,12 +539,12 @@ def _apply_transforms(data, aes):
     for ae, name in aes.items():
         if (isinstance(name, six.string_types) and (name not in data)):
             # here we assume that it is a transformation
-            # if the mapping is to a single value (color="red"), this will be handled by pandas and 
+            # if the mapping is to a single value (color="red"), this will be handled by pandas and
             # assigned to the whole index. See also the last case in mapping building in get_layer!
             from patsy.eval import EvalEnvironment
             def factor(s, levels=None, labels=None):
                 # TODO: This factor implementation needs improvements...
-                # probably only gonna happen after https://github.com/pydata/pandas/issues/5313 is 
+                # probably only gonna happen after https://github.com/pydata/pandas/issues/5313 is
                 # implemented in pandas ...
                 if levels or labels:
                     print("factor levels or labels are not yet implemented.")
