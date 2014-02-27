@@ -19,6 +19,30 @@ from matplotlib.cm import get_cmap
 from matplotlib.colors import LinearSegmentedColormap
 
 
+def display_color(c):
+    """
+    Utility for displaying a color. display_color will make a plot with a circle
+    that is the input parameter.
+
+    Parameters
+    ==========
+    c - string
+        a color; can be RGB, hex, name, whatever
+    """
+    dot = plt.Circle((.5,.5), .4, color=c)
+    fig = plt.gcf()
+    fig.gca().add_artist(dot)
+    plt.show()
+
+def display_colors(cs):
+    n = len(cs)
+    fig = plt.gcf()
+    print("Colors:")
+    for i, c in enumerate(cs):
+        print(i, c, (i, 0.5), 1./n)
+        fig.gca().add_artist(plt.Circle((i/n, 0.5), 1./n, color=c))
+    plt.show()
+
 class SMeta(type):
     """
     Usage:
