@@ -9,8 +9,13 @@ from .geom import geom
 
 class geom_line(geom):
     VALID_AES = ['x', 'y', 'color', 'alpha', 'group', 'linestyle', 'linewidth' 'label', 'size']
+    
+    def __init__(self, *args, **kwargs):
+        super(geom_line, self).__init__(*args, **kwargs)
+        self._warning_printed = False
+    
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'x' in layer:
             x = layer.pop('x')
@@ -21,10 +26,12 @@ class geom_line(geom):
             # https://github.com/matplotlib/matplotlib/issues/2658
             if isinstance(layer['size'], list):
                 layer['size'] = 4
-                msg = "'geom_line()' currenty does not support the mapping of " +\
-                      "size ('aes(size=<var>'), using size=4 as a replacement.\n" +\
-                      "Use 'geom_line(size=x)' to set the size for the whole line.\n"
-                sys.stderr.write(msg)
+                if not self._warning_printed:
+                    msg = "'geom_line()' currenty does not support the mapping of " +\
+                          "size ('aes(size=<var>'), using size=4 as a replacement.\n" +\
+                          "Use 'geom_line(size=x)' to set the size for the whole line.\n"
+                    sys.stderr.write(msg)
+                    self._warning_printed = True
             layer['linewidth'] = layer['size']
             del layer['size']
         if 'linestyle' in layer and 'color' not in layer:

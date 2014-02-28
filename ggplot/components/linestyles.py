@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import sys
 import numpy as np
-import ggplot.utils.six as six
+import six
 
 LINESTYLES = [
     '-',  #solid
@@ -51,8 +50,8 @@ def assign_linestyles(data, aes, gg):
         linestyle_col = aes['linestyle']
         possible_linestyles = np.unique(data[linestyle_col])
         linestyle = line_gen()
-        linestyle_mapping = {value: six.next(linestyle) for value in possible_linestyles}
+        linestyle_mapping = dict((value, six.next(linestyle)) for value in possible_linestyles)
         data['linestyle_mapping'] = data[linestyle_col].apply(lambda x: linestyle_mapping[x])
-        gg.add_to_legend('linestyle', {v: k for k, v in linestyle_mapping.items()})
+        gg.add_to_legend('linestyle', dict((v, k) for k, v in linestyle_mapping.items()))
 
     return data

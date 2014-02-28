@@ -104,7 +104,7 @@ class stat_function(geom):
     REQUIRED_AES = ['x','fun']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
         miss_aes = [aes for aes in self.REQUIRED_AES if aes not in layer]

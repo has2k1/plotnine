@@ -1,20 +1,22 @@
 language: python
 python:
   - 2.7
-  - 3.3
-
-env:
-  - MPL=1.1.1 PANDAS=0.12 PIL=pil
-  - MPL= PANDAS= PIL=
 
 matrix:
   exclude:
-    # we don't want to test old versions agains newer python
-    # also pil is only needed with matplotlib 1.1.1
+   - python: 2.7
+  include:
+    - python: 2.7
+      env: pack=newest
+    - python: 2.7
+      env: pack=old_mpl
     - python: 3.3
-      env: MPL=1.1.1 PANDAS=0.12 PIL=pil
+      env: pack=newest
+# It seems there is no matplotlib in condas python 2.6 repos :-(
+#    - python: 2.6
+#      env: pack=old_mpl
 
-  
+
 notifications:
   email: false
 
@@ -27,8 +29,13 @@ before_install:
   - sudo ln -s /run/shm /dev/shm
 # Install packages
 install:
+  #  Update conda else if will result in a problem when conda updates the repos...
+  - conda update --yes conda 
   # Install dependencies
-  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib=$MPL nose dateutil pandas=$PANDAS statsmodels $PIL; else conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels; fi
+  # No idea why a two step process is needed :-(
+  - if [ ${pack} == "old_mpl" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION matplotlib=1.1.1 ; fi
+  - if [ ${pack} == "old_mpl" ]; then conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy nose dateutil pandas statsmodels pil six; fi
+  - if [ ${pack} == "newest" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels six; fi
   - pip install python-coveralls --use-mirrors
   - pip install brewer2mpl --use-mirrors
   - pip install nose-cov --use-mirrors
@@ -45,4 +52,3 @@ script:
 # Calculate coverage
 after_success:
   - coveralls --config_file .coveragerc
-  

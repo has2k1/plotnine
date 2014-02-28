@@ -13,7 +13,7 @@ from .geoms import *
 from .scales import *
 from .themes.theme_gray import _set_default_theme_rcparams
 from .themes.theme_gray import _theme_grey_post_plot_callback
-import ggplot.utils.six as six
+import six
 
 __ALL__ = ["ggplot"]
 

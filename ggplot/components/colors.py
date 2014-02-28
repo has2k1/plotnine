@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib.colors import rgb2hex
 from ..utils.color import ColorHCL
 from copy import deepcopy
-import ggplot.utils.six as six
+import six
 
 
 def hue_pal(h=(0, 360), c=100, l=65, h_start=0, direction=1):
@@ -95,8 +95,8 @@ def assign_colors(data, aes, gg):
                 color = color_gen(len(possible_colors), gg.manual_color_list)
             else:
                 color = color_gen(len(possible_colors))
-            color_mapping = {value: six.next(color) for value in possible_colors}
+            color_mapping = dict((value, six.next(color)) for value in possible_colors)
             data["color_mapping"] = data[color_col].apply(lambda x: color_mapping[x])
-            gg.add_to_legend("color", {v: k for k, v in color_mapping.items()})
+            gg.add_to_legend("color", dict((v, k) for k, v in color_mapping.items()))
 
     return data

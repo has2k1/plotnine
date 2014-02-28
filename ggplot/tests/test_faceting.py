@@ -5,11 +5,8 @@ from . import get_assert_same_ggplot, cleanup
 
 assert_same_ggplot = get_assert_same_ggplot(__file__)
 
-from nose.tools import assert_true, assert_raises
-
 from ggplot import *
 
-from ggplot.utils import six
 import pandas as pd
 
 

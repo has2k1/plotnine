@@ -11,7 +11,7 @@ class geom_area(geom):
     VALID_AES = ['x', 'ymin', 'ymax', 'color', 'alpha', 'label']
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         x = layer.pop('x')
         y1 = layer.pop('ymin')

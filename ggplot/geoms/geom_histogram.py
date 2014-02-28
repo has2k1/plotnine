@@ -7,9 +7,13 @@ from .geom import geom
 
 class geom_histogram(geom):
     VALID_AES = ['x', 'color', 'alpha', 'label', 'binwidth']
+    
+    def __init__(self, *args, **kwargs):
+        super(geom_histogram, self).__init__(*args, **kwargs)
+        self._warning_printed = False
 
     def plot_layer(self, layer):
-        layer = {k: v for k, v in layer.items() if k in self.VALID_AES}
+        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'binwidth' in layer:
             binwidth = layer.pop('binwidth')
@@ -22,7 +26,9 @@ class geom_histogram(geom):
                 pass
         if 'bins' not in layer:
             layer['bins'] = 30
-            sys.stderr.write("binwidth defaulted to range/30. " +
+            if not self._warning_printed:
+                sys.stderr.write("binwidth defaulted to range/30. " +
                              "Use 'binwidth = x' to adjust this.\n")
+                self._warning_printed = True
                 
         plt.hist(**layer)

@@ -8,7 +8,7 @@
 
 import os
 import time
-from ggplot.utils import six
+import six
 
 from collections import defaultdict
 
