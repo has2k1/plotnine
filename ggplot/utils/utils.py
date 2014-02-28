@@ -8,7 +8,7 @@ import json
 import os
 import sys
 
-from ..utils import six
+import six
 
 # API-docs from ggplot2: GPL-2 licensed
 

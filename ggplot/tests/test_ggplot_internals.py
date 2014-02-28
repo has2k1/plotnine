@@ -9,7 +9,7 @@ from nose.tools import (assert_true, assert_raises, assert_is, assert_is_not, as
 
 from ggplot import *
 
-from ggplot.utils import six
+import six
 import pandas as pd
 
 

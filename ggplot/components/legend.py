@@ -8,7 +8,7 @@ import matplotlib.lines as mlines
 import operator
 import numpy as np
 
-from ggplot.utils import six
+import six
 
 def make_title(title):
     title = title.title()

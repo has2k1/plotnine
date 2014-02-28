@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import sys
 import numpy as np
-import ggplot.utils.six as six
+import six
 
 LINESTYLES = [
     '-',  #solid

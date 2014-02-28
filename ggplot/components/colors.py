@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib.colors import rgb2hex
 from ..utils.color import ColorHCL
 from copy import deepcopy
-import ggplot.utils.six as six
+import six
 
 
 def hue_pal(h=(0, 360), c=100, l=65, h_start=0, direction=1):

@@ -34,8 +34,8 @@ install:
   # Install dependencies
   # No idea why a two step process is needed :-(
   - if [ ${pack} == "old_mpl" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION matplotlib=1.1.1 ; fi
-  - if [ ${pack} == "old_mpl" ]; then conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy nose dateutil pandas statsmodels pil; fi
-  - if [ ${pack} == "newest" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels; fi
+  - if [ ${pack} == "old_mpl" ]; then conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy nose dateutil pandas statsmodels pil six; fi
+  - if [ ${pack} == "newest" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels six; fi
   - pip install python-coveralls --use-mirrors
   - pip install brewer2mpl --use-mirrors
   - pip install nose-cov --use-mirrors
