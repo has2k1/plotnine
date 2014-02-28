@@ -1422,26 +1422,26 @@ def color_models():
 def color_model(model = 'RGB'):
     return _color_models[model]
 
-register_color_model('RGB', ColorRGB())
-register_color_model('CMY', ColorCMY())
-register_color_model('HSV', ColorHSV())
-register_color_model('HSL', ColorHSL())
-register_color_model('HSI', ColorHSI())
-register_color_model('HCL', ColorHCL()) # Rev 601, seems also go as 'yCH'
-register_color_model('HCL2', ColorHCL()) # Rev 709, seems also go as 'yCH'
-register_color_model('YIQ', ColorYIQ()) 
-register_color_model('YUV', ColorYUV()) # Rev 601 
-register_color_model('YUV2', ColorYUV2()) # Rev 709
-register_color_model('YCbCr', ColorYCbCr()) 
-register_color_model('YDbDr', ColorYDbDr()) 
-register_color_model('YPbPr', ColorYPbPr()) 
-register_color_model('XYZ', ColorXYZ()) # CIE XYZ 
-register_color_model('LMS', ColorLMS()) # CIE CAM 02 LMS
-register_color_model('xyY', ColorxyY()) # CIE xyY
-register_color_model('Lab', ColorLab()) # CIE L*a*b*, 6504 K 
-register_color_model('Lab2', ColorLab2()) # Hunter Lab, 6504 K 
-register_color_model('CAM', ColorCAM()) # CIE CAM 02 
-register_color_model('sRGB', ColorsRGB()) # IEC 61966-2-1 
+#register_color_model('RGB', ColorRGB())
+#register_color_model('CMY', ColorCMY())
+#register_color_model('HSV', ColorHSV())
+#register_color_model('HSL', ColorHSL())
+#register_color_model('HSI', ColorHSI())
+#register_color_model('HCL', ColorHCL()) # Rev 601, seems also go as 'yCH'
+#register_color_model('HCL2', ColorHCL()) # Rev 709, seems also go as 'yCH'
+#register_color_model('YIQ', ColorYIQ()) 
+#register_color_model('YUV', ColorYUV()) # Rev 601 
+#register_color_model('YUV2', ColorYUV2()) # Rev 709
+#register_color_model('YCbCr', ColorYCbCr()) 
+#register_color_model('YDbDr', ColorYDbDr()) 
+#register_color_model('YPbPr', ColorYPbPr()) 
+#register_color_model('XYZ', ColorXYZ()) # CIE XYZ 
+#register_color_model('LMS', ColorLMS()) # CIE CAM 02 LMS
+#register_color_model('xyY', ColorxyY()) # CIE xyY
+#register_color_model('Lab', ColorLab()) # CIE L*a*b*, 6504 K 
+#register_color_model('Lab2', ColorLab2()) # Hunter Lab, 6504 K 
+#register_color_model('CAM', ColorCAM()) # CIE CAM 02 
+#register_color_model('sRGB', ColorsRGB()) # IEC 61966-2-1 
 
 
 #######################################################################
@@ -2120,6 +2120,7 @@ class ColorMapGal(ColorMap):
              [6.25,1,.75,0,2]])
         }
     _len =  len(maps)
+    
     def __init__(self, mode = 1):
         try: 
             map = self.maps[mode]
@@ -2129,8 +2130,8 @@ class ColorMapGal(ColorMap):
             map = map, 
             layout = 'XCCCG')
 
-for i in xrange(ColorMapGal._len):
-    register_color('GalMap{:d}'.format(i), ColorMapGal(i))
+#for i in xrange(ColorMapGal._len):
+#    register_color('GalMap{:d}'.format(i), ColorMapGal(i))
 
 
 class ColorMapGray(ColorMap):
@@ -2155,8 +2156,8 @@ class ColorMapGray(ColorMap):
     def is_gray():
         return True
 
-for i in xrange(ColorMapGray._len):
-    register_color('GrayMap{:d}'.format(i), ColorMapGray(i))
+#for i in xrange(ColorMapGray._len):
+#    register_color('GrayMap{:d}'.format(i), ColorMapGray(i))
 
 
 class ColorRGBWaves(Color):
@@ -2175,7 +2176,7 @@ class ColorRGBWaves(Color):
                     1 - 0.25 * (np.sin(x*self.waves)**2)
                     ]).transpose())
 
-register_color('RGBWaves200', ColorRGBWaves(200))
+#register_color('RGBWaves200', ColorRGBWaves(200))
 
 class ColorRKB(Color):
     """
@@ -2194,7 +2195,7 @@ class ColorRKB(Color):
                     np.minimum(5*np.abs(x - 0.5),1)
                     ]).transpose())
 
-register_color('RKB', ColorRKB())
+#register_color('RKB', ColorRKB())
 
 class ColorBWR(ColorMap):
     """
@@ -2215,7 +2216,7 @@ class ColorBWR(ColorMap):
             layout = 'XCCCG',
             **kwargs)
 
-register_color('BWR', ColorBWR())
+#register_color('BWR', ColorBWR())
 
 
 class ColorBWGRY(ColorMap):
@@ -2238,7 +2239,7 @@ class ColorBWGRY(ColorMap):
             layout = 'XCCCG',
             **kwargs)
 
-register_color('BWGRY', ColorBWGRY())
+#register_color('BWGRY', ColorBWGRY())
 
 class ColorKRGB(Color):
     """
@@ -2254,7 +2255,7 @@ class ColorKRGB(Color):
                     np.minimum(10*x,1)
                     ]).transpose())
 
-register_color('KRGB', ColorKRGB())
+#register_color('KRGB', ColorKRGB())
 
 class ColorBWC(ColorMap):
     """
@@ -2298,7 +2299,7 @@ class ColorBWC(ColorMap):
             normalize = False,
             **kwargs)
 
-register_color('BWC', ColorBWC())
+#register_color('BWC', ColorBWC())
 
 class ColorMapFunction(ColorMap):
     """
