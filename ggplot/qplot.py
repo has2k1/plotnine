@@ -50,8 +50,8 @@ def qplot(x, y=None, color=None, size=None, fill=None, data=None,
     Examples
     --------
     >>> print qplot('mpg', 'drat', data=mtcars, main="plain")
-    >>> print qplot('mpg', 'drat', color='cyl', data=mtcars, main="continuous color")
-    >>> print qplot('mpg', 'drat', color='name', data=mtcars, main="discrete color")
+    >>> print qplot('mpg', 'drat', color='cyl', data=mtcars, main="cont. color")
+    >>> print qplot('mpg', 'drat', color='name', data=mtcars, main="disc. color")
     >>> print qplot('mpg', 'drat', size='cyl', data=mtcars, main="size")
     >>> print qplot('mpg', 'drat', data=mtcars, log='x', main="log x")
     >>> print qplot('mpg', 'drat', data=mtcars, log='y', main="log y")
