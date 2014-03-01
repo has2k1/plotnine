@@ -6,7 +6,7 @@ from copy import deepcopy
 import six
 
 
-def hue_pal(h=(0, 360), c=100, l=65, h_start=0, direction=1):
+def hue_pal(h=(0 + 15, 360 + 15), c=100, l=65, h_start=0, direction=1):
     """
     Utility for making hue palettes for color schemes.
     """
@@ -31,8 +31,12 @@ def color_gen(n_colors, colors=None):
     are based on the color wheel and the default colors will be chosen by
     maximizing the distance between each color (based on the color wheel).
 
-    params:
-        colors - a list of colors. can be hex or actual names
+    Parameters
+    ----------
+    n_colors: int
+        number of colors you need
+    colors: list
+        a list of colors. can be hex or actual names
     """
     while True:
         if colors is None:
