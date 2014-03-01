@@ -19,6 +19,7 @@ _set_mpl_backend()
 __version__ = '0.4.7'
 
 from .ggplot import *
+from .qplot import *
 from .components import aes
 from .geoms import *
 from .scales import *
