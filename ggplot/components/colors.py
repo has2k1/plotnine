@@ -17,12 +17,11 @@ def hue_pal(h=(0 + 15, 360 + 15), c=100, l=65, h_start=0, direction=1):
         y = deepcopy(h)
         if (y[1] - y[0]) % 360 < 1:
             y = (y[0], y[1] - 360. / n)
-        rotate = lambda x: ((x + h_start) % 360) * direction
-        hues = map(rotate, np.linspace(y[0], y[1], n))
-        hcls = []
-        for hue in hues:
-            hcls.append(rgb2hex(hcl(hue, c, l)))
-        return hcls
+        hues = []
+        for x in np.linspace(y[0], y[1], n):
+            hue = ((x + h_start) % 360) * direction
+            hues.append(rgb2hex(hcl(hue, c, l)))
+        return hues
     return func
 
 def color_gen(n_colors, colors=None):
