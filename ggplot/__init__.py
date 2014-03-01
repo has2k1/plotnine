@@ -18,7 +18,7 @@ _set_mpl_backend()
 # version of ggplot.
 __version__ = '0.4.8'
 
-from .qplot import *
+from .qplot import qplot
 from .ggplot import ggplot
 from .components import aes
 from .geoms import *
