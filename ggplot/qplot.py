@@ -3,8 +3,9 @@ from ggplot import xlab as xlabel
 from ggplot import ylab as ylabel
 
 
-def qplot(x, y=None, color=None, size=None, data=None, geom="auto", stat=[], position=[],
-        xlim=None, ylim=None, log="", main=None, xlab=None, ylab="", asp=None):
+def qplot(x, y=None, color=None, size=None, fill=None, data=None,
+        geom="auto", stat=[], position=[], xlim=None, ylim=None, log="",
+        main=None, xlab=None, ylab="", asp=None):
     """
     Parameters
     ----------
@@ -12,6 +13,12 @@ def qplot(x, y=None, color=None, size=None, data=None, geom="auto", stat=[], pos
         x values
     y: string
         y values
+    color: string
+        color values
+    size: string
+        size values
+    fill: string
+        fill values
     data: data frame
         data frame to use for the plot
     geom: string (auto, point, bar, hist, line)
@@ -65,6 +72,8 @@ def qplot(x, y=None, color=None, size=None, data=None, geom="auto", stat=[], pos
         aes_elements["color"] = color
     if size:
         aes_elements["size"] = size
+    if fill:
+        aes_elements["fill"] = fill
     _aes = aes(**aes_elements)
 
     geom_map = {
