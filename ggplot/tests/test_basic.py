@@ -11,6 +11,8 @@ assert_same_ggplot = get_assert_same_ggplot(__file__)
 from ggplot import *
 from ggplot.exampledata import diamonds
 
+import numpy as np
+import pandas as pd
 
 def _build_testing_df():
     df = pd.DataFrame({

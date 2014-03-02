@@ -9,6 +9,7 @@ assert_same_ggplot = get_assert_same_ggplot(__file__)
 from ggplot import *
 from ggplot.exampledata import diamonds
 
+import pandas as pd
 
 @cleanup
 def test_geom_rect():

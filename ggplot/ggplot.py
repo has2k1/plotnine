@@ -11,11 +11,13 @@ from .components import colors, shapes
 from .components.legend import draw_legend
 from .geoms import *
 from .scales import *
+from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import _set_default_theme_rcparams
 from .themes.theme_gray import _theme_grey_post_plot_callback
 import six
 
-__ALL__ = ["ggplot"]
+__all__ = ["ggplot"]
+__all__ = [str(u) for u in __all__]
 
 import sys
 import warnings
@@ -359,13 +361,13 @@ class ggplot(object):
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
                 if self.xlimits:
                     if not self.xbreaks and not self.xtick_labels:
-                        labs, minval, maxval= utils.calc_axis_breaks_and_limits(self.xlimits[0], self.xlimits[1])
+                        labs, minval, maxval= calc_axis_breaks_and_limits(self.xlimits[0], self.xlimits[1])
                         ax.xaxis.set_ticks(labs)
                         ax.xaxis.set_ticklabels(labs)
                     ax.set_xlim(self.xlimits)
                 if self.ylimits:
                     if not self.ytick_labels:
-                        labs, minval, maxval= utils.calc_axis_breaks_and_limits(self.ylimits[0], self.ylimits[1])
+                        labs, minval, maxval= calc_axis_breaks_and_limits(self.ylimits[0], self.ylimits[1])
                         ax.yaxis.set_ticks(labs)
                         ax.yaxis.set_ticklabels(labs)
                     ax.set_ylim(self.ylimits)

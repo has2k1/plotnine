@@ -30,6 +30,7 @@ __geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_density',
              'geom_histogram', 'geom_hline', 'geom_jitter', 'geom_line', 
              'geom_now_its_art', 'geom_point', 'geom_rect', 'geom_step',
              'geom_text', 'geom_tile', 'geom_vline']
-__stats__ = ['stat_bin2d', 'stat_smooth']
+__stats__ = ['stat_bin2d', 'stat_smooth', 'stat_function']
 __components__ = ['ylab', 'xlab', 'ylim', 'xlim', 'labs', 'ggtitle']
-__ALL__ = __geoms__ + __facet__ + __stats__ + __components__
+__all__ = __geoms__ + __facet__ + __stats__ + __components__
+__all__ = [str(u) for u in __all__]
