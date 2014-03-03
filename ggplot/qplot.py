@@ -67,9 +67,7 @@ def qplot(x, y=None, color=None, size=None, fill=None, data=None,
     """
 
     if x is not None and not isinstance(x, str):
-        data = pd.DataFrame({
-            "x": x
-        })
+        data = pd.DataFrame({"x": x})
         x = 'x'
     if y is not None and not isinstance(y, str):
         data['y'] = y
