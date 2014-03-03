@@ -1,6 +1,7 @@
 from ggplot import *
 from ggplot import xlab as xlabel
 from ggplot import ylab as ylabel
+import pandas as pd
 
 
 def qplot(x, y=None, color=None, size=None, fill=None, data=None,
@@ -64,6 +65,16 @@ def qplot(x, y=None, color=None, size=None, fill=None, data=None,
     >>> print qplot('mpg', 'drat', data=mtcars, xlab= "x lab", main="xlab")
     >>> print qplot('mpg', 'drat', data=mtcars, ylab = "y lab", main="ylab")
     """
+
+    if x is not None and not isinstance(x, str):
+        data = pd.DataFrame({
+            "x": x
+        })
+        x = 'x'
+    if y is not None and not isinstance(y, str):
+        data['y'] = y
+        y = 'y'
+
 
     aes_elements = {"x": x}
     if y:
