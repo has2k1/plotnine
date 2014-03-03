@@ -1,6 +1,6 @@
 from ggplot import *
-from ggplot import xlab as xlabel
-from ggplot import ylab as ylabel
+from .geoms.chart_components import xlab as xlabel
+from .geoms.chart_components import ylab as ylabel
 import pandas as pd
 
 
