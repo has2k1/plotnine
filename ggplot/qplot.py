@@ -10,9 +10,9 @@ def qplot(x, y=None, color=None, size=None, fill=None, data=None,
     """
     Parameters
     ----------
-    x: string
+    x: string, pandas series, list, or numpy array
         x values
-    y: string
+    y: string, pandas series, list, or numpy array
         y values
     color: string
         color values
