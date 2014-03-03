@@ -8,6 +8,7 @@ assert_same_ggplot = get_assert_same_ggplot(__file__)
 
 from ggplot import *
 
+import pandas as pd
 
 @cleanup
 def test_demo_beef():

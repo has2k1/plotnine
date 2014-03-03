@@ -1,8 +1,9 @@
-from .utils import ggsave
+from .utils import ggsave, add_ggplotrc_params
 from .date_breaks import date_breaks
 from .date_format import date_format
 
-__ALL__ = ["ggsave", "date_breaks", "date_format", "add_ggplotrc_params"]
+__all__ = ["ggsave", "date_breaks", "date_format", "add_ggplotrc_params"]
+__all__ = [str(u) for u in __all__]
 
 class _rc_context(object):
     def __init__(self, fname=None):

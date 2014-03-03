@@ -8,6 +8,8 @@ from ggplot.tests import image_comparison
 
 from ggplot import *
 
+import numpy as np
+import pandas as pd
 
 @image_comparison(baseline_images=['scale_without_reverse', 'scale_y_reverse', 'scale_x_reverse', 'scale_both_reverse'], extensions=["png"])
 def test_scale_reverse():
