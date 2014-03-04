@@ -1,9 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 import matplotlib as mpl
-from matplotlib.colors import Normalize
-import numpy as np
 from .geom import geom
 import numpy as np
 
@@ -11,7 +8,7 @@ class geom_point(geom):
     VALID_AES = ['x', 'y', 'size', 'color', 'alpha', 'shape', 'label', 'cmap',
                  'position']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
@@ -33,5 +30,5 @@ class geom_point(geom):
             layer['x'] *= np.random.uniform(.9, 1.1, len(layer['x']))
             layer['y'] *= np.random.uniform(.9, 1.1, len(layer['y']))
 
-        plt.scatter(**layer)
+        ax.scatter(**layer)
 

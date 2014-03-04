@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from .geom import geom
@@ -10,7 +9,7 @@ from pandas.lib import Timestamp
 class geom_bar(geom):
     VALID_AES = ['x', 'color', 'alpha', 'fill', 'label', 'weight', 'position']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
@@ -51,9 +50,7 @@ class geom_bar(geom):
         else:
             layer['color'] = '#333333'
 
-        plt.bar(indentation, weights, width, **layer)
-        plt.autoscale()
-        return [
-                {"function": "set_xticks", "args": [indentation+width/2]},
-                {"function": "set_xticklabels", "args": [labels]}
-            ]
+        ax.bar(indentation, weights, width, **layer)
+        ax.autoscale()
+        ax.set_xticks(indentation+width/2)
+        ax.set_xticklabels(labels)

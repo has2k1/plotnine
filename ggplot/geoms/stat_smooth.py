@@ -1,16 +1,15 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
-from copy import deepcopy
+
 from .geom import geom
-import pandas as pd
-import numpy as np
 from ggplot.components import smoothers
+
+import numpy as np
 
 class stat_smooth(geom):
     VALID_AES = ['x', 'y', 'color', 'alpha', 'label', 'se', 'linestyle', 'method', 'span', 'level', 'window']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
@@ -49,6 +48,6 @@ class stat_smooth(geom):
             y, y1, y2 = smoothers.mavg(x, y, window=window)
         else:
             y, y1, y2 = smoothers.lowess(x, y, span=span)
-        plt.plot(x, y, **layer)
+        ax.plot(x, y, **layer)
         if se==True:
-            plt.fill_between(x, y1, y2, alpha=0.2, color="grey")
+            ax.fill_between(x, y1, y2, alpha=0.2, color="grey")

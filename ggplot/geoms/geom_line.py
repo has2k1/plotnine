@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 from itertools import groupby
 from operator import itemgetter
 import sys
@@ -14,7 +13,7 @@ class geom_line(geom):
         super(geom_line, self).__init__(*args, **kwargs)
         self._warning_printed = False
     
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'x' in layer:
@@ -37,9 +36,9 @@ class geom_line(geom):
         if 'linestyle' in layer and 'color' not in layer:
             layer['color'] = 'k'
         if 'group' not in layer:
-            plt.plot(x, y, **layer)
+            ax.plot(x, y, **layer)
         else:
             g = layer.pop('group')
             for k, v in groupby(sorted(zip(x, y, g), key=itemgetter(2)), key=itemgetter(2)):
                 x_g, y_g, _ = zip(*v) 
-                plt.plot(x_g, y_g, **layer)
+                ax.plot(x_g, y_g, **layer)

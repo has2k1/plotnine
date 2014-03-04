@@ -1,9 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import numpy as np
-import pandas as pd
 from .geom import geom
 
 class geom_text(geom):
@@ -11,7 +8,7 @@ class geom_text(geom):
                  'hjust','size','vjust']
     REQUIRED_AES = ['label','x','y']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
@@ -51,7 +48,6 @@ class geom_text(geom):
         # Take current plotting dimension in account for the case that we
         # work on a special dataframe just for this geom!
         if not self.data is None:
-            ax = plt.gca()
             cxmin, cxmax = ax.get_xlim()
             cymin, cymax = ax.get_ylim()
             # there is a problem if geom_text is the first plot, as
@@ -78,7 +74,7 @@ class geom_text(geom):
             del layer['angle']
 
         for x_g,y_g,s in zip(x,y,label):
-            plt.text(x_g,y_g,s,**layer)
+            ax.text(x_g,y_g,s,**layer)
 
         # resize axes
-        plt.axis([xmin, xmax, ymin, ymax])
+        ax.axis([xmin, xmax, ymin, ymax])

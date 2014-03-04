@@ -1,11 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
 from .geom import geom
-import pandas as pd
 import numpy as np
-import scipy.stats as stats
 
 class stat_function(geom):
     """
@@ -103,7 +99,7 @@ class stat_function(geom):
     VALID_AES = ['x','fun','n','color','args']
     REQUIRED_AES = ['x','fun']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
@@ -122,7 +118,7 @@ class stat_function(geom):
             elif isinstance(args,dict):
                 fun = lambda x: old_fun(x,**args)
             else:
-                fun = lambda x: olf_fun(x,args)
+                fun = lambda x: old_fun(x,args)
 
         color = None if 'color' not in layer else layer.pop('color')
         n = 101 if 'n' not in layer else layer.pop('n')
@@ -133,6 +129,6 @@ class stat_function(geom):
         y_values = list(map(fun,x_values))
 
         if color:
-            plt.plot(x_values,y_values,color=color)
+            ax.plot(x_values,y_values,color=color)
         else:
-            plt.plot(x_values,y_values)
+            ax.plot(x_values,y_values)

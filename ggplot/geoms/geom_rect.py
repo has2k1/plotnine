@@ -1,5 +1,3 @@
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 
 from .geom import geom
 
@@ -26,7 +24,7 @@ class geom_rect(geom):
                  'linetype', 'size', 'alpha']
     REQUIRED_AES = ['xmax', 'xmin', 'ymax', 'ymin']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 
@@ -81,4 +79,4 @@ class geom_rect(geom):
         else:
             layer['color'] = '#333333'
 
-        plt.bar(**layer)
+        ax.bar(**layer)

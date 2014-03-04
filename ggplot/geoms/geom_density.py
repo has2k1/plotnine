@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 from .geom import geom
 from scipy.stats import gaussian_kde
 import numpy as np
@@ -9,7 +8,7 @@ import numpy as np
 class geom_density(geom):
     VALID_AES = ['x', 'color', 'alpha', 'linestyle', 'fill', 'label']
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'x' in layer:
@@ -35,6 +34,6 @@ class geom_density(geom):
         step = (top - bottom) / 1000.0
         x = np.arange(bottom, top, step)
         y = kde.evaluate(x)
-        plt.plot(x, y, **layer)
+        ax.plot(x, y, **layer)
         if fill:
-            plt.fill_between(x, y1=np.zeros(len(x)), y2=y, **layer)
+            ax.fill_between(x, y1=np.zeros(len(x)), y2=y, **layer)

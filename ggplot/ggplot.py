@@ -209,7 +209,8 @@ class ggplot(object):
                         plt.subplot(self.n_wide, self.n_high, pos)
                         for layer in self._get_layers(frame):
                             for geom in self.geoms:
-                                callbacks = geom.plot_layer(layer)
+                                ax = plt.gca()
+                                callbacks = geom.plot_layer(layer, ax)
                         axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
                                                 min(plt.ylim()), max(plt.ylim())]
                     # find the grid wide data extremeties
@@ -270,7 +271,8 @@ class ggplot(object):
                                         plt.tick_params(axis='y', which='both',
                                                         bottom='off', top='off',
                                                         labelbottom='off')
-                                callbacks = geom.plot_layer(layer)
+                                ax = plt.gca()
+                                callbacks = geom.plot_layer(layer, ax)
                                 if callbacks:
                                     for callback in callbacks:
                                         fn = getattr(ax, callback['function'])
@@ -301,7 +303,7 @@ class ggplot(object):
                         data = self.data
                     for layer in self._get_layers(data, _aes):
                         ax = plt.subplot(1, 1, 1)
-                        callbacks = geom.plot_layer(layer)
+                        callbacks = geom.plot_layer(layer, ax)
                         if callbacks:
                             for callback in callbacks:
                                 fn = getattr(ax, callback['function'])

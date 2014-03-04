@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 import sys
 from .geom import geom
 
@@ -12,7 +11,7 @@ class geom_histogram(geom):
         super(geom_histogram, self).__init__(*args, **kwargs)
         self._warning_printed = False
 
-    def plot_layer(self, layer):
+    def plot_layer(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'binwidth' in layer:
@@ -31,4 +30,4 @@ class geom_histogram(geom):
                              "Use 'binwidth = x' to adjust this.\n")
                 self._warning_printed = True
                 
-        plt.hist(**layer)
+        ax.hist(**layer)
