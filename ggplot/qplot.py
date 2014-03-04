@@ -2,6 +2,7 @@ from ggplot import *
 from .geoms.chart_components import xlab as xlabel
 from .geoms.chart_components import ylab as ylabel
 import pandas as pd
+import six
 
 
 def qplot(x, y=None, color=None, size=None, fill=None, data=None,
@@ -66,10 +67,10 @@ def qplot(x, y=None, color=None, size=None, fill=None, data=None,
     >>> print qplot('mpg', 'drat', data=mtcars, ylab = "y lab", main="ylab")
     """
 
-    if x is not None and not isinstance(x, str):
+    if x is not None and not isinstance(x, six.string_types):
         data = pd.DataFrame({"x": x})
         x = 'x'
-    if y is not None and not isinstance(y, str):
+    if y is not None and not isinstance(y, six.string_types):
         data['y'] = y
         y = 'y'
 
