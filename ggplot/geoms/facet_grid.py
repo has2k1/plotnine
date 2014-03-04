@@ -36,19 +36,19 @@ class facet_grid(object):
         
         n_dim = n_dim_x * n_dim_y
         if self.ncol is None and self.nrow is None:
-            n_wide = n_dim_x
-            n_high = n_dim_y
+            n_rows = n_dim_x
+            n_cols = n_dim_y
         elif self.nrow is None:
-            n_wide = self.ncol
-            n_high = math.ceil(float(n_dim) / n_wide)
+            n_rows = self.ncol
+            n_cols = math.ceil(float(n_dim) / n_rows)
         elif self.ncol is None:
-            n_high = self.nrow
-            n_wide = math.ceil(float(n_dim) / n_high)
+            n_cols = self.nrow
+            n_rows = math.ceil(float(n_dim) / n_cols)
         else:
-            n_wide = self.ncol
-            n_high = self.nrow
+            n_rows = self.ncol
+            n_cols = self.nrow
 
-        gg.n_wide, gg.n_high = int(n_wide), int(n_high)
+        gg.n_rows, gg.n_columns = int(n_rows), int(n_cols)
 
         facets = []
         if self.x:
