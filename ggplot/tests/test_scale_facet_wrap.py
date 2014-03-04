@@ -10,6 +10,17 @@ from ggplot import *
 
 import matplotlib.pyplot as plt
 
+
+@cleanup
+def test_not_turn_off_first_axis():
+    # as per GH47, the first axis was switched off when we had a square number of axis
+    import pandas as pd
+    # 4 plots
+    dat4 = pd.DataFrame({'x': range(40), 'y': range(40), 'w': (list('abcd')* 10)})
+    gg = ggplot(aes(x = 'x', y = 'y'), data=dat4) + geom_line() + facet_wrap('w')
+    assert_same_ggplot(gg, "first_ax_not_off")
+
+
 @cleanup
 def test_scale_facet_wrap_visual():
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
@@ -53,8 +64,6 @@ def test_scale_facet_wrap_internals():
     p2 = p + facet_wrap("cut", scales="free")
     print(p2)
 
-    # FIXME: n_columns is the number of columns, not rows, because n_columns and
-    # n_rows are being passed backwards to plt.subplot in ggplot.py
     columns = p2.n_columns
 
     fig = plt.gcf()
@@ -121,3 +130,4 @@ def test_scale_facet_wrap_internals():
             assert_true(all(list(map(convertText, ax.get_yticklabels())) == yticks))
         else:
             assert_true(all(map(empty, ax.get_yticklabels())))
+

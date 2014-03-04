@@ -170,8 +170,9 @@ class ggplot(object):
                     extra_subplots = subplots_available - self.n_dim_x
                 else:
                     extra_subplots = 0
-                for extra_plot in axs.flatten()[-extra_subplots:]:
-                    extra_plot.axis('off')
+                if extra_subplots > 0:
+                    for extra_plot in axs.flatten()[-extra_subplots:]:
+                        extra_plot.axis('off')
 
                 # plots is a mapping from xth-plot -> subplot position
                 plots = []
