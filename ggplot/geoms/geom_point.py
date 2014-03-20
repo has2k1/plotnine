@@ -8,7 +8,25 @@ class geom_point(geom):
     VALID_AES = ['x', 'y', 'size', 'color', 'alpha', 'shape', 'label', 'cmap',
                  'position']
 
-    def plot_layer(self, layer, ax):
+    def plot_layer(self, data, ax):
+        groups = {'color', 'shape', 'alpha'}
+
+        # NOTE: This is the correct check however with aes
+        # set in ggplot(), self.aes is empty
+        # groups = groups & set(self.aes) & set(data.columns)
+
+        groups = groups & set(data.columns)
+        if groups:
+            for name, _data in data.groupby(list(groups)):
+                _data = _data.to_dict('list')
+                for ae in groups:
+                    _data[ae] = _data[ae][0]
+                self._plot(_data, ax)
+        else:
+            _data = data.to_dict('list')
+            self._plot(_data, ax)
+
+    def _plot(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
 

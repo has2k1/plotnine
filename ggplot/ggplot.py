@@ -209,10 +209,10 @@ class ggplot(object):
                     for _iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
                         pos = self.facet_pairs.index(facets) + 1
                         plt.subplot(self.n_rows, self.n_columns, pos)
-                        for layer in self._get_layers(frame):
-                            for geom in self.geoms:
-                                ax = plt.gca()
-                                callbacks = geom.plot_layer(layer, ax)
+                        frame = self._make_plot_data(frame)
+                        for geom in self.geoms:
+                            ax = plt.gca()
+                            callbacks = geom.plot_layer(frame, ax)
                         axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
                                                 min(plt.ylim()), max(plt.ylim())]
                     # find the grid wide data extremeties
@@ -255,30 +255,30 @@ class ggplot(object):
 
                 else: # now facet_wrap > 2 or facet_grid w/ only 1 facet
                     for facet, frame in self.data.groupby(self.facets):
-                        for layer in self._get_layers(frame):
-                            for geom in self.geoms:
-                                if self.facet_type == "wrap" or 1==1:
-                                    if cntr + 1 > len(plots):
-                                        continue
-                                    pos = plots[cntr]
-                                    if pos is None:
-                                        continue
-                                    y_i, x_i = pos
-                                    pos = x_i + y_i * self.n_columns + 1
-                                    ax = plt.subplot(self.n_rows, self.n_columns, pos)
-                                else:
-                                    ax = plt.subplot(self.n_rows, self.n_columns, cntr)
-                                    # TODO: this needs some work
-                                    if (cntr % self.n_columns) == -1:
-                                        plt.tick_params(axis='y', which='both',
-                                                        bottom='off', top='off',
-                                                        labelbottom='off')
-                                ax = plt.gca()
-                                callbacks = geom.plot_layer(layer, ax)
-                                if callbacks:
-                                    for callback in callbacks:
-                                        fn = getattr(ax, callback['function'])
-                                        fn(*callback['args'])
+                        frame = self._make_plot_data(frame)
+                        for geom in self.geoms:
+                            if self.facet_type == "wrap" or 1==1:
+                                if cntr + 1 > len(plots):
+                                    continue
+                                pos = plots[cntr]
+                                if pos is None:
+                                    continue
+                                y_i, x_i = pos
+                                pos = x_i + y_i * self.n_columns + 1
+                                ax = plt.subplot(self.n_rows, self.n_columns, pos)
+                            else:
+                                ax = plt.subplot(self.n_rows, self.n_columns, cntr)
+                                # TODO: this needs some work
+                                if (cntr % self.n_columns) == -1:
+                                    plt.tick_params(axis='y', which='both',
+                                                    bottom='off', top='off',
+                                                    labelbottom='off')
+                            ax = plt.gca()
+                            callbacks = geom.plot_layer(frame, ax)
+                            if callbacks:
+                                for callback in callbacks:
+                                    fn = getattr(ax, callback['function'])
+                                    fn(*callback['args'])
                         title = facet
                         if isinstance(facet, tuple):
                             title = ", ".join(facet)
@@ -299,13 +299,14 @@ class ggplot(object):
                         data = assign_visual_mapping(data, _aes, self)
                     else:
                         data = self.data
-                    for layer in self._get_layers(data, _aes):
-                        ax = plt.subplot(1, 1, 1)
-                        callbacks = geom.plot_layer(layer, ax)
-                        if callbacks:
-                            for callback in callbacks:
-                                fn = getattr(ax, callback['function'])
-                                fn(*callback['args'])
+                    ax = plt.subplot(1, 1, 1)
+
+                    data = self._make_plot_data(data, _aes)
+                    callbacks = geom.plot_layer(data, ax)
+                    if callbacks:
+                        for callback in callbacks:
+                            fn = getattr(ax, callback['function'])
+                            fn(*callback['args'])
 
             # Handling the details of the chart here; probably be a better
             # way to do this...
@@ -408,6 +409,54 @@ class ggplot(object):
                     _theme_grey_post_plot_callback(ax)
 
         return plt.gcf()
+
+    def _make_plot_data(self, data=None, aes=None):
+        # Use the default data and aestetics in case no specific ones are supplied
+        if data is None:
+            data = self.data
+        if aes is None:
+            aes = self.aesthetics
+
+        mapping = {}
+        extra = {}
+        for ae, key in aes.items():
+            if isinstance(key, list) or hasattr(key, "__array__"):
+                # direct assignment of a list/array to the aes -> it's done in the get_layer step
+                mapping[ae] = key
+            elif key in data:
+                # a column or a transformed column
+                mapping[ae] = data[key]
+            else:
+                # now we have a single value. ggplot2 treats that as if all rows should be this
+                # value, so lets do the same. To ensure that all rows get this value, we have to
+                # do that after we constructed the dataframe.
+                # See also the _apply_transform function below, which does this already for
+                # string values.
+                extra[ae] = key
+        mapping = pd.DataFrame(mapping)
+        for ae, key in extra.items():
+            mapping[ae] = key
+
+        # Overwrite the already done mappings to matplotlib understandable
+        # values for color/size/etc
+        if "color" in mapping:
+            mapping['color'] = data['color_mapping']
+        if "size" in mapping:
+            mapping['size'] = data['size_mapping']
+        if "shape" in mapping:
+            mapping['shape'] = data['shape_mapping']
+        if "linestyle" in mapping:
+            mapping['linestyle'] = data['linestyle_mapping']
+
+        # Default the x and y axis labels to the name of the column
+        if "x" in aes and self.xlab is None:
+            self.xlab = aes['x']
+        if "y" in aes and self.ylab is None:
+            self.ylab = aes['y']
+
+        # Automatically drop any row that has an NA value
+        mapping = mapping.dropna()
+        return mapping
 
     def _get_layers(self, data=None, aes=None):
         """Get a layer to be plotted."""

@@ -11,7 +11,22 @@ class geom_histogram(geom):
         super(geom_histogram, self).__init__(*args, **kwargs)
         self._warning_printed = False
 
-    def plot_layer(self, layer, ax):
+    def plot_layer(self, data, ax):
+        # NOTE: Remove 'shape' and fix the result image of the
+        # test that depends on it
+        groups = {'color', 'alpha', 'shape'}
+        groups = groups & set(data.columns)
+        if groups:
+            for name, _data in data.groupby(list(groups)):
+                _data = _data.to_dict('list')
+                for ae in groups:
+                    _data[ae] = _data[ae][0]
+                self._plot(_data, ax)
+        else:
+            _data = data.to_dict('list')
+            self._plot(_data, ax)
+
+    def _plot(self, layer, ax):
         layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
         layer.update(self.manual_aes)
         if 'binwidth' in layer:
