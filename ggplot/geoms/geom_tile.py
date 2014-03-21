@@ -5,25 +5,13 @@ from .geom import geom
 
 
 class geom_tile(geom):
-    VALID_AES = ['x', 'y', 'fill']
+    VALID_AES = {'x', 'y', 'alpha', 'colour', 'fill', 'linetype', 'size'}
+    REQUIRED_AES = {'x', 'y'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    def plot_layer(self, data, ax):
-        groups = {'fill'}
-        groups = groups & set(data.columns)
-        if groups:
-            for name, _data in data.groupby(list(groups)):
-                _data = _data.to_dict('list')
-                for ae in groups:
-                    _data[ae] = _data[ae][0]
-                self._plot(_data, ax)
-        else:
-            _data = data.to_dict('list')
-            self._plot(_data, ax)
+    _groups = {'fill'}
 
-    def plot_layer(self, layer, ax):
-        layer = dict((k, v) for k, v in layer.iteritems() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
-
+    def plot(self, layer, ax):
         x = layer.pop('x')
         y = layer.pop('y')
         fill = layer.pop('fill')

@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from nose.tools import assert_equal, assert_is, assert_is_not
+from nose.tools import assert_equal, assert_is, assert_is_not, assert_raises
 from ggplot.tests import image_comparison
 
 from ggplot import *
@@ -21,9 +21,8 @@ def test_geom_basics():
     assert_equal("beef", g.aes["color"])
     g = geom(mapping=aes(color="pork"))
     assert_equal("pork", g.aes["color"])
-    # It would probably be better to throw an exception if
-    # two aes are given...
-    g = geom(aes(color="beef"), mapping=aes(color="pork"))
+    with assert_raises(Exception):
+        g = geom(aes(color="beef"), mapping=aes(color="pork"))
     assert_equal("pork", g.aes["color"])
     # setting, not mapping
     g = geom(color="blue")

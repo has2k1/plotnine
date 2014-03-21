@@ -6,34 +6,16 @@ from .geom import geom
 import pandas as pd
 
 class geom_abline(geom):
-    VALID_AES = ['x', 'slope', 'intercept', 'color', 'linestyle', 'alpha', 'label']
+    VALID_AES = {'x', 'color', 'linestyle', 'alpha', 'size'}
+    DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity', 'slope': 1.0, 'intercept': 0.0, 'label': ''}
 
-    def plot_layer(self, data, ax):
-        groups = {'color', 'linestyle', 'alpha'}
-        groups = groups & set(data.columns)
-        if groups:
-            for name, _data in data.groupby(list(groups)):
-                _data = _data.to_dict('list')
-                for ae in groups:
-                   _data[ae] = _data[ae][0]
-                self._plot(_data, ax)
-        else:
-            _data = data.to_dict('list')
-            self._plot(_data, ax)
+    _groups = {'color', 'linestyle', 'alpha'}
 
-    def _plot(self, layer, ax):
-        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
-        if 'x' in layer:
-            x = layer.pop('x')
-        if 'slope' in layer:
-            slope = layer.pop('slope')
-        else:
-            slope = 1.0
-        if 'intercept' in layer:
-            intercept = layer.pop('intercept')
-        else:
-            intercept = 0.0
+    def plot(self, layer, ax):
+        x = layer.pop(x)
+        slope = self.params['slope']
+        intercept = self.params['intercept']
+        layer['label'] = self.params['label']
         if isinstance(x[0], Timestamp):
             ax.set_autoscale_on(False)
             ax.plot(ax.get_xlim(),ax.get_ylim())

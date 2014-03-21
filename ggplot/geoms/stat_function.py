@@ -96,52 +96,42 @@ class stat_function(geom):
         print(gg)
     
     """
-    VALID_AES = ['x','fun','n','color','args']
-    REQUIRED_AES = ['x','fun']
+    VALID_AES = {'x', 'alpha', 'color', 'linetype', 'size'}
+    REQUIRED_AES = {'x'}
+    DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity', 'fun': None,
+            'n': 101, 'args': None, 'label': ''}
 
-    def plot_layer(self, data, ax):
-        groups = {'color'}
-        groups = groups & set(data.columns)
-        if groups:
-            for name, _data in data.groupby(list(groups)):
-                _data = _data.to_dict('list')
-                for ae in groups:
-                   _data[ae] = _data[ae][0]
-                self._plot(_data, ax)
-        else:
-            _data = data.to_dict('list')
-            self._plot(_data, ax)
+    _groups = {'color'}
+    _translations = {'size': 'linewidth'}
 
-    def _plot(self, layer, ax):
-        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
-
-        miss_aes = [aes for aes in self.REQUIRED_AES if aes not in layer]
-        if(miss_aes):
-            raise Exception("stat_function requires the following " +
-                            "missing aesthetics: %s" % ", ".join(miss_aes))
+    def plot(self, layer, ax):
         x = layer.pop('x')
-        fun = layer.pop('fun')
+        fun = self.params['fun']
+        n = self.params['n']
+        args = self.params['args']
 
-        if 'args' in layer:
-            args = layer.pop('args')
-            old_fun = fun
-            if isinstance(args,list):
-                fun = lambda x: old_fun(x,*args)
-            elif isinstance(args,dict):
-                fun = lambda x: old_fun(x,**args)
-            else:
-                fun = lambda x: old_fun(x,args)
+        if not hasattr(fun, '__call__'):
+            raise Exception("stat_function requires parameter 'fun' to be " +
+                            "a function or any other callable object")
 
-        color = None if 'color' not in layer else layer.pop('color')
-        n = 101 if 'n' not in layer else layer.pop('n')
+        old_fun = fun
+        if isinstance(args,list):
+            fun = lambda x: old_fun(x,*args)
+        elif isinstance(args,dict):
+            fun = lambda x: old_fun(x,**args)
+        elif args is not None:
+            fun = lambda x: old_fun(x, args)
+        else:
+            fun = lambda x: old_fun(x)
 
+        color = layer.pop('color', None)
+        label = self.params['label']
         x_min = min(x)
         x_max = max(x)
         x_values = np.linspace(x_min,x_max,n)
         y_values = list(map(fun,x_values))
 
         if color:
-            ax.plot(x_values,y_values,color=color)
+            ax.plot(x_values,y_values,color=color, label=label)
         else:
-            ax.plot(x_values,y_values)
+            ax.plot(x_values,y_values, label=label)

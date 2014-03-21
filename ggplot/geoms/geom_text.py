@@ -4,38 +4,15 @@ import numpy as np
 from .geom import geom
 
 class geom_text(geom):
-    VALID_AES = ['label','x','y','alpha','angle','color','family','fontface',
-                 'hjust','size','vjust']
-    REQUIRED_AES = ['label','x','y']
+    VALID_AES = {'label','x','y','alpha','angle','color','family','fontface',
+                 'hjust','size','vjust'}
+    REQUIRED_AES = {'label','x','y'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'parse': False}
 
-    def plot_layer(self, data, ax):
-        groups = {'color', 'family', 'alpha', 'size'}
-        groups = groups & set(data.columns)
-        if groups:
-            for name, _data in data.groupby(list(groups)):
-                _data = _data.to_dict('list')
-                for ae in groups:
-                    _data[ae] = _data[ae][0]
-                self._plot(_data, ax)
-        else:
-            _data = data.to_dict('list')
-            self._plot(_data, ax)
+    _groups = {'color', 'family', 'alpha', 'size'}
+    _translations = {'angle': 'rotation'}
 
-    def _plot(self, layer, ax):
-        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
-
-        # Check for required aesthetics
-        missing_aes = []
-        for required_aes in self.REQUIRED_AES:
-            if required_aes not in layer:
-                missing_aes.append(required_aes)
-
-        if len(missing_aes) > 0:
-            raise Exception(
-                "geom_text requires the following missing aesthetics: %s" %\
-                ", ".join(missing_aes))
-
+    def plot(self, layer, ax):
         x = layer.pop('x')
         y = layer.pop('y')
         label = layer.pop('label')
@@ -81,10 +58,6 @@ class geom_text(geom):
             del layer['vjust']
         else:
             layer['verticalalignment'] = 'center'
-
-        if 'angle' in layer:
-            layer['rotation'] = layer['angle']
-            del layer['angle']
 
         for x_g,y_g,s in zip(x,y,label):
             ax.text(x_g,y_g,s,**layer)
