@@ -10,18 +10,19 @@ class geom_tile(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     _groups = {'fill'}
+    _aes_renames = {'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        x = layer.pop('x')
-        y = layer.pop('y')
-        fill = layer.pop('fill')
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        y = pinfo.pop('y')
+        fill = pinfo.pop('fill')
         X = pd.DataFrame({'x': x,
                           'y': y,
                           'fill': fill}).set_index(['x', 'y']).unstack(0)
         x_ticks = range(0, len(set(x)))
         y_ticks = range(0, len(set(y)))
 
-        ax.imshow(X, interpolation='nearest', **layer)
+        ax.imshow(X, interpolation='nearest', **pinfo)
         ax.set_xticklabels(x)
         ax.set_xticks(x_ticks)
         ax.set_yticklabels(y)

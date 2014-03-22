@@ -26,26 +26,27 @@ class geom_rect(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     _groups = {'color', 'alpha', 'linetype', 'size'}
-    _translations = {'xmin': 'left', 'ymin': 'bottom', 'size': 'linewidth'}
+    _aes_renames = {'xmin': 'left', 'ymin': 'bottom', 'size': 'linewidth',
+                     'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        if isinstance(layer['xmax'], list):
-            xcoords = zip(layer['left'], layer['xmax'])
+    def _plot_unit(self, pinfo, ax):
+        if isinstance(pinfo['xmax'], list):
+            xcoords = zip(pinfo['left'], pinfo['xmax'])
             width = [xmax - xmin for xmin, xmax in xcoords]
         else:
-            width = layer['xmax'] - layer['left']
-        layer['width'] = width
-        del layer['xmax']
+            width = pinfo['xmax'] - pinfo['left']
+        pinfo['width'] = width
+        del pinfo['xmax']
 
-        if isinstance(layer['ymax'], list):
-            ycoords = zip(layer['bottom'], layer['ymax'])
+        if isinstance(pinfo['ymax'], list):
+            ycoords = zip(pinfo['bottom'], pinfo['ymax'])
             height = [ymax - ymin for ymin, ymax in ycoords]
         else:
-            height = layer['ymax'] - layer['bottom']
-        layer['height'] = height
-        del layer['ymax']
+            height = pinfo['ymax'] - pinfo['bottom']
+        pinfo['height'] = height
+        del pinfo['ymax']
 
-        layer['edgecolor'] = layer.pop('color', '#333333')
-        layer['color'] = layer.pop('fill', '#333333')
+        pinfo['edgecolor'] = pinfo.pop('color', '#333333')
+        pinfo['color'] = pinfo.pop('fill', '#333333')
 
-        ax.bar(**layer)
+        ax.bar(**pinfo)

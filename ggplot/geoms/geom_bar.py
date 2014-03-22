@@ -12,15 +12,17 @@ class geom_bar(geom):
     DEFAULT_PARAMS = {'stat': 'bin', 'position':'stack'}
 
     _groups = {'color'}
-    def plot(self, layer, ax):
-        x = layer.pop('x')
-        if 'weight' not in layer:
+    _aes_renames = {'linetype': 'linestyle'}
+
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        if 'weight' not in pinfo:
             counts = pd.value_counts(x)
             labels = counts.index.tolist()
             weights = counts.tolist()
         else:
             # TODO: pretty sure this isn't right
-            weights = layer.pop('weight')
+            weights = pinfo.pop('weight')
             if not isinstance(x[0], Timestamp):
                 labels = x
             else:
@@ -38,10 +40,10 @@ class geom_bar(geom):
         labels, weights = np.array(labels)[idx], np.array(weights)[idx]
         labels = sorted(labels)
 
-        layer['edgecolor'] = layer.pop('color', '#333333')
-        layer['color'] = layer.pop('fill', '#333333')
+        pinfo['edgecolor'] = pinfo.pop('color', '#333333')
+        pinfo['color'] = pinfo.pop('fill', '#333333')
 
-        ax.bar(indentation, weights, width, **layer)
+        ax.bar(indentation, weights, width, **pinfo)
         ax.autoscale()
         ax.set_xticks(indentation+width/2)
         ax.set_xticklabels(labels)

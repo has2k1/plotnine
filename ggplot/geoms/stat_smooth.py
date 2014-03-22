@@ -14,17 +14,18 @@ class stat_smooth(geom):
             'se': True, 'n': 80, 'fullrange': False, 'level': 0.95,
             'span': 2/3., 'window': None, 'label': ''}
 
-    _groups = {'color', 'fill', 'linestyle'}
+    _groups = {'color', 'fill', 'linetype'}
+    _aes_renames = {'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        x = layer.pop('x')
-        y = layer.pop('y')
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        y = pinfo.pop('y')
         se = self.params['se']
         level = self.params['level']
         method = self.params['method']
         span = self.params['span']
         window = self.params['window']
-        layer['label'] = self.params['label']
+        pinfo['label'] = self.params['label']
 
         if window is None:
             window = int(np.ceil(len(x) / 10.0))
@@ -39,7 +40,7 @@ class stat_smooth(geom):
             y, y1, y2 = smoothers.mavg(x, y, window=window)
         else:
             y, y1, y2 = smoothers.lowess(x, y, span=span)
-        ax.plot(x, y, **layer)
+        ax.plot(x, y, **pinfo)
         if se==True:
             ax.fill_between(x, y1, y2, alpha=0.2, color="grey",
-                             label=layer['label'])
+                             label=pinfo['label'])

@@ -13,11 +13,11 @@ if hasattr(matplotlib.pyplot, 'hist2d'):
 
         _groups = {'color', 'alpha'}
 
-        def plot(self, layer, ax):
-            x = layer.pop('x')
-            y = layer.pop('y')
+        def _plot_unit(self, pinfo, ax):
+            x = pinfo.pop('x')
+            y = pinfo.pop('y')
 
-            ax.hist2d(x, y, cmap=matplotlib.pyplot.cm.Blues, **layer)
+            ax.hist2d(x, y, cmap=matplotlib.pyplot.cm.Blues, **pinfo)
 else:
     def stat_bin2d(*args, **kwargs):
         import matplotlib

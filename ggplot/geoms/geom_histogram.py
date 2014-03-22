@@ -11,27 +11,29 @@ class geom_histogram(geom):
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack', 'label': ''}
     
     _groups = {'color', 'alpha', 'shape'}
+    _aes_renames = {'linetype': 'linestyle'}
+
     def __init__(self, *args, **kwargs):
         super(geom_histogram, self).__init__(*args, **kwargs)
         self._warning_printed = False
 
-    def plot(self, layer, ax):
-        layer['label'] = self.params['label']
+    def _plot_unit(self, pinfo, ax):
+        pinfo['label'] = self.params['label']
 
-        if 'binwidth' in layer:
-            binwidth = layer.pop('binwidth')
+        if 'binwidth' in pinfo:
+            binwidth = pinfo.pop('binwidth')
             try:
                 binwidth = float(binwidth)
-                bottom = np.nanmin(layer['x'])
-                top = np.nanmax(layer['x'])
-                layer['bins'] = np.arange(bottom, top + binwidth, binwidth)
+                bottom = np.nanmin(pinfo['x'])
+                top = np.nanmax(pinfo['x'])
+                pinfo['bins'] = np.arange(bottom, top + binwidth, binwidth)
             except:
                 pass
-        if 'bins' not in layer:
-            layer['bins'] = 30
+        if 'bins' not in pinfo:
+            pinfo['bins'] = 30
             if not self._warning_printed:
                 sys.stderr.write("binwidth defaulted to range/30. " +
                              "Use 'binwidth = x' to adjust this.\n")
                 self._warning_printed = True
 
-        ax.hist(**layer)
+        ax.hist(**pinfo)

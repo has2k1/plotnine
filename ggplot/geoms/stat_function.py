@@ -7,7 +7,7 @@ class stat_function(geom):
     """
     Superimpose a function onto a plot
 
-    Uses a 
+    Uses a
 
     Parameters
     ----------
@@ -23,16 +23,16 @@ class stat_function(geom):
     args : list, dict, object
         List or dict of additional arguments to pass to function. If neither
         list or dict, object is passed as second argument.
-        
+
 
     Examples
     --------
 
     Sin vs cos.
-    
+
     .. plot::
         :include-source:
-    
+
         import numpy as np
         import pandas as pd
         from ggplot import *
@@ -40,19 +40,19 @@ class stat_function(geom):
         gg = gg + stat_function(fun=np.sin,color="red")
         gg = gg + stat_function(fun=np.cos,color="blue")
         print(gg)
-        
+
 
     Compare random sample density to normal distribution.
-    
+
     .. plot::
         :include-source:
-        
+
         import numpy as np
         import pandas as pd
         from ggplot import *
         x = np.random.normal(size=100)
         # normal distribution function
-        def dnorm(n): 
+        def dnorm(n):
             return (1.0 / np.sqrt(2 * np.pi)) * (np.e ** (-0.5 * (n ** 2)))
         data = pd.DataFrame({'x':x})
         gg = ggplot(aes(x='x'),data=data) + geom_density()
@@ -60,10 +60,10 @@ class stat_function(geom):
         print(gg)
 
     Passing additional arguments to function as list.
-    
+
     .. plot::
         :include-source:
-        
+
         import numpy as np
         import pandas as pd
         from ggplot import *
@@ -77,15 +77,15 @@ class stat_function(geom):
         print(gg)
 
     Passing additional arguments to function as dict.
-    
+
     .. plot::
         :include-source:
 
         import scipy
         import numpy as np
         import pandas as pd
-        from ggplot import *        
-        def dnorm(x, mean, var): 
+        from ggplot import *
+        def dnorm(x, mean, var):
             return scipy.stats.norm(mean,var).pdf(x)
         data = pd.DataFrame({'x':np.arange(-5,6)})
         gg = ggplot(aes(x='x'),data=data)
@@ -94,18 +94,18 @@ class stat_function(geom):
         gg = gg + stat_function(fun=dnorm,color="yellow",args={'mean':0.0,'var':5.0})
         gg = gg + stat_function(fun=dnorm,color="green",args={'mean':-2.0,'var':0.5})
         print(gg)
-    
     """
+
     VALID_AES = {'x', 'alpha', 'color', 'linetype', 'size'}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity', 'fun': None,
             'n': 101, 'args': None, 'label': ''}
 
-    _groups = {'color'}
-    _translations = {'size': 'linewidth'}
+    _groups = {'color', 'linetype'}
+    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        x = layer.pop('x')
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
         fun = self.params['fun']
         n = self.params['n']
         args = self.params['args']
@@ -124,7 +124,7 @@ class stat_function(geom):
         else:
             fun = lambda x: old_fun(x)
 
-        color = layer.pop('color', None)
+        color = pinfo.pop('color', None)
         label = self.params['label']
         x_min = min(x)
         x_max = max(x)

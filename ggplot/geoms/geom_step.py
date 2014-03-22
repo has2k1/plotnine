@@ -13,15 +13,15 @@ class geom_step(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
             'direction': 'hv', 'group': None, 'label': ''}
 
-    _groups = {'color', 'alpha', 'linestyle', 'size'}
-    _translations = {'size': 'markersize'}
+    _groups = {'color', 'alpha', 'linetype', 'size'}
+    _aes_renames = {'size': 'markersize', 'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        x = layer.pop('x')
-        y = layer.pop('y')
-        layer['label'] = self.params['label']
-        if 'linetype' in layer and 'color' not in layer:
-            layer['color'] = 'k'
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        y = pinfo.pop('y')
+        pinfo['label'] = self.params['label']
+        if 'linetype' in pinfo and 'color' not in pinfo:
+            pinfo['color'] = 'k'
 
         x_stepped = []
         y_stepped = []
@@ -33,11 +33,11 @@ class geom_step(geom):
 
         # TODO: Fix this when the group aes/parameter is handled
         # across all geoms
-        if 'group' not in layer:
-            ax.plot(x_stepped, y_stepped, **layer)
+        if 'group' not in pinfo:
+            ax.plot(x_stepped, y_stepped, **pinfo)
         else:
-            g = layer.pop('group')
+            g = pinfo.pop('group')
             for k, v in groupby(sorted(zip(x_stepped, y_stepped, g),
                                        key=itemgetter(2)), key=itemgetter(2)):
                 x_g, y_g, _ = zip(*v)
-                ax.plot(x_g, y_g, **layer)
+                ax.plot(x_g, y_g, **pinfo)

@@ -8,9 +8,9 @@ class geom_vline(geom):
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity', 'show_guide': False,
             'label': ''}
 
-    _groups = {'color', 'alpha', 'linestyle'}
-    _translations = {'size': 'linewidth'}
+    _groups = {'color', 'alpha', 'linetype'}
+    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        layer['label'] = self.params['label']
-        ax.axvline(**layer)
+    def _plot_unit(self, pinfo, ax):
+        pinfo['label'] = self.params['label']
+        ax.axvline(**pinfo)

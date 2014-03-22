@@ -11,10 +11,11 @@ class geom_area(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack'}
 
     _groups = {'color', 'alpha'}
+    _aes_renames = {'linetype': 'linestyle'}
 
-    def plot(self, layer, ax):
-        x = layer.pop('x')
-        y1 = layer.pop('ymin')
-        y2 = layer.pop('ymax')
-        ax.fill_between(x, y1, y2, **layer)
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        y1 = pinfo.pop('ymin')
+        y2 = pinfo.pop('ymax')
+        ax.fill_between(x, y1, y2, **pinfo)
 

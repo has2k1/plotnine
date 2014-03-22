@@ -10,12 +10,12 @@ class geom_text(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'parse': False}
 
     _groups = {'color', 'family', 'alpha', 'size'}
-    _translations = {'angle': 'rotation'}
+    _aes_renames = {'angle': 'rotation'}
 
-    def plot(self, layer, ax):
-        x = layer.pop('x')
-        y = layer.pop('y')
-        label = layer.pop('label')
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        y = pinfo.pop('y')
+        label = pinfo.pop('label')
 
         # before taking max and min make sure x is not empty
         if len(x) == 0:
@@ -47,20 +47,20 @@ class geom_text(geom):
             ymax = max(ymax, cymax)
             ymin = min(ymin, cymin)
 
-        if 'hjust' in layer:
-            x = (np.array(x) + layer['hjust']).tolist()
-            del layer['hjust']
+        if 'hjust' in pinfo:
+            x = (np.array(x) + pinfo['hjust']).tolist()
+            del pinfo['hjust']
         else:
-            layer['horizontalalignment'] = 'center'
+            pinfo['horizontalalignment'] = 'center'
 
-        if 'vjust' in layer:
-            y = (np.array(y) + layer['vjust']).tolist()
-            del layer['vjust']
+        if 'vjust' in pinfo:
+            y = (np.array(y) + pinfo['vjust']).tolist()
+            del pinfo['vjust']
         else:
-            layer['verticalalignment'] = 'center'
+            pinfo['verticalalignment'] = 'center'
 
         for x_g,y_g,s in zip(x,y,label):
-            ax.text(x_g,y_g,s,**layer)
+            ax.text(x_g,y_g,s,**pinfo)
 
         # resize axes
         ax.axis([xmin, xmax, ymin, ymax])
