@@ -1,4 +1,5 @@
-from matplotlib.dates import DayLocator, WeekdayLocator, MonthLocator, YearLocator
+from matplotlib.dates import MinuteLocator, HourLocator, DayLocator
+from matplotlib.dates import WeekdayLocator, MonthLocator, YearLocator
 
 def parse_break_str(txt):
     "parses '10 weeks' into tuple (10, week)."
@@ -14,6 +15,8 @@ def parse_break_str(txt):
 # matplotlib's YearLocator uses different named
 # arguments than the others
 LOCATORS = {
+    'minute': MinuteLocator,
+    'hour': HourLocator,
     'day': DayLocator,
     'week': WeekdayLocator,
     'month': MonthLocator,
@@ -25,7 +28,7 @@ def date_breaks(width):
     "Regularly spaced dates."
 
     width:
-        an interval specification. must be one of [day, week, month, year]
+        an interval specification. must be one of [minute, hour, day, week, month, year]
     usage:
         date_breaks(width = '1 year')
         date_breaks(width = '6 weeks')
