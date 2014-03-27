@@ -54,7 +54,7 @@ def calc_axis_breaks_and_limits(minval, maxval, nlabs=None):
         tick_range = diff / float(nlabs)
         # make the tick range nice looking...
         power = math.ceil(math.log(tick_range, 10))
-        step = round(tick_range / (10**power), 1) * 10**power
+        step = np.round(tick_range / (10**power), 1) * 10**power
 
     labs = list(drange(minval-(step/3), maxval+(step/3), step))
 
