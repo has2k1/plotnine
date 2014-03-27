@@ -236,10 +236,12 @@ class ggplot(object):
                             ax = axs[pos % self.n_columns][pos % self.n_rows]
                             ax = plt.gca()
                             ax.text(1, 0.5, facets[0],
+                                    # NOTE: bbox colors are buggy for python 3.3
+                                    # color overides facecolor and edgecolor
+                                    # instead of the opposite
                                      bbox=dict(
                                          facecolor='lightgrey',
                                          edgecolor='black',
-                                         color='black',
                                          width=mpl.rcParams['font.size'] * 1.65
                                      ),
                                      transform=ax.transAxes,
@@ -254,6 +256,7 @@ class ggplot(object):
                                      self.facet_pairs, self.facet_scales)
 
                 else: # now facet_wrap > 2 or facet_grid w/ only 1 facet
+
                     for facet, frame in self.data.groupby(self.facets):
                         frame = self._make_plot_data(frame)
                         for geom in self.geoms:
@@ -457,74 +460,6 @@ class ggplot(object):
         # Automatically drop any row that has an NA value
         mapping = mapping.dropna()
         return mapping
-
-    def _get_layers(self, data=None, aes=None):
-        """Get a layer to be plotted."""
-        # Use the default data and aestetics in case no specific ones are supplied
-        if data is None:
-            data = self.data
-        if aes is None:
-            aes = self.aesthetics
-
-        mapping = {}
-        extra = {}
-        for ae, key in aes.items():
-            if isinstance(key, list) or hasattr(key, "__array__"):
-                # direct assignment of a list/array to the aes -> it's done in the get_layer step
-                mapping[ae] = key
-            elif key in data:
-                # a column or a transformed column
-                mapping[ae] = data[key]
-            else:
-                # now we have a single value. ggplot2 treats that as if all rows should be this
-                # value, so lets do the same. To ensure that all rows get this value, we have to
-                # do that after we constructed the dataframe.
-                # See also the _apply_transform function below, which does this already for
-                # string values.
-                extra[ae] = key
-        mapping = pd.DataFrame(mapping)
-        for ae, key in extra.items():
-            mapping[ae] = key
-
-        # Overwrite the already done mappings to matplotlib understandable
-        # values for color/size/etc
-        if "color" in mapping:
-            mapping['color'] = data['color_mapping']
-        if "size" in mapping:
-            mapping['size'] = data['size_mapping']
-        if "shape" in mapping:
-            mapping['shape'] = data['shape_mapping']
-        if "linestyle" in mapping:
-            mapping['linestyle'] = data['linestyle_mapping']
-
-        # Default the x and y axis labels to the name of the column
-        if "x" in aes and self.xlab is None:
-            self.xlab = aes['x']
-        if "y" in aes and self.ylab is None:
-            self.ylab = aes['y']
-
-        # Automatically drop any row that has an NA value
-        mapping = mapping.dropna()
-
-        discrete_aes = [ae for ae in self.DISCRETE if ae in mapping]
-        # TODO: it think this infomation should better be passed in to the plot_layer() and should be based whether the variable is a factor or not
-        # -> Use dtypes = object/string or in case we use a proper "factor" function -> compute the levels over the whole dataframe in case of faceting!
-        # TODO: It would be nice if the plot_layer() methods could get a dataframe in case some munging is required
-        # TODO: maybe change this to pass in the complete dataframe for the layer and let the plot_layer function work out that it has to plot each series differently.
-        layers = []
-        if len(discrete_aes) == 0:
-            frame = mapping.to_dict('list')
-            layers.append(frame)
-        else:
-            for name, frame in mapping.groupby(discrete_aes):
-                frame = frame.to_dict('list')
-                for ae in self.DISCRETE:
-                    if ae in frame:
-                        frame[ae] = frame[ae][0]
-                layers.append(frame)
-
-        return layers
-
 
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend

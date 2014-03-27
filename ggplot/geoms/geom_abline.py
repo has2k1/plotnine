@@ -6,11 +6,12 @@ from .geom import geom
 import pandas as pd
 
 class geom_abline(geom):
-    VALID_AES = {'x', 'color', 'linetype', 'alpha', 'size'}
+    DEFAULT_AES = {'color': 'black', 'linetype': 'solid', 'alpha': None, 'size': 1.0}
+    REQUIRED = {'x'} # TODO: Why is x needed.
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity', 'slope': 1.0, 'intercept': 0.0, 'label': ''}
 
-    _groups = {'color', 'linestyle', 'alpha'}
-    _aes_renames = {'linetype': 'linestyle'}
+    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
+    _groups = {'alpha', 'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop(x)

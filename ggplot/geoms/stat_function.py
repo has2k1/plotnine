@@ -96,13 +96,14 @@ class stat_function(geom):
         print(gg)
     """
 
-    VALID_AES = {'x', 'alpha', 'color', 'linetype', 'size'}
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'linetype': 'solid',
+                   'size': 1.0}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity', 'fun': None,
-            'n': 101, 'args': None, 'label': ''}
+                      'n': 101, 'args': None, 'label': ''}
 
-    _groups = {'color', 'linetype'}
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
+    _groups = {'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')
@@ -124,14 +125,10 @@ class stat_function(geom):
         else:
             fun = lambda x: old_fun(x)
 
-        color = pinfo.pop('color', None)
-        label = self.params['label']
+        pinfo['label'] = self.params['label']
         x_min = min(x)
         x_max = max(x)
         x_values = np.linspace(x_min,x_max,n)
         y_values = list(map(fun,x_values))
 
-        if color:
-            ax.plot(x_values,y_values,color=color, label=label)
-        else:
-            ax.plot(x_values,y_values, label=label)
+        ax.plot(x_values,y_values, **pinfo)

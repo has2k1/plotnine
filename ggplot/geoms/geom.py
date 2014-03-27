@@ -9,7 +9,7 @@ __all__ = [str(u) for u in __all__]
 
 class geom(object):
     """Base class of all Geoms"""
-    VALID_AES = set()   # TODO: use DEFAULT_AES dict instead
+    DEFAULT_AES = dict()
     REQUIRED_AES = set()
     DEFAULT_PARAMS = dict()
 
@@ -18,39 +18,87 @@ class geom(object):
     manual_aes = None
     params = None
 
-    _groups = set()
+    # Some ggplot aesthetics are named different from the parameters of
+    # the matplotlib function that will be used to plot.
+    # This dictionary, of the form {ggplot-aes-name: matplotlib-aes-name},
+    # connects the two.
+    #
+    # geoms should fill it out so that the plot
+    # information they receive is properly named.
+    # See: geom_point
     _aes_renames = dict()
 
+    # A matplotlib plot function may require that an aethestic have a
+    # single unique value. e.g. linestyle='dashed' and not
+    # linestyle=['dashed', 'dotted', ...].
+    # A single call to such a function can only plot lines with the
+    # same linestyle. However, if the plot we want has more than one
+    # line with different linestyles, we need to group the lines with
+    # the same linestyle and plot them as one unit.
+    #
+    # geoms should fill out this set with such aesthetics so that the
+    # plot information they receive can be plotted in a single call.
+    # Use names as expected by matplotlib
+    # See: geom_point
+    _groups = set()
+
     def __init__(self, *args, **kwargs):
-        # new dicts for each geom
+        self.valid_aes = set(self.DEFAULT_AES) ^ self.REQUIRED_AES
         self.aes, self.data = self._find_aes_and_data(args, kwargs)
-        self.manual_aes = {}
+
+        if 'colour' in kwargs:
+            kwargs['color'] = kwargs.pop('colour')
+
         self.params = deepcopy(self.DEFAULT_PARAMS)
+        self.manual_aes = {}
         for k, v in kwargs.items():
-            if k in self.VALID_AES:
+            if k in self.aes:
+                raise Exception('Aesthetic, %s, specified twice' % k)
+            elif k in self.valid_aes:
                 self.manual_aes[k] = v
             elif k in self.DEFAULT_PARAMS:
                 self.params[k] = v
-            # NOTE: Deal with unknown parameters.
-            # Throw an exception or save them for
-            # the layer?
+            else:
+                raise Exception('Cannot recognize argument: %s' % k)
+
+        self._cache = {}
+        # When putting together the plot information for the geoms,
+        # we need the aethetics names to be matplotlib compatible.
+        # These are created and stored in self._cache and so would
+        # go stale if users or geoms change geom.manual_aes
+        self._create_aes_with_mpl_names()
 
     def plot_layer(self, data, ax):
         self._verify_aesthetics(data)
 
-        # NOTE: This is the correct check however with aes
-        # set in ggplot(), self.aes is empty
-        # groups = groups & set(self.aes) & set(data.columns)
-        # This should be correct when the layer passes
-        # a sanitized dataframe
+        # TODO: Get rid of this when components.aes
+        # is stripped of the renaming
+        if 'linestyle' in data:
+            data = data.rename(columns={'linestyle': 'linetype'})
+
+        # should happen in the layer
+        data = data[list(set(data.columns) & set(self.valid_aes))]
+
+        # aesthetic precedence
+        # geom.manual_aes > geom.aes > ggplot.aes (part of data)
+        # NOTE: currently geom.aes is not handled. This may be
+        # a bad place to do it -- may mess up faceting or just
+        # inefficient. Probably in ggplot or layer.
+
+        # Any aesthetic to be overridden by the manual aesthetics
+        # should not affect the grouping of the data
+        _overrided_aes = set(data.columns) & set(self.manual_aes)
+        for ae in _overrided_aes:
+            data.pop(ae)
+        data = data.rename(columns=self._aes_renames)
         groups = self._groups & set(data.columns)
 
-        for pinfo in self._get_grouped_data(data, groups):
-            pinfo = dict((k, v) for k, v in pinfo.items()  # at layer level!
-                         if k in self.VALID_AES)
-            pinfo.update(self.manual_aes)                  # at layer level!!
-
-            self._do_aes_renames(pinfo)
+        # Create plot information that observes the aesthetic precedence
+        # (grouped data + manual aesthetics) overwrite the default aesthetics
+        for _data in self._get_grouped_data(data, groups):
+            _data.update(self._cache['manual_aes_mpl'])
+            pinfo = deepcopy(self._cache['default_aes_mpl'])
+            pinfo.update(_data)
             self._plot_unit(pinfo, ax)
 
     def __radd__(self, gg):
@@ -105,25 +153,34 @@ class geom(object):
         if data is None and 'data' in kwargs:
             data = kwargs.pop('data')
 
-        valid_aes = {}
+        _aes = {}
         for k, v in passed_aes.items():
-            if k in self.VALID_AES:
-               valid_aes[k] = v
-        return valid_aes, data
+            if k in self.valid_aes:
+               _aes[k] = v
+        return _aes, data
 
-    def _do_aes_renames(self, layer):
+    def _create_aes_with_mpl_names(self):
         """
-        Convert ggplot2 API names to matplotlib names
-        """
-        # apply to all geoms
-        if 'colour' in layer:
-            layer['color'] = layer.pop('colour')
+        Create copies of the manual and default aesthetics
+        with matplotlib compatitble names.
 
-        # TODO: Sort out potential cyclic renames
-        # e.g fill -> color, color -> edgecolor
-        for old, new in self._aes_renames.items():
-            if old in layer:
-                layer[new] = layer.pop(old)
+        Uses self._aes_renames, and the results are stored
+        in:
+            self._cache['manual_aes_mpl']
+            self._cache['default_aes_mpl']
+        """
+        def _rename_fn(aes_dict):
+            # to prevent overwrites
+            _d = {}
+            for old, new in self._aes_renames.items():
+                if old in aes_dict:
+                    _d[new] = aes_dict.pop(old)
+            aes_dict.update(_d)
+
+        self._cache['manual_aes_mpl'] = deepcopy(self.manual_aes)
+        self._cache['default_aes_mpl'] = deepcopy(self.DEFAULT_AES)
+        _rename_fn(self._cache['manual_aes_mpl'])
+        _rename_fn(self._cache['default_aes_mpl'])
 
     def _get_grouped_data(self, data, groups):
         """
@@ -139,17 +196,14 @@ class geom(object):
 
         Returns
         -------
-        res : list
+        out : list
             A list of dicts. Each dict represents a unique
             grouping. The dicts are of the form
             {'column-name': list-of-values | value}
 
         Note
         ----
-        This is a helper function for the geoms. If the column
-        names in the data represent valid arguments to a matplotlib
-        function, then the dict(s) returned can be passed along to
-        the plot command as **kwarg.
+        This is a helper function for self._plot_layer
         """
         out = []
         if groups:
@@ -162,4 +216,3 @@ class geom(object):
             _data = data.to_dict('list')
             out.append(_data)
         return out
-

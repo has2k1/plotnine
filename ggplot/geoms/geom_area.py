@@ -3,19 +3,15 @@ from __future__ import (absolute_import, division, print_function,
 from .geom import geom
 
 
-
 class geom_area(geom):
-    VALID_AES = {'x', 'ymax', 'ymin', 'alpha', 'color',
-                 'fill', 'linetype', 'size'}
+    DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
+                   'linetype': 'solid', 'size': 1.0}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack'}
 
-    _groups = {'color', 'alpha'}
-    _aes_renames = {'linetype': 'linestyle'}
+    _aes_renames = {'linetype': 'linestyle', 'ymin': 'y1', 'ymax': 'y2',
+                    'size': 'linewidth', 'fill': 'facecolor', 'color': 'edgecolor'}
+    _groups = { 'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
-        x = pinfo.pop('x')
-        y1 = pinfo.pop('ymin')
-        y2 = pinfo.pop('ymax')
-        ax.fill_between(x, y1, y2, **pinfo)
-
+        ax.fill_between(**pinfo)

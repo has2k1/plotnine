@@ -5,14 +5,20 @@ from .geom import geom
 
 
 class geom_tile(geom):
-    VALID_AES = {'x', 'y', 'alpha', 'colour', 'fill', 'linetype', 'size'}
+
+    DEFAULT_AES = {'alpha': None, 'color': '#333333', 'fill': '#333333',
+                   'linetype': 'solid', 'size': 0.1}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _groups = {'fill'}
-    _aes_renames = {'linetype': 'linestyle'}
+    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
+                    'fill': 'color', 'color': 'edgecolor'}
+    _groups = {'color', 'edgecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
+        # TODO: Seems off or just needs some
+        # work fixing the color and alpha. Or, it may
+        # not be possible to mimick ggplot2 geom_tile using imshow
         x = pinfo.pop('x')
         y = pinfo.pop('y')
         fill = pinfo.pop('fill')

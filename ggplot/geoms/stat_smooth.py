@@ -7,15 +7,16 @@ from ggplot.components import smoothers
 import numpy as np
 
 class stat_smooth(geom):
-    VALID_AES = {'x', 'y', 'alpha', 'color', 'fill', 'linetype',
-                 'size', 'weight'}
+    DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
+                   'linetype': 'solid', 'size': 1.0}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity', 'method': 'auto',
             'se': True, 'n': 80, 'fullrange': False, 'level': 0.95,
             'span': 2/3., 'window': None, 'label': ''}
 
-    _groups = {'color', 'fill', 'linetype'}
-    _aes_renames = {'linetype': 'linestyle'}
+    _aes_renames = {'linetype': 'linestyle', 'fill': 'facecolor',
+                    'size': 'linewidth'}
+    _groups = {'color', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')
@@ -40,7 +41,14 @@ class stat_smooth(geom):
             y, y1, y2 = smoothers.mavg(x, y, window=window)
         else:
             y, y1, y2 = smoothers.lowess(x, y, span=span)
+
+        facecolor = pinfo.pop('facecolor')
+        alpha = pinfo.pop('alpha')
         ax.plot(x, y, **pinfo)
+
         if se==True:
-            ax.fill_between(x, y1, y2, alpha=0.2, color="grey",
-                             label=pinfo['label'])
+            pinfo.pop('color')
+            pinfo.pop('linewidth')
+            pinfo['facecolor'] = facecolor
+            pinfo['alpha'] = alpha
+            ax.fill_between(x, y1, y2, **pinfo)

@@ -7,20 +7,18 @@ from .geom import geom
 
 
 class geom_line(geom):
-    VALID_AES = {'x', 'y', 'color', 'alpha', 'linetype', 'size', 'group'}
+    DEFAULT_AES = {'color': 'black', 'alpha': None, 'linetype': 'solid', 'size': 1.0}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'label': ''}
 
-    _groups = {'color', 'alpha', 'linetype'}
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
+    _groups = {'alpha', 'color', 'linestyle'}
 
     def __init__(self, *args, **kwargs):
         super(geom_line, self).__init__(*args, **kwargs)
         self._warning_printed = False
 
     def _plot_unit(self, pinfo, ax):
-        x = pinfo.pop('x')
-        y = pinfo.pop('y')
         pinfo['label'] = self.params['label']
 
         if 'linewidth' in pinfo and isinstance(pinfo['linewidth'], list):
@@ -33,13 +31,7 @@ class geom_line(geom):
                       "Use 'geom_line(size=x)' to set the size for the whole line.\n"
                 sys.stderr.write(msg)
                 self._warning_printed = True
-        if 'linestyle' in pinfo and 'color' not in pinfo:
-            pinfo['color'] = 'k'
-        if 'group' not in pinfo:
-            ax.plot(x, y, **pinfo)
-        else:
-            g = pinfo.pop('group')
-            for k, v in groupby(sorted(zip(x, y, g), key=itemgetter(2)),
-                                key=itemgetter(2)):
-                x_g, y_g, _ = zip(*v)
-                ax.plot(x_g, y_g, **pinfo)
+
+        x = pinfo.pop('x')
+        y = pinfo.pop('y')
+        ax.plot(x, y, **pinfo)

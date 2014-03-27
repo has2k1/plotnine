@@ -3,13 +3,14 @@ from __future__ import (absolute_import, division, print_function,
 from .geom import geom
 
 class geom_hline(geom):
-    VALID_AES = {'y', 'xmin', 'xmax', 'color', 'linetype', 'size', 'alpha'}
+    DEFAULT_AES = {'xmin': 0, 'xmax': 1, 'color': 'black', 'linetype': 'solid',
+                   'size': 1.0, 'alpha': None}
     REQUIRED_AES = {'y'}
-    DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity', 'show_guide': False,
-            'label': ''}
+    DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',
+                      'show_guide': False, 'label': ''}
 
-    _groups = {'color', 'alpha', 'linetype'}
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
+    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
+    _groups = {'alpha', 'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']

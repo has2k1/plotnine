@@ -5,15 +5,24 @@ from .geom import geom
 import numpy as np
 
 class geom_point(geom):
-    VALID_AES = {'x', 'y', 'alpha', 'color', 'fill', 'shape', 'size'}
+    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
+                   'shape': 'o', 'size': 20}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap':None, 'label': ''}
 
-    _groups = {'color', 'shape', 'alpha'}
-    _aes_renames = {'size': 's', 'shape': 'marker'}
+    _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
+    _groups = {'alpha', 'marker'}
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']
+
+        _abscent = {None: pinfo['color'], False: ''}
+        try:
+            if pinfo['facecolor'] in _abscent:
+                pinfo['facecolor'] = _abscent[pinfo['facecolor']]
+        except TypeError:
+            pass
+
         # for some reason, scatter doesn't default to the same color styles
         # as the axes.color_cycle
         if "color" not in pinfo and self.params['cmap'] is None:

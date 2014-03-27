@@ -90,9 +90,9 @@ def test_different_markers():
     df = pd.DataFrame({"x":[1,2],"y":[1,2], "a":["a","b"], "b":["c","d"]})
     gg = ggplot(aes(x="x", y="y", shape="a", color="b"), data=df)
     new_df = assign_visual_mapping(df,aes(x="x", y="y", shape="a", color="b"), gg)
-    layer = gg._get_layers(new_df)
-    assert_true("shape" in layer[0], "no shape was assigned")
-    assert_true(layer[0]["shape"] != layer[1]["shape"], "wrong marker was assigned")
+    data = gg._make_plot_data(new_df)
+    assert_true("shape" in data, "no shape was assigned")
+    assert_true(data["shape"][0] != data["shape"][1], "wrong marker was assigned")
     # And now a visual test that both shapes are there. Make them big so that the test is failing
     # if something is wrong
     gg = ggplot(aes(x="x", y="y", shape="a", color="b"), data=df)

@@ -11,8 +11,8 @@ from ggplot.geoms.geom import geom
 def test_geom_basics():
     # mock the validd aes and get the geom to accept the color
     # mapping -> only subclasses normally declare which aes mappings
-    # are valid and geom.VALID_AES is a empty list
-    geom.VALID_AES = ["color"]
+    # are valid and geom.DEFAULT_AES is a empty list
+    geom.DEFAULT_AES = {"color": None}
     g = geom(data=meat)
     assert_is(meat, g.data)
     g = geom(meat)
@@ -40,3 +40,7 @@ def test_geom_with_data():
     _text = geom_text(aes(label="name"), data=mtcars[mtcars.cyl == 6])
     g2 = gg + _text
     assert_is_not(g2.data, _text.data, "Adding a dataset to a geom replaced the data in ggplot")
+
+def test_geom_with_invalid_argument():
+    with assert_raises(Exception):
+        geom_text(write_shakespeare=True)

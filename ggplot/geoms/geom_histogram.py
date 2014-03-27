@@ -4,14 +4,16 @@ import sys
 from .geom import geom
 
 
+# TODO: Why the difference between geom_bar and geom_histogram?
 class geom_histogram(geom):
-    VALID_AES = {'x', 'alpha', 'color', 'fill', 'linetype',
-                 'size', 'weight'}
+    DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
+                   'linetype': 'solid', 'size': 1.0, 'weight': None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack', 'label': ''}
-    
-    _groups = {'color', 'alpha', 'shape'}
-    _aes_renames = {'linetype': 'linestyle'}
+
+    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
+                    'fill': 'facecolor', 'color': 'edgecolor'}
+    _groups = {'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
 
     def __init__(self, *args, **kwargs):
         super(geom_histogram, self).__init__(*args, **kwargs)
@@ -19,6 +21,7 @@ class geom_histogram(geom):
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']
+        weight = pinfo.pop('weight')
 
         if 'binwidth' in pinfo:
             binwidth = pinfo.pop('binwidth')

@@ -20,14 +20,16 @@ class geom_rect(geom):
     size
     """
 
-    VALID_AES = {'xmax', 'xmin', 'ymax', 'ymin', 'color', 'fill',
-                 'linetype', 'size', 'alpha'}
+    DEFAULT_AES = {'color': '#333333', 'fill': '#333333',
+                   'linetype': 'solid', 'size': 1.0, 'alpha': None}
+
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _groups = {'color', 'alpha', 'linetype', 'size'}
     _aes_renames = {'xmin': 'left', 'ymin': 'bottom', 'size': 'linewidth',
-                     'linetype': 'linestyle'}
+                    'linetype': 'linestyle', 'fill': 'facecolor',
+                    'color': 'edgecolor'}
+    _groups = {'alpha', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         if isinstance(pinfo['xmax'], list):
@@ -45,8 +47,5 @@ class geom_rect(geom):
             height = pinfo['ymax'] - pinfo['bottom']
         pinfo['height'] = height
         del pinfo['ymax']
-
-        pinfo['edgecolor'] = pinfo.pop('color', '#333333')
-        pinfo['color'] = pinfo.pop('fill', '#333333')
 
         ax.bar(**pinfo)
