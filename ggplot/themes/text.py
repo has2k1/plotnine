@@ -131,4 +131,4 @@ class element_text(object):
                 l.set(**self.properties)
 
         else:
-            print "unknown element %s" % self.element
+            print("unknown element %s" % self.element)

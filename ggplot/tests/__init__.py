@@ -31,8 +31,8 @@ default_test_modules = [
     'ggplot.tests.test_colors',
     'ggplot.tests.test_chart_components',
     'ggplot.tests.test_legend',
+    'ggplot.tests.test_element_text',
 ]
-
 
 _multiprocess_can_split_ = True
 
