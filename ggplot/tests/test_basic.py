@@ -53,7 +53,7 @@ def test_geom_point():
     df = _build_testing_df()
     gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
     assert_same_ggplot(gg + geom_point(), "geom_point")
-    gg = gg + geom_point() + geom_vline(x=50, ymin=-10, ymax=10)
+    gg = gg + geom_point() + geom_vline(xintercept=50, ymin=-10, ymax=10)
     assert_same_ggplot(gg, "geom_point_vline")
 
 @cleanup

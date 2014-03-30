@@ -16,9 +16,7 @@ class geom_tile(geom):
     _groups = {'color', 'edgecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
-        # TODO: Seems off or just needs some
-        # work fixing the color and alpha. Or, it may
-        # not be possible to mimick ggplot2 geom_tile using imshow
+        # TODO: Reimplement this
         x = pinfo.pop('x')
         y = pinfo.pop('y')
         fill = pinfo.pop('fill')

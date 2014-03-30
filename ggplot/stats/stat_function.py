@@ -1,9 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from .geom import geom
+from .stat import stat
 import numpy as np
 
-class stat_function(geom):
+class stat_function(stat):
     """
     Superimpose a function onto a plot
 
@@ -95,17 +95,19 @@ class stat_function(geom):
         gg = gg + stat_function(fun=dnorm,color="green",args={'mean':-2.0,'var':0.5})
         print(gg)
     """
-
-    DEFAULT_AES = {'alpha': None, 'color': 'black', 'linetype': 'solid',
-                   'size': 1.0}
+    # TODO: Should not have a required aesthetic, use the scale information
+    # maybe that is where the "scale trainning" helps
+    DEFAULT_AES = {'y': None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity', 'fun': None,
-                      'n': 101, 'args': None, 'label': ''}
+                      'n': 101, 'args': None}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
     _groups = {'color', 'linestyle', 'linewidth'}
 
-    def _plot_unit(self, pinfo, ax):
+    CREATES = {'y'}
+
+    def _calculate(self, pinfo):
         x = pinfo.pop('x')
         fun = self.params['fun']
         n = self.params['n']
@@ -125,10 +127,11 @@ class stat_function(geom):
         else:
             fun = lambda x: old_fun(x)
 
-        pinfo['label'] = self.params['label']
         x_min = min(x)
         x_max = max(x)
         x_values = np.linspace(x_min,x_max,n)
         y_values = list(map(fun,x_values))
 
-        ax.plot(x_values,y_values, **pinfo)
+        pinfo['x'] = x_values
+        pinfo['y'] = y_values
+        return pinfo

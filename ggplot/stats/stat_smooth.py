@@ -1,24 +1,18 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
-from .geom import geom
-from ggplot.components import smoothers
-
 import numpy as np
+from ggplot.components import smoothers
+from .stat import stat
 
-class stat_smooth(geom):
-    DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
-                   'linetype': 'solid', 'size': 1.0}
+
+class stat_smooth(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity', 'method': 'auto',
             'se': True, 'n': 80, 'fullrange': False, 'level': 0.95,
             'span': 2/3., 'window': None, 'label': ''}
+    CREATES = {'ymin', 'ymax'}
 
-    _aes_renames = {'linetype': 'linestyle', 'fill': 'facecolor',
-                    'size': 'linewidth'}
-    _groups = {'color', 'facecolor', 'linestyle', 'linewidth'}
-
-    def _plot_unit(self, pinfo, ax):
+    def _calculate(self, pinfo):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
         se = self.params['se']
@@ -26,7 +20,6 @@ class stat_smooth(geom):
         method = self.params['method']
         span = self.params['span']
         window = self.params['window']
-        pinfo['label'] = self.params['label']
 
         if window is None:
             window = int(np.ceil(len(x) / 10.0))
@@ -42,13 +35,9 @@ class stat_smooth(geom):
         else:
             y, y1, y2 = smoothers.lowess(x, y, span=span)
 
-        facecolor = pinfo.pop('facecolor')
-        alpha = pinfo.pop('alpha')
-        ax.plot(x, y, **pinfo)
-
-        if se==True:
-            pinfo.pop('color')
-            pinfo.pop('linewidth')
-            pinfo['facecolor'] = facecolor
-            pinfo['alpha'] = alpha
-            ax.fill_between(x, y1, y2, **pinfo)
+        pinfo['x'] = x
+        pinfo['y'] = y
+        if se:
+            pinfo['ymin'] = y1
+            pinfo['ymax'] = y2
+        return pinfo

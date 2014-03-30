@@ -2,62 +2,60 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import numpy as np
 import pandas as pd
+import matplotlib.cbook as cbook
 from .geom import geom
 from pandas.lib import Timestamp
 
 
 class geom_bar(geom):
     DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.0, 'weight': None}
+                   'linetype': 'solid', 'size': 1.0, 'weight': None, 'y': None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor', 'color': 'edgecolor'}
 
+    # Every geom should be able to list the essential parameters
+    # that it requires to draw the plot. This would include those
+    # computed by the stats but not part of the user API
+    # _requires = {'x', 'y', 'width'}
+
     # NOTE: Currently, geom_bar does not support mapping
     # to alpha and linestyle. TODO: raise exception
     _groups = {'alpha', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
+        pinfo.pop('weight')
         x = pinfo.pop('x')
-        weights = pinfo.pop('weight')
+        width = pinfo.pop('width')
+        heights = pinfo.pop('y')
+        labels = x
+        _left_gap = 0.2
+        _spacing_factor = 0.1     # of the bin width
 
-        # TODO: fix the weight aesthetic,
-        # ggplot2 has the default as 1
-        if weights is None:
-            counts = pd.value_counts(x)
-            labels = counts.index.tolist()
-            weights = counts.tolist()
+        if cbook.is_numlike(x[0]):
+            left = np.array([x[i]-width[i]/2 for i in range(len(x))])
+            _sep = width[0] * _spacing_factor
         else:
-            # TODO: pretty sure this isn't right
-            if not isinstance(x[0], Timestamp):
-                labels = x
-            else:
-                df = pd.DataFrame({'weights':weights, 'timepoint': pd.to_datetime(x)})
-                df = df.set_index('timepoint')
-                ts = pd.TimeSeries(df.weights, index=df.index)
-                ts = ts.resample('W', how='sum')
-                ts = ts.fillna(0)
-                weights = ts.values.tolist()
-                labels = ts.index.to_pydatetime().tolist()
+            _breaks = [0] + [width] * len(x)
+            left = np.cumsum(_breaks[:-1])
+            _sep = width * _spacing_factor
 
-        indentation = np.arange(len(labels)) + 0.2
-        width = 0.9
-        idx = np.argsort(labels)
-        labels, weights = np.array(labels)[idx], np.array(weights)[idx]
-        labels = sorted(labels)
+        left = left + _left_gap + [_sep * i for i in range(len(left))]
 
-        # TODO: Add this test, preferably using fill aesthetic
-        # p = ggplot(aes(x='factor(cyl)', color='factor(cyl)'), data=mtcars)
-        # p + geom_bar(size=10)
+
         # mapped coloring aesthetics are required in ascending order acc. x
+        # NOTE: This is now broken
+        # Solution: When the statistics change the length of an aesthetic,
+        # all other aesthetics must have their lengths changed
         for ae in ('edgecolor', 'facecolor'):
             if isinstance(pinfo[ae], list):
                 pinfo[ae] = [color for _, color in
                              sorted(set(zip(x, pinfo[ae])))]
 
-        ax.bar(indentation, weights, width, **pinfo)
+        # TODO: When x is numeric, need to use better xticklabels
+        ax.bar(left, heights, width, **pinfo)
         ax.autoscale()
-        ax.set_xticks(indentation+width/2)
-        ax.set_xticklabels(labels)
+        ax.set_xticks(left+width/2)
+        ax.set_xticklabels(x)

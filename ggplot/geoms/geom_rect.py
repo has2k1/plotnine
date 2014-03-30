@@ -29,9 +29,9 @@ class geom_rect(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     _aes_renames = {'xmin': 'left', 'ymin': 'bottom', 'size': 'linewidth',
-                    'linetype': 'linestyle', 'fill': 'facecolor',
+                    'linetype': 'linestyle', 'fill': 'color',
                     'color': 'edgecolor'}
-    _groups = {'alpha', 'facecolor', 'linestyle', 'linewidth'}
+    _groups = {'alpha', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         if isinstance(pinfo['xmax'], list):

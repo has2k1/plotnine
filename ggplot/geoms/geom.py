@@ -1,6 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
+# from ggplot import stats
+import ggplot.stats
+# from ggplot import stats
 from ggplot.components import aes
 from pandas import DataFrame
 
@@ -44,6 +47,7 @@ class geom(object):
 
     def __init__(self, *args, **kwargs):
         self.valid_aes = set(self.DEFAULT_AES) ^ self.REQUIRED_AES
+        self._stat_type = self._get_stat_type(kwargs)
         self.aes, self.data = self._find_aes_and_data(args, kwargs)
 
         if 'colour' in kwargs:
@@ -58,6 +62,8 @@ class geom(object):
                 self.manual_aes[k] = v
             elif k in self.DEFAULT_PARAMS:
                 self.params[k] = v
+            elif k in self._stat_type.DEFAULT_PARAMS:
+                self.params[k] = v
             else:
                 raise Exception('Cannot recognize argument: %s' % k)
 
@@ -69,10 +75,22 @@ class geom(object):
         self._create_aes_with_mpl_names()
 
     def plot_layer(self, data, ax):
+        # TODO: compute stats before "grouping", stats should do
+        # their own real grouping. Grouping in the geom is for
+        # matplotlib. Grouping in the stats should be according
+        # to the aesthetic mappings.
         self._verify_aesthetics(data)
 
-        # should happen in the layer
-        data = data[list(set(data.columns) & set(self.valid_aes))]
+        # In ggplot2, aes() does map columns in data to parameters, not
+        # just to aesthetics!!! This feature is used by geom_abline and
+        # probably some other geoms. So parameter columns ar detected
+        # in the data we keep them.
+        _keep = (set(self.valid_aes) |
+                 set(self._stat.REQUIRED_AES) |
+                 set(self._stat.DEFAULT_PARAMS) |
+                 set(self.params))
+        data = data[list(set(data.columns) & _keep)]
+        # if 'yintercept' in data: print(data['yintercept'])
 
         # aesthetic precedence
         # geom.manual_aes > geom.aes > ggplot.aes (part of data)
@@ -89,25 +107,55 @@ class geom(object):
         groups = self._groups & set(data.columns)
 
         # Create plot information that observes the aesthetic precedence
-        # (grouped data + manual aesthetics) overwrite the default aesthetics
+        #   - (grouped data + manual aesthics)
+        #   - modify previous using statistic
+        #   - previous overwrites the default aesthetics
         for _data in self._get_grouped_data(data, groups):
-            _data.update(self._cache['manual_aes_mpl'])
+            _data.update(self._cache['manual_aes_mpl']) # should happen before the grouping
+            _data = self._calculate_and_rename_stats(_data) # should happend before the grouping
             pinfo = deepcopy(self._cache['default_aes_mpl'])
             pinfo.update(_data)
             self._plot_unit(pinfo, ax)
 
+    def _get_stat_type(self, kwargs):
+        """
+        Find out the stat and return the type object that can be
+        used(called) to create it.
+        For example, if the stat is 'smooth' we return
+        ggplot.stats.stat_smooth
+        """
+        # get
+        try:
+            _name = 'stat_%s' % kwargs['stat']
+        except KeyError:
+            _name = 'stat_%s' % self.DEFAULT_PARAMS['stat']
+        return getattr(ggplot.stats, _name)
+
     def __radd__(self, gg):
         gg = deepcopy(gg)
+        # create stat and hand over the parameters it understands
+        if not hasattr(self, '_stat'):
+            self._stat = self._stat_type()
+            _similar_params = set(self.params) & set(self._stat.params)
+            for k in _similar_params:
+                self._stat.params[k] = self.params[k]
         gg.geoms.append(self)
         return gg
 
     def _verify_aesthetics(self, data):
         """
-        Check if all the required aesthetics have been specified
+        Check if all the required aesthetics have been specified.
+        Takes into consideration the aesthetics to be computed
+        by the stat
 
         Raise an Exception if an aesthetic is missing
         """
-        missing_aes = self.REQUIRED_AES - set(data.columns)
+        self._stat._verify_aesthetics(data)
+
+        missing_aes = (self.REQUIRED_AES -
+                       set(self.manual_aes) -
+                       self._stat.CREATES -
+                       set(data.columns))
         if missing_aes:
             msg = '{} requires the following missing aesthetics: {}'
             raise Exception(msg.format(
@@ -132,13 +180,14 @@ class geom(object):
 
         for arg in args:
             if isinstance(arg, aes) and passed_aes:
-                raise Exception(aes_err)
+                raise Execption(aes_err)
             if isinstance(arg, aes):
                 passed_aes = arg
             elif isinstance(arg, DataFrame):
                 data = arg
             else:
-                raise Exception('Unknown argument of type "{0}".'.format(type(arg)))
+                raise Exception(
+                    'Unknown argument of type "{0}".'.format(type(arg)))
 
         if 'mapping' in kwargs and passed_aes:
             raise Exception(aes_err)
@@ -149,10 +198,32 @@ class geom(object):
             data = kwargs.pop('data')
 
         _aes = {}
+        # To make mapping of columns to geom/stat or stat parameters
+        # possible
+        _keep = set(self.DEFAULT_PARAMS) | set(self._stat_type.DEFAULT_PARAMS)
         for k, v in passed_aes.items():
-            if k in self.valid_aes:
-               _aes[k] = v
+            if k in self.valid_aes or k in _keep:
+                _aes[k] = v
+            else:
+                raise Exception('Cannot recognize aesthetic: %s' % k)
         return _aes, data
+
+    def _calculate_and_rename_stats(self, data):
+        """
+        Use the stat object (self._stat) to compute the stats
+        and make sure the returned columns are renamed to
+        matplotlib compatible names
+        """
+        # only rename the new columns,
+        # so keep track of the original ones
+        _original = set(data)
+        data = self._stat._calculate(data)
+        _d = {}
+        for old, new in self._aes_renames.items():
+            if (old in data) and (old not in _original):
+                _d[new] = data.pop(old)
+        data.update(_d)
+        return data
 
     def _create_aes_with_mpl_names(self):
         """

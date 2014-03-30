@@ -22,6 +22,7 @@ from .qplot import qplot
 from .ggplot import ggplot
 from .components import aes
 from .geoms import *
+from .stats import *
 from .scales import *
 from .themes import *
 from .utils import *
