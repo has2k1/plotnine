@@ -4,7 +4,7 @@ from .theme_gray import theme_gray
 from .theme_xkcd import theme_xkcd
 from .theme_matplotlib import theme_matplotlib
 from .theme_seaborn import theme_seaborn
-from .text import element_text
+from .element_text import element_text
 
 __all__ = ["theme","theme_bw","theme_gray","theme_xkcd","theme_matplotlib",
            "theme_seaborn","element_text"]

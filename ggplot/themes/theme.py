@@ -13,6 +13,8 @@ specify the scope of the theme application.
 """
 from copy import deepcopy
 
+from .element import element_factory
+
 
 class theme(object):
 
@@ -55,8 +57,14 @@ class theme(object):
 
         for theme_element in legal_elements:
             element = kwargs.get(theme_element)
+            print("element_target = %s" % theme_element)
             if element:
-                element.element = theme_element
+                target = element_factory(theme_element)
+                if target:
+                    element.target = target
+                    print("added %s to %s" % (theme_element, element))
+                else:
+                    element.element = theme_element
                 self.elements.append(element)
 
         for k, v in kwargs.items():
