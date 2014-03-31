@@ -25,7 +25,7 @@ def test_meat():
     meat_lng = pd.melt(meat[['date', 'beef', 'pork', 'broilers']], id_vars='date')
     gg = ggplot(aes(x='date', y='value', colour='variable'), data=meat_lng) + \
         geom_point() + \
-        stat_smooth(color='red')
+        stat_smooth(color='red', se=False)
     assert_same_ggplot(gg, 'ggplot_meat')
 
 @cleanup

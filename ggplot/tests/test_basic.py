@@ -43,6 +43,7 @@ def test_geom_density():
 @cleanup
 def test_geom_histogram():
     df = _build_testing_df()
+    # TODO: use fill aesthetic for a better test
     gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
     assert_same_ggplot(gg + geom_histogram(), "geom_hist")
     assert_same_ggplot(gg + geom_histogram() + ggtitle("My Histogram"), "geom_hist_title")
@@ -116,8 +117,8 @@ def test_factor_bar():
 @cleanup
 def test_stats_smooth():
     df = _build_testing_df()
-    gg = ggplot(aes(x="x", y="y", shape="cat2", color="cat"), data=df)
-    gg = gg + stat_smooth(color="blue") + ggtitle("My Smoothed Chart")
+    gg = ggplot(aes(x="x", y="y", color="cat"), data=df)
+    gg = gg + stat_smooth(se=False) + ggtitle("My Smoothed Chart")
     assert_same_ggplot(gg, "stat_smooth")
 
 @cleanup
@@ -181,8 +182,8 @@ def test_facet_grid():
 def test_smooth_se():
     meat = _build_meat_df()
     p = ggplot(aes(x='date', y='beef'), data=meat)
-    assert_same_ggplot(p + geom_point() + stat_smooth(se=True), "point_smooth_se")
-    assert_same_ggplot(p + stat_smooth(se=True), "smooth_se")
+    assert_same_ggplot(p + geom_point() + stat_smooth(), "point_smooth_se")
+    assert_same_ggplot(p + stat_smooth(), "smooth_se")
 
 @cleanup
 def test_scale_xy_continous():

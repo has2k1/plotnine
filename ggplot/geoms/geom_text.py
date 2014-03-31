@@ -1,34 +1,27 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import numpy as np
-import pandas as pd
 from .geom import geom
 
 class geom_text(geom):
-    VALID_AES = ['label','x','y','alpha','angle','color','family','fontface',
-                 'hjust','size','vjust']
-    REQUIRED_AES = ['label','x','y']
+    DEFAULT_AES = {'alpha': None, 'angle': 0, 'color': 'black', 'family': None,
+                   'fontface': 1, 'hjust': None, 'size': 12, 'vjust': None,
+                   'lineheight': 1.2}
+    REQUIRED_AES = {'label','x','y'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'parse': False}
 
-    def plot_layer(self, layer):
-        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
+    _aes_renames = {'angle': 'rotation', 'lineheight': 'linespacing'}
+    _groups = {'alpha', 'color', 'family', 'size'}
 
-        # Check for required aesthetics
-        missing_aes = []
-        for required_aes in self.REQUIRED_AES:
-            if required_aes not in layer:
-                missing_aes.append(required_aes)
-
-        if len(missing_aes) > 0:
-            raise Exception(
-                "geom_text requires the following missing aesthetics: %s" %\
-                ", ".join(missing_aes))
-
-        x = layer.pop('x')
-        y = layer.pop('y')
-        label = layer.pop('label')
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        y = pinfo.pop('y')
+        label = pinfo.pop('label')
+        # TODO: Deal with the fontface
+        # from ggplot2
+        # 1 = plain, 2 = bold, 3 = italic, 4 = bold italic
+        # "plain", "bold", "italic", "oblique", and "bold.italic"
+        pinfo.pop('fontface')
 
         # before taking max and min make sure x is not empty
         if len(x) == 0:
@@ -50,8 +43,7 @@ class geom_text(geom):
 
         # Take current plotting dimension in account for the case that we
         # work on a special dataframe just for this geom!
-        if not self.data is None:
-            ax = plt.gca()
+        if not self.data is None:  # NOTE: not working??
             cxmin, cxmax = ax.get_xlim()
             cymin, cymax = ax.get_ylim()
             # there is a problem if geom_text is the first plot, as
@@ -61,24 +53,23 @@ class geom_text(geom):
             ymax = max(ymax, cymax)
             ymin = min(ymin, cymin)
 
-        if 'hjust' in layer:
-            x = (np.array(x) + layer['hjust']).tolist()
-            del layer['hjust']
+        # TODO: Fix the defaults for this
+        # try out 0.5
+        if pinfo['hjust'] is not None:
+            x = (np.array(x) + pinfo['hjust']).tolist()
         else:
-            layer['horizontalalignment'] = 'center'
+            pinfo['horizontalalignment'] = 'center'
 
-        if 'vjust' in layer:
-            y = (np.array(y) + layer['vjust']).tolist()
-            del layer['vjust']
+        if pinfo['vjust'] is not None:
+            y = (np.array(y) + pinfo['vjust']).tolist()
         else:
-            layer['verticalalignment'] = 'center'
+            pinfo['verticalalignment'] = 'center'
 
-        if 'angle' in layer:
-            layer['rotation'] = layer['angle']
-            del layer['angle']
-
+        del pinfo['hjust']
+        del pinfo['vjust']
         for x_g,y_g,s in zip(x,y,label):
-            plt.text(x_g,y_g,s,**layer)
+            ax.text(x_g,y_g,s,**pinfo)
 
+        # TODO: Find out why this isn't working as desired
         # resize axes
-        plt.axis([xmin, xmax, ymin, ymax])
+        ax.axis([xmin, xmax, ymin, ymax])

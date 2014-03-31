@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from .geom import geom
@@ -8,20 +7,30 @@ from pandas.lib import Timestamp
 
 
 class geom_bar(geom):
-    VALID_AES = ['x', 'color', 'alpha', 'fill', 'label', 'weight', 'position']
+    DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
+                   'linetype': 'solid', 'size': 1.0, 'weight': None}
+    REQUIRED_AES = {'x'}
+    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
-    def plot_layer(self, layer):
-        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
+    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
+                    'fill': 'facecolor', 'color': 'edgecolor'}
 
-        x = layer.pop('x')
-        if 'weight' not in layer:
+    # NOTE: Currently, geom_bar does not support mapping
+    # to alpha and linestyle. TODO: raise exception
+    _groups = {'alpha', 'linestyle', 'linewidth'}
+
+    def _plot_unit(self, pinfo, ax):
+        x = pinfo.pop('x')
+        weights = pinfo.pop('weight')
+
+        # TODO: fix the weight aesthetic,
+        # ggplot2 has the default as 1
+        if weights is None:
             counts = pd.value_counts(x)
             labels = counts.index.tolist()
             weights = counts.tolist()
         else:
             # TODO: pretty sure this isn't right
-            weights = layer.pop('weight')
             if not isinstance(x[0], Timestamp):
                 labels = x
             else:
@@ -39,21 +48,16 @@ class geom_bar(geom):
         labels, weights = np.array(labels)[idx], np.array(weights)[idx]
         labels = sorted(labels)
 
-        if 'color' in layer:
-            layer['edgecolor'] = layer['color']
-            del layer['color']
-        else:
-            layer['edgecolor'] = '#333333'
+        # TODO: Add this test, preferably using fill aesthetic
+        # p = ggplot(aes(x='factor(cyl)', color='factor(cyl)'), data=mtcars)
+        # p + geom_bar(size=10)
+        # mapped coloring aesthetics are required in ascending order acc. x
+        for ae in ('edgecolor', 'facecolor'):
+            if isinstance(pinfo[ae], list):
+                pinfo[ae] = [color for _, color in
+                             sorted(set(zip(x, pinfo[ae])))]
 
-        if 'fill' in layer:
-            layer['color'] = layer['fill']
-            del layer['fill']
-        else:
-            layer['color'] = '#333333'
-
-        plt.bar(indentation, weights, width, **layer)
-        plt.autoscale()
-        return [
-                {"function": "set_xticks", "args": [indentation+width/2]},
-                {"function": "set_xticklabels", "args": [labels]}
-            ]
+        ax.bar(indentation, weights, width, **pinfo)
+        ax.autoscale()
+        ax.set_xticks(indentation+width/2)
+        ax.set_xticklabels(labels)

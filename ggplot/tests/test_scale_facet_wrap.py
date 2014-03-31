@@ -10,6 +10,17 @@ from ggplot import *
 
 import matplotlib.pyplot as plt
 
+
+@cleanup
+def test_not_turn_off_first_axis():
+    # as per GH47, the first axis was switched off when we had a square number of axis
+    import pandas as pd
+    # 4 plots
+    dat4 = pd.DataFrame({'x': range(40), 'y': range(40), 'w': (list('abcd')* 10)})
+    gg = ggplot(aes(x = 'x', y = 'y'), data=dat4) + geom_line() + facet_wrap('w')
+    assert_same_ggplot(gg, "first_ax_not_off")
+
+
 @cleanup
 def test_scale_facet_wrap_visual():
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
@@ -27,12 +38,12 @@ def test_add_scale_returns_new_ggplot_object():
     # an older implementation set values on the original ggplot object and only made a deepcopy on the last step.
     # Actually all geoms/... should have such a test...
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
-    h, w = p.n_high, p.n_wide
+    c, r = p.n_columns, p.n_rows
     p2 = p + facet_wrap("cut", scales="free")
-    hn, wn = p.n_high, p.n_wide
-    h2, w2 = p2.n_high, p2.n_wide
-    assert_true(h==hn and w==wn, "Original object changed!")
-    assert_true(h!=h2 or w!=w2, "New object not changed!")
+    cn, rn = p.n_columns, p.n_rows
+    c2, r2 = p2.n_columns, p2.n_rows
+    assert_true(c==cn and r==rn, "Original object changed!")
+    assert_true(c!=c2 or r!=r2, "New object not changed!")
 
 @cleanup            
 def test_scale_facet_wrap_internals():
@@ -53,9 +64,7 @@ def test_scale_facet_wrap_internals():
     p2 = p + facet_wrap("cut", scales="free")
     print(p2)
 
-    # FIXME: n_high is the number of columns, not rows, because n_high and
-    # n_wide are being passed backwards to plt.subplot in ggplot.py
-    columns = p2.n_high
+    columns = p2.n_columns
 
     fig = plt.gcf()
 
@@ -121,3 +130,4 @@ def test_scale_facet_wrap_internals():
             assert_true(all(list(map(convertText, ax.get_yticklabels())) == yticks))
         else:
             assert_true(all(map(empty, ax.get_yticklabels())))
+

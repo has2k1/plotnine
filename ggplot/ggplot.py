@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.gridspec as gridspec
 
 from .components import aes, assign_visual_mapping
 from .components import colors, shapes
@@ -65,8 +66,8 @@ class ggplot(object):
 
         # defaults
         self.geoms = []
-        self.n_wide = 1
-        self.n_high = 1
+        self.n_rows = 1
+        self.n_columns = 1
         self.n_dim_x = None
         self.n_dim_y = None
         # facets
@@ -153,36 +154,37 @@ class ggplot(object):
                 except Exception as e:
                     msg = """Setting "mpl.rcParams['%s']=%s" raised an Exception: %s""" % (key, str(val), str(e))
                     warnings.warn(msg, RuntimeWarning)
-                    # draw is not allowed to show a plot, so we can use to result for ggsave
-                # This sets a rcparam, so we don't have to undo it after plotting
+            # draw is not allowed to show a plot, so we can use to result for ggsave
+            # This sets a rcparam, so we don't have to undo it after plotting
             mpl.interactive(False)
             if self.facet_type == "grid" and len(self.facets) > 1:
-                fig, axs = plt.subplots(self.n_high, self.n_wide,
+                fig, axs = plt.subplots(self.n_columns, self.n_rows,
                                         sharex=True, sharey=True)
                 plt.subplots_adjust(wspace=.05, hspace=.05)
             elif self.facet_type == "wrap" or len(self.facets)==1:
                 # add (more than) the needed number of subplots
-                fig, axs = plt.subplots(self.n_high, self.n_wide)
+                fig, axs = plt.subplots(self.n_columns, self.n_rows)
                 # there are some extra, remove the plots
-                subplots_available = self.n_wide * self.n_high
+                subplots_available = self.n_rows * self.n_columns
                 if self.n_dim_x:
                     extra_subplots = subplots_available - self.n_dim_x
                 else:
                     extra_subplots = 0
-                for extra_plot in axs.flatten()[-extra_subplots:]:
-                    extra_plot.axis('off')
+                if extra_subplots > 0:
+                    for extra_plot in axs.flatten()[-extra_subplots:]:
+                        extra_plot.axis('off')
 
                 # plots is a mapping from xth-plot -> subplot position
                 plots = []
-                for x in range(self.n_wide):
-                    for y in range(self.n_high):
+                for x in range(self.n_rows):
+                    for y in range(self.n_columns):
                         plots.append((x, y))
-                plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_high + 1)
+                plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_columns + 1)
             else:
-                fig, axs = plt.subplots(self.n_high, self.n_wide)
+                fig, axs = plt.subplots(self.n_columns, self.n_rows)
             axs = np.atleast_2d(axs)
             # Set the default plot to the first one
-            plt.subplot(self.n_wide, self.n_high, 1)
+            plt.subplot(self.n_rows, self.n_columns, 1)
 
             # Aes need to be initialized BEFORE we start faceting. This is b/c
             # we want to have a consistent aes mapping across facets.
@@ -202,14 +204,15 @@ class ggplot(object):
                 #first grids: faceting with two variables and defined positions
                 if len(self.facets) == 2 and self.facet_type != "wrap":
                     # store the extreme x and y coordinates of each pair of axes
-                    axis_extremes = np.zeros(shape=(self.n_high * self.n_wide, 4))
+                    axis_extremes = np.zeros(shape=(self.n_columns * self.n_rows, 4))
                     xlab_offset = .15
                     for _iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
                         pos = self.facet_pairs.index(facets) + 1
-                        plt.subplot(self.n_wide, self.n_high, pos)
-                        for layer in self._get_layers(frame):
-                            for geom in self.geoms:
-                                callbacks = geom.plot_layer(layer)
+                        plt.subplot(self.n_rows, self.n_columns, pos)
+                        frame = self._make_plot_data(frame)
+                        for geom in self.geoms:
+                            ax = plt.gca()
+                            callbacks = geom.plot_layer(frame, ax)
                         axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
                                                 min(plt.ylim()), max(plt.ylim())]
                     # find the grid wide data extremeties
@@ -222,59 +225,63 @@ class ggplot(object):
                     for pos, facets in enumerate(self.facet_pairs):
                         pos += 1
                         # Plot the top and right boxes
-                        if pos <= self.n_high: # first row
-                            plt.subplot(self.n_wide, self.n_high, pos)
+                        if pos <= self.n_columns: # first row
+                            plt.subplot(self.n_rows, self.n_columns, pos)
                             plt.table(cellText=[[facets[1]]], loc='top',
                                       cellLoc='center', cellColours=[['lightgrey']])
-                        if (pos % self.n_high) == 0: # last plot in a row
-                            plt.subplot(self.n_wide, self.n_high, pos)
+                        if (pos % self.n_columns) == 0: # last plot in a row
+                            plt.subplot(self.n_rows, self.n_columns, pos)
                             x = max(plt.xticks()[0])
                             y = max(plt.yticks()[0])
-                            ax = axs[pos % self.n_high][pos % self.n_wide]
+                            ax = axs[pos % self.n_columns][pos % self.n_rows]
                             ax = plt.gca()
                             ax.text(1, 0.5, facets[0],
+                                    # NOTE: bbox colors are buggy for python 3.3
+                                    # color overides facecolor and edgecolor
+                                    # instead of the opposite
                                      bbox=dict(
                                          facecolor='lightgrey',
                                          edgecolor='black',
-                                         color='black',
                                          width=mpl.rcParams['font.size'] * 1.65
                                      ),
                                      transform=ax.transAxes,
                                      fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
                             )
 
-                    plt.subplot(self.n_wide, self.n_high, pos)
+                    plt.subplot(self.n_rows, self.n_columns, pos)
                     # Handle the different scale types here
                     # (free|free_y|free_x|None) and also make sure that only the
                     # left column gets y scales and the bottom row gets x scales
-                    scale_facet_grid(self.n_wide, self.n_high,
+                    scale_facet_grid(self.n_rows, self.n_columns,
                                      self.facet_pairs, self.facet_scales)
 
                 else: # now facet_wrap > 2 or facet_grid w/ only 1 facet
+
                     for facet, frame in self.data.groupby(self.facets):
-                        for layer in self._get_layers(frame):
-                            for geom in self.geoms:
-                                if self.facet_type == "wrap" or 1==1:
-                                    if cntr + 1 > len(plots):
-                                        continue
-                                    pos = plots[cntr]
-                                    if pos is None:
-                                        continue
-                                    y_i, x_i = pos
-                                    pos = x_i + y_i * self.n_high + 1
-                                    ax = plt.subplot(self.n_wide, self.n_high, pos)
-                                else:
-                                    ax = plt.subplot(self.n_wide, self.n_high, cntr)
-                                    # TODO: this needs some work
-                                    if (cntr % self.n_high) == -1:
-                                        plt.tick_params(axis='y', which='both',
-                                                        bottom='off', top='off',
-                                                        labelbottom='off')
-                                callbacks = geom.plot_layer(layer)
-                                if callbacks:
-                                    for callback in callbacks:
-                                        fn = getattr(ax, callback['function'])
-                                        fn(*callback['args'])
+                        frame = self._make_plot_data(frame)
+                        for geom in self.geoms:
+                            if self.facet_type == "wrap" or 1==1:
+                                if cntr + 1 > len(plots):
+                                    continue
+                                pos = plots[cntr]
+                                if pos is None:
+                                    continue
+                                y_i, x_i = pos
+                                pos = x_i + y_i * self.n_columns + 1
+                                ax = plt.subplot(self.n_rows, self.n_columns, pos)
+                            else:
+                                ax = plt.subplot(self.n_rows, self.n_columns, cntr)
+                                # TODO: this needs some work
+                                if (cntr % self.n_columns) == -1:
+                                    plt.tick_params(axis='y', which='both',
+                                                    bottom='off', top='off',
+                                                    labelbottom='off')
+                            ax = plt.gca()
+                            callbacks = geom.plot_layer(frame, ax)
+                            if callbacks:
+                                for callback in callbacks:
+                                    fn = getattr(ax, callback['function'])
+                                    fn(*callback['args'])
                         title = facet
                         if isinstance(facet, tuple):
                             title = ", ".join(facet)
@@ -282,11 +289,7 @@ class ggplot(object):
                                   cellLoc='center', cellColours=[['lightgrey']])
                         cntr += 1
 
-                    # NOTE: Passing n_high for cols (instead of n_wide) and
-                    # n_wide for rows because in all previous calls to
-                    # plt.subplot, n_wide is passed as the number of rows, not
-                    # columns.
-                    scale_facet_wrap(self.n_wide, self.n_high, range(cntr), self.facet_scales)
+                    scale_facet_wrap(self.n_rows, self.n_columns, range(cntr), self.facet_scales)
             else: # no faceting
                 for geom in self.geoms:
                     _aes = self.aesthetics
@@ -299,13 +302,14 @@ class ggplot(object):
                         data = assign_visual_mapping(data, _aes, self)
                     else:
                         data = self.data
-                    for layer in self._get_layers(data, _aes):
-                        ax = plt.subplot(1, 1, 1)
-                        callbacks = geom.plot_layer(layer)
-                        if callbacks:
-                            for callback in callbacks:
-                                fn = getattr(ax, callback['function'])
-                                fn(*callback['args'])
+                    ax = plt.subplot(1, 1, 1)
+
+                    data = self._make_plot_data(data, _aes)
+                    callbacks = geom.plot_layer(data, ax)
+                    if callbacks:
+                        for callback in callbacks:
+                            fn = getattr(ax, callback['function'])
+                            fn(*callback['args'])
 
             # Handling the details of the chart here; probably be a better
             # way to do this...
@@ -386,7 +390,7 @@ class ggplot(object):
             # getting set to True.
             if self.legend:
                 # works with faceted and non-faceted plots
-                ax = axs[0][self.n_wide - 1]
+                ax = axs[0][self.n_rows - 1]
                 box = ax.get_position()
                 ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 
@@ -409,8 +413,7 @@ class ggplot(object):
 
         return plt.gcf()
 
-    def _get_layers(self, data=None, aes=None):
-        """Get a layer to be plotted."""
+    def _make_plot_data(self, data=None, aes=None):
         # Use the default data and aestetics in case no specific ones are supplied
         if data is None:
             data = self.data
@@ -456,26 +459,7 @@ class ggplot(object):
 
         # Automatically drop any row that has an NA value
         mapping = mapping.dropna()
-
-        discrete_aes = [ae for ae in self.DISCRETE if ae in mapping]
-        # TODO: it think this infomation should better be passed in to the plot_layer() and should be based whether the variable is a factor or not
-        # -> Use dtypes = object/string or in case we use a proper "factor" function -> compute the levels over the whole dataframe in case of faceting!
-        # TODO: It would be nice if the plot_layer() methods could get a dataframe in case some munging is required
-        # TODO: maybe change this to pass in the complete dataframe for the layer and let the plot_layer function work out that it has to plot each series differently.
-        layers = []
-        if len(discrete_aes) == 0:
-            frame = mapping.to_dict('list')
-            layers.append(frame)
-        else:
-            for name, frame in mapping.groupby(discrete_aes):
-                frame = frame.to_dict('list')
-                for ae in self.DISCRETE:
-                    if ae in frame:
-                        frame[ae] = frame[ae][0]
-                layers.append(frame)
-
-        return layers
-
+        return mapping
 
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend

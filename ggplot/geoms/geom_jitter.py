@@ -1,8 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from .geom_point import geom_point
-import numpy as np
-import pandas as pd
 
 class geom_jitter(geom_point):
     def __init__(self, *args, **kwargs):

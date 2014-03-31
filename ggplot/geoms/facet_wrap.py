@@ -31,22 +31,21 @@ class facet_wrap(object):
             gg.n_dim_x *= y.nunique()
             facets.append(self.y)
 
-        # TODO: for some reason this is backwards
-        n_wide = self.nrow
-        n_high = self.ncol
+        n_rows = self.nrow
+        n_cols = self.ncol
 
-        if n_wide is None and n_high is None:
+        if n_rows is None and n_cols is None:
             # calculate both on the fly
-            n_wide = math.ceil(math.sqrt(gg.n_dim_x))
-            n_high = math.ceil(gg.n_dim_x / math.ceil(math.sqrt(gg.n_dim_x)))
-        elif n_wide is None:
-            # calculate n_wide on the fly
-            n_wide = math.ceil(float(gg.n_dim_x) / n_high)
-        elif n_high is None:
-            # calculate n_high on the fly
-            n_high = math.ceil(float(gg.n_dim_x) / n_wide)
+            n_rows = math.ceil(math.sqrt(gg.n_dim_x))
+            n_cols = math.ceil(gg.n_dim_x / math.ceil(math.sqrt(gg.n_dim_x)))
+        elif n_rows is None:
+            # calculate n_rows on the fly
+            n_rows = math.ceil(float(gg.n_dim_x) / n_cols)
+        elif n_cols is None:
+            # calculate n_columns on the fly
+            n_cols = math.ceil(float(gg.n_dim_x) / n_rows)
 
-        gg.n_wide, gg.n_high = int(n_wide), int(n_high)
+        gg.n_rows, gg.n_columns = int(n_rows), int(n_cols)
 
         gg.facets = facets
         gg.facet_type = "wrap"

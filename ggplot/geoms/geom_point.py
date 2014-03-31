@@ -1,37 +1,36 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib.pyplot as plt
 import matplotlib as mpl
-from matplotlib.colors import Normalize
-import numpy as np
 from .geom import geom
 import numpy as np
 
 class geom_point(geom):
-    VALID_AES = ['x', 'y', 'size', 'color', 'alpha', 'shape', 'label', 'cmap',
-                 'position']
+    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
+                   'shape': 'o', 'size': 20}
+    REQUIRED_AES = {'x', 'y'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap':None, 'label': ''}
 
-    def plot_layer(self, layer):
-        layer = dict((k, v) for k, v in layer.items() if k in self.VALID_AES)
-        layer.update(self.manual_aes)
+    _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
+    _groups = {'alpha', 'marker'}
 
-        if "size" in layer:
-            layer["s"] = layer["size"]
-            del layer["size"]
+    def _plot_unit(self, pinfo, ax):
+        pinfo['label'] = self.params['label']
 
-        if "shape" in layer:
-            layer["marker"] = layer["shape"]
-            del layer["shape"]
+        _abscent = {None: pinfo['color'], False: ''}
+        try:
+            if pinfo['facecolor'] in _abscent:
+                pinfo['facecolor'] = _abscent[pinfo['facecolor']]
+        except TypeError:
+            pass
 
         # for some reason, scatter doesn't default to the same color styles
         # as the axes.color_cycle
-        if "color" not in layer and "cmap" not in layer:
-            layer["color"] = mpl.rcParams.get("axes.color_cycle", ["#333333"])[0]
-        
-        if "position" in layer:
-            del layer["position"]
-            layer['x'] *= np.random.uniform(.9, 1.1, len(layer['x']))
-            layer['y'] *= np.random.uniform(.9, 1.1, len(layer['y']))
+        if "color" not in pinfo and self.params['cmap'] is None:
+            pinfo["color"] = mpl.rcParams.get("axes.color_cycle", ["#333333"])[0]
 
-        plt.scatter(**layer)
+        if self.params['position'] == 'jitter':
+            pinfo['x'] *= np.random.uniform(.9, 1.1, len(pinfo['x']))
+            pinfo['y'] *= np.random.uniform(.9, 1.1, len(pinfo['y']))
+
+        ax.scatter(**pinfo)
 
