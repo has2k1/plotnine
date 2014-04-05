@@ -35,7 +35,7 @@ def test_theme4():
         stat_smooth(span=.15, color='black', se=True) + \
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
-    print gg + theme(axis_text_x=element_text(color="red"))
+    print(gg + theme(axis_text_x=element_text(color="red")))
 
 def test_theme5():
     # complete theme t2 replaces partial theme t2
