@@ -51,6 +51,15 @@ def element_target_factory(element_target, element_theme):
         return None
 
 
+def merge_element_targets(et_list1, et_list2):
+    """Merge two lists of element_targets by first sorting them according to
+    precedence, then retaining the last instance of a target in case of
+    insances.
+
+    """
+    return unique_element_targets(sorted_element_targets(et_list1 + et_list2))
+
+
 def unique_element_targets(element_targets):
     """From a list of elment targets, save the last element target for targets
     of the same type.

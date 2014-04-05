@@ -55,6 +55,25 @@ def test_theme7():
     # partial themes should be combined for later application to a complete
     # theme
     t1 = theme(text=element_text())
-    t2 = theme(text=element_text())
+    t2 = theme(axis_text=element_text())
     t3 = t1 + t2
     assert_equal(t3.element_themes, t1.element_themes + t2.element_themes)
+
+# based on examples from http://docs.ggplot2.org/current/theme.html
+gg = ggplot(aes(x='mpg', y='wt'), data=mtcars) + geom_point()
+
+@image_comparison(["general_first"], extensions=["png"], tol=0)
+def test_theme8():
+    # Text element_target properties that can be configured with rcParams.
+    print(gg +
+          theme(text=element_text(color="red")) +
+          theme(axis_text_y=element_text(color="green")) +
+          theme(axis_title=element_text(color="blue")))
+
+@image_comparison(["general_last"], extensions=["png"], tol=0)
+def test_theme8():
+    # Text element_target properties that can be configured with rcParams.
+    print(gg +
+          theme(axis_text_y=element_text(color="green")) +
+          theme(axis_title=element_text(color="blue")) +
+          theme(text=element_text(color="red")))

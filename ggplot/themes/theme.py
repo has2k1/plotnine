@@ -13,7 +13,7 @@ specify the scope of the theme application.
 """
 from copy import deepcopy
 
-from .element_target import element_target_factory
+from .element_target import element_target_factory, merge_element_targets
 
 
 class theme(object):
@@ -55,10 +55,9 @@ class theme(object):
 
         for element_name in legal_elements:
             element_theme = kwargs.get(element_name)
-            #@todo: remove me
-            #print("element_target = %s" % element_name)
             if element_theme:
-                element_target = element_target_factory(element_name, element_theme)
+                element_target = element_target_factory(element_name,
+                                                        element_theme)
                 if element_target:
                     element_theme.target = element_target
                     print("added %s to %s" % (element_name, element_theme))
@@ -75,7 +74,6 @@ class theme(object):
         "Subclasses may override this method."
         rcParams.update(self._rcParams)
         if self.element_themes:
-            # does this need to be sorted first?
             for element_theme in self.element_themes:
                 rcparams = element_theme.get_rcparams()
             rcParams.update(rcparams)
@@ -114,9 +112,9 @@ class theme(object):
             return other
         else:
             theme_copy = deepcopy(self)
-            element_themes = deepcopy(self.element_themes) + \
-                             deepcopy(other.element_themes)
-            theme_copy.element_themes = element_themes
+            theme_copy.element_themes = merge_element_targets(
+                deepcopy(self.element_themes),
+                deepcopy(other.element_themes))
             return theme_copy
 
     def __radd__(self, other):
