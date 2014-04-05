@@ -28,4 +28,4 @@ def test_scale_reverse():
     print(gg)
     print(gg + scale_y_reverse())
     print(gg + scale_x_reverse())
-    print(gg + scale_x_reverse()+ scale_y_reverse())
+    print(gg + scale_x_reverse() + scale_y_reverse())

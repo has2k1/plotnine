@@ -11,7 +11,6 @@ class element_text(object):
         to left, bottom; right, top. Any other value is translated to center.
 
         """
-        self.element = None
         self.target = None
         self.properties = {}
         if family:

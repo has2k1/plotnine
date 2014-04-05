@@ -7,5 +7,5 @@ from .theme_seaborn import theme_seaborn
 from .element_text import element_text
 
 __all__ = ["theme","theme_bw","theme_gray","theme_xkcd","theme_matplotlib",
-           "theme_seaborn","element_text"]
+           "theme_seaborn", "element_text"]
 __all__ = [str(u) for u in __all__]

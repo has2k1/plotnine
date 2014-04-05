@@ -13,7 +13,7 @@ specify the scope of the theme application.
 """
 from copy import deepcopy
 
-from .element import element_factory
+from .element_target import element_target_factory
 
 
 class theme(object):
@@ -42,30 +42,29 @@ class theme(object):
 
         line - all line elements (element_line)
         rect - all rectangular elements (element_rect)
-        text - all text elements (element_test)
-        title - all title element: plo, axes, legends (element_text; inherits
-            from text)
+        text - all text elements (element_text)
+        title - all title elements (element_text)
 
         """
-        self.partial_themes = []
-        self.elements = []
+        self.element_themes = []
         self.complete = complete
 
         legal_elements = ["line", "rect", "text", "title",
                           "axis_text", "axis_title",
                           "axis_text_x", "axis_text_y"]
 
-        for theme_element in legal_elements:
-            element = kwargs.get(theme_element)
-            print("element_target = %s" % theme_element)
-            if element:
-                target = element_factory(theme_element)
-                if target:
-                    element.target = target
-                    print("added %s to %s" % (theme_element, element))
+        for element_name in legal_elements:
+            element_theme = kwargs.get(element_name)
+            #@todo: remove me
+            #print("element_target = %s" % element_name)
+            if element_theme:
+                element_target = element_target_factory(element_name, element_theme)
+                if element_target:
+                    element_theme.target = element_target
+                    print("added %s to %s" % (element_name, element_theme))
                 else:
-                    element.element = theme_element
-                self.elements.append(element)
+                    print("invalid element target %s" % element_name)
+                self.element_themes.append(element_target)
 
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -75,28 +74,31 @@ class theme(object):
     def apply_rcparams(self, rcParams):
         "Subclasses may override this method."
         rcParams.update(self._rcParams)
-        for partial_theme in self.partial_themes:
-            partial_theme.apply_rcparams(rcParams)
-        for element in self.elements:
-            element.apply_rcparams(rcParams)
+        if self.element_themes:
+            # does this need to be sorted first?
+            for element_theme in self.element_themes:
+                rcparams = element_theme.get_rcparams()
+            rcParams.update(rcparams)
+        return rcParams
 
     def post_plot_callback(self, ax):
         """Apply this theme, then apply additional modifications in order.
 
-        This method should not be overridden. Override the method that it
+        This method should not be overridden. Subclasses should override
+        the apply_theme subclass. See theme_gray for an example.
         calls.
 
         """
         self.apply_theme(ax)
-        for i in self.partial_themes:
-            i.apply_theme(ax)
+        # does this need to be ordered first?
+        for element_theme in self.element_themes:
+            element_theme.post_plot_callback(ax)
 
     def apply_theme(self, ax):
-        """Subclasses should override this method.
+        """Subclasses ie. complete themes should override this method.
 
         It will be called after the plot has been created."""
-        for element in self.elements:
-            element(ax)
+        pass
 
     def __add__(self, other):
         """Add themes together.
@@ -112,7 +114,9 @@ class theme(object):
             return other
         else:
             theme_copy = deepcopy(self)
-            theme_copy.partial_themes.append(other)
+            element_themes = deepcopy(self.element_themes) + \
+                             deepcopy(other.element_themes)
+            theme_copy.element_themes = element_themes
             return theme_copy
 
     def __radd__(self, other):
@@ -138,5 +142,5 @@ class theme(object):
             # else make a copy of other combined with self.
             else:
                 theme_copy = deepcopy(other)
-                theme_copy.partial_themes.append(self)
+                theme_copy.element_themes.append(self)
                 return theme_copy

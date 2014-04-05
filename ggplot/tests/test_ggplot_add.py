@@ -21,6 +21,6 @@ def test_ggplot_add2():
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
     theme_mpl = theme_matplotlib()
-    partial_theme = theme()
+    partial_theme = theme(axis_text=element_text())
     gg_themed = gg + theme_mpl + partial_theme
-    assert_equal(gg_themed.theme.partial_themes, [partial_theme])
+    assert_equal(gg_themed.theme.element_themes, partial_theme.element_themes)

@@ -49,7 +49,7 @@ def test_theme6():
     t1 = theme_gray()
     t2 = theme(text=element_text())
     t3 = t1 + t2
-    assert_equal(t3.partial_themes, [t2])
+    assert_equal(t3.element_themes, t2.element_themes)
 
 def test_theme7():
     # partial themes should be combined for later application to a complete
@@ -57,5 +57,4 @@ def test_theme7():
     t1 = theme(text=element_text())
     t2 = theme(text=element_text())
     t3 = t1 + t2
-    assert_equal(t3.partial_themes, [t2])
-
+    assert_equal(t3.element_themes, t1.element_themes + t2.element_themes)
