@@ -49,24 +49,27 @@ class theme(object):
         self.element_themes = []
         self.complete = complete
 
-        legal_elements = ["line", "rect", "text", "title",
-                          "axis_text", "axis_title",
-                          "axis_text_x", "axis_text_y"]
+        # legal_elements = ["line", "rect", "text", "title",
+        #                   "axis_text", "axis_title",
+        #                   "axis_text_x", "axis_text_y"]
 
-        for element_name in legal_elements:
-            element_theme = kwargs.get(element_name)
-            if element_theme:
-                element_target = element_target_factory(element_name,
-                                                        element_theme)
-                if element_target:
-                    element_theme.target = element_target
-                    print("added %s to %s" % (element_name, element_theme))
-                else:
-                    print("invalid element target %s" % element_name)
-                self.element_themes.append(element_target)
+        # for element_name in legal_elements:
+        #     element_theme = kwargs.get(element_name)
+        #     if element_theme:
+        #         element_target = element_target_factory(element_name,
+        #                                                 element_theme)
+        #         if element_target:
+        #             element_theme.target = element_target
+        #             print("added %s to %s" % (element_name, element_theme))
+        #         else:
+        #             print("invalid element target %s" % element_name)
+        #         self.element_themes.append(element_target)
 
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+        for target_name, theme_element in kwargs.items():
+            self.element_themes.append(element_target_factory(target_name, theme_element))
+
+        # for k, v in kwargs.items():
+        #     setattr(self, k, v)
 
         self._rcParams = {}
 

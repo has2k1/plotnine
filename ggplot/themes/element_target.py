@@ -34,21 +34,25 @@ class Trace(type):
         return super(Trace, meta).__new__(meta, class_name, bases, class_dict)
 
 
+element_target_map = {}
+
+
+class RegisterElementTarget(Trace):
+    """Register all public element targets so they can be created by name."""
+    def __init__(klass, name, bases, class_dict):
+        if not name.startswith("_"):
+            element_target_map[name] = klass
+
+        super(RegisterElementTarget, klass).__init__(name, bases, class_dict)
+
+
 def element_target_factory(element_target, element_theme):
-    if element_target == "text":
-        return text(element_theme)
-    elif element_target == "axis_title":
-        return axis_title(element_theme)
-    elif element_target == "axis_text":
-        return axis_text(element_theme)
-    elif element_target == "axis_text_x":
-        return axis_text_x(element_theme)
-    elif element_target == "axis_text_y":
-        return axis_text_y(element_theme)
-    elif element_target == "axis_ticks":
-        return axis_ticks(element_theme)
+    """Create an element target by name."""
+    klass = element_target_map.get(element_target)
+    if klass:
+        return klass(element_theme)
     else:
-        return None
+        raise Exception("no such element target %s" % element_target)
 
 
 def merge_element_targets(et_list1, et_list2):
@@ -67,6 +71,8 @@ def unique_element_targets(element_targets):
     This is not strictly necessary, but is an optimaztion when combining themes
     to prevent carying arround themes that will be completely overridden.
 
+    @todo: should merge boy overriding the old properites with the newer
+    properties.
     """
     target_seen = set()
     reversed_targets = []
@@ -93,7 +99,7 @@ def sorted_element_targets(element_target_list):
 
 
 class __element_target(object):
-    #__metaclass__ = Trace
+    __metaclass__ = RegisterElementTarget
 
     def __init__(self, element_theme=None):
         # @todo: fix unittests in test_element_target or leave this as is?
@@ -111,6 +117,12 @@ class __element_target(object):
         return {}
 
     def post_plot_callback(self, ax):
+        """Subclasses should override this method.
+
+        It should be implemented as
+        super(...).post_plot_callback()
+        # call backs specific to this target
+        """
         pass
 
 
@@ -144,6 +156,46 @@ class axis_title(axis_title_x, axis_title_y):
     pass
 
 
+class legend_title(__element_target):
+    def post_plot_callback(self, ax):
+        super(legend_title, self).post_plot_callback(ax)
+        legend = ax.get_legend()
+        if legend:
+            legend.set(**self.properties)
+
+
+class legend_text(legend_title):
+    #@todo: implement me
+    pass
+
+
+class plot_title(__element_target):
+    def post_plot_callback(self, ax):
+        print self.properties
+        print ax.title
+        super(plot_title, self).post_plot_callback(ax)
+        ax.title.set(**self.properties)
+
+
+class strip_text_x(__element_target):
+    #@todo implement me
+    pass
+
+
+class strip_text_y(__element_target):
+    #@todo implement me
+    pass
+
+
+class strip_text(strip_text_x, strip_text_y):
+    pass
+
+
+class title(axis_title, legend_title, plot_title):
+    #@todo: also need to inherit from plot_title and legend_title
+    pass
+
+
 class axis_text_x(__element_target):
 
     def post_plot_callback(self, ax):
@@ -162,11 +214,12 @@ class axis_text_y(__element_target):
             l.set(**self.properties)
 
 
-class axis_text(axis_text_x, axis_text_y):
+class axis_text(title, axis_text_x, axis_text_y):
+    """Set theme the text on x and y axis."""
     pass
 
 
-class text(axis_text, axis_title):
+class text(axis_text, legend_text, strip_text, title):
     """
     Scope of theme that applies to all text in plot
     """
