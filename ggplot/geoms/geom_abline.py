@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from pandas.lib import Timestamp
 import numpy as np
 from .geom import geom
-import pandas as pd
+
 
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid', 'alpha': None, 'size': 1.0}

@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 import math
 from ..utils.utils import add_ggplotrc_params
-from .facet_wrap import facet_wrap
 
 
 class facet_grid(object):

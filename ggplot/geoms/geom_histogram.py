@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
+import numpy as np
 from .geom import geom
 
 
@@ -36,7 +37,7 @@ class geom_histogram(geom):
             pinfo['bins'] = 30
             if not self._warning_printed:
                 sys.stderr.write("binwidth defaulted to range/30. " +
-                             "Use 'binwidth = x' to adjust this.\n")
+                                 "Use 'binwidth = x' to adjust this.\n")
                 self._warning_printed = True
 
         ax.hist(**pinfo)
