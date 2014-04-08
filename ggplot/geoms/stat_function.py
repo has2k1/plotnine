@@ -117,9 +117,9 @@ class stat_function(geom):
 
         old_fun = fun
         if isinstance(args,list):
-            fun = lambda x: old_fun(x,*args)
+            fun = lambda x: old_fun(x, *args)
         elif isinstance(args,dict):
-            fun = lambda x: old_fun(x,**args)
+            fun = lambda x: old_fun(x, **args)
         elif args is not None:
             fun = lambda x: old_fun(x, args)
         else:
