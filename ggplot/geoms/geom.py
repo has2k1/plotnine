@@ -137,7 +137,7 @@ class geom(object):
 
         for arg in args:
             if isinstance(arg, aes) and passed_aes:
-                raise Execption(aes_err)
+                raise Exception(aes_err)
             if isinstance(arg, aes):
                 passed_aes = arg
             elif isinstance(arg, DataFrame):
