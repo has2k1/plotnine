@@ -89,7 +89,7 @@ def test_different_markers():
     # Do shapes show up in the transformed layer?
     df = pd.DataFrame({"x":[1,2],"y":[1,2], "a":["a","b"], "b":["c","d"]})
     gg = ggplot(aes(x="x", y="y", shape="a", color="b"), data=df)
-    new_df = assign_visual_mapping(df,aes(x="x", y="y", shape="a", color="b"), gg)
+    new_df, _ = assign_visual_mapping(df,aes(x="x", y="y", shape="a", color="b"), gg)
     data = gg._make_plot_data(new_df)
     assert_true("shape" in data, "no shape was assigned")
     assert_true(data["shape"][0] != data["shape"][1], "wrong marker was assigned")

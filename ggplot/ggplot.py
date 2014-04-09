@@ -9,7 +9,7 @@ import matplotlib.gridspec as gridspec
 
 from .components import aes, assign_visual_mapping
 from .components import colors, shapes
-from .components.legend import draw_legend
+from .components.legend import add_legend
 from .geoms import *
 from .scales import *
 from .scales.utils import calc_axis_breaks_and_limits
@@ -93,11 +93,8 @@ class ggplot(object):
         self.scale_x_reverse = None
         self.scale_y_log = None
         self.scale_x_log = None
-        # legend is a dictionary of {legend_type: {visual_value: legend_key}},
-        # where legend_type is one of "color", "linestyle", "marker", "size";
-        # visual_value is color value, line style, marker character, or size
-        # value; and legend_key is a quantile.
-        self.legend = {}
+        self.legend = None
+
         # Theme releated options
         # this must be set by any theme to prevent addig the default theme
         self.theme_applied = False
@@ -188,7 +185,7 @@ class ggplot(object):
 
             # Aes need to be initialized BEFORE we start faceting. This is b/c
             # we want to have a consistent aes mapping across facets.
-            self.data = assign_visual_mapping(self.data, self.aesthetics, self)
+            self.data, self.legend = assign_visual_mapping(self.data, self.aesthetics, self)
 
             # Faceting just means doing an additional groupby. The
             # dimensions of the plot remain the same
@@ -299,7 +296,7 @@ class ggplot(object):
                         _aes.update(geom.aes)
                     if not geom.data is None:
                         data = _apply_transforms(geom.data, _aes)
-                        data = assign_visual_mapping(data, _aes, self)
+                        data, self.legend = assign_visual_mapping(data, _aes, self)
                     else:
                         data = self.data
                     ax = plt.subplot(1, 1, 1)
@@ -393,15 +390,7 @@ class ggplot(object):
                 ax = axs[0][self.n_rows - 1]
                 box = ax.get_position()
                 ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-
-                cntr = 0
-                # py3 and py2 have different sorting order in dics, so make that consistent
-                for ltype in sorted(self.legend.keys()):
-                    legend = self.legend[ltype]
-                    lname = self.aesthetics.get(ltype, ltype)
-                    new_legend = draw_legend(ax, legend, ltype, lname, cntr)
-                    ax.add_artist(new_legend)
-                    cntr += 1
+                add_legend(self.legend, ax)
 
             # Finaly apply any post plot callbacks (theming, etc)
             if self.theme_applied:
@@ -442,14 +431,11 @@ class ggplot(object):
 
         # Overwrite the already done mappings to matplotlib understandable
         # values for color/size/etc
-        if "color" in mapping:
-            mapping['color'] = data['color_mapping']
-        if "size" in mapping:
-            mapping['size'] = data['size_mapping']
-        if "shape" in mapping:
-            mapping['shape'] = data['shape_mapping']
-        if "linestyle" in mapping:
-            mapping['linestyle'] = data['linestyle_mapping']
+        for ae in ('alpha', 'color', 'fill', 'size', 'shape', 'linetype'):
+            # TODO: Need to find a better way to avoid naming collisions
+            _mcolumn = ':::%s_mapping:::' % ae
+            if _mcolumn in data:
+                mapping[ae] = data[_mcolumn]
 
         # Default the x and y axis labels to the name of the column
         if "x" in aes and self.xlab is None:
@@ -460,32 +446,6 @@ class ggplot(object):
         # Automatically drop any row that has an NA value
         mapping = mapping.dropna()
         return mapping
-
-    def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
-        """Adds the the specified legend to the legend
-
-        Parameters
-        ----------
-        legend_type : str
-            type of legend, one of "color", "linestyle", "marker", "size"
-        legend_dict : dict
-            a dictionary of {visual_value: legend_key} where visual_value
-            is color value, line style, marker character, or size value;
-            and legend_key is a quantile.
-        scale_type : str
-            either "discrete" (default) or "continuous"; usually only color
-            needs to specify which kind of legend should be drawn, all
-            other scales will get a discrete scale.
-        """
-        # scale_type is up to now unused
-        # TODO: what happens if we add a second color mapping?
-        # Currently the color mapping in the legend is overwritten.
-        # What does ggplot do in such a case?
-        if legend_type in self.legend:
-            pass
-            #msg = "Adding a secondary mapping of {0} is unsupported and no legend for this mapping is added.\n"
-            #sys.stderr.write(msg.format(str(legend_type)))
-        self.legend[legend_type] = legend_dict
 
     def _apply_post_plot_callbacks(self, axis):
         for cb in self.post_plot_callbacks:

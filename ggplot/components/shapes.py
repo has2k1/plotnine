@@ -23,7 +23,7 @@ def shape_gen():
             yield shape
 
 
-def assign_shapes(data, aes, gg):
+def assign_shapes(data, aes):
     """Assigns shapes to the given data based on the aes and adds the right legend
 
     Parameters
@@ -32,20 +32,26 @@ def assign_shapes(data, aes, gg):
         dataframe which should have shapes assigned to
     aes : aesthetic
         mapping, including a mapping from shapes to variable
-    gg : ggplot
-        object, which holds information and gets a legend assigned
 
     Returns
     -------
     data : DataFrame
         the changed dataframe
+    legend_entry : dict
+        An entry into the legend dictionary.
+        Documented in `components.legend`
     """
+    legend_entry = dict()
     if 'shape' in aes:
         shape_col = aes['shape']
         possible_shapes = np.unique(data[shape_col])
         shape = shape_gen()
         # marker in matplotlib are not unicode ready in 1.3.1 :-( -> use explicit str()...
         shape_mapping = dict((value, str(six.next(shape))) for value in possible_shapes)
-        data['shape_mapping'] = data[shape_col].apply(lambda x: shape_mapping[x])
-        gg.add_to_legend("marker", dict((v, k) for k, v in shape_mapping.items()))
-    return data
+        data[':::shape_mapping:::'] = data[shape_col].apply(
+            lambda x: shape_mapping[x])
+
+        legend_entry = {'column_name': shape_col,
+                  'dict': dict((v, k) for k, v in shape_mapping.items()),
+                  'scale_type': "discrete"}
+    return data, legend_entry

@@ -49,7 +49,7 @@ def color_gen(n_colors, colors=None):
                 yield color
 
 
-def assign_colors(data, aes, gg):
+def assign_colors(data, aes, gg, aes_name='color'):
     """
     Assigns colors to the given data based on the aes and adds the right legend
 
@@ -60,30 +60,38 @@ def assign_colors(data, aes, gg):
     Parameters
     ----------
     data : DataFrame
-        dataframe which should have shapes assigned to
+        dataframe which should have colors assigned to
     aes : aesthetic
         mapping, including a mapping from color to variable
     gg : ggplot object, which holds information and gets a legend assigned
+    aes_name : string
+        Which aesthetic needs a color mapping; 'color' | 'fill'
 
     Returns
     -------
     data : DataFrame
         the changed dataframe
+    legend_entry : dict
+        An entry into the legend dictionary.
+        Documented in `components.legend`
     """
-    if 'color' in aes:
-        color_col = aes['color']
+    legend_entry = dict()
+    if aes_name in aes:
+        color_col = aes[aes_name]
         numeric_cols = set(data._get_numeric_data().columns)
         bool_cols = set(data._get_bool_data().columns)
         continuous_cols = numeric_cols - bool_cols
         if color_col in continuous_cols:
-            data = assign_continuous_colors(data, gg, color_col)
+            data, legend_entry = assign_continuous_colors(
+                data, gg, aes_name, color_col)
         else:
-            data = assign_discrete_colors(data, gg, color_col)
+            data, legend_entry = assign_discrete_colors(
+                data, gg, aes_name, color_col)
 
-    return data
+    return data, legend_entry
 
 
-def assign_continuous_colors(data, gg, color_col):
+def assign_continuous_colors(data, gg, aes_name, color_col):
     """
     Logic to assign colors in the continuous case.
 
@@ -98,27 +106,36 @@ def assign_continuous_colors(data, gg, color_col):
     ----------
     data : DataFrame
         dataframe which should have shapes assigned to
-    gg : ggplot object, which holds information and gets a legend assigned
+    gg : ggplot object
+        It holds the colormap
     color_col : The column we are using to color.
+    aes_name : string
+        Which aesthetic needs a color mapping; 'color' | 'fill'
 
     Returns
     -------
     data : DataFrame
         the changed dataframe
+    legend_entry : dict
+        An entry into the legend dictionary.
+        Documented in `components.legend`
     """
+    _mcolumn = ':::%s_mapping:::' % aes_name
     values = data[color_col].tolist()
     values = [(i - min(values)) / (max(values) - min(values)) for i in values]
     color_mapping = gg.colormap(values)[::, :3]
-    data["color_mapping"] = [rgb2hex(value) for value in color_mapping]
+    data[_mcolumn] = [rgb2hex(value) for value in color_mapping]
     quantiles = np.percentile(gg.data[color_col], [0, 25, 50, 75, 100])
     key_colors = gg.colormap([0, 25, 50, 75, 100])[::, :3]
     key_colors = [rgb2hex(value) for value in key_colors]
-    gg.add_to_legend("color", dict(zip(key_colors, quantiles)),
-                     scale_type="continuous")
-    return data
+
+    legend_entry = {'column_name': color_col,
+                    'dict' : dict(zip(key_colors, quantiles)),
+                    'scale_type': 'continuous'}
+    return data, legend_entry
 
 
-def assign_discrete_colors(data, gg, color_col):
+def assign_discrete_colors(data, gg, aes_name, color_col):
     """
     Logic to assign colors in the discrete case.
 
@@ -132,21 +149,30 @@ def assign_discrete_colors(data, gg, color_col):
     Parameters
     ----------
     data : DataFrame
-        dataframe which should have shapes assigned to
+        dataframe which should have colors assigned to
     gg : ggplot object, which holds information and gets a legend assigned
     color_col : The column we are using to color.
+    aes_name : string
+        Which aesthetic needs a color mapping; 'color' | 'fill'
 
     Returns
     -------
     data : DataFrame
         the changed dataframe
+    legend_entry : dict
+        An entry into the legend dict
+        Documented in `components.legend`
     """
+    _mcolumn = ':::%s_mapping:::' % aes_name
     possible_colors = np.unique(data[color_col])
     if gg.manual_color_list:
         color = color_gen(len(possible_colors), gg.manual_color_list)
     else:
         color = color_gen(len(possible_colors))
     color_mapping = dict((value, six.next(color)) for value in possible_colors)
-    data["color_mapping"] = data[color_col].apply(lambda x: color_mapping[x])
-    gg.add_to_legend("color", dict((v, k) for k, v in color_mapping.items()))
-    return data
+    data[_mcolumn] = data[color_col].apply(lambda x: color_mapping[x])
+
+    legend_entry = {'column_name': color_col,
+                    'dict': dict((v, k) for k, v in color_mapping.items()),
+                    'scale_type': 'discrete'}
+    return data, legend_entry
