@@ -71,11 +71,6 @@ class geom(object):
     def plot_layer(self, data, ax):
         self._verify_aesthetics(data)
 
-        # TODO: Get rid of this when components.aes
-        # is stripped of the renaming
-        if 'linestyle' in data:
-            data = data.rename(columns={'linestyle': 'linetype'})
-
         # should happen in the layer
         data = data[list(set(data.columns) & set(self.valid_aes))]
 
