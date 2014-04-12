@@ -13,7 +13,7 @@ class geom_path(geom):
                       'label': ''}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _groups = {'alpha', 'color', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')

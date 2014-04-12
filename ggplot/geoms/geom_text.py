@@ -11,7 +11,7 @@ class geom_text(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'parse': False}
 
     _aes_renames = {'angle': 'rotation', 'lineheight': 'linespacing'}
-    _groups = {'alpha', 'color', 'family', 'size'}
+    _units = {'alpha', 'color', 'family', 'size'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')

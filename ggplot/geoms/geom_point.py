@@ -11,7 +11,7 @@ class geom_point(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap': None, 'label': ''}
 
     _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
-    _groups = {'alpha', 'marker'}
+    _units = {'alpha', 'marker'}
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']

@@ -23,7 +23,7 @@ class geom_bar(geom):
 
     # NOTE: Currently, geom_bar does not support mapping
     # to alpha and linestyle. TODO: raise exception
-    _groups = {'alpha', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         pinfo.pop('weight')

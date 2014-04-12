@@ -13,7 +13,7 @@ class geom_tile(geom):
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'color', 'color': 'edgecolor'}
-    _groups = {'color', 'edgecolor', 'linestyle', 'linewidth'}
+    _units = {'color', 'edgecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         # TODO: Reimplement this

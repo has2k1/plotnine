@@ -10,7 +10,7 @@ class geom_line(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'label': ''}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _groups = {'alpha', 'color', 'linestyle'}
+    _units = {'alpha', 'color', 'linestyle'}
 
     def __init__(self, *args, **kwargs):
         super(geom_line, self).__init__(*args, **kwargs)

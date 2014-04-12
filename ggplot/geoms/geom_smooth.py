@@ -15,7 +15,7 @@ class geom_smooth(geom):
 
     _aes_renames = {'linetype': 'linestyle', 'fill': 'facecolor',
                     'size': 'linewidth', 'ymin': 'y1', 'ymax': 'y2'}
-    _groups = {'color', 'facecolor', 'linestyle', 'linewidth'}
+    _units = {'color', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')

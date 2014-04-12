@@ -43,7 +43,7 @@ class geom(object):
     # plot information they receive can be plotted in a single call.
     # Use names as expected by matplotlib
     # See: geom_point
-    _groups = set()
+    _units = set()
 
     def __init__(self, *args, **kwargs):
         self.valid_aes = set(self.DEFAULT_AES) ^ self.REQUIRED_AES
@@ -104,13 +104,13 @@ class geom(object):
         for ae in _overrided_aes:
             data.pop(ae)
         data = data.rename(columns=self._aes_renames)
-        groups = self._groups & set(data.columns)
+        units = self._units & set(data.columns)
 
         # Create plot information that observes the aesthetic precedence
         #   - (grouped data + manual aesthics)
         #   - modify previous using statistic
         #   - previous overwrites the default aesthetics
-        for _data in self._get_grouped_data(data, groups):
+        for _data in self._get_unit_grouped_data(data, units):
             _data.update(self._cache['manual_aes_mpl']) # should happen before the grouping
             _data = self._calculate_and_rename_stats(_data) # should happend before the grouping
             pinfo = deepcopy(self._cache['default_aes_mpl'])
@@ -248,23 +248,25 @@ class geom(object):
         _rename_fn(self._cache['manual_aes_mpl'])
         _rename_fn(self._cache['default_aes_mpl'])
 
-    def _get_grouped_data(self, data, groups):
+    def _get_unit_grouped_data(self, data, units):
         """
-        Split the data into groups.
+        Split data into groups.
+
+        The units determine the groups.
 
         Parameters
         ----------
-        data   : dataframe
+        data : dataframe
             The data to be split into groups
-        groups : set
+        units : set
             A set of column names in the data and by
             which the grouping will happen
 
         Returns
         -------
-        out : list
-            A list of dicts. Each dict represents a unique
-            grouping. The dicts are of the form
+        out : list of dict
+            Each dict represents a unique grouping.
+            The dicts are of the form
             {'column-name': list-of-values | value}
 
         Note
@@ -272,10 +274,10 @@ class geom(object):
         This is a helper function for self._plot_layer
         """
         out = []
-        if groups:
-            for name, _data in data.groupby(list(groups)):
+        if units:
+            for name, _data in data.groupby(list(units)):
                 _data = _data.to_dict('list')
-                for ae in groups:
+                for ae in units:
                     _data[ae] = _data[ae][0]
                 out.append(_data)
         else:

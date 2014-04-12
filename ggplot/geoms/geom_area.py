@@ -11,7 +11,7 @@ class geom_area(geom):
 
     _aes_renames = {'linetype': 'linestyle', 'ymin': 'y1', 'ymax': 'y2',
                     'size': 'linewidth', 'fill': 'facecolor', 'color': 'edgecolor'}
-    _groups = { 'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
+    _units = { 'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         ax.fill_between(**pinfo)

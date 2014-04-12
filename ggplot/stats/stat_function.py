@@ -103,7 +103,6 @@ class stat_function(stat):
                       'n': 101, 'args': None}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _groups = {'color', 'linestyle', 'linewidth'}
 
     CREATES = {'y'}
 

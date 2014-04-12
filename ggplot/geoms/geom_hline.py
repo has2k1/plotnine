@@ -10,7 +10,7 @@ class geom_hline(geom):
                       'show_guide': False, 'label': ''}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _groups = {'alpha'}
+    _units = {'alpha'}
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']

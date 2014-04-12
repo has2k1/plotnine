@@ -13,7 +13,7 @@ class geom_density(geom):
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor'}
-    _groups = {'alpha', 'color', 'facecolor', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'color', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')
