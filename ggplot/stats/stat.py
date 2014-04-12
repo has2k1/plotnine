@@ -16,7 +16,7 @@ class stat(object):
     CREATES = set()
 
     def __init__(self, *args, **kwargs):
-        _params = self._find_params(kwargs)
+        _params, kwargs = self._find_stat_params(kwargs)
         self.params = deepcopy(self.DEFAULT_PARAMS)
         self.params.update(_params)
 
@@ -35,16 +35,29 @@ class stat(object):
         _geom._stat = self
         return gg + _geom
 
-    def _find_params(self, kwargs):
+    def _find_stat_params(self, kwargs):
         """
         Identity and return the stat parameters.
+
         The identified parameters are removed from kwargs
+
+        Parameters
+        ----------
+        kwargs : dict
+            keyword arguments passed to stat.__init__
+
+        Returns
+        -------
+        d : dict
+            stat parameters
+        kwargs : dict
+            rest of the kwargs
         """
         d = {}
         for k in list(kwargs.keys()):
             if k in self.DEFAULT_PARAMS:
                 d[k] = kwargs.pop(k)
-        return d
+        return d, kwargs
 
     def _verify_aesthetics(self, data):
         """

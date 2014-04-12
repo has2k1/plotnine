@@ -25,7 +25,7 @@ class geom_vline(geom):
 
         x = pinfo.pop('xintercept')
         # TODO: if x is not the same length as
-        # the other aesthetics, default aesthetics should
+        # the other aesthetics, default aesthetics
         # should be for the array-like aesthetics
         # problem illustrated by:
         # gg = ggplot(aes(x="x", y="y", shape="cat2",

@@ -25,7 +25,9 @@ class stat_abline(stat):
             _n = 1
 
         if n != _n:
-            raise('Specified %d slopes but %d intercepts' % (n, _n))
+            # TODO: Test case
+            raise Exception(
+                'Specified {} slopes but {} intercepts'.format(n, _n))
 
         if n == 1:
             slope = [slope]
