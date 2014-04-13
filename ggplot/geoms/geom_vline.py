@@ -7,13 +7,12 @@ class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'size': 1.0, 'alpha': None}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
-                      'show_guide': False, 'label': ''}
+                      'show_guide': False}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
     _units = {'alpha'}
 
     def _plot_unit(self, pinfo, ax):
-        pinfo['label'] = self.params['label']
         try:
             ymin = pinfo.pop('ymin')
         except KeyError:

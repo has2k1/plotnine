@@ -9,7 +9,7 @@ class stat_smooth(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity', 'method': 'auto',
             'se': True, 'n': 80, 'fullrange': False, 'level': 0.95,
-            'span': 2/3., 'window': None, 'label': ''}
+            'span': 2/3., 'window': None}
     CREATES = {'ymin', 'ymax'}
 
     def _calculate(self, pinfo):

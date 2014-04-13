@@ -8,9 +8,10 @@ import numpy as np
 class geom_density(geom):
     DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 1.0, 'weight': 1}
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'density', 'position': 'identity', 'label': ''}
+    REQUIRED_AES = {'x'}
+    DEFAULT_PARAMS = {'stat': 'density', 'position': 'identity'}
 
+    _extra_requires = {'y'}
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor'}
     _units = {'alpha', 'color', 'facecolor', 'linestyle', 'linewidth'}
@@ -20,7 +21,7 @@ class geom_density(geom):
         y = pinfo.pop('y')
 
         # Only meant to for the stat
-        pinfo.pop('weight')
+        del pinfo['weight']
 
         # These do not apply to the line
         _alpha = pinfo.pop('alpha')

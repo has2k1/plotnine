@@ -8,13 +8,12 @@ class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 20}
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap': None, 'label': ''}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap':None}
 
     _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
     _units = {'alpha', 'marker'}
 
     def _plot_unit(self, pinfo, ax):
-        pinfo['label'] = self.params['label']
 
         _abscent = {None: pinfo['color'], False: ''}
         try:

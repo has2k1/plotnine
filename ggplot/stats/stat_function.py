@@ -97,7 +97,6 @@ class stat_function(stat):
     """
     # TODO: Should not have a required aesthetic, use the scale information
     # maybe that is where the "scale trainning" helps
-    DEFAULT_AES = {'y': None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity', 'fun': None,
                       'n': 101, 'args': None}

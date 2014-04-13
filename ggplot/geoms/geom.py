@@ -21,6 +21,24 @@ class geom(object):
     manual_aes = None
     params = None
 
+    # Some geoms require more information than that provided by the
+    # user. This information is usually another aesthetic variable
+    # but it could another non-aesthetic variable. It is the duty
+    # of the associated statistic to calculate this information.
+    #
+    # For example:
+    #   A geom may have REQUIRED_AES = {'x', 'y'} and
+    #   the user may map or manually set only aesthetic 'x',
+    #   so the stat would have to calculate 'y'. However this
+    #   may not be enough, to actually make the plot the geom
+    #   may require the 'width' aesthetic. In this case, 'width'
+    #   would be the extra required information.
+    #
+    # geoms should fill out this set with what they require
+    # and is not in REQUIRED_AES
+    # see: geom_bar, stat_bin
+    _extra_requires = set()
+
     # Some ggplot aesthetics are named different from the parameters of
     # the matplotlib function that will be used to plot.
     # This dictionary, of the form {ggplot-aes-name: matplotlib-aes-name},

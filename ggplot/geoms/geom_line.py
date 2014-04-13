@@ -7,7 +7,7 @@ from .geom import geom
 class geom_line(geom):
     DEFAULT_AES = {'color': 'black', 'alpha': None, 'linetype': 'solid', 'size': 1.0}
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'label': ''}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
     _units = {'alpha', 'color', 'linestyle'}
@@ -17,8 +17,6 @@ class geom_line(geom):
         self._warning_printed = False
 
     def _plot_unit(self, pinfo, ax):
-        pinfo['label'] = self.params['label']
-
         if 'linewidth' in pinfo and isinstance(pinfo['linewidth'], list):
             # ggplot also supports aes(size=...) but the current mathplotlib
             # is not. See https://github.com/matplotlib/matplotlib/issues/2658

@@ -13,14 +13,9 @@ class geom_bar(geom):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
+    _extra_requires = {'y', 'width'}
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor', 'color': 'edgecolor'}
-
-    # Every geom should be able to list the essential parameters
-    # that it requires to draw the plot. This would include those
-    # computed by the stats but not part of the user API
-    # _requires = {'x', 'y', 'width'}
-
     # NOTE: Currently, geom_bar does not support mapping
     # to alpha and linestyle. TODO: raise exception
     _units = {'alpha', 'linestyle', 'linewidth'}

@@ -13,10 +13,7 @@ class stat_bin(stat):
     DEFAULT_PARAMS = {'geom': 'bar', 'position': 'stack',
                       'width': 0.9, 'drop': False, 'right': False,
                       'binwidth': None, 'origin': None, 'breaks': None}
-
-    # Maybe should be an internal API thing, especially
-    # the width
-    CREATES = {'x', 'y', 'width'}
+    CREATES = {'y', 'width'}
 
     def __init__(self, *args, **kwargs):
         super(stat_bin, self).__init__(*args, **kwargs)

@@ -9,8 +9,7 @@ class geom_path(geom):
                    'size': 1.0}
 
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'label': ''}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
     _units = {'alpha', 'color', 'linestyle', 'linewidth'}
@@ -18,5 +17,4 @@ class geom_path(geom):
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
-        pinfo['label'] = self.params['label']
         ax.plot(x, y, **pinfo)

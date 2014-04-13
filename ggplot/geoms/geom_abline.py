@@ -8,7 +8,7 @@ from .geom import geom
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'alpha': None, 'size': 1.0}
-    DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity', 'label': ''}
+    DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
 

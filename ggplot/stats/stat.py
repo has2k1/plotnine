@@ -12,7 +12,12 @@ class stat(object):
     REQUIRED_AES = set()
     DEFAULT_PARAMS = dict()
 
+    # Stats may modify existing columns or create extra
+    # columns.
+    #
     # Any extra columns that may be created by the stat
+    # should be specified in this set
+    # see: stat_bin
     CREATES = set()
 
     def __init__(self, *args, **kwargs):
