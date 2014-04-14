@@ -6,6 +6,7 @@ from .components import aes
 from .geoms import geom_point, geom_bar, geom_histogram, geom_line
 from .geoms.chart_components import xlab as xlabel
 from .geoms.chart_components import ylab as ylabel
+from .geoms.chart_components import ggtitle
 from .scales import scale_x_log, scale_y_log
 import pandas as pd
 import numpy as np
