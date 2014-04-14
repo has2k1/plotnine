@@ -5,7 +5,9 @@ from .geom import geom
 
 class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': None}
+                   'size': 1.0, 'alpha': None, 'ymin': None,
+                   'ymax': None}
+    REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
                       'show_guide': False}
 
@@ -13,13 +15,12 @@ class geom_vline(geom):
     _units = {'alpha'}
 
     def _plot_unit(self, pinfo, ax):
-        try:
-            ymin = pinfo.pop('ymin')
-        except KeyError:
+        ymin = pinfo.pop('ymin')
+        if ymin is None:
             ymin, _ = ax.get_ylim()
-        try:
-            ymax = pinfo.pop('ymax')
-        except KeyError:
+
+        ymax = pinfo.pop('ymax')
+        if ymax is None:
             _, ymax = ax.get_ylim()
 
         x = pinfo.pop('xintercept')
@@ -30,4 +31,10 @@ class geom_vline(geom):
         # gg = ggplot(aes(x="x", y="y", shape="cat2",
         #             color="cat"), data=df)
         # gg + geom_point() + geom_vline(xintercept=40)
+        # vertical line should be black
+        #
+        # This is probably a good test for handling
+        # aesthetics properly along the whole pipeline.
+        # The problem should clear up when that is the case,
+        # and the above code should be added as a test case
         ax.vlines(x, ymin, ymax, **pinfo)

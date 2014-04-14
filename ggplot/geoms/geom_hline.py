@@ -5,7 +5,9 @@ from .geom import geom
 
 class geom_hline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': None}
+                   'size': 1.0, 'alpha': None, 'xmin': None,
+                   'xmax': None}
+    REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',
                       'show_guide': False}
 
@@ -13,13 +15,12 @@ class geom_hline(geom):
     _units = {'alpha'}
 
     def _plot_unit(self, pinfo, ax):
-        try:
-            xmin = pinfo.pop('xmin')
-        except KeyError:
+        xmin = pinfo.pop('xmin')
+        if xmin is None:
             xmin, _ = ax.get_xlim()
-        try:
-            xmax = pinfo.pop('xmax')
-        except KeyError:
+
+        xmax = pinfo.pop('xmax')
+        if xmax is None:
             _, xmax = ax.get_xlim()
 
         y = pinfo.pop('yintercept')

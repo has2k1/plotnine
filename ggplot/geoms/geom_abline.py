@@ -5,9 +5,13 @@ import matplotlib.cbook as cbook
 import numpy as np
 from .geom import geom
 
+# Note when documenting
+# slope and intercept can be functions that compute the slope
+# and intercept using the data
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'alpha': None, 'size': 1.0}
+    REQUIRED_AES = {'slope', 'intercept'}
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
