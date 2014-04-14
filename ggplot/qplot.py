@@ -1,7 +1,14 @@
-from ggplot import *
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+import ggplot
+from .components import aes
+from .geoms import geom_point, geom_bar, geom_histogram, geom_line
 from .geoms.chart_components import xlab as xlabel
 from .geoms.chart_components import ylab as ylabel
+from .scales import scale_x_log, scale_y_log
 import pandas as pd
+import numpy as np
 import six
 
 
@@ -97,14 +104,12 @@ def qplot(x, y=None, color=None, size=None, fill=None, data=None,
     if geom=="auto":
         if y is None:
             geom = geom_histogram
-        elif data[x].dtype==np.object:
-            geom = geom_bar
         else:
             geom = geom_point
     else:
         geom = geom_map.get(geom, geom_point)
 
-    p = ggplot(_aes, data=data) + geom()
+    p = ggplot.ggplot(_aes, data=data) + geom()
     if "x" in log:
         p += scale_x_log()
     if "y" in log:
