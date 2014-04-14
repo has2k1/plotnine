@@ -13,10 +13,6 @@ class TestQPlot(unittest.TestCase):
         gg = qplot('veal', data=meat)
         self.assertTrue(type(gg.geoms[0])==geom_histogram)
 
-    def test_qplot_auto_bar(self):
-        gg = qplot('cut', data=diamonds)
-        self.assertTrue(type(gg.geoms[0])==geom_bar)
-
     def test_qplot_point(self):
         gg = qplot('date', 'veal', data=meat, geom='point')
         self.assertTrue(type(gg.geoms[0])==geom_point)
@@ -24,7 +20,7 @@ class TestQPlot(unittest.TestCase):
     def test_qplot_line(self):
         gg = qplot('date', 'veal', data=meat, geom='line')
         self.assertTrue(type(gg.geoms[0])==geom_line)
-    
+
     def test_qplot_bar(self):
         gg = qplot('cut', data=diamonds, geom='bar')
         self.assertTrue(type(gg.geoms[0])==geom_bar)
