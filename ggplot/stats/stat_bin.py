@@ -2,10 +2,12 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import sys
-from .stat import stat
 import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
+
+import ggplot.utils as utils
+from .stat import stat
 
 
 class stat_bin(stat):
@@ -30,14 +32,7 @@ class stat_bin(stat):
         weight = 1
         x_weights = np.ones(len(x)) * weight
 
-        # TODO: Expand the coverage and maybe make it
-        # available in the utilities
-        def _is_categorical(lst):
-            if cbook.is_sequence_of_strings(lst):
-                return True
-            return False
-
-        categorical = _is_categorical(x)
+        categorical = utils.is_categorical(x)
 
         if categorical:
             x_assignments = x

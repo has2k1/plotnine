@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from pandas.lib import Timestamp
-import matplotlib.cbook as cbook
+
 import numpy as np
+from ggplot.utils import make_iterable_ntimes
 from .geom import geom
 
 # Note when documenting
@@ -21,15 +21,11 @@ class geom_abline(geom):
         intercept = pinfo['intercept']
 
         n = len(slope)
-        def _make_iterable_ntimes(val):
-            if cbook.iterable(val) and not cbook.is_string_like(val):
-                return val
-            return [val] * n
 
-        linewidth = _make_iterable_ntimes(pinfo['linewidth'])
-        linestyle = _make_iterable_ntimes(pinfo['linestyle'])
-        alpha = _make_iterable_ntimes(pinfo['alpha'])
-        color = _make_iterable_ntimes(pinfo['color'])
+        linewidth = make_iterable_ntimes(pinfo['linewidth'], n)
+        linestyle = make_iterable_ntimes(pinfo['linestyle'], n)
+        alpha = make_iterable_ntimes(pinfo['alpha'], n)
+        color = make_iterable_ntimes(pinfo['color'], n)
 
         ax.set_autoscale_on(False)
         xlim = ax.get_xlim()
