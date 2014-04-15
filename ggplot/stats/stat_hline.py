@@ -1,5 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import pandas as pd
+
+from ggplot.utils import make_iterable, make_iterable_ntimes
 from .stat import stat
 
 
@@ -8,11 +11,14 @@ class stat_hline(stat):
                       'yintercept': 0}
     CREATES = {'yintercept'}
 
-    def _calculate(self, pinfo):
+    def _calculate(self, data):
         # yintercept may be one of:
         #   - aesthetic to geom_hline or
         #   - parameter setting to stat_hline
-        yintercept = pinfo.pop('yintercept', self.params['yintercept'])
+        try:
+            yintercept = data.pop('yintercept')
+        except KeyError:
+            yintercept = self.params['yintercept']
 
         # TODO: Enable this when the parameters are passed correctly
         # and uncomment test case
@@ -22,5 +28,10 @@ class stat_hline(stat):
         #             'To compute the intercept, y aesthetic is needed')
         #     yintercept = yintercept(pinfo['y'])
 
-        pinfo['yintercept'] = yintercept
-        return pinfo
+        yintercept = make_iterable(yintercept)
+        new_data = pd.DataFrame({'yintercept': yintercept})
+        # Copy the other aesthetics into the new dataframe
+        n = len(yintercept)
+        for ae in data:
+            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        return new_data

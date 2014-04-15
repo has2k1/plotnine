@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import pandas as pd
 
+from ggplot.utils import make_iterable, make_iterable_ntimes
 from .stat import stat
 
 
@@ -12,19 +14,26 @@ class stat_abline(stat):
                       'slope': 1, 'intercept': 0}
     CREATES = {'slope', 'intercept'}
 
-    def _calculate(self, pinfo):
+    def _calculate(self, data):
         # intercept and slope may be one of:
         #   - aesthetics to geom_abline or
         #   - parameter settings to stat_abline
-        slope = pinfo.pop('slope', self.params['slope'])
-        intercept = pinfo.pop('intercept', self.params['intercept'])
+        try:
+            slope = data.pop('slope')
+        except KeyError:
+            slope = self.params['slope']
+
+        try:
+            intercept = data.pop('intercept')
+        except KeyError:
+            intercept = self.params['intercept']
 
         # TODO: Enable this when the parameters are passed correctly
         # and uncomment test case
         # if hasattr(slope, '__call__'):
-        #     slope = slope(pinfo['x'], pinfo['y'])
+        #     slope = slope(data['x'], data['y'])
         # if hasattr(intercept, '__call__'):
-        #     intercept = intercept(pinfo['y'])
+        #     intercept = intercept(data['y'])
 
         try:
             n = len(slope)
@@ -41,11 +50,11 @@ class stat_abline(stat):
             raise Exception(
                 'Specified {} slopes but {} intercepts'.format(n, _n))
 
-        if n == 1:
-            slope = [slope]
-            intercept = [intercept]
-
-        pinfo['slope'] = slope
-        pinfo['intercept'] = intercept
-
-        return pinfo
+        slope = make_iterable(slope)
+        intercept = make_iterable(intercept)
+        new_data = pd.DataFrame({'slope': slope, 'intercept': intercept})
+        # Copy the other aesthetics into the new dataframe
+        n = len(slope)
+        for ae in data:
+            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        return new_data

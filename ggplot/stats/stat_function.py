@@ -1,7 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from .stat import stat
 import numpy as np
+import pandas as pd
+
+from ggplot.utils import make_iterable_ntimes
+from .stat import stat
+
 
 class stat_function(stat):
     """
@@ -95,6 +99,7 @@ class stat_function(stat):
         gg = gg + stat_function(fun=dnorm,color="green",args={'mean':-2.0,'var':0.5})
         print(gg)
     """
+
     # TODO: Should not have a required aesthetic, use the scale information
     # maybe that is where the "scale trainning" helps
     REQUIRED_AES = {'x'}
@@ -105,8 +110,8 @@ class stat_function(stat):
 
     CREATES = {'y'}
 
-    def _calculate(self, pinfo):
-        x = pinfo.pop('x')
+    def _calculate(self, data):
+        x = data.pop('x')
         fun = self.params['fun']
         n = self.params['n']
         args = self.params['args']
@@ -125,11 +130,13 @@ class stat_function(stat):
         else:
             fun = lambda x: old_fun(x)
 
-        x_min = min(x)
-        x_max = max(x)
-        x_values = np.linspace(x_min,x_max,n)
-        y_values = list(map(fun,x_values))
+        x = np.linspace(x.min(), x.max(),n)
+        y = list(map(fun, x))
 
-        pinfo['x'] = x_values
-        pinfo['y'] = y_values
-        return pinfo
+        new_data = pd.DataFrame({'x': x, 'y': y})
+
+        # Copy the other aesthetics into the new dataframe
+        n = len(x)
+        for ae in data:
+            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        return new_data

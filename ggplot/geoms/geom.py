@@ -5,6 +5,7 @@ from copy import deepcopy
 import ggplot.stats
 # from ggplot import stats
 from ggplot.components import aes
+import pandas as pd
 from pandas import DataFrame
 
 __all__ = ['geom']
@@ -93,34 +94,21 @@ class geom(object):
         self._create_aes_with_mpl_names()
 
     def plot_layer(self, data, ax):
-        # TODO: compute stats before "grouping", stats should do
-        # their own real grouping. Grouping in the geom is for
-        # matplotlib. Grouping in the stats should be according
-        # to the aesthetic mappings.
+        # Any aesthetic to be overridden by the manual aesthetics
+        # should not affect the statistics and the unit grouping
+        # of the data
+        _cols = set(data.columns) & set(self.manual_aes)
+        data = data.drop(_cols, axis=1)
+        data = self._calculate_stats(data)
         self._verify_aesthetics(data)
-
-        # In ggplot2, aes() does map columns in data to parameters, not
-        # just to aesthetics!!! This feature is used by geom_abline and
-        # probably some other geoms. So parameter columns ar detected
-        # in the data we keep them.
-        _keep = (set(self.valid_aes) |
-                 set(self._stat.REQUIRED_AES) |
-                 set(self._stat.DEFAULT_PARAMS) |
-                 set(self.params))
-        data = data[list(set(data.columns) & _keep)]
-        # if 'yintercept' in data: print(data['yintercept'])
+        _needed = self.valid_aes | self._extra_requires
+        data = data[list(set(data.columns) & _needed)]
 
         # aesthetic precedence
         # geom.manual_aes > geom.aes > ggplot.aes (part of data)
         # NOTE: currently geom.aes is not handled. This may be
         # a bad place to do it -- may mess up faceting or just
         # inefficient. Probably in ggplot or layer.
-
-        # Any aesthetic to be overridden by the manual aesthetics
-        # should not affect the grouping of the data
-        _overrided_aes = set(data.columns) & set(self.manual_aes)
-        for ae in _overrided_aes:
-            data.pop(ae)
         data = data.rename(columns=self._aes_renames)
         units = self._units & set(data.columns)
 
@@ -130,7 +118,6 @@ class geom(object):
         #   - previous overwrites the default aesthetics
         for _data in self._get_unit_grouped_data(data, units):
             _data.update(self._cache['manual_aes_mpl']) # should happen before the grouping
-            _data = self._calculate_and_rename_stats(_data) # should happend before the grouping
             pinfo = deepcopy(self._cache['default_aes_mpl'])
             pinfo.update(_data)
             self._plot_unit(pinfo, ax)
@@ -151,6 +138,8 @@ class geom(object):
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
+        # steal aesthetics info.
+        self._cache['ggplot.aesthetics'] = deepcopy(gg.aesthetics)
         # create stat and hand over the parameters it understands
         if not hasattr(self, '_stat'):
             self._stat = self._stat_type()
@@ -163,16 +152,12 @@ class geom(object):
     def _verify_aesthetics(self, data):
         """
         Check if all the required aesthetics have been specified.
-        Takes into consideration the aesthetics to be computed
-        by the stat
 
         Raise an Exception if an aesthetic is missing
         """
-        self._stat._verify_aesthetics(data)
 
         missing_aes = (self.REQUIRED_AES -
                        set(self.manual_aes) -
-                       self._stat.CREATES -
                        set(data.columns))
         if missing_aes:
             msg = '{} requires the following missing aesthetics: {}'
@@ -242,6 +227,37 @@ class geom(object):
                 _d[new] = data.pop(old)
         data.update(_d)
         return data
+
+    def _calculate_stats(self, data):
+        """
+        Calculate the statistics on each group in the data
+
+        The groups are determined by the mappings.
+
+        Returns
+        -------
+        data : dataframe
+        """
+        self._stat._verify_aesthetics(data)
+        # In most cases 'x' and 'y' mappings do not and
+        # should not influence the grouping. If this is
+        # not the desired behaviour then the groups
+        # parameter should be used.
+        groups = set(self._cache['ggplot.aesthetics'].keys())
+        groups = groups & (self.valid_aes - {'x', 'y'})
+        groups = groups & set(data.columns)
+
+        new_data = DataFrame()
+        # TODO: Find a more effecient way to concatenate
+        # the dataframes
+        if groups:
+            for name, _data in data.groupby(sorted(groups)):
+                _data = _data.reindex()
+                _data = self._stat._calculate(_data)
+                new_data = new_data.append(_data, ignore_index=True)
+        else:
+            new_data = self._stat._calculate(data)
+        return new_data
 
     def _create_aes_with_mpl_names(self):
         """

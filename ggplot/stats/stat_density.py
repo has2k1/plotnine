@@ -1,8 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from .stat import stat
-from scipy.stats import gaussian_kde
 import numpy as np
+import pandas as pd
+from scipy.stats import gaussian_kde
+
+from ggplot.utils import make_iterable_ntimes
+from .stat import stat
 
 
 class stat_density(stat):
@@ -12,11 +15,11 @@ class stat_density(stat):
 
     CREATES = {'y'}
 
-    def _calculate(self, pinfo):
-        x = pinfo['x']
+    def _calculate(self, data):
+        x = data.pop('x')
 
         try:
-            float(x[0])
+            float(x.iloc[0])
         except:
             try:
                 # try to use it as a pandas.tslib.Timestamp
@@ -25,7 +28,7 @@ class stat_density(stat):
                 raise Exception("stat_density(): aesthetic x mapping " +
                                 "needs to be convertable to float!")
         # TODO: Implement weight
-        # weight = pinfo.pop('weight')
+        # weight = data.pop('weight')
 
         # TODO: Get "full" range of densities
         # i.e tail off to zero like ggplot2? But there is nothing
@@ -34,7 +37,13 @@ class stat_density(stat):
         bottom = np.min(x)
         top = np.max(x)
         step = (top - bottom) / 1000.0
+
         x = np.arange(bottom, top, step)
-        pinfo['x'] = x
-        pinfo['y'] = kde.evaluate(x)
-        return pinfo
+        y = kde.evaluate(x)
+        new_data = pd.DataFrame({'x': x, 'y': y})
+
+        # Copy the other aesthetics into the new dataframe
+        n = len(x)
+        for ae in data:
+            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        return new_data
