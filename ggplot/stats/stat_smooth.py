@@ -29,11 +29,11 @@ class stat_smooth(stat):
         y = np.array(y)[idx]
 
         if method == "lm":
-            y, y1, y2 = smoothers.lm(x, y, 1-level)
+            x, y, y1, y2 = smoothers.lm(x, y, 1-level)
         elif method == "ma":
-            y, y1, y2 = smoothers.mavg(x, y, window=window)
+            x, y, y1, y2 = smoothers.mavg(x, y, window=window)
         else:
-            y, y1, y2 = smoothers.lowess(x, y, span=span)
+            x, y, y1, y2 = smoothers.lowess(x, y, span=span)
 
         pinfo['x'] = x
         pinfo['y'] = y
