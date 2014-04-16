@@ -14,7 +14,7 @@ class geom_abline(geom):
     _groups = {'alpha', 'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
-        x = pinfo.pop(x)
+        x = pinfo.pop('x')
         slope = self.params['slope']
         intercept = self.params['intercept']
         pinfo['label'] = self.params['label']
