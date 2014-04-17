@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from nose.tools import assert_true
+from nose.tools import assert_is_instance
 from ggplot.tests import image_comparison
 
 from ggplot import *
@@ -15,5 +15,5 @@ def test_theme_matplotlib2():
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
     gg_theme = gg + theme_seaborn()
-    assert_true(isinstance(gg_theme.theme, theme_seaborn))
+    assert_is_instance(gg_theme.theme, theme_seaborn)
     print(gg_theme)

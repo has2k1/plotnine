@@ -5,10 +5,7 @@ from ggplot.themes.element_target import *
 
 def test_element_target1():
     txt = text()
-    x = axis_text_x()
     y = axis_text_y()
-    print(txt.__class__.__mro__)
-    print(y.__class__.__mro__)
     assert_true(len(txt.__class__.__mro__) > len(y.__class__.__mro__))
 
 

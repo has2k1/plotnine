@@ -99,6 +99,48 @@ def sorted_element_targets(element_target_list):
 
 
 class __element_target(object):
+    """__element_target is an abstract class of things that can be themed.
+
+    It is the base of a class heirarchy that uses inheritence in a
+    non-tradtional manner. In the textbook use of class inheritence,
+    superclasses are general and subclasses are specializations. In some
+    sence the heiricarcy used here is the opposite in that superclasses
+    are more specific than subclasses.
+
+    It is probably better to think if this heirarchy of leverging
+    Python's multiple inheritence to implement composition. For example
+    the axis_title target is *composed of* the x_axis_title and the
+    y_axis_title. We are just using multiple inheritence to speciy
+    this composition.
+
+    When implementing a new target based on the ggplot2 documentation, it is
+    important to keep this in mind and reverse the order of the "inherits from"
+    in the documentation.
+
+    For example, to implement,
+
+    axis.title.x x axis label (element_text; inherits from axis.title)
+    axis.title.y y axis label (element_text; inherits from axis.title)
+
+    You would have this implementation:
+
+    class axis_title_x(__element_target):
+        ...
+
+    class axis_title_y(__element_target):
+        ...
+
+    class axis_title(axis_title_x, axis_title_y):
+       ...
+
+
+    If the superclasses fully implement the subclass, the body of the
+    subclass should be "pass". Python will do the right thing.
+
+    When a method does require implentation, call super() then add
+    the target's implementation to the axes.
+
+    """
     __metaclass__ = RegisterElementTarget
 
     def __init__(self, element_theme=None):
@@ -114,14 +156,31 @@ class __element_target(object):
                 (self.properties == other.properties))
 
     def get_rcparams(self):
+        """Add targets rcparams to an rcparam dict before plotting.
+
+        :return rcparams: a dictionary of matplotlib rcparams that
+            will be set for the next plot.
+
+        This method should always call super(...).get_rcparams and
+        update the dictionary that it returns with its own value, and
+        return that dictionar.
+
+        This method is called befor plotting. It tends to be more useful
+        for general targets. Very specific targets often cannot be themed
+        until they are created as a result of the plotting process.
+
+        """
         return {}
 
     def post_plot_callback(self, ax):
         """Subclasses should override this method.
 
-        It should be implemented as
-        super(...).post_plot_callback()
-        # call backs specific to this target
+        :param ax: matplotlib axes
+
+        It should be implemented as super(...).post_plot_callback()
+        followed by extracting the portion of the axes specific to this
+        tartget then applying the properties to the target.
+
         """
         pass
 

@@ -198,35 +198,33 @@ class theme_seaborn(theme):
                                     self.context)
 
     def apply_theme(self, ax):
-        _theme_grey_post_plot_callback(ax)
+        """"Styles x,y axes to appear like ggplot2
+        Must be called after all plot and axis manipulation operations have
+        been carried out (needs to know final tick spacing)
 
+        From: https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
 
-def _theme_grey_post_plot_callback(ax):
-    '''Styles x,y axes to appear like ggplot2
-    Must be called after all plot and axis manipulation operations have been
-    carried out (needs to know final tick spacing)
+        """
+        #Remove axis border
+        for child in ax.get_children():
+            if isinstance(child, mpl.spines.Spine):
+                child.set_alpha(0)
 
-    From: https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
-    '''
-    #Remove axis border
-    for child in ax.get_children():
-        if isinstance(child, mpl.spines.Spine):
-            child.set_alpha(0)
+        #Restyle the tick lines
+        for line in ax.get_xticklines() + ax.get_yticklines():
+            line.set_markersize(5)
+            line.set_markeredgewidth(1.4)
 
-    #Restyle the tick lines
-    for line in ax.get_xticklines() + ax.get_yticklines():
-        line.set_markersize(5)
-        line.set_markeredgewidth(1.4)
+        #Only show bottom left ticks
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
 
-    #Only show bottom left ticks
-    ax.xaxis.set_ticks_position('bottom')
-    ax.yaxis.set_ticks_position('left')
+        #Set minor grid lines
+        ax.grid(True, 'minor', color='#F2F2F2', linestyle='-', linewidth=0.7)
 
-    #Set minor grid lines
-    ax.grid(True, 'minor', color='#F2F2F2', linestyle='-', linewidth=0.7)
+        if not isinstance(ax.xaxis.get_major_locator(), mpl.ticker.LogLocator):
+            ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
+        if not isinstance(ax.yaxis.get_major_locator(), mpl.ticker.LogLocator):
+            ax.yaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
 
-    if not isinstance(ax.xaxis.get_major_locator(), mpl.ticker.LogLocator):
-        ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
-    if not isinstance(ax.yaxis.get_major_locator(), mpl.ticker.LogLocator):
-        ax.yaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))
 

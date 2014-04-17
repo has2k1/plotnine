@@ -74,7 +74,11 @@ class theme(object):
         self._rcParams = {}
 
     def apply_rcparams(self, rcParams):
-        "Subclasses may override this method."
+        """Subclasses may override this method.
+
+        @todo: change to get_rcparams
+
+        """
         rcParams.update(self._rcParams)
         if self.element_themes:
             for element_theme in self.element_themes:
@@ -122,8 +126,6 @@ class theme(object):
 
     def __radd__(self, other):
         "Subclasses should not override this method."
-        # @todo: investigate moving this to ggplot
-        # probably won't work becasuse all different types get added to themes
 
         # other + self is ggplot + theme
         if not isinstance(other, theme):

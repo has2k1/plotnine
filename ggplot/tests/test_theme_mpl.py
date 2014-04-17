@@ -32,8 +32,7 @@ def test_theme_matplotlib():
     b = mpl.rcParams.copy()
     assert_true(len(_diff(a,b)) < 2, "setting font.family changed more than that in ggplot object: %s" % list(six.iterkeys(_diff(a,b)))[:5])
 
-@image_comparison(baseline_images=['theme_clean', 'theme_mpl_completly'],
-                  extensions=["png"])
+@image_comparison(baseline_images=['theme_clean', 'theme_mpl_completly'])
 def test_theme_matplotlib2():
     gg = ggplot(aes(x='date', y='beef'), data=meat) + \
         geom_point(color='lightblue') + \
@@ -47,7 +46,7 @@ def test_theme_matplotlib2():
     assert_true(len(_diff(a,b)) < 1, "Just plotting changed something in the ggplot object: %s" % list(six.iterkeys(_diff(a,b)))[:5])
     print(gg + theme_matplotlib())
 
-@image_comparison(baseline_images=['theme_clean2', 'theme_mpl_only_one'], extensions=["png"])
+@image_comparison(baseline_images=['theme_clean2', 'theme_mpl_only_one'])
 def test_theme_matplotlib3():
     gg = ggplot(aes(x='date', y='beef'), data=meat) + \
         geom_point(color='lightblue') + \
@@ -67,7 +66,7 @@ def test_theme_matplotlib3():
     b = mpl.rcParams.copy()
     assert_true(len(_diff(a,b)) < 2, "Plotting after setting just one param changed more in the ggplot object: %s" % list(six.iterkeys(_diff(a,b)))[:5])
 
-@image_comparison(baseline_images=['theme_mpl_all_before', 'theme_mpl_all_after'], extensions=["png"])
+@image_comparison(baseline_images=['theme_mpl_all_before', 'theme_mpl_all_after'])
 def test_theme_matplotlib4():
     gg = ggplot(aes(x='date', y='beef'), data=meat) + \
         geom_point(color='lightblue') + \
@@ -78,7 +77,7 @@ def test_theme_matplotlib4():
     print(gg + theme_matplotlib())
     print(gg + theme_matplotlib({"font.family": "serif"}, matplotlib_defaults=False))
 
-@image_comparison(baseline_images=['theme_mpl_all_before'], extensions=["png"])
+@image_comparison(baseline_images=['theme_mpl_all_before'])
 def test_theme_matplotlib5():
     # Make sure the last complete theme wins.
     gg = ggplot(aes(x='date', y='beef'), data=meat) + \

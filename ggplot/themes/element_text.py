@@ -1,6 +1,3 @@
-from pprint import pprint
-
-
 class element_text(object):
 
     def __init__(self, family="", face="", colour="", size="", hjust=None,

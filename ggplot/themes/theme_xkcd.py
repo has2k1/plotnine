@@ -1,20 +1,23 @@
 from copy import copy, deepcopy
 
-from .theme_matplotlib import theme_matplotlib
+from .theme import theme
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 
-class theme_xkcd(theme_matplotlib):
+class theme_xkcd(theme):
     """
     xkcd theme
 
     The theme internaly uses the settings from pyplot.xkcd().
+
+    @todo: testme.
+
     """
     def __init__(self, scale=1, length=100, randomness=2):
         # Not sure why this inherits from theme_matplotlib.
         # -gdowding
-        super(theme_matplotlib, self).__init__(complete=True)
+        super(theme, self).__init__(complete=True)
         with plt.xkcd(scale=scale, length=length, randomness=randomness):
             _xkcd = mpl.rcParams.copy()
         # no need to a get a deprecate warning for nothing...
