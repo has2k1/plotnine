@@ -14,7 +14,7 @@ from .stat import stat
 class stat_bin2d(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
-                      'bins': 30, 'drop': True}
+                      'bins': 30, 'drop': True, 'weight': 1}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
     def _calculate(self, data):
@@ -22,58 +22,35 @@ class stat_bin2d(stat):
         y = data.pop('y')
         bins = self.params['bins']
         drop = self.params['drop']
+        weight = make_iterable_ntimes(self.params['weight'], len(x))
 
-        xlow, ylow = x.min(), y.min()
-        xbinwidth = x.ptp() / bins
-        ybinwidth = y.ptp() / bins
-
-        # bin boundaries
-        xlimits = [(xlow+i*xbinwidth, xlow+(i+1)*xbinwidth)
-                   for i in range(bins)]
-        ylimits = [(ylow+i*ybinwidth, ylow+(i+1)*ybinwidth)
-                   for i in range(bins)]
-
-        # indices
-        x_idx = (min(int(np.floor_divide(num-xlow, xbinwidth)), bins-1)
-                 for num in x)
-        y_idx = (min(int(np.floor_divide(num-ylow, ybinwidth)), bins-1)
-                 for num in y)
-
-        if drop:
-            rects = defaultdict(int)
-        else:
-            # TODO: Make this different
-            # Need to init all bins to zero counts
-            rects = defaultdict(int)
-
-        for (i, j) in zip(x_idx, y_idx):
-            _t = (xlimits[i][0], xlimits[i][1],
-                  ylimits[j][0], ylimits[j][1])
-            rects[_t] += 1
-
-        xmin = [0] * len(rects)
-        ymin = [0] * len(rects)
-        xmax = [0] * len(rects)
-        ymax = [0] * len(rects)
-        count = np.zeros(len(rects))
-
-        # Assign values
-        for i, k in enumerate(rects):
-            xmin[i], xmax[i], ymin[i], ymax[i] = k
-            count[i] = rects[k]
-
-        new_data = pd.DataFrame({'xmin': xmin, 'xmax': xmax,
-                                 'ymin': ymin, 'ymax': ymax})
-
+        # create the cutting parameters
+        x_assignments, xbreaks = pd.cut(x, bins=bins, labels=False,
+                                        right=True, retbins=True)
+        y_assignments, ybreaks = pd.cut(y, bins=bins, labels=False,
+                                        right=True, retbins=True)
+        # create rectangles
+        # xmin, xmax, ymin, ymax, fill=count
+        df = pd.DataFrame({'xbin': x_assignments,
+                           'ybin': y_assignments,
+                           'weights': weight})
+        table = pd.pivot_table(df, values='weights',
+                               rows=['xbin', 'ybin'], aggfunc=np.sum)
+        rects = np.array([[xbreaks[i], xbreaks[i+1],
+                           ybreaks[j], ybreaks[j+1],
+                           table[(i, j)]]
+                          for (i, j) in table.keys()])
+        new_data = pd.DataFrame(rects, columns=['xmin', 'xmax',
+                                                'ymin', 'ymax',
+                                                'fill'])
         # !!! assign colors???
-        # TODO: Uncomment this when visual mapping is applied after
+        # TODO: Remove this when visual mapping is applied after
         # computing the stats
-        # new_data['fill'] = count / count.sum()
-        new_data['fill'] = ['#333333'] * len(count)
+        new_data['fill'] = ['#333333'] * len(new_data)
 
         # Copy the other aesthetics into the new dataframe
         # Note: There probably shouldn't be any for this stat
-        n = len(xmin)
+        n = len(new_data)
         for ae in data:
             new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
         return new_data
