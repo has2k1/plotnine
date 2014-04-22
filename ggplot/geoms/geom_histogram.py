@@ -10,7 +10,7 @@ class geom_histogram(geom):
     DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 1.0, 'weight': None}
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack', 'label': ''}
+    DEFAULT_PARAMS = {'binwidth': None, 'stat': 'bin', 'position': 'stack', 'label': ''}
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor', 'color': 'edgecolor'}
@@ -24,8 +24,8 @@ class geom_histogram(geom):
         pinfo['label'] = self.params['label']
         weight = pinfo.pop('weight')
 
-        if 'binwidth' in pinfo:
-            binwidth = pinfo.pop('binwidth')
+        binwidth = self.params['binwidth']
+        if binwidth:
             try:
                 binwidth = float(binwidth)
                 bottom = np.nanmin(pinfo['x'])
