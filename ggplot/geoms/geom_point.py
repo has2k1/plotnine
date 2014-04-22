@@ -8,7 +8,7 @@ class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 20}
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap':None, 'label': ''}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap': None, 'label': ''}
 
     _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
     _groups = {'alpha', 'marker'}
