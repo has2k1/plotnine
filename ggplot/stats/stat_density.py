@@ -7,7 +7,7 @@ from scipy.stats import gaussian_kde
 from ggplot.utils import make_iterable_ntimes
 from .stat import stat
 
-
+# TODO: switch to statsmodels kdes
 class stat_density(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',
@@ -28,7 +28,10 @@ class stat_density(stat):
                 raise Exception("stat_density(): aesthetic x mapping " +
                                 "needs to be convertable to float!")
         # TODO: Implement weight
-        # weight = data.pop('weight')
+        try:
+            weight = data.pop('weight')
+        except KeyError:
+            weight = np.ones(len(x))
 
         # TODO: Get "full" range of densities
         # i.e tail off to zero like ggplot2? But there is nothing

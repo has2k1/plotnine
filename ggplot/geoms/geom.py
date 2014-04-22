@@ -1,15 +1,16 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
-# from ggplot import stats
-import ggplot.stats
-# from ggplot import stats
-from ggplot.components import aes
 import pandas as pd
-from pandas import DataFrame
+from matplotlib.cbook import iterable
+
+import ggplot.stats
+from ggplot.utils import is_scalar_or_string
+from ggplot.components import aes
 
 __all__ = ['geom']
 __all__ = [str(u) for u in __all__]
+
 
 class geom(object):
     """Base class of all Geoms"""
@@ -67,22 +68,32 @@ class geom(object):
     def __init__(self, *args, **kwargs):
         self.valid_aes = set(self.DEFAULT_AES) ^ self.REQUIRED_AES
         self._stat_type = self._get_stat_type(kwargs)
-        self.aes, self.data = self._find_aes_and_data(args, kwargs)
+        self.aes, self.data, kwargs = self._find_aes_and_data(args, kwargs)
 
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
+        # When a geom is created, some of the parameters may be meant
+        # for the stat and some for the layer.
+        # Some arguments are can be identified as either aesthetics to
+        # the geom and or parameter settings to the stat, in this case
+        # if the argument has a scalar value it is a setting for the stat.
+        self._stat_params = {}
         self.params = deepcopy(self.DEFAULT_PARAMS)
         self.manual_aes = {}
         for k, v in kwargs.items():
             if k in self.aes:
                 raise Exception('Aesthetic, %s, specified twice' % k)
+            elif (k in self.valid_aes and
+                  k in self._stat_type.DEFAULT_PARAMS and
+                  is_scalar_or_string(kwargs[k])):
+                self._stat_params[k] = v
             elif k in self.valid_aes:
                 self.manual_aes[k] = v
             elif k in self.DEFAULT_PARAMS:
                 self.params[k] = v
             elif k in self._stat_type.DEFAULT_PARAMS:
-                self.params[k] = v
+                self._stat_params[k] = v
             else:
                 raise Exception('Cannot recognize argument: %s' % k)
 
@@ -143,9 +154,7 @@ class geom(object):
         # create stat and hand over the parameters it understands
         if not hasattr(self, '_stat'):
             self._stat = self._stat_type()
-            _similar_params = set(self.params) & set(self._stat.params)
-            for k in _similar_params:
-                self._stat.params[k] = self.params[k]
+            self._stat.params.update(self._stat_params)
         gg.geoms.append(self)
         return gg
 
@@ -186,7 +195,7 @@ class geom(object):
                 raise Execption(aes_err)
             if isinstance(arg, aes):
                 passed_aes = arg
-            elif isinstance(arg, DataFrame):
+            elif isinstance(arg, pd.DataFrame):
                 data = arg
             else:
                 raise Exception(
@@ -209,7 +218,7 @@ class geom(object):
                 _aes[k] = v
             else:
                 raise Exception('Cannot recognize aesthetic: %s' % k)
-        return _aes, data
+        return _aes, data, kwargs
 
     def _calculate_and_rename_stats(self, data):
         """
@@ -247,7 +256,7 @@ class geom(object):
         groups = groups & (self.valid_aes - {'x', 'y'})
         groups = groups & set(data.columns)
 
-        new_data = DataFrame()
+        new_data = pd.DataFrame()
         # TODO: Find a more effecient way to concatenate
         # the dataframes
         if groups:

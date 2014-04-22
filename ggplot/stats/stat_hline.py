@@ -12,6 +12,11 @@ class stat_hline(stat):
     CREATES = {'yintercept'}
 
     def _calculate(self, data):
+        try:
+            y = data.pop('y')
+        except KeyError:
+            pass
+
         # yintercept may be one of:
         #   - aesthetic to geom_hline or
         #   - parameter setting to stat_hline
@@ -22,11 +27,13 @@ class stat_hline(stat):
 
         # TODO: Enable this when the parameters are passed correctly
         # and uncomment test case
-        # if hasattr(xintercept, '__call__'):
-        #     if 'y' not in pinfo:
-        #         raise Exception(
-        #             'To compute the intercept, y aesthetic is needed')
-        #     yintercept = yintercept(pinfo['y'])
+        if hasattr(yintercept, '__call__'):
+            try:
+                y = y
+            except NameError:
+                raise Exception(
+                    'To compute the intercept, y aesthetic is needed')
+            yintercept = yintercept(y)
 
         yintercept = make_iterable(yintercept)
         new_data = pd.DataFrame({'yintercept': yintercept})

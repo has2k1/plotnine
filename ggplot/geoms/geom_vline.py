@@ -5,8 +5,8 @@ from .geom import geom
 
 class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': None, 'ymin': None,
-                   'ymax': None}
+                   'size': 1.0, 'alpha': None, 'x': None,
+                   'ymin': None, 'ymax': None}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
                       'show_guide': False}
@@ -15,6 +15,7 @@ class geom_vline(geom):
     _units = {'alpha'}
 
     def _plot_unit(self, pinfo, ax):
+        del pinfo['x']
         ymin = pinfo.pop('ymin')
         if ymin is None:
             ymin, _ = ax.get_ylim()

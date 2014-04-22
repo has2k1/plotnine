@@ -7,10 +7,12 @@ from .geom import geom
 
 # Note when documenting
 # slope and intercept can be functions that compute the slope
-# and intercept using the data
+# and intercept using the data. If that is the case then the
+# x and y aesthetics must be mapped
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'alpha': None, 'size': 1.0}
+                   'alpha': None, 'size': 1.0, 'x': None,
+                   'y': None}
     REQUIRED_AES = {'slope', 'intercept'}
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
 

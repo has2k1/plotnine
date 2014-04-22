@@ -12,9 +12,14 @@ class stat_vline(stat):
     CREATES = {'xintercept'}
 
     def _calculate(self, data):
+        try:
+            x = data.pop('x')
+        except KeyError:
+            pass
+
         # xintercept may be one of:
-        #   - aesthetic to geom_hline or
-        #   - parameter setting to stat_hline
+        #   - aesthetic to geom_vline or
+        #   - parameter setting to stat_vline
         try:
             xintercept = data.pop('xintercept')
         except KeyError:
@@ -22,11 +27,13 @@ class stat_vline(stat):
 
         # TODO: Enable this when the parameters are passed correctly
         # and uncomment test case
-        # if hasattr(xintercept, '__call__'):
-        #     if 'x'not in data:
-        #         raise Exception(
-        #             'To compute the intercept, x aesthetic is needed')
-        #     xintercept = [xintercept(data['x'])]
+        if hasattr(xintercept, '__call__'):
+            try:
+                x = x
+            except NameError:
+                raise Exception(
+                    'To compute the intercept, x aesthetic is needed')
+            xintercept = xintercept(x)
 
         xintercept = make_iterable(xintercept)
         new_data = pd.DataFrame({'xintercept': xintercept})

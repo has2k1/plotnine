@@ -50,22 +50,22 @@ def test_geom_abline_mapped():
     assert_same_ggplot(gg, 'geom_abline_mapped')
 
 # TODO: Uncomment when the handling is proper
-# @cleanup
-# def test_geom_abline_functions():
-#     df = _build_line_df()
-#
-#     def sfunc(x, y):
-#         return (y[-1] - y[0]) / (x[-1] - x[0])
-#
-#     def ifunc(y):
-#         return np.mean(y)
-#     gg = ggplot(df, aes(x='wt', y='mpg'))
-#
-#     # Note, could have done intercept=np.mean
-#     gg = gg + geom_point() +  geom_abline(aes(x='wt', y='mpg'),
-#                                           slope=sfunc,
-#                                           intercept=ifunc)
-#     assert_same_ggplot(gg, 'geom_abline_functions')
+@cleanup
+def test_geom_abline_functions():
+    df = _build_line_df()
+
+    def sfunc(x, y):
+        return (y.iloc[-1] - y.iloc[0]) / (x.iloc[-1] - x.iloc[0])
+
+    def ifunc(x, y):
+        return np.mean(y)
+    gg = ggplot(df, aes(x='wt', y='mpg'))
+
+    # Note, could have done intercept=np.mean
+    gg = gg + geom_point() +  geom_abline(aes(x='wt', y='mpg'),
+                                          slope=sfunc,
+                                          intercept=ifunc)
+    assert_same_ggplot(gg, 'geom_abline_functions')
 
 @cleanup
 def test_geom_vline():
@@ -89,14 +89,14 @@ def test_geom_vline_mapped():
           geom_vline(size=2))
     assert_same_ggplot(gg, 'geom_vline_mapped')
 
-# @cleanup
-# def test_geom_vline_function():
-#     df = _build_line_df()
-#     gg = ggplot(df, aes(x='wt', y='mpg'))
-#     def ifunc(x):
-#         return np.mean(x)
-#     gg = gg + geom_point() +  geom_vline(aes(x='wt'), xintercept=ifunc)
-#     assert_same_ggplot(gg, 'geom_vline_function')
+@cleanup
+def test_geom_vline_function():
+    df = _build_line_df()
+    gg = ggplot(df, aes(x='wt', y='mpg'))
+    def ifunc(x):
+        return np.mean(x)
+    gg = gg + geom_point() +  geom_vline(aes(x='wt'), xintercept=ifunc)
+    assert_same_ggplot(gg, 'geom_vline_function')
 
 @cleanup
 def test_geom_hline():
@@ -120,26 +120,32 @@ def test_geom_hline_mapped():
           geom_hline(size=2))
     assert_same_ggplot(gg, 'geom_hline_mapped')
 
-# @cleanup
-# def test_geom_hline_function():
-#     df = _build_line_df()
-#     gg = ggplot(df, aes(x='wt', y='mpg'))
-#     def ifunc(y):
-#         return np.mean(y)
-#     gg = gg + geom_point() +  geom_hline(aes(y='mpg'), yintercept=ifunc)
-#     assert_same_ggplot(gg, 'geom_hline_function')
+@cleanup
+def test_geom_hline_function():
+    df = _build_line_df()
+    gg = ggplot(df, aes(x='wt', y='mpg'))
+    def ifunc(y):
+        return np.mean(y)
+    gg = gg + geom_point() +  geom_hline(aes(y='mpg'), yintercept=ifunc)
+    assert_same_ggplot(gg, 'geom_hline_function')
 
 @cleanup
 def test_geom_festival_of_lines():
+    # All 3 lines should intersect at the point of the same color.
+    # Horizontal and vertical will overlap for points on the same line
     df = _build_line_df()
-    df['m'] = [5] * len(df)
-    df['c'] = df['mpg'] - df['m'] * df['wt']
-    colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF',
-              '#4B0082','#8F00FF', '#FB00FF', '#808080', '#000000']
-    gg = ggplot(df, aes(x='wt', y='mpg', xintercept='wt',
-                        yintercept='mpg', slope='m', intercept='c'))
-    gg = (gg + geom_point(size=150, color=colors, alpha=.9) +
-          geom_abline(size=2, color=colors) +
-          geom_vline(size=2, color=colors) +
-          geom_hline(size=2, color=colors))
+    df['color'] = range(len(df['wt']))
+    def xfunc(x):
+        return x
+    def yfunc(y):
+        return y
+    def ifunc(x, y):
+        return y - 5 * x
+    def sfunc(x, y):
+        return 5
+    gg = ggplot(df, aes(x='wt', y='mpg', color='factor(color)'))
+    gg = (gg + geom_point(size=150, alpha=.9) +
+          geom_abline(size=2, intercept=ifunc, slope=sfunc) +
+          geom_vline(size=2, xintercept=xfunc) +
+          geom_hline(size=2, yintercept=yfunc))
     assert_same_ggplot(gg, 'geom_festival_of_lines')

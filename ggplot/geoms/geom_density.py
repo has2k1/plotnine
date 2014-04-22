@@ -7,7 +7,7 @@ import numpy as np
 
 class geom_density(geom):
     DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': None,
-                   'linetype': 'solid', 'size': 1.0, 'weight': 1}
+                   'linetype': 'solid', 'size': 1.0, 'weight': None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'density', 'position': 'identity'}
 

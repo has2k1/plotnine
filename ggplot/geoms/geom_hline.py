@@ -5,8 +5,8 @@ from .geom import geom
 
 class geom_hline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': None, 'xmin': None,
-                   'xmax': None}
+                   'size': 1.0, 'alpha': None, 'y': None,
+                   'xmin': None, 'xmax': None}
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',
                       'show_guide': False}
@@ -15,6 +15,7 @@ class geom_hline(geom):
     _units = {'alpha'}
 
     def _plot_unit(self, pinfo, ax):
+        del pinfo['y']
         xmin = pinfo.pop('xmin')
         if xmin is None:
             xmin, _ = ax.get_xlim()

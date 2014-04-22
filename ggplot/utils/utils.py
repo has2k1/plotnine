@@ -8,6 +8,13 @@ import numpy as np
 import matplotlib.cbook as cbook
 
 
+def is_scalar_or_string(val):
+    """
+    Return whether the given object is a scalar or string like.
+    """
+    return is_string(val) or not cbook.iterable(val)
+
+
 def is_string(obj):
     """
     Return True if *obj* is a string
