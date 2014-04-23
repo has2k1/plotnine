@@ -1,7 +1,13 @@
 from nose.tools import assert_equal, assert_true, assert_raises
+from numpy import linspace
+from pandas import DataFrame
 
 from ggplot.tests import image_comparison, cleanup
 from ggplot import *
+
+df = DataFrame({"x": linspace(999, 1111, 9),
+                "y": linspace(999, 1111, 9)})
+simple_gg = ggplot(aes(x="x", y="y"), data=df) + geom_line()
 
 
 def _test_theme1():
@@ -26,16 +32,11 @@ def test_theme3():
     tg = theme_gray()
     assert_true(tg.complete)
 
-@image_comparison(["red_text"], tol=0)
+@image_comparison(["red_text"], tol=10)
 def test_theme4():
     # Incomplete theme should have the default theme plus additinal theme
     # elements.
-    gg = ggplot(aes(x='date', y='beef'), data=meat) + \
-        geom_point(color='lightblue') + \
-        stat_smooth(span=.15, color='black', se=True) + \
-        xlab("Date") + \
-        ylab("Head of Cattle Slaughtered")
-    print(gg + theme(axis_text_x=element_text(color="red")))
+    print(simple_gg + theme(axis_text=element_text(color="red", size=50, angle=90)))
 
 def test_theme5():
     # complete theme t2 replaces partial theme t2
@@ -62,22 +63,19 @@ def test_theme7():
 # based on examples from http://docs.ggplot2.org/current/theme.html
 gg = ggplot(aes(x='mpg', y='wt'), data=mtcars) + geom_point()
 
-@image_comparison(["general_first"], tol=0)
+@image_comparison(["general_first"], tol=10)
 def test_theme8():
-    # Text element_target properties that can be configured with rcParams.
-    print(gg +
-          theme(text=element_text(color="red")) +
+    print(simple_gg +
+          theme(text=element_text(color="red", size=50, angle=45)) +
           theme(axis_text_y=element_text(color="green")) +
           theme(axis_title=element_text(color="blue")))
 
-@image_comparison(["general_last"], tol=0)
-def test_theme8():
-    print(gg)
-    # Text element_target properties that can be configured with rcParams.
-    print(gg +
+@image_comparison(["general_last"], tol=10)
+def test_theme9():
+    print(simple_gg +
           theme(axis_text_y=element_text(color="green")) +
           theme(axis_title=element_text(color="blue")) +
-          theme(text=element_text(color="red")))
+          theme(text=element_text(color="red", size=50, angle=-45)))
 
-def test_theme9():
+def test_theme10():
     assert_raises(TypeError, lambda: theme() + gg)

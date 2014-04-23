@@ -15,9 +15,7 @@ class theme_xkcd(theme):
 
     """
     def __init__(self, scale=1, length=100, randomness=2):
-        # Not sure why this inherits from theme_matplotlib.
-        # -gdowding
-        super(theme, self).__init__(complete=True)
+        super(theme_xkcd, self).__init__(complete=True)
         with plt.xkcd(scale=scale, length=length, randomness=randomness):
             _xkcd = mpl.rcParams.copy()
         # no need to a get a deprecate warning for nothing...
