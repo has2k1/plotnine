@@ -59,10 +59,9 @@ class element_text(object):
         else:
             return "center"
 
-    def apply_rcparams(self, rcParams):
+    def apply_rcparams(self):
         if self.target:
-            rc_params = self.target.get_rcparams(self.properties)
-            rcParams.update(rc_params)
+            rc_params = self.target.get_rcParams(self.properties)
             return rcParams
 
     def post_plot_callback(self, ax):

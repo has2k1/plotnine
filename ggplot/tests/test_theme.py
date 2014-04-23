@@ -1,4 +1,4 @@
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_equal, assert_true, assert_raises
 
 from ggplot.tests import image_comparison, cleanup
 from ggplot import *
@@ -74,7 +74,10 @@ def test_theme8():
 def test_theme8():
     print(gg)
     # Text element_target properties that can be configured with rcParams.
-    # print(gg +
-    #       theme(axis_text_y=element_text(color="green")) +
-    #       theme(axis_title=element_text(color="blue")) +
-    #       theme(text=element_text(color="red")))
+    print(gg +
+          theme(axis_text_y=element_text(color="green")) +
+          theme(axis_title=element_text(color="blue")) +
+          theme(text=element_text(color="red")))
+
+def test_theme9():
+    assert_raises(TypeError, lambda: theme() + gg)

@@ -18,6 +18,23 @@ from .element_target import element_target_factory, merge_element_targets
 
 class theme(object):
 
+    """This is an abstract base class for themes.
+
+    In general, only complete thems should should subclass this class.
+
+    When subclassing there are really only two methods that need to be
+    implemented.
+
+    __init__: This should call super().__init__ which will define
+    self._rcParams. Subclasses should customize sef._rcParams after calling
+    super().__init__. That will ensure that the rcParams are applied at
+    the appropriate time.
+
+    The other method is apply_theme(ax). This method takes an axes obect that
+    has been created during the plot process. The theme should modify the
+    axes according.
+
+    """
     def __init__(self, complete=False, *args, **kwargs):
         """
         Provide ggplot2 themeing capabilities.
@@ -66,23 +83,43 @@ class theme(object):
         #         self.element_themes.append(element_target)
 
         for target_name, theme_element in kwargs.items():
-            self.element_themes.append(element_target_factory(target_name, theme_element))
+            self.element_themes.append(element_target_factory(target_name,
+                                                              theme_element))
 
         # for k, v in kwargs.items():
         #     setattr(self, k, v)
 
         self._rcParams = {}
 
-    def apply_rcparams(self, rcParams):
-        """Subclasses may override this method.
+    def apply_theme(self, ax):
+        """This will be called with an axes object after plot has completed.
 
-        @todo: change to get_rcparams
+        Complete themes should implement this method if post plot themeing is
+        required.
 
         """
-        rcParams.update(self._rcParams)
+        pass
+
+    def get_rcParams(self):
+        """Create an rcParams dict for this theme.
+
+        Subclasses should not need to override this method method as long as
+        self._rcParams is constructed properly.
+
+        rcParams are used during plotting. Sometimes the same theme can be
+        achieved by setting rcParams before plotting or a post_plot_callback
+        after plotting. The choice of how to implement it is is a matter of
+        convenience in that case.
+
+        There are certian things can only be themed after plotting. There
+        may not be an rcParam to control the theme or the act of plotting
+        may cause an entity to come into existence before it can be themed.
+
+        """
+        rcParams = deepcopy(self._rcParams)
         if self.element_themes:
             for element_theme in self.element_themes:
-                rcparams = element_theme.get_rcparams()
+                rcparams = element_theme.get_rcParams()
             rcParams.update(rcparams)
         return rcParams
 
@@ -90,8 +127,8 @@ class theme(object):
         """Apply this theme, then apply additional modifications in order.
 
         This method should not be overridden. Subclasses should override
-        the apply_theme subclass. See theme_gray for an example.
-        calls.
+        the apply_theme subclass. This implementation will ensure that the
+        a theme that includes partial themes will be themed properly.
 
         """
         self.apply_theme(ax)
@@ -99,13 +136,7 @@ class theme(object):
         for element_theme in self.element_themes:
             element_theme.post_plot_callback(ax)
 
-    def apply_theme(self, ax):
-        """Subclasses ie. complete themes should override this method.
-
-        It will be called after the plot has been created."""
-        pass
-
-    def __add__(self, other):
+    def add_theme(self, other):
         """Add themes together.
 
         Subclasses should not override this method.
@@ -124,16 +155,27 @@ class theme(object):
                 deepcopy(other.element_themes))
             return theme_copy
 
-    def __radd__(self, other):
-        "Subclasses should not override this method."
+    def __add__(self, other):
+        if isinstance(other, theme):
+            return self.add_theme(other)
+        else:
+            raise TypeError()
 
-        # other + self is ggplot + theme
+    def __radd__(self, other):
+        """Subclasses should not override this method.
+
+        This will be called in one of two ways:
+        gg + theme which is translated to self=theme, other=gg
+        or
+        theme1 + theme2 which is translated into self=theme2, other=theme1
+
+        """
         if not isinstance(other, theme):
             gg_copy = deepcopy(other)
             if self.complete:
                 gg_copy.theme = self
             else:
-                gg_copy.theme = other.theme + self
+                gg_copy.theme = other.theme.add_theme(self)
             return gg_copy
         # other _ self is theme + self
         else:

@@ -155,13 +155,13 @@ class __element_target(object):
         return ((self.__class__ == other.__class__) and
                 (self.properties == other.properties))
 
-    def get_rcparams(self):
+    def get_rcParams(self):
         """Add targets rcparams to an rcparam dict before plotting.
 
         :return rcparams: a dictionary of matplotlib rcparams that
             will be set for the next plot.
 
-        This method should always call super(...).get_rcparams and
+        This method should always call super(...).get_rcParams and
         update the dictionary that it returns with its own value, and
         return that dictionar.
 
@@ -187,8 +187,8 @@ class __element_target(object):
 
 class axis_ticks(__element_target):
     # @todo: line_element
-    def get_rcparams(self):
-        rcParams = super(axis_ticks, self).get_rcparams()
+    def get_rcParams(self):
+        rcParams = super(axis_ticks, self).get_rcParams()
         color = self.properties.get("color")
         if color:
             rcParams["xtick.color"] = color
@@ -283,8 +283,8 @@ class text(axis_text, legend_text, strip_text, title):
     Scope of theme that applies to all text in plot
     """
 
-    def get_rcparams(self):
-        rcParams = super(text, self).get_rcparams()
+    def get_rcParams(self):
+        rcParams = super(text, self).get_rcParams()
         family = self.properties.get("family")
         if family:
             rcParams["font.family"] = family

@@ -137,8 +137,7 @@ class ggplot(object):
             # residual from this plot
             # @todo: change it to something more like
             # rcParams = theme.get_rcParams()
-            rcParams = {}
-            self.theme.apply_rcparams(rcParams)
+            rcParams = self.theme.get_rcParams()
             for key in six.iterkeys(rcParams):
                 val = rcParams[key]
                 # there is a bug in matplotlib which does not allow None directly
@@ -469,6 +468,7 @@ class ggplot(object):
         self.legend[legend_type] = legend_dict
 
     def _apply_post_plot_callbacks(self, axis):
+        # dead code? -gdowding
         for cb in self.post_plot_callbacks:
             cb(axis)
 
