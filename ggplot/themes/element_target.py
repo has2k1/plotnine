@@ -197,8 +197,6 @@ class legend_text(legend_title):
 
 class plot_title(__element_target):
     def post_plot_callback(self, ax):
-        print self.properties
-        print ax.title
         super(plot_title, self).post_plot_callback(ax)
         ax.title.set(**self.properties)
 
