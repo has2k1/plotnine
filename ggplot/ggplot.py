@@ -467,10 +467,6 @@ class ggplot(object):
             #sys.stderr.write(msg.format(str(legend_type)))
         self.legend[legend_type] = legend_dict
 
-    def _apply_post_plot_callbacks(self, axis):
-        # dead code? -gdowding
-        for cb in self.post_plot_callbacks:
-            cb(axis)
 
 def _is_identity(x):
     if x in colors.COLORS:
