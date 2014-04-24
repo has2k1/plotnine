@@ -10,34 +10,10 @@ that covers text also has to cover axis.title.
 
 """
 
-from types import FunctionType
-
-
-class Trace(type):
-
-    def __new__(meta, class_name, bases, class_dict):
-        def wrapper(class_name, func_name, func, depth):
-            def trace(*args, **kwargs):
-                print("%s>> enter %s %s" % (
-                    " " * 2 * depth, class_name, func_name))
-                result = func(*args, **kwargs)
-                print("%s<< exit %s %s" % (
-                    " " * 2 * depth, class_name, func_name))
-                return result
-            return trace
-
-        traced = {}
-        for k, v in class_dict.items():
-            if type(v) == FunctionType and not k.startswith("_"):
-                traced[k] = wrapper(class_name, k, v, len(bases))
-        class_dict.update(traced)
-        return super(Trace, meta).__new__(meta, class_name, bases, class_dict)
-
-
 element_target_map = {}
 
 
-class RegisterElementTarget(Trace):
+class RegisterElementTarget(type):
     """Register all public element targets so they can be created by name."""
     def __init__(klass, name, bases, class_dict):
         if not name.startswith("_"):
