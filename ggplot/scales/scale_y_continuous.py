@@ -4,16 +4,18 @@ from .scale import scale
 from copy import deepcopy
 from matplotlib.pyplot import FuncFormatter
 
-dollar   = lambda x,pos: '$%1.2f' % x
+dollar   = lambda x, pos: '$%1.2f' % x
 currency = dollar
-comma    = lambda x,pos: '{:0,d}'.format(int(x))
+comma    = lambda x, pos: '{:0,d}'.format(int(x))
 millions = lambda x, pos: '$%1.1fM' % (x*1e-6)
+percent  = lambda x, pos: '{0:.0f}%'.format(x*100)
 
 LABEL_FORMATS = {
     'comma': comma,
     'dollar': dollar,
     'currency': currency,
-    'millions': millions
+    'millions': millions,
+    'percent': percent
 }
 
 class scale_y_continuous(scale):
