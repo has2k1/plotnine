@@ -1,4 +1,4 @@
-"""provide element targets, that is the elements that are targetd for theming.
+"""provide element targets, that is the elements that are targeted for themeing.
 
 
 From the ggplot2 documentation the axis.title inherits from text.
@@ -9,6 +9,8 @@ only to the axis.title. In matplotlib terms this means that a theme
 that covers text also has to cover axis.title.
 
 """
+
+from six import with_metaclass
 
 element_target_map = {}
 
@@ -34,20 +36,20 @@ def element_target_factory(element_target, element_theme):
 def merge_element_targets(et_list1, et_list2):
     """Merge two lists of element_targets by first sorting them according to
     precedence, then retaining the last instance of a target in case of
-    insances.
+    instances.
 
     """
     return unique_element_targets(sorted_element_targets(et_list1 + et_list2))
 
 
 def unique_element_targets(element_targets):
-    """From a list of elment targets, save the last element target for targets
+    """From a list of element targets, save the last element target for targets
     of the same type.
 
     This is not strictly necessary, but is an optimaztion when combining themes
-    to prevent carying arround themes that will be completely overridden.
+    to prevent carrying around themes that will be completely overridden.
 
-    @todo: should merge boy overriding the old properites with the newer
+    @todo: should merge boy overriding the old properties with the newer
     properties.
     """
     target_seen = set()
@@ -62,7 +64,7 @@ def unique_element_targets(element_targets):
 
 def sorted_element_targets(element_target_list):
     """Sort element_targets in reverse based on the their depth in the
-    inheritence heirarchy.
+    inheritance hierarchy.
 
     This will make sure any general target, like text will be applied by
     a specific target like axis_text_x.
@@ -74,19 +76,19 @@ def sorted_element_targets(element_target_list):
     return sorted(element_target_list, key=key, reverse=True)
 
 
-class __element_target(object):
+class __element_target(with_metaclass(RegisterElementTarget, object)):
     """__element_target is an abstract class of things that can be themed.
 
-    It is the base of a class heirarchy that uses inheritence in a
-    non-tradtional manner. In the textbook use of class inheritence,
+    It is the base of a class hierarchy that uses inheritance in a
+    non-traditional manner. In the textbook use of class inheritance,
     superclasses are general and subclasses are specializations. In some
-    sence the heiricarcy used here is the opposite in that superclasses
+    since the hierarchy used here is the opposite in that superclasses
     are more specific than subclasses.
 
-    It is probably better to think if this heirarchy of leverging
-    Python's multiple inheritence to implement composition. For example
+    It is probably better to think if this hierarchy of leveraging
+    Python's multiple inheritance to implement composition. For example
     the axis_title target is *composed of* the x_axis_title and the
-    y_axis_title. We are just using multiple inheritence to speciy
+    y_axis_title. We are just using multiple inheritance to specify
     this composition.
 
     When implementing a new target based on the ggplot2 documentation, it is
@@ -113,7 +115,7 @@ class __element_target(object):
     If the superclasses fully implement the subclass, the body of the
     subclass should be "pass". Python will do the right thing.
 
-    When a method does require implentation, call super() then add
+    When a method does require implementation, call super() then add
     the target's implementation to the axes.
 
     """
@@ -139,9 +141,9 @@ class __element_target(object):
 
         This method should always call super(...).get_rcParams and
         update the dictionary that it returns with its own value, and
-        return that dictionar.
+        return that dictionary.
 
-        This method is called befor plotting. It tends to be more useful
+        This method is called before plotting. It tends to be more useful
         for general targets. Very specific targets often cannot be themed
         until they are created as a result of the plotting process.
 
@@ -155,7 +157,7 @@ class __element_target(object):
 
         It should be implemented as super(...).post_plot_callback()
         followed by extracting the portion of the axes specific to this
-        tartget then applying the properties to the target.
+        target then applying the properties to the target.
 
         """
         pass
