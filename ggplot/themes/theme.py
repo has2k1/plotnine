@@ -34,6 +34,8 @@ class theme(object):
     has been created during the plot process. The theme should modify the
     axes according.
 
+    The default image size is set  here to "11, 8".
+
     """
     def __init__(self, complete=False, **kwargs):
         """
@@ -69,7 +71,7 @@ class theme(object):
         for target_name, theme_element in kwargs.items():
             self.element_themes.append(element_target_factory(target_name,
                                                               theme_element))
-        self._rcParams = {}
+        self._rcParams = {"figure.figsize": "11, 8"}
 
     def apply_theme(self, ax):
         """This will be called with an axes object after plot has completed.

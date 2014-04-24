@@ -6,6 +6,6 @@ class theme_bw(theme_gray):
     White background w/ black gridlines
     """
 
-    def apply_rcparams(self, rcParams):
-        super(theme_bw, self).apply_rcparams(rcParams)
-        rcParams['axes.facecolor'] = 'white'
+    def __init__(self):
+        super(theme_bw, self).__init__()
+        self._rcParams['axes.facecolor'] = 'white'

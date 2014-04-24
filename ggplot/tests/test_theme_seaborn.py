@@ -6,7 +6,7 @@ from ggplot.tests import image_comparison
 
 from ggplot import *
 
-@image_comparison(baseline_images=['theme_seaborn'], extensions=["png"])
+@image_comparison(baseline_images=['theme_seaborn'])
 def test_theme_matplotlib2():
     gg = ggplot(aes(x='date', y='beef'), data=meat) + \
         geom_point(color='lightblue') + \
