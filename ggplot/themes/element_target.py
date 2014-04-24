@@ -185,17 +185,6 @@ class __element_target(object):
         pass
 
 
-class axis_ticks(__element_target):
-    # @todo: line_element
-    def get_rcParams(self):
-        rcParams = super(axis_ticks, self).get_rcParams()
-        color = self.properties.get("color")
-        if color:
-            rcParams["xtick.color"] = color
-            rcParams["ytick.color"] = color
-        return rcParams
-
-
 class axis_title_x(__element_target):
     def post_plot_callback(self, ax):
         super(axis_title_x, self).post_plot_callback(ax)
