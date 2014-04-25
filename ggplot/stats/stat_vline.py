@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 
 from ggplot.utils import pop, make_iterable, make_iterable_ntimes
+from ggplot.utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -22,7 +23,7 @@ class stat_vline(stat):
         # and uncomment test case
         if hasattr(xintercept, '__call__'):
             if x is None:
-                raise Exception(
+                raise GgplotError(
                     'To compute the intercept, x aesthetic is needed')
             xintercept = xintercept(x)
 

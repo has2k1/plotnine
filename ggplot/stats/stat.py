@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
+from ggplot.utils.exceptions import GgplotError
 import ggplot.geoms
 
 __all__ = ['stat']
@@ -79,5 +80,5 @@ class stat(object):
         missing_aes = self.REQUIRED_AES - set(data.columns)
         if missing_aes:
             msg = '{} requires the following missing aesthetics: {}'
-            raise Exception(msg.format(
+            raise GgplotError(msg.format(
                 self.__class__.__name__, ', '.join(missing_aes)))

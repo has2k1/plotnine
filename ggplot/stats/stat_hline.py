@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 
 from ggplot.utils import pop, make_iterable, make_iterable_ntimes
+from ggplot.utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -23,7 +24,7 @@ class stat_hline(stat):
         # and uncomment test case
         if hasattr(yintercept, '__call__'):
             if y is None:
-                raise Exception(
+                raise GgplotError(
                     'To compute the intercept, y aesthetic is needed')
             yintercept = yintercept(y)
 

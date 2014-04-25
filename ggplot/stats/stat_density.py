@@ -5,6 +5,7 @@ import pandas as pd
 from scipy.stats import gaussian_kde
 
 from ggplot.utils import make_iterable_ntimes
+from ggplot.utils.exceptions import GgplotError
 from .stat import stat
 
 # TODO: switch to statsmodels kdes
@@ -25,7 +26,7 @@ class stat_density(stat):
                 # try to use it as a pandas.tslib.Timestamp
                 x = [ts.toordinal() for ts in x]
             except:
-                raise Exception("stat_density(): aesthetic x mapping " +
+                raise GgplotError("stat_density(): aesthetic x mapping " +
                                 "needs to be convertable to float!")
         # TODO: Implement weight
         try:

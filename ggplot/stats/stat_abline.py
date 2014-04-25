@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 
 from ggplot.utils import pop, make_iterable, make_iterable_ntimes
+from ggplot.utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -26,13 +27,13 @@ class stat_abline(stat):
 
         if  hasattr(slope, '__call__'):
             if x is None or y is None:
-                raise Exception(
+                raise GgplotError(
                     'To compute the slope, x & y aesthetics are needed')
             slope = slope(x, y)
 
         if  hasattr(intercept, '__call__'):
             if x is None or y is None:
-                raise Exception(
+                raise GgplotError(
                     'To compute the intercept, x & y aesthetics are needed')
             intercept = intercept(x, y)
 
@@ -48,7 +49,7 @@ class stat_abline(stat):
 
         if n != _n:
             # TODO: Test case
-            raise Exception(
+            raise GgplotError(
                 'Specified {} slopes but {} intercepts'.format(n, _n))
 
         slope = make_iterable(slope)

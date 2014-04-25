@@ -8,6 +8,7 @@ from matplotlib.cbook import iterable
 import ggplot.stats
 from ggplot.utils import is_scalar_or_string
 from ggplot.components import aes
+from ggplot.utils.exceptions import GgplotError
 
 __all__ = ['geom']
 __all__ = [str(u) for u in __all__]
@@ -84,7 +85,7 @@ class geom(object):
         self.manual_aes = {}
         for k, v in kwargs.items():
             if k in self.aes:
-                raise Exception('Aesthetic, %s, specified twice' % k)
+                raise GgplotError('Aesthetic, %s, specified twice' % k)
             elif (k in self.valid_aes and
                   k in self._stat_type.DEFAULT_PARAMS and
                   is_scalar_or_string(kwargs[k])):
@@ -96,7 +97,7 @@ class geom(object):
             elif k in self._stat_type.DEFAULT_PARAMS:
                 self._stat_params[k] = v
             else:
-                raise Exception('Cannot recognize argument: %s' % k)
+                raise GgplotError('Cannot recognize argument: %s' % k)
 
         self._cache = {}
         # When putting together the plot information for the geoms,
@@ -176,7 +177,7 @@ class geom(object):
                        set(data.columns))
         if missing_aes:
             msg = '{} requires the following missing aesthetics: {}'
-            raise Exception(msg.format(
+            raise GgplotError(msg.format(
                 self.__class__.__name__, ', '.join(missing_aes)))
 
     def _find_aes_and_data(self, args, kwargs):
@@ -204,11 +205,11 @@ class geom(object):
             elif isinstance(arg, pd.DataFrame):
                 data = arg
             else:
-                raise Exception(
+                raise GgplotError(
                     'Unknown argument of type "{0}".'.format(type(arg)))
 
         if 'mapping' in kwargs and passed_aes:
-            raise Exception(aes_err)
+            raise GgplotError(aes_err)
         elif not passed_aes and 'mapping' in kwargs:
             passed_aes = kwargs.pop('mapping')
 
@@ -223,7 +224,7 @@ class geom(object):
             if k in self.valid_aes or k in _keep:
                 _aes[k] = v
             else:
-                raise Exception('Cannot recognize aesthetic: %s' % k)
+                raise GgplotError('Cannot recognize aesthetic: %s' % k)
         return _aes, data, kwargs
 
     def _calculate_and_rename_stats(self, data):

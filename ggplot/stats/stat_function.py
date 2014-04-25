@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from ggplot.utils import make_iterable_ntimes
+from ggplot.utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -117,7 +118,7 @@ class stat_function(stat):
         args = self.params['args']
 
         if not hasattr(fun, '__call__'):
-            raise Exception("stat_function requires parameter 'fun' to be " +
+            raise GgplotError("stat_function requires parameter 'fun' to be " +
                             "a function or any other callable object")
 
         old_fun = fun
