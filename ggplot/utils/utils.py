@@ -6,6 +6,19 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 import matplotlib.cbook as cbook
+import six
+
+
+def pop(dataframe, key, default):
+    """
+    Pop element *key* from dataframe and return it. Return default
+    if it *key* not in dataframe
+    """
+    try:
+        value = dataframe.pop(key)
+    except KeyError:
+        value = default
+    return value
 
 
 def is_scalar_or_string(val):
@@ -19,7 +32,7 @@ def is_string(obj):
     """
     Return True if *obj* is a string
     """
-    if isinstance(obj, (str, unicode)):
+    if isinstance(obj, six.string_types):
         return True
     return False
 

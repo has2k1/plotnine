@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
+
 import pandas as pd
 from matplotlib.cbook import iterable
 
@@ -132,6 +133,11 @@ class geom(object):
             pinfo = deepcopy(self._cache['default_aes_mpl'])
             pinfo.update(_data)
             self._plot_unit(pinfo, ax)
+
+    def _plot_unit(self, pinfo, ax):
+        msg = "{} should implement this method."
+        raise NotImplementedError(
+            msg.format(self.__class__.__name__))
 
     def _get_stat_type(self, kwargs):
         """
@@ -266,6 +272,10 @@ class geom(object):
                 new_data = new_data.append(_data, ignore_index=True)
         else:
             new_data = self._stat._calculate(data)
+
+        # some geoms expect a sorted x domain
+        if 'x' in new_data:
+            new_data.sort(columns=('x'), inplace=True)
         return new_data
 
     def _create_aes_with_mpl_names(self):

@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import pandas as pd
 
-from ggplot.utils import make_iterable, make_iterable_ntimes
+from ggplot.utils import pop, make_iterable, make_iterable_ntimes
 from .stat import stat
 
 
@@ -15,44 +15,23 @@ class stat_abline(stat):
     CREATES = {'slope', 'intercept'}
 
     def _calculate(self, data):
-        try:
-            x = data.pop('x')
-        except KeyError:
-            pass
-        try:
-            y = data.pop('y')
-        except KeyError:
-            pass
+        x = pop(data, 'x', None)
+        y = pop(data, 'y', None)
 
         # intercept and slope may be one of:
         #   - aesthetics to geom_abline or
         #   - parameter settings to stat_abline
-        try:
-            slope = data.pop('slope')
-        except KeyError:
-            slope = self.params['slope']
+        slope = pop(data, 'slope', self.params['slope'])
+        intercept = pop(data, 'intercept', self.params['intercept'])
 
-        try:
-            intercept = data.pop('intercept')
-        except KeyError:
-            intercept = self.params['intercept']
-
-        if hasattr(slope, '__call__'):
-            try:
-                x = x
-                y = y
-            except NameError:
-                # TODO: test case
+        if  hasattr(slope, '__call__'):
+            if x is None or y is None:
                 raise Exception(
                     'To compute the slope, x & y aesthetics are needed')
             slope = slope(x, y)
 
-        if hasattr(intercept, '__call__'):
-            try:
-                x = x
-                y = y
-            except NameError:
-                # TODO: test case
+        if  hasattr(intercept, '__call__'):
+            if x is None or y is None:
                 raise Exception(
                     'To compute the intercept, x & y aesthetics are needed')
             intercept = intercept(x, y)

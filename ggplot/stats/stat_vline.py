@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import pandas as pd
 
-from ggplot.utils import make_iterable, make_iterable_ntimes
+from ggplot.utils import pop, make_iterable, make_iterable_ntimes
 from .stat import stat
 
 
@@ -12,25 +12,16 @@ class stat_vline(stat):
     CREATES = {'xintercept'}
 
     def _calculate(self, data):
-        try:
-            x = data.pop('x')
-        except KeyError:
-            pass
-
+        x = pop(data, 'x', None)
         # xintercept may be one of:
         #   - aesthetic to geom_vline or
         #   - parameter setting to stat_vline
-        try:
-            xintercept = data.pop('xintercept')
-        except KeyError:
-            xintercept = self.params['xintercept']
+        xintercept = pop(data, 'xintercept', self.params['xintercept'])
 
         # TODO: Enable this when the parameters are passed correctly
         # and uncomment test case
         if hasattr(xintercept, '__call__'):
-            try:
-                x = x
-            except NameError:
+            if x is None:
                 raise Exception(
                     'To compute the intercept, x aesthetic is needed')
             xintercept = xintercept(x)

@@ -1,11 +1,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from copy import deepcopy
 
 import ggplot.geoms
-from copy import deepcopy
 
 __all__ = ['stat']
 __all__ = [str(u) for u in __all__]
+
 
 class stat(object):
     """Base class of all stats"""
@@ -30,6 +31,11 @@ class stat(object):
         # parameters, will be used to create a geom
         self._cache['args'] = args
         self._cache['kwargs'] = kwargs
+
+    def _calculate(self, data):
+        msg = "{} should implement this method."
+        raise NotImplementedError(
+            msg.format(self.__class__.__name__))
 
     def __radd__(self, gg):
         # Create and add a geom to ggplot object

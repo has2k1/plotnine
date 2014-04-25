@@ -46,9 +46,10 @@ class geom_bar(geom):
         return pinfo
 
     def _plot_unit(self, pinfo, ax):
+        categorical = is_categorical(pinfo['x'])
         # If x is not numeric, the bins are sorted acc. to x
         # so the list type aesthetics must be sorted too
-        if is_categorical(pinfo['x']):
+        if categorical:
             pinfo = self._sort_list_types_by_x(pinfo)
 
         pinfo.pop('weight')
@@ -83,5 +84,7 @@ class geom_bar(geom):
         # TODO: When x is numeric, need to use better xticklabels
         ax.bar(left, heights, width, **pinfo)
         ax.autoscale()
-        ax.set_xticks(left+width/2)
-        ax.set_xticklabels(x)
+
+        if categorical:
+            ax.set_xticks(left+width/2)
+            ax.set_xticklabels(x)

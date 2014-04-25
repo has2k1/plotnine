@@ -53,10 +53,13 @@ class stat_bin(stat):
         else:
             self._print_warning(_MSG1, 1)
 
-        # TODO: make sure it is passed from the geom
-        # data.pop('weight')
-        weight = 1
-        x_weights = np.ones(len(x)) * weight
+        # If weight not mapped to, use one (no weight)
+        try:
+            weights = data.pop('weight')
+        except KeyError:
+            weights = np.ones(len(x))
+        else:
+            weights = make_iterable_ntimes(weights, len(x))
 
         categorical = is_categorical(x.values)
         if categorical:
@@ -87,7 +90,7 @@ class stat_bin(stat):
         #   - the weights of each x value
         # Then create a weighted frequency table
         _df = pd.DataFrame({'assignments': x_assignments,
-                            'weights': x_weights
+                            'weights': weights
                             })
         _wfreq_table = pd.pivot_table(_df, values='weights',
                                       rows=['assignments'], aggfunc=np.sum)
@@ -96,7 +99,7 @@ class stat_bin(stat):
         # in the computed frequency table. We need to add the zeros and
         # since frequency table is a Series object, we need to keep it ordered
         if len(_wfreq_table) < len(x):
-            empty_bins = set(range(max(x_assignments))) - set(x_assignments)
+            empty_bins = set(range(len(x))) - set(x_assignments)
             for _b in empty_bins:
                 _wfreq_table[_b] = 0
             _wfreq_table = _wfreq_table.sort_index()

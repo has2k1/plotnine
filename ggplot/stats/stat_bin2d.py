@@ -9,12 +9,11 @@ from ggplot.utils import make_iterable_ntimes
 from .stat import stat
 
 
-# TODO: Could use some speed, use a vectorized approach
-# and maybe some of the pandas functions
 class stat_bin2d(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
-                      'bins': 30, 'drop': True, 'weight': 1}
+                      'bins': 30, 'drop': True, 'weight': 1,
+                      'right': False}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
     def _calculate(self, data):
@@ -22,13 +21,14 @@ class stat_bin2d(stat):
         y = data.pop('y')
         bins = self.params['bins']
         drop = self.params['drop']
+        right = self.params['right']
         weight = make_iterable_ntimes(self.params['weight'], len(x))
 
         # create the cutting parameters
         x_assignments, xbreaks = pd.cut(x, bins=bins, labels=False,
-                                        right=True, retbins=True)
+                                        right=right, retbins=True)
         y_assignments, ybreaks = pd.cut(y, bins=bins, labels=False,
-                                        right=True, retbins=True)
+                                        right=right, retbins=True)
         # create rectangles
         # xmin, xmax, ymin, ymax, fill=count
         df = pd.DataFrame({'xbin': x_assignments,

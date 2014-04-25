@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import pandas as pd
 
-from ggplot.utils import make_iterable, make_iterable_ntimes
+from ggplot.utils import pop, make_iterable, make_iterable_ntimes
 from .stat import stat
 
 
@@ -12,25 +12,17 @@ class stat_hline(stat):
     CREATES = {'yintercept'}
 
     def _calculate(self, data):
-        try:
-            y = data.pop('y')
-        except KeyError:
-            pass
+        y = pop(data, 'y', None)
 
         # yintercept may be one of:
         #   - aesthetic to geom_hline or
         #   - parameter setting to stat_hline
-        try:
-            yintercept = data.pop('yintercept')
-        except KeyError:
-            yintercept = self.params['yintercept']
+        yintercept = pop(data, 'yintercept', self.params['yintercept'])
 
         # TODO: Enable this when the parameters are passed correctly
         # and uncomment test case
         if hasattr(yintercept, '__call__'):
-            try:
-                y = y
-            except NameError:
+            if y is None:
                 raise Exception(
                     'To compute the intercept, y aesthetic is needed')
             yintercept = yintercept(y)

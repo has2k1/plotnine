@@ -136,6 +136,12 @@ class stat_function(stat):
         new_data = pd.DataFrame({'x': x, 'y': y})
 
         # Copy the other aesthetics into the new dataframe
+        # Don't copy the any previous 'y' assignments
+        try:
+            del data['y']
+        except KeyError:
+            pass
+
         n = len(x)
         for ae in data:
             new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
