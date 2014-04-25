@@ -69,11 +69,13 @@ class geom_bar(geom):
         #
         # then add a uniform gap between each bin
         #   - the gap is a fraction of the width of the first bin
-        _left_gap = 0.2
-        _spacing_factor = 0.1     # of the bin width
-        if cbook.is_numlike(x[0]):
+        _left_gap = 0
+        _spacing_factor = 0     # of the bin width
+        if not categorical:
             left = np.array([x[i]-width[i]/2 for i in range(len(x))])
         else:
+            _left_gap = 0.2
+            _spacing_factor = 0.105     # of the bin width
             _breaks = np.append([0], width)
             left = np.cumsum(_breaks[:-1])
 
