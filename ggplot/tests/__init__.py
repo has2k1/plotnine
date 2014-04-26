@@ -28,6 +28,8 @@ default_test_modules = [
     'ggplot.tests.test_readme_examples',
     'ggplot.tests.test_ggplot_internals',
     'ggplot.tests.test_geom',
+    'ggplot.tests.test_stat',
+    'ggplot.tests.test_stat_calculate_methods',
     'ggplot.tests.test_geom_rect',
     'ggplot.tests.test_qplot',
     'ggplot.tests.test_geom_lines',

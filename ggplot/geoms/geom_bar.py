@@ -69,6 +69,7 @@ class geom_bar(geom):
         #
         # then add a uniform gap between each bin
         #   - the gap is a fraction of the width of the first bin
+        #     and only applies when x is categorical
         _left_gap = 0
         _spacing_factor = 0     # of the bin width
         if not categorical:
@@ -83,7 +84,6 @@ class geom_bar(geom):
         left = left + _left_gap + [_sep * i for i in range(len(left))]
 
 
-        # TODO: When x is numeric, need to use better xticklabels
         ax.bar(left, heights, width, **pinfo)
         ax.autoscale()
 

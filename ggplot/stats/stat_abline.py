@@ -29,13 +29,19 @@ class stat_abline(stat):
             if x is None or y is None:
                 raise GgplotError(
                     'To compute the slope, x & y aesthetics are needed')
-            slope = slope(x, y)
+            try:
+                slope = slope(x, y)
+            except TypeError as err:
+                raise GgplotError(*err.args)
 
         if  hasattr(intercept, '__call__'):
             if x is None or y is None:
                 raise GgplotError(
                     'To compute the intercept, x & y aesthetics are needed')
-            intercept = intercept(x, y)
+            try:
+                intercept = intercept(x, y)
+            except TypeError as err:
+                raise GgplotError(*err.args)
 
         try:
             n = len(slope)
@@ -48,7 +54,6 @@ class stat_abline(stat):
             _n = 1
 
         if n != _n:
-            # TODO: Test case
             raise GgplotError(
                 'Specified {} slopes but {} intercepts'.format(n, _n))
 

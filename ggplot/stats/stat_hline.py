@@ -20,13 +20,14 @@ class stat_hline(stat):
         #   - parameter setting to stat_hline
         yintercept = pop(data, 'yintercept', self.params['yintercept'])
 
-        # TODO: Enable this when the parameters are passed correctly
-        # and uncomment test case
         if hasattr(yintercept, '__call__'):
             if y is None:
                 raise GgplotError(
                     'To compute the intercept, y aesthetic is needed')
-            yintercept = yintercept(y)
+            try:
+                yintercept = yintercept(y)
+            except TypeError as err:
+                raise GgplotError(*err.args)
 
         yintercept = make_iterable(yintercept)
         new_data = pd.DataFrame({'yintercept': yintercept})

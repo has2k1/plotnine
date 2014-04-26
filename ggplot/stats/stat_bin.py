@@ -83,7 +83,6 @@ class stat_bin(stat):
             x = [breaks[i] + width[i] / 2
                  for i in range(len(breaks)-1)]
         else:
-            # TODO: Create test case
             raise GgplotError("Cannot recognise the type of x")
 
         # Create a dataframe with two columns:

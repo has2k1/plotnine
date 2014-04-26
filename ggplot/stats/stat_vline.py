@@ -19,13 +19,14 @@ class stat_vline(stat):
         #   - parameter setting to stat_vline
         xintercept = pop(data, 'xintercept', self.params['xintercept'])
 
-        # TODO: Enable this when the parameters are passed correctly
-        # and uncomment test case
         if hasattr(xintercept, '__call__'):
             if x is None:
                 raise GgplotError(
                     'To compute the intercept, x aesthetic is needed')
-            xintercept = xintercept(x)
+            try:
+                xintercept = xintercept(x)
+            except TypeError as err:
+                raise GgplotError(*err.args)
 
         xintercept = make_iterable(xintercept)
         new_data = pd.DataFrame({'xintercept': xintercept})
