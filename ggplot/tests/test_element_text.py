@@ -27,9 +27,9 @@ def test_element_text2():
 def test_element_text3():
     print (simple_gg +
            theme(text=element_text(face="bold", color="red")) +
-           theme(axis_title=element_text(color="purple", size=70)))
+           theme(axis_title=element_text(color="purple", size=50)))
 
-@image_comparison(["axis_title_text"], extensions=["png"], tol=10)
+@image_comparison(["axis_title_text"], extensions=["png"], tol=15)
 def test_element_text4():
     print(simple_gg +
           theme(text=element_text(face="bold", color="red")) +
