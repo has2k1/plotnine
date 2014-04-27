@@ -136,8 +136,10 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
     def get_rcParams(self):
         """Add targets rcparams to an rcparam dict before plotting.
 
-        :return rcparams: a dictionary of matplotlib rcparams that
-            will be set for the next plot.
+        Returns
+        -------
+        dict
+            Dictionary of legal matplotlib parameters.
 
         This method should always call super(...).get_rcParams and
         update the dictionary that it returns with its own value, and
@@ -151,11 +153,16 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         return {}
 
     def post_plot_callback(self, ax):
-        """Subclasses should override this method.
+        """Called after a chart has been plotted.
 
-        :param ax: matplotlib axes
+        Subclasses should override this method to customize the plot according to
+        the theme.
 
-        It should be implemented as super(...).post_plot_callback()
+        Parameters
+        ----------
+        ax : matplotlib.axes.Axes
+
+        This method should be implemented as super(...).post_plot_callback()
         followed by extracting the portion of the axes specific to this
         target then applying the properties to the target.
 

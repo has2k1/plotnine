@@ -6,8 +6,8 @@ Theme elements:
 * element_text
 * element_title
 
-These elemenets define what operations can be performed. The specific targets,
-eg. line, rect, text, title and their derivities axist_title or axis_title_x
+These elements define what operations can be performed. The specific targets,
+eg. line, rect, text, title and their derivatives axis_title or axis_title_x
 specify the scope of the theme application.
 
 """
@@ -20,49 +20,53 @@ class theme(object):
 
     """This is an abstract base class for themes.
 
-    In general, only complete thems should should subclass this class.
+    In general, only complete themes should should subclass this class.
 
+
+    Notes
+    ----- 
     When subclassing there are really only two methods that need to be
     implemented.
 
     __init__: This should call super().__init__ which will define
-    self._rcParams. Subclasses should customize sef._rcParams after calling
+    self._rcParams. Subclasses should customize self._rcParams after calling
     super().__init__. That will ensure that the rcParams are applied at
     the appropriate time.
 
-    The other method is apply_theme(ax). This method takes an axes obect that
+    The other method is apply_theme(ax). This method takes an axes object that
     has been created during the plot process. The theme should modify the
     axes according.
 
-    The default image size is set  here to "11, 8".
-
     """
+
     def __init__(self, complete=False, **kwargs):
         """
         Provide ggplot2 themeing capabilities.
 
         Parameters
         -----------
-        complete : Themes that are complete will override any existing themes.
+        complete : bool
+            Themes that are complete will override any existing themes.
             themes that are not complete (ie. partial) will add to or
             override specific elements of the current theme.
 
             eg. theme_matplotlib() + theme_xkcd() will be completely
             determined by theme_xkcd, but
-            theme_matplotlib() + theme(axis_text_x=elemet_text(angle=45)) will
+            theme_matplotlib() + theme(axis_text_x=element_text(angle=45)) will
             only modify the x axis text.
 
-        Theme Elements
-        ---------------
-        Taken from http://docs.ggplot2.org/current/theme.html
+        kwargs**: theme_element
+            kwargs are theme_elements based on http://docs.ggplot2.org/current/theme.html.
+            Currently only a subset of the elements are implemented. In addition,
+            Python does not allow using '.' in argument names, so we are using '_'
+            instead.
 
-        Python does not allow using '.' in argument names, so we are using '_'
-        instead.
+            For example, ggplot2 axis.ticks.y will be  axis_ticks_y in Python ggplot.
 
-        line - all line elements (element_line)
-        rect - all rectangular elements (element_rect)
-        text - all text elements (element_text)
-        title - all title elements (element_text)
+        Notes
+        _____
+
+        The default image size is set  here to "11, 8".
 
         """
         self.element_themes = []
@@ -74,7 +78,7 @@ class theme(object):
         self._rcParams = {"figure.figsize": "11, 8"}
 
     def apply_theme(self, ax):
-        """This will be called with an axes object after plot has completed.
+        """apply_theme will be called with an axes object after plot has completed.
 
         Complete themes should implement this method if post plot themeing is
         required.
@@ -83,8 +87,10 @@ class theme(object):
         pass
 
     def get_rcParams(self):
-        """Create an rcParams dict for this theme.
+        """Get an rcParams dict for this theme.
 
+        Notes
+        -----
         Subclasses should not need to override this method method as long as
         self._rcParams is constructed properly.
 
@@ -93,7 +99,7 @@ class theme(object):
         after plotting. The choice of how to implement it is is a matter of
         convenience in that case.
 
-        There are certian things can only be themed after plotting. There
+        There are certain things can only be themed after plotting. There
         may not be an rcParam to control the theme or the act of plotting
         may cause an entity to come into existence before it can be themed.
 
@@ -125,7 +131,7 @@ class theme(object):
 
         This will be called when adding two instances of class 'theme'
         together.
-        A complete theme will anhilate any previous themes. Partial themes
+        A complete theme will annihilate any previous themes. Partial themes
         can be added together and can be added to a complete theme.
         """
         if other.complete:
