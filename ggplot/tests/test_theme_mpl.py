@@ -86,7 +86,7 @@ def test_theme_matplotlib5():
         ggtitle("Beef: It's What's for Dinner") + \
         xlab("Date") + \
         ylab("Head of Cattle Slaughtered")
-    print(gg + theme_xkcd() + theme_matplotlib())
+    print(gg + theme_gray() + theme_matplotlib())
 
 def test_theme_matplotlib6():
     tmpl = theme_matplotlib()
