@@ -18,22 +18,20 @@ def test_element_text1():
 
 @image_comparison(["axis_text"], extensions=["png"], tol=10)
 def test_element_text2():
+    #print(simple_gg)
     print(simple_gg +
-          theme(text=element_text(family="serif", face="bold.italic",
-                                  size=50, color="red")) +
+          theme(text=element_text(face="bold", size=50, color="red")) +
           theme(axis_text=element_text(color="green", angle=45)))
 
 @image_comparison(["axis_title"], extensions=["png"], tol=10)
 def test_element_text3():
     print (simple_gg +
-           theme(text=element_text(family="serif", face="bold.italic",
-                                   color="red")) +
+           theme(text=element_text(face="bold", color="red")) +
            theme(axis_title=element_text(color="purple", size=70)))
 
 @image_comparison(["axis_title_text"], extensions=["png"], tol=10)
 def test_element_text4():
     print(simple_gg +
-          theme(text=element_text(family="serif", face="bold.italic",
-                                  color="red")) +
+          theme(text=element_text(face="bold", color="red")) +
           theme(axis_text_y=element_text(color="green", size=50)) +
           theme(axis_title=element_text(color="blue", size=50)))
