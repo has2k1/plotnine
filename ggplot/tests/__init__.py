@@ -7,6 +7,15 @@ from nose.tools import with_setup, make_decorator, assert_true
 import warnings
 
 
+figsize_orig = mpl.rcParams["figure.figsize"]
+def setup_package():
+    mpl.rcParams["figure.figsize"] = "11, 8"
+
+
+def teardown_package():
+    mpl.rcParams["figure.figsize"] = figsize_orig
+
+
 
 import os
 

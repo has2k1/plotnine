@@ -63,19 +63,14 @@ class theme(object):
 
             For example, ggplot2 axis.ticks.y will be  axis_ticks_y in Python ggplot.
 
-        Notes
-        _____
-
-        The default image size is set  here to "11, 8".
-
         """
         self.element_themes = []
         self.complete = complete
+        self._rcParams = {}
 
         for target_name, theme_element in kwargs.items():
             self.element_themes.append(element_target_factory(target_name,
                                                               theme_element))
-        self._rcParams = {"figure.figsize": "11, 8"}
 
     def apply_theme(self, ax):
         """apply_theme will be called with an axes object after plot has completed.
