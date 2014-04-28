@@ -14,6 +14,12 @@ class geom_hline(geom):
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']
-        ax.axhline(**pinfo)
-
+        pinfo['label'] = self.params['label']
+        if isinstance(pinfo['y'], list):
+            ys = pinfo['y']
+            for y in ys:
+                pinfo['y'] = y
+                ax.axhline(**pinfo)
+        else:
+            ax.axhline(**pinfo)
 

@@ -14,4 +14,10 @@ class geom_vline(geom):
 
     def _plot_unit(self, pinfo, ax):
         pinfo['label'] = self.params['label']
-        ax.axvline(**pinfo)
+        if isinstance(pinfo['x'], list):
+            xs = pinfo['x']
+            for x in xs:
+                pinfo['x'] = x
+                ax.axvline(**pinfo)
+        else:
+            ax.axvline(**pinfo)
