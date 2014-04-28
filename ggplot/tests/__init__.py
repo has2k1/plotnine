@@ -7,6 +7,15 @@ from nose.tools import with_setup, make_decorator, assert_true
 import warnings
 
 
+figsize_orig = mpl.rcParams["figure.figsize"]
+def setup_package():
+    mpl.rcParams["figure.figsize"] = (11.0, 8.0)
+
+
+def teardown_package():
+    mpl.rcParams["figure.figsize"] = figsize_orig
+
+
 
 import os
 
@@ -31,8 +40,14 @@ default_test_modules = [
     'ggplot.tests.test_colors',
     'ggplot.tests.test_chart_components',
     'ggplot.tests.test_legend',
+    'ggplot.tests.test_element_target',
+    'ggplot.tests.test_element_text',
+    'ggplot.tests.test_theme',
+    'ggplot.tests.test_theme_bw',
+    'ggplot.tests.test_theme_gray',
+    'ggplot.tests.test_theme_mpl',
+    'ggplot.tests.test_theme_seaborn'
 ]
-
 
 _multiprocess_can_split_ = True
 
@@ -84,6 +99,8 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
     expected_fname = make_test_fn(actual_fname, 'expected')
     if os.path.exists(orig_expected_fname):
         shutil.copyfile(orig_expected_fname, expected_fname)
+    else:
+        raise Exception("Baseline image %s is missing" % orig_expected_fname)
     fig.savefig(actual_fname)
     err = compare_images(expected_fname, actual_fname,
                          tol, in_decorator=True)

@@ -13,8 +13,8 @@ from .components.legend import add_legend
 from .geoms import *
 from .scales import *
 from .scales.utils import calc_axis_breaks_and_limits
-from .themes.theme_gray import _set_default_theme_rcparams
-from .themes.theme_gray import _theme_grey_post_plot_callback
+from .themes.theme_gray import theme_gray
+
 import six
 
 __all__ = ["ggplot"]
@@ -95,12 +95,8 @@ class ggplot(object):
         self.scale_x_log = None
         self.legend = None
 
-        # Theme releated options
-        # this must be set by any theme to prevent addig the default theme
-        self.theme_applied = False
-        self.rcParams = {}
-        # Callbacks to change aspects of each axis
-        self.post_plot_callbacks = []
+        # default theme is theme_gray
+        self.theme = theme_gray()
 
         # continuous color configs
         self.color_scale = None
@@ -137,11 +133,13 @@ class ggplot(object):
         # Adding rc=self.rcParams does not validate/parses the params which then
         # throws an error during plotting!
         with mpl.rc_context():
-            if not self.theme_applied:
-                _set_default_theme_rcparams(mpl)
-                # will be empty if no theme was applied
-            for key in six.iterkeys(self.rcParams):
-                val = self.rcParams[key]
+            # Use a throw away rcParams, so subsequent plots will not have any
+            # residual from this plot
+            # @todo: change it to something more like
+            # rcParams = theme.get_rcParams()
+            rcParams = self.theme.get_rcParams()
+            for key in six.iterkeys(rcParams):
+                val = rcParams[key]
                 # there is a bug in matplotlib which does not allow None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543
                 try:
@@ -393,12 +391,8 @@ class ggplot(object):
                 add_legend(self.legend, ax)
 
             # Finaly apply any post plot callbacks (theming, etc)
-            if self.theme_applied:
-                for ax in plt.gcf().axes:
-                    self._apply_post_plot_callbacks(ax)
-            else:
-                for ax in plt.gcf().axes:
-                    _theme_grey_post_plot_callback(ax)
+            for ax in plt.gcf().axes:
+                self.theme.post_plot_callback(ax)
 
         return plt.gcf()
 
@@ -447,9 +441,31 @@ class ggplot(object):
         mapping = mapping.dropna()
         return mapping
 
-    def _apply_post_plot_callbacks(self, axis):
-        for cb in self.post_plot_callbacks:
-            cb(axis)
+    def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
+        """Adds the the specified legend to the legend
+
+        Parameters
+        ----------
+        legend_type : str
+            type of legend, one of "color", "linestyle", "marker", "size"
+        legend_dict : dict
+            a dictionary of {visual_value: legend_key} where visual_value
+            is color value, line style, marker character, or size value;
+            and legend_key is a quantile.
+        scale_type : str
+            either "discrete" (default) or "continuous"; usually only color
+            needs to specify which kind of legend should be drawn, all
+            other scales will get a discrete scale.
+        """
+        # scale_type is up to now unused
+        # TODO: what happens if we add a second color mapping?
+        # Currently the color mapping in the legend is overwritten.
+        # What does ggplot do in such a case?
+        if legend_type in self.legend:
+            pass
+            #msg = "Adding a secondary mapping of {0} is unsupported and no legend for this mapping is added.\n"
+            #sys.stderr.write(msg.format(str(legend_type)))
+        self.legend[legend_type] = legend_dict
 
 
 def _is_identity(x):
