@@ -9,7 +9,7 @@ import warnings
 
 figsize_orig = mpl.rcParams["figure.figsize"]
 def setup_package():
-    mpl.rcParams["figure.figsize"] = "11, 8"
+    mpl.rcParams["figure.figsize"] = (11.0, 8.0)
 
 
 def teardown_package():
