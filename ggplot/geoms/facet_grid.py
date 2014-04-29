@@ -6,12 +6,12 @@ from ..utils.utils import add_ggplotrc_params
 
 
 class facet_grid(object):
-    def __init__(self, x=None, y=None, nrow=None, ncol=None, scales=None):
+    def __init__(self, x=None, y=None, scales=None):
         add_ggplotrc_params(self)
         self.x = x
         self.y = y
-        self.ncol = nrow
-        self.nrow = ncol
+        self.ncol = None
+        self.nrow = None
         self.scales = scales
 
     def __radd__(self, gg):
@@ -57,5 +57,14 @@ class facet_grid(object):
         gg.facets = facets
         gg.facet_type = "grid"
         gg.facet_scales = self.scales
+
+        combos = []
+        for x_i in sorted(x.unique()):
+            if y is not None:
+                for y_i in sorted(y.unique()):
+                    combos.append((x_i, y_i))
+            else:
+                combos.append((x_i, 1))
+        gg.facet_pairs = combos
 
         return gg
