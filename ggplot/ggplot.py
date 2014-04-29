@@ -94,6 +94,8 @@ class ggplot(object):
         self.scale_y_log = None
         self.scale_x_log = None
         self.legend = None
+        # coords
+        self.coord_equal = None
 
         # default theme is theme_gray
         self.theme = theme_gray()
@@ -378,6 +380,11 @@ class ggplot(object):
                     ax.set_yscale('log', basey=self.scale_y_log)
                 if self.scale_x_log:
                     ax.set_xscale('log', basex=self.scale_x_log)
+                if self.coord_equal:
+                    min_val = np.min([np.min(ax.get_yticks()), np.min(ax.get_xticks())])
+                    max_val = np.max([np.max(ax.get_yticks()), np.max(ax.get_xticks())])
+                    ax.set_xticks(np.linspace(min_val, max_val, 7))
+                    ax.set_yticks(np.linspace(min_val, max_val, 7))
 
             # TODO: Having some issues here with things that shouldn't have a
             # legend or at least shouldn't get shrunk to accomodate one. Need

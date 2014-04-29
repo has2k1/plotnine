@@ -21,6 +21,7 @@ __version__ = '0.5.5'
 from .qplot import qplot
 from .ggplot import ggplot
 from .components import aes
+from .coords import *
 from .geoms import *
 from .scales import *
 from .themes import *
