@@ -10,13 +10,13 @@ from ggplot.utils import is_categorical, make_iterable_ntimes
 from ggplot.utils.exceptions import GgplotError
 from .stat import stat
 
-_MSG_YVALUE_1 = """A variable was mapped to y.
+_MSG_YVALUE = """A variable was mapped to y.
     stat_bin sets the y value to the count of cases in each group.
     The mapping to y was ignored.
     If you want y to represent values in the data, use stat="identity".
 """
 
-_MSG_BINWIDTH_2 = """stat_bin: binwidth defaulted to range/30.
+_MSG_BINWIDTH = """stat_bin: binwidth defaulted to range/30.
     Use 'binwidth = x' to adjust this.
 """
 
@@ -27,18 +27,6 @@ class stat_bin(stat):
                       'width': 0.9, 'drop': False, 'right': False,
                       'binwidth': None, 'origin': None, 'breaks': None}
     CREATES = {'y', 'width'}
-
-    _warnings_printed = set()
-
-    def _print_warning(self, message, message_id):
-        """
-        Prints message to the standard error.
-
-        message_id ensures that the message is printed once
-        """
-        if message_id not in self._warnings_printed:
-            sys.stderr.write(message)
-            self._warnings_printed.add(message_id)
 
     def _calculate(self, data):
         x = data.pop('x')
@@ -52,7 +40,7 @@ class stat_bin(stat):
         except KeyError:
             pass
         else:
-            self._print_warning(_MSG_YVALUE_1, 1)
+            self._print_warning(_MSG_YVALUE)
 
         # If weight not mapped to, use one (no weight)
         try:
@@ -70,7 +58,7 @@ class stat_bin(stat):
         elif cbook.is_numlike(x.iloc[0]):
             if breaks is None and binwidth is None:
                 _bin_count = 30
-                self._print_warning(_MSG_BINWIDTH_2, 2)
+                self._print_warning(_MSG_BINWIDTH)
             if binwidth:
                 _bin_count = int(np.ceil(np.ptp(x))) / binwidth
 
@@ -112,4 +100,5 @@ class stat_bin(stat):
         for ae in data:
             new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
         return new_data
+
 

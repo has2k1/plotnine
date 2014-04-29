@@ -32,7 +32,7 @@ def test_theme3():
     tg = theme_gray()
     assert_true(tg.complete)
 
-@image_comparison(["red_text"], tol=10)
+@image_comparison(["red_text"], tol=13)
 def test_theme4():
     # Incomplete theme should have the default theme plus additinal theme
     # elements.
@@ -63,14 +63,14 @@ def test_theme7():
 # based on examples from http://docs.ggplot2.org/current/theme.html
 gg = ggplot(aes(x='mpg', y='wt'), data=mtcars) + geom_point()
 
-@image_comparison(["general_first"], tol=10)
+@image_comparison(["general_first"], tol=13)
 def test_theme8():
     print(simple_gg +
           theme(text=element_text(color="red", size=50, angle=45)) +
           theme(axis_text_y=element_text(color="green")) +
           theme(axis_title=element_text(color="blue")))
 
-@image_comparison(["general_last"], tol=10)
+@image_comparison(["general_last"], tol=13)
 def test_theme9():
     print(simple_gg +
           theme(axis_text_y=element_text(color="green")) +

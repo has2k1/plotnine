@@ -9,6 +9,15 @@ from ggplot.utils import make_iterable_ntimes
 from .stat import stat
 
 
+_MSG_STATUS = """stat_bin2d is still under construction.
+The resulting plot lacks color to indicate the counts/density in each bin
+and if grouping/facetting is used you get more bins than specified and
+they vary in size between the groups.
+
+see: https://github.com/yhat/ggplot/pull/266#issuecomment-41355513
+     https://github.com/yhat/ggplot/issues/283
+"""
+
 class stat_bin2d(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
@@ -17,6 +26,8 @@ class stat_bin2d(stat):
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
     def _calculate(self, data):
+        self._print_warning(_MSG_STATUS)
+
         x = data.pop('x')
         y = data.pop('y')
         bins = self.params['bins']

@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import sys
 from copy import deepcopy
 
 from ggplot.utils.exceptions import GgplotError
@@ -22,6 +23,10 @@ class stat(object):
     # see: stat_bin
     CREATES = set()
 
+    # used by _print_warning to keep track of the
+    # warning messages printed to the standard error
+    _warnings_printed = set()
+
     def __init__(self, *args, **kwargs):
         _params, kwargs = self._find_stat_params(kwargs)
         self.params = deepcopy(self.DEFAULT_PARAMS)
@@ -32,6 +37,14 @@ class stat(object):
         # parameters, will be used to create a geom
         self._cache['args'] = args
         self._cache['kwargs'] = kwargs
+
+    def _print_warning(self, message):
+        """
+        Prints message to the standard error.
+        """
+        if message not in self._warnings_printed:
+            sys.stderr.write(message)
+            self._warnings_printed.add(message)
 
     def _calculate(self, data):
         msg = "{} should implement this method."
