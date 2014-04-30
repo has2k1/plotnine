@@ -13,6 +13,7 @@ def test_geom_basics():
     # mapping -> only subclasses normally declare which aes mappings
     # are valid and geom.DEFAULT_AES is a empty list
     geom.DEFAULT_AES = {"color": None}
+    geom.DEFAULT_PARAMS = {'stat': 'identity'}
     g = geom(data=meat)
     assert_is(meat, g.data)
     g = geom(meat)

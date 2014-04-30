@@ -1,36 +1,42 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from pandas.lib import Timestamp
+
 import numpy as np
+from ggplot.utils import make_iterable_ntimes
 from .geom import geom
 
-
+# Note when documenting
+# slope and intercept can be functions that compute the slope
+# and intercept using the data. If that is the case then the
+# x and y aesthetics must be mapped
 class geom_abline(geom):
-    DEFAULT_AES = {'color': 'black', 'linetype': 'solid', 'alpha': None, 'size': 1.0}
-    REQUIRED = {} 
-    DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity', 'slope': 1.0, 'intercept': 0.0, 'label': ''}
+    DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
+                   'alpha': None, 'size': 1.0, 'x': None,
+                   'y': None}
+    REQUIRED_AES = {'slope', 'intercept'}
+    DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
-    _groups = {'alpha', 'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
-        slope = self.params['slope']
-        intercept = self.params['intercept']
-        pinfo['label'] = self.params['label']
+        slope = pinfo['slope']
+        intercept = pinfo['intercept']
+
+        n = len(slope)
+
+        linewidth = make_iterable_ntimes(pinfo['linewidth'], n)
+        linestyle = make_iterable_ntimes(pinfo['linestyle'], n)
+        alpha = make_iterable_ntimes(pinfo['alpha'], n)
+        color = make_iterable_ntimes(pinfo['color'], n)
+
         ax.set_autoscale_on(False)
-        # Get plot limits
         xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        # Determine line function
-        line_func = lambda x: x*slope + intercept
-        # Get "x" points within limit and map to "y" coordinates
-        x_points = np.linspace(min(xlim),max(xlim),100)
-        y_points = np.array(map(line_func,x_points))
-        # detemine which points are still within the limit of the plot
-        in_range = np.logical_and(y_points > min(ylim),
-                                  y_points < max(ylim))
-        # If some points are withinn the plot draw them on 
-        if np.sum(in_range) > 0:
-            x_points = x_points[in_range]
-            y_points = y_points[in_range]
-            ax.plot(x_points,y_points,**pinfo)
+
+        _x = np.array([np.min(xlim), np.max(xlim)])
+        for i in range(len(slope)):
+            _y = _x * slope[i] + intercept[i]
+            ax.plot(_x, _y,
+                    linewidth=linewidth[i],
+                    linestyle=linestyle[i],
+                    alpha=alpha[i],
+                    color=color[i])

@@ -2,62 +2,91 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import numpy as np
 import pandas as pd
+import matplotlib.cbook as cbook
+
 from .geom import geom
-from pandas.lib import Timestamp
+from ggplot.utils import is_string
+from ggplot.utils import is_categorical
 
 
 class geom_bar(geom):
     DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.0, 'weight': None}
+                   'linetype': 'solid', 'size': 1.0, 'weight': None, 'y': None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
+    _extra_requires = {'y', 'width'}
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
-                    'fill': 'facecolor', 'color': 'edgecolor'}
-
+                    'fill': 'color', 'color': 'edgecolor'}
     # NOTE: Currently, geom_bar does not support mapping
     # to alpha and linestyle. TODO: raise exception
-    _groups = {'alpha', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'linestyle', 'linewidth'}
+
+    def _sort_list_types_by_x(self, pinfo):
+        """
+        Sort the lists in pinfo according to pinfo['x']
+        """
+        # Remove list types from pinfo
+        _d = {}
+        for k in list(pinfo.keys()):
+            if not is_string(pinfo[k]) and cbook.iterable(pinfo[k]):
+                _d[k] = pinfo.pop(k)
+
+        # Sort numerically if all items can be cast
+        try:
+            x = list(map(np.float, _d['x']))
+        except ValueError:
+            x = _d['x']
+        idx = np.argsort(x)
+
+        # Put sorted lists back in pinfo
+        for key in _d:
+            pinfo[key] = [_d[key][i] for i in idx]
+
+        return pinfo
 
     def _plot_unit(self, pinfo, ax):
+        categorical = is_categorical(pinfo['x'])
+        # If x is not numeric, the bins are sorted acc. to x
+        # so the list type aesthetics must be sorted too
+        if categorical:
+            pinfo = self._sort_list_types_by_x(pinfo)
+
+        pinfo.pop('weight')
         x = pinfo.pop('x')
-        weights = pinfo.pop('weight')
+        width = np.array(pinfo.pop('width'))
+        heights = pinfo.pop('y')
+        labels = x
 
-        # TODO: fix the weight aesthetic,
-        # ggplot2 has the default as 1
-        if weights is None:
-            counts = pd.value_counts(x)
-            labels = counts.index.tolist()
-            weights = counts.tolist()
+        # layout and spacing
+        #
+        # matplotlib needs the left of each bin and it's width
+        # if x has numeric values then:
+        #   - left = x - width/2
+        # otherwise x is categorical:
+        #   - left = cummulative width of previous bins starting
+        #            at zero for the first bin
+        #
+        # then add a uniform gap between each bin
+        #   - the gap is a fraction of the width of the first bin
+        #     and only applies when x is categorical
+        _left_gap = 0
+        _spacing_factor = 0     # of the bin width
+        if not categorical:
+            left = np.array([x[i]-width[i]/2 for i in range(len(x))])
         else:
-            # TODO: pretty sure this isn't right
-            if not isinstance(x[0], Timestamp):
-                labels = x
-            else:
-                df = pd.DataFrame({'weights':weights, 'timepoint': pd.to_datetime(x)})
-                df = df.set_index('timepoint')
-                ts = pd.TimeSeries(df.weights, index=df.index)
-                ts = ts.resample('W', how='sum')
-                ts = ts.fillna(0)
-                weights = ts.values.tolist()
-                labels = ts.index.to_pydatetime().tolist()
+            _left_gap = 0.2
+            _spacing_factor = 0.105     # of the bin width
+            _breaks = np.append([0], width)
+            left = np.cumsum(_breaks[:-1])
 
-        indentation = np.arange(len(labels)) + 0.2
-        width = 0.9
-        idx = np.argsort(labels)
-        labels, weights = np.array(labels)[idx], np.array(weights)[idx]
-        labels = sorted(labels)
+        _sep = width[0] * _spacing_factor
+        left = left + _left_gap + [_sep * i for i in range(len(left))]
 
-        # TODO: Add this test, preferably using fill aesthetic
-        # p = ggplot(aes(x='factor(cyl)', color='factor(cyl)'), data=mtcars)
-        # p + geom_bar(size=10)
-        # mapped coloring aesthetics are required in ascending order acc. x
-        for ae in ('edgecolor', 'facecolor'):
-            if isinstance(pinfo[ae], list):
-                pinfo[ae] = [color for _, color in
-                             sorted(set(zip(x, pinfo[ae])))]
 
-        ax.bar(indentation, weights, width, **pinfo)
+        ax.bar(left, heights, width, **pinfo)
         ax.autoscale()
-        ax.set_xticks(indentation+width/2)
-        ax.set_xticklabels(labels)
+
+        if categorical:
+            ax.set_xticks(left+width/2)
+            ax.set_xticklabels(x)

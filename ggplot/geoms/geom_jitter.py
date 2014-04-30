@@ -6,6 +6,5 @@ class geom_jitter(geom_point):
     def __init__(self, *args, **kwargs):
         # jitter is just a special case of geom_point, so we'll just use
         # geom_point and then enforce jitter
-        super(geom_point, self).__init__()
+        super(geom_point, self).__init__(*args, **kwargs)
         self.manual_aes['position'] = "jitter"
-

@@ -1,9 +1,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from .geom import geom
 import numpy as np
+import pandas as pd
 
-class stat_function(geom):
+from ggplot.utils import make_iterable_ntimes
+from ggplot.utils.exceptions import GgplotError
+from .stat import stat
+
+
+class stat_function(stat):
     """
     Superimpose a function onto a plot
 
@@ -96,23 +101,24 @@ class stat_function(geom):
         print(gg)
     """
 
-    DEFAULT_AES = {'alpha': None, 'color': 'black', 'linetype': 'solid',
-                   'size': 1.0}
+    # TODO: Should not have a required aesthetic, use the scale information
+    # maybe that is where the "scale trainning" helps
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity', 'fun': None,
-                      'n': 101, 'args': None, 'label': ''}
+                      'n': 101, 'args': None}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _groups = {'color', 'linestyle', 'linewidth'}
 
-    def _plot_unit(self, pinfo, ax):
-        x = pinfo.pop('x')
+    CREATES = {'y'}
+
+    def _calculate(self, data):
+        x = data.pop('x')
         fun = self.params['fun']
         n = self.params['n']
         args = self.params['args']
 
         if not hasattr(fun, '__call__'):
-            raise Exception("stat_function requires parameter 'fun' to be " +
+            raise GgplotError("stat_function requires parameter 'fun' to be " +
                             "a function or any other callable object")
 
         old_fun = fun
@@ -125,10 +131,19 @@ class stat_function(geom):
         else:
             fun = lambda x: old_fun(x)
 
-        pinfo['label'] = self.params['label']
-        x_min = min(x)
-        x_max = max(x)
-        x_values = np.linspace(x_min,x_max,n)
-        y_values = list(map(fun,x_values))
+        x = np.linspace(x.min(), x.max(),n)
+        y = list(map(fun, x))
 
-        ax.plot(x_values,y_values, **pinfo)
+        new_data = pd.DataFrame({'x': x, 'y': y})
+
+        # Copy the other aesthetics into the new dataframe
+        # Don't copy the any previous 'y' assignments
+        try:
+            del data['y']
+        except KeyError:
+            pass
+
+        n = len(x)
+        for ae in data:
+            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        return new_data

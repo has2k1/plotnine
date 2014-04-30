@@ -7,42 +7,23 @@ import numpy as np
 
 class geom_density(geom):
     DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': None,
-                   'linetype': 'solid', 'size': 1.0, 'weight': 1}
+                   'linetype': 'solid', 'size': 1.0, 'weight': None}
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'density', 'position': 'identity', 'label': ''}
+    DEFAULT_PARAMS = {'stat': 'density', 'position': 'identity'}
 
+    _extra_requires = {'y'}
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor'}
-    _groups = {'alpha', 'color', 'facecolor', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'color', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')
-        # TODO: Implement weight
-        # find where to multiply by it
-        weight = pinfo.pop('weight')
-        pinfo['label'] = self.params['label']
+        y = pinfo.pop('y')
 
-        try:
-            float(x[0])
-        except:
-            try:
-                # try to use it as a pandas.tslib.Timestamp
-                x = [ts.toordinal() for ts in x]
-            except:
-                raise Exception("geom_density(): aesthetic x mapping needs to be convertable to float!")
+        # Only meant to for the stat
+        del pinfo['weight']
 
-        # TODO: Get "full" range of densities
-        # i.e tail off to zero like ggplot2? But there is nothing
-        # wrong with the current state.
-        kde = gaussian_kde(x)
-        bottom = np.min(x)
-        top = np.max(x)
-        step = (top - bottom) / 1000.0
-        x = np.arange(bottom, top, step)
-        y = kde.evaluate(x)
-
-        # alpha only applies to the line, otherwise a single
-        # needed for plot
+        # These do not apply to the line
         _alpha = pinfo.pop('alpha')
         _fc = pinfo.pop('facecolor')
 

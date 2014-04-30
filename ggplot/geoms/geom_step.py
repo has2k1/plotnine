@@ -9,15 +9,14 @@ class geom_step(geom):
                    'size': 1.0}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-            'direction': 'hv', 'label': ''}
+            'direction': 'hv'}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _groups = {'alpha', 'color', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'color', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
-        pinfo['label'] = self.params['label']
 
         x_stepped = []
         y_stepped = []

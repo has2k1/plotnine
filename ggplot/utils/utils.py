@@ -1,179 +1,110 @@
-"""Helper methods for ggplot.
+"""
+Little functions used all over the codebase
 """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-                        
-import matplotlib.pyplot as plt
-import json
-import os
-import sys
 
+import numpy as np
+import matplotlib.cbook as cbook
 import six
 
-# API-docs from ggplot2: GPL-2 licensed
 
-def ggsave(filename = None, plot = None, device = None, format = None,
-           path = None, scale = 1, width = None, height = None, units = "in",
-           dpi = 300, limitsize=True, **kwargs):
-    """Save a ggplot with sensible defaults
-    
-    ggsave is a convenient function for saving a plot.  It defaults to
-    saving the last plot that you displayed, and for a default size uses 
-    the size of the current graphics device.  It also guesses the type of 
-    graphics device from the extension.  This means the only argument you 
-    need to supply is the filename.
-
-    Parameters
-    ----------
-    filename : str or file
-        file name or file to write the plot to
-    plot : ggplot
-        plot to save, defaults to last plot displayed
-    format : str
-        image format to use, automatically extract from 
-        file name extension
-    path : str
-        path to save plot to (if you just want to set path and 
-        not filename)
-    scale : number
-        scaling factor
-    width : number
-        width (defaults to the width of current plotting window)
-    height : number
-        height (defaults to the height of current plotting window)
-    units : str
-        units for width and height when either one is explicitly 
-        specified (in, cm, or mm)
-    dpi : number
-        dpi to use for raster graphics
-    limitsize : bool
-        when `True` (the default), ggsave will not save images 
-        larger than 50x50 inches, to prevent the common error 
-        of specifying dimensions in pixels.
-    kwargs : dict 
-        additional arguments to pass to matplotlib `savefig()`
-    
-    Returns
-    -------
-    None
-    
-    Examples
-    --------
-    >>> from ggplot import *
-    >>> gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
-    >>> ggsave("filename.png", gg)
-
-    Notes
-    -----
-    Incompatibilities to ggplot2:
-    
-    - `format` can be use as a alternative to `device`
-    - ggsave will happily save matplotlib plots, if that was the last plot
+def pop(dataframe, key, default):
     """
-    fig_kwargs = {}
-    fig_kwargs.update(kwargs)
-    
-    # This is the case when we just use "ggsave(plot)"
-    if hasattr(filename, "draw"):
-        plot, filename = filename, plot
-    
-    if plot is None:
-        figure = plt.gcf()
-    else:
-        if hasattr(plot, "draw"):
-            figure = plot.draw()
-        else:
-            raise Exception("plot is not a ggplot object")
-
-    if format and device:
-        raise Exception("Both 'format' and 'device' given: only use one")
-    # in the end the imageformat is in format
-    if device:
-        format = device
-    if format:
-        if not format in figure.canvas.get_supported_filetypes():
-            raise Exception("Unknown format: {0}".format(format))
-        fig_kwargs["format"] = format
-
-    if filename is None:
-        if plot:
-            # ggplot2 defaults to pdf
-            filename = str(plot.__hash__()) + "." +(format if format else "pdf")
-        else:
-            # ggplot2 has a way to get to the last plot, but we currently dont't
-            raise Exception("No filename given: please supply a filename")
-
-    if not isinstance(filename, six.string_types):
-        # so probably a file object
-        if format is None:
-            raise Exception("filename is not a string and no format given: please supply a format!")
-    
-    if path:
-        filename = os.path.join(path, filename)
-        
-    if units not in ["in", "cm", "mm"]:
-        raise Exception("units not 'in', 'cm', or 'mm'")
-
-    to_inch = {"in":lambda x:x,"cm":lambda x: x / 2.54, "mm":lambda x: x * 2.54 * 10}
-    from_inch = {"in":lambda x:x,"cm":lambda x: x * 2.54, "mm":lambda x: x * 2.54 * 10}
-    
-    w, h = figure.get_size_inches()
-    issue_size = False
-    if width is None:
-        width = w
-        issue_size = True
-    else:
-        width = to_inch[units](width)
-    if height is None:
-        height = h
-        issue_size = True
-    else:
-        height = to_inch[units](height)
-    
+    Pop element *key* from dataframe and return it. Return default
+    if it *key* not in dataframe
+    """
     try:
-        scale = float(scale)
-    except:
-        raise Exception("Can't convert scale argument to a number: {0}".format(scale))
-    # ggplot2: if you specify a width *and* a scale, you get the width*scale image!
-    width = width * scale
-    height = height * scale
-    
-    if issue_size:
-        msg = "Saving {0} x {1} {2} image.\n".format(from_inch[units](width), from_inch[units](height), units)
-        sys.stderr.write(msg)
-    
-    if limitsize and (width > 25 or height > 25):
-        msg = "Dimensions exceed 25 inches (height and width are specified in inches/cm/mm, not pixels)." + \
-              " If you are sure you want these dimensions, use 'limitsize=False'."
-        raise Exception(msg)
-    
-    fig_kwargs["dpi"] = dpi
- 
-    #savefig(fname, dpi=None, facecolor='w', edgecolor='w',
-    #    orientation='portrait', papertype=None, format=None,
-    #    transparent=False, bbox_inches=None, pad_inches=0.1,
-    #    frameon=None)
-    try:
-        figure.set_size_inches(width,height)
-        figure.savefig(filename, **fig_kwargs)
-    finally:
-        # restore the sizes
-        figure.set_size_inches(w,h)
-    # close figure, if it was drawn by ggsave
-    if not plot is None:
-        plt.close(figure)
-
-def add_ggplotrc_params(obj):
-    # ggplotrc defaults
-    if "HOME" in os.environ:
-        ggrc = os.path.join(os.environ["HOME"], ".ggplotrc")
-        try:
-            klass = obj.__class__.__name__
-            ggrc = json.load(open(ggrc, 'r'))
-            if klass in ggrc:
-                for k, v in ggrc[klass].items():
-                    setattr(obj, k, v)
-        except:
-            pass
+        value = dataframe.pop(key)
+    except KeyError:
+        value = default
+    return value
 
 
+def is_scalar_or_string(val):
+    """
+    Return whether the given object is a scalar or string like.
+    """
+    return is_string(val) or not cbook.iterable(val)
+
+
+def is_string(obj):
+    """
+    Return True if *obj* is a string
+    """
+    if isinstance(obj, six.string_types):
+        return True
+    return False
+
+
+def is_sequence_of_strings(obj):
+    """
+    Returns true if *obj* is iterable and contains strings
+    """
+    # Note: cbook.is_sequence_of_strings has a bug because
+    # a numpy array of strings is recognized as being
+    # string_like and therefore not a sequence of strings
+    if not cbook.iterable(obj):
+        return False
+    if not isinstance(obj, np.ndarray) and cbook.is_string_like(obj):
+        return False
+    for o in obj:
+        if not cbook.is_string_like(o):
+            return False
+    return True
+
+
+def is_sequence_of_booleans(obj):
+    """
+    Return True if *obj* is array-like and contains boolean values
+    """
+    if not cbook.iterable(obj):
+        return False
+    _it = (isinstance(x, bool) for x in obj)
+    if all(_it):
+        return True
+    return False
+
+
+def is_categorical(obj):
+    """
+    Return True if *obj* is array-like and has categorical values
+
+    Categorical values include:
+        - strings
+        - booleans
+    """
+    if is_sequence_of_strings(obj):
+        return True
+    if is_sequence_of_booleans(obj):
+        return True
+    return False
+
+
+def make_iterable(val):
+    """
+    Return [*val*] if *val* is not iterable
+
+    Strings are not recognized as iterables
+    """
+    if cbook.iterable(val) and not is_string(val):
+        return val
+    return [val]
+
+
+def make_iterable_ntimes(val, n):
+    """
+    Return [*val*, *val*, ...] if *val* is not iterable.
+
+    If *val* is an iterable of length n, it is returned as is.
+    Strings are not recognized as iterables
+
+    Raises an exception if *val* is an iterable but has length
+    not equal to n
+    """
+    if cbook.iterable(val) and not is_string(val):
+        if len(val) != n:
+            raise Exception(
+                '`val` is an iterable of length not equal to n.')
+        return val
+    return [val] * n

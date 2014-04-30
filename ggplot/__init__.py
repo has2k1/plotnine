@@ -23,6 +23,7 @@ from .ggplot import ggplot
 from .components import aes
 from .coords import *
 from .geoms import *
+from .stats import *
 from .scales import *
 from .themes import *
 from .utils import *

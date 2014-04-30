@@ -2,7 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 import math
-from ..utils.utils import add_ggplotrc_params
+from ..utils.ggutils import add_ggplotrc_params
+from ggplot.utils.exceptions import GgplotError
 
 
 class facet_grid(object):
@@ -19,7 +20,7 @@ class facet_grid(object):
         y = gg.data.get(self.y)
 
         if x is None and y is None:
-            raise Exception("No facets provided!")
+            raise GgplotError("No facets provided!")
         
         # only do the deepcopy after the check
         gg = deepcopy(gg)
