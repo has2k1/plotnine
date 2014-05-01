@@ -88,10 +88,10 @@ class stat_bin(stat):
         # since frequency table is a Series object, we need to keep it ordered
         if len(_wfreq_table) < len(x):
             empty_bins = set(range(len(x))) - set(x_assignments)
-            new_wfreq_table = _wfreq_table.to_dict()
+            _wfreq_table = _wfreq_table.to_dict()
             for _b in empty_bins:
-                new_wfreq_table[_b] = 0
-            _wfreq_table = pd.Series(new_wfreq_table)
+                _wfreq_table[_b] = 0
+            _wfreq_table = pd.Series(_wfreq_table)
             _wfreq_table = _wfreq_table.sort_index()
 
         y = list(_wfreq_table)
