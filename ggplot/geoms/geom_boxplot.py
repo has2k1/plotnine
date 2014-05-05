@@ -12,6 +12,7 @@ from ggplot.utils import is_categorical
 class geom_boxplot(geom):
     DEFAULT_AES = {'y': None, 'color': 'black', 'flier_marker': '+'}
     REQUIRED_AES = {'x'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     def __group(self, x, y):
         out = {}
