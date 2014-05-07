@@ -30,4 +30,6 @@ class geom_line(geom):
 
         x = pinfo.pop('x')
         y = pinfo.pop('y')
+        if isinstance(y[0], (pd.TimeStamp)):
+            pass
         ax.plot(x, y, **pinfo)
