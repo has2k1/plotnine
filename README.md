@@ -125,6 +125,6 @@ TODO
 distinguished.](https://github.com/yhat/ggplot/blob/master/TODO.md)
 We're looking for contributors! Email greg at yhathq.com for more info.
 For getting started with contributing, check out [these
-docs](https://github.com/yhat/ggplot/blob/master/docs/contributing.md)
+docs](https://github.com/yhat/ggplot/blob/master/docs/contributing.rst)
 
 [![image](https://ga-beacon.appspot.com/UA-46996803-1/ggplot/README.md)](https://github.com/yhat/ggplot)
