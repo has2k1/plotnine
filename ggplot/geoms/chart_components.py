@@ -18,15 +18,20 @@ class ggtitle(object):
 
 
 class xlim(object):
-    def __init__(self, low, high):
-        if low is None or high is None:
-            raise GgplotError("Arguments to", self.__class__.__name__,
-                              "cannot be None")
-        try:
-            _ = high - low
-        except TypeError:
-            raise GgplotError("Arguments to", self.__class__.__name__,
-                              "must be of a numeric type")
+    def __init__(self, low = None, high = None):
+        if low != None :
+            try:
+                _ = low - 0
+            except TypeError:
+                raise GgplotError("The 'low' argument to", self.__class__.__name__,
+                                "must be of a numeric type or None")
+        if high != None :
+            try:
+                _ = high - 0
+            except TypeError:
+                raise GgplotError("The 'high' argument to", self.__class__.__name__,
+                                "must be of a numeric type or None")
+
         self.low, self.high = low, high
 
     def __radd__(self, gg):
@@ -36,15 +41,20 @@ class xlim(object):
 
 
 class ylim(object):
-    def __init__(self, low, high):
-        if low is None or high is None:
-            raise GgplotError("Arguments to", self.__class__.__name__,
-                              "cannot be None")
-        try:
-            _ = high - low
-        except TypeError:
-            raise GgplotError("Arguments to", self.__class__.__name__,
-                              "must be of a numeric type")
+    def __init__(self, low = None, high = None):
+        if low != None :
+            try:
+                _ = low - 0
+            except TypeError:
+                raise GgplotError("The 'low' argument to", self.__class__.__name__,
+                                "must be of a numeric type or None")
+        if high != None :
+            try:
+                _ = high - 0
+            except TypeError:
+                raise GgplotError("The 'high' argument to", self.__class__.__name__,
+                                "must be of a numeric type or None")
+
         self.low, self.high = low, high
 
     def __radd__(self, gg):
