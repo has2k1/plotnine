@@ -204,6 +204,11 @@ def test_partial_limits() :
     p = ggplot(diamonds, aes('carat', 'price'))
     assert_same_ggplot(p + geom_point(alpha=1/20.) + xlim(high = 4) + ylim(0), "partial_limits")
 
+@cleanup
+def test_partial_limits_facet() :
+    p = ggplot(diamonds, aes('carat', 'price', color="clarity"))
+    p = p + geom_point(alpha=1/20.) + facet_wrap(x="cut", scales="free") + xlim(low=0) + ylim(low=0)
+    assert_same_ggplot(p, "partial_limits_facet")
 
 @cleanup
 def test_scale_date():
