@@ -151,10 +151,10 @@ def test_facet_wrap2():
     assert_same_ggplot(p + geom_density(fill=True, alpha=0.3) + facet_wrap("variable"), "geom_density_facet")
     assert_same_ggplot(p + geom_line(alpha=0.3) + facet_wrap("variable"), "geom_line_facet")
 
-@cleanup 
+@cleanup
 def test_facet_grid_exceptions():
     meat = _build_meat_df()
-    meat_lng = pd.melt(meat, id_vars=['date'])    
+    meat_lng = pd.melt(meat, id_vars=['date'])
     p = ggplot(aes(x="date", y="value", colour="variable", shape="variable"), meat_lng)
     with assert_raises(Exception):
         print(p + geom_point() + facet_grid(y="variable"))
@@ -171,7 +171,7 @@ def test_facet_grid():
     _mask2 = (diamonds.clarity == "SI2") | (diamonds.clarity == "VS1")
     _df = diamonds[_mask1 & _mask2]
     p = ggplot(aes(x='x', y='y', colour='z'), data=_df)
-    p = p + geom_point() + scale_colour_gradient(low="white", high="red") 
+    p = p + geom_point() + scale_colour_gradient(low="white", high="red")
     p = p + facet_grid("cut", "clarity")
     assert_same_ggplot(p, "diamonds_big")
     p = ggplot(aes(x='carat'), data=_df)
@@ -200,15 +200,26 @@ def test_ylim():
     assert_same_ggplot(p + geom_point() + ylim(0, 1500), "ylim")
 
 @cleanup
+def test_partial_limits() :
+    p = ggplot(diamonds, aes('carat', 'price'))
+    assert_same_ggplot(p + geom_point(alpha=1/20.) + xlim(high = 4) + ylim(0), "partial_limits")
+
+@cleanup
+def test_partial_limits_facet() :
+    p = ggplot(diamonds, aes('carat', 'price', color="clarity"))
+    p = p + geom_point(alpha=1/20.) + facet_wrap(x="cut", scales="free") + xlim(low=0) + ylim(low=0)
+    assert_same_ggplot(p, "partial_limits_facet")
+
+@cleanup
 def test_scale_date():
     meat = _build_meat_df()
-    gg = ggplot(aes(x='date', y='beef'), data=meat) + geom_line() 
+    gg = ggplot(aes(x='date', y='beef'), data=meat) + geom_line()
     assert_same_ggplot(gg+scale_x_date(labels="%Y-%m-%d"), "scale_date")
 
 @cleanup
-def test_diamond():    
+def test_diamond():
     p = ggplot(aes(x='x', y='y', colour='z'), data=diamonds.head(4))
-    p = p + geom_point() + scale_colour_gradient(low="white", high="red") 
+    p = p + geom_point() + scale_colour_gradient(low="white", high="red")
     p = p + facet_wrap("cut")
     assert_same_ggplot(p, "diamonds_small")
 

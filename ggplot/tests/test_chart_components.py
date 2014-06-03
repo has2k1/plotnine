@@ -24,16 +24,10 @@ def test_chart_components():
     assert_raises(GgplotError, ggtitle, None)
 
     # test xlim
-    assert_raises(GgplotError, xlim, 0, None)
-    assert_raises(GgplotError, xlim, None, 0)
-    assert_raises(GgplotError, xlim, None, None)
     assert_raises(GgplotError, xlim, "foo", 1)
     assert_raises(GgplotError, xlim, "foo", "bar")
 
     # test ylim
-    assert_raises(GgplotError, ylim, 0, None)
-    assert_raises(GgplotError, ylim, None, 0)
-    assert_raises(GgplotError, ylim, None, None)
     assert_raises(GgplotError, ylim, "foo", 1)
     assert_raises(GgplotError, ylim, "foo", "bar")
 
