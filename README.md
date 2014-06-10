@@ -37,7 +37,6 @@ Goals
 -----
 
 -   same API as `ggplot2` for `R`
--   never use matplotlib again
 -   ability to use both American and British English spellings of
     aesthetics
 -   tight integration with [pandas](https://github.com/pydata/pandas)
