@@ -6,6 +6,7 @@ import pandas as pd
 from nose.tools import assert_true
 
 from ggplot import *
+from ggplot.components.legend import get_labels
 from ggplot.components.colors import assign_continuous_colors, \
     assign_discrete_colors
 from ggplot.tests import cleanup
@@ -32,7 +33,9 @@ def test_assign_colors():
     gg_int += geom_point()
     gg_int.draw()
 
-    new_data, _ = assign_continuous_colors(df, gg_int, 'color', color_col)
+    labels, scale_type, indices = get_labels(df, color_col)
+    new_data, _ = assign_continuous_colors(df, gg_int, 'color',
+                                           color_col, labels, indices)
     expected_cols = new_data[color_mapping_col]
     actual_cols = gg_int.data[color_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -43,7 +46,9 @@ def test_assign_colors():
     gg_num += geom_point()
     gg_num.draw()
 
-    new_data, _ = assign_continuous_colors(df, gg_int, 'color', color_col)
+    labels, scale_type, indices = get_labels(df, color_col)
+    new_data, _ = assign_continuous_colors(df, gg_num, 'color',
+                                           color_col, labels, indices)
     expected_cols = new_data[color_mapping_col]
     actual_cols = gg_num.data[color_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -54,7 +59,9 @@ def test_assign_colors():
     gg_bool += geom_point()
     gg_bool.draw()
 
-    new_data, _ = assign_discrete_colors(df, gg_bool, 'color', color_col)
+    labels, scale_type, indices = get_labels(df, color_col)
+    new_data, _ = assign_discrete_colors(df, gg_bool, 'color',
+                                           color_col, labels)
     expected_cols = new_data[color_mapping_col]
     actual_cols = gg_bool.data[color_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -65,7 +72,9 @@ def test_assign_colors():
     gg_char += geom_point()
     gg_char.draw()
 
-    new_data, _ = assign_discrete_colors(df, gg_bool, 'color', color_col)
+    labels, scale_type, indices = get_labels(df, color_col)
+    new_data, _ = assign_discrete_colors(df, gg_char, 'color',
+                                           color_col, labels)
     expected_cols = new_data[color_mapping_col]
     actual_cols = gg_char.data[color_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -78,7 +87,9 @@ def test_assign_colors():
     gg_int += geom_point()
     gg_int.draw()
 
-    new_data, _ = assign_continuous_colors(df, gg_int, 'fill', fill_col)
+    labels, scale_type, indices = get_labels(df, fill_col)
+    new_data, _ = assign_continuous_colors(df, gg_int, 'fill',
+                                           fill_col, labels, indices)
     expected_cols = new_data[fill_mapping_col]
     actual_cols = gg_int.data[fill_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -89,7 +100,9 @@ def test_assign_colors():
     gg_num += geom_point()
     gg_num.draw()
 
-    new_data, _ = assign_continuous_colors(df, gg_int, 'fill', fill_col)
+    labels, scale_type, indices = get_labels(df, fill_col)
+    new_data, _ = assign_continuous_colors(df, gg_num, 'fill',
+                                           fill_col, labels, indices)
     expected_cols = new_data[fill_mapping_col]
     actual_cols = gg_num.data[fill_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -100,7 +113,9 @@ def test_assign_colors():
     gg_bool += geom_point()
     gg_bool.draw()
 
-    new_data, _ = assign_discrete_colors(df, gg_bool, 'fill', fill_col)
+    labels, scale_type, indices = get_labels(df, fill_col)
+    new_data, _ = assign_discrete_colors(df, gg_bool, 'fill',
+                                           fill_col, labels)
     expected_cols = new_data[fill_mapping_col]
     actual_cols = gg_bool.data[fill_mapping_col]
     assert_true((actual_cols == expected_cols).all())
@@ -111,7 +126,9 @@ def test_assign_colors():
     gg_char += geom_point()
     gg_char.draw()
 
-    new_data, _ = assign_discrete_colors(df, gg_bool, 'fill', fill_col)
+    labels, scale_type, indices = get_labels(df, fill_col)
+    new_data, _ = assign_discrete_colors(df, gg_char, 'fill',
+                                           fill_col, labels)
     expected_cols = new_data[fill_mapping_col]
     actual_cols = gg_char.data[fill_mapping_col]
     assert_true((actual_cols == expected_cols).all())
