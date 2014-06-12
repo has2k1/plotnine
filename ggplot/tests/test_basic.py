@@ -112,7 +112,7 @@ def test_labs():
 @cleanup
 def test_factor_bar():
     p = ggplot(aes(x='factor(cyl)'), data=mtcars)
-    assert_same_ggplot(p + geom_bar(), "factor_geom_bar")
+    assert_same_ggplot(p + geom_histogram(), "factor_geom_bar")
 
 @cleanup
 def test_stats_smooth():

@@ -199,7 +199,7 @@ class geom(object):
 
         for arg in args:
             if isinstance(arg, aes) and passed_aes:
-                raise Execption(aes_err)
+                raise Exception(aes_err)
             if isinstance(arg, aes):
                 passed_aes = arg
             elif isinstance(arg, pd.DataFrame):
@@ -255,6 +255,7 @@ class geom(object):
         data : dataframe
         """
         self._stat._verify_aesthetics(data)
+        self._stat._calculate_global(data)
         # In most cases 'x' and 'y' mappings do not and
         # should not influence the grouping. If this is
         # not the desired behaviour then the groups
@@ -274,9 +275,6 @@ class geom(object):
         else:
             new_data = self._stat._calculate(data)
 
-        # some geoms expect a sorted x domain
-        if 'x' in new_data:
-            new_data.sort(columns=('x'), inplace=True)
         return new_data
 
     def _create_aes_with_mpl_names(self):

@@ -46,6 +46,14 @@ class stat(object):
             sys.stderr.write(message)
             self._warnings_printed.add(message)
 
+    # For some stats we need to calculate something from the entire set of data
+    # before we work with the groups. An example is stat_bin, where we need to
+    # know the max and min of the x-axis globally. If we don't we end up with
+    # groups that are binned based on only the group x-axis leading to
+    # different bin-sizes.
+    def _calculate_global(self, data):
+        pass
+
     def _calculate(self, data):
         msg = "{} should implement this method."
         raise NotImplementedError(
