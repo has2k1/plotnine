@@ -3,7 +3,9 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 
 import pandas as pd
+import numpy as np
 from matplotlib.cbook import iterable
+from ggplot.utils import is_string
 
 import ggplot.stats
 from ggplot.utils import is_scalar_or_string
@@ -336,3 +338,30 @@ class geom(object):
             _data = data.to_dict('list')
             out.append(_data)
         return out
+
+
+    def sort_by_x(self, pinfo):
+        """
+        Sort the lists in pinfo according to pinfo['x']
+        This function is useful for geom's that expect
+        the x-values to come in sorted order
+        """
+        # Remove list types from pinfo
+        _d = {}
+        for k in list(pinfo.keys()):
+            if not is_string(pinfo[k]) and iterable(pinfo[k]):
+                _d[k] = pinfo.pop(k)
+
+        # Sort numerically if all items can be cast
+        try:
+            x = list(map(np.float, _d['x']))
+        except ValueError:
+            x = _d['x']
+        idx = np.argsort(x)
+
+        # Put sorted lists back in pinfo
+        for key in _d:
+            pinfo[key] = [_d[key][i] for i in idx]
+
+        return pinfo
+
