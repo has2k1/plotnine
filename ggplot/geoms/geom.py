@@ -366,6 +366,5 @@ class geom(object):
                 pinfo[key] = [_d[key][i] for i in idx]
         except:
             pass
-
         return pinfo
 
