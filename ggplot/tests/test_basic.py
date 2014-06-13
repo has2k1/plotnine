@@ -247,3 +247,11 @@ def test_aes_mixed_args():
     result = aes("weight", "hp", color="qsec")
     expected = {"x": "weight", "y": "hp", "color": "qsec"}
     assert_equal(result, expected)
+
+
+@cleanup
+def test_scale_color_brewer() :
+    p = ggplot(diamonds, aes(x = "x", y="y"))
+    p = p + geom_line() + scale_color_brewer(type='qual', palette=2)
+    assert_same_ggplot(p, "scale_color_brewer")
+
