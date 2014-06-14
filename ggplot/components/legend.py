@@ -176,7 +176,7 @@ def make_label(label, max_length = 20, capitalize = True):
 
 def get_legend_labels(legends) :
     # All the legends are for the same column, so the labels of any will do
-    return sorted(legends.values()[0].keys())
+    return sorted(list(legends.values())[0].keys())
 
 
 def get_colors(legends) :
