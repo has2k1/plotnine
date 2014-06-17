@@ -13,7 +13,7 @@ class geom_bar(geom):
     DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 1.0, 'weight': None, 'y': None, 'width' : None}
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'bar', 'position': 'stack'}
+    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
     _extra_requires = {'y', 'width'}
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',

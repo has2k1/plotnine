@@ -13,7 +13,7 @@ from .stat import stat
 _MSG_YVALUE = """A variable was mapped to y.
     stat_bin sets the y value to the count of cases in each group.
     The mapping to y was ignored.
-    If you want y to represent values in the data, use stat="identity".
+    If you want y to represent values in the data, use stat="bar".
 """
 
 _MSG_BINWIDTH = """stat_bin: binwidth defaulted to range/30.

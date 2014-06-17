@@ -45,14 +45,14 @@ def test_labels_manual():
 def test_facet_grid_discrete():
     df = _build_testing_df()
     gg = ggplot(aes(x='a', y='y', fill='y'), data=df)
-    assert_same_ggplot(gg + geom_bar() + facet_grid(x="facets", y="facets2"),
+    assert_same_ggplot(gg + geom_bar(stat='bar') + facet_grid(x="facets", y="facets2"),
                        "faceting_grid_discrete")
 
 @cleanup
 def test_facet_wrap_discrete():
     df = _build_testing_df()
     gg = ggplot(aes(x='a', y='y'), data=df)
-    assert_same_ggplot(gg + geom_bar() + facet_wrap(x="facets"), "faceting_wrap_discrete")
+    assert_same_ggplot(gg + geom_bar(stat='bar') + facet_wrap(x="facets"), "faceting_wrap_discrete")
 
 @cleanup
 def test_facet_colors():
