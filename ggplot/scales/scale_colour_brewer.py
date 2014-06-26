@@ -29,7 +29,7 @@ class scale_colour_brewer(scale):
     palette: string
         If a string, will use that named palette. If a number, will index into
         the list of palettes of appropriate type
-    
+
     Examples
     --------
     >>> from ggplot import *
@@ -41,8 +41,8 @@ class scale_colour_brewer(scale):
     >>> print(p + scale_color_brewer(type='seq'))
     >>> print(p + scale_color_brewer(type='seq', palette='Blues'))
     """
-    VALID_SCALES = ['type', 'palette'] 
-    
+    VALID_SCALES = ['type', 'palette']
+
     def __radd__(self, gg):
         gg = deepcopy(gg)
 
@@ -59,7 +59,15 @@ class scale_colour_brewer(scale):
         if isinstance(palette, int):
             palette = _number_to_palette(ctype, palette)
 
-        n_colors = gg.data[gg.aesthetics['color']].nunique()
+        # Try to get colors
+        try:
+            color_col = gg.aesthetics.get('color', gg.aesthetics['fill'])
+            n_colors = max(gg.data[color_col].nunique(),3)
+        except KeyError :
+            # If we are neither using 'color' nor 'fill' then assume there is
+            # only one color used
+            n_colors = 3
+
         bmap = brewer2mpl.get_map(palette, ctype, n_colors)
         gg.manual_color_list = bmap.hex_colors
 
