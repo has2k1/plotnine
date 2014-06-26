@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 from .geom import geom
 
 
@@ -14,4 +15,5 @@ class geom_area(geom):
     _units = { 'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):
+        pinfo = self.sort_by_x(pinfo)
         ax.fill_between(**pinfo)

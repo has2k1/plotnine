@@ -58,5 +58,5 @@ def test_density_with_fill():
 def test_mtcars_geom_bar_cyl():
     meat_lng = pd.melt(meat[['date', 'beef', 'broilers', 'pork']], id_vars=['date'])
     gg = ggplot(mtcars, aes('factor(cyl)'))
-    gg = gg + geom_bar()
+    gg = gg + geom_histogram()
     assert_same_ggplot(gg, 'mtcars_geom_bar_cyl')
