@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import numpy as np
 import six
+from .legend import get_labels
 
 # Matplolib is not consistent. Sometimes it does not
 # accept abbreviations
@@ -53,9 +53,9 @@ def assign_linetypes(data, aes):
     legend_entry = dict()
     if 'linetype' in aes:
         linetype_col = aes['linetype']
-        possible_linetypes = np.unique(data[linetype_col])
         linetype = line_gen()
-        linetype_mapping = dict((value, six.next(linetype)) for value in possible_linetypes)
+        labels, scale_type, indices = get_labels(data, linetype_col, "discrete")
+        linetype_mapping = dict((value, six.next(linetype)) for value in labels)
         data[':::linetype_mapping:::'] = data[linetype_col].apply(
             lambda x: linetype_mapping[x])
 

@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import numpy as np
 import six
+from .legend import get_labels
 
 
 SHAPES = [
@@ -44,10 +44,10 @@ def assign_shapes(data, aes):
     legend_entry = dict()
     if 'shape' in aes:
         shape_col = aes['shape']
-        possible_shapes = np.unique(data[shape_col])
         shape = shape_gen()
+        labels, scale_type, indices = get_labels(data, shape_col, "discrete")
         # marker in matplotlib are not unicode ready in 1.3.1 :-( -> use explicit str()...
-        shape_mapping = dict((value, str(six.next(shape))) for value in possible_shapes)
+        shape_mapping = dict((value, str(six.next(shape))) for value in labels)
         data[':::shape_mapping:::'] = data[shape_col].apply(
             lambda x: shape_mapping[x])
 

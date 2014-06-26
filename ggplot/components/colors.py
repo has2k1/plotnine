@@ -4,7 +4,9 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 from matplotlib.colors import rgb2hex
 from ..utils.color import ColorHCL
+from .legend import get_labels
 from copy import deepcopy
+from ..utils.exceptions import GgplotError
 import six
 
 
@@ -78,20 +80,20 @@ def assign_colors(data, aes, gg, aes_name='color'):
     legend_entry = dict()
     if aes_name in aes:
         color_col = aes[aes_name]
-        numeric_cols = set(data._get_numeric_data().columns)
-        bool_cols = set(data._get_bool_data().columns)
-        continuous_cols = numeric_cols - bool_cols
-        if color_col in continuous_cols:
+        labels, scale_type, indices = get_labels(data, color_col)
+        if scale_type == "continuous" :
             data, legend_entry = assign_continuous_colors(
-                data, gg, aes_name, color_col)
-        else:
+                data, gg, aes_name, color_col, labels, indices)
+        elif scale_type == "discrete" :
             data, legend_entry = assign_discrete_colors(
-                data, gg, aes_name, color_col)
+                data, gg, aes_name, color_col, labels)
+        else :
+            raise GgplotError("Unknow scale_type: '%s'" % scale_type)
 
     return data, legend_entry
 
 
-def assign_continuous_colors(data, gg, aes_name, color_col):
+def assign_continuous_colors(data, gg, aes_name, color_col, labels, indices):
     """
     Logic to assign colors in the continuous case.
 
@@ -111,6 +113,10 @@ def assign_continuous_colors(data, gg, aes_name, color_col):
     color_col : The column we are using to color.
     aes_name : string
         Which aesthetic needs a color mapping; 'color' | 'fill'
+    labels : [string]
+        A list of legend labels
+    indices : [int]
+        The percentile indices used to generate the labels
 
     Returns
     -------
@@ -125,17 +131,16 @@ def assign_continuous_colors(data, gg, aes_name, color_col):
     values = [(i - min(values)) / (max(values) - min(values)) for i in values]
     color_mapping = gg.colormap(values)[::, :3]
     data[_mcolumn] = [rgb2hex(value) for value in color_mapping]
-    quantiles = np.percentile(gg.data[color_col], [0, 25, 50, 75, 100])
-    key_colors = gg.colormap([0, 25, 50, 75, 100])[::, :3]
+    key_colors = gg.colormap(indices)[::, :3]
     key_colors = [rgb2hex(value) for value in key_colors]
 
     legend_entry = {'column_name': color_col,
-                    'dict' : dict(zip(key_colors, quantiles)),
+                    'dict' : dict(zip(key_colors, labels)),
                     'scale_type': 'continuous'}
     return data, legend_entry
 
 
-def assign_discrete_colors(data, gg, aes_name, color_col):
+def assign_discrete_colors(data, gg, aes_name, color_col, labels):
     """
     Logic to assign colors in the discrete case.
 

@@ -2,6 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
+from .legend import get_labels
+from ..utils.exceptions import GgplotError
 
 
 def assign_alphas(data, aes):
@@ -29,15 +31,22 @@ def assign_alphas(data, aes):
     legend_entry = dict()
     if 'alpha' in aes:
         alpha_col = aes['alpha']
-        values = data[alpha_col].astype(np.float)
+        # Check that values are in the right format
+        try :
+            values = data[alpha_col].astype(np.float)
+        except ValueError :
+            raise GgplotError(
+                "Size aesthetic '%s' contains non-numerical data" % alpha_col)
+        labels, scale_type, indices = get_labels(data, alpha_col)
         _min, _max = values.min(), values.max()
-        data[':::alpha_mapping:::'] = np.interp(values,
-                                                [_min, _max], [0.1, 1])
-        labels = np.percentile(values, [5, 25, 50, 75, 95])
-        quantiles = np.percentile(data[':::alpha_mapping:::'],
-                                  [5, 25, 50, 75, 95])
+        normalize = lambda v : np.interp(v, [_min, _max], [0.1, 1])
+        data[':::alpha_mapping:::'] = normalize(values)
+        if scale_type == "continuous" :
+            quantiles = np.percentile(data[':::alpha_mapping:::'], indices)
+        elif scale_type == "discrete" :
+            quantiles = normalize(np.array(labels, dtype=np.float))
         legend_entry = {
             'column_name': alpha_col,
             'dict': dict(zip(quantiles, labels)),
-            'scale_type': 'continuous'}
+            'scale_type': scale_type}
     return data, legend_entry

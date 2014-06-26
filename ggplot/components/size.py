@@ -2,6 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
+from .legend import get_labels
+from ..utils.exceptions import GgplotError
 
 
 def assign_sizes(data, aes):
@@ -28,17 +30,25 @@ def assign_sizes(data, aes):
     # TODO: add different types of normalization (log, inverse, etc.)
     if 'size' in aes:
         size_col = aes['size']
-        values = data[size_col].astype(np.float)
+        # Check that values are in the right format
+        try :
+            values = data[size_col].astype(np.float)
+        except ValueError :
+            raise GgplotError(
+                "Size aesthetic '%s' contains non-numerical data" % size_col)
         _min = values.min()
-        data[":::size_mapping:::"] = (200.0 *
-                                      (values - _min + .15) /
-                                      (values.max() - _min))
-        labels = np.percentile(values, [5, 25, 50, 75, 95])
-        quantiles = np.percentile(data[":::size_mapping:::"],
-                                  [5, 25, 50, 75, 95])
+        normalize = lambda v : 30 + (200.0 * (v - _min) / (v.max() - _min))
+        data[":::size_mapping:::"] = normalize(values)
+        labels, scale_type, indices = get_labels(data, size_col)
+        if scale_type == "continuous" :
+            quantiles = np.percentile(data[":::size_mapping:::"], indices)
+        elif scale_type == "discrete" :
+            quantiles = normalize(np.array(labels, dtype=np.float))
+        else :
+            raise GgplotError("Unknow scale_type: '%s'" % scale_type)
 
         legend_entry = {
             'column_name': size_col,
             'dict': dict(zip(quantiles, labels)),
-            'scale_type': 'continuous'}
+            'scale_type': scale_type}
     return data, legend_entry
