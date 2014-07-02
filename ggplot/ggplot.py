@@ -534,5 +534,5 @@ def _apply_transforms(data, aes):
             except Exception as e:
                 msg = """The '%s' mapping: '%s' produced a value of type '%s', but only single items
                 and lists/arrays can be used. (original error: %s)"""
-                raise Exception(msg % (ae, name, str(type(_new_val)), str(e)))
+                raise Exception(msg % (ae, name, str(type(new_val)), str(e)))
     return data
