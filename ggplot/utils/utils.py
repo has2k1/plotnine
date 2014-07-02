@@ -108,3 +108,23 @@ def make_iterable_ntimes(val, n):
                 '`val` is an iterable of length not equal to n.')
         return val
     return [val] * n
+
+
+_waiver_ = object()
+def waiver(param=None):
+    """
+    When no parameter is passed, return an object to imply 'default'.
+    When a parameter is passed, return True if that object implies use
+    default and False otherwise.
+    """
+    if param is None:
+        return _waiver_
+    else:
+        return param is _waiver_
+
+
+def identity(*args):
+    """
+    Return whatever is passed in
+    """
+    return args if len(args) else args[0]

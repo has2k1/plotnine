@@ -62,3 +62,32 @@ def calc_axis_breaks_and_limits(minval, maxval, nlabs=None):
         labs = [convert_if_int(lab) for lab in labs]
 
     return labs, minval-(step/3), maxval+(step/3)
+
+
+def rescale_pal(range=(0.1, 1)):
+    """
+    Rescale the input to the specific output range.
+    Useful for alpha, size, and continuous position.
+    """
+    def rescale_(x):
+        return rescale(x, range, (0, 1))
+    return rescale_
+
+
+def rescale(x, to=(0, 1), from_=None):
+    """
+    Rescale numeric vector to have specified minimum and maximum.
+
+    Parameters
+    ----------
+    x: ndarray | numeric
+        1D vector of values to manipulate.
+    to: tuple
+        output range (numeric vector of length two)
+    from_: tuple
+        input range (numeric vector of length two).
+        If not given, is calculated from the range of x
+    """
+    if not from_:
+        from_ = np.min(x), np.max(x)
+    return np.interp(x, from_, to)
