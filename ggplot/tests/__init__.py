@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import sys
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from nose.tools import with_setup, make_decorator, assert_true
@@ -24,37 +26,33 @@ import os
 # Tests which should be run with 'python tests.py' or via 'must be
 # included here.
 default_test_modules = [
-    'ggplot.tests.test_basic',
-    'ggplot.tests.test_readme_examples',
-    'ggplot.tests.test_ggplot_internals',
-    'ggplot.tests.test_geom',
-    'ggplot.tests.test_stat',
-    'ggplot.tests.test_stat_calculate_methods',
-    'ggplot.tests.test_stat_summary',
-    'ggplot.tests.test_geom_rect',
-    'ggplot.tests.test_geom_dotplot',
-    'ggplot.tests.test_geom_bar',
-    'ggplot.tests.test_qplot',
-    'ggplot.tests.test_geom_lines',
-    'ggplot.tests.test_geom_linerange',
-    'ggplot.tests.test_geom_pointrange',
-    'ggplot.tests.test_faceting',
-    'ggplot.tests.test_stat_function',
-    'ggplot.tests.test_scale_facet_wrap',
-    'ggplot.tests.test_scale_log',
-    'ggplot.tests.test_reverse',
-    'ggplot.tests.test_ggsave',
-    'ggplot.tests.test_theme_mpl',
-    'ggplot.tests.test_colors',
-    'ggplot.tests.test_chart_components',
-    'ggplot.tests.test_legend',
-    'ggplot.tests.test_element_target',
-    'ggplot.tests.test_element_text',
-    'ggplot.tests.test_theme',
-    'ggplot.tests.test_theme_bw',
-    'ggplot.tests.test_theme_gray',
-    'ggplot.tests.test_theme_mpl',
-    'ggplot.tests.test_theme_seaborn'
+    # 'ggplot.tests.test_basic',
+    # 'ggplot.tests.test_readme_examples',
+    # 'ggplot.tests.test_ggplot_internals',
+    # 'ggplot.tests.test_geom',
+    # 'ggplot.tests.test_stat',
+    # 'ggplot.tests.test_stat_calculate_methods',
+    # 'ggplot.tests.test_geom_rect',
+    # 'ggplot.tests.test_qplot',
+    # 'ggplot.tests.test_geom_lines',
+    # 'ggplot.tests.test_faceting',
+    # 'ggplot.tests.test_stat_function',
+    # 'ggplot.tests.test_scale_facet_wrap',
+    # 'ggplot.tests.test_scale_log',
+    # 'ggplot.tests.test_reverse',
+    # 'ggplot.tests.test_ggsave',
+    # 'ggplot.tests.test_theme_mpl',
+    # 'ggplot.tests.test_colors',
+    # 'ggplot.tests.test_chart_components',
+    # 'ggplot.tests.test_legend',
+    # 'ggplot.tests.test_element_target',
+    # 'ggplot.tests.test_element_text',
+    # 'ggplot.tests.test_theme',
+    # 'ggplot.tests.test_theme_bw',
+    # 'ggplot.tests.test_theme_gray',
+    # 'ggplot.tests.test_theme_mpl',
+    # 'ggplot.tests.test_theme_seaborn',
+    'ggplot.tests.test_scale_internals',
 ]
 
 _multiprocess_can_split_ = True
@@ -135,6 +133,27 @@ def get_assert_same_ggplot(test_file):
 def assert_same_elements(first,second, msg=None):
     assert_true(len(first) == len(second), "different length")
     assert_true(all([a==b for a,b in zip(first,second)]), "Unequal: %s vs %s" % (first, second))
+
+
+class assert_prints_warning(object):
+    """
+    Make sure a message has been printed to
+    sys.stderr on exiting the context
+    """
+    class OutputDevice(object):
+        def __init__(self):
+            self.output = ''
+
+        def write(self, s):
+            self.output = s
+
+    def __enter__(self):
+        self.stderr_old = sys.stderr
+        sys.stderr = self.OutputDevice()
+
+    def __exit__(self, exception_type, exception_value, trace):
+        assert(sys.stderr.output)
+        sys.stderr = self.stderr_old
 
 
 def image_comparison(baseline_images=None, tol=17, extensions=None):

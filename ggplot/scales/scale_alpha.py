@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import numpy as np
+
 from .utils import rescale_pal
 from .scale import scale_discrete, scale_continuous
 
@@ -9,7 +11,7 @@ class scale_alpha(scale_continuous):
     aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1)):
-        self.palette = staticmethod(rescale_pal(range))
+        self.palette = rescale_pal(range)
 
 
 class scale_alpha_continuous(scale_alpha):

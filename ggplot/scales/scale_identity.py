@@ -11,7 +11,7 @@ class scale_color_identity(scale_discrete):
     palette = staticmethod(identity)
 
 
-class scale_fill_identity(scale_fill_identity):
+class scale_fill_identity(scale_color_identity):
     aesthetics = ['fill']
 
 

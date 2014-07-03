@@ -2,7 +2,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import sys
-from matplotlib.colors import rgb2hex
+from copy import deepcopy
+
+
+import numpy as np
+from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import matplotlib.cbook as cbook
 import brewer2mpl
 
@@ -20,6 +24,7 @@ Using a discrete colour palette in a continuous scale.
 Consider using type = "seq" or type = "div" instead"
 """
 ## Palette making utilities ##
+
 
 def hue_pal(h=(0 + 15, 360 + 15), c=100, l=65, h_start=0, direction=1):
     """
@@ -47,7 +52,7 @@ def grey_pal(start=0.2, end=0.8):
     gamma = 2.2
     ends = ((0.0, start, start), (1.0, end, end))
     cdict = {'red': ends, 'green': ends, 'blue': ends}
-    grey_cmap = matplotlib.colors.LinearSegmentedColormap('grey', cdict)
+    grey_cmap = LinearSegmentedColormap('grey', cdict)
     def func(n):
         colors = []
         # The grey scale points are linearly separated in
@@ -79,7 +84,7 @@ def brewer_pal(type='seq', palette=1):
         if n < len(palettes):
             return palettes[n]
 
-    def _max_palette_colors(type):
+    def _max_palette_colors(type, palette_name):
         """
         Return the number of colors in the brewer palette
         """
@@ -92,12 +97,14 @@ def brewer_pal(type='seq', palette=1):
             qlimit = {"Accent": 8, "Dark": 8, "Paired": 12,
                       "Pastel1": 9, "Pastel2": 8, "Set1": 9,
                       "Set2": 8, "Set3": 12}
-            return qlimit(self.type)
+            return qlimit[palette_name]
 
     type = _handle_shorthand(type)
-    nmax = _max_palette_colors(type)
     if isinstance(palette, int):
         palette_name = _number_to_palette(type, palette)
+    else:
+        palette_name = palette
+    nmax = _max_palette_colors(type, palette_name)
 
     def func(n):
         # Only draw the maximum allowable colors from the palette
@@ -120,7 +127,7 @@ class scale_color_hue(scale_discrete):
 
     def __init__(self, h=(0 + 15, 360 + 15), c=100, l=65,
                  h_start=0, direction=1):
-        self.palette = staticmethod(hue_pal(h, c, l, h_start, direction))
+        self.palette = hue_pal(h, c, l, h_start, direction)
 
 
 class scale_fill_hue(scale_color_hue):
@@ -132,7 +139,7 @@ class scale_color_brewer(scale_discrete):
     aesthetics = ['color']
 
     def __init__(self, type='seq', palette=1):
-        self.palette = staticmethod(brewer_pal(type, palette))
+        self.palette = brewer_pal(type, palette)
 
 
 class scale_fill_brewer(scale_color_brewer):
@@ -143,7 +150,7 @@ class scale_fill_brewer(scale_color_brewer):
 class scale_color_grey(scale_discrete):
     aesthetics = ['color']
     def __init__(self, start=0.2, end=0.8):
-        self.palette = staticmethod(grey_pal(start, end))
+        self.palette = grey_pal(start, end)
 
 
 class scale_fill_grey(scale_color_grey):
@@ -177,7 +184,7 @@ class scale_color_gradient(scale_continuous):
         color_tuples = self.colormap(values)
         try:
             rgb_colors = [rgb2hex(t) for t in color_tuples]
-        except TypeError:
+        except IndexError:
             rgb_colors = rgb2hex(color_tuples)
         return rgb_colors
 

@@ -3,8 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 
-from .scale_discrete import scale_discrete
-from .scale_continuous import scale_continuous
+from .scale import scale_discrete, scale_continuous
 from .utils import rescale_pal
 
 
@@ -22,7 +21,7 @@ class scale_size_continuous(scale_continuous):
     aesthetics = ['size']
 
     def __init__(self, range=(1, 6)):
-        palette = staticmethod(rescale_pal(range))
+        self.palette = rescale_pal(range)
 
 
 scale_size_discrete = scale_size

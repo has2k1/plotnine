@@ -6,11 +6,8 @@ import sys
 from .scale import scale_discrete
 from ..utils.exceptions import GgplotError
 
-_TPL_SMALL_SCALE = """\
-Insufficient values in manual scale. , {}, needed but only , {},  provided.
-"""
 
-class _scale_manual(scale_disrete):
+class _scale_manual(scale_discrete):
     """
     Abstract class for manual scales
     """
@@ -18,9 +15,13 @@ class _scale_manual(scale_disrete):
         self.values
 
     def palette(self, n):
+        msg = """\
+        Insufficient values in manual scale.\
+        , {}, needed but only , {},  provided.
+        """
         if n > len(self.values):
             raise GgplotError(
-                _TPL_SMALL_SCALE.format(n, len(self.values)))
+                msg.format(n, len(self.values)))
         return values
 
 
