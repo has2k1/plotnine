@@ -1,21 +1,22 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib as mpl
+
+import sys
+
 from .geom import geom
-from ggplot.utils import is_string
 from ggplot.utils import is_categorical
 import numpy as np
 
+
 class geom_linerange(geom):
-    DEFAULT_AES = {'alpha': 1, 'color': 'black',# 'fill': None,
+    DEFAULT_AES = {'alpha': 1, 'color': 'black',
                    'linetype': 'solid',
-                   #'shape': 'o',
                    'size': 2}
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap':None}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap': None}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _units = {'alpha', 'color', 'linestyle'}# 'marker'}
+    _units = {'alpha', 'color', 'linestyle'}
 
     def _plot_unit(self, pinfo, ax):
         # If x is categorical, calculate positions to plot
