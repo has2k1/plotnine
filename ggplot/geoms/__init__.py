@@ -14,6 +14,7 @@ from .geom_linerange import geom_linerange
 from .geom_now_its_art import geom_now_its_art
 from .geom_path import geom_path
 from .geom_point import geom_point
+from .geom_pointrange import geom_pointrange
 from .geom_rect import geom_rect
 from .geom_smooth import geom_smooth
 from .geom_step import geom_step
@@ -29,7 +30,7 @@ from .chart_components import *
 __facet__ = ['facet_grid', 'facet_wrap']
 __geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot', 'geom_density',
              'geom_histogram', 'geom_hline', 'geom_jitter', 'geom_line', 'geom_linerange',
-             'geom_now_its_art', 'geom_path', 'geom_point', 'geom_rect',
+             'geom_now_its_art', 'geom_path', 'geom_point', 'geom_pointrange', 'geom_rect',
              'geom_step', 'geom_smooth', 'geom_text', 'geom_tile',
              'geom_vline']
 __components__ = ['ylab', 'xlab', 'ylim', 'xlim', 'labs', 'ggtitle']
