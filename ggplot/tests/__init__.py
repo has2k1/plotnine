@@ -32,6 +32,7 @@ default_test_modules = [
     'ggplot.tests.test_stat_calculate_methods',
     'ggplot.tests.test_geom_rect',
     'ggplot.tests.test_geom_dotplot',
+    'ggplot.tests.test_geom_bar',
     'ggplot.tests.test_qplot',
     'ggplot.tests.test_geom_lines',
     'ggplot.tests.test_faceting',

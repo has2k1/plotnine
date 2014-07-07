@@ -11,7 +11,7 @@ from ggplot.utils import is_categorical
 
 class geom_bar(geom):
     DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.0, 'weight': None, 'y': None}
+                   'linetype': 'solid', 'size': 1.0, 'weight': None, 'y': None, 'width' : None}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
@@ -20,43 +20,35 @@ class geom_bar(geom):
                     'fill': 'color', 'color': 'edgecolor'}
     # NOTE: Currently, geom_bar does not support mapping
     # to alpha and linestyle. TODO: raise exception
-    _units = {'alpha', 'linestyle', 'linewidth'}
+    _units = {'edgecolor', 'color', 'alpha', 'linestyle', 'linewidth'}
 
-    def _sort_list_types_by_x(self, pinfo):
-        """
-        Sort the lists in pinfo according to pinfo['x']
-        """
-        # Remove list types from pinfo
-        _d = {}
-        for k in list(pinfo.keys()):
-            if not is_string(pinfo[k]) and cbook.iterable(pinfo[k]):
-                _d[k] = pinfo.pop(k)
 
-        # Sort numerically if all items can be cast
-        try:
-            x = list(map(np.float, _d['x']))
-        except ValueError:
-            x = _d['x']
-        idx = np.argsort(x)
+    def __init__(self, *args, **kwargs):
+        # TODO: Change self.__class__ to geom_bar
+        super(geom_bar, self).__init__(*args, **kwargs)
+        self.bottom = None
+        self.ax = None
 
-        # Put sorted lists back in pinfo
-        for key in _d:
-            pinfo[key] = [_d[key][i] for i in idx]
-
-        return pinfo
 
     def _plot_unit(self, pinfo, ax):
         categorical = is_categorical(pinfo['x'])
-        # If x is not numeric, the bins are sorted acc. to x
-        # so the list type aesthetics must be sorted too
-        if categorical:
-            pinfo = self._sort_list_types_by_x(pinfo)
 
         pinfo.pop('weight')
         x = pinfo.pop('x')
-        width = np.array(pinfo.pop('width'))
-        heights = pinfo.pop('y')
-        labels = x
+        width_elem = pinfo.pop('width')
+        # If width is unspecified, default is an array of 1's
+        if width_elem == None:
+            width = np.ones(len(x))
+        else :
+            width = np.array(width_elem)
+
+        # Make sure bottom is initialized and get heights. If we are working on
+        # a new plot (using facet_wrap or grid), then reset bottom
+        _reset = self.bottom == None or (self.ax != None and self.ax != ax)
+        self.bottom = np.zeros(len(x)) if _reset else self.bottom
+        self.ax = ax
+        heights = np.array(pinfo.pop('y'))
+
 
         # layout and spacing
         #
@@ -79,14 +71,14 @@ class geom_bar(geom):
             _spacing_factor = 0.105     # of the bin width
             _breaks = np.append([0], width)
             left = np.cumsum(_breaks[:-1])
-
         _sep = width[0] * _spacing_factor
         left = left + _left_gap + [_sep * i for i in range(len(left))]
-
-
-        ax.bar(left, heights, width, **pinfo)
+        ax.bar(left, heights, width, bottom=self.bottom, **pinfo)
         ax.autoscale()
 
         if categorical:
             ax.set_xticks(left+width/2)
             ax.set_xticklabels(x)
+
+        # Update bottom positions
+        self.bottom = heights + self.bottom

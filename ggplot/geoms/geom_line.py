@@ -28,6 +28,7 @@ class geom_line(geom):
                 sys.stderr.write(msg)
                 self._warning_printed = True
 
+        pinfo = self.sort_by_x(pinfo)
         x = pinfo.pop('x')
         y = pinfo.pop('y')
         ax.plot(x, y, **pinfo)

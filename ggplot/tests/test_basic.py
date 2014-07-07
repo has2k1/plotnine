@@ -112,7 +112,7 @@ def test_labs():
 @cleanup
 def test_factor_bar():
     p = ggplot(aes(x='factor(cyl)'), data=mtcars)
-    assert_same_ggplot(p + geom_bar(), "factor_geom_bar")
+    assert_same_ggplot(p + geom_histogram(), "factor_geom_bar")
 
 @cleanup
 def test_stats_smooth():
@@ -247,3 +247,11 @@ def test_aes_mixed_args():
     result = aes("weight", "hp", color="qsec")
     expected = {"x": "weight", "y": "hp", "color": "qsec"}
     assert_equal(result, expected)
+
+
+@cleanup
+def test_scale_color_brewer() :
+    p = ggplot(diamonds, aes(x = "x", y="y"))
+    p = p + geom_line() + scale_color_brewer(type='qual', palette=2)
+    assert_same_ggplot(p, "scale_color_brewer")
+
