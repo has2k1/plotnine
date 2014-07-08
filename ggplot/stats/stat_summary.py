@@ -56,14 +56,19 @@ def median_hilow(series, confidence_interval=0.95):
                       'ymax': np.percentile(series, 100 * (1 - tail))})
 
 
-# TODO: Implement remaining functions provided in stat_summary (mean_cl_normal,
-# median_hilow, see
-# https://github.com/hadley/ggplot2/blob/master/R/stat-summary.r)
+def mean_se(series, mult=1):
+    m = np.mean(series)
+    se = mult * np.sqrt(np.var(series) / len(series))
+    return pd.Series({'y': m,
+                      'ymin': m-se,
+                      'ymax': m+se})
+
 
 function_dict = {'mean_cl_boot': mean_cl_boot,
                  'mean_cl_normal': mean_cl_normal,
                  'mean_sdl': mean_sdl,
-                 'median_hilow': median_hilow}
+                 'median_hilow': median_hilow,
+                 'mean_se': mean_se}
 
 
 def combined_fun_data(series, fun_y, fun_ymin, fun_ymax):
