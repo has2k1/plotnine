@@ -35,12 +35,20 @@ def mean_sdl(series, mult=2):
                       'ymax': m+mult*s})
 
 
+def median_hilow(series, confidence_interval=0.95):
+    tail = (1 - confidence_interval) / 2
+    return pd.Series({'y': np.median(series),
+                      'ymin': np.percentile(series, 100 * tail),
+                      'ymax': np.percentile(series, 100 * (1 - tail))})
+
+
 # TODO: Implement remaining functions provided in stat_summary (mean_cl_normal,
 # median_hilow, see
 # https://github.com/hadley/ggplot2/blob/master/R/stat-summary.r)
 
 function_dict = {'mean_cl_boot': mean_cl_boot,
-                 'mean_sdl': mean_sdl}
+                 'mean_sdl': mean_sdl,
+                 'median_hilow': median_hilow}
 
 
 def combined_fun_data(series, fun_y, fun_ymin, fun_ymax):
