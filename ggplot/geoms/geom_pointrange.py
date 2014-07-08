@@ -20,6 +20,10 @@ class geom_pointrange(geom):
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle', 'shape': 'marker', 'fill': 'facecolor'}
     _units = {'alpha', 'color', 'linestyle', 'marker'}
 
+    def __init__(self, *args, **kwargs):
+        super(geom_pointrange, self).__init__(*args, **kwargs)
+        self._warning_printed = False
+
     def _plot_unit(self, pinfo, ax):
         # If x is categorical, calculate positions to plot
         categorical = is_categorical(pinfo['x'])

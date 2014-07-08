@@ -18,6 +18,10 @@ class geom_linerange(geom):
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
     _units = {'alpha', 'color', 'linestyle'}
 
+    def __init__(self, *args, **kwargs):
+        super(geom_linerange, self).__init__(*args, **kwargs)
+        self._warning_printed = False
+
     def _plot_unit(self, pinfo, ax):
         # If x is categorical, calculate positions to plot
         categorical = is_categorical(pinfo['x'])
