@@ -119,7 +119,7 @@ class stat_summary(stat):
 
         from ggplot import *
 
-        ggplot(aes(x='cut', y='carat'), data=diamonds) \
+        ggplot(aes(x='cut', y='carat'), data=diamonds) \\
             + stat_summary(fun_data = 'mean_cl_boot')
 
     Provide own function:
@@ -133,7 +133,7 @@ class stat_summary(stat):
             return pd.Series({'y': np.median(series),
                               'ymin': np.percentile(series, 5),
                               'ymax': np.percentile(series, 95)})
-        ggplot(aes(x='cut', y='carat'), data=diamonds) \
+        ggplot(aes(x='cut', y='carat'), data=diamonds) \\
             + stat_summary(fun_data = median_quantile)
 
     Provide different funtions for y, ymin and ymax:
@@ -143,7 +143,7 @@ class stat_summary(stat):
 
         import numpy as np
         from ggplot import *
-        ggplot(aes(x='cut', y='carat'), data=diamonds) \
+        ggplot(aes(x='cut', y='carat'), data=diamonds) \\
             + stat_summary(fun_y = np.median, fun_ymin=np.min, fun_ymax=np.max)
 
     """
