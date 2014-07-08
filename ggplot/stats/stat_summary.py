@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from six import string_types
 
 import numpy as np
+import scipy.stats
 import pandas as pd
 
 from ggplot.utils import make_iterable_ntimes
@@ -27,6 +28,19 @@ def mean_cl_boot(series, n_samples=1000, confidence_interval=0.95):
     return bootstrap_statistics(series, np.mean, n_samples=n_samples, confidence_interval=confidence_interval)
 
 
+def mean_cl_normal(series, confidence_interval=0.95):
+    """
+    Adapted from http://stackoverflow.com/a/15034143
+    """
+    a = np.asarray(series)
+    m = np.mean(a)
+    se = scipy.stats.sem(a)
+    h = se * scipy.stats.t._ppf((1+confidence_interval)/2, len(a)-1)
+    return pd.Series({'y': m,
+                      'ymin': m-h,
+                      'ymax': m+h})
+
+
 def mean_sdl(series, mult=2):
     m = series.mean()
     s = series.std()
@@ -47,6 +61,7 @@ def median_hilow(series, confidence_interval=0.95):
 # https://github.com/hadley/ggplot2/blob/master/R/stat-summary.r)
 
 function_dict = {'mean_cl_boot': mean_cl_boot,
+                 'mean_cl_normal': mean_cl_normal,
                  'mean_sdl': mean_sdl,
                  'median_hilow': median_hilow}
 
