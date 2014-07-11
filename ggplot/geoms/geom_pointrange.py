@@ -96,9 +96,9 @@ class geom_pointrange(geom):
 
         # Plotting the line
         pinfoline = dict(pinfo)
-        pinfoline.pop('marker')
-        pinfoline.pop('facecolor')
-        pinfoline.pop('y')
+        del pinfoline['marker']
+        del pinfoline['facecolor']
+        del pinfoline['y']
 
         x = pinfoline.pop('x')
         x = np.vstack([x, x])
@@ -111,9 +111,9 @@ class geom_pointrange(geom):
 
         # Plotting the points
         pinfopoint = dict(pinfo)
-        pinfopoint.pop('ymin')
-        pinfopoint.pop('ymax')
-        pinfopoint.pop('linestyle')
+        del pinfopoint['ymin']
+        del pinfopoint['ymax']
+        del pinfopoint['linestyle']
 
         _abscent = {None: pinfopoint['color'], False: ''}
         try:
