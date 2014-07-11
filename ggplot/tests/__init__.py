@@ -103,6 +103,9 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
         base, ext = os.path.splitext(fname)
         return '%s-%s%s' % (base, purpose, ext)
     expected_fname = make_test_fn(actual_fname, 'expected')
+    # Save the figure before testing whether the original image
+    # actually exists. This make creating new tests much easier,
+    # as the result image can afterwards just be copied.
     fig.savefig(actual_fname)
     if os.path.exists(orig_expected_fname):
         shutil.copyfile(orig_expected_fname, expected_fname)
