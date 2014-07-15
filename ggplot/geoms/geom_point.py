@@ -15,12 +15,13 @@ class geom_point(geom):
 
     def _plot_unit(self, pinfo, ax):
 
-        _abscent = {None: pinfo['color'], False: ''}
-        try:
-            if pinfo['facecolor'] in _abscent:
-                pinfo['facecolor'] = _abscent[pinfo['facecolor']]
-        except TypeError:
-            pass
+        fc = pinfo['facecolor']
+        if fc is None:
+            # default to color
+            pinfo['facecolor'] = pinfo['color']
+        elif fc is False:
+            # Matlab expects empty string instead of False
+            pinfo['facecolor'] = ''
 
         # for some reason, scatter doesn't default to the same color styles
         # as the axes.color_cycle

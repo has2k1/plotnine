@@ -115,12 +115,13 @@ class geom_pointrange(geom):
         del pinfopoint['ymax']
         del pinfopoint['linestyle']
 
-        _abscent = {None: pinfopoint['color'], False: ''}
-        try:
-            if pinfopoint['facecolor'] in _abscent:
-                pinfopoint['facecolor'] = _abscent[pinfopoint['facecolor']]
-        except TypeError:
-            pass
+        fc = pinfopoint['facecolor']
+        if fc is None:
+            # default to color
+            pinfopoint['facecolor'] = pinfopoint['color']
+        elif fc is False:
+            # Matlab expects empty string instead of False
+            pinfopoint['facecolor'] = ''
 
         # for some reason, scatter doesn't default to the same color styles
         # as the axes.color_cycle
