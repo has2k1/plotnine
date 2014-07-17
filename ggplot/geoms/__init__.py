@@ -16,7 +16,6 @@ from .geom_linerange import geom_linerange
 from .geom_now_its_art import geom_now_its_art
 from .geom_path import geom_path
 from .geom_point import geom_point
-from .geom_pointrange import geom_pointrange
 from .geom_rect import geom_rect
 from .geom_smooth import geom_smooth
 from .geom_step import geom_step
