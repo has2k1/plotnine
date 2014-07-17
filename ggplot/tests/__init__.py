@@ -34,6 +34,8 @@ default_test_modules = [
     'ggplot.tests.test_geom_bar',
     'ggplot.tests.test_qplot',
     'ggplot.tests.test_geom_lines',
+    'ggplot.tests.test_geom_linerange',
+    'ggplot.tests.test_geom_pointrange',
     'ggplot.tests.test_faceting',
     'ggplot.tests.test_stat_function',
     'ggplot.tests.test_scale_facet_wrap',
@@ -101,11 +103,14 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
         base, ext = os.path.splitext(fname)
         return '%s-%s%s' % (base, purpose, ext)
     expected_fname = make_test_fn(actual_fname, 'expected')
+    # Save the figure before testing whether the original image
+    # actually exists. This make creating new tests much easier,
+    # as the result image can afterwards just be copied.
+    fig.savefig(actual_fname)
     if os.path.exists(orig_expected_fname):
         shutil.copyfile(orig_expected_fname, expected_fname)
     else:
         raise Exception("Baseline image %s is missing" % orig_expected_fname)
-    fig.savefig(actual_fname)
     err = compare_images(expected_fname, actual_fname,
                          tol, in_decorator=True)
     if err:
