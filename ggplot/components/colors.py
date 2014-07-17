@@ -128,7 +128,7 @@ def assign_continuous_colors(data, gg, aes_name, color_col, labels, indices):
     """
     _mcolumn = ':::%s_mapping:::' % aes_name
     min_val = data[color_col].min()
-    max_val = data[color_col].min()
+    max_val = data[color_col].max()
     values = (data[color_col] - min_val) / (max_val - min_val)
     values = values.tolist()
     color_mapping = gg.colormap(values)[::, :3]
