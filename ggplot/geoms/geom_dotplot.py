@@ -16,11 +16,10 @@ class geom_dotplot(geom):
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
     _extra_requires = {'y', 'width'}
-    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
-                    'fill': 'color', 'color': 'edgecolor'}
+    _aes_renames = {'size': 'linewidth', 'fill': 'color', 'color': 'edgecolor'}
     # NOTE: Currently, geom_dotplot does not support mapping
-    # to alpha and linestyle. TODO: raise exception
-    _units = {'alpha', 'linestyle', 'linewidth'}
+    # to alpha TODO: raise exception
+    _units = {'alpha'}
 
     def _sort_list_types_by_x(self, pinfo):
         """
