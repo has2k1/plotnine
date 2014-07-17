@@ -4,8 +4,10 @@ from __future__ import (absolute_import, division, print_function,
 from .geom_abline import geom_abline
 from .geom_area import geom_area
 from .geom_bar import geom_bar
+from .geom_blank import geom_blank
 from .geom_boxplot import geom_boxplot
 from .geom_density import geom_density
+from .geom_dotplot import geom_dotplot
 from .geom_histogram import geom_histogram
 from .geom_hline import geom_hline
 from .geom_jitter import geom_jitter
@@ -29,6 +31,7 @@ from .chart_components import *
 
 __facet__ = ['facet_grid', 'facet_wrap']
 __geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot', 'geom_density',
+            'geom_dotplot', 'geom_blank', 'geom_linerange', 'geom_pointrange',
              'geom_histogram', 'geom_hline', 'geom_jitter', 'geom_line', 'geom_linerange',
              'geom_now_its_art', 'geom_path', 'geom_point', 'geom_pointrange', 'geom_rect',
              'geom_step', 'geom_smooth', 'geom_text', 'geom_tile',
