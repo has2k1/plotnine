@@ -11,9 +11,13 @@ import matplotlib.gridspec as gridspec
 from .components import aes, assign_visual_mapping
 from .components import colors, shapes
 from .components.legend import add_legend
-from .scales.scale_facet import scale_facet_grid, scale_facet_wrap
+from .geoms import *
+from .scales import *
+from .facets import *
 from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import theme_gray
+from .utils.exceptions import GgplotError
+from .panel import Panel
 
 import datetime
 import six
@@ -33,6 +37,8 @@ if sys.flags.interactive:
 if not hasattr(mpl, 'rc_context'):
     from .utils import _rc_context
     mpl.rc_context = _rc_context
+
+
 
 class ggplot(object):
     """
@@ -71,11 +77,9 @@ class ggplot(object):
         self.n_columns = 1
         self.n_dim_x = None
         self.n_dim_y = None
+
         # facets
-        self.facets = []
-        self.facet_type = None
-        self.facet_scales = None
-        self.facet_pairs = [] # used by facet_grid
+        self.facet = facet_null()
         # components
         self.title = None
         self.xlab = None
@@ -502,6 +506,26 @@ class ggplot(object):
             #msg = "Adding a secondary mapping of {0} is unsupported and no legend for this mapping is added.\n"
             #sys.stderr.write(msg.format(str(legend_type)))
         self.legend[legend_type] = legend_dict
+
+    def plot_build(self):
+        if not self.layers:
+            raise GgplotError('No layers in plot')
+
+        plot = deepcopy(self)
+
+        layers = self.layers
+        layer_data = [x.data for x in self.layers]
+        data = [plot.data] + layer_data
+        scales = self.scales
+
+        # Initialise panels, add extra data for margins & missing facetting
+        # variables, and add on a PANEL variable to data
+        panel = Panel()
+        panel.layout = plot.facet.train_layout(data)
+        data = plot.facet.map_layout(data, panel.layout)
+
+        # Compute aesthetics to produce data with generalised variable names
+
 
 
 def _is_identity(x):
