@@ -43,7 +43,6 @@ Goals
 -----
 
 -  same API as ``ggplot2`` for ``R``
--  never use matplotlib again
 -  ability to use both American and British English spellings of
    aesthetics
 -  tight integration with `pandas <https://github.com/pydata/pandas>`__
@@ -166,7 +165,7 @@ TODO
 distinguished. <https://github.com/yhat/ggplot/blob/master/TODO.md>`__
 We're looking for contributors! Email greg at yhathq.com for more info.
 For getting started with contributing, check out `these
-docs <https://github.com/yhat/ggplot/blob/master/docs/contributing.md>`__
+docs <https://github.com/yhat/ggplot/blob/master/docs/contributing.rst>`__
 
 |image|
 
