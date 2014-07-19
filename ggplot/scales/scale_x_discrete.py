@@ -25,10 +25,10 @@ class scale_x_discrete(scale):
         gg = deepcopy(gg)
         if self.name:
             gg.xlab = self.name
-        if self.limits:
+        if not (self.limits is None):
             gg.xlimits = self.limits
-        if self.breaks:
+        if not (self.breaks is None):
             gg.xbreaks = self.breaks
-        if self.labels:
+        if not (self.labels is None):
             gg.xtick_labels = self.labels
         return gg
