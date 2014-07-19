@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import pandas as pd
+import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -346,7 +347,7 @@ class ggplot(object):
                             lab = self.xtick_labels.get(lab)
                             labs.append(lab)
                         ax.xaxis.set_ticklabels(labs)
-                    elif isinstance(self.xtick_labels, list):
+                    elif com.is_list_like(self.xtick_labels):
                         ax.xaxis.set_ticklabels(self.xtick_labels)
                 if not (self.ytick_labels is None):
                     if isinstance(self.ytick_labels, dict):
@@ -356,7 +357,7 @@ class ggplot(object):
                             lab = self.ytick_labels.get(lab)
                             labs.append(lab)
                         ax.yaxis.set_ticklabels(labs)
-                    elif isinstance(self.ytick_labels, list):
+                    elif com.is_list_like(self.ytick_labels):
                         ax.yaxis.set_ticklabels(self.ytick_labels)
                 if self.ytick_formatter:
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
