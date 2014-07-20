@@ -24,15 +24,15 @@ class scale_y_continuous(scale):
         gg = deepcopy(gg)
         if self.name:
             gg.ylab = self.name.title()
-        if self.labels:
+        if not (self.labels is None):
             if self.labels in LABEL_FORMATS:
                 format_func = LABEL_FORMATS[self.labels]
                 gg.ytick_formatter = FuncFormatter(format_func)
             else:
                 gg.ytick_labels = self.labels
-        if self.limits:
+        if not (self.limits is None):
             gg.ylimits = self.limits
-        if self.breaks:
+        if not (self.breaks is None):
             gg.ybreaks = self.breaks
         return gg
 

@@ -25,10 +25,10 @@ class scale_y_discrete(scale):
         gg = deepcopy(gg)
         if self.name:
             gg.ylab = self.name
-        if self.limits:
+        if not (self.limits is None):
             gg.ylimits = self.limits
-        if self.breaks:
+        if not (self.breaks is None):
             gg.ybreaks = self.breaks
-        if self.labels:
+        if not (self.labels is None):
             gg.ytick_labels = self.labels
         return gg

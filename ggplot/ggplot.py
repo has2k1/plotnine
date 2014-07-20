@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import pandas as pd
+import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -10,8 +11,7 @@ import matplotlib.gridspec as gridspec
 from .components import aes, assign_visual_mapping
 from .components import colors, shapes
 from .components.legend import add_legend
-from .geoms import *
-from .scales import *
+from .scales.scale_facet import scale_facet_grid, scale_facet_wrap
 from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import theme_gray
 
@@ -191,6 +191,7 @@ class ggplot(object):
             # dimensions of the plot remain the same
             if self.facets:
                 # geom_bar does not work with faceting yet
+                from .geoms import geom_bar
                 _check_geom_bar = lambda x :isinstance(x, geom_bar)
                 if any(map(_check_geom_bar, self.geoms)):
                     msg = """Facetting is currently not supported with geom_bar. See
@@ -317,13 +318,13 @@ class ggplot(object):
                                        fontsize=mpl.rcParams['axes.titlesize'])
                 else:
                     plt.title(self.title)
-            if self.xlab:
+            if not (self.xlab is None):
                 if self.facet_type == "grid":
                     fig.text(0.5, 0.025, self.xlab)
                 else:
                     for ax in plt.gcf().axes:
                         ax.set_xlabel(self.xlab)
-            if self.ylab:
+            if not (self.ylab is None):
                 if self.facet_type == "grid":
                     fig.text(0.025, 0.5, self.ylab, rotation='vertical')
                 else:
@@ -338,7 +339,7 @@ class ggplot(object):
                     fig.autofmt_xdate()
                 if self.xbreaks: # xbreaks is a list manually provided
                     ax.xaxis.set_ticks(self.xbreaks)
-                if self.xtick_labels:
+                if not (self.xtick_labels is None):
                     if isinstance(self.xtick_labels, dict):
                         labs = []
                         for lab in plt.xticks()[1]:
@@ -346,9 +347,9 @@ class ggplot(object):
                             lab = self.xtick_labels.get(lab)
                             labs.append(lab)
                         ax.xaxis.set_ticklabels(labs)
-                    elif isinstance(self.xtick_labels, list):
+                    elif com.is_list_like(self.xtick_labels):
                         ax.xaxis.set_ticklabels(self.xtick_labels)
-                if self.ytick_labels:
+                if not (self.ytick_labels is None):
                     if isinstance(self.ytick_labels, dict):
                         labs = []
                         for lab in plt.yticks()[1]:
@@ -356,20 +357,20 @@ class ggplot(object):
                             lab = self.ytick_labels.get(lab)
                             labs.append(lab)
                         ax.yaxis.set_ticklabels(labs)
-                    elif isinstance(self.ytick_labels, list):
+                    elif com.is_list_like(self.ytick_labels):
                         ax.yaxis.set_ticklabels(self.ytick_labels)
                 if self.ytick_formatter:
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
-                if self.xlimits:
+                if not (self.xlimits is None):
                     limits = [x if x != None else x_def for x, x_def in zip(self.xlimits, ax.get_xlim())]
-                    if not self.xbreaks and not self.xtick_labels:
+                    if (self.xbreaks is None) and (self.xtick_labels is None):
                         labs, minval, maxval= calc_axis_breaks_and_limits(limits[0], limits[1])
                         ax.xaxis.set_ticks(labs)
                         ax.xaxis.set_ticklabels(labs)
                     ax.set_xlim(limits)
-                if self.ylimits:
+                if not (self.ylimits is None):
                     limits = [y if y != None else y_def for y, y_def in zip(self.ylimits, ax.get_ylim())]
-                    if not self.ytick_labels:
+                    if self.ytick_labels is None:
                         labs, minval, maxval= calc_axis_breaks_and_limits(limits[0], limits[1])
                         ax.yaxis.set_ticks(labs)
                         ax.yaxis.set_ticklabels(labs)
