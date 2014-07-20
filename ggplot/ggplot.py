@@ -11,8 +11,7 @@ import matplotlib.gridspec as gridspec
 from .components import aes, assign_visual_mapping
 from .components import colors, shapes
 from .components.legend import add_legend
-from .geoms import *
-from .scales import *
+from .scales.scale_facet import scale_facet_grid, scale_facet_wrap
 from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import theme_gray
 
@@ -192,6 +191,7 @@ class ggplot(object):
             # dimensions of the plot remain the same
             if self.facets:
                 # geom_bar does not work with faceting yet
+                from .geoms import geom_bar
                 _check_geom_bar = lambda x :isinstance(x, geom_bar)
                 if any(map(_check_geom_bar, self.geoms)):
                     msg = """Facetting is currently not supported with geom_bar. See
