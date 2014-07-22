@@ -30,6 +30,7 @@ default_test_modules = [
     'ggplot.tests.test_geom',
     'ggplot.tests.test_stat',
     'ggplot.tests.test_stat_calculate_methods',
+    'ggplot.tests.test_stat_summary',
     'ggplot.tests.test_geom_rect',
     'ggplot.tests.test_geom_dotplot',
     'ggplot.tests.test_geom_bar',
