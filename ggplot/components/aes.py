@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
+import re
 if sys.hexversion > 0x03000000:
     # UserDict moved in python3 standard library
     from collections import UserDict
@@ -10,6 +11,7 @@ else:
 from copy import deepcopy
 
 from patsy.eval import EvalEnvironment
+
 
 class aes(UserDict):
     """
@@ -82,3 +84,15 @@ class aes(UserDict):
                 raise
 
         return result
+
+
+def is_calculated_aes(aesthetics):
+    """
+    Return a list of the aesthetics that are calculated
+    """
+    pattern = "^\.\.([a-zA-Z._]+)\.\.$"
+    calculated_aesthetics = []
+    for k, v in aesthetics.items():
+        if re.match(pattern, v):
+            calculated_aesthetics.append(k)
+    return calculated_aesthetics

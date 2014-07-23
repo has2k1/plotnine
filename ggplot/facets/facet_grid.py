@@ -2,8 +2,9 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import pandas as pd
-from layouts import layout_grid
-from locate import locate_grid
+
+from .layouts import layout_grid
+from .locate import locate_grid
 
 
 class facet_grid(object):
@@ -35,11 +36,22 @@ class facet_grid(object):
 
         return layout
 
-    def map_layout(self, data, layout):
+    def map_layout(self, layout, data, plot_data):
         """
         Assign a data points to panels
+
+        Parameters
+        ----------
+        layout : dataframe
+            As returned by self.train_layout
+        data: list
+            dataframe for each layer or None
+        plot_data: dataframe
+            default data. Specified in the call to  ggplot
         """
         _data = []
         for df in data:
+            if df is None:
+                df = plot_data.copy()
             _data.append(locate_grid(df, layout, self.vars))
         return _data

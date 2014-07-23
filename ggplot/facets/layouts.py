@@ -113,7 +113,7 @@ def layout_base(data, vars=None, drop=True):
     needed for facetting
     The first data frame in the list should be the default data
     for the plot. Other data frames in the list are ones that are
-    added to layers.
+    added to the layers.
     """
     if not vars:
         return pd.DataFrame()
@@ -121,6 +121,8 @@ def layout_base(data, vars=None, drop=True):
     # For each layer, compute the facet values
     values = []
     for df in data:
+        if df is None:
+            continue
         _lst = [x for x in vars if x in df]
         if _lst:
             values.append(df[_lst])

@@ -6,5 +6,5 @@ from .facet_grid import facet_grid
 from .facet_wrap import facet_wrap
 
 
-__all__ = ['facet_grid', 'facet_wrap']
+__all__ = ['facet_null', 'facet_grid', 'facet_wrap']
 __all__ = [str(u) for u in __all__]

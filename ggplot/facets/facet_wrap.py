@@ -2,8 +2,9 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import pandas as pd
-from layouts import layout_wrap
-from locate import locate_wrap
+
+from .layouts import layout_wrap
+from .locate import locate_wrap
 
 
 class facet_wrap(object):
@@ -36,11 +37,22 @@ class facet_wrap(object):
 
         return layout
 
-    def map_layout(self, data, layout):
+    def map_layout(self, layout, data, plot_data):
         """
         Assign a data points to panels
+
+        Parameters
+        ----------
+        layout : dataframe
+            As returned by self.train_layout
+        data: list
+            dataframe for each layer or None
+        plot_data: dataframe
+            default data. Specified in the call to  ggplot
         """
         _data = []
         for df in data:
+            if df is None:
+                df = plot_data.copy()
             _data.append(locate_wrap(df, layout, self.vars))
         return _data

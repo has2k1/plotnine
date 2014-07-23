@@ -6,7 +6,6 @@ import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import matplotlib.gridspec as gridspec
 
 from .components import aes, assign_visual_mapping
 from .components import colors, shapes
@@ -14,7 +13,6 @@ from .components.legend import add_legend
 from .geoms import *
 from .scales import *
 from .facets import *
-from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import theme_gray
 from .utils.exceptions import GgplotError
 from .panel import Panel
@@ -63,53 +61,18 @@ class ggplot(object):
     CONTINUOUS = ['x', 'y', 'size', 'alpha']
     DISCRETE = ['color', 'shape', 'marker', 'alpha', 'linestyle']
 
-    def __init__(self, aesthetics, data):
-        # ggplot should just 'figure out' which is which
+    def __init__(self, mapping, data):
         if not isinstance(data, pd.DataFrame):
-            aesthetics, data = data, aesthetics
+            mapping, data = data, mapping
 
-        self.aesthetics = aesthetics
-        self.data = _apply_transforms(data, self.aesthetics)
-
-        # defaults
-        self.geoms = []
-        self.n_rows = 1
-        self.n_columns = 1
-        self.n_dim_x = None
-        self.n_dim_y = None
-
-        # facets
+        self.data = data
+        self.mapping = mapping
         self.facet = facet_null()
-        # components
-        self.title = None
-        self.xlab = None
-        self.ylab = None
-        # format for x/y major ticks
-        self.xtick_formatter = None
-        self.xbreaks = None
-        self.xtick_labels = None
-        self.xmajor_locator = None
-        self.xminor_locator = None
-        self.ytick_formatter = None
-        self.xlimits = None
-        self.ylimits = None
-        self.ytick_labels = None
+        self.labels = mapping  # TODO: Should allow for something else!!
+        self.layers = []
         self.scales = []
-        self.scale_y_reverse = None
-        self.scale_x_reverse = None
-        self.scale_y_log = None
-        self.scale_x_log = None
-        self.legend = None
-        # coords
-        self.coord_equal = None
-
         # default theme is theme_gray
         self.theme = theme_gray()
-
-        # continuous color configs
-        self.color_scale = None
-        self.colormap = plt.cm.Blues
-        self.manual_color_list = None
 
     def __repr__(self):
         """Print/show the plot"""
@@ -160,281 +123,7 @@ class ggplot(object):
             # draw is not allowed to show a plot, so we can use to result for ggsave
             # This sets a rcparam, so we don't have to undo it after plotting
             mpl.interactive(False)
-            if self.facet_type == "grid" and len(self.facets) > 1:
-                fig, axs = plt.subplots(self.n_columns, self.n_rows,
-                                        sharex=True, sharey=True)
-                plt.subplots_adjust(wspace=.05, hspace=.05)
-            elif self.facet_type == "wrap" or len(self.facets)==1:
-                # add (more than) the needed number of subplots
-                fig, axs = plt.subplots(self.n_columns, self.n_rows)
-                # there are some extra, remove the plots
-                subplots_available = self.n_rows * self.n_columns
-                if self.n_dim_x:
-                    extra_subplots = subplots_available - self.n_dim_x
-                else:
-                    extra_subplots = 0
-                if extra_subplots > 0:
-                    for extra_plot in axs.flatten()[-extra_subplots:]:
-                        extra_plot.axis('off')
-
-                # plots is a mapping from xth-plot -> subplot position
-                plots = []
-                for x in range(self.n_rows):
-                    for y in range(self.n_columns):
-                        plots.append((x, y))
-                plots = sorted(plots, key=lambda x: x[1] + x[0] * self.n_columns + 1)
-            else:
-                fig, axs = plt.subplots(self.n_columns, self.n_rows)
-            axs = np.atleast_2d(axs)
-            # Set the default plot to the first one
-            plt.subplot(self.n_rows, self.n_columns, 1)
-
-            # Aes need to be initialized BEFORE we start faceting. This is b/c
-            # we want to have a consistent aes mapping across facets.
-            self.data, self.legend = assign_visual_mapping(self.data, self.aesthetics, self)
-
-            # Faceting just means doing an additional groupby. The
-            # dimensions of the plot remain the same
-            if self.facets:
-                # geom_bar does not work with faceting yet
-                from .geoms import geom_bar
-                _check_geom_bar = lambda x :isinstance(x, geom_bar)
-                if any(map(_check_geom_bar, self.geoms)):
-                    msg = """Facetting is currently not supported with geom_bar. See
-                    https://github.com/yhat/ggplot/issues/196 for more information"""
-                    warnings.warn(msg, RuntimeWarning)
-                # the current subplot in the axs and plots
-                cntr = 0
-                #first grids: faceting with two variables and defined positions
-                if len(self.facets) == 2 and self.facet_type != "wrap":
-                    # store the extreme x and y coordinates of each pair of axes
-                    axis_extremes = np.zeros(shape=(self.n_columns * self.n_rows, 4))
-                    xlab_offset = .15
-                    for _iter, (facets, frame) in enumerate(self.data.groupby(self.facets)):
-                        pos = self.facet_pairs.index(facets) + 1
-                        plt.subplot(self.n_rows, self.n_columns, pos)
-                        frame = self._make_plot_data(frame)
-                        for geom in self.geoms:
-                            ax = plt.gca()
-                            callbacks = geom.plot_layer(frame, ax)
-                        axis_extremes[_iter] = [min(plt.xlim()), max(plt.xlim()),
-                                                min(plt.ylim()), max(plt.ylim())]
-                    # find the grid wide data extremeties
-                    xlab_min, ylab_min = np.min(axis_extremes, axis=0)[[0, 2]]
-                    xlab_max, ylab_max = np.max(axis_extremes, axis=0)[[1, 3]]
-                    # position of vertical labels for facet grid
-                    xlab_pos = xlab_max + xlab_offset
-                    ylab_pos = ylab_max - float(ylab_max - ylab_min) / 2
-                    # This needs to enumerate all possibilities
-                    for pos, facets in enumerate(self.facet_pairs):
-                        pos += 1
-                        # Plot the top and right boxes
-                        if pos <= self.n_columns: # first row
-                            plt.subplot(self.n_rows, self.n_columns, pos)
-                            plt.table(cellText=[[facets[1]]], loc='top',
-                                      cellLoc='center', cellColours=[['lightgrey']])
-                        if (pos % self.n_columns) == 0: # last plot in a row
-                            plt.subplot(self.n_rows, self.n_columns, pos)
-                            x = max(plt.xticks()[0])
-                            y = max(plt.yticks()[0])
-                            ax = axs[pos % self.n_columns][pos % self.n_rows]
-                            ax = plt.gca()
-                            ax.text(1, 0.5, facets[0],
-                                    # NOTE: bbox colors are buggy for python 3.3
-                                    # color overides facecolor and edgecolor
-                                    # instead of the opposite
-                                     bbox=dict(
-                                         facecolor='lightgrey',
-                                         edgecolor='black',
-                                         width=mpl.rcParams['font.size'] * 1.65
-                                     ),
-                                     transform=ax.transAxes,
-                                     fontdict=dict(rotation=-90, verticalalignment="center", horizontalalignment='left')
-                            )
-
-                    plt.subplot(self.n_rows, self.n_columns, pos)
-                    # Handle the different scale types here
-                    # (free|free_y|free_x|None) and also make sure that only the
-                    # left column gets y scales and the bottom row gets x scales
-                    scale_facet_grid(self.n_rows, self.n_columns,
-                                     self.facet_pairs, self.facet_scales)
-
-                else: # now facet_wrap > 2 or facet_grid w/ only 1 facet
-
-                    for facet, frame in self.data.groupby(self.facets):
-                        frame = self._make_plot_data(frame)
-                        for geom in self.geoms:
-                            if self.facet_type == "wrap" or 1==1:
-                                if cntr + 1 > len(plots):
-                                    continue
-                                pos = plots[cntr]
-                                if pos is None:
-                                    continue
-                                y_i, x_i = pos
-                                pos = x_i + y_i * self.n_columns + 1
-                                ax = plt.subplot(self.n_rows, self.n_columns, pos)
-                            else:
-                                ax = plt.subplot(self.n_rows, self.n_columns, cntr)
-                                # TODO: this needs some work
-                                if (cntr % self.n_columns) == -1:
-                                    plt.tick_params(axis='y', which='both',
-                                                    bottom='off', top='off',
-                                                    labelbottom='off')
-                            ax = plt.gca()
-                            callbacks = geom.plot_layer(frame, ax)
-                            if callbacks:
-                                for callback in callbacks:
-                                    fn = getattr(ax, callback['function'])
-                                    fn(*callback['args'])
-                        title = facet
-                        if isinstance(facet, tuple):
-                            title = ", ".join(facet)
-                        plt.table(cellText=[[title]], loc='top',
-                                  cellLoc='center', cellColours=[['lightgrey']])
-                        cntr += 1
-
-                    scale_facet_wrap(self.n_rows, self.n_columns, range(cntr), self.facet_scales)
-            else: # no faceting
-                for geom in self.geoms:
-                    _aes = self.aesthetics
-                    if geom.aes:
-                        # update the default mapping with the geom specific one
-                        _aes = _aes.copy()
-                        _aes.update(geom.aes)
-                    if not geom.data is None:
-                        data = _apply_transforms(geom.data, _aes)
-                        data, self.legend = assign_visual_mapping(data, _aes, self)
-                    else:
-                        data = self.data
-                    ax = plt.subplot(1, 1, 1)
-
-                    # Now that ax has changed, lets make sure we still have correct figure.
-                    fig = plt.gcf()
-                    axs = [[ax]] # So that the axs object matches what a single facet might look like in legend code.
-
-                    data = self._make_plot_data(data, _aes)
-                    callbacks = geom.plot_layer(data, ax)
-                    if callbacks:
-                        for callback in callbacks:
-                            fn = getattr(ax, callback['function'])
-                            fn(*callback['args'])
-
-            # Handling the details of the chart here; probably be a better
-            # way to do this...
-            if self.title:
-                if self.facets:
-                    # This is currently similar what plt.title uses
-                    plt.gcf().suptitle(self.title, verticalalignment='baseline',
-                                       fontsize=mpl.rcParams['axes.titlesize'])
-                else:
-                    plt.title(self.title)
-            if not (self.xlab is None):
-                if self.facet_type == "grid":
-                    fig.text(0.5, 0.025, self.xlab)
-                else:
-                    for ax in plt.gcf().axes:
-                        ax.set_xlabel(self.xlab)
-            if not (self.ylab is None):
-                if self.facet_type == "grid":
-                    fig.text(0.025, 0.5, self.ylab, rotation='vertical')
-                else:
-                    for ax in plt.gcf().axes:
-                        ax.set_ylabel(self.ylab)
-            # in case of faceting, this should be applied to all axis!
-            for ax in plt.gcf().axes:
-                if self.xmajor_locator:
-                    ax.xaxis.set_major_locator(self.xmajor_locator)
-                if self.xtick_formatter:
-                    ax.xaxis.set_major_formatter(self.xtick_formatter)
-                    fig.autofmt_xdate()
-                if self.xbreaks: # xbreaks is a list manually provided
-                    ax.xaxis.set_ticks(self.xbreaks)
-                if not (self.xtick_labels is None):
-                    if isinstance(self.xtick_labels, dict):
-                        labs = []
-                        for lab in plt.xticks()[1]:
-                            lab = lab.get_text()
-                            lab = self.xtick_labels.get(lab)
-                            labs.append(lab)
-                        ax.xaxis.set_ticklabels(labs)
-                    elif com.is_list_like(self.xtick_labels):
-                        ax.xaxis.set_ticklabels(self.xtick_labels)
-                # need to handle cases when there's no geom_bar/hist
-                elif "data" in locals() and ("x" in data) and isinstance(data["x"].iloc[0], datetime.date):
-                    # "did matplotlib do a decent job of making the label" check
-                    if np.log10(ax.get_xticks()[0]) > 6:
-                        date_ticks = [datetime.date.fromtimestamp(ix) for ix in ax.get_xticks()]
-                        ax.xaxis.set_ticklabels(date_ticks)
-                elif "data" in locals() and ("x" in data) and isinstance(data["x"].iloc[0], datetime.time):
-                    if np.log10(ax.get_xticks()[0]) > 6:
-                        date_ticks = [datetime.time.fromtimestamp(ix) for ix in ax.get_xticks()]
-                        ax.xaxis.set_ticklabels(date_ticks)
-                elif "data" in locals() and ("x" in data) and isinstance(data["x"].iloc[0], datetime.datetime):
-                    if np.log10(ax.get_xticks()[0]) > 6:
-                        date_ticks = [datetime.datetime.fromtimestamp(ix) for ix in ax.get_xticks()]
-                        ax.xaxis.set_ticklabels(date_ticks)
-                if not (self.ytick_labels is None):
-                    if isinstance(self.ytick_labels, dict):
-                        labs = []
-                        for lab in plt.yticks()[1]:
-                            lab = lab.get_text()
-                            lab = self.ytick_labels.get(lab)
-                            labs.append(lab)
-                        ax.yaxis.set_ticklabels(labs)
-                    elif com.is_list_like(self.ytick_labels):
-                        ax.yaxis.set_ticklabels(self.ytick_labels)
-                if self.ytick_formatter:
-                    ax.yaxis.set_major_formatter(self.ytick_formatter)
-                if not (self.xlimits is None):
-                    limits = []
-                    for x, x_def in zip(self.xlimits, ax.get_xlim()):
-                        if x != None:
-                            limits.append(x)
-                        else:
-                            limits.append(x_def)
-
-                    if (self.xbreaks is None) and (self.xtick_labels is None):
-                        labs, minval, maxval = calc_axis_breaks_and_limits(limits[0], limits[1])
-                        ax.xaxis.set_ticks(labs)
-                        ax.xaxis.set_ticklabels(labs)
-                    ax.set_xlim(limits)
-                if not (self.ylimits is None):
-                    limits = [y if y != None else y_def for y, y_def in zip(self.ylimits, ax.get_ylim())]
-                    if self.ytick_labels is None:
-                        labs, minval, maxval= calc_axis_breaks_and_limits(limits[0], limits[1])
-                        ax.yaxis.set_ticks(labs)
-                        ax.yaxis.set_ticklabels(labs)
-                    ax.set_ylim(limits)
-                if self.scale_y_reverse:
-                    ax.invert_yaxis()
-                if self.scale_x_reverse:
-                    ax.invert_xaxis()
-                if self.scale_y_log:
-                    ax.set_yscale('log', basey=self.scale_y_log)
-                if self.scale_x_log:
-                    ax.set_xscale('log', basex=self.scale_x_log)
-                if self.coord_equal:
-                    min_val = np.min([np.min(ax.get_yticks()), np.min(ax.get_xticks())])
-                    max_val = np.max([np.max(ax.get_yticks()), np.max(ax.get_xticks())])
-                    ax.set_xticks(np.linspace(min_val, max_val, 7))
-                    ax.set_yticks(np.linspace(min_val, max_val, 7))
-
-            # TODO: Having some issues here with things that shouldn't have a
-            # legend or at least shouldn't get shrunk to accomodate one. Need
-            # some sort of test in place to prevent this OR prevent legend
-            # getting set to True.
-            if self.legend:
-                # works with faceted and non-faceted plots
-                ax = axs[0][self.n_rows - 1]
-                box = ax.get_position()
-                ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-                add_legend(self.legend, ax)
-
-            # Finaly apply any post plot callbacks (theming, etc)
-            for ax in plt.gcf().axes:
-                self.theme.post_plot_callback(ax)
-
-        return plt.gcf()
+            self.plot_build()
 
     def _make_plot_data(self, data=None, aes=None):
         # Use the default data and aestetics in case no specific ones are supplied
@@ -515,16 +204,25 @@ class ggplot(object):
 
         layers = self.layers
         layer_data = [x.data for x in self.layers]
-        data = [plot.data] + layer_data
+        all_data = [plot.data] + layer_data
         scales = self.scales
 
         # Initialise panels, add extra data for margins & missing facetting
         # variables, and add on a PANEL variable to data
         panel = Panel()
-        panel.layout = plot.facet.train_layout(data)
-        data = plot.facet.map_layout(data, panel.layout)
+        panel.layout = plot.facet.train_layout(all_data)
+        data = plot.facet.map_layout(panel.layout, layer_data, plot.data)
 
         # Compute aesthetics to produce data with generalised variable names
+        # data[0] = layers[0].compute_aesthetics(data[0], plot)
+        # _data = []
+        # for i, df in enumerate(data, start=1):
+        #     if not (df is None):
+        #         df = layer[i].compute_aesthetics(data)
+
+
+        print(data)
+        # print(plot.scales)
 
 
 

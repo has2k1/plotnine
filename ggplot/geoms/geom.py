@@ -12,6 +12,8 @@ from ggplot.utils import is_scalar_or_string
 from ggplot.components import aes
 from ggplot.utils.exceptions import GgplotError
 
+from ..layer import layer
+
 __all__ = ['geom']
 __all__ = [str(u) for u in __all__]
 
@@ -163,14 +165,15 @@ class geom(object):
     def __radd__(self, gg):
         gg = deepcopy(gg)
         # steal aesthetics info.
-        self._cache['ggplot.aesthetics'] = deepcopy(gg.aesthetics)
-        self.aes_unique_to_geom -= set(gg.aesthetics.keys())
+        self._cache['ggplot.mapping'] = deepcopy(gg.mapping)
         # create stat and hand over the parameters it understands
         if not hasattr(self, '_stat'):
             self._stat = self._stat_type()
             self._stat.params.update(self._stat_params)
-        gg.geoms.append(self)
-        self.gg = gg
+        l = layer(geom=self, stat=self._stat, data=self.data,
+                  mapping=self.aes,
+                  position=self.params['position'])
+        gg.layers.append(l)
         return gg
 
     def _verify_aesthetics(self, data):
@@ -268,7 +271,7 @@ class geom(object):
         # should not influence the grouping. If this is
         # not the desired behaviour then the groups
         # parameter should be used.
-        groups = set(self._cache['ggplot.aesthetics'].keys())
+        groups = set(self._cache['ggplot.mapping'].keys())
         groups = groups & (self.valid_aes - {'x', 'y'})
         groups = groups & set(data.columns)
 
