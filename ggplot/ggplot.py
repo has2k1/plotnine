@@ -197,6 +197,9 @@ class ggplot(object):
         self.legend[legend_type] = legend_dict
 
     def plot_build(self):
+        # TODO: copy the plot_data in here and give each layer
+        # a separate copy. Currently this is happening in
+        # facet.map_layout
         if not self.layers:
             raise GgplotError('No layers in plot')
 
@@ -207,6 +210,17 @@ class ggplot(object):
         all_data = [plot.data] + layer_data
         scales = self.scales
 
+        def dlapply(f):
+            """
+            Call the function f with the dataframe and layer
+            object as arguments.
+            """
+            out = [None] * len(data)
+            for i in range(len(data)):
+                out[i] = f(data[i], layers[i])
+            return out
+
+
         # Initialise panels, add extra data for margins & missing facetting
         # variables, and add on a PANEL variable to data
         panel = Panel()
@@ -214,14 +228,8 @@ class ggplot(object):
         data = plot.facet.map_layout(panel.layout, layer_data, plot.data)
 
         # Compute aesthetics to produce data with generalised variable names
-        # data[0] = layers[0].compute_aesthetics(data[0], plot)
-        # _data = []
-        # for i, df in enumerate(data, start=1):
-        #     if not (df is None):
-        #         df = layer[i].compute_aesthetics(data)
+        data = dlapply(lambda d, l: l.compute_aesthetics(d, plot))
 
-
-        print(data)
         # print(plot.scales)
 
 

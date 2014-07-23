@@ -1,8 +1,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import six
+import pandas.core.common as com
+
 from .components.aes import aes, is_calculated_aes
 from .scales.scales import scales_add_defaults
+from .utils.exceptions import GgplotError
 
 
 class layer(object):
@@ -42,6 +46,10 @@ class layer(object):
 
 
     def compute_aesthetics(self, data, plot):
+        """
+        Return a dataframe where the columns match the
+        aesthetic mappings
+        """
         aesthetics = self.layer_mapping(plot.mapping)
 
         # Override grouping if set in layer.
@@ -50,43 +58,30 @@ class layer(object):
 
         scales_add_defaults(plot.scales, data, aesthetics)
 
-        return data
+        renames = {}   # columns to rename with aesthetics names
+        settings = {}  # for manual settings withing aesthetics
+        for ae, col in aesthetics.items():
+            if isinstance(col, six.string_types):
+                renames[col] = ae
+            elif com.is_list_like(col):
+                n = len(col)
+                if n != len(data) or n != 1:
+                    raise GgplotError(
+                        "Aesthetics must either be length one, " +
+                        "or the same length as the data")
+                settings[ae] = col
+            else:
+                msg = "Do not know how to deal with aesthetic `{}`"
+                raise GgplotError(msg.format(ae))
 
-"""
-  compute_aesthetics <- function(., data, plot) {
-    aesthetics <- .$layer_mapping(plot$mapping)
+        evaled = data.loc[:, list(renames.keys())]
+        evaled.rename(columns=renames, inplace=True)
+        evaled.update(settings)
 
-    if (!is.null(.$subset)) {
-      include <- data.frame(eval.quoted(.$subset, data, plot$env))
-      data <- data[rowSums(include, na.rm = TRUE) == ncol(include), ]
-    }
+        if len(data) == 0 and settings:
+            # No data, and vectors suppled to aesthetics
+            evaled['PANEL'] = 1
+        else:
+            evaled['PANEL'] = data['PANEL']
 
-    # Override grouping if set in layer.
-    if (!is.null(.$geom_params$group)) {
-      aesthetics["group"] <- .$geom_params$group
-    }
-
-    scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
-
-    # Evaluate aesthetics in the context of their data frame
-    evaled <- compact(
-      eval.quoted(aesthetics, data, plot$plot_env))
-
-    lengths <- vapply(evaled, length, integer(1))
-    n <- if (length(lengths) > 0) max(lengths) else 0
-
-    wrong <- lengths != 1 & lengths != n
-    if (any(wrong)) {
-      stop("Aesthetics must either be length one, or the same length as the data",
-        "Problems:", paste(aesthetics[wrong], collapse = ", "), call. = FALSE)
-    }
-
-    if (empty(data) && n > 0) {
-      # No data, and vectors suppled to aesthetics
-      evaled$PANEL <- 1
-    } else {
-      evaled$PANEL <- data$PANEL
-    }
-    data.frame(evaled)
-  }
-"""
+        return evaled
