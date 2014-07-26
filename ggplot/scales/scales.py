@@ -6,7 +6,7 @@ import textwrap
 import numpy as np
 
 import ggplot.scales  # TODO: make relative
-from ..utils import waiver, identity
+from ..utils import discrete_dtypes, continuous_dtypes
 
 
 def scales_add_defaults(scales, data, aesthetics):
@@ -32,7 +32,7 @@ def scales_add_defaults(scales, data, aesthetics):
     ae_cols = [(ae, aesthetics[ae]) for ae in new_aesthetics
                  if aesthetics[ae] in data.columns]
     for ae, col in ae_cols:
-        _type = scale_type(data.loc[:, col])
+        _type = scale_type(data[col])
         scale_name = 'scale_{}_{}'.format(ae, _type)
 
         try:
@@ -44,17 +44,17 @@ def scales_add_defaults(scales, data, aesthetics):
 
 
 def scale_type(column):
-    if column.dtype in (np.number, np.dtype('int64')):
+    if column.dtype in continuous_dtypes:
         stype = 'continuous'
-    elif column.dtype in (np.dtype('O'), np.bool): # TODO: Add categorical
+    elif column.dtype in discrete_dtypes:
         stype = 'discrete'
     elif column.dtype == np.dtype('<M8[ns]'):
         stype = 'datetime'
     else:
         msg = """\
             Don't know how to automatically pick scale for \
-            object of type {} .Defaulting to 'continuous'""".format(
-                column.dtype),
+            object of type {}. Defaulting to 'continuous'""".format(
+                column.dtype)
         sys.stderr.write(textwrap.dedent(msg))
         stype = 'continuous'
     return stype

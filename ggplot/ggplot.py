@@ -16,6 +16,7 @@ from .facets import *
 from .themes.theme_gray import theme_gray
 from .utils.exceptions import GgplotError
 from .panel import Panel
+from .layer import add_group
 
 import datetime
 import six
@@ -229,7 +230,9 @@ class ggplot(object):
 
         # Compute aesthetics to produce data with generalised variable names
         data = dlapply(lambda d, l: l.compute_aesthetics(d, plot))
+        data = list(map(add_group, data))
 
+        print(data)
         # print(plot.scales)
 
 

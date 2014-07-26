@@ -9,6 +9,13 @@ import matplotlib.cbook as cbook
 import six
 
 
+discrete_dtypes = {'category', np.dtype('O'), np.bool}
+continuous_dtypes = {np.number,
+                     np.dtype('int16'), np.dtype('float16'),
+                     np.dtype('int32'), np.dtype('float32'),
+                     np.dtype('int64'), np.dtype('float64')}
+
+
 def pop(dataframe, key, default):
     """
     Pop element *key* from dataframe and return it. Return default
@@ -128,3 +135,39 @@ def identity(*args):
     Return whatever is passed in
     """
     return args if len(args) > 1 else args[0]
+
+
+def dataframe_id(df, columns=None):
+    """
+    Compute a unique numeric id for each unique row in
+    a data frame. The ids start at 1 -- in the spirit
+    of `plyr::id`
+
+    Parameters
+    ----------
+    df : dataframe
+    columns : list
+        The columns to consider for uniquness. If None, then
+        it is all the columns
+
+    Note
+    ----
+    So far there has been no need not to drop unused levels
+    of categorical variables.
+    """
+    if not columns:
+        columns = df.columns
+    udf = df[columns].drop_duplicates()
+    columns = udf.columns
+    lookup = {}
+    for i, row in enumerate(udf.iterrows(), start=1):
+        row = row[1]
+        row = tuple(row[c] for c in columns)
+        lookup[row] = i
+
+    ids = []
+    for row in df.iterrows():
+        row = row[1]
+        row = tuple(row[c] for c in columns)
+        ids.append(lookup[row])
+    return ids

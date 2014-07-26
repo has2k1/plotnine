@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils.exceptions import GgplotError
+from ..utils import dataframe_id
 
 
 def layout_null(data):
@@ -95,8 +96,8 @@ def layout_grid(data, rows=None, cols=None, margins=None,
         # TODO: Implement this
         pass
 
-    rows = 1 if rows is None else row_to_integer_id(base.loc[:, rows])
-    cols = 1 if cols is None else row_to_integer_id(base.loc[:, cols])
+    rows = 1 if rows is None else dataframe_id(base, rows)
+    cols = 1 if cols is None else dataframe_id(base, cols)
 
     n = len(base)
     panels = pd.DataFrame({'PANEL': range(1, n+1)})
@@ -164,37 +165,21 @@ def layout_base(data, vars=None, drop=True):
     return base
 
 
-def row_to_integer_id(df):
-    """
-    Assign an integer id to each unique row in df
-
-    Return a list of the assignments
-    """
-    udf = df.drop_duplicates()
-    columns = udf.columns
-    lookup = {}
-    for i, row in enumerate(udf.iterrows(), start=1):
-        row = row[1]
-        row = tuple(row[c] for c in columns)
-        lookup[row] = i
-
-    ids = []
-    for row in df.iterrows():
-        row = row[1]
-        row = tuple(row[c] for c in columns)
-        ids.append(lookup[row])
-    return ids
-
-
 def unique_combs(df):
     """
     Return data frame with all possible combinations
     of the values in the columns
     """
+    # A sliced copy with zero rows so as to
+    # preserve the column dtypes
+    _df = df.ix[0:-1, df.columns]
+
     # List of unique values from every column
     lst = map(lambda x: x.unique().tolist(), [df[c] for c in df])
     rows = itertools.product(*lst)
-    return pd.DataFrame.from_records(rows, columns=df.columns)
+    for i, row in enumerate(rows):
+        _df.loc[i] = row
+    return _df
 
 
 def cross_join(df1, df2):

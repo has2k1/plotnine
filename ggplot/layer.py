@@ -7,6 +7,7 @@ import pandas.core.common as com
 from .components.aes import aes, is_calculated_aes
 from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
+from .utils import discrete_dtypes, dataframe_id
 
 
 class layer(object):
@@ -85,3 +86,31 @@ class layer(object):
             evaled['PANEL'] = data['PANEL']
 
         return evaled
+
+
+def add_group(data):
+    if len(data) == 0:
+        return data
+    if not ('group' in data):
+        disc = discrete_columns(data, ignore=['label'])
+        if disc:
+            data['group'] = dataframe_id(data, columns=disc)
+        else:
+            data['group'] = 1
+    else:
+        data['group'] = dataframe_id(data, columns=['group'])
+
+    return data
+
+
+def discrete_columns(df, ignore):
+    """
+    Return a list of the discrete columns in the
+    dataframe `df`. `ignore` is a list|set|tuple with the
+    names of the columns to skip.
+    """
+    lst = []
+    for col in df:
+        if (df[col].dtype in discrete_dtypes) and not (col in ignore):
+            lst.append(col)
+    return lst
