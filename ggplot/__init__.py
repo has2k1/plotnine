@@ -25,6 +25,7 @@ from .coords import *
 from .geoms import *
 from .stats import *
 from .scales import *
+from .facets import *
 from .themes import *
 from .utils import *
 from .exampledata import (diamonds,mtcars,meat,pageviews,movies)

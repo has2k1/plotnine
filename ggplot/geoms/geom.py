@@ -114,6 +114,24 @@ class geom(object):
         # go stale if users or geoms change geom.manual_aes
         self._create_aes_with_mpl_names()
 
+    def __deepcopy__(self, memo):
+        """
+        Deep copy without copying the self.data dataframe
+        """
+        # In case the object cannot be initialized with out
+        # arguments
+        class _empty(object):
+            pass
+        result = _empty()
+        result.__class__ = self.__class__
+        for key, item in self.__dict__.items():
+            # don't make a deepcopy of data!
+            if key == "data":
+                result.__dict__[key] = self.__dict__[key]
+                continue
+            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+        return result
+
     def plot_layer(self, data, ax):
         # Any aesthetic to be overridden by the manual aesthetics
         # should not affect the statistics and the unit grouping

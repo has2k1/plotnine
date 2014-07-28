@@ -171,3 +171,44 @@ def dataframe_id(df, columns=None):
         row = tuple(row[c] for c in columns)
         ids.append(lookup[row])
     return ids
+
+
+def match(v1, v2, nomatch=-1, incomparables=None, start=0):
+    """
+    Return a vector of the positions of (first)
+    matches of its first argument in its second.
+
+    Parameters
+    ----------
+    v1: array-like
+        the values to be matched
+
+    v2: array-like
+        the values to be matched against
+
+    nomatch: int
+        the value to be returned in the case when
+        no match is found.
+
+    incomparables: array-like
+        a list of values that cannot be matched.
+        Any value in v1 matching a value in this list
+        is assigned the nomatch value.
+    start: int
+        type of indexing to use. Most likely 0 or 1
+    """
+    lookup = {}
+    for i, x in enumerate(v2):
+        if not (x in lookup):
+            lookup[x] = i
+
+    lst = [nomatch] * len(v1)
+    skip = set(incomparables) if incomparables else set()
+    for i, x in enumerate(v1):
+        if x in skip:
+            continue
+        try:
+            lst[i] = lookup[x] + start
+        except KeyError:
+            pass
+    return lst

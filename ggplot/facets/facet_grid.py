@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from copy import deepcopy
 
 import pandas as pd
 
@@ -13,8 +14,8 @@ class facet_grid(object):
                  space='fixed', shrink=True, labeller='label_value',
                  as_table=True, drop=True):
         # TODO: Implement faceting formula
-        self.rows = x
-        self.cols = y
+        self.rows = [x] if x else x
+        self.cols = [y] if y else y
         self.margins = margins
         self.shrink = shrink
         self.labeller = labeller
@@ -25,6 +26,10 @@ class facet_grid(object):
         self.space_free = {'x': space in ('free_x', 'free'),
                            'y': space in ('free_y', 'free')}
 
+    def __radd__(self, gg):
+        gg = deepcopy(gg)
+        gg.facet = self
+        return gg
 
     def train_layout(self, data):
         layout = layout_grid(data, rows=self.rows, cols=self.cols,
@@ -53,5 +58,5 @@ class facet_grid(object):
         for df in data:
             if df is None:
                 df = plot_data.copy()
-            _data.append(locate_grid(df, layout, self.vars))
+            _data.append(locate_grid(df, layout, self.rows, self.cols))
         return _data

@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import six
+from copy import deepcopy
 import pandas.core.common as com
 
 from .components.aes import aes, is_calculated_aes
@@ -25,6 +26,24 @@ class layer(object):
         self.inherit_aes = inherit_aes
         self.group = group
 
+    def __deepcopy__(self, memo):
+        """
+        Deep copy without copying the self.data dataframe
+        """
+        # In case the object cannot be initialized with out
+        # arguments
+        class _empty(object):
+            pass
+        result = _empty()
+        result.__class__ = self.__class__
+        for key, item in self.__dict__.items():
+            # don't make a deepcopy of data!
+            if key == "data":
+                result.__dict__[key] = self.__dict__[key]
+                continue
+            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+        return result
+
     def layer_mapping(self, mapping):
         """
         Return the mappings that are active in this layer
@@ -44,7 +63,6 @@ class layer(object):
         d = dict((ae, v) for ae, v in aesthetics.items()
                  if not (ae in manual) and not (ae in calculated))
         return aes(**d)
-
 
     def compute_aesthetics(self, data, plot):
         """

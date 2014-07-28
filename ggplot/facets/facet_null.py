@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from copy import deepcopy
 
 import pandas as pd
 
@@ -8,6 +9,11 @@ class facet_null(object):
 
     def __init__(self, shrink=True):
         self.shrink = shrink
+
+    def __radd__(self, gg):
+        gg = deepcopy(gg)
+        gg.facet = self
+        return gg
 
     def train_layout(self, data):
         layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,

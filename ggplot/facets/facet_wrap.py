@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from copy import deepcopy
+
 import pandas as pd
 
 from .layouts import layout_wrap
@@ -19,6 +21,11 @@ class facet_wrap(object):
         self.drop = drop
         self.free = {'x': scales in ('free_x', 'free'),
                      'y': scales in ('free_y', 'free')}
+
+    def __radd__(self, gg):
+        gg = deepcopy(gg)
+        gg.facet = self
+        return gg
 
     def train_layout(self, data):
         layout = layout_wrap(data, vars=self.vars, nrow=self.nrow,

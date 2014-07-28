@@ -38,6 +38,24 @@ class stat(object):
         self._cache['args'] = args
         self._cache['kwargs'] = kwargs
 
+    def __deepcopy__(self, memo):
+        """
+        Deep copy without copying the self.data dataframe
+        """
+        # In case the object cannot be initialized with out
+        # arguments
+        class _empty(object):
+            pass
+        result = _empty()
+        result.__class__ = self.__class__
+        for key, item in self.__dict__.items():
+            # don't make a deepcopy of data!
+            if key == "data":
+                result.__dict__[key] = self.__dict__[key]
+                continue
+            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+        return result
+
     def _print_warning(self, message):
         """
         Prints message to the standard error.

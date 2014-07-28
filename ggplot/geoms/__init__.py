@@ -25,11 +25,8 @@ from .geom_tile import geom_tile
 from .geom_vline import geom_vline
 
 # misc
-from .facet_grid import facet_grid
-from .facet_wrap import facet_wrap
 from .chart_components import *
 
-__facet__ = ['facet_grid', 'facet_wrap']
 __geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot', 'geom_density',
             'geom_dotplot', 'geom_blank', 'geom_linerange', 'geom_pointrange',
              'geom_histogram', 'geom_hline', 'geom_jitter', 'geom_line', 'geom_linerange',
@@ -37,5 +34,5 @@ __geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot', 'geom_densi
              'geom_step', 'geom_smooth', 'geom_text', 'geom_tile',
              'geom_vline']
 __components__ = ['ylab', 'xlab', 'ylim', 'xlim', 'labs', 'ggtitle']
-__all__ = __geoms__ + __facet__ + __components__
+__all__ = __geoms__ + __components__
 __all__ = [str(u) for u in __all__]

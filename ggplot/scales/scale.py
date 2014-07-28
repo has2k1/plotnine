@@ -30,6 +30,9 @@ class scale(object):
         gg.scales.append(self)
         return gg
 
+    def clone(self):
+        return deepcopy(self)
+
 
 class scale_discrete(scale):
     """
@@ -46,3 +49,6 @@ class scale_continuous(scale):
     oob = None       # what to do with out of bounds data points
     minor_breaks = waiver()
     trans = identity  # transformation function
+
+
+

@@ -17,6 +17,7 @@ from .themes.theme_gray import theme_gray
 from .utils.exceptions import GgplotError
 from .panel import Panel
 from .layer import add_group
+from .scales.scales import Scales
 
 import datetime
 import six
@@ -71,7 +72,7 @@ class ggplot(object):
         self.facet = facet_null()
         self.labels = mapping  # TODO: Should allow for something else!!
         self.layers = []
-        self.scales = []
+        self.scales = Scales()
         # default theme is theme_gray
         self.theme = theme_gray()
 
@@ -204,7 +205,8 @@ class ggplot(object):
         if not self.layers:
             raise GgplotError('No layers in plot')
 
-        plot = deepcopy(self)
+        # plot = deepcopy(self)
+        plot = self
 
         layers = self.layers
         layer_data = [x.data for x in self.layers]
@@ -221,7 +223,6 @@ class ggplot(object):
                 out[i] = f(data[i], layers[i])
             return out
 
-
         # Initialise panels, add extra data for margins & missing facetting
         # variables, and add on a PANEL variable to data
         panel = Panel()
@@ -232,7 +233,17 @@ class ggplot(object):
         data = dlapply(lambda d, l: l.compute_aesthetics(d, plot))
         data = list(map(add_group, data))
 
-        print(data)
+        # Transform all scales
+
+        # Map and train positions so that statistics have access to ranges
+        # and all positions are numeric
+        scale_x = scales.get_scales('x')
+        scale_y = scales.get_scales('y')
+
+        # panel <- train_position(panel, data, scale_x(), scale_y())
+        # data <- map_position(panel, data, scale_x(), scale_y())
+        # print(data)
+        print(panel.layout)
         # print(plot.scales)
 
 
