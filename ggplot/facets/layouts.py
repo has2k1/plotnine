@@ -11,7 +11,7 @@ from ..utils import dataframe_id
 
 
 def layout_null(data):
-    return pd.DataFrame({'PANEL': 1, 'ROW':  1, 'COL': 1})
+    return pd.DataFrame({'PANEL': pd.Categorical[1], 'ROW':  1, 'COL': 1})
 
 
 def layout_wrap(data, vars=None, nrow=None, ncol=None,
@@ -42,17 +42,18 @@ def layout_wrap(data, vars=None, nrow=None, ncol=None,
     base = layout_base(data, vars, drop=drop)
     n = len(base)
     dims = wrap_dims(n, nrow, ncol)
-
-    layout = pd.DataFrame({'PANEL': range(1, n+1)})
     _id = np.arange(1, n+1)
-    if as_table:
-        layout['ROW'] = (_id - 1) // dims[1] + 1
-    else:
-        layout['ROW'] = dims[0] - (_id - 1) // dims[1]
-    layout['COL'] = (_id - 1) % dims[1] + 1
-    layout['ROW'] = layout['ROW'].astype(int)
-    layout['COL'] = layout['COL'].astype(int)
 
+    if as_table:
+        row = (_id - 1) // dims[1] + 1
+    else:
+        row = dims[0] - (_id - 1) // dims[1]
+
+    col = (_id - 1) % dims[1] + 1
+
+    layout = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
+                           'ROW': row.astype(int),
+                           'COL': col.astype(int)})
     panels = pd.concat([layout, base], axis=1)
     return panels
 
@@ -100,10 +101,9 @@ def layout_grid(data, rows=None, cols=None, margins=None,
     cols = 1 if cols is None else dataframe_id(base, cols)
 
     n = len(base)
-    panels = pd.DataFrame({'PANEL': range(1, n+1)})
-    panels['ROW'] = rows
-    panels['COL'] = cols
-
+    panels = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
+                           'ROW': rows,
+                           'COL': cols})
     panels = pd.concat([panels, base], axis=1)
     return panels
 
@@ -142,10 +142,9 @@ def layout_base(data, vars=None, drop=True):
     if not drop:
         base = unique_combs(base)
 
-    # NOTE: Should be sorted according to the levels of the
-    # factor base.columns and not in alphabetical order
-    # TODO: Change when pandas allows categoricals in dataframes
+    # sorts according to order of factor levels
     base.sort(columns=list(base.columns), inplace=True)
+
 
     # Systematically add on missing combinations
     for i, value in enumerate(values):

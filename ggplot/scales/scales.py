@@ -9,18 +9,38 @@ import numpy as np
 import ggplot.scales  # TODO: make relative
 from ..utils import discrete_dtypes, continuous_dtypes
 
+_TPL_DUPLICATE_SCALE = """\
+Scale for '{0}' is already present.
+Adding another scale for '{0}',
+which will replace the existing scale.
+"""
+
 
 class Scales(list):
+    def append(self, sc):
+        """
+        Add scale 'sc' and remove any previous
+        scales that cover the same aesthetics
+        """
+        ae = sc.aesthetics[0]
+        cover_ae = self.find(ae)
+        if any(cover_ae):
+            sys.err.write(_TPL_DUPLICATE_SCALE.format(ae))
+            idx = cover_ae.index(True)
+            self.remove(idx)
+        super(Scales, self).append(sc)
+
     def find(self, aesthetic):
         """
-        Return a list of True|False
+        Return a list of True|False for each scale if
+        it covers the aesthetic.
         """
         return [aesthetic in s.aesthetics for s in self]
 
     def input(self):
         """
         Return a list of all the aesthetics covered by
-        the scales
+        the scales.
         """
         lst = [s.aesthetics for s in self]
         return list(itertools.chain(lst))
@@ -32,7 +52,8 @@ class Scales(list):
         """
         bool_lst = self.find(aesthetic)
         try:
-            return bool_lst.index(True)
+            idx = bool_lst.index(True)
+            return self[idx]
         except ValueError:
             return None
 
@@ -45,57 +66,35 @@ class Scales(list):
              if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
         return Scales(l)
 
+    def train(self, data, vars, idx):
+        """
+        Train the scales on the data.
+        The scales should be for the same aesthetic
+        e.g. x scales, y scales, color scales, ...
 
-"""
-  find = function(aesthetic) {
-    vapply(scales, function(x) any(aesthetic %in% x$aesthetics), logical(1))
-  },
-  has_scale = function(aesthetic) {
-    any(find(aesthetic))
-  },
-  add = function(scale) {
-    prev_aes <- find(scale$aesthetics)
-    if (any(prev_aes)) {
-      # Get only the first aesthetic name in the returned vector -- it can
-      # sometimes be c("x", "xmin", "xmax", ....)
-      scalename <- scales[prev_aes][[1]]$aesthetics[1]
-      message("Scale for '", scalename,
-        "' is already present. Adding another scale for '", scalename,
-        "', which will replace the existing scale.")
-    }
+        Parameters
+        ----------
+        data : dataframe
+            data to use for training
+        vars : list | tuple
+            columns in data to use for training
+        idx : array-like
+            indices that map the data points to the
+            scales. These start at 1, so subtract 1 to
+            get the true index into the scales array
+        """
+        idx = np.array(idx)
+        for col in vars:
+            for i, s in enumerate(self, start=1):
+                bool_idx = (i == idx)
+                s.train(data.loc[bool_idx, col])
 
-    # Remove old scale for this aesthetic (if it exists)
-    scales <<- c(scales[!prev_aes], list(scale))
-  },
-  clone = function() {
-    new_scales <- lapply(scales, scale_clone)
-    Scales$new(new_scales)
-  },
-  n = function() {
-    length(scales)
-  },
-  input = function() {
-    unlist(lapply(scales, "[[", "aesthetics"))
-  },
-  initialize = function(scales = NULL) {
-    initFields(scales = scales)
-  },
-  non_position_scales = function(.) {
-    Scales$new(scales[!find("x") & !find("y")])
-  },
-  get_scales = function(output) {
-    scale <- scales[find(output)]
-    if (length(scale) == 0) return()
-    scale[[1]]
-  }
-"""
 
 def scales_add_defaults(scales, data, aesthetics):
     """
     Add default scales for the aesthetics if none are
     present
     """
-    new_scales = []
     if not aesthetics:
         return
 
@@ -122,6 +121,8 @@ def scales_add_defaults(scales, data, aesthetics):
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue
         scales.append(scale_f())
+
+    return scales
 
 
 def scale_type(column):

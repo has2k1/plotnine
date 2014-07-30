@@ -199,19 +199,24 @@ class ggplot(object):
         self.legend[legend_type] = legend_dict
 
     def plot_build(self):
-        # TODO: copy the plot_data in here and give each layer
-        # a separate copy. Currently this is happening in
-        # facet.map_layout
+        # TODO:
+        # - copy the plot_data in here and give each layer
+        #   a separate copy. Currently this is happening in
+        #   facet.map_layout
+        # - Do not alter the user dataframe, create a copy
+        #   that keeps only the columns mapped to aesthetics.
+        #   Currently, this space conservation is happening
+        #   in compute_aesthetics. Can we get this evaled
+        #   dataframe before train_layout!!!
         if not self.layers:
             raise GgplotError('No layers in plot')
 
-        # plot = deepcopy(self)
-        plot = self
+        plot = deepcopy(self)
 
         layers = self.layers
         layer_data = [x.data for x in self.layers]
         all_data = [plot.data] + layer_data
-        scales = self.scales
+        scales = plot.scales
 
         def dlapply(f):
             """
@@ -237,15 +242,17 @@ class ggplot(object):
 
         # Map and train positions so that statistics have access to ranges
         # and all positions are numeric
-        scale_x = scales.get_scales('x')
-        scale_y = scales.get_scales('y')
+        x_scale = scales.get_scales('x')
+        y_scale = scales.get_scales('y')
 
-        # panel <- train_position(panel, data, scale_x(), scale_y())
+        panel.train_position(data, x_scale, y_scale)
         # data <- map_position(panel, data, scale_x(), scale_y())
-        # print(data)
-        print(panel.layout)
-        # print(plot.scales)
 
+        # print(scales)
+        # print(data)
+        # print(panel.layout)
+        # print(plot.scales)
+        return panel
 
 
 def _is_identity(x):

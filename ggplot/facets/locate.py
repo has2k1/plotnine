@@ -7,11 +7,13 @@ import numpy as np
 import pandas as pd
 
 from ..utils.exceptions import GgplotError
+from ..utils import match
 
 
 def locate_wrap(data, panels, vars):
     if not len(data):
-        data['PANEL'] = ''
+        data['PANEL'] = pd.Categorical([])
+        data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
         return data
 
     # The columns that are facetted
@@ -37,19 +39,21 @@ def locate_wrap(data, panels, vars):
         facet_vals.append(to_add.iloc[facet_rep, :])
 
     # assign each point to a panel
-    facet_vals.drop_duplicates(inplace=True)
-    lookup = dict((row, i) for i, row in
-                  enumerate(facet_vals.itertuples(index=False), start=1))
-    data['PANEL'] = [lookup[t] for t in
-                     data.loc[:, vars].itertuples(index=False)]
-    data.sort(columns='PANEL', inplace=True)
+    keys_x = list(facet_vals.loc[:, vars].itertuples(index=False))
+    keys_y = list(panels.loc[:, vars].itertuples(index=False))
+    data['PANEL'] = match(keys_x, keys_y, start=1)
 
+    # matching dtype
+    data['PANEL'] = pd.Categorical(data['PANEL'])
+    data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
+    data.sort(columns='PANEL', inplace=True)
     return data
 
 
 def locate_grid(data, panels, rows=None, cols=None, margins=False):
     if not len(data):
-        data['PANEL'] = ''
+        data['PANEL'] = pd.Categorical([])
+        data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
         return data
     vars = [x for x in rows + cols]
 
@@ -63,7 +67,7 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
     vars_ = [v for v in vars if v in data.columns]
     facet_vals = data.loc[:, vars_].reset_index(drop=True)
 
-    # When a dataframe a some layer does not have all
+    # When in a dataframe some layer does not have all
     # the facets variables, add the missing facet
     # variables and create new data where the points(duplicates)
     # are present in all the facets
@@ -82,17 +86,16 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
         facet_vals.append(to_add.iloc[facet_rep, :])
 
     # assign each point to a panel
-    facet_vals.drop_duplicates(inplace=True)
-
     if len(facet_vals) == 0:
         # Special case of no facetting
         data['PANEL'] = 1
     else:
-        lookup = dict((row, i) for i, row in
-                      enumerate(facet_vals.itertuples(index=False),
-                                start=1))
-        data['PANEL'] = [lookup[t] for t in
-                         data.loc[:, vars].itertuples(index=False)]
-        data.sort(columns='PANEL', inplace=True)
+        keys_x = list(facet_vals.loc[:, vars].itertuples(index=False))
+        keys_y = list(panels.loc[:, vars].itertuples(index=False))
+        data['PANEL'] = match(keys_x, keys_y, start=1)
 
+    # matching dtype
+    data['PANEL'] = pd.Categorical(data['PANEL'])
+    data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
+    data.sort(columns='PANEL', inplace=True)
     return data

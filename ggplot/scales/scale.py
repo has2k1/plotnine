@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from copy import deepcopy
+import numpy as np
 
 from ..utils import waiver, identity
 
@@ -33,12 +34,27 @@ class scale(object):
     def clone(self):
         return deepcopy(self)
 
+    def reset_range(self):
+        self.range = None
+
 
 class scale_discrete(scale):
     """
     Base class for all discrete scales
     """
-    pass
+
+    def train(self, series):
+        """
+        Train scale
+
+        Parameters
+        ----------
+        series: pd.series | np.array
+            a column of data to train over
+        """
+        if not self.range:
+            self.range = set()
+        self.range.update(series)
 
 
 class scale_continuous(scale):
@@ -50,5 +66,19 @@ class scale_continuous(scale):
     minor_breaks = waiver()
     trans = identity  # transformation function
 
+    def train(self, series):
+        """
+        Train scale
 
-
+        Parameters
+        ----------
+        series: pd.series | np.array
+            a column of data to train over
+        """
+        mn = series.min()
+        mx = series.max()
+        if self.range:
+            _mn, _mx = self.range
+            mn = np.min([mn, _mn])
+            mx = np.max([mx, _mx])
+        self.range = [mn, mx]

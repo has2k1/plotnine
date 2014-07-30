@@ -30,9 +30,9 @@ class facet_null(object):
         ----------
         layout : dataframe
             As returned by self.train_layout
-        data: list
+        data : list
             dataframe for each layer or None
-        plot_data: dataframe
+        plot_data : dataframe
             default data. Specified in the call to  ggplot
         """
         _data = []
