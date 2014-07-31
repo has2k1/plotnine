@@ -53,6 +53,7 @@ default_test_modules = [
     # 'ggplot.tests.test_theme_mpl',
     # 'ggplot.tests.test_theme_seaborn',
     'ggplot.tests.test_scale_internals',
+    'ggplot.tests.test_utils',
 ]
 
 _multiprocess_can_split_ = True

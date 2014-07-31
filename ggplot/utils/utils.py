@@ -4,7 +4,10 @@ Little functions used all over the codebase
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import itertools
+
 import numpy as np
+import pandas as pd
 import matplotlib.cbook as cbook
 import six
 
@@ -212,3 +215,101 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
         except KeyError:
             pass
     return lst
+
+
+def margins(vars, _margins=True):
+    """
+    Figure out margining variables.
+
+    Given the variables that form the rows and
+    columns, and a set of desired margins, works
+    out which ones are possible. Variables that
+    can't be margined over are dropped silently.
+
+    Parameters
+    ----------
+    vars : list
+        variable names for rows and columns
+    margins : bool | list
+        If true, margins over all vars, otherwise
+        only those listed
+
+    Return
+    ------
+    out : list
+        All the margins to create.
+    """
+    if _margins == False:
+        return []
+
+    def fn(_vars):
+        "The margin variables for a given row or column"
+        # The first item is and empty list for no margins
+        dim_margins = [[]]
+        # for each wanted variable, couple it with
+        # all variables to the right
+        for i, u in enumerate(_vars):
+            if _margins == True or u in _margins:
+                lst = [u] + [v for v in _vars[i+1:]]
+                dim_margins.append(lst)
+        return dim_margins
+
+    # Margin variables for rows and columns
+    row_margins = fn(vars[0])
+    col_margins = fn(vars[1])
+
+    # Cross the two
+    lst = list(itertools.product(col_margins, row_margins))
+
+    # Clean up -- merge the row and column variables
+    pretty = []
+    for c, r in lst:
+        pretty.append(r + c)
+    return pretty
+
+
+def add_margins(df, vars, _margins=True):
+    """
+    Add margins to a data frame.
+
+    All margining variables will be converted to factors.
+
+    Parameters
+    ----------
+    df : dataframe
+        input data frame
+
+    vars : list
+        a list of 2 lists | tuples vectors giving the
+        variables in each dimension
+
+    margins : bool | list
+        variable names to compute margins for.
+        True will compute all possible margins.
+    """
+    margin_vars = margins(vars, _margins)
+    if not margin_vars:
+        return df
+
+    # all margin columns become categoricals
+    all_vars = set([v for vlst in margin_vars for v in vlst])
+    for v in all_vars:
+        df[v] = pd.Categorical(df[v])
+        levels = df[v].cat.levels.tolist() + ['(all)']
+        try:
+            df[v].cat.reorder_levels(levels)
+        except ValueError:
+            # Already a categorical with '(all)' level
+            pass
+
+    # create margin dataframes
+    margin_dfs = [df]
+    for vlst in margin_vars[1:]:
+        dfx = df.copy()
+        for v in vlst:
+            dfx.loc[0:, v] = '(all)'
+        margin_dfs.append(dfx)
+
+    merged = pd.concat(margin_dfs, axis=0)
+    merged.reset_index(drop=True, inplace=True)
+    return merged

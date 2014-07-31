@@ -8,7 +8,7 @@ from .utils import (pop, is_categorical, is_string, is_scalar_or_string,
                     is_sequence_of_booleans, is_sequence_of_strings,
                     make_iterable, make_iterable_ntimes, waiver,
                     identity, discrete_dtypes, continuous_dtypes,
-                    dataframe_id, match)
+                    dataframe_id, match, add_margins)
 
 __all__ = ["ggsave", "date_breaks", "date_format", "add_ggplotrc_params"]
 __all__ = [str(u) for u in __all__]

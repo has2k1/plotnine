@@ -1,13 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import itertools
-
 import numpy as np
 import pandas as pd
 
 from ..utils.exceptions import GgplotError
-from ..utils import match
+from ..utils import match, add_margins
 
 
 def locate_wrap(data, panels, vars):
@@ -57,11 +55,11 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
         return data
     vars = [x for x in rows + cols]
 
-    # TODO: Implement add_margins when dataframe allows
-    # categorical columns and uncomment the lines below
-    # margin_vars = [list[set(rows) & set(data.columns)],
-    #                list[set(cols) & set(data.columns)]]
-    # data = add_margins(data, margin_vars, margins)
+    rows = [] if rows is None else rows
+    cols = [] if cols is None else cols
+    margin_vars = [list(data.columns & rows),
+                   list(data.columns & cols)]
+    data = add_margins(data, margin_vars, margins)
 
     # The columns that are facetted
     vars_ = [v for v in vars if v in data.columns]
