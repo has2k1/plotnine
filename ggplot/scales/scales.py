@@ -3,10 +3,12 @@ from __future__ import (absolute_import, division, print_function,
 import sys
 import textwrap
 import itertools
+import importlib
 
 import numpy as np
+import pandas as pd
+import pandas.core.common as com
 
-import ggplot.scales  # TODO: make relative
 from ..utils import discrete_dtypes, continuous_dtypes
 
 _TPL_DUPLICATE_SCALE = """\
@@ -17,6 +19,7 @@ which will replace the existing scale.
 
 
 class Scales(list):
+
     def append(self, sc):
         """
         Add scale 'sc' and remove any previous
@@ -28,7 +31,8 @@ class Scales(list):
             sys.err.write(_TPL_DUPLICATE_SCALE.format(ae))
             idx = cover_ae.index(True)
             self.remove(idx)
-        super(Scales, self).append(sc)
+        # super() does not work well with reloads
+        list.append(self, sc)
 
     def find(self, aesthetic):
         """
@@ -85,9 +89,51 @@ class Scales(list):
         """
         idx = np.array(idx)
         for col in vars:
-            for i, s in enumerate(self, start=1):
+            for i, sc in enumerate(self, start=1):
                 bool_idx = (i == idx)
-                s.train(data.loc[bool_idx, col])
+                sc.train(data.loc[bool_idx, col])
+
+    def map(self, data, vars, idx):
+        """
+        Map the data on the scales
+        The scales should be for the same aesthetic
+        e.g. x scales, y scales, color scales, ...
+
+        Parameters
+        ----------
+        data : dataframe
+            data with columns to map
+            This is modified inplace
+        vars : list | tuple
+            columns to map
+        idx : array-like
+            indices that link the data points to the
+            scales. These start at 1, so subtract 1 to
+            get the true index into the scales array
+        """
+        idx = np.array(idx)
+        # discrete scales can change the dtype
+        # from category to int. Use a new dataframe
+        # to collect these results
+        df = pd.DataFrame({}, index=range(len(data)))
+        cat_cols = []
+
+        # Loop through each variable, mapping across each scale,
+        # then joining back into the copy of the data
+        for col in vars:
+            use_df = com.is_categorical_dtype(data[col])
+            if use_df:
+                cat_cols.append(col)
+            for i, sc in enumerate(self, start=1):
+                bool_idx = (i == idx)
+                results = sc.map(data.loc[bool_idx, col])
+                if use_df:
+                    df.loc[bool_idx, col] = results
+                else:
+                    data.loc[bool_idx, col] = results
+
+        for col in cat_cols:
+            data[col] = df[col]
 
 
 def scales_add_defaults(scales, data, aesthetics):
@@ -114,10 +160,11 @@ def scales_add_defaults(scales, data, aesthetics):
     for ae, col in ae_cols:
         _type = scale_type(data[col])
         scale_name = 'scale_{}_{}'.format(ae, _type)
+        this_package = importlib.import_module('..scales', __package__)
 
         try:
-            scale_f = getattr(ggplot.scales, scale_name)
-        except AttributeError:
+            scale_f = getattr(this_package, scale_name)
+        except KeyError:
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue
         scales.append(scale_f())

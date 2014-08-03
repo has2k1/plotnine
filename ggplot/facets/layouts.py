@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils.exceptions import GgplotError
-from ..utils import dataframe_id
+from ..utils import ninteraction
 
 
 def layout_null(data):
@@ -21,18 +21,18 @@ def layout_wrap(data, vars=None, nrow=None, ncol=None,
 
     Parameters
     ----------
-    data: list
+    data : list
         list of dataframes with list[0] the default dataframe,
         list[1] dataframe for the 1st layer, ...
-    vars: tuple | list
+    vars : tuple | list
         facet variables
-    nrow: int
+    nrow : int
         number of row
-    ncol: int
+    ncol : int
         number of col
-    as_table: bool
+    as_table : bool
         d
-    drop: bool
+    drop : bool
         Whether to exclude missing combinations of facet variables
         from the plot
     """
@@ -65,16 +65,16 @@ def layout_grid(data, rows=None, cols=None, margins=None,
 
     Parameters
     ----------
-    data: list
+    data : list
         list of dataframes with list[0] the default dataframe,
         list[1] dataframe for the 1st layer, ...
-    rows: tuple | list
+    rows : tuple | list
         number of row
-    cols: tuple | list
+    cols : tuple | list
         number of col
-    as_table: bool
+    as_table : bool
         d
-    drop: bool
+    drop : bool
         Whether to exclude missing combinations of facet variables
         from the plot
     """
@@ -97,8 +97,8 @@ def layout_grid(data, rows=None, cols=None, margins=None,
         # TODO: Implement this
         pass
 
-    rows = 1 if rows is None else dataframe_id(base, rows)
-    cols = 1 if cols is None else dataframe_id(base, cols)
+    rows = 1 if rows is None else ninteraction(base, rows)
+    cols = 1 if cols is None else ninteraction(base, cols)
 
     n = len(base)
     panels = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),

@@ -8,7 +8,7 @@ import pandas.core.common as com
 from .components.aes import aes, is_calculated_aes
 from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
-from .utils import discrete_dtypes, dataframe_id
+from .utils import discrete_dtypes, ninteraction
 
 
 class layer(object):
@@ -112,11 +112,11 @@ def add_group(data):
     if not ('group' in data):
         disc = discrete_columns(data, ignore=['label'])
         if disc:
-            data['group'] = dataframe_id(data, columns=disc)
+            data['group'] = ninteraction(data[disc], drop=True)
         else:
             data['group'] = 1
     else:
-        data['group'] = dataframe_id(data, columns=['group'])
+        data['group'] = ninteraction(data['group'], drop=True)
 
     return data
 

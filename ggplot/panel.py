@@ -17,6 +17,11 @@ class Panel(object):
     y_scales  = None  # scale object(s). 1 or n of them
 
     def train_position(self, data, x_scale, y_scale):
+        """
+        Create all the required x_scales and y_scales
+        and set the ranges for each scale according
+        to the data
+        """
         layout = self.layout
         # Initialise scales if needed, and possible.
         if not self.x_scales and x_scale:
@@ -42,3 +47,24 @@ class Panel(object):
                 # the scale index for each data point
                 SCALE_Y = layout['SCALE_Y'].iloc[match_id].tolist()
                 self.y_scales.train(layer_data, y_vars, SCALE_Y)
+        return self
+
+    def map_position(self, data, x_scale, y_scale):
+        layout = self.layout
+
+        for layer_data in data:
+            if x_scale:
+                match_id = match(layer_data['PANEL'], layout['PANEL'])
+                x_vars = list(set(x_scale.aesthetics) &
+                              set(layer_data.columns))
+                SCALE_X = layout['SCALE_X'].iloc[match_id].tolist()
+                self.x_scales.map(layer_data, x_vars, SCALE_X)
+
+            if y_scale:
+                match_id = match(layer_data['PANEL'], layout['PANEL'])
+                y_vars = list(set(y_scale.aesthetics) &
+                              set(layer_data.columns))
+                SCALE_Y = layout['SCALE_Y'].iloc[match_id].tolist()
+                self.y_scales.map(layer_data, y_vars, SCALE_Y)
+
+        return data

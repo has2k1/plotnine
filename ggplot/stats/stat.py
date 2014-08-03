@@ -6,6 +6,8 @@ from copy import deepcopy
 from ggplot.utils.exceptions import GgplotError
 import ggplot.geoms
 
+from ..layer import layer
+
 __all__ = ['stat']
 __all__ = [str(u) for u in __all__]
 
@@ -85,8 +87,8 @@ class stat(object):
         _geom.params['position'] = self.params['position']
         _geom._stat = self
 
-        l = layer(geom=self._geom, stat=self, data=self.data,
-                  mapping=self.aes,
+        l = layer(geom=_geom, stat=self, data=_geom.data,
+                  mapping=_geom.aes,
                   position=self.params['position'])
         gg.layers.append(l)
         return gg

@@ -1,21 +1,25 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
+import random
+import string
+import itertools
 from nose.tools import assert_equal, assert_true, assert_raises
-
-from . import get_assert_same_ggplot, cleanup
-assert_same_ggplot = get_assert_same_ggplot(__file__)
 
 import numpy as np
 import pandas as pd
+import scipy.stats as ss
 
+from . import get_assert_same_ggplot, cleanup
 from ..exampledata import mtcars
-from ..utils.utils import margins, add_margins
+from ..utils.utils import _margins, add_margins, ninteraction
+from ..scales.utils import censor
+
+assert_same_ggplot = get_assert_same_ggplot(__file__)
 
 
-def test_margins():
+def test__margins():
     vars = [('vs', 'am'), ('gear',)]
-    lst = margins(vars, True)
+    lst = _margins(vars, True)
     assert(lst == [[],
                    ['vs', 'am'],
                    ['am'],
@@ -23,23 +27,23 @@ def test_margins():
                    ['vs', 'am', 'gear'],
                    ['am', 'gear']])
 
-    lst = margins(vars, False)
+    lst = _margins(vars, False)
     assert(lst == [])
 
-    lst = margins(vars, ['vs'])
+    lst = _margins(vars, ['vs'])
     assert(lst == [[],
                    ['vs', 'am']])
 
-    lst = margins(vars, ['am'])
+    lst = _margins(vars, ['am'])
     assert(lst == [[],
                    ['am']])
 
-    lst = margins(vars, ['vs', 'am'])
+    lst = _margins(vars, ['vs', 'am'])
     assert(lst == [[],
                    ['vs', 'am'],
                    ['am']])
 
-    lst = margins(vars, ['gear'])
+    lst = _margins(vars, ['gear'])
     assert(lst == [[],
                    ['gear']])
 
@@ -84,3 +88,53 @@ def test_add_margins():
 
     assert(all(dfx.loc[5*n:6*n-1, 'am'] == all_lst))
     assert(all(dfx.loc[5*n:6*n-1, 'gear'] == all_lst))
+
+
+def test_censor():
+    x = range(10)
+    xx = censor(x, (2, 8))
+    assert(np.isnan(xx[0]))
+    assert(np.isnan(xx[1]))
+    assert(np.isnan(xx[9]))
+
+    df = pd.DataFrame({'x': x, 'y': range(10)})
+    df['x'] = censor(df['x'], (2, 8))
+    assert(np.isnan(df['x'][0]))
+    assert(np.isnan(df['x'][1]))
+    assert(np.isnan(df['x'][9]))
+
+    df['y'] = censor(df['y'], (-2, 18))
+    assert(issubclass(df['y'].dtype.type, np.integer))
+
+
+def test_ninteraction():
+    simple_vectors = [
+      list(string.ascii_lowercase),
+      random.sample(string.ascii_lowercase, 26),
+      list(range(1, 27))]
+
+    # vector of unique values is equivalent to rank
+    for case in simple_vectors:
+        rank = pd.DataFrame(case).rank(method='min')
+        rank = rank[0].astype(int).tolist()
+        rank_df = ninteraction(pd.DataFrame(case))
+        assert(rank == rank_df)
+
+    # duplicates are numbered sequentially
+    # df                    ids
+    # [6, 6, 4, 4, 5, 5] -> [3, 3, 1, 1, 2, 2]
+    for case in simple_vectors:
+        rank = pd.DataFrame(case).rank(method='min')
+        rank = rank[0].astype(int).repeat(2).tolist()
+        rank_df = ninteraction(
+            pd.DataFrame(np.array(case).repeat(2)))
+        assert(rank == rank_df)
+
+    # grids are correctly ranked
+    df = pd.DataFrame(list(itertools.product([1, 2], range(1, 11))))
+    assert(ninteraction(df) == list(range(1, len(df)+1)))
+    assert(ninteraction(df, drop=True) == list(range(1, len(df)+1)))
+
+    # zero length dataframe
+    df = pd.DataFrame()
+    assert(ninteraction(df) == [])

@@ -91,3 +91,48 @@ def rescale(x, to=(0, 1), from_=None):
     if not from_:
         from_ = np.min(x), np.max(x)
     return np.interp(x, from_, to)
+
+
+def censor(x, range=(0, 1), only_finite=True):
+    """
+    Convert any values outside of range to np.NaN
+
+    Parameters
+    ----------
+    x : array-like
+        values to manipulate.
+    range: tuple
+        (min, max) giving desired output range.
+    only_finite : bool
+        if True (the default), will only modify
+        finite values.
+
+    Returns
+    -------
+    x : array-like
+        Censored array
+    """
+    intype = None
+    if not hasattr(x, 'dtype'):
+        intype = type(x)
+        x = np.array(x)
+
+    if only_finite:
+        finite = np.isfinite(x)
+    else:
+        finite = True
+
+    below = x < range[0]
+    above = x > range[1]
+    # np.nan is a float therefore x.dtype
+    # must be a float. The 'ifs' are to avoid
+    # unnecessary type changes
+    if any(below) or any(above):
+        if issubclass(x.dtype.type, np.integer):
+            x = x.astype(np.float)
+        x[finite & below] = np.nan
+        x[finite & above] = np.nan
+
+    if intype:
+        x = intype(x)
+    return x

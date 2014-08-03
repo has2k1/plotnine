@@ -8,6 +8,7 @@ import itertools
 
 import numpy as np
 import pandas as pd
+import pandas.core.common as com
 import matplotlib.cbook as cbook
 import six
 
@@ -115,6 +116,7 @@ def make_iterable_ntimes(val, n):
     if cbook.iterable(val) and not is_string(val):
         if len(val) != n:
             raise Exception(
+
                 '`val` is an iterable of length not equal to n.')
         return val
     return [val] * n
@@ -138,42 +140,6 @@ def identity(*args):
     Return whatever is passed in
     """
     return args if len(args) > 1 else args[0]
-
-
-def dataframe_id(df, columns=None):
-    """
-    Compute a unique numeric id for each unique row in
-    a data frame. The ids start at 1 -- in the spirit
-    of `plyr::id`
-
-    Parameters
-    ----------
-    df : dataframe
-    columns : list
-        The columns to consider for uniquness. If None, then
-        it is all the columns
-
-    Note
-    ----
-    So far there has been no need not to drop unused levels
-    of categorical variables.
-    """
-    if not columns:
-        columns = df.columns
-    udf = df[columns].drop_duplicates()
-    columns = udf.columns
-    lookup = {}
-    for i, row in enumerate(udf.iterrows(), start=1):
-        row = row[1]
-        row = tuple(row[c] for c in columns)
-        lookup[row] = i
-
-    ids = []
-    for row in df.iterrows():
-        row = row[1]
-        row = tuple(row[c] for c in columns)
-        ids.append(lookup[row])
-    return ids
 
 
 def match(v1, v2, nomatch=-1, incomparables=None, start=0):
@@ -217,7 +183,7 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
     return lst
 
 
-def margins(vars, _margins=True):
+def _margins(vars, margins=True):
     """
     Figure out margining variables.
 
@@ -239,7 +205,7 @@ def margins(vars, _margins=True):
     out : list
         All the margins to create.
     """
-    if _margins == False:
+    if margins == False:
         return []
 
     def fn(_vars):
@@ -249,7 +215,7 @@ def margins(vars, _margins=True):
         # for each wanted variable, couple it with
         # all variables to the right
         for i, u in enumerate(_vars):
-            if _margins == True or u in _margins:
+            if margins == True or u in margins:
                 lst = [u] + [v for v in _vars[i+1:]]
                 dim_margins.append(lst)
         return dim_margins
@@ -268,7 +234,7 @@ def margins(vars, _margins=True):
     return pretty
 
 
-def add_margins(df, vars, _margins=True):
+def add_margins(df, vars, margins=True):
     """
     Add margins to a data frame.
 
@@ -287,7 +253,7 @@ def add_margins(df, vars, _margins=True):
         variable names to compute margins for.
         True will compute all possible margins.
     """
-    margin_vars = margins(vars, _margins)
+    margin_vars = _margins(vars, margins)
     if not margin_vars:
         return df
 
@@ -313,3 +279,66 @@ def add_margins(df, vars, _margins=True):
     merged = pd.concat(margin_dfs, axis=0)
     merged.reset_index(drop=True, inplace=True)
     return merged
+
+
+def ninteraction(df, drop=False):
+    """
+    Compute a unique numeric id for each unique row in
+    a data frame. The ids start at 1 -- in the spirit
+    of `plyr::id`
+
+    Parameters
+    ----------
+    df : dataframe
+    columns : list
+        The columns to consider for uniquness. If None, then
+        it is all the columns
+
+    Note
+    ----
+    So far there has been no need not to drop unused levels
+    of categorical variables.
+    """
+    if len(df) == 0:
+        return []
+
+    # Special case for single variable
+    if len(df) == 1:
+        return _id_var(df, drop)
+
+    # Calculate individual ids
+    ids = df.apply(_id_var, axis=0)
+    ids = ids.reindex(columns=reversed(ids.columns))
+    p = ids.shape[1]
+
+    # Calculate dimensions
+    len_unique = lambda x: len(np.unique(x))
+    ndistinct = ids.apply(len_unique, axis=0).as_matrix()
+    n = ndistinct.prod()
+
+    combs = np.matrix(
+        np.hstack([1, ndistinct[:-1]]))
+    mat = np.matrix(ids)
+    res = (mat - 1) * combs.T + 1
+    res = np.array(res).flatten().tolist()
+
+    if drop:
+        return _id_var(res, drop)
+    else:
+        return res
+
+
+def _id_var(x, drop=False):
+    if len(x) == 0:
+        return []
+
+    if com.is_categorical_dtype(x) and not drop:
+        x = x.copy()
+        x.cat.levels = range(1, len(x.cat.levels) + 1)
+        lst = x.tolist()
+    else:
+        levels = np.sort(np.unique(x))
+        lst = match(x, levels)
+        lst = [item + 1 for item in lst]
+
+    return lst

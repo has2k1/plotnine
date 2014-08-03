@@ -241,7 +241,9 @@ class scale_color_distiller(scale_color_gradientn):
             sys.stderr.write(_MSG_CONTINUOUS_DISTILLER)
         # Grab 6 colors from brewer and create a gradient palette
         colours = brewer_pal(type, palette)(6)
-        super(scale_color_distiller, self).__init__(colours, values, space)
+
+        # super() does not work well with reloads
+        scale_color_gradientn.__init__(self, colours, values, space)
 
 
 class scale_fill_distiller(scale_color_distiller):
