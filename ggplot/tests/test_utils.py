@@ -12,7 +12,7 @@ import scipy.stats as ss
 from . import get_assert_same_ggplot, cleanup
 from ..exampledata import mtcars
 from ..utils.utils import _margins, add_margins, ninteraction
-from ..scales.utils import censor
+from ..scales.utils import censor, zero_range, expand_range
 
 assert_same_ggplot = get_assert_same_ggplot(__file__)
 
@@ -138,3 +138,35 @@ def test_ninteraction():
     # zero length dataframe
     df = pd.DataFrame()
     assert(ninteraction(df) == [])
+
+
+def test_zero_range():
+    c = np.array
+    eps = np.finfo(float).eps
+
+    assert(zero_range(c((1, 1 + eps))))
+    assert(zero_range(c((1, 1 + 99 * eps))))
+    assert(not zero_range(c((1, 1 + 101 * eps)))) # Crossed the tol threshold
+    assert(not zero_range(c((1, 1 + 2 * eps)), tol = eps)) # Changed tol
+
+    # Scaling up or down all the values has no effect since the values
+    # are rescaled to 1 before checking against tol
+    assert(zero_range(100000 * c((1, 1 + eps))))
+    assert(not zero_range(100000 * c((1, 1 + 200 * eps))))
+    assert(zero_range(.00001 * c((1, 1 + eps))))
+    assert(not zero_range(.00001 * c((1, 1 + 200 * eps))))
+
+    # NA values
+    assert(zero_range((1, np.nan)))
+
+    # Infinite values
+    assert(not zero_range((1, np.inf)))
+    assert(not zero_range((-np.inf, np.inf)))
+    assert(zero_range((np.inf, np.inf)))
+
+def test_expand_range():
+    assert(expand_range((0, 1)) == (0, 1))
+    assert(expand_range((0, 1), mul=2) == (-2, 3))
+    assert(expand_range((0, 1), add=2) == (-2, 3))
+    assert(expand_range((0, 1), mul=2, add=2) == (-4, 5))
+    assert(expand_range((1, 1), mul=2, add=2, zero_width=1) == (0.5, 1.5))

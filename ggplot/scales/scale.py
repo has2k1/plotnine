@@ -5,8 +5,9 @@ from copy import deepcopy
 import numpy as np
 import pandas.core.common as com
 
-from ..utils import waiver, identity, discrete_dtypes, match
-from .utils import rescale, censor
+from ..utils import waiver, is_waive
+from ..utils import identity, discrete_dtypes, match
+from .utils import rescale, censor, expand_range
 
 
 class scale(object):
@@ -18,7 +19,7 @@ class scale(object):
     range = None       # range of aesthetic
     trans = None       # transformation function
     na_value = np.NaN  # What to do with the NA values
-    expand = waiver()  #
+    _expand = waiver() # multiplicative and additive expansion constants.
     breaks = waiver()  # major breaks
     labels = waiver()  # labels at the breaks
     guide = waiver()   # legend or any other guide
@@ -51,6 +52,18 @@ class scale(object):
     @limits.setter
     def limits(self, value):
         self._limits = value
+
+    @property
+    def expand(self):
+        if is_waive(self._expand):
+            # default
+            return (0, 0)
+        else:
+            return self._expand
+
+    @expand.setter
+    def expand(self, value):
+        self._expand = value
 
 
 class scale_discrete(scale):
@@ -85,6 +98,15 @@ class scale_discrete(scale):
         # update range
         self.range += [x for x in rng if not (x in set(self.range))]
 
+    def dimension(self, expand=None):
+        """
+        The phyical size of the scale, if a position scale
+        Unlike limits, this always returns a numeric vector of length 2
+        """
+        if expand is None:
+            expand = self.expand
+        return expand_range(len(self.limits), expand[0], expand[1])
+
 
 class scale_continuous(scale):
     """
@@ -113,3 +135,12 @@ class scale_continuous(scale):
             mn = np.min([mn, _mn])
             mx = np.max([mx, _mx])
         self.range = [mn, mx]
+
+    def dimension(self, expand=None):
+        """
+        The phyical size of the scale, if a position scale
+        Unlike limits, this always returns a numeric vector of length 2
+        """
+        if expand is None:
+            expand = self.expand
+        return expand_range(self.limits, expand[0], expand[1])

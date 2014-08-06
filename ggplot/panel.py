@@ -2,9 +2,10 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
+import pandas as pd
 
 from .scales.scales import Scales
-from .utils import match
+from .utils import match, xy_panel_scales
 
 
 class Panel(object):
@@ -68,3 +69,57 @@ class Panel(object):
                 self.y_scales.map(layer_data, y_vars, SCALE_Y)
 
         return data
+
+    def panel_scales(self, i):
+        """
+        Return the x scale and y scale for panel i
+        if they exist.
+        """
+        bool_idx = (self.layout['PANEL'] == i)
+        xsc = None
+        ysc = None
+
+        if self.x_scales:
+            idx = self.layout.loc[bool_idx, 'SCALE_X'].values[0]
+            xsc = self.x_scales[idx-1]
+
+        if self.y_scales:
+            idx = self.layout.loc[bool_idx, 'SCALE_Y'].values[0]
+            ysc = self.y_scales[idx-1]
+
+        return xy_panel_scales(x=xsc, y=ysc)
+
+    def calculate_stats(self, data, layers):
+        """
+        Calculate statistics
+
+        Parameters
+        ----------
+        data :  list of dataframes
+            one for each layer
+        layers : list of layers
+
+        Return
+        ------
+        data : list of dataframes
+            dataframes with statistic columns
+        """
+        new_data = []
+        def fn(panel_data, l):
+            """
+            For a specific panel with data 'panel_data',
+            compute the statistics in layer 'l' and
+            return the resulting dataframe
+            """
+            pscales = self.panel_scales(panel_data.loc[0, 'PANEL'])
+            return l.calc_statistic(panel_data, pscales)
+
+        # A dataframe in a layer can have rows split across
+        # multiple panels(facets). For each layer and accompanying
+        # data the statistics are calculated independently for
+        # each panel.
+        for (d, l) in zip(data, layers):
+            df = d.groupby(['PANEL']).apply(fn, l)
+            df.reset_index(drop=True, inplace=True)
+            new_data.append(df)
+        return new_data

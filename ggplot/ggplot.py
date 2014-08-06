@@ -248,6 +248,11 @@ class ggplot(object):
         panel.train_position(data, x_scale, y_scale)
         data = panel.map_position(data, x_scale, y_scale)
 
+        # Apply and map statistics
+        data = panel.calculate_stats(data, layers)
+        print(data)
+
+
         # print(scales)
         # print(data)
         # print(panel.layout)

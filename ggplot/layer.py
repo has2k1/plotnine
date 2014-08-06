@@ -3,12 +3,15 @@ from __future__ import (absolute_import, division, print_function,
 
 import six
 from copy import deepcopy
+
+import pandas as pd
 import pandas.core.common as com
 
 from .components.aes import aes, is_calculated_aes
 from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import discrete_dtypes, ninteraction
+from .utils import check_required_aesthetics
 
 
 class layer(object):
@@ -77,11 +80,13 @@ class layer(object):
 
         scales_add_defaults(plot.scales, data, aesthetics)
 
-        renames = {}   # columns to rename with aesthetics names
+        colnames = []  # columns to rename with aesthetics names
+        aenames = []   # aesthetics names to use
         settings = {}  # for manual settings withing aesthetics
         for ae, col in aesthetics.items():
             if isinstance(col, six.string_types):
-                renames[col] = ae
+                colnames.append(col)
+                aenames.append(ae)
             elif com.is_list_like(col):
                 n = len(col)
                 if n != len(data) or n != 1:
@@ -90,11 +95,12 @@ class layer(object):
                         "or the same length as the data")
                 settings[ae] = col
             else:
-                msg = "Do not know how to deal with aesthetic `{}`"
+                msg = "Do not know how to deal with aesthetic '{}'"
                 raise GgplotError(msg.format(ae))
 
-        evaled = data.loc[:, list(renames.keys())]
-        evaled.rename(columns=renames, inplace=True)
+        evaled = pd.DataFrame()
+        for ae, col in zip(aenames, colnames):
+            evaled[ae] = data[col]
         evaled.update(settings)
 
         if len(data) == 0 and settings:
@@ -104,6 +110,21 @@ class layer(object):
             evaled['PANEL'] = data['PANEL']
 
         return evaled
+
+    def calc_statistic(self, data, scales):
+        """
+        Verify required aethetics and return the
+        statistics as computed by the stat object
+        """
+        if not len(data):
+            return pd.DataFrame()
+
+        check_required_aesthetics(
+            self.stat.REQUIRED_AES,
+            list(data.columns) + list(self.stat.params.keys()),
+            self.stat.__class__.__name__)
+
+        return self.stat._calculate_groups(data, scales)
 
 
 def add_group(data):

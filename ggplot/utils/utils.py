@@ -3,7 +3,7 @@ Little functions used all over the codebase
 """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
+import collections
 import itertools
 
 import numpy as np
@@ -12,12 +12,17 @@ import pandas.core.common as com
 import matplotlib.cbook as cbook
 import six
 
+from .exceptions import GgplotError
+
 
 discrete_dtypes = {'category', np.dtype('O'), np.bool}
 continuous_dtypes = {np.number,
                      np.dtype('int16'), np.dtype('float16'),
                      np.dtype('int32'), np.dtype('float32'),
                      np.dtype('int64'), np.dtype('float64')}
+
+# The x scale and y scale of a panel. Each may be None
+xy_panel_scales = collections.namedtuple('xy_panel_scales', 'x y')
 
 
 def pop(dataframe, key, default):
@@ -123,16 +128,19 @@ def make_iterable_ntimes(val, n):
 
 
 _waiver_ = object()
-def waiver(param=None):
+def waiver():
     """
-    When no parameter is passed, return an object to imply 'default'.
-    When a parameter is passed, return True if that object implies use
+    Return an object to imply 'default'.
+    """
+    return _waiver_
+
+
+def is_waive(x):
+    """
+    Return True if x object implies use
     default and False otherwise.
     """
-    if param is None:
-        return _waiver_
-    else:
-        return param is _waiver_
+    return x is _waiver_
 
 
 def identity(*args):
@@ -329,6 +337,17 @@ def ninteraction(df, drop=False):
 
 
 def _id_var(x, drop=False):
+    """
+    Assign ids to items in x. If two items
+    are the same, they get the same id.
+
+    Parameters
+    ----------
+    x : array-like
+        items to associate ids with
+    drop : bool
+        Whether to drop unused factor levels
+    """
     if len(x) == 0:
         return []
 
@@ -342,3 +361,23 @@ def _id_var(x, drop=False):
         lst = [item + 1 for item in lst]
 
     return lst
+
+
+def check_required_aesthetics(required, present, name):
+    missing_aes = set(required) - set(present)
+
+    if missing_aes:
+        msg = '{} requires the following missing aesthetics: {}'
+        raise GgplotError(
+            msg.format(name, ', '.join(missing_aes)))
+
+def uniquecols(df):
+    """
+    Return unique columns
+
+    This is used for figuring out which columns are
+    constant within a group
+    """
+    bool_idx = df.apply(lambda col: len(col.unique())==1, axis=0)
+    df = df.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
+    return df

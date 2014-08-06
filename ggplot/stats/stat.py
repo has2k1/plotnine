@@ -3,10 +3,12 @@ from __future__ import (absolute_import, division, print_function,
 import sys
 from copy import deepcopy
 
-from ggplot.utils.exceptions import GgplotError
+import pandas as pd
 import ggplot.geoms
 
 from ..layer import layer
+from ..utils import uniquecols
+from ..utils.exceptions import GgplotError
 
 __all__ = ['stat']
 __all__ = [str(u) for u in __all__]
@@ -66,18 +68,41 @@ class stat(object):
             sys.stderr.write(message)
             self._warnings_printed.add(message)
 
-    # For some stats we need to calculate something from the entire set of data
-    # before we work with the groups. An example is stat_bin, where we need to
-    # know the max and min of the x-axis globally. If we don't we end up with
-    # groups that are binned based on only the group x-axis leading to
-    # different bin-sizes.
-    def _calculate_global(self, data):
-        pass
-
-    def _calculate(self, data):
+    def _calculate(self, data, scales, **kwargs):
         msg = "{} should implement this method."
         raise NotImplementedError(
             msg.format(self.__class__.__name__))
+
+    def _calculate_groups(self, data, scales, **kwargs):
+        """
+        Calculate the stats of all the groups and
+        return the results in a single dataframe.
+
+        This is a default function that can be overriden
+        by individual stats
+        """
+        if not len(data):
+            return pd.DataFrame()
+
+        def fn(grouped_data):
+            return self._calculate(grouped_data, scales)
+
+        # Calculate all the stats
+        stats = data.groupby('group').apply(fn)
+        stats = stats.reset_index(0).reset_index(drop=True)
+
+        # Combine with original data
+        unique = data.groupby('group').apply(uniquecols)
+        unique.reset_index(drop=True, inplace=True)
+        missing = unique.columns - stats.columns
+        stats = pd.concat([stats, unique.loc[:, missing]], axis=1)
+
+        # Note: If the data coming in has columns with non-unique
+        # values with-in group(s), this implementation loses the
+        # columns. Individual stats may want to do some preparation
+        # before then fall back on this implementation or override
+        # it completely.
+        return stats
 
     def __radd__(self, gg):
         # Create and add a layer to ggplot object

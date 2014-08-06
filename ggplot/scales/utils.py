@@ -3,6 +3,9 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import math
 
+from ..utils.exceptions import GgplotError
+
+
 def drange(start, stop, step):
     """Compute the steps in between start and stop
 
@@ -136,3 +139,72 @@ def censor(x, range=(0, 1), only_finite=True):
     if intype:
         x = intype(x)
     return x
+
+
+def zero_range (x, tol=np.finfo(float).eps * 100):
+    """
+    Determine if range of vector is close to zero,
+    with a specified tolerance
+
+    Default tolerance is the machine epsilon
+    """
+    try:
+        if len(x) == 1:
+            return True
+    except TypeError:
+        return True
+
+    if len(x) != 2:
+        return GgplotError(
+            'x must be length 1 or 2')
+
+    if any(np.isnan(x)):
+        return np.nan
+
+    if x[0] == x[1]:
+        return True
+
+    if all(np.isinf(x)):
+        return False
+
+    m = np.abs(x).min()
+    if m == 0:
+        return False
+
+    return np.abs((x[0] - x[1]) / m) < tol
+
+
+def expand_range(range, mul=0, add=0, zero_width=1):
+    """
+    Expand a range with a multiplicative or additive constant.
+
+
+    Parameters
+    ----------
+    range : tuple of size 2
+        range of data
+    mul : int | float
+        multiplicative constract
+    add : int | float
+        additive constant
+    zero_width : int | float
+        distance to use if range has zero width
+    """
+    if range is None:
+        return None
+
+    # Enforce tuple
+    try:
+        range[0]
+    except TypeError:
+        range = (range, range)
+
+
+    if zero_range(range):
+        erange = (range[0] - zero_width/2,
+                  range[0] + zero_width/2)
+    else:
+        erange = (np.array(range) +
+                  np.array([-1, 1]) * (np.diff(range) * mul + add))
+        erange = tuple(erange)
+    return erange
