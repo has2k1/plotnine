@@ -75,7 +75,9 @@ class Panel(object):
         Return the x scale and y scale for panel i
         if they exist.
         """
-        bool_idx = (self.layout['PANEL'] == i)
+        # wrapping with np.asarray prevents an exception
+        # on some datasets !!!
+        bool_idx = (np.asarray(self.layout['PANEL']) == i)
         xsc = None
         ysc = None
 
@@ -111,7 +113,11 @@ class Panel(object):
             compute the statistics in layer 'l' and
             return the resulting dataframe
             """
-            pscales = self.panel_scales(panel_data.loc[0, 'PANEL'])
+            if len(panel_data) == 0:
+                return pd.DataFrame()
+
+            pscales = self.panel_scales(
+                panel_data['PANEL'].as_matrix()[0])
             return l.calc_statistic(panel_data, pscales)
 
         # A dataframe in a layer can have rows split across
@@ -119,7 +125,7 @@ class Panel(object):
         # data the statistics are calculated independently for
         # each panel.
         for (d, l) in zip(data, layers):
-            df = d.groupby(['PANEL']).apply(fn, l)
+            df = d.groupby('PANEL').apply(fn, l)
             df.reset_index(drop=True, inplace=True)
             new_data.append(df)
         return new_data

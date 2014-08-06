@@ -11,7 +11,7 @@ from .components.aes import aes, is_calculated_aes
 from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import discrete_dtypes, ninteraction
-from .utils import check_required_aesthetics
+from .utils import check_required_aesthetics, defaults
 
 
 class layer(object):
@@ -55,10 +55,9 @@ class layer(object):
         # ignore the default aesthetics and only use those
         # set in the layer
         if self.inherit_aes:
-            # TODO: Changing this accordingly
-            aesthetics = mapping
+            aesthetics = defaults(self.mapping, mapping)
         else:
-            aesthetics = mapping
+            aesthetics = self.mapping
 
         # drop aesthetics that are manual or calculated
         manual = set(self.geom.manual_aes.keys())
@@ -126,6 +125,43 @@ class layer(object):
 
         return self.stat._calculate_groups(data, scales)
 
+    def map_statistic(self, data, plot):
+        """
+        """
+        if len(data) == 0:
+            return pd.DataFrame()
+
+        # Assemble aesthetics from layer, plot and stat mappings
+        aesthetics = deepcopy(self.mapping)
+        if self.inherit_aes:
+            aesthetics = defaults(aesthetics, plot.mapping)
+
+        aesthetics = defaults(aesthetics, self.stat.DEFAULT_AES)
+
+        # The new aesthetics are those that the stat calculates
+        # and have been mapped to with dot dot notation
+        # e.g aes(y='..count..'), y is the new aesthetic and
+        # 'count' is the computed column in data
+        new = {}  # {'aesthetic_name': 'calculated_stat'}
+        stat_data = pd.DataFrame()
+        for ae in is_calculated_aes(aesthetics):
+            new[ae] = strip_dots(aesthetics[ae])
+            stat_data[ae] = data[new[ae]]
+
+        if not new:
+            return data
+
+        # Add any new scales, if needed
+        scales_add_defaults(plot.scales, data, new)
+
+        # Transform the values, if the scale say it's ok
+        if self.stat.retransform:
+            # TODO: Implement this
+            # data = scales_transform_df(plot.scales, stat_data)
+            pass
+
+        data = pd.concat([data, stat_data], axis=1)
+        return data
 
 def add_group(data):
     if len(data) == 0:

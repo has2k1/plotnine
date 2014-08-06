@@ -96,3 +96,6 @@ def is_calculated_aes(aesthetics):
         if re.match(pattern, v):
             calculated_aesthetics.append(k)
     return calculated_aesthetics
+
+def strip_dots(ae):
+    return ae.strip('..')

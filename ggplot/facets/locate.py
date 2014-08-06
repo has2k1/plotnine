@@ -45,6 +45,7 @@ def locate_wrap(data, panels, vars):
     data['PANEL'] = pd.Categorical(data['PANEL'])
     data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
     data.sort(columns='PANEL', inplace=True)
+    data.reset_index(drop=True, inplace=True)
     return data
 
 
@@ -96,4 +97,5 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
     data['PANEL'] = pd.Categorical(data['PANEL'])
     data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
     data.sort(columns='PANEL', inplace=True)
+    data.reset_index(drop=True, inplace=True)
     return data

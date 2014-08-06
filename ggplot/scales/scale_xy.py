@@ -5,7 +5,6 @@ import numpy as np
 from ..utils import waiver, identity, match
 from ..utils import discrete_dtypes, continuous_dtypes
 from .scale import scale_discrete, scale_continuous
-# from .scale import map_position_continuous, map_position_discrete
 
 
 # positions scales have a couple of differences (quirks) that

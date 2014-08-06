@@ -8,5 +8,5 @@ class stat_identity(stat):
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
               'width': None, 'height': None}
 
-    def _calculate(self, data):
+    def _calculate_groups(self, data, scales, **kwargs):
         return data

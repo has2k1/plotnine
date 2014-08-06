@@ -17,7 +17,13 @@ __all__ = [str(u) for u in __all__]
 class stat(object):
     """Base class of all stats"""
     REQUIRED_AES = set()
+    DEFAULT_AES = dict()
     DEFAULT_PARAMS = dict()
+
+    # Should the values produced by the statistic also
+    # be transformed in the second pass when recently
+    # added statistics are trained to the scales
+    retransform = True
 
     # Stats may modify existing columns or create extra
     # columns.

@@ -30,8 +30,8 @@ class stat_bin(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': 0.9, 'drop': False, 'right': False,
-                      'binwidth': None, 'origin': None, 'breaks': None,
-                      'labels': None}
+                      'binwidth': None, 'origin': None, 'breaks': None}
+    DEFAULT_AES = {'y': '..count..'}
     CREATES = {'y', 'width'}
 
     def _calculate(self, data, scales, **kwargs):
@@ -61,7 +61,7 @@ class stat_bin(stat):
         except KeyError:
             weights = np.ones(len(x))
         else:
-            weights = np.array(
+            weights = np.asarray(
                 make_iterable_ntimes(weights, len(x)))
             weights[np.isnan(weights)] = 0
 
@@ -71,7 +71,7 @@ class stat_bin(stat):
             width = make_iterable_ntimes(self.params['width'], len(x))
         elif np.diff(range_) == 0:
             bins = x
-            width = width
+            width = make_iterable_ntimes(self.params['width'], len(x))
         elif com.is_numeric_dtype(x):
             if breaks is None and binwidth is None:
                 bin_count = 30

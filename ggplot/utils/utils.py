@@ -371,6 +371,7 @@ def check_required_aesthetics(required, present, name):
         raise GgplotError(
             msg.format(name, ', '.join(missing_aes)))
 
+
 def uniquecols(df):
     """
     Return unique columns
@@ -381,3 +382,13 @@ def uniquecols(df):
     bool_idx = df.apply(lambda col: len(col.unique())==1, axis=0)
     df = df.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
     return df
+
+
+def defaults(d1, d2):
+    """
+    Update dict d1 with the contents of d2 that
+    are not in d1
+    """
+    for k in (set(d2.keys()) - set(d1.keys())):
+        d1[k] = d2[k]
+    return d1

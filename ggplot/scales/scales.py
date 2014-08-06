@@ -47,7 +47,7 @@ class Scales(list):
         the scales.
         """
         lst = [s.aesthetics for s in self]
-        return list(itertools.chain(lst))
+        return list(itertools.chain(*lst))
 
     def get_scales(self, aesthetic):
         """
@@ -87,7 +87,7 @@ class Scales(list):
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array
         """
-        idx = np.array(idx)
+        idx = np.asarray(idx)
         for col in vars:
             for i, sc in enumerate(self, start=1):
                 bool_idx = (i == idx)
@@ -111,7 +111,7 @@ class Scales(list):
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array
         """
-        idx = np.array(idx)
+        idx = np.asarray(idx)
         # discrete scales can change the dtype
         # from category to int. Use a new dataframe
         # to collect these results
@@ -170,6 +170,26 @@ def scales_add_defaults(scales, data, aesthetics):
         scales.append(scale_f())
 
     return scales
+
+
+def scales_add_missing(plot, aesthetics):
+    """
+    Add missing but required scales.
+
+    Parameters
+    ----------
+    aesthetics : list | tuple
+        aesthetic names. Typically, ('x', 'y').
+    """
+
+    # Keep only aesthetics that aren't already in plot$scales
+    aesthetics = set(aesthetics) - set(plot.scales.input())
+
+    for ae in aesthetics:
+        scale_name = 'scale_{}_continuous'.format(ae)
+        this_package = importlib.import_module('..scales', __package__)
+        scale_f = getattr(this_package, scale_name)
+        plot.scales.append(scale_f())
 
 
 def scale_type(column):

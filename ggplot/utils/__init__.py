@@ -10,7 +10,7 @@ from .utils import (pop, is_categorical, is_string, is_scalar_or_string,
                     identity, discrete_dtypes, continuous_dtypes,
                     ninteraction, match, add_margins,
                     check_required_aesthetics, xy_panel_scales,
-                    uniquecols)
+                    uniquecols, defaults)
 
 __all__ = ["ggsave", "date_breaks", "date_format", "add_ggplotrc_params"]
 __all__ = [str(u) for u in __all__]

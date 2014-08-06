@@ -18,6 +18,7 @@ from .utils.exceptions import GgplotError
 from .panel import Panel
 from .layer import add_group
 from .scales.scales import Scales
+from .scales.scales import scales_add_missing
 
 import datetime
 import six
@@ -250,8 +251,11 @@ class ggplot(object):
 
         # Apply and map statistics
         data = panel.calculate_stats(data, layers)
-        print(data)
+        data = dlapply(lambda d, l: l.map_statistic(d, plot))
+        # data = list(map(order_groups, data)) # !!! look into this
 
+        # Make sure missing (but required) aesthetics are added
+        scales_add_missing(plot, ('x', 'y'))
 
         # print(scales)
         # print(data)
