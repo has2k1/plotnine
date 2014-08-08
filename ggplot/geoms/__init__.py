@@ -23,6 +23,7 @@ from .geom_step import geom_step
 from .geom_text import geom_text
 from .geom_tile import geom_tile
 from .geom_vline import geom_vline
+from .geom_ribbon import geom_ribbon
 
 # misc
 from .chart_components import *
@@ -32,7 +33,7 @@ __geoms__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot', 'geom_densi
              'geom_histogram', 'geom_hline', 'geom_jitter', 'geom_line', 'geom_linerange',
              'geom_now_its_art', 'geom_path', 'geom_point', 'geom_pointrange', 'geom_rect',
              'geom_step', 'geom_smooth', 'geom_text', 'geom_tile',
-             'geom_vline']
+             'geom_vline', 'geom_ribbon']
 __components__ = ['ylab', 'xlab', 'ylim', 'xlim', 'labs', 'ggtitle']
 __all__ = __geoms__ + __components__
 __all__ = [str(u) for u in __all__]

@@ -392,3 +392,33 @@ def defaults(d1, d2):
     for k in (set(d2.keys()) - set(d1.keys())):
         d1[k] = d2[k]
     return d1
+
+
+def resolution(x, zero=True):
+    """
+    Compute the resolution of a data vector
+
+    Resolution is smallest non-zero distance between adjacent values
+
+    Parameters
+    ----------
+    x    : 1D array-like
+    zero : Boolean
+        Whether to include zero values in the computation
+
+    Result
+    ------
+    res : resolution of x
+        If x is an integer array, then the resolution is 1
+    """
+    x = np.asarray(x)
+
+    # (unsigned) integers or an effective range of zero
+    if (x.dtype.kind in ('i', 'u') or
+            x.ptp() < np.finfo(float).resolution()):
+        return 1
+
+    if not zero:
+        x = x[x != 0]
+
+    return min(np.diff(np.sort(x)))

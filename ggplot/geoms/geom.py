@@ -132,6 +132,9 @@ class geom(object):
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
 
+    def reparameterise(self, data):
+        return data
+
     def plot_layer(self, data, ax):
         # Any aesthetic to be overridden by the manual aesthetics
         # should not affect the statistics and the unit grouping

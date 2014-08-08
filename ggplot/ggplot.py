@@ -257,8 +257,11 @@ class ggplot(object):
         # Make sure missing (but required) aesthetics are added
         scales_add_missing(plot, ('x', 'y'))
 
+        # Reparameterise geoms from (e.g.) y and width to ymin and ymax
+        data = dlapply(lambda d, l: l.reparameterise(d))
+
+        print(data)
         # print(scales)
-        # print(data)
         # print(panel.layout)
         # print(plot.scales)
         return panel

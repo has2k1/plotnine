@@ -7,7 +7,7 @@ from copy import deepcopy
 import pandas as pd
 import pandas.core.common as com
 
-from .components.aes import aes, is_calculated_aes
+from .components.aes import aes, is_calculated_aes, strip_dots
 from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import discrete_dtypes, ninteraction
@@ -19,7 +19,7 @@ class layer(object):
     def __init__(self, geom=None, stat=None,
                  data=None, mapping=None,
                  position=None, params=None,
-                 inherit_aes=False, group=None):
+                 inherit_aes=True, group=None):
         self.geom = geom
         self.stat = stat
         self.data = data
@@ -162,6 +162,16 @@ class layer(object):
 
         data = pd.concat([data, stat_data], axis=1)
         return data
+
+    def reparameterise(self, data):
+      if len(data) == 0:
+          return pd.DataFrame()
+      return self.geom.reparameterise(data)
+
+  # reparameterise <- function(., data) {
+  #   if (empty(data)) return(data.frame())
+  #   .$geom$reparameterise(data, .$geom_params)
+  # }
 
 def add_group(data):
     if len(data) == 0:
