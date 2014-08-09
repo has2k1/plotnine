@@ -351,13 +351,13 @@ class ggplot(object):
                     elif com.is_list_like(self.xtick_labels):
                         ax.xaxis.set_ticklabels(self.xtick_labels)
                 # need to handle cases when there's no geom_bar/hist
-                elif ("data" in globals()) and ("x" in data) and isinstance(data["x"][0], datetime.date):
+                elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.date):
                     date_ticks = [datetime.date.fromtimestamp(ix) for ix in ax.get_xticks()]
                     ax.xaxis.set_ticklabels(date_ticks)
-                elif ("data" in globals()) and ("x" in data) and isinstance(data["x"][0], datetime.time):
+                elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.time):
                     date_ticks = [datetime.time.fromtimestamp(ix) for ix in ax.get_xticks()]
                     ax.xaxis.set_ticklabels(date_ticks)
-                elif ("data" in globals()) and ("x" in data) and isinstance(data["x"][0], datetime.datetime):
+                elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.datetime):
                     date_ticks = [datetime.datetime.fromtimestamp(ix) for ix in ax.get_xticks()]
                     ax.xaxis.set_ticklabels(date_ticks)
                 if not (self.ytick_labels is None):

@@ -1,4 +1,14 @@
 =====
+0.6.2
+=====
+- adding in datetime/dates for geom_histogram
+
+=====
+0.6.1
+=====
+- bugfixes of varying importance
+
+=====
 0.6.0
 =====
 - geom_pointrange
