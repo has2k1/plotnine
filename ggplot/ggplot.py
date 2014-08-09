@@ -15,6 +15,7 @@ from .scales.scale_facet import scale_facet_grid, scale_facet_wrap
 from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import theme_gray
 
+import datetime
 import six
 
 __all__ = ["ggplot"]
@@ -349,6 +350,15 @@ class ggplot(object):
                         ax.xaxis.set_ticklabels(labs)
                     elif com.is_list_like(self.xtick_labels):
                         ax.xaxis.set_ticklabels(self.xtick_labels)
+                elif "x" in data and isinstance(data["x"][0], datetime.date):
+                    date_ticks = [datetime.date.fromtimestamp(ix) for ix in ax.get_xticks()]
+                    ax.xaxis.set_ticklabels(date_ticks)
+                elif "x" in data and isinstance(data["x"][0], datetime.time):
+                    date_ticks = [datetime.time.fromtimestamp(ix) for ix in ax.get_xticks()]
+                    ax.xaxis.set_ticklabels(date_ticks)
+                elif "x" in data and isinstance(data["x"][0], datetime.datetime):
+                    date_ticks = [datetime.datetime.fromtimestamp(ix) for ix in ax.get_xticks()]
+                    ax.xaxis.set_ticklabels(date_ticks)
                 if not (self.ytick_labels is None):
                     if isinstance(self.ytick_labels, dict):
                         labs = []

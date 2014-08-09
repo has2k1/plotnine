@@ -6,9 +6,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
 
+from ggplot import scales
 from ggplot.utils import is_categorical, make_iterable_ntimes
 from ggplot.utils.exceptions import GgplotError
 from .stat import stat
+
+import datetime
+import time
 
 _MSG_YVALUE = """A variable was mapped to y.
     stat_bin sets the y value to the count of cases in each group.
@@ -48,7 +52,16 @@ class stat_bin(stat):
         # For non-categoriacal data we set breaks
         if not (is_categorical(x) or self.breaks):
             # Check that x is numerical
-            if not cbook.is_numlike(x[0]):
+            if isinstance(x[0], datetime.date):
+                def convert(d):
+                    d = datetime.datetime.combine(d, datetime.datetime.min.time())
+                    return time.mktime(d.timetuple())
+                x = [convert(d) for d in x]
+            elif isinstance(x[0], datetime.datetime):
+                x = [time.mktime(d.timetuple()) for d in x]
+            elif isinstance(x[0], datetime.time):
+                raise GgplotError("Cannot recognise the type of x")
+            elif not cbook.is_numlike(x[0]):
                 raise GgplotError("Cannot recognise the type of x")
             if binwidth is None:
                 _bin_count = 30
@@ -71,6 +84,13 @@ class stat_bin(stat):
             pass
         else:
             self._print_warning(_MSG_YVALUE)
+
+        if isinstance(x[0], datetime.date):
+            def convert(d):
+                d = datetime.datetime.combine(d, datetime.datetime.min.time())
+                return time.mktime(d.timetuple())
+            x = x.apply(convert)
+            self.dtype = datetime.date
 
         # If weight not mapped to, use one (no weight)
         try:
