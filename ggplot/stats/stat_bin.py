@@ -52,14 +52,14 @@ class stat_bin(stat):
         # For non-categoriacal data we set breaks
         if not (is_categorical(x) or self.breaks):
             # Check that x is numerical
-            if isinstance(x[0], datetime.date):
+            if len(x) > 0 and isinstance(x[0], datetime.date):
                 def convert(d):
                     d = datetime.datetime.combine(d, datetime.datetime.min.time())
                     return time.mktime(d.timetuple())
                 x = [convert(d) for d in x]
-            elif isinstance(x[0], datetime.datetime):
+            elif len(x) > 0 and isinstance(x[0], datetime.datetime):
                 x = [time.mktime(d.timetuple()) for d in x]
-            elif isinstance(x[0], datetime.time):
+            elif len(x) > 0 and isinstance(x[0], datetime.time):
                 raise GgplotError("Cannot recognise the type of x")
             elif not cbook.is_numlike(x[0]):
                 raise GgplotError("Cannot recognise the type of x")
@@ -85,12 +85,15 @@ class stat_bin(stat):
         else:
             self._print_warning(_MSG_YVALUE)
 
-        if isinstance(x[0], datetime.date):
+        if len(x) > 0 and isinstance(x.get(0), datetime.date):
             def convert(d):
                 d = datetime.datetime.combine(d, datetime.datetime.min.time())
                 return time.mktime(d.timetuple())
             x = x.apply(convert)
-            self.dtype = datetime.date
+        elif len(x) > 0 and isinstance(x.get(0), datetime.datetime):
+            x = x.apply(lambda d: time.mktime(d.timetuple()))
+        elif len(x) > 0 and isinstance(x.get(0), datetime.time):
+            raise GgplotError("Cannot recognise the type of x")
 
         # If weight not mapped to, use one (no weight)
         try:
