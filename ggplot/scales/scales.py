@@ -10,6 +10,7 @@ import pandas as pd
 import pandas.core.common as com
 
 from ..utils import discrete_dtypes, continuous_dtypes
+from ..utils import gg_import
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -156,17 +157,21 @@ def scales_add_defaults(scales, data, aesthetics):
         return
 
     ae_cols = [(ae, aesthetics[ae]) for ae in new_aesthetics
-                 if aesthetics[ae] in data.columns]
+               if aesthetics[ae] in data.columns]
     for ae, col in ae_cols:
         _type = scale_type(data[col])
         scale_name = 'scale_{}_{}'.format(ae, _type)
-        this_package = importlib.import_module('..scales', __package__)
-
-        try:
-            scale_f = getattr(this_package, scale_name)
-        except KeyError:
+        scale_f = gg_import(scale_name)
+        if scale_f is None:
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue
+        # this_package = importlib.import_module('..scales', __package__)
+        #
+        # try:
+        #     scale_f = getattr(this_package, scale_name)
+        # except KeyError:
+        #     # Skip aesthetics with no scales (e.g. group, order, etc)
+        #     continue
         scales.append(scale_f())
 
     return scales
@@ -187,8 +192,9 @@ def scales_add_missing(plot, aesthetics):
 
     for ae in aesthetics:
         scale_name = 'scale_{}_continuous'.format(ae)
-        this_package = importlib.import_module('..scales', __package__)
-        scale_f = getattr(this_package, scale_name)
+        scale_f = gg_import(scale_name)
+        # this_package = importlib.import_module('..scales', __package__)
+        # scale_f = getattr(this_package, scale_name)
         plot.scales.append(scale_f())
 
 

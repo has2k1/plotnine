@@ -5,6 +5,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import collections
 import itertools
+import re
+import importlib
 
 import numpy as np
 import pandas as pd
@@ -379,7 +381,7 @@ def uniquecols(df):
     This is used for figuring out which columns are
     constant within a group
     """
-    bool_idx = df.apply(lambda col: len(col.unique())==1, axis=0)
+    bool_idx = df.apply(lambda col: len(col.unique()) == 1, axis=0)
     df = df.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
     return df
 
@@ -394,31 +396,69 @@ def defaults(d1, d2):
     return d1
 
 
-def resolution(x, zero=True):
+def jitter(x, factor=1, amount=None):
     """
-    Compute the resolution of a data vector
-
-    Resolution is smallest non-zero distance between adjacent values
-
-    Parameters
-    ----------
-    x    : 1D array-like
-    zero : Boolean
-        Whether to include zero values in the computation
-
-    Result
-    ------
-    res : resolution of x
-        If x is an integer array, then the resolution is 1
+    Add a small amount of noise to values in an array_like
     """
+    if len(x) == 0:
+        return x
+
     x = np.asarray(x)
 
-    # (unsigned) integers or an effective range of zero
-    if (x.dtype.kind in ('i', 'u') or
-            x.ptp() < np.finfo(float).resolution()):
-        return 1
+    try:
+        z = np.ptp(x[np.isfinite(x)])
+    except IndexError:
+        z = 0
 
-    if not zero:
-        x = x[x != 0]
+    if z == 0:
+        z = x.min().abs()
+    if z == 0:
+        z = 1
 
-    return min(np.diff(np.sort(x)))
+    if amount is None:
+        _x = np.round(x, 3-np.int(np.floor(np.log10(z)))).astype(np.int)
+        xx = np.unique(np.sort(_x))
+        d = np.diff(xx)
+        if len(d):
+            d = d.min()
+        elif xx != 0:
+            d = xx/10.
+        else:
+            d = z/10
+        amount = factor/5. * abs(d)
+    elif amount == 0:
+        amount = factor * (z / 50.)
+
+    return x + np.random.uniform(-amount, amount, len(x))
+
+
+def gg_import(name):
+    """
+    Import and return ggplot component type.
+
+    The understood components are of base classes the
+    following base classes: geom, stat, scale, position
+
+    Raises an exception if the component  is not understood.
+
+    Return None if subclass does not exists. eg. 'geom_nada'
+    """
+    # relative pathnames from this package
+    lookup = {'geom': '..geoms',
+              'stat': '..stats',
+              'scale': '..scales',
+              'position': '..positions'}
+    pattern = '([a-z]+)_'
+    match = re.match(pattern, name)
+
+    if not match or not (match.group(1) in lookup):
+        GgplotError('Failed to import {}'.format(name))
+
+    base = match.group(1)
+    package = importlib.import_module(lookup[base], __package__)
+
+    try:
+        obj = getattr(package, name)
+    except AttributeError:
+        obj = None
+    return obj

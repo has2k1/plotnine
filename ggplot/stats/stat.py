@@ -4,10 +4,9 @@ import sys
 from copy import deepcopy
 
 import pandas as pd
-import ggplot.geoms
 
 from ..layer import layer
-from ..utils import uniquecols
+from ..utils import uniquecols, gg_import
 from ..utils.exceptions import GgplotError
 
 __all__ = ['stat']
@@ -112,7 +111,7 @@ class stat(object):
 
     def __radd__(self, gg):
         # Create and add a layer to ggplot object
-        _g = getattr(ggplot.geoms, 'geom_' + self.params['geom'])
+        _g = gg_import('geom_' + self.params['geom'])
         _geom = _g(*self._cache['args'], **self._cache['kwargs'])
         _geom.params['stat'] = self.__class__.__name__
         _geom.params['position'] = self.params['position']

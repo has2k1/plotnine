@@ -2,8 +2,9 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
-from ggplot.utils import make_iterable_ntimes
+from ..utils import make_iterable_ntimes
 from .geom import geom
+
 
 # Note when documenting
 # slope and intercept can be functions that compute the slope

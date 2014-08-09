@@ -260,6 +260,9 @@ class ggplot(object):
         # Reparameterise geoms from (e.g.) y and width to ymin and ymax
         data = dlapply(lambda d, l: l.reparameterise(d))
 
+        # Apply position adjustments
+        data = dlapply(lambda d, l: l.adjust_position(d))
+
         print(data)
         # print(scales)
         # print(panel.layout)

@@ -3,16 +3,11 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 
 import pandas as pd
-import numpy as np
-from matplotlib.cbook import iterable
-from ggplot.utils import is_string
 
-import ggplot.stats
-from ggplot.utils import is_scalar_or_string
-from ggplot.components import aes
-from ggplot.utils.exceptions import GgplotError
-
+from ..components import aes
+from ..utils.exceptions import GgplotError
 from ..layer import layer
+from ..utils import is_scalar_or_string, gg_import
 
 __all__ = ['geom']
 __all__ = [str(u) for u in __all__]
@@ -176,12 +171,9 @@ class geom(object):
         For example, if the stat is 'smooth' we return
         ggplot.stats.stat_smooth
         """
-        # get
-        try:
-            _name = 'stat_%s' % kwargs['stat']
-        except KeyError:
-            _name = 'stat_%s' % self.DEFAULT_PARAMS['stat']
-        return getattr(ggplot.stats, _name)
+        name = 'stat_{}'.format(
+            kwargs.get('stat', self.DEFAULT_PARAMS['stat']))
+        return gg_import(name)
 
     def __radd__(self, gg):
         gg = deepcopy(gg)

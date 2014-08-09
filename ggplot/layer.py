@@ -12,6 +12,8 @@ from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import discrete_dtypes, ninteraction
 from .utils import check_required_aesthetics, defaults
+from .utils import is_string, gg_import
+from .positions.position import position
 
 
 class layer(object):
@@ -24,7 +26,7 @@ class layer(object):
         self.stat = stat
         self.data = data
         self.mapping = mapping
-        self.position = position
+        self.position = self._position_object(position)
         self.params = params
         self.inherit_aes = inherit_aes
         self.group = group
@@ -46,6 +48,22 @@ class layer(object):
                 continue
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
+
+    def _position_object(self, name):
+        """
+        Return an instantiated position object
+        """
+        if issubclass(type(name), position):
+            return name
+
+        if not is_string(name):
+            GgplotError(
+                'Unknown position of type {}'.format(type(name)))
+
+        if not name.startswith('position_'):
+            name = 'position_' + name
+
+        return gg_import(name)()
 
     def layer_mapping(self, mapping):
         """
@@ -74,7 +92,7 @@ class layer(object):
         aesthetics = self.layer_mapping(plot.mapping)
 
         # Override grouping if set in layer.
-        if not self.group is None:
+        if not (self.group is None):
             aesthetics['group'] = self.group
 
         scales_add_defaults(plot.scales, data, aesthetics)
@@ -164,14 +182,23 @@ class layer(object):
         return data
 
     def reparameterise(self, data):
-      if len(data) == 0:
-          return pd.DataFrame()
-      return self.geom.reparameterise(data)
+        if len(data) == 0:
+            return pd.DataFrame()
+        return self.geom.reparameterise(data)
 
-  # reparameterise <- function(., data) {
-  #   if (empty(data)) return(data.frame())
-  #   .$geom$reparameterise(data, .$geom_params)
-  # }
+    def adjust_position(self, data):
+        """
+        Adjust the position of each geometric object
+        in concert with the other objects in the panel
+        """
+        def fn(panel_data):
+            if len(panel_data) == 0:
+                return pd.DataFrame()
+            return self.position.adjust(panel_data)
+
+        data = data.groupby('PANEL').apply(fn)
+        return data
+
 
 def add_group(data):
     if len(data) == 0:

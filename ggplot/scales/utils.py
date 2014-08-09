@@ -208,3 +208,32 @@ def expand_range(range, mul=0, add=0, zero_width=1):
                   np.array([-1, 1]) * (np.diff(range) * mul + add))
         erange = tuple(erange)
     return erange
+
+
+def resolution(x, zero=True):
+    """
+    Compute the resolution of a data vector
+
+    Resolution is smallest non-zero distance between adjacent values
+
+    Parameters
+    ----------
+    x    : 1D array-like
+    zero : Boolean
+        Whether to include zero values in the computation
+
+    Result
+    ------
+    res : resolution of x
+        If x is an integer array, then the resolution is 1
+    """
+    x = np.asarray(x)
+
+    # (unsigned) integers or an effective range of zero
+    if x.dtype.kind in ('i', 'u') or zero_range(x):
+        return 1
+
+    if not zero:
+        x = x[x != 0]
+
+    return np.min(np.diff(np.sort(x)))
