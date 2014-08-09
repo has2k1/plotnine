@@ -362,9 +362,15 @@ class ggplot(object):
                 if self.ytick_formatter:
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
                 if not (self.xlimits is None):
-                    limits = [x if x != None else x_def for x, x_def in zip(self.xlimits, ax.get_xlim())]
+                    limits = []
+                    for x, x_def in zip(self.xlimits, ax.get_xlim()):
+                        if x != None:
+                            limits.append(x)
+                        else:
+                            limits.append(x_def)
+
                     if (self.xbreaks is None) and (self.xtick_labels is None):
-                        labs, minval, maxval= calc_axis_breaks_and_limits(limits[0], limits[1])
+                        labs, minval, maxval = calc_axis_breaks_and_limits(limits[0], limits[1])
                         ax.xaxis.set_ticks(labs)
                         ax.xaxis.set_ticklabels(labs)
                     ax.set_xlim(limits)
