@@ -7,6 +7,7 @@ from ..utils.color import ColorHCL
 from .legend import get_labels
 from copy import deepcopy
 from ..utils.exceptions import GgplotError
+from . import palettes
 import six
 
 
@@ -44,8 +45,8 @@ def color_gen(n_colors, colors=None):
     """
     while True:
         if colors is None:
-            for color in hue_pal()(n_colors):
-                yield color
+            for color in palettes.hls_palette(n_colors=n_colors):
+                yield rgb2hex(color)
         else:
             for color in colors:
                 yield color
