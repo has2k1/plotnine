@@ -9,7 +9,7 @@ from six import string_types
 from six.moves import range
 
 import husl
-from xkcd_rgb import xkcd_rgb
+from .xkcd_rgb import xkcd_rgb
 
 
 
