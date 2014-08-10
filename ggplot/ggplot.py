@@ -352,14 +352,18 @@ class ggplot(object):
                         ax.xaxis.set_ticklabels(self.xtick_labels)
                 # need to handle cases when there's no geom_bar/hist
                 elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.date):
-                    date_ticks = [datetime.date.fromtimestamp(ix) for ix in ax.get_xticks()]
-                    ax.xaxis.set_ticklabels(date_ticks)
+                    # "did matplotlib do a decent job of making the label" check
+                    if np.log10(ax.get_xticks()[0]) > 6:
+                        date_ticks = [datetime.date.fromtimestamp(ix) for ix in ax.get_xticks()]
+                        ax.xaxis.set_ticklabels(date_ticks)
                 elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.time):
-                    date_ticks = [datetime.time.fromtimestamp(ix) for ix in ax.get_xticks()]
-                    ax.xaxis.set_ticklabels(date_ticks)
+                    if np.log10(ax.get_xticks()[0]) > 6:
+                        date_ticks = [datetime.time.fromtimestamp(ix) for ix in ax.get_xticks()]
+                        ax.xaxis.set_ticklabels(date_ticks)
                 elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.datetime):
-                    date_ticks = [datetime.datetime.fromtimestamp(ix) for ix in ax.get_xticks()]
-                    ax.xaxis.set_ticklabels(date_ticks)
+                    if np.log10(ax.get_xticks()[0]) > 6:
+                        date_ticks = [datetime.datetime.fromtimestamp(ix) for ix in ax.get_xticks()]
+                        ax.xaxis.set_ticklabels(date_ticks)
                 if not (self.ytick_labels is None):
                     if isinstance(self.ytick_labels, dict):
                         labs = []

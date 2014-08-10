@@ -117,6 +117,14 @@ Examples
 
 ![image](https://raw.github.com/yhat/ggplot/master/ggplot/tests/baseline_images/test_readme_examples/mtcars_geom_bar_cyl.png)
 
+## Testing
+To generate image test data...
+
+In the base dir, run the tests with python tests.py, afterwards run python visual_tests.py (opens a page in a browser) and compare the plots/ make sure they look as the test intended.
+
+Then copy the missing files from result_images/test_whatever/*.png to ggplot/tests/test_whatever/*.png. Make sure that you DON'T copy images with filenames ending in *-expected.png, as these are the copies from ggplot/tests/test_*/*.png which the test images get compared to.
+
+
 TODO
 ----
 
