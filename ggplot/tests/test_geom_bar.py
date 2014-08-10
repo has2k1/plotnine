@@ -61,11 +61,11 @@ def test_facet_colors():
             stat_bin(binwidth=1200) + facet_wrap("color")
     assert_same_ggplot(gg, "facet_colors")
 
-@cleanup
-def test_date_hist():
-    dates = [datetime.date(2014, 3, i) for i in range(1, 31)]
-    gg = ggplot(pd.DataFrame({"x": dates}), aes(x='x')) + geom_histogram()
-    assert_same_ggplot(gg, "geom_hist_date")
+# @cleanup
+# def test_date_hist():
+#     dates = [datetime.date(2014, 3, i) for i in range(1, 31)]
+#     gg = ggplot(pd.DataFrame({"x": dates}), aes(x='x')) + geom_histogram()
+#     assert_same_ggplot(gg, "geom_hist_date")
 
 @cleanup
 def test_color_hist():
