@@ -158,6 +158,20 @@ Examples
    :alt: image
 
    image
+Testing
+-------
+
+To generate image test data...
+
+In the base dir, run the tests with python tests.py, afterwards run
+python visual\_tests.py (opens a page in a browser) and compare the
+plots/ make sure they look as the test intended.
+
+Then copy the missing files from result\_images/test\_whatever/\ *.png
+to ggplot/tests/test\_whatever/*.png. Make sure that you DON'T copy
+images with filenames ending in *-expected.png, as these are the copies
+from ggplot/tests/test\_*/\*.png which the test images get compared to.
+
 TODO
 ----
 
