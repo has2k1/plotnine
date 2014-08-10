@@ -10,3 +10,4 @@ matplotlib
 scipy
 patsy
 statsmodels
+husl

@@ -15,6 +15,7 @@ from .scales.scale_facet import scale_facet_grid, scale_facet_wrap
 from .scales.utils import calc_axis_breaks_and_limits
 from .themes.theme_gray import theme_gray
 
+import datetime
 import six
 
 __all__ = ["ggplot"]
@@ -349,6 +350,20 @@ class ggplot(object):
                         ax.xaxis.set_ticklabels(labs)
                     elif com.is_list_like(self.xtick_labels):
                         ax.xaxis.set_ticklabels(self.xtick_labels)
+                # need to handle cases when there's no geom_bar/hist
+                elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.date):
+                    # "did matplotlib do a decent job of making the label" check
+                    if np.log10(ax.get_xticks()[0]) > 6:
+                        date_ticks = [datetime.date.fromtimestamp(ix) for ix in ax.get_xticks()]
+                        ax.xaxis.set_ticklabels(date_ticks)
+                elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.time):
+                    if np.log10(ax.get_xticks()[0]) > 6:
+                        date_ticks = [datetime.time.fromtimestamp(ix) for ix in ax.get_xticks()]
+                        ax.xaxis.set_ticklabels(date_ticks)
+                elif "data" in locals() and ("x" in data) and isinstance(data["x"][0], datetime.datetime):
+                    if np.log10(ax.get_xticks()[0]) > 6:
+                        date_ticks = [datetime.datetime.fromtimestamp(ix) for ix in ax.get_xticks()]
+                        ax.xaxis.set_ticklabels(date_ticks)
                 if not (self.ytick_labels is None):
                     if isinstance(self.ytick_labels, dict):
                         labs = []
@@ -362,9 +377,15 @@ class ggplot(object):
                 if self.ytick_formatter:
                     ax.yaxis.set_major_formatter(self.ytick_formatter)
                 if not (self.xlimits is None):
-                    limits = [x if x != None else x_def for x, x_def in zip(self.xlimits, ax.get_xlim())]
+                    limits = []
+                    for x, x_def in zip(self.xlimits, ax.get_xlim()):
+                        if x != None:
+                            limits.append(x)
+                        else:
+                            limits.append(x_def)
+
                     if (self.xbreaks is None) and (self.xtick_labels is None):
-                        labs, minval, maxval= calc_axis_breaks_and_limits(limits[0], limits[1])
+                        labs, minval, maxval = calc_axis_breaks_and_limits(limits[0], limits[1])
                         ax.xaxis.set_ticks(labs)
                         ax.xaxis.set_ticklabels(labs)
                     ax.set_xlim(limits)

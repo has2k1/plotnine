@@ -16,7 +16,7 @@ _set_mpl_backend()
 # This is the only place the version is specified and 
 # used in both setup.py and docs/conf.py to set the 
 # version of ggplot.
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 from .qplot import qplot
 from .ggplot import ggplot

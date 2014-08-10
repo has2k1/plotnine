@@ -39,6 +39,7 @@ install:
   - pip install python-coveralls --use-mirrors
   - pip install brewer2mpl --use-mirrors
   - pip install nose-cov --use-mirrors
+  - pip install husl --use-mirrors
   - python setup.py install
   - export MATPLOTLIB_BACKEND=agg
   # List all conda and pip packages
