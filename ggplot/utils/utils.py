@@ -14,7 +14,7 @@ import pandas.core.common as com
 import matplotlib.cbook as cbook
 import six
 
-from .exceptions import GgplotError
+from .exceptions import GgplotError, gg_warning
 
 
 discrete_dtypes = {'category', np.dtype('O'), np.bool}
@@ -462,3 +462,42 @@ def gg_import(name):
     except AttributeError:
         obj = None
     return obj
+
+
+def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
+    """
+    Convenience function to remove missing values from a dataframe
+
+    Parameters
+    ----------
+    df : dataframe
+    na_rm : bool
+        If False remove all non-complete rows with and show warning.
+    vars : list-like
+        columns to act on
+    name : str
+        Name of calling method for a more informative message
+    finite : bool
+        If True replace the infinite values in addition to the NaNs
+    """
+    n = len(df)
+
+    if vars is None:
+        vars = df.columns
+    else:
+        vars = [v for v in vars if v in df.columns]
+
+    if finite:
+        lst = [np.inf, -np.inf]
+        to_replace = dict((v, lst) for v in vars)
+        df.replace(to_replace, np.nan, inplace=True)
+        txt = 'non-finite'
+    else:
+        txt = 'missing'
+
+    df.dropna(inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    if len(df) < n and not na_rm:
+        msg = '{} : Removed {} rows containing {} values.'
+        gg_warning(msg.format(name, n-len(df), txt))
+    return df

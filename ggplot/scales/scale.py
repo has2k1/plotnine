@@ -6,7 +6,7 @@ import numpy as np
 import pandas.core.common as com
 
 from ..utils import waiver, is_waive
-from ..utils import identity, discrete_dtypes, match
+from ..utils import identity
 from .utils import rescale, censor, expand_range
 
 
@@ -14,16 +14,16 @@ class scale(object):
     """
     Base class for all scales
     """
-    aesthetics = None  # aesthetics affected by this scale
-    palette = None     # aesthetic mapping function
-    range = None       # range of aesthetic
-    trans = None       # transformation function
-    na_value = np.NaN  # What to do with the NA values
-    _expand = waiver() # multiplicative and additive expansion constants.
-    breaks = waiver()  # major breaks
-    labels = waiver()  # labels at the breaks
-    guide = waiver()   # legend or any other guide
-    _limits = None     # (min, max)
+    aesthetics = None   # aesthetics affected by this scale
+    palette = None      # aesthetic mapping function
+    range = None        # range of aesthetic
+    trans = None        # transformation function
+    na_value = np.NaN   # What to do with the NA values
+    _expand = waiver()  # multiplicative and additive expansion constants.
+    breaks = waiver()   # major breaks
+    labels = waiver()   # labels at the breaks
+    guide = waiver()    # legend or any other guide
+    _limits = None      # (min, max)
 
     def __radd__(self, gg):
         """
@@ -44,7 +44,7 @@ class scale(object):
     def limits(self):
         # Fall back to the range if the limits
         # are not set or if any is NaN
-        if not self._limits is None:
+        if not (self._limits is None):
             if not any(map(np.isnan, self._limits)):
                 return self._limits
         return self.range
@@ -80,6 +80,8 @@ class scale_discrete(scale):
         ----------
         series: pd.series | np.array
             a column of data to train over
+        
+        A discrete range is stored in a list
         """
         if drop is None:
             drop = self.drop
@@ -112,7 +114,7 @@ class scale_continuous(scale):
     """
     Base class for all continuous scales
     """
-    rescaler = staticmethod(rescale) # Used by diverging & n colour gradients
+    rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)  # what to do with out of bounds data points
     minor_breaks = waiver()
     trans = staticmethod(identity)  # transformation function
@@ -125,16 +127,20 @@ class scale_continuous(scale):
         ----------
         series: pd.series | np.array
             a column of data to train over
+
+        A continuous range is stored in a 1d-ndarray
         """
         if not len(series):
             return
+
         mn = series.min()
         mx = series.max()
         if self.range:
             _mn, _mx = self.range
             mn = np.min([mn, _mn])
             mx = np.max([mx, _mx])
-        self.range = [mn, mx]
+
+        self.range = np.array([mn, mx])
 
     def dimension(self, expand=None):
         """

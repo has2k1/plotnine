@@ -4,17 +4,19 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 import pandas.core.common as com
 import numpy as np
+
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from patsy.eval import EvalEnvironment
 
-from .components import aes, assign_visual_mapping
+from .components import aes
 from .components import colors, shapes
 from .components.legend import add_legend
 from .geoms import *
 from .scales import *
 from .facets import *
 from .themes.theme_gray import theme_gray
-from .utils.exceptions import GgplotError
+from .utils.exceptions import GgplotError, gg_warning
 from .panel import Panel
 from .layer import add_group
 from .scales.scales import Scales
@@ -76,6 +78,7 @@ class ggplot(object):
         self.scales = Scales()
         # default theme is theme_gray
         self.theme = theme_gray()
+        self.plot_env = EvalEnvironment.capture(1)
 
     def __repr__(self):
         """Print/show the plot"""
@@ -94,9 +97,10 @@ class ggplot(object):
             pass
         result = _empty()
         result.__class__ = self.__class__
+        # don't make a deepcopy of data, or plot_env
+        shallow = {'data', 'plot_env'}
         for key, item in self.__dict__.items():
-            # don't make a deepcopy of data!
-            if key == "data":
+            if key in shallow:
                 result.__dict__[key] = self.__dict__[key]
                 continue
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
@@ -127,51 +131,6 @@ class ggplot(object):
             # This sets a rcparam, so we don't have to undo it after plotting
             mpl.interactive(False)
             self.plot_build()
-
-    def _make_plot_data(self, data=None, aes=None):
-        # Use the default data and aestetics in case no specific ones are supplied
-        if data is None:
-            data = self.data
-        if aes is None:
-            aes = self.aesthetics
-
-        mapping = {}
-        extra = {}
-        for ae, key in aes.items():
-            if isinstance(key, list) or hasattr(key, "__array__"):
-                # direct assignment of a list/array to the aes -> it's done in the get_layer step
-                mapping[ae] = key
-            elif key in data:
-                # a column or a transformed column
-                mapping[ae] = data[key]
-            else:
-                # now we have a single value. ggplot2 treats that as if all rows should be this
-                # value, so lets do the same. To ensure that all rows get this value, we have to
-                # do that after we constructed the dataframe.
-                # See also the _apply_transform function below, which does this already for
-                # string values.
-                extra[ae] = key
-        mapping = pd.DataFrame(mapping)
-        for ae, key in extra.items():
-            mapping[ae] = key
-
-        # Overwrite the already done mappings to matplotlib understandable
-        # values for color/size/etc
-        for ae in ('alpha', 'color', 'fill', 'size', 'shape', 'linetype'):
-            # TODO: Need to find a better way to avoid naming collisions
-            _mcolumn = ':::%s_mapping:::' % ae
-            if _mcolumn in data:
-                mapping[ae] = data[_mcolumn]
-
-        # Default the x and y axis labels to the name of the column
-        if "x" in aes and self.xlab is None:
-            self.xlab = aes['x']
-        if "y" in aes and self.ylab is None:
-            self.ylab = aes['y']
-
-        # Automatically drop any row that has an NA value
-        mapping = mapping.dropna()
-        return mapping
 
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend
@@ -263,7 +222,7 @@ class ggplot(object):
         # Apply position adjustments
         data = dlapply(lambda d, l: l.adjust_position(d))
 
-        print(data)
+        print(data[0])
         # print(scales)
         # print(panel.layout)
         # print(plot.scales)
@@ -279,53 +238,3 @@ def _is_identity(x):
         return True
     else:
         return False
-
-
-def _apply_transforms(data, aes):
-    """Adds columns from the aes included transformations
-
-    Possible transformations are "factor(<col>)" and
-    expressions which can be used with eval.
-
-    Parameters
-    ----------
-    data : DataFrame
-        the original dataframe
-    aes : aesthetics
-        the aesthetic
-
-    Returns
-    -------
-    data : DateFrame
-        Transformed DataFrame
-    """
-    data = data.copy()
-    for ae, name in aes.items():
-        if (isinstance(name, six.string_types) and (name not in data)):
-            # here we assume that it is a transformation
-            # if the mapping is to a single value (color="red"), this will be handled by pandas and
-            # assigned to the whole index. See also the last case in mapping building in get_layer!
-            from patsy.eval import EvalEnvironment
-            def factor(s, levels=None, labels=None):
-                # TODO: This factor implementation needs improvements...
-                # probably only gonna happen after https://github.com/pydata/pandas/issues/5313 is
-                # implemented in pandas ...
-                if levels or labels:
-                    print("factor levels or labels are not yet implemented.")
-                return s.apply(str)
-            # use either the captured eval_env from aes or use the env one steps up
-            env = EvalEnvironment.capture(eval_env=(aes.__eval_env__ or 1))
-            # add factor as a special case
-            env.add_outer_namespace({"factor":factor})
-            try:
-                new_val = env.eval(name, inner_namespace=data)
-            except Exception as e:
-                msg = "Could not evaluate the '%s' mapping: '%s' (original error: %s)"
-                raise Exception(msg % (ae, name, str(e)))
-            try:
-                data[name] = new_val
-            except Exception as e:
-                msg = """The '%s' mapping: '%s' produced a value of type '%s', but only single items
-                and lists/arrays can be used. (original error: %s)"""
-                raise Exception(msg % (ae, name, str(type(new_val)), str(e)))
-    return data

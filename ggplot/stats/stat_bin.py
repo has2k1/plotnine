@@ -1,15 +1,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import sys
 import numpy as np
 import pandas as pd
-import matplotlib.cbook as cbook
 import pandas.core.common as com
 
-from ggplot import scales
-from ggplot.utils import is_categorical, make_iterable_ntimes
-from ggplot.utils.exceptions import GgplotError
+from ..utils import make_iterable_ntimes
+from ..utils.exceptions import GgplotError
 from .stat import stat
 
 import datetime
@@ -83,7 +80,7 @@ class stat_bin(stat):
             # pandas accepts either the breaks or the number of bins
             bins_info = breaks or bin_count
             bins, breaks = pd.cut(x, bins=bins_info, labels=False,
-                                          right=right, retbins=True)
+                                  right=right, retbins=True)
             width = np.diff(breaks)
             x = [breaks[i] + width[i] / 2
                  for i in range(len(breaks)-1)]
@@ -97,7 +94,7 @@ class stat_bin(stat):
         df = pd.DataFrame({'bins': bins,
                            'weights': weights})
         wfreq_table = pd.pivot_table(df, values='weights',
-                                     rows=['bins'], aggfunc=np.sum)
+                                     index=['bins'], aggfunc=np.sum)
 
         # For numerical x values, empty bins get no value
         # in the computed frequency table. We need to add the
@@ -110,9 +107,9 @@ class stat_bin(stat):
             wfreq_table = wfreq_table.sort_index()
 
         res = pd.DataFrame({
-            'x' : x,
-            'count' : wfreq_table,
-            'width' : width})
+            'x': x,
+            'count': wfreq_table,
+            'width': width})
 
         # other computed stats
         res['density'] = (res['count'] / width) / res['count'].abs().sum()

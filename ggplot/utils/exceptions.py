@@ -1,6 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import sys
+import textwrap
+
 
 class GgplotError(Exception):
     """
@@ -11,3 +14,8 @@ class GgplotError(Exception):
 
     def __str__(self):
         return repr(self.message)
+
+
+def gg_warning(text):
+    sys.stderr.write(
+        textwrap.dedent(text))

@@ -6,6 +6,7 @@ from copy import deepcopy
 
 import pandas as pd
 import pandas.core.common as com
+from patsy.eval import EvalEnvironment
 
 from .components.aes import aes, is_calculated_aes, strip_dots
 from .scales.scales import scales_add_defaults
@@ -14,6 +15,15 @@ from .utils import discrete_dtypes, ninteraction
 from .utils import check_required_aesthetics, defaults
 from .utils import is_string, gg_import
 from .positions.position import position
+
+_TPL_EVAL_FAIL = """\
+Could not evaluate the '{}' mapping: '{}' \
+(original error: {})"""
+
+_TPL_BAD_EVAL_TYPE = """\
+The '{}' mapping: '{}' produced a value of type '{}',\
+but only single items and lists/arrays can be used. \
+(original error: {})"""
 
 
 class layer(object):
@@ -87,7 +97,10 @@ class layer(object):
     def compute_aesthetics(self, data, plot):
         """
         Return a dataframe where the columns match the
-        aesthetic mappings
+        aesthetic mappings.
+
+        Transformations like 'factor(cyl)' and other
+        expression evaluation are  made in here
         """
         aesthetics = self.layer_mapping(plot.mapping)
 
@@ -95,15 +108,34 @@ class layer(object):
         if not (self.group is None):
             aesthetics['group'] = self.group
 
-        scales_add_defaults(plot.scales, data, aesthetics)
+        def factor(s):
+            return pd.Categorical(s)
 
-        colnames = []  # columns to rename with aesthetics names
-        aenames = []   # aesthetics names to use
-        settings = {}  # for manual settings withing aesthetics
+        env = EvalEnvironment.capture(eval_env=plot.plot_env)
+        env.add_outer_namespace({"factor": factor})
+
+        evaled = pd.DataFrame()
+        settings = {}  # for manual settings within aes()
+
+        # If a column name is not in the data, it is evaluated/transformed
+        # in the environment of the call to ggplot
         for ae, col in aesthetics.items():
             if isinstance(col, six.string_types):
-                colnames.append(col)
-                aenames.append(ae)
+                if col in data:
+                    evaled[ae] = data[col]
+                else:
+                    try:
+                        new_val = env.eval(col, inner_namespace=data)
+                    except Exception as e:
+                        raise GgplotError(
+                            _TPL_EVAL_FAIL.format(ae, col, str(e)))
+
+                    try:
+                        evaled[ae] = new_val
+                    except Exception as e:
+                        raise GgplotError(
+                            _TPL_BAD_EVAL_TYPE.format(
+                                ae, col, str(type(new_val)), str(e)))
             elif com.is_list_like(col):
                 n = len(col)
                 if n != len(data) or n != 1:
@@ -115,10 +147,11 @@ class layer(object):
                 msg = "Do not know how to deal with aesthetic '{}'"
                 raise GgplotError(msg.format(ae))
 
-        evaled = pd.DataFrame()
-        for ae, col in zip(aenames, colnames):
-            evaled[ae] = data[col]
         evaled.update(settings)
+        evaled_aes = aes(**dict((col, col) for col in evaled))
+
+        scales_add_defaults(plot.scales, data, aesthetics)
+        scales_add_defaults(plot.scales, evaled, evaled_aes)
 
         if len(data) == 0 and settings:
             # No data, and vectors suppled to aesthetics

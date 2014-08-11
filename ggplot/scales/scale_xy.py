@@ -2,8 +2,9 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import numpy as np
 
-from ..utils import waiver, identity, match
+from ..utils import identity, match
 from ..utils import discrete_dtypes, continuous_dtypes
+from ..utils.exceptions import GgplotError
 from .scale import scale_discrete, scale_continuous
 
 
@@ -28,8 +29,10 @@ class scale_position_discrete(scale_discrete):
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
         if series.dtype in continuous_dtypes:
+            # range is stored in an ndarray
             self.train_continuous(series)
         else:
+            # range is stored in a list
             # super() does not work well with reloads
             scale_discrete.train(self, series)
 
@@ -45,30 +48,25 @@ class scale_position_discrete(scale_discrete):
 
     @property
     def limits(self):
-        # Fall back to the range if the limits
-        # are not set or if any is NaN
-        if not self._limits is None:
-            if not any(map(np.isnan, self._limits)):
-                return self._limits
-        return self.range
-
-    @limits.getter
-    def limits(self):
         if self._limits:
             return self._limits
-        elif self.range and not np.isreal(self.range[0]):
+        elif isinstance(self.range, list):
             # discrete range
             return self.range
-        else:
+        elif isinstance(self.range, np.ndarray):
             # discrete limits for a continuous range
             mn = int(np.floor(np.min(self.range)))
             mx = int(np.ceil(np.max(self.range)))
             return range(mn, mx+1)
+        else:
+            GgplotError(
+                'Lost, do not know what the limits are.')
 
 
 # Discrete position scales should be able to make use of the train
 # method bound to continuous scales
 scale_position_discrete.train_continuous = scale_continuous.__dict__['train']
+
 
 class scale_position_continuous(scale_continuous):
     """

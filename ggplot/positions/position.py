@@ -19,7 +19,7 @@ class position(object):
 
         How?
         ----
-        Make necessary adjustments the columns in the dataframe.
+        Make necessary adjustments to the columns in the dataframe.
 
         Create the position transformation functions and
         use self._transform_position() do the rest.

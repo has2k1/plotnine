@@ -11,11 +11,14 @@ from .utils import match, xy_panel_scales
 class Panel(object):
     # n = no. of visual panels
     layout = None     # table n rows, grid information
-    shrink = False    # boolean, whether to shrink scales to
-                      # fit output of statistics, not raw data
+
+    # whether to shrink scales to fit
+    # output of statistics, not raw data
+    shrink = False
+
     ranges = None     # list of n dicts.
     x_scales = None   # scale object(s). 1 or n of them
-    y_scales  = None  # scale object(s). 1 or n of them
+    y_scales = None   # scale object(s). 1 or n of them
 
     def train_position(self, data, x_scale, y_scale):
         """
@@ -54,15 +57,14 @@ class Panel(object):
         layout = self.layout
 
         for layer_data in data:
+            match_id = match(layer_data['PANEL'], layout['PANEL'])
             if x_scale:
-                match_id = match(layer_data['PANEL'], layout['PANEL'])
                 x_vars = list(set(x_scale.aesthetics) &
                               set(layer_data.columns))
                 SCALE_X = layout['SCALE_X'].iloc[match_id].tolist()
                 self.x_scales.map(layer_data, x_vars, SCALE_X)
 
             if y_scale:
-                match_id = match(layer_data['PANEL'], layout['PANEL'])
                 y_vars = list(set(y_scale.aesthetics) &
                               set(layer_data.columns))
                 SCALE_Y = layout['SCALE_Y'].iloc[match_id].tolist()
@@ -107,6 +109,7 @@ class Panel(object):
             dataframes with statistic columns
         """
         new_data = []
+
         def fn(panel_data, l):
             """
             For a specific panel with data 'panel_data',

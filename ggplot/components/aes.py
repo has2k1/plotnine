@@ -10,8 +10,6 @@ else:
 
 from copy import deepcopy
 
-from patsy.eval import EvalEnvironment
-
 
 class aes(UserDict):
     """
@@ -67,7 +65,6 @@ class aes(UserDict):
         if 'colour' in self.data:
             self.data['color'] = self.data['colour']
             del self.data['colour']
-        self.__eval_env__ = EvalEnvironment.capture(1)
 
     def __deepcopy__(self, memo):
         '''deepcopy support for ggplot'''
@@ -80,7 +77,6 @@ class aes(UserDict):
             try:
                 result.__dict__[key] = deepcopy(self.__dict__[key], memo)
             except:
-                print(key)
                 raise
 
         return result
@@ -96,6 +92,7 @@ def is_calculated_aes(aesthetics):
         if re.match(pattern, v):
             calculated_aesthetics.append(k)
     return calculated_aesthetics
+
 
 def strip_dots(ae):
     return ae.strip('..')

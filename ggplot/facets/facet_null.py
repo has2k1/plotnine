@@ -21,7 +21,6 @@ class facet_null(object):
                               index=[1])
         return layout
 
-
     def map_layout(self, layout, data, plot_data):
         """
         Assign a data points to panels

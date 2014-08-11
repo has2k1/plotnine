@@ -1,9 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import sys
-import textwrap
 import itertools
-import importlib
 
 import numpy as np
 import pandas as pd
@@ -11,6 +8,7 @@ import pandas.core.common as com
 
 from ..utils import discrete_dtypes, continuous_dtypes
 from ..utils import gg_import
+from ..utils.exceptions import gg_warning
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -29,7 +27,7 @@ class Scales(list):
         ae = sc.aesthetics[0]
         cover_ae = self.find(ae)
         if any(cover_ae):
-            sys.err.write(_TPL_DUPLICATE_SCALE.format(ae))
+            gg_warning(_TPL_DUPLICATE_SCALE.format(ae))
             idx = cover_ae.index(True)
             self.remove(idx)
         # super() does not work well with reloads
@@ -141,6 +139,10 @@ def scales_add_defaults(scales, data, aesthetics):
     """
     Add default scales for the aesthetics if none are
     present
+
+    Scales are added only if the aesthetic is mapped to
+    a column in the dataframe. This function may have to be
+    called separately after evaluating the aesthetics.
     """
     if not aesthetics:
         return
@@ -158,6 +160,7 @@ def scales_add_defaults(scales, data, aesthetics):
 
     ae_cols = [(ae, aesthetics[ae]) for ae in new_aesthetics
                if aesthetics[ae] in data.columns]
+
     for ae, col in ae_cols:
         _type = scale_type(data[col])
         scale_name = 'scale_{}_{}'.format(ae, _type)
@@ -165,13 +168,6 @@ def scales_add_defaults(scales, data, aesthetics):
         if scale_f is None:
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue
-        # this_package = importlib.import_module('..scales', __package__)
-        #
-        # try:
-        #     scale_f = getattr(this_package, scale_name)
-        # except KeyError:
-        #     # Skip aesthetics with no scales (e.g. group, order, etc)
-        #     continue
         scales.append(scale_f())
 
     return scales
@@ -193,8 +189,6 @@ def scales_add_missing(plot, aesthetics):
     for ae in aesthetics:
         scale_name = 'scale_{}_continuous'.format(ae)
         scale_f = gg_import(scale_name)
-        # this_package = importlib.import_module('..scales', __package__)
-        # scale_f = getattr(this_package, scale_name)
         plot.scales.append(scale_f())
 
 
@@ -208,8 +202,7 @@ def scale_type(column):
     else:
         msg = """\
             Don't know how to automatically pick scale for \
-            object of type {}. Defaulting to 'continuous'""".format(
-                column.dtype)
-        sys.stderr.write(textwrap.dedent(msg))
+            object of type {}. Defaulting to 'continuous'"""
+        gg_warning(msg.format(column.dtype))
         stype = 'continuous'
     return stype
