@@ -134,6 +134,14 @@ class Scales(list):
         for col in cat_cols:
             data[col] = df[col]
 
+    def reset(self):
+        """
+        Reset all the scales
+        """
+        for sc in self:
+            sc.reset()
+        return self
+
 
 def scales_add_defaults(scales, data, aesthetics):
     """

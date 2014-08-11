@@ -37,7 +37,12 @@ class scale(object):
     def clone(self):
         return deepcopy(self)
 
-    def reset_range(self):
+    def reset(self):
+        """
+        Set the range of the scale to None.
+
+        i.e Forget all the training
+        """
         self.range = None
 
     @property
@@ -80,7 +85,7 @@ class scale_discrete(scale):
         ----------
         series: pd.series | np.array
             a column of data to train over
-        
+
         A discrete range is stored in a list
         """
         if drop is None:
@@ -128,19 +133,18 @@ class scale_continuous(scale):
         series: pd.series | np.array
             a column of data to train over
 
-        A continuous range is stored in a 1d-ndarray
         """
         if not len(series):
             return
 
         mn = series.min()
         mx = series.max()
-        if self.range:
+        if not (self.range is None):
             _mn, _mx = self.range
             mn = np.min([mn, _mn])
             mx = np.max([mx, _mx])
 
-        self.range = np.array([mn, mx])
+        self.range = [mn, mx]
 
     def dimension(self, expand=None):
         """

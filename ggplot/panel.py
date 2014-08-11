@@ -132,3 +132,13 @@ class Panel(object):
             df.reset_index(drop=True, inplace=True)
             new_data.append(df)
         return new_data
+
+    def reset_scales(self):
+        """
+        Reset x and y scales
+        """
+        if not self.shrink:
+            return
+
+        self.x_scales.reset()
+        self.y_scales.reset()

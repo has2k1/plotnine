@@ -222,6 +222,14 @@ class ggplot(object):
         # Apply position adjustments
         data = dlapply(lambda d, l: l.adjust_position(d))
 
+        # Reset position scales, then re-train and map.  This ensures
+        # that facets have control over the range of a plot:
+        #   - is it generated from what's displayed, or
+        #   - does it include the range of underlying data
+        panel.reset_scales()
+        panel.train_position(data, x_scale, y_scale)
+        data = panel.map_position(data, x_scale, y_scale)
+
         print(data[0])
         # print(scales)
         # print(panel.layout)

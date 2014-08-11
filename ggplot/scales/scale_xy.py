@@ -21,6 +21,13 @@ class scale_position_discrete(scale_discrete):
     """
     Base class for discrete position scales
     """
+    # Keeps two ranges, range and range_c
+    range_c = None
+
+    def reset(self):
+        # Can't reset discrete scale because
+        # no way to recover values
+        self.range_c = None
 
     def train(self, series):
         # The discrete position scale is capable of doing
@@ -29,10 +36,13 @@ class scale_position_discrete(scale_discrete):
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
         if series.dtype in continuous_dtypes:
-            # range is stored in an ndarray
+            # trick the training method into training
+            # range_c by temporarily renaming it to range
+            backup, self.range = self.range, self.range_c
             self.train_continuous(series)
+            # restore
+            self.range_c, self.range = self.range, backup
         else:
-            # range is stored in a list
             # super() does not work well with reloads
             scale_discrete.train(self, series)
 
@@ -50,13 +60,13 @@ class scale_position_discrete(scale_discrete):
     def limits(self):
         if self._limits:
             return self._limits
-        elif isinstance(self.range, list):
+        elif self.range:
             # discrete range
             return self.range
-        elif isinstance(self.range, np.ndarray):
+        elif self.range_c:
             # discrete limits for a continuous range
-            mn = int(np.floor(np.min(self.range)))
-            mx = int(np.ceil(np.max(self.range)))
+            mn = int(np.floor(np.min(self.range_c)))
+            mx = int(np.ceil(np.max(self.range_c)))
             return range(mn, mx+1)
         else:
             GgplotError(
