@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 
 from .scales.scales import Scales
-from .utils import match, xy_panel_scales
+from .scales.scale import scale_continuous
+from .utils import match, xy_panel_scales, is_waive
 
 
 class Panel(object):
@@ -142,3 +143,36 @@ class Panel(object):
 
         self.x_scales.reset()
         self.y_scales.reset()
+
+    def train_ranges(self):
+        """
+        Calculate the x & y ranges for each panel
+        """
+        def compute_ranges(pos_scales):
+            lst = []
+            for sc in pos_scales:
+                if sc._limits:
+                    # NOTE: Should transform if/when scale.trans
+                    # is enabled
+                    rng = sc._limits
+                elif is_waive(sc._expand):
+                    if isinstance(sc, scale_continuous):
+                        rng = sc.dimension((0.05, 0))
+                    else:
+                        # discrete scale
+                        rng = sc.dimension((0, 0.6))
+                else:
+                    rng = sc.dimension(sc._expand)
+
+                lst.append(rng)
+
+            return lst
+
+        self.ranges = [None] * len(self.layout)
+        x_ranges = compute_ranges(self.x_scales)
+        y_ranges = compute_ranges(self.y_scales)
+
+        cols = ['PANEL', 'SCALE_X', 'SCALE_Y']
+        for p, i, j in self.layout[cols].itertuples(index=False):
+            self.ranges[p-1] = {'x': x_ranges[i-1],
+                                'y': y_ranges[j-1]}

@@ -42,7 +42,6 @@ if not hasattr(mpl, 'rc_context'):
     mpl.rc_context = _rc_context
 
 
-
 class ggplot(object):
     """
     ggplot is the base layer or object that you use to define
@@ -130,7 +129,8 @@ class ggplot(object):
             # draw is not allowed to show a plot, so we can use to result for ggsave
             # This sets a rcparam, so we don't have to undo it after plotting
             mpl.interactive(False)
-            self.plot_build()
+            data, panel, plot = self.plot_build()
+            # print(panel.layout)
 
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend
@@ -159,6 +159,22 @@ class ggplot(object):
         self.legend[legend_type] = legend_dict
 
     def plot_build(self):
+        """
+        Build ggplot for rendering.
+
+        This function takes the plot object, and performs all steps
+        necessary to produce an object that can be rendered.
+
+        Returns
+        -------
+        data : list
+            dataframes, one for each layer
+        panel : panel
+            panel object with all the information required
+            for ploting
+        plot : ggplot
+            A copy of the ggplot object
+        """
         # TODO:
         # - copy the plot_data in here and give each layer
         #   a separate copy. Currently this is happening in
@@ -230,11 +246,14 @@ class ggplot(object):
         panel.train_position(data, x_scale, y_scale)
         data = panel.map_position(data, x_scale, y_scale)
 
-        print(data[0])
-        # print(scales)
-        # print(panel.layout)
-        # print(plot.scales)
-        return panel
+        # Train and map non-position scales
+        npscales = scales.non_position_scales()
+        if len(npscales):
+            map(lambda d: npscales.train_df(d), data)
+            data = list(map(lambda d: npscales.map_df(d), data))
+
+        panel.train_ranges()
+        return data, panel, plot
 
 
 def _is_identity(x):

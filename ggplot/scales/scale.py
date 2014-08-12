@@ -3,10 +3,12 @@ from __future__ import (absolute_import, division, print_function,
 
 from copy import deepcopy
 import numpy as np
+import pandas as pd
 import pandas.core.common as com
 
 from ..utils import waiver, is_waive
-from ..utils import identity
+from ..utils import identity, match
+from ..utils import round_any
 from .utils import rescale, censor, expand_range
 
 
@@ -70,6 +72,27 @@ class scale(object):
     def expand(self, value):
         self._expand = value
 
+    def train_df(self, df):
+        """
+        Train scale from a dataframe
+        """
+        aesthetics = set(self.aesthetics) & set(df.columns)
+        for ae in aesthetics:
+            self.train(df[ae])
+
+    def map_df(self, df):
+        """
+        Map df
+        """
+        if len(df) == 0:
+            return
+
+        aesthetics = set(self.aesthetics) & set(df.columns)
+        for ae in aesthetics:
+            df[ae] = self.map(df[ae])
+
+        return df
+
 
 class scale_discrete(scale):
     """
@@ -114,6 +137,20 @@ class scale_discrete(scale):
             expand = self.expand
         return expand_range(len(self.limits), expand[0], expand[1])
 
+    def map(self, x, limits=None):
+        """
+        Return an array-like of x mapped to values
+        from the scales palette
+        """
+        if limits is None:
+            limits = self.limits
+
+        n = sum(~pd.isnull(limits))
+        pal = np.asarray(self.palette(n))
+        pal_match = pal[match(x, limits)]
+        pal_match[pd.isnull(pal_match)] = self.na_value
+        return pal_match
+
 
 class scale_continuous(scale):
     """
@@ -154,3 +191,20 @@ class scale_continuous(scale):
         if expand is None:
             expand = self.expand
         return expand_range(self.limits, expand[0], expand[1])
+
+    def map(self, x, limits=None):
+        if limits is None:
+            limits = self.limits
+
+        x = self.oob(self.rescaler(x, from_=limits))
+
+        # Points are rounded to the nearest 500th, to reduce the
+        # amount of work that the scale palette must do - this is
+        # particularly important for colour scales which are rather
+        # slow.  This shouldn't have any perceptual impacts.
+        x = round_any(x, 1 / 500)
+        uniq = np.unique(x)
+        pal = np.asarray(self.palette(uniq))
+        scaled = pal[match(x, uniq)]
+        scaled[np.isnan(scaled)] = self.na_value
+        return scaled

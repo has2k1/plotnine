@@ -2,8 +2,6 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
-import pandas as pd
-
 from .layouts import layout_grid
 from .locate import locate_grid
 

@@ -501,3 +501,10 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
         msg = '{} : Removed {} rows containing {} values.'
         gg_warning(msg.format(name, n-len(df), txt))
     return df
+
+
+def round_any(x, accuracy, f=np.round):
+    """
+    Round to multiple of any number.
+    """
+    return f(x / accuracy) * accuracy

@@ -199,7 +199,6 @@ def expand_range(range, mul=0, add=0, zero_width=1):
     except TypeError:
         range = (range, range)
 
-
     if zero_range(range):
         erange = (range[0] - zero_width/2,
                   range[0] + zero_width/2)

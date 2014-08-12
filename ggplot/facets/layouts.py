@@ -97,8 +97,8 @@ def layout_grid(data, rows=None, cols=None, margins=None,
         # TODO: Implement this
         pass
 
-    rows = 1 if rows is None else ninteraction(base, rows)
-    cols = 1 if cols is None else ninteraction(base, cols)
+    rows = 1 if rows is None else ninteraction(base[rows], drop=True)
+    cols = 1 if cols is None else ninteraction(base[cols], drop=True)
 
     n = len(base)
     panels = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),

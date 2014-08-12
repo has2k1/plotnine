@@ -140,7 +140,28 @@ class Scales(list):
         """
         for sc in self:
             sc.reset()
-        return self
+
+    def train_df(self, df, drop=False):
+        """
+        Train scales from a dataframe
+        """
+        if (len(df) == 0) or (len(self) == 0):
+            return
+
+        for sc in self:
+            sc.train_df(df)
+
+    def map_df(self, df):
+        """
+        Map values from a dataframe.
+
+        Returns dataframe
+        """
+        if (len(df) == 0) or (len(self) == 0):
+            return
+        for sc in self:
+            df = sc.map_df(df)
+        return df
 
 
 def scales_add_defaults(scales, data, aesthetics):
