@@ -129,6 +129,8 @@ class Panel(object):
         # data the statistics are calculated independently for
         # each panel.
         for (d, l) in zip(data, layers):
+            # TODO: This groupby is evil -- there is a nested
+            # groupby hence four computations
             df = d.groupby('PANEL').apply(fn, l)
             df.reset_index(drop=True, inplace=True)
             new_data.append(df)

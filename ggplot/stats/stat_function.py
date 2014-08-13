@@ -1,10 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 import numpy as np
 import pandas as pd
 
-from ggplot.utils import make_iterable_ntimes
-from ggplot.utils.exceptions import GgplotError
+from ..utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -111,39 +111,31 @@ class stat_function(stat):
 
     CREATES = {'y'}
 
-    def _calculate(self, data):
+    def _calculate(self, data, scales, **kwargs):
         x = data.pop('x')
         fun = self.params['fun']
         n = self.params['n']
         args = self.params['args']
 
+        range_x = scales.x.dimension((0, 0))
+
         if not hasattr(fun, '__call__'):
-            raise GgplotError("stat_function requires parameter 'fun' to be " +
-                            "a function or any other callable object")
+            raise GgplotError(
+                "stat_function requires parameter 'fun' to be " +
+                "a function or any other callable object")
 
         old_fun = fun
-        if isinstance(args,list):
+        if isinstance(args, list):
             fun = lambda x: old_fun(x, *args)
-        elif isinstance(args,dict):
+        elif isinstance(args, dict):
             fun = lambda x: old_fun(x, **args)
         elif args is not None:
             fun = lambda x: old_fun(x, args)
         else:
             fun = lambda x: old_fun(x)
 
-        x = np.linspace(x.min(), x.max(),n)
+        x = np.linspace(range_x[0], range_x[1], n)
         y = list(map(fun, x))
 
         new_data = pd.DataFrame({'x': x, 'y': y})
-
-        # Copy the other aesthetics into the new dataframe
-        # Don't copy the any previous 'y' assignments
-        try:
-            del data['y']
-        except KeyError:
-            pass
-
-        n = len(x)
-        for ae in data:
-            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
         return new_data

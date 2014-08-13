@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 import numpy as np
+import pandas as pd
 
 from ..utils import identity, match
 from ..utils import discrete_dtypes, continuous_dtypes
@@ -92,7 +94,7 @@ class scale_position_continuous(scale_continuous):
         if not limits:
             limits = self.limits
         scaled = self.oob(series, limits)
-        scaled[np.isnan(scaled)] = self.na_value
+        scaled[pd.isnull(scaled)] = self.na_value
         return scaled
 
 

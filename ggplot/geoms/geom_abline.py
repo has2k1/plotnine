@@ -17,6 +17,8 @@ class geom_abline(geom):
     REQUIRED_AES = {'slope', 'intercept'}
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
 
+    layer_params = {'inherit_aes': False}
+
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
 
     def _plot_unit(self, pinfo, ax):

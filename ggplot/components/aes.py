@@ -9,6 +9,7 @@ else:
     from UserDict import UserDict
 
 from copy import deepcopy
+import six
 
 
 class aes(UserDict):
@@ -89,6 +90,8 @@ def is_calculated_aes(aesthetics):
     pattern = "^\.\.([a-zA-Z._]+)\.\.$"
     calculated_aesthetics = []
     for k, v in aesthetics.items():
+        if not isinstance(v, six.string_types):
+            continue
         if re.match(pattern, v):
             calculated_aesthetics.append(k)
     return calculated_aesthetics

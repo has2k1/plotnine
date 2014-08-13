@@ -90,17 +90,33 @@ class stat(object):
             return pd.DataFrame()
 
         def fn(grouped_data):
-            return self._calculate(grouped_data, scales)
+            group = grouped_data['group'].iloc[0]
+            res = self._calculate(grouped_data, scales)
+            res['group'] = group
+            return res
 
         # Calculate all the stats
-        stats = data.groupby('group').apply(fn)
-        stats = stats.reset_index(0).reset_index(drop=True)
+        stats = data.groupby('group', ).apply(fn)
+        stats.reset_index(drop=True, inplace=True)
 
         # Combine with original data
-        unique = data.groupby('group').apply(uniquecols)
+        unique = data.groupby('group', as_index=False).apply(uniquecols)
         unique.reset_index(drop=True, inplace=True)
         missing = unique.columns - stats.columns
-        stats = pd.concat([stats, unique.loc[:, missing]], axis=1)
+
+        # Instead of a more expensive join, make sure the order is
+        # fine and concat. This is really not expected to fail
+        # print(stats)
+        assert(all(
+            stats['group'].as_matrix() == unique['group'].as_matrix()))
+        if len(stats) == len(unique):
+            stats = pd.concat([stats, unique.loc[:, missing]],
+                              axis=1)
+        elif len(unique) == 1:
+            for col in unique:
+                stats[col] = unique[col].iloc[0]
+        else:
+            raise GgplotError('Could not merge stats. Report bug')
 
         # Note: If the data coming in has columns with non-unique
         # values with-in group(s), this implementation loses the

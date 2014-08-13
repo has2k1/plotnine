@@ -319,12 +319,10 @@ def ninteraction(df, drop=False):
     # Calculate individual ids
     ids = df.apply(_id_var, axis=0)
     ids = ids.reindex(columns=reversed(ids.columns))
-    p = ids.shape[1]
 
     # Calculate dimensions
     len_unique = lambda x: len(np.unique(x))
     ndistinct = ids.apply(len_unique, axis=0).as_matrix()
-    n = ndistinct.prod()
 
     combs = np.matrix(
         np.hstack([1, ndistinct[:-1]]))

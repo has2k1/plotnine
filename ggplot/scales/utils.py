@@ -141,7 +141,7 @@ def censor(x, range=(0, 1), only_finite=True):
     return x
 
 
-def zero_range (x, tol=np.finfo(float).eps * 100):
+def zero_range(x, tol=np.finfo(float).eps * 100):
     """
     Determine if range of vector is close to zero,
     with a specified tolerance

@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import gaussian_kde
 
-from ggplot.utils import make_iterable_ntimes
-from ggplot.utils.exceptions import GgplotError
+from ..utils.exceptions import GgplotError
 from .stat import stat
+
 
 # TODO: switch to statsmodels kdes
 class stat_density(stat):
@@ -16,8 +16,9 @@ class stat_density(stat):
 
     CREATES = {'y'}
 
-    def _calculate(self, data):
+    def _calculate(self, data, scales, **kwargs):
         x = data.pop('x')
+        range_x = scales.x.dimension((0, 0))  # TODO: Use this
 
         try:
             float(x.iloc[0])
@@ -26,8 +27,9 @@ class stat_density(stat):
                 # try to use it as a pandas.tslib.Timestamp
                 x = [ts.toordinal() for ts in x]
             except:
-                raise GgplotError("stat_density(): aesthetic x mapping " +
-                                "needs to be convertable to float!")
+                raise GgplotError(
+                    "stat_density(): aesthetic x mapping " +
+                    "needs to be convertable to float!")
         # TODO: Implement weight
         try:
             weight = data.pop('weight')
@@ -45,9 +47,4 @@ class stat_density(stat):
         x = np.arange(bottom, top, step)
         y = kde.evaluate(x)
         new_data = pd.DataFrame({'x': x, 'y': y})
-
-        # Copy the other aesthetics into the new dataframe
-        n = len(x)
-        for ae in data:
-            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
         return new_data

@@ -52,7 +52,7 @@ class scale(object):
         # Fall back to the range if the limits
         # are not set or if any is NaN
         if not (self._limits is None):
-            if not any(map(np.isnan, self._limits)):
+            if not any(map(pd.isnull, self._limits)):
                 return self._limits
         return self.range
 
@@ -206,5 +206,5 @@ class scale_continuous(scale):
         uniq = np.unique(x)
         pal = np.asarray(self.palette(uniq))
         scaled = pal[match(x, uniq)]
-        scaled[np.isnan(scaled)] = self.na_value
+        scaled[pd.isnull(scaled)] = self.na_value
         return scaled

@@ -145,7 +145,6 @@ def layout_base(data, vars=None, drop=True):
     # sorts according to order of factor levels
     base.sort(columns=list(base.columns), inplace=True)
 
-
     # Systematically add on missing combinations
     for i, value in enumerate(values):
         if has_all[i]:
@@ -217,11 +216,11 @@ def n2mfrow(nr_plots):
     This is a port of grDevices::n2mfrow from R
     """
     if nr_plots <= 3:
-        nrow, ncol =  nr_plots, 1
+        nrow, ncol = nr_plots, 1
     elif nr_plots <= 6:
         nrow, ncol = (nr_plots + 1) // 2, 2
     elif nr_plots <= 12:
-        nrow, ncol = (nr.plots + 2) // 3, 3
+        nrow, ncol = (nr_plots + 2) // 3, 3
     else:
         nrow = int(np.ceil(np.sqrt(nr_plots)))
         ncol = int(np.ceil(nr_plots/nrow))

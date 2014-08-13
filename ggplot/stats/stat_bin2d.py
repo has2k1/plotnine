@@ -1,67 +1,77 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import itertools
 
-from collections import defaultdict
 import pandas as pd
 import numpy as np
 
-from ggplot.utils import make_iterable_ntimes
 from .stat import stat
 
-
-_MSG_STATUS = """stat_bin2d is still under construction.
-The resulting plot lacks color to indicate the counts/density in each bin
-and if grouping/facetting is used you get more bins than specified and
-they vary in size between the groups.
-
-see: https://github.com/yhat/ggplot/pull/266#issuecomment-41355513
-     https://github.com/yhat/ggplot/issues/283
-"""
 
 class stat_bin2d(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
-                      'bins': 30, 'drop': True, 'weight': 1,
-                      'right': False}
+                      'bins': 30, 'drop': True}
+    DEFAULT_AES = {'fill': '..count..'}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
-    def _calculate(self, data):
-        self._print_warning(_MSG_STATUS)
-
+    def _calculate(self, data, scales, **kwargs):
         x = data.pop('x')
         y = data.pop('y')
         bins = self.params['bins']
         drop = self.params['drop']
-        right = self.params['right']
-        weight = make_iterable_ntimes(self.params['weight'], len(x))
+        weight = data.get('weight', 1)  # hidden feature
+
+        # The bins will be over the dimension(full size) of the
+        # trained x and y scales
+        range_x = scales.x.dimension((0, 0))
+        range_y = scales.y.dimension((0, 0))
+
+        # Trick pd.cut into creating cuts over the range of
+        # the scale
+        x = np.append(x, range_x)
+        y = np.append(y, range_y)
 
         # create the cutting parameters
-        x_assignments, xbreaks = pd.cut(x, bins=bins, labels=False,
-                                        right=right, retbins=True)
-        y_assignments, ybreaks = pd.cut(y, bins=bins, labels=False,
-                                        right=right, retbins=True)
-        # create rectangles
-        # xmin, xmax, ymin, ymax, fill=count
-        df = pd.DataFrame({'xbin': x_assignments,
-                           'ybin': y_assignments,
+        xbins, xbreaks = pd.cut(x, bins=bins, labels=False,
+                                right=True, retbins=True)
+        ybins, ybreaks = pd.cut(y, bins=bins, labels=False,
+                                right=True, retbins=True)
+
+        # Remove the spurious points
+        xbins = xbins[:-2]
+        ybins = ybins[:-2]
+
+        # Because we are graphing, we want to see equal breaks
+        # The original breaks have an extra room to the left
+        ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
+        xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
+
+        df = pd.DataFrame({'xbins': xbins,
+                           'ybins': ybins,
                            'weights': weight})
         table = pd.pivot_table(df, values='weights',
-                               rows=['xbin', 'ybin'], aggfunc=np.sum)
-        rects = np.array([[xbreaks[i], xbreaks[i+1],
-                           ybreaks[j], ybreaks[j+1],
-                           table[(i, j)]]
-                          for (i, j) in table.keys()])
+                               index=['xbins', 'ybins'], aggfunc=np.sum)
+
+        # create rectangles
+        rects = []
+        keys = itertools.product(range(len(ybreaks)-1),
+                                 range(len(xbreaks)-1))
+        for (j, i) in keys:
+            try:
+                cval = table[(i, j)]
+            except KeyError:
+                if drop:
+                    continue
+                cval = 0
+            # xmin, xmax, ymin, ymax, count
+            row = [xbreaks[i], xbreaks[i+1],
+                   ybreaks[j], ybreaks[j+1],
+                   cval]
+            rects.append(row)
+
         new_data = pd.DataFrame(rects, columns=['xmin', 'xmax',
                                                 'ymin', 'ymax',
-                                                'fill'])
-        # !!! assign colors???
-        # TODO: Remove this when visual mapping is applied after
-        # computing the stats
-        new_data['fill'] = ['#333333'] * len(new_data)
-
-        # Copy the other aesthetics into the new dataframe
-        # Note: There probably shouldn't be any for this stat
-        n = len(new_data)
-        for ae in data:
-            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+                                                'count'])
+        new_data['density'] = new_data['count'] / new_data['count'].sum()
         return new_data

@@ -11,6 +11,8 @@ class geom_vline(geom):
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
                       'show_guide': False}
 
+    layer_params = {'inherit_aes': False}
+
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
     _units = {'alpha'}
 

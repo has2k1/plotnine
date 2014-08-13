@@ -3,19 +3,19 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 
-from ggplot.components import smoothers
-from ggplot.utils import make_iterable_ntimes
+from ..components import smoothers
 from .stat import stat
 
 
 class stat_smooth(stat):
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity', 'method': 'auto',
-            'se': True, 'n': 80, 'fullrange': False, 'level': 0.95,
-            'span': 2/3., 'window': None}
+    DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
+                      'method': 'auto', 'se': True, 'n': 80,
+                      'fullrange': False, 'level': 0.95,
+                      'span': 2/3., 'window': None}
     CREATES = {'ymin', 'ymax'}
 
-    def _calculate(self, data):
+    def _calculate(self, data, scales, **kwargs):
         # sort data by x and
         # convert x and y to lists so that the Series index
         # does not mess with the smoothing functions
@@ -28,6 +28,7 @@ class stat_smooth(stat):
         method = self.params['method']
         span = self.params['span']
         window = self.params['window']
+        weight = data.get('weight', 1)  # should make use of this
 
         if window is None:
             window = int(np.ceil(len(x) / 10.0))
@@ -47,8 +48,4 @@ class stat_smooth(stat):
             new_data['ymin'] = y1
             new_data['ymax'] = y2
 
-        # Copy the other aesthetics into the new dataframe
-        n = len(x)
-        for ae in data:
-            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
         return new_data

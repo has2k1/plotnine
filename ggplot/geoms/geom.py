@@ -24,6 +24,10 @@ class geom(object):
     manual_aes = None
     params = None
 
+    # geoms & stats and even users can pass parameters to the
+    # layer when it is created.
+    layer_params = dict()
+
     # Some geoms require more information than that provided by the
     # user. This information is usually another aesthetic variable
     # but it could another non-aesthetic variable. It is the duty
@@ -185,7 +189,8 @@ class geom(object):
             self._stat.params.update(self._stat_params)
         l = layer(geom=self, stat=self._stat, data=self.data,
                   mapping=self.aes,
-                  position=self.params['position'])
+                  position=self.params['position'],
+                  **self.layer_params)
         gg.layers.append(l)
         return gg
 

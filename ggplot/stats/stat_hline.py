@@ -2,8 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import pandas as pd
 
-from ggplot.utils import pop, make_iterable, make_iterable_ntimes
-from ggplot.utils.exceptions import GgplotError
+from ..utils import pop
+from ..utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -12,7 +12,7 @@ class stat_hline(stat):
                       'yintercept': 0}
     CREATES = {'yintercept'}
 
-    def _calculate(self, data):
+    def _calculate(self, data, scales, **kwargs):
         y = pop(data, 'y', None)
 
         # yintercept may be one of:
@@ -29,10 +29,7 @@ class stat_hline(stat):
             except TypeError as err:
                 raise GgplotError(*err.args)
 
-        yintercept = make_iterable(yintercept)
         new_data = pd.DataFrame({'yintercept': yintercept})
-        # Copy the other aesthetics into the new dataframe
-        n = len(yintercept)
-        for ae in data:
-            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        new_data['y'] = new_data['yintercept']
+        new_data['yend'] = new_data['yintercept']
         return new_data
