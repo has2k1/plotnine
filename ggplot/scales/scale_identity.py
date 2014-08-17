@@ -6,6 +6,7 @@ import sys
 from ..utils import identity
 from .scale import scale_discrete, scale_continuous
 
+
 class scale_color_identity(scale_discrete):
     aesthetics = ['color']
     palette = staticmethod(identity)

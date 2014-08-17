@@ -1,7 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import numpy as np
 import math
+
+import numpy as np
 
 from ..utils.exceptions import GgplotError
 
