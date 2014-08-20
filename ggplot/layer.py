@@ -232,6 +232,16 @@ class layer(object):
         data = data.groupby('PANEL').apply(fn)
         return data
 
+    def plot(self, data, scales, ax):
+        """
+        Plot layer
+        """
+        check_required_aesthetics(
+            self.geom.REQUIRED_AES,
+            data.columns,
+            self.geom.__class__.__name__)
+        self.geom.draw_groups(data, scales, ax)
+
 
 def add_group(data):
     if len(data) == 0:

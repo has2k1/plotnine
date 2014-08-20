@@ -19,6 +19,8 @@ class facet_null(object):
         layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
                                'SCALE_X': 1, 'SCALE_Y': 1},
                               index=[1])
+        self.nrow = 1
+        self.ncol = 1
         return layout
 
     def map_layout(self, layout, data, plot_data):

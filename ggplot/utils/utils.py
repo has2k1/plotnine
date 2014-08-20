@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
+from matplotlib.colors import ColorConverter
 import six
 
 from .exceptions import GgplotError, gg_warning
@@ -506,3 +507,37 @@ def round_any(x, accuracy, f=np.round):
     Round to multiple of any number.
     """
     return f(x / accuracy) * accuracy
+
+
+def hex_to_rgba(colors, alphas=1):
+    """
+    Covert hex colors to rgba values.
+
+    Parameters
+    ----------
+    colors : list-like | str
+        colors to convert
+    alphas : list-like | float
+        alpha values
+
+    Returns
+    -------
+    out : ndarray | tuple
+        rgba color(s)
+
+    Note
+    ----
+    Matplotlib plotting functions only accept scalar
+    alpha values. Hence no two objects with different
+    alpha values may be plotted in one call. This would
+    make plots with continuous alpha values innefficient.
+    However :), the colors can be rgba list-likes and
+    the alpha dimension will be respected.
+    """
+    cc = ColorConverter()
+    if is_string(colors):
+        out = cc.to_rgba(colors, alphas)
+    else:
+        out = cc.to_rgba_array(colors)
+        out[:, 3] = alphas
+    return out

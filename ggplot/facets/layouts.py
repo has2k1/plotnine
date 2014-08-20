@@ -130,7 +130,7 @@ def layout_base(data, vars=None, drop=True):
 
     # Form the base data frame which contains all combinations
     # of facetting variables that appear in the data
-    has_all = [x.shape[1]==len(vars) for x in values]
+    has_all = [x.shape[1] == len(vars) for x in values]
     if not any(has_all):
         raise GgplotError(
             "At least one layer must contain all variables " +

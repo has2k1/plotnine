@@ -1,36 +1,37 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import matplotlib as mpl
+
 from .geom import geom
-import numpy as np
+from ..utils import hex_to_rgba
+
 
 class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 20}
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap':None}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
-    _units = {'alpha', 'marker'}
+    _units = {'marker'}
 
-    def _plot_unit(self, pinfo, ax):
+    def draw_groups(self, data, scales, ax, **kwargs):
+        """
+        Plot all groups
+        """
+        pinfos = self._make_pinfos(data)
+        for pinfo in pinfos:
+            self.draw(pinfo, scales, ax, **kwargs)
 
+    def draw(self, pinfo, scales, ax, **kwargs):
         fc = pinfo['facecolor']
         if fc is None:
             # default to color
             pinfo['facecolor'] = pinfo['color']
         elif fc is False:
-            # Matlab expects empty string instead of False
+            # Matplotlib expects empty string instead of False
             pinfo['facecolor'] = ''
-
-        # for some reason, scatter doesn't default to the same color styles
-        # as the axes.color_cycle
-        if "color" not in pinfo and self.params['cmap'] is None:
-            pinfo["color"] = mpl.rcParams.get("axes.color_cycle", ["#333333"])[0]
-
-        if self.params['position'] == 'jitter':
-            pinfo['x'] *= np.random.uniform(.9, 1.1, len(pinfo['x']))
-            pinfo['y'] *= np.random.uniform(.9, 1.1, len(pinfo['y']))
+        else:
+            alpha = pinfo.pop('alpha')
+            pinfo['facecolor'] = hex_to_rgba(pinfo['facecolor'], alpha)
 
         ax.scatter(**pinfo)
-

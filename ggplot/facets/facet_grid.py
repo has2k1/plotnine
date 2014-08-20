@@ -37,6 +37,8 @@ class facet_grid(object):
         layout['SCALE_X'] = layout['COL'] if self.free['x'] else 1
         layout['SCALE_Y'] = layout['ROW'] if self.free['y'] else 1
 
+        self.nrow = layout['ROW'].max()
+        self.ncol = layout['COL'].max()
         return layout
 
     def map_layout(self, layout, data, plot_data):

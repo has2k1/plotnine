@@ -29,7 +29,6 @@ __all__ = ["ggplot"]
 __all__ = [str(u) for u in __all__]
 
 import sys
-import warnings
 from copy import deepcopy
 
 # Show plots if in interactive mode
@@ -107,8 +106,8 @@ class ggplot(object):
         return result
 
     def draw(self):
-        # Adding rc=self.rcParams does not validate/parses the params which then
-        # throws an error during plotting!
+        # Adding rc=self.rcParams does not validate/parses the params
+        # which then throws an error during plotting!
         with mpl.rc_context():
             # Use a throw away rcParams, so subsequent plots will not have any
             # residual from this plot
@@ -117,20 +116,56 @@ class ggplot(object):
             rcParams = self.theme.get_rcParams()
             for key in six.iterkeys(rcParams):
                 val = rcParams[key]
-                # there is a bug in matplotlib which does not allow None directly
+                # there is a bug in matplotlib which does not allow
+                # None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543
                 try:
                     if key == 'text.dvipnghack' and val is None:
                         val = "none"
                     mpl.rcParams[key] = val
                 except Exception as e:
-                    msg = """Setting "mpl.rcParams['%s']=%s" raised an Exception: %s""" % (key, str(val), str(e))
-                    warnings.warn(msg, RuntimeWarning)
-            # draw is not allowed to show a plot, so we can use to result for ggsave
-            # This sets a rcparam, so we don't have to undo it after plotting
+                    msg = """\
+                        Setting "mpl.rcParams['{}']={}" \
+                        raised an Exception: {}"""
+                    gg_warning(msg.format(key, val, e))
+            # draw is not allowed to show a plot, so we can use to
+            # result for ggsave. This sets a rcparam, so we don't
+            # have to undo it after plotting
             mpl.interactive(False)
+
             data, panel, plot = self.plot_build()
+            fig, axs = plt.subplots(plot.facet.nrow,
+                                    plot.facet.ncol,
+                                    sharex=(not plot.facet.free['x']),
+                                    sharey=(not plot.facet.free['y']))
+            plt.subplots_adjust(wspace=.05, hspace=.05)
+            axs = np.atleast_2d(axs)
+            axs = [ax for row in axs for ax in row]
+
+            # ax - axes for a particular panel
+            # pnl - a panel (facet)
+            for ax, (_, pnl) in zip(axs, panel.layout.iterrows()):
+                xy_scales = {'x': panel.x_scales[pnl['SCALE_X'] - 1],
+                             'y': panel.y_scales[pnl['SCALE_Y'] - 1]}
+
+                # Plot all data for each layer
+                for l, d in zip(plot.layers, data):
+                    bool_idx = (d['PANEL'] == pnl['PANEL'])
+                    l.plot(d[bool_idx], xy_scales, ax)
+
+                # set axis limits
+                ax.set_xlim(panel.ranges[pnl['PANEL'] - 1]['x'])
+                ax.set_ylim(panel.ranges[pnl['PANEL'] - 1]['y'])
+
+                # draw facet labels
+                if isinstance(plot.facet, facet_grid):
+                    draw_facet_label(plot, pnl, ax, fig)
+
+                self.theme.post_plot_callback(ax)
+
+            # Draw legend
             # print(panel.layout)
+        return plt.gcf()
 
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend
@@ -197,7 +232,7 @@ class ggplot(object):
         def dlapply(f):
             """
             Call the function f with the dataframe and layer
-            object as arguments.
+            object as arguments.%s
             """
             out = [None] * len(data)
             for i in range(len(data)):
@@ -254,6 +289,62 @@ class ggplot(object):
 
         panel.train_ranges()
         return data, panel, plot
+
+
+def draw_facet_label(plot, pnl, ax, fig):
+    if pnl['ROW'] != 1 and pnl['COL'] != plot.facet.ncol:
+        return
+
+    # NOTE: When saveing an image the fig.dpi value is
+    # that of the screen !!! The labels should be pixel
+    # perfect when graph is plotted to the screen.
+
+    # The facet labels are placed onto the figure using
+    # transAxes dimensions. The line height and line
+    # width are mapped to the same [0, 1] range
+    # i.e (pts) * (inches / pts) * (1 / inches)
+    # plus a padding factor of 1.65
+    bbox = ax.get_window_extent().transformed(
+        fig.dpi_scale_trans.inverted())
+    w, h = bbox.width, bbox.height  # in inches
+    oneh = 1 / (fig.dpi * w)  # 1pt horizontal in transAxes
+    onev = 1 / (fig.dpi * h)  # 1pt vertical in transAxes
+    w = mpl.rcParams['font.size'] * 1.65 * oneh
+    h = mpl.rcParams['font.size'] * 1.65 * onev
+
+    # Need to use theme (element_rect) for the colors
+    # top labels
+    if pnl['ROW'] == 1:
+        facet_var = plot.facet.cols[0]
+        ax.text(0.5, 1+onev, pnl[facet_var],
+                bbox=dict(
+                    xy=(0, 1+onev),
+                    facecolor='lightgrey',
+                    edgecolor='lightgrey',
+                    height=h,
+                    width=1-oneh,
+                    transform=ax.transAxes),
+                transform=ax.transAxes,
+                fontdict=dict(verticalalignment="bottom",
+                              horizontalalignment='left')
+                )
+
+    # right labels
+    if pnl['COL'] == plot.facet.ncol:
+        facet_var = plot.facet.rows[0]
+        ax.text(1+oneh, 0.5, pnl[facet_var],
+                bbox=dict(
+                    xy=(1+oneh, 0+onev),
+                    facecolor='lightgrey',
+                    edgecolor='lightgrey',
+                    height=1-onev,
+                    width=w,
+                    transform=ax.transAxes),
+                transform=ax.transAxes,
+                fontdict=dict(rotation=-90,
+                              verticalalignment="center",
+                              horizontalalignment='left')
+                )
 
 
 def _is_identity(x):

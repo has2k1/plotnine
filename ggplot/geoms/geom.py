@@ -134,6 +134,19 @@ class geom(object):
     def reparameterise(self, data):
         return data
 
+    def draw_groups(self, data, scales, ax, **kwargs):
+        """
+        Plot all groups
+
+        For effeciency, geoms that do not need to partition
+        different groups before plotting should override this
+        method and avoid the groupby.
+        """
+        for gdata in data.groupby('group'):
+            pinfos = self.make_pinfos(data)
+            for pinfo in pinfos:
+                self.draw(pinfo, scales, ax, **kwargs)
+
     def plot_layer(self, data, ax):
         # Any aesthetic to be overridden by the manual aesthetics
         # should not affect the statistics and the unit grouping
@@ -194,21 +207,6 @@ class geom(object):
         gg.layers.append(l)
         return gg
 
-    def _verify_aesthetics(self, data):
-        """
-        Check if all the required aesthetics have been specified.
-
-        Raise an Exception if an aesthetic is missing
-        """
-
-        missing_aes = (self.REQUIRED_AES -
-                       set(self.manual_aes) -
-                       set(data.columns))
-        if missing_aes:
-            msg = '{} requires the following missing aesthetics: {}'
-            raise GgplotError(msg.format(
-                self.__class__.__name__, ', '.join(missing_aes)))
-
     def _find_aes_and_data(self, args, kwargs):
         """
         Identify the aes and data objects.
@@ -256,56 +254,6 @@ class geom(object):
                 raise GgplotError('Cannot recognize aesthetic: %s' % k)
         return _aes, data, kwargs
 
-    def _calculate_and_rename_stats(self, data):
-        """
-        Use the stat object (self._stat) to compute the stats
-        and make sure the returned columns are renamed to
-        matplotlib compatible names
-        """
-        # only rename the new columns,
-        # so keep track of the original ones
-        _original = set(data)
-        data = self._stat._calculate(data)
-        _d = {}
-        for old, new in self._aes_renames.items():
-            if (old in data) and (old not in _original):
-                _d[new] = data.pop(old)
-        data.update(_d)
-        return data
-
-    def _calculate_stats(self, data):
-        """
-        Calculate the statistics on each group in the data
-
-        The groups are determined by the mappings.
-
-        Returns
-        -------
-        data : dataframe
-        """
-        self._stat._verify_aesthetics(data)
-        self._stat._calculate_global(data)
-        # In most cases 'x' and 'y' mappings do not and
-        # should not influence the grouping. If this is
-        # not the desired behaviour then the groups
-        # parameter should be used.
-        groups = set(self._cache['ggplot.mapping'].keys())
-        groups = groups & (self.valid_aes - {'x', 'y'})
-        groups = groups & set(data.columns)
-
-        new_data = pd.DataFrame()
-        # TODO: Find a more effecient way to concatenate
-        # the dataframes
-        if groups:
-            for name, _data in data.groupby(sorted(groups)):
-                _data = _data.reindex()
-                _data = self._stat._calculate(_data)
-                new_data = new_data.append(_data, ignore_index=True)
-        else:
-            new_data = self._stat._calculate(data)
-
-        return new_data
-
     def _create_aes_with_mpl_names(self):
         """
         Create copies of the manual and default aesthetics
@@ -329,69 +277,77 @@ class geom(object):
         _rename_fn(self._cache['manual_aes_mpl'])
         _rename_fn(self._cache['default_aes_mpl'])
 
-    def _get_unit_grouped_data(self, data, units):
+    def _make_pinfos(self, data):
         """
-        Split data into groups.
+        Make plot information
 
-        The units determine the groups.
+        Put together the data and the default aesthetics into
+        groups that can be plotted in a single call to self._plot_unit.
 
         Parameters
         ----------
         data : dataframe
             The data to be split into groups
-        units : set
-            A set of column names in the data and by
-            which the grouping will happen
 
         Returns
         -------
         out : list of dict
-            Each dict represents a unique grouping.
+            Each dict represents a unique grouping, ready for
+            plotting
             The dicts are of the form
-            {'column-name': list-of-values | value}
+            {'column-name' | 'mpl-param-name': list-of-values | value}
 
         Note
         ----
-        This is a helper function for self._plot_layer
+        This is a helper function for self.draw_group or self.draw
         """
+        # (default aesthetics + data), grouped into plotable units
+        # and renamed -- ready for matplotlib
+
+        # self._units as ggplot aesthetics
+        units = [col for col in set(data.columns) & set(self._aes_renames)
+                 if self._aes_renames[col] in self._units]
+
+        # ggplot plot building stuff that is not needed
+        # by to draw the plot
+        wanted = set(self.DEFAULT_AES) | self.REQUIRED_AES
+
+        def remove_unwanted(d):
+            for key in set(d) - wanted:
+                del d[key]
+            return d
+
         out = []
         if units:
-            for name, _data in data.groupby(list(units)):
-                _data = _data.to_dict('list')
+            for name, _data in data.groupby(units):
+                pinfo = deepcopy(self.DEFAULT_AES)
+                pinfo.update(_data.to_dict('list'))
                 for ae in units:
-                    _data[ae] = _data[ae][0]
-                out.append(_data)
+                    pinfo[ae] = pinfo[ae][0]
+
+                pinfo = remove_unwanted(pinfo)
+                pinfo = self._rename_to_mpl(pinfo)
+                out.append(pinfo)
         else:
-            _data = data.to_dict('list')
-            out.append(_data)
+            pinfo = deepcopy(self.DEFAULT_AES)
+            pinfo.update(data.to_dict('list'))
+            pinfo = remove_unwanted(pinfo)
+            pinfo = self._rename_to_mpl(pinfo)
+            out.append(pinfo)
+
         return out
 
-
-    def sort_by_x(self, pinfo):
+    def _rename_to_mpl(self, pinfo):
         """
-        Sort the lists in pinfo according to pinfo['x']
-        This function is useful for geom's that expect
-        the x-values to come in sorted order
+        Rename the keys in pinfo from ggplot aesthetic names
+        to matplotlib plot function parameter names
         """
-        # Remove list types from pinfo
-        _d = {}
-        for k in list(pinfo.keys()):
-            if not is_string(pinfo[k]) and iterable(pinfo[k]):
-                _d[k] = pinfo.pop(k)
-
-        # Sort numerically if all items can be cast
-        try:
-            x = list(map(np.float, _d['x']))
-        except (ValueError, TypeError):
-            x = _d['x']
-
-        # Make sure we don't try to sort something unsortable
-        try:
-            idx = np.argsort(x)
-            # Put sorted lists back in pinfo
-            for key in _d:
-                pinfo[key] = [_d[key][i] for i in idx]
-        except:
-            pass
+        # use a separate dict to prevent cyclic overwrites
+        renamed = {}
+        for old, new in self._aes_renames.items():
+            try:
+                renamed[new] = pinfo.pop(old)
+            except KeyError:
+                pass
+        pinfo.update(renamed)
         return pinfo
-

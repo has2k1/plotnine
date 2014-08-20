@@ -3,8 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 
 from copy import deepcopy
 
-import pandas as pd
-
 from .layouts import layout_wrap
 from .locate import locate_wrap
 
@@ -42,6 +40,8 @@ class facet_wrap(object):
         layout['AXIS_X'] = True if self.free['x'] else layout['ROW'] == nrow
         layout['AXIS_y'] = True if self.free['y'] else layout['COL'] == 1
 
+        self.nrow = nrow
+        self.ncol = layout['COL'].max()
         return layout
 
     def map_layout(self, layout, data, plot_data):
