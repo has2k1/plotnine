@@ -136,8 +136,8 @@ class ggplot(object):
             data, panel, plot = self.plot_build()
             fig, axs = plt.subplots(plot.facet.nrow,
                                     plot.facet.ncol,
-                                    sharex=(not plot.facet.free['x']),
-                                    sharey=(not plot.facet.free['y']))
+                                    sharex=False,
+                                    sharey=False)
             # TODO: spaces should depend on the axis horizontal
             # and vertical lengths since the values are in
             # transAxes dimensions
