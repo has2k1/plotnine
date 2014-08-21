@@ -72,7 +72,7 @@ class theme(object):
             self.element_themes.append(element_target_factory(target_name,
                                                               theme_element))
 
-    def apply_theme(self, ax):
+    def apply_theme(self, ax, params):
         """apply_theme will be called with an axes object after plot has completed.
 
         Complete themes should implement this method if post plot themeing is
@@ -106,7 +106,7 @@ class theme(object):
             rcParams.update(rcparams)
         return rcParams
 
-    def post_plot_callback(self, ax):
+    def post_plot_callback(self, ax, *args, **kwargs):
         """Apply this theme, then apply additional modifications in order.
 
         This method should not be overridden. Subclasses should override
@@ -114,7 +114,7 @@ class theme(object):
         a theme that includes partial themes will be themed properly.
 
         """
-        self.apply_theme(ax)
+        self.apply_theme(ax, *args, **kwargs)
         # does this need to be ordered first?
         for element_theme in self.element_themes:
             element_theme.post_plot_callback(ax)

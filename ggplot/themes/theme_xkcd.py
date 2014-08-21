@@ -31,6 +31,7 @@ class theme_xkcd(theme):
             pass
         result = _empty()
         result.__class__ = self.__class__
+        result.__dict__['element_themes'] = deepcopy(self.element_themes)
         result.__dict__["_rcParams"] = {}
         for k, v in self._rcParams.items():
             try:
@@ -42,4 +43,24 @@ class theme_xkcd(theme):
                 # In particular, XKCD uses matplotlib.patheffects.withStrok
                 # -gdowding
                 result.__dict__["_rcParams"][k] = copy(v)
+
         return result
+
+    def apply_theme(self, ax, params):
+        '''Styles x,y axes to appear like ggplot2
+        Must be called after all plot and axis manipulation operations have
+        been carried out (needs to know final tick spacing)
+
+        From: https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
+        '''
+        #Restyle the tick lines
+        for line in ax.get_xticklines() + ax.get_yticklines():
+            line.set_markersize(5)
+            line.set_markeredgewidth(1.4)
+
+        # set parameters
+        for att, val in params['xaxis']:
+            getattr(ax.xaxis, att)(val)
+
+        for att, val in params['yaxis']:
+            getattr(ax.yaxis, att)(val)

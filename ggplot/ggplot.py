@@ -138,6 +138,9 @@ class ggplot(object):
                                     plot.facet.ncol,
                                     sharex=(not plot.facet.free['x']),
                                     sharey=(not plot.facet.free['y']))
+            # TODO: spaces should depend on the axis horizontal
+            # and vertical lengths since the values are in
+            # transAxes dimensions
             plt.subplots_adjust(wspace=.05, hspace=.05)
             axs = np.atleast_2d(axs)
             axs = [ax for row in axs for ax in row]
@@ -153,15 +156,16 @@ class ggplot(object):
                     bool_idx = (d['PANEL'] == pnl['PANEL'])
                     l.plot(d[bool_idx], xy_scales, ax)
 
-                # set axis limits
+                # panel limits
                 ax.set_xlim(panel.ranges[pnl['PANEL'] - 1]['x'])
                 ax.set_ylim(panel.ranges[pnl['PANEL'] - 1]['y'])
+
+                # xaxis, yaxis stuff
+                set_axis_attributes(plot, pnl, ax)
 
                 # draw facet labels
                 if isinstance(plot.facet, facet_grid):
                     draw_facet_label(plot, pnl, ax, fig)
-
-                self.theme.post_plot_callback(ax)
 
             # Draw legend
             # print(panel.layout)
@@ -291,13 +295,30 @@ class ggplot(object):
         return data, panel, plot
 
 
+def set_axis_attributes(plot, pnl, ax):
+    # Figure out the parameters that should be set
+    # in the theme
+    params = {'xaxis': [], 'yaxis': []}
+
+    if pnl['ROW'] == plot.facet.nrow:
+        params['xaxis'] += [('set_ticks_position', 'bottom')]
+    else:
+        params['xaxis'] += [('set_ticks_position', 'none'),
+                            ('set_ticklabels', [])]
+
+    if pnl['COL'] == 1:
+        params['yaxis'] += [('set_ticks_position', 'left')]
+    else:
+        params['yaxis'] += [('set_ticks_position', 'none'),
+                            ('set_ticklabels', [])]
+
+    plot.theme.post_plot_callback(ax, params)
+
+
+# Should probably be in themes
 def draw_facet_label(plot, pnl, ax, fig):
     if pnl['ROW'] != 1 and pnl['COL'] != plot.facet.ncol:
         return
-
-    # NOTE: When saveing an image the fig.dpi value is
-    # that of the screen !!! The labels should be pixel
-    # perfect when graph is plotted to the screen.
 
     # The facet labels are placed onto the figure using
     # transAxes dimensions. The line height and line
@@ -322,7 +343,7 @@ def draw_facet_label(plot, pnl, ax, fig):
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
                     height=h,
-                    width=1-oneh,
+                    width=1,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
                 fontdict=dict(verticalalignment="bottom",
@@ -334,10 +355,10 @@ def draw_facet_label(plot, pnl, ax, fig):
         facet_var = plot.facet.rows[0]
         ax.text(1+oneh, 0.5, pnl[facet_var],
                 bbox=dict(
-                    xy=(1+oneh, 0+onev),
+                    xy=(1+oneh, 0),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
-                    height=1-onev,
+                    height=1,
                     width=w,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
