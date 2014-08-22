@@ -115,7 +115,7 @@ class layer(object):
         env.add_outer_namespace({"factor": factor})
 
         evaled = pd.DataFrame()
-        settings = {}  # for manual settings within aes()
+        settings = False  # Indicate manual settings within aes()
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
@@ -138,19 +138,17 @@ class layer(object):
                                 ae, col, str(type(new_val)), str(e)))
             elif com.is_list_like(col):
                 n = len(col)
-                if n != len(data) or n != 1:
+                if n != len(data) and n != 1:
                     raise GgplotError(
                         "Aesthetics must either be length one, " +
                         "or the same length as the data")
-                settings[ae] = col
+                settings = True
+                evaled[ae] = col
             else:
                 msg = "Do not know how to deal with aesthetic '{}'"
                 raise GgplotError(msg.format(ae))
 
-        evaled.update(settings)
         evaled_aes = aes(**dict((col, col) for col in evaled))
-
-        scales_add_defaults(plot.scales, data, aesthetics)
         scales_add_defaults(plot.scales, evaled, evaled_aes)
 
         if len(data) == 0 and settings:

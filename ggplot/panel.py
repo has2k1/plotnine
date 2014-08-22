@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 
 from .scales.scales import Scales
-from .scales.scale import scale_continuous
-from .utils import match, xy_panel_scales, is_waive
+from .utils import match, xy_panel_scales
+from .utils.exceptions import GgplotError, gg_warning
 
 
 class Panel(object):
@@ -150,29 +150,23 @@ class Panel(object):
         """
         Calculate the x & y ranges for each panel
         """
-        def compute_ranges(pos_scales):
-            lst = []
-            for sc in pos_scales:
-                if sc._limits:
-                    # NOTE: Should transform if/when scale.trans
-                    # is enabled
-                    rng = sc._limits
-                elif is_waive(sc._expand):
-                    if isinstance(sc, scale_continuous):
-                        rng = sc.dimension((0.05, 0))
-                    else:
-                        # discrete scale
-                        rng = sc.dimension((0, 0.6))
-                else:
-                    rng = sc.dimension(sc._expand)
-
-                lst.append(rng)
-
-            return lst
-
         self.ranges = [None] * len(self.layout)
-        x_ranges = compute_ranges(self.x_scales)
-        y_ranges = compute_ranges(self.y_scales)
+        if self.x_scales and self.y_scales:
+            x_ranges = list(map(lambda sc: sc.coord_range(), self.x_scales))
+            y_ranges = list(map(lambda sc: sc.coord_range(), self.y_scales))
+        else:
+            msg = """\
+                Error: Missing a scale
+                If you do not map to the x or y aesthetic, you must
+                add a scale. For example
+                >>> df = pd.DataFrame({'x': [1,2,3]})
+                >>> p = ggplot(aes(x='x'), data=df)
+                >>> p + geom_point(y=[1,2,3])                        # wrong
+                >>> p + geom_point(aes(y=[1,2,3]))                   # correct
+                >>> p + geom_point(y=[1,2,3]) + scale_y_continuous() # correct
+                """
+            gg_warning(msg)
+            raise GgplotError('Missing a scale')
 
         cols = ['PANEL', 'SCALE_X', 'SCALE_Y']
         for p, i, j in self.layout[cols].itertuples(index=False):

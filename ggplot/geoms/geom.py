@@ -107,11 +107,6 @@ class geom(object):
                 raise GgplotError('Cannot recognize argument: %s' % k)
 
         self._cache = {}
-        # When putting together the plot information for the geoms,
-        # we need the aethetics names to be matplotlib compatible.
-        # These are created and stored in self._cache and so would
-        # go stale if users or geoms change geom.manual_aes
-        self._create_aes_with_mpl_names()
 
     def __deepcopy__(self, memo):
         """
@@ -176,7 +171,7 @@ class geom(object):
             pinfo.update(_data)
             self._plot_unit(pinfo, ax)
 
-    def _plot_unit(self, pinfo, ax):
+    def draw(self, pinfo, ax):
         msg = "{} should implement this method."
         raise NotImplementedError(
             msg.format(self.__class__.__name__))
@@ -194,8 +189,6 @@ class geom(object):
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
-        # steal aesthetics info.
-        self._cache['ggplot.mapping'] = deepcopy(gg.mapping)
         # create stat and hand over the parameters it understands
         if not hasattr(self, '_stat'):
             self._stat = self._stat_type()
@@ -254,29 +247,6 @@ class geom(object):
                 raise GgplotError('Cannot recognize aesthetic: %s' % k)
         return _aes, data, kwargs
 
-    def _create_aes_with_mpl_names(self):
-        """
-        Create copies of the manual and default aesthetics
-        with matplotlib compatitble names.
-
-        Uses self._aes_renames, and the results are stored
-        in:
-            self._cache['manual_aes_mpl']
-            self._cache['default_aes_mpl']
-        """
-        def _rename_fn(aes_dict):
-            # to prevent overwrites
-            _d = {}
-            for old, new in self._aes_renames.items():
-                if old in aes_dict:
-                    _d[new] = aes_dict.pop(old)
-            aes_dict.update(_d)
-
-        self._cache['manual_aes_mpl'] = deepcopy(self.manual_aes)
-        self._cache['default_aes_mpl'] = deepcopy(self.DEFAULT_AES)
-        _rename_fn(self._cache['manual_aes_mpl'])
-        _rename_fn(self._cache['default_aes_mpl'])
-
     def _make_pinfos(self, data):
         """
         Make plot information
@@ -326,12 +296,14 @@ class geom(object):
                     pinfo[ae] = pinfo[ae][0]
 
                 pinfo = remove_unwanted(pinfo)
+                pinfo.update(self.manual_aes)
                 pinfo = self._rename_to_mpl(pinfo)
                 out.append(pinfo)
         else:
             pinfo = deepcopy(self.DEFAULT_AES)
             pinfo.update(data.to_dict('list'))
             pinfo = remove_unwanted(pinfo)
+            pinfo.update(self.manual_aes)
             pinfo = self._rename_to_mpl(pinfo)
             out.append(pinfo)
 

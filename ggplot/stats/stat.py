@@ -96,7 +96,7 @@ class stat(object):
             return res
 
         # Calculate all the stats
-        stats = data.groupby('group', ).apply(fn)
+        stats = data.groupby('group').apply(fn)
         stats.reset_index(drop=True, inplace=True)
 
         # Combine with original data
@@ -106,7 +106,6 @@ class stat(object):
 
         # Instead of a more expensive join, make sure the order is
         # fine and concat. This is really not expected to fail
-        # print(stats)
         assert(all(
             stats['group'].as_matrix() == unique['group'].as_matrix()))
         if len(stats) == len(unique):

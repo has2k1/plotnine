@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import pandas as pd
 
-from ..utils import pop
+from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
@@ -28,7 +28,7 @@ class stat_abline(stat):
         if hasattr(slope, '__call__'):
             if x is None or y is None:
                 raise GgplotError(
-                    'To compute the slope, x & y aesthetics are needed')
+                    'To compute the slope, map to the x & y aesthetics')
             try:
                 slope = slope(x, y)
             except TypeError as err:
@@ -37,25 +37,21 @@ class stat_abline(stat):
         if hasattr(intercept, '__call__'):
             if x is None or y is None:
                 raise GgplotError(
-                    'To compute the intercept, x & y aesthetics are needed')
+                    'To compute the slope, map to the x & y aesthetics')
             try:
                 intercept = intercept(x, y)
             except TypeError as err:
                 raise GgplotError(*err.args)
 
-        try:
-            n = len(slope)
-        except TypeError:
-            n = 1
+        slope = make_iterable(slope)
+        intercept = make_iterable(intercept)
 
-        try:
-            _n = len(intercept)
-        except TypeError:
-            _n = 1
-
+        n, _n = len(slope), len(intercept)
         if n != _n:
             raise GgplotError(
                 'Specified {} slopes but {} intercepts'.format(n, _n))
 
-        new_data = pd.DataFrame({'slope': slope, 'intercept': intercept})
-        return new_data
+        data = data.iloc[range(len(intercept)), :]
+        data['intercept'] = intercept
+        data['slope'] = slope
+        return data

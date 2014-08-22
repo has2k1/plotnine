@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import pandas as pd
 
-from ..utils import pop
+from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
@@ -22,13 +21,15 @@ class stat_vline(stat):
         if hasattr(xintercept, '__call__'):
             if x is None:
                 raise GgplotError(
-                    'To compute the intercept, x aesthetic is needed')
+                    'To compute the intercept, map to the x aesthetic')
             try:
                 xintercept = xintercept(x)
             except TypeError as err:
                 raise GgplotError(*err.args)
 
-        new_data = pd.DataFrame({'xintercept': xintercept})
-        new_data['x'] = new_data['xintercept']
-        new_data['xend'] = new_data['xintercept']
-        return new_data
+        xintercept = make_iterable(xintercept)
+        data = data.iloc[range(len(xintercept)), :]
+        data['xintercept'] = xintercept
+        data['x'] = data['xintercept']
+        data['xend'] = data['xintercept']
+        return data

@@ -1,11 +1,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 from .geom import geom
+from ..utils import hex_to_rgba
 
 
 class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': None, 'x': None,
+                   'size': 1.0, 'alpha': 1, 'x': None,
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
@@ -14,30 +16,31 @@ class geom_vline(geom):
     layer_params = {'inherit_aes': False}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _units = {'alpha'}
 
-    def _plot_unit(self, pinfo, ax):
-        del pinfo['x']
-        ymin = pinfo.pop('ymin')
-        if ymin is None:
-            ymin, _ = ax.get_ylim()
+    def draw_groups(self, data, scales, ax, **kwargs):
+        """
+        Plot all groups
+        """
+        pinfos = self._make_pinfos(data)
+        for pinfo in pinfos:
+            self.draw(pinfo, scales, ax, **kwargs)
 
-        ymax = pinfo.pop('ymax')
-        if ymax is None:
-            _, ymax = ax.get_ylim()
-
+    def draw(self, pinfo, scales, ax, **kwargs):
+        try:
+            del pinfo['x']
+        except KeyError:
+            pass
         x = pinfo.pop('xintercept')
-        # TODO: if x is not the same length as
-        # the other aesthetics, default aesthetics
-        # should be for the array-like aesthetics
-        # problem illustrated by:
-        # gg = ggplot(aes(x="x", y="y", shape="cat2",
-        #             color="cat"), data=df)
-        # gg + geom_point() + geom_vline(xintercept=40)
-        # vertical line should be black
-        #
-        # This is probably a good test for handling
-        # aesthetics properly along the whole pipeline.
-        # The problem should clear up when that is the case,
-        # and the above code should be added as a test case
+        ymin = pinfo.pop('ymin')
+        ymax = pinfo.pop('ymax')
+
+        range_y = scales['y'].coord_range()
+        if ymin is None:
+            ymin = range_y[0]
+
+        if ymax is None:
+            ymax = range_y[1]
+
+        alpha = pinfo.pop('alpha')
+        pinfo['color'] = hex_to_rgba(pinfo['color'], alpha)
         ax.vlines(x, ymin, ymax, **pinfo)

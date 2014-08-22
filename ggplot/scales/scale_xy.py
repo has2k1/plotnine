@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 
-from ..utils import identity, match
+from ..utils import identity, match, is_waive
 from ..utils import discrete_dtypes, continuous_dtypes
 from ..utils.exceptions import GgplotError
 from .scale import scale_discrete, scale_continuous
@@ -74,6 +74,21 @@ class scale_position_discrete(scale_discrete):
             GgplotError(
                 'Lost, do not know what the limits are.')
 
+    def coord_range(self):
+        """
+        Return the range for the coordinate axis
+        """
+        if self._limits:
+            # NOTE: Should transform if/when selfale.trans
+            # is enabled
+            rng = self._limits
+        elif is_waive(self._expand):
+            rng = self.dimension((0, 0.6))
+        else:
+            rng = self.dimension(self._expand)
+
+        return rng
+
 
 # Discrete position scales should be able to make use of the train
 # method bound to continuous scales
@@ -96,6 +111,21 @@ class scale_position_continuous(scale_continuous):
         scaled = self.oob(series, limits)
         scaled[pd.isnull(scaled)] = self.na_value
         return scaled
+
+    def coord_range(self):
+        """
+        Return the range for the coordinate axis
+        """
+        if self._limits:
+            # NOTE: Should transform if/when selfale.trans
+            # is enabled
+            rng = self._limits
+        elif is_waive(self._expand):
+            rng = self.dimension((0.05, 0))
+        else:
+            rng = self.dimension(self._expand)
+
+        return rng
 
 
 class scale_x_discrete(scale_position_discrete):

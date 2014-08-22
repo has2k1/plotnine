@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import pandas as pd
 
-from ..utils import pop
+from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
@@ -29,7 +28,9 @@ class stat_hline(stat):
             except TypeError as err:
                 raise GgplotError(*err.args)
 
-        new_data = pd.DataFrame({'yintercept': yintercept})
-        new_data['y'] = new_data['yintercept']
-        new_data['yend'] = new_data['yintercept']
-        return new_data
+        yintercept = make_iterable(yintercept)
+        data = data.iloc[range(len(yintercept)), :]
+        data['yintercept'] = yintercept
+        data['y'] = data['yintercept']
+        data['yend'] = data['yintercept']
+        return data

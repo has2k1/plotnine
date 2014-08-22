@@ -7,6 +7,7 @@ import pandas as pd
 import pandas.core.common as com
 
 from ..utils import discrete_dtypes, continuous_dtypes
+from ..utils import is_string
 from ..utils import gg_import
 from ..utils.exceptions import gg_warning
 
@@ -187,11 +188,9 @@ def scales_add_defaults(scales, data, aesthetics):
     if not new_aesthetics:
         return
 
-    ae_cols = [(ae, aesthetics[ae]) for ae in new_aesthetics
-               if aesthetics[ae] in data.columns]
-
-    for ae, col in ae_cols:
-        _type = scale_type(data[col])
+    ae_cols = new_aesthetics & set(data.columns)
+    for ae in ae_cols:
+        _type = scale_type(data[ae])
         scale_name = 'scale_{}_{}'.format(ae, _type)
         scale_f = gg_import(scale_name)
         if scale_f is None:

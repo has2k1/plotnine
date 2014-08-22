@@ -12,7 +12,7 @@ from .geom import geom
 # x and y aesthetics must be mapped
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'alpha': None, 'size': 1.0, 'x': None,
+                   'alpha': 1, 'size': 1.0, 'x': None,
                    'y': None}
     REQUIRED_AES = {'slope', 'intercept'}
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
@@ -21,9 +21,18 @@ class geom_abline(geom):
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
 
-    def _plot_unit(self, pinfo, ax):
+    def draw_groups(self, data, scales, ax, **kwargs):
+        """
+        Plot all groups
+        """
+        pinfos = self._make_pinfos(data)
+        for pinfo in pinfos:
+            self.draw(pinfo, scales, ax, **kwargs)
+
+    def draw(self, pinfo, scales, ax, **kwargs):
         slope = pinfo['slope']
         intercept = pinfo['intercept']
+        range_x = scales['x'].coord_range()
 
         n = len(slope)
 
@@ -32,11 +41,8 @@ class geom_abline(geom):
         alpha = make_iterable_ntimes(pinfo['alpha'], n)
         color = make_iterable_ntimes(pinfo['color'], n)
 
-        ax.set_autoscale_on(False)
-        xlim = ax.get_xlim()
-
-        _x = np.array([np.min(xlim), np.max(xlim)])
-        for i in range(len(slope)):
+        _x = np.array(range_x)
+        for i in range(n):
             _y = _x * slope[i] + intercept[i]
             ax.plot(_x, _y,
                     linewidth=linewidth[i],

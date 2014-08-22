@@ -124,7 +124,7 @@ class scale_discrete(scale):
             if drop:
                 rng = [x for x in rng if x in set(series)]
         else:
-            rng = list(series.drop_duplicates().sort())
+            rng = list(series.drop_duplicates().sort(inplace=False))
 
         # update range
         self.range += [x for x in rng if not (x in set(self.range))]
