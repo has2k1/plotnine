@@ -5,6 +5,7 @@ import six
 from copy import deepcopy
 
 import pandas as pd
+import matplotlib.cbook as cbook
 import pandas.core.common as com
 from patsy.eval import EvalEnvironment
 
@@ -144,6 +145,8 @@ class layer(object):
                         "or the same length as the data")
                 settings = True
                 evaled[ae] = col
+            elif not cbook.iterable(col) and cbook.is_numlike(col):
+                evaled[ae] = col
             else:
                 msg = "Do not know how to deal with aesthetic '{}'"
                 raise GgplotError(msg.format(ae))
@@ -236,7 +239,7 @@ class layer(object):
         """
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
-            data.columns,
+            set(data.columns) | set(self.geom.manual_aes),
             self.geom.__class__.__name__)
         self.geom.draw_groups(data, scales, ax)
 

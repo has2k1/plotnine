@@ -13,6 +13,7 @@ mtcars = pd.read_csv(os.path.join(_ROOT, "mtcars.csv"))
 meat = pd.read_csv(os.path.join(_ROOT, "meat.csv"), parse_dates=[0])
 movies = pd.read_csv(os.path.join(_ROOT, "movies.csv"))
 pageviews = pd.read_csv(os.path.join(_ROOT, "pageviews.csv"), parse_dates=[0])
+huron = pd.read_csv(os.path.join(_ROOT, "huron.csv"))
 
 # add factors
 diamonds['cut'] = pd.Categorical(diamonds['cut'])

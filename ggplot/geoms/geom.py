@@ -138,7 +138,7 @@ class geom(object):
         method and avoid the groupby.
         """
         for gdata in data.groupby('group'):
-            pinfos = self.make_pinfos(data)
+            pinfos = self._make_pinfos(data)
             for pinfo in pinfos:
                 self.draw(pinfo, scales, ax, **kwargs)
 
@@ -275,12 +275,22 @@ class geom(object):
         # and renamed -- ready for matplotlib
 
         # self._units as ggplot aesthetics
-        units = [col for col in set(data.columns) & set(self._aes_renames)
-                 if self._aes_renames[col] in self._units]
+        units = []
+        for col in data.columns:
+            try:
+                flag = self._aes_renames[col] in self._units
+            except KeyError:
+                flag = col in self._units
+            if flag:
+                units.append(col)
 
         # ggplot plot building stuff that is not needed
-        # by to draw the plot
-        wanted = set(self.DEFAULT_AES) | self.REQUIRED_AES
+        # by to draw the plot. Look at all the superclasses
+        # other than 'object'
+        required = set()
+        for klass in type(self).__mro__[:-1]:
+            required.update(klass.REQUIRED_AES)
+        wanted = set(self.DEFAULT_AES) | required
 
         def remove_unwanted(d):
             for key in set(d) - wanted:
@@ -306,7 +316,6 @@ class geom(object):
             pinfo.update(self.manual_aes)
             pinfo = self._rename_to_mpl(pinfo)
             out.append(pinfo)
-
         return out
 
     def _rename_to_mpl(self, pinfo):

@@ -22,7 +22,7 @@ class scale_alpha_discrete(scale_discrete):
     aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1)):
-        self.range = range
+        self._alpha_range = range
 
     def palette(self, n):
-        return np.linspace(self.range[0], self.range[1], n)
+        return np.linspace(self._alpha_range[0], self._alpha_range[1], n)

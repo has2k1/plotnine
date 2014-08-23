@@ -106,6 +106,7 @@ class ggplot(object):
         return result
 
     def draw(self):
+        plt.close("all")
         # Adding rc=self.rcParams does not validate/parses the params
         # which then throws an error during plotting!
         with mpl.rc_context():

@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import pandas.core.common as com
 
+from ..components.aes import aes_to_scale
 from ..utils import discrete_dtypes, continuous_dtypes
-from ..utils import is_string
 from ..utils import gg_import
 from ..utils.exceptions import gg_warning
 
@@ -185,13 +185,20 @@ def scales_add_defaults(scales, data, aesthetics):
 
     # aesthetics that do not have scales present
     new_aesthetics = set(aesthetics.keys()) - aws
+
     if not new_aesthetics:
         return
 
     ae_cols = new_aesthetics & set(data.columns)
+    seen = set()
     for ae in ae_cols:
+        # add the cardinal scale only once e.g x for xmin and xmax
+        scale_var = aes_to_scale(ae)
+        if scale_var in seen:
+            continue
+        seen.add(scale_var)
         _type = scale_type(data[ae])
-        scale_name = 'scale_{}_{}'.format(ae, _type)
+        scale_name = 'scale_{}_{}'.format(scale_var, _type)
         scale_f = gg_import(scale_name)
         if scale_f is None:
             # Skip aesthetics with no scales (e.g. group, order, etc)

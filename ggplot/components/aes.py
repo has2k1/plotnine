@@ -99,3 +99,14 @@ def is_calculated_aes(aesthetics):
 
 def strip_dots(ae):
     return ae.strip('..')
+
+
+def aes_to_scale(var):
+    """
+    Look up the scale that should be used for a given aesthetic
+    """
+    if var in {'x', 'xmin', 'xmax', 'xend', 'xintercept'}:
+        var = 'x'
+    elif var in {'y', 'ymin', 'ymax', 'yend', 'yintercept'}:
+        var = 'y'
+    return var

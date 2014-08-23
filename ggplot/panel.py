@@ -166,6 +166,7 @@ class Panel(object):
                 >>> p + geom_point(y=[1,2,3]) + scale_y_continuous() # correct
                 """
             gg_warning(msg)
+            # print(self.x_scales, self.y_scales)
             raise GgplotError('Missing a scale')
 
         cols = ['PANEL', 'SCALE_X', 'SCALE_Y']
