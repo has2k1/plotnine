@@ -97,6 +97,46 @@ def rescale(x, to=(0, 1), from_=None):
     return np.interp(x, from_, to)
 
 
+def rescale_mid(x, to=(0, 1), from_=None, mid=0):
+    """
+    Rescale numeric vector to have specified minimum, midpoint,
+    and maximum.
+
+    Parameters
+    ----------
+    x : ndarray | numeric
+        1D vector of values to manipulate.
+    to : tuple
+        output range (numeric vector of length two)
+    from_ : tuple
+        input range (numeric vector of length two).
+        If not given, is calculated from the range of x
+    mid	: numeric
+        mid-point of input range
+    """
+    array_like = True
+
+    try:
+        len(x)
+    except TypeError:
+        array_like = False
+        x = [x]
+
+    x = np.asarray(x)
+    if not from_:
+        from_ = np.array([np.min(x), np.max(x)])
+
+    if (zero_range(from_) or zero_range(to)):
+        out = np.repeat(np.mean(to), len(x))
+    else:
+        extent = 2 * np.max(np.abs(from_ - mid))
+        out = (x - mid) / extent * np.diff(to) + np.mean(to)
+
+    if not array_like:
+        out = out[0]
+    return out
+
+
 def censor(x, range=(0, 1), only_finite=True):
     """
     Convert any values outside of range to np.NaN

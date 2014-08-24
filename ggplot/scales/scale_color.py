@@ -12,6 +12,7 @@ import brewer2mpl
 
 from ..utils import waiver, identity
 from ..utils.color import ColorHCL
+from .utils import rescale_mid
 from .scale import scale_discrete, scale_continuous
 
 _TPL_MAX_PALETTE_COLORS = """Warning message:
@@ -199,13 +200,19 @@ class scale_color_gradient2(scale_color_gradient):
     guide = 'colorbar'
 
     def __init__(self, low='#832424', mid='#FFFFFF',
-                 high='#3A3A98', space='Lab'):
+                 high='#3A3A98', space='Lab', midpoint=0):
         """
         Create colormap that will be used by the palette
         """
         color_spectrum = [low, mid, high]
         self.colormap = LinearSegmentedColormap.from_list(
             'gradient2', color_spectrum)
+
+        # All rescale functions should have the same signature
+        def _rescale_mid(*args, **kwargs):
+            return rescale_mid(*args,  mid=midpoint, **kwargs)
+
+        self.rescaler = _rescale_mid
 
 
 class scale_fill_gradient2(scale_color_gradient2):
