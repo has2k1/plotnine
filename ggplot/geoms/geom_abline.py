@@ -25,7 +25,7 @@ class geom_abline(geom):
         """
         Plot all groups
         """
-        pinfos = self._make_pinfos(data)
+        pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 
@@ -33,6 +33,7 @@ class geom_abline(geom):
         slope = pinfo['slope']
         intercept = pinfo['intercept']
         range_x = scales['x'].coord_range()
+        zorder = pinfo['zorder']
 
         n = len(slope)
 
@@ -48,4 +49,5 @@ class geom_abline(geom):
                     linewidth=linewidth[i],
                     linestyle=linestyle[i],
                     alpha=alpha[i],
-                    color=color[i])
+                    color=color[i],
+                    zorder=zorder)

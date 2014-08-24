@@ -21,7 +21,7 @@ class geom_vline(geom):
         """
         Plot all groups
         """
-        pinfos = self._make_pinfos(data)
+        pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 

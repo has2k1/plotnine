@@ -233,7 +233,7 @@ class layer(object):
         data = data.groupby('PANEL').apply(fn)
         return data
 
-    def plot(self, data, scales, ax):
+    def plot(self, data, scales, ax, zorder):
         """
         Plot layer
         """
@@ -241,7 +241,7 @@ class layer(object):
             self.geom.REQUIRED_AES,
             set(data.columns) | set(self.geom.manual_aes),
             self.geom.__class__.__name__)
-        self.geom.draw_groups(data, scales, ax)
+        self.geom.draw_groups(data, scales, ax, zorder=zorder)
 
 
 def add_group(data):

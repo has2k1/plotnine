@@ -3,12 +3,66 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
                         
-import matplotlib.pyplot as plt
 import json
 import os
 import sys
 
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import six
+
+from .exceptions import gg_warning, gg_reset
+
+
+if not hasattr(mpl, 'rc_context'):
+    from .utils import _rc_context
+    mpl.rc_context = _rc_context
+
+
+class gg_context(object):
+    def __init__(self, fname=None, theme=None):
+        self.fname = fname
+        self.theme = theme
+
+    def __enter__(self):
+        # Outer matplotlib context
+        try:
+            mpl.rc_context().__enter__()
+        except AttributeError:
+            # Workaround for matplotlib 1.1.1 not having a rc_context
+            self._rcparams = mpl.rcParams.copy()
+            if self.fname:
+                mpl.rcfile(self.fname)
+
+        # Modify
+        if self.theme:
+            # Use a throw away rcParams, so subsequent plots
+            # will not have any residual from this plot
+            rcParams = self.theme.get_rcParams()
+            for key in six.iterkeys(rcParams):
+                val = rcParams[key]
+                # there is a bug in matplotlib which does not allow
+                # None directly
+                # https://github.com/matplotlib/matplotlib/issues/2543
+                try:
+                    if key == 'text.dvipnghack' and val is None:
+                        val = "none"
+                    mpl.rcParams[key] = val
+                except Exception as e:
+                    msg = """\
+                        Setting "mpl.rcParams['{}']={}" \
+                        raised an Exception: {}"""
+                    gg_warning(msg.format(key, val, e))
+        mpl.interactive(False)
+
+    def __exit__(self, type, value, tb):
+        try:
+            mpl.rc_context().__exit__(type, value, tb)
+        except AttributeError:
+            mpl.rcParams.update(self._rcparams)
+
+        gg_reset()
+
 
 # API-docs from ggplot2: GPL-2 licensed
 

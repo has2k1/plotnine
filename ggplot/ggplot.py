@@ -1,44 +1,35 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import sys
+from copy import deepcopy
 
 import pandas as pd
 import pandas.core.common as com
 import numpy as np
-
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from patsy.eval import EvalEnvironment
 
-from .components import aes
 from .components import colors, shapes
 from .components.legend import add_legend
-from .geoms import *
-from .scales import *
-from .facets import *
+# from .geoms import *
+# from .scales import *
+from .facets import facet_null, facet_grid
 from .themes.theme_gray import theme_gray
 from .utils.exceptions import GgplotError, gg_warning
+from .utils.ggutils import gg_context
 from .panel import Panel
 from .layer import add_group
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 
-import datetime
-import six
 
 __all__ = ["ggplot"]
 __all__ = [str(u) for u in __all__]
 
-import sys
-from copy import deepcopy
-
 # Show plots if in interactive mode
 if sys.flags.interactive:
     plt.ion()
-
-# Workaround for matplotlib 1.1.1 not having a rc_context
-if not hasattr(mpl, 'rc_context'):
-    from .utils import _rc_context
-    mpl.rc_context = _rc_context
 
 
 class ggplot(object):
@@ -107,33 +98,7 @@ class ggplot(object):
 
     def draw(self):
         plt.close("all")
-        # Adding rc=self.rcParams does not validate/parses the params
-        # which then throws an error during plotting!
-        with mpl.rc_context():
-            # Use a throw away rcParams, so subsequent plots will not have any
-            # residual from this plot
-            # @todo: change it to something more like
-            # rcParams = theme.get_rcParams()
-            rcParams = self.theme.get_rcParams()
-            for key in six.iterkeys(rcParams):
-                val = rcParams[key]
-                # there is a bug in matplotlib which does not allow
-                # None directly
-                # https://github.com/matplotlib/matplotlib/issues/2543
-                try:
-                    if key == 'text.dvipnghack' and val is None:
-                        val = "none"
-                    mpl.rcParams[key] = val
-                except Exception as e:
-                    msg = """\
-                        Setting "mpl.rcParams['{}']={}" \
-                        raised an Exception: {}"""
-                    gg_warning(msg.format(key, val, e))
-            # draw is not allowed to show a plot, so we can use to
-            # result for ggsave. This sets a rcparam, so we don't
-            # have to undo it after plotting
-            mpl.interactive(False)
-
+        with gg_context(theme=self.theme):
             data, panel, plot = self.plot_build()
             fig, axs = plt.subplots(plot.facet.nrow,
                                     plot.facet.ncol,
@@ -153,9 +118,10 @@ class ggplot(object):
                              'y': panel.y_scales[pnl['SCALE_Y'] - 1]}
 
                 # Plot all data for each layer
-                for l, d in zip(plot.layers, data):
+                for zorder, (l, d) in enumerate(
+                        zip(plot.layers, data), start=1):
                     bool_idx = (d['PANEL'] == pnl['PANEL'])
-                    l.plot(d[bool_idx], xy_scales, ax)
+                    l.plot(d[bool_idx], xy_scales, ax, zorder)
 
                 # panel limits
                 ax.set_xlim(panel.ranges[pnl['PANEL'] - 1]['x'])

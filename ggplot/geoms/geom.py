@@ -138,38 +138,9 @@ class geom(object):
         method and avoid the groupby.
         """
         for gdata in data.groupby('group'):
-            pinfos = self._make_pinfos(data)
+            pinfos = self._make_pinfos(data, kwargs)
             for pinfo in pinfos:
                 self.draw(pinfo, scales, ax, **kwargs)
-
-    def plot_layer(self, data, ax):
-        # Any aesthetic to be overridden by the manual aesthetics
-        # should not affect the statistics and the unit grouping
-        # of the data
-        _cols = set(data.columns) & set(self.manual_aes)
-        data = data.drop(_cols, axis=1)
-        data = self._calculate_stats(data)
-        self._verify_aesthetics(data)
-        _needed = self.valid_aes | self._extra_requires
-        data = data[list(set(data.columns) & _needed)]
-
-        # aesthetic precedence
-        # geom.manual_aes > geom.aes > ggplot.aes (part of data)
-        # NOTE: currently geom.aes is not handled. This may be
-        # a bad place to do it -- may mess up faceting or just
-        # inefficient. Probably in ggplot or layer.
-        data = data.rename(columns=self._aes_renames)
-        units = self._units & set(data.columns)
-
-        # Create plot information that observes the aesthetic precedence
-        #   - (grouped data + manual aesthics)
-        #   - modify previous using statistic
-        #   - previous overwrites the default aesthetics
-        for _data in self._get_unit_grouped_data(data, units):
-            _data.update(self._cache['manual_aes_mpl']) # should happen before the grouping
-            pinfo = deepcopy(self._cache['default_aes_mpl'])
-            pinfo.update(_data)
-            self._plot_unit(pinfo, ax)
 
     def draw(self, pinfo, ax):
         msg = "{} should implement this method."
@@ -247,7 +218,7 @@ class geom(object):
                 raise GgplotError('Cannot recognize aesthetic: %s' % k)
         return _aes, data, kwargs
 
-    def _make_pinfos(self, data):
+    def _make_pinfos(self, data, kwargs):
         """
         Make plot information
 
@@ -258,6 +229,8 @@ class geom(object):
         ----------
         data : dataframe
             The data to be split into groups
+        kwargs : dict
+            kwargs passed to the draw or draw_groups methods
 
         Returns
         -------
@@ -298,6 +271,19 @@ class geom(object):
             return d
 
         out = []
+
+        def prep_and_append(pinfo):
+            """
+            After data has been converted to a dict of lists
+            prepare it for ploting and append it the output
+            list
+            """
+            pinfo = remove_unwanted(pinfo)
+            pinfo.update(self.manual_aes)
+            pinfo = self._rename_to_mpl(pinfo)
+            pinfo['zorder'] = kwargs['zorder']
+            out.append(pinfo)
+
         if units:
             for name, _data in data.groupby(units):
                 pinfo = deepcopy(self.DEFAULT_AES)
@@ -305,17 +291,11 @@ class geom(object):
                 for ae in units:
                     pinfo[ae] = pinfo[ae][0]
 
-                pinfo = remove_unwanted(pinfo)
-                pinfo.update(self.manual_aes)
-                pinfo = self._rename_to_mpl(pinfo)
-                out.append(pinfo)
+                prep_and_append(pinfo)
         else:
             pinfo = deepcopy(self.DEFAULT_AES)
             pinfo.update(data.to_dict('list'))
-            pinfo = remove_unwanted(pinfo)
-            pinfo.update(self.manual_aes)
-            pinfo = self._rename_to_mpl(pinfo)
-            out.append(pinfo)
+            prep_and_append(pinfo)
         return out
 
     def _rename_to_mpl(self, pinfo):

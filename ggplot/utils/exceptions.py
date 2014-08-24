@@ -16,6 +16,19 @@ class GgplotError(Exception):
         return repr(self.message)
 
 
+_printed_warnings = set()
+
+
 def gg_warning(text):
-    sys.stderr.write(
-        textwrap.dedent(text))
+    if not (text in _printed_warnings):
+        _printed_warnings.add(text)
+        sys.stderr.write(
+            textwrap.dedent(text))
+
+
+def gg_reset():
+    """
+    Cleanup after creating a plot
+    """
+    global _printed_warnings
+    _printed_warnings = set()
