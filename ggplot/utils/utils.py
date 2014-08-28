@@ -131,6 +131,8 @@ def make_iterable_ntimes(val, n):
 
 
 _waiver_ = object()
+
+
 def waiver():
     """
     Return an object to imply 'default'.

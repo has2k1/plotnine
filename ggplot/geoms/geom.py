@@ -137,8 +137,8 @@ class geom(object):
         different groups before plotting should override this
         method and avoid the groupby.
         """
-        for gdata in data.groupby('group'):
-            pinfos = self._make_pinfos(data, kwargs)
+        for _, gdata in data.groupby('group'):
+            pinfos = self._make_pinfos(gdata, kwargs)
             for pinfo in pinfos:
                 self.draw(pinfo, scales, ax, **kwargs)
 

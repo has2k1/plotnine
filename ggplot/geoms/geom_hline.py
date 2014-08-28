@@ -16,7 +16,6 @@ class geom_hline(geom):
     layer_params = {'inherit_aes': False}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _units = {'alpha'}
 
     def draw_groups(self, data, scales, ax, **kwargs):
         """
