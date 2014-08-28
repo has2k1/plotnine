@@ -1,31 +1,30 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from .geom import geom
+from .geom_path import geom_path
 
-# TODO: Needs testing
-class geom_step(geom):
 
-    DEFAULT_AES = {'color': 'black', 'alpha': None, 'linetype': 'solid',
-                   'size': 1.0}
-    REQUIRED_AES = {'x', 'y'}
+# TODO: Add test case
+class geom_step(geom_path):
+
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-            'direction': 'hv'}
+                      'direction': 'hv'}
 
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-    _units = {'alpha', 'color', 'linestyle', 'linewidth'}
-
-    def _plot_unit(self, pinfo, ax):
+    def draw(self, pinfo, scales, ax, **kwargs):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
 
-        x_stepped = []
-        y_stepped = []
-        # TODO: look into this?
-        # seems off and there are no test cases
-        for i in range(len(x) - 1):
-            x_stepped.append(x[i])
-            x_stepped.append(x[i+1])
-            y_stepped.append(y[i])
-            y_stepped.append(y[i])
+        xs = [None] * (2 * (len(x)-1))
+        ys = [None] * (2 * (len(x)-1))
 
-        ax.plot(x_stepped, y_stepped, **pinfo)
+        # create stepped path -- interweave x with
+        # itself and y with itself
+        if self.params['direction'] == 'hv':
+            xs[::2], xs[1::2] = x[:-1], x[1:]
+            ys[::2], ys[1::2] = y[:-1], y[:-1]
+        elif self.params['direction'] == 'vh':
+            xs[::2], xs[1::2] = x[:-1], x[:-1]
+            ys[::2], ys[1::2] = y[:-1], y[1:]
+
+        pinfo['x'] = xs
+        pinfo['y'] = ys
+        geom_path.draw(self, pinfo, scales, ax, **kwargs)
