@@ -17,13 +17,15 @@ class theme_bw(theme_gray):
         self._rcParams["ytick.color"] = "black"
 
     def apply_theme(self, ax, params):
-        '''Styles x,y axes to appear like ggplot2
+        """
+        Styles x,y axes to appear like ggplot2
         Must be called after all plot and axis manipulation operations have
         been carried out (needs to know final tick spacing)
 
-        From: https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
-        '''
-        #Restyle the tick lines
+        From:
+        https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
+        """
+        # Restyle the tick lines
         for line in ax.get_xticklines() + ax.get_yticklines():
             line.set_markersize(5)
             line.set_markeredgewidth(1.4)
@@ -35,7 +37,7 @@ class theme_bw(theme_gray):
         for att, val in params['yaxis']:
             getattr(ax.yaxis, att)(val)
 
-        #Set minor grid lines
+        # Set minor grid lines
         ax.grid(True, 'minor', color='#FAFAFA', linestyle='-', linewidth=0.7)
 
         if not isinstance(ax.xaxis.get_major_locator(), mpl.ticker.LogLocator):

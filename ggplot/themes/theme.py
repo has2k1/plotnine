@@ -24,7 +24,7 @@ class theme(object):
 
 
     Notes
-    ----- 
+    -----
     When subclassing there are really only two methods that need to be
     implemented.
 
@@ -56,12 +56,15 @@ class theme(object):
             only modify the x axis text.
 
         kwargs**: theme_element
-            kwargs are theme_elements based on http://docs.ggplot2.org/current/theme.html.
-            Currently only a subset of the elements are implemented. In addition,
-            Python does not allow using '.' in argument names, so we are using '_'
+            kwargs are theme_elements based on
+            http://docs.ggplot2.org/current/theme.html.
+            Currently only a subset of the elements are implemented.
+            In addition, Python does not allow using '.' in argument
+            names, so we are using '_'
             instead.
 
-            For example, ggplot2 axis.ticks.y will be  axis_ticks_y in Python ggplot.
+            For example, ggplot2 axis.ticks.y will be axis_ticks_y
+            in Python ggplot.
 
         """
         self.element_themes = []

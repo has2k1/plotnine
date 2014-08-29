@@ -1,4 +1,4 @@
-"""provide element targets, that is the elements that are targeted for themeing.
+"""provide element targets, that is the elements targeted for theming.
 
 
 From the ggplot2 documentation the axis.title inherits from text.
@@ -155,8 +155,8 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
     def post_plot_callback(self, ax):
         """Called after a chart has been plotted.
 
-        Subclasses should override this method to customize the plot according to
-        the theme.
+        Subclasses should override this method to customize the plot
+        according to the theme.
 
         Parameters
         ----------
@@ -198,7 +198,7 @@ class legend_title(__element_target):
 
 
 class legend_text(legend_title):
-    #@todo: implement me
+    # @todo: implement me
     pass
 
 
@@ -209,12 +209,12 @@ class plot_title(__element_target):
 
 
 class strip_text_x(__element_target):
-    #@todo implement me
+    # @todo implement me
     pass
 
 
 class strip_text_y(__element_target):
-    #@todo implement me
+    # @todo implement me
     pass
 
 
@@ -223,7 +223,7 @@ class strip_text(strip_text_x, strip_text_y):
 
 
 class title(axis_title, legend_title, plot_title):
-    #@todo: also need to inherit from plot_title and legend_title
+    # @todo: also need to inherit from plot_title and legend_title
     pass
 
 

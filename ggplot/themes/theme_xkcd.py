@@ -47,13 +47,15 @@ class theme_xkcd(theme):
         return result
 
     def apply_theme(self, ax, params):
-        '''Styles x,y axes to appear like ggplot2
+        """"
+        Styles x,y axes to appear like ggplot2
         Must be called after all plot and axis manipulation operations have
         been carried out (needs to know final tick spacing)
 
-        From: https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
-        '''
-        #Restyle the tick lines
+        From:
+        https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
+        """
+        # Restyle the tick lines
         for line in ax.get_xticklines() + ax.get_yticklines():
             line.set_markersize(5)
             line.set_markeredgewidth(1.4)
