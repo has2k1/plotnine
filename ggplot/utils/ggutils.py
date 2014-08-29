@@ -27,14 +27,16 @@ class gg_context(object):
     def __enter__(self):
         # Outer matplotlib context
         try:
-            mpl.rc_context().__enter__()
+            self._rc_context = mpl.rc_context()
         except AttributeError:
             # Workaround for matplotlib 1.1.1 not having a rc_context
             self._rcparams = mpl.rcParams.copy()
             if self.fname:
                 mpl.rcfile(self.fname)
+        else:
+            self._rc_context.__enter__()
 
-        # Modify
+        # Inside self._rc_context, modify rc params
         if self.theme:
             # Use a throw away rcParams, so subsequent plots
             # will not have any residual from this plot
@@ -56,11 +58,13 @@ class gg_context(object):
         mpl.interactive(False)
 
     def __exit__(self, type, value, tb):
+        # restore rc params
         try:
-            mpl.rc_context().__exit__(type, value, tb)
+            self._rc_context.__exit__(type, value, tb)
         except AttributeError:
             mpl.rcParams.update(self._rcparams)
 
+        # other clean up
         gg_reset()
 
 

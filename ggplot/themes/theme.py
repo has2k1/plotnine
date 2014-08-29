@@ -11,7 +11,7 @@ eg. line, rect, text, title and their derivatives axis_title or axis_title_x
 specify the scope of the theme application.
 
 """
-from copy import deepcopy
+from copy import copy, deepcopy
 
 from .element_target import element_target_factory, merge_element_targets
 
@@ -99,7 +99,16 @@ class theme(object):
         may cause an entity to come into existence before it can be themed.
 
         """
-        rcParams = deepcopy(self._rcParams)
+
+        try:
+            rcParams = deepcopy(self._rcParams)
+        except NotImplementedError:
+            # deepcopy raises an error for objects that are drived from or
+            # composed of matplotlib.transform.TransformNode.
+            # Not desirable, but probably requires upstream fix.
+            # In particular, XKCD uses matplotlib.patheffects.withStrok
+            rcParams = copy(self._rcParams)
+
         if self.element_themes:
             for element_theme in self.element_themes:
                 rcparams = element_theme.get_rcParams()
