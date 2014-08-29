@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..utils import make_color_tuples
 from .geom import geom
-from ..utils import hex_to_rgba
 
 
 class geom_hline(geom):
@@ -42,5 +42,5 @@ class geom_hline(geom):
             xmax = range_x[1]
 
         alpha = pinfo.pop('alpha')
-        pinfo['color'] = hex_to_rgba(pinfo['color'], alpha)
+        pinfo['color'] = make_color_tuples(pinfo['color'], alpha)
         ax.hlines(y, xmin, xmax, **pinfo)

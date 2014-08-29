@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..utils import make_color_tuples
 from .geom import geom
-from ..utils import hex_to_rgba
 
 
 class geom_point(geom):
@@ -31,7 +31,7 @@ class geom_point(geom):
             # Matplotlib expects empty string instead of False
             pinfo['facecolor'] = ''
         else:
-            alpha = pinfo.pop('alpha')
-            pinfo['facecolor'] = hex_to_rgba(pinfo['facecolor'], alpha)
+            pinfo['facecolor'] = make_color_tuples(
+                pinfo['facecolor'], pinfo['alpha'])
 
         ax.scatter(**pinfo)

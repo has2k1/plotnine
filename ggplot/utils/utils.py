@@ -535,6 +535,8 @@ def hex_to_rgba(colors, alphas=1):
     make plots with continuous alpha values innefficient.
     However :), the colors can be rgba list-likes and
     the alpha dimension will be respected.
+
+    see: `make_color_tuples`
     """
     cc = ColorConverter()
     if is_string(colors):
@@ -543,3 +545,31 @@ def hex_to_rgba(colors, alphas=1):
         out = cc.to_rgba_array(colors)
         out[:, 3] = alphas
     return out
+
+
+def make_color_tuples(colors, alpha):
+    """
+    Return RGBA color tuples.
+
+    Takes care of the parameters having different lengths.
+    It is better to use this function instead of calling
+    `hex_to_rgba` directly.
+
+    see: `hex_to_rgba`
+    """
+    def is_iterable(var):
+        return cbook.iterable(var) and not is_string(var)
+
+    if is_iterable(colors) and is_iterable(alpha):
+        if len(colors) != len(alpha):
+            if len(alpha == 1):
+                alpha = alpha[0]
+            elif len(colors == 1):
+                colors = colors[0]
+            else:
+                raise GgplotError(
+                    "Cannot match the colors with the alpha values")
+    elif not is_iterable(colors) and is_iterable(alpha):
+        colors = make_iterable_ntimes(colors, len(alpha))
+
+    return hex_to_rgba(colors, alpha)
