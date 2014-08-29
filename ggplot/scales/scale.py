@@ -10,6 +10,7 @@ import pandas.core.common as com
 from ..utils import waiver, is_waive
 from ..utils import identity, match
 from ..utils import round_any
+from ..utils.exceptions import gg_warning
 from .utils import rescale, censor, expand_range
 
 
@@ -27,6 +28,16 @@ class scale(object):
     labels = waiver()   # labels at the breaks
     guide = waiver()    # legend or any other guide
     _limits = None      # (min, max)
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            if hasattr(self, k):
+                setattr(self, k, v)
+            elif hasattr(self, '_'+k):
+                setattr(self, '_'+k, v)
+            else:
+                msg = '{} could not recognise parameter `{}`'
+                gg_warning(msg.format(self.__class__.__name__, k))
 
     def __radd__(self, gg):
         """

@@ -7,10 +7,8 @@ from copy import deepcopy
 
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
-import matplotlib.cbook as cbook
 import brewer2mpl
 
-from ..utils import waiver, identity
 from ..utils.color import ColorHCL
 from .utils import rescale_mid
 from .scale import scale_discrete, scale_continuous
@@ -24,7 +22,7 @@ _MSG_CONTINUOUS_DISTILLER = """\
 Using a discrete colour palette in a continuous scale.
 Consider using type = "seq" or type = "div" instead"
 """
-## Palette making utilities ##
+# Palette making utilities #
 
 
 def hue_pal(h=(0 + 15, 360 + 15), c=100, l=65, h_start=0, direction=1):
@@ -34,6 +32,7 @@ def hue_pal(h=(0 + 15, 360 + 15), c=100, l=65, h_start=0, direction=1):
     c /= 100.
     l /= 100.
     hcl = ColorHCL()
+
     def func(n):
         y = deepcopy(h)
         if (y[1] - y[0]) % 360 < 1:
@@ -54,6 +53,7 @@ def grey_pal(start=0.2, end=0.8):
     ends = ((0.0, start, start), (1.0, end, end))
     cdict = {'red': ends, 'green': ends, 'blue': ends}
     grey_cmap = LinearSegmentedColormap('grey', cdict)
+
     def func(n):
         colors = []
         # The grey scale points are linearly separated in
@@ -120,7 +120,9 @@ def brewer_pal(type='seq', palette=1):
         return hex_colors
     return func
 
-## Discrete color scales ##
+
+# Discrete color scales #
+
 
 # Qualitative colour scale with evenly spaced hues.
 class scale_color_hue(scale_discrete):
@@ -150,6 +152,7 @@ class scale_fill_brewer(scale_color_brewer):
 # Sequential grey colour scale.
 class scale_color_grey(scale_discrete):
     aesthetics = ['color']
+
     def __init__(self, start=0.2, end=0.8):
         self.palette = grey_pal(start, end)
 
@@ -157,7 +160,9 @@ class scale_color_grey(scale_discrete):
 class scale_fill_grey(scale_color_grey):
     aesthetics = ['fill']
 
-## Continuous color scales ##
+
+# Continuous color scales #
+
 
 # Smooth gradient between two colours
 class scale_color_gradient(scale_continuous):
@@ -171,7 +176,6 @@ class scale_color_gradient(scale_continuous):
         color_spectrum = [low, high]
         self.colormap = LinearSegmentedColormap.from_list(
             'gradient', color_spectrum)
-
 
     def palette(self, values):
         """

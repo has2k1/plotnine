@@ -11,10 +11,7 @@ class scale_size(scale_discrete):
     aesthetics = ['size']
 
     def __init__(self, range=(1, 6)):
-        self.range = range
-
-    def palette(self, n):
-        return np.linspace(self.range[0], self.range[1], n)
+        self.palette = lambda n: np.linspace(range[0], range[1], n)
 
 
 class scale_size_continuous(scale_continuous):

@@ -1,6 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from matplotlib.collections import PolyCollection
+
+from ..utils import make_iterable, make_color_tuples
 from .geom import geom
 
 
@@ -23,31 +26,46 @@ class geom_rect(geom):
     """
 
     DEFAULT_AES = {'color': '#333333', 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.0, 'alpha': None}
+                   'linetype': 'solid', 'size': 1.0, 'alpha': 1}
 
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _aes_renames = {'xmin': 'left', 'ymin': 'bottom', 'size': 'linewidth',
-                    'linetype': 'linestyle', 'fill': 'color',
-                    'color': 'edgecolor'}
-    _units = {'alpha', 'linestyle', 'linewidth'}
+    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle',
+                    'fill': 'facecolor', 'color': 'edgecolor'}
 
-    def _plot_unit(self, pinfo, ax):
-        if isinstance(pinfo['xmax'], list):
-            xcoords = zip(pinfo['left'], pinfo['xmax'])
-            width = [xmax - xmin for xmin, xmax in xcoords]
-        else:
-            width = pinfo['xmax'] - pinfo['left']
-        pinfo['width'] = width
-        del pinfo['xmax']
+    def draw_groups(self, data, scales, ax, **kwargs):
+        """
+        Plot all groups
+        """
+        pinfos = self._make_pinfos(data, kwargs)
+        for pinfo in pinfos:
+            self.draw(pinfo, scales, ax, **kwargs)
 
-        if isinstance(pinfo['ymax'], list):
-            ycoords = zip(pinfo['bottom'], pinfo['ymax'])
-            height = [ymax - ymin for ymin, ymax in ycoords]
-        else:
-            height = pinfo['ymax'] - pinfo['bottom']
-        pinfo['height'] = height
-        del pinfo['ymax']
+    def draw(self, pinfo, scales, ax, **kwargs):
+        def fn(key):
+            return make_iterable(pinfo.pop(key))
 
-        ax.bar(**pinfo)
+        xmin = fn('xmin')
+        xmax = fn('xmax')
+        ymin = fn('ymin')
+        ymax = fn('ymax')
+
+        verts = [None] * len(xmin)
+        for i in range(len(xmin)):
+            verts[i] = [(xmin[i], ymin[i]),
+                        (xmin[i], ymax[i]),
+                        (xmax[i], ymax[i]),
+                        (xmax[i], ymin[i])]
+
+        pinfo['facecolor'] = make_color_tuples(
+            pinfo['facecolor'], pinfo['alpha'])
+
+        col = PolyCollection(
+            verts,
+            facecolors=pinfo['facecolor'],
+            edgecolors=pinfo['edgecolor'],
+            linestyles=pinfo['linestyle'],
+            linewidths=pinfo['linewidth'],
+            transOffset=ax.transData)
+        ax.add_collection(col)
