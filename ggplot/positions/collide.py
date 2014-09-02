@@ -92,7 +92,10 @@ def pos_fill(df, width):
 # Dodge overlapping interval.
 # Assumes that each set has the same horizontal position.
 def pos_dodge(df, width):
-    n = len(df['group'].drop_duplicates())
+    width = np.asarray(width)
+    udf_group = df['group'].drop_duplicates()
+
+    n = len(udf_group)
     if n == 1:
         return df
 
@@ -106,7 +109,8 @@ def pos_dodge(df, width):
     # This might be needed if the group numbers in this set don't
     # include all of 1:n
     groupidx = match(df['group'],
-                     df['group'].drop_duplicates().sort())
+                     udf_group.sort(inplace=False))
+    groupidx = np.asarray(groupidx) + 1
 
     # Find the center for each group, then use that to
     # calculate xmin and xmax

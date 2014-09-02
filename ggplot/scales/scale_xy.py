@@ -7,6 +7,7 @@ import pandas as pd
 from ..utils import identity, match, is_waive
 from ..utils import discrete_dtypes, continuous_dtypes
 from ..utils.exceptions import GgplotError
+from .utils import expand_range
 from .scale import scale_discrete, scale_continuous
 
 
@@ -89,6 +90,39 @@ class scale_position_discrete(scale_discrete):
 
         return rng
 
+    def dimension(self, expand=None):
+        """
+        The phyical size of the scale, if a position scale
+        Unlike limits, this always returns a numeric vector of length 2
+        """
+        # This is special e.g x scale for a categorical bar plot
+        # calculate a dimension acc. to the discrete items(limits)
+        # and a dimension acc. to the continuous range (range_c)
+        # pick the (min, max)
+        if expand is None:
+            expand = self.expand
+        disc_range = (1, len(self.limits))
+        disc = expand_range(disc_range, 0, expand[1], 1)
+        cont = expand_range(self.range_c, expand[0], 0, expand[1])
+        a = np.array([x for x in [disc, cont] if x is not None])
+        return (a.min(), a.max())
+
+    def coord_breaks(self):
+        """
+        The breaks that appear on the coordinate axis
+        """
+        if not is_waive(self.breaks):
+            return self.breaks
+        return list(range(1, len(self.limits)+1))
+
+    def coord_labels(self):
+        """
+        The labels that appear at the breaks on the coordinate axis
+        """
+        if not is_waive(self.labels):
+            return self.labels
+        return self.range
+
 
 # Discrete position scales should be able to make use of the train
 # method bound to continuous scales
@@ -126,6 +160,18 @@ class scale_position_continuous(scale_continuous):
             rng = self.dimension(self._expand)
 
         return rng
+
+    def coord_breaks(self):
+        """
+        The breaks that appear on the coordinate axis
+        """
+        return self.breaks
+
+    def coord_labels(self):
+        """
+        The labels that appear at the breaks on the coordinate axis
+        """
+        return self.labels
 
 
 class scale_x_discrete(scale_position_discrete):

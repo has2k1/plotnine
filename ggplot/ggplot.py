@@ -16,12 +16,14 @@ from .components.legend import add_legend
 # from .scales import *
 from .facets import facet_null, facet_grid
 from .themes.theme_gray import theme_gray
+from .utils import is_waive
 from .utils.exceptions import GgplotError, gg_warning
 from .utils.ggutils import gg_context
 from .panel import Panel
 from .layer import add_group
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
+from .scales.scale import scale_discrete
 
 
 __all__ = ["ggplot"]
@@ -114,6 +116,7 @@ class ggplot(object):
             # ax - axes for a particular panel
             # pnl - a panel (facet)
             for ax, (_, pnl) in zip(axs, panel.layout.iterrows()):
+                panel_idx = pnl['PANEL'] - 1
                 xy_scales = {'x': panel.x_scales[pnl['SCALE_X'] - 1],
                              'y': panel.y_scales[pnl['SCALE_Y'] - 1]}
 
@@ -124,11 +127,26 @@ class ggplot(object):
                     l.plot(d[bool_idx], xy_scales, ax, zorder)
 
                 # panel limits
-                ax.set_xlim(panel.ranges[pnl['PANEL'] - 1]['x'])
-                ax.set_ylim(panel.ranges[pnl['PANEL'] - 1]['y'])
+                ax.set_xlim(panel.ranges[panel_idx]['x'])
+                ax.set_ylim(panel.ranges[panel_idx]['y'])
+
+                # panel breaks
+                set_breaks(panel, panel_idx, ax)
+
+                # panel labels
+                set_labels(panel, panel_idx, ax)
 
                 # xaxis, yaxis stuff
                 set_axis_attributes(plot, pnl, ax)
+
+                # TODO: Need to find a better place for this
+                # theme_apply turns on the minor grid only to turn
+                # it off here!!!
+                if isinstance(xy_scales['x'], scale_discrete):
+                    ax.grid(False, which='minor', axis='x')
+
+                if isinstance(xy_scales['y'], scale_discrete):
+                    ax.grid(False, which='minor', axis='y')
 
                 # draw facet labels
                 if isinstance(plot.facet, facet_grid):
@@ -224,11 +242,11 @@ class ggplot(object):
 
         # Map and train positions so that statistics have access to ranges
         # and all positions are numeric
-        x_scale = scales.get_scales('x')
-        y_scale = scales.get_scales('y')
+        scale_x = lambda: scales.get_scales('x')
+        scale_y = lambda: scales.get_scales('y')
 
-        panel.train_position(data, x_scale, y_scale)
-        data = panel.map_position(data, x_scale, y_scale)
+        panel.train_position(data, scale_x(), scale_y())
+        data = panel.map_position(data, scale_x(), scale_y())
 
         # Apply and map statistics
         data = panel.calculate_stats(data, layers)
@@ -249,8 +267,8 @@ class ggplot(object):
         #   - is it generated from what's displayed, or
         #   - does it include the range of underlying data
         panel.reset_scales()
-        panel.train_position(data, x_scale, y_scale)
-        data = panel.map_position(data, x_scale, y_scale)
+        panel.train_position(data, scale_x(), scale_y())
+        data = panel.map_position(data, scale_x(), scale_y())
 
         # Train and map non-position scales
         npscales = scales.non_position_scales()
@@ -280,6 +298,28 @@ def set_axis_attributes(plot, pnl, ax):
                             ('set_ticklabels', [])]
 
     plot.theme.post_plot_callback(ax, params)
+
+
+def set_breaks(panel, idx, ax):
+    xbreaks = panel.ranges[idx]['x_breaks']
+    ybreaks = panel.ranges[idx]['y_breaks']
+
+    if not is_waive(xbreaks):
+        ax.set_xticks(xbreaks)
+
+    if not is_waive(ybreaks):
+        ax.set_yticks(ybreaks)
+
+
+def set_labels(panel, idx, ax):
+    xlabels = panel.ranges[idx]['x_labels']
+    ylabels = panel.ranges[idx]['y_labels']
+
+    if not is_waive(xlabels):
+        ax.set_xticklabels(xlabels)
+
+    if not is_waive(ylabels):
+        ax.set_yticklabels(ylabels)
 
 
 # Should probably be in themes

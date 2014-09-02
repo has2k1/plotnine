@@ -328,7 +328,7 @@ def ninteraction(df, drop=False):
     ndistinct = ids.apply(len_unique, axis=0).as_matrix()
 
     combs = np.matrix(
-        np.hstack([1, ndistinct[:-1]]))
+        np.hstack([1, np.cumprod(ndistinct[:-1])]))
     mat = np.matrix(ids)
     res = (mat - 1) * combs.T + 1
     res = np.array(res).flatten().tolist()
@@ -382,7 +382,7 @@ def uniquecols(df):
     This is used for figuring out which columns are
     constant within a group
     """
-    bool_idx = df.apply(lambda col: len(col.unique()) == 1, axis=0)
+    bool_idx = df.apply(lambda col: len(np.unique(col)) == 1, axis=0)
     df = df.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
     return df
 
@@ -412,7 +412,7 @@ def jitter(x, factor=1, amount=None):
         z = 0
 
     if z == 0:
-        z = x.min().abs()
+        z = np.abs(np.min(x))
     if z == 0:
         z = 1
 

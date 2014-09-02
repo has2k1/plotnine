@@ -133,7 +133,7 @@ class Scales(list):
                     data.loc[bool_idx, col] = results
 
         for col in cat_cols:
-            data[col] = df[col]
+            data[col] = pd.Categorical(df[col])
 
     def reset(self):
         """

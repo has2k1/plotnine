@@ -67,5 +67,7 @@ class geom_rect(geom):
             edgecolors=pinfo['edgecolor'],
             linestyles=pinfo['linestyle'],
             linewidths=pinfo['linewidth'],
-            transOffset=ax.transData)
+            transOffset=ax.transData,
+            zorder=pinfo['zorder']
+        )
         ax.add_collection(col)
