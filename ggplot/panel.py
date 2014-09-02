@@ -6,6 +6,7 @@ import pandas as pd
 
 from .scales.scales import Scales
 from .utils import match, xy_panel_scales
+from .utils import groupby_apply
 from .utils.exceptions import GgplotError, gg_warning
 
 
@@ -120,8 +121,7 @@ class Panel(object):
             if len(panel_data) == 0:
                 return pd.DataFrame()
 
-            pscales = self.panel_scales(
-                panel_data['PANEL'].as_matrix()[0])
+            pscales = self.panel_scales(panel_data['PANEL'].iat[0])
             return l.calc_statistic(panel_data, pscales)
 
         # A dataframe in a layer can have rows split across
@@ -129,11 +129,9 @@ class Panel(object):
         # data the statistics are calculated independently for
         # each panel.
         for (d, l) in zip(data, layers):
-            # TODO: This groupby is evil -- there is a nested
-            # groupby hence four computations
-            df = d.groupby('PANEL').apply(fn, l)
-            df.reset_index(drop=True, inplace=True)
+            df = groupby_apply(d, 'PANEL', fn, l)
             new_data.append(df)
+
         return new_data
 
     def reset_scales(self):

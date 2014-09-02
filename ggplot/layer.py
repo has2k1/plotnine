@@ -14,7 +14,7 @@ from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import discrete_dtypes, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .utils import is_string, gg_import
+from .utils import is_string, gg_import, groupby_apply
 from .positions.position import position
 
 _TPL_EVAL_FAIL = """\
@@ -225,12 +225,7 @@ class layer(object):
         Adjust the position of each geometric object
         in concert with the other objects in the panel
         """
-        def fn(panel_data):
-            if len(panel_data) == 0:
-                return pd.DataFrame()
-            return self.position.adjust(panel_data)
-
-        data = data.groupby('PANEL').apply(fn)
+        data = groupby_apply(data, 'PANEL', self.position.adjust)
         return data
 
     def plot(self, data, scales, ax, zorder):

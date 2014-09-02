@@ -89,33 +89,16 @@ class stat(object):
         if not len(data):
             return pd.DataFrame()
 
-        def fn(grouped_data):
-            group = grouped_data['group'].iloc[0]
-            res = self._calculate(grouped_data, scales)
-            res['group'] = group
-            return res
+        stats = []
+        for _, old in data.groupby('group'):
+            new = self._calculate(old, scales)
+            unique = uniquecols(old)
+            missing = unique.columns - new.columns
+            u = unique.loc[[0]*len(new), missing].reset_index(drop=True)
+            df = pd.concat([new, u], axis=1)
+            stats.append(df)
 
-        # Calculate all the stats
-        stats = data.groupby('group').apply(fn)
-        stats.reset_index(drop=True, inplace=True)
-
-        # Combine with original data
-        unique = data.groupby('group', as_index=False).apply(uniquecols)
-        unique.reset_index(drop=True, inplace=True)
-        missing = unique.columns - stats.columns
-
-        # Instead of a more expensive join, make sure the order is
-        # fine and concat. This is really not expected to fail
-        assert(all(
-            stats['group'].as_matrix() == unique['group'].as_matrix()))
-        if len(stats) == len(unique):
-            stats = pd.concat([stats, unique.loc[:, missing]],
-                              axis=1)
-        elif len(unique) == 1:
-            for col in unique:
-                stats[col] = unique[col].iloc[0]
-        else:
-            raise GgplotError('Could not merge stats. Report bug')
+        stats = pd.concat(stats, axis=0, ignore_index=True)
 
         # Note: If the data coming in has columns with non-unique
         # values with-in group(s), this implementation loses the

@@ -573,3 +573,36 @@ def make_color_tuples(colors, alpha):
         colors = make_iterable_ntimes(colors, len(alpha))
 
     return hex_to_rgba(colors, alpha)
+
+
+def groupby_apply(df, cols, func, *args, **kwargs):
+    """
+    Groupby cols and call the function fn on each grouped dataframe.
+
+    Parameters
+    ----------
+    cols : str | list of str
+        columns to groupby
+    func : function
+        function to call on the grouped data
+    *args : tuple
+        positional parameters to pass to func
+    **kwargs : dict
+        keyword parameter to pass to func
+
+    This is meant to avoid pandas df.groupby('col').apply(fn, *args),
+    as it calls fn twice on the first dataframe. If the nested code also
+    does the same thing, it can be very expensive
+    """
+    try:
+        axis = kwargs.pop('axis')
+    except KeyError:
+        axis = 0
+
+    lst = []
+    for _, d in df.groupby(cols):
+        # function fn should be free to modify dataframe d, therefore
+        # do not mark d as a slice of df i.e no SettingWithCopyWarning
+        d.is_copy = None
+        lst.append(func(d, *args, **kwargs))
+    return pd.concat(lst, axis=axis, ignore_index=True)

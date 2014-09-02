@@ -5,7 +5,7 @@ import numpy as np
 
 from ..utils.exceptions import GgplotError, gg_warning
 from ..scales.utils import zero_range
-from ..utils import match
+from ..utils import match, groupby_apply
 
 
 # Detect and prevent collisions.
@@ -45,12 +45,12 @@ def collide(data, width=None, name='', strategy=None):
         gg_warning(msg.format(name))
 
     if 'ymax' in data:
-        data = data.groupby('xmin').apply(strategy, width)
+        data = groupby_apply(data, 'xmin', strategy, width)
     elif 'y' in data:
         gg_warning('ymax not defined: adjusting position using y instead')
 
         data['ymax'] = data['y']
-        data = data.groupby('xmin').apply(strategy, width)
+        data = groupby_apply(data, 'xmin', strategy, width)
         data['y'] = data['ymax']
     else:
         GgplotError('Neither y nor ymax defined')
