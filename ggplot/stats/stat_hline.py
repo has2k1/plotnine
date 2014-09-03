@@ -30,6 +30,7 @@ class stat_hline(stat):
 
         yintercept = make_iterable(yintercept)
         data = data.iloc[range(len(yintercept)), :]
+        data.is_copy = None
         data['yintercept'] = yintercept
         data['y'] = data['yintercept']
         data['yend'] = data['yintercept']

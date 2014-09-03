@@ -29,6 +29,7 @@ class stat_vline(stat):
 
         xintercept = make_iterable(xintercept)
         data = data.iloc[range(len(xintercept)), :]
+        data.is_copy = None
         data['xintercept'] = xintercept
         data['x'] = data['xintercept']
         data['xend'] = data['xintercept']

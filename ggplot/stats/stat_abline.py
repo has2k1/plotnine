@@ -52,6 +52,7 @@ class stat_abline(stat):
                 'Specified {} slopes but {} intercepts'.format(n, _n))
 
         data = data.iloc[range(len(intercept)), :]
+        data.is_copy = None
         data['intercept'] = intercept
         data['slope'] = slope
         return data
