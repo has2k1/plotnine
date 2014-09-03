@@ -2,18 +2,23 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import numpy as np
 import pandas as pd
-from scipy.stats import gaussian_kde
+import pandas.core.common as com
+import statsmodels.api as sm
 
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
 
-# TODO: switch to statsmodels kdes
+# NOTE: Parameter discriptions are in
+# statsmodels/nonparametric/kde.py
+# TODO: Update when statsmodels-0.6 is released
 class stat_density(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',
-                      'kernel': 'gaussian', 'adjust': 1, 'trim': False}
-
+                      'kernel': 'gaussian', 'adjust': 1,
+                      'trim': False, 'n': 512, 'gridsize': None,
+                      'bw': 'normal_reference', 'cut': 3,
+                      'clip': (-np.inf, np.inf)}
     CREATES = {'y'}
 
     def _calculate(self, data, scales, **kwargs):
@@ -30,14 +35,45 @@ class stat_density(stat):
                 raise GgplotError(
                     "stat_density(): aesthetic x mapping " +
                     "needs to be convertable to float!")
-        # TODO: Implement weight
+
+        # kde is computed efficiently using fft. But the fft does
+        # not support weights and is only available with the
+        # gaussian kernel. When weights are relevant we
+        # turn off the fft.
         try:
             weight = data.pop('weight')
         except KeyError:
-            weight = np.ones(len(x))
+            weight = None
 
-        kde = gaussian_kde(x)
-        x2 = np.linspace(range_x[0], range_x[1], 1000)
+        if com.is_list_like(weight) and all([w == 1 for w in weight]):
+            weight = None
+
+        lookup = {
+            'biweight': 'biw',
+            'cosine': 'cos',
+            'epanechnikov': 'epa',
+            'gaussian': 'gau',
+            'triangular': 'tri',
+            'triweight': 'triw',
+            'uniform': 'uni'}
+        kernel = lookup[self.params['kernel'].lower()]
+
+        if weight is None and kernel == 'gaussian':
+            fft = True
+        else:
+            fft = False
+
+        kde = sm.nonparametric.KDEUnivariate(x)
+        kde.fit(
+            # kernel=kernel,        # enable after statsmodels 0.6
+            # bw=self.params['bw'], # enable after statsmodels 0.6
+            fft=fft,
+            weights=weight,
+            adjust=self.params['adjust'],
+            cut=self.params['cut'],
+            gridsize=self.params['gridsize'],
+            clip=self.params['clip'],)
+        x2 = np.linspace(range_x[0], range_x[1], self.params['n'])
         y = kde.evaluate(x2)
         new_data = pd.DataFrame({'x': x2, 'y': y})
         return new_data
