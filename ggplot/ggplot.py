@@ -14,7 +14,7 @@ from .components import colors, shapes
 from .components.legend import add_legend
 # from .geoms import *
 # from .scales import *
-from .facets import facet_null, facet_grid
+from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive
 from .utils.exceptions import GgplotError, gg_warning
@@ -106,15 +106,12 @@ class ggplot(object):
                                     plot.facet.ncol,
                                     sharex=False,
                                     sharey=False)
-            # TODO: spaces should depend on the axis horizontal
-            # and vertical lengths since the values are in
-            # transAxes dimensions
-            plt.subplots_adjust(wspace=.05, hspace=.05)
+
             axs = np.atleast_2d(axs)
             axs = [ax for row in axs for ax in row]
 
             # ax - axes for a particular panel
-            # pnl - a panel (facet)
+            # pnl - panel (facet) information from layout table
             for ax, (_, pnl) in zip(axs, panel.layout.iterrows()):
                 panel_idx = pnl['PANEL'] - 1
                 xy_scales = {'x': panel.x_scales[pnl['SCALE_X'] - 1],
@@ -149,8 +146,10 @@ class ggplot(object):
                     ax.grid(False, which='minor', axis='y')
 
                 # draw facet labels
-                if isinstance(plot.facet, facet_grid):
+                if isinstance(plot.facet, (facet_grid, facet_wrap)):
                     draw_facet_label(plot, pnl, ax, fig)
+
+            set_facet_spacing(plot)
 
             # Draw legend
             # print(panel.layout)
@@ -322,6 +321,7 @@ def set_labels(panel, idx, ax):
         ax.set_yticklabels(ylabels)
 
 
+# TODO Need to use theme (element_rect) for the colors
 # Should probably be in themes
 def draw_facet_label(plot, pnl, ax, fig):
     if pnl['ROW'] != 1 and pnl['COL'] != plot.facet.ncol:
@@ -340,9 +340,26 @@ def draw_facet_label(plot, pnl, ax, fig):
     w = mpl.rcParams['font.size'] * 1.65 * oneh
     h = mpl.rcParams['font.size'] * 1.65 * onev
 
-    # Need to use theme (element_rect) for the colors
-    # top labels
+    # facet_wrap #
+    if isinstance(plot.facet, facet_wrap):
+        facet_var = plot.facet.vars[0]
+        ax.text(0.5, 1+onev, pnl[facet_var],
+                bbox=dict(
+                    xy=(0, 1+onev),
+                    facecolor='lightgrey',
+                    edgecolor='lightgrey',
+                    height=h,
+                    width=1,
+                    transform=ax.transAxes),
+                transform=ax.transAxes,
+                fontdict=dict(verticalalignment="bottom",
+                              horizontalalignment='left')
+                )
+        return
+
+    # facet_grid #
     if pnl['ROW'] == 1:
+        # top labels
         facet_var = plot.facet.cols[0]
         ax.text(0.5, 1+onev, pnl[facet_var],
                 bbox=dict(
@@ -357,8 +374,8 @@ def draw_facet_label(plot, pnl, ax, fig):
                               horizontalalignment='left')
                 )
 
-    # right labels
     if pnl['COL'] == plot.facet.ncol:
+        # right labels
         facet_var = plot.facet.rows[0]
         ax.text(1+oneh, 0.5, pnl[facet_var],
                 bbox=dict(
@@ -373,6 +390,16 @@ def draw_facet_label(plot, pnl, ax, fig):
                               verticalalignment="center",
                               horizontalalignment='left')
                 )
+
+
+def set_facet_spacing(plot):
+    # TODO: spaces should depend on the axis horizontal
+    # and vertical lengths since the values are in
+    # transAxes dimensions
+    if isinstance(plot.facet, facet_wrap):
+        plt.subplots_adjust(wspace=.05, hspace=.20)
+    else:
+        plt.subplots_adjust(wspace=.05, hspace=.05)
 
 
 def _is_identity(x):

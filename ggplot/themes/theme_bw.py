@@ -28,7 +28,7 @@ class theme_bw(theme_gray):
         # Restyle the tick lines
         for line in ax.get_xticklines() + ax.get_yticklines():
             line.set_markersize(5)
-            line.set_markeredgewidth(1.4)
+            line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
 
         # set parameters
         for att, val in params['xaxis']:
@@ -38,7 +38,7 @@ class theme_bw(theme_gray):
             getattr(ax.yaxis, att)(val)
 
         # Set minor grid lines
-        ax.grid(True, 'minor', color='#FAFAFA', linestyle='-', linewidth=0.7)
+        ax.grid(True, 'minor', color='#FAFAFA', linestyle='-', linewidth=0.5)
 
         if not isinstance(ax.xaxis.get_major_locator(), mpl.ticker.LogLocator):
             ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator(2))

@@ -197,7 +197,7 @@ def cross_join(df1, df2):
 
 def wrap_dims(n, nrow=None, ncol=None):
     if not nrow and not ncol:
-        nrow, ncol = n2mfrow(n)
+        ncol, nrow = n2mfrow(n)
     elif not ncol:
         ncol = int(np.ceil(n/nrow))
     elif not nrow:

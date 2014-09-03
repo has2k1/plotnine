@@ -217,7 +217,7 @@ class theme_seaborn(theme):
         # Restyle the tick lines
         for line in ax.get_xticklines() + ax.get_yticklines():
             line.set_markersize(5)
-            line.set_markeredgewidth(1.4)
+            line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
 
         # set parameters
         for att, val in params['xaxis']:

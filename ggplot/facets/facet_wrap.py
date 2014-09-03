@@ -9,9 +9,9 @@ from .locate import locate_wrap
 
 class facet_wrap(object):
 
-    def __init__(self, x=None, y=None, nrow=None, ncol=None, scales='fixed',
+    def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
                  shrink=True, as_table=True, drop=True):
-        self.vars = (x, y)
+        self.vars = (facets,)
         self.nrow = nrow
         self.ncol = ncol
         self.shrink = shrink
