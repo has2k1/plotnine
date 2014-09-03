@@ -36,15 +36,8 @@ class stat_density(stat):
         except KeyError:
             weight = np.ones(len(x))
 
-        # TODO: Get "full" range of densities
-        # i.e tail off to zero like ggplot2? But there is nothing
-        # wrong with the current state.
         kde = gaussian_kde(x)
-        bottom = np.min(x)
-        top = np.max(x)
-        step = (top - bottom) / 1000.0
-
-        x = np.arange(bottom, top, step)
-        y = kde.evaluate(x)
-        new_data = pd.DataFrame({'x': x, 'y': y})
+        x2 = np.linspace(range_x[0], range_x[1], 1000)
+        y = kde.evaluate(x2)
+        new_data = pd.DataFrame({'x': x2, 'y': y})
         return new_data

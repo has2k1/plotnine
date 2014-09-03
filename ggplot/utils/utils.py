@@ -540,7 +540,10 @@ def hex_to_rgba(colors, alphas=1):
     """
     cc = ColorConverter()
     if is_string(colors):
-        out = cc.to_rgba(colors, alphas)
+        if len(colors):
+            out = cc.to_rgba(colors, alphas)
+        else:
+            out = colors
     else:
         out = cc.to_rgba_array(colors)
         out[:, 3] = alphas
