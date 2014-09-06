@@ -196,8 +196,7 @@ def zero_range(x, tol=np.finfo(float).eps * 100):
         return True
 
     if len(x) != 2:
-        return GgplotError(
-            'x must be length 1 or 2')
+        raise GgplotError('x must be length 1 or 2')
 
     if any(np.isnan(x)):
         return np.nan
@@ -270,10 +269,13 @@ def resolution(x, zero=True):
     x = np.asarray(x)
 
     # (unsigned) integers or an effective range of zero
-    if x.dtype.kind in ('i', 'u') or zero_range(x):
+    _x = x[~np.isnan(x)]
+    _x = (x.min(), x.max())
+    if x.dtype.kind in ('i', 'u') or zero_range(_x):
         return 1
 
-    if not zero:
-        x = x[x != 0]
+    x = np.unique(x)
+    if zero:
+        x = np.unique(np.hstack([0, x]))
 
     return np.min(np.diff(np.sort(x)))
