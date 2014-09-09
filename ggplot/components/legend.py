@@ -61,7 +61,7 @@ def add_legend(legend, ax):
         nb_rows += rows + 1
         if nb_rows > max(max_rows, rows + 1) :
             nb_cols += 1
-            nb_rows = 0
+            nb_rows = rows + 1
             cur_nb_rows = 0
         anchor_legend(ax, legend_box, cur_nb_rows, nb_cols)
 
