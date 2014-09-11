@@ -8,7 +8,8 @@ from .geom_path import geom_path
 
 class geom_line(geom_path):
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
 
@@ -16,4 +17,4 @@ class geom_line(geom_path):
         pinfo['x'] = [x[i] for i in idx]
         pinfo['y'] = [y[i] for i in idx]
 
-        geom_path.draw(self, pinfo, scales, ax, **kwargs)
+        geom_path.draw(pinfo, scales, ax, **kwargs)

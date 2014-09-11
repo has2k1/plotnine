@@ -42,7 +42,8 @@ class geom_rect(geom):
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         def fn(key):
             return make_iterable(pinfo.pop(key))
 

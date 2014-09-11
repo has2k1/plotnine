@@ -142,10 +142,10 @@ class geom(object):
             for pinfo in pinfos:
                 self.draw(pinfo, scales, ax, **kwargs)
 
-    def draw(self, pinfo, scales, ax, **kwargs):
-        msg = "{} should implement this method."
-        raise NotImplementedError(
-            msg.format(self.__class__.__name__))
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
+        msg = "The geom should implement this method."
+        raise NotImplementedError(msg)
 
     def _get_stat_type(self, kwargs):
         """

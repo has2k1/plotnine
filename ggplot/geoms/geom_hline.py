@@ -25,7 +25,8 @@ class geom_hline(geom):
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         try:
             del pinfo['y']
         except KeyError:

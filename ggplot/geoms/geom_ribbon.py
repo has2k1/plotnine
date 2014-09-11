@@ -24,7 +24,8 @@ class geom_ribbon(geom):
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         for key in ('y', 'weight'):
             try:
                 del pinfo[key]

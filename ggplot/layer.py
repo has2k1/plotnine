@@ -236,7 +236,10 @@ class layer(object):
             self.geom.REQUIRED_AES,
             set(data.columns) | set(self.geom.manual_aes),
             self.geom.__class__.__name__)
-        self.geom.draw_groups(data, scales, ax, zorder=zorder)
+
+        kwargs = deepcopy(self.geom.params)
+        kwargs['zorder'] = zorder
+        self.geom.draw_groups(data, scales, ax, **kwargs)
 
 
 def add_group(data):

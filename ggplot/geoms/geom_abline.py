@@ -29,7 +29,8 @@ class geom_abline(geom):
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         slope = pinfo['slope']
         intercept = pinfo['intercept']
         range_x = scales['x'].coord_range()

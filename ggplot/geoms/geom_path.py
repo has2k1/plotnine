@@ -14,17 +14,20 @@ class geom_path(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
+    _aes_renames = {'color': 'edgecolor', 'size': 'linewidth',
+                    'linetype': 'linestyle'}
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
 
-        pinfo['color'] = make_color_tuples(pinfo['color'], pinfo['alpha'])
+        pinfo['edgecolor'] = make_color_tuples(pinfo['edgecolor'],
+                                               pinfo['alpha'])
 
         lines = [((x[i], y[i]), (x[i+1], y[i+1])) for i in range(len(x)-1)]
         lines = LineCollection(lines,
-                               color=pinfo['color'],
+                               edgecolor=pinfo['edgecolor'],
                                linewidths=pinfo['linewidth'],
                                linestyles=pinfo['linestyle'])
         ax.add_collection(lines)

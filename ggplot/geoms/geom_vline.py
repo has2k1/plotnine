@@ -25,7 +25,8 @@ class geom_vline(geom):
         for pinfo in pinfos:
             self.draw(pinfo, scales, ax, **kwargs)
 
-    def draw(self, pinfo, scales, ax, **kwargs):
+    @staticmethod
+    def draw(pinfo, scales, ax, **kwargs):
         try:
             del pinfo['x']
         except KeyError:
