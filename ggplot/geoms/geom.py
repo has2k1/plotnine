@@ -74,6 +74,10 @@ class geom(object):
         self._stat_type = self._get_stat_type(kwargs)
         self.aes, self.data, kwargs = self._find_aes_and_data(args, kwargs)
 
+        # This set will list the geoms that were uniquely set in this
+        # geom (not specified already i.e. in the ggplot aes).
+        self.aes_unique_to_geom = set(self.aes.keys())
+
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
@@ -160,11 +164,13 @@ class geom(object):
         gg = deepcopy(gg)
         # steal aesthetics info.
         self._cache['ggplot.aesthetics'] = deepcopy(gg.aesthetics)
+        self.aes_unique_to_geom -= set(gg.aesthetics.keys())
         # create stat and hand over the parameters it understands
         if not hasattr(self, '_stat'):
             self._stat = self._stat_type()
             self._stat.params.update(self._stat_params)
         gg.geoms.append(self)
+        self.gg = gg
         return gg
 
     def _verify_aesthetics(self, data):
