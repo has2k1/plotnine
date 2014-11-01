@@ -147,7 +147,7 @@ def test_aes_mixed_args():
 
 
 def test_nonzero_indexed_data():
-    df = pd.DataFrame({98: {"blip":0, "blop":1}
+    df = pd.DataFrame({98: {"blip":0, "blop":1},
                        99: {"blip":1, "blop":3}}).T
     gg = ggplot(aes(x='blip',y='blop'),data=df) + geom_line()
     fn = "filename.png"
