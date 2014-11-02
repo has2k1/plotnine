@@ -36,7 +36,7 @@ def assert_same_dims(orig, new, msg=None):
     #print(orig, new)
     assert_true(ow == nw, msg.format("x", ow, nw))
     assert_true(oh == nh, msg.format("y", oh, nh))
-    
+
 @cleanup
 def test_ggsave_file():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
@@ -46,14 +46,14 @@ def test_ggsave_file():
     ggsave(fn)
     assert_exist_and_clean(fn)
 
-@cleanup 
+@cleanup
 def test_ggsave_plot():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
     ggsave(gg)
     assert_exist_and_clean(str(gg.__hash__())+".pdf")
-    
-@cleanup 
+
+@cleanup
 def test_ggsave_arguments():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
@@ -91,7 +91,7 @@ def test_ggsave_arguments():
     ggsave(fn, gg, dpi=100)
     assert_exist_and_clean(fn, "dpi=100")
 
-@cleanup 
+@cleanup
 def test_ggsave_big():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
@@ -103,8 +103,8 @@ def test_ggsave_big():
     ggsave(fn, gg, width=26, height=26, limitsize=False)
     assert_exist_and_clean(fn, "both height and width big")
     assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after both")
-    
-@cleanup 
+
+@cleanup
 def test_ggsave_exceptions():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
     fn = "filename.png"
@@ -131,16 +131,26 @@ def test_ggsave_exceptions():
         ggsave(fn, gg, dpi="xxx")
     assert_same_dims(orig, plt.gcf().get_size_inches(), "size is different after unknown dpi")
 
-@cleanup 
+@cleanup
 def test_ggsave_close_plot():
     gg = ggplot(aes(x='wt',y='mpg',label='name'),data=mtcars) + geom_text()
     fn = "filename.png"
     ggsave(fn, gg)
     assert_exist_and_clean(fn, "exist")
     assert_true(plt.get_fignums() == [], "ggsave did not close the plot")
-    
+
 
 def test_aes_mixed_args():
     result = aes("weight", "hp", color="qsec")
     expected = {"x": "weight", "y": "hp", "color": "qsec"}
     assert_equal(result,expected)
+
+
+def test_nonzero_indexed_data():
+    df = pd.DataFrame({98: {"blip":0, "blop":1},
+                       99: {"blip":1, "blop":3}}).T
+    gg = ggplot(aes(x='blip',y='blop'),data=df) + geom_line()
+    fn = "filename.png"
+    ggsave(fn, gg) # Will throw an exception if ggsave uses `[0]` to index
+    assert_exist_and_clean(fn, "exist")
+
