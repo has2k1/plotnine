@@ -303,6 +303,10 @@ class ggplot(object):
                         data = self.data
                     ax = plt.subplot(1, 1, 1)
 
+                    # Now that ax has changed, lets make sure we still have correct figure.
+                    fig = plt.gcf()
+                    axs = [[ax]] # So that the axs object matches what a single facet might look like in legend code.
+
                     data = self._make_plot_data(data, _aes)
                     callbacks = geom.plot_layer(data, ax)
                     if callbacks:
