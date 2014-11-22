@@ -8,7 +8,7 @@ import matplotlib as mpl
 from six import string_types
 from six.moves import range
 
-import husl
+from . import husl
 from .xkcd_rgb import xkcd_rgb
 
 
