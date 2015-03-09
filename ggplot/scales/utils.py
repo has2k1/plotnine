@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import math
 
 import numpy as np
+import pandas as pd
 
 from ..utils.exceptions import GgplotError
 
@@ -161,10 +162,11 @@ def censor(x, range=(0, 1), only_finite=True):
         intype = type(x)
         x = np.array(x)
 
-    if only_finite:
-        finite = np.isfinite(x)
-    else:
-        finite = True
+    if 'datetime64' not in str(x.dtype):
+        if only_finite:
+            finite = np.isfinite(x)
+        else:
+            finite = True
 
     below = x < range[0]
     above = x > range[1]
@@ -197,6 +199,11 @@ def zero_range(x, tol=np.finfo(float).eps * 100):
 
     if len(x) != 2:
         raise GgplotError('x must be length 1 or 2')
+
+    # TODO: Get rid of this copout and find a way to deal
+    # with timestamps
+    if type(x[0]) == pd.Timestamp:
+        return False
 
     if any(np.isnan(x)):
         return np.nan
@@ -242,6 +249,10 @@ def expand_range(range, mul=0, add=0, zero_width=1):
     if zero_range(range):
         erange = (range[0] - zero_width/2,
                   range[0] + zero_width/2)
+    # TODO: Get rid of this copout and find a way to deal
+    # with timestamps
+    elif type(range[0]) == pd.Timestamp:
+        erange = range
     else:
         erange = (np.array(range) +
                   np.array([-1, 1]) * (np.diff(range) * mul + add))

@@ -65,12 +65,12 @@ def pos_stack(df, width):
         return df
 
     n = len(df) + 1
-    y = df['y']
-    y[np.isnan(y)] = 0
 
     if all(np.isnan(df['x'])):
         heights = [np.nan] * n
     else:
+        y = df['y'].copy()
+        y[np.isnan(y)] = 0
         heights = np.append(0, y.cumsum())
 
     df['ymin'] = heights[:-1]

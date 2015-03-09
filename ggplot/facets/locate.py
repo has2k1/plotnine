@@ -11,7 +11,7 @@ from ..utils import match, add_margins
 def locate_wrap(data, panels, vars):
     if not len(data):
         data['PANEL'] = pd.Categorical([])
-        data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
+        data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
         return data
 
     # The columns that are facetted
@@ -43,7 +43,7 @@ def locate_wrap(data, panels, vars):
 
     # matching dtype
     data['PANEL'] = pd.Categorical(data['PANEL'])
-    data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
+    data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
     data.sort(columns='PANEL', inplace=True)
     data.reset_index(drop=True, inplace=True)
     return data
@@ -52,7 +52,7 @@ def locate_wrap(data, panels, vars):
 def locate_grid(data, panels, rows=None, cols=None, margins=False):
     if not len(data):
         data['PANEL'] = pd.Categorical([])
-        data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
+        data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
         return data
     vars = [x for x in rows + cols]
 
@@ -95,7 +95,7 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
 
     # matching dtype
     data['PANEL'] = pd.Categorical(data['PANEL'])
-    data['PANEL'].cat.reorder_levels(panels['PANEL'].cat.levels)
+    data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
     data.sort(columns='PANEL', inplace=True)
     data.reset_index(drop=True, inplace=True)
     return data

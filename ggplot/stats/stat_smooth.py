@@ -41,6 +41,7 @@ class stat_smooth(stat):
         elif method == "ma":
             x, y, y1, y2 = smoothers.mavg(x, y, window=window)
         else:
+            # TODO: deal with timestamp
             x, y, y1, y2 = smoothers.lowess(x, y, span=span)
 
         new_data = pd.DataFrame({'x': x, 'y': y})

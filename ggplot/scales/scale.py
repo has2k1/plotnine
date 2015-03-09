@@ -131,7 +131,7 @@ class scale_discrete(scale):
 
         # new range values
         if com.is_categorical_dtype(series):
-            rng = list(series.cat.levels)
+            rng = list(series.cat.categories)
             if drop:
                 rng = [x for x in rng if x in set(series)]
         else:
@@ -190,6 +190,8 @@ class scale_continuous(scale):
         mx = series.max()
         if not (self.range is None):
             _mn, _mx = self.range
+            # print(mn, _mn)
+            # print(mx, _mx)
             mn = np.min([mn, _mn])
             mx = np.max([mx, _mx])
 

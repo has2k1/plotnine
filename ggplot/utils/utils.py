@@ -274,9 +274,9 @@ def add_margins(df, vars, margins=True):
     all_vars = set([v for vlst in margin_vars for v in vlst])
     for v in all_vars:
         df[v] = pd.Categorical(df[v])
-        levels = df[v].cat.levels.tolist() + ['(all)']
+        levels = df[v].cat.categories.tolist() + ['(all)']
         try:
-            df[v].cat.reorder_levels(levels)
+            df[v].cat.reorder_categories(levels)
         except ValueError:
             # Already a categorical with '(all)' level
             pass
@@ -356,7 +356,7 @@ def _id_var(x, drop=False):
 
     if com.is_categorical_dtype(x) and not drop:
         x = x.copy()
-        x.cat.levels = range(1, len(x.cat.levels) + 1)
+        x.cat.categories = range(1, len(x.cat.categories) + 1)
         lst = x.tolist()
     else:
         levels = np.sort(np.unique(x))

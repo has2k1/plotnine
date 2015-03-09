@@ -93,8 +93,13 @@ class stat(object):
         for _, old in data.groupby('group'):
             new = self._calculate(old, scales)
             unique = uniquecols(old)
-            missing = unique.columns - new.columns
+            missing = unique.columns.difference(new.columns)
             u = unique.loc[[0]*len(new), missing].reset_index(drop=True)
+            # concat can have problems with empty dataframes that
+            # have an index
+            if u.empty and len(u):
+                u = pd.DataFrame()
+
             df = pd.concat([new, u], axis=1)
             stats.append(df)
 

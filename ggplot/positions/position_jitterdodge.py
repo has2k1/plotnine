@@ -35,7 +35,7 @@ class position_jitterdodge(position):
 
         # Adjust the x transformation based on the number
         # of 'fill' variables
-        nfill = len(data['fill'].cat.levels)
+        nfill = len(data['fill'].cat.categories)
 
         if self.jitter_width is None:
             self.jitter_width = resolution(data['x'], zero=False) * 0.4

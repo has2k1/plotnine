@@ -1,10 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import pandas as pd
-import matplotlib.image as mpimg
 import os
 
-__all__ = ["diamonds","mtcars","meat","pageviews","movies"]
+__all__ = ["diamonds", "mtcars", "meat", "pageviews"]
 __all__ = [str(u) for u in __all__]
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -20,9 +19,9 @@ diamonds['cut'] = pd.Categorical(diamonds['cut'])
 diamonds['color'] = pd.Categorical(diamonds['color'])
 diamonds['clarity'] = pd.Categorical(diamonds['clarity'])
 
-diamonds['cut'].cat.reorder_levels(
+diamonds['cut'].cat.reorder_categories(
     ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'])
-diamonds['clarity'].cat.reorder_levels(
+diamonds['clarity'].cat.reorder_categories(
     ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'])
-diamonds['color'].cat.reorder_levels(
+diamonds['color'].cat.reorder_categories(
     ['D', 'E', 'F', 'G', 'H', 'I', 'J'])
