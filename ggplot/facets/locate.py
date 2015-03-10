@@ -93,9 +93,14 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
         keys_y = list(panels.loc[:, vars].itertuples(index=False))
         data['PANEL'] = match(keys_x, keys_y, start=1)
 
-    # matching dtype
+    # matching dtype and
+    # the categories(panel numbers) for the data should be in the
+    # same order as the panels. i.e the panels are the reference, they "know"
+    # the right order
     data['PANEL'] = pd.Categorical(data['PANEL'])
-    data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
+    ordered_categories = [c for c in panels['PANEL'].cat.categories
+                          if c in data['PANEL'].cat.categories]
+    data['PANEL'].cat.categories = ordered_categories
     data.sort(columns='PANEL', inplace=True)
     data.reset_index(drop=True, inplace=True)
     return data
