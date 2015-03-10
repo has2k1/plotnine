@@ -5,6 +5,7 @@ import math
 import numpy as np
 import pandas as pd
 
+from ..utils import round_any
 from ..utils.exceptions import GgplotError
 
 
@@ -290,3 +291,34 @@ def resolution(x, zero=True):
         x = np.unique(np.hstack([0, x]))
 
     return np.min(np.diff(np.sort(x)))
+
+
+def fullseq(range_, size, pad=False):
+    """
+    Generate sequence of fixed size intervals covering range.
+
+    Parameters
+    ----------
+    range_ : array-like
+        Range of sequence. Must be of length 2
+    size : numeric
+        interval size
+
+    Note: This is a port of scales::fullseq.
+          Source at https://github.com/hadley/scales
+    """
+    range_ = np.asarray(range_)
+    if zero_range(range_):
+        return range_ + size * np.array([-1, 1])/2
+
+    num = np.int(np.floor(np.ptp(range_)/size + size))
+    x = np.linspace(
+        round_any(range_[0], size, np.floor),
+        round_any(range_[1], size, np.ceil),
+        num)
+
+    # Add extra bin on bottom and on top, to guarantee that
+    # we cover complete range of data, whether right = True/False
+    if pad:
+        x = np.hstack([np.min(x) - size, x, np.max(x) + size])
+    return x

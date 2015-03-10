@@ -7,6 +7,7 @@ import pandas.core.common as com
 
 from ..utils import make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warning
+from ..scales.utils import fullseq
 from .stat import stat
 
 import datetime
@@ -36,7 +37,8 @@ class stat_bin(stat):
         breaks = self.params['breaks']
         right = self.params['right']
         binwidth = self.params['binwidth']
-        range_ = scales.x.dimension((0, 0))
+        origin = self.params['origin']
+        range_ = np.asarray(scales.x.dimension((0, 0)))
 
         # y values are not needed
         if 'y' in data:
@@ -50,22 +52,32 @@ class stat_bin(stat):
             bins = x
             width = make_iterable_ntimes(self.params['width'], len(x))
         elif com.is_numeric_dtype(x):
-            mn, mx = range_
-            adj = (mx - mn) * 0.001  # .1% of range
             if breaks is None and binwidth is None:
-                bin_count = 30
+                binwidth = np.ptp(range_) / 30
                 gg_warning(_MSG_BINWIDTH)
-            elif binwidth:
-                # create bins over the range like pandas would
-                bin_count = int(np.ceil(np.ptp(range_) + adj) / binwidth)
             if breaks is None:
-                breaks = np.linspace(mn, mx, bin_count + 1, endpoint=True)
-                if right:
-                    breaks[0] -= adj
+                if origin is None:
+                    breaks = fullseq(range_, binwidth, pad=True)
                 else:
-                    breaks[-1] += adj
+                    bincount = np.floor(
+                        (range_[1] + 2*binwidth - origin) / binwidth)
+                    breaks = np.linspace(
+                        origin,
+                        range_[1] + binwidth,
+                        bincount)
 
-            bins = pd.cut(x, bins=breaks, labels=False,
+            # fuzzy breaks to protect from floating point rounding errors
+            diddle = 1e-07 * np.median(np.diff(breaks))
+            if right:
+                fuzz = np.hstack(
+                    [-diddle, np.repeat(diddle, len(breaks)-1)])
+            else:
+                fuzz = np.hstack(
+                    [np.repeat(-diddle, len(breaks)-1), diddle])
+
+            fuzzybreaks = breaks + fuzz
+
+            bins = pd.cut(x, bins=fuzzybreaks, labels=False,
                           right=right)
             width = np.diff(breaks)
             x = [breaks[i] + width[i] / 2
