@@ -23,9 +23,9 @@ class stat_density(stat):
 
     def _calculate(self, data, scales, **kwargs):
         x = data.pop('x')
+        n = len(x)
 
-        _sc = scales.x if scales.x else scales.y
-        range_x = _sc.dimension((0, 0))
+        range_x = scales.x.dimension((0, 0))
 
         try:
             float(x.iloc[0])
@@ -45,7 +45,7 @@ class stat_density(stat):
         try:
             weight = data.pop('weight')
         except KeyError:
-            weight = np.ones(len(x))
+            weight = np.ones(n) / n
 
         lookup = {
             'biweight': 'biw',
@@ -74,5 +74,8 @@ class stat_density(stat):
             clip=self.params['clip'],)
         x2 = np.linspace(range_x[0], range_x[1], self.params['n'])
         y = kde.evaluate(x2)
-        new_data = pd.DataFrame({'x': x2, 'y': y})
+        new_data = pd.DataFrame({'x': x2,
+                                 'y': y,
+                                 'count': y * n,
+                                 'scaled': y / np.max(y)})
         return new_data
