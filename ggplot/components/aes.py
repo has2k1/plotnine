@@ -2,18 +2,12 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
 import re
-if sys.hexversion > 0x03000000:
-    # UserDict moved in python3 standard library
-    from collections import UserDict
-else:
-    from UserDict import UserDict
-
 from copy import deepcopy
 import six
 from patsy.eval import EvalEnvironment
 
 
-class aes(UserDict):
+class aes(dict):
     """
     Creates a dictionary that is used to evaluate
     things you're plotting. Most typically, this will
@@ -59,9 +53,7 @@ class aes(UserDict):
 
     def __init__(self, *args, **kwargs):
         if args:
-            self.data = dict(zip(self.DEFAULT_ARGS, args))
-        else:
-            self.data = {}
+            dict.__init__(self, zip(self.DEFAULT_ARGS, args))
         if kwargs:
             self.update(kwargs)
         if 'colour' in self:
@@ -71,17 +63,15 @@ class aes(UserDict):
 
     def __deepcopy__(self, memo):
         '''deepcopy support for ggplot'''
+        # Just copy the keys and point to the env
         result = aes()
-        for key, item in self.__dict__.items():
-            # don't make a deepcopy of the env!
-            if key == "__eval_env__":
-                result.__dict__[key] = self.__dict__[key]
-                continue
+        for key, item in self.items():
             try:
-                result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+                result[key] = deepcopy(self[key], memo)
             except:
                 raise
 
+        result.aes_env = self.aes_env
         return result
 
 
