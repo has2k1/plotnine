@@ -10,6 +10,7 @@ else:
 
 from copy import deepcopy
 import six
+from patsy.eval import EvalEnvironment
 
 
 class aes(UserDict):
@@ -62,10 +63,11 @@ class aes(UserDict):
         else:
             self.data = {}
         if kwargs:
-            self.data.update(kwargs)
-        if 'colour' in self.data:
-            self.data['color'] = self.data['colour']
-            del self.data['colour']
+            self.update(kwargs)
+        if 'colour' in self:
+            self['color'] = self.pop('colour')
+
+        self.aes_env = EvalEnvironment.capture(1)
 
     def __deepcopy__(self, memo):
         '''deepcopy support for ggplot'''

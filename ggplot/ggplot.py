@@ -8,7 +8,6 @@ import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from patsy.eval import EvalEnvironment
 
 from .components import colors, shapes
 from .components.legend import add_legend
@@ -69,7 +68,7 @@ class ggplot(object):
         self.scales = Scales()
         # default theme is theme_gray
         self.theme = theme_gray()
-        self.plot_env = EvalEnvironment.capture(1)
+        self.plot_env = mapping.aes_env
 
     def __repr__(self):
         """Print/show the plot"""
