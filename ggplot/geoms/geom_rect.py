@@ -30,6 +30,7 @@ class geom_rect(geom):
 
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    guide_geom = 'polygon'
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle',
                     'fill': 'facecolor', 'color': 'edgecolor'}

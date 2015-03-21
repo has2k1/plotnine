@@ -19,6 +19,7 @@ class GgplotError(Exception):
 _printed_warnings = set()
 
 
+# TODO: use the warn package
 def gg_warning(text):
     if not (text in _printed_warnings):
         _printed_warnings.add(text)

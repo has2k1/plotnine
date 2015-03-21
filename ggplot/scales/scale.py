@@ -6,12 +6,15 @@ from copy import deepcopy
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
+import matplotlib.cbook as cbook
+from matplotlib.ticker import MaxNLocator
 
 from ..utils import waiver, is_waive
 from ..utils import identity, match
 from ..utils import round_any
-from ..utils.exceptions import gg_warning
-from .utils import rescale, censor, expand_range
+from ..utils.exceptions import gg_warning, GgplotError
+from .utils import rescale, censor, expand_range, zero_range
+from ..components.aes import is_position_aes
 
 
 class scale(object):
@@ -26,7 +29,7 @@ class scale(object):
     _expand = waiver()  # multiplicative and additive expansion constants.
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
-    guide = waiver()    # legend or any other guide
+    guide = 'legend'    # legend or any other guide
     _limits = None      # (min, max)
 
     def __init__(self, **kwargs):
@@ -38,6 +41,16 @@ class scale(object):
             else:
                 msg = '{} could not recognise parameter `{}`'
                 gg_warning(msg.format(self.__class__.__name__, k))
+
+        if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
+            if len(self.breaks) != len(self.labels):
+                raise GgplotError(
+                    "Breaks and labels have unequal lengths")
+
+        if (self.breaks is None and
+                not is_position_aes(self.aesthetics) and
+                self.guide is not None):
+            self.guide = None
 
     def __radd__(self, gg):
         """
@@ -163,6 +176,60 @@ class scale_discrete(scale):
         pal_match[pd.isnull(pal_match)] = self.na_value
         return pal_match
 
+    def scale_breaks(self):
+        """
+        Returns a dictionary of the form {break: position}
+
+        e.g.
+        {'fair': 1, 'good': 2, 'very good': 3,
+        'premium': 4, 'ideal': 5}
+        """
+        if self.breaks is None:
+            return None
+        elif is_waive(scale.breaks):
+            breaks = self.limits
+        elif callable(scale.breaks):
+            breaks = scale.breaks(self.limits)
+        else:
+            breaks = scale.breaks
+
+        # Breaks can only occur only on values in domain
+        in_domain = list(set(breaks) & set(self.limits))
+        pos = match(in_domain, breaks)
+        return dict(zip(in_domain, pos))
+
+    def scale_labels(self):
+        breaks = self.scale_breaks()
+
+        if breaks is None:
+            return None
+
+        if self.labels is None:
+            return None
+        elif is_waive(self.labels):
+            # if breaks is
+            #   {'I': 2, 'G': 1, 'P': 3, 'V': 4, 'F': 0}
+            # We want the labels sorted acc. to the value
+            # i.e ['F', 'G', 'I', 'P', 'V']
+            return sorted(breaks, key=breaks.__getitem__)
+        elif callable(self.labels):
+            return self.labels(breaks)
+        else:
+            # if a dict is used to rename some labels
+            if issubclass(scale.labels, dict):
+                labels = breaks
+                lookup = list(scale.labels.items())
+                mp = match(lookup, labels, nomatch=-1)
+                for idx in mp:
+                    if idx != -1:
+                        labels[idx] = lookup[idx]
+                return labels
+            else:
+                # TODO: see ggplot2
+                # Need to ensure that if breaks were dropped,
+                # corresponding labels are too
+                return self.labels
+
 
 class scale_continuous(scale):
     """
@@ -190,8 +257,6 @@ class scale_continuous(scale):
         mx = series.max()
         if not (self.range is None):
             _mn, _mx = self.range
-            # print(mn, _mn)
-            # print(mx, _mx)
             mn = np.min([mn, _mn])
             mx = np.max([mx, _mx])
 
@@ -222,3 +287,55 @@ class scale_continuous(scale):
         scaled = pal[match(x, uniq)]
         scaled[pd.isnull(scaled)] = self.na_value
         return scaled
+
+    def scale_breaks(self):
+        # Limits in transformed space need to be converted back to
+        # data space
+        # TODO enable this after transforms are sorted out
+        # limits = scale.trans.inv(scale.limits)
+        limits = self.limits
+
+        if scale.breaks is None:
+            return None
+        elif zero_range(limits):
+            breaks = limits[0]
+        elif is_waive(scale.breaks):
+            # Transformation needed here XXX ?
+            breaks = MaxNLocator(4).tick_values(*limits)
+        elif callable(scale.breaks):
+            breaks = scale.breaks(limits)
+        else:
+            breaks = scale.breaks
+
+        # Breaks in data space need to be converted back to
+        # transformed space And any breaks outside the
+        # dimensions need to be flagged as missing
+        # breaks = censor(scale.trans.trans(breaks),
+        #                 scale.trans.trans(limits))
+        breaks = censor(breaks, limits)
+        if len(breaks) == 0:
+            GgplotError('Zero breaks in scale for {}'.format(
+                scale.aesthetics))
+        return breaks
+
+    def scale_labels(self):
+        breaks = self.scale_breaks()
+
+        if breaks is None:
+            return None
+
+        if self.labels is None:
+            return None
+        elif is_waive(self.labels):
+            # TODO: Should apply transformation
+            labels = breaks
+        elif callable(self.labels):
+            labels = self.labels(breaks)
+        else:
+            labels = self.labels
+
+        if len(labels) != len(breaks):
+            raise GgplotError(
+                "Breaks and labels are different lengths")
+
+        return labels

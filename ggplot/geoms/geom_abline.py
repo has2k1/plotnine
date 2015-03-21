@@ -16,6 +16,7 @@ class geom_abline(geom):
                    'y': None}
     REQUIRED_AES = {'slope', 'intercept'}
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity'}
+    guide_geom = 'path'
 
     layer_params = {'inherit_aes': False}
 

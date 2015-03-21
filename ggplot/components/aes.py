@@ -3,8 +3,12 @@ from __future__ import (absolute_import, division, print_function,
 import sys
 import re
 from copy import deepcopy
+
+import pandas as pd
 import six
 from patsy.eval import EvalEnvironment
+
+from ..utils import defaults
 
 
 class aes(dict):
@@ -102,3 +106,40 @@ def aes_to_scale(var):
     elif var in {'y', 'ymin', 'ymax', 'yend', 'yintercept'}:
         var = 'y'
     return var
+
+
+def is_position_aes(vars_):
+    """
+    Figure out if an aesthetic is a position aesthetic or not
+    """
+    try:
+        return all([aes_to_scale(v) in {'x', 'y'} for v in vars_])
+    except TypeError:
+        return aes_to_scale(vars_) in {'x', 'y'}
+
+
+def aesdefaults(data, y, params):
+    """
+    Convenience method for setting aesthetic defaults
+
+    Parameters
+    ----------
+    data : dataframe
+        data values from aesthetic mappings
+    y : dict
+        defaults
+    params : dict
+        user specified values
+    """
+    updated = y.copy()
+    if params is not None:
+        updated.update(params)
+
+    cols = defaults(data, updated)
+
+    # TODO:
+    # Need to be careful here because stat_boxplot uses a
+    # list-column to store a vector of outliers
+    # !!!
+    df = cols
+    return df

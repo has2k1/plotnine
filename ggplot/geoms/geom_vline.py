@@ -12,6 +12,7 @@ class geom_vline(geom):
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
                       'show_guide': False}
+    guide_geom = 'path'
 
     layer_params = {'inherit_aes': False}
 

@@ -7,7 +7,7 @@ from .geom_rect import geom_rect
 class geom_bar(geom_rect):
     DEFAULT_AES = {'alpha': 1, 'color': '', 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5,
-                   'weight': None, 'y': None}
+                   'weight': 1}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 

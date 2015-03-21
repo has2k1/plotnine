@@ -12,6 +12,7 @@ class geom_hline(geom):
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',
                       'show_guide': False}
+    guide_geom = 'path'
 
     layer_params = {'inherit_aes': False}
 

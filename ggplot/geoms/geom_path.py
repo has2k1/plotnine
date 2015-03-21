@@ -13,6 +13,7 @@ class geom_path(geom):
 
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    guide_geom = 'path'
 
     _aes_renames = {'color': 'edgecolor', 'size': 'linewidth',
                     'linetype': 'linestyle'}

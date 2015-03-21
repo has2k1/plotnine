@@ -167,7 +167,7 @@ class scale_fill_grey(scale_color_grey):
 # Smooth gradient between two colours
 class scale_color_gradient(scale_continuous):
     aesthetics = ['color']
-    guide = 'colourbar'
+    guide = 'colorbar'
 
     def __init__(self, low='#132B43', high='#56B1F7', space='Lab'):
         """
@@ -201,7 +201,6 @@ class scale_fill_gradient(scale_color_gradient):
 # Diverging colour gradient
 class scale_color_gradient2(scale_color_gradient):
     aesthetics = ['color']
-    guide = 'colorbar'
 
     def __init__(self, low='#832424', mid='#FFFFFF',
                  high='#3A3A98', space='Lab', midpoint=0):

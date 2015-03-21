@@ -10,9 +10,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 from .components import colors, shapes
-from .components.legend import add_legend
-# from .geoms import *
-# from .scales import *
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive
@@ -23,6 +20,7 @@ from .layer import add_group
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 from .scales.scale import scale_discrete
+from .guides.guides import guides
 
 
 __all__ = ["ggplot"]
@@ -65,6 +63,7 @@ class ggplot(object):
         self.facet = facet_null()
         self.labels = mapping  # TODO: Should allow for something else!!
         self.layers = []
+        self.guides = guides()
         self.scales = Scales()
         # default theme is theme_gray
         self.theme = theme_gray()
@@ -151,6 +150,7 @@ class ggplot(object):
             set_facet_spacing(plot)
 
             # Draw legend
+            self.guides.build(plot, 'right')
             # print(panel.layout)
         return plt.gcf()
 

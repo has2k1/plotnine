@@ -80,7 +80,7 @@ class Panel(object):
         if they exist.
         """
         # wrapping with np.asarray prevents an exception
-        # on some datasets !!!
+        # on some datasets
         bool_idx = (np.asarray(self.layout['PANEL']) == i)
         xsc = None
         ysc = None

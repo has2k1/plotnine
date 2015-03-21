@@ -28,4 +28,6 @@ from .scales import *
 from .facets import *
 from .themes import *
 from .utils import *
-from .exampledata import (diamonds,mtcars,meat,pageviews,movies)
+from .exampledata import (diamonds, mtcars, meat, pageviews)
+from .guides import (guides, guide_legend,
+                     guide_colorbar, guide_colourbar)

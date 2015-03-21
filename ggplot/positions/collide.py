@@ -33,7 +33,7 @@ def collide(data, width=None, name='', strategy=None):
 
     # Reorder by x position, relying on stable sort to preserve existing
     # ordering, which may be by group or order.
-    data = data.iloc[data['xmin'].order().index, :]  # !!! reset_index
+    data = data.iloc[data['xmin'].order().index, :]
 
     # Check for overlap
     intervals = data[xminmax].drop_duplicates().as_matrix().flatten()

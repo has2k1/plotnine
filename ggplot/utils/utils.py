@@ -218,7 +218,7 @@ def _margins(vars, margins=True):
     out : list
         All the margins to create.
     """
-    if margins == False:
+    if margins is False:
         return []
 
     def fn(_vars):
@@ -228,7 +228,7 @@ def _margins(vars, margins=True):
         # for each wanted variable, couple it with
         # all variables to the right
         for i, u in enumerate(_vars):
-            if margins == True or u in margins:
+            if margins is True or u in margins:
                 lst = [u] + [v for v in _vars[i+1:]]
                 dim_margins.append(lst)
         return dim_margins
@@ -324,7 +324,8 @@ def ninteraction(df, drop=False):
     ids = ids.reindex(columns=reversed(ids.columns))
 
     # Calculate dimensions
-    len_unique = lambda x: len(np.unique(x))
+    def len_unique(x):
+        return len(np.unique(x))
     ndistinct = ids.apply(len_unique, axis=0).as_matrix()
 
     combs = np.matrix(
@@ -389,11 +390,26 @@ def uniquecols(df):
 
 def defaults(d1, d2):
     """
-    Update dict d1 with the contents of d2 that
-    are not in d1
+    Update d1 with the contents of d2 that are not in d1.
+    d1 and d2 are dictionary like objects.
+
+    Parameters
+    ----------
+    d1 : dict | dataframe
+    d2 : dict | dataframe
+
+    Returns
+    -------
+    out : dict | dataframe
+        type of d1
     """
+    tolist = isinstance(d2, pd.DataFrame)
     for k in (set(d2.keys()) - set(d1.keys())):
-        d1[k] = d2[k]
+        if tolist:
+            d1[k] = d2[k].tolist()
+        else:
+            d1[k] = d2[k]
+
     return d1
 
 
@@ -448,7 +464,8 @@ def gg_import(name):
     lookup = {'geom': '..geoms',
               'stat': '..stats',
               'scale': '..scales',
-              'position': '..positions'}
+              'position': '..positions',
+              'guide': '..guides'}
     pattern = '([a-z]+)_'
     match = re.match(pattern, name)
 

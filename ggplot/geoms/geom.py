@@ -19,10 +19,11 @@ class geom(object):
     REQUIRED_AES = set()
     DEFAULT_PARAMS = dict()
 
-    data = None
-    aes = None
-    manual_aes = None
-    params = None
+    data = None           # geom/layer specific dataframe
+    aes = None            # mappings i.e aes(x=col1, fill=col2, ...)
+    manual_aes = None     # setting of aesthetic
+    params = None         # parameter settings
+    guide_geom = 'point'  # the geom responsible for the legend
 
     # geoms & stats and even users can pass parameters to the
     # layer when it is created.
@@ -107,7 +108,7 @@ class geom(object):
                 raise GgplotError('Cannot recognize argument: %s' % k)
 
         self._cache = {}
-
+#from ggplot.utils i
     def __deepcopy__(self, memo):
         """
         Deep copy without copying the self.data dataframe

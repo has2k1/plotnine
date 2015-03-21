@@ -10,6 +10,7 @@ class geom_ribbon(geom):
                    'linetype': 'solid', 'size': 1.0}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    guide_geom = 'polygon'
 
     _aes_renames = {'linetype': 'linestyle', 'ymin': 'y1', 'ymax': 'y2',
                     'size': 'linewidth', 'fill': 'facecolor',

@@ -4,17 +4,19 @@ from __future__ import (absolute_import, division, print_function,
 import six
 from copy import deepcopy
 
+import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
 import pandas.core.common as com
 from patsy.eval import EvalEnvironment
 
-from .components.aes import aes, is_calculated_aes, strip_dots
+from .components.aes import aes, is_calculated_aes, strip_dots, aesdefaults
 from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import discrete_dtypes, ninteraction
 from .utils import check_required_aesthetics, defaults
 from .utils import is_string, gg_import, groupby_apply
+from .utils import is_scalar_or_string
 from .positions.position import position
 
 _TPL_EVAL_FAIL = """\
@@ -32,7 +34,8 @@ class layer(object):
     def __init__(self, geom=None, stat=None,
                  data=None, mapping=None,
                  position=None, params=None,
-                 inherit_aes=True, group=None):
+                 inherit_aes=True, group=None,
+                 show_guide=None):
         self.geom = geom
         self.stat = stat
         self.data = data
@@ -41,6 +44,7 @@ class layer(object):
         self.params = params
         self.inherit_aes = inherit_aes
         self.group = group
+        self.show_guide = show_guide
 
     def __deepcopy__(self, memo):
         """
@@ -240,6 +244,46 @@ class layer(object):
         kwargs = deepcopy(self.geom.params)
         kwargs['zorder'] = zorder
         self.geom.draw_groups(data, scales, ax, **kwargs)
+
+    def use_defaults(self, data):
+        """
+        Return dataframe with aesthetic parameter setting and
+        default aesthetic values. i.e. Unmapped aesthetics
+        and their values
+        """
+        df = aesdefaults(data, self.geom.DEFAULT_AES, None)
+
+        # Override mappings with atomic parameters
+        gp = ((set(df.columns) | set(self.geom.REQUIRED_AES)) &
+              set(self.geom.manual_aes))
+        for ae in self.geom.manual_aes:
+            if not is_scalar_or_string(self.geom.manual_aes[ae]):
+                try:
+                    gp.remove(ae)
+                except KeyError:
+                    pass
+
+        gp = list(gp)
+
+        # Check that mappings are compatable length: either 1 or
+        # the same length
+        def llen(var):
+            if is_scalar_or_string(var):
+                return 1
+            return len(var)
+
+        param_lengths = np.array(
+            [llen(self.geom.manual_aes[ae]) for ae in gp])
+
+        bad = (param_lengths != 1) & (param_lengths != len(df))
+        if any(bad):
+            msg = "Incompatible lengths for set aesthetics: {}"
+            raise GgplotError(msg.format(', '.join(df[bad].columns)))
+
+        for ae in gp:
+            df[ae] = self.geom.manual_aes[ae]
+
+        return df
 
 
 def add_group(data):

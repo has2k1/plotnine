@@ -1,4 +1,5 @@
 from .theme import theme
+from .element_text import element_text
 
 import matplotlib as mpl
 
@@ -55,7 +56,24 @@ class theme_gray(theme):
         self._rcParams["ytick.minor.pad"] = "6"
         self._rcParams["ytick.color"] = "#7F7F7F"
         self._rcParams["ytick.direction"] = "out"  # pointing out of axis
+
         self._rcParams["legend.fancybox"] = "True"
+        # self._rcParams["legend.direction"] = None
+        # self._rcParams["legend.margin"] = "0.2"
+        # self._rcParams["legend.key.size"] = "1.2"
+        # self._rcParams["legend.key.height"] = None
+        # self._rcParams["legend.key.width"] = None
+        # self._rcParams["legend.text"] = element_text(size='0.8')
+        # self._rcParams["legend.text.align"] = None
+        # self._rcParams["legend.title"] = element_text(size='0.8',
+        #                                               face='bold',
+        #                                               hjust=0)
+        # self._rcParams["legend.title.align"] = None
+        # self._rcParams["legend.box"] = None
+        # self._rcParams["legend.box.just"] = None
+        # self._rcParams["legend.justification"] = "center"
+        # self._rcParams["legend.position"] = "right"
+
         self._rcParams["figure.figsize"] = "11, 8"
         self._rcParams["figure.facecolor"] = "1.0"
         self._rcParams["figure.edgecolor"] = "0.50"

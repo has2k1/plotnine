@@ -65,8 +65,11 @@ class gg_context(object):
             mpl.rcParams.update(self._rcparams)
 
         # other clean up
-        gg_reset()
+        gg_reset()  # TODO: get rid of this
+        self.reset()
 
+    def reset(self):
+        pass
 
 # API-docs from ggplot2: GPL-2 licensed
 
