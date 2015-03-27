@@ -2,10 +2,15 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import pandas as pd
+from matplotlib.cbook import Bunch
+from matplotlib.offsetbox import (AnchoredOffsetbox, TextArea,
+                                  DrawingArea, HPacker, VPacker)
 
-from ..utils import gg_import
-from ..utils.exceptions import gg_warning
+from ..utils import gg_import, ColoredDrawingArea
+from ..utils.exceptions import gg_warning, GgplotError
 from .guide import guide
+
+# See guides.py for terminology
 
 
 class guide_legend(guide):
@@ -80,7 +85,49 @@ class guide_legend(guide):
             geom = gg_import('geom_' + l.geom.guide_geom)
             params = l.geom.manual_aes.copy()
             params.update(l.stat.params)
-            lst.append({'geom': geom, 'data': data, 'params': params})
+            lst.append(Bunch(geom=geom, data=data, params=params))
 
         self.geoms = lst
         return self
+
+    def draw(self, theme):
+        """
+        Draw guide
+
+        Parameters
+        ----------
+        theme : theme
+
+        Returns
+        -------
+        out : matplotlib.offsetbox.Offsetbox
+            A drawing of this legend
+        """
+        # default setting
+        if self.label_position is None:
+            label_position = 'right'
+        if label_position not in ['top', 'bottom', 'left', 'right']:
+            msg = 'label position {} is invalid'
+            raise GgplotError(msg.format(label_position))
+
+        nbreak = len(self.key)
+
+        # gap between the keys
+        hgap = 0.3 * 20  # .3 lines
+        vgap = hgap
+
+        # title
+        # TODO: theme me
+        title = TextArea("  %s" % self.title, textprops=dict(color="k"))
+        lst = [title]
+        for i in range(nbreak):
+            # TODO: theme me
+            da = ColoredDrawingArea(20, 20, 0, 0, color='#E5E5E5')
+            # overlay geoms
+            for g in self.geoms:
+                g.data.rename(columns=g.geom._aes_renames, inplace=True)
+                lst.append(g.geom.draw_legend(g.data.iloc[i], g.params, da))
+
+        # TODO: theme me
+        box = VPacker(children=lst, align='center', pad=0, sep=vgap)
+        return box

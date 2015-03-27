@@ -14,6 +14,7 @@ specify the scope of the theme application.
 from copy import copy, deepcopy
 
 from .element_target import element_target_factory, merge_element_targets
+from .element_target import other_targets
 
 
 class theme(object):
@@ -70,10 +71,15 @@ class theme(object):
         self.element_themes = []
         self.complete = complete
         self._rcParams = {}
+        # theming parameters that matplolib cannot deal with
+        self._params = other_targets.copy()
 
         for target_name, theme_element in kwargs.items():
-            self.element_themes.append(element_target_factory(target_name,
-                                                              theme_element))
+            if target_name in other_targets:
+                self._params[target_name] = theme_element
+            else:
+                self.element_themes.append(
+                    element_target_factory(target_name, theme_element))
 
     def apply_theme(self, ax, params):
         """apply_theme will be called with an axes object after plot has completed.

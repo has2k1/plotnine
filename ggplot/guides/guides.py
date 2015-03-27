@@ -2,10 +2,27 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import pandas as pd
+from matplotlib.offsetbox import (AnchoredOffsetbox, TextArea,
+                                  DrawingArea, HPacker, VPacker)
 
 from .guide import guide as guide_class
 from ..utils import is_string, gg_import, is_waive
 from ..utils.exceptions import GgplotError
+
+"""
+Terminology
+-----------
+- A guide is either a legend or colorbar.
+
+- A guide definition (gdef) is an instantiated guide as it
+  is used in the process of creating the legend
+
+- The guides class holds all guides that will appear in the
+  plot
+
+- A guide box is a fully drawn out guide.
+  It is of subclass matplotlib.offsetbox.Offsetbox
+"""
 
 
 class guides(dict):
@@ -25,34 +42,34 @@ class guides(dict):
         return gg
 
     def build(self, plot, position):
-        theme = plot.theme._rcParams
+        params = plot.theme._params
 
-        # def set_if_none(obj, val):
-        #     if obj is None:
-        #         obj = val
-        #
-        # # by default, guide boxes are vertically aligned
-        # set_if_none(theme['legend.box'], 'vertical')
-        #
-        # # size of key (also used for bar in colorbar guide)
-        # set_if_none(theme['legend.key.width'], theme['legend.key.size'])
-        # set_if_none(theme['legend.key.height'], theme['legend.key.size'])
-        # set_if_none(theme['legend.box'], 'vertical')
-        #
-        # # by default, direction of each guide depends on
-        # # the position of the guide.
-        # if position in {'top', 'bottom'}:
-        #     set_if_none(theme['legend.direction'], 'horizontal')
-        # else:  # left, right, (default)
-        #     set_if_none(theme['legend.direction'], 'vertical')
-        #
-        # # justification of legend boxes
-        # if position in {'top', 'bottom'}:
-        #     set_if_none(theme['legend.box.just'], ('center', 'top'))
-        # elif position in {'left', 'right'}:
-        #     set_if_none(theme['legend.box.just'], ('left', 'top'))
-        # else:
-        #     set_if_none(theme['legend.box.just'], ('center', 'center'))
+        def set_if_none(d, key, val):
+            if d[key] is None:
+                d[key] = val
+
+        # by default, guide boxes are vertically aligned
+        set_if_none(params, 'legend_box', 'vertical')
+
+        # size of key (also used for bar in colorbar guide)
+        set_if_none(params, 'legend_key_width', params['legend_key_size'])
+        set_if_none(params, 'legend_key_height', params['legend_key_size'])
+        set_if_none(params, 'legend_box', 'vertical')
+
+        # by default, direction of each guide depends on
+        # the position of the guide_
+        if position in {'top', 'bottom'}:
+            set_if_none(params, 'legend_direction', 'horizontal')
+        else:  # left, right, (default)
+            set_if_none(params, 'legend_direction', 'vertical')
+
+        # justification of legend boxes
+        if position in {'top', 'bottom'}:
+            set_if_none(params, 'legend_box_just', ('center', 'top'))
+        elif position in {'left', 'right'}:
+            set_if_none(params, 'legend_box_just', ('left', 'top'))
+        else:
+            set_if_none(params, 'legend_box_just', ('center', 'center'))
 
         gdefs = self.train(plot)
         if not gdefs:
@@ -63,6 +80,10 @@ class guides(dict):
 
         if not gdefs:
             return
+
+        gboxes = self.draw(gdefs, plot.theme)
+        bigbox = self.assemble(gboxes)
+        return bigbox
 
     def train(self, plot):
         gdefs = []
@@ -92,14 +113,14 @@ class guides(dict):
 
             # title
             if is_waive(guide.title):
-                try:
-                    guide.title = plot.labels[output]
-                except KeyError:
+                if scale.name:
                     guide.title = scale.name
+                else:
+                    guide.title = plot.labels[output]
 
             # direction
-            # if guide.direction is None:
-            #     guide.direction = plot.theme._rcParams['legend.direction']
+            if guide.direction is None:
+                guide.direction = plot.theme._params['legend_direction']
 
             # each guide object trains scale within the object,
             # so Guides (i.e., the container of guides)
@@ -155,3 +176,41 @@ class guides(dict):
                 new_gdefs.append(gdef)
 
         return new_gdefs
+
+    def draw(self, gdefs, theme):
+        """
+        Draw out each guide definition
+
+        Parameters
+        ----------
+        gdefs : list of guide_legend|guide_colorbar
+            guide definitions
+        theme : theme
+
+        Returns
+        -------
+        out : list of matplotlib.offsetbox.Offsetbox
+            A drawing of each legend
+        """
+        valid_positions = {'top', 'bottom', 'left', 'right'}
+
+        def verify_title_position(g):
+            if g.title_position is None:
+                if g.direction == 'vertical':
+                    g.title_position = 'top'
+                elif g.direction == 'horizontal':
+                    g.title_position = 'left'
+            if g.title_position not in valid_positions:
+                msg = 'title position "{}" is invalid'
+                raise GgplotError(msg.format(g.title_position))
+            return g
+
+        gdefs = [verify_title_position(g) for g in gdefs]
+        return [g.draw(theme) for g in gdefs]
+
+    def assemble(self, gboxes):
+        """
+        Put together all the guide boxes
+        """
+        box = VPacker(children=gboxes, align="left", pad=0, sep=5)
+        return box

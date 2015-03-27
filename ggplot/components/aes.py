@@ -143,3 +143,13 @@ def aesdefaults(data, y, params):
     # !!!
     df = cols
     return df
+
+
+def make_labels(mapping):
+    """
+    Convert aesthetic mapping into text labels
+    """
+    labels = mapping.copy()
+    for ae in labels:
+        labels[strip_dots(ae)] = labels[ae]
+    return labels

@@ -27,6 +27,7 @@ class scale(object):
     trans = None        # transformation function
     na_value = np.NaN   # What to do with the NA values
     _expand = waiver()  # multiplicative and additive expansion constants.
+    name = None         # used as the axis label or legend title
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
     guide = 'legend'    # legend or any other guide

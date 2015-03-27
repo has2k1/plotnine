@@ -10,9 +10,25 @@ that covers text also has to cover axis.title.
 
 """
 
+from ..utils.exceptions import GgplotError
+
 from six import with_metaclass
 
 element_target_map = {}
+
+other_targets = {
+    'legend_direction': None,
+    'legend_margin': '0.2',
+    'legend_key_size': '1.2',
+    'legend_key_height': None,
+    'legend_key_width': None,
+    'legend_text_align': None,
+    'legend_title_align': None,
+    'legend_box': None,
+    'legend_box_just': None,
+    'legend_justification': 'center',
+    'legend_position': 'right'
+}
 
 
 class RegisterElementTarget(type):
@@ -30,7 +46,7 @@ def element_target_factory(element_target, element_theme):
     if klass:
         return klass(element_theme)
     else:
-        raise Exception("no such element target %s" % element_target)
+        raise GgplotError("no such element target %s" % element_target)
 
 
 def merge_element_targets(et_list1, et_list2):

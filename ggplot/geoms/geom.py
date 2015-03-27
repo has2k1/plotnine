@@ -5,9 +5,10 @@ from copy import deepcopy
 import pandas as pd
 
 from ..components import aes
+from ..components.aes import make_labels
 from ..utils.exceptions import GgplotError
 from ..layer import layer
-from ..utils import is_scalar_or_string, gg_import
+from ..utils import is_scalar_or_string, gg_import, defaults
 
 __all__ = ['geom']
 __all__ = [str(u) for u in __all__]
@@ -170,6 +171,12 @@ class geom(object):
                   position=self.params['position'],
                   **self.layer_params)
         gg.layers.append(l)
+
+        # Add any new labels
+        mapping = make_labels(self.aes)
+        default = make_labels(self.DEFAULT_AES)
+        new_labels = defaults(mapping, default)
+        gg.labels = defaults(gg.labels, new_labels)
         return gg
 
     def _find_aes_and_data(self, args, kwargs):

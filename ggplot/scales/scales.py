@@ -199,7 +199,6 @@ def scales_add_defaults(scales, data, aesthetics):
         _type = scale_type(data[ae])
         scale_name = 'scale_{}_{}'.format(scale_var, _type)
         scale_f = gg_import(scale_name)
-        scale_f.name = aesthetics[ae]
         if scale_f is None:
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue

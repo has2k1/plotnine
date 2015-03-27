@@ -12,7 +12,7 @@ from .utils import (pop, is_categorical, is_string, is_scalar_or_string,
                     check_required_aesthetics, xy_panel_scales,
                     uniquecols, defaults, jitter, gg_import,
                     remove_missing, round_any, hex_to_rgba,
-                    make_color_tuples, groupby_apply)
+                    make_color_tuples, groupby_apply, ColoredDrawingArea)
 
 __all__ = ["ggsave", "date_breaks", "date_format", "add_ggplotrc_params"]
 __all__ = [str(u) for u in __all__]

@@ -8,8 +8,10 @@ import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.offsetbox import AnchoredOffsetbox
 
 from .components import colors, shapes
+from .components.aes import make_labels
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive
@@ -61,7 +63,7 @@ class ggplot(object):
         self.data = data
         self.mapping = mapping
         self.facet = facet_null()
-        self.labels = mapping  # TODO: Should allow for something else!!
+        self.labels = make_labels(mapping)
         self.layers = []
         self.guides = guides()
         self.scales = Scales()
@@ -71,7 +73,7 @@ class ggplot(object):
 
     def __repr__(self):
         """Print/show the plot"""
-        figure = self.draw()
+        figure = self.render()
         # We're going to default to making the plot appear when __repr__ is
         # called.
         #figure.show() # doesn't work in ipython notebook
@@ -96,63 +98,78 @@ class ggplot(object):
 
         return result
 
-    def draw(self):
+    def render(self):
         plt.close("all")
         with gg_context(theme=self.theme):
-            data, panel, plot = self.plot_build()
-            fig, axs = plt.subplots(plot.facet.nrow,
-                                    plot.facet.ncol,
-                                    sharex=False,
-                                    sharey=False)
-
-            axs = np.atleast_2d(axs)
-            axs = [ax for row in axs for ax in row]
-
-            # ax - axes for a particular panel
-            # pnl - panel (facet) information from layout table
-            for ax, (_, pnl) in zip(axs, panel.layout.iterrows()):
-                panel_idx = pnl['PANEL'] - 1
-                xy_scales = {'x': panel.x_scales[pnl['SCALE_X'] - 1],
-                             'y': panel.y_scales[pnl['SCALE_Y'] - 1]}
-
-                # Plot all data for each layer
-                for zorder, (l, d) in enumerate(
-                        zip(plot.layers, data), start=1):
-                    bool_idx = (d['PANEL'] == pnl['PANEL'])
-                    l.plot(d[bool_idx], xy_scales, ax, zorder)
-
-                # panel limits
-                ax.set_xlim(panel.ranges[panel_idx]['x'])
-                ax.set_ylim(panel.ranges[panel_idx]['y'])
-
-                # panel breaks
-                set_breaks(panel, panel_idx, ax)
-
-                # panel labels
-                set_labels(panel, panel_idx, ax)
-
-                # xaxis, yaxis stuff
-                set_axis_attributes(plot, pnl, ax)
-
-                # TODO: Need to find a better place for this
-                # theme_apply turns on the minor grid only to turn
-                # it off here!!!
-                if isinstance(xy_scales['x'], scale_discrete):
-                    ax.grid(False, which='minor', axis='x')
-
-                if isinstance(xy_scales['y'], scale_discrete):
-                    ax.grid(False, which='minor', axis='y')
-
-                # draw facet labels
-                if isinstance(plot.facet, (facet_grid, facet_wrap)):
-                    draw_facet_label(plot, pnl, ax, fig)
-
+            plot = self.draw()
             set_facet_spacing(plot)
+            ax = plot.axs[0]
+            legend_box = self.guides.build(plot, 'right')
+            anchored_box = AnchoredOffsetbox(loc=6,  # center left
+                                             child=legend_box,
+                                             pad=0.1,
+                                             frameon=False,
+                                             # Spacing goes here
+                                             bbox_to_anchor=(1.05, 0.5),
+                                             bbox_transform=ax.transAxes,
+                                             borderpad=0.,)
+            box = ax.get_position()
+            ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+            ax.add_artist(anchored_box)
 
-            # Draw legend
-            self.guides.build(plot, 'right')
-            # print(panel.layout)
         return plt.gcf()
+
+    def draw(self):
+        data, panel, plot = self.plot_build()
+        fig, axs = plt.subplots(plot.facet.nrow,
+                                plot.facet.ncol,
+                                sharex=False,
+                                sharey=False)
+
+        axs = np.atleast_2d(axs)
+        axs = [ax for row in axs for ax in row]
+        plot.axs = axs
+
+        # ax - axes for a particular panel
+        # pnl - panel (facet) information from layout table
+        for ax, (_, pnl) in zip(axs, panel.layout.iterrows()):
+            panel_idx = pnl['PANEL'] - 1
+            xy_scales = {'x': panel.x_scales[pnl['SCALE_X'] - 1],
+                         'y': panel.y_scales[pnl['SCALE_Y'] - 1]}
+
+            # Plot all data for each layer
+            for zorder, (l, d) in enumerate(
+                    zip(plot.layers, data), start=1):
+                bool_idx = (d['PANEL'] == pnl['PANEL'])
+                l.plot(d[bool_idx], xy_scales, ax, zorder)
+
+            # panel limits
+            ax.set_xlim(panel.ranges[panel_idx]['x'])
+            ax.set_ylim(panel.ranges[panel_idx]['y'])
+
+            # panel breaks
+            set_breaks(panel, panel_idx, ax)
+
+            # panel labels
+            set_labels(panel, panel_idx, ax)
+
+            # xaxis, yaxis stuff
+            set_axis_attributes(plot, pnl, ax)
+
+            # TODO: Need to find a better place for this
+            # theme_apply turns on the minor grid only to turn
+            # it off here!!!
+            if isinstance(xy_scales['x'], scale_discrete):
+                ax.grid(False, which='minor', axis='x')
+
+            if isinstance(xy_scales['y'], scale_discrete):
+                ax.grid(False, which='minor', axis='y')
+
+            # draw facet labels
+            if isinstance(plot.facet, (facet_grid, facet_wrap)):
+                draw_facet_label(plot, pnl, ax, fig)
+
+        return plot
 
     def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
         """Adds the the specified legend to the legend

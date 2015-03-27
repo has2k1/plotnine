@@ -13,6 +13,9 @@ import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
 from matplotlib.colors import ColorConverter
+from matplotlib.offsetbox import DrawingArea
+from matplotlib.patches import Rectangle
+
 import six
 
 from .exceptions import GgplotError, gg_warning
@@ -626,3 +629,19 @@ def groupby_apply(df, cols, func, *args, **kwargs):
         d.is_copy = None
         lst.append(func(d, *args, **kwargs))
     return pd.concat(lst, axis=axis, ignore_index=True)
+
+
+class ColoredDrawingArea(DrawingArea):
+    """
+    A Drawing Area with a background color
+    """
+    def __init__(self, width, height, xdescent=0.0, ydescent=0.0,
+                 clip=True, color='none'):
+
+        super(ColoredDrawingArea, self).__init__(
+            width, height, xdescent, ydescent, clip=clip)
+
+        self.add_artist(Rectangle((0, 0), width=width,
+                                  height=height,
+                                  facecolor=color,
+                                  edgecolor='none'))

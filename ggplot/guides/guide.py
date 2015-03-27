@@ -36,6 +36,16 @@ class guide(object):
     order = 0
 
     def train(self, scale):
+        """
+        Create the key for the guide
+
+        The key is a dataframe with two columns:
+            - scale name : values
+            - label : labels for each value
+
+        scale name is one of the aesthetics
+        ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
+        """
         breaks = scale.scale_breaks()
         key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
