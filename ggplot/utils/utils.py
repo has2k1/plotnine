@@ -644,4 +644,4 @@ class ColoredDrawingArea(DrawingArea):
         self.add_artist(Rectangle((0, 0), width=width,
                                   height=height,
                                   facecolor=color,
-                                  edgecolor='none'))
+                                  edgecolor=color))

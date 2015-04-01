@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from matplotlib.collections import LineCollection
+import matplotlib.lines as lines
 
 from ..utils import make_color_tuples
 from .geom import geom
@@ -32,3 +33,31 @@ class geom_path(geom):
                                linewidths=pinfo['linewidth'],
                                linestyles=pinfo['linestyle'])
         ax.add_collection(lines)
+
+    @staticmethod
+    def draw_legend(data, params, da):
+        """
+        Draw a horizontal line in the box
+
+        Parameters
+        ----------
+        data : dataframe
+        params : dict
+        da : DrawingArea
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        x = [0, da.width]
+        y = [0.5 * da.height] * 2
+        key = lines.Line2D(x,
+                           y,
+                           alpha=data['alpha'],
+                           linestyle=data['linestyle'],
+                           linewidth=data['linewidth'],
+                           color=data['edgecolor'],
+                           solid_capstyle='butt',
+                           antialiased=False)
+        da.add_artist(key)
+        return da
