@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 import numpy as np
+from matplotlib.text import Text
 
 from .geom import geom
 
@@ -12,6 +14,7 @@ class geom_text(geom):
     REQUIRED_AES = {'label', 'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'parse': False}
+    guide_geom = 'text'
 
     _aes_renames = {'angle': 'rotation', 'lineheight': 'linespacing'}
     _units = {'alpha', 'color', 'family', 'size'}
@@ -41,3 +44,32 @@ class geom_text(geom):
         del pinfo['vjust']
         for x_g, y_g, s in zip(x, y, label):
             ax.text(x_g, y_g, s, **pinfo)
+
+    @staticmethod
+    def draw_legend(data, params, da):
+        """
+        Draw letter 'a' in the box
+
+        Parameters
+        ----------
+        data : dataframe
+        params : dict
+        da : DrawingArea
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        key = Text(x=0.5*da.width,
+                   y=0.5*da.height,
+                   text='a',
+                   alpha=data['alpha'],
+                   size=data['size'],
+                   family=data['family'],
+                   color=data['color'],
+                   rotation=data['rotation'],
+                   horizontalalignment='center',
+                   verticalalignment='center'
+                   )
+        da.add_artist(key)
+        return da

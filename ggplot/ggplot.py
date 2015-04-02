@@ -105,17 +105,22 @@ class ggplot(object):
             set_facet_spacing(plot)
             ax = plot.axs[0]
             legend_box = self.guides.build(plot, 'right')
-            anchored_box = AnchoredOffsetbox(loc=6,  # center left
-                                             child=legend_box,
-                                             pad=0.1,
-                                             frameon=False,
-                                             # Spacing goes here
-                                             bbox_to_anchor=(1.05, 0.5),
-                                             bbox_transform=ax.transAxes,
-                                             borderpad=0.,)
-            box = ax.get_position()
-            ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-            ax.add_artist(anchored_box)
+            if legend_box:
+                anchored_box = AnchoredOffsetbox(
+                    loc=6,  # center left
+                    child=legend_box,
+                    pad=0.1,
+                    frameon=False,
+                    # Spacing goes here
+                    bbox_to_anchor=(1.05, 0.5),
+                    bbox_transform=ax.transAxes,
+                    borderpad=0.,
+                )
+                box = ax.get_position()
+                ax.set_position(
+                    [box.x0, box.y0,
+                     box.width * 0.8, box.height])
+                ax.add_artist(anchored_box)
 
         return plt.gcf()
 

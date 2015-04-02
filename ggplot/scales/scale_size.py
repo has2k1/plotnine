@@ -7,7 +7,7 @@ from .scale import scale_discrete, scale_continuous
 from .utils import rescale_pal
 
 
-class scale_size(scale_discrete):
+class scale_size_discrete(scale_discrete):
     aesthetics = ['size']
 
     def __init__(self, range=(1, 6)):
@@ -21,4 +21,4 @@ class scale_size_continuous(scale_continuous):
         self.palette = rescale_pal(range)
 
 
-scale_size_discrete = scale_size
+scale_size = scale_size_continuous

@@ -69,11 +69,11 @@ class guide_legend(guide):
                     tmp = self.key[list(matched)].copy()
                     data = l.use_defaults(tmp)
                 else:
-                    break
+                    continue
             else:
                 # This layer does not contribute to the legend
                 if l.show_guide is None or not l.show_guide:
-                    break
+                    continue
                 else:
                     zeros = [0] * len(self.key)
                     data = l.use_defaults(pd.DataFrame())[zeros]
