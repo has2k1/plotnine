@@ -26,10 +26,6 @@ class geom(object):
     params = None         # parameter settings
     guide_geom = 'point'  # the geom responsible for the legend
 
-    # geoms & stats and even users can pass parameters to the
-    # layer when it is created.
-    layer_params = dict()
-
     # Some geoms require more information than that provided by the
     # user. This information is usually another aesthetic variable
     # but it could another non-aesthetic variable. It is the duty
@@ -92,24 +88,40 @@ class geom(object):
         self._stat_params = {}
         self.params = deepcopy(self.DEFAULT_PARAMS)
         self.manual_aes = {}
+        self._layer_params = {}
+        layer_params = ['group', 'show_guide', 'inherit_aes']
+        for p in layer_params:
+            try:
+                self._layer_params[p] = self.params.pop(p)
+            except KeyError:
+                pass
+
         for k, v in kwargs.items():
             if k in self.aes:
                 raise GgplotError('Aesthetic, %s, specified twice' % k)
+            # geom recognizes aesthetic but stat wants it as a parameter,
+            # if it is a scalar the stat takes it
             elif (k in self.valid_aes and
                   k in self._stat_type.DEFAULT_PARAMS and
                   is_scalar_or_string(kwargs[k])):
                 self._stat_params[k] = v
+            # geom mapping
             elif k in self.valid_aes:
                 self.manual_aes[k] = v
+            # layer parameters
+            elif k in layer_params:
+                self._layer_params[k] = kwargs[k]
+            # Override default geom parameters
             elif k in self.DEFAULT_PARAMS:
                 self.params[k] = v
+            # stat parameters
             elif k in self._stat_type.DEFAULT_PARAMS:
                 self._stat_params[k] = v
             else:
                 raise GgplotError('Cannot recognize argument: %s' % k)
 
         self._cache = {}
-#from ggplot.utils i
+
     def __deepcopy__(self, memo):
         """
         Deep copy without copying the self.data dataframe
@@ -166,10 +178,13 @@ class geom(object):
         if not hasattr(self, '_stat'):
             self._stat = self._stat_type()
             self._stat.params.update(self._stat_params)
-        l = layer(geom=self, stat=self._stat, data=self.data,
+
+        l = layer(geom=self,
+                  stat=self._stat,
+                  data=self.data,
                   mapping=self.aes,
                   position=self.params['position'],
-                  **self.layer_params)
+                  **self._layer_params)
         gg.layers.append(l)
 
         # Add any new labels

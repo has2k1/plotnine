@@ -1,11 +1,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
 from copy import deepcopy
+
+from matplotlib.patches import Rectangle
 
 from .geom import geom
 from .geom_ribbon import geom_ribbon
 from .geom_line import geom_line
+from .geom_line import geom_path
 
 
 class geom_smooth(geom):
@@ -14,6 +16,7 @@ class geom_smooth(geom):
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
+    guide_geom = 'smooth'
 
     _aes_renames = {'linetype': 'linestyle', 'fill': 'facecolor',
                     'color': 'edgecolor', 'size': 'linewidth',
@@ -30,3 +33,31 @@ class geom_smooth(geom):
 
         pinfo['alpha'] = 1
         geom_line.draw(pinfo, scales, ax, **kwargs)
+
+    @staticmethod
+    def draw_legend(data, params, da):
+        """
+        Draw letter 'a' in the box
+
+        Parameters
+        ----------
+        data : dataframe
+        params : dict
+        da : DrawingArea
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        if params['se']:
+            bg = Rectangle((0, 0),
+                           width=da.width,
+                           height=da.height,
+                           alpha=data['alpha'],
+                           facecolor=data['facecolor'],
+                           edgecolor=data['facecolor'])
+            da.add_artist(bg)
+
+        data.is_copy = False
+        data['alpha'] = 1
+        return geom_path.draw_legend(data, params, da)

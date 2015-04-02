@@ -113,18 +113,13 @@ class stat(object):
         return stats
 
     def __radd__(self, gg):
-        # Create and add a layer to ggplot object
+        # Create a geom and it to the ggplot object
         _g = gg_import('geom_' + self.params['geom'])
         _geom = _g(*self._cache['args'], **self._cache['kwargs'])
-        _geom.params['stat'] = self.__class__.__name__
+        _geom.params['stat'] = self.__class__.__name__[5:]
         _geom.params['position'] = self.params['position']
         _geom._stat = self
-
-        l = layer(geom=_geom, stat=self, data=_geom.data,
-                  mapping=_geom.aes,
-                  position=self.params['position'])
-        gg.layers.append(l)
-        return gg
+        return gg + _geom
 
     def _find_stat_params(self, kwargs):
         """

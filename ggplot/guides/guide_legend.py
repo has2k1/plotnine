@@ -126,7 +126,8 @@ class guide_legend(guide):
             # overlay geoms
             for g in self.geoms:
                 g.data.rename(columns=g.geom._aes_renames, inplace=True)
-                lst.append(g.geom.draw_legend(g.data.iloc[i], g.params, da))
+                da = g.geom.draw_legend(g.data.iloc[i], g.params, da)
+            lst.append(da)
 
         # TODO: theme me
         box = VPacker(children=lst, align='center', pad=0, sep=vgap)

@@ -11,10 +11,9 @@ class geom_hline(geom):
                    'xmin': None, 'xmax': None}
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',
-                      'show_guide': False}
+                      'show_guide': False,
+                      'inherit_aes': False}
     guide_geom = 'path'
-
-    layer_params = {'inherit_aes': False}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
 

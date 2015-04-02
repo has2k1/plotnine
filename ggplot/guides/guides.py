@@ -149,6 +149,15 @@ class guides(dict):
     def merge(self, gdefs):
         """
         Merge overlapped guides
+
+        e.g
+        >>> from ggplot import *
+        >>> gg = ggplot(mtcars, aes(y='wt', x='mpg', colour='factor(cyl)'))
+        >>> gg = gg + stat_smooth(aes(fill='factor(cyl)'), method='lm')
+        >>> gg = gg + geom_point()
+        >>> gg
+
+        This would create two guides with the same hash
         """
         # group guide definitions by hash, and
         # reduce each group to a single guide
@@ -212,5 +221,5 @@ class guides(dict):
         """
         Put together all the guide boxes
         """
-        box = VPacker(children=gboxes, align="left", pad=0, sep=5)
+        box = VPacker(children=gboxes, align='left', pad=0, sep=5)
         return box

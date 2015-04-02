@@ -11,10 +11,9 @@ class geom_vline(geom):
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
-                      'show_guide': False}
+                      'show_guide': False,
+                      'inherit_aes': False}
     guide_geom = 'path'
-
-    layer_params = {'inherit_aes': False}
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
 
