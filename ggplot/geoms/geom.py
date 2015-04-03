@@ -234,11 +234,10 @@ class geom(object):
         # To make mapping of columns to geom/stat or stat parameters
         # possible
         _keep = set(self.DEFAULT_PARAMS) | set(self._stat_type.DEFAULT_PARAMS)
+        _keep.add('group')
         for k, v in passed_aes.items():
             if k in self.valid_aes or k in _keep:
                 _aes[k] = v
-            else:
-                raise GgplotError('Cannot recognize aesthetic: %s' % k)
         return _aes, data, kwargs
 
     def _make_pinfos(self, data, kwargs):
@@ -246,7 +245,7 @@ class geom(object):
         Make plot information
 
         Put together the data and the default aesthetics into
-        groups that can be plotted in a single call to self._plot_unit.
+        groups that can be plotted in a single call to self.draw
 
         Parameters
         ----------
@@ -287,6 +286,7 @@ class geom(object):
         for klass in type(self).__mro__[:-1]:
             required.update(klass.REQUIRED_AES)
         wanted = set(self.DEFAULT_AES) | required
+        wanted.add('group')
 
         def remove_unwanted(d):
             for key in set(d) - wanted:

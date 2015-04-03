@@ -110,7 +110,7 @@ class layer(object):
         aesthetics = self.layer_mapping(plot.mapping)
 
         # Override grouping if set in layer.
-        if not (self.group is None):
+        if self.group is not None:
             aesthetics['group'] = self.group
 
         def factor(s):
@@ -296,7 +296,7 @@ def add_group(data):
         else:
             data['group'] = 1
     else:
-        data['group'] = ninteraction(data['group'], drop=True)
+        data['group'] = ninteraction(data[['group']], drop=True)
 
     return data
 

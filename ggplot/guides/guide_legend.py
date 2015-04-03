@@ -1,11 +1,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import hashlib
 
+import numpy as np
 import pandas as pd
 from matplotlib.cbook import Bunch
-from matplotlib.offsetbox import (AnchoredOffsetbox, TextArea,
-                                  DrawingArea, HPacker, VPacker)
+from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
+from ..scales.scale import scale_continuous
 from ..utils import gg_import, ColoredDrawingArea
 from ..utils.exceptions import gg_warning, GgplotError
 from .guide import guide
@@ -21,6 +23,46 @@ class guide_legend(guide):
 
     # parameter
     available_aes = 'any'
+
+    def train(self, scale):
+        """
+        Create the key for the guide
+
+        The key is a dataframe with two columns:
+            - scale name : values
+            - label : labels for each value
+
+        scale name is one of the aesthetics
+        ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
+        """
+        breaks = scale.scale_breaks()
+        key = pd.DataFrame({
+            scale.aesthetics[0]: scale.map(breaks),
+            'label': scale.scale_labels()})
+
+        # Drop out-of-range values for continuous scale
+        # (should use scale$oob?)
+
+        # Currently, numpy does not deal with NA (Not available)
+        # When they are introduced, the block below should be
+        # adjusted likewise, see ggplot2, guide-lengend.r
+        if isinstance(scale, scale_continuous):
+            limits = scale.limits
+            b = np.asarray(breaks)
+            noob = np.logical_and(limits[0] <= b,
+                                  b <= limits[1])
+            key = key[noob]
+
+        if len(key) == 0:
+            return None
+
+        self.key = key
+
+        # create a hash of the important information in the guide
+        labels = ' '.join(str(x) for x in self.key['label'])
+        info = '\n'.join([self.title, labels, str(self.direction),
+                          self.__class__.__name__])
+        self.hash = hashlib.md5(info).hexdigest()
 
     def merge(self, other):
         """

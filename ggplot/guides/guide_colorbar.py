@@ -22,12 +22,6 @@ class guide_colorbar(guide):
     draw_ulim = True
     draw_llim = True
 
-    # general
-    direction = None
-    default_unit = 'line'
-    reverse = False
-    order = 0
-
     # parameter
     available_aes = {'colour', 'color', 'fill'}
 
