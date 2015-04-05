@@ -27,7 +27,7 @@ class geom_ribbon(geom):
 
     @staticmethod
     def draw(pinfo, scales, ax, **kwargs):
-        for key in ('y', 'weight'):
+        for key in ('y', 'weight', 'group'):
             try:
                 del pinfo[key]
             except KeyError:

@@ -37,6 +37,8 @@ class geom_point(geom):
         else:
             pinfo['facecolor'] = make_color_tuples(
                 pinfo['facecolor'], pinfo['alpha'])
+
+        del pinfo['group']
         ax.scatter(**pinfo)
 
     @staticmethod

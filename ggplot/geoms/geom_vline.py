@@ -44,4 +44,5 @@ class geom_vline(geom):
 
         alpha = pinfo.pop('alpha')
         pinfo['color'] = make_color_tuples(pinfo['color'], alpha)
+        del pinfo['group']
         ax.vlines(x, ymin, ymax, **pinfo)

@@ -42,6 +42,7 @@ class geom_text(geom):
 
         del pinfo['hjust']
         del pinfo['vjust']
+        del pinfo['group']
         for x_g, y_g, s in zip(x, y, label):
             ax.text(x_g, y_g, s, **pinfo)
 

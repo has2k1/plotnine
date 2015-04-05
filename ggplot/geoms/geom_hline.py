@@ -44,4 +44,5 @@ class geom_hline(geom):
 
         alpha = pinfo.pop('alpha')
         pinfo['color'] = make_color_tuples(pinfo['color'], alpha)
+        del pinfo['group']
         ax.hlines(y, xmin, xmax, **pinfo)
