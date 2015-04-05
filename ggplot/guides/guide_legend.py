@@ -36,6 +36,9 @@ class guide_legend(guide):
         ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
         """
         breaks = scale.scale_breaks()
+        if isinstance(breaks, dict):
+            breaks = list(sorted(breaks, key=breaks.__getitem__))
+
         key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
             'label': scale.scale_labels()})
@@ -160,17 +163,33 @@ class guide_legend(guide):
 
         # title
         # TODO: theme me
-        title = TextArea("  %s" % self.title, textprops=dict(color="k"))
-        lst = [title]
+        title = TextArea(self.title, textprops=dict(color='k', weight='bold'))
+        entries = [title]
+
+        # labels
+        # TODO: theme me
+        labels = []
+        for txt in self.key['label']:
+            labels.append(TextArea(txt, textprops=dict(color='k')))
+
+        # Drawings
+        # TODO: theme me
+        drawings = []
+        for g in self.geoms:
+            g.data.rename(columns=g.geom._aes_renames, inplace=True)
         for i in range(nbreak):
-            # TODO: theme me
             da = ColoredDrawingArea(20, 20, 0, 0, color='#E5E5E5')
             # overlay geoms
             for g in self.geoms:
-                g.data.rename(columns=g.geom._aes_renames, inplace=True)
                 da = g.geom.draw_legend(g.data.iloc[i], g.params, da)
-            lst.append(da)
+            drawings.append(da)
+
+        # Match Drawings with labels
+        # TODO: theme me
+        for d, l in zip(drawings, labels):
+            e = HPacker(children=[d, l], align='left', pad=0, sep=hgap)
+            entries.append(e)
 
         # TODO: theme me
-        box = VPacker(children=lst, align='center', pad=0, sep=vgap)
+        box = VPacker(children=entries, align='left', pad=0, sep=vgap)
         return box

@@ -15,13 +15,13 @@ pageviews = pd.read_csv(os.path.join(_ROOT, "pageviews.csv"), parse_dates=[0])
 huron = pd.read_csv(os.path.join(_ROOT, "huron.csv"))
 
 # add factors
-diamonds['cut'] = pd.Categorical(diamonds['cut'])
-diamonds['color'] = pd.Categorical(diamonds['color'])
-diamonds['clarity'] = pd.Categorical(diamonds['clarity'])
+diamonds['cut'] = pd.Categorical(diamonds['cut'], ordered=True)
+diamonds['color'] = pd.Categorical(diamonds['color'], ordered=True)
+diamonds['clarity'] = pd.Categorical(diamonds['clarity'], ordered=True)
 
 diamonds['cut'].cat.reorder_categories(
-    ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'])
+    ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'], inplace=True)
 diamonds['clarity'].cat.reorder_categories(
-    ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'])
+    ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'], inplace=True)
 diamonds['color'].cat.reorder_categories(
-    ['D', 'E', 'F', 'G', 'H', 'I', 'J'])
+    ['D', 'E', 'F', 'G', 'H', 'I', 'J'], inplace=True)

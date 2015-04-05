@@ -221,5 +221,5 @@ class guides(dict):
         """
         Put together all the guide boxes
         """
-        box = VPacker(children=gboxes, align='left', pad=0, sep=5)
+        box = VPacker(children=gboxes, align='left', pad=0, sep=20)
         return box
