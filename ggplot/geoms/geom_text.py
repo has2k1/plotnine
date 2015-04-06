@@ -47,15 +47,15 @@ class geom_text(geom):
             ax.text(x_g, y_g, s, **pinfo)
 
     @staticmethod
-    def draw_legend(data, params, da):
+    def draw_legend(data, da, lyr):
         """
         Draw letter 'a' in the box
 
         Parameters
         ----------
         data : dataframe
-        params : dict
         da : DrawingArea
+        lyr : layer
 
         Returns
         -------

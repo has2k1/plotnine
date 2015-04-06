@@ -45,6 +45,7 @@ class layer(object):
         self.inherit_aes = inherit_aes
         self.group = group
         self.show_guide = show_guide
+        self._active_mapping = {}
 
     def __deepcopy__(self, memo):
         """
@@ -83,6 +84,16 @@ class layer(object):
     def layer_mapping(self, mapping):
         """
         Return the mappings that are active in this layer
+
+        Parameters
+        ----------
+        mapping : aes
+            mappings in the ggplot call
+
+        Note
+        ----
+        Once computed the layer mappings are also stored
+        in self._active_mapping
         """
         # For certain geoms, it is useful to be able to
         # ignore the default aesthetics and only use those
@@ -97,7 +108,8 @@ class layer(object):
         calculated = set(is_calculated_aes(aesthetics))
         d = dict((ae, v) for ae, v in aesthetics.items()
                  if not (ae in manual) and not (ae in calculated))
-        return aes(**d)
+        self._active_mapping = aes(**d)
+        return self._active_mapping
 
     def compute_aesthetics(self, data, plot):
         """

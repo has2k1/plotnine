@@ -25,7 +25,7 @@ class geom_rect(geom):
     size
     """
 
-    DEFAULT_AES = {'color': '#333333', 'fill': '#333333',
+    DEFAULT_AES = {'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 1.0, 'alpha': 1}
 
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}

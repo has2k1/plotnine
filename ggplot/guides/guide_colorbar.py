@@ -66,7 +66,7 @@ class guide_colorbar(guide):
         """
         This guide is not geom based
         """
-        self.geoms = []
+        self.glayers = []
         return self
 
 

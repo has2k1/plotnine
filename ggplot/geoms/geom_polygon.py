@@ -54,20 +54,31 @@ class geom_polygon(geom):
         ax.add_collection(col)
 
     @staticmethod
-    def draw_legend(data, params, da):
+    def draw_legend(data, da, lyr):
         """
         Draw a rectangle in the box
 
         Parameters
         ----------
         data : dataframe
-        params : dict
         da : DrawingArea
+        lyr : layer
 
         Returns
         -------
         out : DrawingArea
         """
+        # ggplot leaves out the linewidth and linestyle when
+        # drawing the rectangle despite being helpful in
+        # some cases. We check if they are active in
+        # the layer responsible for this legend entry, and
+        # only then do we include them
+        kwargs = {}
+        if 'linetype' in lyr._active_mapping:
+            kwargs['linestyle'] = data['linestyle']
+        if 'size' in lyr._active_mapping:
+            kwargs['linewidth'] = data['linewidth']
+
         # background
         fc = make_color_tuples(data['facecolor'], data['alpha'])
         bg = Rectangle((0, 0),
@@ -75,8 +86,7 @@ class geom_polygon(geom):
                        height=da.height,
                        facecolor=fc,
                        edgecolor=data['edgecolor'],
-                       linewidth=data['linewidth'],
-                       linestyle=data['linestyle'])
+                       **kwargs)
         da.add_artist(bg)
 
         # strike through

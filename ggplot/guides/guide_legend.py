@@ -96,7 +96,9 @@ class guide_legend(guide):
         to draw the guide together with the data and the parameters that
         will be used in the call to geom.
         """
-        lst = []
+        # A layer either contributes to the guide, or it does not. The
+        # guide entries may be ploted in the layers
+        self.glayers = []
         for l in plot.layers:
             all_ae = [ae for d in [l.mapping, plot.mapping,
                                    l.stat.DEFAULT_AES]
@@ -128,11 +130,8 @@ class guide_legend(guide):
                 data[ae] = self.override_aes[ae]
 
             geom = gg_import('geom_' + l.geom.guide_geom)
-            params = l.geom.manual_aes.copy()
-            params.update(l.stat.params)
-            lst.append(Bunch(geom=geom, data=data, params=params))
+            self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
-        self.geoms = lst
         return self
 
     def draw(self, theme):
@@ -175,13 +174,13 @@ class guide_legend(guide):
         # Drawings
         # TODO: theme me
         drawings = []
-        for g in self.geoms:
-            g.data.rename(columns=g.geom._aes_renames, inplace=True)
+        for gl in self.glayers:
+            gl.data.rename(columns=gl.geom._aes_renames, inplace=True)
         for i in range(nbreak):
             da = ColoredDrawingArea(20, 20, 0, 0, color='#E5E5E5')
             # overlay geoms
-            for g in self.geoms:
-                da = g.geom.draw_legend(g.data.iloc[i], g.params, da)
+            for gl in self.glayers:
+                da = gl.geom.draw_legend(gl.data.iloc[i], da, gl.layer)
             drawings.append(da)
 
         # Match Drawings with labels

@@ -181,7 +181,7 @@ class guides(dict):
         new_gdefs = []
         for gdef in gdefs:
             gdef.create_geoms(plot)
-            if gdef.geoms:
+            if gdef.glayers:
                 new_gdefs.append(gdef)
 
         return new_gdefs

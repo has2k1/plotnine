@@ -35,7 +35,7 @@ class geom_smooth(geom):
         geom_line.draw(pinfo, scales, ax, **kwargs)
 
     @staticmethod
-    def draw_legend(data, params, da):
+    def draw_legend(data, da, lyr):
         """
         Draw letter 'a' in the box
 
@@ -43,13 +43,13 @@ class geom_smooth(geom):
         ----------
         data : dataframe
         params : dict
-        da : DrawingArea
+        lyr : layer
 
         Returns
         -------
         out : DrawingArea
         """
-        if params['se']:
+        if lyr.stat.params['se']:
             bg = Rectangle((0, 0),
                            width=da.width,
                            height=da.height,
@@ -60,4 +60,4 @@ class geom_smooth(geom):
 
         data.is_copy = False
         data['alpha'] = 1
-        return geom_path.draw_legend(data, params, da)
+        return geom_path.draw_legend(data, da, lyr)

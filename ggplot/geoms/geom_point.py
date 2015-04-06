@@ -42,7 +42,7 @@ class geom_point(geom):
         ax.scatter(**pinfo)
 
     @staticmethod
-    def draw_legend(data, params, da):
+    def draw_legend(data, da, lyr):
         """
         Draw a point in the box
 
@@ -50,7 +50,7 @@ class geom_point(geom):
         ----------
         data : dataframe
         params : dict
-        da : DrawingArea
+        lyr : layer
 
         Returns
         -------

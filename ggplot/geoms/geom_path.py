@@ -35,15 +35,15 @@ class geom_path(geom):
         ax.add_collection(lines)
 
     @staticmethod
-    def draw_legend(data, params, da):
+    def draw_legend(data, da, lyr):
         """
         Draw a horizontal line in the box
 
         Parameters
         ----------
         data : dataframe
-        params : dict
         da : DrawingArea
+        lyr : layer
 
         Returns
         -------

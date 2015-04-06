@@ -233,8 +233,8 @@ class ggplot(object):
 
         plot = deepcopy(self)
 
-        layers = self.layers
-        layer_data = [x.data for x in self.layers]
+        layers = plot.layers
+        layer_data = [x.data for x in plot.layers]
         all_data = [plot.data] + layer_data
         scales = plot.scales
 
