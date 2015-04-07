@@ -189,7 +189,7 @@ class geom(object):
 
         # Add any new labels
         mapping = make_labels(self.aes)
-        default = make_labels(self.DEFAULT_AES)
+        default = make_labels(self._stat.DEFAULT_AES)
         new_labels = defaults(mapping, default)
         gg.labels = defaults(gg.labels, new_labels)
         return gg
@@ -234,6 +234,7 @@ class geom(object):
         # To make mapping of columns to geom/stat or stat parameters
         # possible
         _keep = set(self.DEFAULT_PARAMS) | set(self._stat_type.DEFAULT_PARAMS)
+        _keep.update(self._stat_type.DEFAULT_AES)
         _keep.add('group')
         for k, v in passed_aes.items():
             if k in self.valid_aes or k in _keep:

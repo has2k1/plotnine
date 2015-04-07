@@ -299,7 +299,7 @@ class scale_continuous(scale):
         if scale.breaks is None:
             return None
         elif zero_range(limits):
-            breaks = limits[0]
+            breaks = [limits[0]]
         elif is_waive(scale.breaks):
             # Transformation needed here XXX ?
             breaks = MaxNLocator(4).tick_values(*limits)

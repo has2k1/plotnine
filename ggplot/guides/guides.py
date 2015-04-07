@@ -116,7 +116,7 @@ class guides(dict):
                 if scale.name:
                     guide.title = scale.name
                 else:
-                    guide.title = plot.labels[output]
+                    guide.title = str(plot.labels[output])
 
             # direction
             if guide.direction is None:

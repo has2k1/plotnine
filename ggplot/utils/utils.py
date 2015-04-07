@@ -580,6 +580,9 @@ def make_color_tuples(colors, alpha):
 
     see: `hex_to_rgba`
     """
+    if not colors:
+        return colors
+
     def is_iterable(var):
         return cbook.iterable(var) and not is_string(var)
 

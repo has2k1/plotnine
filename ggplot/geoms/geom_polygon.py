@@ -68,16 +68,14 @@ class geom_polygon(geom):
         -------
         out : DrawingArea
         """
-        # ggplot leaves out the linewidth and linestyle when
-        # drawing the rectangle despite being helpful in
-        # some cases. We check if they are active in
-        # the layer responsible for this legend entry, and
-        # only then do we include them
+        # ggplot leaves out the linetpe when drawing the
+        # rectangle despite being helpful in some cases.
+        # We check if linetype is mapped to in the layer
+        # responsible for this legend entry, and
+        # only then do we include it
         kwargs = {}
         if 'linetype' in lyr._active_mapping:
             kwargs['linestyle'] = data['linestyle']
-        if 'size' in lyr._active_mapping:
-            kwargs['linewidth'] = data['linewidth']
 
         # background
         fc = make_color_tuples(data['facecolor'], data['alpha'])
@@ -89,7 +87,7 @@ class geom_polygon(geom):
                        **kwargs)
         da.add_artist(bg)
 
-        # strike through
+        # diagonal strike through
         if data['edgecolor']:
             strike = lines.Line2D([0, da.width],
                                   [0, da.height],

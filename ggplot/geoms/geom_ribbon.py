@@ -6,7 +6,7 @@ from .geom import geom
 
 
 class geom_ribbon(geom):
-    DEFAULT_AES = {'alpha': 1, 'color': '', 'fill': '#333333',
+    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 1.0}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
