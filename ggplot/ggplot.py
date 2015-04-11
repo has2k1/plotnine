@@ -73,10 +73,9 @@ class ggplot(object):
 
     def __repr__(self):
         """Print/show the plot"""
-        figure = self.render()
-        # We're going to default to making the plot appear when __repr__ is
-        # called.
-        #figure.show() # doesn't work in ipython notebook
+        # We're going to default to making the plot appear
+        # when __repr__ is called.
+        self.render()
         plt.show()
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
@@ -99,32 +98,27 @@ class ggplot(object):
         return result
 
     def render(self):
+        """
+        Render the complete plot and return the matplotlib figure
+        """
         plt.close("all")
         with gg_context(theme=self.theme):
             plot = self.draw()
-            set_facet_spacing(plot)
-            ax = plot.axs[0]
-            legend_box = self.guides.build(plot, 'right')
-            if legend_box:
-                anchored_box = AnchoredOffsetbox(
-                    loc=6,  # center left
-                    child=legend_box,
-                    pad=0.1,
-                    frameon=False,
-                    # Spacing goes here
-                    bbox_to_anchor=(1.05, 0.5),
-                    bbox_transform=ax.transAxes,
-                    borderpad=0.,
-                )
-                box = ax.get_position()
-                ax.set_position(
-                    [box.x0, box.y0,
-                     box.width * 0.8, box.height])
-                ax.add_artist(anchored_box)
+            plot = self.draw_legend(plot)
 
         return plt.gcf()
 
     def draw(self):
+        """
+        Draw the main plot onto the axes.
+
+        Return
+        ------
+        out : ggplot
+            ggplot object with two new properties
+                - axs
+                - fig
+        """
         data, panel, plot = self.plot_build()
         fig, axs = plt.subplots(plot.facet.nrow,
                                 plot.facet.ncol,
@@ -134,6 +128,7 @@ class ggplot(object):
         axs = np.atleast_2d(axs)
         axs = [ax for row in axs for ax in row]
         plot.axs = axs
+        plot.fig = fig
 
         # ax - axes for a particular panel
         # pnl - panel (facet) information from layout table
@@ -174,33 +169,8 @@ class ggplot(object):
             if isinstance(plot.facet, (facet_grid, facet_wrap)):
                 draw_facet_label(plot, pnl, ax, fig)
 
+        set_facet_spacing(plot)
         return plot
-
-    def add_to_legend(self, legend_type, legend_dict, scale_type="discrete"):
-        """Adds the the specified legend to the legend
-
-        Parameters
-        ----------
-        legend_type : str
-            type of legend, one of "color", "linestyle", "marker", "size"
-        legend_dict : dict
-            a dictionary of {visual_value: legend_key} where visual_value
-            is color value, line style, marker character, or size value;
-            and legend_key is a quantile.
-        scale_type : str
-            either "discrete" (default) or "continuous"; usually only color
-            needs to specify which kind of legend should be drawn, all
-            other scales will get a discrete scale.
-        """
-        # scale_type is up to now unused
-        # TODO: what happens if we add a second color mapping?
-        # Currently the color mapping in the legend is overwritten.
-        # What does ggplot do in such a case?
-        if legend_type in self.legend:
-            pass
-            #msg = "Adding a secondary mapping of {0} is unsupported and no legend for this mapping is added.\n"
-            #sys.stderr.write(msg.format(str(legend_type)))
-        self.legend[legend_type] = legend_dict
 
     def plot_build(self):
         """
@@ -298,6 +268,34 @@ class ggplot(object):
 
         panel.train_ranges()
         return data, panel, plot
+
+    def draw_legend(self, plot):
+        legend_box = plot.guides.build(plot)
+        if not legend_box:
+            return plot
+
+        position = plot.theme._params['legend_position']
+        # where to place which point of the legend box
+        lookup = {
+            'right':  (6, (0.94, 0.5)),  # center left
+            'left': (7, (0.07, 0.5)),    # center right
+            'top': (8, (0.5, 0.95)),     # bottom center
+            'bottom': (9, (0.5, 0.07))   # upper center
+        }
+        loc, box_to_anchor = lookup[position]
+        anchored_box = AnchoredOffsetbox(
+            loc=loc,
+            child=legend_box,
+            pad=0.,
+            frameon=False,
+            # Spacing goes here
+            bbox_to_anchor=box_to_anchor,
+            bbox_transform=plot.fig.transFigure,
+            borderpad=0.,
+        )
+        ax = plot.axs[0]
+        ax.add_artist(anchored_box)
+        return plot
 
 
 def set_axis_attributes(plot, pnl, ax):
@@ -421,14 +419,3 @@ def set_facet_spacing(plot):
         plt.subplots_adjust(wspace=.05, hspace=.20)
     else:
         plt.subplots_adjust(wspace=.05, hspace=.05)
-
-
-def _is_identity(x):
-    if x in colors.COLORS:
-        return True
-    elif x in shapes.SHAPES:
-        return True
-    elif isinstance(x, (float, int)):
-        return True
-    else:
-        return False

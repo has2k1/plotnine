@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import hashlib
+from itertools import islice
 
 import numpy as np
 import pandas as pd
@@ -149,12 +150,35 @@ class guide_legend(guide):
         """
         # default setting
         if self.label_position is None:
-            label_position = 'right'
-        if label_position not in ['top', 'bottom', 'left', 'right']:
+            self.label_position = 'right'
+        if self.label_position not in ['top', 'bottom', 'left', 'right']:
             msg = 'label position {} is invalid'
-            raise GgplotError(msg.format(label_position))
+            raise GgplotError(msg.format(self.label_position))
 
         nbreak = len(self.key)
+
+        # rows and columns
+        if self.nrow is not None and self.ncol is not None:
+            if guide.nrow * guide.ncol < nbreak:
+                raise GgplotError(
+                    "nrow x ncol need to be larger",
+                    "than the number of breaks")
+
+        if self.nrow is None:
+            if self.ncol is not None:
+                self.nrow = int(np.ceil(nbreak/self.ncol))
+            elif self.direction == 'horizontal':
+                self.nrow = 1
+            else:
+                self.nrow = nbreak
+
+        if self.ncol is None:
+            if self.nrow is not None:
+                self.ncol = int(np.ceil(nbreak/self.nrow))
+            elif self.direction == 'horizontal':
+                self.ncol = nbreak
+            else:
+                self.ncol = 1
 
         # gap between the keys
         hgap = 0.3 * 20  # .3 lines
@@ -162,15 +186,17 @@ class guide_legend(guide):
 
         # title
         # TODO: theme me
-        title = TextArea(self.title, textprops=dict(color='k', weight='bold'))
-        entries = [title]
+        title_box = TextArea(
+            self.title, textprops=dict(color='k', weight='bold'))
 
         # labels
         # TODO: theme me
         labels = []
-        for txt in self.key['label']:
-            labels.append(TextArea(txt, textprops=dict(color='k')))
-
+        for item in self.key['label']:
+            if isinstance(item, np.float) and np.float.is_integer(item):
+                item = np.int(item)  # 1.0 to 1
+            ta = TextArea(item, textprops=dict(color='k'))
+            labels.append(ta)
         # Drawings
         # TODO: theme me
         drawings = []
@@ -183,12 +209,57 @@ class guide_legend(guide):
                 da = gl.geom.draw_legend(gl.data.iloc[i], da, gl.layer)
             drawings.append(da)
 
-        # Match Drawings with labels
+        # Match Drawings with labels to create the entries
         # TODO: theme me
+        lookup = {
+            'right': (HPacker, slice(None, None, -1)),
+            'left': (HPacker, slice(0, None)),
+            'bottom': (VPacker, slice(None, None, -1)),
+            'top': (VPacker, slice(0, None))}
+        packer, slc = lookup[self.label_position]
+        entries = []
+        # matplotlib adds a baseline padding below the text
+        # which leads to a bigger gap when the label is on top
+        sep = hgap*.2 if self.label_position == 'top' else hgap
         for d, l in zip(drawings, labels):
-            e = HPacker(children=[d, l], align='left', pad=0, sep=hgap)
+            e = packer(children=[l, d][slc], align='left', pad=0, sep=sep)
             entries.append(e)
 
+        # Put the entries together in rows or columns
+        # A chunk is either a row or a column of entries
+        # for a single legend
+        if self.byrow:
+            chunk_size, packers = self.ncol, [HPacker, VPacker]
+            seps = [hgap, vgap]
+        else:
+            chunk_size, packers = self.nrow, [VPacker, HPacker]
+            seps = [vgap, hgap]
+
+        if self.reverse:
+            entries = entries[::-1]
+        chunks = []
+        for i in range(len(entries)):
+            start = i*chunk_size
+            stop = i*chunk_size + chunk_size
+            s = islice(entries, start, stop)
+            chunks.append(list(s))
+            if stop >= len(entries):
+                break
+
+        chunk_boxes = []
+        for chunk in chunks:
+            d1 = packers[0](children=chunk,
+                            align='left', pad=0, sep=seps[0])
+            chunk_boxes.append(d1)
+
+        # Put all the entries (row & columns) together
+        entries_box = packers[1](children=chunk_boxes,
+                                 align='baseline',
+                                 pad=0,
+                                 sep=seps[1])
         # TODO: theme me
-        box = VPacker(children=entries, align='left', pad=0, sep=vgap)
+        # Put the title and entries together
+        packer, slc = lookup[self.title_position]
+        children = [title_box, entries_box][slc]
+        box = packer(children=children, align='center', pad=0, sep=hgap)
         return box

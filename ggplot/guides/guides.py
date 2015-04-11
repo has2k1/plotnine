@@ -1,9 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from copy import deepcopy
+
 import pandas as pd
-from matplotlib.offsetbox import (AnchoredOffsetbox, TextArea,
-                                  DrawingArea, HPacker, VPacker)
+import numpy as np
+from matplotlib.offsetbox import (HPacker, VPacker)
 
 from .guide import guide as guide_class
 from ..utils import is_string, gg_import, is_waive
@@ -38,38 +40,41 @@ class guides(dict):
                 self[ae] = kwargs[ae]
 
     def __radd__(self, gg):
-        gg.guides.update(self)
+        new_guides = {}
+        for k in self:
+            new_guides[k] = deepcopy(self[k])
+        gg.guides.update(new_guides)
         return gg
 
-    def build(self, plot, position):
+    def build(self, plot):
         params = plot.theme._params
 
-        def set_if_none(d, key, val):
-            if d[key] is None:
-                d[key] = val
+        def set_if_none(key, val):
+            if params[key] is None:
+                params[key] = val
 
         # by default, guide boxes are vertically aligned
-        set_if_none(params, 'legend_box', 'vertical')
+        set_if_none('legend_box', 'vertical')
 
         # size of key (also used for bar in colorbar guide)
-        set_if_none(params, 'legend_key_width', params['legend_key_size'])
-        set_if_none(params, 'legend_key_height', params['legend_key_size'])
-        set_if_none(params, 'legend_box', 'vertical')
+        set_if_none('legend_key_width', params['legend_key_size'])
+        set_if_none('legend_key_height', params['legend_key_size'])
+        set_if_none('legend_box', 'vertical')
 
         # by default, direction of each guide depends on
         # the position of the guide_
+        set_if_none('legend_position', 'right')
+        position = params['legend_position']
         if position in {'top', 'bottom'}:
-            set_if_none(params, 'legend_direction', 'horizontal')
+            set_if_none('legend_direction', 'horizontal')
         else:  # left, right, (default)
-            set_if_none(params, 'legend_direction', 'vertical')
+            set_if_none('legend_direction', 'vertical')
 
         # justification of legend boxes
         if position in {'top', 'bottom'}:
-            set_if_none(params, 'legend_box_just', ('center', 'top'))
+            set_if_none('legend_box_just', 'center')
         elif position in {'left', 'right'}:
-            set_if_none(params, 'legend_box_just', ('left', 'top'))
-        else:
-            set_if_none(params, 'legend_box_just', ('center', 'center'))
+            set_if_none('legend_box_just', 'left')
 
         gdefs = self.train(plot)
         if not gdefs:
@@ -82,7 +87,7 @@ class guides(dict):
             return
 
         gboxes = self.draw(gdefs, plot.theme)
-        bigbox = self.assemble(gboxes)
+        bigbox = self.assemble(gboxes, gdefs, plot.theme)
         return bigbox
 
     def train(self, plot):
@@ -141,7 +146,7 @@ class guides(dict):
             obj = gg_import(guide)
             guide = obj()
 
-        if not issubclass(obj, guide_class):
+        if not isinstance(guide, guide_class):
             raise GgplotError(
                 "Unknown guide: {}".format(guide))
         return guide
@@ -217,9 +222,34 @@ class guides(dict):
         gdefs = [verify_title_position(g) for g in gdefs]
         return [g.draw(theme) for g in gdefs]
 
-    def assemble(self, gboxes):
+    def assemble(self, gboxes, gdefs, theme):
         """
         Put together all the guide boxes
         """
-        box = VPacker(children=gboxes, align='left', pad=0, sep=20)
+        # place the guides according to the guide.order
+        # 0 do not sort
+        # 1-99 sort
+        for gdef in gdefs:
+            if gdef.order == 0:
+                gdef.order = 100
+            elif not 0 <= gdef.order <= 99:
+                raise GgplotError("'order' for a guide should be",
+                                  "between 0 and 99")
+        orders = [gdef.order for gdef in gdefs]
+        idx = np.argsort(orders)
+        gboxes = [gboxes[i] for i in idx]
+
+        # direction when more than legend
+        direction = theme._params['legend_box']
+        packer = VPacker if direction == 'vertical' else HPacker
+        if direction == 'vertical':
+            packer = VPacker
+        elif direction == 'horizontal':
+            packer = HPacker
+        else:
+            raise GgplotError("'lengend_box' should be either",
+                              "'vertical' or 'horizontal'")
+
+        align = theme._params['legend_box_just']
+        box = packer(children=gboxes, align=align, pad=0, sep=20)
         return box

@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ..utils import waiver
+from ..utils.exceptions import GgplotError
 
 
 class guide(object):
@@ -29,3 +30,11 @@ class guide(object):
     override_aes = {}
     reverse = False
     order = 0
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            try:
+                setattr(self, k, v)
+            except AttributeError:
+                tpl = "{} does not undestand attribute '{}'"
+                raise GgplotError(tpl.format(self.__class__.__name__), k)

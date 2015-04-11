@@ -154,6 +154,7 @@ class theme(object):
             theme_copy.element_themes = merge_element_targets(
                 deepcopy(self.element_themes),
                 deepcopy(other.element_themes))
+            theme_copy._params.update(other._params)
             return theme_copy
 
     def __add__(self, other):
@@ -189,4 +190,5 @@ class theme(object):
             else:
                 theme_copy = deepcopy(other)
                 theme_copy.element_themes.append(self)
+                theme_copy._params.update(other._params)
                 return theme_copy
