@@ -36,5 +36,8 @@ def date_breaks(width):
     """
     period, units = parse_break_str(width)
     Locator = LOCATORS.get(units)
-    locator = Locator(interval=period)
-    return locator
+
+    def make_locator():
+        return Locator(interval=period)
+
+    return make_locator

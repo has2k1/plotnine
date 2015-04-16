@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 import numpy as np
-from pandas.lib import Timestamp
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.nonparametric.smoothers_lowess import lowess as smlowess
@@ -9,9 +9,9 @@ from statsmodels.sandbox.regression.predstd import wls_prediction_std
 from statsmodels.stats.outliers_influence import summary_table
 import scipy.stats as stats
 
-_isdate = lambda x: isinstance(x, Timestamp)
+
 SPAN = 2/3.
-ALPHA = 0.05 # significance level for confidence interval
+ALPHA = 0.05  # significance level for confidence interval
 
 def snakify(txt):
     txt = txt.strip().lower()
@@ -25,8 +25,6 @@ def plot_friendly(value):
 def lm(x, y, alpha=ALPHA):
     "fits an OLS from statsmodels. returns tuple."
     x, y = map(plot_friendly, [x,y])
-    if _isdate(x[0]):
-        x = np.array([i.toordinal() for i in x])
     X = sm.add_constant(x)
     fit = sm.OLS(y, X).fit()
     prstd, iv_l, iv_u = wls_prediction_std(fit)
@@ -48,8 +46,6 @@ def lowess(x, y, span=SPAN):
         statsmodels.nonparametric.smoothers_lowess.lowess
     """
     x, y = map(plot_friendly, [x,y])
-    if _isdate(x[0]):
-        x = np.array([i.toordinal() for i in x])
     result = smlowess(np.array(y), np.array(x), frac=span)
     x = pd.Series(result[::,0])
     y = pd.Series(result[::,1])
@@ -62,8 +58,6 @@ def lowess(x, y, span=SPAN):
 def mavg(x,y, window):
     "compute moving average"
     x, y = map(plot_friendly, [x,y])
-    if _isdate(x[0]):
-        x = np.array([i.toordinal() for i in x])
     std_err = pd.rolling_std(y, window)
     y = pd.rolling_mean(y, window)
     y1 = y - std_err

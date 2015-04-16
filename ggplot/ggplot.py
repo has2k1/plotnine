@@ -170,6 +170,7 @@ class ggplot(object):
                 draw_facet_label(plot, pnl, ax, fig)
 
         set_facet_spacing(plot)
+        modify_axis(plot)
         return plot
 
     def plot_build(self):
@@ -218,8 +219,8 @@ class ggplot(object):
                 out[i] = f(data[i], layers[i])
             return out
 
-        # Initialise panels, add extra data for margins & missing facetting
-        # variables, and add on a PANEL variable to data
+        # Initialise panels, add extra data for margins & missing
+        # facetting variables, and add on a PANEL variable to data
         panel = Panel()
         panel.layout = plot.facet.train_layout(all_data)
         data = plot.facet.map_layout(panel.layout, layer_data, plot.data)
@@ -228,12 +229,16 @@ class ggplot(object):
         data = dlapply(lambda d, l: l.compute_aesthetics(d, plot))
         data = list(map(add_group, data))
 
-        # Transform all scales
+        # Transform data using all scales
+        data = list(map(lambda d: scales.transform_df(d), data))
 
-        # Map and train positions so that statistics have access to ranges
-        # and all positions are numeric
-        scale_x = lambda: scales.get_scales('x')
-        scale_y = lambda: scales.get_scales('y')
+        # Map and train positions so that statistics have access
+        # to ranges and all positions are numeric
+        def scale_x():
+            return scales.get_scales('x')
+
+        def scale_y():
+            return scales.get_scales('y')
 
         panel.train_position(data, scale_x(), scale_y())
         data = panel.map_position(data, scale_x(), scale_y())
@@ -263,7 +268,7 @@ class ggplot(object):
         # Train and map non-position scales
         npscales = scales.non_position_scales()
         if len(npscales):
-            map(lambda d: npscales.train_df(d), data)
+            data = list(map(lambda d: npscales.train_df(d), data))
             data = list(map(lambda d: npscales.map_df(d), data))
 
         panel.train_ranges()
@@ -303,12 +308,14 @@ def set_axis_attributes(plot, pnl, ax):
     # in the theme
     params = {'xaxis': [], 'yaxis': []}
 
+    # Bottom row should have ticks
     if pnl['ROW'] == plot.facet.nrow:
         params['xaxis'] += [('set_ticks_position', 'bottom')]
     else:
         params['xaxis'] += [('set_ticks_position', 'none'),
                             ('set_ticklabels', [])]
 
+    # left most row should have ticks
     if pnl['COL'] == 1:
         params['yaxis'] += [('set_ticks_position', 'left')]
     else:
@@ -343,7 +350,10 @@ def set_labels(panel, idx, ax):
 # TODO Need to use theme (element_rect) for the colors
 # Should probably be in themes
 def draw_facet_label(plot, pnl, ax, fig):
-    if pnl['ROW'] != 1 and pnl['COL'] != plot.facet.ncol:
+    is_wrap = isinstance(plot.facet, facet_wrap)
+    is_grid = isinstance(plot.facet, facet_grid)
+
+    if is_grid and (pnl['ROW'] != 1 and pnl['COL'] != plot.facet.ncol):
         return
 
     # The facet labels are placed onto the figure using
@@ -360,7 +370,7 @@ def draw_facet_label(plot, pnl, ax, fig):
     h = mpl.rcParams['font.size'] * 1.65 * onev
 
     # facet_wrap #
-    if isinstance(plot.facet, facet_wrap):
+    if is_wrap:
         facet_var = plot.facet.vars[0]
         ax.text(0.5, 1+onev, pnl[facet_var],
                 bbox=dict(
@@ -419,3 +429,12 @@ def set_facet_spacing(plot):
         plt.subplots_adjust(wspace=.05, hspace=.20)
     else:
         plt.subplots_adjust(wspace=.05, hspace=.05)
+
+
+def modify_axis(plot):
+    pscales = plot.scales.position_scales()
+    for sc in pscales:
+        try:
+            sc.trans.modify_axis(plot.axs)
+        except AttributeError:
+            pass

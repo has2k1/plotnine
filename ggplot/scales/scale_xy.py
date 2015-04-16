@@ -8,6 +8,7 @@ from ..utils import identity, match, is_waive
 from ..utils import discrete_dtypes, continuous_dtypes
 from ..utils.exceptions import GgplotError
 from .utils import expand_range
+from .utils import log10_trans, sqrt_trans, identity_trans
 from .scale import scale_discrete, scale_continuous
 
 
@@ -18,12 +19,17 @@ from .scale import scale_discrete, scale_continuous
 # scale_position_discrete and scale_position_continuous
 # are intermediate base classes where the required overiding
 # is done
-
-
 class scale_position_discrete(scale_discrete):
     """
     Base class for discrete position scales
     """
+    # All positions have no guide
+    guide = None
+
+    # After transformations all position values map
+    # to themselves
+    palette = staticmethod(identity)
+
     # Keeps two ranges, range and range_c
     range_c = None
 
@@ -72,7 +78,7 @@ class scale_position_discrete(scale_discrete):
             mx = int(np.ceil(np.max(self.range_c)))
             return range(mn, mx+1)
         else:
-            GgplotError(
+            raise GgplotError(
                 'Lost, do not know what the limits are.')
 
     def coord_range(self):
@@ -133,6 +139,12 @@ class scale_position_continuous(scale_continuous):
     """
     Base class for continuous position scales
     """
+    # All positions have no guide
+    guide = None
+
+    # After transformations all position values map
+    # to themselves
+    palette = staticmethod(identity)
 
     def map(self, series, limits=None):
         # Position aesthetics don't map, because the coordinate
@@ -176,24 +188,51 @@ class scale_position_continuous(scale_continuous):
 
 class scale_x_discrete(scale_position_discrete):
     aesthetics = ["x", "xmin", "xmax", "xend"]
-    palette = staticmethod(identity)
-    guide = None
 
 
 class scale_y_discrete(scale_position_discrete):
     aesthetics = ["y", "ymin", "ymax", "yend"]
-    palette = staticmethod(identity)
-    guide = None
 
 
 class scale_x_continuous(scale_position_continuous):
     aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
-    palette = staticmethod(identity)
-    guide = None
 
 
 class scale_y_continuous(scale_position_continuous):
     aesthetics = ["y", "ymin", "ymax", "yend", "yintercept",
                   "ymin_final", "ymax_final"]
-    palette = staticmethod(identity)
-    guide = None
+
+
+# Transformed scales
+class scale_x_sqrt(scale_x_continuous):
+    trans = sqrt_trans
+
+
+class scale_y_sqrt(scale_y_continuous):
+    trans = sqrt_trans
+
+
+class scale_x_log10(scale_x_continuous):
+    trans = log10_trans
+
+
+class scale_y_log10(scale_y_continuous):
+    trans = log10_trans
+
+
+def _modify_axis(self, axs):
+    attr = 'invert_{}axis'.format(self.aesthetic)
+    for ax in axs:
+        getattr(ax, attr)()
+
+
+class scale_x_reverse(scale_x_continuous):
+    trans = identity_trans
+    trans.modify_axis = _modify_axis
+
+
+class scale_y_reverse(scale_x_continuous):
+    trans = identity_trans
+    trans.modify_axis = _modify_axis
+
+# TODO: breaks and labels parameters for transformed scales

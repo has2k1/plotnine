@@ -135,6 +135,7 @@ class theme(object):
         self.apply_theme(ax, *args, **kwargs)
         # does this need to be ordered first?
         for element_theme in self.element_themes:
+            print('element_theme.post_plot_callback')
             element_theme.post_plot_callback(ax)
 
     def add_theme(self, other):

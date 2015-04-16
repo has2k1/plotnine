@@ -12,7 +12,8 @@ class theme_gray(theme):
         https://github.com/hadley/ggplot2/blob/master/R/theme-defaults.r
     """
     def __init__(self):
-        super(theme_gray, self).__init__(complete=True)
+        # super does not work well with reloads
+        theme.__init__(self, complete=True)
         self._rcParams["timezone"] = "UTC"
         self._rcParams["lines.linewidth"] = "1.0"
         self._rcParams["lines.antialiased"] = "True"

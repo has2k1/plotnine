@@ -53,6 +53,11 @@ class Scales(list):
         """
         Return the scale for the aesthetic or None if there
         isn't one.
+
+        These are the scales specified by the user e.g
+            `ggplot() + scale_x_continuous()`
+        or those added by default during the plot building
+        process
         """
         bool_lst = self.find(aesthetic)
         try:
@@ -68,6 +73,14 @@ class Scales(list):
         """
         l = [s for s in self
              if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
+        return Scales(l)
+
+    def position_scales(self):
+        """
+        Return a list of the position scales that are present
+        """
+        l = [s for s in self
+             if ('x' in s.aesthetics) or ('y' in s.aesthetics)]
         return Scales(l)
 
     def train(self, data, vars, idx):
@@ -149,8 +162,10 @@ class Scales(list):
         if (len(df) == 0) or (len(self) == 0):
             return
 
+        # Each scale trains the columns it understands
         for sc in self:
             sc.train_df(df)
+        return df
 
     def map_df(self, df):
         """
@@ -160,8 +175,24 @@ class Scales(list):
         """
         if (len(df) == 0) or (len(self) == 0):
             return
+
+        # Each scale maps the columns it understands
         for sc in self:
             df = sc.map_df(df)
+        return df
+
+    def transform_df(self, df):
+        """
+        Transform values in a dataframe.
+
+        Returns dataframe
+        """
+        if (len(df) == 0) or (len(self) == 0):
+            return
+
+        # Each scale transforms the columns it understands
+        for sc in self:
+            df = sc.transform_df(df)
         return df
 
 

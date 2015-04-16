@@ -1,11 +1,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import re
 import math
 
 import numpy as np
 import pandas as pd
+import scipy.stats as stats
+from matplotlib.ticker import MaxNLocator, ScalarFormatter
 
-from ..utils import round_any
+from ..utils import round_any, identity
 from ..utils.exceptions import GgplotError
 
 
@@ -322,3 +325,218 @@ def fullseq(range_, size, pad=False):
     if pad:
         x = np.hstack([np.min(x) - size, x, np.max(x) + size])
     return x
+
+
+# Transforms
+
+def trans_new(name, transform, inverse,
+              breaks=None, format_=None,
+              domain=(-np.inf, np.inf)):
+    """
+    Create a transform class
+
+    This class is used to transform data and also tell the
+    x and y axes how to create and label the tick locations.
+
+    Parameters
+    ----------
+    name : str
+        Name of the transform
+    transform : function
+        Preferrably a ufunc
+    inverse : function
+        Preferrably a ufunc
+    breaks : array-like
+    format_ : str
+        format string
+    domain : tuple
+
+    Returns
+    -------
+    out : trans
+        Transform class
+    """
+    # To create the effect where by the scales are labelled in
+    # data space when the data plotted is in a transformed space,
+    # we use the default Locator (MaxNLocator) and default Formatter
+    # (ScalarFormatter). The Locator calculates ticks in data space
+    # and returns them in transformed space and the Formatter
+    # returns a label based on data space.
+
+    # FIXME: breaks and format_ are ignored
+    class cls(object):
+        aesthetic = None
+
+        @staticmethod
+        def trans(series):
+            try:
+                return pd.Series(transform(series))
+            except TypeError:
+                return pd.Series([transform(x) for x in series])
+
+        @staticmethod
+        def inv(series):
+            try:
+                return pd.Series(inverse(series))
+            except TypeError:
+                return pd.Series([inverse(x) for x in series])
+
+        def modify_axis(self, axs):
+            """
+            Modify the xaxis and yaxis
+
+            Set the locator and formatter
+            """
+            if self.name == 'identity':
+                return
+
+            if self.aesthetic not in ('x', 'y'):
+                return
+
+            # xaxis or yaxis
+            axis = '{}axis'.format(self.aesthetic)
+            for ax in axs:
+                obj = getattr(ax, axis)
+                obj.set_major_locator(self.locator_factory())
+                obj.set_major_formatter(self.formatter)
+
+        class transformLocator(MaxNLocator):
+            def __init__(self):
+                MaxNLocator.__init__(self, nbins=8, steps=[1, 2, 5, 10])
+
+            def __call__(self):
+                # Transformed space
+                vmin, vmax = self.axis.get_view_interval()
+                vmin, vmax = self._clip_probability(vmin, vmax)
+
+                # Original data space
+                vmin, vmax = inverse(vmin), inverse(vmax)
+                ticks = self.tick_values(vmin, vmax)
+
+                # Transformed space
+                try:
+                    ticks = transform(ticks)
+                except TypeError:
+                    ticks = [transform(t) for t in ticks]
+                return ticks
+
+            def _clip_probability(self, vmin, vmax):
+                """
+                Make sure vmin and vmax are in the [0, 1]
+                range if the transform is a probability
+                distribution
+                """
+                if cls.__name__.startswith('prob-'):
+                    if vmin < 0:
+                        vmin = 0
+
+                    if vmax > 1:
+                        vmax = 1
+
+                return vmin, vmax
+
+        # how to label(format) the break strings
+        class transformFormatter(ScalarFormatter):
+
+            def __call__(self, x, pos=None):
+                # Original data space
+                x = inverse(x)
+                label = ScalarFormatter.__call__(self, x, pos)
+                pattern = re.compile('\.0+$')
+                match = re.search(pattern, label)
+                if match:
+                    label = re.sub(pattern, '', label)
+                return label
+
+        # In case of faceted plots, each ax needs it's own locator
+        # so we want something that can give us identical locator
+        # objects
+        locator_factory = transformLocator
+        formatter = transformFormatter()
+
+    cls.name = name
+    cls.__name__ = str('{}_trans'.format(name))
+    return cls
+
+
+def log_trans(base=None):
+    # transform function
+    if base is None:
+        name = 'log'
+        base = np.exp(1)
+        trans = np.log
+    elif base == 10:
+        name = 'log10'
+        trans = np.log10
+    elif base == 2:
+        name = 'log2'
+        trans = np.log2
+    else:
+        name = 'log{}'.format(base)
+
+        def trans(x):
+            np.log(x)/np.log(base)
+
+    # inverse function
+    def inv(x):
+        return x ** base
+    return trans_new(name, trans, inv)
+
+
+def exp_trans(base=None):
+    # transform function
+    if base is None:
+        name = 'power-e'
+        base = np.exp(1)
+    else:
+        name = 'power-{}'.format(base)
+
+    # trans function
+    def trans(x):
+        base ** x
+
+    # inverse function
+    def inv(x):
+        return np.log(x)/np.log(base)
+
+    return trans_new(name, trans, inv)
+
+log10_trans = log_trans(10)
+log2_trans = log_trans(2)
+log1p_trans = trans_new('log1p', np.log1p, np.expm1)
+identity_trans = trans_new('identity', identity, identity)
+reverse_trans = trans_new('reverse', np.negative, np.negative)
+sqrt_trans = trans_new('sqrt', np.sqrt, np.square, domain=(0, np.inf))
+asn_trans = trans_new('asn',
+                      lambda x: 2*np.arcsin(np.sqrt(x)),
+                      lambda x: np.sin(x/2)**2)
+atanh_trans = trans_new('atanh', np.arctanh, np.tanh)
+
+
+def boxcox_trans(p):
+    if np.abs(p) < 1e-7:
+        return log_trans
+
+    def trans(x):
+        return (x**p - 1) / (p * np.sign(x-1))
+
+    def inv(x):
+        return (np.abs(x) * p + np.sign(x)) ** (1 / p)
+
+    return trans_new('pow-{}'.format(p), trans, inv)
+
+
+# Probability transforms
+def probability_trans(distribution, *args, **kwargs):
+    cdists = {k for k in dir(stats) if hasattr(getattr(stats, k), 'cdf')}
+    if distribution not in cdists:
+        msg = "Unknown distribution '{}'"
+        raise GgplotError(msg.format(distribution))
+
+    def trans(x):
+        return getattr(stats, distribution).cdf(x, *args, **kwargs)
+
+    def inv(x):
+        return getattr(stats, distribution).ppf(x, *args, **kwargs)
+
+    return trans_new('prob-{}'.format(distribution), trans, inv)

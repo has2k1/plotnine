@@ -8,12 +8,14 @@ import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
 from matplotlib.ticker import MaxNLocator
+import six
 
 from ..utils import waiver, is_waive
 from ..utils import identity, match
-from ..utils import round_any
+from ..utils import round_any, gg_import
 from ..utils.exceptions import gg_warning, GgplotError
 from .utils import rescale, censor, expand_range, zero_range
+from .utils import identity_trans
 from ..components.aes import is_position_aes
 
 
@@ -24,7 +26,6 @@ class scale(object):
     aesthetics = None   # aesthetics affected by this scale
     palette = None      # aesthetic mapping function
     range = None        # range of aesthetic
-    trans = None        # transformation function
     na_value = np.NaN   # What to do with the NA values
     _expand = waiver()  # multiplicative and additive expansion constants.
     name = None         # used as the axis label or legend title
@@ -231,15 +232,33 @@ class scale_discrete(scale):
                 # corresponding labels are too
                 return self.labels
 
+    def transform_df(self, df):
+        """
+        Transform df
+        """
+        # Discrete scales do not do transformations
+        return df
+
 
 class scale_continuous(scale):
     """
     Base class for all continuous scales
     """
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
-    oob = staticmethod(censor)  # what to do with out of bounds data points
+    oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
-    trans = staticmethod(identity)  # transformation function
+    trans = identity_trans         # transformation object
+
+    def __init__(self, **kwargs):
+        if 'trans' in kwargs:
+            self.trans = kwargs.pop('trans')
+        if isinstance(self.trans, six.string_types):
+            self.trans = gg_import(self.trans+'_trans')()
+        elif(isinstance(self.trans, type)):
+            self.trans = self.trans()
+
+        self.trans.aesthetic = self.aesthetics[0]
+        scale.__init__(self, **kwargs)
 
     def train(self, series):
         """
@@ -262,6 +281,25 @@ class scale_continuous(scale):
             mx = np.max([mx, _mx])
 
         self.range = [mn, mx]
+
+    def transform_df(self, df):
+        """
+        Transform df
+        """
+        if len(df) == 0:
+            return
+
+        if self.trans.name == 'identity':
+            return df
+
+        aesthetics = set(self.aesthetics) & set(df.columns)
+        for ae in aesthetics:
+            try:
+                df[ae] = self.trans.trans(df[ae])
+            except TypeError:
+                pass
+
+        return df
 
     def dimension(self, expand=None):
         """
@@ -315,7 +353,7 @@ class scale_continuous(scale):
         #                 scale.trans.trans(limits))
         breaks = censor(breaks, limits)
         if len(breaks) == 0:
-            GgplotError('Zero breaks in scale for {}'.format(
+            raise GgplotError('Zero breaks in scale for {}'.format(
                 scale.aesthetics))
         return breaks
 

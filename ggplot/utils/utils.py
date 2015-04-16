@@ -457,7 +457,7 @@ def gg_import(name):
     Import and return ggplot component type.
 
     The understood components are of base classes the
-    following base classes: geom, stat, scale, position
+    following base classes: geom, stat, scale, position, guide
 
     Raises an exception if the component  is not understood.
 
@@ -468,14 +468,19 @@ def gg_import(name):
               'stat': '..stats',
               'scale': '..scales',
               'position': '..positions',
-              'guide': '..guides'}
-    pattern = '([a-z]+)_'
-    match = re.match(pattern, name)
+              'guide': '..guides',
+              'trans': '..scales.utils'}
+    patterns = [re.compile('([a-z]+)_'),
+                re.compile('_(trans)$')]
+    for p in patterns:
+        match = re.search(p, name)
+        base = match.group(1)
+        if match and base in lookup:
+            break
 
-    if not match or not (match.group(1) in lookup):
+    if not match or (base not in lookup):
         GgplotError('Failed to import {}'.format(name))
 
-    base = match.group(1)
     package = importlib.import_module(lookup[base], __package__)
 
     try:
