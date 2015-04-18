@@ -37,4 +37,7 @@ class geom_ribbon(geom):
         # fill color
         pinfo['facecolor'] = make_color_tuples(
             pinfo['facecolor'], pinfo.pop('alpha'))
+        if pinfo['facecolor'] is None:
+            pinfo['facecolor'] = ''
+
         ax.fill_between(**pinfo)

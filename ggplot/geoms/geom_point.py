@@ -27,16 +27,11 @@ class geom_point(geom):
 
     @staticmethod
     def draw(pinfo, scales, ax, **kwargs):
-        fc = pinfo['facecolor']
-        if fc is None:
-            # default to color
+        pinfo['facecolor'] = make_color_tuples(
+            pinfo['facecolor'], pinfo['alpha'])
+
+        if pinfo['facecolor'] is None:
             pinfo['facecolor'] = pinfo['color']
-        elif fc is False:
-            # Matplotlib expects empty string instead of False
-            pinfo['facecolor'] = ''
-        else:
-            pinfo['facecolor'] = make_color_tuples(
-                pinfo['facecolor'], pinfo['alpha'])
 
         del pinfo['group']
         ax.scatter(**pinfo)

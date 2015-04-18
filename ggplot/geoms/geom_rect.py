@@ -63,6 +63,9 @@ class geom_rect(geom):
         pinfo['facecolor'] = make_color_tuples(
             pinfo['facecolor'], pinfo['alpha'])
 
+        if pinfo['edgecolor'] is None:
+            pinfo['edgecolor'] = ''
+
         col = PolyCollection(
             verts,
             facecolors=pinfo['facecolor'],

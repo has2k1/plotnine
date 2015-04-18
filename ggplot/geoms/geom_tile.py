@@ -7,7 +7,7 @@ from .geom_rect import geom_rect
 
 class geom_tile(geom_rect):
 
-    DEFAULT_AES = {'alpha': 1, 'color': '', 'fill': '#333333',
+    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.1}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}

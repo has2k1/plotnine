@@ -6,7 +6,7 @@ from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 import matplotlib.lines as lines
 
-from ..utils import make_color_tuples
+from ..utils import make_color_tuples, make_iterable
 from .geom import geom
 
 
@@ -42,10 +42,13 @@ class geom_polygon(geom):
             alpha.append(df['alpha'].iloc[0])
 
         fc = make_color_tuples(fc, alpha)
+        ec = ['none' if c is None else c
+              for c in make_iterable(pinfo['edgecolor'])]
+
         col = PolyCollection(
             verts,
             facecolors=fc,
-            edgecolors=pinfo['edgecolor'],
+            edgecolors=ec,
             linestyles=pinfo['linestyle'],
             linewidths=pinfo['linewidth'],
             transOffset=ax.transData,
