@@ -1,76 +1,38 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import re
-import math
 
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
 from matplotlib.ticker import MaxNLocator, ScalarFormatter
+import six
 
-from ..utils import round_any, identity
+from ..utils import round_any, identity, is_waive, gg_import
 from ..utils.exceptions import GgplotError
 
 
-def drange(start, stop, step):
-    """Compute the steps in between start and stop
+# formatting functions
+def dollar(x, pos):
+    return '${:.2f}'.format(x)
 
-    Only steps which are a multiple of `step` are used.
-
-    """
-    r = ((start // step) * step) + step # the first step higher than start
-    # all subsequent steps are multiple of "step"!
-    while r < stop:
-        yield r
-        r += step
-
-def convert_if_int(x):
-    if int(x)==x:
-        return int(x)
-    else:
-        return x
-
-def convertable_to_int(x):
-    if int(x)==x:
-        return True
-    else:
-        return False
+currency = dollar
 
 
-def calc_axis_breaks_and_limits(minval, maxval, nlabs=None):
-    """Calculates axis breaks and suggested limits.
+def comma(x, pos):
+    return '{:0,d}'.format(int(x))
 
-    The limits are computed as minval/maxval -/+ 1/3 step of ticks.
 
-    Parameters
-    ----------
-    minval : number
-      lowest value on this axis
-    maxval : number
-      higest number on this axis
-    nlabs : int
-      number of labels which should be displayed on the axis
-      Default: None
-    """
-    if nlabs is None:
-        diff = maxval - minval
-        base10 = math.log10(diff)
-        power = math.floor(base10)
-        base_unit = 10**power
-        step = base_unit / 2
-    else:
-        diff = maxval - minval
-        tick_range = diff / float(nlabs)
-        # make the tick range nice looking...
-        power = math.ceil(math.log(tick_range, 10))
-        step = np.round(tick_range / (10**power), 1) * 10**power
+def millions(x, pos):
+    return '${:1.1f}M'.format(x*1e-6)
 
-    labs = list(drange(minval-(step/3), maxval+(step/3), step))
 
-    if all([convertable_to_int(lab) for lab in labs]):
-        labs = [convert_if_int(lab) for lab in labs]
+def percent(x, pos):
+    return'{0:.0f}%'.format(x*100)
 
-    return labs, minval-(step/3), maxval+(step/3)
+
+def scientific(x, pos):
+    return '{:.2e}'.format(x)
 
 
 def rescale_pal(range=(0.1, 1)):
@@ -366,20 +328,22 @@ def trans_new(name, transform, inverse,
     # FIXME: breaks and format_ are ignored
     class cls(object):
         aesthetic = None
+        trans = staticmethod(transform)
+        inv = staticmethod(inverse)
 
-        @staticmethod
-        def trans(series):
-            try:
-                return pd.Series(transform(series))
-            except TypeError:
-                return pd.Series([transform(x) for x in series])
-
-        @staticmethod
-        def inv(series):
-            try:
-                return pd.Series(inverse(series))
-            except TypeError:
-                return pd.Series([inverse(x) for x in series])
+        # @staticmethod
+        # def trans(series):
+        #     try:
+        #         return pd.Series(transform(series))
+        #     except TypeError:
+        #         return pd.Series([transform(x) for x in series])
+        #
+        # @staticmethod
+        # def inv(series):
+        #     try:
+        #         return pd.Series(inverse(series))
+        #     except TypeError:
+        #         return pd.Series([inverse(x) for x in series])
 
         def modify_axis(self, axs):
             """
@@ -395,14 +359,20 @@ def trans_new(name, transform, inverse,
 
             # xaxis or yaxis
             axis = '{}axis'.format(self.aesthetic)
-            for ax in axs:
-                obj = getattr(ax, axis)
-                obj.set_major_locator(self.locator_factory())
-                obj.set_major_formatter(self.formatter)
+
+            if not is_waive(self.locator_factory):
+                for ax in axs:
+                    obj = getattr(ax, axis)
+                    obj.set_major_locator(self.locator_factory())
+
+            if not is_waive(self.formatter):
+                for ax in axs:
+                    obj = getattr(ax, axis)
+                    obj.set_major_formatter(self.formatter)
 
         class transformLocator(MaxNLocator):
-            def __init__(self):
-                MaxNLocator.__init__(self, nbins=8, steps=[1, 2, 5, 10])
+            def __init__(self, nbins=8, steps=(1, 2, 5, 10)):
+                MaxNLocator.__init__(self, nbins=nbins, steps=steps)
 
             def __call__(self):
                 # Transformed space
@@ -433,6 +403,8 @@ def trans_new(name, transform, inverse,
                     if vmax > 1:
                         vmax = 1
 
+                    print('clipped')
+
                 return vmin, vmax
 
         # how to label(format) the break strings
@@ -455,6 +427,8 @@ def trans_new(name, transform, inverse,
         formatter = transformFormatter()
 
     cls.name = name
+    cls.breaks = cls.locator_factory  # to match ggplot2
+    cls.format = cls.formatter        # to match ggplot2
     cls.__name__ = str('{}_trans'.format(name))
     return cls
 
@@ -540,3 +514,24 @@ def probability_trans(distribution, *args, **kwargs):
         return getattr(stats, distribution).ppf(x, *args, **kwargs)
 
     return trans_new('prob-{}'.format(distribution), trans, inv)
+
+
+def gettrans(t):
+    """
+    Return a trans object
+
+    Parameters
+    ----------
+    t : string | function
+        name of transformation function
+
+    Returns
+    -------
+    out : tran
+    """
+    # Make sure trans object is instantiated
+    if isinstance(t, six.string_types):
+        out = gg_import(t+'_trans')()
+    elif(isinstance(t, type)):
+        out = t()
+    return out

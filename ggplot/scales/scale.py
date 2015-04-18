@@ -1,21 +1,20 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
+import types
 from copy import deepcopy
 
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
-from matplotlib.ticker import MaxNLocator
-import six
+from matplotlib.ticker import Locator, FuncFormatter
 
 from ..utils import waiver, is_waive
-from ..utils import identity, match
-from ..utils import round_any, gg_import
+from ..utils import match, is_sequence_of_strings
+from ..utils import round_any
 from ..utils.exceptions import gg_warning, GgplotError
 from .utils import rescale, censor, expand_range, zero_range
-from .utils import identity_trans
+from .utils import identity_trans, gettrans
 from ..components.aes import is_position_aes
 
 
@@ -32,7 +31,7 @@ class scale(object):
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
     guide = 'legend'    # legend or any other guide
-    _limits = None      # (min, max)
+    _limits = None      # (min, max) - set by user
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -78,7 +77,7 @@ class scale(object):
     def limits(self):
         # Fall back to the range if the limits
         # are not set or if any is NaN
-        if not (self._limits is None):
+        if self._limits is not None:
             if not any(map(pd.isnull, self._limits)):
                 return self._limits
         return self.range
@@ -181,6 +180,7 @@ class scale_discrete(scale):
     def scale_breaks(self):
         """
         Returns a dictionary of the form {break: position}
+        for the guide
 
         e.g.
         {'fair': 1, 'good': 2, 'very good': 3,
@@ -201,6 +201,9 @@ class scale_discrete(scale):
         return dict(zip(in_domain, pos))
 
     def scale_labels(self):
+        """
+        Generate labels for the legend/guide breaks
+        """
         breaks = self.scale_breaks()
 
         if breaks is None:
@@ -216,21 +219,20 @@ class scale_discrete(scale):
             return sorted(breaks, key=breaks.__getitem__)
         elif callable(self.labels):
             return self.labels(breaks)
+        # if a dict is used to rename some labels
+        elif issubclass(scale.labels, dict):
+            labels = breaks
+            lookup = list(scale.labels.items())
+            mp = match(lookup, labels, nomatch=-1)
+            for idx in mp:
+                if idx != -1:
+                    labels[idx] = lookup[idx]
+            return labels
         else:
-            # if a dict is used to rename some labels
-            if issubclass(scale.labels, dict):
-                labels = breaks
-                lookup = list(scale.labels.items())
-                mp = match(lookup, labels, nomatch=-1)
-                for idx in mp:
-                    if idx != -1:
-                        labels[idx] = lookup[idx]
-                return labels
-            else:
-                # TODO: see ggplot2
-                # Need to ensure that if breaks were dropped,
-                # corresponding labels are too
-                return self.labels
+            # TODO: see ggplot2
+            # Need to ensure that if breaks were dropped,
+            # corresponding labels are too
+            return self.labels
 
     def transform_df(self, df):
         """
@@ -247,17 +249,49 @@ class scale_continuous(scale):
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
-    trans = identity_trans         # transformation object
+    trans = identity_trans()       # transformation object
 
     def __init__(self, **kwargs):
-        if 'trans' in kwargs:
-            self.trans = kwargs.pop('trans')
-        if isinstance(self.trans, six.string_types):
-            self.trans = gg_import(self.trans+'_trans')()
-        elif(isinstance(self.trans, type)):
-            self.trans = self.trans()
+        # We can set the breaks to user defined values or
+        # have matplotlib calculate them using the default locator
+        # function. In case of transform, special locator and
+        # formatter functions are created for mpl to use.
+        try:
+            self.trans = gettrans(kwargs.pop('trans'))
+        except KeyError:
+            pass
 
+        if 'limits' in kwargs:
+            kwargs['limits'] = self.trans.trans(kwargs['limits'])
+
+        # trans object should know the main aesthetic,
+        # in case it has to manipulate the axis
         self.trans.aesthetic = self.aesthetics[0]
+
+        # When both breaks and transformation are specified,
+        # the trans object should not modify the axis. The
+        # trans object will still transform the data
+        if 'breaks' in kwargs:
+            # locator wins
+            if (callable(kwargs['breaks']) and
+                    isinstance(kwargs['breaks'](), Locator)):
+                self.trans.locator_factory = kwargs.pop('breaks')
+            # trust the user breaks
+            elif self.trans != identity_trans:
+                # kill the locator but not the and the formatter.
+                self.trans.locator_factory = waiver()
+
+        if 'labels' in kwargs:
+            # function wins
+            if isinstance(kwargs['labels'], types.FunctionType):
+                self.trans.formatter = FuncFormatter(kwargs.pop('labels'))
+            # trust the user labels
+            elif is_sequence_of_strings(kwargs['labels']):
+                self.trans.formatter = waiver()
+            elif not is_sequence_of_strings(kwargs['labels']):
+                msg = 'labels should be function or a sequence of strings'
+                raise GgplotError(msg)
+
         scale.__init__(self, **kwargs)
 
     def train(self, series):
@@ -295,11 +329,20 @@ class scale_continuous(scale):
         aesthetics = set(self.aesthetics) & set(df.columns)
         for ae in aesthetics:
             try:
-                df[ae] = self.trans.trans(df[ae])
+                df[ae] = self.transform(df[ae])
             except TypeError:
                 pass
 
         return df
+
+    def transform(self, series):
+        """
+        Transform
+        """
+        try:
+            return self.trans.trans(series)
+        except TypeError:
+            return [self.trans.trans(x) for x in series]
 
     def dimension(self, expand=None):
         """
@@ -328,19 +371,19 @@ class scale_continuous(scale):
         return scaled
 
     def scale_breaks(self):
-        # Limits in transformed space need to be converted back to
-        # data space
-        # TODO enable this after transforms are sorted out
-        # limits = scale.trans.inv(scale.limits)
-        limits = self.limits
+        """
+        Generate breaks for the legend/guide
+        """
+        # Limits in transformed space need to be
+        # converted back to data space
+        limits = self.trans.inv(self.limits)
 
         if scale.breaks is None:
             return None
         elif zero_range(limits):
             breaks = [limits[0]]
         elif is_waive(scale.breaks):
-            # Transformation needed here XXX ?
-            breaks = MaxNLocator(4).tick_values(*limits)
+            breaks = self.trans.breaks(4).tick_values(*limits)
         elif callable(scale.breaks):
             breaks = scale.breaks(limits)
         else:
@@ -349,15 +392,17 @@ class scale_continuous(scale):
         # Breaks in data space need to be converted back to
         # transformed space And any breaks outside the
         # dimensions need to be flagged as missing
-        # breaks = censor(scale.trans.trans(breaks),
-        #                 scale.trans.trans(limits))
-        breaks = censor(breaks, limits)
+        breaks = censor(self.transform(breaks),
+                        self.transform(limits))
         if len(breaks) == 0:
             raise GgplotError('Zero breaks in scale for {}'.format(
                 scale.aesthetics))
         return breaks
 
     def scale_labels(self):
+        """
+        Generate labels for the legend/guide breaks
+        """
         breaks = self.scale_breaks()
 
         if breaks is None:
@@ -367,7 +412,8 @@ class scale_continuous(scale):
             return None
         elif is_waive(self.labels):
             # TODO: Should apply transformation
-            labels = breaks
+            # labels = breaks
+            labels = [self.trans.format(b) for b in breaks]
         elif callable(self.labels):
             labels = self.labels(breaks)
         else:

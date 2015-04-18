@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from types import MethodType
 
 import numpy as np
 import pandas as pd
@@ -86,8 +87,6 @@ class scale_position_discrete(scale_discrete):
         Return the range for the coordinate axis
         """
         if self._limits:
-            # NOTE: Should transform if/when selfale.trans
-            # is enabled
             rng = self._limits
         elif is_waive(self._expand):
             rng = self.dimension((0, 0.6))
@@ -163,9 +162,7 @@ class scale_position_continuous(scale_continuous):
         Return the range for the coordinate axis
         """
         if self._limits:
-            # NOTE: Should transform if/when selfale.trans
-            # is enabled
-            rng = self._limits
+            rng = self.transform(self._limits)
         elif is_waive(self._expand):
             rng = self.dimension((0.05, 0))
         else:
@@ -177,6 +174,8 @@ class scale_position_continuous(scale_continuous):
         """
         The breaks that appear on the coordinate axis
         """
+        if not is_waive(self.breaks):
+            return self.transform(self.breaks)
         return self.breaks
 
     def coord_labels(self):
@@ -205,21 +204,22 @@ class scale_y_continuous(scale_position_continuous):
 
 # Transformed scales
 class scale_x_sqrt(scale_x_continuous):
-    trans = sqrt_trans
+    trans = sqrt_trans()
 
 
 class scale_y_sqrt(scale_y_continuous):
-    trans = sqrt_trans
+    trans = sqrt_trans()
 
 
 class scale_x_log10(scale_x_continuous):
-    trans = log10_trans
+    trans = log10_trans()
 
 
 class scale_y_log10(scale_y_continuous):
-    trans = log10_trans
+    trans = log10_trans()
 
 
+# For the trans object of reverse scales
 def _modify_axis(self, axs):
     attr = 'invert_{}axis'.format(self.aesthetic)
     for ax in axs:
@@ -227,12 +227,12 @@ def _modify_axis(self, axs):
 
 
 class scale_x_reverse(scale_x_continuous):
-    trans = identity_trans
-    trans.modify_axis = _modify_axis
+    trans = identity_trans()
+    trans.modify_axis = MethodType(_modify_axis, trans)
 
 
-class scale_y_reverse(scale_x_continuous):
-    trans = identity_trans
-    trans.modify_axis = _modify_axis
+class scale_y_reverse(scale_y_continuous):
+    trans = identity_trans()
+    trans.modify_axis = MethodType(_modify_axis, trans)
 
 # TODO: breaks and labels parameters for transformed scales

@@ -68,7 +68,7 @@ def is_sequence_of_strings(obj):
     # string_like and therefore not a sequence of strings
     if not cbook.iterable(obj):
         return False
-    if not isinstance(obj, np.ndarray) and cbook.is_string_like(obj):
+    if cbook.is_string_like(obj) and not isinstance(obj, np.ndarray):
         return False
     for o in obj:
         if not cbook.is_string_like(o):
@@ -82,10 +82,7 @@ def is_sequence_of_booleans(obj):
     """
     if not cbook.iterable(obj):
         return False
-    _it = (isinstance(x, bool) for x in obj)
-    if all(_it):
-        return True
-    return False
+    return all(isinstance(o, bool) for o in obj)
 
 
 def is_categorical(obj):
@@ -133,7 +130,12 @@ def make_iterable_ntimes(val, n):
     return [val] * n
 
 
-_waiver_ = object()
+class _object(object):
+    def __deepcopy__(self, memo):
+        return self
+
+
+_waiver_ = _object()
 
 
 def waiver():

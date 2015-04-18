@@ -63,6 +63,9 @@ from .scale_xy import scale_x_reverse, scale_y_reverse
 # position datetime
 from .scale_datetime import scale_x_datetime, scale_x_date
 from .scale_datetime import scale_y_datetime, scale_y_date
+# format functions
+from .utils import dollar, currency, comma, millions
+from .utils import percent, scientific
 
 
 __all__ = [# color
@@ -111,6 +114,9 @@ __all__ = [# color
            # position datetime
            'scale_x_datetime', 'scale_x_date',
            'scale_y_datetime', 'scale_y_date',
+            # format functions
+            'dollar', 'currency', 'comma', 'millions',
+            'percent', 'scientific',
            ]
 
 __all__ = [str(u) for u in __all__]

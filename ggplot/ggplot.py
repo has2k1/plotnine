@@ -147,11 +147,8 @@ class ggplot(object):
             ax.set_xlim(panel.ranges[panel_idx]['x'])
             ax.set_ylim(panel.ranges[panel_idx]['y'])
 
-            # panel breaks
-            set_breaks(panel, panel_idx, ax)
-
-            # panel labels
-            set_labels(panel, panel_idx, ax)
+            # panel breaks & panel labels
+            set_breaks_and_labels(panel, panel_idx, ax)
 
             # xaxis, yaxis stuff
             set_axis_attributes(plot, pnl, ax)
@@ -325,20 +322,17 @@ def set_axis_attributes(plot, pnl, ax):
     plot.theme.post_plot_callback(ax, params)
 
 
-def set_breaks(panel, idx, ax):
+def set_breaks_and_labels(panel, idx, ax):
     xbreaks = panel.ranges[idx]['x_breaks']
     ybreaks = panel.ranges[idx]['y_breaks']
+    xlabels = panel.ranges[idx]['x_labels']
+    ylabels = panel.ranges[idx]['y_labels']
 
     if not is_waive(xbreaks):
         ax.set_xticks(xbreaks)
 
     if not is_waive(ybreaks):
         ax.set_yticks(ybreaks)
-
-
-def set_labels(panel, idx, ax):
-    xlabels = panel.ranges[idx]['x_labels']
-    ylabels = panel.ranges[idx]['y_labels']
 
     if not is_waive(xlabels):
         ax.set_xticklabels(xlabels)
