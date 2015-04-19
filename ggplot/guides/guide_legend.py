@@ -188,6 +188,12 @@ class guide_legend(guide):
         # TODO: theme me
         title_box = TextArea(
             self.title, textprops=dict(color='k', weight='bold'))
+        title_align = theme._params['legend_title_align']
+        if title_align is None:
+            if self.direction == 'vertical':
+                title_align = 'left'
+            else:
+                title_align = 'center'
 
         # labels
         # TODO: theme me
@@ -261,5 +267,5 @@ class guide_legend(guide):
         # Put the title and entries together
         packer, slc = lookup[self.title_position]
         children = [title_box, entries_box][slc]
-        box = packer(children=children, align='center', pad=0, sep=hgap)
+        box = packer(children=children, align=title_align, pad=0, sep=hgap)
         return box

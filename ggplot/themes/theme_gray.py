@@ -77,6 +77,7 @@ class theme_gray(theme):
         for child in ax.get_children():
             if isinstance(child, mpl.spines.Spine):
                 child.set_alpha(0)
+                child.set_linewidth(0)
 
         # Restyle the tick lines
         for line in ax.get_xticklines() + ax.get_yticklines():

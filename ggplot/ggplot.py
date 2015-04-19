@@ -127,6 +127,9 @@ class ggplot(object):
 
         axs = np.atleast_2d(axs)
         axs = [ax for row in axs for ax in row]
+        for ax in axs[len(panel.layout):]:
+            ax.axis('off')
+        axs = axs[:len(panel.layout)]
         plot.axs = axs
         plot.fig = fig
 
@@ -354,29 +357,45 @@ def draw_facet_label(plot, pnl, ax, fig):
     # transAxes dimensions. The line height and line
     # width are mapped to the same [0, 1] range
     # i.e (pts) * (inches / pts) * (1 / inches)
-    # plus a padding factor of 1.65
+    # plus a padding factor of 1.6
     bbox = ax.get_window_extent().transformed(
         fig.dpi_scale_trans.inverted())
     w, h = bbox.width, bbox.height  # in inches
+
+    # for covering the invisible frame around the axes
     oneh = 1 / (fig.dpi * w)  # 1pt horizontal in transAxes
     onev = 1 / (fig.dpi * h)  # 1pt vertical in transAxes
-    w = mpl.rcParams['font.size'] * 1.65 * oneh
-    h = mpl.rcParams['font.size'] * 1.65 * onev
+
+    fs = float(plot.theme._rcParams['font.size'])
+
+    # linewidth in transAxes
+    lwy = fs / (72*h)
+    lwx = fs / (72*w)
+
+    # bbox height (along direction of text) of
+    # labels in transAxes
+    hy = 1.6 * lwy
+    hx = 1.6 * lwx
+
+    # text location in transAxes
+    y = 1 + hy/2.1
+    x = 1 + hx/2.4
 
     # facet_wrap #
     if is_wrap:
+        # top label
         facet_var = plot.facet.vars[0]
-        ax.text(0.5, 1+onev, pnl[facet_var],
+        ax.text(0.5, y, pnl[facet_var],
                 bbox=dict(
                     xy=(0, 1+onev),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
-                    height=h,
-                    width=1,
+                    height=hy,
+                    width=1-oneh,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
-                fontdict=dict(verticalalignment="bottom",
-                              horizontalalignment='left')
+                fontdict=dict(verticalalignment='center',
+                              horizontalalignment='center')
                 )
         return
 
@@ -384,34 +403,34 @@ def draw_facet_label(plot, pnl, ax, fig):
     if pnl['ROW'] == 1:
         # top labels
         facet_var = plot.facet.cols[0]
-        ax.text(0.5, 1+onev, pnl[facet_var],
+        ax.text(0.5, y, pnl[facet_var],
                 bbox=dict(
                     xy=(0, 1+onev),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
-                    height=h,
-                    width=1,
+                    height=hy,
+                    width=1-oneh,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
-                fontdict=dict(verticalalignment="bottom",
-                              horizontalalignment='left')
+                fontdict=dict(verticalalignment='center',
+                              horizontalalignment='center')
                 )
 
     if pnl['COL'] == plot.facet.ncol:
         # right labels
         facet_var = plot.facet.rows[0]
-        ax.text(1+oneh, 0.5, pnl[facet_var],
+        ax.text(x, 0.5, pnl[facet_var],
                 bbox=dict(
-                    xy=(1+oneh, 0),
+                    xy=(1, 0+oneh),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
-                    height=1,
-                    width=w,
+                    height=1-onev,
+                    width=hx,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
                 fontdict=dict(rotation=-90,
-                              verticalalignment="center",
-                              horizontalalignment='left')
+                              verticalalignment='center',
+                              horizontalalignment='center')
                 )
 
 

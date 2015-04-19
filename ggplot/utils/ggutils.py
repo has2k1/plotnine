@@ -2,7 +2,7 @@
 """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-                        
+
 import json
 import os
 import sys
@@ -11,7 +11,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import six
 
-from .exceptions import gg_warning, gg_reset
+from .exceptions import gg_warning, GgplotError, gg_reset
 
 
 if not hasattr(mpl, 'rc_context'):
@@ -73,15 +73,16 @@ class gg_context(object):
 
 # API-docs from ggplot2: GPL-2 licensed
 
-def ggsave(filename = None, plot = None, device = None, format = None,
-           path = None, scale = 1, width = None, height = None, units = "in",
-           dpi = 300, limitsize=True, **kwargs):
-    """Save a ggplot with sensible defaults
-    
+def ggsave(filename=None, plot=None, device=None, format=None,
+           path=None, scale=1, width=None, height=None, units="in",
+           dpi=300, limitsize=True, **kwargs):
+    """
+    Save a ggplot with sensible defaults
+
     ggsave is a convenient function for saving a plot.  It defaults to
-    saving the last plot that you displayed, and for a default size uses 
-    the size of the current graphics device.  It also guesses the type of 
-    graphics device from the extension.  This means the only argument you 
+    saving the last plot that you displayed, and for a default size uses
+    the size of the current graphics device.  It also guesses the type of
+    graphics device from the extension.  This means the only argument you
     need to supply is the filename.
 
     Parameters
@@ -91,10 +92,10 @@ def ggsave(filename = None, plot = None, device = None, format = None,
     plot : ggplot
         plot to save, defaults to last plot displayed
     format : str
-        image format to use, automatically extract from 
+        image format to use, automatically extract from
         file name extension
     path : str
-        path to save plot to (if you just want to set path and 
+        path to save plot to (if you just want to set path and
         not filename)
     scale : number
         scaling factor
@@ -103,21 +104,21 @@ def ggsave(filename = None, plot = None, device = None, format = None,
     height : number
         height (defaults to the height of current plotting window)
     units : str
-        units for width and height when either one is explicitly 
+        units for width and height when either one is explicitly
         specified (in, cm, or mm)
     dpi : number
         dpi to use for raster graphics
     limitsize : bool
-        when `True` (the default), ggsave will not save images 
-        larger than 50x50 inches, to prevent the common error 
+        when `True` (the default), ggsave will not save images
+        larger than 50x50 inches, to prevent the common error
         of specifying dimensions in pixels.
-    kwargs : dict 
+    kwargs : dict
         additional arguments to pass to matplotlib `savefig()`
-    
+
     Returns
     -------
     None
-    
+
     Examples
     --------
     >>> from ggplot import *
@@ -127,57 +128,69 @@ def ggsave(filename = None, plot = None, device = None, format = None,
     Notes
     -----
     Incompatibilities to ggplot2:
-    
+
     - `format` can be use as a alternative to `device`
     - ggsave will happily save matplotlib plots, if that was the last plot
     """
-    fig_kwargs = {}
+    fig_kwargs = {'bbox_inches': 'tight'}  # 'tight' is a good default
     fig_kwargs.update(kwargs)
-    
+
     # This is the case when we just use "ggsave(plot)"
-    if hasattr(filename, "draw"):
+    if hasattr(filename, 'render'):
         plot, filename = filename, plot
-    
+
     if plot is None:
         figure = plt.gcf()
     else:
-        if hasattr(plot, "draw"):
-            figure = plot.draw()
+        if hasattr(plot, 'render'):
+            plot.theme._rcParams['figure.dpi'] = dpi
+            figure = plot.render()
         else:
-            raise Exception("plot is not a ggplot object")
+            raise GgplotError("plot is not a ggplot object")
 
     if format and device:
-        raise Exception("Both 'format' and 'device' given: only use one")
+        raise GgplotError(
+            "Both 'format' and 'device' given: only use one")
     # in the end the imageformat is in format
     if device:
         format = device
     if format:
-        if not format in figure.canvas.get_supported_filetypes():
-            raise Exception("Unknown format: {0}".format(format))
-        fig_kwargs["format"] = format
+        if format not in figure.canvas.get_supported_filetypes():
+            raise GgplotError("Unknown format: {}".format(format))
+        fig_kwargs['format'] = format
 
     if filename is None:
         if plot:
             # ggplot2 defaults to pdf
-            filename = str(plot.__hash__()) + "." +(format if format else "pdf")
+            filename = '{}.{}'.format(plot.__hash__(),
+                                      (format if format else 'pdf'))
         else:
-            # ggplot2 has a way to get to the last plot, but we currently dont't
-            raise Exception("No filename given: please supply a filename")
+            # ggplot2 has a way to get to the last plot,
+            # but we currently dont't
+            raise GgplotError(
+                "No plot given: please supply a plot")
 
     if not isinstance(filename, six.string_types):
         # so probably a file object
         if format is None:
-            raise Exception("filename is not a string and no format given: please supply a format!")
-    
+            raise GgplotError(
+                "filename is not a string and no format given:",
+                "please supply a format!")
+
     if path:
         filename = os.path.join(path, filename)
-        
-    if units not in ["in", "cm", "mm"]:
-        raise Exception("units not 'in', 'cm', or 'mm'")
 
-    to_inch = {"in":lambda x:x,"cm":lambda x: x / 2.54, "mm":lambda x: x * 2.54 * 10}
-    from_inch = {"in":lambda x:x,"cm":lambda x: x * 2.54, "mm":lambda x: x * 2.54 * 10}
-    
+    if units not in ['in', 'cm', 'mm']:
+        raise GgplotError("units not one of 'in', 'cm', or 'mm'")
+
+    to_inch = {'in': lambda x: x,
+               'cm': lambda x: x/2.54,
+               'mm': lambda x: x/(2.54*10)}
+
+    from_inch = {'in': lambda x: x,
+                 'cm': lambda x: x*2.54,
+                 'mm': lambda x: x*2.54*10}
+
     w, h = figure.get_size_inches()
     issue_size = False
     if width is None:
@@ -190,51 +203,38 @@ def ggsave(filename = None, plot = None, device = None, format = None,
         issue_size = True
     else:
         height = to_inch[units](height)
-    
+
     try:
         scale = float(scale)
     except:
-        raise Exception("Can't convert scale argument to a number: {0}".format(scale))
-    # ggplot2: if you specify a width *and* a scale, you get the width*scale image!
+        msg = "Can't convert scale argument to a number: {}"
+        raise GgplotError(msg.format(scale))
+
+    # ggplot2: if you specify a width *and* a scale,
+    # you get the width*scale image!
     width = width * scale
     height = height * scale
-    
+
     if issue_size:
-        msg = "Saving {0} x {1} {2} image.\n".format(from_inch[units](width), from_inch[units](height), units)
-        sys.stderr.write(msg)
-    
+        msg = "Saving {0} x {1} {2} image.\n"
+        gg_warning(msg.format(from_inch[units](width),
+                              from_inch[units](height),
+                              units))
+
     if limitsize and (width > 25 or height > 25):
-        msg = "Dimensions exceed 25 inches (height and width are specified in inches/cm/mm, not pixels)." + \
-              " If you are sure you want these dimensions, use 'limitsize=False'."
-        raise Exception(msg)
-    
-    fig_kwargs["dpi"] = dpi
- 
-    #savefig(fname, dpi=None, facecolor='w', edgecolor='w',
-    #    orientation='portrait', papertype=None, format=None,
-    #    transparent=False, bbox_inches=None, pad_inches=0.1,
-    #    frameon=None)
+        raise GgplotError(
+            "Dimensions exceed 25 inches",
+            "(height and width are specified in inches/cm/mm,",
+            "not pixels). If you are sure you want these",
+            "dimensions, use 'limitsize=False'.")
+
     try:
-        figure.set_size_inches(width,height)
+        figure.set_size_inches(width, height)
         figure.savefig(filename, **fig_kwargs)
     finally:
         # restore the sizes
-        figure.set_size_inches(w,h)
+        figure.set_size_inches(w, h)
+
     # close figure, if it was drawn by ggsave
-    if not plot is None:
+    if plot is not None:
         plt.close(figure)
-
-def add_ggplotrc_params(obj):
-    # ggplotrc defaults
-    if "HOME" in os.environ:
-        ggrc = os.path.join(os.environ["HOME"], ".ggplotrc")
-        try:
-            klass = obj.__class__.__name__
-            ggrc = json.load(open(ggrc, 'r'))
-            if klass in ggrc:
-                for k, v in ggrc[klass].items():
-                    setattr(obj, k, v)
-        except:
-            pass
-
-
