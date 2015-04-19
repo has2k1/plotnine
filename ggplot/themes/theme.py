@@ -81,7 +81,7 @@ class theme(object):
                 self.element_themes.append(
                     element_target_factory(target_name, theme_element))
 
-    def apply_theme(self, ax, params):
+    def apply_theme(self, ax):
         """apply_theme will be called with an axes object after plot has completed.
 
         Complete themes should implement this method if post plot themeing is

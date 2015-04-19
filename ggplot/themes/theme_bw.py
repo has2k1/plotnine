@@ -16,7 +16,7 @@ class theme_bw(theme_gray):
         self._rcParams["xtick.color"] = "black"
         self._rcParams["ytick.color"] = "black"
 
-    def apply_theme(self, ax, params):
+    def apply_theme(self, ax):
         """
         Styles x,y axes to appear like ggplot2
         Must be called after all plot and axis manipulation operations have
@@ -29,13 +29,6 @@ class theme_bw(theme_gray):
         for line in ax.get_xticklines() + ax.get_yticklines():
             line.set_markersize(5)
             line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
-
-        # set parameters
-        for att, val in params['xaxis']:
-            getattr(ax.xaxis, att)(val)
-
-        for att, val in params['yaxis']:
-            getattr(ax.yaxis, att)(val)
 
         # Set minor grid lines
         ax.grid(True, 'minor', color='#FAFAFA', linestyle='-', linewidth=0.5)

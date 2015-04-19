@@ -220,10 +220,9 @@ class scale_y_log10(scale_y_continuous):
 
 
 # For the trans object of reverse scales
-def _modify_axis(self, axs):
+def _modify_axis(self, ax):
     attr = 'invert_{}axis'.format(self.aesthetic)
-    for ax in axs:
-        getattr(ax, attr)()
+    getattr(ax, attr)()
 
 
 class scale_x_reverse(scale_x_continuous):

@@ -7,15 +7,13 @@ import pandas as pd
 import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 from matplotlib.offsetbox import AnchoredOffsetbox
 
-from .components import colors, shapes
 from .components.aes import make_labels
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive
-from .utils.exceptions import GgplotError, gg_warning
+from .utils.exceptions import GgplotError
 from .utils.ggutils import gg_context
 from .panel import Panel
 from .layer import add_group
@@ -134,27 +132,22 @@ class ggplot(object):
         plot.fig = fig
 
         # ax - axes for a particular panel
-        # pnl - panel (facet) information from layout table
-        for ax, (_, pnl) in zip(axs, panel.layout.iterrows()):
-            panel_idx = pnl['PANEL'] - 1
-            xy_scales = {'x': panel.x_scales[pnl['SCALE_X'] - 1],
-                         'y': panel.y_scales[pnl['SCALE_Y'] - 1]}
+        # finfo - panel (facet) information from layout table
+        for ax, (_, finfo) in zip(axs, panel.layout.iterrows()):
+            panel_idx = finfo['PANEL'] - 1
+            xy_scales = {'x': panel.x_scales[finfo['SCALE_X'] - 1],
+                         'y': panel.y_scales[finfo['SCALE_Y'] - 1]}
 
             # Plot all data for each layer
             for zorder, (l, d) in enumerate(
                     zip(plot.layers, data), start=1):
-                bool_idx = (d['PANEL'] == pnl['PANEL'])
+                bool_idx = (d['PANEL'] == finfo['PANEL'])
                 l.plot(d[bool_idx], xy_scales, ax, zorder)
 
-            # panel limits
-            ax.set_xlim(panel.ranges[panel_idx]['x'])
-            ax.set_ylim(panel.ranges[panel_idx]['y'])
-
-            # panel breaks & panel labels
-            set_breaks_and_labels(panel, panel_idx, ax)
-
-            # xaxis, yaxis stuff
-            set_axis_attributes(plot, pnl, ax)
+            # xaxis & yaxis breaks and labels and stuff
+            set_breaks_and_labels(plot, panel.ranges[panel_idx],
+                                  finfo, ax)
+            plot.theme.post_plot_callback(ax)
 
             # TODO: Need to find a better place for this
             # theme_apply turns on the minor grid only to turn
@@ -167,10 +160,9 @@ class ggplot(object):
 
             # draw facet labels
             if isinstance(plot.facet, (facet_grid, facet_wrap)):
-                draw_facet_label(plot, pnl, ax, fig)
+                draw_facet_label(plot, finfo, ax, fig)
 
-        set_facet_spacing(plot)
-        modify_axis(plot)
+        apply_facet_spacing(plot)
         return plot
 
     def plot_build(self):
@@ -185,7 +177,7 @@ class ggplot(object):
         data : list
             dataframes, one for each layer
         panel : panel
-            panel object with all the information required
+            panel object with all the finformation required
             for ploting
         plot : ggplot
             A copy of the ggplot object
@@ -303,33 +295,31 @@ class ggplot(object):
         return plot
 
 
-def set_axis_attributes(plot, pnl, ax):
-    # Figure out the parameters that should be set
-    # in the theme
-    params = {'xaxis': [], 'yaxis': []}
+def set_breaks_and_labels(plot, ranges, finfo, ax):
+    """
+    Set the limits, breaks and labels for the axis
 
-    # Bottom row should have ticks
-    if pnl['ROW'] == plot.facet.nrow:
-        params['xaxis'] += [('set_ticks_position', 'bottom')]
-    else:
-        params['xaxis'] += [('set_ticks_position', 'none'),
-                            ('set_ticklabels', [])]
+    Parameters
+    ----------
+    plot : ggplot
+        ggplot object
+    ranges : dict-like
+        range information for the axes
+    finfo : dict-like
+        facet layout information
+    ax : axes
+        current axes
+    """
+    # limits
+    ax.set_xlim(ranges['x'])
+    ax.set_ylim(ranges['y'])
 
-    # left most row should have ticks
-    if pnl['COL'] == 1:
-        params['yaxis'] += [('set_ticks_position', 'left')]
-    else:
-        params['yaxis'] += [('set_ticks_position', 'none'),
-                            ('set_ticklabels', [])]
-
-    plot.theme.post_plot_callback(ax, params)
-
-
-def set_breaks_and_labels(panel, idx, ax):
-    xbreaks = panel.ranges[idx]['x_breaks']
-    ybreaks = panel.ranges[idx]['y_breaks']
-    xlabels = panel.ranges[idx]['x_labels']
-    ylabels = panel.ranges[idx]['y_labels']
+    # breaks and labels for when the user set
+    # them explicitly
+    xbreaks = ranges['x_breaks']
+    ybreaks = ranges['y_breaks']
+    xlabels = ranges['x_labels']
+    ylabels = ranges['y_labels']
 
     if not is_waive(xbreaks):
         ax.set_xticks(xbreaks)
@@ -343,14 +333,54 @@ def set_breaks_and_labels(panel, idx, ax):
     if not is_waive(ylabels):
         ax.set_yticklabels(ylabels)
 
+    # Add axis Locators and Formatters for when
+    # the mpl deals with the breaks and labels
+    pscales = plot.scales.position_scales()
+    for sc in pscales:
+        try:
+            sc.trans.modify_axis(ax)
+        except AttributeError:
+            pass
+
+    # Remove unwanted
+    if not finfo['AXIS_X']:
+        ax.xaxis.set_ticks_position('none')
+        ax.xaxis.set_ticklabels([])
+    if not finfo['AXIS_Y']:
+        ax.yaxis.set_ticks_position('none')
+        ax.yaxis.set_ticklabels([])
+    if finfo['AXIS_X']:
+        ax.xaxis.set_ticks_position('bottom')
+    if finfo['AXIS_Y']:
+        ax.yaxis.set_ticks_position('left')
+
 
 # TODO Need to use theme (element_rect) for the colors
 # Should probably be in themes
-def draw_facet_label(plot, pnl, ax, fig):
-    is_wrap = isinstance(plot.facet, facet_wrap)
-    is_grid = isinstance(plot.facet, facet_grid)
+def draw_facet_label(plot, finfo, ax, fig):
+    """
+    Draw facet label onto the axes.
 
-    if is_grid and (pnl['ROW'] != 1 and pnl['COL'] != plot.facet.ncol):
+    This function will only draw labels if they
+    are needed.
+
+    Parameters
+    ----------
+    plot : ggplot
+        ggplot object
+    finfo : dict-like
+        facet information
+    ax : axes
+        current axes
+    fig : Figure
+        current figure
+    """
+    fcwrap = isinstance(plot.facet, facet_wrap)
+    fcgrid = isinstance(plot.facet, facet_grid)
+    toprow = finfo['ROW'] != 1
+    rightcol = finfo['COL'] != plot.facet.ncol
+
+    if fcgrid and toprow and rightcol:
         return
 
     # The facet labels are placed onto the figure using
@@ -382,10 +412,10 @@ def draw_facet_label(plot, pnl, ax, fig):
     x = 1 + hx/2.4
 
     # facet_wrap #
-    if is_wrap:
+    if fcwrap:
         # top label
         facet_var = plot.facet.vars[0]
-        ax.text(0.5, y, pnl[facet_var],
+        ax.text(0.5, y, finfo[facet_var],
                 bbox=dict(
                     xy=(0, 1+onev),
                     facecolor='lightgrey',
@@ -397,13 +427,12 @@ def draw_facet_label(plot, pnl, ax, fig):
                 fontdict=dict(verticalalignment='center',
                               horizontalalignment='center')
                 )
-        return
 
     # facet_grid #
-    if pnl['ROW'] == 1:
+    if fcgrid and toprow:
         # top labels
         facet_var = plot.facet.cols[0]
-        ax.text(0.5, y, pnl[facet_var],
+        ax.text(0.5, y, finfo[facet_var],
                 bbox=dict(
                     xy=(0, 1+onev),
                     facecolor='lightgrey',
@@ -416,10 +445,10 @@ def draw_facet_label(plot, pnl, ax, fig):
                               horizontalalignment='center')
                 )
 
-    if pnl['COL'] == plot.facet.ncol:
+    if fcgrid and rightcol:
         # right labels
         facet_var = plot.facet.rows[0]
-        ax.text(x, 0.5, pnl[facet_var],
+        ax.text(x, 0.5, finfo[facet_var],
                 bbox=dict(
                     xy=(1, 0+oneh),
                     facecolor='lightgrey',
@@ -434,7 +463,7 @@ def draw_facet_label(plot, pnl, ax, fig):
                 )
 
 
-def set_facet_spacing(plot):
+def apply_facet_spacing(plot):
     # TODO: spaces should depend on the axis horizontal
     # and vertical lengths since the values are in
     # transAxes dimensions
@@ -442,12 +471,3 @@ def set_facet_spacing(plot):
         plt.subplots_adjust(wspace=.05, hspace=.20)
     else:
         plt.subplots_adjust(wspace=.05, hspace=.05)
-
-
-def modify_axis(plot):
-    pscales = plot.scales.position_scales()
-    for sc in pscales:
-        try:
-            sc.trans.modify_axis(plot.axs)
-        except AttributeError:
-            pass

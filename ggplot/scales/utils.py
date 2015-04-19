@@ -345,7 +345,7 @@ def trans_new(name, transform, inverse,
         #     except TypeError:
         #         return pd.Series([inverse(x) for x in series])
 
-        def modify_axis(self, axs):
+        def modify_axis(self, ax):
             """
             Modify the xaxis and yaxis
 
@@ -361,14 +361,12 @@ def trans_new(name, transform, inverse,
             axis = '{}axis'.format(self.aesthetic)
 
             if not is_waive(self.locator_factory):
-                for ax in axs:
-                    obj = getattr(ax, axis)
-                    obj.set_major_locator(self.locator_factory())
+                obj = getattr(ax, axis)
+                obj.set_major_locator(self.locator_factory())
 
             if not is_waive(self.formatter):
-                for ax in axs:
-                    obj = getattr(ax, axis)
-                    obj.set_major_formatter(self.formatter)
+                obj = getattr(ax, axis)
+                obj.set_major_formatter(self.formatter)
 
         class transformLocator(MaxNLocator):
             def __init__(self, nbins=8, steps=(1, 2, 5, 10)):

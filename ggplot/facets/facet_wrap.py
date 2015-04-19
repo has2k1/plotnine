@@ -38,7 +38,7 @@ class facet_wrap(object):
 
         # Figure out where axes should go
         layout['AXIS_X'] = True if self.free['x'] else layout['ROW'] == nrow
-        layout['AXIS_y'] = True if self.free['y'] else layout['COL'] == 1
+        layout['AXIS_Y'] = True if self.free['y'] else layout['COL'] == 1
 
         self.nrow = nrow
         self.ncol = layout['COL'].max()

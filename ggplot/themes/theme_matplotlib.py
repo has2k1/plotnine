@@ -38,19 +38,3 @@ class theme_matplotlib(theme):
             self._rcParams.update(mpl.rc_params_from_file(fname))
         if rc:
             self._rcParams.update(rc)
-
-    def apply_theme(self, ax, params):
-        """
-        Styles x,y axes to appear like ggplot2
-        Must be called after all plot and axis manipulation operations have
-        been carried out (needs to know final tick spacing)
-
-        From:
-        https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
-        """
-        # set parameters
-        for att, val in params['xaxis']:
-            getattr(ax.xaxis, att)(val)
-
-        for att, val in params['yaxis']:
-            getattr(ax.yaxis, att)(val)
