@@ -82,6 +82,8 @@ class geom_polygon(geom):
 
         # background
         fc = make_color_tuples(data['facecolor'], data['alpha'])
+        if fc is None:
+            fc = 'none'
         bg = Rectangle((0, 0),
                        width=da.width,
                        height=da.height,
