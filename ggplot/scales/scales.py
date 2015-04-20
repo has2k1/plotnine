@@ -219,15 +219,23 @@ def scales_add_defaults(scales, data, aesthetics):
     if not new_aesthetics:
         return
 
-    ae_cols = new_aesthetics & set(data.columns)
+    # If a new aesthetic corresponds to a column in the data
+    # frame, find a default scale for the type of data in that
+    # column
+    ae_cols = []
+    for ae in new_aesthetics:
+        col = aesthetics[ae]
+        if col in data.columns:
+            ae_cols.append((ae, col))
+
     seen = set()
-    for ae in ae_cols:
+    for ae, col in ae_cols:
         # add the cardinal scale only once e.g x for xmin and xmax
         scale_var = aes_to_scale(ae)
         if scale_var in seen:
             continue
         seen.add(scale_var)
-        _type = scale_type(data[ae])
+        _type = scale_type(data[col])
         scale_name = 'scale_{}_{}'.format(scale_var, _type)
         scale_f = gg_import(scale_name)
         if scale_f is None:

@@ -223,10 +223,9 @@ class layer(object):
         scales_add_defaults(plot.scales, data, new)
 
         # Transform the values, if the scale say it's ok
+        # (see stat_spoke for one exception)
         if self.stat.retransform:
-            # TODO: Implement this
-            # data = scales_transform_df(plot.scales, stat_data)
-            pass
+            stat_data = plot.scales.transform_df(stat_data)
 
         data = pd.concat([data, stat_data], axis=1)
         return data

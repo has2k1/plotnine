@@ -12,7 +12,7 @@ class scale_size_discrete(scale_discrete):
 
     def __init__(self, range=(1, 6), **kwargs):
         def palette(n):
-            np.linspace(range[0], range[1], n)
+            return np.linspace(range[0], range[1], n)
         kwargs['palette'] = palette
         scale_discrete.__init__(self, **kwargs)
 
