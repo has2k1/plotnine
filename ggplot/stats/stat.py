@@ -1,11 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import sys
 from copy import deepcopy
 
 import pandas as pd
 
-from ..layer import layer
 from ..utils import uniquecols, gg_import
 from ..utils.exceptions import GgplotError
 
@@ -31,10 +29,6 @@ class stat(object):
     # should be specified in this set
     # see: stat_bin
     CREATES = set()
-
-    # used by _print_warning to keep track of the
-    # warning messages printed to the standard error
-    _warnings_printed = set()
 
     def __init__(self, *args, **kwargs):
         _params, kwargs = self._find_stat_params(kwargs)
@@ -64,14 +58,6 @@ class stat(object):
                 continue
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
-
-    def _print_warning(self, message):
-        """
-        Prints message to the standard error.
-        """
-        if message not in self._warnings_printed:
-            sys.stderr.write(message)
-            self._warnings_printed.add(message)
 
     def _calculate(self, data, scales, **kwargs):
         msg = "{} should implement this method."

@@ -3,13 +3,13 @@ from __future__ import (absolute_import, division, print_function,
 
 import pandas as pd
 
-from .position import position
+from .position import _position_base
 from .collide import collide, pos_fill
 from ..utils import check_required_aesthetics
 from ..utils.exceptions import gg_warning
 
 
-class position_fill(position):
+class position_fill(_position_base):
 
     def adjust(self, data):
         if len(data) == 0:

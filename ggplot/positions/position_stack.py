@@ -3,13 +3,13 @@ from __future__ import (absolute_import, division, print_function,
 
 import pandas as pd
 
-from .position import position
+from .position import _position_base
 from .collide import collide, pos_stack
 from ..utils import remove_missing
 from ..utils.exceptions import gg_warning
 
 
-class position_stack(position):
+class position_stack(_position_base):
 
     def adjust(self, data):
         if len(data) == 0:
@@ -20,7 +20,7 @@ class position_stack(position):
             vars=('x', 'y', 'ymin', 'ymax', 'xmin', 'xmax'),
             name='position_stack')
 
-        if not ('ymax' in data) and not ('y' in data):
+        if ('ymax' not in data) and ('y' not in data):
             gg_warning(
                 """\
                 Missing y and ymax in position = 'stack'. \

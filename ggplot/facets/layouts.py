@@ -173,7 +173,7 @@ def unique_combs(df):
     _df = df.ix[0:-1, df.columns]
 
     # List of unique values from every column
-    lst = map(lambda x: x.unique().tolist(), [df[c] for c in df])
+    lst = [x.unique().tolist() for x in (df[c] for c in df)]
     rows = itertools.product(*lst)
     for i, row in enumerate(rows):
         _df.loc[i] = row

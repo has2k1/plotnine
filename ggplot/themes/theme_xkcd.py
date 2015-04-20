@@ -23,7 +23,7 @@ class theme_xkcd(theme):
             if key in _xkcd:
                 del _xkcd[key]
         if 'tk.pythoninspect' in _xkcd:
-                del _xkcd['tk.pythoninspect']
+            del _xkcd['tk.pythoninspect']
         self._rcParams.update(_xkcd)
 
     def __deepcopy__(self, memo):

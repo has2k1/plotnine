@@ -1,10 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import sys
 import re
 from copy import deepcopy
 
-import pandas as pd
 import six
 from patsy.eval import EvalEnvironment
 

@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from .ggutils import ggsave
 from .date_breaks import date_breaks
 from .date_format import date_format
-from .utils import (pop, is_categorical, is_string, is_scalar_or_string,
+from .utils import (pop, is_string, is_scalar_or_string,
                     is_sequence_of_booleans, is_sequence_of_strings,
                     make_iterable, make_iterable_ntimes, waiver, is_waive,
                     identity, discrete_dtypes, continuous_dtypes,

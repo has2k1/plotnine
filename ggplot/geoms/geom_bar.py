@@ -15,7 +15,8 @@ class geom_bar(geom_rect):
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor', 'color': 'edgecolor'}
 
-    def reparameterise(self, data):
+    @staticmethod
+    def reparameterise(data):
         bool_idx = (data['y'] < 0)
 
         data['ymin'] = 0

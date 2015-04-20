@@ -210,7 +210,7 @@ def scales_add_defaults(scales, data, aesthetics):
 
     # aesthetics with scales
     if scales:
-        aws = reduce(set.union, map(set, [sc.aesthetics for sc in scales]))
+        aws = reduce(set.union, [set(sc.aesthetics) for sc in scales])
     else:
         aws = set()
 

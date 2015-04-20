@@ -1,5 +1,4 @@
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 from numpy import isreal
 
 from .theme import theme

@@ -45,7 +45,7 @@ class guide_colorbar(guide):
 
         bar = MaxNLocator(self.nbin).tick_values(*scale.limits)
         # discard locations in bar not in scale.limits
-        bar = filter(lambda x: scale.limits[0] <= x <= scale.limits[1], bar)
+        bar = [x for x in bar if scale.limits[0] <= x <= scale.limits[1]]
         self.bar = pd.DataFrame({
             'color': scale.map(bar),
             'value': bar})

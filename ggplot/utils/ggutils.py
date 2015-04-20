@@ -3,15 +3,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import json
 import os
-import sys
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import six
 
-from .exceptions import gg_warning, GgplotError, gg_reset
+from .exceptions import gg_warning, GgplotError
 
 
 if not hasattr(mpl, 'rc_context'):
@@ -65,11 +63,11 @@ class gg_context(object):
             mpl.rcParams.update(self._rcparams)
 
         # other clean up
-        gg_reset()  # TODO: get rid of this
         self.reset()
 
     def reset(self):
         pass
+
 
 # API-docs from ggplot2: GPL-2 licensed
 

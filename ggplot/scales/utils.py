@@ -1,15 +1,21 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import re
+import datetime
 
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
 from matplotlib.ticker import MaxNLocator, ScalarFormatter
+import matplotlib.dates as dates
 import six
 
 from ..utils import round_any, identity, is_waive, gg_import
 from ..utils.exceptions import GgplotError
+
+
+to_ordinalf = dates._to_ordinalf_np_vectorized
+from_ordinalf = dates._from_ordinalf_np_vectorized
 
 
 # formatting functions
@@ -166,10 +172,8 @@ def zero_range(x, tol=np.finfo(float).eps * 100):
     if len(x) != 2:
         raise GgplotError('x must be length 1 or 2')
 
-    # TODO: Get rid of this copout and find a way to deal
-    # with timestamps
-    if type(x[0]) == pd.Timestamp:
-        return False
+    if isinstance(x[0], (pd.Timestamp, datetime.datetime)):
+        x = to_ordinalf(x)
 
     if any(np.isnan(x)):
         return np.nan
@@ -212,17 +216,21 @@ def expand_range(range, mul=0, add=0, zero_width=1):
     except TypeError:
         range = (range, range)
 
+    timestamp = isinstance(range[0], pd.Timestamp)
+    if timestamp:
+        range = to_ordinalf(range)
+
+    # The expansion cases
     if zero_range(range):
         erange = (range[0] - zero_width/2,
                   range[0] + zero_width/2)
-    # TODO: Get rid of this copout and find a way to deal
-    # with timestamps
-    elif type(range[0]) == pd.Timestamp:
-        erange = range
     else:
         erange = (np.array(range) +
                   np.array([-1, 1]) * (np.diff(range) * mul + add))
         erange = tuple(erange)
+
+    if timestamp:
+        erange = tuple(from_ordinalf(erange))
     return erange
 
 
@@ -331,20 +339,6 @@ def trans_new(name, transform, inverse,
         trans = staticmethod(transform)
         inv = staticmethod(inverse)
 
-        # @staticmethod
-        # def trans(series):
-        #     try:
-        #         return pd.Series(transform(series))
-        #     except TypeError:
-        #         return pd.Series([transform(x) for x in series])
-        #
-        # @staticmethod
-        # def inv(series):
-        #     try:
-        #         return pd.Series(inverse(series))
-        #     except TypeError:
-        #         return pd.Series([inverse(x) for x in series])
-
         def modify_axis(self, ax):
             """
             Modify the xaxis and yaxis
@@ -401,8 +395,6 @@ def trans_new(name, transform, inverse,
                     if vmax > 1:
                         vmax = 1
 
-                    print('clipped')
-
                 return vmin, vmax
 
         # how to label(format) the break strings
@@ -412,7 +404,7 @@ def trans_new(name, transform, inverse,
                 # Original data space
                 x = inverse(x)
                 label = ScalarFormatter.__call__(self, x, pos)
-                pattern = re.compile('\.0+$')
+                pattern = re.compile(r'\.0+$')
                 match = re.search(pattern, label)
                 if match:
                     label = re.sub(pattern, '', label)

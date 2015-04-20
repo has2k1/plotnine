@@ -1,8 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import sys
-
 from .scale import scale_discrete
 from ..utils.exceptions import GgplotError
 
@@ -11,18 +9,20 @@ class _scale_manual(scale_discrete):
     """
     Abstract class for manual scales
     """
-    def __init__(self, values):
-        self.values
+    def __init__(self, values, **kwargs):
 
-    def palette(self, n):
-        msg = """\
-        Insufficient values in manual scale.\
-        , {}, needed but only , {},  provided.
-        """
-        if n > len(self.values):
-            raise GgplotError(
-                msg.format(n, len(self.values)))
-        return values
+        def palette(n):
+            msg = """\
+            Insufficient values in manual scale.\
+            , {}, needed but only , {},  provided.
+            """
+            if n > len(values):
+                raise GgplotError(
+                    msg.format(n, len(values)))
+            return values
+
+        kwargs['palette'] = palette
+        scale_discrete.__init__(self, **kwargs)
 
 
 class scale_color_manual(_scale_manual):

@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 
-class position(object):
+class _position_base(object):
     """Base class for all positions"""
 
     # Aesthetics that map onto the x and y scales
@@ -45,10 +45,10 @@ class position(object):
         Helper function for self.adjust
         """
         if trans_x:
-            xs = filter(lambda name: name in self.X,  data.columns)
+            xs = [name for name in data.columns if name in self.X]
             data[xs] = data[xs].apply(trans_x)
 
         if trans_y:
-            ys = filter(lambda name: name in self.Y,  data.columns)
+            ys = [name for name in data.columns if name in self.Y]
             data[ys] = data[ys].apply(trans_y)
         return data

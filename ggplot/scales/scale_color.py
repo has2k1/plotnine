@@ -9,6 +9,7 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import brewer2mpl
 
+from ..utils.exceptions import gg_warning
 from ..utils.color import ColorHCL
 from .utils import rescale_mid
 from .scale import scale_discrete, scale_continuous
@@ -115,11 +116,37 @@ def brewer_pal(type='seq', palette=1):
         hex_colors = bmap.hex_colors
         if n > nmax:
             msg = _TPL_MAX_PALETTE_COLORS.format(palette_name, nmax)
-            sys.stderr.write(msg)
+            gg_warning(msg)
             hex_colors = hex_colors + [None] * (n - nmax)
         return hex_colors
     return func
 
+
+def gradient_n_pal(colors, values=None, name='gradientn'):
+    if values is None:
+        colormap = LinearSegmentedColormap.from_list(
+            name, colors)
+    else:
+        colormap = LinearSegmentedColormap.from_list(
+            name, list(zip(values, colors)))
+
+    def func(vals):
+
+        """
+        Return colors along a colormap
+
+        Parameters
+        ----------
+        values : array_like | float
+            Numeric(s) in the range (0, 1)
+        """
+        color_tuples = colormap(vals)
+        try:
+            rgb_colors = [rgb2hex(t) for t in color_tuples]
+        except IndexError:
+            rgb_colors = rgb2hex(color_tuples)
+        return rgb_colors
+    return func
 
 # Discrete color scales #
 
@@ -129,8 +156,9 @@ class scale_color_hue(scale_discrete):
     aesthetics = ['color']
 
     def __init__(self, h=(0 + 15, 360 + 15), c=100, l=65,
-                 h_start=0, direction=1):
-        self.palette = hue_pal(h, c, l, h_start, direction)
+                 h_start=0, direction=1, **kwargs):
+        kwargs['palette'] = hue_pal(h, c, l, h_start, direction)
+        scale_discrete.__init__(self, **kwargs)
 
 
 class scale_fill_hue(scale_color_hue):
@@ -141,8 +169,9 @@ class scale_fill_hue(scale_color_hue):
 class scale_color_brewer(scale_discrete):
     aesthetics = ['color']
 
-    def __init__(self, type='seq', palette=1):
-        self.palette = brewer_pal(type, palette)
+    def __init__(self, type='seq', palette=1, **kwargs):
+        kwargs['palette'] = brewer_pal(type, palette)
+        scale_discrete.__init__(self, **kwargs)
 
 
 class scale_fill_brewer(scale_color_brewer):
@@ -153,8 +182,9 @@ class scale_fill_brewer(scale_color_brewer):
 class scale_color_grey(scale_discrete):
     aesthetics = ['color']
 
-    def __init__(self, start=0.2, end=0.8):
-        self.palette = grey_pal(start, end)
+    def __init__(self, start=0.2, end=0.8, **kwargs):
+        kwargs['palette'] = grey_pal(start, end)
+        scale_discrete.__init__(self, **kwargs)
 
 
 class scale_fill_grey(scale_color_grey):
@@ -169,29 +199,13 @@ class scale_color_gradient(scale_continuous):
     aesthetics = ['color']
     guide = 'colorbar'
 
-    def __init__(self, low='#132B43', high='#56B1F7', space='Lab'):
+    def __init__(self, low='#132B43', high='#56B1F7', space='Lab', **kwargs):
         """
         Create colormap that will be used by the palette
         """
-        color_spectrum = [low, high]
-        self.colormap = LinearSegmentedColormap.from_list(
-            'gradient', color_spectrum)
-
-    def palette(self, values):
-        """
-        Return colors along a colormap
-
-        Parameters
-        ----------
-        values : array_like | float
-            Numeric(s) in the range (0, 1)
-        """
-        color_tuples = self.colormap(values)
-        try:
-            rgb_colors = [rgb2hex(t) for t in color_tuples]
-        except IndexError:
-            rgb_colors = rgb2hex(color_tuples)
-        return rgb_colors
+        kwargs['palette'] = gradient_n_pal([low, high],
+                                           name='gradient')
+        scale_continuous.__init__(self, **kwargs)
 
 
 class scale_fill_gradient(scale_color_gradient):
@@ -199,23 +213,23 @@ class scale_fill_gradient(scale_color_gradient):
 
 
 # Diverging colour gradient
-class scale_color_gradient2(scale_color_gradient):
+class scale_color_gradient2(scale_continuous):
     aesthetics = ['color']
 
     def __init__(self, low='#832424', mid='#FFFFFF',
-                 high='#3A3A98', space='Lab', midpoint=0):
+                 high='#3A3A98', space='Lab', midpoint=0,
+                 **kwargs):
         """
         Create colormap that will be used by the palette
         """
-        color_spectrum = [low, mid, high]
-        self.colormap = LinearSegmentedColormap.from_list(
-            'gradient2', color_spectrum)
-
         # All rescale functions should have the same signature
         def _rescale_mid(*args, **kwargs):
             return rescale_mid(*args,  mid=midpoint, **kwargs)
 
-        self.rescaler = _rescale_mid
+        kwargs['rescaler'] = _rescale_mid
+        kwargs['palette'] = gradient_n_pal([low, mid, high],
+                                           name='gradient2')
+        scale_continuous.__init__(self, **kwargs)
 
 
 class scale_fill_gradient2(scale_color_gradient2):
@@ -223,17 +237,15 @@ class scale_fill_gradient2(scale_color_gradient2):
 
 
 # Smooth colour gradient between n colours
-class scale_color_gradientn(scale_color_gradient):
+class scale_color_gradientn(scale_continuous):
     aesthetics = ['color']
 
-    def __init__(self, colours, values=None, space='Lab'):
+    def __init__(self, colors, values=None, space='Lab', **kwargs):
         """
         Create colormap that will be used by the palette
         """
-        # TODO: Implement values
-        color_spectrum = colours
-        self.colormap = LinearSegmentedColormap.from_list(
-            'gradient2', color_spectrum)
+        kwargs['palette'] = gradient_n_pal(colors, values, 'gradientn')
+        scale_continuous.__init__(self, **kwargs)
 
 
 class scale_fill_gradientn(scale_color_gradientn):
@@ -243,17 +255,18 @@ class scale_fill_gradientn(scale_color_gradientn):
 class scale_color_distiller(scale_color_gradientn):
     aesthetics = ['color']
 
-    def __init__(self, type='seq', palette=1, values=None, space='Lab'):
+    def __init__(self, type='seq', palette=1, values=None,
+                 space='Lab', **kwargs):
         """
         Create colormap that will be used by the palette
         """
         if type.lower() in ('qual', 'qualitative'):
-            sys.stderr.write(_MSG_CONTINUOUS_DISTILLER)
+            gg_warning(_MSG_CONTINUOUS_DISTILLER)
+
         # Grab 6 colors from brewer and create a gradient palette
         colours = brewer_pal(type, palette)(6)
-
-        # super() does not work well with reloads
-        scale_color_gradientn.__init__(self, colours, values, space)
+        scale_color_gradientn.__init__(self, colours, values,
+                                       space, **kwargs)
 
 
 class scale_fill_distiller(scale_color_distiller):

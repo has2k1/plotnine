@@ -219,10 +219,10 @@ class ggplot(object):
 
         # Compute aesthetics to produce data with generalised variable names
         data = dlapply(lambda d, l: l.compute_aesthetics(d, plot))
-        data = list(map(add_group, data))
+        data = [add_group(d) for d in data]
 
         # Transform data using all scales
-        data = list(map(lambda d: scales.transform_df(d), data))
+        data = [scales.transform_df(d) for d in data]
 
         # Map and train positions so that statistics have access
         # to ranges and all positions are numeric
@@ -238,7 +238,7 @@ class ggplot(object):
         # Apply and map statistics
         data = panel.calculate_stats(data, layers)
         data = dlapply(lambda d, l: l.map_statistic(d, plot))
-        # data = list(map(order_groups, data)) # !!! look into this
+        # data = [order_groups(d) for d in data)] # !!! look into this
 
         # Make sure missing (but required) aesthetics are added
         scales_add_missing(plot, ('x', 'y'))
@@ -260,8 +260,8 @@ class ggplot(object):
         # Train and map non-position scales
         npscales = scales.non_position_scales()
         if len(npscales):
-            data = list(map(lambda d: npscales.train_df(d), data))
-            data = list(map(lambda d: npscales.map_df(d), data))
+            data = [npscales.train_df(d) for d in data]
+            data = [npscales.map_df(d) for d in data]
 
         panel.train_ranges()
         return data, panel, plot
@@ -310,6 +310,11 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
     ax : axes
         current axes
     """
+    # It starts out with axes and labels on
+    # all sides, we keep what we want and
+    # get rid of what we don't want depending
+    # on the plot
+
     # limits
     ax.set_xlim(ranges['x'])
     ax.set_ylim(ranges['y'])
@@ -342,17 +347,33 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
         except AttributeError:
             pass
 
+    bottomrow = finfo['ROW'] == plot.facet.nrow
+    leftcol = finfo['COL'] == 1
+
     # Remove unwanted
-    if not finfo['AXIS_X']:
-        ax.xaxis.set_ticks_position('none')
-        ax.xaxis.set_ticklabels([])
-    if not finfo['AXIS_Y']:
-        ax.yaxis.set_ticks_position('none')
-        ax.yaxis.set_ticklabels([])
-    if finfo['AXIS_X']:
-        ax.xaxis.set_ticks_position('bottom')
-    if finfo['AXIS_Y']:
-        ax.yaxis.set_ticks_position('left')
+    if isinstance(plot.facet, facet_wrap):
+        if not finfo['AXIS_X']:
+            ax.xaxis.set_ticks_position('none')
+            ax.xaxis.set_ticklabels([])
+        if not finfo['AXIS_Y']:
+            ax.yaxis.set_ticks_position('none')
+            ax.yaxis.set_ticklabels([])
+        if finfo['AXIS_X']:
+            ax.xaxis.set_ticks_position('bottom')
+        if finfo['AXIS_Y']:
+            ax.yaxis.set_ticks_position('left')
+    else:
+        if bottomrow:
+            ax.xaxis.set_ticks_position('bottom')
+        else:
+            ax.xaxis.set_ticks_position('none')
+            ax.xaxis.set_ticklabels([])
+
+        if leftcol:
+            ax.yaxis.set_ticks_position('left')
+        else:
+            ax.yaxis.set_ticks_position('none')
+            ax.yaxis.set_ticklabels([])
 
 
 # TODO Need to use theme (element_rect) for the colors
@@ -377,10 +398,10 @@ def draw_facet_label(plot, finfo, ax, fig):
     """
     fcwrap = isinstance(plot.facet, facet_wrap)
     fcgrid = isinstance(plot.facet, facet_grid)
-    toprow = finfo['ROW'] != 1
-    rightcol = finfo['COL'] != plot.facet.ncol
+    toprow = finfo['ROW'] == 1
+    rightcol = finfo['COL'] == plot.facet.ncol
 
-    if fcgrid and toprow and rightcol:
+    if fcgrid and not toprow and not rightcol:
         return
 
     # The facet labels are placed onto the figure using

@@ -4,8 +4,7 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..components import aes
-from ..components.aes import make_labels
+from ..components.aes import aes, make_labels
 from ..utils.exceptions import GgplotError
 from ..layer import layer
 from ..utils import is_scalar_or_string, gg_import, defaults
@@ -140,7 +139,8 @@ class geom(object):
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
 
-    def reparameterise(self, data):
+    @staticmethod
+    def reparameterise(data):
         return data
 
     def draw_groups(self, data, scales, ax, **kwargs):

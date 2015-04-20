@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
-import sys
 import textwrap
+import warnings
 
 
 class GgplotError(Exception):
@@ -16,20 +15,5 @@ class GgplotError(Exception):
         return repr(self.message)
 
 
-_printed_warnings = set()
-
-
-# TODO: use the warn package
 def gg_warning(text):
-    if not (text in _printed_warnings):
-        _printed_warnings.add(text)
-        sys.stderr.write(
-            textwrap.dedent(text))
-
-
-def gg_reset():
-    """
-    Cleanup after creating a plot
-    """
-    global _printed_warnings
-    _printed_warnings = set()
+    warnings.warn(textwrap.dedent(text))

@@ -85,21 +85,6 @@ def is_sequence_of_booleans(obj):
     return all(isinstance(o, bool) for o in obj)
 
 
-def is_categorical(obj):
-    """
-    Return True if *obj* is array-like and has categorical values
-
-    Categorical values include:
-        - strings
-        - booleans
-    """
-    if is_sequence_of_strings(obj):
-        return True
-    if is_sequence_of_booleans(obj):
-        return True
-    return False
-
-
 def make_iterable(val):
     """
     Return [*val*] if *val* is not iterable

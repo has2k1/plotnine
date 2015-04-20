@@ -10,19 +10,19 @@ from .scale import scale_discrete, scale_continuous
 class scale_alpha(scale_continuous):
     aesthetics = ['alpha']
 
-    def __init__(self, range=(0.1, 1)):
-        self.palette = rescale_pal(range)
+    def __init__(self, range=(0.1, 1), **kwargs):
+        kwargs['palette'] = rescale_pal(range)
+        scale_continuous.__init__(self, **kwargs)
 
 
-class scale_alpha_continuous(scale_alpha):
-    pass
+scale_alpha_continuous = scale_alpha
 
 
 class scale_alpha_discrete(scale_discrete):
     aesthetics = ['alpha']
 
-    def __init__(self, range=(0.1, 1)):
-        self._alpha_range = range
-
-    def palette(self, n):
-        return np.linspace(self._alpha_range[0], self._alpha_range[1], n)
+    def __init__(self, range=(0.1, 1), **kwargs):
+        def palette(n):
+            return np.linspace(range[0], range[1], n)
+        kwargs['palette'] = palette
+        scale_discrete.__init__(self, **kwargs)

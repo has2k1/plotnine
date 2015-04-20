@@ -13,7 +13,7 @@ from ..utils import match, groupby_apply
 def collide(data, width=None, name='', strategy=None):
     xminmax = ['xmin', 'xmax']
     # Determine width
-    if not (width is None):
+    if width is not None:
         # Width set manually
         if not all([col in data.columns for col in xminmax]):
             data['xmin'] = data['x'] - width / 2
@@ -53,7 +53,7 @@ def collide(data, width=None, name='', strategy=None):
         data = groupby_apply(data, 'xmin', strategy, width)
         data['y'] = data['ymax']
     else:
-        GgplotError('Neither y nor ymax defined')
+        raise GgplotError('Neither y nor ymax defined')
 
     return data
 

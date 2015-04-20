@@ -5,12 +5,12 @@ import pandas as pd
 
 from ..utils import jitter, check_required_aesthetics
 from ..scales.utils import resolution
-from .position import position
+from .position import _position_base
 from .collide import collide, pos_dodge
 
 
 # Adjust position by simultaneously dodging and jittering
-class position_jitterdodge(position):
+class position_jitterdodge(_position_base):
 
     def __init__(self,
                  jitter_width=None,
@@ -48,10 +48,13 @@ class position_jitterdodge(position):
 
         if self.jitter_width > 0:
             amount = self.jitter_width / (nfill + 2)
-            trans_x = lambda x: jitter(x, amount=amount)
+
+            def trans_x(x):
+                return jitter(x, amount=amount)
 
         if self.jitter_height > 0:
-            trans_y = lambda x: jitter(x, amount=self.jitter_height)
+            def trans_y(y):
+                return jitter(y, amount=self.jitter_height)
 
         if self.dodge_width is None:
             self.dodge_width = 0.75

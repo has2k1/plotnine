@@ -3,10 +3,10 @@ from __future__ import (absolute_import, division, print_function,
 
 from ..utils import jitter
 from ..scales.utils import resolution
-from .position import position
+from .position import _position_base
 
 
-class position_jitter(position):
+class position_jitter(_position_base):
 
     def adjust(self, data):
         if not self.width:
@@ -18,9 +18,11 @@ class position_jitter(position):
         trans_y = None
 
         if self.width:
-            trans_x = lambda x: jitter(x, self.width)
+            def trans_x(x):
+                return jitter(x, self.width)
 
         if self.height:
-            trans_y = lambda y: jitter(y, self.height)
+            def trans_y(y):
+                return jitter(y, self.height)
 
         return self._transform_position(data, trans_x, trans_y)

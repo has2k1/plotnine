@@ -12,7 +12,8 @@ class geom_area(geom_ribbon):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack'}
 
-    def reparameterise(self, data):
+    @staticmethod
+    def reparameterise(data):
         data['ymin'] = 0
         data['ymax'] = data['y']
         return data

@@ -17,7 +17,7 @@ from .utils import discrete_dtypes, ninteraction
 from .utils import check_required_aesthetics, defaults
 from .utils import is_string, gg_import, groupby_apply
 from .utils import is_scalar_or_string
-from .positions.position import position
+from .positions.position import _position_base
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -69,7 +69,7 @@ class layer(object):
         """
         Return an instantiated position object
         """
-        if issubclass(type(name), position):
+        if issubclass(type(name), _position_base):
             return name
 
         if not is_string(name):

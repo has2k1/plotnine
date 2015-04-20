@@ -35,9 +35,8 @@ class guides(dict):
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
-        for ae in kwargs:
-            if ae in aes_names:
-                self[ae] = kwargs[ae]
+        dict.__init__(self, ((ae, kwargs[ae]) for ae in kwargs
+                             if ae in aes_names))
 
     def __radd__(self, gg):
         new_guides = {}

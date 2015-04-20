@@ -151,8 +151,8 @@ class Panel(object):
         # ranges
         self.ranges = [None] * len(self.layout)
         if self.x_scales and self.y_scales:
-            x_ranges = list(map(lambda sc: sc.coord_range(), self.x_scales))
-            y_ranges = list(map(lambda sc: sc.coord_range(), self.y_scales))
+            x_ranges = [sc.coord_range() for sc in self.x_scales]
+            y_ranges = [sc.coord_range() for sc in self.y_scales]
         else:
             msg = """\
                 Error: Missing a scale
@@ -168,12 +168,12 @@ class Panel(object):
             raise GgplotError('Missing a scale')
 
         # breaks- either a list of values or waiver() object
-        x_breaks = list(map(lambda sc: sc.coord_breaks(), self.x_scales))
-        y_breaks = list(map(lambda sc: sc.coord_breaks(), self.y_scales))
+        x_breaks = [sc.coord_breaks() for sc in self.x_scales]
+        y_breaks = [sc.coord_breaks() for sc in self.y_scales]
 
         # labels - either a list of values or waiver() object
-        x_labels = list(map(lambda sc: sc.coord_labels(), self.x_scales))
-        y_labels = list(map(lambda sc: sc.coord_labels(), self.y_scales))
+        x_labels = [sc.coord_labels() for sc in self.x_scales]
+        y_labels = [sc.coord_labels() for sc in self.y_scales]
 
         cols = ['PANEL', 'SCALE_X', 'SCALE_Y']
         for p, i, j in self.layout[cols].itertuples(index=False):

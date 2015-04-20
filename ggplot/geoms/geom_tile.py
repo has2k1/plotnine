@@ -15,7 +15,8 @@ class geom_tile(geom_rect):
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'fill': 'facecolor', 'color': 'edgecolor'}
 
-    def reparameterise(self, data):
+    @staticmethod
+    def reparameterise(data):
         try:
             width = data.pop('width')
         except KeyError:
