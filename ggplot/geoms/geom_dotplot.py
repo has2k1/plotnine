@@ -4,9 +4,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
 
+from ..utils import is_string
 from .geom import geom
-from ggplot.utils import is_string
-from ggplot.utils import is_categorical
 
 
 class geom_dotplot(geom):

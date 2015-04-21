@@ -2,9 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
 
-from .geom import geom
-from ggplot.utils import is_categorical
 import numpy as np
+from .geom import geom
 
 
 class geom_linerange(geom):
