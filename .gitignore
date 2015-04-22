@@ -34,14 +34,6 @@ nosetests.xml
 # Translations
 *.mo
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-#pycharm
-.idea/
-
 *.swp
 
 # Testing
@@ -54,3 +46,21 @@ docs/generated/
 
 release.sh
 reset-images.sh
+
+## Tools and IDEs ##
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+#pycharm
+.idea/
+
+# rope
+.ropeproject
+
+# spyder
+.spyderproject
+.spyderworkspace
+

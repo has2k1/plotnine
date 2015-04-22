@@ -1,16 +1,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import sys
 from copy import deepcopy
-
 
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import brewer2mpl
 
-from ..utils.exceptions import gg_warning
-from ..utils.color import ColorHCL
+from ..utils.exceptions import gg_warning, GgplotError
+from ..components import palettes
 from .utils import rescale_mid
 from .scale import scale_discrete, scale_continuous
 
@@ -26,23 +24,18 @@ Consider using type = "seq" or type = "div" instead"
 # Palette making utilities #
 
 
-def hue_pal(h=(0 + 15, 360 + 15), c=100, l=65, h_start=0, direction=1):
+def hue_pal(h=.01, l=.6, s=.65):
     """
     Utility for making hue palettes for color schemes.
     """
-    c /= 100.
-    l /= 100.
-    hcl = ColorHCL()
+    if not all([0<=val<=1 for val in (h, l, s)]):
+        msg = ("hue_pal expects values to be between 0 and 1.",
+               " I got h={}, l={}, s={}".format(h, l, s))
+        raise GgplotError(*msg)
 
     def func(n):
-        y = deepcopy(h)
-        if (y[1] - y[0]) % 360 < 1:
-            y = (y[0], y[1] - 360. / n)
-        hues = []
-        for x in np.linspace(y[0], y[1], n):
-            hue = ((x + h_start) % 360) * direction
-            hues.append(rgb2hex(hcl(hue, c, l)))
-        return hues
+        colors = palettes.hls_palette(n, h, l, s)
+        return [rgb2hex(c) for c in colors]
     return func
 
 
@@ -152,12 +145,12 @@ def gradient_n_pal(colors, values=None, name='gradientn'):
 
 
 # Qualitative colour scale with evenly spaced hues.
+# Note: ggplot operates in the hcl space
 class scale_color_hue(scale_discrete):
     aesthetics = ['color']
 
-    def __init__(self, h=(0 + 15, 360 + 15), c=100, l=65,
-                 h_start=0, direction=1, **kwargs):
-        kwargs['palette'] = hue_pal(h, c, l, h_start, direction)
+    def __init__(self, h=.01, l=.6, s=.65, **kwargs):
+        kwargs['palette'] = hue_pal(h, l, s)
         scale_discrete.__init__(self, **kwargs)
 
 

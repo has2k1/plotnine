@@ -213,7 +213,7 @@ class geom(object):
 
         for arg in args:
             if isinstance(arg, aes) and passed_aes:
-                raise Exception(aes_err)
+                raise GgplotError(aes_err)
             if isinstance(arg, aes):
                 passed_aes = arg
             elif isinstance(arg, pd.DataFrame):

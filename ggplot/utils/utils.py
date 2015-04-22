@@ -108,8 +108,7 @@ def make_iterable_ntimes(val, n):
     """
     if cbook.iterable(val) and not is_string(val):
         if len(val) != n:
-            raise Exception(
-
+            raise GgplotError(
                 '`val` is an iterable of length not equal to n.')
         return val
     return [val] * n
