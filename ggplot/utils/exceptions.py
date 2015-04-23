@@ -16,5 +16,17 @@ class GgplotError(Exception):
         return repr(self.message)
 
 
-def gg_warning(text):
-    warnings.warn(dedent(text))
+def gg_warning(message, category=None, stacklevel=2):
+    """
+    Show warning message
+
+    Users of this function can use triple quoted strings or
+    lists/tuples with worry less about indentation and the
+    79 character limit.
+    """
+    if isinstance(message, (list, tuple)):
+        message = ' '.join([dedent(s) for s in message])
+    else:
+        message = dedent(message)
+
+    warnings.warn(message, category=category, stacklevel=stacklevel)

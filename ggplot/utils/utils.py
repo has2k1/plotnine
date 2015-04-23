@@ -114,12 +114,15 @@ def make_iterable_ntimes(val, n):
     return [val] * n
 
 
-class _object(object):
+class _waiver(object):
+    def __repr__(self):
+        return 'waiver()'
+
     def __deepcopy__(self, memo):
         return self
 
 
-_waiver_ = _object()
+_waiver_ = _waiver()
 
 
 def waiver():
@@ -465,7 +468,7 @@ def gg_import(name):
             break
 
     if not match or (base not in lookup):
-        GgplotError('Failed to import {}'.format(name))
+        raise GgplotError('Failed to import {}'.format(name))
 
     package = importlib.import_module(lookup[base], __package__)
 

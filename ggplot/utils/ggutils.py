@@ -134,15 +134,15 @@ def ggsave(filename=None, plot=None, device=None, format=None,
     fig_kwargs.update(kwargs)
 
     # This is the case when we just use "ggsave(plot)"
-    if hasattr(filename, 'render'):
+    if hasattr(filename, 'draw'):
         plot, filename = filename, plot
 
     if plot is None:
         figure = plt.gcf()
     else:
-        if hasattr(plot, 'render'):
+        if hasattr(plot, 'draw'):
             plot.theme._rcParams['figure.dpi'] = dpi
-            figure = plot.render()
+            figure = plot.draw()
         else:
             raise GgplotError("plot is not a ggplot object")
 

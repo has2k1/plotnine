@@ -7,7 +7,7 @@ import pandas as pd
 from .scales.scales import Scales
 from .utils import match, xy_panel_scales
 from .utils import groupby_apply
-from .utils.exceptions import GgplotError, gg_warning
+from .utils.exceptions import GgplotError
 
 
 class Panel(object):
@@ -148,24 +148,17 @@ class Panel(object):
         """
         Calculate the x & y ranges for each panel
         """
+        if not self.x_scales:
+            raise GgplotError('Missing an x scale')
+
+        if not self.y_scales:
+            raise GgplotError('Missing a y scale')
+
         # ranges
         self.ranges = [None] * len(self.layout)
-        if self.x_scales and self.y_scales:
-            x_ranges = [sc.coord_range() for sc in self.x_scales]
-            y_ranges = [sc.coord_range() for sc in self.y_scales]
-        else:
-            msg = """\
-                Error: Missing a scale
-                If you do not map to the x or y aesthetic, you must
-                add a scale. For example
-                >>> df = pd.DataFrame({'x': [1,2,3]})
-                >>> p = ggplot(aes(x='x'), data=df)
-                >>> p + geom_point(y=[1,2,3])                        # wrong
-                >>> p + geom_point(aes(y=[1,2,3]))                   # correct
-                >>> p + geom_point(y=[1,2,3]) + scale_y_continuous() # correct
-                """
-            gg_warning(msg)
-            raise GgplotError('Missing a scale')
+
+        x_ranges = [sc.coord_range() for sc in self.x_scales]
+        y_ranges = [sc.coord_range() for sc in self.y_scales]
 
         # breaks- either a list of values or waiver() object
         x_breaks = [sc.coord_breaks() for sc in self.x_scales]

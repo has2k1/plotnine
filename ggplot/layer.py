@@ -73,7 +73,7 @@ class layer(object):
             return name
 
         if not is_string(name):
-            GgplotError(
+            raise GgplotError(
                 'Unknown position of type {}'.format(type(name)))
 
         if not name.startswith('position_'):
@@ -243,9 +243,21 @@ class layer(object):
         data = groupby_apply(data, 'PANEL', self.position.adjust)
         return data
 
-    def plot(self, data, scales, ax, zorder):
+    def draw(self, data, scales, ax, zorder):
         """
-        Plot layer
+        Draw layer
+
+        Parameters
+        ----------
+        data : DataFrame
+            DataFrame specific for this layer
+        scales : dict
+            Has two keys, 'x' and 'y' whose values
+            are the x and y scales respectively
+        ax : axes
+            On which to draw the layer
+        zorder : int
+            Stacking order of the layer in the plot
         """
         check_required_aesthetics(
             self.geom.REQUIRED_AES,

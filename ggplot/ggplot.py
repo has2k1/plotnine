@@ -4,7 +4,6 @@ import sys
 from copy import deepcopy
 
 import pandas as pd
-import pandas.core.common as com
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
@@ -73,14 +72,15 @@ class ggplot(object):
         """Print/show the plot"""
         # We're going to default to making the plot appear
         # when __repr__ is called.
-        self.render()
+        self.draw()
         plt.show()
         # TODO: We can probably get more sugary with this
         return "<ggplot: (%d)>" % self.__hash__()
 
     def __deepcopy__(self, memo):
-        '''deepcopy support for ggplot'''
-        # This is a workaround as ggplot(None, None) does not really work :-(
+        """deepcopy support for ggplot"""
+        # This is a workaround as ggplot(None, None)
+        # does not really work :-(
         class _empty(object):
             pass
         result = _empty()
@@ -95,20 +95,20 @@ class ggplot(object):
 
         return result
 
-    def render(self):
+    def draw(self):
         """
         Render the complete plot and return the matplotlib figure
         """
-        plt.close("all")
+        plt.close("all")  # TODO: Remove before merging into mainline
         with gg_context(theme=self.theme):
-            plot = self.draw()
+            plot = self.draw_plot()
             plot = self.draw_legend(plot)
 
-        return plt.gcf()
+        return plot.fig
 
-    def draw(self):
+    def draw_plot(self):
         """
-        Draw the main plot onto the axes.
+        Draw the main plot(s) onto the axes.
 
         Return
         ------
@@ -142,7 +142,7 @@ class ggplot(object):
             for zorder, (l, d) in enumerate(
                     zip(plot.layers, data), start=1):
                 bool_idx = (d['PANEL'] == finfo['PANEL'])
-                l.plot(d[bool_idx], xy_scales, ax, zorder)
+                l.draw(d[bool_idx], xy_scales, ax, zorder)
 
             # xaxis & yaxis breaks and labels and stuff
             set_breaks_and_labels(plot, panel.ranges[panel_idx],
@@ -446,8 +446,7 @@ def draw_facet_label(plot, finfo, ax, fig):
                     transform=ax.transAxes),
                 transform=ax.transAxes,
                 fontdict=dict(verticalalignment='center',
-                              horizontalalignment='center')
-                )
+                              horizontalalignment='center'))
 
     # facet_grid #
     if fcgrid and toprow:
@@ -463,8 +462,7 @@ def draw_facet_label(plot, finfo, ax, fig):
                     transform=ax.transAxes),
                 transform=ax.transAxes,
                 fontdict=dict(verticalalignment='center',
-                              horizontalalignment='center')
-                )
+                              horizontalalignment='center'))
 
     if fcgrid and rightcol:
         # right labels
@@ -480,8 +478,7 @@ def draw_facet_label(plot, finfo, ax, fig):
                 transform=ax.transAxes,
                 fontdict=dict(rotation=-90,
                               verticalalignment='center',
-                              horizontalalignment='center')
-                )
+                              horizontalalignment='center'))
 
 
 def apply_facet_spacing(plot):
