@@ -66,6 +66,8 @@ from .scale_datetime import scale_y_datetime, scale_y_date
 # format functions
 from .utils import dollar, currency, comma, millions
 from .utils import percent, scientific
+# date helper functions
+from .utils import date_breaks, date_format
 
 
 __all__ = [# color
@@ -117,6 +119,8 @@ __all__ = [# color
             # format functions
             'dollar', 'currency', 'comma', 'millions',
             'percent', 'scientific',
+            # date helper functions
+            'date_breaks', 'date_format',
            ]
 
 __all__ = [str(u) for u in __all__]

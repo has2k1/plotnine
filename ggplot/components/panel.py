@@ -4,10 +4,10 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 
-from .scales.scales import Scales
-from .utils import match, xy_panel_scales
-from .utils import groupby_apply
-from .utils.exceptions import GgplotError
+from ..scales.scales import Scales
+from ..utils import match, xy_panel_scales
+from ..utils import groupby_apply
+from ..utils.exceptions import GgplotError
 
 
 class Panel(object):

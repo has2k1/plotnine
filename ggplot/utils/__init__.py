@@ -2,8 +2,6 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from .ggutils import ggsave
-from .date_breaks import date_breaks
-from .date_format import date_format
 from .utils import (pop, is_string, is_scalar_or_string,
                     is_sequence_of_booleans, is_sequence_of_strings,
                     make_iterable, make_iterable_ntimes, waiver, is_waive,
@@ -15,5 +13,5 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     make_color_tuples, groupby_apply, ColoredDrawingArea)
 
 
-__all__ = ["ggsave", "date_breaks", "date_format"]
+__all__ = ['ggsave']
 __all__ = [str(u) for u in __all__]

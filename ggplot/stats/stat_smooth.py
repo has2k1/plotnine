@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 
-from ..components import smoothers
+from ..utils import smoothers
 from .stat import stat
 
 

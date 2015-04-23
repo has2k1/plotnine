@@ -5,8 +5,8 @@ from copy import deepcopy
 import pandas as pd
 
 from ..components.aes import aes, make_labels
+from ..components.layer import layer
 from ..utils.exceptions import GgplotError
-from ..layer import layer
 from ..utils import is_scalar_or_string, gg_import, defaults
 
 __all__ = ['geom']

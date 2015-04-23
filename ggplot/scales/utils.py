@@ -1,3 +1,13 @@
+"""
+Functions related to the scales in some way or another
+
+Any methods ported from Hadley Wickham's `scales` package
+belong in this file
+
+Reference:
+----------
+https://github.com/hadley/scales
+"""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import re
@@ -8,6 +18,9 @@ import pandas as pd
 import scipy.stats as stats
 from matplotlib.ticker import MaxNLocator, ScalarFormatter
 import matplotlib.dates as dates
+from matplotlib.dates import MinuteLocator, HourLocator, DayLocator
+from matplotlib.dates import WeekdayLocator, MonthLocator, YearLocator
+from matplotlib.dates import DateFormatter
 import six
 
 from ..utils import round_any, identity, is_waive, gg_import
@@ -297,7 +310,140 @@ def fullseq(range_, size, pad=False):
     return x
 
 
-# Transforms
+def _parse_break_str(txt):
+    """
+    Parses '10 weeks' into tuple (10, week).
+
+    Helper for date_breaks
+    """
+    txt = txt.strip()
+    if len(txt.split()) == 2:
+        n, units = txt.split()
+    else:
+        n, units = 1, txt
+    units = units.rstrip('s')  # e.g. weeks => week
+    n = int(n)
+    return n, units
+
+# matplotlib's YearLocator uses different named
+# arguments than the others
+LOCATORS = {
+    'minute': MinuteLocator,
+    'hour': HourLocator,
+    'day': DayLocator,
+    'week': WeekdayLocator,
+    'month': MonthLocator,
+    'year': lambda interval: YearLocator(base=interval)
+}
+
+
+def date_breaks(width):
+    """
+    "Regularly spaced dates."
+
+    Parameters:
+    -----------
+    width: str
+        an interval specification. Must be one of
+        [minute, hour, day, week, month, year]
+
+    Example:
+    --------
+    >>> date_breaks(width = '1 year')
+    >>> date_breaks(width = '6 weeks')
+    >>> date_breaks('months')
+    """
+    period, units = _parse_break_str(width)
+    Locator = LOCATORS[units]
+
+    def make_locator():
+        return Locator(interval=period)
+
+    return make_locator
+
+
+def date_format(format='%Y-%m-%d'):
+    """
+    "Formatted dates."
+
+    Parameters:
+    -----------
+    format : str
+        Date format using standard strftime format.
+
+    Example:
+    --------
+    >>> date_format('%b-%y')
+    >>> date_format('%B %d, %Y')
+    """
+    return DateFormatter(format)
+
+
+# Transforms #
+
+# To create the effect where by the scales are labelled in
+# data space when the data plotted is in a transformed space,
+# we use the default Locator (MaxNLocator) and default Formatter
+# (ScalarFormatter). The Locator calculates ticks in data space
+# and returns them in transformed space and the Formatter
+# returns a label based on data space.
+
+def make_locator(transform, inverse):
+    class transformLocator(MaxNLocator):
+        trans_name = ''
+
+        def __init__(self, nbins=8, steps=(1, 2, 5, 10)):
+            MaxNLocator.__init__(self, nbins=nbins, steps=steps)
+
+        def __call__(self):
+            # Transformed space
+            vmin, vmax = self.axis.get_view_interval()
+            vmin, vmax = self._clip_probability(vmin, vmax)
+
+            # Original data space
+            vmin, vmax = inverse(vmin), inverse(vmax)
+            ticks = self.tick_values(vmin, vmax)
+
+            # Transformed space
+            try:
+                ticks = transform(ticks)
+            except TypeError:
+                ticks = [transform(t) for t in ticks]
+            return ticks
+
+        def _clip_probability(self, vmin, vmax):
+            """
+            Make sure vmin and vmax are in the [0, 1]
+            range if the transform is a probability
+            distribution
+            """
+            if self.trans_name.startswith('prob-'):
+                if vmin < 0:
+                    vmin = 0
+
+                if vmax > 1:
+                    vmax = 1
+
+            return vmin, vmax
+
+    return transformLocator
+
+
+# how to label(format) the break strings
+def make_formatter(inverse):
+    class transformFormatter(ScalarFormatter):
+
+        def __call__(self, x, pos=None):
+            # Original data space
+            x = inverse(x)
+            label = ScalarFormatter.__call__(self, x, pos)
+            pattern = re.compile(r'\.0+$')
+            match = re.search(pattern, label)
+            if match:
+                label = re.sub(pattern, '', label)
+            return label
+    return transformFormatter
+
 
 def trans_new(name, transform, inverse,
               breaks=None, format_=None,
@@ -326,15 +472,11 @@ def trans_new(name, transform, inverse,
     out : trans
         Transform class
     """
-    # To create the effect where by the scales are labelled in
-    # data space when the data plotted is in a transformed space,
-    # we use the default Locator (MaxNLocator) and default Formatter
-    # (ScalarFormatter). The Locator calculates ticks in data space
-    # and returns them in transformed space and the Formatter
-    # returns a label based on data space.
+    trans_name = str('{}_trans'.format(name))
 
-    # FIXME: breaks and format_ are ignored
+    # FIXME: look into minor ticks
     class cls(object):
+        __name__ = trans_name
         aesthetic = None
         trans = staticmethod(transform)
         inv = staticmethod(inverse)
@@ -362,64 +504,15 @@ def trans_new(name, transform, inverse,
                 obj = getattr(ax, axis)
                 obj.set_major_formatter(self.formatter)
 
-        class transformLocator(MaxNLocator):
-            def __init__(self, nbins=8, steps=(1, 2, 5, 10)):
-                MaxNLocator.__init__(self, nbins=nbins, steps=steps)
-
-            def __call__(self):
-                # Transformed space
-                vmin, vmax = self.axis.get_view_interval()
-                vmin, vmax = self._clip_probability(vmin, vmax)
-
-                # Original data space
-                vmin, vmax = inverse(vmin), inverse(vmax)
-                ticks = self.tick_values(vmin, vmax)
-
-                # Transformed space
-                try:
-                    ticks = transform(ticks)
-                except TypeError:
-                    ticks = [transform(t) for t in ticks]
-                return ticks
-
-            def _clip_probability(self, vmin, vmax):
-                """
-                Make sure vmin and vmax are in the [0, 1]
-                range if the transform is a probability
-                distribution
-                """
-                if cls.__name__.startswith('prob-'):
-                    if vmin < 0:
-                        vmin = 0
-
-                    if vmax > 1:
-                        vmax = 1
-
-                return vmin, vmax
-
-        # how to label(format) the break strings
-        class transformFormatter(ScalarFormatter):
-
-            def __call__(self, x, pos=None):
-                # Original data space
-                x = inverse(x)
-                label = ScalarFormatter.__call__(self, x, pos)
-                pattern = re.compile(r'\.0+$')
-                match = re.search(pattern, label)
-                if match:
-                    label = re.sub(pattern, '', label)
-                return label
-
-        # In case of faceted plots, each ax needs it's own locator
-        # so we want something that can give us identical locator
-        # objects
-        locator_factory = transformLocator
-        formatter = transformFormatter()
-
     cls.name = name
+    # In case of faceted plots, each ax needs it's own locator
+    # so we want something that can give us identical locator
+    # objects. i.e the class
+    cls.locator_factory = make_locator(transform, inverse)
+    cls.locator_factory.trans_name = trans_name
+    cls.formatter = make_formatter(inverse)()
     cls.breaks = cls.locator_factory  # to match ggplot2
     cls.format = cls.formatter        # to match ggplot2
-    cls.__name__ = str('{}_trans'.format(name))
     return cls
 
 

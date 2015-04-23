@@ -10,14 +10,14 @@ import matplotlib.cbook as cbook
 import pandas.core.common as com
 from patsy.eval import EvalEnvironment
 
-from .components.aes import aes, is_calculated_aes, strip_dots, aesdefaults
-from .scales.scales import scales_add_defaults
-from .utils.exceptions import GgplotError
-from .utils import discrete_dtypes, ninteraction
-from .utils import check_required_aesthetics, defaults
-from .utils import is_string, gg_import, groupby_apply
-from .utils import is_scalar_or_string
-from .positions.position import _position_base
+from ..scales.scales import scales_add_defaults
+from ..utils.exceptions import GgplotError
+from ..utils import discrete_dtypes, ninteraction
+from ..utils import check_required_aesthetics, defaults
+from ..utils import is_string, gg_import, groupby_apply
+from ..utils import is_scalar_or_string
+from ..positions.position import _position_base
+from .aes import aes, is_calculated_aes, strip_dots, aesdefaults
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \

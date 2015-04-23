@@ -8,7 +8,7 @@ from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import brewer2mpl
 
 from ..utils.exceptions import gg_warning, GgplotError
-from ..components import palettes
+from ..utils import palettes
 from .utils import rescale_mid
 from .scale import scale_discrete, scale_continuous
 

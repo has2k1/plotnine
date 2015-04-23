@@ -16,7 +16,7 @@ class GgplotError(Exception):
         return repr(self.message)
 
 
-def gg_warning(message, category=None, stacklevel=2):
+def gg_warning(message, category=UserWarning, stacklevel=2):
     """
     Show warning message
 

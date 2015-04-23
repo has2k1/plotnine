@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
 
 from .components.aes import make_labels
+from .components.panel import Panel
+from .components.layer import add_group
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive
 from .utils.exceptions import GgplotError
 from .utils.ggutils import gg_context
-from .panel import Panel
-from .layer import add_group
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 from .scales.scale import scale_discrete
