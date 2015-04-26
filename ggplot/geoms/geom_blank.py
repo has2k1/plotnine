@@ -4,12 +4,7 @@ from .geom import geom
 
 
 class geom_blank(geom):
-    DEFAULT_AES = {}
-    REQUIRED_AES = set()
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _aes_renames = {}
-    _units = set()
-
-    def _plot_unit(self, pinfo, ax):
+    def draw_groups(self, data, scales, ax, **kwargs):
         pass

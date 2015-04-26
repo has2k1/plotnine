@@ -294,20 +294,37 @@ class geom(object):
                 del d[key]
             return d
 
-        out = []
+        shrinkable = {'facecolor', 'edgecolor', 'linewidth', 'linestyle'}
 
-        def prep_and_append(pinfo):
+        def shrink(pinfo):
+            """
+            Reduce shrinkable parameters to scalars if possible.
+            """
+            # If it is the same value in the list make it a scalar
+            # This can help the matplotlib functions draw faster
+            for ae in set(pinfo) & shrinkable:
+                try:
+                    if all(pinfo[ae][0] == v for v in pinfo[ae]):
+                        pinfo[ae] = pinfo[ae][0]
+                except TypeError:
+                    pass
+                except IndexError:
+                    pass
+            return pinfo
+
+        def prep(pinfo):
             """
             After data has been converted to a dict of lists
-            prepare it for ploting and append it the output
-            list
+            prepare it for plotting
             """
             pinfo = remove_unwanted(pinfo)
             pinfo.update(self.manual_aes)
             pinfo = self._rename_to_mpl(pinfo)
+            pinfo = shrink(pinfo)
             pinfo['zorder'] = kwargs['zorder']
-            out.append(pinfo)
+            return pinfo
 
+        out = []
         if units:
             for name, _data in data.groupby(units):
                 pinfo = deepcopy(self.DEFAULT_AES)
@@ -315,11 +332,12 @@ class geom(object):
                 for ae in units:
                     pinfo[ae] = pinfo[ae][0]
 
-                prep_and_append(pinfo)
+                out.append(prep(pinfo))
         else:
             pinfo = deepcopy(self.DEFAULT_AES)
             pinfo.update(data.to_dict('list'))
-            prep_and_append(pinfo)
+            out.append(prep(pinfo))
+
         return out
 
     def _rename_to_mpl(self, pinfo):
