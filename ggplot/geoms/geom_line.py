@@ -10,11 +10,10 @@ class geom_line(geom_path):
 
     @staticmethod
     def draw(pinfo, scales, ax, **kwargs):
-        x = pinfo.pop('x')
-        y = pinfo.pop('y')
-
-        idx = np.argsort(x)
-        pinfo['x'] = [x[i] for i in idx]
-        pinfo['y'] = [y[i] for i in idx]
+        idx = np.argsort(pinfo['x'])
+        n = len(idx)
+        for param in pinfo:
+            if (isinstance(pinfo[param], list) and len(pinfo[param]) == n):
+                pinfo[param] = [pinfo[param][i] for i in idx]
 
         geom_path.draw(pinfo, scales, ax, **kwargs)

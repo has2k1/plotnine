@@ -1,13 +1,15 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
+from .geom import geom
 from .geom_path import geom_path
 
 
 # TODO: Add test case
 class geom_step(geom_path):
-
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'direction': 'hv'}
+    draw_groups = geom.draw_groups
 
     @staticmethod
     def draw(pinfo, scales, ax, **kwargs):
@@ -28,4 +30,5 @@ class geom_step(geom_path):
 
         pinfo['x'] = xs
         pinfo['y'] = ys
+        pinfo['group'] = pinfo['group'][0]
         geom_path.draw(pinfo, scales, ax, **kwargs)

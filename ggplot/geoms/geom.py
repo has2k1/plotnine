@@ -294,7 +294,8 @@ class geom(object):
                 del d[key]
             return d
 
-        shrinkable = {'facecolor', 'edgecolor', 'linewidth', 'linestyle'}
+        shrinkable = {'alpha', 'facecolor', 'edgecolor',
+                      'linewidth', 'linestyle'}
 
         def shrink(pinfo):
             """
