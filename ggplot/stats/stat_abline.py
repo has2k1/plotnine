@@ -5,6 +5,11 @@ from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
+_MSG_MAPXY = """\
+To compute the intercept or slope, map to the x & y aesthetics. \
+Note: stat_abline does not inherit the aesthetics from the \
+ggplot call. You can do so exclitily i.e stat_abline(inherit_aes=True)"""
+
 
 # Note when documenting
 # slope and intercept can be functions that compute the slope
@@ -26,8 +31,7 @@ class stat_abline(stat):
 
         if hasattr(slope, '__call__'):
             if x is None or y is None:
-                raise GgplotError(
-                    'To compute the slope, map to the x & y aesthetics')
+                raise GgplotError(_MSG_MAPXY)
             try:
                 slope = slope(x, y)
             except TypeError as err:
@@ -35,8 +39,7 @@ class stat_abline(stat):
 
         if hasattr(intercept, '__call__'):
             if x is None or y is None:
-                raise GgplotError(
-                    'To compute the slope, map to the x & y aesthetics')
+                raise GgplotError(_MSG_MAPXY)
             try:
                 intercept = intercept(x, y)
             except TypeError as err:

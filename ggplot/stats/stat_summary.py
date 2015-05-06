@@ -6,11 +6,12 @@ import numpy as np
 import scipy.stats
 import pandas as pd
 
-from ggplot.utils import make_iterable_ntimes
+from ..utils import uniquecols
 from .stat import stat
 
 
-def bootstrap_statistics(series, statistic, n_samples=1000, confidence_interval=0.95):
+def bootstrap_statistics(series, statistic, n_samples=1000,
+                         confidence_interval=0.95):
     """
     Default parameters taken from
     R's Hmisc smean.cl.boot
@@ -25,7 +26,9 @@ def bootstrap_statistics(series, statistic, n_samples=1000, confidence_interval=
 
 
 def mean_cl_boot(series, n_samples=1000, confidence_interval=0.95):
-    return bootstrap_statistics(series, np.mean, n_samples=n_samples, confidence_interval=confidence_interval)
+    return bootstrap_statistics(series, np.mean,
+                                n_samples=n_samples,
+                                confidence_interval=confidence_interval)
 
 
 def mean_cl_normal(series, confidence_interval=0.95):
@@ -91,26 +94,24 @@ class stat_summary(stat):
     ----------
 
     fun_data : string or function
-        One of `"mean_cl_boot"`, `"mean_cl_normal"`, `"mean_sdl"`, `"median_hilow"` or
-        any function that takes a pandas series and returns a series with three
-        rows indexed as `y`, `ymin` and `ymax`. Defaults to `"mean_cl_boot"`.
+        One of `"mean_cl_boot"`, `"mean_cl_normal"`,
+        `"mean_sdl"`, `"median_hilow"` or any function that takes a
+        pandas series and returns a series with three rows indexed
+        as `y`, `ymin` and `ymax`. Defaults to `"mean_cl_boot"`.
     fun_y, fun_ymin, fun_ymax : function
         Any function that takes a pandas series and returns a value
-
 
     Notes
     -----
 
-    If any of `fun_y`, `fun_ymin` or `fun_ymax` are provided, the value of
-    `fun_data` will be ignored.
-
+    If any of `fun_y`, `fun_ymin` or `fun_ymax` are provided, the
+    value of `fun_data` will be ignored.
 
     As R's syntax `fun.data = some_function` is not valid in python, here
     `fun_data = somefunction` is used for now.
 
     Examples
     --------
-
 
     General usage:
 
@@ -144,29 +145,40 @@ class stat_summary(stat):
         import numpy as np
         from ggplot import *
         ggplot(aes(x='cut', y='carat'), data=diamonds) \\
-            + stat_summary(fun_y = np.median, fun_ymin=np.min, fun_ymax=np.max)
+            + stat_summary(fun_y = np.median,
+                           fun_ymin=np.min,
+                           fun_ymax=np.max)
 
     """
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity', 'fun_data': 'mean_cl_boot',
-                      'fun_y': None, 'fun_ymin': None, 'fun_ymax': None}
+    DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
+                      'fun_data': 'mean_cl_boot', 'fun_y': None,
+                      'fun_ymin': None, 'fun_ymax': None}
     CREATES = {'ymin', 'ymax'}
 
-    def _calculate(self, data):
-
-        if self.params['fun_y'] or self.params['fun_ymin'] or self.params['fun_ymax']:
-            fun_data = lambda s: combined_fun_data(s, self.params['fun_y'], self.params['fun_ymin'], self.params['fun_ymax'])
+    def _calculate_groups(self, data, scales, **kwargs):
+        if (self.params['fun_y'] or self.params['fun_ymin'] or
+                self.params['fun_ymax']):
+            def fun_data(s):
+                return combined_fun_data(s, self.params['fun_y'],
+                                         self.params['fun_ymin'],
+                                         self.params['fun_ymax'])
         elif isinstance(self.params['fun_data'], string_types):
             fun_data = function_dict[self.params['fun_data']]
         else:
             fun_data = self.params['fun_data']
 
-        new_data = data.groupby('x').apply(lambda df: fun_data(df['y'])).reset_index()
-        data.pop('x')
-        data.pop('y')
+        # break a dataframe into pieces, summarise each piece,
+        # and join the pieces back together, retaining original
+        # columns unaffected by the summary.
+        summaries = []
+        for (group, x), df in data.groupby(['group', 'x']):
+            summary = pd.DataFrame(fun_data(df['y'])).T
+            summary['x'] = x
+            summary['group'] = group
+            unique = uniquecols(df)
+            merged = summary.merge(unique, on=['group', 'x'])
+            summaries.append(merged)
 
-        # Copy the other aesthetics into the new dataframe
-        n = len(new_data.x)
-        for ae in data:
-            new_data[ae] = make_iterable_ntimes(data[ae].iloc[0], n)
+        new_data = pd.concat(summaries, axis=0, ignore_index=True)
         return new_data

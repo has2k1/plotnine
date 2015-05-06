@@ -5,6 +5,11 @@ from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
+_MSG_MAPX = """\
+To compute the xintercept, map to the y aesthetic. \
+Note: stat_vline does not inherit the aesthetics from the \
+ggplot call. You can do so exclitily i.e stat_vline(inherit_aes=True)"""
+
 
 class stat_vline(stat):
     DEFAULT_PARAMS = {'geom': 'vline', 'position': 'identity',
@@ -20,8 +25,7 @@ class stat_vline(stat):
 
         if hasattr(xintercept, '__call__'):
             if x is None:
-                raise GgplotError(
-                    'To compute the intercept, map to the x aesthetic')
+                raise GgplotError(_MSG_MAPX)
             try:
                 xintercept = xintercept(x)
             except TypeError as err:

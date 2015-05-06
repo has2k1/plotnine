@@ -266,9 +266,8 @@ def add_margins(df, vars, margins=True):
     all_vars = set([v for vlst in margin_vars for v in vlst])
     for v in all_vars:
         df[v] = pd.Categorical(df[v])
-        levels = df[v].cat.categories.tolist() + ['(all)']
         try:
-            df[v].cat.reorder_categories(levels)
+            df[v].cat.add_categories('(all)', inplace=True)
         except ValueError:
             # Already a categorical with '(all)' level
             pass

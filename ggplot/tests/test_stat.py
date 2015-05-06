@@ -47,14 +47,18 @@ def test_stat_parameter_sharing():
                           'weight': 1}
         REQUIRED_AES = {'x'}
         CREATES = {'y'}
-        def _calculate(self, data):
+
+        def _calculate_groups(self, data, scales, **kwargs):
             return data
 
     class geom_abc(geom):
         DEFAULT_PARAMS = {'stat': 'stat_abc', 'position': 'identity'}
         REQUIRED_AES = {'x', 'weight'}
-        def _plot_unit(self, pinfo, ax):
+
+        @staticmethod
+        def draw(pinfo, scales, ax, **kwargs):
             pass
+
         def _get_stat_type(self, kwargs):
             return stat_abc
 

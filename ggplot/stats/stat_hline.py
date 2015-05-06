@@ -5,6 +5,11 @@ from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
+_MSG_MAPY = """\
+To compute the yintercept, map to the y aesthetic. \
+Note: stat_hline does not inherit the aesthetics from the \
+ggplot call. You can do so exclitily i.e stat_hline(inherit_aes=True)"""
+
 
 class stat_hline(stat):
     DEFAULT_PARAMS = {'geom': 'hline', 'position': 'identity',
@@ -21,8 +26,7 @@ class stat_hline(stat):
 
         if hasattr(yintercept, '__call__'):
             if y is None:
-                raise GgplotError(
-                    'To compute the intercept, y aesthetic is needed')
+                raise GgplotError(_MSG_MAPY)
             try:
                 yintercept = yintercept(y)
             except TypeError as err:

@@ -413,10 +413,6 @@ def draw_facet_label(plot, finfo, ax, fig):
         fig.dpi_scale_trans.inverted())
     w, h = bbox.width, bbox.height  # in inches
 
-    # for covering the invisible frame around the axes
-    oneh = 1 / (fig.dpi * w)  # 1pt horizontal in transAxes
-    onev = 1 / (fig.dpi * h)  # 1pt vertical in transAxes
-
     fs = float(plot.theme._rcParams['font.size'])
 
     # linewidth in transAxes
@@ -429,7 +425,7 @@ def draw_facet_label(plot, finfo, ax, fig):
     hx = 1.6 * lwx
 
     # text location in transAxes
-    y = 1 + hy/2.1
+    y = 1 + hy/2.4
     x = 1 + hx/2.4
 
     # facet_wrap #
@@ -438,11 +434,11 @@ def draw_facet_label(plot, finfo, ax, fig):
         facet_var = plot.facet.vars[0]
         ax.text(0.5, y, finfo[facet_var],
                 bbox=dict(
-                    xy=(0, 1+onev),
+                    xy=(0, 1),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
                     height=hy,
-                    width=1-oneh,
+                    width=1,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
                 fontdict=dict(verticalalignment='center',
@@ -454,11 +450,11 @@ def draw_facet_label(plot, finfo, ax, fig):
         facet_var = plot.facet.cols[0]
         ax.text(0.5, y, finfo[facet_var],
                 bbox=dict(
-                    xy=(0, 1+onev),
+                    xy=(0, 1),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
                     height=hy,
-                    width=1-oneh,
+                    width=1,
                     transform=ax.transAxes),
                 transform=ax.transAxes,
                 fontdict=dict(verticalalignment='center',
@@ -469,10 +465,10 @@ def draw_facet_label(plot, finfo, ax, fig):
         facet_var = plot.facet.rows[0]
         ax.text(x, 0.5, finfo[facet_var],
                 bbox=dict(
-                    xy=(1, 0+oneh),
+                    xy=(1, 0),
                     facecolor='lightgrey',
                     edgecolor='lightgrey',
-                    height=1-onev,
+                    height=1,
                     width=hx,
                     transform=ax.transAxes),
                 transform=ax.transAxes,

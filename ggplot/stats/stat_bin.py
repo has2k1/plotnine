@@ -15,8 +15,10 @@ import time
 
 _MSG_YVALUE = """A variable was mapped to y.
     stat_bin sets the y value to the count of cases in each group.
-    The mapping to y was ignored.
-    If you want y to represent values in the data, use stat="bar".
+    If you want 'y' to represent values in the data, use stat='identity'.
+    Or, if you set some aethetics in the ggplot call can do override
+    them and this time do not include 'y'
+    e.g. stat_bin(aes(x='x')) or geom_bar(aes(x='x'))
 """
 
 _MSG_BINWIDTH = """stat_bin: binwidth defaulted to range/30.
@@ -42,7 +44,7 @@ class stat_bin(stat):
 
         # y values are not needed
         if 'y' in data:
-            gg_warning(_MSG_YVALUE)
+            raise GgplotError(_MSG_YVALUE)
 
         if com.is_categorical_dtype(x):
             bins = x.tolist()
@@ -83,6 +85,9 @@ class stat_bin(stat):
             x = [breaks[i] + width[i] / 2
                  for i in range(len(breaks)-1)]
         else:
+            # Proper scale trainning and mapping should never let
+            # the code path get here. If there is a problem here,
+            # something is probably wrong with the chosen scale
             raise GgplotError("Cannot recognise the type of x")
 
         # If weight not mapped to, use one (no weight)
