@@ -21,8 +21,8 @@ import six
 from .exceptions import GgplotError, gg_warning
 
 
-discrete_dtypes = {'category', np.dtype('O'), np.bool}
-continuous_dtypes = {np.number,
+DISCRETE_DTYPES = {'category', np.dtype('O'), np.bool}
+CONTINUOUS_DTYPES = {np.number,
                      np.dtype('int16'), np.dtype('float16'),
                      np.dtype('int32'), np.dtype('float32'),
                      np.dtype('int64'), np.dtype('float64')}

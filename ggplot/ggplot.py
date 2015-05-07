@@ -163,6 +163,7 @@ class ggplot(object):
                 draw_facet_label(plot, finfo, ax, fig)
 
         apply_facet_spacing(plot)
+        add_labels_and_title(plot)
         return plot
 
     def plot_build(self):
@@ -374,6 +375,22 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
         else:
             ax.yaxis.set_ticks_position('none')
             ax.yaxis.set_ticklabels([])
+
+
+def add_labels_and_title(plot):
+    fig = plot.fig
+    xlabel = plot.labels.get('x', '')
+    ylabel = plot.labels.get('y', '')
+    title = plot.labels.get('title', '')
+
+    # TODO: theme me
+    fig.text(0.5, 0.08, xlabel,
+             ha='center', va='top')
+    fig.text(0.09, 0.5, ylabel,
+             ha='right', va='center',
+             rotation='vertical')
+    fig.text(0.5, 0.92, title,
+             ha='center', va='bottom')
 
 
 # TODO Need to use theme (element_rect) for the colors

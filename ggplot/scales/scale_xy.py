@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import identity, match, is_waive
-from ..utils import discrete_dtypes, continuous_dtypes
+from ..utils import DISCRETE_DTYPES, CONTINUOUS_DTYPES
 from ..utils.exceptions import GgplotError
 from .utils import expand_range
 from .utils import log10_trans, sqrt_trans, identity_trans
@@ -45,7 +45,7 @@ class scale_position_discrete(scale_discrete):
         # This complicates training and mapping, but makes it
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
-        if series.dtype in continuous_dtypes:
+        if series.dtype in CONTINUOUS_DTYPES:
             # trick the training method into training
             # range_c by temporarily renaming it to range
             backup, self.range = self.range, self.range_c
@@ -61,7 +61,7 @@ class scale_position_discrete(scale_discrete):
         # at 1
         if not limits:
             limits = self.limits
-        if series.dtype in discrete_dtypes:
+        if series.dtype in DISCRETE_DTYPES:
             seq = np.arange(1, len(limits)+1)
             return seq[match(series, limits)]
         return series

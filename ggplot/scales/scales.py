@@ -7,9 +7,9 @@ import pandas as pd
 import pandas.core.common as com
 
 from ..components.aes import aes_to_scale
-from ..utils import discrete_dtypes, continuous_dtypes
+from ..utils import DISCRETE_DTYPES, CONTINUOUS_DTYPES
 from ..utils import gg_import
-from ..utils.exceptions import gg_warning
+from ..utils.exceptions import gg_warning, GgplotError
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -235,13 +235,12 @@ def scales_add_defaults(scales, data, aesthetics):
         if scale_var in seen:
             continue
         seen.add(scale_var)
-        _type = scale_type(data[col])
-        scale_name = 'scale_{}_{}'.format(scale_var, _type)
-        scale_f = gg_import(scale_name)
-        if scale_f is None:
+        try:
+            sc = make_scale(scale_var, data[col])
+        except GgplotError:
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue
-        scales.append(scale_f())
+        scales.append(sc)
 
     return scales
 
@@ -265,17 +264,33 @@ def scales_add_missing(plot, aesthetics):
         plot.scales.append(scale_f())
 
 
-def scale_type(column):
-    if column.dtype in continuous_dtypes:
+def scale_type(series):
+    if series.dtype in CONTINUOUS_DTYPES:
         stype = 'continuous'
-    elif column.dtype in discrete_dtypes:
+    elif series.dtype in DISCRETE_DTYPES:
         stype = 'discrete'
-    elif column.dtype == np.dtype('<M8[ns]'):
+    elif series.dtype == np.dtype('<M8[ns]'):
         stype = 'datetime'
     else:
         msg = """\
             Don't know how to automatically pick scale for \
             object of type {}. Defaulting to 'continuous'"""
-        gg_warning(msg.format(column.dtype))
+        gg_warning(msg.format(series.dtype))
         stype = 'continuous'
     return stype
+
+
+def make_scale(ae, series, *args, **kwargs):
+    """
+    Return a proper scale object for the series
+
+    The scale is for the aesthetic ae, and args & kwargs
+    are passed on to the scale creating class
+    """
+    _type = scale_type(series)
+    scale_name = 'scale_{}_{}'.format(ae, _type)
+    scale_klass = gg_import(scale_name)
+    if not scale_klass:
+        msg = 'Could not create object of type {}'
+        raise GgplotError(msg.format(scale_name))
+    return scale_klass(*args, **kwargs)
