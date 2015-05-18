@@ -447,9 +447,7 @@ def gg_import(name):
     The understood components are of base classes the
     following base classes: geom, stat, scale, position, guide
 
-    Raises an exception if the component  is not understood.
-
-    Return None if subclass does not exists. eg. 'geom_nada'
+    Raises an exception if the component is not understood.
     """
     # relative pathnames from this package
     lookup = {'geom': '..geoms',
@@ -460,21 +458,25 @@ def gg_import(name):
               'trans': '..scales.utils'}
     patterns = [re.compile('([a-z]+)_'),
                 re.compile('_(trans)$')]
+    base = None
     for p in patterns:
         match = re.search(p, name)
-        base = match.group(1)
-        if match and base in lookup:
+        if match and match.group(1) in lookup:
+            base = match.group(1)
             break
+    else:
+        raise GgplotError("Cannot recognize '{}'".format(name))
 
-    if not match or (base not in lookup):
-        raise GgplotError('Failed to import {}'.format(name))
-
-    package = importlib.import_module(lookup[base], __package__)
+    try:
+        package = importlib.import_module(lookup[base], __package__)
+    except ImportError:
+        raise GgplotError("Failed to import '{}'".format(name))
 
     try:
         obj = getattr(package, name)
     except AttributeError:
-        obj = None
+        msg = "{} has no attribute '{}'"
+        raise GgplotError(msg.format(package, name))
     return obj
 
 

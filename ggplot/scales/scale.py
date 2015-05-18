@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
-from matplotlib.ticker import Locator, FuncFormatter
+from matplotlib.ticker import Locator, Formatter, FuncFormatter
 
 from ..utils import waiver, is_waive
 from ..utils import match, is_sequence_of_strings
@@ -249,24 +249,31 @@ class scale_continuous(scale):
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
-    trans = identity_trans()       # transformation object
+    trans = 'identity'             # transform class
 
     def __init__(self, **kwargs):
+        # Make sure we have a transform and it
+        # should know the main aesthetic,
+        # in case it has to manipulate the axis
+        try:
+            self.trans = kwargs.pop('trans')
+        except KeyError:
+            pass
+        self.trans = gettrans(self.trans)
+        self.trans.aesthetic = self.aesthetics[0]
+
+        # The limits are given in original dataspace
+        # but they leave in transformed space since all
+        # computations happen on transformed data. The
+        # labeling of the plot axis and the guides are in
+        # the original dataspace.
+        if 'limits' in kwargs:
+            kwargs['limits'] = self.trans.trans(kwargs['limits'])
+
         # We can set the breaks to user defined values or
         # have matplotlib calculate them using the default locator
         # function. In case of transform, special locator and
         # formatter functions are created for mpl to use.
-        try:
-            self.trans = gettrans(kwargs.pop('trans'))
-        except KeyError:
-            pass
-
-        if 'limits' in kwargs:
-            kwargs['limits'] = self.trans.trans(kwargs['limits'])
-
-        # trans object should know the main aesthetic,
-        # in case it has to manipulate the axis
-        self.trans.aesthetic = self.aesthetics[0]
 
         # When both breaks and transformation are specified,
         # the trans object should not modify the axis. The
@@ -282,12 +289,15 @@ class scale_continuous(scale):
                 self.trans.locator_factory = waiver()
 
         if 'labels' in kwargs:
-            # function wins
-            if isinstance(kwargs['labels'], types.FunctionType):
-                self.trans.formatter = FuncFormatter(kwargs.pop('labels'))
-            # trust the user labels
+            # Accept an MPL Formatter, a function or a list-like
+            if (callable(kwargs['labels']) and
+                    isinstance(kwargs['labels'](), Formatter)):
+                self.trans.formatter_factory = kwargs.pop('labels')
+            elif isinstance(kwargs['labels'], types.FunctionType):
+                self.trans.formatter_factory = FuncFormatter(
+                    kwargs.pop('labels'))
             elif is_sequence_of_strings(kwargs['labels']):
-                self.trans.formatter = waiver()
+                self.trans.formatter_factory = waiver()
             elif not is_sequence_of_strings(kwargs['labels']):
                 msg = 'labels should be function or a sequence of strings'
                 raise GgplotError(msg)

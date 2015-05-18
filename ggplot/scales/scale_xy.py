@@ -203,20 +203,34 @@ class scale_y_continuous(scale_position_continuous):
 
 
 # Transformed scales
+class scale_x_datetime(scale_position_continuous):
+    trans = 'datetime'
+    aesthetics = ['x', 'xmin', 'xmax', 'xend']
+
+
+class scale_y_datetime(scale_position_continuous):
+    trans = 'datetime'
+    aesthetics = ['y', 'ymin', 'ymay', 'yend']
+
+
+scale_x_date = scale_x_datetime
+scale_y_date = scale_y_datetime
+
+
 class scale_x_sqrt(scale_x_continuous):
-    trans = sqrt_trans()
+    trans = 'sqrt'
 
 
 class scale_y_sqrt(scale_y_continuous):
-    trans = sqrt_trans()
+    trans = 'sqrt'
 
 
 class scale_x_log10(scale_x_continuous):
-    trans = log10_trans()
+    trans = 'log10'
 
 
 class scale_y_log10(scale_y_continuous):
-    trans = log10_trans()
+    trans = 'log10'
 
 
 # For the trans object of reverse scales

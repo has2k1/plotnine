@@ -12,6 +12,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import re
 import datetime
+from types import FunctionType
 
 import numpy as np
 import pandas as pd
@@ -20,6 +21,7 @@ from matplotlib.ticker import MaxNLocator, ScalarFormatter
 import matplotlib.dates as dates
 from matplotlib.dates import MinuteLocator, HourLocator, DayLocator
 from matplotlib.dates import WeekdayLocator, MonthLocator, YearLocator
+from matplotlib.dates import AutoDateLocator
 from matplotlib.dates import DateFormatter
 import six
 
@@ -364,7 +366,7 @@ def date_breaks(width):
 
 def date_format(format='%Y-%m-%d'):
     """
-    "Formatted dates."
+    Formatted dates.
 
     Parameters:
     -----------
@@ -376,7 +378,10 @@ def date_format(format='%Y-%m-%d'):
     >>> date_format('%b-%y')
     >>> date_format('%B %d, %Y')
     """
-    return DateFormatter(format)
+    def make_formatter():
+        return DateFormatter(format)
+
+    return make_formatter
 
 
 # Transforms #
@@ -437,6 +442,7 @@ def make_formatter(inverse):
             # Original data space
             x = inverse(x)
             label = ScalarFormatter.__call__(self, x, pos)
+            # Remove unnecessary decimals
             pattern = re.compile(r'\.0+$')
             match = re.search(pattern, label)
             if match:
@@ -475,7 +481,7 @@ def trans_new(name, transform, inverse,
     trans_name = str('{}_trans'.format(name))
 
     # FIXME: look into minor ticks
-    class cls(object):
+    class klass(object):
         __name__ = trans_name
         aesthetic = None
         trans = staticmethod(transform)
@@ -500,20 +506,19 @@ def trans_new(name, transform, inverse,
                 obj = getattr(ax, axis)
                 obj.set_major_locator(self.locator_factory())
 
-            if not is_waive(self.formatter):
+            if not is_waive(self.formatter_factory):
                 obj = getattr(ax, axis)
-                obj.set_major_formatter(self.formatter)
+                obj.set_major_formatter(self.formatter_factory())
 
-    cls.name = name
-    # In case of faceted plots, each ax needs it's own locator
-    # so we want something that can give us identical locator
-    # objects. i.e the class
-    cls.locator_factory = make_locator(transform, inverse)
-    cls.locator_factory.trans_name = trans_name
-    cls.formatter = make_formatter(inverse)()
-    cls.breaks = cls.locator_factory  # to match ggplot2
-    cls.format = cls.formatter        # to match ggplot2
-    return cls
+    klass.name = name
+    # Each axis requires a separate locator(MPL requirement),
+    # and for consistency we used separate formatters too.
+    klass.locator_factory = make_locator(transform, inverse)
+    klass.locator_factory.trans_name = trans_name
+    klass.formatter_factory = make_formatter(inverse)
+    klass.breaks = klass.locator_factory          # to match ggplot2
+    klass.format = klass.formatter_factory        # to match ggplot2
+    return klass
 
 
 def log_trans(base=None):
@@ -532,7 +537,7 @@ def log_trans(base=None):
         name = 'log{}'.format(base)
 
         def trans(x):
-            np.log(x)/np.log(base)
+            return np.log(x)/np.log(base)
 
     # inverse function
     def inv(x):
@@ -541,16 +546,16 @@ def log_trans(base=None):
 
 
 def exp_trans(base=None):
-    # transform function
+    # default to e
     if base is None:
         name = 'power-e'
         base = np.exp(1)
     else:
         name = 'power-{}'.format(base)
 
-    # trans function
+    # transform function
     def trans(x):
-        base ** x
+        return base ** x
 
     # inverse function
     def inv(x):
@@ -599,22 +604,47 @@ def probability_trans(distribution, *args, **kwargs):
     return trans_new('prob-{}'.format(distribution), trans, inv)
 
 
+def datetime_trans():
+    def trans(x):
+        try:
+            x = to_ordinalf(x)
+        except AttributeError:
+            # numpy datetime64
+            x = [pd.Timestamp(item) for item in x]
+            x = to_ordinalf(x)
+        return x
+
+    def inv(x):
+        return from_ordinalf(x)
+
+    def _DateFormatter():
+        return DateFormatter('%Y-%m-%d')
+
+    _trans = trans_new('datetime', trans, inv)
+    _trans.locator_factory = staticmethod(AutoDateLocator)
+    _trans.formatter_factory = staticmethod(_DateFormatter)
+    return _trans
+
+
 def gettrans(t):
     """
     Return a trans object
 
     Parameters
     ----------
-    t : string | function
+    t : string | function | class | object
         name of transformation function
 
     Returns
     -------
     out : tran
     """
+    obj = t
     # Make sure trans object is instantiated
-    if isinstance(t, six.string_types):
-        out = gg_import(t+'_trans')()
-    elif(isinstance(t, type)):
-        out = t()
-    return out
+    if isinstance(obj, six.string_types):
+        obj = gg_import('{}_trans'.format(obj))
+    if isinstance(obj, FunctionType):
+        obj = obj()
+    if isinstance(obj, type):
+        obj = obj()
+    return obj

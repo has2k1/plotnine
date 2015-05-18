@@ -241,7 +241,6 @@ def scales_add_defaults(scales, data, aesthetics):
             # Skip aesthetics with no scales (e.g. group, order, etc)
             continue
         scales.append(sc)
-
     return scales
 
 
@@ -290,7 +289,4 @@ def make_scale(ae, series, *args, **kwargs):
     _type = scale_type(series)
     scale_name = 'scale_{}_{}'.format(ae, _type)
     scale_klass = gg_import(scale_name)
-    if not scale_klass:
-        msg = 'Could not create object of type {}'
-        raise GgplotError(msg.format(scale_name))
     return scale_klass(*args, **kwargs)
