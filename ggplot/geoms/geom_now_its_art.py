@@ -14,7 +14,7 @@ class geom_now_its_art(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         img = mpimg.imread(os.path.join(_ROOT, 'bird.png'))
         ax.imshow(img, alpha=pinfo['alpha'])
         print ("Put a bird on it!")

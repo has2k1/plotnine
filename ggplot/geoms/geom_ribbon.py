@@ -17,16 +17,16 @@ class geom_ribbon(geom):
                     'color': 'edgecolor'}
     _units = {'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         for key in ('y', 'weight', 'group'):
             try:
                 del pinfo[key]

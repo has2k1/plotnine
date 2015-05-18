@@ -100,7 +100,7 @@ class stat(object):
 
     def __radd__(self, gg):
         # Create a geom and it to the ggplot object
-        _g = gg_import('geom_' + self.params['geom'])
+        _g = gg_import('geom_{}'.format(self.params['geom']))
         _geom = _g(*self._cache['args'], **self._cache['kwargs'])
         _geom.params['stat'] = self.__class__.__name__[5:]
         _geom.params['position'] = self.params['position']

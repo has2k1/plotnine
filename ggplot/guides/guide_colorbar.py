@@ -2,6 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import hashlib
 
+import six
+import numpy as np
 import pandas as pd
 from matplotlib.ticker import MaxNLocator
 
@@ -37,10 +39,11 @@ class guide_colorbar(guide):
 
         # value = breaks (numeric) is used for determining the
         # position of ticks
-        breaks = scale.scale_breaks()
+        breaks = scale.scale_breaks(can_waive=False)
+        breaks = breaks[~np.isnan(breaks)]
         self.key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
-            'label': scale.scale_labels(),
+            'label': scale.scale_labels(breaks, can_waive=False),
             'value': breaks})
 
         bar = MaxNLocator(self.nbin).tick_values(*scale.limits)
@@ -50,11 +53,11 @@ class guide_colorbar(guide):
             'color': scale.map(bar),
             'value': bar})
 
-        labels = ' '.join(str(x) for x in self.key['label'])
+        labels = ' '.join(six.text_type(x) for x in self.key['label'])
         info = '\n'.join([self.title, labels,
                           ' '.join(self.bar['color'].tolist()),
                           self.__class__.__name__])
-        self.hash = hashlib.md5(info).hexdigest()
+        self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
 
     def merge(self, other):
         """

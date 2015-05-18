@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import itertools
 from collections import Counter
 
 import numpy as np
@@ -28,7 +27,7 @@ class geom_path(geom):
     _aes_renames = {'color': 'edgecolor', 'size': 'linewidth',
                     'linetype': 'linestyle'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         if not any(data['group'].duplicated()):
             msg = ("geom_path: Each group consist of only one",
                    "observation. Do you need to adjust the",
@@ -60,12 +59,12 @@ class geom_path(geom):
         if not constant:
             pinfos = self._make_pinfos(data, kwargs)
             assert len(pinfos) == 1
-            self.draw(pinfos[0], scales, ax, **kwargs)
+            self.draw(pinfos[0], scales, coordinates, ax, **kwargs)
         else:
-            geom.draw_groups(self, data, scales, ax, **kwargs)
+            geom.draw_groups(self, data, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         try:
             if kwargs['linejoin'] == 'mitre':
                 kwargs['linejoin'] = 'miter'
@@ -88,7 +87,8 @@ class geom_path(geom):
             _draw_lines(pinfo, ax, **kwargs)
 
         try:
-            kwargs['arrow'].draw(pinfo, scales, ax, constant=constant)
+            kwargs['arrow'].draw(
+                pinfo, scales, coordinates, ax, constant=constant)
         except AttributeError:
             # Arrow is None
             pass
@@ -151,7 +151,7 @@ class arrow(object):
         self.type = type
         self._cache = {}
 
-    def _init(self, scales, ax):
+    def _init(self, scales, coordinates, ax):
         """
         Calculate and cache the arrow edge lengths along both axes
         """
@@ -167,15 +167,16 @@ class arrow(object):
         # these values
         fig = ax.get_figure()
         width, height = fig.get_size_inches()
-        width_ = np.ptp(scales['x'].coord_range())
-        height_ = np.ptp(scales['y'].coord_range())
+        ranges = coordinates.range(scales)
+        width_ = np.ptp(ranges.x)
+        height_ = np.ptp(ranges.y)
 
         self._cache['scales'] = scales
         self._cache['ax'] = ax
         self._cache['lx'] = self.length * width_/width
         self._cache['ly'] = self.length * height_/height
 
-    def draw(self, pinfo, scales, ax, constant=True):
+    def draw(self, pinfo, scales, coordinates, ax, constant=True):
         """
         Draw arrows at the end(s) of the lines
 
@@ -191,7 +192,7 @@ class arrow(object):
             If the path attributes vary along the way. If false,
             the arrows are per segment of the path
         """
-        self._init(scales, ax)
+        self._init(scales, coordinates, ax)
         Path = mpath.Path
 
         first = self.ends in ('first', 'both')

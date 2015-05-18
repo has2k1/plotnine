@@ -112,22 +112,6 @@ class scale_position_discrete(scale_discrete):
         a = np.array([x for x in [disc, cont] if x is not None])
         return (a.min(), a.max())
 
-    def coord_breaks(self):
-        """
-        The breaks that appear on the coordinate axis
-        """
-        if not is_waive(self.breaks):
-            return self.breaks
-        return list(range(1, len(self.limits)+1))
-
-    def coord_labels(self):
-        """
-        The labels that appear at the breaks on the coordinate axis
-        """
-        if not is_waive(self.labels):
-            return self.labels
-        return self.range
-
 
 # Discrete position scales should be able to make use of the train
 # method bound to continuous scales
@@ -156,33 +140,6 @@ class scale_position_continuous(scale_continuous):
         scaled = self.oob(series, limits)
         scaled[pd.isnull(scaled)] = self.na_value
         return scaled
-
-    def coord_range(self):
-        """
-        Return the range for the coordinate axis
-        """
-        if self._limits:
-            rng = self.transform(self._limits)
-        elif is_waive(self._expand):
-            rng = self.dimension((0.05, 0))
-        else:
-            rng = self.dimension(self._expand)
-
-        return rng
-
-    def coord_breaks(self):
-        """
-        The breaks that appear on the coordinate axis
-        """
-        if not is_waive(self.breaks):
-            return self.transform(self.breaks)
-        return self.breaks
-
-    def coord_labels(self):
-        """
-        The labels that appear at the breaks on the coordinate axis
-        """
-        return self.labels
 
 
 class scale_x_discrete(scale_position_discrete):

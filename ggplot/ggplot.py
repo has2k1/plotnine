@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
+from matplotlib.cbook import Bunch
 
 from .components.aes import make_labels
 from .components.panel import Panel
@@ -19,6 +20,7 @@ from .utils.ggutils import gg_context
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 from .scales.scale import scale_discrete
+from .coords import coord_cartesian
 from .guides.guides import guides
 
 
@@ -66,6 +68,7 @@ class ggplot(object):
         self.scales = Scales()
         # default theme is theme_gray
         self.theme = theme_gray()
+        self.coordinates = coord_cartesian()
         self.plot_env = mapping.aes_env
 
     def __repr__(self):
@@ -135,14 +138,17 @@ class ggplot(object):
         # finfo - panel (facet) information from layout table
         for ax, (_, finfo) in zip(axs, panel.layout.iterrows()):
             panel_idx = finfo['PANEL'] - 1
-            xy_scales = {'x': panel.x_scales[finfo['SCALE_X'] - 1],
-                         'y': panel.y_scales[finfo['SCALE_Y'] - 1]}
+            scales = panel.ranges[panel_idx]
+            # xy_scales = Bunch(
+            #     x=panel.x_scales[finfo['SCALE_X'] - 1],
+            #     y=panel.y_scales[finfo['SCALE_Y'] - 1])
 
             # Plot all data for each layer
             for zorder, (l, d) in enumerate(
                     zip(plot.layers, data), start=1):
                 bool_idx = (d['PANEL'] == finfo['PANEL'])
-                l.draw(d[bool_idx], xy_scales, ax, zorder)
+                l.draw(d[bool_idx], scales, plot.coordinates,
+                       ax, zorder)
 
             # xaxis & yaxis breaks and labels and stuff
             set_breaks_and_labels(plot, panel.ranges[panel_idx],
@@ -152,10 +158,12 @@ class ggplot(object):
             # TODO: Need to find a better place for this
             # theme_apply turns on the minor grid only to turn
             # it off here!!!
-            if isinstance(xy_scales['x'], scale_discrete):
+            xscale = panel.x_scales[finfo['SCALE_X'] - 1]
+            yscale = panel.y_scales[finfo['SCALE_Y'] - 1]
+            if isinstance(xscale, scale_discrete):
                 ax.grid(False, which='minor', axis='x')
 
-            if isinstance(xy_scales['y'], scale_discrete):
+            if isinstance(yscale, scale_discrete):
                 ax.grid(False, which='minor', axis='y')
 
             # draw facet labels
@@ -205,12 +213,9 @@ class ggplot(object):
         def dlapply(f):
             """
             Call the function f with the dataframe and layer
-            object as arguments.%s
+            objects as arguments.
             """
-            out = [None] * len(data)
-            for i in range(len(data)):
-                out[i] = f(data[i], layers[i])
-            return out
+            return [f(d, l) for d, l in zip(data, layers)]
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
@@ -264,7 +269,8 @@ class ggplot(object):
             data = [npscales.train_df(d) for d in data]
             data = [npscales.map_df(d) for d in data]
 
-        panel.train_ranges()
+        # Train coordinate system
+        panel.train_ranges(plot.coordinates)
         return data, panel, plot
 
     def draw_legend(self, plot):
@@ -317,13 +323,13 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
     # on the plot
 
     # limits
-    ax.set_xlim(ranges['x'])
-    ax.set_ylim(ranges['y'])
+    ax.set_xlim(ranges['x_range'])
+    ax.set_ylim(ranges['y_range'])
 
     # breaks and labels for when the user set
     # them explicitly
-    xbreaks = ranges['x_breaks']
-    ybreaks = ranges['y_breaks']
+    xbreaks = ranges['x_major']
+    ybreaks = ranges['y_major']
     xlabels = ranges['x_labels']
     ylabels = ranges['y_labels']
 

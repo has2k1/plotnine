@@ -20,16 +20,16 @@ class geom_polygon(geom):
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle',
                     'fill': 'facecolor', 'color': 'edgecolor'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
         # And like ggplot, alpha applies to the facecolor

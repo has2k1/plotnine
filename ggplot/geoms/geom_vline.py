@@ -17,16 +17,16 @@ class geom_vline(geom):
 
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         try:
             del pinfo['x']
         except KeyError:
@@ -35,12 +35,12 @@ class geom_vline(geom):
         ymin = pinfo.pop('ymin')
         ymax = pinfo.pop('ymax')
 
-        range_y = scales['y'].coord_range()
+        ranges = coordinates.range(scales)
         if ymin is None:
-            ymin = range_y[0]
+            ymin = ranges.y[0]
 
         if ymax is None:
-            ymax = range_y[1]
+            ymax = ranges.y[1]
 
         alpha = pinfo.pop('alpha')
         pinfo['color'] = make_color_tuples(pinfo['color'], alpha)

@@ -144,7 +144,7 @@ class Panel(object):
         self.x_scales.reset()
         self.y_scales.reset()
 
-    def train_ranges(self):
+    def train_ranges(self, coord):
         """
         Calculate the x & y ranges for each panel
         """
@@ -155,24 +155,11 @@ class Panel(object):
             raise GgplotError('Missing a y scale')
 
         # ranges
-        self.ranges = [None] * len(self.layout)
-
-        x_ranges = [sc.coord_range() for sc in self.x_scales]
-        y_ranges = [sc.coord_range() for sc in self.y_scales]
-
-        # breaks- either a list of values or waiver() object
-        x_breaks = [sc.coord_breaks() for sc in self.x_scales]
-        y_breaks = [sc.coord_breaks() for sc in self.y_scales]
-
-        # labels - either a list of values or waiver() object
-        x_labels = [sc.coord_labels() for sc in self.x_scales]
-        y_labels = [sc.coord_labels() for sc in self.y_scales]
-
-        cols = ['PANEL', 'SCALE_X', 'SCALE_Y']
-        for p, i, j in self.layout[cols].itertuples(index=False):
-            self.ranges[p-1] = {'x': x_ranges[i-1],
-                                'y': y_ranges[j-1],
-                                'x_breaks': x_breaks[i-1],
-                                'y_breaks': y_breaks[j-1],
-                                'x_labels': x_labels[i-1],
-                                'y_labels': y_labels[j-1]}
+        self.ranges = []
+        cols = ['SCALE_X', 'SCALE_Y']
+        for i, j in self.layout[cols].itertuples(index=False):
+            i, j = i-1, j-1
+            xinfo = coord.train(self.x_scales[i])
+            yinfo = coord.train(self.y_scales[j])
+            xinfo.update(yinfo)
+            self.ranges.append(xinfo)

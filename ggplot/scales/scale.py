@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import types
 from copy import deepcopy
+from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
@@ -26,7 +27,7 @@ class scale(object):
     palette = None      # aesthetic mapping function
     range = None        # range of aesthetic
     na_value = np.NaN   # What to do with the NA values
-    _expand = waiver()  # multiplicative and additive expansion constants.
+    expand = waiver()   # multiplicative and additive expansion constants.
     name = None         # used as the axis label or legend title
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
@@ -85,18 +86,6 @@ class scale(object):
     @limits.setter
     def limits(self, value):
         self._limits = value
-
-    @property
-    def expand(self):
-        if is_waive(self._expand):
-            # default
-            return (0, 0)
-        else:
-            return self._expand
-
-    @expand.setter
-    def expand(self, value):
-        self._expand = value
 
     def train_df(self, df):
         """
@@ -177,50 +166,76 @@ class scale_discrete(scale):
         pal_match[pd.isnull(pal_match)] = self.na_value
         return pal_match
 
-    def scale_breaks(self):
+    def break_info(self, range=None):
+        if range is None:
+            range = self.dimension()
+        # for discrete, limits != range
+        limits = self.limits
+        major = self.scale_breaks(limits)
+        if major is None:
+            labels = None
+        else:
+            labels = self.scale_labels(major)
+            major = pd.Categorical(major.keys())
+            major = self.map(major)
+        return {'range': range,
+                'labels': labels,
+                'major': major}
+
+    def scale_breaks(self, limits=None, can_waive=False):
         """
-        Returns a dictionary of the form {break: position}
-        for the guide
+        Returns a ordered dictionary of the form {break: position}
+
+        The form is suitable for use by the guides
 
         e.g.
         {'fair': 1, 'good': 2, 'very good': 3,
         'premium': 4, 'ideal': 5}
         """
+        if limits is None:
+            limits = self.limits
+
         if self.breaks is None:
             return None
         elif is_waive(scale.breaks):
-            breaks = self.limits
+            breaks = limits
         elif callable(scale.breaks):
-            breaks = scale.breaks(self.limits)
+            breaks = scale.breaks(limits)
         else:
             breaks = scale.breaks
 
         # Breaks can only occur only on values in domain
         in_domain = list(set(breaks) & set(self.limits))
         pos = match(in_domain, breaks)
-        return dict(zip(in_domain, pos))
+        tups = zip(in_domain, pos)
+        return OrderedDict(sorted(tups, key=lambda t: t[1]))
 
-    def scale_labels(self):
+    def scale_labels(self, breaks=None, can_waive=False):
         """
         Generate labels for the legend/guide breaks
         """
-        breaks = self.scale_breaks()
-
         if breaks is None:
-            return None
+            breaks = self.scale_breaks(can_waive=can_waive)
 
-        if self.labels is None:
+        # The labels depend on the breaks if the breaks are None
+        # or are waived, it is likewise for the labels
+        if breaks is None or self.labels is None:
             return None
+        elif is_waive(breaks):
+            return waiver()
         elif is_waive(self.labels):
-            # if breaks is
+            # if breaks is a dict (ordered by value)
             #   {'I': 2, 'G': 1, 'P': 3, 'V': 4, 'F': 0}
-            # We want the labels sorted acc. to the value
+            # The keys are the labels
             # i.e ['F', 'G', 'I', 'P', 'V']
-            return sorted(breaks, key=breaks.__getitem__)
+            try:
+                return list(breaks.keys())
+            except AttributeError:
+                return breaks
         elif callable(self.labels):
             return self.labels(breaks)
         # if a dict is used to rename some labels
-        elif issubclass(scale.labels, dict):
+        elif isinstance(scale.labels, dict):
             labels = breaks
             lookup = list(scale.labels.items())
             mp = match(lookup, labels, nomatch=-1)
@@ -240,6 +255,12 @@ class scale_discrete(scale):
         """
         # Discrete scales do not do transformations
         return df
+
+    def transform(self, series):
+        """
+        Transform
+        """
+        return series
 
 
 class scale_continuous(scale):
@@ -380,10 +401,31 @@ class scale_continuous(scale):
         scaled[pd.isnull(scaled)] = self.na_value
         return scaled
 
-    def scale_breaks(self):
+    def break_info(self, range=None):
+        if range is None:
+            range = self.dimension()
+
+        major = self.scale_breaks(range)
+        labels = self.scale_labels(major)
+        return {'range': range,
+                'labels': labels,
+                'major': major}
+
+    def scale_breaks(self, limits=None, can_waive=True):
         """
         Generate breaks for the legend/guide
+
+        Parameters
+        ----------
+        limits : list-like
+        can_waive : bool
+            Whether the method can return a waiver object.
+            When the guides request breaks they really need
+            them and cannot rely on Matplotlib. This option
+            is for them.
         """
+        if limits is None:
+            limits = self.limits
         # Limits in transformed space need to be
         # converted back to data space
         limits = self.trans.inv(self.limits)
@@ -392,6 +434,9 @@ class scale_continuous(scale):
             return None
         elif zero_range(limits):
             breaks = [limits[0]]
+        elif can_waive and is_waive(scale.breaks):
+            # The MPL Locator will handle them
+            return scale.breaks
         elif is_waive(scale.breaks):
             breaks = self.trans.breaks(4).tick_values(*limits)
         elif callable(scale.breaks):
@@ -409,21 +454,34 @@ class scale_continuous(scale):
                 scale.aesthetics))
         return breaks
 
-    def scale_labels(self):
+    def scale_labels(self, breaks=None, can_waive=False):
         """
         Generate labels for the legend/guide breaks
         """
-        breaks = self.scale_breaks()
-
         if breaks is None:
-            return None
+            breaks = self.scale_breaks(can_waive=can_waive)
 
-        if self.labels is None:
+        # The labels depend on the breaks if the breaks are None
+        # or are waived, it is likewise for the labels
+        if breaks is None or self.labels is None:
             return None
+        elif is_waive(breaks):
+            return waiver()
+        elif can_waive and is_waive(self.labels):
+            # The MPL Formatter will handle them
+            return self.labels
         elif is_waive(self.labels):
-            # TODO: Should apply transformation
-            # labels = breaks
-            labels = [self.trans.format(b) for b in breaks]
+            # Instantiate a formatter and "prep"
+            # it for use
+            breaks = np.asarray(breaks)
+            locs = breaks[~np.isnan(breaks)]
+            if not len(locs):
+                locs = [0, 1]
+            formatter = self.trans.format()
+            formatter.create_dummy_axis()
+            formatter.set_locs(locs)
+            # This is what really matters
+            labels = [formatter(b) for b in breaks]
         elif callable(self.labels):
             labels = self.labels(breaks)
         else:

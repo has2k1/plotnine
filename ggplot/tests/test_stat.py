@@ -56,7 +56,7 @@ def test_stat_parameter_sharing():
         REQUIRED_AES = {'x', 'weight'}
 
         @staticmethod
-        def draw(pinfo, scales, ax, **kwargs):
+        def draw(pinfo, scales, coordinates, ax, **kwargs):
             pass
 
         def _get_stat_type(self, kwargs):

@@ -35,16 +35,16 @@ class geom_rect(geom):
     _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle',
                     'fill': 'facecolor', 'color': 'edgecolor'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         def fn(key):
             return make_iterable(pinfo.pop(key))
 

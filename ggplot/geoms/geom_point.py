@@ -17,16 +17,16 @@ class geom_point(geom):
     _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
     _units = {'marker'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         pinfo['facecolor'] = make_color_tuples(
             pinfo['facecolor'], pinfo['alpha'])
 

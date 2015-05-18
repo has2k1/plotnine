@@ -20,7 +20,7 @@ class geom_text(geom):
     _units = {'alpha', 'color', 'family', 'size'}
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
         label = pinfo.pop('label')

@@ -143,7 +143,7 @@ class geom(object):
     def reparameterise(data):
         return data
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
 
@@ -154,10 +154,10 @@ class geom(object):
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, kwargs)
             for pinfo in pinfos:
-                self.draw(pinfo, scales, ax, **kwargs)
+                self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 

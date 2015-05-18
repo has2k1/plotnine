@@ -77,7 +77,7 @@ class layer(object):
                 'Unknown position of type {}'.format(type(name)))
 
         if not name.startswith('position_'):
-            name = 'position_' + name
+            name = 'position_{}'.format(name)
 
         return gg_import(name)()
 
@@ -243,7 +243,7 @@ class layer(object):
         data = groupby_apply(data, 'PANEL', self.position.adjust)
         return data
 
-    def draw(self, data, scales, ax, zorder):
+    def draw(self, data, scales, coordinates, ax, zorder):
         """
         Draw layer
 
@@ -254,6 +254,8 @@ class layer(object):
         scales : dict
             Has two keys, 'x' and 'y' whose values
             are the x and y scales respectively
+        coordinates : coord
+            Type of coordinate axes
         ax : axes
             On which to draw the layer
         zorder : int
@@ -266,7 +268,7 @@ class layer(object):
 
         kwargs = deepcopy(self.geom.params)
         kwargs['zorder'] = zorder
-        self.geom.draw_groups(data, scales, ax, **kwargs)
+        self.geom.draw_groups(data, scales, coordinates, ax, **kwargs)
 
     def use_defaults(self, data):
         """

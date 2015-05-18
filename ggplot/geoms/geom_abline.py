@@ -21,19 +21,19 @@ class geom_abline(geom):
 
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
 
-    def draw_groups(self, data, scales, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, kwargs)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         slope = pinfo['slope']
         intercept = pinfo['intercept']
-        range_x = scales['x'].coord_range()
+        ranges = coordinates.range(scales)
         zorder = pinfo['zorder']
 
         n = len(slope)
@@ -43,7 +43,7 @@ class geom_abline(geom):
         alpha = make_iterable_ntimes(pinfo['alpha'], n)
         color = make_iterable_ntimes(pinfo['color'], n)
 
-        _x = np.array(range_x)
+        _x = np.array(ranges.x)
         for i in range(n):
             _y = _x * slope[i] + intercept[i]
             ax.plot(_x, _y,

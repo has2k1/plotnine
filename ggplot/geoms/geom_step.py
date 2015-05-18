@@ -12,7 +12,7 @@ class geom_step(geom_path):
     draw_groups = geom.draw_groups
 
     @staticmethod
-    def draw(pinfo, scales, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **kwargs):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
 
@@ -31,4 +31,4 @@ class geom_step(geom_path):
         pinfo['x'] = xs
         pinfo['y'] = ys
         pinfo['group'] = pinfo['group'][0]
-        geom_path.draw(pinfo, scales, ax, **kwargs)
+        geom_path.draw(pinfo, scales, coordinates, ax, **kwargs)

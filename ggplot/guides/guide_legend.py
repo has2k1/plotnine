@@ -36,13 +36,15 @@ class guide_legend(guide):
         scale name is one of the aesthetics
         ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
         """
-        breaks = scale.scale_breaks()
-        if isinstance(breaks, dict):
-            breaks = list(sorted(breaks, key=breaks.__getitem__))
+        breaks = scale.scale_breaks(can_waive=False)
+        try:
+            breaks = list(breaks.keys())
+        except AttributeError:
+            pass
 
         key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
-            'label': scale.scale_labels()})
+            'label': scale.scale_labels(breaks, can_waive=False)})
 
         # Drop out-of-range values for continuous scale
         # (should use scale$oob?)
@@ -130,7 +132,7 @@ class guide_legend(guide):
             for ae in set(self.override_aes) & set(data.columns):
                 data[ae] = self.override_aes[ae]
 
-            geom = gg_import('geom_' + l.geom.guide_geom)
+            geom = gg_import('geom_{}'.format(l.geom.guide_geom))
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
         return self
