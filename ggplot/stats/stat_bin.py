@@ -5,13 +5,11 @@ import numpy as np
 import pandas as pd
 import pandas.core.common as com
 
-from ..utils import make_iterable_ntimes
+from ..utils import seq, make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warning
 from ..scales.utils import fullseq
 from .stat import stat
 
-import datetime
-import time
 
 _MSG_YVALUE = """A variable was mapped to y.
     stat_bin sets the y value to the count of cases in each group.
@@ -61,12 +59,9 @@ class stat_bin(stat):
                 if origin is None:
                     breaks = fullseq(range_, binwidth, pad=True)
                 else:
-                    bincount = np.floor(
-                        (range_[1] + 2*binwidth - origin) / binwidth)
-                    breaks = np.linspace(
-                        origin,
-                        range_[1] + binwidth,
-                        bincount)
+                    breaks = seq(origin,
+                                 np.max(range_)+binwidth,
+                                 binwidth)
 
             # fuzzy breaks to protect from floating point rounding errors
             diddle = 1e-07 * np.median(np.diff(breaks))

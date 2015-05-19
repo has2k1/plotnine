@@ -526,6 +526,19 @@ def round_any(x, accuracy, f=np.round):
     return f(x / accuracy) * accuracy
 
 
+def seq(fromm=1, to=1, by=1):
+    """
+    Generate regular sequences
+
+    Meant to be the same as Rs seq to prevent
+    discrepancies at the margins
+    """
+    x = np.arange(fromm, to+by, by)
+    if x[-1] > to:
+        x = x[:-1]
+    return x
+
+
 def hex_to_rgba(colors, alphas=1):
     """
     Covert hex colors to rgba values.

@@ -9,7 +9,7 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     ninteraction, match, add_margins,
                     check_required_aesthetics, xy_panel_scales,
                     uniquecols, defaults, jitter, gg_import,
-                    remove_missing, round_any, hex_to_rgba,
+                    remove_missing, round_any, seq, hex_to_rgba,
                     make_color_tuples, groupby_apply, ColoredDrawingArea)
 
 
