@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
-import matplotlib.lines as lines
+import matplotlib.lines as mlines
 
 from ..utils import make_color_tuples
 from .geom import geom
@@ -51,15 +51,15 @@ class geom_point(geom):
         -------
         out : DrawingArea
         """
-        key = lines.Line2D([0.5*da.width],
-                           [0.5*da.height],
-                           alpha=data['alpha'],
-                           marker=data['marker'],
-                           # scatter size units are points^2, while
-                           # Line2D size units are points
-                           markersize=np.sqrt(data['s']),
-                           color=data['color'],
-                           markerfacecolor=data['facecolor'],
-                           markeredgecolor=data['color'])
+        key = mlines.Line2D([0.5*da.width],
+                            [0.5*da.height],
+                            alpha=data['alpha'],
+                            marker=data['marker'],
+                            # scatter size units are points^2, while
+                            # Line2D size units are points
+                            markersize=np.sqrt(data['s']),
+                            color=data['color'],
+                            markerfacecolor=data['facecolor'],
+                            markeredgecolor=data['color'])
         da.add_artist(key)
         return da

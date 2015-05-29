@@ -279,7 +279,9 @@ class ggplot(object):
             return plot
 
         position = plot.theme._params['legend_position']
-        # where to place which point of the legend box
+        # At what point (e.g [.94, .5]) on the figure
+        # to place which point (e.g 6, for center left) of
+        # the legend box
         lookup = {
             'right':  (6, (0.94, 0.5)),  # center left
             'left': (7, (0.07, 0.5)),    # center right

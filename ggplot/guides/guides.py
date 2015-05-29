@@ -184,8 +184,8 @@ class guides(dict):
         """
         new_gdefs = []
         for gdef in gdefs:
-            gdef.create_geoms(plot)
-            if gdef.glayers:
+            gdef = gdef.create_geoms(plot)
+            if gdef:
                 new_gdefs.append(gdef)
 
         return new_gdefs
@@ -205,20 +205,8 @@ class guides(dict):
         out : list of matplotlib.offsetbox.Offsetbox
             A drawing of each legend
         """
-        valid_positions = {'top', 'bottom', 'left', 'right'}
-
-        def verify_title_position(g):
-            if g.title_position is None:
-                if g.direction == 'vertical':
-                    g.title_position = 'top'
-                elif g.direction == 'horizontal':
-                    g.title_position = 'left'
-            if g.title_position not in valid_positions:
-                msg = 'title position "{}" is invalid'
-                raise GgplotError(msg.format(g.title_position))
-            return g
-
-        gdefs = [verify_title_position(g) for g in gdefs]
+        for g in gdefs:
+            g._set_defaults(theme)
         return [g.draw(theme) for g in gdefs]
 
     def assemble(self, gboxes, gdefs, theme):
@@ -240,13 +228,12 @@ class guides(dict):
 
         # direction when more than legend
         direction = theme._params['legend_box']
-        packer = VPacker if direction == 'vertical' else HPacker
         if direction == 'vertical':
             packer = VPacker
         elif direction == 'horizontal':
             packer = HPacker
         else:
-            raise GgplotError("'lengend_box' should be either",
+            raise GgplotError("'legend_box' should be either",
                               "'vertical' or 'horizontal'")
 
         align = theme._params['legend_box_just']

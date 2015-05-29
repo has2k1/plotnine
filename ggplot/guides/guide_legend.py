@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import hashlib
 from itertools import islice
 
+import six
 import numpy as np
 import pandas as pd
 from matplotlib.cbook import Bunch
@@ -65,10 +66,11 @@ class guide_legend(guide):
         self.key = key
 
         # create a hash of the important information in the guide
-        labels = ' '.join(str(x) for x in self.key['label'])
+        labels = ' '.join(six.text_type(x) for x in self.key['label'])
         info = '\n'.join([self.title, labels, str(self.direction),
                           self.__class__.__name__])
-        self.hash = hashlib.md5(info).hexdigest()
+        self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
+
 
     def merge(self, other):
         """
@@ -135,28 +137,12 @@ class guide_legend(guide):
             geom = gg_import('geom_{}'.format(l.geom.guide_geom))
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
+        if not self.glayers:
+            return None
         return self
 
-    def draw(self, theme):
-        """
-        Draw guide
-
-        Parameters
-        ----------
-        theme : theme
-
-        Returns
-        -------
-        out : matplotlib.offsetbox.Offsetbox
-            A drawing of this legend
-        """
-        # default setting
-        if self.label_position is None:
-            self.label_position = 'right'
-        if self.label_position not in ['top', 'bottom', 'left', 'right']:
-            msg = 'label position {} is invalid'
-            raise GgplotError(msg.format(self.label_position))
-
+    def _set_defaults(self, theme):
+        guide._set_defaults(self, theme)
         nbreak = len(self.key)
 
         # rows and columns
@@ -182,20 +168,28 @@ class guide_legend(guide):
             else:
                 self.ncol = 1
 
-        # gap between the keys
-        hgap = 0.3 * 20  # .3 lines
-        vgap = hgap
+    def draw(self, theme):
+        """
+        Draw guide
+
+        Parameters
+        ----------
+        theme : theme
+
+        Returns
+        -------
+        out : matplotlib.offsetbox.Offsetbox
+            A drawing of this legend
+        """
+        obverse = slice(0, None)
+        reverse = slice(None, None, -1)
+        nbreak = len(self.key)
+        sep = 0.3 * 20  # gap between the keys, .3 lines
 
         # title
         # TODO: theme me
         title_box = TextArea(
             self.title, textprops=dict(color='k', weight='bold'))
-        title_align = theme._params['legend_title_align']
-        if title_align is None:
-            if self.direction == 'vertical':
-                title_align = 'left'
-            else:
-                title_align = 'center'
 
         # labels
         # TODO: theme me
@@ -203,8 +197,10 @@ class guide_legend(guide):
         for item in self.key['label']:
             if isinstance(item, np.float) and np.float.is_integer(item):
                 item = np.int(item)  # 1.0 to 1
-            ta = TextArea(item, textprops=dict(color='k'))
+            va = 'center' if self.label_position == 'top' else 'baseline'
+            ta = TextArea(item, textprops=dict(color='k', va=va))
             labels.append(ta)
+
         # Drawings
         # TODO: theme me
         drawings = []
@@ -220,17 +216,17 @@ class guide_legend(guide):
         # Match Drawings with labels to create the entries
         # TODO: theme me
         lookup = {
-            'right': (HPacker, slice(None, None, -1)),
-            'left': (HPacker, slice(0, None)),
-            'bottom': (VPacker, slice(None, None, -1)),
-            'top': (VPacker, slice(0, None))}
+            'right': (HPacker, reverse),
+            'left': (HPacker, obverse),
+            'bottom': (VPacker, reverse),
+            'top': (VPacker, obverse)}
         packer, slc = lookup[self.label_position]
         entries = []
-        # matplotlib adds a baseline padding below the text
-        # which leads to a bigger gap when the label is on top
-        sep = hgap*.2 if self.label_position == 'top' else hgap
+        label_align = 'center' if packer == HPacker else 'left'
         for d, l in zip(drawings, labels):
-            e = packer(children=[l, d][slc], align='left', pad=0, sep=sep)
+            e = packer(children=[l, d][slc],
+                       align=label_align,
+                       pad=0, sep=sep)
             entries.append(e)
 
         # Put the entries together in rows or columns
@@ -238,10 +234,8 @@ class guide_legend(guide):
         # for a single legend
         if self.byrow:
             chunk_size, packers = self.ncol, [HPacker, VPacker]
-            seps = [hgap, vgap]
         else:
             chunk_size, packers = self.nrow, [VPacker, HPacker]
-            seps = [vgap, hgap]
 
         if self.reverse:
             entries = entries[::-1]
@@ -257,17 +251,18 @@ class guide_legend(guide):
         chunk_boxes = []
         for chunk in chunks:
             d1 = packers[0](children=chunk,
-                            align='left', pad=0, sep=seps[0])
+                            align='left', pad=0, sep=sep)
             chunk_boxes.append(d1)
 
         # Put all the entries (row & columns) together
         entries_box = packers[1](children=chunk_boxes,
                                  align='baseline',
                                  pad=0,
-                                 sep=seps[1])
+                                 sep=sep)
         # TODO: theme me
         # Put the title and entries together
         packer, slc = lookup[self.title_position]
         children = [title_box, entries_box][slc]
-        box = packer(children=children, align=title_align, pad=0, sep=hgap)
+        box = packer(children=children, align=self._title_align,
+                     pad=0, sep=sep)
         return box
