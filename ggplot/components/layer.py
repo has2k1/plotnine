@@ -131,7 +131,7 @@ class layer(object):
         env = EvalEnvironment.capture(eval_env=plot.plot_env)
         env.add_outer_namespace({"factor": factor})
 
-        evaled = pd.DataFrame()
+        evaled = pd.DataFrame(index=data.index)
         settings = False  # Indicate manual settings within aes()
 
         # If a column name is not in the data, it is evaluated/transformed
@@ -159,6 +159,8 @@ class layer(object):
                     raise GgplotError(
                         "Aesthetics must either be length one, " +
                         "or the same length as the data")
+                elif n == 1:
+                    col = col[0]
                 settings = True
                 evaled[ae] = col
             elif not cbook.iterable(col) and cbook.is_numlike(col):

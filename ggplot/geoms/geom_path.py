@@ -57,8 +57,8 @@ class geom_path(geom):
         kwargs['constant'] = constant
 
         if not constant:
+            # expects len(pinfos) == 1
             pinfos = self._make_pinfos(data, kwargs)
-            assert len(pinfos) == 1
             self.draw(pinfos[0], scales, coordinates, ax, **kwargs)
         else:
             geom.draw_groups(self, data, scales, coordinates, ax, **kwargs)
@@ -86,16 +86,9 @@ class geom_path(geom):
         else:
             _draw_lines(pinfo, ax, **kwargs)
 
-        try:
+        if 'arrow' in kwargs and kwargs['arrow']:
             kwargs['arrow'].draw(
                 pinfo, scales, coordinates, ax, constant=constant)
-        except AttributeError:
-            # Arrow is None
-            pass
-        except KeyError:
-            # some geoms draw with this method but they
-            # do not know about the arrow parameter
-            pass
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -175,6 +168,7 @@ class arrow(object):
         self._cache['ax'] = ax
         self._cache['lx'] = self.length * width_/width
         self._cache['ly'] = self.length * height_/height
+        self._cache['radians'] = self.angle * np.pi / 180
 
     def draw(self, pinfo, scales, coordinates, ax, constant=True):
         """
@@ -275,7 +269,7 @@ class arrow(object):
         arrowhead at (x1, y1)
         """
         lx, ly = self._cache['lx'], self._cache['ly']
-        a = self.angle * np.pi / 180
+        a = self._cache['radians']
         yc = y2 - y1
         xc = x2 - x1
         rot = np.arctan2(yc/ly, xc/lx)
