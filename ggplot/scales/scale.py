@@ -197,12 +197,12 @@ class scale_discrete(scale):
 
         if self.breaks is None:
             return None
-        elif is_waive(scale.breaks):
+        elif is_waive(self.breaks):
             breaks = limits
-        elif callable(scale.breaks):
-            breaks = scale.breaks(limits)
+        elif callable(self.breaks):
+            breaks = self.breaks(limits)
         else:
-            breaks = scale.breaks
+            breaks = self.breaks
 
         # Breaks can only occur only on values in domain
         in_domain = list(set(breaks) & set(self.limits))
@@ -235,9 +235,9 @@ class scale_discrete(scale):
         elif callable(self.labels):
             return self.labels(breaks)
         # if a dict is used to rename some labels
-        elif isinstance(scale.labels, dict):
+        elif isinstance(self.labels, dict):
             labels = breaks
-            lookup = list(scale.labels.items())
+            lookup = list(self.labels.items())
             mp = match(lookup, labels, nomatch=-1)
             for idx in mp:
                 if idx != -1:
@@ -430,19 +430,19 @@ class scale_continuous(scale):
         # converted back to data space
         limits = self.trans.inv(self.limits)
 
-        if scale.breaks is None:
+        if self.breaks is None:
             return None
         elif zero_range(limits):
             breaks = [limits[0]]
-        elif can_waive and is_waive(scale.breaks):
+        elif can_waive and is_waive(self.breaks):
             # The MPL Locator will handle them
-            return scale.breaks
-        elif is_waive(scale.breaks):
+            return self.breaks
+        elif is_waive(self.breaks):
             breaks = self.trans.breaks(4).tick_values(*limits)
-        elif callable(scale.breaks):
-            breaks = scale.breaks(limits)
+        elif callable(self.breaks):
+            breaks = self.breaks(limits)
         else:
-            breaks = scale.breaks
+            breaks = self.breaks
 
         # Breaks in data space need to be converted back to
         # transformed space And any breaks outside the
@@ -451,7 +451,7 @@ class scale_continuous(scale):
                         self.transform(limits))
         if len(breaks) == 0:
             raise GgplotError('Zero breaks in scale for {}'.format(
-                scale.aesthetics))
+                self.aesthetics))
         return breaks
 
     def scale_labels(self, breaks=None, can_waive=False):
