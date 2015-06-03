@@ -2,7 +2,10 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
-from ..utils import make_iterable_ntimes
+import matplotlib.collections as mcoll
+
+from ..utils import make_line_segments, make_rgba
+from ..utils.exceptions import GgplotError
 from .geom import geom
 
 
@@ -19,7 +22,8 @@ class geom_abline(geom):
                       'inherit_aes': False}
     guide_geom = 'path'
 
-    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth'}
+    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
+                    'color': 'edgecolor'}
 
     def draw_groups(self, data, scales, coordinates, ax, **kwargs):
         """
@@ -31,24 +35,23 @@ class geom_abline(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **kwargs):
-        slope = pinfo['slope']
-        intercept = pinfo['intercept']
         ranges = coordinates.range(scales)
-        zorder = pinfo['zorder']
-
-        n = len(slope)
-
-        linewidth = make_iterable_ntimes(pinfo['linewidth'], n)
-        linestyle = make_iterable_ntimes(pinfo['linestyle'], n)
-        alpha = make_iterable_ntimes(pinfo['alpha'], n)
-        color = make_iterable_ntimes(pinfo['color'], n)
-
-        _x = np.array(ranges.x)
-        for i in range(n):
-            _y = _x * slope[i] + intercept[i]
-            ax.plot(_x, _y,
-                    linewidth=linewidth[i],
-                    linestyle=linestyle[i],
-                    alpha=alpha[i],
-                    color=color[i],
-                    zorder=zorder)
+        n = len(pinfo['slope'])
+        slope = np.asarray(pinfo['slope'])
+        intercept = np.asarray(pinfo['intercept'])
+        x = np.array(ranges.x)
+        x = np.tile(x, (n, 1))
+        y = np.zeros(x.shape)
+        y[:, 0] = x[:, 0] * slope + intercept
+        y[:, 1] = x[:, 1] * slope + intercept
+        segments = make_line_segments(x.ravel(),
+                                      y.ravel(),
+                                      ispath=False)
+        pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
+                                       pinfo['alpha'])
+        coll = mcoll.LineCollection(segments,
+                                    edgecolor=pinfo['edgecolor'],
+                                    linewidth=pinfo['linewidth'],
+                                    linestyle=pinfo['linestyle'],
+                                    zorder=pinfo['zorder'])
+        ax.add_collection(coll)

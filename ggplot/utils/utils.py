@@ -565,7 +565,7 @@ def hex_to_rgba(colors, alphas=1):
     However :), the colors can be rgba list-likes and
     the alpha dimension will be respected.
 
-    see: `make_color_tuples`
+    see: `make_rgba`
     """
     cc = ColorConverter()
     if is_string(colors):
@@ -579,7 +579,7 @@ def hex_to_rgba(colors, alphas=1):
     return out
 
 
-def make_color_tuples(colors, alpha):
+def make_rgba(colors, alpha):
     """
     Return RGBA color tuples.
 
@@ -641,6 +641,37 @@ def groupby_apply(df, cols, func, *args, **kwargs):
         d.is_copy = None
         lst.append(func(d, *args, **kwargs))
     return pd.concat(lst, axis=axis, ignore_index=True)
+
+
+def make_line_segments(x, y, ispath=True):
+    """
+    Return an (n x 2 x 2) array of line segments
+
+    Parameters
+    ----------
+    x : array-like
+        x points
+    y : array-like
+        y points
+    ispath : bool
+        If True, the points represent a path from one point
+        to the next until the last. If False, then each pair
+        of successive(even-odd pair) points yields a line.
+    """
+    if ispath:
+        num_segments = len(x)-1
+        xs = [None] * (2*num_segments)
+        ys = [None] * (2*num_segments)
+        xs[::2], xs[1::2] = x[:-1], x[1:]
+        ys[::2], ys[1::2] = y[:-1], y[1:]
+    else:
+        if len(x) % 2:
+            raise GgplotError("Expects an even number of points")
+        num_segments = len(x) // 2
+        xs, ys = x, y
+    segments = np.array(list(zip(xs, ys)))
+    segments = segments.reshape(num_segments, 2, 2)
+    return segments
 
 
 class ColoredDrawingArea(DrawingArea):

@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.collections import PolyCollection
 
-from ..utils import make_iterable, make_color_tuples
+from ..utils import make_iterable, make_rgba
 from .geom import geom
 
 
@@ -60,8 +60,8 @@ class geom_rect(geom):
                         (xmax[i], ymax[i]),
                         (xmax[i], ymin[i])]
 
-        pinfo['facecolor'] = make_color_tuples(
-            pinfo['facecolor'], pinfo['alpha'])
+        pinfo['facecolor'] = make_rgba(pinfo['facecolor'],
+                                       pinfo['alpha'])
 
         if pinfo['edgecolor'] is None:
             pinfo['edgecolor'] = ''

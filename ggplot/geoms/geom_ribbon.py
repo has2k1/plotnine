@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..utils import make_color_tuples
+from ..utils import make_rgba
 from .geom import geom
 
 
@@ -33,9 +33,9 @@ class geom_ribbon(geom):
             except KeyError:
                 pass
 
-        # To much ggplot2, the alpha only affects the
+        # To match ggplot2, the alpha only affects the
         # fill color
-        pinfo['facecolor'] = make_color_tuples(
+        pinfo['facecolor'] = make_rgba(
             pinfo['facecolor'], pinfo.pop('alpha'))
         if pinfo['facecolor'] is None:
             pinfo['facecolor'] = ''

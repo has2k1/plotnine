@@ -10,7 +10,8 @@ import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
 from ..utils.exceptions import gg_warning
-from ..utils import make_color_tuples, make_iterable_ntimes
+from ..utils import make_rgba, make_iterable_ntimes
+from ..utils import make_line_segments
 from .geom import geom
 
 
@@ -77,8 +78,8 @@ class geom_path(geom):
         except KeyError:
             pass
 
-        pinfo['edgecolor'] = make_color_tuples(pinfo['edgecolor'],
-                                               pinfo['alpha'])
+        pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
+                                       pinfo['alpha'])
 
         constant = kwargs.pop('constant', False)
         if not constant:
@@ -311,11 +312,11 @@ def _draw_segments(pinfo, ax, **kwargs):
     for _, _df in df.groupby('group'):
         idx = _df.index.tolist()
         indices[:-1] += idx  # One line from two points
-        for i1, i2 in zip(idx[:-1], idx[1:]):
-            x1, x2 = pinfo['x'][i1], pinfo['x'][i2]
-            y1, y2 = pinfo['y'][i1], pinfo['y'][i2]
-            segments.append(((x1, y1), (x2, y2)))
+        x = [pinfo['x'][i] for i in idx]
+        y = [pinfo['y'][i] for i in idx]
+        segments.append(make_line_segments(x, y, ispath=True))
 
+    segments = np.vstack(segments)
     edgecolor = get_param('edgecolor', indices)
     linewidth = get_param('linewidth', indices)
     linestyle = get_param('linestyle', indices)

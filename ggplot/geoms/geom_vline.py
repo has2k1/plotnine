@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..utils import make_color_tuples
+from ..utils import make_rgba
 from .geom import geom
 
 
@@ -43,6 +43,6 @@ class geom_vline(geom):
             ymax = ranges.y[1]
 
         alpha = pinfo.pop('alpha')
-        pinfo['color'] = make_color_tuples(pinfo['color'], alpha)
+        pinfo['color'] = make_rgba(pinfo['color'], alpha)
         del pinfo['group']
         ax.vlines(x, ymin, ymax, **pinfo)

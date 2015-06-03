@@ -1,11 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from itertools import chain
 
-import numpy as np
 import matplotlib.collections as mcoll
 
 from .geom import geom
-from ..utils import make_color_tuples
+from ..utils import make_rgba, make_line_segments
 
 
 class geom_segment(geom):
@@ -21,13 +21,11 @@ class geom_segment(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **kwargs):
-        pinfo['edgecolor'] = make_color_tuples(pinfo['edgecolor'],
-                                               pinfo['alpha'])
-        segments = np.zeros((len(pinfo['x']), 2, 2))
-        segments[:, 0, 0] = pinfo['x']
-        segments[:, 0, 1] = pinfo['y']
-        segments[:, 1, 0] = pinfo['xend']
-        segments[:, 1, 1] = pinfo['yend']
+        pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
+                                       pinfo['alpha'])
+        x = list(chain(*zip(pinfo['x'], pinfo['xend'])))
+        y = list(chain(*zip(pinfo['y'], pinfo['yend'])))
+        segments = make_line_segments(x, y, ispath=False)
         coll = mcoll.LineCollection(segments,
                                     edgecolor=pinfo['edgecolor'],
                                     linewidth=pinfo['linewidth'],
