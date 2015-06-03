@@ -477,7 +477,7 @@ class scale_continuous(scale):
             locs = breaks[~np.isnan(breaks)]
             if not len(locs):
                 locs = [0, 1]
-            formatter = self.trans.format()
+            formatter = self.trans.format(useOffset=0)
             formatter.create_dummy_axis()
             formatter.set_locs(locs)
             # This is what really matters
