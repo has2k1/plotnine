@@ -21,7 +21,8 @@ class stat_density(stat):
                       'clip': (-np.inf, np.inf)}
     CREATES = {'y'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         x = data.pop('x')
         n = len(x)
 
@@ -55,7 +56,7 @@ class stat_density(stat):
             'triangular': 'tri',
             'triweight': 'triw',
             'uniform': 'uni'}
-        kernel = lookup[self.params['kernel'].lower()]
+        kernel = lookup[params['kernel'].lower()]
 
         if kernel == 'gaussian':
             fft, weight = True, None
@@ -65,14 +66,14 @@ class stat_density(stat):
         kde = sm.nonparametric.KDEUnivariate(x)
         kde.fit(
             # kernel=kernel,        # enable after statsmodels 0.6
-            # bw=self.params['bw'], # enable after statsmodels 0.6
+            # bw=params['bw'], # enable after statsmodels 0.6
             fft=fft,
             weights=weight,
-            adjust=self.params['adjust'],
-            cut=self.params['cut'],
-            gridsize=self.params['gridsize'],
-            clip=self.params['clip'],)
-        x2 = np.linspace(range_x[0], range_x[1], self.params['n'])
+            adjust=params['adjust'],
+            cut=params['cut'],
+            gridsize=params['gridsize'],
+            clip=params['clip'],)
+        x2 = np.linspace(range_x[0], range_x[1], params['n'])
         y = kde.evaluate(x2)
         new_data = pd.DataFrame({'x': x2,
                                  'y': y,

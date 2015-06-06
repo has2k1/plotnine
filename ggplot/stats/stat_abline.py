@@ -19,15 +19,16 @@ class stat_abline(stat):
                       'slope': 1, 'intercept': 0}
     CREATES = {'slope', 'intercept'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         x = pop(data, 'x', None)
         y = pop(data, 'y', None)
 
         # intercept and slope may be one of:
         #   - aesthetics to geom_abline or
         #   - parameter settings to stat_abline
-        slope = pop(data, 'slope', self.params['slope'])
-        intercept = pop(data, 'intercept', self.params['intercept'])
+        slope = pop(data, 'slope', params['slope'])
+        intercept = pop(data, 'intercept', params['intercept'])
 
         if hasattr(slope, '__call__'):
             if x is None or y is None:

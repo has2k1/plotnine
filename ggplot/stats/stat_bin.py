@@ -32,12 +32,13 @@ class stat_bin(stat):
     DEFAULT_AES = {'y': '..count..'}
     CREATES = {'y', 'width'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         x = data['x']
-        breaks = self.params['breaks']
-        right = self.params['right']
-        binwidth = self.params['binwidth']
-        origin = self.params['origin']
+        breaks = params['breaks']
+        right = params['right']
+        binwidth = params['binwidth']
+        origin = params['origin']
         range_ = np.asarray(scales.x.dimension((0, 0)))
 
         # y values are not needed
@@ -47,10 +48,10 @@ class stat_bin(stat):
         if com.is_categorical_dtype(x):
             bins = x.tolist()
             x = x.drop_duplicates().tolist()
-            width = make_iterable_ntimes(self.params['width'], len(x))
+            width = make_iterable_ntimes(params['width'], len(x))
         elif np.diff(range_) == 0:
             bins = x
-            width = make_iterable_ntimes(self.params['width'], len(x))
+            width = make_iterable_ntimes(params['width'], len(x))
         elif com.is_numeric_dtype(x):
             if breaks is None and binwidth is None:
                 binwidth = np.ptp(range_) / 30

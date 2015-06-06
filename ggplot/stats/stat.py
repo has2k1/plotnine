@@ -59,25 +59,37 @@ class stat(object):
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         msg = "{} should implement this method."
         raise NotImplementedError(
-            msg.format(self.__class__.__name__))
+            msg.format(cls.__name__))
 
-    def _calculate_groups(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate_groups(cls, data, scales, **params):
         """
         Calculate the stats of all the groups and
         return the results in a single dataframe.
 
         This is a default function that can be overriden
         by individual stats
+
+        Parameters
+        ----------
+        data : dataframe
+            data for the computing
+        scales : namedtuple
+            x & y scales
+        params : dict
+            The parameters for the stat. It includes default
+            values if user did not set a particular parameter.
         """
         if not len(data):
             return pd.DataFrame()
 
         stats = []
         for _, old in data.groupby('group'):
-            new = self._calculate(old, scales)
+            new = cls._calculate(old, scales, **params)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
             u = unique.loc[[0]*len(new), missing].reset_index(drop=True)

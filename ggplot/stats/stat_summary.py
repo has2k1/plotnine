@@ -139,7 +139,7 @@ class stat_summary(stat):
 
     Provide different funtions for y, ymin and ymax:
 
-    .. plot:
+    .. plot::
         :include-source:
 
         import numpy as np
@@ -156,17 +156,18 @@ class stat_summary(stat):
                       'fun_ymin': None, 'fun_ymax': None}
     CREATES = {'ymin', 'ymax'}
 
-    def _calculate_groups(self, data, scales, **kwargs):
-        if (self.params['fun_y'] or self.params['fun_ymin'] or
-                self.params['fun_ymax']):
+    @classmethod
+    def _calculate_groups(cls, data, scales, **params):
+        if (params['fun_y'] or params['fun_ymin'] or
+                params['fun_ymax']):
             def fun_data(s):
-                return combined_fun_data(s, self.params['fun_y'],
-                                         self.params['fun_ymin'],
-                                         self.params['fun_ymax'])
-        elif isinstance(self.params['fun_data'], string_types):
-            fun_data = function_dict[self.params['fun_data']]
+                return combined_fun_data(s, params['fun_y'],
+                                         params['fun_ymin'],
+                                         params['fun_ymax'])
+        elif isinstance(params['fun_data'], string_types):
+            fun_data = function_dict[params['fun_data']]
         else:
-            fun_data = self.params['fun_data']
+            fun_data = params['fun_data']
 
         # break a dataframe into pieces, summarise each piece,
         # and join the pieces back together, retaining original

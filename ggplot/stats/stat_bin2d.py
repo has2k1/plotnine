@@ -15,11 +15,12 @@ class stat_bin2d(stat):
     DEFAULT_AES = {'fill': '..count..'}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         x = data.pop('x')
         y = data.pop('y')
-        bins = self.params['bins']
-        drop = self.params['drop']
+        bins = params['bins']
+        drop = params['drop']
         weight = data.get('weight', 1)  # hidden feature
 
         # The bins will be over the dimension(full size) of the

@@ -16,12 +16,13 @@ class stat_vline(stat):
                       'xintercept': 0}
     CREATES = {'xintercept'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         x = pop(data, 'x', None)
         # xintercept may be one of:
         #   - aesthetic to geom_vline or
         #   - parameter setting to stat_vline
-        xintercept = pop(data, 'xintercept', self.params['xintercept'])
+        xintercept = pop(data, 'xintercept', params['xintercept'])
 
         if hasattr(xintercept, '__call__'):
             if x is None:

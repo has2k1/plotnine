@@ -193,7 +193,8 @@ class layer(object):
             list(data.columns) + list(self.stat.params.keys()),
             self.stat.__class__.__name__)
 
-        return self.stat._calculate_groups(data, scales)
+        return self.stat._calculate_groups(data, scales,
+                                           **self.stat.params)
 
     def map_statistic(self, data, plot):
         """

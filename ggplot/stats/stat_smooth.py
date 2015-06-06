@@ -15,7 +15,8 @@ class stat_smooth(stat):
                       'span': 2/3., 'window': None}
     CREATES = {'ymin', 'ymax'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         # sort data by x and
         # convert x and y to lists so that the Series index
         # does not mess with the smoothing functions
@@ -23,11 +24,11 @@ class stat_smooth(stat):
         x = list(data.pop('x'))
         y = list(data.pop('y'))
 
-        se = self.params['se']
-        level = self.params['level']
-        method = self.params['method']
-        span = self.params['span']
-        window = self.params['window']
+        se = params['se']
+        level = params['level']
+        method = params['method']
+        span = params['span']
+        window = params['window']
         weight = data.get('weight', 1)  # should make use of this
 
         if window is None:

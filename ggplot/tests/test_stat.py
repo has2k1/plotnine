@@ -48,7 +48,8 @@ def test_stat_parameter_sharing():
         REQUIRED_AES = {'x'}
         CREATES = {'y'}
 
-        def _calculate_groups(self, data, scales, **kwargs):
+        @classmethod
+        def _calculate_groups(cls, data, scales, **params):
             return data
 
     class geom_abc(geom):

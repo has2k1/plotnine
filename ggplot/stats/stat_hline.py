@@ -16,13 +16,14 @@ class stat_hline(stat):
                       'yintercept': 0}
     CREATES = {'yintercept'}
 
-    def _calculate(self, data, scales, **kwargs):
+    @classmethod
+    def _calculate(cls, data, scales, **params):
         y = pop(data, 'y', None)
 
         # yintercept may be one of:
         #   - aesthetic to geom_hline or
         #   - parameter setting to stat_hline
-        yintercept = pop(data, 'yintercept', self.params['yintercept'])
+        yintercept = pop(data, 'yintercept', params['yintercept'])
 
         if hasattr(yintercept, '__call__'):
             if y is None:

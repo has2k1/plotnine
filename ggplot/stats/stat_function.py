@@ -112,10 +112,11 @@ class stat_function(stat):
 
     CREATES = {'y'}
 
-    def _calculate(self, data, scales, **kwargs):
-        fun = self.params['fun']
-        n = self.params['n']
-        args = self.params['args']
+    @classmethod
+    def _calculate(cls, data, scales, **params):
+        fun = params['fun']
+        n = params['n']
+        args = params['args']
 
         range_x = scales.x.dimension((0, 0))
 
