@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.collections as mcoll
 
 from ..utils import make_line_segments, make_rgba
-from ..utils.exceptions import GgplotError
 from .geom import geom
 
 
@@ -25,16 +24,16 @@ class geom_abline(geom):
     _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
                     'color': 'edgecolor'}
 
-    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **params):
         """
         Plot all groups
         """
-        pinfos = self._make_pinfos(data, kwargs)
+        pinfos = self._make_pinfos(data, params)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, coordinates, ax, **kwargs)
+            self.draw(pinfo, scales, coordinates, ax, **params)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **params):
         ranges = coordinates.range(scales)
         n = len(pinfo['slope'])
         slope = np.asarray(pinfo['slope'])

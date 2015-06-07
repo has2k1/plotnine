@@ -269,9 +269,10 @@ class layer(object):
             set(data.columns) | set(self.geom.manual_aes),
             self.geom.__class__.__name__)
 
-        kwargs = deepcopy(self.geom.params)
-        kwargs['zorder'] = zorder
-        self.geom.draw_groups(data, scales, coordinates, ax, **kwargs)
+        params = deepcopy(self.geom.params)
+        params.update(self.stat.params)
+        params['zorder'] = zorder
+        self.geom.draw_groups(data, scales, coordinates, ax, **params)
 
     def use_defaults(self, data):
         """

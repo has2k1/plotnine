@@ -24,15 +24,15 @@ class geom_smooth(geom):
     _units = {'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **params):
         has_ribbon = (pinfo['y1'] is not None) and (pinfo['y2'] is not None)
         if has_ribbon:
             pinfo2 = deepcopy(pinfo)
             pinfo2['edgecolor'] = ''
-            geom_ribbon.draw(pinfo2, scales, coordinates, ax, **kwargs)
+            geom_ribbon.draw(pinfo2, scales, coordinates, ax, **params)
 
         pinfo['alpha'] = 1
-        geom_line.draw(pinfo, scales, coordinates, ax, **kwargs)
+        geom_line.draw(pinfo, scales, coordinates, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

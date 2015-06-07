@@ -139,9 +139,6 @@ class ggplot(object):
         for ax, (_, finfo) in zip(axs, panel.layout.iterrows()):
             panel_idx = finfo['PANEL'] - 1
             scales = panel.ranges[panel_idx]
-            # xy_scales = Bunch(
-            #     x=panel.x_scales[finfo['SCALE_X'] - 1],
-            #     y=panel.y_scales[finfo['SCALE_Y'] - 1])
 
             # Plot all data for each layer
             for zorder, (l, d) in enumerate(

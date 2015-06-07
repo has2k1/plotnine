@@ -143,21 +143,42 @@ class geom(object):
     def reparameterise(data):
         return data
 
-    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **params):
         """
         Plot all groups
 
         For effeciency, geoms that do not need to partition
         different groups before plotting should override this
         method and avoid the groupby.
+
+        Parameters
+        ----------
+        data : dataframe
+            Data to be plotted by this geom. This is the
+            dataframe created in the plot_build pipeline
+        scales : dict
+            The scale information as may be required by the
+            axes. At this point, that information is about
+            ranges, ticks and labels. Keys of interest to
+            the geom are:
+                - 'x_range' -- tuple
+                - 'y_range' -- tuple
+        coordinates : coord
+            Coordinate (e.g. coord_cartesian) system of the
+            geom
+        ax : axes
+            Axes on which to plot
+        params : dict
+            Combined parameters for the geom and stat. Also
+            includes the 'zorder'.
         """
         for _, gdata in data.groupby('group'):
-            pinfos = self._make_pinfos(gdata, kwargs)
+            pinfos = self._make_pinfos(gdata, params)
             for pinfo in pinfos:
-                self.draw(pinfo, scales, coordinates, ax, **kwargs)
+                self.draw(pinfo, scales, coordinates, ax, **params)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **params):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 

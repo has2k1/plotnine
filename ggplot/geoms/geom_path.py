@@ -28,7 +28,7 @@ class geom_path(geom):
     _aes_renames = {'color': 'edgecolor', 'size': 'linewidth',
                     'linetype': 'linestyle'}
 
-    def draw_groups(self, data, scales, coordinates, ax, **kwargs):
+    def draw_groups(self, data, scales, coordinates, ax, **params):
         if not any(data['group'].duplicated()):
             msg = ("geom_path: Each group consist of only one",
                    "observation. Do you need to adjust the",
@@ -55,40 +55,40 @@ class geom_path(geom):
         cols = cols & set(data.columns)
         df = data.drop_duplicates(cols)
         constant = len(df) == len(data['group'].unique())
-        kwargs['constant'] = constant
+        params['constant'] = constant
 
         if not constant:
             # expects len(pinfos) == 1
-            pinfos = self._make_pinfos(data, kwargs)
-            self.draw(pinfos[0], scales, coordinates, ax, **kwargs)
+            pinfos = self._make_pinfos(data, params)
+            self.draw(pinfos[0], scales, coordinates, ax, **params)
         else:
-            geom.draw_groups(self, data, scales, coordinates, ax, **kwargs)
+            geom.draw_groups(self, data, scales, coordinates, ax, **params)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **params):
         try:
-            if kwargs['linejoin'] == 'mitre':
-                kwargs['linejoin'] = 'miter'
+            if params['linejoin'] == 'mitre':
+                params['linejoin'] = 'miter'
         except KeyError:
             pass
 
         try:
-            if kwargs['lineend'] == 'square':
-                kwargs['lineend'] = 'projecting'
+            if params['lineend'] == 'square':
+                params['lineend'] = 'projecting'
         except KeyError:
             pass
 
         pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
                                        pinfo['alpha'])
 
-        constant = kwargs.pop('constant', False)
+        constant = params.pop('constant', False)
         if not constant:
-            _draw_segments(pinfo, ax, **kwargs)
+            _draw_segments(pinfo, ax, **params)
         else:
-            _draw_lines(pinfo, ax, **kwargs)
+            _draw_lines(pinfo, ax, **params)
 
-        if 'arrow' in kwargs and kwargs['arrow']:
-            kwargs['arrow'].draw(
+        if 'arrow' in params and params['arrow']:
+            params['arrow'].draw(
                 pinfo, scales, coordinates, ax, constant=constant)
 
     @staticmethod
@@ -283,7 +283,7 @@ class arrow(object):
         return [(v1x, v1y), (x1, y1), (v2x, v2y)]
 
 
-def _draw_segments(pinfo, ax, **kwargs):
+def _draw_segments(pinfo, ax, **params):
     """
     Draw independent line segments between all the
     points
@@ -328,13 +328,13 @@ def _draw_segments(pinfo, ax, **kwargs):
     ax.add_collection(coll)
 
 
-def _draw_lines(pinfo, ax, **kwargs):
+def _draw_lines(pinfo, ax, **params):
     """
     Draw a path with the same characteristics from the
     first point to the last point
     """
-    joinstyle = kwargs.get('linejoin', 'miter')
-    capstyle = kwargs.get('lineend', 'butt')
+    joinstyle = params.get('linejoin', 'miter')
+    capstyle = params.get('lineend', 'butt')
     d = {}
     if pinfo['linestyle'] == 'solid':
         d['solid_joinstyle'] = joinstyle

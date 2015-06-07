@@ -12,7 +12,7 @@ class geom_step(geom_path):
     draw_groups = geom.draw_groups
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **params):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
 
@@ -21,14 +21,14 @@ class geom_step(geom_path):
 
         # create stepped path -- interleave x with
         # itself and y with itself
-        if kwargs['direction'] == 'hv':
+        if params['direction'] == 'hv':
             xs[::2], xs[1::2] = x[:-1], x[1:]
             ys[::2], ys[1::2] = y[:-1], y[:-1]
-        elif kwargs['direction'] == 'vh':
+        elif params['direction'] == 'vh':
             xs[::2], xs[1::2] = x[:-1], x[:-1]
             ys[::2], ys[1::2] = y[:-1], y[1:]
 
         pinfo['x'] = xs
         pinfo['y'] = ys
         pinfo['group'] = pinfo['group'][0]
-        geom_path.draw(pinfo, scales, coordinates, ax, **kwargs)
+        geom_path.draw(pinfo, scales, coordinates, ax, **params)

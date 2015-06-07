@@ -20,7 +20,7 @@ class geom_segment(geom):
                     'color': 'edgecolor'}
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **kwargs):
+    def draw(pinfo, scales, coordinates, ax, **params):
         pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
                                        pinfo['alpha'])
         x = list(chain(*zip(pinfo['x'], pinfo['xend'])))
@@ -33,7 +33,7 @@ class geom_segment(geom):
                                     zorder=pinfo['zorder'])
         ax.add_collection(coll)
 
-        if 'arrow' in kwargs and kwargs['arrow']:
+        if 'arrow' in params and params['arrow']:
             pinfo['group'] = list(range(1, len(pinfo['x'])+1)) * 2
             pinfo['x'] = pinfo['x'] + pinfo['xend']
             pinfo['y'] = pinfo['y'] + pinfo['yend']
@@ -42,5 +42,5 @@ class geom_segment(geom):
                 if isinstance(pinfo[param], list):
                     pinfo[param] = pinfo[param] * 2
 
-            kwargs['arrow'].draw(
+            params['arrow'].draw(
                 pinfo, scales, coordinates, ax, constant=False)
