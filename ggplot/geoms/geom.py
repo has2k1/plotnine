@@ -68,58 +68,62 @@ class geom(object):
     _units = set()
 
     def __init__(self, *args, **kwargs):
+        self._cache = {}
         self.valid_aes = set(self.DEFAULT_AES) ^ self.REQUIRED_AES
-        self._stat_type = self._get_stat_type(kwargs)
         self.aes, self.data, kwargs = self._find_aes_and_data(args, kwargs)
 
         # This set will list the geoms that were uniquely set in this
         # geom (not specified already i.e. in the ggplot aes).
         self.aes_unique_to_geom = set(self.aes.keys())
 
-        if 'colour' in kwargs:
+        try:
             kwargs['color'] = kwargs.pop('colour')
+        except KeyError:
+            pass
 
         # When a geom is created, some of the parameters may be meant
         # for the stat and some for the layer.
         # Some arguments are can be identified as either aesthetics to
         # the geom and or parameter settings to the stat, in this case
         # if the argument has a scalar value it is a setting for the stat.
-        self._stat_params = {}
+        stat_params = {}
         self.params = deepcopy(self.DEFAULT_PARAMS)
         self.manual_aes = {}
-        self._layer_params = {}
-        layer_params = ['group', 'show_guide', 'inherit_aes']
+        layer_params = {}
+        _layer_params = ['group', 'show_guide', 'inherit_aes']
         for p in layer_params:
             try:
                 self._layer_params[p] = self.params.pop(p)
             except KeyError:
                 pass
 
+        stat_type = self._cache['stat_type']
         for k, v in kwargs.items():
             if k in self.aes:
                 raise GgplotError('Aesthetic, %s, specified twice' % k)
             # geom recognizes aesthetic but stat wants it as a parameter,
             # if it is a scalar the stat takes it
             elif (k in self.valid_aes and
-                  k in self._stat_type.DEFAULT_PARAMS and
+                  k in stat_type.DEFAULT_PARAMS and
                   is_scalar_or_string(kwargs[k])):
-                self._stat_params[k] = v
+                stat_params[k] = v
             # geom mapping
             elif k in self.valid_aes:
                 self.manual_aes[k] = v
             # layer parameters
-            elif k in layer_params:
-                self._layer_params[k] = kwargs[k]
+            elif k in _layer_params:
+                layer_params[k] = kwargs[k]
             # Override default geom parameters
             elif k in self.DEFAULT_PARAMS:
                 self.params[k] = v
             # stat parameters
-            elif k in self._stat_type.DEFAULT_PARAMS:
-                self._stat_params[k] = v
+            elif k in stat_type.DEFAULT_PARAMS:
+                stat_params[k] = v
             else:
                 raise GgplotError('Cannot recognize argument: %s' % k)
 
-        self._cache = {}
+        self._cache['stat_params'] = stat_params
+        self._cache['layer_params'] = layer_params
 
     def __deepcopy__(self, memo):
         """
@@ -182,6 +186,29 @@ class geom(object):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
+    @property
+    def _stat(self):
+        """
+        Return stat instance for this geom
+
+        The stat is created once and stored in the cache.
+        The stat can only be created after the geom has
+        been initialized.
+
+        Alternatively a stat not automatically created by
+        the geom can add itself to the geoms cache.
+        See stat._geom
+        """
+        try:
+            stat = self._cache['stat']
+        except KeyError:
+            stat = self._cache['stat_type'](
+                geom=self.__class__.__name__[5:],
+                position=self.params['position'],
+                **self._cache['stat_params'])
+            self._cache['stat'] = stat
+        return stat
+
     def _get_stat_type(self, kwargs):
         """
         Find out the stat and return the type object that can be
@@ -191,21 +218,18 @@ class geom(object):
         """
         name = 'stat_{}'.format(
             kwargs.get('stat', self.DEFAULT_PARAMS['stat']))
-        return gg_import(name)
+        self._cache['stat_type'] = gg_import(name)
+        return self._cache['stat_type']
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
-        # create stat and hand over the parameters it understands
-        if not hasattr(self, '_stat'):
-            self._stat = self._stat_type()
-            self._stat.params.update(self._stat_params)
-
+        # create and add layer
         l = layer(geom=self,
                   stat=self._stat,
                   data=self.data,
                   mapping=self.aes,
                   position=self.params['position'],
-                  **self._layer_params)
+                  **self._cache['layer_params'])
         gg.layers.append(l)
 
         # Add any new labels
@@ -254,8 +278,9 @@ class geom(object):
         _aes = {}
         # To make mapping of columns to geom/stat or stat parameters
         # possible
-        _keep = set(self.DEFAULT_PARAMS) | set(self._stat_type.DEFAULT_PARAMS)
-        _keep.update(self._stat_type.DEFAULT_AES)
+        stat = self._get_stat_type(kwargs)
+        _keep = set(self.DEFAULT_PARAMS) | set(stat.DEFAULT_PARAMS)
+        _keep.update(stat.DEFAULT_AES)
         _keep.add('group')
         for k, v in passed_aes.items():
             if k in self.valid_aes or k in _keep:

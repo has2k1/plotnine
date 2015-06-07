@@ -111,13 +111,31 @@ class stat(object):
         return stats
 
     def __radd__(self, gg):
-        # Create a geom and it to the ggplot object
-        _g = gg_import('geom_{}'.format(self.params['geom']))
-        _geom = _g(*self._cache['args'], **self._cache['kwargs'])
-        _geom.params['stat'] = self.__class__.__name__[5:]
-        _geom.params['position'] = self.params['position']
-        _geom._stat = self
-        return gg + _geom
+        return gg + self._geom
+
+    @property
+    def _geom(self):
+        """
+        Create a geom
+
+        The geom is created once and stored in the cache.
+        The geom can only be created after the stat has
+        been initialized.
+        """
+        try:
+            _geom = self._cache['geom']
+        except KeyError:
+            # Create a geom and it to the ggplot object
+            geom = gg_import('geom_{}'.format(self.params['geom']))
+            _geom = geom(*self._cache['args'],
+                         stat=self.__class__.__name__[5:],
+                         position=self.params['position'],
+                         **self._cache['kwargs'])
+            # Allow the geom to know about the stat object
+            # Usefull in geom.__radd__ when creating layer
+            _geom._cache['stat'] = self
+            self._cache['geom'] = _geom
+        return _geom
 
     def _find_stat_params(self, kwargs):
         """
