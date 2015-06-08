@@ -25,9 +25,6 @@ class geom_path(geom):
                       'arrow': None}
     guide_geom = 'path'
 
-    _aes_renames = {'color': 'edgecolor', 'size': 'linewidth',
-                    'linetype': 'linestyle'}
-
     def draw_groups(self, data, scales, coordinates, ax, **params):
         if not any(data['group'].duplicated()):
             msg = ("geom_path: Each group consist of only one",
@@ -78,8 +75,8 @@ class geom_path(geom):
         except KeyError:
             pass
 
-        pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
-                                       pinfo['alpha'])
+        pinfo['color'] = make_rgba(pinfo['color'],
+                                   pinfo['alpha'])
 
         constant = params.pop('constant', False)
         if not constant:
@@ -111,9 +108,9 @@ class geom_path(geom):
         key = mlines.Line2D(x,
                             y,
                             alpha=data['alpha'],
-                            linestyle=data['linestyle'],
-                            linewidth=data['linewidth'],
-                            color=data['edgecolor'],
+                            linestyle=data['linetype'],
+                            linewidth=data['size'],
+                            color=data['color'],
                             solid_capstyle='butt',
                             antialiased=False)
         da.add_artist(key)
@@ -195,7 +192,7 @@ class arrow(object):
         if self.type == 'open':
             pinfo['facecolor'] = 'none'
         else:
-            pinfo['facecolor'] = pinfo['edgecolor']
+            pinfo['facecolor'] = pinfo['color']
 
         # Create reusable lists of vertices and codes
         paths = []
@@ -232,10 +229,10 @@ class arrow(object):
                     if last:
                         verts[slc2] = self._vertices(x2, x1, y2, y1)
                     paths.append(Path(verts, codes))
-            edgecolor = get_param('edgecolor', indices)
+            edgecolor = get_param('color', indices)
             facecolor = get_param('facecolor', indices)
-            linewidth = get_param('linewidth', indices)
-            linestyle = get_param('linestyle', indices)
+            linewidth = get_param('size', indices)
+            linestyle = get_param('linetype', indices)
             coll = mcoll.PathCollection(paths,
                                         edgecolor=edgecolor,
                                         facecolor=facecolor,
@@ -253,10 +250,10 @@ class arrow(object):
                 y1, y2 = pinfo['y'][-2:]
                 verts[slc2] = self._vertices(x2, x1, y2, y1)
             patch = mpatches.PathPatch(Path(verts, codes),
-                                       edgecolor=pinfo['edgecolor'],
+                                       edgecolor=pinfo['color'],
                                        facecolor=pinfo['facecolor'],
-                                       linewidth=pinfo['linewidth'],
-                                       linestyle=pinfo['linestyle'],
+                                       linewidth=pinfo['size'],
+                                       linestyle=pinfo['linetype'],
                                        joinstyle='round',
                                        capstyle='butt')
             ax.add_artist(patch)
@@ -317,9 +314,9 @@ def _draw_segments(pinfo, ax, **params):
         segments.append(make_line_segments(x, y, ispath=True))
 
     segments = np.vstack(segments)
-    edgecolor = get_param('edgecolor', indices)
-    linewidth = get_param('linewidth', indices)
-    linestyle = get_param('linestyle', indices)
+    edgecolor = get_param('color', indices)
+    linewidth = get_param('size', indices)
+    linestyle = get_param('linetype', indices)
     coll = mcoll.LineCollection(segments,
                                 edgecolor=edgecolor,
                                 linewidth=linewidth,
@@ -336,18 +333,18 @@ def _draw_lines(pinfo, ax, **params):
     joinstyle = params.get('linejoin', 'miter')
     capstyle = params.get('lineend', 'butt')
     d = {}
-    if pinfo['linestyle'] == 'solid':
+    if pinfo['linetype'] == 'solid':
         d['solid_joinstyle'] = joinstyle
         d['solid_capstyle'] = capstyle
-    elif pinfo['linestyle'] == 'dashed':
+    elif pinfo['linetype'] == 'dashed':
         d['dash_joinstyle'] = joinstyle
         d['dash_capstyle'] = capstyle
 
     lines = mlines.Line2D(pinfo['x'],
                           pinfo['y'],
-                          color=pinfo['edgecolor'],
-                          linewidth=pinfo['linewidth'],
-                          linestyle=pinfo['linestyle'],
+                          color=pinfo['color'],
+                          linewidth=pinfo['size'],
+                          linestyle=pinfo['linetype'],
                           zorder=pinfo['zorder'],
                           **d)
     pinfo.update(d)

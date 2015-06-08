@@ -21,9 +21,6 @@ class geom_abline(geom):
                       'inherit_aes': False}
     guide_geom = 'path'
 
-    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
-                    'color': 'edgecolor'}
-
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
         Plot all groups
@@ -46,11 +43,11 @@ class geom_abline(geom):
         segments = make_line_segments(x.ravel(),
                                       y.ravel(),
                                       ispath=False)
-        pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
-                                       pinfo['alpha'])
+        pinfo['color'] = make_rgba(pinfo['color'],
+                                   pinfo['alpha'])
         coll = mcoll.LineCollection(segments,
-                                    edgecolor=pinfo['edgecolor'],
-                                    linewidth=pinfo['linewidth'],
-                                    linestyle=pinfo['linestyle'],
+                                    edgecolor=pinfo['color'],
+                                    linewidth=pinfo['size'],
+                                    linestyle=pinfo['linetype'],
                                     zorder=pinfo['zorder'])
         ax.add_collection(coll)

@@ -32,9 +32,6 @@ class geom_rect(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     guide_geom = 'polygon'
 
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle',
-                    'fill': 'facecolor', 'color': 'edgecolor'}
-
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
         Plot all groups
@@ -60,19 +57,18 @@ class geom_rect(geom):
                         (xmax[i], ymax[i]),
                         (xmax[i], ymin[i])]
 
-        pinfo['facecolor'] = make_rgba(pinfo['facecolor'],
-                                       pinfo['alpha'])
+        pinfo['fill'] = make_rgba(pinfo['fill'],
+                                  pinfo['alpha'])
 
-        if pinfo['edgecolor'] is None:
-            pinfo['edgecolor'] = ''
+        if pinfo['color'] is None:
+            pinfo['color'] = ''
 
         col = PolyCollection(
             verts,
-            facecolors=pinfo['facecolor'],
-            edgecolors=pinfo['edgecolor'],
-            linestyles=pinfo['linestyle'],
-            linewidths=pinfo['linewidth'],
+            facecolors=pinfo['fill'],
+            edgecolors=pinfo['color'],
+            linestyles=pinfo['linetype'],
+            linewidths=pinfo['size'],
             transOffset=ax.transData,
-            zorder=pinfo['zorder']
-        )
+            zorder=pinfo['zorder'])
         ax.add_collection(col)

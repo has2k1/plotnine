@@ -204,8 +204,6 @@ class guide_legend(guide):
         # Drawings
         # TODO: theme me
         drawings = []
-        for gl in self.glayers:
-            gl.data.rename(columns=gl.geom._aes_renames, inplace=True)
         for i in range(nbreak):
             da = ColoredDrawingArea(20, 20, 0, 0, color='#E5E5E5')
             # overlay geoms

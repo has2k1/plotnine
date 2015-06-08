@@ -14,8 +14,7 @@ class geom_point(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _aes_renames = {'size': 's', 'shape': 'marker', 'fill': 'facecolor'}
-    _units = {'marker'}
+    _units = {'shape'}
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
@@ -27,14 +26,20 @@ class geom_point(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        pinfo['facecolor'] = make_rgba(pinfo['facecolor'],
-                                       pinfo['alpha'])
+        pinfo['fill'] = make_rgba(pinfo['fill'],
+                                  pinfo['alpha'])
 
-        if pinfo['facecolor'] is None:
-            pinfo['facecolor'] = pinfo['color']
+        if pinfo['fill'] is None:
+            pinfo['fill'] = pinfo['color']
 
-        del pinfo['group']
-        ax.scatter(**pinfo)
+        ax.scatter(x=pinfo['x'],
+                   y=pinfo['y'],
+                   facecolor=pinfo['fill'],
+                   color=pinfo['color'],
+                   marker=pinfo['shape'],
+                   s=pinfo['size'],
+                   zorder=pinfo['zorder'],
+                   alpha=pinfo['alpha'])
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -54,12 +59,12 @@ class geom_point(geom):
         key = mlines.Line2D([0.5*da.width],
                             [0.5*da.height],
                             alpha=data['alpha'],
-                            marker=data['marker'],
+                            marker=data['shape'],
                             # scatter size units are points^2, while
                             # Line2D size units are points
-                            markersize=np.sqrt(data['s']),
+                            markersize=np.sqrt(data['size']),
                             color=data['color'],
-                            markerfacecolor=data['facecolor'],
+                            markerfacecolor=data['fill'],
                             markeredgecolor=data['color'])
         da.add_artist(key)
         return da

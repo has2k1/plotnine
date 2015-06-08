@@ -16,20 +16,18 @@ class geom_segment(geom):
                       'arrow': None, 'lineend': 'butt'}
 
     guide_geom = 'path'
-    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
-                    'color': 'edgecolor'}
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        pinfo['edgecolor'] = make_rgba(pinfo['edgecolor'],
-                                       pinfo['alpha'])
+        pinfo['color'] = make_rgba(pinfo['color'],
+                                   pinfo['alpha'])
         x = list(chain(*zip(pinfo['x'], pinfo['xend'])))
         y = list(chain(*zip(pinfo['y'], pinfo['yend'])))
         segments = make_line_segments(x, y, ispath=False)
         coll = mcoll.LineCollection(segments,
-                                    edgecolor=pinfo['edgecolor'],
-                                    linewidth=pinfo['linewidth'],
-                                    linestyle=pinfo['linestyle'],
+                                    edgecolor=pinfo['color'],
+                                    linewidth=pinfo['size'],
+                                    linestyle=pinfo['linetype'],
                                     zorder=pinfo['zorder'])
         ax.add_collection(coll)
 
@@ -37,7 +35,7 @@ class geom_segment(geom):
             pinfo['group'] = list(range(1, len(pinfo['x'])+1)) * 2
             pinfo['x'] = pinfo['x'] + pinfo['xend']
             pinfo['y'] = pinfo['y'] + pinfo['yend']
-            other = ['edgecolor', 'linewidth', 'linestyle']
+            other = ['color', 'size', 'linetype']
             for param in other:
                 if isinstance(pinfo[param], list):
                     pinfo[param] = pinfo[param] * 2

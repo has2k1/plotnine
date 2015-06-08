@@ -108,8 +108,6 @@ class stat_function(stat):
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
                       'fun': None, 'n': 101, 'args': None}
 
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
-
     CREATES = {'y'}
 
     @classmethod

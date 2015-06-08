@@ -12,10 +12,7 @@ class geom_ribbon(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     guide_geom = 'polygon'
 
-    _aes_renames = {'linetype': 'linestyle', 'ymin': 'y1', 'ymax': 'y2',
-                    'size': 'linewidth', 'fill': 'facecolor',
-                    'color': 'edgecolor'}
-    _units = {'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'color', 'fill', 'linetype', 'size'}
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
@@ -27,17 +24,18 @@ class geom_ribbon(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        for key in ('y', 'weight', 'group'):
-            try:
-                del pinfo[key]
-            except KeyError:
-                pass
-
         # To match ggplot2, the alpha only affects the
         # fill color
-        pinfo['facecolor'] = make_rgba(
-            pinfo['facecolor'], pinfo.pop('alpha'))
-        if pinfo['facecolor'] is None:
-            pinfo['facecolor'] = ''
+        pinfo['fill'] = make_rgba(pinfo['fill'],
+                                  pinfo['alpha'])
+        if pinfo['fill'] is None:
+            pinfo['fill'] = ''
 
-        ax.fill_between(**pinfo)
+        ax.fill_between(x=pinfo['x'],
+                        y1=pinfo['ymin'],
+                        y2=pinfo['ymax'],
+                        facecolor=pinfo['fill'],
+                        edgecolor=pinfo['color'],
+                        linewidth=pinfo['size'],
+                        linestyle=pinfo['linetype'],
+                        zorder=pinfo['zorder'])

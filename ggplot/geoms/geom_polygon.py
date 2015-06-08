@@ -17,9 +17,6 @@ class geom_polygon(geom):
     REQUIRED_AES = {'x', 'y'}
     guide_geom = 'polygon'
 
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle',
-                    'fill': 'facecolor', 'color': 'edgecolor'}
-
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
         Plot all groups
@@ -35,22 +32,22 @@ class geom_polygon(geom):
         # And like ggplot, alpha applies to the facecolor
         # and not the edgecolor
         grouped = pd.DataFrame(pinfo).groupby('group')
-        verts, fc, alpha = [], [], []
+        verts, facecolor, alpha = [], [], []
         for group, df in grouped:
             verts.append(tuple(zip(df['x'], df['y'])))
-            fc.append(df['facecolor'].iloc[0])
+            facecolor.append(df['fill'].iloc[0])
             alpha.append(df['alpha'].iloc[0])
 
-        fc = make_rgba(fc, alpha)
-        ec = ['none' if c is None else c
-              for c in make_iterable(pinfo['edgecolor'])]
+        facecolor = make_rgba(facecolor, alpha)
+        edgecolor = ['none' if c is None else c
+                     for c in make_iterable(pinfo['color'])]
 
         col = PolyCollection(
             verts,
-            facecolors=fc,
-            edgecolors=ec,
-            linestyles=pinfo['linestyle'],
-            linewidths=pinfo['linewidth'],
+            facecolors=facecolor,
+            edgecolors=edgecolor,
+            linestyles=pinfo['linetype'],
+            linewidths=pinfo['size'],
             transOffset=ax.transData,
             zorder=pinfo['zorder']
         )
@@ -78,27 +75,27 @@ class geom_polygon(geom):
         # only then do we include it
         kwargs = {}
         if 'linetype' in lyr._active_mapping:
-            kwargs['linestyle'] = data['linestyle']
+            kwargs['linestyle'] = data['linetype']
 
         # background
-        fc = make_rgba(data['facecolor'], data['alpha'])
-        if fc is None:
-            fc = 'none'
+        facecolor = make_rgba(data['fill'], data['alpha'])
+        if facecolor is None:
+            facecolor = 'none'
         bg = Rectangle((0, 0),
                        width=da.width,
                        height=da.height,
-                       facecolor=fc,
-                       edgecolor=data['edgecolor'],
+                       facecolor=facecolor,
+                       edgecolor=data['color'],
                        **kwargs)
         da.add_artist(bg)
 
         # diagonal strike through
-        if data['edgecolor']:
+        if data['color']:
             strike = lines.Line2D([0, da.width],
                                   [0, da.height],
-                                  linestyle=data['linestyle'],
-                                  linewidth=data['linewidth'],
-                                  color=data['edgecolor'],
+                                  linestyle=data['linetype'],
+                                  linewidth=data['size'],
+                                  color=data['color'],
                                   solid_capstyle='butt')
             da.add_artist(strike)
         return da

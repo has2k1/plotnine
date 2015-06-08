@@ -12,9 +12,6 @@ class geom_tile(geom_rect):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
-                    'fill': 'facecolor', 'color': 'edgecolor'}
-
     @staticmethod
     def reparameterise(data):
         try:

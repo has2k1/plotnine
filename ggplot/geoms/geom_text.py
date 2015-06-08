@@ -16,35 +16,37 @@ class geom_text(geom):
                       'parse': False}
     guide_geom = 'text'
 
-    _aes_renames = {'angle': 'rotation', 'lineheight': 'linespacing'}
     _units = {'alpha', 'color', 'family', 'size'}
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
-        label = pinfo.pop('label')
         # TODO: Deal with the fontface
         # from ggplot2
         # 1 = plain, 2 = bold, 3 = italic, 4 = bold italic
         # "plain", "bold", "italic", "oblique", and "bold.italic"
         pinfo.pop('fontface')
+        pinfo['horizontalalignment'] = 'center'
+        pinfo['verticalalignment'] = 'center'
 
         if pinfo['hjust'] is not None:
             x = (np.array(x) + pinfo['hjust']).tolist()
-        else:
-            pinfo['horizontalalignment'] = 'center'
 
         if pinfo['vjust'] is not None:
             y = (np.array(y) + pinfo['vjust']).tolist()
-        else:
-            pinfo['verticalalignment'] = 'center'
 
-        del pinfo['hjust']
-        del pinfo['vjust']
-        del pinfo['group']
-        for x_g, y_g, s in zip(x, y, label):
-            ax.text(x_g, y_g, s, **pinfo)
+        for x_g, y_g, s in zip(x, y, pinfo['label']):
+            ax.text(x_g, y_g, s,
+                    alpha=pinfo['alpha'],
+                    color=pinfo['color'],
+                    size=pinfo['size'],
+                    linespacing=pinfo['lineheight'],
+                    family=pinfo['family'],
+                    verticalalignment=pinfo['verticalalignment'],
+                    horizontalalignment=pinfo['horizontalalignment'],
+                    rotation=pinfo['angle'],
+                    zorder=pinfo['zorder'])
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -68,9 +70,8 @@ class geom_text(geom):
                    size=data['size'],
                    family=data['family'],
                    color=data['color'],
-                   rotation=data['rotation'],
+                   rotation=data['angle'],
                    horizontalalignment='center',
-                   verticalalignment='center'
-                   )
+                   verticalalignment='center')
         da.add_artist(key)
         return da

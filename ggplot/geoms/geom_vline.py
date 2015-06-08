@@ -1,7 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..utils import make_rgba
+import numpy as np
+import matplotlib.collections as mcoll
+
+from ..utils import make_rgba, make_line_segments
 from .geom import geom
 
 
@@ -11,11 +14,8 @@ class geom_vline(geom):
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',
-                      'show_guide': False,
-                      'inherit_aes': False}
+                      'show_guide': False, 'inherit_aes': False}
     guide_geom = 'path'
-
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle'}
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
@@ -27,22 +27,24 @@ class geom_vline(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        try:
-            del pinfo['x']
-        except KeyError:
-            pass
-        x = pinfo.pop('xintercept')
-        ymin = pinfo.pop('ymin')
-        ymax = pinfo.pop('ymax')
+        ymin = pinfo.get('ymin')
+        ymax = pinfo.get('ymax')
 
         ranges = coordinates.range(scales)
         if ymin is None:
             ymin = ranges.y[0]
-
         if ymax is None:
             ymax = ranges.y[1]
 
-        alpha = pinfo.pop('alpha')
-        pinfo['color'] = make_rgba(pinfo['color'], alpha)
-        del pinfo['group']
-        ax.vlines(x, ymin, ymax, **pinfo)
+        pinfo['color'] = make_rgba(pinfo['color'], pinfo['alpha'])
+
+        x = np.repeat(pinfo['xintercept'], 2)
+        y = np.zeros(len(x))
+        y[::2], y[1::2] = ymin, ymax  # interleave
+        segments = make_line_segments(x, y, ispath=False)
+        coll = mcoll.LineCollection(segments,
+                                    edgecolor=pinfo['color'],
+                                    linewidth=pinfo['size'],
+                                    linestyle=pinfo['linetype'],
+                                    zorder=pinfo['zorder'])
+        ax.add_collection(coll)

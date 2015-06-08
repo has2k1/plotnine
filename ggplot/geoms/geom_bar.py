@@ -12,8 +12,6 @@ class geom_bar(geom_rect):
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
 
     _extra_requires = {'y', 'width'}
-    _aes_renames = {'linetype': 'linestyle', 'size': 'linewidth',
-                    'fill': 'facecolor', 'color': 'edgecolor'}
 
     @staticmethod
     def reparameterise(data):

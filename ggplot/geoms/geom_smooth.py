@@ -18,17 +18,15 @@ class geom_smooth(geom):
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
     guide_geom = 'smooth'
 
-    _aes_renames = {'linetype': 'linestyle', 'fill': 'facecolor',
-                    'color': 'edgecolor', 'size': 'linewidth',
-                    'ymin': 'y1', 'ymax': 'y2'}
-    _units = {'alpha', 'edgecolor', 'facecolor', 'linestyle', 'linewidth'}
+    _units = {'alpha', 'color', 'fill', 'linetype', 'size'}
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        has_ribbon = (pinfo['y1'] is not None) and (pinfo['y2'] is not None)
+        has_ribbon = (pinfo['ymin'] is not None and
+                      pinfo['ymax'] is not None)
         if has_ribbon:
             pinfo2 = deepcopy(pinfo)
-            pinfo2['edgecolor'] = ''
+            pinfo2['color'] = ''
             geom_ribbon.draw(pinfo2, scales, coordinates, ax, **params)
 
         pinfo['alpha'] = 1
@@ -54,8 +52,8 @@ class geom_smooth(geom):
                            width=da.width,
                            height=da.height,
                            alpha=data['alpha'],
-                           facecolor=data['facecolor'],
-                           edgecolor=data['facecolor'])
+                           facecolor=data['fill'],
+                           edgecolor=data['color'])
             da.add_artist(bg)
 
         data.is_copy = False

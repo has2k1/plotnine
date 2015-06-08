@@ -43,16 +43,6 @@ class geom(object):
     # see: geom_bar, stat_bin
     _extra_requires = set()
 
-    # Some ggplot aesthetics are named different from the parameters of
-    # the matplotlib function that will be used to plot.
-    # This dictionary, of the form {ggplot-aes-name: matplotlib-aes-name},
-    # connects the two.
-    #
-    # geoms should fill it out so that the plot
-    # information they receive is properly named.
-    # See: geom_point
-    _aes_renames = dict()
-
     # A matplotlib plot function may require that an aethestic have a
     # single unique value. e.g. linestyle='dashed' and not
     # linestyle=['dashed', 'dotted', ...].
@@ -63,7 +53,6 @@ class geom(object):
     #
     # geoms should fill out this set with such aesthetics so that the
     # plot information they receive can be plotted in a single call.
-    # Use names as expected by matplotlib
     # See: geom_point
     _units = set()
 
@@ -254,7 +243,8 @@ class geom(object):
         """
         passed_aes = {}
         data = None
-        aes_err = 'Found more than one aes argument. Expecting zero or one'
+        aes_err = ('Found more than one aes argument. '
+                   'Expecting zero or one')
 
         for arg in args:
             if isinstance(arg, aes) and passed_aes:
@@ -264,8 +254,8 @@ class geom(object):
             elif isinstance(arg, pd.DataFrame):
                 data = arg
             else:
-                raise GgplotError(
-                    'Unknown argument of type "{0}".'.format(type(arg)))
+                msg = "Unknown argument of type '{0}'."
+                raise GgplotError(msg.format(type(arg)))
 
         if 'mapping' in kwargs and passed_aes:
             raise GgplotError(aes_err)
@@ -313,35 +303,13 @@ class geom(object):
         ----
         This is a helper function for self.draw_group or self.draw
         """
-        # (default aesthetics + data), grouped into plotable units
-        # and renamed -- ready for matplotlib
-
-        # self._units as ggplot aesthetics
+        # (default aesthetics + data), grouped into plottable units
         units = []
         for col in data.columns:
-            try:
-                flag = self._aes_renames[col] in self._units
-            except KeyError:
-                flag = col in self._units
-            if flag:
+            if col in self._units:
                 units.append(col)
 
-        # ggplot plot building stuff that is not needed
-        # by to draw the plot. Look at all the superclasses
-        # other than 'object'
-        required = set()
-        for klass in type(self).__mro__[:-1]:
-            required.update(klass.REQUIRED_AES)
-        wanted = set(self.DEFAULT_AES) | required
-        wanted.add('group')
-
-        def remove_unwanted(d):
-            for key in set(d) - wanted:
-                del d[key]
-            return d
-
-        shrinkable = {'alpha', 'facecolor', 'edgecolor',
-                      'linewidth', 'linestyle'}
+        shrinkable = {'alpha', 'fill', 'color', 'size', 'linetype'}
 
         def shrink(pinfo):
             """
@@ -364,9 +332,7 @@ class geom(object):
             After data has been converted to a dict of lists
             prepare it for plotting
             """
-            pinfo = remove_unwanted(pinfo)
             pinfo.update(self.manual_aes)
-            pinfo = self._rename_to_mpl(pinfo)
             pinfo = shrink(pinfo)
             pinfo['zorder'] = kwargs['zorder']
             return pinfo
@@ -386,18 +352,3 @@ class geom(object):
             out.append(prep(pinfo))
 
         return out
-
-    def _rename_to_mpl(self, pinfo):
-        """
-        Rename the keys in pinfo from ggplot aesthetic names
-        to matplotlib plot function parameter names
-        """
-        # use a separate dict to prevent cyclic overwrites
-        renamed = {}
-        for old, new in self._aes_renames.items():
-            try:
-                renamed[new] = pinfo.pop(old)
-            except KeyError:
-                pass
-        pinfo.update(renamed)
-        return pinfo
