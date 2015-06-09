@@ -14,7 +14,6 @@ class geom_text(geom):
     REQUIRED_AES = {'label', 'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'parse': False}
-    guide_geom = 'text'
 
     _units = {'alpha', 'color', 'family', 'size'}
 

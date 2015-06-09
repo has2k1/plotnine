@@ -15,7 +15,6 @@ class geom_polygon(geom):
                    'linetype': 'solid', 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     REQUIRED_AES = {'x', 'y'}
-    guide_geom = 'polygon'
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """

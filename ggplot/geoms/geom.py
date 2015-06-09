@@ -23,7 +23,10 @@ class geom(object):
     aes = None            # mappings i.e aes(x=col1, fill=col2, ...)
     manual_aes = None     # setting of aesthetic
     params = None         # parameter settings
-    guide_geom = 'point'  # the geom responsible for the legend
+
+    # The geom responsible for the legend if draw_legend is
+    # not implemented
+    guide_geom = 'point'
 
     # Some geoms require more information than that provided by the
     # user. This information is usually another aesthetic variable

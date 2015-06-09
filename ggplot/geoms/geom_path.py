@@ -23,7 +23,6 @@ class geom_path(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'lineend': 'butt', 'linejoin': 'round',
                       'arrow': None}
-    guide_geom = 'path'
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         if not any(data['group'].duplicated()):

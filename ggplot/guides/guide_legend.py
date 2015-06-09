@@ -134,7 +134,10 @@ class guide_legend(guide):
             for ae in set(self.override_aes) & set(data.columns):
                 data[ae] = self.override_aes[ae]
 
-            geom = gg_import('geom_{}'.format(l.geom.guide_geom))
+            if hasattr(l.geom, 'draw_legend'):
+                geom = l.geom.__class__
+            else:
+                geom = gg_import('geom_{}'.format(l.geom.guide_geom))
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
         if not self.glayers:

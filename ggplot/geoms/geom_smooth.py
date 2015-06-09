@@ -16,7 +16,6 @@ class geom_smooth(geom):
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
-    guide_geom = 'smooth'
 
     _units = {'alpha', 'color', 'fill', 'linetype', 'size'}
 
