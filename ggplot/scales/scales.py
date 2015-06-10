@@ -125,9 +125,9 @@ class Scales(list):
             get the true index into the scales array
         """
         idx = np.asarray(idx)
-        # discrete scales can change the dtype
+        # discrete scales change the dtype
         # from category to int. Use a new dataframe
-        # to collect these results
+        # to collect these results.
         df = pd.DataFrame({}, index=range(len(data)))
         cat_cols = []
 
@@ -146,7 +146,7 @@ class Scales(list):
                     data.loc[bool_idx, col] = results
 
         for col in cat_cols:
-            data[col] = pd.Categorical(df[col])
+            data[col] = df[col]
 
     def reset(self):
         """

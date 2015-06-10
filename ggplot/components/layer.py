@@ -125,11 +125,8 @@ class layer(object):
         if self.group is not None:
             aesthetics['group'] = self.group
 
-        def factor(s):
-            return pd.Categorical(s)
-
         env = EvalEnvironment.capture(eval_env=plot.plot_env)
-        env.add_outer_namespace({"factor": factor})
+        env.add_outer_namespace({'factor': pd.Categorical})
 
         evaled = pd.DataFrame(index=data.index)
         settings = False  # Indicate manual settings within aes()
@@ -168,6 +165,14 @@ class layer(object):
             else:
                 msg = "Do not know how to deal with aesthetic '{}'"
                 raise GgplotError(msg.format(ae))
+
+        # int columns are continuous, cast them to floats.
+        # Also when categoricals are mapped onto scales,
+        # they create int columns.
+        # Some stats e.g stat_bin need this distinction
+        for col in evaled:
+            if evaled[col].dtype == np.int:
+                evaled[col] = evaled[col].astype(np.float)
 
         evaled_aes = aes(**dict((col, col) for col in evaled))
         scales_add_defaults(plot.scales, evaled, evaled_aes)
