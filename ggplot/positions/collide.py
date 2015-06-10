@@ -92,7 +92,13 @@ def pos_fill(df, width):
 # Dodge overlapping interval.
 # Assumes that each set has the same horizontal position.
 def pos_dodge(df, width):
-    width = np.asarray(width)
+    try:
+        iter(width)
+        width = np.asarray(width)
+        width = width[df.index]
+    except TypeError:
+        pass
+
     udf_group = df['group'].drop_duplicates()
 
     n = len(udf_group)
