@@ -5,7 +5,7 @@ import numpy as np
 
 from ..utils.exceptions import GgplotError, gg_warning
 from ..scales.utils import zero_range
-from ..utils import match, groupby_apply
+from ..utils import match, groupby_apply, suppress
 
 
 # Detect and prevent collisions.
@@ -92,12 +92,11 @@ def pos_fill(df, width):
 # Dodge overlapping interval.
 # Assumes that each set has the same horizontal position.
 def pos_dodge(df, width):
-    try:
+
+    with suppress(TypeError):
         iter(width)
         width = np.asarray(width)
         width = width[df.index]
-    except TypeError:
-        pass
 
     udf_group = df['group'].drop_duplicates()
 

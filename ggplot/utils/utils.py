@@ -7,6 +7,7 @@ import collections
 import itertools
 import re
 import importlib
+import contextlib
 
 import numpy as np
 import pandas as pd
@@ -182,10 +183,10 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
     for i, x in enumerate(v1):
         if x in skip:
             continue
-        try:
+
+        with suppress(KeyError):
             lst[i] = lookup[x] + start
-        except KeyError:
-            pass
+
     return lst
 
 
@@ -712,3 +713,19 @@ class ColoredDrawingArea(DrawingArea):
                 if not c.clipbox and not c._clippath:
                     c.set_clip_path(tpath)
                 c.draw(renderer)
+
+
+@contextlib.contextmanager
+def suppress(*exceptions):
+    """
+    Return a context manager that suppresses any of the
+    specified exceptions if they occur in the body of a
+    with statement and then resumes execution with the
+    first statement following the end of the with statement.
+
+    From python 3.4
+    """
+    try:
+        yield
+    except exceptions:
+        pass

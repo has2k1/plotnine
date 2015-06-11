@@ -7,7 +7,7 @@ import pandas as pd
 from ..components.aes import aes, make_labels
 from ..components.layer import layer
 from ..utils.exceptions import GgplotError
-from ..utils import is_scalar_or_string, gg_import, defaults
+from ..utils import is_scalar_or_string, gg_import, defaults, suppress
 
 __all__ = ['geom']
 __all__ = [str(u) for u in __all__]
@@ -68,10 +68,8 @@ class geom(object):
         # geom (not specified already i.e. in the ggplot aes).
         self.aes_unique_to_geom = set(self.aes.keys())
 
-        try:
+        with suppress(KeyError):
             kwargs['color'] = kwargs.pop('colour')
-        except KeyError:
-            pass
 
         # When a geom is created, some of the parameters may be meant
         # for the stat and some for the layer.
@@ -84,10 +82,8 @@ class geom(object):
         layer_params = {}
         _layer_params = ['group', 'show_guide', 'inherit_aes']
         for p in layer_params:
-            try:
+            with suppress(KeyError):
                 self._layer_params[p] = self.params.pop(p)
-            except KeyError:
-                pass
 
         stat_type = self._cache['stat_type']
         for k, v in kwargs.items():
@@ -321,13 +317,9 @@ class geom(object):
             # If it is the same value in the list make it a scalar
             # This can help the matplotlib functions draw faster
             for ae in set(pinfo) & shrinkable:
-                try:
+                with suppress(TypeError, IndexError):
                     if all(pinfo[ae][0] == v for v in pinfo[ae]):
                         pinfo[ae] = pinfo[ae][0]
-                except TypeError:
-                    pass
-                except IndexError:
-                    pass
             return pinfo
 
         def prep(pinfo):

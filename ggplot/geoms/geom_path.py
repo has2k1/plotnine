@@ -11,7 +11,7 @@ import matplotlib.path as mpath
 
 from ..utils.exceptions import gg_warning
 from ..utils import make_rgba, make_iterable_ntimes
-from ..utils import make_line_segments
+from ..utils import make_line_segments, suppress
 from .geom import geom
 
 
@@ -62,17 +62,14 @@ class geom_path(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        try:
+
+        with suppress(KeyError):
             if params['linejoin'] == 'mitre':
                 params['linejoin'] = 'miter'
-        except KeyError:
-            pass
 
-        try:
+        with suppress(KeyError):
             if params['lineend'] == 'square':
                 params['lineend'] = 'projecting'
-        except KeyError:
-            pass
 
         pinfo['color'] = make_rgba(pinfo['color'],
                                    pinfo['alpha'])
@@ -145,11 +142,10 @@ class arrow(object):
         """
         Calculate and cache the arrow edge lengths along both axes
         """
-        try:
+
+        with suppress(KeyError):
             if scales is self._cache['scales'] and ax is self._cache['ax']:
                 return
-        except KeyError:
-            pass
         # A length for each dimension, makes the edges of
         # all arrowheads to be drawn have the same length.
         # i.e a perfect isosceles arrowhead
@@ -207,11 +203,9 @@ class arrow(object):
 
         def get_param(param, indices):
             out = pinfo[param]
-            try:
+            with suppress(TypeError):
                 if len(out) == len(pinfo['x']):
                     out = [pinfo[param][i] for i in indices]
-            except TypeError:
-                pass
             return out
 
         if not constant:
@@ -296,11 +290,9 @@ def _draw_segments(pinfo, ax, **params):
         Return values for a given parameter
         """
         out = pinfo[param]
-        try:
+        with suppress(TypeError):
             if len(out) == len(pinfo['x']):
                 out = [pinfo[param][i] for i in indices]
-        except TypeError:
-            pass
         return out
 
     indices = []

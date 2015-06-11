@@ -11,7 +11,7 @@ from matplotlib.cbook import Bunch
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
 from ..scales.scale import scale_continuous
-from ..utils import gg_import, ColoredDrawingArea
+from ..utils import gg_import, ColoredDrawingArea, suppress
 from ..utils.exceptions import gg_warning, GgplotError
 from .guide import guide
 
@@ -39,10 +39,8 @@ class guide_legend(guide):
         ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
         """
         breaks = scale.scale_breaks(can_waive=False)
-        try:
+        with suppress(AttributeError):
             breaks = list(breaks.keys())
-        except AttributeError:
-            pass
 
         key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),

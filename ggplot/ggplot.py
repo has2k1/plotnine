@@ -7,14 +7,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
-from matplotlib.cbook import Bunch
 
 from .components.aes import make_labels
 from .components.panel import Panel
 from .components.layer import add_group
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
-from .utils import is_waive
+from .utils import is_waive, suppress
 from .utils.exceptions import GgplotError
 from .utils.ggutils import gg_context
 from .scales.scales import Scales
@@ -348,10 +347,8 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
     # the mpl deals with the breaks and labels
     pscales = plot.scales.position_scales()
     for sc in pscales:
-        try:
+        with suppress(AttributeError):
             sc.trans.modify_axis(ax)
-        except AttributeError:
-            pass
 
     bottomrow = finfo['ROW'] == plot.facet.nrow
     leftcol = finfo['COL'] == 1

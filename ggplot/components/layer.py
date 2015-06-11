@@ -15,7 +15,7 @@ from ..utils.exceptions import GgplotError
 from ..utils import DISCRETE_DTYPES, ninteraction
 from ..utils import check_required_aesthetics, defaults
 from ..utils import is_string, gg_import, groupby_apply
-from ..utils import is_scalar_or_string
+from ..utils import is_scalar_or_string, suppress
 from ..positions.position import _position_base
 from .aes import aes, is_calculated_aes, strip_dots, aesdefaults
 
@@ -292,10 +292,8 @@ class layer(object):
               set(self.geom.manual_aes))
         for ae in self.geom.manual_aes:
             if not is_scalar_or_string(self.geom.manual_aes[ae]):
-                try:
+                with suppress(KeyError):
                     gp.remove(ae)
-                except KeyError:
-                    pass
 
         gp = list(gp)
 

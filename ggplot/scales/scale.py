@@ -12,7 +12,7 @@ from matplotlib.ticker import Locator, Formatter, FuncFormatter
 
 from ..utils import waiver, is_waive
 from ..utils import match, is_sequence_of_strings
-from ..utils import round_any
+from ..utils import round_any, suppress
 from ..utils.exceptions import gg_warning, GgplotError
 from .utils import rescale, censor, expand_range, zero_range
 from .utils import identity_trans, gettrans
@@ -276,10 +276,9 @@ class scale_continuous(scale):
         # Make sure we have a transform and it
         # should know the main aesthetic,
         # in case it has to manipulate the axis
-        try:
+
+        with suppress(KeyError):
             self.trans = kwargs.pop('trans')
-        except KeyError:
-            pass
         self.trans = gettrans(self.trans)
         self.trans.aesthetic = self.aesthetics[0]
 
@@ -359,10 +358,8 @@ class scale_continuous(scale):
 
         aesthetics = set(self.aesthetics) & set(df.columns)
         for ae in aesthetics:
-            try:
+            with suppress(TypeError):
                 df[ae] = self.transform(df[ae])
-            except TypeError:
-                pass
 
         return df
 

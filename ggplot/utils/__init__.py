@@ -11,7 +11,7 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     uniquecols, defaults, jitter, gg_import,
                     remove_missing, round_any, seq, hex_to_rgba,
                     make_rgba, groupby_apply, make_line_segments,
-                    ColoredDrawingArea)
+                    ColoredDrawingArea, suppress)
 
 
 __all__ = ['ggsave']
