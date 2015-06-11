@@ -1,95 +1,181 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import numpy as np
-import pandas as pd
-import matplotlib.cbook as cbook
+import matplotlib.collections as mcoll
+import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
 
-from ..utils import is_string
+from ..utils import groupby_apply, make_rgba
+from ..utils.exceptions import gg_warn
+from ..scales.utils import resolution
 from .geom import geom
 
 
 class geom_dotplot(geom):
-    DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
-                   'weight': None, 'y': None}
-    REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
+    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
+    REQUIRED_AES = {'x', 'y'}
+    DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',
+                      'stackdir': 'up', 'stackratio': 1,
+                      'dotsize': 1, 'stackgroups': False}
 
-    _extra_requires = {'y', 'width'}
-    _aes_renames = {'size': 'linewidth', 'fill': 'color', 'color': 'edgecolor'}
-    # NOTE: Currently, geom_dotplot does not support mapping
-    # to alpha TODO: raise exception
-    _units = {'alpha'}
+    _extra_requires = {'width'}
 
-    def _sort_list_types_by_x(self, pinfo):
+    @classmethod
+    def _verify(cls, **params):
         """
-        Sort the lists in pinfo according to pinfo['x']
+        Issue warnings when parameters don't make sense
         """
-        # Remove list types from pinfo
-        _d = {}
-        for k in list(pinfo.keys()):
-            if not is_string(pinfo[k]) and cbook.iterable(pinfo[k]):
-                _d[k] = pinfo.pop(k)
+        if params['position'] == 'stack':
+            gg_warn("position='stack' doesn't work properly with "
+                    "geom_dotplot. Use stackgroups=True instead.")
+        if (params['stackgroups'] and
+                params['method'] == 'dotdensity' and
+                params['binpositions'] == 'bygroup'):
+            gg_warn("geom_dotplot called with stackgroups=TRUE and "
+                    "method='dotdensity'. You probably want to set "
+                    "binpositions='all'")
 
-        # Sort numerically if all items can be cast
-        try:
-            x = list(map(np.float, _d['x']))
-        except ValueError:
-            x = _d['x']
-        idx = np.argsort(x)
+    def reparameterise(self, data):
+        gp = self.params
+        sp = self._stat.params
 
-        # Put sorted lists back in pinfo
-        for key in _d:
-            pinfo[key] = [_d[key][i] for i in idx]
+        if 'width' not in data:
+            if sp['width']:
+                data['width'] = sp['width']
+            else:
+                data['width'] = resolution(data['x'], False) * 0.9
 
-        return pinfo
+        # Set up the stacking function and range
+        if gp['stackdir'] in (None, 'up'):
+            def stackdots(a):
+                return a - .5
+            stackaxismin = 0
+            stackaxismax = 1
+        elif gp['stackdir'] == 'down':
+            def stackdots(a):
+                return -a + .5
+            stackaxismin = -1
+            stackaxismax = 0
+        elif gp['stackdir'] == 'center':
+            def stackdots(a):
+                return a - 1 - np.max(a-1)/2
+            stackaxismin = -.5
+            stackaxismax = .5
+        elif gp['stackdir'] == 'centerwhole':
+            def stackdots(a):
+                return a - 1 - np.floor(np.max(a-1)/2)
+            stackaxismin = -.5
+            stackaxismax = .5
 
-    def _plot_unit(self, pinfo, ax):
-        categorical = is_categorical(pinfo['x'])
-        # If x is not numeric, the bins are sorted acc. to x
-        # so the list type aesthetics must be sorted too
-        if categorical:
-            pinfo = self._sort_list_types_by_x(pinfo)
+        # Fill the bins: at a given x (or y),
+        # if count=3, make 3 entries at that x
+        idx = [i for i, c in enumerate(data['count'])
+               for j in range(int(c))]
+        data = data.iloc[idx]
+        data.reset_index(inplace=True, drop=True)
+        data.is_copy = None
+        # Next part will set the position of each dot within each stack
+        # If stackgroups=TRUE, split only on x (or y) and panel;
+        # if not stacking, also split by group
+        groupvars = [sp['binaxis'], 'PANEL']
+        if not gp['stackgroups']:
+            groupvars.append('group')
 
-        pinfo.pop('weight')
-        x = pinfo.pop('x')
-        width = np.array(pinfo.pop('width'))
-        heights = pinfo.pop('y')
-        labels = x
+        # Within each x, or x+group, set countidx=1,2,3,
+        # and set stackpos according to stack function
+        def func(df):
+            df['countidx'] = range(1, len(df)+1)
+            df['stackpos'] = stackdots(df['countidx'])
+            return df
 
-        # layout and spacing
-        #
-        # matplotlib needs the left of each bin and it's width
-        # if x has numeric values then:
-        #   - left = x - width/2
-        # otherwise x is categorical:
-        #   - left = cummulative width of previous bins starting
-        #            at zero for the first bin
-        #
-        # then add a uniform gap between each bin
-        #   - the gap is a fraction of the width of the first bin
-        #     and only applies when x is categorical
-        _left_gap = 0
-        _spacing_factor = 0     # of the bin width
-        if not categorical:
-            left = np.array([x[i]-width[i]/2 for i in range(len(x))])
-        else:
-            _left_gap = 0.2
-            _spacing_factor = 0.105     # of the bin width
-            _breaks = np.append([0], width)
-            left = np.cumsum(_breaks[:-1])
+        # Within each x, or x+group, set countidx=1,2,3, and set
+        # stackpos according to stack function
+        data = groupby_apply(data, groupvars, func)
 
-        _sep = width[0] * _spacing_factor
-        left = left + _left_gap + [_sep * i for i in range(len(left))]
+        # Set the bounding boxes for the dots
+        if sp['binaxis'] == 'x':
+            # ymin, ymax, xmin, and xmax define the bounding
+            # rectangle for each stack. Can't do bounding box per dot,
+            # because y position isn't real.
+            # After position code is rewritten, each dot should have
+            # its own bounding box.
+            data['xmin'] = data['x'] - data['binwidth']/2
+            data['xmax'] = data['x'] + data['binwidth']/2
+            data['ymin'] = stackaxismin
+            data['ymax'] = stackaxismax
+            data['y'] = 0
+        elif sp['binaxis'] == 'y':
+            # ymin, ymax, xmin, and xmax define the bounding
+            # rectangle for each stack. Can't do bounding box per dot,
+            # because x position isn't real.
+            # xmin and xmax aren't really the x bounds. They're just
+            # set to the standard x +- width/2 so that dot clusters
+            # can be dodged like other geoms.
+            # After position code is rewritten, each dot should have
+            # its own bounding box.
+            def func(df):
+                df['ymin'] = df['y'].min() - data['binwidth'][0]/2
+                df['ymax'] = df['y'].max() + data['binwidth'][0]/2
+                return df
+            data = groupby_apply(data, 'group', func)
+            data['xmin'] = data['x'] + data['width'] * stackaxismin
+            data['xmax'] = data['x'] + data['width'] * stackaxismax
 
+        return data
 
-        step = np.max(heights) / 24.
-        for (_x, _y) in zip(left + width, heights):
-            yvals = np.arange(0, _y, step) + step/2
-            pinfo['s'] = 240
-            ax.scatter(np.repeat(_x, len(yvals)), yvals, **pinfo)
-        ax.autoscale()
+    @staticmethod
+    def draw(pinfo, scales, coordinates, ax, **params):
+        geom_dotplot._verify(**params)
 
-        if categorical:
-            ax.set_xticks(left+width)
-            ax.set_xticklabels(x)
+        pinfo['fill'] = make_rgba(pinfo['fill'],
+                                  pinfo['alpha'])
+        x = np.asarray(pinfo['x'])
+        y = np.asarray(pinfo['y'])
+        # For perfect circles the width/height of the circle(ellipse)
+        # should factor in the figure dimensions
+        fw, fh = ax.figure.get_figwidth(), ax.figure.get_figheight()
+        factor = ((fw/fh) *
+                  np.ptp(scales['y_range'])/np.ptp(scales['x_range']))
+        size = pinfo['binwidth'][0] * params['dotsize']
+        offsets = np.asarray(pinfo['stackpos']) * params['stackratio']
 
+        if params['binaxis'] == 'x':
+            width, height = size, size*factor
+            xpos, ypos = x, y + height*offsets
+        elif params['binaxis'] == 'y':
+            width, height = size/factor, size
+            xpos, ypos = x + width*offsets, y
+
+        circles = []
+        for xy in zip(xpos, ypos):
+            patch = mpatches.Ellipse(xy, width=width, height=height)
+            circles.append(patch)
+        coll = mcoll.PatchCollection(circles,
+                                     edgecolors=pinfo['color'],
+                                     facecolors=pinfo['fill'])
+        ax.add_collection(coll)
+
+    @staticmethod
+    def draw_legend(data, da, lyr):
+        """
+        Draw a point in the box
+
+        Parameters
+        ----------
+        data : dataframe
+        params : dict
+        lyr : layer
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        key = mlines.Line2D([0.5*da.width],
+                            [0.5*da.height],
+                            alpha=data['alpha'],
+                            marker='o',
+                            markersize=da.width/2,
+                            markerfacecolor=data['fill'],
+                            markeredgecolor=data['color'])
+        da.add_artist(key)
+        return da

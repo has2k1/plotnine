@@ -63,7 +63,6 @@ class geom_point(geom):
                             # scatter size units are points^2, while
                             # Line2D size units are points
                             markersize=np.sqrt(data['size']),
-                            color=data['color'],
                             markerfacecolor=data['fill'],
                             markeredgecolor=data['color'])
         da.add_artist(key)

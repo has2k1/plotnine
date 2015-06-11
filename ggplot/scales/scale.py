@@ -427,8 +427,8 @@ class scale_continuous(scale):
         # converted back to data space
         limits = self.trans.inv(self.limits)
 
-        if self.breaks is None:
-            return None
+        if not self.breaks:  # None, False, []
+            return []
         elif zero_range(limits):
             breaks = [limits[0]]
         elif can_waive and is_waive(self.breaks):
@@ -446,9 +446,6 @@ class scale_continuous(scale):
         # dimensions need to be flagged as missing
         breaks = censor(self.transform(breaks),
                         self.transform(limits))
-        if len(breaks) == 0:
-            raise GgplotError('Zero breaks in scale for {}'.format(
-                self.aesthetics))
         return breaks
 
     def scale_labels(self, breaks=None, can_waive=False):
