@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
+from six.moves import range
 
 from ..utils import seq, make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warning
@@ -83,8 +84,7 @@ def bin(x, **params):
         bins = pd.cut(x, bins=fuzzybreaks, labels=False,
                       right=right)
         width = np.diff(breaks)
-        x = [breaks[i] + width[i] / 2
-             for i in range(len(breaks)-1)]
+        x = [b+w/2 for (b, w) in zip(breaks[:-1], width)]
     else:
         # Proper scale trainning and mapping should never let
         # the code path get here. If there is a problem here,

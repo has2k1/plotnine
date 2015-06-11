@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from matplotlib.collections import PolyCollection
+from six.moves import zip
 
 from ..utils import make_iterable, make_rgba
 from .geom import geom
@@ -51,11 +52,9 @@ class geom_rect(geom):
         ymax = fn('ymax')
 
         verts = [None] * len(xmin)
-        for i in range(len(xmin)):
-            verts[i] = [(xmin[i], ymin[i]),
-                        (xmin[i], ymax[i]),
-                        (xmax[i], ymax[i]),
-                        (xmax[i], ymin[i])]
+        limits = zip(xmin, xmax, ymin, ymax)
+        for i, (l, r, b, t) in enumerate(limits):
+            verts[i] = [(l, b), (l, t), (r, t), (r, b)]
 
         pinfo['fill'] = make_rgba(pinfo['fill'],
                                   pinfo['alpha'])

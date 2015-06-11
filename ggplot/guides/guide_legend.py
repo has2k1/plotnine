@@ -3,7 +3,8 @@ from __future__ import (absolute_import, division, print_function,
 import hashlib
 from itertools import islice
 
-import six
+from six import text_type
+from six.moves import zip, range
 import numpy as np
 import pandas as pd
 from matplotlib.cbook import Bunch
@@ -66,11 +67,10 @@ class guide_legend(guide):
         self.key = key
 
         # create a hash of the important information in the guide
-        labels = ' '.join(six.text_type(x) for x in self.key['label'])
+        labels = ' '.join(text_type(x) for x in self.key['label'])
         info = '\n'.join([self.title, labels, str(self.direction),
                           self.__class__.__name__])
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
-
 
     def merge(self, other):
         """
@@ -243,7 +243,7 @@ class guide_legend(guide):
         chunks = []
         for i in range(len(entries)):
             start = i*chunk_size
-            stop = i*chunk_size + chunk_size
+            stop = start + chunk_size
             s = islice(entries, start, stop)
             chunks.append(list(s))
             if stop >= len(entries):

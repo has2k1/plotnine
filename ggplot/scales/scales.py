@@ -5,6 +5,7 @@ import itertools
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
+from six.moves import range
 
 from ..components.aes import aes_to_scale
 from ..utils import DISCRETE_DTYPES, CONTINUOUS_DTYPES

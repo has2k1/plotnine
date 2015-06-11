@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from six.moves import range
+
 from ..utils import pop, make_iterable
 from ..utils.exceptions import GgplotError
 from .stat import stat

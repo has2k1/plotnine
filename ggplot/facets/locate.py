@@ -27,9 +27,9 @@ def locate_wrap(data, panels, vars):
         to_add.reset_index(drop=True, inplace=True)
 
         # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]
-        data_rep = np.tile(list(range(len(data))), len(to_add))
+        data_rep = np.tile(np.arange(len(data)), len(to_add))
         # a facet for each point, [0, 0, 0, 1, 1, 1, ... n-1, n-1, n-1]
-        facet_rep = np.repeat(list(range(len(to_add))), len(data))
+        facet_rep = np.repeat(np.arange(len(to_add)), len(data))
 
         data = data.iloc[data_rep, :].reset_index(drop=True)
         facet_vals = facet_vals.iloc[data_rep, :].reset_index(drop=True)
@@ -75,9 +75,9 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
         to_add.reset_index(drop=True, inplace=True)
 
         # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]
-        data_rep = np.tile(list(range(len(data))), len(to_add))
+        data_rep = np.tile(np.arange(len(data)), len(to_add))
         # a facet for each point, [0, 0, 0, 1, 1, 1, ... n-1, n-1, n-1]
-        facet_rep = np.repeat(list(range(len(to_add))), len(data))
+        facet_rep = np.repeat(np.arange(len(to_add)), len(data))
 
         data = data.iloc[data_rep, :].reset_index(drop=True)
         facet_vals = facet_vals.iloc[data_rep, :].reset_index(drop=True)

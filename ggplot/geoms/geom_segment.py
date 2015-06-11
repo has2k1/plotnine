@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from itertools import chain
 
+import numpy as np
 import matplotlib.collections as mcoll
 
 from .geom import geom
@@ -32,7 +33,7 @@ class geom_segment(geom):
         ax.add_collection(coll)
 
         if 'arrow' in params and params['arrow']:
-            pinfo['group'] = list(range(1, len(pinfo['x'])+1)) * 2
+            pinfo['group'] = np.tile(np.arange(1, len(pinfo['x'])+1), 2)
             pinfo['x'] = pinfo['x'] + pinfo['xend']
             pinfo['y'] = pinfo['y'] + pinfo['yend']
             other = ['color', 'size', 'linetype']

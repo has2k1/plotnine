@@ -4,6 +4,7 @@ import itertools
 
 import pandas as pd
 import numpy as np
+from six.moves import range
 
 from .stat import stat
 
