@@ -14,7 +14,7 @@ from matplotlib.offsetbox import AuxTransformBox
 from matplotlib.colors import ListedColormap
 
 from ..utils import ColoredDrawingArea
-from ..utils.exceptions import gg_warning
+from ..utils.exceptions import gg_warn
 from ..scales.utils import rescale
 from ..scales.scale import scale_continuous
 from .guide import guide
@@ -38,11 +38,11 @@ class guide_colorbar(guide):
     def train(self, scale):
         # Do nothing if scales are inappropriate
         if set(scale.aesthetics) & {'color', 'colour', 'fill'} == 0:
-            gg_warning('colorbar guide needs color or fill scales.')
+            gg_warn('colorbar guide needs color or fill scales.')
             return None
 
         if not issubclass(scale.__class__, scale_continuous):
-            gg_warning('colorbar guide needs continuous scales')
+            gg_warn('colorbar guide needs continuous scales')
             return None
 
         # value = breaks (numeric) is used for determining the

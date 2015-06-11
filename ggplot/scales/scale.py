@@ -13,7 +13,7 @@ from matplotlib.ticker import Locator, Formatter, FuncFormatter
 from ..utils import waiver, is_waive
 from ..utils import match, is_sequence_of_strings
 from ..utils import round_any, suppress
-from ..utils.exceptions import gg_warning, GgplotError
+from ..utils.exceptions import gg_warn, GgplotError
 from .utils import rescale, censor, expand_range, zero_range
 from .utils import identity_trans, gettrans
 from ..components.aes import is_position_aes
@@ -42,7 +42,7 @@ class scale(object):
                 setattr(self, '_'+k, v)
             else:
                 msg = '{} could not recognise parameter `{}`'
-                gg_warning(msg.format(self.__class__.__name__, k))
+                gg_warn(msg.format(self.__class__.__name__, k))
 
         if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
             if len(self.breaks) != len(self.labels):

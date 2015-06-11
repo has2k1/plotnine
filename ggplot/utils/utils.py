@@ -20,7 +20,7 @@ from matplotlib.patches import Rectangle
 
 import six
 
-from .exceptions import GgplotError, gg_warning
+from .exceptions import GgplotError, gg_warn
 
 
 DISCRETE_DTYPES = {'category', np.dtype('O'), np.bool}
@@ -517,7 +517,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     df.reset_index(drop=True, inplace=True)
     if len(df) < n and not na_rm:
         msg = '{} : Removed {} rows containing {} values.'
-        gg_warning(msg.format(name, n-len(df), txt))
+        gg_warn(msg.format(name, n-len(df), txt))
     return df
 
 

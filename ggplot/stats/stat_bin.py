@@ -7,7 +7,7 @@ import pandas.core.common as com
 from six.moves import range
 
 from ..utils import seq, make_iterable_ntimes
-from ..utils.exceptions import GgplotError, gg_warning
+from ..utils.exceptions import GgplotError, gg_warn
 from ..scales.utils import fullseq
 from .stat import stat
 
@@ -61,7 +61,7 @@ def bin(x, **params):
     elif com.is_numeric_dtype(x):
         if breaks is None and binwidth is None:
             binwidth = np.ptp(rangee) / 30
-            gg_warning(_MSG_BINWIDTH)
+            gg_warn(_MSG_BINWIDTH)
         if breaks is None:
             if origin is None:
                 breaks = fullseq(rangee, binwidth, pad=True)

@@ -6,7 +6,7 @@ import pandas as pd
 from .position import _position_base
 from .collide import collide, pos_fill
 from ..utils import check_required_aesthetics
-from ..utils.exceptions import gg_warning
+from ..utils.exceptions import gg_warn
 
 
 class position_fill(_position_base):
@@ -19,7 +19,7 @@ class position_fill(_position_base):
             ['x', 'ymax'], data.columns, "position_fill")
 
         if not all(data['ymin'] == 0):
-            gg_warning('Filling not well defined when ymin != 0')
+            gg_warn('Filling not well defined when ymin != 0')
 
         width = data['width'] if 'width' in data else None
         return collide(data, width=width,

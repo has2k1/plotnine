@@ -10,7 +10,7 @@ from six.moves import range
 from ..components.aes import aes_to_scale
 from ..utils import DISCRETE_DTYPES, CONTINUOUS_DTYPES
 from ..utils import gg_import
-from ..utils.exceptions import gg_warning, GgplotError
+from ..utils.exceptions import gg_warn, GgplotError
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -29,7 +29,7 @@ class Scales(list):
         ae = sc.aesthetics[0]
         cover_ae = self.find(ae)
         if any(cover_ae):
-            gg_warning(_TPL_DUPLICATE_SCALE.format(ae))
+            gg_warn(_TPL_DUPLICATE_SCALE.format(ae))
             idx = cover_ae.index(True)
             self.remove(idx)
         # super() does not work well with reloads
@@ -272,10 +272,9 @@ def scale_type(series):
     elif series.dtype == np.dtype('<M8[ns]'):
         stype = 'datetime'
     else:
-        msg = """\
-            Don't know how to automatically pick scale for \
-            object of type {}. Defaulting to 'continuous'"""
-        gg_warning(msg.format(series.dtype))
+        msg = ("Don't know how to automatically pick scale for "
+               "object of type {}. Defaulting to 'continuous'")
+        gg_warn(msg.format(series.dtype))
         stype = 'continuous'
     return stype
 

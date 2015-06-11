@@ -9,7 +9,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import six
 
-from .exceptions import gg_warning, GgplotError
+from .exceptions import gg_warn, GgplotError
 
 
 if not hasattr(mpl, 'rc_context'):
@@ -49,10 +49,9 @@ class gg_context(object):
                         val = "none"
                     mpl.rcParams[key] = val
                 except Exception as e:
-                    msg = """\
-                        Setting "mpl.rcParams['{}']={}" \
-                        raised an Exception: {}"""
-                    gg_warning(msg.format(key, val, e))
+                    msg = ("""Setting "mpl.rcParams['{}']={}" """
+                           "raised an Exception: {}")
+                    gg_warn(msg.format(key, val, e))
         mpl.interactive(False)
 
     def __exit__(self, type, value, tb):
@@ -215,16 +214,16 @@ def ggsave(filename=None, plot=None, device=None, format=None,
 
     if issue_size:
         msg = "Saving {0} x {1} {2} image.\n"
-        gg_warning(msg.format(from_inch[units](width),
-                              from_inch[units](height),
-                              units))
+        gg_warn(msg.format(from_inch[units](width),
+                           from_inch[units](height),
+                           units))
 
     if limitsize and (width > 25 or height > 25):
-        raise GgplotError(
-            "Dimensions exceed 25 inches",
-            "(height and width are specified in inches/cm/mm,",
-            "not pixels). If you are sure you want these",
-            "dimensions, use 'limitsize=False'.")
+        msg = ("Dimensions exceed 25 inches "
+               "(height and width are specified in inches/cm/mm, "
+               "not pixels). If you are sure you want these "
+               "dimensions, use 'limitsize=False'.")
+        raise GgplotError(msg)
 
     try:
         figure.set_size_inches(width, height)

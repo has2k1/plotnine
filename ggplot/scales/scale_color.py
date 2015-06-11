@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import brewer2mpl
 
-from ..utils.exceptions import gg_warning, GgplotError
+from ..utils.exceptions import gg_warn, GgplotError
 from ..utils import palettes
 from .utils import rescale_mid
 from .scale import scale_discrete, scale_continuous
@@ -109,7 +109,7 @@ def brewer_pal(type='seq', palette=1):
         hex_colors = bmap.hex_colors
         if n > nmax:
             msg = _TPL_MAX_PALETTE_COLORS.format(palette_name, nmax)
-            gg_warning(msg)
+            gg_warn(msg)
             hex_colors = hex_colors + [None] * (n - nmax)
         return hex_colors
     return func
@@ -254,7 +254,7 @@ class scale_color_distiller(scale_color_gradientn):
         Create colormap that will be used by the palette
         """
         if type.lower() in ('qual', 'qualitative'):
-            gg_warning(_MSG_CONTINUOUS_DISTILLER)
+            gg_warn(_MSG_CONTINUOUS_DISTILLER)
 
         # Grab 6 colors from brewer and create a gradient palette
         colours = brewer_pal(type, palette)(6)

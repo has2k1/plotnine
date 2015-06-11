@@ -9,7 +9,7 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
-from ..utils.exceptions import gg_warning
+from ..utils.exceptions import gg_warn
 from ..utils import make_rgba, make_iterable_ntimes
 from ..utils import make_line_segments, suppress
 from .geom import geom
@@ -26,10 +26,10 @@ class geom_path(geom):
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         if not any(data['group'].duplicated()):
-            msg = ("geom_path: Each group consist of only one",
-                   "observation. Do you need to adjust the",
+            msg = ("geom_path: Each group consist of only one "
+                   "observation. Do you need to adjust the "
                    "group aesthetic?")
-            gg_warning(msg)
+            gg_warn(msg)
 
         # dataframe mergesort is stable, we rely on that here
         data.sort(columns=['group'], kind='mergesort', inplace=True)

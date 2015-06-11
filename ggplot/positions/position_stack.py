@@ -6,7 +6,7 @@ import pandas as pd
 from .position import _position_base
 from .collide import collide, pos_stack
 from ..utils import remove_missing
-from ..utils.exceptions import gg_warning
+from ..utils.exceptions import gg_warn
 
 
 class position_stack(_position_base):
@@ -21,14 +21,14 @@ class position_stack(_position_base):
             name='position_stack')
 
         if ('ymax' not in data) and ('y' not in data):
-            gg_warning(
+            gg_warn(
                 """\
                 Missing y and ymax in position = 'stack'. \
                 Maybe you want position = 'identity'?""")
             return data
 
         if 'ymin' in data and not all(data['ymin'] == 0):
-            gg_warning('Stacking not well defined when ymin != 0')
+            gg_warn('Stacking not well defined when ymin != 0')
 
         width = data['width'] if 'width' in data else None
 

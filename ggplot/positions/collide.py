@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 
-from ..utils.exceptions import GgplotError, gg_warning
+from ..utils.exceptions import GgplotError, gg_warn
 from ..scales.utils import zero_range
 from ..utils import match, groupby_apply, suppress
 
@@ -28,7 +28,7 @@ def collide(data, width=None, name='', strategy=None):
         widths = widths[~np.isnan(widths)]
         if not zero_range([widths.min(), widths.max()]):
             msg = '{} requires constant width: output may be incorrect'
-            gg_warning(msg.format(name))
+            gg_warn(msg.format(name))
         width = widths.iloc[0]
 
     # Reorder by x position, relying on stable sort to preserve existing
@@ -42,12 +42,12 @@ def collide(data, width=None, name='', strategy=None):
     if (len(np.unique(intervals)) > 1 and
             any(np.diff(intervals - intervals.mean()) < -1e-6)):
         msg = '{} requires non-overlapping x intervals'
-        gg_warning(msg.format(name))
+        gg_warn(msg.format(name))
 
     if 'ymax' in data:
         data = groupby_apply(data, 'xmin', strategy, width)
     elif 'y' in data:
-        gg_warning('ymax not defined: adjusting position using y instead')
+        gg_warn('ymax not defined: adjusting position using y instead')
 
         data['ymax'] = data['y']
         data = groupby_apply(data, 'xmin', strategy, width)
