@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from itertools import chain
 
 import numpy as np
 import matplotlib.collections as mcoll
@@ -22,8 +21,13 @@ class geom_segment(geom):
     def draw(pinfo, scales, coordinates, ax, **params):
         pinfo['color'] = make_rgba(pinfo['color'],
                                    pinfo['alpha'])
-        x = list(chain(*zip(pinfo['x'], pinfo['xend'])))
-        y = list(chain(*zip(pinfo['y'], pinfo['yend'])))
+        x = np.zeros(len(pinfo['x'])*2)
+        y = np.zeros(len(pinfo['y'])*2)
+
+        # interleave
+        x[::2], x[1::2] = pinfo['x'], pinfo['xend']
+        y[::2], y[1::2] = pinfo['y'], pinfo['yend']
+
         segments = make_line_segments(x, y, ispath=False)
         coll = mcoll.LineCollection(segments,
                                     edgecolor=pinfo['color'],
