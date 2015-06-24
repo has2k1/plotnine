@@ -27,7 +27,7 @@ class geom_rect(geom):
     """
 
     DEFAULT_AES = {'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.0, 'alpha': 1}
+                   'linetype': 'solid', 'size': 1.5, 'alpha': 1}
 
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}

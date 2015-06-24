@@ -17,7 +17,7 @@ from .geom import geom
 
 class geom_path(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
-                   'size': 1.0}
+                   'size': 1.5}
 
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

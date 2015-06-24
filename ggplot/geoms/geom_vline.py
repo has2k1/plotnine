@@ -10,7 +10,7 @@ from .geom import geom
 
 class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': 1, 'x': None,
+                   'size': 1.5, 'alpha': 1, 'x': None,
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'vline', 'position': 'identity',

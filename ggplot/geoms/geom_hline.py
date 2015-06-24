@@ -10,7 +10,7 @@ from .geom import geom
 
 class geom_hline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.0, 'alpha': 1, 'y': None,
+                   'size': 1.5, 'alpha': 1, 'y': None,
                    'xmin': None, 'xmax': None}
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',

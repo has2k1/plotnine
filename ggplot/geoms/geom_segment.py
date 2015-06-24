@@ -11,7 +11,7 @@ from ..utils import make_rgba, make_line_segments
 
 class geom_segment(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
-                   'size': 1.0}
+                   'size': 1.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'arrow': None, 'lineend': 'butt'}

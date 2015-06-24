@@ -14,7 +14,7 @@ from .geom import geom
 # x and y aesthetics must be mapped
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'alpha': 1, 'size': 1.0, 'x': None,
+                   'alpha': 1, 'size': 1.5, 'x': None,
                    'y': None}
     REQUIRED_AES = {'slope', 'intercept'}
     DEFAULT_PARAMS = {'stat': 'abline', 'position': 'identity',

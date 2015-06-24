@@ -10,7 +10,7 @@ from .geom import geom
 
 class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'shape': 'o', 'size': 20}
+                   'shape': 'o', 'size': 5}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
@@ -37,7 +37,9 @@ class geom_point(geom):
                    facecolor=pinfo['fill'],
                    color=pinfo['color'],
                    marker=pinfo['shape'],
-                   s=pinfo['size'],
+                   # Our size is in 'points' while
+                   # scatter wants 'points^2'
+                   s=np.square(pinfo['size']),
                    zorder=pinfo['zorder'],
                    alpha=pinfo['alpha'])
 
@@ -60,9 +62,7 @@ class geom_point(geom):
                             [0.5*da.height],
                             alpha=data['alpha'],
                             marker=data['shape'],
-                            # scatter size units are points^2, while
-                            # Line2D size units are points
-                            markersize=np.sqrt(data['size']),
+                            markersize=data['size'],
                             markerfacecolor=data['fill'],
                             markeredgecolor=data['color'])
         da.add_artist(key)

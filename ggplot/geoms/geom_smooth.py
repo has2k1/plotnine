@@ -12,7 +12,7 @@ from .geom_line import geom_path
 
 class geom_smooth(geom):
     DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
-                   'linetype': 'solid', 'size': 1.0,
+                   'linetype': 'solid', 'size': 1.5,
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
