@@ -1,11 +1,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import sys
-
-import matplotlib as mpl
-from .geom import geom
 import numpy as np
+
+from .geom import geom
+from .geom_path import geom_path
+from .geom_point import geom_point
+from .geom_linerange import geom_linerange
 
 
 class geom_pointrange(geom):
@@ -59,74 +60,37 @@ class geom_pointrange(geom):
     """
 
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'linetype': 'solid',
-                   'shape': 'o',
-                   'size': 2}
+                   'linetype': 'solid', 'shape': 'o', 'size': 1.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'cmap': None}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _aes_renames = {'size': 'linewidth', 'linetype': 'linestyle', 'shape': 'marker', 'fill': 'facecolor'}
-    _units = {'alpha', 'color', 'linestyle', 'marker'}
+    _units = {'shape'}
 
-    def __init__(self, *args, **kwargs):
-        super(geom_pointrange, self).__init__(*args, **kwargs)
-        self._warning_printed = False
+    @staticmethod
+    def draw(pinfo, scales, coordinates, ax, **params):
+        y = pinfo['y']
+        geom_linerange.draw(pinfo, scales, coordinates, ax, **params)
+        pinfo['size'] = np.asarray(pinfo['size']) * 4
+        pinfo['y'] = y
+        geom_point.draw(pinfo, scales, coordinates, ax, **params)
 
-    def _plot_unit(self, pinfo, ax):
-        # If x is categorical, calculate positions to plot
-        categorical = is_categorical(pinfo['x'])
-        if categorical:
-            x = pinfo.pop('x')
-            new_x = np.arange(len(x))
-            ax.set_xticks(new_x)
-            ax.set_xticklabels(x)
-            pinfo['x'] = new_x
+    @staticmethod
+    def draw_legend(data, da, lyr):
+        """
+        Draw a point in the box
 
-        if 'linewidth' in pinfo and isinstance(pinfo['linewidth'], list):
-            # ggplot also supports aes(size=...) but the current mathplotlib
-            # is not. See https://github.com/matplotlib/matplotlib/issues/2658
-            pinfo['linewidth'] = 4
-            if not self._warning_printed:
-                msg = "'geom_line()' currenty does not support the mapping of " +\
-                      "size ('aes(size=<var>'), using size=4 as a replacement.\n" +\
-                      "Use 'geom_line(size=x)' to set the size for the whole line.\n"
-                sys.stderr.write(msg)
-                self._warning_printed = True
+        Parameters
+        ----------
+        data : dataframe
+        params : dict
+        lyr : layer
 
-        # Plotting the line
-        pinfoline = dict(pinfo)
-        del pinfoline['marker']
-        del pinfoline['facecolor']
-        del pinfoline['y']
-
-        x = pinfoline.pop('x')
-        x = np.vstack([x, x])
-
-        ymin = pinfoline.pop('ymin')
-        ymax = pinfoline.pop('ymax')
-        y = np.vstack([ymin, ymax])
-
-        ax.plot(x, y, **pinfoline)
-
-        # Plotting the points
-        pinfopoint = dict(pinfo)
-        del pinfopoint['ymin']
-        del pinfopoint['ymax']
-        del pinfopoint['linestyle']
-
-        fc = pinfopoint['facecolor']
-        if fc is None:
-            # default to color
-            pinfopoint['facecolor'] = pinfopoint['color']
-        elif fc is False:
-            # Matlab expects empty string instead of False
-            pinfopoint['facecolor'] = ''
-
-        # for some reason, scatter doesn't default to the same color styles
-        # as the axes.color_cycle
-        if "color" not in pinfopoint and self.params['cmap'] is None:
-            pinfopoint["color"] = mpl.rcParams.get("axes.color_cycle", ["#333333"])[0]
-
-        pinfopoint['s'] = pinfopoint.pop('linewidth')**2*4
-
-        ax.scatter(**pinfopoint)
+        Returns
+        -------
+        out : DrawingArea
+        """
+        data.is_copy = None
+        geom_path.draw_legend(data, da, lyr)
+        data['size'] = data['size'] * 4
+        geom_point.draw_legend(data, da, lyr)
+        return da

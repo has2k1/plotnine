@@ -58,6 +58,9 @@ class geom_point(geom):
         -------
         out : DrawingArea
         """
+        data.is_copy = None
+        if data['fill'] is None:
+            data['fill'] = data['color']
         key = mlines.Line2D([0.5*da.width],
                             [0.5*da.height],
                             alpha=data['alpha'],
