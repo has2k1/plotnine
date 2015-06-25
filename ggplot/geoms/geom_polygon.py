@@ -31,13 +31,12 @@ class geom_polygon(geom):
         # And like ggplot, alpha applies to the facecolor
         # and not the edgecolor
         grouped = pd.DataFrame(pinfo).groupby('group')
-        verts, facecolor, alpha = [], [], []
+        verts, facecolor = [], []
         for group, df in grouped:
             verts.append(tuple(zip(df['x'], df['y'])))
-            facecolor.append(df['fill'].iloc[0])
-            alpha.append(df['alpha'].iloc[0])
+            fc = make_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
+            facecolor.append('none' if fc is None else fc)
 
-        facecolor = make_rgba(facecolor, alpha)
         edgecolor = ['none' if c is None else c
                      for c in make_iterable(pinfo['color'])]
 
@@ -85,6 +84,7 @@ class geom_polygon(geom):
                        height=da.height,
                        facecolor=facecolor,
                        edgecolor=data['color'],
+                       capstyle='projecting',
                        **kwargs)
         da.add_artist(bg)
 

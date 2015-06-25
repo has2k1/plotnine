@@ -584,9 +584,9 @@ def make_rgba(colors, alpha):
     """
     Return RGBA color tuples.
 
-    Takes care of the parameters having different lengths.
-    It is better to use this function instead of calling
-    `hex_to_rgba` directly.
+    Takes care of the parameters having different lengths
+    and also deals with None values. It is better to use
+    this function instead of calling `hex_to_rgba` directly.
 
     see: `hex_to_rgba`
     """
@@ -607,6 +607,9 @@ def make_rgba(colors, alpha):
                     "Cannot match the colors with the alpha values")
     elif not is_iterable(colors) and is_iterable(alpha):
         colors = make_iterable_ntimes(colors, len(alpha))
+
+    if any(c is None for c in colors):
+        return [c if c is None else hex_to_rgba(c) for c in colors]
 
     return hex_to_rgba(colors, alpha)
 
