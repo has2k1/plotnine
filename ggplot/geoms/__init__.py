@@ -26,6 +26,8 @@ from .geom_vline import geom_vline
 from .geom_ribbon import geom_ribbon
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
+from .geom_errorbar import geom_errorbar
+from .geom_errorbarh import geom_errorbarh
 
 # other
 from .geom_path import arrow
@@ -38,7 +40,7 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot',
            'geom_point', 'geom_pointrange', 'geom_rect',
            'geom_step', 'geom_smooth', 'geom_text', 'geom_tile',
            'geom_vline', 'geom_ribbon', 'geom_polygon',
-           'geom_segment',
+           'geom_segment', 'geom_errorbar', 'geom_errorbarh',
            # other
            'arrow']
 __all__ = [str(u) for u in __all__]
