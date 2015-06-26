@@ -157,7 +157,8 @@ class stat(object):
         """
         d = {}
         for k in list(kwargs.keys()):
-            if k in self.DEFAULT_PARAMS:
+            if (k in self.DEFAULT_PARAMS or
+                    k in self.REQUIRED_AES):
                 d[k] = kwargs.pop(k)
         return d, kwargs
 

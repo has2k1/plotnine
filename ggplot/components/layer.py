@@ -222,7 +222,11 @@ class layer(object):
         stat_data = pd.DataFrame()
         for ae in is_calculated_aes(aesthetics):
             new[ae] = strip_dots(aesthetics[ae])
-            stat_data[ae] = data[new[ae]]
+            # In conjuction with the pd.concat at the end,
+            # be careful not to create duplicate columns
+            # for cases like y='..y..'
+            if ae != new[ae]:
+                stat_data[ae] = data[new[ae]]
 
         if not new:
             return data

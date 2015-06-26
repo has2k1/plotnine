@@ -86,6 +86,8 @@ class geom(object):
                 self._layer_params[p] = self.params.pop(p)
 
         stat_type = self._cache['stat_type']
+        stat_aes_params = (set(stat_type.DEFAULT_PARAMS) |
+                           stat_type.REQUIRED_AES)
         for k, v in kwargs.items():
             if k in self.aes:
                 raise GgplotError('Aesthetic, %s, specified twice' % k)
@@ -105,7 +107,7 @@ class geom(object):
             elif k in self.DEFAULT_PARAMS:
                 self.params[k] = v
             # stat parameters
-            elif k in stat_type.DEFAULT_PARAMS:
+            elif k in stat_aes_params:
                 stat_params[k] = v
             else:
                 raise GgplotError('Cannot recognize argument: %s' % k)
@@ -270,6 +272,7 @@ class geom(object):
         stat = self._get_stat_type(kwargs)
         _keep = set(self.DEFAULT_PARAMS) | set(stat.DEFAULT_PARAMS)
         _keep.update(stat.DEFAULT_AES)
+        _keep.update(stat.REQUIRED_AES)
         _keep.add('group')
         for k, v in passed_aes.items():
             if k in self.valid_aes or k in _keep:

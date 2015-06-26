@@ -6,7 +6,7 @@ from copy import deepcopy
 import six
 from patsy.eval import EvalEnvironment
 
-from ..utils import defaults
+from ..utils import defaults, suppress
 
 
 class aes(dict):
@@ -92,7 +92,9 @@ def is_calculated_aes(aesthetics):
 
 
 def strip_dots(ae):
-    return ae.strip('..')
+    with suppress(AttributeError):
+        ae = ae.strip('..')
+    return ae
 
 
 def aes_to_scale(var):
@@ -149,5 +151,5 @@ def make_labels(mapping):
     """
     labels = mapping.copy()
     for ae in labels:
-        labels[strip_dots(ae)] = labels[ae]
+        labels[ae] = strip_dots(labels[ae])
     return labels
