@@ -12,10 +12,11 @@ from .stat_identity import stat_identity
 from .stat_smooth import stat_smooth
 from .stat_summary import stat_summary
 from .stat_vline import stat_vline
-from .stat_bar import stat_bar
+from .stat_unique import stat_unique
+
 
 __all__ = ['stat_abline', 'stat_bin', 'stat_bin2d', 'stat_density',
            'stat_bindot', 'stat_function', 'stat_hline',
            'stat_identity', 'stat_smooth', 'stat_summary',
-           'stat_vline']
+           'stat_vline', 'stat_unique']
 __all__ = [str(u) for u in __all__]
