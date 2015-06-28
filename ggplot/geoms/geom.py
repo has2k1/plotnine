@@ -80,10 +80,10 @@ class geom(object):
         self.params = deepcopy(self.DEFAULT_PARAMS)
         self.manual_aes = {}
         layer_params = {}
-        _layer_params = ['group', 'show_guide', 'inherit_aes']
-        for p in layer_params:
+        _layer_params = {'group', 'show_guide', 'inherit_aes'}
+        for p in _layer_params:
             with suppress(KeyError):
-                self._layer_params[p] = self.params.pop(p)
+                layer_params[p] = self.params.pop(p)
 
         stat_type = self._cache['stat_type']
         stat_aes_params = (set(stat_type.DEFAULT_PARAMS) |
