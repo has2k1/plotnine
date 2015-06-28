@@ -279,9 +279,9 @@ class ggplot(object):
         # to place which point (e.g 6, for center left) of
         # the legend box
         lookup = {
-            'right':  (6, (0.94, 0.5)),  # center left
+            'right':  (6, (0.92, 0.5)),  # center left
             'left': (7, (0.07, 0.5)),    # center right
-            'top': (8, (0.5, 0.95)),     # bottom center
+            'top': (8, (0.5, 0.92)),     # bottom center
             'bottom': (9, (0.5, 0.07))   # upper center
         }
         loc, box_to_anchor = lookup[position]

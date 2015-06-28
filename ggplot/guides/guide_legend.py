@@ -24,6 +24,8 @@ class guide_legend(guide):
     ncol = None
     byrow = False
 
+    keyseparation = None
+
     # parameter
     available_aes = 'any'
 
@@ -169,6 +171,53 @@ class guide_legend(guide):
             else:
                 self.ncol = 1
 
+        if self.keyseparation is None:
+            self.keyseparation = 2
+
+        # key width and key height for each legend entry
+        #
+        # Take a peak into data['size'] to make sure the
+        # legend dimensions are big enough
+        """
+        >>> gg = ggplot(diamonds, aes(x='cut', y='clarity'))
+        >>> gg = gg + stat_sum(aes(group='cut'))
+        >>> gg + scale_size(range=(3, 25))
+
+        Note the different height sizes for the entries
+        """
+        default_size = 20
+        pad = 14
+        if self.keywidth is None:
+            size = np.ones(nbreak) * default_size
+            for i in range(nbreak):
+                for gl in self.glayers:
+                    try:
+                        size[i] = np.max([gl.data.ix[i, 'size'].max()+pad,
+                                          size[i]])
+                    except KeyError:
+                        break
+
+            if self.direction == 'vertical':
+                size[:] = size.max()
+            self._keywidth = size
+        else:
+            self._keywidth = [self.keywidth]*nbreak
+
+        if self.keyheight is None:
+            size = np.ones(nbreak) * default_size
+            for i in range(nbreak):
+                for gl in self.glayers:
+                    try:
+                        size[i] = np.max([gl.data.ix[i, 'size'].max()+pad,
+                                          size[i]])
+                    except KeyError:
+                        break
+            if self.direction == 'horizontal':
+                size[:] = size.max()
+            self._keyheight = size
+        else:
+            self._keyheight = [self.keyheight]*nbreak
+
     def draw(self, theme):
         """
         Draw guide
@@ -185,7 +234,7 @@ class guide_legend(guide):
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
-        sep = 0.3 * 20  # gap between the keys, .3 lines
+        sep = 5  # gap between the legends
 
         # title
         # TODO: theme me
@@ -206,7 +255,9 @@ class guide_legend(guide):
         # TODO: theme me
         drawings = []
         for i in range(nbreak):
-            da = ColoredDrawingArea(20, 20, 0, 0, color='#E5E5E5')
+            da = ColoredDrawingArea(self._keywidth[i],
+                                    self._keyheight[i],
+                                    0, 0, color='#E5E5E5')
             # overlay geoms
             for gl in self.glayers:
                 da = gl.geom.draw_legend(gl.data.iloc[i], da, gl.layer)
@@ -250,7 +301,8 @@ class guide_legend(guide):
         chunk_boxes = []
         for chunk in chunks:
             d1 = packers[0](children=chunk,
-                            align='left', pad=0, sep=sep)
+                            align='left', pad=0,
+                            sep=self.keyseparation)
             chunk_boxes.append(d1)
 
         # Put all the entries (row & columns) together

@@ -93,12 +93,13 @@ class guides(dict):
         gdefs = []
 
         for scale in plot.scales:
-            # guides(XXX) is stored in guides[XXX],
-            # which is prior to scale_ZZZ(guide=XXX)
-            # guide is determined in order of:
-            #   + guides(XXX)
-            #      > + scale_ZZZ(guide=XXX)
-            #      > default(i.e., legend)
+            # The guide for aesthetic 'xxx' is stored
+            # in plot.guides['xxx']. The priority for
+            # the guides depends on how they are created
+            # 1. ... + guides(xxx=guide_blah())
+            # 2. ... + scale_xxx(guide=guide_blah())
+            # 3. default(either guide_legend or guide_colorbar
+            #            depending on the scale type)
             output = scale.aesthetics[0]
             guide = self.get(output, scale.guide)
 
