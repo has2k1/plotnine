@@ -8,6 +8,14 @@ from patsy.eval import EvalEnvironment
 
 from ..utils import defaults, suppress
 
+all_aesthetics = {
+    'alpha', 'angle', 'color', 'colour', 'fill', 'group',
+    'hjust', 'label', 'linetype', 'lower', 'lwd', 'middle',
+    'order', 'radius', 'sample', 'shape', 'size', 'upper',
+    'vjust', 'weight', 'width', 'x', 'xend', 'xmax', 'xmin',
+    'xintercept', 'y', 'yend', 'ymax', 'ymin', 'yintercept',
+    'z'}
+
 
 class aes(dict):
     """
