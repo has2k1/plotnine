@@ -528,13 +528,30 @@ def round_any(x, accuracy, f=np.round):
     return f(x / accuracy) * accuracy
 
 
-def seq(fromm=1, to=1, by=1):
+def seq(fromm=1, to=1, by=1, length_out=None):
     """
     Generate regular sequences
+
+    Parameters
+    ----------
+    fromm : numeric
+        start of the sequence.
+    to : numeric
+        end of the sequence.
+    by : numeric
+        increment of the sequence.
+    length_out : int
+        length of the sequence. If a float is supplied, it
+        will be rounded up
 
     Meant to be the same as Rs seq to prevent
     discrepancies at the margins
     """
+    if length_out is not None:
+        if length_out < 0:
+            raise GgplotError('length_out must be non-negative number')
+        by = (to - fromm)/(np.ceil(length_out)-1)
+
     x = np.arange(fromm, to+by, by)
     if x[-1] > to:
         x = x[:-1]
