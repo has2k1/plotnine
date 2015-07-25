@@ -161,9 +161,14 @@ class scale_discrete(scale):
             limits = self.limits
 
         n = sum(~pd.isnull(limits))
-        pal = np.asarray(self.palette(n))
-        pal_match = pal[match(x, limits)]
-        pal_match[pd.isnull(pal_match)] = self.na_value
+        pal = self.palette(n)
+        if isinstance(pal, dict):
+            # manual palette with specific assignments
+            pal_match = [pal[val] for val in x]
+        else:
+            pal = np.asarray(pal)
+            pal_match = pal[match(x, limits)]
+            pal_match[pd.isnull(pal_match)] = self.na_value
         return pal_match
 
     def break_info(self, range=None):
