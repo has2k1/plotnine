@@ -1,5 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
+
 # For testing purposes we might need to set mpl backend before any
 # other import of matplotlib.
 def _set_mpl_backend():
@@ -13,8 +15,8 @@ def _set_mpl_backend():
 
 _set_mpl_backend()
 
-# This is the only place the version is specified and 
-# used in both setup.py and docs/conf.py to set the 
+# This is the only place the version is specified and
+# used in both setup.py and docs/conf.py to set the
 # version of ggplot.
 __version__ = '0.6.6'
 

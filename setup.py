@@ -1,6 +1,7 @@
 import os
 from setuptools import find_packages, setup
 
+
 def extract_version():
     """
     Extracts version values from the main matplotlib __init__.py and
@@ -12,6 +13,7 @@ def extract_version():
                 exec(line.strip())
     return locals()["__version__"]
 
+
 def get_package_data():
     baseline_images = [
         'tests/baseline_images/%s/*' % x
@@ -21,9 +23,9 @@ def get_package_data():
         'ggplot':
         baseline_images +
         [
-            "exampledata/*.csv", 
+            "exampledata/*.csv",
             "geoms/*.png"
-        ]} 
+        ]}
 
 setup(
     name="ggplot",
@@ -39,10 +41,17 @@ setup(
     description="ggplot for python",
     # run pandoc --from=markdown --to=rst --output=README.rst README.md
     long_description=open("README.rst").read(),
-    # numpy is here to make installing easier... Needs to be at the last position,
-    # as that's the first installed with "python setup.py install"
-    install_requires=["six", "statsmodels", "brewer2mpl", "matplotlib", "scipy",
-                      "patsy", "pandas", "numpy"],
+    # numpy is here to make installing easier... Needs to be at the
+    # last position, as that's the first installed with
+    # "python setup.py install"
+    install_requires=["six",
+                      "statsmodels >= 0.6",
+                      "brewer2mpl",
+                      "matplotlib >= 1.4.0",
+                      "scipy",
+                      "patsy >= 0.4.0",
+                      "pandas >= 0.16.0",
+                      "numpy"],
     classifiers=['Intended Audience :: Science/Research',
                  'Intended Audience :: Developers',
                  'Programming Language :: Python',

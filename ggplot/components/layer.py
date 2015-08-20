@@ -126,7 +126,7 @@ class layer(object):
             aesthetics['group'] = self.group
 
         env = EvalEnvironment.capture(eval_env=plot.plot_env)
-        env.with_outer_namespace({'factor': pd.Categorical})
+        env = env.with_outer_namespace({'factor': pd.Categorical})
 
         evaled = pd.DataFrame(index=data.index)
         settings = False  # Indicate manual settings within aes()
