@@ -18,7 +18,7 @@ _set_mpl_backend()
 # version of ggplot.
 __version__ = '0.6.6'
 
-from .qplot import qplot
+# from .qplot import qplot
 from .ggplot import ggplot
 from .components import *
 from .coords import *
