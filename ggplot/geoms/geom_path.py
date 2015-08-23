@@ -11,7 +11,7 @@ import matplotlib.path as mpath
 
 from ..utils.exceptions import gg_warn
 from ..utils import make_rgba, make_iterable_ntimes
-from ..utils import make_line_segments, suppress
+from ..utils import make_line_segments, suppress, is_string
 from .geom import geom
 
 
@@ -291,7 +291,7 @@ def _draw_segments(pinfo, ax, **params):
         """
         out = pinfo[param]
         with suppress(TypeError):
-            if len(out) == len(pinfo['x']):
+            if not is_string(out) and len(out) == len(pinfo['x']):
                 out = [pinfo[param][i] for i in indices]
         return out
 
