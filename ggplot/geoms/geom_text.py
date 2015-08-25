@@ -5,6 +5,7 @@ import numpy as np
 from matplotlib.text import Text
 
 from .geom import geom
+from ..utils import make_iterable_ntimes
 
 
 class geom_text(geom):
@@ -21,6 +22,7 @@ class geom_text(geom):
     def draw(pinfo, scales, coordinates, ax, **params):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
+        # pinfo['label'] = [pinfo['label']]
         # TODO: Deal with the fontface
         # from ggplot2
         # 1 = plain, 2 = bold, 3 = italic, 4 = bold italic
@@ -35,6 +37,7 @@ class geom_text(geom):
         if pinfo['vjust'] is not None:
             y = (np.array(y) + pinfo['vjust']).tolist()
 
+        pinfo['label'] = make_iterable_ntimes(pinfo['label'], len(x))
         for x_g, y_g, s in zip(x, y, pinfo['label']):
             ax.text(x_g, y_g, s,
                     alpha=pinfo['alpha'],

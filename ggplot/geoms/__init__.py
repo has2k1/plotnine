@@ -32,6 +32,7 @@ from .geom_crossbar import geom_crossbar
 
 # other
 from .geom_path import arrow
+from .annotate import annotate
 
 __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot',
            'geom_density', 'geom_dotplot', 'geom_blank',
@@ -44,5 +45,5 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot',
            'geom_segment', 'geom_errorbar', 'geom_errorbarh',
            'geom_crossbar',
            # other
-           'arrow']
+           'arrow', 'annotate']
 __all__ = [str(u) for u in __all__]
