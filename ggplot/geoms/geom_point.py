@@ -35,7 +35,7 @@ class geom_point(geom):
         ax.scatter(x=pinfo['x'],
                    y=pinfo['y'],
                    facecolor=pinfo['fill'],
-                   color=pinfo['color'],
+                   edgecolor=pinfo['color'],
                    marker=pinfo['shape'],
                    # Our size is in 'points' while
                    # scatter wants 'points^2'

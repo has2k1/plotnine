@@ -173,9 +173,10 @@ class guides(dict):
         grouped = df.groupby('hash')
         gdefs = []
         for name, group in grouped:
-            gdef = reduce(
-                lambda g1, g2: g1.merge(g2),
-                group['gdef'])
+            # merge
+            gdef = group['gdef'].iloc[0]
+            for g in group['gdef'].iloc[1:]:
+                gdef = gdef.merge(g)
             gdefs.append(gdef)
         return gdefs
 

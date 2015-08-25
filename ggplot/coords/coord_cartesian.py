@@ -32,7 +32,7 @@ class coord_cartesian(coord):
             rangee = scale.transform(limits)
 
         out = scale.break_info(rangee)
-        for key in out.keys():
+        for key in list(out.keys()):
             new_key = '{}_{}'.format(name, key)
             out[new_key] = out.pop(key)
         return out

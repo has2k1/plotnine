@@ -210,10 +210,10 @@ def scales_add_defaults(scales, data, aesthetics):
         return
 
     # aesthetics with scales
+    aws = set()
     if scales:
-        aws = reduce(set.union, [set(sc.aesthetics) for sc in scales])
-    else:
-        aws = set()
+        for s in (set(sc.aesthetics) for sc in scales):
+            aws.update(s)
 
     # aesthetics that do not have scales present
     new_aesthetics = set(aesthetics.keys()) - aws
