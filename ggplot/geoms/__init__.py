@@ -1,5 +1,5 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import
+
 # geoms
 from .geom_abline import geom_abline
 from .geom_area import geom_area
@@ -34,16 +34,7 @@ from .geom_crossbar import geom_crossbar
 from .geom_path import arrow
 from .annotate import annotate
 
-__all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_boxplot',
-           'geom_density', 'geom_dotplot', 'geom_blank',
-           'geom_linerange', 'geom_pointrange', 'geom_histogram',
-           'geom_hline', 'geom_jitter', 'geom_line',
-           'geom_linerange', 'geom_now_its_art', 'geom_path',
-           'geom_point', 'geom_pointrange', 'geom_rect',
-           'geom_step', 'geom_smooth', 'geom_text', 'geom_tile',
-           'geom_vline', 'geom_ribbon', 'geom_polygon',
-           'geom_segment', 'geom_errorbar', 'geom_errorbarh',
-           'geom_crossbar',
-           # other
-           'arrow', 'annotate']
-__all__ = [str(u) for u in __all__]
+
+__all__ = [s for s in dir()
+           if not (s.startswith('_') or
+                   s == 'absolute_import')]

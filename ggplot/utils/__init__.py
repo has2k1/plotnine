@@ -1,5 +1,4 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import
 
 from .ggutils import ggsave
 from .utils import (pop, is_string, is_scalar_or_string,
@@ -15,4 +14,3 @@ from .utils import (pop, is_string, is_scalar_or_string,
 
 
 __all__ = ['ggsave']
-__all__ = [str(u) for u in __all__]

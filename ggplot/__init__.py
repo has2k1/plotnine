@@ -1,5 +1,4 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import
 
 
 # For testing purposes we might need to set mpl backend before any
@@ -31,5 +30,9 @@ from .facets import *
 from .themes import *
 from .utils import *
 from .exampledata import (diamonds, mtcars, meat, pageviews)
-from .guides import (guides, guide_legend,
-                     guide_colorbar, guide_colourbar)
+from .guides import *
+
+
+__all__ = [s for s in dir()
+           if not (s.startswith('_') or
+                   s == 'absolute_import')]

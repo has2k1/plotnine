@@ -1,5 +1,4 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import
 
 from .stat_abline import stat_abline
 from .stat_bin import stat_bin
@@ -19,9 +18,6 @@ from .stat_ecdf import stat_ecdf
 from .stat_qq import stat_qq
 
 
-__all__ = ['stat_abline', 'stat_bin', 'stat_bin2d', 'stat_density',
-           'stat_bindot', 'stat_function', 'stat_hline',
-           'stat_identity', 'stat_smooth', 'stat_summary',
-           'stat_vline', 'stat_unique', 'stat_spoke', 'stat_sum',
-           'stat_ecdf', 'stat_qq']
-__all__ = [str(u) for u in __all__]
+__all__ = [s for s in dir()
+           if not (s.startswith('_') or
+                   s == 'absolute_import')]
