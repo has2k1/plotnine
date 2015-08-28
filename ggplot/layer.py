@@ -234,7 +234,7 @@ class layer(object):
                                 ae, col, str(type(new_val)), str(e)))
             elif com.is_list_like(col):
                 n = len(col)
-                if n != len(data) and n != 1:
+                if len(data) and n != len(data) and n != 1:
                     raise GgplotError(
                         "Aesthetics must either be length one, " +
                         "or the same length as the data")

@@ -1,126 +1,196 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
-import ggplot
-from .components import aes
-from .geoms import geom_point, geom_bar, geom_boxplot, geom_histogram, geom_line
-from .geoms.chart_components import xlab as xlabel
-from .geoms.chart_components import ylab as ylabel
-from .geoms.chart_components import ggtitle
-# from .scales import scale_x_log, scale_y_log
 import pandas as pd
 import numpy as np
+from patsy.eval import EvalEnvironment
 import six
 
+from .ggplot import ggplot
+from .aes import aes, all_aesthetics
+from .labels import ggtitle, xlab as xlabel, ylab as ylabel
+from .facets import facet_null, facet_grid, facet_wrap
+from .facets.facet_grid import parse_grid_facets
+from .facets.facet_wrap import parse_wrap_facets
+from .utils import Registry, is_string, DISCRETE_KINDS, suppress
+from .utils.exceptions import GgplotError, gg_warn
+from .scales import scale_x_log10, scale_y_log10
+from .themes import theme
 
-def qplot(x, y=None, color=None, size=None, fill=None, data=None,
-        geom="auto", stat=[], position=[], xlim=None, ylim=None, log="",
-        main=None, xlab=None, ylab="", asp=None):
+
+def qplot(x=None, y=None, data=None, facets=None, margins=False,
+          geom='auto', xlim=None, ylim=None, log='', main=None,
+          xlab=None, ylab=None, asp=None, **kwargs):
     """
+    Quick plot
+
     Parameters
     ----------
-    x: string, pandas series, list, or numpy array
-        x values
-    y: string, pandas series, list, or numpy array
-        y values
-    color: string
-        color values
-    size: string
-        size values
-    fill: string
-        fill values
-    data: data frame
-        data frame to use for the plot
-    geom: string (auto, point, bar, hist, line)
-        string that specifies which type of plot to make
-    stat: list
-        specifies which statistics to use
-    position: list
-        gives position adjustment to use
+    x: str | array_like
+        x aesthetic
+    y: str | array_like
+        y aesthetic
+    data: pandas.DataFrame
+        Data frame to use (optional). If not specified,
+        will create one, extracting arrays from the
+        current environment.
+    geom: str | list
+        *geom(s)* to do the drawing. If ``auto``, defaults
+        to 'point' if ``x`` and ``y`` are specified or
+        'histogram' if only ``x`` is specified.
     xlim: tuple
-        limits on x axis; i.e. (0, 10)
-    ylim: tuple, None
-        limits on y axis; i.e. (0, 10)
-    log: string
-        which variables to log transform ("x", "y", or "xy")
-    main: string
-        title for the plot
-    xlab: string
-        title for the x axis
-    ylab: string
-        title for the y axis
-    asp: string
-        the y/x aspect ratio
-    
+        x-axis limits
+    ylim: tuple
+        y-axis limits
+    log: 'x' | 'y' | 'xy'
+        Which variables to log transform.
+    main: str
+        Plot title
+    xlab: str
+        x-axis label
+    ylab: str
+        y-axis label
+    asp: str | float
+        The y/x aspect ratio.
+    kwargs: dict
+        Arguments passed on to the geom.
+
     Returns
     -------
     p: ggplot
-        returns a plot
-
-    Examples
-    --------
-    >>> print qplot('mpg', 'drat', data=mtcars, main="plain")
-    >>> print qplot('mpg', 'drat', color='cyl', data=mtcars, main="cont. color")
-    >>> print qplot('mpg', 'drat', color='name', data=mtcars, main="disc. color")
-    >>> print qplot('mpg', 'drat', size='cyl', data=mtcars, main="size")
-    >>> print qplot('mpg', 'drat', data=mtcars, log='x', main="log x")
-    >>> print qplot('mpg', 'drat', data=mtcars, log='y', main="log y")
-    >>> print qplot('mpg', 'drat', data=mtcars, log='xy', main="log xy")
-    >>> print qplot('mpg', 'drat', data=mtcars, geom="point", main="point")
-    >>> print qplot('mpg', 'drat', data=mtcars, geom="line", main="line")
-    >>> print qplot('mpg', data=mtcars, geom="hist", main="hist")
-    >>> print qplot('mpg', data=mtcars, geom="histogram", main="histogram")
-    >>> print qplot('cyl', 'mpg', data=mtcars, geom="bar", main="bar")
-    >>> print qplot('mpg', 'drat', data=mtcars, xlab= "x lab", main="xlab")
-    >>> print qplot('mpg', 'drat', data=mtcars, ylab = "y lab", main="ylab")
+        ggplot object
     """
+    # Extract all recognizable aesthetic mappings from the parameters
+    # String values e.g  "I('red')", "I(4)" are not treated as mappings
 
-    if x is not None and not isinstance(x, six.string_types):
-        data = pd.DataFrame({"x": x})
-        x = 'x'
-    if y is not None and not isinstance(y, six.string_types):
-        data['y'] = y
-        y = 'y'
+    environment = EvalEnvironment.capture(1)
+    aesthetics = {} if x is None else {'x': x}
+    if y is not None:
+        aesthetics['y'] = y
 
+    def is_mapping(value):
+        """
+        Return True if value is not enclosed in I() function
+        """
+        with suppress(AttributeError):
+            return not (value.startswith('I(') and value.endswith(')'))
+        return True
 
-    aes_elements = {"x": x}
-    if y:
-        aes_elements["y"] = y
-    if color:
-        aes_elements["color"] = color
-    if size:
-        aes_elements["size"] = size
-    if fill:
-        aes_elements["fill"] = fill
-    _aes = aes(**aes_elements)
+    def I(value):
+        return value
 
-    geom_map = {
-        "bar": geom_bar,
-        "boxplot": geom_boxplot,
-        "hist": geom_histogram,
-        "histogram": geom_histogram,
-        "line": geom_line,
-        "point": geom_point,
-    }
-    # taking our best guess
-    if geom=="auto":
-        if y is None:
-            geom = geom_histogram
+    I_env = EvalEnvironment([{'I': I}])
+
+    for ae in six.viewkeys(kwargs) & all_aesthetics:
+        value = kwargs[ae]
+        if is_mapping(value):
+            aesthetics[ae] = value
         else:
-            geom = geom_point
-    else:
-        geom = geom_map.get(geom, geom_point)
+            kwargs[ae] = I_env.eval(value)
 
-    p = ggplot.ggplot(_aes, data=data) + geom()
-    if "x" in log:
-        p += scale_x_log()
-    if "y" in log:
-        p += scale_y_log()
+    # List of geoms
+    if is_string(geom):
+        geom = [geom]
+    elif isinstance(geom, tuple):
+        geom = list(geom)
+
+    if data is None:
+        data = pd.DataFrame()
+
+    # Work out plot data, and modify aesthetics, if necessary
+    def replace_auto(lst, str2):
+        """
+        Replace all occurences of 'auto' in with str2
+        """
+        for i, value in enumerate(lst):
+            if value == 'auto':
+                lst[i] = str2
+        return lst
+
+    if 'auto' in geom:
+        if 'sample' in aesthetics:
+            replace_auto(geom, 'qq')
+        elif y is None:
+            # If x is discrete we choose geom_bar &
+            # geom_histogram otherwise. But we need to
+            # evaluate the mapping to find out the dtype
+            env = environment.with_outer_namespace(
+                {'factor': pd.Categorical})
+
+            if isinstance(aesthetics['x'], six.string_types):
+                try:
+                    x = env.eval(aesthetics['x'], inner_namespace=data)
+                except Exception:
+                    msg = "Could not evaluate aesthetic 'x={}'"
+                    raise GgplotError(msg.format(aesthetics['x']))
+            elif not hasattr(aesthetics['x'], 'dtype'):
+                x = np.asarray(aesthetics['x'])
+
+            if x.dtype.kind in DISCRETE_KINDS:
+                replace_auto(geom, 'bar')
+            else:
+                replace_auto(geom, 'histogram')
+
+        else:
+            if x is None:
+                aesthetics['x'] = 'range(1, len(y)+1)'
+            replace_auto(geom, 'point')
+
+    p = ggplot(aes(**aesthetics), data=data, environment=environment)
+
+    def get_facet_type(facets):
+        with suppress(GgplotError):
+            parse_grid_facets(facets)
+            return 'grid'
+
+        with suppress(GgplotError):
+            parse_wrap_facets(facets)
+            return 'wrap'
+
+        gg_warn("Could not determine the type of faceting, "
+                "therefore no faceting.")
+        return 'null'
+
+    if facets:
+        facet_type = get_facet_type(facets)
+        if facet_type == 'grid':
+            p += facet_grid(facets, margins=margins)
+        elif facet_type == 'wrap':
+            p += facet_wrap(facets)
+        else:
+            p += facet_null()
+
+    # Add geoms
+    for g in geom:
+        geom_name = 'geom_{}'.format(g)
+        geom_klass = Registry[geom_name]
+        stat_name = 'stat_{}'.format(geom_klass.DEFAULT_PARAMS['stat'])
+        stat_klass = Registry[stat_name]
+        # find params
+        recognized = (six.viewkeys(kwargs) &
+                      (six.viewkeys(geom_klass.DEFAULT_PARAMS) |
+                       geom_klass.aesthetics() |
+                       six.viewkeys(stat_klass.DEFAULT_PARAMS) |
+                       stat_klass.aesthetics()))
+        recognized = recognized - six.viewkeys(aesthetics)
+        params = {ae: kwargs[ae] for ae in recognized}
+        p += geom_klass(**params)
+
+    if 'x' in log:
+        p += scale_x_log10()
+
+    if 'y' in log:
+        p += scale_y_log10()
+
     if xlab:
         p += xlabel(xlab)
+
     if ylab:
         p += ylabel(ylab)
+
     if main:
         p += ggtitle(main)
-    return p
 
+    if asp:
+        p += theme(aspect_ratio=asp)
+
+    return p
