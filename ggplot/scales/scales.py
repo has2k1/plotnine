@@ -161,7 +161,7 @@ class Scales(list):
         Train scales from a dataframe
         """
         if (len(df) == 0) or (len(self) == 0):
-            return
+            return df
 
         # Each scale trains the columns it understands
         for sc in self:
@@ -175,7 +175,7 @@ class Scales(list):
         Returns dataframe
         """
         if (len(df) == 0) or (len(self) == 0):
-            return
+            return df
 
         # Each scale maps the columns it understands
         for sc in self:
@@ -189,7 +189,7 @@ class Scales(list):
         Returns dataframe
         """
         if (len(df) == 0) or (len(self) == 0):
-            return
+            return df
 
         # Each scale transforms the columns it understands
         for sc in self:
