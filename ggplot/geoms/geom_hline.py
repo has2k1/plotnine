@@ -1,11 +1,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import numpy as np
-import matplotlib.collections as mcoll
+import pandas as pd
 
-from ..utils import make_rgba, make_line_segments
+from ..utils import make_iterable, suppress
+from ..components import aes
 from .geom import geom
+from .geom_segment import geom_segment
 
 
 class geom_hline(geom):
@@ -13,38 +14,30 @@ class geom_hline(geom):
                    'size': 1.5, 'alpha': 1, 'y': None,
                    'xmin': None, 'xmax': None}
     REQUIRED_AES = {'yintercept'}
-    DEFAULT_PARAMS = {'stat': 'hline', 'position': 'identity',
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'show_guide': False, 'inherit_aes': False}
     guide_geom = 'path'
+
+    def __init__(self, *args, **kwargs):
+        with suppress(KeyError):
+            yintercept = make_iterable(kwargs.pop('yintercept'))
+            data = pd.DataFrame({'yintercept': yintercept})
+            kwargs['mapping'] = aes(yintercept='yintercept')
+            kwargs['data'] = data
+
+        geom.__init__(self, *args, **kwargs)
 
     def draw_groups(self, data, scales, coordinates, ax, **params):
         """
         Plot all groups
         """
-        pinfos = self._make_pinfos(data, params)
-        for pinfo in pinfos:
-            self.draw(pinfo, scales, coordinates, ax, **params)
+        data['y'] = data['yintercept']
+        data['yend'] = data['yintercept']
+        data['x'] = scales['x_range'][0]
+        data['xend'] = scales['x_range'][1]
+        data.drop_duplicates(inplace=True)
 
-    @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
-        xmin = pinfo.get('xmin')
-        xmax = pinfo.get('xmax')
-
-        ranges = coordinates.range(scales)
-        if xmin is None:
-            xmin = ranges.x[0]
-        if xmax is None:
-            xmax = ranges.x[1]
-
-        pinfo['color'] = make_rgba(pinfo['color'], pinfo['alpha'])
-
-        y = np.repeat(pinfo['yintercept'], 2)
-        x = np.zeros(len(y))
-        x[::2], x[1::2] = xmin, xmax  # interleave
-        segments = make_line_segments(x, y, ispath=False)
-        coll = mcoll.LineCollection(segments,
-                                    edgecolor=pinfo['color'],
-                                    linewidth=pinfo['size'],
-                                    linestyle=pinfo['linetype'],
-                                    zorder=pinfo['zorder'])
-        ax.add_collection(coll)
+        for _, gdata in data.groupby('group'):
+            pinfos = self._make_pinfos(gdata, params)
+            for pinfo in pinfos:
+                geom_segment.draw(pinfo, scales, coordinates, ax, **params)
