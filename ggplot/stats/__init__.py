@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from .stat_bar import stat_bar
 from .stat_bin import stat_bin
 from .stat_bin2d import stat_bin2d
 from .stat_bindot import stat_bindot

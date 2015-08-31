@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..scales.utils import resolution
 from .geom_rect import geom_rect
 
 
@@ -9,12 +10,18 @@ class geom_bar(geom_rect):
                    'linetype': 'solid', 'size': 1.5,
                    'weight': 1}
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
+    DEFAULT_PARAMS = {'stat': 'bar', 'position': 'stack',
+                      'width': None}
 
-    _extra_requires = {'y', 'width'}
+    _extra_requires = {'y'}
 
-    @staticmethod
-    def reparameterise(data):
+    def reparameterise(self, data):
+        if 'width' not in data:
+            if self.params['width']:
+                data['width'] = self.params['width']
+            else:
+                data['width'] = resolution(data['x'], False) * 0.9
+
         bool_idx = (data['y'] < 0)
 
         data['ymin'] = 0

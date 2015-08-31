@@ -5,4 +5,4 @@ from .geom_bar import geom_bar
 
 
 class geom_histogram(geom_bar):
-    pass
+    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
