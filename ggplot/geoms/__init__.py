@@ -25,6 +25,7 @@ from .geom_rect import geom_rect
 from .geom_ribbon import geom_ribbon
 from .geom_segment import geom_segment
 from .geom_smooth import geom_smooth
+from .geom_spoke import geom_spoke
 from .geom_step import geom_step
 from .geom_text import geom_text
 from .geom_tile import geom_tile

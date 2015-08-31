@@ -10,7 +10,6 @@ from .stat_function import stat_function
 from .stat_identity import stat_identity
 from .stat_qq import stat_qq
 from .stat_smooth import stat_smooth
-from .stat_spoke import stat_spoke
 from .stat_sum import stat_sum
 from .stat_summary import stat_summary
 from .stat_unique import stat_unique
