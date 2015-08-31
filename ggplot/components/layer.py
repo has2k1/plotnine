@@ -33,17 +33,14 @@ class layer(object):
 
     def __init__(self, geom=None, stat=None,
                  data=None, mapping=None,
-                 position=None, params=None,
-                 inherit_aes=True, group=None,
+                 position=None, inherit_aes=True,
                  show_guide=None):
         self.geom = geom
         self.stat = stat
         self.data = data
         self.mapping = mapping
         self.position = self._position_object(position)
-        self.params = params
         self.inherit_aes = inherit_aes
-        self.group = group
         self.show_guide = show_guide
         self._active_mapping = {}
 
@@ -103,11 +100,11 @@ class layer(object):
         else:
             aesthetics = self.mapping
 
-        # drop aesthetics that are manual or calculated
-        manual = set(self.geom.manual_aes.keys())
+        # drop aesthetic parameters or the calculated aesthetics
         calculated = set(is_calculated_aes(aesthetics))
         d = dict((ae, v) for ae, v in aesthetics.items()
-                 if not (ae in manual) and not (ae in calculated))
+                 if (ae not in self.geom.aes_params) and
+                 (ae not in calculated))
         self._active_mapping = aes(**d)
         return self._active_mapping
 
@@ -122,14 +119,14 @@ class layer(object):
         aesthetics = self.layer_mapping(plot.mapping)
 
         # Override grouping if set in layer.
-        if self.group is not None:
-            aesthetics['group'] = self.group
+        with suppress(KeyError):
+            aesthetics['group'] = self.geom.aes_params['group']
 
         env = EvalEnvironment.capture(eval_env=plot.plot_env)
         env = env.with_outer_namespace({'factor': pd.Categorical})
 
         evaled = pd.DataFrame(index=data.index)
-        settings = False  # Indicate manual settings within aes()
+        has_aes_params = False  # aesthetic parameter in aes()
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
@@ -158,7 +155,7 @@ class layer(object):
                         "or the same length as the data")
                 elif n == 1:
                     col = col[0]
-                settings = True
+                has_aes_params = True
                 evaled[ae] = col
             elif not cbook.iterable(col) and cbook.is_numlike(col):
                 evaled[ae] = col
@@ -177,7 +174,7 @@ class layer(object):
         evaled_aes = aes(**dict((col, col) for col in evaled))
         scales_add_defaults(plot.scales, evaled, evaled_aes)
 
-        if len(data) == 0 and settings:
+        if len(data) == 0 and has_aes_params:
             # No data, and vectors suppled to aesthetics
             evaled['PANEL'] = 1
         else:
@@ -275,7 +272,7 @@ class layer(object):
         """
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
-            set(data.columns) | set(self.geom.manual_aes),
+            set(data.columns) | set(self.geom.aes_params),
             self.geom.__class__.__name__)
 
         params = deepcopy(self.geom.params)
@@ -293,9 +290,9 @@ class layer(object):
 
         # Override mappings with atomic parameters
         gp = ((set(df.columns) | set(self.geom.REQUIRED_AES)) &
-              set(self.geom.manual_aes))
-        for ae in self.geom.manual_aes:
-            if not is_scalar_or_string(self.geom.manual_aes[ae]):
+              set(self.geom.aes_params))
+        for ae in self.geom.aes_params:
+            if not is_scalar_or_string(self.geom.aes_params[ae]):
                 with suppress(KeyError):
                     gp.remove(ae)
 
@@ -309,7 +306,7 @@ class layer(object):
             return len(var)
 
         param_lengths = np.array(
-            [llen(self.geom.manual_aes[ae]) for ae in gp])
+            [llen(self.geom.aes_params[ae]) for ae in gp])
 
         bad = (param_lengths != 1) & (param_lengths != len(df))
         if any(bad):
@@ -317,7 +314,7 @@ class layer(object):
             raise GgplotError(msg.format(', '.join(df[bad].columns)))
 
         for ae in gp:
-            df[ae] = self.geom.manual_aes[ae]
+            df[ae] = self.geom.aes_params[ae]
 
         return df
 

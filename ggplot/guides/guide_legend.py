@@ -112,7 +112,7 @@ class guide_legend(guide):
                                     l.geom.DEFAULT_AES]
                        for ae in d]
             matched = set(all_ae) & set(geom_ae) & set(self.key.columns)
-            matched = matched - set(l.geom.manual_aes)
+            matched = matched - set(l.geom.aes_params)
 
             if len(matched):
                 # This layer contributes to the legend

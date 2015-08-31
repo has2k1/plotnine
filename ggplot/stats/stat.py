@@ -31,15 +31,12 @@ class stat(object):
     CREATES = set()
 
     def __init__(self, *args, **kwargs):
-        _params, kwargs = self._find_stat_params(kwargs)
         self.params = deepcopy(self.DEFAULT_PARAMS)
-        self.params.update(_params)
+        for p in set(kwargs) & set(self.DEFAULT_PARAMS):
+            self.params[p] = kwargs[p]
 
-        self._cache = {}
-        # Whatever arguments cannot be recognised as
-        # parameters, will be used to create a geom
-        self._cache['args'] = args
-        self._cache['kwargs'] = kwargs
+        # Will be used to create the geom
+        self._cache = {'args': args, 'kwargs': kwargs}
 
     def __deepcopy__(self, memo):
         """
@@ -111,56 +108,11 @@ class stat(object):
         return stats
 
     def __radd__(self, gg):
-        return gg + self._geom
-
-    @property
-    def _geom(self):
-        """
-        Create a geom
-
-        The geom is created once and stored in the cache.
-        The geom can only be created after the stat has
-        been initialized.
-        """
-        try:
-            _geom = self._cache['geom']
-        except KeyError:
-            # Create a geom and it to the ggplot object
-            geom = gg_import('geom_{}'.format(self.params['geom']))
-            _geom = geom(*self._cache['args'],
-                         stat=self.__class__.__name__[5:],
-                         position=self.params['position'],
-                         **self._cache['kwargs'])
-            # Allow the geom to know about the stat object
-            # Usefull in geom.__radd__ when creating layer
-            _geom._cache['stat'] = self
-            self._cache['geom'] = _geom
-        return _geom
-
-    def _find_stat_params(self, kwargs):
-        """
-        Identity and return the stat parameters.
-
-        The identified parameters are removed from kwargs
-
-        Parameters
-        ----------
-        kwargs : dict
-            keyword arguments passed to stat.__init__
-
-        Returns
-        -------
-        d : dict
-            stat parameters
-        kwargs : dict
-            rest of the kwargs
-        """
-        d = {}
-        for k in list(kwargs.keys()):
-            if (k in self.DEFAULT_PARAMS or
-                    k in self.REQUIRED_AES):
-                d[k] = kwargs.pop(k)
-        return d, kwargs
+        geom = gg_import('geom_{}'.format(self.params['geom']))
+        _geom = geom(*self._cache['args'],
+                     stat=self,
+                     **self._cache['kwargs'])
+        return gg + _geom
 
     def _verify_aesthetics(self, data):
         """

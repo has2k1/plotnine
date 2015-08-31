@@ -34,14 +34,10 @@ def test_stat_basics():
 
 def test_stat_parameter_sharing():
     # When the stat has a parameter with the same name as
-    # the geom aesthetic, if that aesthetic is manually set
-    # to a scalar when the geom is creates, then the stat
-    # takes it as a parameter. If that aesthetic is mapped,
-    # then the geom takes it as a mapping
+    # the geom aesthetic,they both get their value
 
     # NOTE: This test may need to be modified when the
-    # layer class is created and the geom & stat internals
-    # change
+    # geom & stat internals change
     class stat_abc(stat):
         DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
                           'weight': 1}
@@ -53,30 +49,24 @@ def test_stat_parameter_sharing():
             return data
 
     class geom_abc(geom):
-        DEFAULT_PARAMS = {'stat': 'stat_abc', 'position': 'identity'}
+        DEFAULT_PARAMS = {'stat': 'abc', 'position': 'identity'}
         REQUIRED_AES = {'x', 'weight'}
 
         @staticmethod
         def draw(pinfo, scales, coordinates, ax, **kwargs):
             pass
 
-        def _get_stat_type(self, kwargs):
-            return stat_abc
+    # TODO: Should allow for checking the environment
+    # instead of monkey patching
+    import ggplot as _ggplot
+    _ggplot.stats.stat_abc = stat_abc
 
     # weight is manually set, it should be a stat parameter and
     # not a geom manual setting
-    _geom = geom_abc(weight=4)
-    with assert_raises(KeyError):
-        w = _geom.aes['weight']
-    with assert_raises(KeyError):
-        w = _geom.manual_aes['weight']
-    assert_equal(_geom._stat_params['weight'], 4)
+    g = geom_abc(weight=4)
+    assert('weight' in g.aes_params)
+    assert('weight' in g._stat.params)
 
-    # weight is mapped set, it should be a geom aesthetic
-    # and the stat parameter should still have the default value
-    _geom = geom_abc(aes(weight='mpg'))
-    w = _geom.aes['weight']  # No keyError
-    with assert_raises(KeyError):
-        w = _geom.manual_aes['weight']
-    with assert_raises(KeyError):
-        w = _geom._stat_params['weight']
+    g = geom_abc(aes(weight='mpg'))
+    assert('weight' in g.mapping)
+    assert('weight' in g._stat.params)

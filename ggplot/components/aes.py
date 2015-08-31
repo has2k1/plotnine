@@ -62,17 +62,16 @@ class aes(dict):
     DEFAULT_ARGS = ['x', 'y', 'color']
 
     def __init__(self, *args, **kwargs):
+        kwargs = rename_aesthetics(kwargs)
         if args:
             dict.__init__(self, zip(self.DEFAULT_ARGS, args))
         if kwargs:
             self.update(kwargs)
-        if 'colour' in self:
-            self['color'] = self.pop('colour')
 
         self.aes_env = EvalEnvironment.capture(1)
 
     def __deepcopy__(self, memo):
-        '''deepcopy support for ggplot'''
+        """deepcopy support for ggplot"""
         # Just copy the keys and point to the env
         result = aes()
         for key, item in self.items():
@@ -83,6 +82,12 @@ class aes(dict):
 
         result.aes_env = self.aes_env
         return result
+
+
+def rename_aesthetics(d):
+    with suppress(KeyError):
+        d['color'] = d.pop('colour')
+    return d
 
 
 def is_calculated_aes(aesthetics):
