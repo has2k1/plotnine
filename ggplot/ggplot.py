@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
+from six.moves import zip
 
 from .components.aes import make_labels
 from .components.panel import Panel
@@ -119,7 +120,7 @@ class ggplot(object):
                 - axs
                 - fig
         """
-        data, panel, plot = self.plot_build()
+        data, panel, plot = self.build()
         fig, axs = plt.subplots(plot.facet.nrow,
                                 plot.facet.ncol,
                                 sharex=False,
@@ -170,7 +171,7 @@ class ggplot(object):
         add_labels_and_title(plot)
         return plot
 
-    def plot_build(self):
+    def build(self):
         """
         Build ggplot for rendering.
 
@@ -206,13 +207,6 @@ class ggplot(object):
         all_data = [plot.data] + layer_data
         scales = plot.scales
 
-        def dlapply(f):
-            """
-            Call the function f with the dataframe and layer
-            objects as arguments.
-            """
-            return [f(d, l) for d, l in zip(data, layers)]
-
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
         panel = Panel()
@@ -220,7 +214,7 @@ class ggplot(object):
         data = plot.facet.map_layout(panel.layout, layer_data, plot.data)
 
         # Compute aesthetics to produce data with generalised variable names
-        data = dlapply(lambda d, l: l.compute_aesthetics(d, plot))
+        data = [l.compute_aesthetics(d, plot) for l, d in zip(layers, data)]
         data = [add_group(d) for d in data]
 
         # Transform data using all scales
@@ -239,17 +233,17 @@ class ggplot(object):
 
         # Apply and map statistics
         data = panel.calculate_stats(data, layers)
-        data = dlapply(lambda d, l: l.map_statistic(d, plot))
+        data = [l.map_statistic(d, plot) for l, d in zip(layers, data)]
         # data = [order_groups(d) for d in data)] # !!! look into this
 
         # Make sure missing (but required) aesthetics are added
         scales_add_missing(plot, ('x', 'y'))
 
         # Reparameterise geoms from (e.g.) y and width to ymin and ymax
-        data = dlapply(lambda d, l: l.reparameterise(d))
+        data = [l.reparameterise(d) for l, d in zip(layers, data)]
 
         # Apply position adjustments
-        data = dlapply(lambda d, l: l.adjust_position(d))
+        data = [l.adjust_position(d) for l, d in zip(layers, data)]
 
         # Reset position scales, then re-train and map.  This ensures
         # that facets have control over the range of a plot:
