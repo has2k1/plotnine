@@ -4,11 +4,9 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..utils import uniquecols, gg_import
+from ..utils import uniquecols, gg_import, check_required_aesthetics
+from ..utils import groupby_apply
 from ..utils.exceptions import GgplotError
-
-__all__ = ['stat']
-__all__ = [str(u) for u in __all__]
 
 
 class stat(object):
@@ -56,14 +54,33 @@ class stat(object):
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
 
-    @classmethod
-    def _calculate(cls, data, scales, **params):
-        msg = "{} should implement this method."
-        raise NotImplementedError(
-            msg.format(cls.__name__))
+    def setup_params(self, data):
+        """
+        Overide this to verify parameters
+        """
+        return self.params
 
     @classmethod
-    def _calculate_groups(cls, data, scales, **params):
+    def compute_layer(cls, data, params, panel):
+        check_required_aesthetics(
+            cls.REQUIRED_AES,
+            list(data.columns) + list(params.keys()),
+            cls.__name__)
+
+        def fn(pdata):
+            """
+            Helper compute function
+            """
+            # Given data belonging to a specific panel, grab
+            # the corresponding scales and call the method
+            # that does the real computation
+            pscales = panel.panel_scales(pdata['PANEL'].iat[0])
+            return cls.compute_panel(pdata, pscales, **params)
+
+        return groupby_apply(data, 'PANEL', fn)
+
+    @classmethod
+    def compute_panel(cls, data, scales, **params):
         """
         Calculate the stats of all the groups and
         return the results in a single dataframe.
@@ -86,7 +103,7 @@ class stat(object):
 
         stats = []
         for _, old in data.groupby('group'):
-            new = cls._calculate(old, scales, **params)
+            new = cls.compute_group(old, scales, **params)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
             u = unique.loc[[0]*len(new), missing].reset_index(drop=True)
@@ -106,6 +123,12 @@ class stat(object):
         # before then fall back on this implementation or override
         # it completely.
         return stats
+
+    @classmethod
+    def compute_group(cls, data, scales, **params):
+        msg = "{} should implement this method."
+        raise NotImplementedError(
+            msg.format(cls.__name__))
 
     def __radd__(self, gg):
         geom = gg_import('geom_{}'.format(self.params['geom']))

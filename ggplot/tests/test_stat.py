@@ -45,7 +45,7 @@ def test_stat_parameter_sharing():
         CREATES = {'y'}
 
         @classmethod
-        def _calculate_groups(cls, data, scales, **params):
+        def compute_panel(cls, data, scales, **params):
             return data
 
     class geom_abc(geom):

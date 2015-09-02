@@ -16,7 +16,7 @@ class stat_smooth(stat):
     CREATES = {'ymin', 'ymax'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         # sort data by x and
         # convert x and y to lists so that the Series index
         # does not mess with the smoothing functions

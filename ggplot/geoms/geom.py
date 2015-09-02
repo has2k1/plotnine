@@ -10,9 +10,6 @@ from ..utils.exceptions import GgplotError
 from ..utils import gg_import, defaults, suppress
 from ..stats.stat import stat
 
-__all__ = ['geom']
-__all__ = [str(u) for u in __all__]
-
 
 class geom(object):
     """Base class of all Geoms"""

@@ -157,7 +157,7 @@ class stat_summary(stat):
     CREATES = {'ymin', 'ymax'}
 
     @classmethod
-    def _calculate_groups(cls, data, scales, **params):
+    def compute_panel(cls, data, scales, **params):
         if (params['fun_y'] or params['fun_ymin'] or
                 params['fun_ymax']):
             def fun_data(s):

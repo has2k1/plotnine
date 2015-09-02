@@ -22,7 +22,7 @@ class stat_density(stat):
     CREATES = {'y'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         x = data.pop('x')
         n = len(x)
 

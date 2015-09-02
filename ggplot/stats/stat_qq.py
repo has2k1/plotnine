@@ -15,7 +15,7 @@ class stat_qq(stat):
                       'distribution': 'norm', 'dparams': ()}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         theoretical, sample = probplot(data['sample'],
                                        dist=params['distribution'],
                                        sparams=params['dparams'],

@@ -25,7 +25,7 @@ class stat_bindot(stat):
     CREATES = {'y', 'width'}
 
     @classmethod
-    def _calculate_groups(cls, data, scales, **params):
+    def compute_panel(cls, data, scales, **params):
         if (params['method'] == 'dotdensity' and
                 params['binpositions'] == 'all'):
             if params['binaxis'] == 'x':
@@ -49,11 +49,11 @@ class stat_bindot(stat):
             data['binwidth'] = newdata['binwidth']
             data['weight'] = newdata['weight']
             data['bincenter'] = newdata['bincenter']
-        return super(cls, stat_bindot)._calculate_groups(data, scales,
-                                                         **params)
+        return super(cls, stat_bindot).compute_panel(data, scales,
+                                                     **params)
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         # Check that weights are whole numbers
         # (for dots, weights must be whole)
         weight = data.get('weight')

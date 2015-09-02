@@ -2,11 +2,9 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
-import pandas as pd
 
 from ..scales.scales import Scales
 from ..utils import match, xy_panel_scales
-from ..utils import groupby_apply
 from ..utils.exceptions import GgplotError
 
 
@@ -94,45 +92,6 @@ class Panel(object):
             ysc = self.y_scales[idx-1]
 
         return xy_panel_scales(x=xsc, y=ysc)
-
-    def calculate_stats(self, data, layers):
-        """
-        Calculate statistics
-
-        Parameters
-        ----------
-        data :  list of dataframes
-            one for each layer
-        layers : list of layers
-
-        Return
-        ------
-        data : list of dataframes
-            dataframes with statistic columns
-        """
-        new_data = []
-
-        def fn(panel_data, l):
-            """
-            For a specific panel with data 'panel_data',
-            compute the statistics in layer 'l' and
-            return the resulting dataframe
-            """
-            if len(panel_data) == 0:
-                return pd.DataFrame()
-
-            pscales = self.panel_scales(panel_data['PANEL'].iat[0])
-            return l.calc_statistic(panel_data, pscales)
-
-        # A dataframe in a layer can have rows split across
-        # multiple panels(facets). For each layer and accompanying
-        # data the statistics are calculated independently for
-        # each panel.
-        for (d, l) in zip(data, layers):
-            df = groupby_apply(d, 'PANEL', fn, l)
-            new_data.append(df)
-
-        return new_data
 
     def reset_scales(self):
         """

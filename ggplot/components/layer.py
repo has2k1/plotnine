@@ -182,24 +182,19 @@ class layer(object):
 
         return evaled
 
-    def calc_statistic(self, data, scales):
+    def compute_statistic(self, data, panel):
         """
-        Verify required aethetics and return the
-        statistics as computed by the stat object
+        Compute & return statistics for this layer
         """
         if not len(data):
             return pd.DataFrame()
 
-        check_required_aesthetics(
-            self.stat.REQUIRED_AES,
-            list(data.columns) + list(self.stat.params.keys()),
-            self.stat.__class__.__name__)
-
-        return self.stat._calculate_groups(data, scales,
-                                           **self.stat.params)
+        params = self.stat.setup_params(data)
+        return self.stat.compute_layer(data, params, panel)
 
     def map_statistic(self, data, plot):
         """
+        Mapping aesthetics to computed statistics
         """
         if len(data) == 0:
             return pd.DataFrame()

@@ -111,7 +111,7 @@ class stat_function(stat):
     CREATES = {'y'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         fun = params['fun']
         n = params['n']
         args = params['args']

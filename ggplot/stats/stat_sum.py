@@ -16,7 +16,7 @@ class stat_sum(stat):
     CREATES = {'size'}
 
     @classmethod
-    def _calculate_groups(cls, data, scales, **params):
+    def compute_panel(cls, data, scales, **params):
         if 'weight' not in data:
             data['weight'] = params.get('weight', 1)
 

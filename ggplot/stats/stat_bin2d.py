@@ -17,7 +17,7 @@ class stat_bin2d(stat):
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         x = data.pop('x')
         y = data.pop('y')
         bins = params['bins']

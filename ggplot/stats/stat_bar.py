@@ -17,7 +17,7 @@ class stat_bar(stat):
     CREATES = {'y', 'width'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         x = data['x']
         if ('y' in data) or ('y' in params):
             msg = 'stat_bar() must not be used with a y aesthetic'

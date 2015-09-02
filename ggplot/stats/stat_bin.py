@@ -34,7 +34,7 @@ class stat_bin(stat):
     CREATES = {'y', 'width'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         if 'y' in data:
             raise GgplotError(_MSG_YVALUE)
         params['range'] = np.asarray(scales.x.dimension((0, 0)))

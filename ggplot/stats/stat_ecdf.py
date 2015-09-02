@@ -17,7 +17,7 @@ class stat_ecdf(stat):
     CREATES = {'y'}
 
     @classmethod
-    def _calculate(cls, data, scales, **params):
+    def compute_group(cls, data, scales, **params):
         # If n is None, use raw values; otherwise interpolate
         if params['n'] is None:
             xvals = np.unique(data['x'])

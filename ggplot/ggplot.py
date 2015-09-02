@@ -24,9 +24,6 @@ from .coords import coord_cartesian
 from .guides.guides import guides
 
 
-__all__ = ["ggplot"]
-__all__ = [str(u) for u in __all__]
-
 # Show plots if in interactive mode
 if sys.flags.interactive:
     plt.ion()
@@ -232,7 +229,8 @@ class ggplot(object):
         data = panel.map_position(data, scale_x(), scale_y())
 
         # Apply and map statistics
-        data = panel.calculate_stats(data, layers)
+        data = [l.compute_statistic(d, panel)
+                for l, d in zip(layers, data)]
         data = [l.map_statistic(d, plot) for l, d in zip(layers, data)]
         # data = [order_groups(d) for d in data)] # !!! look into this
 
