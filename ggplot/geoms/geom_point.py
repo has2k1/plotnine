@@ -10,7 +10,7 @@ from .geom import geom
 
 class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'shape': 'o', 'size': 5}
+                   'shape': 'o', 'size': 5, 'stroke': 1}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
@@ -36,10 +36,14 @@ class geom_point(geom):
                    y=pinfo['y'],
                    facecolor=pinfo['fill'],
                    edgecolor=pinfo['color'],
+                   linewidth=pinfo['stroke'],
                    marker=pinfo['shape'],
                    # Our size is in 'points' while
-                   # scatter wants 'points^2'
-                   s=np.square(pinfo['size']),
+                   # scatter wants 'points^2'. The
+                   # stroke is outside.
+                   s=np.square(
+                       np.array(pinfo['size']) +
+                       pinfo['stroke']),
                    zorder=pinfo['zorder'],
                    alpha=pinfo['alpha'])
 
@@ -65,8 +69,9 @@ class geom_point(geom):
                             [0.5*da.height],
                             alpha=data['alpha'],
                             marker=data['shape'],
-                            markersize=data['size'],
+                            markersize=data['size']+data['stroke'],
                             markerfacecolor=data['fill'],
-                            markeredgecolor=data['color'])
+                            markeredgecolor=data['color'],
+                            linewidth=data['stroke'])
         da.add_artist(key)
         return da

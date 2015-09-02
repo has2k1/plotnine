@@ -72,6 +72,7 @@ class geom_pointrange(geom):
         geom_linerange.draw(pinfo, scales, coordinates, ax, **params)
         pinfo['size'] = np.asarray(pinfo['size']) * 4
         pinfo['y'] = y
+        pinfo['stroke'] = 1
         geom_point.draw(pinfo, scales, coordinates, ax, **params)
 
     @staticmethod
@@ -92,5 +93,6 @@ class geom_pointrange(geom):
         data.is_copy = None
         geom_path.draw_legend(data, da, lyr)
         data['size'] = data['size'] * 4
+        data['stroke'] = 1
         geom_point.draw_legend(data, da, lyr)
         return da
