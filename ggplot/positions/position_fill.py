@@ -1,27 +1,23 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import pandas as pd
-
-from .position import _position_base
+from .position import position
 from .collide import collide, pos_fill
-from ..utils import check_required_aesthetics
+from ..utils import suppress
 from ..utils.exceptions import gg_warn
 
 
-class position_fill(_position_base):
+class position_fill(position):
+    REQUIRED_AES = {'x', 'ymax'}
 
-    def adjust(self, data):
-        if len(data) == 0:
-            return pd.DataFrame()
+    def setup_data(self, data, params):
+        with suppress(KeyError):
+            if not all(data['ymin'] == 0):
+                gg_warn("Filling not well defined when ymin != 0")
+        return position.setup_data(self, data, params)
 
-        check_required_aesthetics(
-            ['x', 'ymax'], data.columns, "position_fill")
-
-        if not all(data['ymin'] == 0):
-            gg_warn('Filling not well defined when ymin != 0')
-
-        width = data['width'] if 'width' in data else None
-        return collide(data, width=width,
+    @classmethod
+    def compute_panel(cls, data, scales, params):
+        return collide(data, width=None,
                        name='position_fill',
                        strategy=pos_fill)

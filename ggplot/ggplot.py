@@ -241,7 +241,8 @@ class ggplot(object):
         data = [l.reparameterise(d) for l, d in zip(layers, data)]
 
         # Apply position adjustments
-        data = [l.adjust_position(d) for l, d in zip(layers, data)]
+        data = [l.compute_position(d, panel)
+                for l, d in zip(layers, data)]
 
         # Reset position scales, then re-train and map.  This ensures
         # that facets have control over the range of a plot:

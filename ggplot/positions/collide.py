@@ -26,14 +26,15 @@ def collide(data, width=None, name='', strategy=None):
         # Width determined from data, must be floating point constant
         widths = (data['xmax'] - data['xmin']).drop_duplicates()
         widths = widths[~np.isnan(widths)]
-        if not zero_range([widths.min(), widths.max()]):
-            msg = '{} requires constant width: output may be incorrect'
-            gg_warn(msg.format(name))
+        # # Suppress warning message since it's not reliable
+        # if not zero_range([widths.min(), widths.max()]):
+        #     msg = '{} requires constant width: output may be incorrect'
+        #     gg_warn(msg.format(name))
         width = widths.iloc[0]
 
     # Reorder by x position, relying on stable sort to preserve existing
     # ordering, which may be by group or order.
-    data = data.iloc[data['xmin'].order().index, :]
+    data = data.loc[data['xmin'].order().index, :]
 
     # Check for overlap
     intervals = data[xminmax].drop_duplicates().as_matrix().flatten()

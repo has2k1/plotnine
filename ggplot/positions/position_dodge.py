@@ -1,23 +1,30 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from copy import deepcopy
 
-import pandas as pd
-
-from .position import _position_base
+from .position import position
 from .collide import collide, pos_dodge
-from ..utils import check_required_aesthetics
+from ..utils.exceptions import GgplotError
 
 
-class position_dodge(_position_base):
+class position_dodge(position):
+    REQUIRED_AES = {'x'}
+    DEFAULT_PARAMS = {'width': None}
 
-    def adjust(self, data):
-        if len(data) == 0:
-            return pd.DataFrame()
+    def __init__(self, width=None):
+        self.params = {'width': width}
 
-        check_required_aesthetics(
-            ['x'], data.columns, "position_dodge")
+    def setup_params(self, data):
+        if (('xmin' not in data) and
+                ('xmax' not in data) and
+                (self.params['width'] is None)):
+            msg = ("Width not defined. "
+                   "Set with `position_dodge(width = ?)`")
+            raise GgplotError(msg)
+        return deepcopy(self.params)
 
-        width = data['width'] if 'width' in data else None
-        return collide(data, width=width,
+    @classmethod
+    def compute_panel(cls, data, scales, params):
+        return collide(data, width=params['width'],
                        name='position_dodge',
                        strategy=pos_dodge)

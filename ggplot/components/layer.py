@@ -14,9 +14,9 @@ from ..scales.scales import scales_add_defaults
 from ..utils.exceptions import GgplotError
 from ..utils import DISCRETE_DTYPES, ninteraction
 from ..utils import check_required_aesthetics, defaults
-from ..utils import is_string, gg_import, groupby_apply
+from ..utils import is_string, gg_import
 from ..utils import is_scalar_or_string, suppress
-from ..positions.position import _position_base
+from ..positions.position import position
 from .aes import aes, is_calculated_aes, strip_dots, aesdefaults
 
 _TPL_EVAL_FAIL = """\
@@ -66,7 +66,7 @@ class layer(object):
         """
         Return an instantiated position object
         """
-        if issubclass(type(name), _position_base):
+        if issubclass(type(name), position):
             return name
 
         if not is_string(name):
@@ -239,13 +239,14 @@ class layer(object):
             return pd.DataFrame()
         return self.geom.reparameterise(data)
 
-    def adjust_position(self, data):
+    def compute_position(self, data, panel):
         """
-        Adjust the position of each geometric object
+        Compute the position of each geometric object
         in concert with the other objects in the panel
         """
-        data = groupby_apply(data, 'PANEL', self.position.adjust)
-        return data
+        params = self.position.setup_params(data)
+        data = self.position.setup_data(data, params)
+        return self.position.compute_layer(data, params, panel)
 
     def draw(self, data, scales, coordinates, ax, zorder):
         """

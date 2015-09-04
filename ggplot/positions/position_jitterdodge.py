@@ -1,67 +1,57 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from copy import deepcopy
 
-import pandas as pd
+import numpy as np
 
-from ..utils import jitter, check_required_aesthetics
+from ..utils import jitter
 from ..scales.utils import resolution
-from .position import _position_base
+from .position import position
 from .collide import collide, pos_dodge
 
 
 # Adjust position by simultaneously dodging and jittering
-class position_jitterdodge(_position_base):
+class position_jitterdodge(position):
+    REQUIRED_AES = ['x', 'y', 'fill']
 
-    def __init__(self,
-                 jitter_width=None,
-                 jitter_height=None,
-                 dodge_width=None):
-        self.jitter_width = jitter_width
-        self.jitter_height = jitter_height
-        self.dodge_width = dodge_width
+    def __init__(self, jitter_width=None, jitter_height=0,
+                 dodge_width=0.75):
+        self.params = {'jitter_width': jitter_width,
+                       'jitter_height': jitter_height,
+                       'dodge_width': dodge_width}
 
-    def adjust(self, data):
-        if len(data) == 0:
-            return pd.DataFrame()
-
-        check_required_aesthetics(
-            ['x', 'y', 'fill'], data.columns,
-            'position_jitterdodge')
-
-        # Workaround to avoid this warning:
-        # ymax not defined: adjusting position using y instead
-        if not ('ymax' in data):
-            data['ymax'] = data['y']
+    def setup_params(self, data):
+        params = deepcopy(self.params)
+        width = params['jitter_width']
+        if width is None:
+            width = resolution(data['x']) * .4
 
         # Adjust the x transformation based on the number
         # of 'fill' variables
-        nfill = len(data['fill'].cat.categories)
+        try:
+            nfill = len(data['fill'].cat.categories)
+        except AttributeError:
+            nfill = len(np.unique(data['fill']))
 
-        if self.jitter_width is None:
-            self.jitter_width = resolution(data['x'], zero=False) * 0.4
+        params['jitter_width'] = width/(nfill+2)
+        return params
 
-        if self.jitter_height is None:
-            self.jitter_height = 0
-
+    @classmethod
+    def compute_panel(cls, data, scales, params):
         trans_x = None
         trans_y = None
 
-        if self.jitter_width > 0:
-            amount = self.jitter_width / (nfill + 2)
-
+        if params['jitter_width'] > 0:
             def trans_x(x):
-                return jitter(x, amount=amount)
+                return jitter(x, amount=params['jitter_width'])
 
-        if self.jitter_height > 0:
+        if params['jitter_height'] > 0:
             def trans_y(y):
-                return jitter(y, amount=self.jitter_height)
-
-        if self.dodge_width is None:
-            self.dodge_width = 0.75
+                return jitter(y, amount=params['jitter_height'])
 
         # dodge, then jitter
-        data = collide(data, width=self.dodge_width,
+        data = collide(data, width=params['dodge_width'],
                        name='position_jitterdodge',
                        strategy=pos_dodge)
-        data = self._transform_position(data, trans_x, trans_y)
+        data = cls.transform_position(data, trans_x, trans_y)
         return data

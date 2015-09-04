@@ -1,8 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from .position import _position_base
+from .position import position
 
 
-class position_identity(_position_base):
-    pass
+class position_identity(position):
+
+    @classmethod
+    def compute_layer(cls, data, params, panel):
+        return data
