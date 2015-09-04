@@ -7,7 +7,7 @@ import pandas as pd
 from ..components.aes import aes, make_labels, rename_aesthetics
 from ..components.layer import layer
 from ..utils.exceptions import GgplotError
-from ..utils import gg_import, defaults, suppress
+from ..utils import gg_import, defaults, suppress, copy_keys
 from ..stats.stat import stat
 
 
@@ -60,37 +60,13 @@ class geom(object):
     def __init__(self, *args, **kwargs):
         kwargs = rename_aesthetics(kwargs)
         kwargs = self._sanitize_arguments(args, kwargs)
-        self._cache = {'kwargs': kwargs}
-
-        _kwargs = set(kwargs)
-        duplicates = set(kwargs['mapping']) & _kwargs
-        if duplicates:
-            msg = 'Aesthetics {} specified two times.'
-            raise GgplotError(msg.format(duplicates))
-
-        # Create a stat if non has been passed in
-        with suppress(KeyError):
-            if isinstance(kwargs['stat'], stat):
-                self._stat = kwargs['stat']
-
-        try:
-            self._stat
-        except AttributeError:
-            self._stat = self._make_stat()
-
-        self.verify_arguments(kwargs)
+        self._cache = {'kwargs': kwargs}  # for making stat & layer
+        self._stat = self._make_stat()
+        self.verify_arguments(kwargs)     # geom, stat, layer
 
         # separate aesthetics and parameters
-        aparams = _kwargs & self.aesthetics
-        gparams = _kwargs & set(self.DEFAULT_PARAMS)
-
-        def set_params(d, which_params):
-            for param in which_params:
-                d[param] = kwargs[param]
-            return d
-
-        self.aes_params = set_params({}, aparams)
-        self.params = set_params(deepcopy(self.DEFAULT_PARAMS), gparams)
+        self.aes_params = copy_keys(kwargs, {}, self.aesthetics)
+        self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
         self.mapping = kwargs['mapping']
         self.data = kwargs['data']
 
@@ -201,8 +177,15 @@ class geom(object):
     def _make_stat(self):
         """
         Return stat instance for this geom
+
+        Create a stat if none has been passed in the
+        kwargs
         """
         kwargs = self._cache['kwargs']
+        with suppress(KeyError):
+            if isinstance(kwargs['stat'], stat):
+                return kwargs['stat']
+
         name = 'stat_{}'.format(
             kwargs.get('stat', self.DEFAULT_PARAMS['stat']))
         stat_type = gg_import(name)
@@ -246,6 +229,10 @@ class geom(object):
         elif 'data' not in kwargs:
             kwargs['data'] = data
 
+        duplicates = set(kwargs['mapping']) & set(kwargs)
+        if duplicates:
+            msg = 'Aesthetics {} specified two times.'
+            raise GgplotError(msg.format(duplicates))
         return kwargs
 
     def verify_arguments(self, kwargs):

@@ -5,7 +5,7 @@ from copy import deepcopy
 import pandas as pd
 
 from ..utils import uniquecols, gg_import, check_required_aesthetics
-from ..utils import groupby_apply
+from ..utils import groupby_apply, copy_keys
 from ..utils.exceptions import GgplotError
 
 
@@ -29,9 +29,7 @@ class stat(object):
     CREATES = set()
 
     def __init__(self, *args, **kwargs):
-        self.params = deepcopy(self.DEFAULT_PARAMS)
-        for p in set(kwargs) & set(self.DEFAULT_PARAMS):
-            self.params[p] = kwargs[p]
+        self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
 
         # Will be used to create the geom
         self._cache = {'args': args, 'kwargs': kwargs}
