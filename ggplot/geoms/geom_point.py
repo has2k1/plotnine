@@ -64,13 +64,14 @@ class geom_point(geom):
         data.is_copy = None
         if data['fill'] is None:
             data['fill'] = data['color']
+
         key = mlines.Line2D([0.5*da.width],
                             [0.5*da.height],
                             alpha=data['alpha'],
                             marker=data['shape'],
-                            markersize=data['size']+data['stroke'],
+                            markersize=data['size'],
                             markerfacecolor=data['fill'],
                             markeredgecolor=data['color'],
-                            linewidth=data['stroke'])
+                            markeredgewidth=data['stroke'])
         da.add_artist(key)
         return da
