@@ -49,30 +49,3 @@ class geom_abline(geom):
             pinfos = self._make_pinfos(gdata, params)
             for pinfo in pinfos:
                 geom_segment.draw(pinfo, scales, coordinates, ax, **params)
-
-        # pinfos = self._make_pinfos(data, params)
-        # for pinfo in pinfos:
-        #     self.draw(pinfo, scales, coordinates, ax, **params)
-
-    @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
-        ranges = coordinates.range(scales)
-        n = len(pinfo['slope'])
-        slope = np.asarray(pinfo['slope'])
-        intercept = np.asarray(pinfo['intercept'])
-        x = np.array(ranges.x)
-        x = np.tile(x, (n, 1))
-        y = np.zeros(x.shape)
-        y[:, 0] = x[:, 0] * slope + intercept
-        y[:, 1] = x[:, 1] * slope + intercept
-        segments = make_line_segments(x.ravel(),
-                                      y.ravel(),
-                                      ispath=False)
-        pinfo['color'] = to_rgba(pinfo['color'],
-                                 pinfo['alpha'])
-        coll = mcoll.LineCollection(segments,
-                                    edgecolor=pinfo['color'],
-                                    linewidth=pinfo['size'],
-                                    linestyle=pinfo['linetype'],
-                                    zorder=pinfo['zorder'])
-        ax.add_collection(coll)
