@@ -6,7 +6,7 @@ from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 import matplotlib.lines as lines
 
-from ..utils import make_rgba, make_iterable
+from ..utils import to_rgba, make_iterable
 from .geom import geom
 
 
@@ -34,7 +34,7 @@ class geom_polygon(geom):
         verts, facecolor = [], []
         for group, df in grouped:
             verts.append(tuple(zip(df['x'], df['y'])))
-            fc = make_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
+            fc = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
             facecolor.append('none' if fc is None else fc)
 
         edgecolor = ['none' if c is None else c
@@ -76,7 +76,7 @@ class geom_polygon(geom):
             kwargs['linestyle'] = data['linetype']
 
         # background
-        facecolor = make_rgba(data['fill'], data['alpha'])
+        facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
             facecolor = 'none'
         bg = Rectangle((0, 0),

@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import matplotlib.lines as mlines
 
-from ..utils import make_rgba
+from ..utils import to_rgba
 from .geom import geom
 
 
@@ -26,8 +26,7 @@ class geom_point(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        pinfo['fill'] = make_rgba(pinfo['fill'],
-                                  pinfo['alpha'])
+        pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
 
         if pinfo['fill'] is None:
             pinfo['fill'] = pinfo['color']

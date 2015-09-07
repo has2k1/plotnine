@@ -10,7 +10,7 @@ import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
 from ..utils.exceptions import gg_warn
-from ..utils import make_rgba, make_iterable_ntimes
+from ..utils import to_rgba, make_iterable_ntimes
 from ..utils import make_line_segments, suppress, is_string
 from .geom import geom
 
@@ -71,8 +71,7 @@ class geom_path(geom):
             if params['lineend'] == 'square':
                 params['lineend'] = 'projecting'
 
-        pinfo['color'] = make_rgba(pinfo['color'],
-                                   pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
 
         constant = params.pop('constant', False)
         if not constant:

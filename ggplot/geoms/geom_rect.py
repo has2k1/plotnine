@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from matplotlib.collections import PolyCollection
 from six.moves import zip
 
-from ..utils import make_iterable, make_rgba
+from ..utils import make_iterable, to_rgba
 from .geom import geom
 
 
@@ -56,8 +56,7 @@ class geom_rect(geom):
         for i, (l, r, b, t) in enumerate(limits):
             verts[i] = [(l, b), (l, t), (r, t), (r, b)]
 
-        pinfo['fill'] = make_rgba(pinfo['fill'],
-                                  pinfo['alpha'])
+        pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
 
         if pinfo['color'] is None:
             pinfo['color'] = ''

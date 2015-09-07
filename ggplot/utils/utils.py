@@ -14,7 +14,7 @@ import pandas as pd
 import pandas.core.common as com
 import matplotlib as mpl
 import matplotlib.cbook as cbook
-from matplotlib.colors import ColorConverter
+from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
 
@@ -558,15 +558,15 @@ def seq(fromm=1, to=1, by=1, length_out=None):
     return x
 
 
-def hex_to_rgba(colors, alphas=1):
+def to_rgba(colors, alpha):
     """
     Covert hex colors to rgba values.
 
     Parameters
     ----------
-    colors : list-like | str
+    colors : iterable | str
         colors to convert
-    alphas : list-like | float
+    alphas : iterable | float
         alpha values
 
     Returns
@@ -582,53 +582,22 @@ def hex_to_rgba(colors, alphas=1):
     make plots with continuous alpha values innefficient.
     However :), the colors can be rgba list-likes and
     the alpha dimension will be respected.
-
-    see: `make_rgba`
     """
-    cc = ColorConverter()
-    if is_string(colors):
-        if len(colors):
-            out = cc.to_rgba(colors, alphas)
-        else:
-            out = colors
-    else:
-        out = cc.to_rgba_array(colors)
-        out[:, 3] = alphas
-    return out
-
-
-def make_rgba(colors, alpha):
-    """
-    Return RGBA color tuples.
-
-    Takes care of the parameters having different lengths
-    and also deals with None values. It is better to use
-    this function instead of calling `hex_to_rgba` directly.
-
-    see: `hex_to_rgba`
-    """
-    if not colors:
+    if colors is None:
         return colors
 
     def is_iterable(var):
         return cbook.iterable(var) and not is_string(var)
 
-    if is_iterable(colors) and is_iterable(alpha):
-        if len(colors) != len(alpha):
-            if len(alpha == 1):
-                alpha = alpha[0]
-            elif len(colors == 1):
-                colors = colors[0]
-            else:
-                raise GgplotError(
-                    "Cannot match the colors with the alpha values")
+    cc = colorConverter
+    if is_iterable(colors) and not is_iterable(alpha):
+        return cc.to_rgba_array(colors, alpha)
+    elif is_iterable(colors) and is_iterable(alpha):
+        return [cc.to_rgba(c, a) for c, a in zip(colors, alpha)]
     elif not is_iterable(colors) and is_iterable(alpha):
-        colors = make_iterable_ntimes(colors, len(alpha))
-
-    if any(c is None for c in colors):
-        return [c if c is None else hex_to_rgba(c) for c in colors]
-
-    return hex_to_rgba(colors, alpha)
+        return [cc.to_rgba(colors, a) for a in alpha]
+    else:  # not is_iterable(colors) and not is_iterable(alpha)
+        return cc.to_rgba(colors, alpha)
 
 
 def groupby_apply(df, cols, func, *args, **kwargs):

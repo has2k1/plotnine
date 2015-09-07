@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.collections as mcoll
 
 from .geom import geom
-from ..utils import make_rgba, make_line_segments
+from ..utils import to_rgba, make_line_segments
 
 
 class geom_segment(geom):
@@ -19,8 +19,7 @@ class geom_segment(geom):
 
     @staticmethod
     def draw(pinfo, scales, coordinates, ax, **params):
-        pinfo['color'] = make_rgba(pinfo['color'],
-                                   pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
         x = np.zeros(len(pinfo['x'])*2)
         y = np.zeros(len(pinfo['y'])*2)
 

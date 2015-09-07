@@ -5,7 +5,7 @@ import matplotlib.collections as mcoll
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 
-from ..utils import groupby_apply, make_rgba
+from ..utils import groupby_apply, to_rgba
 from ..utils.exceptions import gg_warn
 from ..scales.utils import resolution
 from .geom import geom
@@ -127,8 +127,7 @@ class geom_dotplot(geom):
     def draw(pinfo, scales, coordinates, ax, **params):
         geom_dotplot._verify(**params)
 
-        pinfo['fill'] = make_rgba(pinfo['fill'],
-                                  pinfo['alpha'])
+        pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
         x = np.asarray(pinfo['x'])
         y = np.asarray(pinfo['y'])
         # For perfect circles the width/height of the circle(ellipse)

@@ -6,7 +6,7 @@ import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
 from ..scales.utils import resolution
-from ..utils import make_rgba
+from ..utils import to_rgba
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
@@ -73,7 +73,7 @@ class geom_crossbar(geom):
         out : DrawingArea
         """
         # background
-        facecolor = make_rgba(data['fill'], data['alpha'])
+        facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
             facecolor = 'none'
 

@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.collections as mcoll
 
-from ..utils import make_rgba, make_line_segments, suppress
+from ..utils import to_rgba, make_line_segments, suppress
 from ..utils import make_iterable
 from ..components import aes
 from .geom import geom
@@ -68,8 +68,8 @@ class geom_abline(geom):
         segments = make_line_segments(x.ravel(),
                                       y.ravel(),
                                       ispath=False)
-        pinfo['color'] = make_rgba(pinfo['color'],
-                                   pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'],
+                                 pinfo['alpha'])
         coll = mcoll.LineCollection(segments,
                                     edgecolor=pinfo['color'],
                                     linewidth=pinfo['size'],
