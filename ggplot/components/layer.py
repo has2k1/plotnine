@@ -12,7 +12,7 @@ from patsy.eval import EvalEnvironment
 
 from ..scales.scales import scales_add_defaults
 from ..utils.exceptions import GgplotError
-from ..utils import DISCRETE_DTYPES, ninteraction
+from ..utils import DISCRETE_KINDS, ninteraction
 from ..utils import check_required_aesthetics, defaults
 from ..utils import is_string, gg_import
 from ..utils import is_scalar_or_string, suppress
@@ -338,6 +338,6 @@ def discrete_columns(df, ignore):
     """
     lst = []
     for col in df:
-        if (df[col].dtype in DISCRETE_DTYPES) and not (col in ignore):
+        if (df[col].dtype.kind in DISCRETE_KINDS) and not (col in ignore):
             lst.append(col)
     return lst

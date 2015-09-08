@@ -23,11 +23,8 @@ import six
 from .exceptions import GgplotError, gg_warn
 
 
-DISCRETE_DTYPES = {'category', np.dtype('O'), np.bool}
-CONTINUOUS_DTYPES = {np.number,
-                     np.dtype('int16'), np.dtype('float16'),
-                     np.dtype('int32'), np.dtype('float32'),
-                     np.dtype('int64'), np.dtype('float64')}
+DISCRETE_KINDS = 'Ob'
+CONTINUOUS_KINDS = 'if'
 
 # The x scale and y scale of a panel. Each may be None
 xy_panel_scales = collections.namedtuple('xy_panel_scales', 'x y')

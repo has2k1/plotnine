@@ -8,7 +8,7 @@ import pandas.core.common as com
 from six.moves import range
 
 from ..components.aes import aes_to_scale
-from ..utils import DISCRETE_DTYPES, CONTINUOUS_DTYPES
+from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
 from ..utils import gg_import
 from ..utils.exceptions import gg_warn, GgplotError
 
@@ -265,11 +265,11 @@ def scales_add_missing(plot, aesthetics):
 
 
 def scale_type(series):
-    if series.dtype in CONTINUOUS_DTYPES:
+    if series.dtype.kind in CONTINUOUS_KINDS:
         stype = 'continuous'
-    elif series.dtype in DISCRETE_DTYPES:
+    elif series.dtype.kind in DISCRETE_KINDS:
         stype = 'discrete'
-    elif series.dtype == np.dtype('<M8[ns]'):
+    elif series.dtype.kind == 'M':
         stype = 'datetime'
     else:
         msg = ("Don't know how to automatically pick scale for "
