@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import types
 from copy import deepcopy
 from collections import OrderedDict
+from six.moves import zip
 
 import numpy as np
 import pandas as pd
@@ -12,7 +13,7 @@ from matplotlib.ticker import Locator, Formatter, FuncFormatter
 
 from ..utils import waiver, is_waive
 from ..utils import match, is_sequence_of_strings
-from ..utils import round_any, suppress
+from ..utils import round_any, suppress, CONTINUOUS_KINDS
 from ..utils.exceptions import gg_warn, GgplotError
 from .utils import rescale, censor, expand_range, zero_range
 from .utils import identity_trans, gettrans
@@ -23,8 +24,7 @@ class scale(object):
     """
     Base class for all scales
     """
-    aesthetics = None   # aesthetics affected by this scale
-    palette = None      # aesthetic mapping function
+    aesthetics = []     # aesthetics affected by this scale
     range = None        # range of aesthetic
     na_value = np.NaN   # What to do with the NA values
     expand = waiver()   # multiplicative and additive expansion constants.
@@ -62,6 +62,52 @@ class scale(object):
         gg = deepcopy(gg)
         gg.scales.append(self)
         return gg
+
+    @staticmethod
+    def palette(x):
+        """
+        Aesthetic mapping function
+        """
+        raise NotImplementedError('Not Implemented')
+
+    def map(self, x, limits=None):
+        """
+        Map every element of x
+
+        The palette should do the real work, this should
+        make sure that sensible values are sent and
+        return from the palette.
+        """
+        raise NotImplementedError('Not Implemented')
+
+    def train(self, x):
+        """
+        Train scale
+
+        Parameters
+        ----------
+        x: pd.series | np.array
+            a column of data to train over
+        """
+        raise NotImplementedError('Not Implemented')
+
+    def dimension(self, expand=None):
+        """
+        The phyical size of the scale.
+        """
+        raise NotImplementedError('Not Implemented')
+
+    def transform_df(self, df):
+        """
+        Transform dataframe
+        """
+        raise NotImplementedError('Not Implemented')
+
+    def transform(self, x):
+        """
+        Transform array|series x
+        """
+        raise NotImplementedError('Not Implemented')
 
     def clone(self):
         return deepcopy(self)
@@ -115,13 +161,13 @@ class scale_discrete(scale):
     """
     drop = True        # drop unused factor levels from the scale
 
-    def train(self, series, drop=None):
+    def train(self, x, drop=None):
         """
         Train scale
 
         Parameters
         ----------
-        series: pd.series | np.array
+        x: pd.series| np.array
             a column of data to train over
 
         A discrete range is stored in a list
@@ -133,15 +179,18 @@ class scale_discrete(scale):
             self.range = []
 
         # new range values
-        if com.is_categorical_dtype(series):
-            rng = list(series.cat.categories)
+        if com.is_categorical_dtype(x):
+            rng = list(x.cat.categories)
             if drop:
-                rng = [x for x in rng if x in set(series)]
+                rng = x.drop_duplicates().tolist()
+        elif x.dtype.kind in CONTINUOUS_KINDS:
+            msg = "Continuous value supplied to discrete scale"
+            raise GgplotError(msg)
         else:
-            rng = list(series.drop_duplicates().sort(inplace=False))
+            rng = list(x.drop_duplicates().sort(inplace=False))
 
         # update range
-        self.range += [x for x in rng if not (x in set(self.range))]
+        self.range += [i for i in rng if not (i in set(self.range))]
 
     def dimension(self, expand=None):
         """
@@ -256,16 +305,17 @@ class scale_discrete(scale):
 
     def transform_df(self, df):
         """
-        Transform df
+        Transform dataframe
         """
         # Discrete scales do not do transformations
         return df
 
-    def transform(self, series):
+    def transform(self, x):
         """
-        Transform
+        Transform array|series x
         """
-        return series
+        # Discrete scales do not do transformations
+        return x
 
 
 class scale_continuous(scale):
@@ -329,21 +379,21 @@ class scale_continuous(scale):
 
         scale.__init__(self, **kwargs)
 
-    def train(self, series):
+    def train(self, x):
         """
         Train scale
 
         Parameters
         ----------
-        series: pd.series | np.array
+        x: pd.series | np.array
             a column of data to train over
 
         """
-        if not len(series):
+        if not len(x):
             return
 
-        mn = series.min()
-        mx = series.max()
+        mn = x.min()
+        mx = x.max()
         if not (self.range is None):
             _mn, _mx = self.range
             mn = np.min([mn, _mn])
@@ -353,7 +403,7 @@ class scale_continuous(scale):
 
     def transform_df(self, df):
         """
-        Transform df
+        Transform dataframe
         """
         if len(df) == 0:
             return
@@ -368,14 +418,14 @@ class scale_continuous(scale):
 
         return df
 
-    def transform(self, series):
+    def transform(self, x):
         """
-        Transform
+        Transform array|series x
         """
         try:
-            return self.trans.trans(series)
+            return self.trans.trans(x)
         except TypeError:
-            return [self.trans.trans(x) for x in series]
+            return [self.trans.trans(val) for val in x]
 
     def dimension(self, expand=None):
         """
