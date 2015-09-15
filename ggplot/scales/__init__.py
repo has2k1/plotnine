@@ -55,6 +55,8 @@ from .scale_xy import scale_y_discrete, scale_y_continuous
 # position transforms
 from .scale_xy import scale_x_datetime, scale_x_date
 from .scale_xy import scale_y_datetime, scale_y_date
+from .scale_xy import scale_x_timedelta
+from .scale_xy import scale_y_timedelta
 from .scale_xy import scale_x_log10, scale_y_log10
 from .scale_xy import scale_x_sqrt, scale_y_sqrt
 # reverse

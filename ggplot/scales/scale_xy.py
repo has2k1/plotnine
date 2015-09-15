@@ -174,6 +174,16 @@ scale_x_date = scale_x_datetime
 scale_y_date = scale_y_datetime
 
 
+class scale_x_timedelta(scale_position_continuous):
+    trans = 'timedelta'
+    aesthetics = ['x', 'xmin', 'xmax', 'xend']
+
+
+class scale_y_timedelta(scale_position_continuous):
+    trans = 'timedelta'
+    aesthetics = ['y', 'ymin', 'ymay', 'yend']
+
+
 class scale_x_sqrt(scale_x_continuous):
     trans = 'sqrt'
 

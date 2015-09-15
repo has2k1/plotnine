@@ -17,20 +17,16 @@ from types import FunctionType
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
-from matplotlib.ticker import MaxNLocator, ScalarFormatter
-import matplotlib.dates as dates
+from matplotlib.ticker import MaxNLocator, ScalarFormatter, Formatter
 from matplotlib.dates import MinuteLocator, HourLocator, DayLocator
 from matplotlib.dates import WeekdayLocator, MonthLocator, YearLocator
 from matplotlib.dates import AutoDateLocator
 from matplotlib.dates import DateFormatter
+from matplotlib.dates import date2num, num2date
 import six
 
 from ..utils import seq, round_any, identity, is_waive, gg_import
 from ..utils.exceptions import GgplotError
-
-
-to_ordinalf = dates._to_ordinalf_np_vectorized
-from_ordinalf = dates._from_ordinalf_np_vectorized
 
 
 # formatting functions
@@ -149,7 +145,8 @@ def censor(x, range=(0, 1), only_finite=True):
         intype = type(x)
         x = np.array(x)
 
-    if 'datetime64' not in str(x.dtype):
+    # Not datetime or timedelta
+    if x.dtype.kind not in 'Mm':
         if only_finite:
             finite = np.isfinite(x)
         else:
@@ -188,7 +185,11 @@ def zero_range(x, tol=np.finfo(float).eps * 100):
         raise GgplotError('x must be length 1 or 2')
 
     if isinstance(x[0], (pd.Timestamp, datetime.datetime)):
-        x = to_ordinalf(x)
+        x = date2num(x)
+    elif isinstance(x[0], pd.Timedelta):
+        # series preserves the timedelta,
+        # then we want them as ints
+        x = pd.Series(x).astype(np.int)
 
     if any(np.isnan(x)):
         return np.nan
@@ -232,8 +233,11 @@ def expand_range(range, mul=0, add=0, zero_width=1):
         range = (range, range)
 
     timestamp = isinstance(range[0], pd.Timestamp)
+    timedelta = isinstance(range[0], pd.Timedelta)
     if timestamp:
-        range = to_ordinalf(range)
+        range = date2num(range)
+    elif timedelta:
+        range = pd.Series(range).astype(np.int)
 
     # The expansion cases
     if zero_range(range):
@@ -245,7 +249,10 @@ def expand_range(range, mul=0, add=0, zero_width=1):
         erange = tuple(erange)
 
     if timestamp:
-        erange = tuple(from_ordinalf(erange))
+        erange = tuple(num2date(erange))
+    elif timedelta:
+        erange = (pd.Timedelta(int(erange[0])),
+                  pd.Timedelta(int(erange[1])))
     return erange
 
 
@@ -381,6 +388,11 @@ def date_format(format='%Y-%m-%d'):
         return DateFormatter(format)
 
     return make_formatter
+
+
+class TimedeltaFormatter(Formatter):
+    def __call__(self, x, pos=0):
+        return str(pd.Timedelta(x))
 
 
 # Transforms #
@@ -606,15 +618,15 @@ def probability_trans(distribution, *args, **kwargs):
 def datetime_trans():
     def trans(x):
         try:
-            x = to_ordinalf(x)
+            x = date2num(x)
         except AttributeError:
             # numpy datetime64
             x = [pd.Timestamp(item) for item in x]
-            x = to_ordinalf(x)
+            x = date2num(x)
         return x
 
     def inv(x):
-        return from_ordinalf(x)
+        return num2date(x)
 
     def _DateFormatter():
         return DateFormatter('%Y-%m-%d')
@@ -622,6 +634,28 @@ def datetime_trans():
     _trans = trans_new('datetime', trans, inv)
     _trans.locator_factory = staticmethod(AutoDateLocator)
     _trans.formatter_factory = staticmethod(_DateFormatter)
+    return _trans
+
+
+def timedelta_trans():
+    def trans(x):
+        try:
+            iter(x)
+            x = pd.Series(x).astype(np.int)
+        except TypeError:
+            x = np.int(x)
+        return x
+
+    def inv(x):
+        try:
+            x = [pd.Timedelta(int(i)) for i in x]
+        except TypeError:
+            x = pd.Timedelta(int(x))
+        return x
+
+    _trans = trans_new('timedelta', trans, inv)
+    _trans.locator_factory = staticmethod(MaxNLocator)
+    _trans.formatter_factory = staticmethod(TimedeltaFormatter)
     return _trans
 
 

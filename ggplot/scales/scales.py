@@ -271,6 +271,8 @@ def scale_type(series):
         stype = 'discrete'
     elif series.dtype.kind == 'M':
         stype = 'datetime'
+    elif series.dtype.kind == 'm':
+        stype = 'timedelta'
     else:
         msg = ("Don't know how to automatically pick scale for "
                "object of type {}. Defaulting to 'continuous'")
