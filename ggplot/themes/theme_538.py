@@ -13,9 +13,6 @@ class theme_538(theme):
     def __init__(self):
         theme.__init__(self, complete=True)
         d = {
-            'axes.color_cycle': ['#30A2DA', '#FC4F30',
-                                 '#E5AE38', '#6D904F',
-                                 '#8B8B8B'],
             'axes.axisbelow': 'True',
             'axes.edgecolor': '#F0F0F0',
             'axes.facecolor': '#F0F0F0',

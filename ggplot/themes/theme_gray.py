@@ -13,10 +13,6 @@ class theme_gray(theme):
         theme.__init__(self, complete=True)
         d = {
             'axes.axisbelow': 'True',
-            'axes.color_cycle': ['#333333', '348ABD',
-                                 '7A68A6', 'A60628',
-                                 '467821', 'CF4457',
-                                 '188487', 'E24A33'],
             'axes.edgecolor': 'bcbcbc',
             'axes.facecolor': '#E5E5E5',
             'axes.grid': 'True',
