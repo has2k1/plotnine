@@ -38,9 +38,7 @@ class gg_context(object):
         if self.theme:
             # Use a throw away rcParams, so subsequent plots
             # will not have any residual from this plot
-            rcParams = self.theme.get_rcParams()
-            for key in six.iterkeys(rcParams):
-                val = rcParams[key]
+            for key, val in six.iteritems(self.theme.rcParams):
                 # there is a bug in matplotlib which does not allow
                 # None directly
                 # https://github.com/matplotlib/matplotlib/issues/2543

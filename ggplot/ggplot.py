@@ -19,7 +19,6 @@ from .utils.exceptions import GgplotError
 from .utils.ggutils import gg_context
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
-from .scales.scale import scale_discrete
 from .coords import coord_cartesian
 from .guides.guides import guides
 
@@ -147,18 +146,7 @@ class ggplot(object):
             # xaxis & yaxis breaks and labels and stuff
             set_breaks_and_labels(plot, panel.ranges[panel_idx],
                                   finfo, ax)
-            plot.theme.post_plot_callback(ax)
-
-            # TODO: Need to find a better place for this
-            # theme_apply turns on the minor grid only to turn
-            # it off here!!!
-            xscale = panel.x_scales[finfo['SCALE_X'] - 1]
-            yscale = panel.y_scales[finfo['SCALE_Y'] - 1]
-            if isinstance(xscale, scale_discrete):
-                ax.grid(False, which='minor', axis='x')
-
-            if isinstance(yscale, scale_discrete):
-                ax.grid(False, which='minor', axis='y')
+            plot.theme.apply(ax)
 
             # draw facet labels
             if isinstance(plot.facet, (facet_grid, facet_wrap)):

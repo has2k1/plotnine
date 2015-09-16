@@ -149,7 +149,8 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         return ((self.__class__ == other.__class__) and
                 (self.properties == other.properties))
 
-    def get_rcParams(self):
+    @property
+    def rcParams(self):
         """Add targets rcparams to an rcparam dict before plotting.
 
         Returns
@@ -157,7 +158,7 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         dict
             Dictionary of legal matplotlib parameters.
 
-        This method should always call super(...).get_rcParams and
+        This method should always call super(...).rcParams and
         update the dictionary that it returns with its own value, and
         return that dictionary.
 
@@ -168,7 +169,7 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         """
         return {}
 
-    def post_plot_callback(self, ax):
+    def apply(self, ax):
         """Called after a chart has been plotted.
 
         Subclasses should override this method to customize the plot
@@ -178,7 +179,7 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         ----------
         ax : matplotlib.axes.Axes
 
-        This method should be implemented as super(...).post_plot_callback()
+        This method should be implemented as super(...).apply()
         followed by extracting the portion of the axes specific to this
         target then applying the properties to the target.
 
@@ -187,16 +188,16 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
 
 
 class axis_title_x(__element_target):
-    def post_plot_callback(self, ax):
-        super(axis_title_x, self).post_plot_callback(ax)
+    def apply(self, ax):
+        super(axis_title_x, self).apply(ax)
 
         x_axis_label = ax.get_xaxis().get_label()
         x_axis_label.set(**self.properties)
 
 
 class axis_title_y(__element_target):
-    def post_plot_callback(self, ax):
-        super(axis_title_y, self).post_plot_callback(ax)
+    def apply(self, ax):
+        super(axis_title_y, self).apply(ax)
         y_axis_label = ax.get_yaxis().get_label()
         y_axis_label.set(**self.properties)
 
@@ -206,8 +207,8 @@ class axis_title(axis_title_x, axis_title_y):
 
 
 class legend_title(__element_target):
-    def post_plot_callback(self, ax):
-        super(legend_title, self).post_plot_callback(ax)
+    def apply(self, ax):
+        super(legend_title, self).apply(ax)
         legend = ax.get_legend()
         if legend:
             legend.set(**self.properties)
@@ -219,8 +220,8 @@ class legend_text(legend_title):
 
 
 class plot_title(__element_target):
-    def post_plot_callback(self, ax):
-        super(plot_title, self).post_plot_callback(ax)
+    def apply(self, ax):
+        super(plot_title, self).apply(ax)
         ax.title.set(**self.properties)
 
 
@@ -245,8 +246,8 @@ class title(axis_title, legend_title, plot_title):
 
 class axis_text_x(__element_target):
 
-    def post_plot_callback(self, ax):
-        super(axis_text_x, self).post_plot_callback(ax)
+    def apply(self, ax):
+        super(axis_text_x, self).apply(ax)
         labels = ax.get_xticklabels()
         for l in labels:
             l.set(**self.properties)
@@ -254,8 +255,8 @@ class axis_text_x(__element_target):
 
 class axis_text_y(__element_target):
 
-    def post_plot_callback(self, ax):
-        super(axis_text_y, self).post_plot_callback(ax)
+    def apply(self, ax):
+        super(axis_text_y, self).apply(ax)
         labels = ax.get_yticklabels()
         for l in labels:
             l.set(**self.properties)
@@ -271,8 +272,9 @@ class text(axis_text, legend_text, strip_text, title):
     Scope of theme that applies to all text in plot
     """
 
-    def get_rcParams(self):
-        rcParams = super(text, self).get_rcParams()
+    @property
+    def rcParams(self):
+        rcParams = super(text, self).rcParams
         family = self.properties.get("family")
         if family:
             rcParams["font.family"] = family

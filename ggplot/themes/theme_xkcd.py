@@ -15,15 +15,18 @@ class theme_xkcd(theme):
 
     """
     def __init__(self, scale=1, length=100, randomness=2):
-        super(theme_xkcd, self).__init__(complete=True)
+        theme.__init__(self, complete=True)
         with plt.xkcd(scale=scale, length=length, randomness=randomness):
             _xkcd = mpl.rcParams.copy()
+
         # no need to a get a deprecate warning for nothing...
         for key in mpl._deprecated_map:
             if key in _xkcd:
                 del _xkcd[key]
+
         if 'tk.pythoninspect' in _xkcd:
             del _xkcd['tk.pythoninspect']
+
         self._rcParams.update(_xkcd)
 
     def __deepcopy__(self, memo):
@@ -33,6 +36,7 @@ class theme_xkcd(theme):
         result.__class__ = self.__class__
         result.__dict__['element_themes'] = deepcopy(self.element_themes)
         result.__dict__["_rcParams"] = {}
+        result.__dict__["_params"] = deepcopy(self._params)
         for k, v in self._rcParams.items():
             try:
                 result.__dict__["_rcParams"][k] = deepcopy(v, memo)
@@ -46,16 +50,6 @@ class theme_xkcd(theme):
 
         return result
 
-    def apply_theme(self, ax):
-        """"
-        Styles x,y axes to appear like ggplot2
-        Must be called after all plot and axis manipulation operations have
-        been carried out (needs to know final tick spacing)
-
-        From:
-        https://github.com/wrobstory/climatic/blob/master/climatic/stylers.py
-        """
-        # Restyle the tick lines
+    def apply_more(self, ax):
         for line in ax.get_xticklines() + ax.get_yticklines():
-            line.set_markersize(5)
-            line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
+            line.set_markeredgewidth(2)

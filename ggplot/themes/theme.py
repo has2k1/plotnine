@@ -13,6 +13,8 @@ specify the scope of the theme application.
 """
 from copy import copy, deepcopy
 
+import matplotlib as mpl
+
 from .element_target import element_target_factory, merge_element_targets
 from .element_target import other_targets
 
@@ -81,17 +83,37 @@ class theme(object):
                 self.element_themes.append(
                     element_target_factory(target_name, theme_element))
 
-    def apply_theme(self, ax):
-        """apply_theme will be called with an axes object after plot has completed.
+    def apply(self, ax):
+        """
+        Apply this theme, then apply additional modifications in order.
+
+        This method should not be overridden. Subclasses should override
+        the apply_more method. This implementation will ensure that the
+        a theme that includes partial themes will be themed properly.
+        """
+        # Restyle the tick lines
+        for line in ax.get_xticklines() + ax.get_yticklines():
+            line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
+
+        self.apply_more(ax)
+
+        # does this need to be ordered first?
+        for element_theme in self.element_themes:
+            element_theme.apply(ax)
+
+    def apply_more(self, ax):
+        """
+        apply_more will be called with an axes object after plot has completed.
 
         Complete themes should implement this method if post plot themeing is
         required.
-
         """
         pass
 
-    def get_rcParams(self):
-        """Get an rcParams dict for this theme.
+    @property
+    def rcParams(self):
+        """
+        Return rcParams dict for this theme.
 
         Notes
         -----
@@ -99,7 +121,7 @@ class theme(object):
         self._rcParams is constructed properly.
 
         rcParams are used during plotting. Sometimes the same theme can be
-        achieved by setting rcParams before plotting or a post_plot_callback
+        achieved by setting rcParams before plotting or a apply
         after plotting. The choice of how to implement it is is a matter of
         convenience in that case.
 
@@ -120,23 +142,8 @@ class theme(object):
 
         if self.element_themes:
             for element_theme in self.element_themes:
-                rcparams = element_theme.get_rcParams()
-            rcParams.update(rcparams)
+                rcParams.update(element_theme.rcParams)
         return rcParams
-
-    def post_plot_callback(self, ax, *args, **kwargs):
-        """Apply this theme, then apply additional modifications in order.
-
-        This method should not be overridden. Subclasses should override
-        the apply_theme subclass. This implementation will ensure that the
-        a theme that includes partial themes will be themed properly.
-
-        """
-        self.apply_theme(ax, *args, **kwargs)
-        # does this need to be ordered first?
-        for element_theme in self.element_themes:
-            print('element_theme.post_plot_callback')
-            element_theme.post_plot_callback(ax)
 
     def add_theme(self, other):
         """Add themes together.
