@@ -209,6 +209,22 @@ class scale_fill_gradient(scale_color_gradient):
     aesthetics = ['fill']
 
 
+class scale_color_desaturate(scale_color_gradient):
+    aesthetics = ['color']
+    guide = 'colorbar'
+
+    def __init__(self, color='red', reverse=False, **kwargs):
+        color2 = palettes.desaturate(color, 0)
+        low, high = color, color2
+        if reverse:
+            low, high = high, low
+        scale_color_gradient.__init__(self, low, high, **kwargs)
+
+
+class scale_fill_desaturate(scale_color_desaturate):
+    aesthetics = ['fill']
+
+
 # Diverging colour gradient
 class scale_color_gradient2(scale_continuous):
     aesthetics = ['color']
