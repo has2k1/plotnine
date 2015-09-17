@@ -1,8 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from copy import deepcopy
-
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import brewer2mpl
@@ -24,17 +22,23 @@ Consider using type = "seq" or type = "div" instead"
 # Palette making utilities #
 
 
-def hue_pal(h=.01, l=.6, s=.65):
+def hue_pal(h=.01, l=.6, s=.65, color_space='hls'):
     """
     Utility for making hue palettes for color schemes.
     """
-    if not all([0<=val<=1 for val in (h, l, s)]):
-        msg = ("hue_pal expects values to be between 0 and 1.",
+    if not all([0 <= val <= 1 for val in (h, l, s)]):
+        msg = ("hue_pal expects values to be between 0 and 1. "
                " I got h={}, l={}, s={}".format(h, l, s))
-        raise GgplotError(*msg)
+        raise GgplotError(msg)
+
+    if color_space not in ('hls', 'husl'):
+        msg = "color_space should be one of ['hls', 'husl']"
+        raise GgplotError(msg)
+
+    palette = getattr(palettes, '{}_palette'.format(color_space))
 
     def func(n):
-        colors = palettes.hls_palette(n, h, l, s)
+        colors = palette(n, h=h, l=l, s=s)
         return [rgb2hex(c) for c in colors]
     return func
 
@@ -149,8 +153,8 @@ def gradient_n_pal(colors, values=None, name='gradientn'):
 class scale_color_hue(scale_discrete):
     aesthetics = ['color']
 
-    def __init__(self, h=.01, l=.6, s=.65, **kwargs):
-        kwargs['palette'] = hue_pal(h, l, s)
+    def __init__(self, h=.01, l=.6, s=.65, color_space='hls', **kwargs):
+        kwargs['palette'] = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -208,6 +212,7 @@ class scale_fill_gradient(scale_color_gradient):
 # Diverging colour gradient
 class scale_color_gradient2(scale_continuous):
     aesthetics = ['color']
+    guide = 'colorbar'
 
     def __init__(self, low='#832424', mid='#FFFFFF',
                  high='#3A3A98', space='Lab', midpoint=0,
@@ -232,6 +237,7 @@ class scale_fill_gradient2(scale_color_gradient2):
 # Smooth colour gradient between n colours
 class scale_color_gradientn(scale_continuous):
     aesthetics = ['color']
+    guide = 'colorbar'
 
     def __init__(self, colors, values=None, space='Lab', **kwargs):
         """
@@ -247,6 +253,7 @@ class scale_fill_gradientn(scale_color_gradientn):
 
 class scale_color_distiller(scale_color_gradientn):
     aesthetics = ['color']
+    guide = 'colorbar'
 
     def __init__(self, type='seq', palette=1, values=None,
                  space='Lab', **kwargs):
