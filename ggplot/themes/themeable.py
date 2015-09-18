@@ -12,10 +12,9 @@ that covers text also has to cover axis.title.
 
 from six import add_metaclass
 
+from ..utils import RegisteredMeta
 from ..utils.exceptions import GgplotError
 
-
-element_target_map = {}
 
 other_targets = {
     'legend_direction': None,
@@ -32,77 +31,13 @@ other_targets = {
 }
 
 
-class RegisterElementTarget(type):
+@add_metaclass(RegisteredMeta)
+class themeable(object):
     """
-    Register all public element targets so they can be created by name.
-    """
-    def __init__(klass, name, bases, class_dict):
-        if not name.startswith("_"):
-            element_target_map[name] = klass
+    themeable is an abstract class of things that can be themed.
 
-        super(RegisterElementTarget, klass).__init__(name, bases, class_dict)
-
-
-def element_target_factory(element_target, element_theme):
-    """
-    Create an element target by name.
-    """
-    klass = element_target_map.get(element_target)
-    if klass:
-        return klass(element_theme)
-    else:
-        raise GgplotError("no such element target %s" % element_target)
-
-
-def merge_element_targets(et_list1, et_list2):
-    """
-    Merge two lists of element_targets by first sorting them according to
-    precedence, then retaining the last instance of a target in case of
-    instances.
-    """
-    return unique_element_targets(sorted_element_targets(et_list1 + et_list2))
-
-
-def unique_element_targets(element_targets):
-    """
-    From a list of element targets, save the last element target for targets
-    of the same type.
-
-    This is not strictly necessary, but is an optimaztion when combining
-    themes to prevent carrying around themes that will be completely
-    overridden.
-
-    @todo: should merge by overriding the old properties with the newer
-    properties.
-    """
-    target_seen = set()
-    reversed_targets = []
-    for element_target in reversed(element_targets):
-        if element_target.__class__ not in target_seen:
-            target_seen.add(element_target.__class__)
-            reversed_targets.append(element_target)
-
-    return [i for i in reversed(reversed_targets)]
-
-
-def sorted_element_targets(element_target_list):
-    """
-    Sort element_targets in reverse based on the their depth in the
-    inheritance hierarchy.
-
-    This will make sure any general target, like text will be applied by
-    a specific target like axis_text_x.
-    """
-    def key(element_target_):
-        return len(element_target_.__class__.__mro__)
-
-    return sorted(element_target_list, key=key, reverse=True)
-
-
-@add_metaclass(RegisterElementTarget)
-class __element_target(object):
-    """
-    __element_target is an abstract class of things that can be themed.
+    Every subclass of themeable is stored in a dict at
+    `themeable.register` with the name of the subclass as the key.
 
     It is the base of a class hierarchy that uses inheritance in a
     non-traditional manner. In the textbook use of class inheritance,
@@ -116,9 +51,9 @@ class __element_target(object):
     y_axis_title. We are just using multiple inheritance to specify
     this composition.
 
-    When implementing a new target based on the ggplot2 documentation, it is
-    important to keep this in mind and reverse the order of the "inherits from"
-    in the documentation.
+    When implementing a new target based on the ggplot2 documentation,
+    it is important to keep this in mind and reverse the order of the
+    "inherits from" in the documentation.
 
     For example, to implement,
 
@@ -127,10 +62,10 @@ class __element_target(object):
 
     You would have this implementation:
 
-    class axis_title_x(__element_target):
+    class axis_title_x(themeable):
         ...
 
-    class axis_title_y(__element_target):
+    class axis_title_y(themeable):
         ...
 
     class axis_title(axis_title_x, axis_title_y):
@@ -138,15 +73,14 @@ class __element_target(object):
 
 
     If the superclasses fully implement the subclass, the body of the
-    subclass should be "pass". Python will do the right thing.
+    subclass should be "pass". Python(__mro__) will do the right thing.
 
     When a method does require implementation, call super() then add
     the target's implementation to the axes.
-
     """
 
     def __init__(self, element_theme=None):
-        # @todo: fix unittests in test_element_target or leave this as is?
+        # @todo: fix unittests in test_themeable or leave this as is?
         if element_theme:
             self.properties = element_theme.properties
         else:
@@ -196,15 +130,70 @@ class __element_target(object):
         pass
 
 
-class axis_title_x(__element_target):
+def make_themeable(name, theme_element):
+    """
+    Create an themeable by name.
+    """
+    try:
+        klass = themeable.registry[name]
+    except KeyError:
+        raise GgplotError("No such element target %s" % themeable)
+    return klass(theme_element)
+
+
+def merge_themeables(et_list1, et_list2):
+    """
+    Merge two lists of themeables by first sorting them according to
+    precedence, then retaining the last instance of a target in case of
+    instances.
+    """
+    return unique_themeables(sorted_themeables(et_list1 + et_list2))
+
+
+def unique_themeables(themeables):
+    """
+    From a list of element targets, save the last element target for targets
+    of the same type.
+
+    This is not strictly necessary, but is an optimaztion when combining
+    themes to prevent carrying around themes that will be completely
+    overridden.
+
+    @todo: should merge by overriding the old properties with the newer
+    properties.
+    """
+    target_seen = set()
+    reversed_targets = []
+    for themeable in reversed(themeables):
+        if themeable.__class__ not in target_seen:
+            target_seen.add(themeable.__class__)
+            reversed_targets.append(themeable)
+
+    return [i for i in reversed(reversed_targets)]
+
+
+def sorted_themeables(themeable_list):
+    """
+    Sort themeables in reverse based on the their depth in the
+    inheritance hierarchy.
+
+    This will make sure any general target, like text will be applied by
+    a specific target like axis_text_x.
+    """
+    def key(themeable_):
+        return len(themeable_.__class__.__mro__)
+
+    return sorted(themeable_list, key=key, reverse=True)
+
+
+class axis_title_x(themeable):
     def apply(self, ax):
         super(axis_title_x, self).apply(ax)
-
         x_axis_label = ax.get_xaxis().get_label()
         x_axis_label.set(**self.properties)
 
 
-class axis_title_y(__element_target):
+class axis_title_y(themeable):
     def apply(self, ax):
         super(axis_title_y, self).apply(ax)
         y_axis_label = ax.get_yaxis().get_label()
@@ -215,7 +204,7 @@ class axis_title(axis_title_x, axis_title_y):
     pass
 
 
-class legend_title(__element_target):
+class legend_title(themeable):
     def apply(self, ax):
         super(legend_title, self).apply(ax)
         legend = ax.get_legend()
@@ -228,18 +217,18 @@ class legend_text(legend_title):
     pass
 
 
-class plot_title(__element_target):
+class plot_title(themeable):
     def apply(self, ax):
         super(plot_title, self).apply(ax)
         ax.title.set(**self.properties)
 
 
-class strip_text_x(__element_target):
+class strip_text_x(themeable):
     # @todo implement me
     pass
 
 
-class strip_text_y(__element_target):
+class strip_text_y(themeable):
     # @todo implement me
     pass
 
@@ -253,7 +242,7 @@ class title(axis_title, legend_title, plot_title):
     pass
 
 
-class axis_text_x(__element_target):
+class axis_text_x(themeable):
 
     def apply(self, ax):
         super(axis_text_x, self).apply(ax)
@@ -262,7 +251,7 @@ class axis_text_x(__element_target):
             l.set(**self.properties)
 
 
-class axis_text_y(__element_target):
+class axis_text_y(themeable):
 
     def apply(self, ax):
         super(axis_text_y, self).apply(ax)

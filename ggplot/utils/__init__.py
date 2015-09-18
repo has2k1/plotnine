@@ -10,7 +10,8 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     uniquecols, defaults, jitter, gg_import,
                     remove_missing, round_any, seq,
                     to_rgba, groupby_apply, make_line_segments,
-                    ColoredDrawingArea, suppress, copy_keys)
+                    ColoredDrawingArea, suppress, copy_keys,
+                    RegisteredMeta)
 
 
 __all__ = ['ggsave']

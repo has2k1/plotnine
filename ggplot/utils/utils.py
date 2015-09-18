@@ -736,3 +736,20 @@ def copy_keys(source, destination, keys=None):
     for k in set(source) & set(keys):
         destination[k] = source[k]
     return destination
+
+
+class RegisteredMeta(type):
+    """
+    Creates class that automatically registers all subclasses
+
+    The subclasses are held in the `registry` attribute of the
+    class. This is a `dict` of the form {name: class} and it
+    is accessed as `createdclass.registry`
+    """
+
+    def __init__(cls, name, bases, dct):
+        if not hasattr(cls, 'registry'):
+            cls.registry = {}
+        else:
+            cls.registry[name] = cls
+        super(RegisteredMeta, cls).__init__(name, bases, dct)

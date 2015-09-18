@@ -15,8 +15,8 @@ from copy import copy, deepcopy
 
 import matplotlib as mpl
 
-from .element_target import element_target_factory, merge_element_targets
-from .element_target import other_targets
+from .themeable import make_themeable, merge_themeables
+from .themeable import other_targets
 
 
 class theme(object):
@@ -76,12 +76,12 @@ class theme(object):
         # theming parameters that matplolib cannot deal with
         self._params = other_targets.copy()
 
-        for target_name, theme_element in kwargs.items():
-            if target_name in other_targets:
-                self._params[target_name] = theme_element
+        for name, theme_element in kwargs.items():
+            if name in other_targets:
+                self._params[name] = theme_element
             else:
                 self.element_themes.append(
-                    element_target_factory(target_name, theme_element))
+                    make_themeable(name, theme_element))
 
     def apply(self, ax):
         """
@@ -159,7 +159,7 @@ class theme(object):
             return other
         else:
             theme_copy = deepcopy(self)
-            theme_copy.element_themes = merge_element_targets(
+            theme_copy.element_themes = merge_themeables(
                 deepcopy(self.element_themes),
                 deepcopy(other.element_themes))
             theme_copy._params.update(other._params)
