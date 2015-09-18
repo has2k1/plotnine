@@ -1,4 +1,5 @@
-"""provide element targets, that is the elements targeted for theming.
+"""
+Provide element targets, that is the elements targeted for theming.
 
 
 From the ggplot2 documentation the axis.title inherits from text.
@@ -7,12 +8,12 @@ that may be themed, but the scope of what they apply to is different.
 The scope of text covers all text in the plot, axis.title applies
 only to the axis.title. In matplotlib terms this means that a theme
 that covers text also has to cover axis.title.
-
 """
+
+from six import add_metaclass
 
 from ..utils.exceptions import GgplotError
 
-from six import with_metaclass
 
 element_target_map = {}
 
@@ -32,7 +33,9 @@ other_targets = {
 
 
 class RegisterElementTarget(type):
-    """Register all public element targets so they can be created by name."""
+    """
+    Register all public element targets so they can be created by name.
+    """
     def __init__(klass, name, bases, class_dict):
         if not name.startswith("_"):
             element_target_map[name] = klass
@@ -41,7 +44,9 @@ class RegisterElementTarget(type):
 
 
 def element_target_factory(element_target, element_theme):
-    """Create an element target by name."""
+    """
+    Create an element target by name.
+    """
     klass = element_target_map.get(element_target)
     if klass:
         return klass(element_theme)
@@ -50,22 +55,24 @@ def element_target_factory(element_target, element_theme):
 
 
 def merge_element_targets(et_list1, et_list2):
-    """Merge two lists of element_targets by first sorting them according to
+    """
+    Merge two lists of element_targets by first sorting them according to
     precedence, then retaining the last instance of a target in case of
     instances.
-
     """
     return unique_element_targets(sorted_element_targets(et_list1 + et_list2))
 
 
 def unique_element_targets(element_targets):
-    """From a list of element targets, save the last element target for targets
+    """
+    From a list of element targets, save the last element target for targets
     of the same type.
 
-    This is not strictly necessary, but is an optimaztion when combining themes
-    to prevent carrying around themes that will be completely overridden.
+    This is not strictly necessary, but is an optimaztion when combining
+    themes to prevent carrying around themes that will be completely
+    overridden.
 
-    @todo: should merge boy overriding the old properties with the newer
+    @todo: should merge by overriding the old properties with the newer
     properties.
     """
     target_seen = set()
@@ -79,12 +86,12 @@ def unique_element_targets(element_targets):
 
 
 def sorted_element_targets(element_target_list):
-    """Sort element_targets in reverse based on the their depth in the
+    """
+    Sort element_targets in reverse based on the their depth in the
     inheritance hierarchy.
 
     This will make sure any general target, like text will be applied by
     a specific target like axis_text_x.
-
     """
     def key(element_target_):
         return len(element_target_.__class__.__mro__)
@@ -92,8 +99,10 @@ def sorted_element_targets(element_target_list):
     return sorted(element_target_list, key=key, reverse=True)
 
 
-class __element_target(with_metaclass(RegisterElementTarget, object)):
-    """__element_target is an abstract class of things that can be themed.
+@add_metaclass(RegisterElementTarget)
+class __element_target(object):
+    """
+    __element_target is an abstract class of things that can be themed.
 
     It is the base of a class hierarchy that uses inheritance in a
     non-traditional manner. In the textbook use of class inheritance,
@@ -135,7 +144,6 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
     the target's implementation to the axes.
 
     """
-    __metaclass__ = RegisterElementTarget
 
     def __init__(self, element_theme=None):
         # @todo: fix unittests in test_element_target or leave this as is?
@@ -151,7 +159,8 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
 
     @property
     def rcParams(self):
-        """Add targets rcparams to an rcparam dict before plotting.
+        """
+        Add targets rcparams to an rcparam dict before plotting.
 
         Returns
         -------
@@ -170,7 +179,8 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         return {}
 
     def apply(self, ax):
-        """Called after a chart has been plotted.
+        """
+        Called after a chart has been plotted.
 
         Subclasses should override this method to customize the plot
         according to the theme.
@@ -182,7 +192,6 @@ class __element_target(with_metaclass(RegisterElementTarget, object)):
         This method should be implemented as super(...).apply()
         followed by extracting the portion of the axes specific to this
         target then applying the properties to the target.
-
         """
         pass
 
@@ -263,7 +272,9 @@ class axis_text_y(__element_target):
 
 
 class axis_text(title, axis_text_x, axis_text_y):
-    """Set theme the text on x and y axis."""
+    """
+    Set theme the text on x and y axis.
+    """
     pass
 
 
