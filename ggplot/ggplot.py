@@ -102,8 +102,11 @@ class ggplot(object):
         with gg_context(theme=self.theme):
             plot = self.draw_plot()
             plot = self.draw_legend(plot)
+            # Theming
+            for ax in plot.axs:
+                plot.theme.apply(ax)
 
-        return plot.fig
+        return plot.figure
 
     def draw_plot(self):
         """
@@ -114,21 +117,24 @@ class ggplot(object):
         out : ggplot
             ggplot object with two new properties
                 - axs
-                - fig
+                - figure
         """
         data, panel, plot = self.build()
-        fig, axs = plt.subplots(plot.facet.nrow,
-                                plot.facet.ncol,
-                                sharex=False,
-                                sharey=False)
+        figure, axs = plt.subplots(plot.facet.nrow,
+                                   plot.facet.ncol,
+                                   sharex=False,
+                                   sharey=False)
 
+        figure._themeable = {}
         axs = np.atleast_2d(axs)
         axs = [ax for row in axs for ax in row]
         for ax in axs[len(panel.layout):]:
             ax.axis('off')
+            ax._themeable = {}
         axs = axs[:len(panel.layout)]
         plot.axs = axs
-        plot.fig = fig
+        plot.figure = figure
+        plot.theme.figure = figure
 
         # ax - axes for a particular panel
         # finfo - panel (facet) information from layout table
@@ -146,14 +152,13 @@ class ggplot(object):
             # xaxis & yaxis breaks and labels and stuff
             set_breaks_and_labels(plot, panel.ranges[panel_idx],
                                   finfo, ax)
-            plot.theme.apply(ax)
-
             # draw facet labels
             if isinstance(plot.facet, (facet_grid, facet_wrap)):
-                draw_facet_label(plot, finfo, ax, fig)
+                draw_facet_label(plot, finfo, ax)
 
         apply_facet_spacing(plot)
         add_labels_and_title(plot)
+
         return plot
 
     def build(self):
@@ -273,7 +278,7 @@ class ggplot(object):
             frameon=False,
             # Spacing goes here
             bbox_to_anchor=box_to_anchor,
-            bbox_transform=plot.fig.transFigure,
+            bbox_transform=plot.figure.transFigure,
             borderpad=0.,
         )
         ax = plot.axs[0]
@@ -361,24 +366,25 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
 
 
 def add_labels_and_title(plot):
-    fig = plot.fig
+    fig = plot.figure
     xlabel = plot.labels.get('x', '')
     ylabel = plot.labels.get('y', '')
     title = plot.labels.get('title', '')
 
-    # TODO: theme me
-    fig.text(0.5, 0.08, xlabel,
-             ha='center', va='top')
-    fig.text(0.09, 0.5, ylabel,
-             ha='right', va='center',
-             rotation='vertical')
-    fig.text(0.5, 0.92, title,
-             ha='center', va='bottom')
+    d = dict(
+        axis_title_x=fig.text(0.5, 0.08, xlabel,
+                              ha='center', va='top'),
+        axis_title_y=fig.text(0.09, 0.5, ylabel,
+                              ha='right', va='center',
+                              rotation='vertical'),
+        plot_title=fig.text(0.5, 0.92, title,
+                            ha='center', va='bottom'))
+
+    fig._themeable.update(d)
 
 
 # TODO Need to use theme (element_rect) for the colors
-# Should probably be in themes
-def draw_facet_label(plot, finfo, ax, fig):
+def draw_facet_label(plot, finfo, ax):
     """
     Draw facet label onto the axes.
 
@@ -410,7 +416,7 @@ def draw_facet_label(plot, finfo, ax, fig):
     # i.e (pts) * (inches / pts) * (1 / inches)
     # plus a padding factor of 1.6
     bbox = ax.get_window_extent().transformed(
-        fig.dpi_scale_trans.inverted())
+        plot.figure.dpi_scale_trans.inverted())
     w, h = bbox.width, bbox.height  # in inches
 
     fs = float(plot.theme._rcParams['font.size'])
@@ -428,53 +434,61 @@ def draw_facet_label(plot, finfo, ax, fig):
     y = 1 + hy/2.4
     x = 1 + hx/2.4
 
+    d = plot.figure._themeable
+    for key in ('strip_text_x', 'strip_text_y'):
+        if key not in d:
+            d[key] = []
+
     # facet_wrap #
     if fcwrap:
         # top label
         facet_var = plot.facet.vars[0]
-        ax.text(0.5, y, finfo[facet_var],
-                bbox=dict(
-                    xy=(0, 1),
-                    facecolor='lightgrey',
-                    edgecolor='lightgrey',
-                    height=hy,
-                    width=1,
-                    transform=ax.transAxes),
-                transform=ax.transAxes,
-                fontdict=dict(verticalalignment='center',
-                              horizontalalignment='center'))
+        text = ax.text(0.5, y, finfo[facet_var],
+                       bbox=dict(
+                           xy=(0, 1),
+                           facecolor='lightgrey',
+                           edgecolor='lightgrey',
+                           height=hy,
+                           width=1,
+                           transform=ax.transAxes),
+                       transform=ax.transAxes,
+                       fontdict=dict(verticalalignment='center',
+                                     horizontalalignment='center'))
+        d['strip_text_x'].append(text)
 
     # facet_grid #
     if fcgrid and toprow:
         # top labels
         facet_var = plot.facet.cols[0]
-        ax.text(0.5, y, finfo[facet_var],
-                bbox=dict(
-                    xy=(0, 1),
-                    facecolor='lightgrey',
-                    edgecolor='lightgrey',
-                    height=hy,
-                    width=1,
-                    transform=ax.transAxes),
-                transform=ax.transAxes,
-                fontdict=dict(verticalalignment='center',
-                              horizontalalignment='center'))
+        text = ax.text(0.5, y, finfo[facet_var],
+                       bbox=dict(
+                           xy=(0, 1),
+                           facecolor='lightgrey',
+                           edgecolor='lightgrey',
+                           height=hy,
+                           width=1,
+                           transform=ax.transAxes),
+                       transform=ax.transAxes,
+                       fontdict=dict(verticalalignment='center',
+                                     horizontalalignment='center'))
+        d['strip_text_x'].append(text)
 
     if fcgrid and rightcol:
         # right labels
         facet_var = plot.facet.rows[0]
-        ax.text(x, 0.5, finfo[facet_var],
-                bbox=dict(
-                    xy=(1, 0),
-                    facecolor='lightgrey',
-                    edgecolor='lightgrey',
-                    height=1,
-                    width=hx,
-                    transform=ax.transAxes),
-                transform=ax.transAxes,
-                fontdict=dict(rotation=-90,
-                              verticalalignment='center',
-                              horizontalalignment='center'))
+        text = ax.text(x, 0.5, finfo[facet_var],
+                       bbox=dict(
+                           xy=(1, 0),
+                           facecolor='lightgrey',
+                           edgecolor='lightgrey',
+                           height=1,
+                           width=hx,
+                           transform=ax.transAxes),
+                       transform=ax.transAxes,
+                       fontdict=dict(rotation=-90,
+                                     verticalalignment='center',
+                                     horizontalalignment='center'))
+        d['strip_text_y'].append(text)
 
 
 def apply_facet_spacing(plot):

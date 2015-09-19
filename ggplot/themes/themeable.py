@@ -183,15 +183,15 @@ def sorted_themeables(themeable_list):
 class axis_title_x(themeable):
     def apply(self, ax):
         super(axis_title_x, self).apply(ax)
-        x_axis_label = ax.get_xaxis().get_label()
-        x_axis_label.set(**self.properties)
+        text = ax.figure._themeable['axis_title_x']
+        text.set(**self.properties)
 
 
 class axis_title_y(themeable):
     def apply(self, ax):
         super(axis_title_y, self).apply(ax)
-        y_axis_label = ax.get_yaxis().get_label()
-        y_axis_label.set(**self.properties)
+        text = ax.figure._themeable['axis_title_y']
+        text.set(**self.properties)
 
 
 class axis_title(axis_title_x, axis_title_y):
@@ -201,30 +201,39 @@ class axis_title(axis_title_x, axis_title_y):
 class legend_title(themeable):
     def apply(self, ax):
         super(legend_title, self).apply(ax)
-        legend = ax.get_legend()
-        if legend:
-            legend.set(**self.properties)
+        textarea = ax.figure._themeable['legend_title']
+        textarea._text.set(**self.properties)
 
 
 class legend_text(legend_title):
-    # @todo: implement me
-    pass
+    def apply(self, ax):
+        super(legend_title, self).apply(ax)
+        texts = ax.figure._themeable['legend_text']
+        for text in texts:
+            text.set(**self.properties)
 
 
 class plot_title(themeable):
     def apply(self, ax):
         super(plot_title, self).apply(ax)
-        ax.title.set(**self.properties)
+        text = ax.figure._themeable['plot_title']
+        text.set(**self.properties)
 
 
 class strip_text_x(themeable):
-    # @todo implement me
-    pass
+    def apply(self, ax):
+        super(strip_text_x, self).apply(ax)
+        texts = ax.figure._themeable['strip_text_x']
+        for text in texts:
+            text.set(**self.properties)
 
 
 class strip_text_y(themeable):
-    # @todo implement me
-    pass
+    def apply(self, ax):
+        super(strip_text_y, self).apply(ax)
+        texts = ax.figure._themeable['strip_text_y']
+        for text in texts:
+            text.set(**self.properties)
 
 
 class strip_text(strip_text_x, strip_text_y):
@@ -232,12 +241,10 @@ class strip_text(strip_text_x, strip_text_y):
 
 
 class title(axis_title, legend_title, plot_title):
-    # @todo: also need to inherit from plot_title and legend_title
     pass
 
 
 class axis_text_x(themeable):
-
     def apply(self, ax):
         super(axis_text_x, self).apply(ax)
         labels = ax.get_xticklabels()
@@ -246,7 +253,6 @@ class axis_text_x(themeable):
 
 
 class axis_text_y(themeable):
-
     def apply(self, ax):
         super(axis_text_y, self).apply(ax)
         labels = ax.get_yticklabels()
@@ -254,7 +260,7 @@ class axis_text_y(themeable):
             l.set(**self.properties)
 
 
-class axis_text(title, axis_text_x, axis_text_y):
+class axis_text(axis_text_x, axis_text_y):
     """
     Set theme the text on x and y axis.
     """

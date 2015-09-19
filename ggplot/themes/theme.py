@@ -70,7 +70,9 @@ class theme(object):
         self.element_themes = []
         self.complete = complete
         self._rcParams = {}
-        # theming parameters that matplolib cannot deal with
+        # This is set when the figure is created,
+        # it is useful at legend drawing time.
+        self.figure = None
         self._params = other_targets.copy()
 
         for name, theme_element in kwargs.items():

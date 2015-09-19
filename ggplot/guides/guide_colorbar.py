@@ -121,6 +121,7 @@ class guide_colorbar(guide):
         direction = self.direction
         colors = self.bar['color'].tolist()
         labels = self.key['label'].tolist()
+        themeable = theme.figure._themeable
 
         # .5 puts the ticks in the middle of the bars when
         # raster=False. So when raster=True the ticks are
@@ -141,9 +142,9 @@ class guide_colorbar(guide):
             tick_locations = length - tick_locations[::-1]
 
         # title #
-        # TODO: theme me
         title_box = TextArea(
             self.title, textprops=dict(color='k', weight='bold'))
+        themeable['legend_title'] = title_box
 
         # colorbar and ticks #
         da = ColoredDrawingArea(width, height, 0, 0)
@@ -157,7 +158,10 @@ class guide_colorbar(guide):
 
         # labels #
         if self.label:
-            labels_da = create_labels(da, labels, tick_locations, direction)
+            labels_da, _themeable = create_labels(da, labels,
+                                                  tick_locations,
+                                                  direction)
+            themeable.update(_themeable)
         else:
             labels_da = ColoredDrawingArea(0, 0)
 
@@ -315,14 +319,15 @@ def create_labels(da, labels, locations, direction):
     labels_box.add_artist(txt1)
     labels_box.add_artist(txt2)
 
-    # TODO: Theme me
+    legend_text = []
     for i, (x, y, text) in enumerate(zip(xs, ys, labels)):
         txt = mtext.Text(x, y, text,
                          size=fontsize,
                          horizontalalignment=ha,
                          verticalalignment=va)
         labels_box.add_artist(txt)
-    return labels_box
+        legend_text.append(txt)
+    return labels_box, {'legend_text': legend_text}
 
 
 guide_colourbar = guide_colorbar

@@ -235,14 +235,14 @@ class guide_legend(guide):
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
         sep = 5  # gap between the legends
+        themeable = theme.figure._themeable
 
         # title
-        # TODO: theme me
         title_box = TextArea(
             self.title, textprops=dict(color='k', weight='bold'))
+        themeable['legend_title'] = title_box
 
         # labels
-        # TODO: theme me
         labels = []
         for item in self.key['label']:
             if isinstance(item, np.float) and np.float.is_integer(item):
@@ -250,9 +250,9 @@ class guide_legend(guide):
             va = 'center' if self.label_position == 'top' else 'baseline'
             ta = TextArea(item, textprops=dict(color='k', va=va))
             labels.append(ta)
+        themeable['legend_text'] = labels
 
         # Drawings
-        # TODO: theme me
         drawings = []
         for i in range(nbreak):
             da = ColoredDrawingArea(self._keywidth[i],
@@ -262,6 +262,7 @@ class guide_legend(guide):
             for gl in self.glayers:
                 da = gl.geom.draw_legend(gl.data.iloc[i], da, gl.layer)
             drawings.append(da)
+        themeable['legend_key'] = drawings
 
         # Match Drawings with labels to create the entries
         # TODO: theme me
