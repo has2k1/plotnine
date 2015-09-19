@@ -61,4 +61,4 @@ class ggtitle(labs):
             raise GgplotError("Arguments to",
                               self.__class__.__name__,
                               "cannot be None")
-        self.label = {'title': title}
+        self.labels = {'title': title}
