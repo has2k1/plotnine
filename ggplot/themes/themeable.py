@@ -1,6 +1,5 @@
 """
-Provide element targets, that is the elements targeted for theming.
-
+Provide theamables, that is the elements can be themed.
 
 From the ggplot2 documentation the axis.title inherits from text.
 What this means is that axis.title and text have the same elements
@@ -9,6 +8,7 @@ The scope of text covers all text in the plot, axis.title applies
 only to the axis.title. In matplotlib terms this means that a theme
 that covers text also has to cover axis.title.
 """
+from collections import OrderedDict
 
 from six import add_metaclass
 
@@ -47,11 +47,11 @@ class themeable(object):
 
     It is probably better to think if this hierarchy of leveraging
     Python's multiple inheritance to implement composition. For example
-    the axis_title target is *composed of* the x_axis_title and the
+    the axis_title themeable is *composed of* the x_axis_title and the
     y_axis_title. We are just using multiple inheritance to specify
     this composition.
 
-    When implementing a new target based on the ggplot2 documentation,
+    When implementing a new themeable based on the ggplot2 documentation,
     it is important to keep this in mind and reverse the order of the
     "inherits from" in the documentation.
 
@@ -76,7 +76,7 @@ class themeable(object):
     subclass should be "pass". Python(__mro__) will do the right thing.
 
     When a method does require implementation, call super() then add
-    the target's implementation to the axes.
+    the themeable's implementation to the axes.
     """
 
     def __init__(self, element_theme=None):
@@ -94,7 +94,7 @@ class themeable(object):
     @property
     def rcParams(self):
         """
-        Add targets rcparams to an rcparam dict before plotting.
+        Return themeables rcparams to an rcparam dict before plotting.
 
         Returns
         -------
@@ -105,10 +105,10 @@ class themeable(object):
         update the dictionary that it returns with its own value, and
         return that dictionary.
 
-        This method is called before plotting. It tends to be more useful
-        for general targets. Very specific targets often cannot be themed
-        until they are created as a result of the plotting process.
-
+        This method is called before plotting. It tends to be more
+        useful for general themeables. Very specific themeables
+        often cannot be be themed until they are created as a
+        result of the plotting process.
         """
         return {}
 
@@ -125,7 +125,7 @@ class themeable(object):
 
         This method should be implemented as super(...).apply()
         followed by extracting the portion of the axes specific to this
-        target then applying the properties to the target.
+        themeable then applying the properties.
         """
         pass
 
@@ -137,39 +137,33 @@ def make_themeable(name, theme_element):
     try:
         klass = themeable.registry[name]
     except KeyError:
-        raise GgplotError("No such element target %s" % themeable)
+        msg = "No such themeable element {}"
+        raise GgplotError(msg.format(name))
     return klass(theme_element)
 
 
-def merge_themeables(et_list1, et_list2):
+def merge_themeables(th1, th2):
     """
     Merge two lists of themeables by first sorting them according to
-    precedence, then retaining the last instance of a target in case of
-    instances.
+    precedence, then retaining the last instance of a themeable
+    in case of ties.
     """
-    return unique_themeables(sorted_themeables(et_list1 + et_list2))
+    return unique_themeables(sorted_themeables(th1 + th2))
 
 
 def unique_themeables(themeables):
     """
-    From a list of element targets, save the last element target for targets
-    of the same type.
+    Return a unique list of themeables, keep the last if there is more
+    than one of the same type.
 
     This is not strictly necessary, but is an optimaztion when combining
     themes to prevent carrying around themes that will be completely
     overridden.
-
-    @todo: should merge by overriding the old properties with the newer
-    properties.
     """
-    target_seen = set()
-    reversed_targets = []
-    for themeable in reversed(themeables):
-        if themeable.__class__ not in target_seen:
-            target_seen.add(themeable.__class__)
-            reversed_targets.append(themeable)
-
-    return [i for i in reversed(reversed_targets)]
+    d = OrderedDict()
+    for th in themeables:
+        d[th.__class__] = th
+    return list(d.values())
 
 
 def sorted_themeables(themeable_list):
@@ -177,8 +171,8 @@ def sorted_themeables(themeable_list):
     Sort themeables in reverse based on the their depth in the
     inheritance hierarchy.
 
-    This will make sure any general target, like text will be applied by
-    a specific target like axis_text_x.
+    This will make sure any general themeable, like text will be
+    applied by a specific themeable like axis_text_x.
     """
     def key(themeable_):
         return len(themeable_.__class__.__mro__)

@@ -1,27 +1,16 @@
-"""
-Theme elements:
-
-* element_line
-* element_rect
-* element_text
-* element_title
-
-These elements define what operations can be performed. The specific targets,
-eg. line, rect, text, title and their derivatives axis_title or axis_title_x
-specify the scope of the theme application.
-
-"""
 from copy import copy, deepcopy
 
 import matplotlib as mpl
 
+from ..utils.exceptions import GgplotError
 from .themeable import make_themeable, merge_themeables
 from .themeable import other_targets
 
 
 class theme(object):
 
-    """This is an abstract base class for themes.
+    """
+    This is an abstract base class for themes.
 
     In general, only complete themes should should subclass this class.
 
@@ -36,7 +25,7 @@ class theme(object):
     super().__init__. That will ensure that the rcParams are applied at
     the appropriate time.
 
-    The other method is apply_theme(ax). This method takes an axes object that
+    The other method is apply_more(ax). This method takes an axes object that
     has been created during the plot process. The theme should modify the
     axes according.
 
@@ -58,10 +47,10 @@ class theme(object):
             theme_matplotlib() + theme(axis_text_x=element_text(angle=45)) will
             only modify the x axis text.
 
-        kwargs**: theme_element
-            kwargs are theme_elements based on
+        kwargs**: themeables
+            kwargs are themeables based on
             http://docs.ggplot2.org/current/theme.html.
-            Currently only a subset of the elements are implemented.
+            Currently only a subset of the themeables are implemented.
             In addition, Python does not allow using '.' in argument
             names, so we are using '_'
             instead.
@@ -69,6 +58,14 @@ class theme(object):
             For example, ggplot2 axis.ticks.y will be axis_ticks_y
             in Python ggplot.
 
+            Many themeables are defined using theme elements i.e
+
+                - element_line
+                - element_rect
+                - element_text
+
+            These simply bind together all the aspects of a themeable
+            that can be themed.
         """
         self.element_themes = []
         self.complete = complete
@@ -103,10 +100,11 @@ class theme(object):
 
     def apply_more(self, ax):
         """
-        apply_more will be called with an axes object after plot has completed.
+        Makes any desired changes to the axes object
 
-        Complete themes should implement this method if post plot themeing is
-        required.
+        This method will be called with an axes object after plot
+        has completed. Complete themes should implement this method
+        if post plot themeing is required.
         """
         pass
 
@@ -166,10 +164,11 @@ class theme(object):
             return theme_copy
 
     def __add__(self, other):
-        if isinstance(other, theme):
-            return self.add_theme(other)
-        else:
-            raise TypeError()
+        if not isinstance(other, theme):
+            msg = ("Adding theme failed. ",
+                   "{} is not a theme").format(str(other))
+            raise GgplotError(msg)
+        return self.add_theme(other)
 
     def __radd__(self, other):
         """Subclasses should not override this method.
