@@ -8,6 +8,7 @@ The scope of text covers all text in the plot, axis.title applies
 only to the axis.title. In matplotlib terms this means that a theme
 that covers text also has to cover axis.title.
 """
+from copy import deepcopy
 from collections import OrderedDict
 
 from six import add_metaclass
@@ -180,6 +181,8 @@ def sorted_themeables(themeable_list):
     return sorted(themeable_list, key=key, reverse=True)
 
 
+# element_text themeables
+
 class axis_title_x(themeable):
     def apply(self, ax):
         super(axis_title_x, self).apply(ax)
@@ -275,23 +278,140 @@ class text(axis_text, legend_text, strip_text, title):
     @property
     def rcParams(self):
         rcParams = super(text, self).rcParams
-        family = self.properties.get("family")
-        if family:
-            rcParams["font.family"] = family
-        style = self.properties.get("style")
-        if style:
-            rcParams["font.style"] = style
-        weight = self.properties.get("weight")
-        if weight:
-            rcParams["font.weight"] = weight
-        size = self.properties.get("size")
-        if size:
-            rcParams["font.size"] = size
-            rcParams["xtick.labelsize"] = size
-            rcParams["ytick.labelsize"] = size
-            rcParams["legend.fontsize"] = size
-        color = self.properties.get("color")
-        if color:
-            rcParams["text.color"] = color
+        family = self.properties.get('family')
+        style = self.properties.get('style')
+        weight = self.properties.get('weight')
+        size = self.properties.get('size')
+        color = self.properties.get('color')
 
+        if family:
+            rcParams['font.family'] = family
+        if style:
+            rcParams['font.style'] = style
+        if weight:
+            rcParams['font.weight'] = weight
+        if size:
+            rcParams['font.size'] = size
+            rcParams['xtick.labelsize'] = size
+            rcParams['ytick.labelsize'] = size
+            rcParams['legend.fontsize'] = size
+        if color:
+            rcParams['text.color'] = color
+
+        return rcParams
+
+
+# element_line themeables
+
+class axis_line_x(themeable):
+    def apply(self, ax):
+        super(axis_line_x, self).apply(ax)
+        ax.spines['top'].set(**self.properties)
+        ax.spines['bottom'].set(**self.properties)
+        print(self.properties)
+
+
+class axis_line_y(themeable):
+    def apply(self, ax):
+        super(axis_line_y, self).apply(ax)
+        ax.spines['left'].set(**self.properties)
+        ax.spines['right'].set(**self.properties)
+
+
+class axis_line(axis_line_x, axis_line_y):
+    pass
+
+
+class axis_ticks_x(themeable):
+    def apply(self, ax):
+        super(axis_ticks_x, self).apply(ax)
+        d = deepcopy(self.properties)
+        d['markeredgewidth'] = d.pop('linewidth')
+        for line in ax.get_xticklines():
+            line.set(**d)
+
+
+class axis_ticks_y(themeable):
+    def apply(self, ax):
+        super(axis_ticks_y, self).apply(ax)
+        d = deepcopy(self.properties)
+        d['markeredgewidth'] = d.pop('linewidth')
+        for line in ax.get_yticklines():
+            line.set(**d)
+
+
+class axis_ticks(axis_ticks_x, axis_ticks_y):
+    pass
+
+
+class panel_grid_major_x(themeable):
+    def apply(self, ax):
+        super(panel_grid_major_x, self).apply(ax)
+        ticks = ax.xaxis.get_major_ticks()
+        for tick in ticks:
+            tick.gridline.set(**self.properties)
+
+
+class panel_grid_major_y(themeable):
+    def apply(self, ax):
+        super(panel_grid_major_y, self).apply(ax)
+        ticks = ax.yaxis.get_major_ticks()
+        for tick in ticks:
+            tick.gridline.set(**self.properties)
+
+
+class panel_grid_minor_x(themeable):
+    def apply(self, ax):
+        super(panel_grid_minor_x, self).apply(ax)
+        ticks = ax.xaxis.get_minor_ticks()
+        for tick in ticks:
+            tick.gridline.set(**self.properties)
+
+
+class panel_grid_minor_y(themeable):
+    def apply(self, ax):
+        super(panel_grid_minor_y, self).apply(ax)
+        ticks = ax.yaxis.get_minor_ticks()
+        for tick in ticks:
+            tick.gridline.set(**self.properties)
+
+
+class panel_grid_major(panel_grid_major_x, panel_grid_major_y):
+    pass
+
+
+class panel_grid_minor(panel_grid_minor_x, panel_grid_minor_y):
+    pass
+
+
+class panel_grid(panel_grid_major, panel_grid_minor):
+    pass
+
+
+class line(axis_line, axis_ticks, panel_grid):
+
+    @property
+    def rcParams(self):
+        rcParams = super(line, self).rcParams
+        color = self.properties.get('color')
+        linewidth = self.properties.get('linewidth')
+        linestyle = self.properties.get('linestyle')
+        d = {}
+
+        if color:
+            d['axes.edgecolor'] = color
+            d['xtick.color'] = color
+            d['ytick.color'] = color
+            d['grid.color'] = color
+        if linewidth:
+            d['axes.linewidth'] = linewidth
+            d['xtick.major.width'] = linewidth
+            d['xtick.minor.width'] = linewidth
+            d['ytick.major.width'] = linewidth
+            d['ytick.minor.width'] = linewidth
+            d['grid.linewidth'] = linewidth
+        if linestyle:
+            d['grid.linestyle'] = linestyle
+
+        rcParams.update(d)
         return rcParams

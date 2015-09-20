@@ -8,6 +8,7 @@ from .theme_xkcd import theme_xkcd
 from .theme_matplotlib import theme_matplotlib
 from .theme_seaborn import theme_seaborn
 from .element_text import element_text
+from .element_line import element_line
 
 
 __all__ = [s for s in dir()
