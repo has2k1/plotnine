@@ -415,3 +415,57 @@ class line(axis_line, axis_ticks, panel_grid):
 
         rcParams.update(d)
         return rcParams
+
+
+class legend_key(themeable):
+    def apply(self, ax):
+        super(legend_key, self).apply(ax)
+        das = ax.figure._themeable['legend_key']
+        for da in das:
+            da.patch.set(**self.properties)
+
+
+class legend_background(themeable):
+    def apply(self, ax):
+        super(legend_background, self).apply(ax)
+        aob = ax.figure._themeable['legend_background']
+        aob.patch.set(**self.properties)
+        if self.properties:
+            aob._drawFrame = True
+            # some small sensible padding
+            if not aob.pad:
+                aob.pad = .2
+
+
+class panel_background(themeable):
+    def apply(self, ax):
+        super(panel_background, self).apply(ax)
+        ax.patch.set(**self.properties)
+
+
+# Yeah, this is the same as panel_background
+class panel_border(themeable):
+    def apply(self, ax):
+        super(panel_border, self).apply(ax)
+        ax.patch.set(**self.properties)
+
+
+class plot_background(themeable):
+    def apply(self, ax):
+        super(plot_background, self).apply(ax)
+        ax.figure.patch.set(**self.properties)
+
+
+class strip_background(themeable):
+    def apply(self, ax):
+        super(strip_background, self).apply(ax)
+        tx = ax.figure._themeable.get('strip_text_x', [])
+        ty = ax.figure._themeable.get('strip_text_y', [])
+        for text in tx + ty:
+            text._bbox.update(**self.properties)
+
+
+class rect(legend_key, legend_background,
+           panel_background, panel_border,
+           plot_background, strip_background):
+    pass

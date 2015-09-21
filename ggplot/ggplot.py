@@ -281,6 +281,7 @@ class ggplot(object):
             bbox_transform=plot.figure.transFigure,
             borderpad=0.,
         )
+        plot.figure._themeable['legend_background'] = anchored_box
         ax = plot.axs[0]
         ax.add_artist(anchored_box)
         return plot

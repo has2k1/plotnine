@@ -671,12 +671,13 @@ class ColoredDrawingArea(DrawingArea):
         super(ColoredDrawingArea, self).__init__(
             width, height, xdescent, ydescent)
 
-        self.add_artist(Rectangle((0, 0), width=width,
-                                  height=height,
-                                  facecolor=color,
-                                  edgecolor='None',
-                                  linewidth=0,
-                                  antialiased=False))
+        self.patch = Rectangle((0, 0), width=width,
+                               height=height,
+                               facecolor=color,
+                               edgecolor='None',
+                               linewidth=0,
+                               antialiased=False)
+        self.add_artist(self.patch)
 
     if mpl.__version__ <= '1.4.3':
         # We do not want to draw beyond the bounds.
