@@ -11,24 +11,27 @@ that covers text also has to cover axis.title.
 from copy import deepcopy
 from collections import OrderedDict
 
+import six
 from six import add_metaclass
 
 from ..utils import RegisteredMeta
 from ..utils.exceptions import GgplotError
+from . import element_text, element_line, element_rect
 
 
-other_targets = {
-    'legend_direction': None,
-    'legend_margin': '0.2',
-    'legend_key_size': '1.2',
-    'legend_key_height': None,
-    'legend_key_width': None,
-    'legend_text_align': None,
-    'legend_title_align': None,
+# These do not have rcParams to modify
+scalar_themeables = {
     'legend_box': None,
     'legend_box_just': None,
+    'legend_direction': None,
     'legend_justification': 'center',
-    'legend_position': 'right'
+    'legend_key_height': None,
+    'legend_key_size': '1.2',
+    'legend_key_width': None,
+    'legend_margin': '0.2',
+    'legend_position': 'right',
+    'legend_text_align': None,
+    'legend_title_align': None,
 }
 
 
@@ -80,10 +83,17 @@ class themeable(object):
     the themeable's implementation to the axes.
     """
 
-    def __init__(self, element_theme=None):
+    def __init__(self, theme_element=None):
         # @todo: fix unittests in test_themeable or leave this as is?
-        if element_theme:
-            self.properties = element_theme.properties
+        element_types = (element_text, element_line, element_rect)
+        scalar_types = (int, float, bool, six.string_types)
+        if isinstance(theme_element, element_types):
+            self.properties = theme_element.properties
+        elif isinstance(theme_element, scalar_types):
+            # The specific themeable takes this value and
+            # does stuff with rcParams or sets something
+            # on some object attached to the axes/figure
+            self.properties = {'value': theme_element}
         else:
             self.properites = {}
 
@@ -469,3 +479,55 @@ class rect(legend_key, legend_background,
            panel_background, panel_border,
            plot_background, strip_background):
     pass
+
+
+class axis_ticks_length(themeable):
+    @property
+    def rcParams(self):
+        rcParams = super(axis_ticks_length, self).rcParams
+        val = self.properties['value']
+        rcParams['xtick.major.size'] = val
+        rcParams['ytick.major.size'] = val
+        rcParams['xtick.minor.size'] = val
+        rcParams['ytick.minor.size'] = val
+        return rcParams
+
+
+class panel_margin_x(themeable):
+    def apply(self, ax):
+        super(panel_margin_x, self).apply(ax)
+        val = self.properties['value']
+        ax.figure.subplots_adjust(wspace=val)
+
+
+class panel_margin_y(themeable):
+    def apply(self, ax):
+        super(panel_margin_y, self).apply(ax)
+        val = self.properties['value']
+        ax.figure.subplots_adjust(hspace=val)
+
+
+class panel_margin(panel_margin_x, panel_margin_y):
+    pass
+
+
+class plot_margin(themeable):
+    def apply(self, ax):
+        super(plot_margin, self).apply(ax)
+        val = self.properties['value']
+        ax.figure.subplots_adjust(left=val,
+                                  right=1-val,
+                                  bottom=val,
+                                  top=1-val)
+
+
+class panel_ontop(themeable):
+    def apply(self, ax):
+        super(panel_ontop, self).apply(ax)
+        ax.set_axisbelow(self.properties['value'])
+
+
+class aspect_ratio(themeable):
+    def apply(self, ax):
+        super(aspect_ratio, self).apply(ax)
+        ax.set_aspect(self.properties['value'])

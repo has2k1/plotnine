@@ -4,7 +4,7 @@ import matplotlib as mpl
 
 from ..utils.exceptions import GgplotError
 from .themeable import make_themeable, merge_themeables
-from .themeable import other_targets
+from .themeable import scalar_themeables
 
 
 class theme(object):
@@ -73,10 +73,10 @@ class theme(object):
         # This is set when the figure is created,
         # it is useful at legend drawing time.
         self.figure = None
-        self._params = other_targets.copy()
+        self._params = scalar_themeables.copy()
 
         for name, theme_element in kwargs.items():
-            if name in other_targets:
+            if name in scalar_themeables:
                 self._params[name] = theme_element
             else:
                 self.element_themes.append(
