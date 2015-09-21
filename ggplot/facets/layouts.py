@@ -81,15 +81,16 @@ def layout_grid(data, rows=None, cols=None, margins=None,
     if not rows and not cols:
         return layout_null(data)
 
+    if rows is None:
+        rows = []
+
+    if cols is None:
+        cols = []
+
     base_rows = layout_base(data, rows, drop=drop)
     if not as_table:
-        # NOTE: This will only become effective when dataframes
-        # have categorical columns and the columns have ordered levels.
-        # layout_base above would return rows ordered according
-        # to the levels of the facet variable
-
         # Reverse the order of the rows
-        base_rows = base_rows.reindex(index=base_rows.index[::-1])
+        base_rows = base_rows[::-1]
     base_cols = layout_base(data, cols, drop=drop)
     base = cross_join(base_rows, base_cols)
 
@@ -97,8 +98,8 @@ def layout_grid(data, rows=None, cols=None, margins=None,
         # TODO: Implement this
         pass
 
-    rows = 1 if rows is None else ninteraction(base[rows], drop=True)
-    cols = 1 if cols is None else ninteraction(base[cols], drop=True)
+    rows = 1 if not rows else ninteraction(base[rows], drop=True)
+    cols = 1 if not cols else ninteraction(base[cols], drop=True)
 
     n = len(base)
     panels = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
@@ -187,6 +188,12 @@ def cross_join(df1, df2):
 
     ref: https://github.com/pydata/pandas/issues/5401
     """
+    if len(df1) == 0:
+        return df2
+
+    if len(df2) == 0:
+        return df1
+
     # Add as lists so that the new index keeps the items in
     # the order that they are added together
     all_columns = pd.Index(list(df1.columns) + list(df2.columns))

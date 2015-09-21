@@ -12,8 +12,8 @@ class facet_grid(object):
                  space='fixed', shrink=True, labeller='label_value',
                  as_table=True, drop=True):
         # TODO: Implement faceting formula
-        self.rows = [x] if x else x
-        self.cols = [y] if y else y
+        self.rows = [] if x is None else [x]
+        self.cols = [] if y is None else [y]
         self.margins = margins
         self.shrink = shrink
         self.labeller = labeller

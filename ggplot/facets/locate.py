@@ -53,10 +53,10 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
         data['PANEL'] = pd.Categorical([])
         data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
         return data
-    vars = [x for x in rows + cols]
 
     rows = [] if rows is None else rows
     cols = [] if cols is None else cols
+    vars = [x for x in rows + cols]
     margin_vars = [list(data.columns & rows),
                    list(data.columns & cols)]
     data = add_margins(data, margin_vars, margins)

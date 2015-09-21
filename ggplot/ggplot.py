@@ -474,7 +474,7 @@ def draw_facet_label(plot, finfo, ax):
                                      horizontalalignment='center'))
         d['strip_text_x'].append(text)
 
-    if fcgrid and rightcol:
+    if fcgrid and rightcol and len(plot.facet.rows):
         # right labels
         facet_var = plot.facet.rows[0]
         text = ax.text(x, 0.5, finfo[facet_var],
