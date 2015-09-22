@@ -205,7 +205,6 @@ class ggplot(object):
 
         # Compute aesthetics to produce data with generalised variable names
         data = [l.compute_aesthetics(d, plot) for l, d in zip(layers, data)]
-        data = [add_group(d) for d in data]
 
         # Transform data using all scales
         data = [scales.transform_df(d) for d in data]

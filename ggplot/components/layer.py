@@ -180,6 +180,7 @@ class layer(object):
         else:
             evaled['PANEL'] = data['PANEL']
 
+        evaled = add_group(evaled)
         return evaled
 
     def compute_statistic(self, data, panel):
