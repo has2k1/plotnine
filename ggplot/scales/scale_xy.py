@@ -9,7 +9,7 @@ from ..utils import identity, match, is_waive
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
 from ..utils.exceptions import GgplotError
 from .utils import expand_range
-from .utils import log10_trans, sqrt_trans, identity_trans
+from .utils import identity_trans
 from .scale import scale_discrete, scale_continuous
 
 

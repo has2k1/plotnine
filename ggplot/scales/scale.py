@@ -182,7 +182,8 @@ class scale_discrete(scale):
         if com.is_categorical_dtype(x):
             rng = list(x.cat.categories)
             if drop:
-                rng = x.drop_duplicates().tolist()
+                present = set(x.drop_duplicates())
+                rng = [i for i in rng if i in present]
         elif x.dtype.kind in CONTINUOUS_KINDS:
             msg = "Continuous value supplied to discrete scale"
             raise GgplotError(msg)
@@ -190,7 +191,8 @@ class scale_discrete(scale):
             rng = list(x.drop_duplicates().sort(inplace=False))
 
         # update range
-        self.range += [i for i in rng if not (i in set(self.range))]
+        old_range = set(self.range)
+        self.range += [i for i in rng if (i not in old_range)]
 
     def dimension(self, expand=None):
         """
