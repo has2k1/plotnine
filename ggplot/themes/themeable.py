@@ -8,6 +8,7 @@ The scope of text covers all text in the plot, axis.title applies
 only to the axis.title. In matplotlib terms this means that a theme
 that covers text also has to cover axis.title.
 """
+from __future__ import absolute_import
 from copy import deepcopy
 from collections import OrderedDict
 
@@ -16,7 +17,9 @@ from six import add_metaclass
 
 from ..utils import RegisteredMeta
 from ..utils.exceptions import GgplotError
-from . import element_text, element_line, element_rect
+from .element_text import element_text
+from .element_line import element_line
+from .element_rect import element_rect
 
 
 # These do not have rcParams to modify
@@ -318,7 +321,6 @@ class axis_line_x(themeable):
         super(axis_line_x, self).apply(ax)
         ax.spines['top'].set(**self.properties)
         ax.spines['bottom'].set(**self.properties)
-        print(self.properties)
 
 
 class axis_line_y(themeable):
