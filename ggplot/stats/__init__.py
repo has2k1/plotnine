@@ -4,6 +4,7 @@ from .stat_bar import stat_bar
 from .stat_bin import stat_bin
 from .stat_bin2d import stat_bin2d
 from .stat_bindot import stat_bindot
+from .stat_boxplot import stat_boxplot
 from .stat_density import stat_density
 from .stat_ecdf import stat_ecdf
 from .stat_function import stat_function

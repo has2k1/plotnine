@@ -1,38 +1,152 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.cbook as cbook
+from copy import deepcopy
 
+import matplotlib.lines as mlines
+from matplotlib.patches import Rectangle
+
+from ..scales.utils import resolution
+from ..utils import make_iterable_ntimes, to_rgba
+from .geom_point import geom_point
+from .geom_segment import geom_segment
+from .geom_crossbar import geom_crossbar
 from .geom import geom
-from ggplot.utils import is_string
+
 
 class geom_boxplot(geom):
-    DEFAULT_AES = {'y': None, 'color': 'black', 'flier_marker': '+'}
-    REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
+                   'linetype': 'solid', 'outlier_color': 'black',
+                   'outlier_shape': 'o', 'outlier_size': 2,
+                   'outlier_stroke': 1, 'shape': 'o', 'size': 1,
+                   'weight': 1}
+    REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
+    DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge',
+                      'notch': False, 'varwidth': False,
+                      'notchwidth': 0.5}
 
-    def __group(self, x, y):
-        out = {}
-        for xx, yy in zip(x,y):
-            if yy not in out: out[yy] = []
-            out[yy].append(xx)
-        return out
+    def reparameterise(self, data):
+        if 'width' not in data:
+            if 'width' in self.params and self.params['width']:
+                data['width'] = self.params['width']
+            else:
+                data['width'] = resolution(data['x'], False) * 0.9
 
-    def _plot_unit(self, pinfo, ax):
-        x = pinfo.pop('x')
-        y = pinfo.pop('y')
-        color = pinfo.pop('color')
-        fliermarker = pinfo.pop('flier_marker')
+        # if varwidth not requested or not available, don't use it
+        if ('varwidth' not in self.params or
+                not self.params['varwidth'] or
+                'relvarwidth' not in data):
+            data['xmin'] = data['x'] - data['width']/2
+            data['xmax'] = data['x'] + data['width']/2
+        else:
+            # make relvarwidth relative to the size of the
+            # largest group
+            data['relvarwidth'] /= data['relvarwidth'].max()
+            data['xmin'] = data['x'] - data['relvarwidth']*data['width']/2
+            data['xmax'] = data['x'] + data['relvarwidth']*data['width']/2
+            del data['relvarwidth']
 
-        if y is not None:
-            g = self.__group(x,y)
-            l = sorted(g.keys())
-            x = [g[k] for k in l]
-            plt.setp(ax, yticklabels=l)
+        del data['width']
 
-        q = ax.boxplot(x, vert=False)
-        plt.setp(q['boxes'], color=color)
-        plt.setp(q['whiskers'], color=color)
-        plt.setp(q['fliers'], color=color, marker=fliermarker)
+        return data
+
+    @staticmethod
+    def draw(pinfo, scales, coordinates, ax, **params):
+
+        def subdict(keys):
+            d = {}
+            for key in keys:
+                d[key] = deepcopy(pinfo[key])
+            return d
+
+        common = subdict(('color', 'size', 'linetype',
+                          'fill', 'group', 'alpha',
+                          'zorder'))
+
+        whiskers = subdict(('x',))
+        whiskers.update(deepcopy(common))
+        whiskers['x'] = whiskers['x'] * 2
+        whiskers['xend'] = whiskers['x']
+        whiskers['y'] = pinfo['upper'] + pinfo['lower']
+        whiskers['yend'] = pinfo['ymax'] + pinfo['ymin']
+
+        box = subdict(('xmin', 'xmax', 'lower', 'middle', 'upper'))
+        box.update(deepcopy(common))
+        box['ymin'] = box.pop('lower')
+        box['y'] = box.pop('middle')
+        box['ymax'] = box.pop('upper')
+        box['notchwidth'] = params['notchwidth']
+        if params['notch']:
+            box['ynotchlower'] = pinfo['notchlower']
+            box['ynotchupper'] = pinfo['notchupper']
+
+        if 'outliers' in pinfo and len(pinfo['outliers'][0]):
+            outliers = subdict(('outlier_color', 'outlier_size',
+                                'outlier_stroke', 'outlier_shape',
+                                'alpha', 'zorder'))
+            outliers['y'] = pinfo['outliers'][0]
+            outliers['x'] = make_iterable_ntimes(pinfo['x'][0],
+                                                 len(outliers['y']))
+            outliers['color'] = outliers.pop('outlier_color')
+            outliers['fill'] = outliers['color']
+            outliers['shape'] = outliers.pop('outlier_shape')
+            outliers['size'] = outliers.pop('outlier_size')
+            outliers['stroke'] = outliers.pop('outlier_stroke')
+            geom_point.draw(outliers, scales, coordinates, ax, **params)
+
+        geom_segment.draw(whiskers, scales, coordinates, ax, **params)
+        params['fatten'] = geom_crossbar.DEFAULT_PARAMS['fatten']
+        geom_crossbar.draw(box, scales, coordinates, ax, **params)
+
+    @staticmethod
+    def draw_legend(data, da, lyr):
+        """
+        Draw a rectangle in the box
+
+        Parameters
+        ----------
+        data : dataframe
+        da : DrawingArea
+        lyr : layer
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        # box
+        facecolor = to_rgba(data['fill'], data['alpha'])
+        if facecolor is None:
+            facecolor = 'none'
+
+        kwargs = dict(
+           linestyle=data['linetype'],
+           linewidth=data['size'])
+
+        box = Rectangle((da.width*.125, da.height*.25),
+                        width=da.width*.75,
+                        height=da.height*.5,
+                        facecolor=facecolor,
+                        edgecolor=data['color'],
+                        capstyle='projecting',
+                        antialiased=False,
+                        **kwargs)
+        da.add_artist(box)
+
+        kwargs['solid_capstyle'] = 'butt'
+        kwargs['color'] = data['color']
+        # middle strike through
+        strike = mlines.Line2D([da.width*.125, da.width*.875],
+                               [da.height*.5, da.height*.5],
+                               **kwargs)
+        da.add_artist(strike)
+
+        # whiskers
+        top = mlines.Line2D([da.width*.5, da.width*.5],
+                            [da.height*.75, da.height*.9],
+                            **kwargs)
+        da.add_artist(top)
+
+        bottom = mlines.Line2D([da.width*.5, da.width*.5],
+                               [da.height*.25, da.height*.1],
+                               **kwargs)
+        da.add_artist(bottom)
+        return da
