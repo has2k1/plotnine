@@ -19,7 +19,8 @@ class coord(object):
         gg.coordinates = self
         return gg
 
-    def expand(self, scale, discrete=(0, 0.6), continuous=(0.05, 0)):
+    def expand_default(self, scale, discrete=(0, 0.6),
+                       continuous=(0.05, 0)):
         """
         Expand a single scale
         """

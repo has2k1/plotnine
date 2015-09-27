@@ -35,17 +35,18 @@ class geom_abline(geom):
 
         geom.__init__(self, *args, **kwargs)
 
-    def draw_groups(self, data, scales, coordinates, ax, **params):
+    def draw_groups(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
-        data['x'] = scales['x_range'][0]
-        data['xend'] = scales['x_range'][1]
-        data['y'] = scales['x_range'][0] * data['slope'] + data['intercept']
-        data['yend'] = scales['x_range'][1] * data['slope'] + data['intercept']
+        ranges = coord.range(panel_scales)
+        data['x'] = ranges.x[0]
+        data['xend'] = ranges.x[1]
+        data['y'] = ranges.x[0] * data['slope'] + data['intercept']
+        data['yend'] = ranges.x[1] * data['slope'] + data['intercept']
         data.drop_duplicates(inplace=True)
 
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, params)
             for pinfo in pinfos:
-                geom_segment.draw(pinfo, scales, coordinates, ax, **params)
+                geom_segment.draw(pinfo, panel_scales, coord, ax, **params)

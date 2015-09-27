@@ -18,7 +18,7 @@ class geom_segment(geom):
     guide_geom = 'path'
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
         x = np.zeros(len(pinfo['x'])*2)
         y = np.zeros(len(pinfo['y'])*2)
@@ -45,4 +45,4 @@ class geom_segment(geom):
                     pinfo[param] = pinfo[param] * 2
 
             params['arrow'].draw(
-                pinfo, scales, coordinates, ax, constant=False)
+                pinfo, panel_scales, coord, ax, constant=False)

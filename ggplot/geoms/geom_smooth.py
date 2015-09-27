@@ -20,16 +20,16 @@ class geom_smooth(geom):
     _units = {'alpha', 'color', 'fill', 'linetype', 'size'}
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         has_ribbon = (pinfo['ymin'] is not None and
                       pinfo['ymax'] is not None)
         if has_ribbon:
             pinfo2 = deepcopy(pinfo)
             pinfo2['color'] = ''
-            geom_ribbon.draw(pinfo2, scales, coordinates, ax, **params)
+            geom_ribbon.draw(pinfo2, panel_scales, coord, ax, **params)
 
         pinfo['alpha'] = 1
-        geom_line.draw(pinfo, scales, coordinates, ax, **params)
+        geom_line.draw(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

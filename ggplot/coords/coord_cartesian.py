@@ -3,13 +3,15 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.cbook import Bunch
 
+from ..scales.utils import expand_range
 from .coord import coord
 
 
 class coord_cartesian(coord):
 
-    def __init__(self, xlim=None, ylim=None):
+    def __init__(self, xlim=None, ylim=None, expand=True):
         self.limits = Bunch(xlim=xlim, ylim=ylim)
+        self.expand = expand
 
     def train(self, scale):
         """
@@ -26,12 +28,18 @@ class coord_cartesian(coord):
             limits = self.limits.ylim
 
         if limits is None:
-            expand = self.expand(scale)
-            rangee = scale.dimension(expand)
+            rangee = scale.dimension()
         else:
             rangee = scale.transform(limits)
 
+        if self.expand:
+            expand = self.expand_default(scale)
+            rangee = expand_range(rangee, expand[0], expand[1])
+
         out = scale.break_info(rangee)
+        # This is where
+        # x_major, x_labels, x_minor, ...
+        # range keys are created
         for key in list(out.keys()):
             new_key = '{}_{}'.format(name, key)
             out[new_key] = out.pop(key)

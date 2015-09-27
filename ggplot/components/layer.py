@@ -249,7 +249,7 @@ class layer(object):
         data = self.position.setup_data(data, params)
         return self.position.compute_layer(data, params, panel)
 
-    def draw(self, data, scales, coordinates, ax, zorder):
+    def draw(self, data, panel_scales, coord, ax, zorder):
         """
         Draw layer
 
@@ -257,10 +257,10 @@ class layer(object):
         ----------
         data : DataFrame
             DataFrame specific for this layer
-        scales : dict
-            Has two keys, 'x' and 'y' whose values
-            are the x and y scales respectively
-        coordinates : coord
+        panel_scales : dict
+            Computed scale ranges for the panel. Should
+            have atleast 'x_range', 'y_range'
+        coord : coord
             Type of coordinate axes
         ax : axes
             On which to draw the layer
@@ -275,7 +275,7 @@ class layer(object):
         params = deepcopy(self.geom.params)
         params.update(self.stat.params)
         params['zorder'] = zorder
-        self.geom.draw_groups(data, scales, coordinates, ax, **params)
+        self.geom.draw_groups(data, panel_scales, coord, ax, **params)
 
     def use_defaults(self, data):
         """

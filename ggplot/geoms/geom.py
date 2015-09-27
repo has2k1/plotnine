@@ -103,7 +103,7 @@ class geom(object):
     def reparameterise(data):
         return data
 
-    def draw_groups(self, data, scales, coordinates, ax, **params):
+    def draw_groups(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
 
@@ -123,7 +123,7 @@ class geom(object):
             the geom are:
                 - 'x_range' -- tuple
                 - 'y_range' -- tuple
-        coordinates : coord
+        coord : coord
             Coordinate (e.g. coord_cartesian) system of the
             geom
         ax : axes
@@ -135,10 +135,10 @@ class geom(object):
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, params)
             for pinfo in pinfos:
-                self.draw(pinfo, scales, coordinates, ax, **params)
+                self.draw(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 

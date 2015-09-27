@@ -33,16 +33,16 @@ class geom_rect(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     guide_geom = 'polygon'
 
-    def draw_groups(self, data, scales, coordinates, ax, **params):
+    def draw_groups(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, params)
         for pinfo in pinfos:
-            self.draw(pinfo, scales, coordinates, ax, **params)
+            self.draw(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         def fn(key):
             return make_iterable(pinfo.pop(key))
 

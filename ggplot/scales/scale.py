@@ -194,13 +194,11 @@ class scale_discrete(scale):
         old_range = set(self.range)
         self.range += [i for i in rng if (i not in old_range)]
 
-    def dimension(self, expand=None):
+    def dimension(self, expand=(0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
         """
-        if expand is None:
-            expand = self.expand
         return expand_range(len(self.limits), expand[0], expand[1])
 
     def map(self, x, limits=None):
@@ -429,13 +427,11 @@ class scale_continuous(scale):
         except TypeError:
             return [self.trans.trans(val) for val in x]
 
-    def dimension(self, expand=None):
+    def dimension(self, expand=(0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
         """
-        if expand is None:
-            expand = self.expand
         return expand_range(self.limits, expand[0], expand[1])
 
     def map(self, x, limits=None):

@@ -95,7 +95,7 @@ class scale_position_discrete(scale_discrete):
 
         return rng
 
-    def dimension(self, expand=None):
+    def dimension(self, expand=(0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
@@ -104,8 +104,6 @@ class scale_position_discrete(scale_discrete):
         # calculate a dimension acc. to the discrete items(limits)
         # and a dimension acc. to the continuous range (range_c)
         # pick the (min, max)
-        if expand is None:
-            expand = self.expand
         disc_range = (1, len(self.limits))
         disc = expand_range(disc_range, 0, expand[1], 1)
         cont = expand_range(self.range_c, expand[0], 0, expand[1])

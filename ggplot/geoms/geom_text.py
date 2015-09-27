@@ -32,7 +32,7 @@ class geom_text(geom):
         geom.__init__(self, *args, **kwargs)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
         color = to_rgba(pinfo['color'], pinfo['alpha'])

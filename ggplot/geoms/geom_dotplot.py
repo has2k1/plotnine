@@ -124,17 +124,18 @@ class geom_dotplot(geom):
         return data
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         geom_dotplot._verify(**params)
 
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
         x = np.asarray(pinfo['x'])
         y = np.asarray(pinfo['y'])
+        ranges = coord.range(panel_scales)
         # For perfect circles the width/height of the circle(ellipse)
         # should factor in the figure dimensions
         fw, fh = ax.figure.get_figwidth(), ax.figure.get_figheight()
         factor = ((fw/fh) *
-                  np.ptp(scales['y_range'])/np.ptp(scales['x_range']))
+                  np.ptp(ranges.y)/np.ptp(ranges.x))
         size = pinfo['binwidth'][0] * params['dotsize']
         offsets = np.asarray(pinfo['stackpos']) * params['stackratio']
 

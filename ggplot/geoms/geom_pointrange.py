@@ -67,13 +67,13 @@ class geom_pointrange(geom):
     _units = {'shape'}
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
         y = pinfo['y']
-        geom_linerange.draw(pinfo, scales, coordinates, ax, **params)
+        geom_linerange.draw(pinfo, panel_scales, coord, ax, **params)
         pinfo['size'] = np.asarray(pinfo['size']) * 4
         pinfo['y'] = y
         pinfo['stroke'] = 1
-        geom_point.draw(pinfo, scales, coordinates, ax, **params)
+        geom_point.draw(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

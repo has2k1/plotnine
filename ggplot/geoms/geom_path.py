@@ -24,7 +24,7 @@ class geom_path(geom):
                       'lineend': 'butt', 'linejoin': 'round',
                       'arrow': None}
 
-    def draw_groups(self, data, scales, coordinates, ax, **params):
+    def draw_groups(self, data, panel_scales, coord, ax, **params):
         if not any(data['group'].duplicated()):
             msg = ("geom_path: Each group consist of only one "
                    "observation. Do you need to adjust the "
@@ -56,12 +56,12 @@ class geom_path(geom):
         if not constant:
             # expects len(pinfos) == 1
             pinfos = self._make_pinfos(data, params)
-            self.draw(pinfos[0], scales, coordinates, ax, **params)
+            self.draw(pinfos[0], panel_scales, coord, ax, **params)
         else:
-            geom.draw_groups(self, data, scales, coordinates, ax, **params)
+            geom.draw_groups(self, data, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, scales, coordinates, ax, **params):
+    def draw(pinfo, panel_scales, coord, ax, **params):
 
         with suppress(KeyError):
             if params['linejoin'] == 'mitre':
@@ -81,7 +81,7 @@ class geom_path(geom):
 
         if 'arrow' in params and params['arrow']:
             params['arrow'].draw(
-                pinfo, scales, coordinates, ax, constant=constant)
+                pinfo, panel_scales, coord, ax, constant=constant)
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -137,13 +137,14 @@ class arrow(object):
         self.type = type
         self._cache = {}
 
-    def _init(self, scales, coordinates, ax):
+    def _init(self, panel_scales, coord, ax):
         """
         Calculate and cache the arrow edge lengths along both axes
         """
 
         with suppress(KeyError):
-            if scales is self._cache['scales'] and ax is self._cache['ax']:
+            if (panel_scales is self._cache['panel_scales'] and
+                    ax is self._cache['ax']):
                 return
         # A length for each dimension, makes the edges of
         # all arrowheads to be drawn have the same length.
@@ -152,17 +153,17 @@ class arrow(object):
         # these values
         fig = ax.get_figure()
         width, height = fig.get_size_inches()
-        ranges = coordinates.range(scales)
+        ranges = coord.range(panel_scales)
         width_ = np.ptp(ranges.x)
         height_ = np.ptp(ranges.y)
 
-        self._cache['scales'] = scales
+        self._cache['panel_scales'] = panel_scales
         self._cache['ax'] = ax
         self._cache['lx'] = self.length * width_/width
         self._cache['ly'] = self.length * height_/height
         self._cache['radians'] = self.angle * np.pi / 180
 
-    def draw(self, pinfo, scales, coordinates, ax, constant=True):
+    def draw(self, pinfo, panel_scales, coord, ax, constant=True):
         """
         Draw arrows at the end(s) of the lines
 
@@ -178,7 +179,7 @@ class arrow(object):
             If the path attributes vary along the way. If false,
             the arrows are per segment of the path
         """
-        self._init(scales, coordinates, ax)
+        self._init(panel_scales, coord, ax)
         Path = mpath.Path
 
         first = self.ends in ('first', 'both')

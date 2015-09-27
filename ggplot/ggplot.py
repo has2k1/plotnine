@@ -140,13 +140,13 @@ class ggplot(object):
         # finfo - panel (facet) information from layout table
         for ax, (_, finfo) in zip(axs, panel.layout.iterrows()):
             panel_idx = finfo['PANEL'] - 1
-            scales = panel.ranges[panel_idx]
+            panel_scales = panel.ranges[panel_idx]
 
             # Plot all data for each layer
             for zorder, (l, d) in enumerate(
                     zip(plot.layers, data), start=1):
                 bool_idx = (d['PANEL'] == finfo['PANEL'])
-                l.draw(d[bool_idx], scales, plot.coordinates,
+                l.draw(d[bool_idx], panel_scales, plot.coordinates,
                        ax, zorder)
 
             # xaxis & yaxis breaks and labels and stuff
