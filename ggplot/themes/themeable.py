@@ -17,9 +17,7 @@ from six import add_metaclass
 
 from ..utils import RegisteredMeta
 from ..utils.exceptions import GgplotError
-from .element_text import element_text
-from .element_line import element_line
-from .element_rect import element_rect
+from .theme_elements import element_line, element_rect, element_text
 
 
 # These do not have rcParams to modify

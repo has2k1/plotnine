@@ -1,11 +1,68 @@
+"""
+Theme elements used to decorate the graph. These conform
+to the ggplot2 API.
+"""
+
+
+class element_line(object):
+    """
+    Theme element: Line
+    """
+
+    def __init__(self, colour=None, size=None, linetype=None,
+                 lineend=None, color=None):
+        color = color if color else colour
+        d = {}
+        if color:
+            d['color'] = color
+        if size:
+            d['linewidth'] = size
+        if linetype:
+            d['linestyle'] = linetype
+
+        if linetype in ('solid', '-') and lineend:
+            d['solid_capstyle'] = lineend
+        elif linetype and lineend:
+            d['dashed_capstyle'] = lineend
+
+        self.properties = d
+
+
+class element_rect(object):
+    """
+    Theme element: Rectangle
+
+    Used for backgrounds and borders
+    """
+
+    def __init__(self, fill=None, colour=None, size=None,
+                 linetype=None, color=None):
+
+        color = color if color else colour
+        d = {}
+        if fill:
+            d['facecolor'] = fill
+        if color:
+            d['edgecolor'] = color
+        if size:
+            d['linewidth'] = size
+        if linetype:
+            d['linestyle'] = linetype
+
+        self.properties = d
+
+
 class element_text(object):
+    """
+    Theme element: Text
+    """
 
     def __init__(self, family='', face='', colour='', size='',
                  hjust=None, vjust=None, angle=0, lineheight=0,
                  color='', backgroundcolor=''):
         """
-        Set element_text properties according to the ggplot2 API.
-
+        Note
+        ----
         vjust and hjust are not fully implemented, 0 or 1 is
         translated to left, bottom; right, top. Any other value is
         translated to center.

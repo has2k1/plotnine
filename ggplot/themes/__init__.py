@@ -7,9 +7,7 @@ from .theme_gray import theme_gray
 from .theme_xkcd import theme_xkcd
 from .theme_matplotlib import theme_matplotlib
 from .theme_seaborn import theme_seaborn
-from .element_text import element_text
-from .element_line import element_line
-from .element_rect import element_rect
+from .theme_elements import element_line, element_rect, element_text
 
 
 __all__ = [s for s in dir()
