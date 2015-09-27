@@ -234,7 +234,8 @@ class scale_discrete(scale):
             major = self.map(major)
         return {'range': range,
                 'labels': labels,
-                'major': major}
+                'major': major,
+                'minor': None}
 
     def scale_breaks(self, limits=None, can_waive=False):
         """
@@ -331,11 +332,11 @@ class scale_continuous(scale):
         # Make sure we have a transform and it
         # should know the main aesthetic,
         # in case it has to manipulate the axis
-
+        trans = kwargs.get('trans', self.trans)
         with suppress(KeyError):
-            self.trans = kwargs.pop('trans')
-        self.trans = gettrans(self.trans)
-        self.trans.aesthetic = self.aesthetics[0]
+            del kwargs['trans']
+        trans = gettrans(trans)
+        trans.aesthetic = self.aesthetics[0]
 
         # The limits are given in original dataspace
         # but they leave in transformed space since all
@@ -357,26 +358,36 @@ class scale_continuous(scale):
             # locator wins
             if (callable(kwargs['breaks']) and
                     isinstance(kwargs['breaks'](), Locator)):
-                self.trans.locator_factory = kwargs.pop('breaks')
+                trans.breaks_locator = kwargs.pop('breaks')
             # trust the user breaks
-            elif self.trans != identity_trans:
+            elif trans != identity_trans:
                 # kill the locator but not the and the formatter.
-                self.trans.locator_factory = waiver()
+                trans.breaks_locator = waiver()
+
+        if 'minor_breaks' in kwargs:
+            # locator wins
+            if (callable(kwargs['minor_breaks']) and
+                    isinstance(kwargs['minor_breaks'](), Locator)):
+                trans.minor_breaks_locator = kwargs.pop('minor_breaks')
+            # trust the user breaks
+            elif trans != identity_trans:
+                trans.minor_breaks_locator = waiver()
 
         if 'labels' in kwargs:
             # Accept an MPL Formatter, a function or a list-like
             if (callable(kwargs['labels']) and
                     isinstance(kwargs['labels'](), Formatter)):
-                self.trans.formatter_factory = kwargs.pop('labels')
+                trans.labels_formatter = kwargs.pop('labels')
             elif isinstance(kwargs['labels'], types.FunctionType):
-                self.trans.formatter_factory = FuncFormatter(
+                trans.labels_formatter = FuncFormatter(
                     kwargs.pop('labels'))
             elif is_sequence_of_strings(kwargs['labels']):
-                self.trans.formatter_factory = waiver()
+                trans.labels_formatter = waiver()
             elif not is_sequence_of_strings(kwargs['labels']):
                 msg = 'labels should be function or a sequence of strings'
                 raise GgplotError(msg)
 
+        self.trans = trans
         scale.__init__(self, **kwargs)
 
     def train(self, x):
@@ -456,10 +467,19 @@ class scale_continuous(scale):
             range = self.dimension()
 
         major = self.scale_breaks(range)
+        with suppress(TypeError):
+            major = [x for x in self.scale_breaks(range) if not np.isnan(x)]
+
+        minor = self.minor_breaks
+        with suppress(TypeError):
+            minor = [x for x in minor if range[0] <= x <= range[1]]
+
         labels = self.scale_labels(major)
+
         return {'range': range,
                 'labels': labels,
-                'major': major}
+                'major': major,
+                'minor': minor}
 
     def scale_breaks(self, limits=None, can_waive=True):
         """
@@ -478,7 +498,7 @@ class scale_continuous(scale):
             limits = self.limits
         # Limits in transformed space need to be
         # converted back to data space
-        limits = self.trans.inv(self.limits)
+        limits = self.trans.inv(limits)
 
         if not self.breaks:  # None, False, []
             return []
@@ -488,7 +508,7 @@ class scale_continuous(scale):
             # The MPL Locator will handle them
             return self.breaks
         elif is_waive(self.breaks):
-            breaks = self.trans.breaks(4).tick_values(*limits)
+            breaks = self.trans.breaks_locator(4).tick_values(*limits)
         elif callable(self.breaks):
             breaks = self.breaks(limits)
         else:
@@ -524,7 +544,7 @@ class scale_continuous(scale):
             locs = breaks[~np.isnan(breaks)]
             if not len(locs):
                 locs = [0, 1]
-            formatter = self.trans.format(useOffset=0)
+            formatter = self.trans.labels_formatter()
             formatter.create_dummy_axis()
             formatter.set_locs(locs)
             # This is what really matters

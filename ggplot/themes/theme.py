@@ -21,13 +21,13 @@ class theme(object):
     implemented.
 
     __init__: This should call super().__init__ which will define
-    self._rcParams. Subclasses should customize self._rcParams after calling
-    super().__init__. That will ensure that the rcParams are applied at
-    the appropriate time.
+    self._rcParams. Subclasses should customize self._rcParams after
+    calling super().__init__. That will ensure that the rcParams are
+    applied at the appropriate time.
 
-    The other method is apply_more(ax). This method takes an axes object that
-    has been created during the plot process. The theme should modify the
-    axes according.
+    The other method is apply_more(ax). This method takes an axes
+    object that has been created during the plot process. The theme
+    should modify the axes according.
 
     """
 
@@ -42,18 +42,21 @@ class theme(object):
             themes that are not complete (ie. partial) will add to or
             override specific elements of the current theme.
 
-            eg. theme_matplotlib() + theme_xkcd() will be completely
-            determined by theme_xkcd, but
-            theme_matplotlib() + theme(axis_text_x=element_text(angle=45)) will
-            only modify the x axis text.
+            eg.
+                theme_matplotlib() + theme_xkcd()
+
+            will be completely determined by theme_xkcd, but
+
+                (theme_matplotlib() +
+                    theme(axis_text_x=element_text(angle=45)))
+
+            will only modify the x axis text.
 
         kwargs**: themeables
             kwargs are themeables based on
             http://docs.ggplot2.org/current/theme.html.
-            Currently only a subset of the themeables are implemented.
             In addition, Python does not allow using '.' in argument
-            names, so we are using '_'
-            instead.
+            names, so we are using '_' instead.
 
             For example, ggplot2 axis.ticks.y will be axis_ticks_y
             in Python ggplot.
@@ -93,6 +96,12 @@ class theme(object):
         # Restyle the tick lines
         for line in ax.get_xticklines() + ax.get_yticklines():
             line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
+
+        # minor grid line
+        if mpl.rcParams['axes.grid.which'] in ('minor', 'both'):
+            lw = mpl.rcParams['grid.linewidth']/2.0
+            ax.xaxis.grid(which='minor', linewidth=lw)
+            ax.yaxis.grid(which='minor', linewidth=lw)
 
         self.apply_more(ax)
 

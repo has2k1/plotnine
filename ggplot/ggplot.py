@@ -312,22 +312,17 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
 
     # breaks and labels for when the user set
     # them explicitly
-    xbreaks = ranges['x_major']
-    ybreaks = ranges['y_major']
-    xlabels = ranges['x_labels']
-    ylabels = ranges['y_labels']
+    def setter(ax_set_method, value, **kwargs):
+        """Call axes set method if value is available"""
+        if not is_waive(value) and value is not None:
+            ax_set_method(value, **kwargs)
 
-    if not is_waive(xbreaks):
-        ax.set_xticks(xbreaks)
-
-    if not is_waive(ybreaks):
-        ax.set_yticks(ybreaks)
-
-    if not is_waive(xlabels):
-        ax.set_xticklabels(xlabels)
-
-    if not is_waive(ylabels):
-        ax.set_yticklabels(ylabels)
+    setter(ax.set_xticks, ranges['x_major'])
+    setter(ax.set_yticks, ranges['y_major'])
+    setter(ax.set_xticks, ranges['x_minor'], minor=True)
+    setter(ax.set_yticks, ranges['y_minor'], minor=True)
+    setter(ax.set_xticklabels, ranges['x_labels'])
+    setter(ax.set_yticklabels, ranges['y_labels'])
 
     # Add axis Locators and Formatters for when
     # the mpl deals with the breaks and labels

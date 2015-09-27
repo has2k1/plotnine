@@ -357,33 +357,25 @@ class axis_ticks(axis_ticks_x, axis_ticks_y):
 class panel_grid_major_x(themeable):
     def apply(self, ax):
         super(panel_grid_major_x, self).apply(ax)
-        ticks = ax.xaxis.get_major_ticks()
-        for tick in ticks:
-            tick.gridline.set(**self.properties)
+        ax.xaxis.grid(which='major', **self.properties)
 
 
 class panel_grid_major_y(themeable):
     def apply(self, ax):
         super(panel_grid_major_y, self).apply(ax)
-        ticks = ax.yaxis.get_major_ticks()
-        for tick in ticks:
-            tick.gridline.set(**self.properties)
+        ax.yaxis.grid(which='major', **self.properties)
 
 
 class panel_grid_minor_x(themeable):
     def apply(self, ax):
         super(panel_grid_minor_x, self).apply(ax)
-        ticks = ax.xaxis.get_minor_ticks()
-        for tick in ticks:
-            tick.gridline.set(**self.properties)
+        ax.xaxis.grid(which='minor', **self.properties)
 
 
 class panel_grid_minor_y(themeable):
     def apply(self, ax):
         super(panel_grid_minor_y, self).apply(ax)
-        ticks = ax.yaxis.get_minor_ticks()
-        for tick in ticks:
-            tick.gridline.set(**self.properties)
+        ax.yaxis.grid(which='minor', **self.properties)
 
 
 class panel_grid_major(panel_grid_major_x, panel_grid_major_y):
