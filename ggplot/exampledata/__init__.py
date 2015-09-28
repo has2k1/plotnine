@@ -1,4 +1,4 @@
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import
 
 import pandas as pd
 import os
@@ -8,6 +8,7 @@ __all__ = ['diamonds', 'economics', 'midwest', 'movies',
            # extras for backward compatibility!
            'meat', 'mtcars', 'pageviews']
 
+__all__ = [str(u) for u in __all__]
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 mtcars = pd.read_csv(os.path.join(_ROOT, 'mtcars.csv'))

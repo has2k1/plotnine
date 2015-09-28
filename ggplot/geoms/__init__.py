@@ -36,6 +36,16 @@ from .geom_path import arrow
 from .annotate import annotate
 
 
-__all__ = [s for s in dir()
-           if not (s.startswith('_') or
-                   s == 'absolute_import')]
+__all__ = ['geom_abline', 'geom_area', 'geom_bar',
+           'geom_blank', 'geom_boxplot', 'geom_crossbar',
+           'geom_density', 'geom_dotplot', 'geom_errorbar',
+           'geom_errorbarh', 'geom_histogram', 'geom_hline',
+           'geom_jitter', 'geom_line', 'geom_linerange',
+           'geom_linerange', 'geom_now_its_art', 'geom_path',
+           'geom_point', 'geom_pointrange', 'geom_pointrange',
+           'geom_polygon', 'geom_rect', 'geom_ribbon',
+           'geom_segment', 'geom_smooth', 'geom_spoke',
+           'geom_step', 'geom_text', 'geom_tile',
+           'geom_vline',
+           # other
+           'arrow', 'annotate']

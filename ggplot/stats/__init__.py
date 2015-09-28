@@ -15,6 +15,11 @@ from .stat_sum import stat_sum
 from .stat_summary import stat_summary
 from .stat_unique import stat_unique
 
-__all__ = [s for s in dir()
-           if not (s.startswith('_') or
-                   s == 'absolute_import')]
+
+__all__ = ['stat_bar', 'stat_bin',
+           'stat_bin2d', 'stat_bindot',
+           'stat_boxplot', 'stat_density',
+           'stat_ecdf', 'stat_function',
+           'stat_identity', 'stat_qq',
+           'stat_smooth', 'stat_sum',
+           'stat_summary', 'stat_unique']

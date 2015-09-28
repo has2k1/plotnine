@@ -10,6 +10,6 @@ from .theme_seaborn import theme_seaborn
 from .theme_elements import element_line, element_rect, element_text
 
 
-__all__ = [s for s in dir()
-           if not (s.startswith('_') or
-                   s == 'absolute_import')]
+__all__ = ['theme', 'theme_538', 'theme_bw', 'theme_gray', 'theme_xkcd',
+           'theme_matplotlib', 'theme_seaborn',
+           'element_line', 'element_rect', 'element_text']

@@ -299,6 +299,7 @@ scale_fill_continuous = scale_fill_gradient
 scale_colour_hue = scale_color_hue
 scale_colour_grey = scale_color_grey
 scale_colour_brewer = scale_color_brewer
+scale_colour_desaturate = scale_color_desaturate
 scale_colour_gradient = scale_color_gradient
 scale_colour_gradient2 = scale_color_gradient2
 scale_colour_gradientn = scale_color_gradientn

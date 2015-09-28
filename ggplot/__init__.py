@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-
 # For testing purposes we might need to set mpl backend before any
 # other import of matplotlib.
 def _set_mpl_backend():
@@ -34,6 +33,25 @@ from .exampledata import (diamonds, mtcars, meat, pageviews)
 from .guides import *
 
 
-__all__ = [s for s in dir()
-           if not (s.startswith('_') or
-                   s == 'absolute_import')]
+def _get_all_imports():
+    """
+    Return list of all the imports
+
+    This prevents sub-modules (geoms, stats, utils, ...)
+    from being imported into the user namespace by the
+    following import statement
+
+        from ggplot import *
+
+    This is because `from Module import Something`
+    leads to `Module` itself coming into the namespace!!
+    """
+    import types
+    lst = [name for name, obj in globals().items()
+           if not (name.startswith('_') or
+                   name == 'aboslute_import' or
+                   isinstance(obj, types.ModuleType))]
+    return lst
+
+
+__all__ = _get_all_imports()
