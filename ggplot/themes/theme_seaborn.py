@@ -25,3 +25,8 @@ class theme_seaborn(theme):
         d = seaborn_set(context=context, style=style,
                         font=font, font_scale=font_scale)
         self._rcParams.update(d)
+
+        d = {
+             'figure.figsize': '11, 8',
+             'figure.subplot.hspace': '0.5'}
+        self._rcParams.update(d)

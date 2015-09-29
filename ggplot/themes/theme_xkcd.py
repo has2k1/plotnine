@@ -29,6 +29,11 @@ class theme_xkcd(theme):
 
         self._rcParams.update(_xkcd)
 
+        d = {
+             'figure.figsize': '11, 8',
+             'figure.subplot.hspace': '0.5'}
+        self._rcParams.update(d)
+
     def __deepcopy__(self, memo):
         class _empty(object):
             pass
