@@ -11,8 +11,7 @@ from .geom_segment import geom_segment
 
 class geom_hline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.5, 'alpha': 1, 'y': None,
-                   'xmin': None, 'xmax': None}
+                   'size': 1.5, 'alpha': 1}
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'show_guide': False, 'inherit_aes': False}

@@ -11,8 +11,7 @@ from .geom_segment import geom_segment
 
 class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.5, 'alpha': 1, 'x': None,
-                   'ymin': None, 'ymax': None}
+                   'size': 1.5, 'alpha': 1}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'show_guide': False, 'inherit_aes': False}

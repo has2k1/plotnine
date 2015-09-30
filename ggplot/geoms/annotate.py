@@ -10,14 +10,17 @@ from ..utils.exceptions import GgplotError
 
 
 class annotate(object):
-    def __init__(self, geom, x=None, y=None, xmin=None,
-                 xmax=None, ymin=None, ymax=None,
+    def __init__(self, geom, x=None, y=None,
+                 xmin=None, xmax=None, xend=None,
+                 ymin=None, ymax=None, yend=None,
                  **kwargs):
         variables = locals()
 
         # position only, and combined aesthetics
         position = {loc: variables[loc]
-                    for loc in ('x', 'y', 'xmin', 'xmax', 'ymin', 'ymax')
+                    for loc in ('x', 'y',
+                                'xmin', 'xmax', 'xend',
+                                'ymin', 'ymax', 'yend')
                     if variables[loc] is not None}
         aesthetics = position.copy()
         aesthetics.update(kwargs)
