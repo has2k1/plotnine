@@ -344,7 +344,7 @@ class scale_continuous(scale):
         # labeling of the plot axis and the guides are in
         # the original dataspace.
         if 'limits' in kwargs:
-            kwargs['limits'] = self.trans.trans(kwargs['limits'])
+            kwargs['limits'] = trans.transform(kwargs['limits'])
 
         # We can set the breaks to user defined values or
         # have matplotlib calculate them using the default locator
@@ -434,9 +434,9 @@ class scale_continuous(scale):
         Transform array|series x
         """
         try:
-            return self.trans.trans(x)
+            return self.trans.transform(x)
         except TypeError:
-            return [self.trans.trans(val) for val in x]
+            return [self.trans.transform(val) for val in x]
 
     def dimension(self, expand=(0, 0)):
         """
@@ -498,7 +498,7 @@ class scale_continuous(scale):
             limits = self.limits
         # Limits in transformed space need to be
         # converted back to data space
-        limits = self.trans.inv(limits)
+        limits = self.trans.inverse(limits)
 
         if not self.breaks:  # None, False, []
             return []

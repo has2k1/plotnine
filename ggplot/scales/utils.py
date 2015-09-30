@@ -558,8 +558,6 @@ def trans_new(name, transform, inverse,
 
     class klass(object):
         aesthetic = None
-        trans = staticmethod(transform)
-        inv = staticmethod(inverse)
 
         def modify_axis(self, ax):
             """
@@ -584,6 +582,8 @@ def trans_new(name, transform, inverse,
 
     klass.__name__ = trans_name
     klass.name = name
+    klass.transform = staticmethod(transform)
+    klass.inverse = staticmethod(inverse)
     # Each axis requires a separate locator(MPL requirement),
     # and for consistency we used separate formatters too.
     klass.breaks_locator = make_locator(transform, inverse)
@@ -599,13 +599,13 @@ def log_trans(base=None):
     if base is None:
         name = 'log'
         base = np.exp(1)
-        trans = np.log
+        transform = np.log
     elif base == 10:
         name = 'log10'
-        trans = np.log10
+        transform = np.log10
     elif base == 2:
         name = 'log2'
-        trans = np.log2
+        transform = np.log2
     else:
         name = 'log{}'.format(base)
 
@@ -613,9 +613,9 @@ def log_trans(base=None):
             return np.log(x)/np.log(base)
 
     # inverse function
-    def inv(x):
+    def inverse(x):
         return x ** base
-    return trans_new(name, trans, inv)
+    return trans_new(name, transform, inverse)
 
 
 def exp_trans(base=None):
@@ -627,14 +627,14 @@ def exp_trans(base=None):
         name = 'power-{}'.format(base)
 
     # transform function
-    def trans(x):
+    def transform(x):
         return base ** x
 
     # inverse function
-    def inv(x):
+    def inverse(x):
         return np.log(x)/np.log(base)
 
-    return trans_new(name, trans, inv)
+    return trans_new(name, transform, inverse)
 
 log10_trans = log_trans(10)
 log2_trans = log_trans(2)
@@ -652,13 +652,13 @@ def boxcox_trans(p):
     if np.abs(p) < 1e-7:
         return log_trans
 
-    def trans(x):
+    def transform(x):
         return (x**p - 1) / (p * np.sign(x-1))
 
-    def inv(x):
+    def inverse(x):
         return (np.abs(x) * p + np.sign(x)) ** (1 / p)
 
-    return trans_new('pow-{}'.format(p), trans, inv)
+    return trans_new('pow-{}'.format(p), transform, inverse)
 
 
 # Probability transforms
@@ -668,17 +668,17 @@ def probability_trans(distribution, *args, **kwargs):
         msg = "Unknown distribution '{}'"
         raise GgplotError(msg.format(distribution))
 
-    def trans(x):
+    def transform(x):
         return getattr(stats, distribution).cdf(x, *args, **kwargs)
 
-    def inv(x):
+    def inverse(x):
         return getattr(stats, distribution).ppf(x, *args, **kwargs)
 
-    return trans_new('prob-{}'.format(distribution), trans, inv)
+    return trans_new('prob-{}'.format(distribution), transform, inverse)
 
 
 def datetime_trans():
-    def trans(x):
+    def transform(x):
         try:
             x = date2num(x)
         except AttributeError:
@@ -687,13 +687,13 @@ def datetime_trans():
             x = date2num(x)
         return x
 
-    def inv(x):
+    def inverse(x):
         return num2date(x)
 
     def _DateFormatter():
         return DateFormatter('%Y-%m-%d')
 
-    _trans = trans_new('datetime', trans, inv)
+    _trans = trans_new('datetime', transform, inverse)
     _trans.breaks_locator = staticmethod(DateLocator)
     _trans.minor_breaks_locator = staticmethod(defaultMinorLocator)
     _trans.labels_formatter = staticmethod(_DateFormatter)
@@ -701,7 +701,7 @@ def datetime_trans():
 
 
 def timedelta_trans():
-    def trans(x):
+    def transform(x):
         try:
             iter(x)
             x = pd.Series(x).astype(np.int)
@@ -709,14 +709,14 @@ def timedelta_trans():
             x = np.int(x)
         return x
 
-    def inv(x):
+    def inverse(x):
         try:
             x = [pd.Timedelta(int(i)) for i in x]
         except TypeError:
             x = pd.Timedelta(int(x))
         return x
 
-    _trans = trans_new('timedelta', trans, inv)
+    _trans = trans_new('timedelta', transform, inverse)
     _trans.breaks_locator = staticmethod(defaultLocator)
     _trans.minor_breaks_locator = staticmethod(defaultMinorLocator)
     _trans.labels_formatter = staticmethod(TimedeltaFormatter)
