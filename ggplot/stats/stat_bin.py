@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
-from six.moves import range
+from six.moves import range, zip
 
 from ..utils import seq, make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warn
@@ -37,7 +37,7 @@ class stat_bin(stat):
     def compute_group(cls, data, scales, **params):
         if 'y' in data:
             raise GgplotError(_MSG_YVALUE)
-        params['range'] = np.asarray(scales.x.dimension((0, 0)))
+        params['range'] = np.asarray(scales.x.dimension())
         params['weight'] = data.get('weight')
         return bin(data['x'], **params)
 
@@ -118,7 +118,7 @@ def bin(x, **params):
     if len(wftable) < len(x):
         empty_bins = set(range(len(x))) - set(bins)
         for b in empty_bins:
-            wftable[b] = 0
+            wftable.loc[b] = 0
         wftable = wftable.sort_index()
     count = wftable.tolist()
 
