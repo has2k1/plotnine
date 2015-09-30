@@ -7,9 +7,8 @@ from nose.tools import assert_equal, assert_true, assert_raises
 
 import numpy as np
 import pandas as pd
-import scipy.stats as ss
 
-from . import get_assert_same_ggplot, cleanup
+from . import get_assert_same_ggplot
 from ..exampledata import mtcars
 from ..utils.utils import _margins, add_margins, ninteraction
 from ..scales.utils import censor, zero_range, expand_range
@@ -47,8 +46,9 @@ def test__margins():
     assert(lst == [[],
                    ['gear']])
 
+
 def test_add_margins():
-    df = mtcars.loc[:, ['mpg','disp', 'vs', 'am', 'gear']]
+    df = mtcars.loc[:, ['mpg', 'disp', 'vs', 'am', 'gear']]
     n = len(df)
     all_lst = ['(all)'] * n
 
@@ -91,7 +91,7 @@ def test_add_margins():
 
 
 def test_censor():
-    x = range(10)
+    x = list(range(10))
     xx = censor(x, (2, 8))
     assert(np.isnan(xx[0]))
     assert(np.isnan(xx[1]))
@@ -146,8 +146,8 @@ def test_zero_range():
 
     assert(zero_range(c((1, 1 + eps))))
     assert(zero_range(c((1, 1 + 99 * eps))))
-    assert(not zero_range(c((1, 1 + 101 * eps)))) # Crossed the tol threshold
-    assert(not zero_range(c((1, 1 + 2 * eps)), tol = eps)) # Changed tol
+    assert(not zero_range(c((1, 1 + 101 * eps))))  # Crossed the tol threshold
+    assert(not zero_range(c((1, 1 + 2 * eps)), tol=eps))  # Changed tol
 
     # Scaling up or down all the values has no effect since the values
     # are rescaled to 1 before checking against tol
@@ -163,6 +163,7 @@ def test_zero_range():
     assert(not zero_range((1, np.inf)))
     assert(not zero_range((-np.inf, np.inf)))
     assert(zero_range((np.inf, np.inf)))
+
 
 def test_expand_range():
     assert(expand_range((0, 1)) == (0, 1))
