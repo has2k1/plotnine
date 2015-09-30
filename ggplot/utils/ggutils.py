@@ -49,7 +49,7 @@ class gg_context(object):
                 except Exception as e:
                     msg = ("""Setting "mpl.rcParams['{}']={}" """
                            "raised an Exception: {}")
-                    gg_warn(msg.format(key, val, e))
+                    raise GgplotError(msg.format(key, val, e))
         mpl.interactive(False)
 
     def __exit__(self, type, value, tb):
