@@ -235,10 +235,20 @@ class layer(object):
         data = pd.concat([data, stat_data], axis=1)
         return data
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
+        """
+        Prepare/modify data for plotting
+        """
         if len(data) == 0:
             return pd.DataFrame()
-        return self.geom.reparameterise(data)
+
+        data = self.geom.setup_data(data)
+
+        check_required_aesthetics(
+            self.geom.REQUIRED_AES,
+            set(data.columns) | set(self.geom.aes_params),
+            self.geom.__class__.__name__)
+        return data
 
     def compute_position(self, data, panel):
         """
@@ -267,10 +277,6 @@ class layer(object):
         zorder : int
             Stacking order of the layer in the plot
         """
-        check_required_aesthetics(
-            self.geom.REQUIRED_AES,
-            set(data.columns) | set(self.geom.aes_params),
-            self.geom.__class__.__name__)
 
         params = deepcopy(self.geom.params)
         params.update(self.stat.params)

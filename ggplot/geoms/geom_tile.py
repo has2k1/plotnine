@@ -12,8 +12,7 @@ class geom_tile(geom_rect):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    @staticmethod
-    def reparameterise(data):
+    def setup_data(self, data):
         try:
             width = data.pop('width')
         except KeyError:

@@ -24,7 +24,7 @@ class geom_boxplot(geom):
                       'notch': False, 'varwidth': False,
                       'notchwidth': 0.5}
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
         if 'width' not in data:
             if 'width' in self.params and self.params['width']:
                 data['width'] = self.params['width']

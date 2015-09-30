@@ -15,7 +15,7 @@ class geom_bar(geom_rect):
 
     _extra_requires = {'y'}
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
         if 'width' not in data:
             if self.params['width']:
                 data['width'] = self.params['width']

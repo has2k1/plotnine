@@ -229,8 +229,8 @@ class ggplot(object):
         # Make sure missing (but required) aesthetics are added
         scales_add_missing(plot, ('x', 'y'))
 
-        # Reparameterise geoms from (e.g.) y and width to ymin and ymax
-        data = [l.reparameterise(d) for l, d in zip(layers, data)]
+        # Prepare data in geoms from (e.g.) y and width to ymin and ymax
+        data = [l.setup_data(d) for l, d in zip(layers, data)]
 
         # Apply position adjustments
         data = [l.compute_position(d, panel)

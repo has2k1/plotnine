@@ -35,7 +35,7 @@ class geom_dotplot(geom):
                     "method='dotdensity'. You probably want to set "
                     "binpositions='all'")
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
         gp = self.params
         sp = self._stat.params
 

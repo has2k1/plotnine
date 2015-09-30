@@ -99,8 +99,7 @@ class geom(object):
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
 
-    @staticmethod
-    def reparameterise(data):
+    def setup_data(self, data):
         return data
 
     def draw_groups(self, data, panel_scales, coord, ax, **params):

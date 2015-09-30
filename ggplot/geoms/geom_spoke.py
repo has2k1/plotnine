@@ -9,7 +9,7 @@ from .geom_segment import geom_segment
 class geom_spoke(geom_segment):
     REQUIRED_AES = {'x', 'y', 'angle', 'radius'}
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
         try:
             radius = data['radius']
         except KeyError:

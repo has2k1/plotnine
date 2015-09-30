@@ -15,7 +15,7 @@ class geom_errorbarh(geom):
                       'height': 0.5}
     guide_geom = 'path'
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
         if 'height' not in data:
             if self.params['height']:
                 data['height'] = self.params['height']

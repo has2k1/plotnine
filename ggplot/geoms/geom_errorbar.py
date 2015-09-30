@@ -15,7 +15,7 @@ class geom_errorbar(geom):
                       'width': 0.5}
     guide_geom = 'path'
 
-    def reparameterise(self, data):
+    def setup_data(self, data):
         if 'width' not in data:
             if self.params['width']:
                 data['width'] = self.params['width']
