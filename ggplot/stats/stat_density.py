@@ -19,6 +19,7 @@ class stat_density(stat):
                       'trim': False, 'n': 512, 'gridsize': None,
                       'bw': 'normal_reference', 'cut': 3,
                       'clip': (-np.inf, np.inf)}
+    DEFAULT_AES = {'y': '..density..'}
     CREATES = {'y'}
 
     @classmethod
@@ -76,7 +77,8 @@ class stat_density(stat):
         x2 = np.linspace(range_x[0], range_x[1], params['n'])
         y = kde.evaluate(x2)
         new_data = pd.DataFrame({'x': x2,
-                                 'y': y,
+                                 'density': y,
                                  'count': y * n,
-                                 'scaled': y / np.max(y)})
+                                 'scaled': y / np.max(y),
+                                 'n': n})
         return new_data
