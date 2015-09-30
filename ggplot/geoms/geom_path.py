@@ -295,11 +295,11 @@ def _draw_segments(pinfo, ax, **params):
                 out = [pinfo[param][i] for i in indices]
         return out
 
-    indices = []
+    indices = []  # for attributes of starting point of each segment
     segments = []
     for _, _df in df.groupby('group'):
         idx = _df.index.tolist()
-        indices[:-1] += idx  # One line from two points
+        indices += idx[:-1]  # One line from two points
         x = [pinfo['x'][i] for i in idx]
         y = [pinfo['y'][i] for i in idx]
         segments.append(make_line_segments(x, y, ispath=True))
@@ -308,6 +308,7 @@ def _draw_segments(pinfo, ax, **params):
     edgecolor = get_param('color', indices)
     linewidth = get_param('size', indices)
     linestyle = get_param('linetype', indices)
+
     coll = mcoll.LineCollection(segments,
                                 edgecolor=edgecolor,
                                 linewidth=linewidth,
