@@ -18,28 +18,21 @@ class facet_null(object):
     def train_layout(self, data):
         layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
                                'SCALE_X': 1, 'SCALE_Y': 1},
-                              index=[1])
+                              index=[0])
         self.nrow = 1
         self.ncol = 1
         return layout
 
-    def map_layout(self, layout, data, plot_data):
+    def map_layout(self, data, layout):
         """
         Assign a data points to panels
 
         Parameters
         ----------
-        layout : dataframe
+        data : DataFrame
+            dataframe for a layer
+        layout : DataFrame
             As returned by self.train_layout
-        data : list
-            dataframe for each layer or None
-        plot_data : dataframe
-            default data. Specified in the call to  ggplot
         """
-        _data = []
-        for df in data:
-            if df is None:
-                df = plot_data.copy()
-            df['PANEL'] = 1
-            _data.append(df)
-        return _data
+        data['PANEL'] = 1
+        return data

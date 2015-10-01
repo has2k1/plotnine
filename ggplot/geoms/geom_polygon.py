@@ -16,16 +16,16 @@ class geom_polygon(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     REQUIRED_AES = {'x', 'y'}
 
-    def draw_groups(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, params)
         for pinfo in pinfos:
-            self.draw(pinfo, panel_scales, coord, ax, **params)
+            self.draw_group(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
         # And like ggplot, alpha applies to the facecolor

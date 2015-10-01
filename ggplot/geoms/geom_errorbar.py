@@ -28,11 +28,11 @@ class geom_errorbar(geom):
         return data
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         # create (two horizontal bars) + vertical bar
         p1 = copy(pinfo)
         p1['x'] = (pinfo['xmin']*2) + pinfo['x']
         p1['xend'] = (pinfo['xmax']*2) + pinfo['x']
         p1['y'] = (pinfo['ymin'] + pinfo['ymax']) + pinfo['ymin']
         p1['yend'] = (pinfo['ymin'] + pinfo['ymax']) + pinfo['ymax']
-        geom_segment.draw(p1, panel_scales, coord, ax, **params)
+        geom_segment.draw_group(p1, panel_scales, coord, ax, **params)

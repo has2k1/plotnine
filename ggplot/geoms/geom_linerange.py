@@ -56,7 +56,7 @@ class geom_linerange(geom):
     guide_geom = 'path'
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         pinfo['xend'] = pinfo['x']
         pinfo['y'], pinfo['yend'] = pinfo['ymin'], pinfo['ymax']
-        geom_segment.draw(pinfo, panel_scales, coord, ax, **params)
+        geom_segment.draw_group(pinfo, panel_scales, coord, ax, **params)

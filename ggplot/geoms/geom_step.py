@@ -9,10 +9,10 @@ from .geom_path import geom_path
 class geom_step(geom_path):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'direction': 'hv'}
-    draw_groups = geom.draw_groups
+    draw_panel = geom.draw_panel
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         x = pinfo.pop('x')
         y = pinfo.pop('y')
 
@@ -31,4 +31,4 @@ class geom_step(geom_path):
         pinfo['x'] = xs
         pinfo['y'] = ys
         pinfo['group'] = pinfo['group'][0]
-        geom_path.draw(pinfo, panel_scales, coord, ax, **params)
+        geom_path.draw_group(pinfo, panel_scales, coord, ax, **params)

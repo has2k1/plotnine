@@ -4,14 +4,13 @@ import sys
 from copy import deepcopy
 
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
 from six.moves import zip
 
 from .components.aes import make_labels
 from .components.panel import Panel
-from .components.layer import add_group
+from .components.layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive, suppress
@@ -59,13 +58,14 @@ class ggplot(object):
         self.mapping = mapping
         self.facet = facet_null()
         self.labels = make_labels(mapping)
-        self.layers = []
+        self.layers = Layers()
         self.guides = guides()
         self.scales = Scales()
         # default theme is theme_gray
         self.theme = theme_gray()
         self.coordinates = coord_cartesian()
         self.plot_env = mapping.aes_env
+        self.panel = None
 
     def __repr__(self):
         """Print/show the plot"""
@@ -94,6 +94,40 @@ class ggplot(object):
 
         return result
 
+    def _make_axes(self, plot):
+        """
+        Create MPL figure and axes
+
+        Parameters
+        ----------
+        plot : ggplot
+            built ggplot object
+
+        Note
+        ----
+        This method creates a grid of axes and
+        unsed ones are turned off.
+        A dict `figure._themeable` is attached to
+        the figure to get a handle on objects that
+        may be themed
+        """
+        figure, axs = plt.subplots(plot.facet.nrow,
+                                   plot.facet.ncol,
+                                   sharex=False,
+                                   sharey=False)
+        figure._themeable = {}
+        try:
+            axs = axs.flatten()
+        except AttributeError:
+            axs = [axs]
+
+        for ax in axs[len(plot.panel.layout):]:
+            ax.axis('off')
+        axs = axs[:len(plot.panel.layout)]
+
+        plot.axs = plot.panel.axs = axs
+        plot.figure = plot.theme.figure = figure
+
     def draw(self):
         """
         Render the complete plot and return the matplotlib figure
@@ -119,42 +153,24 @@ class ggplot(object):
                 - axs
                 - figure
         """
-        data, panel, plot = self.build()
-        figure, axs = plt.subplots(plot.facet.nrow,
-                                   plot.facet.ncol,
-                                   sharex=False,
-                                   sharey=False)
+        data, plot = self.build()
+        self._make_axes(plot)
+        panel = plot.panel
 
-        figure._themeable = {}
-        axs = np.atleast_2d(axs)
-        axs = [ax for row in axs for ax in row]
-        for ax in axs[len(panel.layout):]:
-            ax.axis('off')
-            ax._themeable = {}
-        axs = axs[:len(panel.layout)]
-        plot.axs = axs
-        plot.figure = figure
-        plot.theme.figure = figure
+        # Draw the geoms
+        for l, ldata in zip(plot.layers, data):
+            l.draw(ldata, panel, plot.coordinates)
 
-        # ax - axes for a particular panel
-        # finfo - panel (facet) information from layout table
-        for ax, (_, finfo) in zip(axs, panel.layout.iterrows()):
-            panel_idx = finfo['PANEL'] - 1
-            panel_scales = panel.ranges[panel_idx]
-
-            # Plot all data for each layer
-            for zorder, (l, d) in enumerate(
-                    zip(plot.layers, data), start=1):
-                bool_idx = (d['PANEL'] == finfo['PANEL'])
-                l.draw(d[bool_idx], panel_scales, plot.coordinates,
-                       ax, zorder)
-
-            # xaxis & yaxis breaks and labels and stuff
-            set_breaks_and_labels(plot, panel.ranges[panel_idx],
-                                  finfo, ax)
-            # draw facet labels
-            if isinstance(plot.facet, (facet_grid, facet_wrap)):
-                draw_facet_label(plot, finfo, ax)
+        # Decorate the axes
+        #   - xaxis & yaxis breaks, labels, limits, ...
+        #   - facet labels
+        #
+        # ploc is the panel location (left to right, top to bottom)
+        for ploc, finfo in panel.layout.iterrows():
+            panel_scales = panel.ranges[ploc]
+            ax = panel.axs[ploc]
+            set_breaks_and_labels(plot, panel_scales, finfo, ax)
+            draw_facet_label(plot, finfo, ax)
 
         apply_facet_spacing(plot)
         add_labels_and_title(plot)
@@ -191,17 +207,17 @@ class ggplot(object):
             raise GgplotError('No layers in plot')
 
         plot = deepcopy(self)
+        plot.panel = Panel()
 
         layers = plot.layers
-        layer_data = [x.data for x in plot.layers]
-        all_data = [plot.data] + layer_data
+        layer_data = [l.data for l in layers]
         scales = plot.scales
+        panel = plot.panel
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
-        panel = Panel()
-        panel.layout = plot.facet.train_layout(all_data)
-        data = plot.facet.map_layout(panel.layout, layer_data, plot.data)
+        panel.train_layout(plot.facet, layer_data, plot.data)
+        data = panel.map_layout(plot.facet, layer_data, plot.data)
 
         # Compute aesthetics to produce data with generalised variable names
         data = [l.compute_aesthetics(d, plot) for l, d in zip(layers, data)]
@@ -224,7 +240,6 @@ class ggplot(object):
         data = [l.compute_statistic(d, panel)
                 for l, d in zip(layers, data)]
         data = [l.map_statistic(d, plot) for l, d in zip(layers, data)]
-        # data = [order_groups(d) for d in data)] # !!! look into this
 
         # Make sure missing (but required) aesthetics are added
         scales_add_missing(plot, ('x', 'y'))
@@ -252,7 +267,7 @@ class ggplot(object):
 
         # Train coordinate system
         panel.train_ranges(plot.coordinates)
-        return data, panel, plot
+        return data, plot
 
     def draw_legend(self, plot):
         legend_box = plot.guides.build(plot)
@@ -401,6 +416,9 @@ def draw_facet_label(plot, finfo, ax):
     fcgrid = isinstance(plot.facet, facet_grid)
     toprow = finfo['ROW'] == 1
     rightcol = finfo['COL'] == plot.facet.ncol
+
+    if not fcgrid and not fcwrap:
+        return
 
     if fcgrid and not toprow and not rightcol:
         return

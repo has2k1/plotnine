@@ -26,7 +26,7 @@ class geom_hline(geom):
 
         geom.__init__(self, *args, **kwargs)
 
-    def draw_groups(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
@@ -40,4 +40,5 @@ class geom_hline(geom):
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, params)
             for pinfo in pinfos:
-                geom_segment.draw(pinfo, panel_scales, coord, ax, **params)
+                geom_segment.draw_group(pinfo, panel_scales,
+                                        coord, ax, **params)

@@ -50,7 +50,7 @@ class geom_boxplot(geom):
         return data
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
 
         def subdict(keys):
             d = {}
@@ -91,11 +91,14 @@ class geom_boxplot(geom):
             outliers['shape'] = outliers.pop('outlier_shape')
             outliers['size'] = outliers.pop('outlier_size')
             outliers['stroke'] = outliers.pop('outlier_stroke')
-            geom_point.draw(outliers, panel_scales, coord, ax, **params)
+            geom_point.draw_group(outliers, panel_scales,
+                                  coord, ax, **params)
 
-        geom_segment.draw(whiskers, panel_scales, coord, ax, **params)
+        geom_segment.draw_group(whiskers, panel_scales,
+                                coord, ax, **params)
         params['fatten'] = geom_crossbar.DEFAULT_PARAMS['fatten']
-        geom_crossbar.draw(box, panel_scales, coord, ax, **params)
+        geom_crossbar.draw_group(box, panel_scales,
+                                 coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

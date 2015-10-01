@@ -29,6 +29,36 @@ but only single items and lists/arrays can be used. \
 (original error: {})"""
 
 
+class Layers(list):
+    """
+    List of layers
+
+    Each layer knows its position/zorder (1 based) in the list.
+    """
+
+    def append(self, item):
+        item.zorder = len(self) + 1
+        return list.append(self, item)
+
+    def _set_zorder(self, lst2):
+        base = len(self)
+        for i, item in enumerate(lst2):
+            item.zorder = base + 1
+        return lst2
+
+    def extend(self, other):
+        other = self._set_zorder(other)
+        return list.extend(self, other)
+
+    def __iadd__(self, other):
+        other = self._set_zorder(other)
+        return list.__iadd__(self, other)
+
+    def __add__(self, other):
+        other = self._set_zorder(other)
+        return list.__add__(self, other)
+
+
 class layer(object):
 
     def __init__(self, geom=None, stat=None,
@@ -43,6 +73,7 @@ class layer(object):
         self.inherit_aes = inherit_aes
         self.show_guide = show_guide
         self._active_mapping = {}
+        self.zorder = 0
 
     def __deepcopy__(self, memo):
         """
@@ -259,29 +290,21 @@ class layer(object):
         data = self.position.setup_data(data, params)
         return self.position.compute_layer(data, params, panel)
 
-    def draw(self, data, panel_scales, coord, ax, zorder):
+    def draw(self, data, panel, coord):
         """
-        Draw layer
+        Draw geom
 
         Parameters
         ----------
         data : DataFrame
             DataFrame specific for this layer
-        panel_scales : dict
-            Computed scale ranges for the panel. Should
-            have atleast 'x_range', 'y_range'
+        panel : Panel
+            Panel object created when the plot is getting
+            built
         coord : coord
             Type of coordinate axes
-        ax : axes
-            On which to draw the layer
-        zorder : int
-            Stacking order of the layer in the plot
         """
-
-        params = deepcopy(self.geom.params)
-        params.update(self.stat.params)
-        params['zorder'] = zorder
-        self.geom.draw_groups(data, panel_scales, coord, ax, **params)
+        self.geom.draw_layer(data, panel, coord, self.zorder)
 
     def use_defaults(self, data):
         """

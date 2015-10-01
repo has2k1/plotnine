@@ -33,7 +33,7 @@ class geom_crossbar(geom):
         return data
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         y = pinfo['y']
         xmin = np.array(pinfo['xmin'])
         xmax = np.array(pinfo['xmax'])
@@ -91,8 +91,8 @@ class geom_crossbar(geom):
                 'group': np.tile(np.arange(1, len(pinfo['group'])+1), 5)}
         copy_keys(box)
 
-        geom_polygon.draw(box, panel_scales, coord, ax, **params)
-        geom_segment.draw(middle, panel_scales, coord, ax, **params)
+        geom_polygon.draw_group(box, panel_scales, coord, ax, **params)
+        geom_segment.draw_group(middle, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

@@ -24,7 +24,7 @@ class geom_path(geom):
                       'lineend': 'butt', 'linejoin': 'round',
                       'arrow': None}
 
-    def draw_groups(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_scales, coord, ax, **params):
         if not any(data['group'].duplicated()):
             msg = ("geom_path: Each group consist of only one "
                    "observation. Do you need to adjust the "
@@ -56,12 +56,12 @@ class geom_path(geom):
         if not constant:
             # expects len(pinfos) == 1
             pinfos = self._make_pinfos(data, params)
-            self.draw(pinfos[0], panel_scales, coord, ax, **params)
+            self.draw_group(pinfos[0], panel_scales, coord, ax, **params)
         else:
-            geom.draw_groups(self, data, panel_scales, coord, ax, **params)
+            geom.draw_panel(self, data, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
 
         with suppress(KeyError):
             if params['linejoin'] == 'mitre':

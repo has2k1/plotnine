@@ -6,5 +6,5 @@ from .geom import geom
 class geom_blank(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    def draw_groups(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_scales, coord, ax, **params):
         pass

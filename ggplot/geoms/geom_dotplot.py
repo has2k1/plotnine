@@ -124,7 +124,7 @@ class geom_dotplot(geom):
         return data
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         geom_dotplot._verify(**params)
 
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])

@@ -16,16 +16,16 @@ class geom_point(geom):
 
     _units = {'shape'}
 
-    def draw_groups(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
         pinfos = self._make_pinfos(data, params)
         for pinfo in pinfos:
-            self.draw(pinfo, panel_scales, coord, ax, **params)
+            self.draw_group(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
 
         if pinfo['fill'] is None:

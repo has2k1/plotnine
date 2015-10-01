@@ -102,7 +102,33 @@ class geom(object):
     def setup_data(self, data):
         return data
 
-    def draw_groups(self, data, panel_scales, coord, ax, **params):
+    def draw_layer(self, data, panel, coord, zorder):
+        """
+        Draw layer across all panels
+
+        Parameters
+        ----------
+        data : DataFrame
+            DataFrame specific for this layer
+        panel : Panel
+            Panel object created when the plot is getting
+            built
+        coord : coord
+            Type of coordinate axes
+        zorder : int
+            Stacking order of the layer in the plot
+        """
+        params = deepcopy(self.params)
+        params.update(self._stat.params)
+        params['zorder'] = zorder
+        for pid, pdata in data.groupby('PANEL'):
+            pdata.is_copy = None
+            ploc = pid - 1
+            panel_scales = panel.ranges[ploc]
+            ax = panel.axs[ploc]
+            self.draw_panel(pdata, panel_scales, coord, ax, **params)
+
+    def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
 
@@ -134,10 +160,10 @@ class geom(object):
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, params)
             for pinfo in pinfos:
-                self.draw(pinfo, panel_scales, coord, ax, **params)
+                self.draw_group(pinfo, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(pinfo, panel_scales, coord, ax, **params):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
@@ -257,7 +283,7 @@ class geom(object):
         data : dataframe
             The data to be split into groups
         kwargs : dict
-            kwargs passed to the draw or draw_groups methods
+            kwargs passed to the draw or draw_panel methods
 
         Returns
         -------

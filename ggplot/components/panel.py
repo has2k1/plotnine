@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 
 from ..scales.scales import Scales
-from ..utils import match, xy_panel_scales
+from ..utils import match, xy_panel_scales, suppress
 from ..utils.exceptions import GgplotError
 
 
@@ -19,6 +19,19 @@ class Panel(object):
     ranges = None     # list of n dicts.
     x_scales = None   # scale object(s). 1 or n of them
     y_scales = None   # scale object(s). 1 or n of them
+    axs = None        # MPL axes
+
+    def train_layout(self, facet, layer_data, plot_data):
+        self.layout = facet.train_layout([plot_data] + layer_data)
+        self.shrink = facet.shrink
+
+    def map_layout(self, facet, layer_data, plot_data):
+        new_data = []
+        for data in layer_data:
+            if data is None:
+                data = plot_data.copy()
+            new_data.append(facet.map_layout(data, self.layout))
+        return new_data
 
     def train_position(self, data, x_scale, y_scale):
         """
@@ -100,8 +113,11 @@ class Panel(object):
         if not self.shrink:
             return
 
-        self.x_scales.reset()
-        self.y_scales.reset()
+        with suppress(AttributeError):
+            self.x_scales.reset()
+
+        with suppress(AttributeError):
+            self.y_scales.reset()
 
     def train_ranges(self, coord):
         """
