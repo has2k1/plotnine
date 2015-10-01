@@ -39,6 +39,11 @@ class scale_position_discrete(scale_discrete):
         # no way to recover values
         self.range_c = None
 
+    def is_empty(self):
+        return (self.range is None and
+                self.limits is None and
+                self.range_c is None)
+
     def train(self, series):
         # The discrete position scale is capable of doing
         # training for continuous data.
@@ -68,6 +73,9 @@ class scale_position_discrete(scale_discrete):
 
     @property
     def limits(self):
+        if self.is_empty():
+            return (0, 1)
+
         if self._limits:
             return self._limits
         elif self.range:
@@ -77,7 +85,7 @@ class scale_position_discrete(scale_discrete):
             # discrete limits for a continuous range
             mn = int(np.floor(np.min(self.range_c)))
             mx = int(np.ceil(np.max(self.range_c)))
-            return range(mn, mx+1)
+            return list(range(mn, mx+1))
         else:
             raise GgplotError(
                 'Lost, do not know what the limits are.')

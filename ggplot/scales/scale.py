@@ -120,8 +120,14 @@ class scale(object):
         """
         self.range = None
 
+    def is_empty(self):
+        return self.range is None and self._limits is None
+
     @property
     def limits(self):
+        if self.is_empty():
+            return (0, 1)
+
         # Fall back to the range if the limits
         # are not set or if any is NaN
         if self._limits is not None:
@@ -247,6 +253,9 @@ class scale_discrete(scale):
         {'fair': 1, 'good': 2, 'very good': 3,
         'premium': 4, 'ideal': 5}
         """
+        if self.is_empty():
+            return []
+
         if limits is None:
             limits = self.limits
 
@@ -269,6 +278,9 @@ class scale_discrete(scale):
         """
         Generate labels for the legend/guide breaks
         """
+        if self.is_empty():
+            return []
+
         if breaks is None:
             breaks = self.scale_breaks(can_waive=can_waive)
 
@@ -494,6 +506,9 @@ class scale_continuous(scale):
             them and cannot rely on Matplotlib. This option
             is for them.
         """
+        if self.is_empty():
+            return []
+
         if limits is None:
             limits = self.limits
         # Limits in transformed space need to be

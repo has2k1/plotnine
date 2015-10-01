@@ -39,8 +39,14 @@ class guide_legend(guide):
 
         scale name is one of the aesthetics
         ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
+
+        Returns this guide if training is successful and None
+        if it fails
         """
         breaks = scale.scale_breaks(can_waive=False)
+        if not len(breaks) or all(np.isnan(breaks)):
+            return None
+
         with suppress(AttributeError):
             breaks = list(breaks.keys())
 
@@ -71,6 +77,7 @@ class guide_legend(guide):
         info = '\n'.join([self.title, labels, str(self.direction),
                           self.__class__.__name__])
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
+        return self
 
     def merge(self, other):
         """

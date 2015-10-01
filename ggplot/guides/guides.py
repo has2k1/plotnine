@@ -130,7 +130,7 @@ class guides(dict):
             # each guide object trains scale within the object,
             # so Guides (i.e., the container of guides)
             # need not to know about them
-            guide.train(scale)
+            guide = guide.train(scale)
 
             if guide is not None:
                 gdefs.append(guide)
