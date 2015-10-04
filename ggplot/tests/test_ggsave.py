@@ -38,14 +38,14 @@ def assert_same_dims(orig, new, msg=None):
     assert_true(oh == nh, msg.format("y", oh, nh))
 
 
-@cleanup
-def test_ggsave_file():
-    gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
-    # we must print the object otherwise it wont show up as a figure to save
-    print(gg)
-    fn = "filename.png"
-    ggsave(fn)
-    assert_exist_and_clean(fn)
+# @cleanup
+# def test_ggsave_file():
+#     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
+#     # we must print the object otherwise it wont show up as a figure to save
+#     print(gg)
+#     fn = "filename.png"
+#     ggsave(fn)
+#     assert_exist_and_clean(fn)
 
 
 @cleanup
