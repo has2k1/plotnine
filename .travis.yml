@@ -1,54 +1,58 @@
-language: python
-python:
-  - 2.7
+sudo: false
 
-matrix:
-  exclude:
-   - python: 2.7
-  include:
-    - python: 2.7
-      env: pack=newest
-    - python: 2.7
-      env: pack=old_mpl
-    - python: 3.3
-      env: pack=newest
-# It seems there is no matplotlib in condas python 2.6 repos :-(
-#    - python: 2.6
-#      env: pack=old_mpl
+language: python
+
+
+python:
+   - 2.7
+   - 3.4
+   - 3.5
+
+
+cache: pip
 
 
 notifications:
   email: false
 
-# Setup anaconda
+
+# miniconda recipe
+# http://conda.pydata.org/docs/travis.html#using-conda-with-travis-ci
 before_install:
-  - travis/miniconda.sh -b
-  - export PATH=/home/travis/anaconda/bin:$PATH
-  # The next couple lines fix a crash with multiprocessing on Travis
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+   # Useful for debugging any issues with conda
+  - conda info -a
+
+
 # Install packages
 install:
-  #  Update conda else if will result in a problem when conda updates the repos...
-  - conda update --yes conda 
   # Install dependencies
-  # No idea why a two step process is needed :-(
-  - if [ ${pack} == "old_mpl" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION matplotlib=1.1.1 ; fi
-  - if [ ${pack} == "old_mpl" ]; then conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy nose dateutil pandas statsmodels pil six; fi
-  - if [ ${pack} == "newest" ]; then conda install --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose dateutil pandas statsmodels six; fi
-  - pip install python-coveralls --use-mirrors
-  - pip install brewer2mpl --use-mirrors
-  - pip install nose-cov --use-mirrors
-  - pip install husl --use-mirrors
+  - conda create -q -n ggplot-test python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose pandas statsmodels six
+  - source activate ggplot-test
+  - python setup.py install
+  - pip install python-coveralls
+  - pip install palettable
+  - pip install nose-cov
   - python setup.py install
   - export MATPLOTLIB_BACKEND=agg
   # List all conda and pip packages
   - conda list
 
+
 # Run test
 script:
   # only use the unittests under ggplot/tests/ and not the manual tests in tests/
   - nosetests ggplot --with-cov --cov ggplot --cov-config .coveragerc --logging-level=INFO
+
 
 # Calculate coverage
 after_success:
