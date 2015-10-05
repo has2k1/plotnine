@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import sys
+import os
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -18,8 +19,25 @@ def teardown_package():
     mpl.rcParams["figure.figsize"] = figsize_orig
 
 
+def ignore_warning(message='', category=UserWarning,
+                   module='', append=False):
+    """
+    Ignore warnings that match the regex in message
 
-import os
+    See `warnings.filterwarnings` for full description of
+    the arguments
+    """
+    def wrap(testfunc):
+        def wrapped():
+            with warnings.catch_warnings():
+                warnings.filterwarnings('ignore',
+                                        message=message,
+                                        category=category,
+                                        module=module,
+                                        append=append)
+                testfunc()
+        return make_decorator(testfunc)(wrapped)
+    return wrap
 
 # Testing framework shamelessly stolen from matplotlib...
 
