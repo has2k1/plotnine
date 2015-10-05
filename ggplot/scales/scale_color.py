@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
-import brewer2mpl
+import palettable.colorbrewer as colorbrewer
 
 from ..utils.exceptions import gg_warn, GgplotError
 from ..utils import palettes
@@ -79,7 +79,7 @@ def brewer_pal(type='seq', palette=1):
 
     def _number_to_palette(ctype, n):
         n -= 1
-        palettes = sorted(brewer2mpl.COLOR_MAPS[ctype].keys())
+        palettes = sorted(colorbrewer.COLOR_MAPS[ctype].keys())
         if n < len(palettes):
             return palettes[n]
 
@@ -109,7 +109,7 @@ def brewer_pal(type='seq', palette=1):
         # Only draw the maximum allowable colors from the palette
         # and fill any remaining spots with None
         _n = n if n <= nmax else nmax
-        bmap = brewer2mpl.get_map(palette_name, type, _n)
+        bmap = colorbrewer.get_map(palette_name, type, _n)
         hex_colors = bmap.hex_colors
         if n > nmax:
             msg = _TPL_MAX_PALETTE_COLORS.format(palette_name, nmax)
