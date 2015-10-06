@@ -23,7 +23,7 @@ class _ggplot_options(dict):
 ggplot_options = _ggplot_options(
     # Development flag, e.g. set to True to prevent
     # the queuing up of figures when errors happen.
-    close_all_figures=True)
+    close_all_figures=False)
 
 
 if not hasattr(mpl, 'rc_context'):

@@ -15,7 +15,7 @@ from collections import OrderedDict
 import six
 from six import add_metaclass
 
-from ..utils import RegisteredMeta
+from ..utils import RegisteredMeta, suppress
 from ..utils.exceptions import GgplotError
 from .theme_elements import element_line, element_rect, element_text
 
@@ -215,16 +215,18 @@ class axis_title(axis_title_x, axis_title_y):
 class legend_title(themeable):
     def apply(self, ax):
         super(legend_title, self).apply(ax)
-        textarea = ax.figure._themeable['legend_title']
-        textarea._text.set(**self.properties)
+        with suppress(KeyError):
+            textarea = ax.figure._themeable['legend_title']
+            textarea._text.set(**self.properties)
 
 
 class legend_text(legend_title):
     def apply(self, ax):
         super(legend_title, self).apply(ax)
-        texts = ax.figure._themeable['legend_text']
-        for text in texts:
-            text.set(**self.properties)
+        with suppress(KeyError):
+            texts = ax.figure._themeable['legend_text']
+            for text in texts:
+                text.set(**self.properties)
 
 
 class plot_title(themeable):
@@ -237,17 +239,19 @@ class plot_title(themeable):
 class strip_text_x(themeable):
     def apply(self, ax):
         super(strip_text_x, self).apply(ax)
-        texts = ax.figure._themeable['strip_text_x']
-        for text in texts:
-            text.set(**self.properties)
+        with suppress(KeyError):
+            texts = ax.figure._themeable['strip_text_x']
+            for text in texts:
+                text.set(**self.properties)
 
 
 class strip_text_y(themeable):
     def apply(self, ax):
         super(strip_text_y, self).apply(ax)
-        texts = ax.figure._themeable['strip_text_y']
-        for text in texts:
-            text.set(**self.properties)
+        with suppress(KeyError):
+            texts = ax.figure._themeable['strip_text_y']
+            for text in texts:
+                text.set(**self.properties)
 
 
 class strip_text(strip_text_x, strip_text_y):
@@ -422,21 +426,23 @@ class line(axis_line, axis_ticks, panel_grid):
 class legend_key(themeable):
     def apply(self, ax):
         super(legend_key, self).apply(ax)
-        das = ax.figure._themeable['legend_key']
-        for da in das:
-            da.patch.set(**self.properties)
+        with suppress(KeyError):
+            das = ax.figure._themeable['legend_key']
+            for da in das:
+                da.patch.set(**self.properties)
 
 
 class legend_background(themeable):
     def apply(self, ax):
         super(legend_background, self).apply(ax)
-        aob = ax.figure._themeable['legend_background']
-        aob.patch.set(**self.properties)
-        if self.properties:
-            aob._drawFrame = True
-            # some small sensible padding
-            if not aob.pad:
-                aob.pad = .2
+        with suppress(KeyError):
+            aob = ax.figure._themeable['legend_background']
+            aob.patch.set(**self.properties)
+            if self.properties:
+                aob._drawFrame = True
+                # some small sensible padding
+                if not aob.pad:
+                    aob.pad = .2
 
 
 class panel_background(themeable):
