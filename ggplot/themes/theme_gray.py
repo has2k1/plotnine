@@ -46,13 +46,13 @@ class theme_gray(theme):
             'xtick.color': '#7F7F7F',
             'xtick.direction': 'out',  # pointing out of axis
             'xtick.major.pad': '2',
-            'xtick.major.size': '5',
+            'xtick.major.size': '3',
             'xtick.minor.pad': '2',
             'xtick.minor.size': '0',
             'ytick.color': '#7F7F7F',
             'ytick.direction': 'out',  # pointing out of axis
-            'ytick.major.pad': '0',
-            'ytick.major.size': '5',
+            'ytick.major.pad': '2',
+            'ytick.major.size': '3',
             'ytick.minor.pad': '0',
             'ytick.minor.size': '0',
         }
