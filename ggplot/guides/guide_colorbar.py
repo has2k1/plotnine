@@ -77,6 +77,7 @@ class guide_colorbar(guide):
                           ' '.join(self.bar['color'].tolist()),
                           self.__class__.__name__])
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
+        return self
 
     def merge(self, other):
         """

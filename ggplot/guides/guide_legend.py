@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import hashlib
 from itertools import islice
+from collections import OrderedDict
 
 from six import text_type
 from six.moves import zip, range
@@ -44,7 +45,10 @@ class guide_legend(guide):
         if it fails
         """
         breaks = scale.scale_breaks(can_waive=False)
-        if not len(breaks) or all(np.isnan(breaks)):
+        if isinstance(breaks, OrderedDict):
+            if all([np.isnan(x) for x in breaks.values()]):
+                return None
+        elif not len(breaks) or all(np.isnan(breaks)):
             return None
 
         with suppress(AttributeError):
