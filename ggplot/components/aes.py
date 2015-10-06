@@ -131,33 +131,6 @@ def is_position_aes(vars_):
         return aes_to_scale(vars_) in {'x', 'y'}
 
 
-def aesdefaults(data, y, params):
-    """
-    Convenience method for setting aesthetic defaults
-
-    Parameters
-    ----------
-    data : dataframe
-        data values from aesthetic mappings
-    y : dict
-        defaults
-    params : dict
-        user specified values
-    """
-    updated = y.copy()
-    if params is not None:
-        updated.update(params)
-
-    cols = defaults(data, updated)
-
-    # TODO:
-    # Need to be careful here because stat_boxplot uses a
-    # list-column to store a vector of outliers
-    # !!!
-    df = cols
-    return df
-
-
 def make_labels(mapping):
     """
     Convert aesthetic mapping into text labels

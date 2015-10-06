@@ -269,6 +269,10 @@ class ggplot(object):
 
         # Train coordinate system
         panel.train_ranges(plot.coordinates)
+
+        # fill in the defaults
+        data = [l.use_defaults(d) for l, d in zip(layers, data)]
+
         return data, plot
 
     def draw_legend(self, plot):

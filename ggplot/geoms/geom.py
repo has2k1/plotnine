@@ -84,6 +84,24 @@ class geom(object):
     def setup_data(self, data):
         return data
 
+    def use_defaults(self, data):
+        """
+        Combine data with defaults and set aesthetics from parameters
+        """
+        missing_aes = (self.DEFAULT_AES.viewkeys() -
+                       self.aes_params.viewkeys() -
+                       set(data.columns))
+
+        # Not in data and not set, use default
+        for ae in missing_aes:
+            data[ae] = self.DEFAULT_AES[ae]
+
+        # If set, use it
+        for ae in self.aes_params:
+            data[ae] = self.aes_params[ae]
+
+        return data
+
     def draw_layer(self, data, panel, coord, zorder):
         """
         Draw layer across all panels
@@ -253,33 +271,7 @@ class geom(object):
             msg = 'Unknown parameters {}'
             raise GgplotError(msg.format(unknown))
 
-    def _make_pinfos(self, data, kwargs):
-        """
-        Make plot information
-
-        Put together the data and the default aesthetics into
-        groups that can be plotted in a single call to self.draw
-
-        Parameters
-        ----------
-        data : dataframe
-            The data to be split into groups
-        kwargs : dict
-            kwargs passed to the draw or draw_panel methods
-
-        Returns
-        -------
-        out : list of dict
-            Each dict represents a unique grouping, ready for
-            plotting
-            The dicts are of the form
-            {'column-name' | 'mpl-param-name': list-of-values | value}
-
-        Note
-        ----
-        This is a helper function for self.draw_group or self.draw
-        """
-        # (default aesthetics + data), grouped into plottable units
+    def _make_pinfos(self, data, params):
         units = []
         for col in data.columns:
             if col in self._units:
@@ -287,9 +279,9 @@ class geom(object):
 
         shrinkable = {'alpha', 'fill', 'color', 'size', 'linetype'}
 
-        def shrink(pinfo):
+        def prep(pinfo):
             """
-            Reduce shrinkable parameters to scalars if possible.
+            Reduce shrinkable parameters &  append zorder
             """
             # If it is the same value in the list make it a scalar
             # This can help the matplotlib functions draw faster
@@ -297,30 +289,35 @@ class geom(object):
                 with suppress(TypeError, IndexError):
                     if all(pinfo[ae][0] == v for v in pinfo[ae]):
                         pinfo[ae] = pinfo[ae][0]
-            return pinfo
-
-        def prep(pinfo):
-            """
-            After data has been converted to a dict of lists
-            prepare it for plotting
-            """
-            pinfo.update(self.aes_params)
-            pinfo = shrink(pinfo)
-            pinfo['zorder'] = kwargs['zorder']
+            pinfo['zorder'] = params['zorder']
             return pinfo
 
         out = []
         if units:
-            for name, _data in data.groupby(units):
-                pinfo = deepcopy(self.DEFAULT_AES)
-                pinfo.update(_data.to_dict('list'))
-                for ae in units:
-                    pinfo[ae] = pinfo[ae][0]
+            # Currently groupby does not like None values in any of
+            # the columns that participate in the grouping. These
+            # Nones come in when the default aesthetics are added to
+            # the data. We drop these columns and after turning the
+            # the dataframe into a dictionary insert a None for that
+            # aesthetic
+            _units = []
+            _none_units = []
+            for unit in units:
+                if data[unit].iloc[0] is None:
+                    _none_units.append(unit)
+                    del data[unit]
+                else:
+                    _units.append(unit)
 
+            for name, _data in data.groupby(_units):
+                pinfo = _data.to_dict('list')
+                for ae in _units:
+                    pinfo[ae] = pinfo[ae][0]
+                for ae in _none_units:
+                    pinfo[ae] = None
                 out.append(prep(pinfo))
         else:
-            pinfo = deepcopy(self.DEFAULT_AES)
-            pinfo.update(data.to_dict('list'))
+            pinfo = data.to_dict('list')
             out.append(prep(pinfo))
 
         return out

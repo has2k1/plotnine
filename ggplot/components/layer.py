@@ -14,10 +14,9 @@ from ..scales.scales import scales_add_defaults
 from ..utils.exceptions import GgplotError
 from ..utils import DISCRETE_KINDS, ninteraction
 from ..utils import check_required_aesthetics, defaults
-from ..utils import is_string, gg_import
-from ..utils import is_scalar_or_string, suppress
+from ..utils import is_string, gg_import, suppress
 from ..positions.position import position
-from .aes import aes, is_calculated_aes, strip_dots, aesdefaults
+from .aes import aes, is_calculated_aes, strip_dots
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -308,41 +307,9 @@ class layer(object):
 
     def use_defaults(self, data):
         """
-        Return dataframe with aesthetic parameter setting and
-        default aesthetic values. i.e. Unmapped aesthetics
-        and their values
+        Prepare/modify data for plotting
         """
-        df = aesdefaults(data, self.geom.DEFAULT_AES, None)
-
-        # Override mappings with atomic parameters
-        gp = ((set(df.columns) | set(self.geom.REQUIRED_AES)) &
-              set(self.geom.aes_params))
-        for ae in self.geom.aes_params:
-            if not is_scalar_or_string(self.geom.aes_params[ae]):
-                with suppress(KeyError):
-                    gp.remove(ae)
-
-        gp = list(gp)
-
-        # Check that mappings are compatable length: either 1 or
-        # the same length
-        def llen(var):
-            if is_scalar_or_string(var):
-                return 1
-            return len(var)
-
-        param_lengths = np.array(
-            [llen(self.geom.aes_params[ae]) for ae in gp])
-
-        bad = (param_lengths != 1) & (param_lengths != len(df))
-        if any(bad):
-            msg = "Incompatible lengths for set aesthetics: {}"
-            raise GgplotError(msg.format(', '.join(df[bad].columns)))
-
-        for ae in gp:
-            df[ae] = self.geom.aes_params[ae]
-
-        return df
+        return self.geom.use_defaults(data)
 
 
 def add_group(data):

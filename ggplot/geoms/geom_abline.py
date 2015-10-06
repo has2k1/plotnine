@@ -11,8 +11,7 @@ from .geom_segment import geom_segment
 
 class geom_abline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'alpha': 1, 'size': 1.5, 'x': None,
-                   'y': None}
+                   'alpha': 1, 'size': 1.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'inherit_aes': False}
     REQUIRED_AES = {'slope', 'intercept'}

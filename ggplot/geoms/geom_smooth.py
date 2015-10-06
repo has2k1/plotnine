@@ -21,8 +21,8 @@ class geom_smooth(geom):
 
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):
-        has_ribbon = (pinfo['ymin'] is not None and
-                      pinfo['ymax'] is not None)
+        has_ribbon = (pinfo['ymin'][0] is not None and
+                      pinfo['ymax'][0] is not None)
         if has_ribbon:
             pinfo2 = deepcopy(pinfo)
             pinfo2['color'] = ''
