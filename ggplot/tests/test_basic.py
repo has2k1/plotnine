@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import numpy as np
+import pandas as pd
 from six.moves import xrange
 
 from nose.tools import assert_equal, assert_true, assert_raises
@@ -9,10 +11,8 @@ from . import get_assert_same_ggplot, cleanup
 assert_same_ggplot = get_assert_same_ggplot(__file__)
 
 from ggplot import *
-from ggplot.exampledata import diamonds
+from ggplot.data import diamonds
 
-import numpy as np
-import pandas as pd
 
 def _build_testing_df():
     df = pd.DataFrame({

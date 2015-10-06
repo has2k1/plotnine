@@ -23,7 +23,7 @@ def get_package_data():
         'ggplot':
         baseline_images +
         [
-            "exampledata/*.csv",
+            "data/*.csv",
             "geoms/*.png"
         ]}
 

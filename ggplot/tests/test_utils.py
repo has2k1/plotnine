@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from . import get_assert_same_ggplot
-from ..exampledata import mtcars
+from ..data import mtcars
 from ..utils.utils import _margins, add_margins, ninteraction
 from ..scales.utils import censor, zero_range, expand_range
 

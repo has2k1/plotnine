@@ -29,7 +29,7 @@ from .facets import *
 from .themes import *
 from .utils import *
 from .positions import *
-from .exampledata import (diamonds, mtcars, meat, pageviews)
+from .data import (diamonds, mtcars, meat, pageviews)
 from .guides import *
 
 
