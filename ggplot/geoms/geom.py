@@ -26,24 +26,6 @@ class geom(object):
     # not implemented
     guide_geom = 'point'
 
-    # Some geoms require more information than that provided by the
-    # user. This information is usually another aesthetic variable
-    # but it could another non-aesthetic variable. It is the duty
-    # of the associated statistic to calculate this information.
-    #
-    # For example:
-    #   A geom may have REQUIRED_AES = {'x', 'y'} and
-    #   the user may map or manually set only aesthetic 'x',
-    #   so the stat would have to calculate 'y'. However this
-    #   may not be enough, to actually make the plot the geom
-    #   may require the 'width' aesthetic. In this case, 'width'
-    #   would be the extra required information.
-    #
-    # geoms should fill out this set with what they require
-    # and is not in REQUIRED_AES
-    # see: geom_bar, stat_bin
-    _extra_requires = set()
-
     # A matplotlib plot function may require that an aethestic have a
     # single unique value. e.g. linestyle='dashed' and not
     # linestyle=['dashed', 'dotted', ...].

@@ -13,8 +13,6 @@ class geom_bar(geom_rect):
     DEFAULT_PARAMS = {'stat': 'bar', 'position': 'stack',
                       'width': None}
 
-    _extra_requires = {'y'}
-
     def setup_data(self, data):
         if 'width' not in data:
             if self.params['width']:

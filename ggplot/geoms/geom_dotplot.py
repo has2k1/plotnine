@@ -18,8 +18,6 @@ class geom_dotplot(geom):
                       'stackdir': 'up', 'stackratio': 1,
                       'dotsize': 1, 'stackgroups': False}
 
-    _extra_requires = {'width'}
-
     @classmethod
     def _verify(cls, **params):
         """
