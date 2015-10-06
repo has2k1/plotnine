@@ -29,7 +29,6 @@ from .facets import *
 from .themes import *
 from .utils import *
 from .positions import *
-from .data import (diamonds, mtcars, meat, pageviews)
 from .guides import *
 
 
@@ -49,7 +48,7 @@ def _get_all_imports():
     import types
     lst = [name for name, obj in globals().items()
            if not (name.startswith('_') or
-                   name == 'aboslute_import' or
+                   name == 'absolute_import' or
                    isinstance(obj, types.ModuleType))]
     return lst
 
