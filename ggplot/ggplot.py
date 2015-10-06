@@ -15,7 +15,7 @@ from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive, suppress
 from .utils.exceptions import GgplotError
-from .utils.ggutils import gg_context
+from .utils.ggutils import gg_context, ggplot_options
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 from .coords import coord_cartesian
@@ -132,7 +132,9 @@ class ggplot(object):
         """
         Render the complete plot and return the matplotlib figure
         """
-        plt.close("all")  # TODO: Remove before merging into mainline
+        if ggplot_options['close_all_figures']:
+            plt.close("all")
+
         with gg_context(theme=self.theme):
             plot = self.draw_plot()
             plot = self.draw_legend(plot)

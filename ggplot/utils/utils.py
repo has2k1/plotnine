@@ -9,6 +9,7 @@ import re
 import importlib
 import contextlib
 
+import six
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
@@ -17,8 +18,6 @@ import matplotlib.cbook as cbook
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
-
-import six
 
 from .exceptions import GgplotError, gg_warn
 
