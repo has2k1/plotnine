@@ -9,7 +9,7 @@ from ..scales.utils import resolution
 from .stat import stat
 
 
-class stat_bar(stat):
+class stat_count(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': None}
@@ -20,7 +20,7 @@ class stat_bar(stat):
     def compute_group(cls, data, scales, **params):
         x = data['x']
         if ('y' in data) or ('y' in params):
-            msg = 'stat_bar() must not be used with a y aesthetic'
+            msg = 'stat_count() must not be used with a y aesthetic'
             raise GgplotError(msg)
 
         weight = data.get('weight', np.ones(len(x)))

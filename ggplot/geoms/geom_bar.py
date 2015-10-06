@@ -10,7 +10,7 @@ class geom_bar(geom_rect):
                    'linetype': 'solid', 'size': 1.5,
                    'weight': 1}
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'stat': 'bar', 'position': 'stack',
+    DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
                       'width': None}
 
     def setup_data(self, data):

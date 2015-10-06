@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .stat_bar import stat_bar
+from .stat_count import stat_count
 from .stat_bin import stat_bin
 from .stat_bin2d import stat_bin2d
 from .stat_bindot import stat_bindot
@@ -16,7 +16,7 @@ from .stat_summary import stat_summary
 from .stat_unique import stat_unique
 
 
-__all__ = ['stat_bar', 'stat_bin',
+__all__ = ['stat_count', 'stat_bin',
            'stat_bin2d', 'stat_bindot',
            'stat_boxplot', 'stat_density',
            'stat_ecdf', 'stat_function',
