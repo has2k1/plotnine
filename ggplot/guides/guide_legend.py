@@ -148,7 +148,7 @@ class guide_legend(guide):
             if hasattr(l.geom, 'draw_legend'):
                 geom = l.geom.__class__
             else:
-                geom = gg_import('geom_{}'.format(l.geom.guide_geom))
+                geom = gg_import('geom_{}'.format(l.geom.legend_geom))
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
         if not self.glayers:

@@ -15,7 +15,7 @@ class geom_vline(geom):
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'show_guide': False, 'inherit_aes': False}
-    guide_geom = 'path'
+    legend_geom = 'path'
 
     def __init__(self, *args, **kwargs):
         with suppress(KeyError):

@@ -15,7 +15,7 @@ class geom_segment(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'arrow': None, 'lineend': 'butt'}
 
-    guide_geom = 'path'
+    legend_geom = 'path'
 
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):

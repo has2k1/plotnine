@@ -53,7 +53,7 @@ class geom_linerange(geom):
                    'linetype': 'solid', 'size': 1.5}
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
-    guide_geom = 'path'
+    legend_geom = 'path'
 
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):

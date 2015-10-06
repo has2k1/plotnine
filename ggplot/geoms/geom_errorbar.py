@@ -13,7 +13,7 @@ class geom_errorbar(geom):
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'width': 0.5}
-    guide_geom = 'path'
+    legend_geom = 'path'
 
     def setup_data(self, data):
         if 'width' not in data:

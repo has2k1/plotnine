@@ -13,7 +13,7 @@ class geom_errorbarh(geom):
     REQUIRED_AES = {'y', 'xmin', 'xmax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'height': 0.5}
-    guide_geom = 'path'
+    legend_geom = 'path'
 
     def setup_data(self, data):
         if 'height' not in data:

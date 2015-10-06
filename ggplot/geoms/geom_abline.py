@@ -15,7 +15,7 @@ class geom_abline(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'inherit_aes': False}
     REQUIRED_AES = {'slope', 'intercept'}
-    guide_geom = 'path'
+    legend_geom = 'path'
 
     def __init__(self, *args, **kwargs):
         with suppress(KeyError):

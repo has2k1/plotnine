@@ -24,7 +24,7 @@ class geom(object):
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
-    guide_geom = 'point'
+    legend_geom = 'point'
 
     # A matplotlib plot function may require that an aethestic have a
     # single unique value. e.g. linestyle='dashed' and not
