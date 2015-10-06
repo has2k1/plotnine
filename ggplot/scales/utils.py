@@ -399,7 +399,7 @@ class TimedeltaFormatter(Formatter):
 class defaultLocator(MaxNLocator):
     trans_name = ''
 
-    def __init__(self, nbins=5, steps=(1, 2, 5, 10)):
+    def __init__(self, nbins=7, steps=(1, 2, 5, 10)):
         MaxNLocator.__init__(self, nbins=nbins, steps=steps)
 
 
