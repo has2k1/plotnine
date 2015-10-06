@@ -63,14 +63,14 @@ class layer(object):
     def __init__(self, geom=None, stat=None,
                  data=None, mapping=None,
                  position=None, inherit_aes=True,
-                 show_guide=None):
+                 show_legend=None):
         self.geom = geom
         self.stat = stat
         self.data = data
         self.mapping = mapping
         self.position = self._position_object(position)
         self.inherit_aes = inherit_aes
-        self.show_guide = show_guide
+        self.show_legend = show_legend
         self._active_mapping = {}
         self.zorder = 0
 

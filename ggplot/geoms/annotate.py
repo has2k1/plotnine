@@ -54,7 +54,7 @@ class annotate(object):
                                      data=data,
                                      stat='identity',
                                      inherit_aes=False,
-                                     show_guide=False,
+                                     show_legend=False,
                                      **kwargs)
 
     def __radd__(self, gg):

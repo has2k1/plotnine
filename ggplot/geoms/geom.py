@@ -190,7 +190,7 @@ class geom(object):
                    'position': kwargs.get('position',
                                           DP['position'])}
 
-        for param in ('show_guide', 'inherit_aes'):
+        for param in ('show_legend', 'inherit_aes'):
             if param in kwargs:
                 lkwargs[param] = kwargs[param]
             else:
@@ -265,7 +265,7 @@ class geom(object):
                    self.aesthetics -
                    set(self.DEFAULT_PARAMS) -
                    {'data', 'mapping'} -
-                   {'show_guide', 'inherit_aes'} -  # layer
+                   {'show_legend', 'inherit_aes'} -  # layer
                    set(self._stat.DEFAULT_PARAMS))
         if unknown:
             msg = 'Unknown parameters {}'

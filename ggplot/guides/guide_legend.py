@@ -127,7 +127,7 @@ class guide_legend(guide):
 
             if len(matched):
                 # This layer contributes to the legend
-                if l.show_guide is None or l.show_guide:
+                if l.show_legend is None or l.show_legend:
                     # Default is to include it
                     tmp = self.key[list(matched)].copy()
                     data = l.use_defaults(tmp)
@@ -135,7 +135,7 @@ class guide_legend(guide):
                     continue
             else:
                 # This layer does not contribute to the legend
-                if l.show_guide is None or not l.show_guide:
+                if l.show_legend is None or not l.show_legend:
                     continue
                 else:
                     zeros = [0] * len(self.key)
