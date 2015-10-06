@@ -9,45 +9,13 @@ import matplotlib.pyplot as plt
 from nose.tools import with_setup, make_decorator, assert_true
 import warnings
 
-
-figsize_orig = mpl.rcParams["figure.figsize"]
-def setup_package():
-    mpl.rcParams["figure.figsize"] = (11.0, 8.0)
-
-
-def teardown_package():
-    mpl.rcParams["figure.figsize"] = figsize_orig
-
-
-def ignore_warning(message='', category=UserWarning,
-                   module='', append=False):
-    """
-    Ignore warnings that match the regex in message
-
-    See `warnings.filterwarnings` for full description of
-    the arguments
-    """
-    def wrap(testfunc):
-        def wrapped():
-            with warnings.catch_warnings():
-                warnings.filterwarnings('ignore',
-                                        message=message,
-                                        category=category,
-                                        module=module,
-                                        append=append)
-                testfunc()
-        return make_decorator(testfunc)(wrapped)
-    return wrap
-
 # Testing framework shamelessly stolen from matplotlib...
 
 # Tests which should be run with 'python tests.py' or via 'must be
 # included here.
 default_test_modules = [
-    'ggplot.tests.test_facet_grid',
-    'ggplot.tests.test_facet_wrap',
     'ggplot.tests.test_geom',
-    'ggplot.tests.test_ggplot_add',
+    'ggplot.tests.test_geom_blank',
     'ggplot.tests.test_ggplot_internals',
     'ggplot.tests.test_ggsave',
     'ggplot.tests.test_scale_internals',
@@ -77,7 +45,37 @@ default_test_modules = [
     # 'ggplot.tests.test_theme_seaborn',
 ]
 
+figsize_orig = mpl.rcParams["figure.figsize"]
 _multiprocess_can_split_ = True
+
+
+def setup_package():
+    mpl.rcParams["figure.figsize"] = (11.0, 8.0)
+
+
+def teardown_package():
+    mpl.rcParams["figure.figsize"] = figsize_orig
+
+
+def ignore_warning(message='', category=UserWarning,
+                   module='', append=False):
+    """
+    Ignore warnings that match the regex in message
+
+    See `warnings.filterwarnings` for full description of
+    the arguments
+    """
+    def wrap(testfunc):
+        def wrapped():
+            with warnings.catch_warnings():
+                warnings.filterwarnings('ignore',
+                                        message=message,
+                                        category=category,
+                                        module=module,
+                                        append=append)
+                testfunc()
+        return make_decorator(testfunc)(wrapped)
+    return wrap
 
 
 # Check that the test directories exist
@@ -89,13 +87,16 @@ if not os.path.exists(os.path.join(
         'You may need to install ggplot from source to get the '
         'test data.')
 
+
 def _assert_same_ggplot_image(gg, name, test_file, tol=17):
     """Asserts that the ggplot object produces the right image"""
     fig = gg.draw()
     return _assert_same_figure_images(fig, name, test_file, tol=tol)
 
+
 class ImagesComparisonFailure(Exception):
     pass
+
 
 def _assert_same_figure_images(fig, name, test_file, tol=17):
     """Asserts that the figure object produces the right image"""
@@ -103,10 +104,9 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
     import shutil
     from matplotlib import cbook
     from matplotlib.testing.compare import compare_images
-    from nose.tools import assert_is_not_none
 
-    if not ".png" in name:
-        name = name+".png"
+    if '.png' not in name:
+        name = name + '.png'
 
     basedir = os.path.abspath(os.path.dirname(test_file))
     basename = os.path.basename(test_file)
@@ -124,6 +124,7 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
     def make_test_fn(fname, purpose):
         base, ext = os.path.splitext(fname)
         return '%s-%s%s' % (base, purpose, ext)
+
     expected_fname = make_test_fn(actual_fname, 'expected')
     # Save the figure before testing whether the original image
     # actually exists. This make creating new tests much easier,
@@ -132,13 +133,16 @@ def _assert_same_figure_images(fig, name, test_file, tol=17):
     if os.path.exists(orig_expected_fname):
         shutil.copyfile(orig_expected_fname, expected_fname)
     else:
-        raise Exception("Baseline image %s is missing" % orig_expected_fname)
+        raise Exception("Baseline image %s is missing" %
+                        orig_expected_fname)
     err = compare_images(expected_fname, actual_fname,
                          tol, in_decorator=True)
     if err:
-        msg = 'images not close: {actual:s} vs. {expected:s} (RMS {rms:.2f})'.format(**err)
+        msg = ('images not close: {actual:s} vs. {expected:s}'
+               ' (RMS {rms:.2f})').format(**err)
         raise ImagesComparisonFailure(msg)
     return err
+
 
 def get_assert_same_ggplot(test_file):
     """Returns a "assert_same_ggplot" function for these test file
@@ -152,9 +156,10 @@ def get_assert_same_ggplot(test_file):
     return curried
 
 
-def assert_same_elements(first,second, msg=None):
+def assert_same_elements(first, second, msg=None):
     assert_true(len(first) == len(second), "different length")
-    assert_true(all([a==b for a,b in zip(first,second)]), "Unequal: %s vs %s" % (first, second))
+    assert_true(all([a == b for a, b in zip(first, second)]),
+                "Unequal: %s vs %s" % (first, second))
 
 
 class assert_prints_warning(object):
@@ -178,7 +183,7 @@ class assert_prints_warning(object):
         sys.stderr = self.stderr_old
 
 
-def image_comparison(baseline_images=None, tol=17, extensions=None):
+def image_comparison(baseline_images=None, tol=13, extensions=None):
     """
     call signature::
 
@@ -209,21 +214,31 @@ def image_comparison(baseline_images=None, tol=17, extensions=None):
     def compare_images_decorator(func):
         import inspect
         _file = inspect.getfile(func)
+
         def decorated():
             # make sure we don't carry over bad images from former tests.
-            assert len(plt.get_fignums()) == 0, "no of open figs: %s -> find the last test with ' " \
-                                        "python tests.py -v' and add a '@cleanup' decorator." % \
-                                        str(plt.get_fignums())
+
+            msg = ("no of open figs: {} -> find the last test with ' "
+                   "python tests.py -v' and add a '@cleanup' decorator.")
+
+            assert len(plt.get_fignums()) == 0, msg.format(plt.get_fignums())
+
             func()
-            assert len(plt.get_fignums()) == len(baseline_images), "different number of " \
-                                                                   "baseline_images and actuall " \
-                                                                   "plots."
+
+            msg = ("different number of baseline_images and actuall plots."
+                   "{} != {}")
+            valid = len(plt.get_fignums()) == len(baseline_images)
+            assert valid, msg.format(len(plt.get_fignums()),
+                                     len(baseline_images))
+
             for fignum, baseline in zip(plt.get_fignums(), baseline_images):
                 figure = plt.figure(fignum)
                 _assert_same_figure_images(figure, baseline, _file, tol=tol)
+
         # also use the cleanup decorator to close any open figures!
         return make_decorator(cleanup(func))(decorated)
     return compare_images_decorator
+
 
 def cleanup(func):
     """Decorator to add cleanup to the testing function
@@ -238,7 +253,7 @@ def cleanup(func):
 
     def _teardown():
         plt.close('all')
-        warnings.resetwarnings() #reset any warning filters set in tests
+        warnings.resetwarnings()  # reset any warning filters set in tests
 
     return with_setup(setup=_setup, teardown=_teardown)(func)
 
@@ -263,15 +278,16 @@ def _setup():
 
     mpl.use('Agg', warn=False)  # use Agg backend for these tests
     if mpl.get_backend().lower() != "agg":
-        raise Exception(("Using a wrong matplotlib backend ({0}), which will not produce proper "
-                        "images").format(mpl.get_backend()))
+        msg = ("Using a wrong matplotlib backend ({0}), "
+               "which will not produce proper images")
+        raise Exception(msg.format(mpl.get_backend()))
 
     # These settings *must* be hardcoded for running the comparison
     # tests
     mpl.rcdefaults()  # Start with all defaults
     mpl.rcParams['text.hinting'] = True
     mpl.rcParams['text.antialiased'] = True
-    #mpl.rcParams['text.hinting_factor'] = 8
+    # mpl.rcParams['text.hinting_factor'] = 8
 
     # Clear the font caches.  Otherwise, the hinting mode can travel
     # from one test to another.
@@ -279,9 +295,9 @@ def _setup():
     backend_pdf.RendererPdf.truetype_font_cache.clear()
     backend_svg.RendererSVG.fontd.clear()
     # make sure we don't carry over bad plots from former tests
-    assert len(plt.get_fignums()) == 0, "no of open figs: %s -> find the last test with ' " \
-                                        "python tests.py -v' and add a '@cleanup' decorator." % \
-                                        str(plt.get_fignums())
+    msg = ("no of open figs: {} -> find the last test with ' "
+           "python tests.py -v' and add a '@cleanup' decorator.")
+    assert len(plt.get_fignums()) == 0, msg.format(plt.get_fignums())
 
 
 # This is here to run it like "from ggplot.tests import test; test()"
@@ -298,8 +314,8 @@ def test(verbosity=1):
 
         # store the old values before overriding
         plugins = []
-        plugins.append( KnownFailure() )
-        plugins.extend( [plugin() for plugin in nose.plugins.builtin.plugins] )
+        plugins.append(KnownFailure())
+        plugins.extend([plugin() for plugin in nose.plugins.builtin.plugins])
 
         manager = PluginManager(plugins=plugins)
         config = nose.config.Config(verbosity=verbosity, plugins=manager)
@@ -309,13 +325,11 @@ def test(verbosity=1):
         # a list.
         multiprocess._instantiate_plugins = [KnownFailure]
 
-        success = nose.run( defaultTest=default_test_modules,
-                            config=config,
-                            )
+        success = nose.run(defaultTest=default_test_modules,
+                           config=config)
     finally:
         if old_backend.lower() != 'agg':
             mpl.use(old_backend)
 
     return success
-
-test.__test__ = False # nose: this function is not a test
+test.__test__ = False  # nose: this function is not a test
