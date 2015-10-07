@@ -198,6 +198,11 @@ def add_interpolated_colorbar(da, colors, direction):
     """
     Add 'rastered' colorbar to DrawingArea
     """
+    # Special case that arises due to not so useful
+    # aesthetic mapping.
+    if len(colors) == 1:
+        colors = [colors[0], colors[0]]
+
     # Number of horizontal egdes(breaks) in the grid
     # No need to create more nbreak than colors, provided
     # no. of colors = no. of breaks = no. of cmap colors
@@ -299,7 +304,7 @@ def create_labels(da, labels, locations, direction):
     # the text objects. We put two dummy children at
     # either end to gaurantee that when center packed
     # the labels in the labels_box matchup with the ticks.
-    fontsize = 12
+    fontsize = 9
     aux_transform = mtransforms.IdentityTransform()
     labels_box = AuxTransformBox(aux_transform)
     xs, ys = [0]*len(labels), locations
