@@ -57,7 +57,14 @@ class geom(object):
         """
         Return all the aesthetics for this geom
         """
-        return cls.DEFAULT_AES.viewkeys() | cls.REQUIRED_AES | {'group'}
+        main = cls.DEFAULT_AES.viewkeys() | cls.REQUIRED_AES
+        other = {'group'}
+        # Need to recognize both spellings
+        if 'color' in main:
+            other.add('colour')
+        if 'outlier_color' in main:
+            other.add('outlier_colour')
+        return main | other
 
     def __deepcopy__(self, memo):
         """
@@ -277,7 +284,8 @@ class geom(object):
             if col in self._units:
                 units.append(col)
 
-        shrinkable = {'alpha', 'fill', 'color', 'size', 'linetype'}
+        shrinkable = {'alpha', 'fill', 'color', 'size', 'linetype',
+                      'shape', 'outlier_shape'}
 
         def prep(pinfo):
             """

@@ -87,6 +87,9 @@ class aes(dict):
 def rename_aesthetics(d):
     with suppress(KeyError):
         d['color'] = d.pop('colour')
+
+    with suppress(KeyError):
+        d['outlier_color'] = d.pop('outlier_colour')
     return d
 
 
