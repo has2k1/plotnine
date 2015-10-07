@@ -2,10 +2,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
+import six
 import pandas as pd
 
 from ..utils import uniquecols, gg_import, check_required_aesthetics
-from ..utils import groupby_apply, copy_keys
+from ..utils import groupby_apply, copy_keys, suppress
 from ..utils.exceptions import GgplotError
 
 
@@ -31,6 +32,9 @@ class stat(object):
     def __init__(self, *args, **kwargs):
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
 
+        self.aes_params = {ae: kwargs[ae]
+                           for ae in self.aesthetics() & kwargs.viewkeys()}
+
         # Will be used to create the geom
         self._cache = {'args': args, 'kwargs': kwargs}
 
@@ -52,11 +56,46 @@ class stat(object):
             result.__dict__[key] = deepcopy(self.__dict__[key], memo)
         return result
 
+    @classmethod
+    def aesthetics(cls):
+        """
+        Return a set of all non-computed aesthetics for this stat.
+        """
+        aesthetics = set()
+        for ae, value in six.iteritems(cls.DEFAULT_AES):
+            with suppress(AttributeError):
+                if value.startswith('..'):
+                    continue
+            aesthetics.add(ae)
+        return aesthetics
+
+    def use_defaults(self, data):
+        missing = (self.aesthetics() -
+                   self.aes_params.viewkeys() -
+                   set(data.columns))
+
+        for ae in missing:
+            data[ae] = self.DEFAULT_AES[ae]
+
+        missing = (self.aes_params.viewkeys() -
+                   set(data.columns))
+
+        for ae in self.aes_params:
+            data[ae] = self.aes_params[ae]
+
+        return data
+
     def setup_params(self, data):
         """
         Overide this to verify parameters
         """
         return self.params
+
+    def setup_data(self, data):
+        """
+        Overide to modify data before compute_layer is called
+        """
+        return data
 
     @classmethod
     def compute_layer(cls, data, params, panel):

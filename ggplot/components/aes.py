@@ -6,7 +6,7 @@ from copy import deepcopy
 import six
 from patsy.eval import EvalEnvironment
 
-from ..utils import defaults, suppress
+from ..utils import suppress
 
 all_aesthetics = {
     'alpha', 'angle', 'color', 'colour', 'fill', 'group',

@@ -221,6 +221,8 @@ class layer(object):
             return pd.DataFrame()
 
         params = self.stat.setup_params(data)
+        data = self.stat.use_defaults(data)
+        data = self.stat.setup_data(data)
         return self.stat.compute_layer(data, params, panel)
 
     def map_statistic(self, data, plot):
