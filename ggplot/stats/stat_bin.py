@@ -12,44 +12,53 @@ from ..scales.utils import fullseq
 from .stat import stat
 
 
-_MSG_YVALUE = """A variable was mapped to y.
-    stat_bin sets the y value to the count of cases in each group.
-    If you want 'y' to represent values in the data, use stat='identity'.
-    Or, if you set some aethetics in the ggplot call can do override
-    them and this time do not include 'y'
-    e.g. stat_bin(aes(x='x')) or geom_bar(aes(x='x'))
-"""
-
-_MSG_BINWIDTH = """stat_bin: binwidth defaulted to range/30.
-    Use 'binwidth = x' to adjust this.
-"""
-
-
 class stat_bin(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': 0.9, 'drop': False, 'right': False,
-                      'binwidth': None, 'origin': None, 'breaks': None}
-    DEFAULT_AES = {'y': '..count..'}
+                      'binwidth': None, 'bins': None, 'origin': None,
+                      'breaks': None}
+    DEFAULT_AES = {'y': '..count..', 'weight': 1}
     CREATES = {'y', 'width'}
+
+    def setup_params(self, data):
+        if 'y' in data or 'y' in self.params:
+            msg = "stat_bin() must not be used with a y aesthetic."
+            raise GgplotError(msg)
+
+        if data['x'].dtype.kind == 'i':
+            msg = ('StatBin requires a continuous x variable the x '
+                   'variable is discrete. Perhaps you want stat="count"?')
+            raise GgplotError(msg)
+
+        if (self.params['breaks'] is None and
+                self.params['binwidth'] is None and
+                self.params['bins'] is None):
+            msg = ("'stat_bin()' using 'bins = 30'. "
+                   "Pick better value with 'binwidth'.")
+            gg_warn(msg)
+
+        return self.params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        if 'y' in data:
-            raise GgplotError(_MSG_YVALUE)
         params['range'] = np.asarray(scales.x.dimension())
-        params['weight'] = data.get('weight')
-        return bin(data['x'], **params)
+        return bin(data['x'], data.get('weight'), **params)
 
 
-def bin(x, **params):
+def bin(x, weight, **params):
     x = np.asarray(x)
     breaks = params['breaks']
     right = params['right']
-    binwidth = params['binwidth']
     origin = params['origin']
     rangee = params['range']
-    weight = params.get('weight')
+    binwidth = params['binwidth']
+    num_bins = params['bins']
+
+    if num_bins is None:
+        num_bins = 30
+    if binwidth is None:
+        binwidth = np.ptp(rangee) / num_bins
 
     if x.dtype == np.int:
         bins = x
@@ -59,16 +68,11 @@ def bin(x, **params):
         bins = x
         width = make_iterable_ntimes(params['width'], len(x))
     elif com.is_numeric_dtype(x):
-        if breaks is None and binwidth is None:
-            binwidth = np.ptp(rangee) / 30
-            gg_warn(_MSG_BINWIDTH)
         if breaks is None:
             if origin is None:
                 breaks = fullseq(rangee, binwidth, pad=True)
             else:
-                breaks = seq(origin,
-                             np.max(rangee)+binwidth,
-                             binwidth)
+                breaks = seq(origin, np.max(rangee)+binwidth, binwidth)
 
         # fuzzy breaks to protect from floating point rounding errors
         diddle = 1e-07 * np.median(np.diff(breaks))
