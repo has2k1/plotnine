@@ -14,12 +14,12 @@ from .components.layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
 from .utils import is_waive, suppress
-from .utils.exceptions import GgplotError
 from .utils.ggutils import gg_context, ggplot_options
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 from .coords import coord_cartesian
 from .guides.guides import guides
+from .geoms import geom_blank
 
 
 # Show plots if in interactive mode
@@ -196,21 +196,12 @@ class ggplot(object):
         plot : ggplot
             A copy of the ggplot object
         """
-        # TODO:
-        # - copy the plot_data in here and give each layer
-        #   a separate copy. Currently this is happening in
-        #   facet.map_layout
-        # - Do not alter the user dataframe, create a copy
-        #   that keeps only the columns mapped to aesthetics.
-        #   Currently, this space conservation is happening
-        #   in compute_aesthetics. Can we get this evaled
-        #   dataframe before train_layout!!!
-        if not self.layers:
-            raise GgplotError('No layers in plot')
-
         plot = deepcopy(self)
-        plot.panel = Panel()
 
+        if not plot.layers:
+            plot += geom_blank()
+
+        plot.panel = Panel()
         layers = plot.layers
         layer_data = [l.data for l in layers]
         scales = plot.scales
