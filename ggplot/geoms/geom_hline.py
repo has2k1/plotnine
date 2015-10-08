@@ -14,7 +14,7 @@ class geom_hline(geom):
                    'size': 1.5, 'alpha': 1}
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'show_legend': False, 'inherit_aes': False}
+                      'inherit_aes': False}
     legend_geom = 'path'
 
     def __init__(self, *args, **kwargs):
@@ -23,6 +23,7 @@ class geom_hline(geom):
             data = pd.DataFrame({'yintercept': yintercept})
             kwargs['mapping'] = aes(yintercept='yintercept')
             kwargs['data'] = data
+            kwargs['show_legend'] = False
 
         geom.__init__(self, *args, **kwargs)
 

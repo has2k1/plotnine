@@ -18,12 +18,23 @@ class geom_abline(geom):
     legend_geom = 'path'
 
     def __init__(self, *args, **kwargs):
+        for arg in args:
+            if isinstance(arg, aes):
+                break
+        else:
+            # Nothing is set, default to y=x
+            if 'slope' not in kwargs:
+                kwargs['slope'] = 1
+            if 'intercept' not in kwargs:
+                kwargs['intercept'] = 0
+
         with suppress(KeyError):
             intercept = make_iterable(kwargs.pop('intercept'))
             data = pd.DataFrame({'intercept': intercept,
                                  'slope': kwargs.pop('slope')})
             kwargs['mapping'] = aes(intercept='intercept', slope='slope')
             kwargs['data'] = data
+            kwargs['show_legend'] = False
 
         geom.__init__(self, *args, **kwargs)
 
