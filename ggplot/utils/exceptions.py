@@ -16,7 +16,11 @@ class GgplotError(Exception):
         return repr(self.message)
 
 
-def gg_warn(message, category=UserWarning, stacklevel=2):
+class GgplotWarning(UserWarning):
+    pass
+
+
+def gg_warn(message, category=GgplotWarning, stacklevel=2):
     """
     Show warning message
 
