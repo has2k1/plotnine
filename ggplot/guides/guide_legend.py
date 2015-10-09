@@ -116,13 +116,11 @@ class guide_legend(guide):
         # guide entries may be ploted in the layers
         self.glayers = []
         for l in plot.layers:
-            all_ae = [ae for d in [l.mapping, plot.mapping,
-                                   l.stat.DEFAULT_AES]
-                      for ae in d]
-            geom_ae = [ae for d in [l.geom.REQUIRED_AES,
-                                    l.geom.DEFAULT_AES]
-                       for ae in d]
-            matched = set(all_ae) & set(geom_ae) & set(self.key.columns)
+            all_ae = (l.mapping.viewkeys() |
+                      plot.mapping if l.inherit_aes else set() |
+                      l.stat.DEFAULT_AES.viewkeys())
+            geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.viewkeys()
+            matched = all_ae & geom_ae & set(self.key.columns)
             matched = matched - set(l.geom.aes_params)
 
             if len(matched):
