@@ -22,7 +22,9 @@ class stat_bin(stat):
     CREATES = {'y', 'width'}
 
     def setup_params(self, data):
-        if 'y' in data or 'y' in self.params:
+        params = self.params
+
+        if 'y' in data or 'y' in params:
             msg = "stat_bin() must not be used with a y aesthetic."
             raise GgplotError(msg)
 
@@ -31,14 +33,16 @@ class stat_bin(stat):
                    'variable is discrete. Perhaps you want stat="count"?')
             raise GgplotError(msg)
 
-        if (self.params['breaks'] is None and
-                self.params['binwidth'] is None and
-                self.params['bins'] is None):
+        if (params['breaks'] is None and
+                params['binwidth'] is None and
+                params['bins'] is None):
             msg = ("'stat_bin()' using 'bins = 30'. "
                    "Pick better value with 'binwidth'.")
+            params = params.copy()
+            params['bins'] = 30
             gg_warn(msg)
 
-        return self.params
+        return params
 
     @classmethod
     def compute_group(cls, data, scales, **params):

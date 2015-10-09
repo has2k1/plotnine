@@ -9,20 +9,31 @@ from ..utils.exceptions import GgplotError, gg_warn
 from .stat_bin import bin
 from .stat import stat
 
-_MSG_BINWIDTH = """stat_bindot: binwidth defaulted to range/30.
-    Use 'binwidth = x' to adjust this.
-"""
-
 
 class stat_bindot(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'dotplot', 'position': 'identity',
-                      'binwidth': None, 'origin': None, 'width': 0.9,
-                      'binaxis': 'x', 'method': 'dotdensity',
-                      'binpositions': 'bygroup', 'drop': False,
-                      'right': True, 'na_rm': False, 'breaks': None}
+                      'bins': None, 'binwidth': None, 'origin': None,
+                      'width': 0.9, 'binaxis': 'x',
+                      'method': 'dotdensity', 'binpositions': 'bygroup',
+                      'drop': False, 'right': True, 'na_rm': False,
+                      'breaks': None}
     DEFAULT_AES = {'y': '..count..'}
     CREATES = {'y', 'width'}
+
+    def setup_params(self, data):
+        params = self.params
+
+        if (params['breaks'] is None and
+                params['binwidth'] is None and
+                params['bins'] is None):
+            msg = ("'stat_bindot()' using 'bins = 30'. "
+                   "Pick better value with 'bins' or 'binwidth'.")
+            params = params.copy()
+            params['bins'] = 30
+            gg_warn(msg)
+
+        return params
 
     @classmethod
     def compute_panel(cls, data, scales, **params):
@@ -31,7 +42,8 @@ class stat_bindot(stat):
             if params['binaxis'] == 'x':
                 newdata = densitybin(x=data['x'],
                                      weight=data.get('weight'),
-                                     binwidth=params['binwidth'])
+                                     binwidth=params['binwidth'],
+                                     bins=params['bins'])
                 data.sort(columns='x', inplace=True)
                 data.reset_index(inplace=True, drop=True)
                 newdata.sort(columns='x', inplace=True)
@@ -39,7 +51,8 @@ class stat_bindot(stat):
             elif params['binaxis'] == 'y':
                 newdata = densitybin(x=data['y'],
                                      weight=data.get('weight'),
-                                     binwidth=params['binwidth'])
+                                     binwidth=params['binwidth'],
+                                     bins=params['bins'])
                 data.sort(columns='y', inplace=True)
                 data.reset_index(inplace=True, drop=True)
                 newdata.sort(columns='x', inplace=True)
@@ -76,8 +89,7 @@ class stat_bindot(stat):
         if (params['breaks'] is None and
                 params['binwidth'] is None and
                 not values_are_ints):
-            params['binwidth'] = np.ptp(rangee) / 30
-            gg_warn(_MSG_BINWIDTH)
+            params['binwidth'] = np.ptp(rangee) / params['bins']
 
         if params['method'] == 'histodot':
             params['range'] = rangee
@@ -95,6 +107,7 @@ class stat_bindot(stat):
                 data = densitybin(x=values,
                                   weight=weight,
                                   binwidth=params['binwidth'],
+                                  bins=params['bins'],
                                   rangee=rangee)
 
             # Collapse each bin and get a count
@@ -130,7 +143,7 @@ class stat_bindot(stat):
         return data
 
 
-def densitybin(x, weight=None, binwidth=None, rangee=None):
+def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
     """
     Do density binning
 
@@ -153,6 +166,7 @@ def densitybin(x, weight=None, binwidth=None, rangee=None):
     """
     if all(pd.isnull(x)):
         return pd.DataFrame()
+
     if weight is None:
         weight = np.ones(len(x))
     weight = np.asarray(weight)
@@ -160,8 +174,10 @@ def densitybin(x, weight=None, binwidth=None, rangee=None):
 
     if rangee is None:
         rangee = np.min(x), np.max(x)
+    if bins is None:
+        bins = 30
     if binwidth is None:
-        binwidth = (rangee[1]-rangee[0])/30
+        binwidth = np.ptp(rangee) / bins
 
     # Sort weight and x, by x
     order = np.argsort(x)
