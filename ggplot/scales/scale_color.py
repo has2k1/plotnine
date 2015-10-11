@@ -120,6 +120,9 @@ def brewer_pal(type='seq', palette=1):
 
 
 def gradient_n_pal(colors, values=None, name='gradientn'):
+    # Note: For better results across devices and media types,
+    # it would be better to do the interpolation in
+    # Lab color space.
     if values is None:
         colormap = LinearSegmentedColormap.from_list(
             name, colors)
@@ -196,7 +199,7 @@ class scale_color_gradient(scale_continuous):
     aesthetics = ['color']
     guide = 'colorbar'
 
-    def __init__(self, low='#132B43', high='#56B1F7', space='Lab', **kwargs):
+    def __init__(self, low='#132B43', high='#56B1F7', **kwargs):
         """
         Create colormap that will be used by the palette
         """
@@ -231,7 +234,7 @@ class scale_color_gradient2(scale_continuous):
     guide = 'colorbar'
 
     def __init__(self, low='#832424', mid='#FFFFFF',
-                 high='#3A3A98', space='Lab', midpoint=0,
+                 high='#3A3A98', midpoint=0,
                  **kwargs):
         """
         Create colormap that will be used by the palette
@@ -255,7 +258,7 @@ class scale_color_gradientn(scale_continuous):
     aesthetics = ['color']
     guide = 'colorbar'
 
-    def __init__(self, colors, values=None, space='Lab', **kwargs):
+    def __init__(self, colors, values=None, **kwargs):
         """
         Create colormap that will be used by the palette
         """
@@ -271,8 +274,7 @@ class scale_color_distiller(scale_color_gradientn):
     aesthetics = ['color']
     guide = 'colorbar'
 
-    def __init__(self, type='seq', palette=1, values=None,
-                 space='Lab', **kwargs):
+    def __init__(self, type='seq', palette=1, values=None, **kwargs):
         """
         Create colormap that will be used by the palette
         """
@@ -281,8 +283,7 @@ class scale_color_distiller(scale_color_gradientn):
 
         # Grab 6 colors from brewer and create a gradient palette
         colours = brewer_pal(type, palette)(6)
-        scale_color_gradientn.__init__(self, colours, values,
-                                       space, **kwargs)
+        scale_color_gradientn.__init__(self, colours, values, **kwargs)
 
 
 class scale_fill_distiller(scale_color_distiller):
