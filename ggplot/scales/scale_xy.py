@@ -149,20 +149,21 @@ class scale_position_continuous(scale_continuous):
 
 
 class scale_x_discrete(scale_position_discrete):
-    aesthetics = ["x", "xmin", "xmax", "xend"]
+    aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_discrete(scale_position_discrete):
-    aesthetics = ["y", "ymin", "ymax", "yend"]
+    aesthetics = ['y', 'ymin', 'ymax', 'yend']
 
 
 class scale_x_continuous(scale_position_continuous):
-    aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
+    aesthetics = ['x', 'xmin', 'xmax', 'xend', 'xintercept']
 
 
 class scale_y_continuous(scale_position_continuous):
-    aesthetics = ["y", "ymin", "ymax", "yend", "yintercept",
-                  "ymin_final", "ymax_final"]
+    aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
+                  'ymin_final', 'ymax_final',
+                  'lower', 'middle', 'upper']
 
 
 # Transformed scales
@@ -220,5 +221,3 @@ class scale_x_reverse(scale_x_continuous):
 class scale_y_reverse(scale_y_continuous):
     trans = identity_trans()
     trans.modify_axis = MethodType(_modify_axis, trans)
-
-# TODO: breaks and labels parameters for transformed scales
