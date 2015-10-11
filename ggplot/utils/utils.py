@@ -8,6 +8,7 @@ import itertools
 import re
 import importlib
 import contextlib
+import inspect
 
 import six
 import numpy as np
@@ -753,3 +754,25 @@ class RegisteredMeta(type):
         else:
             cls.registry[name] = cls
         super(RegisteredMeta, cls).__init__(name, bases, dct)
+
+
+def get_kwarg_names(func):
+    """
+    Return a list of valid kwargs to function func
+    """
+    kwarg_names = []
+    args, _, _, defaults = inspect.getargspec(func)
+    if defaults:
+        kwarg_names = args[:-len(defaults)]
+    return kwarg_names
+
+
+def get_valid_kwargs(func, potential_kwargs):
+    """
+    Return valid kwargs to function func
+    """
+    kwargs = {}
+    for name in get_kwarg_names(func):
+        with suppress(KeyError):
+            kwargs[name] = potential_kwargs[name]
+    return kwargs

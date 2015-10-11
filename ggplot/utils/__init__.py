@@ -11,7 +11,7 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     remove_missing, round_any, seq,
                     to_rgba, groupby_apply, make_line_segments,
                     ColoredDrawingArea, suppress, copy_keys,
-                    RegisteredMeta)
+                    RegisteredMeta, get_valid_kwargs)
 
 
 __all__ = ['ggsave']

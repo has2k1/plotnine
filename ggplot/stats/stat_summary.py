@@ -6,7 +6,8 @@ import numpy as np
 import scipy.stats
 import pandas as pd
 
-from ..utils import uniquecols
+from ..utils import uniquecols, get_valid_kwargs
+from ..utils.exceptions import GgplotError
 from .stat import stat
 
 
@@ -20,9 +21,9 @@ def bootstrap_statistics(series, statistic, n_samples=1000,
     inds = np.random.randint(0, len(series), size=(n_samples, len(series)))
     samples = series.values[inds]
     means = np.sort(statistic(samples, axis=1))
-    return pd.Series({'ymin': means[int((alpha/2)*n_samples)],
-                      'ymax': means[int((1-alpha/2)*n_samples)],
-                      'y': statistic(series)})
+    return pd.DataFrame({'ymin': means[int((alpha/2)*n_samples)],
+                         'ymax': means[int((1-alpha/2)*n_samples)],
+                         'y': [statistic(series)]})
 
 
 def mean_cl_boot(series, n_samples=1000, confidence_interval=0.95):
@@ -39,32 +40,32 @@ def mean_cl_normal(series, confidence_interval=0.95):
     m = np.mean(a)
     se = scipy.stats.sem(a)
     h = se * scipy.stats.t._ppf((1+confidence_interval)/2, len(a)-1)
-    return pd.Series({'y': m,
-                      'ymin': m-h,
-                      'ymax': m+h})
+    return pd.DataFrame({'y': [m],
+                         'ymin': m-h,
+                         'ymax': m+h})
 
 
 def mean_sdl(series, mult=2):
     m = series.mean()
     s = series.std()
-    return pd.Series({'y': m,
-                      'ymin': m-mult*s,
-                      'ymax': m+mult*s})
+    return pd.DataFrame({'y': [m],
+                         'ymin': m-mult*s,
+                         'ymax': m+mult*s})
 
 
 def median_hilow(series, confidence_interval=0.95):
     tail = (1 - confidence_interval) / 2
-    return pd.Series({'y': np.median(series),
-                      'ymin': np.percentile(series, 100 * tail),
-                      'ymax': np.percentile(series, 100 * (1 - tail))})
+    return pd.DataFrame({'y': [np.median(series)],
+                         'ymin': np.percentile(series, 100 * tail),
+                         'ymax': np.percentile(series, 100 * (1 - tail))})
 
 
 def mean_se(series, mult=1):
     m = np.mean(series)
     se = mult * np.sqrt(np.var(series) / len(series))
-    return pd.Series({'y': m,
-                      'ymin': m-se,
-                      'ymax': m+se})
+    return pd.DataFrame({'y': [m],
+                         'ymin': m-se,
+                         'ymax': m+se})
 
 
 function_dict = {'mean_cl_boot': mean_cl_boot,
@@ -74,15 +75,31 @@ function_dict = {'mean_cl_boot': mean_cl_boot,
                  'mean_se': mean_se}
 
 
-def combined_fun_data(series, fun_y, fun_ymin, fun_ymax):
-    d = {}
-    if fun_y:
-        d['y'] = fun_y(series)
-    if fun_ymin:
-        d['ymin'] = fun_ymin(series)
-    if fun_ymax:
-        d['ymax'] = fun_ymax(series)
-    return pd.Series(d)
+def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
+    if isinstance(fun_data, string_types):
+        fun_data = function_dict[fun_data]
+
+    if fun_data:
+        kwargs = get_valid_kwargs(fun_data, fun_args)
+
+        def func(df):
+            return fun_data(df['y'], **kwargs)
+    elif any([fun_y, fun_ymin, fun_ymax]):
+
+        def func(df):
+            d = {}
+            if fun_y:
+                kwargs = get_valid_kwargs(fun_y, fun_args)
+                d['y'] = [fun_y(df['y'], **kwargs)]
+            if fun_ymin:
+                kwargs = get_valid_kwargs(fun_ymin, fun_args)
+                d['ymin'] = [fun_ymin(df['y'], **kwargs)]
+            if fun_ymax:
+                kwargs = get_valid_kwargs(fun_ymax, fun_args)
+                d['ymax'] = [fun_ymax(df['y'], **kwargs)]
+            return pd.DataFrame(d)
+
+    return func
 
 
 class stat_summary(stat):
@@ -152,29 +169,30 @@ class stat_summary(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
-                      'fun_data': 'mean_cl_boot', 'fun_y': None,
-                      'fun_ymin': None, 'fun_ymax': None}
+                      'fun_data': None, 'fun_y': None,
+                      'fun_ymin': None, 'fun_ymax': None,
+                      'fun_args': dict()}
     CREATES = {'ymin', 'ymax'}
+
+    def setup_params(self, data):
+        keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
+        if not any(self.params[k] for k in keys):
+            raise GgplotError('No summary function')
+
+        return self.params
 
     @classmethod
     def compute_panel(cls, data, scales, **params):
-        if (params['fun_y'] or params['fun_ymin'] or
-                params['fun_ymax']):
-            def fun_data(s):
-                return combined_fun_data(s, params['fun_y'],
-                                         params['fun_ymin'],
-                                         params['fun_ymax'])
-        elif isinstance(params['fun_data'], string_types):
-            fun_data = function_dict[params['fun_data']]
-        else:
-            fun_data = params['fun_data']
+        func = make_summary_fun(params['fun_data'], params['fun_y'],
+                                params['fun_ymin'], params['fun_ymax'],
+                                params['fun_args'])
 
         # break a dataframe into pieces, summarise each piece,
         # and join the pieces back together, retaining original
         # columns unaffected by the summary.
         summaries = []
         for (group, x), df in data.groupby(['group', 'x']):
-            summary = pd.DataFrame(fun_data(df['y'])).T
+            summary = func(df)
             summary['x'] = x
             summary['group'] = group
             unique = uniquecols(df)
