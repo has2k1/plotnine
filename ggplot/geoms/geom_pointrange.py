@@ -62,7 +62,8 @@ class geom_pointrange(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'shape': 'o', 'size': 1.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'fatten': 4}
 
     _units = {'shape'}
 
@@ -70,7 +71,7 @@ class geom_pointrange(geom):
     def draw_group(pinfo, panel_scales, coord, ax, **params):
         y = pinfo['y']
         geom_linerange.draw_group(pinfo, panel_scales, coord, ax, **params)
-        pinfo['size'] = np.asarray(pinfo['size']) * 4
+        pinfo['size'] = np.asarray(pinfo['size']) * params['fatten']
         pinfo['y'] = y
         pinfo['stroke'] = 1
         geom_point.draw_group(pinfo, panel_scales, coord, ax, **params)
@@ -83,7 +84,7 @@ class geom_pointrange(geom):
         Parameters
         ----------
         data : dataframe
-        params : dict
+        da : DrawingArea
         lyr : layer
 
         Returns
@@ -92,7 +93,7 @@ class geom_pointrange(geom):
         """
         data.is_copy = None
         geom_path.draw_legend(data, da, lyr)
-        data['size'] = data['size'] * 4
+        data['size'] = data['size'] * lyr.geom.params['fatten']
         data['stroke'] = 1
         geom_point.draw_legend(data, da, lyr)
         return da
