@@ -172,7 +172,7 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
     """
     lookup = {}
     for i, x in enumerate(v2):
-        if not (x in lookup):
+        if x not in lookup:
             lookup[x] = i
 
     lst = [nomatch] * len(v1)

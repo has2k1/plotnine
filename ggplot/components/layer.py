@@ -314,15 +314,19 @@ class layer(object):
         return self.geom.use_defaults(data)
 
 
+NO_GROUP = -1
+
+
 def add_group(data):
     if len(data) == 0:
         return data
-    if not ('group' in data):
+
+    if 'group' not in data:
         disc = discrete_columns(data, ignore=['label'])
         if disc:
             data['group'] = ninteraction(data[disc], drop=True)
         else:
-            data['group'] = 1
+            data['group'] = NO_GROUP
     else:
         data['group'] = ninteraction(data[['group']], drop=True)
 
@@ -337,6 +341,6 @@ def discrete_columns(df, ignore):
     """
     lst = []
     for col in df:
-        if (df[col].dtype.kind in DISCRETE_KINDS) and not (col in ignore):
+        if (df[col].dtype.kind in DISCRETE_KINDS) and (col not in ignore):
             lst.append(col)
     return lst
