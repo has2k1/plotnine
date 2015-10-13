@@ -125,6 +125,56 @@ def rescale_mid(x, to=(0, 1), from_=None, mid=0):
     return out
 
 
+def rescale_max(x, to=(0, 1), from_=None):
+    """
+    Rescale numeric vector to have specified maximum.
+
+    Parameters
+    ----------
+    x : ndarray | numeric
+        1D vector of values to manipulate.
+    to : tuple
+        output range (numeric vector of length two)
+    from_ : tuple
+        input range (numeric vector of length two).
+        If not given, is calculated from the range of x
+    """
+    array_like = True
+
+    try:
+        len(x)
+    except TypeError:
+        array_like = False
+        x = [x]
+
+    x = np.asarray(x)
+    if not from_:
+        from_ = np.array([np.min(x), np.max(x)])
+
+    out = x/from_[1] * to[1]
+
+    if not array_like:
+        out = out[0]
+    return out
+
+
+# Palette making utilities #
+
+def area_pal(range=(1, 6)):
+    """
+    Point area palette (continuous).
+
+    Parameters
+    ----------
+    range : tuple
+        Numeric vector of length two, giving range of possible sizes.
+        Should be greater than 0.
+    """
+    def area_palette(x):
+        return rescale(np.sqrt(x), range, (0, 1))
+    return area_palette
+
+
 def grey_pal(start=0.2, end=0.8):
     """
     Utility for creating discrete grey scale palette
@@ -253,6 +303,20 @@ def gradient_n_pal(colors, values=None, name='gradientn'):
             rgb_colors = rgb2hex(color_tuples)
         return rgb_colors
     return func
+
+
+def abs_area(max):
+    """
+    Point area palette (continuous), with area proportional to value.
+
+    Parameters
+    ----------
+    max : float
+        A number representing the maximum size
+    """
+    def abs_area_palette(x):
+        return rescale(np.sqrt(np.abs(x)), (0, max), (0, 1))
+    return abs_area_palette
 
 
 def censor(x, range=(0, 1), only_finite=True):

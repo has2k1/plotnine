@@ -50,8 +50,10 @@ from .scale_shape import scale_shape_continuous
 from .scale_shape import scale_shape_discrete
 # size
 from .scale_size import scale_size
+from .scale_size import scale_size_area
 from .scale_size import scale_size_continuous
 from .scale_size import scale_size_discrete
+from .scale_size import scale_size_radius
 # xy position and transforms
 from .scale_xy import scale_x_datetime, scale_x_date
 from .scale_xy import scale_x_discrete, scale_x_continuous
@@ -97,8 +99,9 @@ __all__ = [
            'scale_shape', 'scale_shape_discrete',
            'scale_shape_continuous',
            # size
-           'scale_size', 'scale_size_discrete',
-           'scale_size_continuous', 'scale_color',
+           'scale_size', 'scale_size_area',
+           'scale_size_discrete', 'scale_size_continuous',
+           'scale_size_radius',
            # identity
            'scale_alpha_identity', 'scale_color_identity',
            'scale_colour_identity', 'scale_fill_identity',
