@@ -16,7 +16,7 @@ class scale_color_hue(scale_discrete):
     aesthetics = ['color']
 
     def __init__(self, h=.01, l=.6, s=.65, color_space='hls', **kwargs):
-        kwargs['palette'] = hue_pal(h, l, s, color_space=color_space)
+        self.palette = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -29,7 +29,7 @@ class scale_color_brewer(scale_discrete):
     aesthetics = ['color']
 
     def __init__(self, type='seq', palette=1, **kwargs):
-        kwargs['palette'] = brewer_pal(type, palette)
+        self.palette = brewer_pal(type, palette)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -42,7 +42,7 @@ class scale_color_grey(scale_discrete):
     aesthetics = ['color']
 
     def __init__(self, start=0.2, end=0.8, **kwargs):
-        kwargs['palette'] = grey_pal(start, end)
+        self.palette = grey_pal(start, end)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -61,7 +61,7 @@ class scale_color_gradient(scale_continuous):
         """
         Create colormap that will be used by the palette
         """
-        kwargs['palette'] = gradient_n_pal([low, high],
+        self.palette = gradient_n_pal([low, high],
                                            name='gradient')
         scale_continuous.__init__(self, **kwargs)
 
@@ -102,8 +102,8 @@ class scale_color_gradient2(scale_continuous):
             return rescale_mid(*args,  mid=midpoint, **kwargs)
 
         kwargs['rescaler'] = _rescale_mid
-        kwargs['palette'] = gradient_n_pal([low, mid, high],
-                                           name='gradient2')
+        self.palette = gradient_n_pal([low, mid, high],
+                                      name='gradient2')
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -120,7 +120,7 @@ class scale_color_gradientn(scale_continuous):
         """
         Create colormap that will be used by the palette
         """
-        kwargs['palette'] = gradient_n_pal(colors, values, 'gradientn')
+        self.palette = gradient_n_pal(colors, values, 'gradientn')
         scale_continuous.__init__(self, **kwargs)
 
 

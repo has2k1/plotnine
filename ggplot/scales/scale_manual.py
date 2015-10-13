@@ -21,7 +21,7 @@ class _scale_manual(scale_discrete):
                     msg.format(n, len(values)))
             return values
 
-        kwargs['palette'] = palette
+        self.palette = palette
         scale_discrete.__init__(self, **kwargs)
 
 
