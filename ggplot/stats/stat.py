@@ -42,18 +42,16 @@ class stat(object):
         """
         Deep copy without copying the self.data dataframe
         """
-        # In case the object cannot be initialized with out
-        # arguments
-        class _empty(object):
-            pass
-        result = _empty()
-        result.__class__ = self.__class__
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+
         for key, item in self.__dict__.items():
-            # don't make a deepcopy of data!
-            if key == "data":
+            if key == '_cache':
                 result.__dict__[key] = self.__dict__[key]
-                continue
-            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+            else:
+                result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+
         return result
 
     @classmethod

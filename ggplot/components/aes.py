@@ -71,14 +71,16 @@ class aes(dict):
         self.aes_env = EvalEnvironment.capture(1)
 
     def __deepcopy__(self, memo):
-        """deepcopy support for ggplot"""
+        """
+        Deep copy without copying the environment
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+
         # Just copy the keys and point to the env
-        result = aes()
         for key, item in self.items():
-            try:
-                result[key] = deepcopy(self[key], memo)
-            except:
-                raise
+            result[key] = deepcopy(self[key], memo)
 
         result.aes_env = self.aes_env
         return result

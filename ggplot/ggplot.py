@@ -77,20 +77,20 @@ class ggplot(object):
         return "<ggplot: (%d)>" % self.__hash__()
 
     def __deepcopy__(self, memo):
-        """deepcopy support for ggplot"""
-        # This is a workaround as ggplot(None, None)
-        # does not really work :-(
-        class _empty(object):
-            pass
-        result = _empty()
-        result.__class__ = self.__class__
+        """
+        Deep copy without copying the dataframe and environment
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+
         # don't make a deepcopy of data, or plot_env
         shallow = {'data', 'plot_env'}
         for key, item in self.__dict__.items():
             if key in shallow:
                 result.__dict__[key] = self.__dict__[key]
-                continue
-            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+            else:
+                result.__dict__[key] = deepcopy(self.__dict__[key], memo)
 
         return result
 

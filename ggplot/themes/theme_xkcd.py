@@ -35,23 +35,30 @@ class theme_xkcd(theme):
         self._rcParams.update(d)
 
     def __deepcopy__(self, memo):
-        class _empty(object):
-            pass
-        result = _empty()
-        result.__class__ = self.__class__
-        result.__dict__['element_themes'] = deepcopy(self.element_themes)
-        result.__dict__["_rcParams"] = {}
-        result.__dict__["_params"] = deepcopy(self._params)
+        """
+        Deep copy support for theme_xkcd
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+
+        for key, item in self.__dict__.items():
+            if key == '_rcParams':
+                continue
+
+            result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+
+        result._rcParams = {}
         for k, v in self._rcParams.items():
             try:
-                result.__dict__["_rcParams"][k] = deepcopy(v, memo)
+                result._rcParams[k] = deepcopy(v, memo)
             except NotImplementedError:
                 # deepcopy raises an error for objects that are drived from or
                 # composed of matplotlib.transform.TransformNode.
                 # Not desirable, but probably requires upstream fix.
                 # In particular, XKCD uses matplotlib.patheffects.withStrok
                 # -gdowding
-                result.__dict__["_rcParams"][k] = copy(v)
+                result._rcParams[k] = copy(v)
 
         return result
 
