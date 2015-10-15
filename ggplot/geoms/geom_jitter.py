@@ -12,7 +12,6 @@ class geom_jitter(geom_point):
                       'width': None, 'height': None}
 
     def __init__(self, *args, **kwargs):
-        print(kwargs)
         if 'width' in kwargs or 'height' in kwargs:
             if 'position' in kwargs:
                 raise GgplotError(
