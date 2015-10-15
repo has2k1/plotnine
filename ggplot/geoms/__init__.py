@@ -29,6 +29,7 @@ from .geom_spoke import geom_spoke
 from .geom_step import geom_step
 from .geom_text import geom_text
 from .geom_tile import geom_tile
+from .geom_violin import geom_violin
 from .geom_vline import geom_vline
 
 # other
@@ -46,6 +47,6 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar',
            'geom_polygon', 'geom_rect', 'geom_ribbon',
            'geom_segment', 'geom_smooth', 'geom_spoke',
            'geom_step', 'geom_text', 'geom_tile',
-           'geom_vline',
+           'geom_violin', 'geom_vline',
            # other
            'arrow', 'annotate']
