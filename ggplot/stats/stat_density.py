@@ -49,9 +49,9 @@ class stat_density(stat):
         weight = data.get('weight')
 
         if params['trim']:
-            range_x = data['y'].min(), data['y'].max()
+            range_x = data['x'].min(), data['x'].max()
         else:
-            range_x = scales.y.dimension()
+            range_x = scales.x.dimension()
 
         return compute_density(data['x'], weight, range_x, **params)
 
