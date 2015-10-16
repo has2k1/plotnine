@@ -196,34 +196,36 @@ class guide_legend(guide):
         """
         default_size = 20
         pad = 14
-        if self.keywidth is None:
+
+        def determine_side_length():
             size = np.ones(nbreak) * default_size
             for i in range(nbreak):
                 for gl in self.glayers:
                     try:
-                        size[i] = np.max([gl.data.ix[i, 'size'].max()+pad,
-                                          size[i]])
+                        # color(edgecolor) affects size(linewidth)
+                        # When the edge is not visible, we should
+                        # not expand the size of the keys
+                        if gl.data.ix[i, 'color'] is not None:
+                            size[i] = np.max([
+                                gl.data.ix[i, 'size'].max()+pad,
+                                size[i]])
                     except KeyError:
                         break
+            return size
 
+        if self.keywidth is None:
+            width = determine_side_length()
             if self.direction == 'vertical':
-                size[:] = size.max()
-            self._keywidth = size
+                width[:] = width.max()
+            self._keywidth = width
         else:
             self._keywidth = [self.keywidth]*nbreak
 
         if self.keyheight is None:
-            size = np.ones(nbreak) * default_size
-            for i in range(nbreak):
-                for gl in self.glayers:
-                    try:
-                        size[i] = np.max([gl.data.ix[i, 'size'].max()+pad,
-                                          size[i]])
-                    except KeyError:
-                        break
+            height = determine_side_length()
             if self.direction == 'horizontal':
-                size[:] = size.max()
-            self._keyheight = size
+                height[:] = height.max()
+            self._keyheight = height
         else:
             self._keyheight = [self.keyheight]*nbreak
 

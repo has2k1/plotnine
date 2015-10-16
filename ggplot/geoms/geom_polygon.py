@@ -66,17 +66,22 @@ class geom_polygon(geom):
         -------
         out : DrawingArea
         """
+        # We take into account that the linewidth
+        # bestrides the boundary of the rectangle
         linewidth = np.min([data['size'],
                             da.width/4, da.height/4])
+        if data['color'] is None:
+            linewidth = 0
 
         facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
             facecolor = 'none'
 
-        rect = Rectangle((0, 0),
-                         width=da.width,
-                         height=da.height,
+        rect = Rectangle((0+linewidth/2, 0+linewidth/2),
+                         width=da.width-linewidth,
+                         height=da.height-linewidth,
                          linewidth=linewidth,
+                         linestyle=data['linetype'],
                          facecolor=facecolor,
                          edgecolor=data['color'],
                          capstyle='projecting')
