@@ -16,8 +16,8 @@ class stat_bin(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': 0.9, 'drop': False, 'right': False,
-                      'binwidth': None, 'bins': None, 'origin': None,
-                      'breaks': None}
+                      'binwidth': None, 'bins': None,
+                      'origin': None, 'breaks': None}
     DEFAULT_AES = {'y': '..count..', 'weight': 1}
     CREATES = {'y', 'width'}
 
@@ -29,8 +29,9 @@ class stat_bin(stat):
             raise GgplotError(msg)
 
         if data['x'].dtype.kind == 'i':
-            msg = ('StatBin requires a continuous x variable the x '
-                   'variable is discrete. Perhaps you want stat="count"?')
+            msg = ("stat_bin requires a continuous x variable the x "
+                   "variable is discrete. "
+                   "Perhaps you want stat='count'?")
             raise GgplotError(msg)
 
         if (params['breaks'] is None and
@@ -76,19 +77,10 @@ def bin(x, weight, **params):
             if origin is None:
                 breaks = fullseq(rangee, binwidth, pad=True)
             else:
-                breaks = seq(origin, np.max(rangee)+binwidth, binwidth)
+                breaks = seq(origin, np.max(rangee)+binwidth,
+                             binwidth)
 
-        # fuzzy breaks to protect from floating point rounding errors
-        diddle = 1e-07 * np.median(np.diff(breaks))
-        if right:
-            fuzz = np.hstack(
-                [-diddle, np.repeat(diddle, len(breaks)-1)])
-        else:
-            fuzz = np.hstack(
-                [np.repeat(-diddle, len(breaks)-1), diddle])
-
-        fuzzybreaks = breaks + fuzz
-
+        fuzzybreaks = adjust_breaks(breaks, right)
         bins = pd.cut(x, bins=fuzzybreaks, labels=False,
                       right=right)
         width = np.diff(breaks)
@@ -141,3 +133,17 @@ def bin(x, weight, **params):
     res['ndensity'] = res['density'] / res['density'].abs().max()
 
     return res
+
+
+def adjust_breaks(breaks, right):
+    # fuzzy breaks to protect from floating point rounding errors
+    diddle = 1e-07 * np.median(np.diff(breaks))
+    if right:
+        fuzz = np.hstack(
+            [-diddle, np.repeat(diddle, len(breaks)-1)])
+    else:
+        fuzz = np.hstack(
+            [np.repeat(-diddle, len(breaks)-1), diddle])
+
+    fuzzybreaks = breaks + fuzz
+    return fuzzybreaks
