@@ -1,10 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import numpy as np
 import pandas as pd
 from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
-import matplotlib.lines as lines
 
 from ..utils import to_rgba, make_iterable
 from .geom import geom
@@ -66,35 +66,19 @@ class geom_polygon(geom):
         -------
         out : DrawingArea
         """
-        # ggplot leaves out the linetpe when drawing the
-        # rectangle despite being helpful in some cases.
-        # We check if linetype is mapped to in the layer
-        # responsible for this legend entry, and
-        # only then do we include it
-        kwargs = {}
-        if 'linetype' in lyr._active_mapping:
-            kwargs['linestyle'] = data['linetype']
+        linewidth = np.min([data['size'],
+                            da.width/4, da.height/4])
 
-        # background
         facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
             facecolor = 'none'
-        bg = Rectangle((0, 0),
-                       width=da.width,
-                       height=da.height,
-                       facecolor=facecolor,
-                       edgecolor=data['color'],
-                       capstyle='projecting',
-                       **kwargs)
-        da.add_artist(bg)
 
-        # diagonal strike through
-        if data['color']:
-            strike = lines.Line2D([0, da.width],
-                                  [0, da.height],
-                                  linestyle=data['linetype'],
-                                  linewidth=data['size'],
-                                  color=data['color'],
-                                  solid_capstyle='butt')
-            da.add_artist(strike)
+        rect = Rectangle((0, 0),
+                         width=da.width,
+                         height=da.height,
+                         linewidth=linewidth,
+                         facecolor=facecolor,
+                         edgecolor=data['color'],
+                         capstyle='projecting')
+        da.add_artist(rect)
         return da
