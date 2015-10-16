@@ -6,8 +6,6 @@ from .geom_rect import geom_rect
 
 
 class geom_bar(geom_rect):
-    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.5}
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
                       'width': None}
