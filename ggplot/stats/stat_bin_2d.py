@@ -49,14 +49,12 @@ class stat_bin_2d(stat):
         y = np.append(data['y'], range_y)
 
         # create the cutting parameters
-        xbins = bin_breaks(scales.x, breaks.x, origin.x,
-                           binwidth.x, bins.x)
-        ybins = bin_breaks(scales.y, breaks.y, origin.y,
-                           binwidth.y, bins.y)
-        xbins, xbreaks = pd.cut(x, bins=xbins, labels=False,
-                                right=True, retbins=True)
-        ybins, ybreaks = pd.cut(y, bins=ybins, labels=False,
-                                right=True, retbins=True)
+        xbreaks = bin_breaks(scales.x, breaks.x, origin.x,
+                             binwidth.x, bins.x)
+        ybreaks = bin_breaks(scales.y, breaks.y, origin.y,
+                             binwidth.y, bins.y)
+        xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)
+        ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)
 
         # Remove the spurious points
         xbins = xbins[:-2]

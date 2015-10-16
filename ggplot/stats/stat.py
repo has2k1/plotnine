@@ -138,6 +138,7 @@ class stat(object):
 
         stats = []
         for _, old in data.groupby('group'):
+            old.is_copy = None
             new = cls.compute_group(old, scales, **params)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
