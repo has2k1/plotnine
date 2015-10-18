@@ -14,6 +14,7 @@ from .geom_errorbarh import geom_errorbarh
 from .geom_histogram import geom_histogram
 from .geom_hline import geom_hline
 from .geom_jitter import geom_jitter
+from .geom_label import geom_label
 from .geom_line import geom_line
 from .geom_linerange import geom_linerange
 from .geom_now_its_art import geom_now_its_art
@@ -42,7 +43,7 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar',
            'geom_blank', 'geom_boxplot', 'geom_crossbar',
            'geom_density', 'geom_dotplot', 'geom_errorbar',
            'geom_errorbarh', 'geom_histogram', 'geom_hline',
-           'geom_jitter', 'geom_line', 'geom_linerange',
+           'geom_jitter', 'geom_label', 'geom_line',
            'geom_linerange', 'geom_now_its_art', 'geom_path',
            'geom_point', 'geom_pointrange', 'geom_pointrange',
            'geom_quantile', 'geom_polygon', 'geom_rect',

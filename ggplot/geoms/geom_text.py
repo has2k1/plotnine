@@ -1,11 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import pandas as pd
 from matplotlib.text import Text
-from six.moves import zip
 
 from .geom import geom
-from ..utils import make_iterable_ntimes, to_rgba, suppress
+from ..utils import to_rgba, suppress
 from ..positions import position_nudge
 
 
@@ -13,13 +13,14 @@ from ..positions import position_nudge
 # due to a limitation imposed by MPL
 # see: https://github.com/matplotlib/matplotlib/pull/1181
 class geom_text(geom):
-    DEFAULT_AES = {'alpha': None, 'angle': 0, 'color': 'black',
-                   'family': None, 'fontface': 1, 'size': 12,
-                   'lineheight': 1.2}
+    DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
+                   'size': 11, 'lineheight': 1.2}
     REQUIRED_AES = {'label', 'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'parse': False, 'hjust': 'center',
-                      'vjust': 'center', 'nudge_x': 0, 'nudge_y': 0}
+                      'family': None, 'fontweight': 'bold',
+                      'fontstyle': 'normal', 'vjust': 'center',
+                      'nudge_x': 0, 'nudge_y': 0}
 
     def __init__(self, *args, **kwargs):
         nudge_kwargs = {}
@@ -33,37 +34,61 @@ class geom_text(geom):
 
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):
-        x = pinfo.pop('x')
-        y = pinfo.pop('y')
+        # Not used by Text
+        del pinfo['PANEL']
+        del pinfo['group']
+
+        # Bind color and alpha
         color = to_rgba(pinfo['color'], pinfo['alpha'])
-        # TODO: Deal with the fontface
-        # from ggplot2
-        # 1 = plain, 2 = bold, 3 = italic, 4 = bold italic
-        # "plain", "bold", "italic", "oblique", and "bold.italic"
-        pinfo.pop('fontface')
-
-        n = len(x)
         if isinstance(color, tuple):
-            color = [color] * n
-        labels = make_iterable_ntimes(pinfo['label'], n)
-        lineheight = make_iterable_ntimes(pinfo['lineheight'], n)
-        size = make_iterable_ntimes(pinfo['size'], n)
-        family = make_iterable_ntimes(pinfo['family'], n)
-        angle = make_iterable_ntimes(pinfo['angle'], n)
+            color = [color] * len(pinfo['x'])
 
+        # Parse latex
+        labels = pinfo.pop('label')
         if params['parse']:
             labels = ['${}$'.format(l) for l in labels]
-        items = (x, y, labels, color, family, size, lineheight, angle)
-        for x_g, y_g, s, col, fam, sz, lh, ang in zip(*items):
-            ax.text(x_g, y_g, s,
-                    color=col,
-                    family=fam,
-                    size=sz,
-                    linespacing=lh,
-                    verticalalignment=params['vjust'],
-                    horizontalalignment=params['hjust'],
-                    rotation=ang,
-                    zorder=pinfo['zorder'])
+
+        # Create ax.text parameters
+        pinfo['color'] = color
+        pinfo['s'] = labels
+        pinfo['linespacing'] = pinfo.pop('lineheight')
+        pinfo['rotation'] = pinfo.pop('angle')
+        pinfo['horizontalalignment'] = params['hjust']
+        pinfo['verticalalignment'] = params['vjust']
+        pinfo['family'] = params['family']
+        pinfo['fontweight'] = params['fontweight']
+        pinfo['clip_on'] = True
+
+        # When fill is present we are creating a label,
+        # so we need an MPL bbox
+        is_geom_label = 'fill' in pinfo
+        if is_geom_label:
+            pinfo['facecolor'] = pinfo.pop('fill')
+            if params['boxstyle'] in ('round', 'round4'):
+                boxstyle = '{},pad={},rounding_size={}'.format(
+                    params['boxstyle'],
+                    params['label_padding'],
+                    params['label_r'])
+            else:
+                boxstyle = '{},pad={}'.format(
+                    params['boxstyle'],
+                    params['label_padding'])
+            bbox = {'linewidth': params['label_size'],
+                    'boxstyle': boxstyle}
+        else:
+            bbox = {}
+
+        # Put all params in dataframe so that each row
+        # represents a text instance & when there is a
+        # facecolor we add the bbox
+        df = pd.DataFrame(pinfo)
+        for i in range(len(df)):
+            kw = df[df.columns].iloc[i].to_dict()
+            if is_geom_label:
+                kw['bbox'] = bbox
+                kw['bbox']['edgecolor'] = kw['color']
+                kw['bbox']['facecolor'] = kw.pop('facecolor')
+            ax.text(**kw)
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -85,7 +110,7 @@ class geom_text(geom):
                    text='a',
                    alpha=data['alpha'],
                    size=data['size'],
-                   family=data['family'],
+                   family=lyr.geom.params['family'],
                    color=data['color'],
                    rotation=data['angle'],
                    horizontalalignment='center',

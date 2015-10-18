@@ -14,6 +14,7 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from ..scales.scale import scale_continuous
 from ..utils import gg_import, ColoredDrawingArea, suppress
 from ..utils.exceptions import gg_warn, GgplotError
+from ..geoms import geom_text
 from .guide import guide
 
 # See guides.py for terminology
@@ -195,12 +196,20 @@ class guide_legend(guide):
         Note the different height sizes for the entries
         """
         default_size = 20
-        pad = 14
+        default_pad = 14
 
         def determine_side_length():
             size = np.ones(nbreak) * default_size
             for i in range(nbreak):
                 for gl in self.glayers:
+                    pad = default_pad
+                    # special case, color does not apply to
+                    # border/linewidth
+                    if issubclass(gl.geom, geom_text):
+                        pad = 0
+                        if gl.data.ix[i, 'size'] < default_size:
+                            continue
+
                     try:
                         # color(edgecolor) affects size(linewidth)
                         # When the edge is not visible, we should
