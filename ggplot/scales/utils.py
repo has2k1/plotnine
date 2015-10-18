@@ -847,7 +847,7 @@ atanh_trans = trans_new('atanh', np.arctanh, np.tanh)
 
 def boxcox_trans(p):
     if np.abs(p) < 1e-7:
-        return log_trans
+        return log_trans()
 
     def transform(x):
         return (x**p - 1) / (p * np.sign(x-1))
