@@ -21,6 +21,7 @@ from .geom_path import geom_path
 from .geom_point import geom_point
 from .geom_pointrange import geom_pointrange
 from .geom_polygon import geom_polygon
+from .geom_quantile import geom_quantile
 from .geom_rect import geom_rect
 from .geom_ribbon import geom_ribbon
 from .geom_segment import geom_segment
@@ -44,9 +45,9 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar',
            'geom_jitter', 'geom_line', 'geom_linerange',
            'geom_linerange', 'geom_now_its_art', 'geom_path',
            'geom_point', 'geom_pointrange', 'geom_pointrange',
-           'geom_polygon', 'geom_rect', 'geom_ribbon',
-           'geom_segment', 'geom_smooth', 'geom_spoke',
-           'geom_step', 'geom_text', 'geom_tile',
+           'geom_quantile', 'geom_polygon', 'geom_rect',
+           'geom_ribbon', 'geom_segment', 'geom_smooth',
+           'geom_spoke', 'geom_step', 'geom_text', 'geom_tile',
            'geom_violin', 'geom_vline',
            # other
            'arrow', 'annotate']
