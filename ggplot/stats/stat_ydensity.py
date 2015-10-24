@@ -16,7 +16,7 @@ class stat_ydensity(stat):
                       'adjust': 1, 'kernel': 'gaussian',
                       'n': 1024, 'trim': True,
                       'scale': 'area'}
-    DEFAULT_AES = {'weight': 1}
+    DEFAULT_AES = {'weight': None}
 
     def setup_params(self, data):
         params = self.params.copy()

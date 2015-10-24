@@ -73,7 +73,8 @@ class stat(object):
                    set(data.columns))
 
         for ae in missing:
-            data[ae] = self.DEFAULT_AES[ae]
+            if self.DEFAULT_AES[ae] is not None:
+                data[ae] = self.DEFAULT_AES[ae]
 
         missing = (self.aes_params.viewkeys() -
                    set(data.columns))

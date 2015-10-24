@@ -19,7 +19,7 @@ class stat_bin_2d(stat):
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
                       'bins': 30, 'breaks': None, 'origin': None,
                       'binwidth': None, 'drop': True}
-    DEFAULT_AES = {'fill': '..count..', 'weight': 1}
+    DEFAULT_AES = {'fill': '..count..', 'weight': None}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
     def setup_params(self, data):

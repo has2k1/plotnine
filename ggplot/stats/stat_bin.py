@@ -18,7 +18,7 @@ class stat_bin(stat):
                       'width': 0.9, 'drop': False, 'right': False,
                       'binwidth': None, 'bins': None,
                       'origin': None, 'breaks': None}
-    DEFAULT_AES = {'y': '..count..', 'weight': 1}
+    DEFAULT_AES = {'y': '..count..', 'weight': None}
     CREATES = {'y', 'width'}
 
     def setup_params(self, data):
