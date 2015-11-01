@@ -10,7 +10,7 @@ class element_line(object):
     """
 
     def __init__(self, colour=None, size=None, linetype=None,
-                 lineend=None, color=None):
+                 lineend=None, color=None, **kwargs):
         color = color if color else colour
         d = {}
         if color:
@@ -25,6 +25,7 @@ class element_line(object):
         elif linetype and lineend:
             d['dashed_capstyle'] = lineend
 
+        d.update(**kwargs)
         self.properties = d
 
 
@@ -36,7 +37,7 @@ class element_rect(object):
     """
 
     def __init__(self, fill=None, colour=None, size=None,
-                 linetype=None, color=None):
+                 linetype=None, color=None, **kwargs):
 
         color = color if color else colour
         d = {}
@@ -49,6 +50,7 @@ class element_rect(object):
         if linetype:
             d['linestyle'] = linetype
 
+        d.update(**kwargs)
         self.properties = d
 
 
@@ -59,7 +61,7 @@ class element_text(object):
 
     def __init__(self, family='', face='', colour='', size='',
                  hjust=None, vjust=None, angle=0, lineheight=0,
-                 color='', backgroundcolor=''):
+                 color='', backgroundcolor='', **kwargs):
         """
         Note
         ----
@@ -68,38 +70,42 @@ class element_text(object):
         translated to center.
         """
         self.properties = {}
+        d = {}
         if family:
-            self.properties['family'] = family
+            d['family'] = family
         if face:
             if face == 'plain':
-                self.properties['style'] = 'normal'
+                d['style'] = 'normal'
             elif face == 'italic':
-                self.properties['style'] = 'italic'
+                d['style'] = 'italic'
             elif face == 'bold':
-                self.properties['weight'] = 'bold'
+                d['weight'] = 'bold'
             elif face == 'bold.italic':
-                self.properties['style'] = 'italic'
-                self.properties['weight'] = 'bold'
+                d['style'] = 'italic'
+                d['weight'] = 'bold'
         if colour or color:
             if colour:
-                self.properties['color'] = colour
+                d['color'] = colour
             else:
-                self.properties['color'] = color
+                d['color'] = color
         if size:
-            self.properties['size'] = size
+            d['size'] = size
         if hjust is not None:
-            self.properties['ha'] = self._translate_hjust(hjust)
+            d['ha'] = self._translate_hjust(hjust)
         if vjust is not None:
-            self.properties['va'] = self._translate_vjust(vjust)
+            d['va'] = self._translate_vjust(vjust)
         if angle:
-            self.properties['rotation'] = angle
+            d['rotation'] = angle
         if lineheight is not None:
             # I'm not sure if this is the right translation. Couldn't find an
             # example and this property doesn't seem to have any effect.
             # -gdowding
-            self.properties['linespacing'] = lineheight
+            d['linespacing'] = lineheight
         if backgroundcolor:
-            self.properties['backgroundcolor'] = backgroundcolor
+            d['backgroundcolor'] = backgroundcolor
+
+        d.update(**kwargs)
+        self.properties = d
 
     def _translate_hjust(self, just):
         """
