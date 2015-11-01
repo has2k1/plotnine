@@ -464,13 +464,24 @@ class plot_background(themeable):
         ax.figure.patch.set(**self.properties)
 
 
-class strip_background(themeable):
+class strip_background_x(themeable):
     def apply(self, ax):
-        super(strip_background, self).apply(ax)
-        tx = ax.figure._themeable.get('strip_text_x', [])
-        ty = ax.figure._themeable.get('strip_text_y', [])
-        for text in tx + ty:
-            text._bbox.update(**self.properties)
+        super(strip_background_x, self).apply(ax)
+        bboxes = ax.figure._themeable.get('strip_background_x', [])
+        for bbox in bboxes:
+            bbox.set(**self.properties)
+
+
+class strip_background_y(themeable):
+    def apply(self, ax):
+        super(strip_background_y, self).apply(ax)
+        bboxes = ax.figure._themeable.get('strip_background_y', [])
+        for bbox in bboxes:
+            bbox.set(**self.properties)
+
+
+class strip_background(strip_background_x, strip_background_y):
+    pass
 
 
 class rect(legend_key, legend_background,

@@ -6,6 +6,8 @@ from copy import deepcopy
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
+import matplotlib.text as mtext
+import matplotlib.patches as mpatch
 from six.moves import zip
 
 from .components.aes import make_labels
@@ -432,8 +434,8 @@ def draw_facet_label(plot, finfo, ax):
     fs = float(plot.theme._rcParams['font.size'])
 
     # linewidth in transAxes
-    lwy = fs / (72*h)
-    lwx = fs / (72*w)
+    lwy = fs / (72.27*h)
+    lwx = fs / (72.27*w)
 
     # bbox height (along direction of text) of
     # labels in transAxes
@@ -444,61 +446,72 @@ def draw_facet_label(plot, finfo, ax):
     y = 1 + hy/2.4
     x = 1 + hx/2.4
 
-    d = plot.figure._themeable
-    for key in ('strip_text_x', 'strip_text_y'):
-        if key not in d:
-            d[key] = []
+    themeable = plot.figure._themeable
+    for key in ('strip_text_x', 'strip_text_y',
+                'strip_background_x', 'strip_background_y'):
+        if key not in themeable:
+            themeable[key] = []
+
+    def draw_label(label, location):
+        """
+        Create a background patch and put a label on it
+        """
+        rotation = 90
+        if location == 'right':
+            _x, _y = x, 0.5
+            xy = (1, 0)
+            rotation = -90
+            box_width = hx
+            box_height = 1
+        else:
+            _x, _y = 0.5, y
+            xy = (0, 1)
+            rotation = 0
+            box_width = 1
+            box_height = hy
+
+        rect = mpatch.FancyBboxPatch(xy,
+                                     width=box_width,
+                                     height=box_height,
+                                     facecolor='lightgrey',
+                                     edgecolor='None',
+                                     linewidth=0,
+                                     transform=ax.transAxes,
+                                     zorder=1,
+                                     boxstyle='square, pad=0',
+                                     clip_on=False)
+
+        text = mtext.Text(_x, _y, label,
+                          transform=ax.transAxes,
+                          rotation=rotation,
+                          verticalalignment='center',
+                          horizontalalignment='center',
+                          zorder=1.2,  # higher than rect
+                          clip_on=False)
+
+        ax.add_artist(rect)
+        ax.add_artist(text)
+
+        if location == 'right':
+            themeable['strip_background_y'].append(rect)
+            themeable['strip_text_y'].append(text)
+        else:
+            themeable['strip_background_x'].append(rect)
+            themeable['strip_text_x'].append(text)
 
     # facet_wrap #
     if fcwrap:
-        # top label
-        facet_var = plot.facet.vars[0]
-        text = ax.text(0.5, y, finfo[facet_var],
-                       bbox=dict(
-                           xy=(0, 1),
-                           facecolor='lightgrey',
-                           edgecolor='lightgrey',
-                           height=hy,
-                           width=1,
-                           transform=ax.transAxes),
-                       transform=ax.transAxes,
-                       fontdict=dict(verticalalignment='center',
-                                     horizontalalignment='center'))
-        d['strip_text_x'].append(text)
+        label = finfo[plot.facet.vars[0]]
+        draw_label(label, 'top')
 
     # facet_grid #
     if fcgrid and toprow:
-        # top labels
-        facet_var = plot.facet.cols[0]
-        text = ax.text(0.5, y, finfo[facet_var],
-                       bbox=dict(
-                           xy=(0, 1),
-                           facecolor='lightgrey',
-                           edgecolor='lightgrey',
-                           height=hy,
-                           width=1,
-                           transform=ax.transAxes),
-                       transform=ax.transAxes,
-                       fontdict=dict(verticalalignment='center',
-                                     horizontalalignment='center'))
-        d['strip_text_x'].append(text)
+        label = finfo[plot.facet.cols[0]]
+        draw_label(label, 'top')
 
     if fcgrid and rightcol and len(plot.facet.rows):
-        # right labels
-        facet_var = plot.facet.rows[0]
-        text = ax.text(x, 0.5, finfo[facet_var],
-                       bbox=dict(
-                           xy=(1, 0),
-                           facecolor='lightgrey',
-                           edgecolor='lightgrey',
-                           height=1,
-                           width=hx,
-                           transform=ax.transAxes),
-                       transform=ax.transAxes,
-                       fontdict=dict(rotation=-90,
-                                     verticalalignment='center',
-                                     horizontalalignment='center'))
-        d['strip_text_y'].append(text)
+        label = finfo[plot.facet.rows[0]]
+        draw_label(label, 'right')
 
 
 def apply_facet_spacing(plot):
