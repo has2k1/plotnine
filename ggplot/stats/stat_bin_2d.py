@@ -37,6 +37,10 @@ class stat_bin_2d(stat):
         binwidth = params['binwidth']
         origin = params['origin']
         drop = params['drop']
+        weight = data.get('weight')
+
+        if not weight:
+            weight = np.ones(len(data['x']))
 
         # The bins will be over the dimension(full size) of the
         # trained x and y scales
@@ -67,7 +71,7 @@ class stat_bin_2d(stat):
 
         df = pd.DataFrame({'xbins': xbins,
                            'ybins': ybins,
-                           'weights': data['weight']})
+                           'weights': weight})
         table = pd.pivot_table(df, values='weights',
                                index=['xbins', 'ybins'], aggfunc=np.sum)
 
