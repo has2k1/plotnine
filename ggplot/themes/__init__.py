@@ -7,7 +7,7 @@ from .theme_gray import theme_gray
 from .theme_xkcd import theme_xkcd
 from .theme_matplotlib import theme_matplotlib
 from .theme_seaborn import theme_seaborn
-from .theme_elements import element_line, element_rect, element_text
+from .elements import element_line, element_rect, element_text
 
 
 __all__ = ['theme', 'theme_538', 'theme_bw', 'theme_gray', 'theme_xkcd',
