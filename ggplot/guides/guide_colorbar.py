@@ -50,6 +50,10 @@ class guide_colorbar(guide):
         breaks = scale.scale_breaks(can_waive=False)
         breaks = np.asarray(breaks)
         breaks = breaks[~np.isnan(breaks)]
+
+        if not len(breaks):
+            return None
+
         self.key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
             'label': scale.scale_labels(breaks, can_waive=False),
