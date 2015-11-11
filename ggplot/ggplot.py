@@ -505,7 +505,7 @@ def draw_facet_label(plot, finfo, ax):
         draw_label(label, 'top')
 
     # facet_grid #
-    if fcgrid and toprow:
+    if fcgrid and toprow and len(plot.facet.cols):
         label = finfo[plot.facet.cols[0]]
         draw_label(label, 'top')
 
