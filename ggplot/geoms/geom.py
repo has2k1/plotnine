@@ -283,7 +283,7 @@ class geom(object):
                 units.append(col)
 
         shrinkable = {'alpha', 'fill', 'color', 'size', 'linetype',
-                      'shape', 'outlier_shape'}
+                      'shape'}
 
         def prep(pinfo):
             """

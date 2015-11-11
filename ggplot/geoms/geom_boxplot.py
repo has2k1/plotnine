@@ -15,14 +15,15 @@ from .geom import geom
 
 class geom_boxplot(geom):
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
-                   'linetype': 'solid', 'outlier_color': 'black',
-                   'outlier_shape': 'o', 'outlier_size': 2,
-                   'outlier_stroke': 1, 'shape': 'o', 'size': 1,
+                   'linetype': 'solid', 'shape': 'o', 'size': 1,
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge',
-                      'notch': False, 'varwidth': False,
-                      'notchwidth': 0.5}
+                      'outlier_alpha': 1,
+                      'outlier_color': None, 'outlier_fill': None,
+                      'outlier_shape': 'o', 'outlier_size': 5,
+                      'outlier_stroke': 0, 'notch': False,
+                      'varwidth': False, 'notchwidth': 0.5}
 
     def setup_data(self, data):
         if 'width' not in data:
@@ -80,17 +81,23 @@ class geom_boxplot(geom):
             box['ynotchupper'] = pinfo['notchupper']
 
         if 'outliers' in pinfo and len(pinfo['outliers'][0]):
-            outliers = subdict(('outlier_color', 'outlier_size',
-                                'outlier_stroke', 'outlier_shape',
-                                'alpha', 'zorder'))
+            outliers = subdict(('alpha', 'zorder'))
+
+            def outlier_value(param):
+                oparam = 'outlier_{}'.format(param)
+                if params[oparam] is not None:
+                    return params[oparam]
+                return pinfo[param]
+
             outliers['y'] = pinfo['outliers'][0]
             outliers['x'] = make_iterable_ntimes(pinfo['x'][0],
                                                  len(outliers['y']))
-            outliers['color'] = outliers.pop('outlier_color')
-            outliers['fill'] = outliers['color']
-            outliers['shape'] = outliers.pop('outlier_shape')
-            outliers['size'] = outliers.pop('outlier_size')
-            outliers['stroke'] = outliers.pop('outlier_stroke')
+            outliers['alpha'] = outlier_value('alpha')
+            outliers['color'] = outlier_value('color')
+            outliers['fill'] = outlier_value('fill')
+            outliers['shape'] = outlier_value('shape')
+            outliers['size'] = outlier_value('size')
+            outliers['stroke'] = outlier_value('stroke')
             geom_point.draw_group(outliers, panel_scales,
                                   coord, ax, **params)
 
