@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import six
 
 from ..utils.exceptions import GgplotError
 from ..utils import suppress
@@ -36,11 +37,11 @@ class stat_density(stat):
         with suppress(KeyError):
             params['kernel'] = lookup[params['kernel'].lower()]
 
-        if params['kernel'] not in lookup.viewvalues():
+        if params['kernel'] not in six.viewvalues(lookup):
             msg = ("kernel should be one of {}. "
                    "You may use the abbreviations {}")
-            raise GgplotError(msg.format(lookup.viewkeys(),
-                                         lookup.viewvalues))
+            raise GgplotError(msg.format(six.viewkeys(lookup),
+                                         six.viewvalues(lookup)))
 
         return params
 

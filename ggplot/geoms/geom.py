@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 
 import pandas as pd
+import six
 
 from ..components.aes import aes, make_labels, rename_aesthetics
 from ..components.layer import layer
@@ -57,7 +58,7 @@ class geom(object):
         """
         Return all the aesthetics for this geom
         """
-        main = cls.DEFAULT_AES.viewkeys() | cls.REQUIRED_AES
+        main = six.viewkeys(cls.DEFAULT_AES) | cls.REQUIRED_AES
         other = {'group'}
         # Need to recognize both spellings
         if 'color' in main:
@@ -89,8 +90,8 @@ class geom(object):
         """
         Combine data with defaults and set aesthetics from parameters
         """
-        missing_aes = (self.DEFAULT_AES.viewkeys() -
-                       self.aes_params.viewkeys() -
+        missing_aes = (six.viewkeys(self.DEFAULT_AES) -
+                       six.viewkeys(self.aes_params) -
                        set(data.columns))
 
         # Not in data and not set, use default
@@ -216,8 +217,8 @@ class geom(object):
             kwargs.get('stat', self.DEFAULT_PARAMS['stat']))
         stat_klass = gg_import(name)
         recognized = ((stat_klass.aesthetics() |
-                       stat_klass.DEFAULT_PARAMS.viewkeys()) &
-                      kwargs.viewkeys())
+                       six.viewkeys(stat_klass.DEFAULT_PARAMS)) &
+                      six.viewkeys(kwargs))
         stat_params = {}
         for p in recognized:
             stat_params[p] = kwargs[p]
@@ -265,13 +266,14 @@ class geom(object):
         return kwargs
 
     def verify_arguments(self, kwargs):
-        unknown = (kwargs.viewkeys() -
-                   self.aesthetics() -                    # geom aesthetics
-                   self.DEFAULT_PARAMS.viewkeys() -       # geom parameters
-                   {'data', 'mapping'} -                  # layer parameters
-                   {'show_legend', 'inherit_aes'} -       # layer parameters
-                   self._stat.aesthetics() -              # stat aesthetics
-                   self._stat.DEFAULT_PARAMS.viewkeys())  # stat parameters
+        unknown = (six.viewkeys(kwargs) -
+                   self.aesthetics() -                  # geom aesthetics
+                   six.viewkeys(self.DEFAULT_PARAMS) -  # geom parameters
+                   {'data', 'mapping'} -                # layer parameters
+                   {'show_legend', 'inherit_aes'} -     # layer parameters
+                   self._stat.aesthetics() -            # stat aesthetics
+                   six.viewkeys(
+                       self._stat.DEFAULT_PARAMS))      # stat parameters
         if unknown:
             msg = 'Unknown parameters {}'
             raise GgplotError(msg.format(unknown))

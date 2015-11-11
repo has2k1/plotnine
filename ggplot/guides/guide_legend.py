@@ -4,7 +4,7 @@ import hashlib
 from itertools import islice
 from collections import OrderedDict
 
-from six import text_type
+import six
 from six.moves import zip, range
 import numpy as np
 import pandas as pd
@@ -78,7 +78,7 @@ class guide_legend(guide):
         self.key = key
 
         # create a hash of the important information in the guide
-        labels = ' '.join(text_type(x) for x in self.key['label'])
+        labels = ' '.join(six.text_type(x) for x in self.key['label'])
         info = '\n'.join([self.title, labels, str(self.direction),
                           self.__class__.__name__])
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
@@ -117,10 +117,10 @@ class guide_legend(guide):
         # guide entries may be ploted in the layers
         self.glayers = []
         for l in plot.layers:
-            all_ae = (l.mapping.viewkeys() |
+            all_ae = (six.viewkeys(l.mapping) |
                       plot.mapping if l.inherit_aes else set() |
-                      l.stat.DEFAULT_AES.viewkeys())
-            geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.viewkeys()
+                      six.viewkeys(l.stat.DEFAULT_AES))
+            geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
             matched = all_ae & geom_ae & set(self.key.columns)
             matched = matched - set(l.geom.aes_params)
 

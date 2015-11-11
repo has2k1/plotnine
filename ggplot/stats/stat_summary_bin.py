@@ -29,7 +29,6 @@ class stat_summary_bin(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        print('lo')
         bins = params['bins']
         breaks = params['breaks']
         binwidth = params['binwidth']

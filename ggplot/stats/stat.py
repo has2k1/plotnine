@@ -33,7 +33,8 @@ class stat(object):
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
 
         self.aes_params = {ae: kwargs[ae]
-                           for ae in self.aesthetics() & kwargs.viewkeys()}
+                           for ae in (self.aesthetics() &
+                                      six.viewkeys(kwargs))}
 
         # Will be used to create the geom
         self._cache = {'args': args, 'kwargs': kwargs}
@@ -69,14 +70,14 @@ class stat(object):
 
     def use_defaults(self, data):
         missing = (self.aesthetics() -
-                   self.aes_params.viewkeys() -
+                   six.viewkeys(self.aes_params) -
                    set(data.columns))
 
         for ae in missing:
             if self.DEFAULT_AES[ae] is not None:
                 data[ae] = self.DEFAULT_AES[ae]
 
-        missing = (self.aes_params.viewkeys() -
+        missing = (six.viewkeys(self.aes_params) -
                    set(data.columns))
 
         for ae in self.aes_params:
