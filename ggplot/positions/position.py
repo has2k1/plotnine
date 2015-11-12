@@ -44,6 +44,8 @@ class position(object):
             # Given data belonging to a specific panel, grab
             # the corresponding scales and call the method
             # that does the real computation
+            if len(pdata) == 0:
+                return pdata
             pscales = panel.panel_scales(pdata['PANEL'].iat[0])
             return cls.compute_panel(pdata, pscales, params)
 

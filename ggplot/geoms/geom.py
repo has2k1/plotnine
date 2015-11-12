@@ -124,6 +124,8 @@ class geom(object):
         params.update(self._stat.params)
         params['zorder'] = zorder
         for pid, pdata in data.groupby('PANEL'):
+            if len(pdata) == 0:
+                continue
             pdata.is_copy = None
             ploc = pid - 1
             panel_scales = panel.ranges[ploc]
