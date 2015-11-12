@@ -8,7 +8,7 @@ from six.moves import range, zip
 
 from ..utils import seq, make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warn
-from ..scales.utils import fullseq
+from ..scales.utils import fullseq, freedman_diaconis_bins
 from .stat import stat
 
 
@@ -37,11 +37,11 @@ class stat_bin(stat):
         if (params['breaks'] is None and
                 params['binwidth'] is None and
                 params['bins'] is None):
-            msg = ("'stat_bin()' using 'bins = 30'. "
-                   "Pick better value with 'binwidth'.")
             params = params.copy()
-            params['bins'] = 30
-            gg_warn(msg)
+            params['bins'] = freedman_diaconis_bins(data['x'])
+            msg = ("'stat_bin()' using 'bins = {}'. "
+                   "Pick better value with 'binwidth'.")
+            gg_warn(msg.format(params['bins']))
 
         return params
 
