@@ -87,7 +87,7 @@ class position(object):
         """
         # Aesthetics that map onto the x and y scales
         X = {'x', 'xmin', 'xmax', 'xend', 'xintercept'}
-        Y = {'y', 'ymin', 'xmax', 'yend', 'yintercept'}
+        Y = {'y', 'ymin', 'ymax', 'yend', 'yintercept'}
 
         if trans_x:
             xs = [name for name in data.columns if name in X]
