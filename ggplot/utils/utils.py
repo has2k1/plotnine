@@ -504,7 +504,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
 
     if finite:
         lst = [np.inf, -np.inf]
-        to_replace = dict((v, lst) for v in vars)
+        to_replace = {v: lst for v in vars}
         df.replace(to_replace, np.nan, inplace=True)
         txt = 'non-finite'
     else:
@@ -514,7 +514,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     df.reset_index(drop=True, inplace=True)
     if len(df) < n and not na_rm:
         msg = '{} : Removed {} rows containing {} values.'
-        gg_warn(msg.format(name, n-len(df), txt))
+        gg_warn(msg.format(name, n-len(df), txt), stacklevel=3)
     return df
 
 
