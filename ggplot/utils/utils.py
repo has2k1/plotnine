@@ -669,7 +669,7 @@ class ColoredDrawingArea(DrawingArea):
                  clip=True, color='none'):
 
         super(ColoredDrawingArea, self).__init__(
-            width, height, xdescent, ydescent)
+            width, height, xdescent, ydescent, clip=clip)
 
         self.patch = Rectangle((0, 0), width=width,
                                height=height,
@@ -678,28 +678,6 @@ class ColoredDrawingArea(DrawingArea):
                                linewidth=0,
                                antialiased=False)
         self.add_artist(self.patch)
-
-    if mpl.__version__ <= '1.4.3':
-        # We do not want to draw beyond the bounds.
-        # submitted PR upstream
-        def draw(self, renderer):
-            """
-            Draw the children
-            """
-            import matplotlib.path as mpath
-            from matplotlib.transforms import TransformedPath
-            dpi_cor = renderer.points_to_pixels(1.)
-            self.dpi_transform.clear()
-            self.dpi_transform.scale(dpi_cor, dpi_cor)
-            tpath = TransformedPath(
-                mpath.Path([[0, 0], [0, self.height],
-                            [self.width, self.height],
-                            [self.width, 0]]),
-                self.get_transform())
-            for c in self._children:
-                if not c.clipbox and not c._clippath:
-                    c.set_clip_path(tpath)
-                c.draw(renderer)
 
 
 @contextlib.contextmanager
