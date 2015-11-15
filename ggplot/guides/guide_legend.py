@@ -45,7 +45,7 @@ class guide_legend(guide):
         Returns this guide if training is successful and None
         if it fails
         """
-        breaks = scale.scale_breaks(can_waive=False)
+        breaks = scale.get_breaks()
         if isinstance(breaks, OrderedDict):
             if all([np.isnan(x) for x in breaks.values()]):
                 return None
@@ -57,7 +57,7 @@ class guide_legend(guide):
 
         key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
-            'label': scale.scale_labels(breaks, can_waive=False)})
+            'label': scale.get_labels(breaks)})
 
         # Drop out-of-range values for continuous scale
         # (should use scale$oob?)

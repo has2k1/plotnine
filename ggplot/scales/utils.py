@@ -19,7 +19,6 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 from matplotlib.ticker import MaxNLocator, ScalarFormatter, Formatter
-from matplotlib.ticker import AutoMinorLocator
 from matplotlib.dates import MinuteLocator, HourLocator, DayLocator
 from matplotlib.dates import WeekdayLocator, MonthLocator, YearLocator
 from matplotlib.dates import AutoDateLocator
@@ -29,7 +28,7 @@ from matplotlib.colors import LinearSegmentedColormap, rgb2hex
 import palettable.colorbrewer as colorbrewer
 
 from ..utils import palettes
-from ..utils import seq, round_any, identity, is_waive, gg_import
+from ..utils import seq, round_any, identity, gg_import
 from ..utils.exceptions import GgplotError, gg_warn
 
 
@@ -589,140 +588,45 @@ def date_format(format='%Y-%m-%d'):
 
 
 class TimedeltaFormatter(Formatter):
+
     def __call__(self, x, pos=0):
         return str(pd.Timedelta(x))
 
 
 class defaultLocator(MaxNLocator):
-    trans_name = ''
 
     def __init__(self, nbins=7, steps=(1, 2, 5, 10)):
         MaxNLocator.__init__(self, nbins=nbins, steps=steps)
 
 
+class TimedeltaLocator(defaultLocator):
+
+    def tick_values(self, vmin, vmax):
+        # The tick locations are pretty bad. There should be
+        # a better way, maybe choose seconds, hours, days, ...
+        # based vmax - vmin
+        vmin, vmax = vmin.value, vmax.value
+        ticks = defaultLocator.tick_values(self, vmin, vmax)
+        ticks = [pd.Timedelta(int(x)) for x in ticks]
+        return np.asarray(ticks)
+
+
 class DateLocator(AutoDateLocator):
-    trans_name = ''
 
     def __init__(self):
         AutoDateLocator.__init__(self, minticks=5, interval_multiples=True)
         from matplotlib.dates import YEARLY
         self.intervald[YEARLY] = [5, 50]
+        self.create_dummy_axis()
 
-
-class defaultMinorLocator(AutoMinorLocator):
-    trans_name = ''
-
-    def __init__(self):
-        AutoMinorLocator.__init__(self, n=2)
+    def tick_values(self, vmin, vmax):
+        ticks = AutoDateLocator.tick_values(self, vmin, vmax)
+        # For consistency with other locators, return ticks
+        # in the same space as the inputs.
+        return num2date(ticks)
 
 
 # Transforms #
-
-# To create the effect where by the scales are labelled in
-# data space when the data plotted is in a transformed space,
-# we use the default Locator (MaxNLocator) and default Formatter
-# (ScalarFormatter). The Locator calculates ticks in data space
-# and returns them in transformed space and the Formatter
-# returns a label based on data space.
-def make_locator(transform, inverse):
-    class transformLocator(defaultLocator):
-        trans_name = ''
-
-        def __call__(self):
-            # Transformed space
-            vmin, vmax = self.axis.get_view_interval()
-            vmin, vmax = self._clip_probability(vmin, vmax)
-
-            # Original data space
-            vmin, vmax = inverse(vmin), inverse(vmax)
-            ticks = self.tick_values(vmin, vmax)
-
-            # Transformed space
-            try:
-                ticks = transform(ticks)
-            except TypeError:
-                ticks = [transform(t) for t in ticks]
-            return ticks
-
-        def _clip_probability(self, vmin, vmax):
-            """
-            Make sure vmin and vmax are in the [0, 1]
-            range if the transform is a probability
-            distribution
-            """
-            if self.trans_name.startswith('prob-'):
-                if vmin < 0:
-                    vmin = 0
-
-                if vmax > 1:
-                    vmax = 1
-
-            return vmin, vmax
-
-    return transformLocator
-
-
-def make_minor_locator(transform, inverse):
-    class transformMinorLocator(defaultMinorLocator):
-        trans_name = ''
-
-        def __call__(self):
-            'Return the locations of the ticks'
-            majorlocs = self.axis.get_majorticklocs()
-            majorlocs = [inverse(l) for l in majorlocs]
-
-            try:
-                majorstep = majorlocs[1] - majorlocs[0]
-            except IndexError:
-                majorstep = 0
-
-            ndivs = self.ndivs
-            minorstep = majorstep / ndivs
-            vmin, vmax = self.axis.get_view_interval()
-
-            # To original data space
-            vmin, vmax = inverse(vmin), inverse(vmax)
-
-            # Calculate locations
-            if vmin > vmax:
-                vmin, vmax = vmax, vmin
-
-            if len(majorlocs) > 0:
-                t0 = majorlocs[0]
-                tmin = ((vmin - t0) // minorstep + 1) * minorstep
-                tmax = ((vmax - t0) // minorstep + 1) * minorstep
-                locs = np.arange(tmin, tmax, minorstep) + t0
-                cond = np.abs((locs - t0) % majorstep) > minorstep / 10.0
-                locs = locs.compress(cond)
-            else:
-                locs = []
-
-            # Back to transformed space
-            locs = [transform(l) for l in locs]
-            return self.raise_if_exceeds(np.array(locs))
-
-    return transformMinorLocator
-
-
-# how to label(format) the break strings
-def make_formatter(inverse):
-    class transformFormatter(ScalarFormatter):
-
-        def __init__(self):
-            ScalarFormatter.__init__(self, useOffset=False)
-
-        def __call__(self, x, pos=None):
-            # Original data space
-            x = inverse(x)
-            label = ScalarFormatter.__call__(self, x, pos)
-            # Remove unnecessary decimals
-            pattern = re.compile(r'\.0+$')
-            match = re.search(pattern, label)
-            if match:
-                label = re.sub(pattern, '', label)
-            return label
-    return transformFormatter
-
 
 def trans_new(name, transform, inverse,
               breaks=None, format_=None,
@@ -756,38 +660,70 @@ def trans_new(name, transform, inverse,
     class klass(object):
         aesthetic = None
 
-        def modify_axis(self, ax):
+        @classmethod
+        def breaks(cls, limits):
             """
-            Modify the xaxis and yaxis
+            Calculate breaks in data space and return them
+            in transformed space.
 
-            Set the locator and formatter
+            Expects limits to be in transform space
             """
-            if self.aesthetic not in ('x', 'y'):
-                return
+            return cls._locator.tick_values(*limits)
 
-            # xaxis or yaxis
-            axis = '{}axis'.format(self.aesthetic)
-            obj = getattr(ax, axis)
-            if not is_waive(self.breaks_locator):
-                obj.set_major_locator(self.breaks_locator())
+        @classmethod
+        def format(cls, x):
+            # For MPL to play nice
+            cls._formatter.create_dummy_axis()
+            # For sensible decimal places
+            cls._formatter.set_locs([i for i in x if ~np.isnan(i)])
+            labels = [cls._formatter(tick) for tick in x]
 
-            if not is_waive(self.minor_breaks_locator):
-                obj.set_minor_locator(self.minor_breaks_locator())
+            # Remove unnecessary decimals
+            pattern = re.compile(r'\.0+$')
+            for i, label in enumerate(labels):
+                match = re.search(pattern, label)
+                if match:
+                    labels[i] = re.sub(pattern, '', label)
 
-            if not is_waive(self.labels_formatter):
-                obj.set_major_formatter(self.labels_formatter())
+            return labels
+
+        @classmethod
+        def minor_breaks(cls, majorlocs, limits):
+            try:
+                majorstep = majorlocs[1] - majorlocs[0]
+            except IndexError:
+                # Without two major ticks, we get zero minor ticks
+                majorstep = 0
+
+            minorstep = majorstep / 2
+            vmin, vmax = limits
+
+            if len(majorlocs) > 0:
+                t0 = majorlocs[0]
+                tmin = ((vmin - t0) // minorstep + 1) * minorstep
+                tmax = ((vmax - t0) // minorstep + 1) * minorstep
+                locs = np.arange(tmin, tmax, minorstep) + t0
+                cond = np.abs((locs - t0) % majorstep) > minorstep / 10.0
+                locs = locs.compress(cond)
+            else:
+                locs = []
+
+            return np.asarray(locs)
 
     klass.__name__ = trans_name
     klass.name = name
+    klass.dataspace_is_ordinal = True
     klass.transform = staticmethod(transform)
     klass.inverse = staticmethod(inverse)
-    # Each axis requires a separate locator(MPL requirement),
-    # and for consistency we used separate formatters too.
-    klass.breaks_locator = make_locator(transform, inverse)
-    klass.breaks_locator.trans_name = trans_name
-    klass.labels_formatter = make_formatter(inverse)
-    klass.minor_breaks_locator = make_minor_locator(transform, inverse)
-    klass.minor_breaks_locator.trans_name = trans_name
+
+    if breaks is not None:
+        klass.breaks = classmethod(breaks)
+
+    if format_ is not None:
+        klass.format = classmethod(format)
+
+    klass._locator = defaultLocator()
+    klass._formatter = ScalarFormatter(useOffset=False)
     return klass
 
 
@@ -871,7 +807,14 @@ def probability_trans(distribution, *args, **kwargs):
     def inverse(x):
         return getattr(stats, distribution).ppf(x, *args, **kwargs)
 
-    return trans_new('prob-{}'.format(distribution), transform, inverse)
+    def breaks(cls, limits):
+        # clip the probabilities
+        vmin = np.max([0, limits[0]])
+        vmax = np.min([1, limits[1]])
+        return cls._locator.tick_values(vmin, vmax)
+
+    return trans_new('prob-{}'.format(distribution),
+                     transform, inverse, breaks=breaks)
 
 
 def datetime_trans():
@@ -891,19 +834,18 @@ def datetime_trans():
         return DateFormatter('%Y-%m-%d')
 
     _trans = trans_new('datetime', transform, inverse)
-    _trans.breaks_locator = staticmethod(DateLocator)
-    _trans.minor_breaks_locator = staticmethod(defaultMinorLocator)
-    _trans.labels_formatter = staticmethod(_DateFormatter)
+    _trans.dataspace_is_ordinal = False
+    _trans._locator = DateLocator()
+    _trans._formatter = DateFormatter('%Y-%m-%d')
     return _trans
 
 
 def timedelta_trans():
     def transform(x):
         try:
-            iter(x)
-            x = pd.Series(x).astype(np.int)
+            x = np.array([_x.value for _x in x])
         except TypeError:
-            x = np.int(x)
+            x = x.value
         return x
 
     def inverse(x):
@@ -914,9 +856,9 @@ def timedelta_trans():
         return x
 
     _trans = trans_new('timedelta', transform, inverse)
-    _trans.breaks_locator = staticmethod(defaultLocator)
-    _trans.minor_breaks_locator = staticmethod(defaultMinorLocator)
-    _trans.labels_formatter = staticmethod(TimedeltaFormatter)
+    _trans.dataspace_is_ordinal = False
+    _trans._locator = TimedeltaLocator()
+    _trans._formatter = TimedeltaFormatter()
     return _trans
 
 
@@ -936,7 +878,7 @@ def gettrans(t):
     obj = t
     # Make sure trans object is instantiated
     if isinstance(obj, six.string_types):
-        obj = gg_import('{}_trans'.format(obj))
+        obj = gg_import('{}_trans'.format(obj))()
     if isinstance(obj, FunctionType):
         obj = obj()
     if isinstance(obj, type):

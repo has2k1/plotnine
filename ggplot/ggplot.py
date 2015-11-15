@@ -324,22 +324,19 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
     ax.set_xlim(ranges['x_range'])
     ax.set_ylim(ranges['y_range'])
 
-    # breaks and labels for when the user set
-    # them explicitly
-    def setter(ax_set_method, value, **kwargs):
-        """Call axes set method if value is available"""
-        if not is_waive(value) and value is not None:
-            ax_set_method(value, **kwargs)
+    # breaks
+    ax.set_xticks(ranges['x_major'])
+    ax.set_yticks(ranges['y_major'])
 
-    setter(ax.set_xticks, ranges['x_major'])
-    setter(ax.set_yticks, ranges['y_major'])
-    setter(ax.set_xticks, ranges['x_minor'], minor=True)
-    setter(ax.set_yticks, ranges['y_minor'], minor=True)
-    setter(ax.set_xticklabels, ranges['x_labels'])
-    setter(ax.set_yticklabels, ranges['y_labels'])
+    # minor breaks
+    ax.set_xticks(ranges['x_minor'], minor=True)
+    ax.set_yticks(ranges['y_minor'], minor=True)
 
-    # Add axis Locators and Formatters for when
-    # the mpl deals with the breaks and labels
+    # labels
+    ax.set_xticklabels(ranges['x_labels'])
+    ax.set_yticklabels(ranges['y_labels'])
+
+    # Modify axis
     pscales = plot.scales.position_scales()
     for sc in pscales:
         with suppress(AttributeError):

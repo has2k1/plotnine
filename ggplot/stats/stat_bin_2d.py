@@ -122,7 +122,7 @@ def bin_breaks(scale, breaks=None, origin=None,
     # of one level, and should show up centered over
     # their tick marks. All other parameters are ignored.
     if isinstance(scale, scale_discrete):
-        breaks = scale.scale_breaks()
+        breaks = scale.get_breaks()
         return -0.5 + np.arange(1, len(breaks)+2)
 
     if breaks is not None:

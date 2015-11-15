@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import types
 from copy import deepcopy
 from collections import OrderedDict
 from six.moves import zip
@@ -9,14 +8,13 @@ import numpy as np
 import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
-from matplotlib.ticker import Locator, Formatter, FuncFormatter
 
 from ..utils import waiver, is_waive
-from ..utils import match, is_sequence_of_strings
+from ..utils import match
 from ..utils import round_any, suppress, CONTINUOUS_KINDS
 from ..utils.exceptions import gg_warn, GgplotError
 from .utils import rescale, censor, expand_range, zero_range
-from .utils import identity_trans, gettrans
+from .utils import gettrans
 from ..components.aes import is_position_aes
 
 
@@ -231,19 +229,20 @@ class scale_discrete(scale):
             range = self.dimension()
         # for discrete, limits != range
         limits = self.limits
-        major = self.scale_breaks(limits)
+        major = self.get_breaks(limits)
+        minor = []
         if major is None:
-            labels = None
+            major = labels = []
         else:
-            labels = self.scale_labels(major)
+            labels = self.get_labels(major)
             major = pd.Categorical(major.keys())
             major = self.map(major)
         return {'range': range,
                 'labels': labels,
                 'major': major,
-                'minor': None}
+                'minor': minor}
 
-    def scale_breaks(self, limits=None, can_waive=False):
+    def get_breaks(self, limits=None):
         """
         Returns a ordered dictionary of the form {break: position}
 
@@ -274,7 +273,7 @@ class scale_discrete(scale):
         tups = zip(in_domain, pos)
         return OrderedDict(sorted(tups, key=lambda t: t[1]))
 
-    def scale_labels(self, breaks=None, can_waive=False):
+    def get_labels(self, breaks=None):
         """
         Generate labels for the legend/guide breaks
         """
@@ -282,7 +281,7 @@ class scale_discrete(scale):
             return []
 
         if breaks is None:
-            breaks = self.scale_breaks(can_waive=can_waive)
+            breaks = self.get_breaks()
 
         # The labels depend on the breaks if the breaks are None
         # or are waived, it is likewise for the labels
@@ -338,69 +337,36 @@ class scale_continuous(scale):
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
-    trans = 'identity'             # transform class
+    _trans = 'identity'            # transform class
 
     def __init__(self, **kwargs):
-        # Make sure we have a transform and it
-        # should know the main aesthetic,
-        # in case it has to manipulate the axis
-        trans = kwargs.get('trans', self.trans)
-        with suppress(KeyError):
-            del kwargs['trans']
-        trans = gettrans(trans)
-        trans.aesthetic = self.aesthetics[0]
-
-        # The limits are given in original dataspace
-        # but they leave in transformed space since all
-        # computations happen on transformed data. The
-        # labeling of the plot axis and the guides are in
-        # the original dataspace.
-        if 'limits' in kwargs:
-            kwargs['limits'] = trans.transform(kwargs['limits'])
-
-        # We can set the breaks to user defined values or
-        # have matplotlib calculate them using the default locator
-        # function. In case of transform, special locator and
-        # formatter functions are created for mpl to use.
-
-        # When both breaks and transformation are specified,
-        # the trans object should not modify the axis. The
-        # trans object will still transform the data
-        if 'breaks' in kwargs:
-            # locator wins
-            if (callable(kwargs['breaks']) and
-                    isinstance(kwargs['breaks'](), Locator)):
-                trans.breaks_locator = kwargs.pop('breaks')
-            # trust the user breaks
-            elif trans != identity_trans:
-                # kill the locator but not the and the formatter.
-                trans.breaks_locator = waiver()
-
-        if 'minor_breaks' in kwargs:
-            # locator wins
-            if (callable(kwargs['minor_breaks']) and
-                    isinstance(kwargs['minor_breaks'](), Locator)):
-                trans.minor_breaks_locator = kwargs.pop('minor_breaks')
-            # trust the user breaks
-            elif trans != identity_trans:
-                trans.minor_breaks_locator = waiver()
-
-        if 'labels' in kwargs:
-            # Accept an MPL Formatter, a function or a list-like
-            if (callable(kwargs['labels']) and
-                    isinstance(kwargs['labels'](), Formatter)):
-                trans.labels_formatter = kwargs.pop('labels')
-            elif isinstance(kwargs['labels'], types.FunctionType):
-                trans.labels_formatter = FuncFormatter(
-                    kwargs.pop('labels'))
-            elif is_sequence_of_strings(kwargs['labels']):
-                trans.labels_formatter = waiver()
-            elif not is_sequence_of_strings(kwargs['labels']):
-                msg = 'labels should be function or a sequence of strings'
-                raise GgplotError(msg)
-
-        self.trans = trans
+        # Make sure we have a transform.
+        self.trans = kwargs.pop('trans', self._trans)
         scale.__init__(self, **kwargs)
+
+    @property
+    def trans(self):
+        return self._trans
+
+    @trans.setter
+    def trans(self, value):
+        self._trans = gettrans(value)
+        self._trans.aesthetic = self.aesthetics[0]
+
+    @scale.limits.setter
+    def limits(self, value):
+        """
+        Limits for the continuous scale
+
+        Note
+        ----
+        The limits are given in original dataspace
+        but they are stored in transformed space since
+        all computations happen on transformed data. The
+        labeling of the plot axis and the guides are in
+        the original dataspace.
+        """
+        self._limits = self.trans.transform(value)
 
     def train(self, x):
         """
@@ -448,7 +414,7 @@ class scale_continuous(scale):
         try:
             return self.trans.transform(x)
         except TypeError:
-            return [self.trans.transform(val) for val in x]
+            return np.array([self.trans.transform(val) for val in x])
 
     def dimension(self, expand=(0, 0)):
         """
@@ -478,52 +444,57 @@ class scale_continuous(scale):
         if range is None:
             range = self.dimension()
 
-        major = self.scale_breaks(range)
-        with suppress(TypeError):
-            major = [x for x in self.scale_breaks(range) if not np.isnan(x)]
+        major = self.get_breaks(range)
+        if major is None or len(major) == 0:
+            major = minor = labels = np.array([])
+        else:
+            major = major.compress(~np.isnan(major))
+            minor = self.get_minor_breaks(major, range)
+            minor = minor.compress(
+                (range[0] <= minor) & (minor <= range[1]))
 
-        minor = self.minor_breaks
-        with suppress(TypeError):
-            minor = [x for x in minor if range[0] <= x <= range[1]]
-
-        labels = self.scale_labels(major)
+        labels = self.get_labels(major)
 
         return {'range': range,
                 'labels': labels,
                 'major': major,
                 'minor': minor}
 
-    def scale_breaks(self, limits=None, can_waive=True):
+    def get_breaks(self, limits=None):
         """
-        Generate breaks for the legend/guide
+        Generate breaks for the axis or legend
 
         Parameters
         ----------
-        limits : list-like
-        can_waive : bool
-            Whether the method can return a waiver object.
-            When the guides request breaks they really need
-            them and cannot rely on Matplotlib. This option
-            is for them.
-        """
-        if self.is_empty():
-            return []
+        limits : list-like | None
+            If None the self.limits are used
+            They are expected to be in transformed
+            space.
 
+        Returns
+        -------
+        out : array-like
+
+        Note
+        ----
+        Breaks are calculated in data space and
+        returned in transformed space since all
+        data is plotted in transformed space.
+        """
         if limits is None:
             limits = self.limits
-        # Limits in transformed space need to be
-        # converted back to data space
+
+        # To data space
         limits = self.trans.inverse(limits)
 
-        if not self.breaks:  # None, False, []
-            return []
+        if self.is_empty():
+            breaks = []
+        elif self.breaks in (None, False):
+            breaks = []
         elif zero_range(limits):
             breaks = [limits[0]]
-        elif can_waive and is_waive(self.breaks):
-            # The MPL Locator will handle them
-            return self.breaks
         elif is_waive(self.breaks):
-            breaks = self.trans.breaks_locator(4).tick_values(*limits)
+            breaks = self.trans.breaks(limits)
         elif callable(self.breaks):
             breaks = self.breaks(limits)
         else:
@@ -534,14 +505,42 @@ class scale_continuous(scale):
         # dimensions need to be flagged as missing
         breaks = censor(self.transform(breaks),
                         self.transform(limits))
-        return breaks
+        return np.asarray(breaks)
 
-    def scale_labels(self, breaks=None, can_waive=False):
+    def get_minor_breaks(self, major, limits=None):
         """
-        Generate labels for the legend/guide breaks
+        Return minor breaks
+        """
+        if not is_waive(self.minor_breaks):
+            return self.minor_breaks
+
+        if major is None:
+            return []
+
+        if limits is None:
+            limits = self.limits
+
+        if self.trans.dataspace_is_ordinal:
+            # Calculations in data space
+            major = self.trans.inverse(major)
+            limits = self.trans.inverse(limits)
+            minor = self.transform(
+                self.trans.minor_breaks(major, limits))
+        else:
+            # Calculations in ordinal (transformed) space
+            minor = self.trans.minor_breaks(major, limits)
+
+        return minor
+
+    def get_labels(self, breaks=None):
+        """
+        Generate labels for the axis or legend
         """
         if breaks is None:
-            breaks = self.scale_breaks(can_waive=can_waive)
+            breaks = self.get_breaks()
+
+        if self.trans.dataspace_is_ordinal:
+            breaks = self.trans.inverse(breaks)
 
         # The labels depend on the breaks if the breaks are None
         # or are waived, it is likewise for the labels
@@ -549,21 +548,8 @@ class scale_continuous(scale):
             return None
         elif is_waive(breaks):
             return waiver()
-        elif can_waive and is_waive(self.labels):
-            # The MPL Formatter will handle them
-            return self.labels
         elif is_waive(self.labels):
-            # Instantiate a formatter and "prep"
-            # it for use
-            breaks = np.asarray(breaks)
-            locs = breaks[~np.isnan(breaks)]
-            if not len(locs):
-                locs = [0, 1]
-            formatter = self.trans.labels_formatter()
-            formatter.create_dummy_axis()
-            formatter.set_locs(locs)
-            # This is what really matters
-            labels = [formatter(b) for b in breaks]
+            labels = self.trans.format(breaks)
         elif callable(self.labels):
             labels = self.labels(breaks)
         else:

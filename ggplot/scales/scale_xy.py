@@ -168,12 +168,12 @@ class scale_y_continuous(scale_position_continuous):
 
 # Transformed scales
 class scale_x_datetime(scale_position_continuous):
-    trans = 'datetime'
+    _trans = 'datetime'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_datetime(scale_position_continuous):
-    trans = 'datetime'
+    _trans = 'datetime'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
@@ -182,29 +182,29 @@ scale_y_date = scale_y_datetime
 
 
 class scale_x_timedelta(scale_position_continuous):
-    trans = 'timedelta'
+    _trans = 'timedelta'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_timedelta(scale_position_continuous):
-    trans = 'timedelta'
+    _trans = 'timedelta'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
 class scale_x_sqrt(scale_x_continuous):
-    trans = 'sqrt'
+    _trans = 'sqrt'
 
 
 class scale_y_sqrt(scale_y_continuous):
-    trans = 'sqrt'
+    _trans = 'sqrt'
 
 
 class scale_x_log10(scale_x_continuous):
-    trans = 'log10'
+    _trans = 'log10'
 
 
 class scale_y_log10(scale_y_continuous):
-    trans = 'log10'
+    _trans = 'log10'
 
 
 # For the trans object of reverse scales
@@ -214,10 +214,10 @@ def _modify_axis(self, ax):
 
 
 class scale_x_reverse(scale_x_continuous):
-    trans = identity_trans()
-    trans.modify_axis = MethodType(_modify_axis, trans)
+    _trans = identity_trans()
+    _trans.modify_axis = MethodType(_modify_axis, _trans)
 
 
 class scale_y_reverse(scale_y_continuous):
-    trans = identity_trans()
-    trans.modify_axis = MethodType(_modify_axis, trans)
+    _trans = identity_trans()
+    _trans.modify_axis = MethodType(_modify_axis, _trans)
