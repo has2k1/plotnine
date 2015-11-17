@@ -112,6 +112,8 @@ def rescale_mid(x, to=(0, 1), from_=None, mid=0):
     x = np.asarray(x)
     if not from_:
         from_ = np.array([np.min(x), np.max(x)])
+    else:
+        from_ = np.asarray(from_)
 
     if (zero_range(from_) or zero_range(to)):
         out = np.repeat(np.mean(to), len(x))
