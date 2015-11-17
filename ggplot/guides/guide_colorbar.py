@@ -48,7 +48,7 @@ class guide_colorbar(guide):
         # value = breaks (numeric) is used for determining the
         # position of ticks
         limits = scale.limits
-        breaks = scale.get_breaks()
+        breaks = scale.get_breaks(strict=True)
         breaks = np.asarray(breaks)
         breaks = breaks[~np.isnan(breaks)]
 

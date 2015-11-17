@@ -107,6 +107,12 @@ class scale(object):
         """
         raise NotImplementedError('Not Implemented')
 
+    def inverse(self, x):
+        """
+        Inverse transform array|series x
+        """
+        raise NotImplementedError('Not Implemented')
+
     def clone(self):
         return deepcopy(self)
 
@@ -242,7 +248,7 @@ class scale_discrete(scale):
                 'major': major,
                 'minor': minor}
 
-    def get_breaks(self, limits=None):
+    def get_breaks(self, limits=None, strict=True):
         """
         Returns a ordered dictionary of the form {break: position}
 
@@ -268,7 +274,10 @@ class scale_discrete(scale):
             breaks = self.breaks
 
         # Breaks can only occur only on values in domain
-        in_domain = list(set(breaks) & set(self.limits))
+        if strict:
+            in_domain = list(set(breaks) & set(self.limits))
+        else:
+            in_domain = breaks
         pos = match(in_domain, breaks)
         tups = zip(in_domain, pos)
         return OrderedDict(sorted(tups, key=lambda t: t[1]))
@@ -397,9 +406,6 @@ class scale_continuous(scale):
         if len(df) == 0:
             return
 
-        if self.trans.name == 'identity':
-            return df
-
         aesthetics = set(self.aesthetics) & set(df.columns)
         for ae in aesthetics:
             with suppress(TypeError):
@@ -415,6 +421,15 @@ class scale_continuous(scale):
             return self.trans.transform(x)
         except TypeError:
             return np.array([self.trans.transform(val) for val in x])
+
+    def inverse(self, x):
+        """
+        Inverse transform array|series x
+        """
+        try:
+            return self.trans.inverse(x)
+        except TypeError:
+            return np.array([self.trans.inverse(val) for val in x])
 
     def dimension(self, expand=(0, 0)):
         """
@@ -441,6 +456,13 @@ class scale_continuous(scale):
         return scaled
 
     def break_info(self, range=None):
+        """
+        Return break information for the axis
+
+        The range, major breaks & minor_breaks are
+        in transformed space. The labels for the major
+        breaks depict data space values.
+        """
         if range is None:
             range = self.dimension()
 
@@ -448,11 +470,11 @@ class scale_continuous(scale):
         if major is None or len(major) == 0:
             major = minor = labels = np.array([])
         else:
-            major = major.compress(~np.isnan(major))
+            major = major.compress(np.isfinite(major))
             minor = self.get_minor_breaks(major, range)
-            minor = minor.compress(
-                (range[0] <= minor) & (minor <= range[1]))
 
+        major = major.compress(
+            (range[0] <= major) & (major <= range[1]))
         labels = self.get_labels(major)
 
         return {'range': range,
@@ -460,7 +482,7 @@ class scale_continuous(scale):
                 'major': major,
                 'minor': minor}
 
-    def get_breaks(self, limits=None):
+    def get_breaks(self, limits=None, strict=False):
         """
         Generate breaks for the axis or legend
 
@@ -470,6 +492,10 @@ class scale_continuous(scale):
             If None the self.limits are used
             They are expected to be in transformed
             space.
+
+        strict : bool
+            If True then the breaks gauranteed to fall within
+            the limits. e.g. when the legend uses this method.
 
         Returns
         -------
@@ -485,26 +511,28 @@ class scale_continuous(scale):
             limits = self.limits
 
         # To data space
-        limits = self.trans.inverse(limits)
+        _limits = self.inverse(limits)
 
         if self.is_empty():
             breaks = []
         elif self.breaks in (None, False):
             breaks = []
-        elif zero_range(limits):
-            breaks = [limits[0]]
+        elif zero_range(_limits):
+            breaks = [_limits[0]]
         elif is_waive(self.breaks):
-            breaks = self.trans.breaks(limits)
+            breaks = self.trans.breaks(_limits)
         elif callable(self.breaks):
-            breaks = self.breaks(limits)
+            breaks = self.breaks(_limits)
         else:
             breaks = self.breaks
 
-        # Breaks in data space need to be converted back to
-        # transformed space And any breaks outside the
-        # dimensions need to be flagged as missing
-        breaks = censor(self.transform(breaks),
-                        self.transform(limits))
+        breaks = self.transform(breaks)
+        # At this point, any breaks beyond the limits
+        # are kept since they may be used to calculate
+        # minor breaks
+        if strict:
+            cond = (breaks >= limits[0]) & (limits[1] >= breaks)
+            breaks = np.compress(cond, breaks)
         return np.asarray(breaks)
 
     def get_minor_breaks(self, major, limits=None):
@@ -522,8 +550,8 @@ class scale_continuous(scale):
 
         if self.trans.dataspace_is_ordinal:
             # Calculations in data space
-            major = self.trans.inverse(major)
-            limits = self.trans.inverse(limits)
+            major = self.inverse(major)
+            limits = self.inverse(limits)
             minor = self.transform(
                 self.trans.minor_breaks(major, limits))
         else:
@@ -540,7 +568,7 @@ class scale_continuous(scale):
             breaks = self.get_breaks()
 
         if self.trans.dataspace_is_ordinal:
-            breaks = self.trans.inverse(breaks)
+            breaks = self.inverse(breaks)
 
         # The labels depend on the breaks if the breaks are None
         # or are waived, it is likewise for the labels

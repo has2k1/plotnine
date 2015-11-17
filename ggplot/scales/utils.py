@@ -349,16 +349,15 @@ def censor(x, range=(0, 1), only_finite=True):
         else:
             finite = True
 
-    below = x < range[0]
-    above = x > range[1]
+    outside = (x < range[0]) | (x > range[1])
+    flags = finite & outside
     # np.nan is a float therefore x.dtype
     # must be a float. The 'ifs' are to avoid
     # unnecessary type changes
-    if any(below) or any(above):
-        if issubclass(x.dtype.type, np.integer):
+    if any(flags):
+        if x.dtype.kind == 'i':
             x = x.astype(np.float)
-        x[finite & below] = np.nan
-        x[finite & above] = np.nan
+        x[flags] = np.nan
 
     if intype:
         x = intype(x)
@@ -688,27 +687,27 @@ def trans_new(name, transform, inverse,
             return labels
 
         @classmethod
-        def minor_breaks(cls, majorlocs, limits):
-            try:
-                majorstep = majorlocs[1] - majorlocs[0]
-            except IndexError:
-                # Without two major ticks, we get zero minor ticks
-                majorstep = 0
+        def minor_breaks(cls, breaks, limits):
+            if len(breaks) < 2:
+                return np.array([])
 
-            minorstep = majorstep / 2
-            vmin, vmax = limits
+            diff = np.diff(breaks)
+            step = diff[0]
 
-            if len(majorlocs) > 0:
-                t0 = majorlocs[0]
-                tmin = ((vmin - t0) // minorstep + 1) * minorstep
-                tmax = ((vmax - t0) // minorstep + 1) * minorstep
-                locs = np.arange(tmin, tmax, minorstep) + t0
-                cond = np.abs((locs - t0) % majorstep) > minorstep / 10.0
-                locs = locs.compress(cond)
+            # For equidistant breaks we can imagine more invisible
+            # breaks at either end and then add minor breaks
+            # accordingly
+            if all(step == diff):
+                breaks = np.hstack([-step+breaks[0],
+                                    breaks,
+                                    breaks[-1]+step])
+                minor = breaks[:-1] + step/2
             else:
-                locs = []
+                minor = breaks[:-1] + diff/2
 
-            return np.asarray(locs)
+            minor = minor.compress(
+                (limits[0] <= minor) & (minor <= limits[1]))
+            return minor
 
     klass.__name__ = trans_name
     klass.name = name
@@ -742,13 +741,14 @@ def log_trans(base=None):
     else:
         name = 'log{}'.format(base)
 
-        def trans(x):
+        def transform(x):
             return np.log(x)/np.log(base)
 
     # inverse function
     def inverse(x):
-        return x ** base
-    return trans_new(name, transform, inverse)
+        return base ** x
+    return trans_new(name, transform, inverse,
+                     domain=(1e-100, np.inf))
 
 
 def exp_trans(base=None):
