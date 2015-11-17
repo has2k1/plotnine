@@ -336,12 +336,6 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
     ax.set_xticklabels(ranges['x_labels'])
     ax.set_yticklabels(ranges['y_labels'])
 
-    # Modify axis
-    pscales = plot.scales.position_scales()
-    for sc in pscales:
-        with suppress(AttributeError):
-            sc.trans.modify_axis(ax)
-
     bottomrow = finfo['ROW'] == plot.facet.nrow
     leftcol = finfo['COL'] == 1
 
