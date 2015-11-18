@@ -280,7 +280,9 @@ class guide_legend(guide):
                                     0, 0, color='#E5E5E5')
             # overlay geoms
             for gl in self.glayers:
-                da = gl.geom.draw_legend(gl.data.iloc[i], da, gl.layer)
+                data = gl.data.iloc[i]
+                data.is_copy = None
+                da = gl.geom.draw_legend(data, da, gl.layer)
             drawings.append(da)
         themeable['legend_key'] = drawings
 

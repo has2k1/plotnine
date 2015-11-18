@@ -580,7 +580,7 @@ def to_rgba(colors, alpha):
     However :), the colors can be rgba list-likes and
     the alpha dimension will be respected.
     """
-    if colors is None:
+    if colors is None or colors == '':
         return colors
 
     def is_iterable(var):

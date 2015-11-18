@@ -91,7 +91,6 @@ class geom_pointrange(geom):
         -------
         out : DrawingArea
         """
-        data.is_copy = None
         geom_path.draw_legend(data, da, lyr)
         data['size'] = data['size'] * lyr.geom.params['fatten']
         data['stroke'] = 1

@@ -41,7 +41,7 @@ class geom_text(geom):
         # Bind color and alpha
         color = to_rgba(pinfo['color'], pinfo['alpha'])
         if isinstance(color, tuple):
-            color = [color] * len(pinfo['x'])
+            color = [list(color)] * len(pinfo['x'])
 
         # Parse latex
         labels = pinfo.pop('label')
@@ -59,11 +59,14 @@ class geom_text(geom):
         pinfo['fontweight'] = params['fontweight']
         pinfo['clip_on'] = True
 
-        # When fill is present we are creating a label,
-        # so we need an MPL bbox
-        is_geom_label = 'fill' in pinfo
-        if is_geom_label:
-            pinfo['facecolor'] = pinfo.pop('fill')
+        # 'fill' indicates geom_label so we need an MPL bbox
+        draw_label = 'fill' in pinfo
+        if draw_label:
+            fill = to_rgba(pinfo.pop('fill'), pinfo['alpha'])
+            if isinstance(fill, tuple):
+                fill = [list(fill)] * len(pinfo['x'])
+            pinfo['facecolor'] = fill
+
             if params['boxstyle'] in ('round', 'round4'):
                 boxstyle = '{},pad={},rounding_size={}'.format(
                     params['boxstyle'],
@@ -84,7 +87,7 @@ class geom_text(geom):
         df = pd.DataFrame(pinfo)
         for i in range(len(df)):
             kw = df[df.columns].iloc[i].to_dict()
-            if is_geom_label:
+            if draw_label:
                 kw['bbox'] = bbox
                 kw['bbox']['edgecolor'] = kw['color']
                 kw['bbox']['facecolor'] = kw.pop('facecolor')

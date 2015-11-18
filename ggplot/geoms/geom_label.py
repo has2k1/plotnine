@@ -46,6 +46,7 @@ class geom_label(geom_text):
                              width=da.width,
                              height=da.height,
                              linewidth=0,
+                             alpha=data['alpha'],
                              facecolor=data['fill'],
                              capstyle='projecting')
             da.add_artist(rect)

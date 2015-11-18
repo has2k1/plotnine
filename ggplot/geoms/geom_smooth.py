@@ -17,7 +17,7 @@ class geom_smooth(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
 
-    _units = {'alpha', 'color', 'fill', 'linetype', 'size'}
+    _units = {'color', 'fill', 'linetype', 'size'}
 
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):
@@ -56,6 +56,5 @@ class geom_smooth(geom):
                            edgecolor=data['color'])
             da.add_artist(bg)
 
-        data.is_copy = False
         data['alpha'] = 1
         return geom_path.draw_legend(data, da, lyr)

@@ -24,9 +24,8 @@ class geom_ribbon(geom):
 
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):
-        # To match ggplot2, the alpha only affects the
-        # fill color
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
         if pinfo['fill'] is None:
             pinfo['fill'] = ''
 

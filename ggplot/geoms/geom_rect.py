@@ -57,6 +57,7 @@ class geom_rect(geom):
             verts[i] = [(l, b), (l, t), (r, t), (r, b)]
 
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
 
         if pinfo['color'] is None:
             pinfo['color'] = ''

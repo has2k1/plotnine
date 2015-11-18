@@ -19,8 +19,7 @@ class geom_boxplot(geom):
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge',
-                      'outlier_alpha': 1,
-                      'outlier_color': None, 'outlier_fill': None,
+                      'outlier_alpha': 1, 'outlier_color': None,
                       'outlier_shape': 'o', 'outlier_size': 5,
                       'outlier_stroke': 0, 'notch': False,
                       'varwidth': False, 'notchwidth': 0.5}
@@ -94,7 +93,7 @@ class geom_boxplot(geom):
                                                  len(outliers['y']))
             outliers['alpha'] = outlier_value('alpha')
             outliers['color'] = outlier_value('color')
-            outliers['fill'] = outlier_value('fill')
+            outliers['fill'] = None
             outliers['shape'] = outlier_value('shape')
             outliers['size'] = outlier_value('size')
             outliers['stroke'] = outlier_value('stroke')

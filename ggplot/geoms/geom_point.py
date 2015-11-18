@@ -27,6 +27,16 @@ class geom_point(geom):
     @staticmethod
     def draw_group(pinfo, panel_scales, coord, ax, **params):
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
+
+        # A single RGBA color will be seen as 4 locations in a
+        # colormap by MPL if there are 4 points. We don't
+        # want that
+        if len(pinfo['x']) == 4:
+            if isinstance(pinfo['fill'], tuple):
+                pinfo['fill'] = [list(pinfo['fill'])] * 4
+            if isinstance(pinfo['color'], tuple):
+                pinfo['color'] = [list(pinfo['color'])] * 4
 
         if pinfo['fill'] is None:
             pinfo['fill'] = pinfo['color']
@@ -43,8 +53,7 @@ class geom_point(geom):
                    s=np.square(
                        np.array(pinfo['size']) +
                        pinfo['stroke']),
-                   zorder=pinfo['zorder'],
-                   alpha=pinfo['alpha'])
+                   zorder=pinfo['zorder'])
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -61,7 +70,6 @@ class geom_point(geom):
         -------
         out : DrawingArea
         """
-        data.is_copy = None
         if data['fill'] is None:
             data['fill'] = data['color']
 

@@ -126,6 +126,7 @@ class geom_dotplot(geom):
         geom_dotplot._verify(**params)
 
         pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
+        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
         x = np.asarray(pinfo['x'])
         y = np.asarray(pinfo['y'])
         ranges = coord.range(panel_scales)

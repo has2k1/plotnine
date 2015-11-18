@@ -110,15 +110,15 @@ class geom_crossbar(geom):
         out : DrawingArea
         """
         # background
-        facecolor = to_rgba(data['fill'], data['alpha'])
-        if facecolor is None:
-            facecolor = 'none'
+        if data['fill'] is None:
+            data['fill'] = 'none'
 
         bg = Rectangle((da.width*.125, da.height*.25),
                        width=da.width*.75,
                        height=da.height*.5,
                        linewidth=data['size'],
-                       facecolor=facecolor,
+                       alpha=data['alpha'],
+                       facecolor=data['fill'],
                        edgecolor=data['color'],
                        linestyle=data['linetype'],
                        capstyle='projecting',
@@ -129,6 +129,7 @@ class geom_crossbar(geom):
                                [da.height*.5, da.height*.5],
                                linestyle=data['linetype'],
                                linewidth=data['size'],
+                               alpha=data['alpha'],
                                color=data['color'])
         da.add_artist(strike)
         return da

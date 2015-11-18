@@ -6,7 +6,7 @@ import pandas as pd
 from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 
-from ..utils import to_rgba, make_iterable
+from ..utils import to_rgba
 from .geom import geom
 
 
@@ -28,17 +28,16 @@ class geom_polygon(geom):
     def draw_group(pinfo, panel_scales, coord, ax, **params):
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
-        # And like ggplot, alpha applies to the facecolor
-        # and not the edgecolor
         grouped = pd.DataFrame(pinfo).groupby('group')
-        verts, facecolor = [], []
-        for group, df in grouped:
-            verts.append(tuple(zip(df['x'], df['y'])))
-            fc = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
-            facecolor.append('none' if fc is None else fc)
-
-        edgecolor = ['none' if c is None else c
-                     for c in make_iterable(pinfo['color'])]
+        verts = [None] * grouped.ngroups
+        facecolor = [None] * grouped.ngroups
+        edgecolor = [None] * grouped.ngroups
+        for i, (group, df) in enumerate(grouped):
+            verts[i] = tuple(zip(df['x'], df['y']))
+            fill = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
+            color = to_rgba(df['color'].iloc[0], df['alpha'].iloc[0])
+            facecolor[i] = 'none' if fill is None else fill
+            edgecolor[i] = 'none' if color is None else color
 
         col = PolyCollection(
             verts,
@@ -73,16 +72,16 @@ class geom_polygon(geom):
         if data['color'] is None:
             linewidth = 0
 
-        facecolor = to_rgba(data['fill'], data['alpha'])
-        if facecolor is None:
-            facecolor = 'none'
+        if data['fill'] is None:
+            data['fill'] = 'none'
 
         rect = Rectangle((0+linewidth/2, 0+linewidth/2),
                          width=da.width-linewidth,
                          height=da.height-linewidth,
                          linewidth=linewidth,
                          linestyle=data['linetype'],
-                         facecolor=facecolor,
+                         alpha=data['alpha'],
+                         facecolor=data['fill'],
                          edgecolor=data['color'],
                          capstyle='projecting')
         da.add_artist(rect)
