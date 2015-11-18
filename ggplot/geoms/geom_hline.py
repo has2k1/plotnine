@@ -36,7 +36,7 @@ class geom_hline(geom):
         data['yend'] = data['yintercept']
         data['x'] = ranges.x[0]
         data['xend'] = ranges.x[1]
-        data.drop_duplicates(inplace=True)
+        data = data.drop_duplicates()
 
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, params)

@@ -510,7 +510,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     else:
         txt = 'missing'
 
-    df.dropna(inplace=True)
+    df = df.dropna()
     df.reset_index(drop=True, inplace=True)
     if len(df) < n and not na_rm:
         msg = '{} : Removed {} rows containing {} values.'

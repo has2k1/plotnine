@@ -138,7 +138,7 @@ def layout_base(data, vars=None, drop=True):
             "used for facetting")
     base = pd.concat([x for i, x in enumerate(values) if has_all[i]],
                      axis=0)
-    base.drop_duplicates(inplace=True)
+    base = base.drop_duplicates()
 
     if not drop:
         base = unique_combs(base)

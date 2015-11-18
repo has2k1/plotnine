@@ -47,7 +47,7 @@ class geom_abline(geom):
         data['xend'] = ranges.x[1]
         data['y'] = ranges.x[0] * data['slope'] + data['intercept']
         data['yend'] = ranges.x[1] * data['slope'] + data['intercept']
-        data.drop_duplicates(inplace=True)
+        data = data.drop_duplicates()
 
         for _, gdata in data.groupby('group'):
             pinfos = self._make_pinfos(gdata, params)
