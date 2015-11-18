@@ -58,7 +58,7 @@ class geom_violin(geom):
             # bottom to top then top to bottom
             n = len(df)
             polygon_df = pd.concat(
-                [df.sort('y'), df.sort('y', ascending=False)],
+                [df.sort_values('y'), df.sort_values('y', ascending=False)],
                 axis=0, ignore_index=True)
             polygon_df.ix[:n, 'x'] = polygon_df.ix[:n, 'xminv']
             polygon_df.ix[n:, 'x'] = polygon_df.ix[n:, 'xmaxv']

@@ -198,7 +198,7 @@ class scale_discrete(scale):
             msg = "Continuous value supplied to discrete scale"
             raise GgplotError(msg)
         else:
-            rng = list(x.drop_duplicates().sort(inplace=False))
+            rng = list(x.drop_duplicates().sort_values())
 
         # update range
         old_range = set(self.range)

@@ -144,7 +144,7 @@ def layout_base(data, vars=None, drop=True):
         base = unique_combs(base)
 
     # sorts according to order of factor levels
-    base.sort(columns=list(base.columns), inplace=True)
+    base = base.sort_values(list(base.columns))
 
     # Systematically add on missing combinations
     for i, value in enumerate(values):

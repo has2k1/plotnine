@@ -20,7 +20,7 @@ class stat_smooth(stat):
         # sort data by x and
         # convert x and y to lists so that the Series index
         # does not mess with the smoothing functions
-        data = data.sort(['x'])
+        data = data.sort_values('x')
         x = list(data.pop('x'))
         y = list(data.pop('y'))
 

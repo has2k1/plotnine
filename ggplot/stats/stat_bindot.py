@@ -45,18 +45,18 @@ class stat_bindot(stat):
                                      weight=data.get('weight'),
                                      binwidth=params['binwidth'],
                                      bins=params['bins'])
-                data.sort(columns='x', inplace=True)
+                data = data.sort_values('x')
                 data.reset_index(inplace=True, drop=True)
-                newdata.sort(columns='x', inplace=True)
+                newdata = newdata.sort_values('x')
                 newdata.reset_index(inplace=True, drop=True)
             elif params['binaxis'] == 'y':
                 newdata = densitybin(x=data['y'],
                                      weight=data.get('weight'),
                                      binwidth=params['binwidth'],
                                      bins=params['bins'])
-                data.sort(columns='y', inplace=True)
+                data = data.sort_values('y')
                 data.reset_index(inplace=True, drop=True)
-                newdata.sort(columns='x', inplace=True)
+                newdata = newdata.sort_values('x')
                 newdata.reset_index(inplace=True, drop=True)
 
             data['bin'] = newdata['bin']

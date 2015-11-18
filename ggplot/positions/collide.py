@@ -34,7 +34,8 @@ def collide(data, width=None, name='', strategy=None):
 
     # Reorder by x position, relying on stable sort to preserve existing
     # ordering, which may be by group or order.
-    data = data.loc[data['xmin'].order().index, :]
+    idx = data['xmin'].sort_values().index
+    data = data.loc[idx, :]
 
     # Check for overlap
     intervals = data[xminmax].drop_duplicates().as_matrix().flatten()
@@ -114,8 +115,8 @@ def pos_dodge(df, width):
     # Have a new group index from 1 to number of groups.
     # This might be needed if the group numbers in this set don't
     # include all of 1:n
-    groupidx = match(df['group'],
-                     udf_group.sort(inplace=False))
+    udf_group = udf_group.sort_values()
+    groupidx = match(df['group'], udf_group)
     groupidx = np.asarray(groupidx) + 1
 
     # Find the center for each group, then use that to

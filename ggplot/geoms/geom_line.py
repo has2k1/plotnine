@@ -7,4 +7,4 @@ from .geom_path import geom_path
 class geom_line(geom_path):
 
     def setup_data(self, data):
-        return data.sort(columns=['PANEL', 'group', 'x'])
+        return data.sort_values(['PANEL', 'group', 'x'])

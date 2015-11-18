@@ -32,7 +32,7 @@ class geom_path(geom):
             gg_warn(msg)
 
         # dataframe mergesort is stable, we rely on that here
-        data.sort(columns=['group'], kind='mergesort', inplace=True)
+        data = data.sort_values('group', kind='mergesort')
         data.reset_index(drop=True, inplace=True)
 
         # drop lines with less than two points
