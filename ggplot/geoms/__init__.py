@@ -11,6 +11,7 @@ from .geom_density import geom_density
 from .geom_dotplot import geom_dotplot
 from .geom_errorbar import geom_errorbar
 from .geom_errorbarh import geom_errorbarh
+from .geom_freqpoly import geom_freqpoly
 from .geom_histogram import geom_histogram
 from .geom_hline import geom_hline
 from .geom_jitter import geom_jitter
@@ -43,8 +44,8 @@ from .annotate import annotate
 __all__ = ['geom_abline', 'geom_area', 'geom_bar',
            'geom_blank', 'geom_boxplot', 'geom_crossbar',
            'geom_density', 'geom_dotplot', 'geom_errorbar',
-           'geom_errorbarh', 'geom_histogram', 'geom_hline',
-           'geom_jitter', 'geom_label', 'geom_line',
+           'geom_errorbarh', 'geom_freqpoly', 'geom_histogram',
+           'geom_hline', 'geom_jitter', 'geom_label', 'geom_line',
            'geom_linerange', 'geom_now_its_art', 'geom_path',
            'geom_point', 'geom_pointrange', 'geom_pointrange',
            'geom_quantile', 'geom_polygon', 'geom_rect',
