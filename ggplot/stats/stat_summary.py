@@ -27,6 +27,9 @@ def bootstrap_statistics(series, statistic, n_samples=1000,
 
 
 def mean_cl_boot(series, n_samples=1000, confidence_interval=0.95):
+    """
+    Bootstrapped mean with confidence limits
+    """
     return bootstrap_statistics(series, np.mean,
                                 n_samples=n_samples,
                                 confidence_interval=confidence_interval)
@@ -46,6 +49,9 @@ def mean_cl_normal(series, confidence_interval=0.95):
 
 
 def mean_sdl(series, mult=2):
+    """
+    mean plus or minus a constant times the standard deviation
+    """
     m = series.mean()
     s = series.std()
     return pd.DataFrame({'y': [m],
@@ -54,6 +60,9 @@ def mean_sdl(series, mult=2):
 
 
 def median_hilow(series, confidence_interval=0.95):
+    """
+    Median and a selected pair of outer quantiles having equal tail areas
+    """
     tail = (1 - confidence_interval) / 2
     return pd.DataFrame({'y': [np.median(series)],
                          'ymin': np.percentile(series, 100 * tail),
@@ -61,6 +70,9 @@ def median_hilow(series, confidence_interval=0.95):
 
 
 def mean_se(series, mult=1):
+    """
+    Calculate mean and standard errors on either side
+    """
     m = np.mean(series)
     se = mult * np.sqrt(np.var(series) / len(series))
     return pd.DataFrame({'y': [m],
@@ -187,6 +199,16 @@ class stat_summary(stat):
                                 params['fun_ymin'], params['fun_ymax'],
                                 params['fun_args'])
 
+        # NOTE: This is a temporary fix due to bug
+        # https://github.com/pydata/pandas/issues/10409
+        # Remove when that bug is fixed
+        import pandas.core.common as com
+        def preserve_categories(ref, other):
+            for col in ref.columns & other.columns:
+                if com.is_categorical_dtype(ref[col]):
+                    other[col] = other[col].astype(
+                        'category', categories=ref[col].cat.categories)
+
         # break a dataframe into pieces, summarise each piece,
         # and join the pieces back together, retaining original
         # columns unaffected by the summary.
@@ -197,6 +219,7 @@ class stat_summary(stat):
             summary['group'] = group
             unique = uniquecols(df)
             merged = summary.merge(unique, on=['group', 'x'])
+            preserve_categories(unique, merged)  # see above note
             summaries.append(merged)
 
         new_data = pd.concat(summaries, axis=0, ignore_index=True)

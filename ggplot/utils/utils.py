@@ -741,7 +741,8 @@ def get_kwarg_names(func):
     kwarg_names = []
     args, _, _, defaults = inspect.getargspec(func)
     if defaults:
-        kwarg_names = args[:-len(defaults)]
+        kwarg_names = args[-len(defaults):]
+
     return kwarg_names
 
 
