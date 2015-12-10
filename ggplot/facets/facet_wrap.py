@@ -2,8 +2,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from copy import deepcopy
+import re
 
-from ..utils.exceptions import gg_warn
+import six
+
+from ..utils.exceptions import gg_warn, GgplotError
 from .layouts import layout_wrap
 from .locate import locate_wrap
 
@@ -14,7 +17,7 @@ class facet_wrap(object):
                  shrink=True, as_table=True, drop=True):
         nrow, ncol = check_dimensions(nrow, ncol)
 
-        self.vars = (facets,)
+        self.vars = tuple(parse_wrap_facets(facets))
         self.nrow = nrow
         self.ncol = ncol
         self.shrink = shrink
@@ -79,3 +82,31 @@ def check_dimensions(nrow, ncol):
             ncol = int(ncol)
 
     return nrow, ncol
+
+
+def parse_wrap_facets(facets):
+    """
+    Return list of facetting variables
+    """
+    valid_forms = ['~ var1', '~ var1 + var2']
+    error_msg = ("'facets' should be a formula string. Valid formula "
+                 "look like {}").format(valid_forms)
+
+    if isinstance(facets, (list, tuple)):
+        return facets
+
+    if not isinstance(facets, six.string_types):
+        raise GgplotError(error_msg)
+
+    if '~' in facets:
+        variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
+        pattern = '\s*~\s*{0}\s*'.format(variables_pattern)
+        match = re.match(pattern, facets)
+        if not match:
+            raise GgplotError(error_msg)
+
+        facets = [var.strip() for var in match.group(1).split('+')]
+    else:
+        raise GgplotError(error_msg)
+
+    return facets

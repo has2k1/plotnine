@@ -1,19 +1,21 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
+import re
 
+import six
+
+from ..utils.exceptions import GgplotError
 from .layouts import layout_grid
 from .locate import locate_grid
 
 
 class facet_grid(object):
 
-    def __init__(self, x=None, y=None, margins=False, scales='fixed',
+    def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',
                  as_table=True, drop=True):
-        # TODO: Implement faceting formula
-        self.rows = [] if x is None else [x]
-        self.cols = [] if y is None else [y]
+        self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
         self.shrink = shrink
         self.labeller = labeller
@@ -54,3 +56,38 @@ class facet_grid(object):
         """
         return locate_grid(data, layout, self.rows, self.cols,
                            margins=self.margins)
+
+
+def parse_grid_facets(facets):
+    """
+    Return two lists of facetting variables, for the rows & columns
+    """
+    valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
+                   'var1 + var2 ~ var3 + var4']
+    error_msg = ("'facets' should be a formula string. Valid formula "
+                 "look like {}").format(valid_forms)
+
+    if not isinstance(facets, six.string_types):
+        raise GgplotError(error_msg)
+
+    variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
+    pattern = '\s*{0}\s*~\s*{0}\s*'.format(variables_pattern)
+    match = re.match(pattern, facets)
+
+    if not match:
+        raise GgplotError(error_msg)
+
+    lhs = match.group(1)
+    rhs = match.group(2)
+
+    if lhs == '.':
+        rows = []
+    else:
+        rows = [var.strip() for var in lhs.split('+')]
+
+    if rhs == '.':
+        cols = []
+    else:
+        cols = [var.strip() for var in rhs.split('+')]
+
+    return rows, cols
