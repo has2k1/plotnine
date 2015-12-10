@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from copy import deepcopy
 
+from ..utils.exceptions import gg_warn
 from .layouts import layout_wrap
 from .locate import locate_wrap
 
@@ -11,6 +12,8 @@ class facet_wrap(object):
 
     def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
                  shrink=True, as_table=True, drop=True):
+        nrow, ncol = check_dimensions(nrow, ncol)
+
         self.vars = (facets,)
         self.nrow = nrow
         self.ncol = ncol
@@ -56,3 +59,23 @@ class facet_wrap(object):
             As returned by self.train_layout
         """
         return locate_wrap(data, layout, self.vars)
+
+
+def check_dimensions(nrow, ncol):
+    if nrow is not None:
+        if nrow < 1:
+            gg_warn("'nrow' must be greater than 0. "
+                    "Your value has been ignored.")
+            nrow = None
+        else:
+            nrow = int(nrow)
+
+    if ncol is not None:
+        if ncol < 1:
+            gg_warn("'ncol' must be greater than 0. "
+                    "Your value has been ignored.")
+            ncol = None
+        else:
+            ncol = int(ncol)
+
+    return nrow, ncol

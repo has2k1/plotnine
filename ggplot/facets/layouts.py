@@ -211,7 +211,9 @@ def wrap_dims(n, nrow=None, ncol=None):
         nrow = int(np.ceil(n/ncol))
     if not nrow * ncol >= n:
         raise GgplotError(
-            'Allocated fewer panels than are required')
+            "Allocated fewer panels than are required. "
+            "Make sure the number of rows and columns can "
+            "hold all the plot panels.")
     return (nrow, ncol)
 
 
