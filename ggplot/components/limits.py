@@ -37,3 +37,22 @@ class xlim(_lim):
 
 class ylim(_lim):
     aesthetic = 'y'
+
+
+class lims(object):
+
+    def __init__(self, **kwargs):
+        self._xlim = kwargs.get('x')
+        self._ylim = kwargs.get('y')
+
+    def __radd__(self, gg):
+        if self._xlim:
+            gg = gg + xlim(self._xlim)
+
+        if self._ylim:
+            gg = gg + ylim(self._ylim)
+
+        return gg
+
+
+
