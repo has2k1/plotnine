@@ -107,6 +107,9 @@ def parse_wrap_facets(facets):
             raise GgplotError(error_msg)
 
         facets = [var.strip() for var in match.group(1).split('+')]
+    elif re.match('\w+', facets):
+        # allow plain string as the variable name
+        facets = [facets]
     else:
         raise GgplotError(error_msg)
 
