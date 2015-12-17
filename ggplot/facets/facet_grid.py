@@ -15,10 +15,12 @@ class facet_grid(object):
     def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',
                  as_table=True, drop=True):
+        from .labelling import as_labeller
+
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
         self.shrink = shrink
-        self.labeller = labeller
+        self.labeller = as_labeller(labeller)
         self.as_table = as_table
         self.drop = drop
         self.free = {'x': scales in ('free_x', 'free'),

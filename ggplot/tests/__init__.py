@@ -26,6 +26,8 @@ import os
 # Tests which should be run with 'python tests.py' or via 'must be
 # included here.
 default_test_modules = [
+    'ggplot.tests.test_facet_grid',
+    'ggplot.tests.test_facet_wrap',
     'ggplot.tests.test_geom',
     'ggplot.tests.test_ggplot_add',
     'ggplot.tests.test_ggplot_internals',

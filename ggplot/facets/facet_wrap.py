@@ -14,13 +14,14 @@ from .locate import locate_wrap
 class facet_wrap(object):
 
     def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
-                 shrink=True, as_table=True, drop=True):
-        nrow, ncol = check_dimensions(nrow, ncol)
+                 shrink=True, labeller='label_value',
+                 as_table=True, drop=True):
+        from .labelling import as_labeller
 
         self.vars = tuple(parse_wrap_facets(facets))
-        self.nrow = nrow
-        self.ncol = ncol
+        self.nrow, self.ncol = check_dimensions(nrow, ncol)
         self.shrink = shrink
+        self.labeller = as_labeller(labeller)
         self.as_table = as_table
         self.drop = drop
         self.free = {'x': scales in ('free_x', 'free'),

@@ -15,7 +15,6 @@ from .components.panel import Panel
 from .components.layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme_gray import theme_gray
-from .utils import is_waive, suppress
 from .utils.ggutils import gg_context, ggplot_options
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
@@ -383,7 +382,6 @@ def add_labels_and_title(plot):
     fig._themeable.update(d)
 
 
-# TODO Need to use theme (element_rect) for the colors
 def draw_facet_label(plot, finfo, ax):
     """
     Draw facet label onto the axes.
@@ -428,38 +426,42 @@ def draw_facet_label(plot, finfo, ax):
     lwy = fs / (72.27*h)
     lwx = fs / (72.27*w)
 
-    # bbox height (along direction of text) of
-    # labels in transAxes
-    hy = 1.6 * lwy
-    hx = 1.6 * lwx
-
-    # text location in transAxes
-    y = 1 + hy/2.4
-    x = 1 + hx/2.4
-
     themeable = plot.figure._themeable
     for key in ('strip_text_x', 'strip_text_y',
                 'strip_background_x', 'strip_background_y'):
         if key not in themeable:
             themeable[key] = []
 
-    def draw_label(label, location):
+    def draw_label(label_info, location):
         """
         Create a background patch and put a label on it
         """
-        rotation = 90
+        num_lines = len(label_info)
+        pad = 1.5
+
+        # bbox height (along direction of text) of
+        # labels in transAxes
+        hy = pad * lwy * num_lines
+        hx = pad * lwx * num_lines
+
+        # text location in transAxes
+        y = 1 + hy/2.0
+        x = 1 + hx/2.0
+
         if location == 'right':
             _x, _y = x, 0.5
             xy = (1, 0)
             rotation = -90
             box_width = hx
             box_height = 1
+            label = '\n'.join(reversed(label_info))
         else:
             _x, _y = 0.5, y
             xy = (0, 1)
             rotation = 0
             box_width = 1
             box_height = hy
+            label = '\n'.join(label_info)
 
         rect = mpatch.FancyBboxPatch(xy,
                                      width=box_width,
@@ -477,6 +479,7 @@ def draw_facet_label(plot, finfo, ax):
                           rotation=rotation,
                           verticalalignment='center',
                           horizontalalignment='center',
+                          linespacing=pad,
                           zorder=1.2,  # higher than rect
                           clip_on=False)
 
@@ -490,19 +493,28 @@ def draw_facet_label(plot, finfo, ax):
             themeable['strip_background_x'].append(rect)
             themeable['strip_text_x'].append(text)
 
+    # some meta information is added label information
+    # to help out the labellers
+
     # facet_wrap #
     if fcwrap:
-        label = finfo[plot.facet.vars[0]]
-        draw_label(label, 'top')
+        label_info = finfo[list(plot.facet.vars)]
+        label_info._meta = {'dimension': 'cols'}
+        label_info = plot.facet.labeller(label_info)
+        draw_label(label_info, 'top')
 
     # facet_grid #
     if fcgrid and toprow and len(plot.facet.cols):
-        label = finfo[plot.facet.cols[0]]
-        draw_label(label, 'top')
+        label_info = finfo[list(plot.facet.cols)]
+        label_info._meta = {'dimension': 'cols'}
+        label_info = plot.facet.labeller(label_info)
+        draw_label(label_info, 'top')
 
     if fcgrid and rightcol and len(plot.facet.rows):
-        label = finfo[plot.facet.rows[0]]
-        draw_label(label, 'right')
+        label_info = finfo[list(plot.facet.rows)]
+        label_info._meta = {'dimension': 'rows'}
+        label_info = plot.facet.labeller(label_info)
+        draw_label(label_info, 'right')
 
 
 def apply_facet_spacing(plot):
@@ -510,6 +522,7 @@ def apply_facet_spacing(plot):
     # and vertical lengths since the values are in
     # transAxes dimensions
     if isinstance(plot.facet, facet_wrap):
-        plt.subplots_adjust(wspace=.05, hspace=.20)
+        hspace = len(plot.facet.vars) * .20
+        plt.subplots_adjust(wspace=.05, hspace=hspace)
     else:
         plt.subplots_adjust(wspace=.05, hspace=.05)
