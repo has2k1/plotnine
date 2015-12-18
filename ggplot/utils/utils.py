@@ -680,20 +680,22 @@ class ColoredDrawingArea(DrawingArea):
         self.add_artist(self.patch)
 
 
-@contextlib.contextmanager
-def suppress(*exceptions):
-    """
-    Return a context manager that suppresses any of the
-    specified exceptions if they occur in the body of a
-    with statement and then resumes execution with the
-    first statement following the end of the with statement.
-
-    From python 3.4
-    """
-    try:
-        yield
-    except exceptions:
-        pass
+try:
+    from contextlib import suppress
+except ImportError:
+    # For python 2.7
+    @contextlib.contextmanager
+    def suppress(*exceptions):
+        """
+        Return a context manager that suppresses any of the
+        specified exceptions if they occur in the body of a
+        with statement and then resumes execution with the
+        first statement following the end of the with statement.
+        """
+        try:
+            yield
+        except exceptions:
+            pass
 
 
 def copy_keys(source, destination, keys=None):
