@@ -320,6 +320,20 @@ def abs_area(max):
     return abs_area_palette
 
 
+def squish_infinite(x, range=(0, 1)):
+    intype = None
+    if not hasattr(x, 'dtype'):
+        intype = type(x)
+        x = np.array(x)
+
+    x[x == -np.inf] = range[0]
+    x[x == np.inf] = range[1]
+
+    if intype:
+        x = intype(x)
+    return x
+
+
 def censor(x, range=(0, 1), only_finite=True):
     """
     Convert any values outside of range to np.NaN

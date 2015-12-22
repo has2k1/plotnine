@@ -20,6 +20,7 @@ class geom_point(geom):
         """
         Plot all groups
         """
+        data = coord.transform(data, panel_scales)
         pinfos = self._make_pinfos(data, params)
         for pinfo in pinfos:
             self.draw_group(pinfo, panel_scales, coord, ax, **params)

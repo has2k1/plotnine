@@ -4,10 +4,12 @@ from __future__ import (absolute_import, division, print_function,
 from matplotlib.cbook import Bunch
 
 from ..scales.utils import expand_range
-from .coord import coord
+from .coord import coord, dist_euclidean
 
 
 class coord_cartesian(coord):
+
+    is_linear = True
 
     def __init__(self, xlim=None, ylim=None, expand=True):
         self.limits = Bunch(xlim=xlim, ylim=ylim)
@@ -44,3 +46,9 @@ class coord_cartesian(coord):
             new_key = '{}_{}'.format(name, key)
             out[new_key] = out.pop(key)
         return out
+
+    @staticmethod
+    def distance(x, y, panel_scales):
+        max_dist = dist_euclidean(panel_scales['x_range'],
+                                  panel_scales['y_range'])[0]
+        return dist_euclidean(x, y) / max_dist

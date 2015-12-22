@@ -13,11 +13,13 @@ class geom_ribbon(geom):
     legend_geom = 'polygon'
 
     _units = {'color', 'fill', 'linetype', 'size'}
+    _munch = True
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
+        data = coord.transform(data, panel_scales, self._munch)
         pinfos = self._make_pinfos(data, params)
         for pinfo in pinfos:
             self.draw_group(pinfo, panel_scales, coord, ax, **params)

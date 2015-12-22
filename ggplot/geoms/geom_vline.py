@@ -32,6 +32,7 @@ class geom_vline(geom):
         Plot all groups
         """
         ranges = coord.range(panel_scales)
+        data = coord.transform(data, panel_scales)
         data['x'] = data['xintercept']
         data['xend'] = data['xintercept']
         data['y'] = ranges.y[0]
