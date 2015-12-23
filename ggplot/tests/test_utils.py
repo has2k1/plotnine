@@ -10,7 +10,8 @@ import pandas as pd
 
 from . import get_assert_same_ggplot
 from ..data import mtcars
-from ..utils.utils import _margins, add_margins, ninteraction
+from ..utils.utils import _margins, add_margins, ninteraction, join_keys
+from ..utils.utils import join_keys
 from ..scales.utils import censor, zero_range, expand_range
 
 assert_same_ggplot = get_assert_same_ggplot(__file__)
@@ -138,6 +139,27 @@ def test_ninteraction():
     # zero length dataframe
     df = pd.DataFrame()
     assert(ninteraction(df) == [])
+
+
+def test_join_keys():
+    df1 = pd.DataFrame({'a': [0, 0, 1, 1, 2, 2],
+                        'b': [0, 1, 2, 3, 1, 2],
+                        'c': [0, 1, 2, 3, 4, 5]})
+
+    # same array and columns the keys should be the same
+    keys = join_keys(df1, df1, ['a', 'b'])
+    assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
+    assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
+
+    # Every other element of df2['b'] is changed
+    # so every other key should be different
+    df2 = pd.DataFrame({'a': [0, 0, 1, 1, 2, 2],
+                        'b': [0, 11, 2, 33, 1, 22],
+                        'c': [1, 2, 3, 4, 5, 6]})
+
+    keys = join_keys(df1, df2, ['a', 'b'])
+    assert_equal(list(keys['x']), [1, 2, 4, 5, 7, 8])
+    assert_equal(list(keys['y']), [1, 3, 4, 6, 7, 9])
 
 
 def test_zero_range():

@@ -357,6 +357,41 @@ def _id_var(x, drop=False):
     return lst
 
 
+def join_keys(x, y, by=None):
+    """
+    Join keys.
+
+    Given two data frames, create a unique key for each row.
+
+    Parameters
+    -----------
+    x : dataframe
+    y : dataframe
+    by : list-like
+        Column names to join by
+
+    Returns
+    -------
+    out : dict
+        Dictionary with keys x and y. The values of both keys
+        are arrays with integer elements. Identical rows in
+        x and y dataframes would have the same key in the
+        output. The key elements start at 1.
+    """
+    if by is None:
+        by = slice(None, None, None)
+
+    if isinstance(by, tuple):
+        by = list(by)
+
+    joint = x[by].append(y[by], ignore_index=True)
+    keys = ninteraction(joint, drop=True)
+    keys = np.asarray(keys)
+    nx, ny = len(x), len(y)
+    return {'x': keys[np.arange(nx)],
+            'y': keys[nx + np.arange(ny)]}
+
+
 def check_required_aesthetics(required, present, name):
     missing_aes = set(required) - set(present)
 
