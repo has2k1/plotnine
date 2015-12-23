@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils.exceptions import GgplotError
-from ..utils import ninteraction
+from ..utils import ninteraction, add_margins
 
 
 def layout_null(data):
@@ -95,17 +95,23 @@ def layout_grid(data, rows=None, cols=None, margins=None,
     base = cross_join(base_rows, base_cols)
 
     if margins:
-        # TODO: Implement this
-        pass
+        base = add_margins(base, [rows, cols], margins)
+        base = base.drop_duplicates().reset_index(drop=True)
+
+    n = len(base)
+    panel = ninteraction(base, drop=True)
+    panel = pd.Categorical(panel, categories=range(1, n+1))
 
     rows = 1 if not rows else ninteraction(base[rows], drop=True)
     cols = 1 if not cols else ninteraction(base[cols], drop=True)
 
-    n = len(base)
-    panels = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
+    panels = pd.DataFrame({'PANEL': panel,
                            'ROW': rows,
                            'COL': cols})
     panels = pd.concat([panels, base], axis=1)
+    panels = panels.sort_values('PANEL')
+    panels.reset_index(drop=True, inplace=True)
+
     return panels
 
 
