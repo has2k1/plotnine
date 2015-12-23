@@ -423,8 +423,9 @@ def draw_facet_label(plot, finfo, ax):
     fs = float(plot.theme._rcParams['font.size'])
 
     # linewidth in transAxes
-    lwy = fs / (72.27*h)
-    lwx = fs / (72.27*w)
+    pad = linespacing = 1.5
+    lwy = (pad+fs) / (72.27*h)
+    lwx = (pad+fs) / (72.27*w)
 
     themeable = plot.figure._themeable
     for key in ('strip_text_x', 'strip_text_y',
@@ -437,7 +438,6 @@ def draw_facet_label(plot, finfo, ax):
         Create a background patch and put a label on it
         """
         num_lines = len(label_info)
-        pad = 1.5
 
         # bbox height (along direction of text) of
         # labels in transAxes
@@ -479,7 +479,7 @@ def draw_facet_label(plot, finfo, ax):
                           rotation=rotation,
                           verticalalignment='center',
                           horizontalalignment='center',
-                          linespacing=pad,
+                          linespacing=linespacing,
                           zorder=1.2,  # higher than rect
                           clip_on=False)
 
