@@ -5,12 +5,19 @@ import pandas as pd
 import matplotlib.lines as mlines
 
 from ..utils import make_iterable, suppress, SIZE_FACTOR
+from ..utils.doctools import document
 from ..aes import aes
 from .geom import geom
 from .geom_segment import geom_segment
 
 
+@document
 class geom_vline(geom):
+    """
+    Vertical line
+
+    {documentation}
+    """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'xintercept'}

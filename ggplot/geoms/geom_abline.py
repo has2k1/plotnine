@@ -4,12 +4,19 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 
 from ..utils import make_iterable, suppress
+from ..utils.doctools import document
 from ..aes import aes
 from .geom import geom
 from .geom_segment import geom_segment
 
 
+@document
 class geom_abline(geom):
+    """
+    Lines specified by slope and intercept
+
+    {documentation}
+    """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'alpha': 1, 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

@@ -5,11 +5,18 @@ import numpy as np
 import pandas as pd
 
 from ..utils import copy_missing_columns
+from ..utils.doctools import document
 from .geom import geom
 from .geom_path import geom_path
 
 
+@document
 class geom_step(geom_path):
+    """
+    Stepped connected points
+
+    {documentation}
+    """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'direction': 'hv'}
     draw_panel = geom.draw_panel

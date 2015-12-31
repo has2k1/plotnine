@@ -1,14 +1,21 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..utils.doctools import document
 from .geom_ribbon import geom_ribbon
 
 
-# An area plot is a special case of geom_ribbon,
-# where the minimum of the range is fixed to 0,
-# and the position adjustment defaults to 'stack'.
-
+@document
 class geom_area(geom_ribbon):
+    """
+    Area plot
+
+    An area plot is a special case of geom_ribbon,
+    where the minimum of the range is fixed to 0,
+    and the position adjustment defaults to 'stack'.
+
+    {documentation}
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack'}
 

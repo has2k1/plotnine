@@ -5,10 +5,17 @@ import numpy as np
 import matplotlib.lines as mlines
 
 from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
+from ..utils.doctools import document
 from .geom import geom
 
 
+@document
 class geom_point(geom):
+    """
+    Plot points (Scatter plot)
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 1.5, 'stroke': 0.5}
     REQUIRED_AES = {'x', 'y'}

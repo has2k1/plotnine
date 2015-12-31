@@ -5,25 +5,16 @@ from matplotlib.collections import PolyCollection
 from six.moves import zip
 
 from ..utils import to_rgba, SIZE_FACTOR
+from ..utils.doctools import document
 from .geom import geom
 
 
+@document
 class geom_rect(geom):
     """
-    Draw a rectangle on a plot.
+    Rectangles
 
-    Notes
-    -----
-    geom_rect accepts the following aesthetics (* - required):
-    xmax *
-    xmin *
-    ymax *
-    ymin *
-    alpha
-    colour
-    fill
-    linetype
-    size
+    {documentation}
     """
 
     DEFAULT_AES = {'color': None, 'fill': '#595959',

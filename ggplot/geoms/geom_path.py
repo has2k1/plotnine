@@ -8,13 +8,25 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
+from ..utils.doctools import document
 from ..utils.exceptions import gg_warn
 from ..utils import to_rgba, make_line_segments, suppress
 from ..utils import SIZE_FACTOR
 from .geom import geom
 
 
+@document
 class geom_path(geom):
+    """
+    Connected points
+
+    {documentation}
+
+    See Also
+    --------
+    :class:`.arrow`
+        Adding arrowhead(s) to paths.
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}
 
@@ -106,24 +118,28 @@ class geom_path(geom):
 
 
 class arrow(object):
+    """
+    Define arrow (actually an arrowhead)
+
+    This is used to define arrow heads for
+    :class:`.geom_path`.
+
+    Parameters
+    ----------
+    angle : int | float
+        angle in degrees between the tail a
+        single edge.
+    length : int | float
+        of the edge in "inches"
+    ends : 'last' | 'first' | 'both'
+        At which end of the line to draw the
+        arrowhead
+    type : 'open' | 'closed'
+        When it is closed, it is also filled
+    """
+
     def __init__(self, angle=30, length=0.25,
                  ends='last', type='open'):
-        """
-        Define arrow (actually an arrowhead)
-
-        Parameters:
-        -----------
-        angle : int | float
-            angle in degrees between the tail a
-            single edge.
-        length : int | float
-            of the edge in "inches"
-        ends : 'last' | 'first' | 'both'
-            At which end of the line to draw the
-            arrowhead
-        type : 'open' | 'closed'
-            When it is closed, it is also filled
-        """
         self.angle = angle
         self.length = length
         self.ends = ends

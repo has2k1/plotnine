@@ -4,10 +4,17 @@ import numpy as np
 import matplotlib.collections as mcoll
 
 from ..utils import to_rgba, make_line_segments, SIZE_FACTOR
+from ..utils.doctools import document
 from .geom import geom
 
 
+@document
 class geom_rug(geom):
+    """
+    Marginal rug plot
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

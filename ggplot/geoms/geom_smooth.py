@@ -3,13 +3,20 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.patches import Rectangle
 
+from ..utils.doctools import document
 from .geom import geom
 from .geom_ribbon import geom_ribbon
 from .geom_line import geom_line
 from .geom_line import geom_path
 
 
+@document
 class geom_smooth(geom):
+    """
+    A smoothed conditional mean
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
                    'linetype': 'solid', 'size': 1,
                    'ymin': None, 'ymax': None}

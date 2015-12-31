@@ -10,6 +10,41 @@ from ..utils.exceptions import GgplotError
 
 
 class annotate(object):
+    """
+    Create an annotation layer
+
+    Parameters
+    ----------
+    geom : geom
+        Name of geom to use for annotation
+    x : float
+        Position
+    y : float
+        Position
+    xmin : float
+        Position
+    ymin : float
+        Position
+    xmax : float
+        Position
+    ymax : float
+        Position
+    xend : float
+        Position
+    yend : float
+        Position
+    kwargs : dict
+        Other aesthetics
+
+    Note
+    ----
+    The positioning aethetics `x`, `y`, `xmin`, `ymin`, `xmax`,
+    `ymax`, `xend` and `yend` depend on which `geom` is used.
+    You need to choose or ignore accordingly.
+
+    All `geoms` are created with :code:`stat='identity'`.
+    """
+
     def __init__(self, geom, x=None, y=None,
                  xmin=None, xmax=None, xend=None,
                  ymin=None, ymax=None, yend=None,

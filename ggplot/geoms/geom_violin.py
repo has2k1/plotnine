@@ -6,12 +6,19 @@ import pandas as pd
 from scipy.interpolate import interp1d
 
 from ..utils import groupby_apply, interleave, resolution
+from ..utils.doctools import document
 from .geom_polygon import geom_polygon
 from .geom_path import geom_path
 from .geom import geom
 
 
+@document
 class geom_violin(geom):
+    """
+    Violin Plot
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}
     REQUIRED_AES = {'x', 'y'}

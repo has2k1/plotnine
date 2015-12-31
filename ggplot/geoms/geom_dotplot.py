@@ -6,11 +6,18 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 
 from ..utils import groupby_apply, to_rgba, resolution
+from ..utils.doctools import document
 from ..utils.exceptions import gg_warn
 from .geom import geom
 
 
+@document
 class geom_dotplot(geom):
+    """
+    Dot plot
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',

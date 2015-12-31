@@ -8,13 +8,20 @@ from matplotlib.patches import Rectangle
 
 from ..utils import copy_missing_columns, to_rgba
 from ..utils import resolution, SIZE_FACTOR
+from ..utils.doctools import document
 from ..utils.exceptions import gg_warn
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
 
 
+@document
 class geom_crossbar(geom):
+    """
+    Vertical interval represented by a crossbar
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}

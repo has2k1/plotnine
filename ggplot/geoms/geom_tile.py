@@ -2,11 +2,17 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ..utils import resolution
+from ..utils.doctools import document
 from .geom_rect import geom_rect
 
 
+@document
 class geom_tile(geom_rect):
+    """
+    Rectangles specified using a center points
 
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.1}
     REQUIRED_AES = {'x', 'y'}

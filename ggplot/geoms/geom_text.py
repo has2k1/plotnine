@@ -3,15 +3,22 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.text import Text
 
-from .geom import geom
 from ..utils import to_rgba, suppress
+from ..utils.doctools import document
 from ..positions import position_nudge
+from .geom import geom
 
 
 # Note: hjust & vjust are parameters instead of aesthetics
 # due to a limitation imposed by MPL
 # see: https://github.com/matplotlib/matplotlib/pull/1181
+@document
 class geom_text(geom):
+    """
+    Textual annotations
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
                    'size': 11, 'lineheight': 1.2}
     REQUIRED_AES = {'label', 'x', 'y'}

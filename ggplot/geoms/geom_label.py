@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.patches import Rectangle
 
+from ..utils.doctools import document
 from .geom_text import geom_text
 
 _aes = geom_text.DEFAULT_AES.copy()
@@ -22,7 +23,13 @@ _params.update({
     'label_size': 0.7})
 
 
+@document
 class geom_label(geom_text):
+    """
+    Textual annotations with a bacground
+
+    {documentation}
+    """
     DEFAULT_AES = _aes
     DEFAULT_PARAMS = _params
 

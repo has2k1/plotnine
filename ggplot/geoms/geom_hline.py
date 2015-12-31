@@ -4,12 +4,19 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 
 from ..utils import make_iterable, suppress
+from ..utils.doctools import document
 from ..aes import aes
 from .geom import geom
 from .geom_segment import geom_segment
 
 
+@document
 class geom_hline(geom):
+    """
+    Horizontal line
+
+    {documentation}
+    """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'yintercept'}

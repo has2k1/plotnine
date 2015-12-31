@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
+from ..utils.doctools import document
 from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
 from ..utils import resolution, SIZE_FACTOR
 from .geom_point import geom_point
@@ -14,7 +15,13 @@ from .geom_crossbar import geom_crossbar
 from .geom import geom
 
 
+@document
 class geom_boxplot(geom):
+    """
+    Box and whiskers plot
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5,
                    'weight': 1}

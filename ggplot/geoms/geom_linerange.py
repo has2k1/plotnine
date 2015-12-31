@@ -1,53 +1,17 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..utils.doctools import document
 from .geom import geom
 from .geom_segment import geom_segment
 
 
+@document
 class geom_linerange(geom):
     """
-    Plot intervals represented by vertical lines
+    Vertical interval represented by lines
 
-    Parameters
-    ---------
-
-    x
-        x values of data
-    ymin
-        lower end of the interval for each x
-    ymax
-        upper end of the interval for each x
-    alpha : float
-        alpha value, defaults to 1
-    color : string
-        line color, defaults to 'black'
-    linetype : string
-        line type, defaults to 'solid'
-    size : string
-        width of the line, defaults to 2
-
-    Examples
-    --------
-
-    .. plot::
-        :include-source:
-
-        import numpy as np
-        import pandas as pd
-        from ggplot import *
-
-        np.random.seed(42)
-        x = np.linspace(0.5, 9.5, num=10)
-        y = np.random.randn(10)
-        ymin = y - np.random.uniform(0,1, size=10)
-        ymax = y + np.random.uniform(0,1, size=10)
-
-        data = pd.DataFrame({'x': x, 'ymin': ymin, 'ymax': ymax})
-
-        ggplot(aes(x='x', ymin='ymin', ymax='ymax'), data) \
-            + geom_linerange()
-
+    {documentation}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}

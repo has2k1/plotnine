@@ -5,12 +5,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.collections as mcoll
 
-from .geom import geom
 from ..utils import to_rgba, make_line_segments, interleave
 from ..utils import SIZE_FACTOR
+from ..utils.doctools import document
+from .geom import geom
 
 
+@document
 class geom_segment(geom):
+    """
+    Line segments
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}

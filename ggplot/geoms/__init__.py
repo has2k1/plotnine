@@ -1,4 +1,6 @@
-from __future__ import absolute_import
+"""
+Plotting objects
+"""
 
 # geoms
 from .geom_abline import geom_abline

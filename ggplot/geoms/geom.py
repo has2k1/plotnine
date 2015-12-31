@@ -17,13 +17,12 @@ from ..utils.exceptions import GgplotError
 class geom(object):
     """Base class of all Geoms"""
     __base__ = True
+    DEFAULT_AES = dict()     #: Default aesthetics for the geom
+    REQUIRED_AES = set()     #: Required aesthetics for the geom
+    DEFAULT_PARAMS = dict()  #: Required parameters for the geom
 
-    DEFAULT_AES = dict()
-    REQUIRED_AES = set()
-    DEFAULT_PARAMS = dict()
-
-    data = None           # geom/layer specific dataframe
-    mapping = None        # mappings i.e aes(x=col1, fill=col2, ...)
+    data = None           #: geom/layer specific dataframe
+    mapping = None        #: mappings i.e aes(x=col1, fill=col2, ...)
     aes_params = None     # setting of aesthetic
     params = None         # parameter settings
 

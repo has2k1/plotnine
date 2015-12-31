@@ -6,10 +6,17 @@ from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 
 from ..utils import to_rgba, SIZE_FACTOR
+from ..utils.doctools import document
 from .geom import geom
 
 
+@document
 class geom_polygon(geom):
+    """
+    Polygon, a filled path
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}

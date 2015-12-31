@@ -5,11 +5,18 @@ import numpy as np
 import pandas as pd
 
 from ..utils import copy_missing_columns, resolution
+from ..utils.doctools import document
 from .geom import geom
 from .geom_segment import geom_segment
 
 
+@document
 class geom_errorbar(geom):
+    """
+    Vertical interval represented as an errorbar
+
+    {documentation}
+    """
     DEFAULT_AES = {'alpha': 1, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
