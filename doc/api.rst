@@ -102,3 +102,21 @@ stats
    stat_summary_bin
    stat_unique
    stat_ydensity
+
+
+facets
+======
+.. currentmodule:: ggplot.facets
+
+.. autosummary::
+   :toctree: generated/
+   :template: only-docstring.rst
+
+   facet_grid
+   facet_null
+   facet_wrap
+   ~labelling.labeller
+   ~labelling.as_labeller
+   ~labelling.label_value
+   ~labelling.label_both
+   ~labelling.label_context

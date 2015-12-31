@@ -108,8 +108,10 @@ def as_labeller(x, default=label_value, multi_line=True):
     ----------
     x : function | dict
         Object to coerce
-    default : function
-        Default labeller.
+    default : function | str
+        Default labeller. If it is a string,
+        it should be the name of one the labelling
+        functions provided by ggplot.
     multi_line : bool
         Whether to place each variable on a separate line
 
@@ -167,6 +169,10 @@ def labeller(rows=None, cols=None, multi_line=True,
         How to label the columns
     multi_line : bool
         Whether to place each variable on a separate line
+    default : function | str
+        Fallback labelling function. If it is a string,
+        it should be the name of one the labelling
+        functions provided by ggplot.
     kwargs : dict
         {variable name : function | string} pairs for
         renaming variables. A function to rename the variable

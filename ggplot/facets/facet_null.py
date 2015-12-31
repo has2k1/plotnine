@@ -7,6 +7,15 @@ from .facet import facet
 
 
 class facet_null(facet):
+    """
+    A single Panel
+
+    Parameters
+    ----------
+    shrink : bool
+        Whether to shrink the scales to the output of the
+        statistics instead of the raw data. Default is ``True``.
+    """
 
     def __init__(self, shrink=True):
         facet.__init__(self, shrink=shrink)

@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 from copy import deepcopy
 import re
 
@@ -12,6 +13,44 @@ from .locate import locate_grid
 
 
 class facet_grid(facet):
+    """
+    Wrap 1D Panels onto 2D surface
+
+    Parameters
+    ----------
+    facets : formula
+        A formula with the rows (of the tabular display) on
+        the LHS and the columns (of the tabular display) on
+        the RHS; the dot in the formula is used to indicate
+        there should be no faceting on this dimension
+        (either row or column).
+    scales : 'fixed' | 'free' | 'free_x' | 'free_y'
+        Whether ``x`` or ``y`` scales should be allowed (free)
+        to vary according to the data on each of the panel.
+        Default is ``'fixed'``.
+    space : 'fixed' | 'free' | 'free_x' | 'free_y'
+        Whether the ``x`` or ``y`` sides of the panels
+        should have the size. It also depends to the
+        ``scales`` parameter. Default is ``'fixed'``.
+        This setting is not properly supported at the moment.
+    shrink : bool
+        Whether to shrink the scales to the output of the
+        statistics instead of the raw data. Default is ``True``.
+    labeller : str | function
+        How to label the facets. If it is a ``str``, it should
+        be one of ``'label_value'`` ``'label_both'`` or
+        ``'label_context'``. Default is ``'label_value'``
+    as_table : bool
+        If ``True``, the facets are laid out like a table with
+        the highest values at the bottom-right. If ``False``
+        the facets are laid out like a plot with the highest
+        value a the top-right. Default it ``True``.
+    drop : bool
+        If ``True``, all factor levels not used in the data
+        will automatically be dropped. If ``False``, all
+        factor levels will be shown, regardless of whether
+        or not they appear in the data. Default is ``True``.
+    """
 
     def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',

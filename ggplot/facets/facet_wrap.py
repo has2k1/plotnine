@@ -13,6 +13,41 @@ from .locate import locate_wrap
 
 
 class facet_wrap(facet):
+    """
+    Wrap 1D Panels onto 2D surface
+
+    Parameters
+    ----------
+    facets : formula | tuple | list
+        Variables to groupby and plot on different panels.
+        If a formula is used it should be right sided,
+        e.g ``'~ a + b'``, ``('a', 'b')``
+    nrow : int, optional
+        Number of rows
+    ncol : int, optional
+        Number of columns
+    scales : 'fixed' | 'free' | 'free_x' | 'free_y'
+        Whether ``x`` or ``y`` scales should be allowed (free)
+        to vary according to the data on each of the panel.
+        Default is ``'fixed'``.
+    shrink : bool
+        Whether to shrink the scales to the output of the
+        statistics instead of the raw data. Default is ``True``.
+    labeller : str | function
+        How to label the facets. If it is a ``str``, it should
+        be one of ``'label_value'`` ``'label_both'`` or
+        ``'label_context'``. Default is ``'label_value'``
+    as_table : bool
+        If ``True``, the facets are laid out like a table with
+        the highest values at the bottom-right. If ``False``
+        the facets are laid out like a plot with the highest
+        value a the top-right. Default it ``True``.
+    drop : bool
+        If ``True``, all factor levels not used in the data
+        will automatically be dropped. If ``False``, all
+        factor levels will be shown, regardless of whether
+        or not they appear in the data. Default is ``True``.
+    """
 
     def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
                  shrink=True, labeller='label_value',
