@@ -20,8 +20,8 @@ lib
 lib64
 
 # generated docs
-docs/_static/
-docs/generated/
+doc/_build
+doc/generated/
 
 # Installer logs
 pip-log.txt
