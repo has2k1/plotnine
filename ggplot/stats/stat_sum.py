@@ -3,12 +3,25 @@ from __future__ import (absolute_import, division, print_function,
 
 from ..aes import all_aesthetics
 from ..utils import groupby_apply
+from ..utils.doctools import document
 from .stat import stat
 
 
+@document
 class stat_sum(stat):
     """
-    Sum unique values.  Useful for overplotting on scatterplots.
+    Sum unique values
+
+    Useful for overplotting on scatterplots.
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    size
+        - ``..n..`` - Number of observations at a position
+        - ``..prop..`` - Ratio of points in that panel at a position
+
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}

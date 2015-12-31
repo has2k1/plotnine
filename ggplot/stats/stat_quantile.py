@@ -3,17 +3,28 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import statsmodels.formula.api as smf
 
+from ..utils.doctools import document
 from ..utils.exceptions import gg_warn
 from .stat import stat
 
 
 # method_args are any of the keyword args (other than q) for
 # statsmodels.regression.quantile_regression.QuantReg.fit
+@document
 class stat_quantile(stat):
+    """
+    Compute quantile regression lines
+
+    {documentation}
+
+    See Also
+    --------
+    :class:`~ggplot.geoms.geom_quantile`
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'quantile', 'position': 'identity',
-                      'quantiles': (0.25, 0.5, 0.75), 'formula': None,
-                      'method_args': {}}
+                      'quantiles': (0.25, 0.5, 0.75),
+                      'formula': 'y ~ x', 'method_args': {}}
 
     def setup_params(self, data):
         params = self.params.copy()

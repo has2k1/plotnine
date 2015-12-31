@@ -60,3 +60,45 @@ Related to geoms
 
    annotate
    arrow
+
+
+Labels
+------
+.. currentmodule:: ggplot.labels
+
+.. autosummary::
+   :toctree: generated/
+   :template: only-docstring.rst
+
+   labs
+   xlab
+   ylab
+   ggtitle
+
+
+stats
+=====
+.. currentmodule:: ggplot.stats
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: only-docstring.rst
+
+   stat_bin
+   stat_bin_2d
+   stat_bindot
+   stat_boxplot
+   stat_count
+   stat_density
+   stat_ecdf
+   stat_function
+   stat_identity
+   stat_qq
+   stat_quantile
+   stat_smooth
+   stat_sum
+   stat_summary
+   stat_summary_bin
+   stat_unique
+   stat_ydensity

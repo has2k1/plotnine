@@ -5,10 +5,27 @@ import numpy as np
 import pandas as pd
 from statsmodels.distributions.empirical_distribution import ECDF
 
+from ..utils.doctools import document
 from .stat import stat
 
 
+@document
 class stat_ecdf(stat):
+    """
+    Emperical Cumulative Density Function
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    y
+        - ``..x..`` - x in the data
+        - ``..y..`` - cumulative density corresponding to x
+
+    See Also
+    --------
+    :class:`~ggplot.geoms.geom_step`
+    """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
                       'n': None}

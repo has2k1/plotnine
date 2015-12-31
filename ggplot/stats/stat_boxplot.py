@@ -7,10 +7,21 @@ import pandas.core.common as com
 from matplotlib.cbook import boxplot_stats
 
 from ..utils import resolution
+from ..utils.doctools import document
 from .stat import stat
 
 
+@document
 class stat_boxplot(stat):
+    """
+    Compute boxplot statistics
+
+    {documentation}
+
+    See Also
+    --------
+    :class:`~ggplot.geoms.geom_boxplot`
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'boxplot', 'position': 'dodge',
                       'coef': 1.5}

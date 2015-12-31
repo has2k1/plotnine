@@ -8,11 +8,24 @@ from six.moves import range
 from matplotlib.cbook import Bunch
 
 from ..utils import is_scalar_or_string, suppress
+from ..utils.doctools import document
 from .binning import fuzzybreaks
 from .stat import stat
 
 
+@document
 class stat_bin_2d(stat):
+    """
+    2 Dimensional bin counts
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    y
+        - ``..count..`` - number of points in bin
+        - ``..density..`` - density of points in bin, scaled to integrate to 1
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
                       'bins': 30, 'breaks': None, 'origin': None,

@@ -5,6 +5,7 @@ import pandas as pd
 import statsmodels.api as sm
 import six
 
+from ..utils.doctools import document
 from ..utils.exceptions import GgplotError
 from ..utils import suppress
 from .stat import stat
@@ -12,7 +13,25 @@ from .stat import stat
 
 # NOTE: Parameter discriptions are in
 # statsmodels/nonparametric/kde.py
+@document
 class stat_density(stat):
+    """
+    Compute density estimate
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    y
+        - ``..density..`` - density estimate
+        - ``..count..`` - density \* number of points,
+          useful for stacked density plots
+        - ``..scaled..`` - density estimate, scaled to maximum of 1
+
+    See Also
+    --------
+    :class:`~ggplot.geoms.geom_density`
+    """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',
                       'kernel': 'gaussian', 'adjust': 1,

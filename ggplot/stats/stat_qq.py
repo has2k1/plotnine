@@ -4,11 +4,26 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 from scipy.stats import probplot
 
+from ..utils.doctools import document
 from .stat import stat
 
 
 # Note: distribution should be a name from scipy.stat.distribution
+@document
 class stat_qq(stat):
+    """
+    Calculation for quantile-quantile plot
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    x
+        - ``..theoretical..`` - theoretical quantiles
+
+    y
+        - ``..sample..`` - sample quantiles
+    """
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': '..theoretical..', 'y': '..sample..'}
     DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',

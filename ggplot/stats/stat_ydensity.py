@@ -6,12 +6,23 @@ import pandas as pd
 import six
 
 from ..utils import suppress
+from ..utils.doctools import document
 from ..utils.exceptions import GgplotError
 from .stat_density import stat_density, compute_density
 from .stat import stat
 
 
+@document
 class stat_ydensity(stat):
+    """
+    Density estimate
+
+    {documentation}
+
+    See Also
+    --------
+    :class:`~ggplot.geoms.geom_violin`
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'violin', 'position': 'dodge',
                       'adjust': 1, 'kernel': 'gaussian',

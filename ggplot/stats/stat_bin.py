@@ -1,13 +1,28 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..utils.doctools import document
 from ..utils.exceptions import GgplotError, gg_warn
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)
 from .stat import stat
 
 
+@document
 class stat_bin(stat):
+    """
+    Count cases in each interval
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    y
+        - ``..count..`` - number of points in bin
+        - ``..density..`` - density of points in bin, scaled to integrate to 1
+        - ``..ncount..`` - count, scaled to maximum of 1
+        - ``..ndensity..`` - density, scaled to maximum of 1
+    """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'binwidth': None, 'bins': None,

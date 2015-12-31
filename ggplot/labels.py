@@ -9,13 +9,20 @@ __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
 class labs(object):
     """
     General class for all label adding classes
+
+    Parameters
+    ----------
+    args : dict
+        Aesthetics to be renamed
+    kwargs : dict
+        Aesthetics to be renamed
     """
     labels = {}
 
     def __init__(self, *args, **kwargs):
         if args and not isinstance(args, dict):
             raise GgplotError(
-                "'labs' excepts either a dictionary as",
+                "'labs' accepts either a dictionary as",
                 "an argument or keyword arguments")
             self.labels = args
         else:
@@ -30,6 +37,11 @@ class labs(object):
 class xlab(labs):
     """
     Create x-axis label
+
+    Parameters
+    ----------
+    xlab : str
+        x-axis label
     """
 
     def __init__(self, xlab):
@@ -43,6 +55,11 @@ class xlab(labs):
 class ylab(labs):
     """
     Create y-axis label
+
+    Parameters
+    ----------
+    ylab : str
+        y-axis label
     """
 
     def __init__(self, ylab):
@@ -56,6 +73,11 @@ class ylab(labs):
 class ggtitle(labs):
     """
     Create plot title
+
+    Parameters
+    ----------
+    title : str
+        Plot title
     """
     def __init__(self, title):
         if title is None:

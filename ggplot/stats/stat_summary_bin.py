@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import groupby_apply
+from ..utils.doctools import document
 from ..utils.exceptions import GgplotError
 from ..scales.scale import scale_discrete
 from .binning import fuzzybreaks
@@ -12,7 +13,17 @@ from .stat_summary import make_summary_fun
 from .stat import stat
 
 
+@document
 class stat_summary_bin(stat):
+    """
+    Summarise y values at x intervals
+
+    {documentation}
+
+    See Also
+    --------
+    :class:`~ggplot.geoms.geom_pointrange`
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
                       'bins': 30, 'breaks': None, 'binwidth': None,

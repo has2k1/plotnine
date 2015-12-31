@@ -1,13 +1,28 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+
 import numpy as np
 import pandas as pd
 
+from ..utils.doctools import document
 from ..utils import smoothers
 from .stat import stat
 
 
+@document
 class stat_smooth(stat):
+    """
+    Calculate a smoothed conditional mean
+
+    {documentation}
+
+    Note
+    ----
+    :class:`~ggplot.geoms.geom_smooth` and :class:`.stat_smooth` are
+    effectively aliases, they both use the same arguments.
+    Use :class:`~ggplot.geoms.geom_smooth` unless
+    you want to display the results with a non-standard geom.
+    """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
                       'method': 'auto', 'se': True, 'n': 80,

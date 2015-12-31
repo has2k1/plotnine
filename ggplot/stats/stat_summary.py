@@ -7,6 +7,7 @@ import scipy.stats
 import pandas as pd
 
 from ..utils import uniquecols, get_valid_kwargs
+from ..utils.doctools import document
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
@@ -114,70 +115,36 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     return func
 
 
+@document
 class stat_summary(stat):
     """
-    Calculate summary statistics depending on x, usually by
-    calculating three values ymin, y and ymax for each value of x.
+    Calculate summary statistics depending on x
+
+    {documentation}
 
     Parameters
     ----------
 
     fun_data : string or function
-        One of `"mean_cl_boot"`, `"mean_cl_normal"`,
-        `"mean_sdl"`, `"median_hilow"` or any function that takes a
+        One of ``"mean_cl_boot"``, ``"mean_cl_normal"``,
+        ``"mean_sdl"``, ``"median_hilow"`` or any function that takes a
         pandas series and returns a series with three rows indexed
-        as `y`, `ymin` and `ymax`. Defaults to `"mean_cl_boot"`.
-    fun_y, fun_ymin, fun_ymax : function
+        as ``y``, ``ymin`` and ``ymax``. Defaults to ``"mean_cl_boot"``.
+    fun_y : function
+        Any function that takes a pandas series and returns a value
+    fun_ymin : function
+        Any function that takes a pandas series and returns a value
+    fun_ymax : function
         Any function that takes a pandas series and returns a value
 
-    Notes
-    -----
+    Note
+    ----
+    If any of ``fun_y``, ``fun_ymin`` or ``fun_ymax`` are provided, the
+    value of ``fun_data`` will be ignored.
 
-    If any of `fun_y`, `fun_ymin` or `fun_ymax` are provided, the
-    value of `fun_data` will be ignored.
-
-    As R's syntax `fun.data = some_function` is not valid in python, here
-    `fun_data = somefunction` is used for now.
-
-    Examples
+    See Also
     --------
-
-    General usage:
-
-    .. plot::
-        :include-source:
-
-        from ggplot import *
-
-        ggplot(aes(x='cut', y='carat'), data=diamonds) \\
-            + stat_summary(fun_data = 'mean_cl_boot')
-
-    Provide own function:
-
-    .. plot::
-        :include-source:
-
-        import numpy as np
-        from ggplot import *
-        def median_quantile(series):
-            return pd.Series({'y': np.median(series),
-                              'ymin': np.percentile(series, 5),
-                              'ymax': np.percentile(series, 95)})
-        ggplot(aes(x='cut', y='carat'), data=diamonds) \\
-            + stat_summary(fun_data = median_quantile)
-
-    Provide different funtions for y, ymin and ymax:
-
-    .. plot::
-        :include-source:
-
-        import numpy as np
-        from ggplot import *
-        ggplot(aes(x='cut', y='carat'), data=diamonds) \\
-            + stat_summary(fun_y = np.median,
-                           fun_ymin=np.min,
-                           fun_ymax=np.max)
-
+    :class:`~ggplot.geoms.geom_pointrange`
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',

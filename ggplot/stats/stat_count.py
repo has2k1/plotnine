@@ -5,11 +5,28 @@ import numpy as np
 import pandas as pd
 
 from ..utils import resolution
+from ..utils.doctools import document
 from ..utils.exceptions import GgplotError
 from .stat import stat
 
 
+@document
 class stat_count(stat):
+    """
+    Counts the number of cases at each x position
+
+    {documentation}
+
+    .. rubric:: Options for computed aesthetics
+
+    size
+        - ``..count..`` - Number of observations at a position
+        - ``..prop..`` - Ratio of points in the panel at a position
+
+    See Also
+    --------
+    :class:`~ggplot.stats.stat_bin`
+    """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': None}

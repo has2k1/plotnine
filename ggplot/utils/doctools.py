@@ -134,6 +134,70 @@ def get_geom_documentation(geom):
     return ''.join([usage(), aesthetics(), parameters()])
 
 
+def get_stat_documentation(stat):
+    """
+    Create a structured documentation for the stat
+    """
+    if (stat.__doc__ is None or
+            '{documentation}' not in stat.__doc__):
+        return ''
+
+    def usage():
+        name = stat.__name__
+        line1 = ("{name}(mapping=None, data=None, geom='{geom}', "
+                 "position='{position}', ").format(
+                     name=name,
+                     geom=stat.DEFAULT_PARAMS['geom'],
+                     position=stat.DEFAULT_PARAMS['position'])
+        line2 = '**kwargs)'
+        out = """
+        .. rubric:: Usage
+
+        ::
+
+            {line1}
+            {indent}{line2}
+
+        Only the ``mapping`` and ``data`` can be positional, the
+        ``**kwargs`` can be aesthetics (or parameters) used by ``stat``,
+        or if the ``stat`` does not recognise them, they are passed on to
+        the ``geom``.
+        """.format(indent=' '*(len(name)+1),
+                   line1=line1,
+                   line2=line2)
+        return out
+
+    def aesthetics():
+        contents = OrderedDict(('**{}**'.format(ae), '')
+                               for ae in sorted(stat.REQUIRED_AES))
+        contents.update(sorted(stat.DEFAULT_AES.items()))
+
+        if not contents:
+            return ''
+
+        table = dict_to_table(('Aesthetic', 'Default value'),
+                              contents)
+        table = indent(table, 2)
+        out = """
+        .. rubric:: Aesthetics \n\n{table}\n
+
+        The **bold** aesthetics are required.
+        """.format(table=table)
+        return out
+
+    def parameters():
+        params = OrderedDict(sorted(stat.DEFAULT_PARAMS.items()))
+        table = dict_to_table(('Parameter', 'Default value'),
+                              params)
+        table = indent(table, 2)
+        out = """
+        .. rubric:: Parameters \n\n{table}\n
+        """.format(table=table)
+        return out
+
+    return ''.join([usage(), aesthetics(), parameters()])
+
+
 def document(klass):
     """
     Decorator to document a class
@@ -143,6 +207,9 @@ def document(klass):
     documentation_text = ''
     if klass.__name__.startswith('geom'):
         documentation_text = get_geom_documentation(klass)
+
+    if klass.__name__.startswith('stat'):
+        documentation_text = get_stat_documentation(klass)
 
     if documentation_text:
         klass.__doc__ = fillin_documentation(
