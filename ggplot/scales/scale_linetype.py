@@ -14,10 +14,16 @@ def linetype_pal():
             return l[:n]
         else:
             return l + [None] * (n - len(linetypes))
+
     return func
 
 
 class scale_linetype(scale_discrete):
+    """
+    Scale for line patterns
+
+    Has the same arguments as :class:`~scale_discrete`
+    """
     aesthetics = ['linetype']
     palette = staticmethod(linetype_pal())
 

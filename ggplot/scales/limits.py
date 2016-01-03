@@ -78,10 +78,35 @@ class _lim(object):
 
 
 class xlim(_lim):
+    """
+    Set x-axis limits
+
+    Parameters
+    ----------
+    limits : array_like
+        Min and max limits. Must be of size 2.
+        You can also pass two values e.g
+        ``xlim(40, 100)``
+    """
     aesthetic = 'x'
 
 
 class ylim(_lim):
+    """
+    Set y-axis limits
+
+    Parameters
+    ----------
+    limits : array_like
+        Min and max limits. Must be of size 2.
+        You can also pass two values e.g
+        ``ylim(40, 100)``
+
+    Note
+    ----
+    If the 2nd value of ``limits`` is less than
+    the first, a reversed scale will be created.
+    """
     aesthetic = 'y'
 
 
@@ -114,6 +139,20 @@ class strokelim(_lim):
 
 
 class lims(object):
+    """
+    Set aesthtic limits
+
+    Parameters
+    ----------
+    kwargs : dict
+        Aesthetic and the values of the limits.
+        e.g ``x=(40, 100)``
+
+    Note
+    ----
+    If the 2nd value of ``limits`` is less than
+    the first, a reversed scale will be created.
+    """
 
     def __init__(self, **kwargs):
         self._kwargs = kwargs

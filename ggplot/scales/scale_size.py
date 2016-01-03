@@ -9,6 +9,17 @@ from .scale import scale_discrete, scale_continuous
 
 
 class scale_size_discrete(scale_discrete):
+    """
+    Discrete area size scale
+
+    Parameters
+    ----------
+    range : array_like
+        Minimum and maximum size of the plotting symbol.
+        It must be of size 2.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_discrete`
+    """
     aesthetics = ['size']
 
     def __init__(self, range=(2, 6), **kwargs):
@@ -21,6 +32,17 @@ class scale_size_discrete(scale_discrete):
 
 
 class scale_size_continuous(scale_continuous):
+    """
+    Continuous area size scale
+
+    Parameters
+    ----------
+    range : array_like
+        Minimum and maximum area of the plotting symbol.
+        It must be of size 2.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_continuous`
+    """
     aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
@@ -32,6 +54,17 @@ alias('scale_size', scale_size_continuous)
 
 
 class scale_size_radius(scale_continuous):
+    """
+    Continuous radius size scale
+
+    Parameters
+    ----------
+    range : array_like
+        Minimum and maximum radius of the plotting symbol.
+        It must be of size 2.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_continuous`
+    """
     aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
@@ -40,6 +73,16 @@ class scale_size_radius(scale_continuous):
 
 
 class scale_size_area(scale_continuous):
+    """
+    Continuous area size scale
+
+    Parameters
+    ----------
+    max_size : float
+        Maximum size of the plotting symbol.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_continuous`
+    """
     aesthetics = ['size']
     rescaler = staticmethod(rescale_max)
 

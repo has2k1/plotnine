@@ -130,18 +130,38 @@ class scale_position_continuous(scale_continuous):
 
 
 class scale_x_discrete(scale_position_discrete):
+    """
+    Discrete x position
+
+    See :class:`.scale_discrete` for parameter documentation
+    """
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_discrete(scale_position_discrete):
+    """
+    Discrete y position
+
+    See :class:`.scale_discrete` for parameter documentation
+    """
     aesthetics = ['y', 'ymin', 'ymax', 'yend']
 
 
 class scale_x_continuous(scale_position_continuous):
+    """
+    Continuous x position
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     aesthetics = ['x', 'xmin', 'xmax', 'xend', 'xintercept']
 
 
 class scale_y_continuous(scale_position_continuous):
+    """
+    Continuous y position
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
                   'ymin_final', 'ymax_final',
                   'lower', 'middle', 'upper']
@@ -149,11 +169,22 @@ class scale_y_continuous(scale_position_continuous):
 
 # Transformed scales
 class scale_x_datetime(scale_position_continuous):
+    """
+    Continuous x position for datetime data points
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'datetime'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_datetime(scale_position_continuous):
+    """
+    Continuous y position for datetime data points
+
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'datetime'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
@@ -163,34 +194,74 @@ alias('scale_y_date', scale_y_datetime)
 
 
 class scale_x_timedelta(scale_position_continuous):
+    """
+    Continuous x position for timedelta data points
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'pd_timedelta'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_timedelta(scale_position_continuous):
+    """
+    Continuous y position for timedelta data points
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'pd_timedelta'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
 class scale_x_sqrt(scale_x_continuous):
+    """
+    Continuous x position sqrt transformed scale
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'sqrt'
 
 
 class scale_y_sqrt(scale_y_continuous):
+    """
+    Continuous y position sqrt transformed scale
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'sqrt'
 
 
 class scale_x_log10(scale_x_continuous):
+    """
+    Continuous x position log10 transformed scale
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'log10'
 
 
 class scale_y_log10(scale_y_continuous):
+    """
+    Continuous y position log10 transformed scale
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'log10'
 
 
 class scale_x_reverse(scale_x_continuous):
+    """
+    Continuous x position reverse transformed scale
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'reverse'
 
 
 class scale_y_reverse(scale_y_continuous):
+    """
+    Continuous y position reverse transformed scale
+
+    See :class:`.scale_continuous` for parameter documentation
+    """
     _trans = 'reverse'

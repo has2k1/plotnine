@@ -21,6 +21,41 @@ from .range import Range, RangeContinuous, RangeDiscrete
 class scale(object):
     """
     Base class for all scales
+
+    Parameters
+    ----------
+    range : array_like
+        Range of aesthetic. Default is to automatically
+        determine the range from the data points.
+    breaks : array_like, optional
+        Major break points. Default is to automatically
+        calculate them.
+    expand : array_like, optional
+        Multiplicative and additive expansion constants
+        that determine how the scale is expanded. If
+        specified must of of length 2. Otherwise suitable
+        defaults are chosen.
+    name : str, optional
+        Name used as the label of the scale. This is what
+        shows up as the axis label or legend title. Suitable
+        defaults are chosen depending on the type of scale.
+    labels : list, optional
+        List of :class:`str`. Labels at the `breaks`.
+    limits : array_like, optional
+        Limits of the scale. Most commonly, these are the
+        min & max values for the scales. For scales that
+        deal with categoricals, these may be a subset or
+        superset of the categories.
+    na_value : scalar
+        What value to assign to missing values. Default
+        is to assign ``np.nan``.
+    palette : function, optional
+        Function to map data points onto the scale. Most
+        scales define their own palettes.
+    aesthetics : list, very optional
+        list of :class:`str`. Aesthetics covered by the
+        scale. These are defined by each scale and the
+        user should probably not change them. Have fun.
     """
     __base__ = True
 
@@ -177,6 +212,14 @@ class scale(object):
 class scale_discrete(scale):
     """
     Base class for all discrete scales
+
+    Parameters
+    ----------
+    drop : bool
+        Whether to drop unused categories from
+        the scale
+    kwargs : dict
+        Parameters passed on to :class:`.scale`
     """
     range = RangeDiscrete
     drop = True        # drop unused factor levels from the scale
@@ -335,6 +378,31 @@ class scale_discrete(scale):
 class scale_continuous(scale):
     """
     Base class for all continuous scales
+
+    Parameters
+    ----------
+    trans : str | function
+        Name of a trans function or a trans function
+    oob : function
+        Function to deal with out of bounds (limits)
+        data points. Default is to turn them into
+        ``np.nan``, which then get dropped.
+    minor_breaks : list | None
+        Minor breaks points. If ``None``, there are not
+        included. Default is to automatically calculate
+        them.
+    rescaler : function, optional
+        Function to rescale data points so that they can
+        be handled by the palette. Default is to rescale
+        them onto the [0, 1] range. Scales that inherit
+        from this class may have another default.
+    kwargs : dict
+        Parameters passed on to :class:`.scale`
+
+    Note
+    ----
+    If using the class directly all arguments must be
+    keyword arguments.
     """
     range = RangeContinuous
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients

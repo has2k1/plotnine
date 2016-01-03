@@ -15,6 +15,7 @@ from .scale_color import scale_color_gradient, scale_colour_gradient
 from .scale_color import scale_color_gradient2, scale_colour_gradient2
 from .scale_color import scale_color_gradientn, scale_colour_gradientn
 from .scale_color import scale_color_grey, scale_colour_grey
+from .scale_color import scale_color_gray, scale_colour_gray
 from .scale_color import scale_color_hue, scale_colour_hue
 # fill
 from .scale_color import scale_fill_brewer
@@ -26,7 +27,7 @@ from .scale_color import scale_fill_distiller
 from .scale_color import scale_fill_gradient
 from .scale_color import scale_fill_gradient2
 from .scale_color import scale_fill_gradientn
-from .scale_color import scale_fill_grey
+from .scale_color import scale_fill_grey, scale_fill_gray
 from .scale_color import scale_fill_hue
 # identity
 from .scale_identity import scale_alpha_identity
@@ -85,6 +86,7 @@ __all__ = [
            'scale_color_gradient2', 'scale_colour_gradient2',
            'scale_color_gradientn', 'scale_colour_gradientn',
            'scale_color_grey', 'scale_colour_grey',
+           'scale_color_gray', 'scale_colour_gray',
            'scale_color_hue', 'scale_colour_hue',
            # fill
            'scale_fill_brewer', 'scale_fill_cmap',
@@ -92,7 +94,8 @@ __all__ = [
            'scale_fill_desaturate', 'scale_fill_discrete',
            'scale_fill_distiller', 'scale_fill_gradient',
            'scale_fill_gradient2', 'scale_fill_gradientn',
-           'scale_fill_grey', 'scale_fill_hue',
+           'scale_fill_grey', 'scale_fill_gray',
+           'scale_fill_hue',
            # alpha
            'scale_alpha', 'scale_alpha_discrete',
            'scale_alpha_continuous',

@@ -25,10 +25,16 @@ def shape_pal():
             return l[:n]
         else:
             return l + [None] * (n - len(shapes))
+
     return func
 
 
 class scale_shape(scale_discrete):
+    """
+    Scale for shapes
+
+    Has the same arguments as :class:`~scale_discrete`
+    """
     aesthetics = ['shape']
     palette = staticmethod(shape_pal())
 

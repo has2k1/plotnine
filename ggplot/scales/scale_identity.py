@@ -21,34 +21,89 @@ class MapTrainMixin(object):
 
 
 class scale_color_identity(MapTrainMixin, scale_discrete):
+    """
+    No color scaling
+
+    Parameters
+    ----------
+    guide : None | 'legend'
+        Whether to include a legend. Default is None.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_discrete`
+    """
     aesthetics = ['color']
     palette = staticmethod(identity)
     guide = None
 
 
 class scale_fill_identity(scale_color_identity):
+    """
+    No color scaling
+
+    See :class:`.scale_color_identity` for documentation.
+    """
     aesthetics = ['fill']
 
 
 class scale_shape_identity(MapTrainMixin, scale_discrete):
+    """
+    No shape scaling
+
+    Parameters
+    ----------
+    guide : None | 'legend'
+        Whether to include a legend. Default is None.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_discrete`
+    """
     aesthetics = ['shape']
     palette = staticmethod(identity)
     guide = None
 
 
 class scale_linetype_identity(MapTrainMixin, scale_discrete):
+    """
+    No linetype scaling
+
+    Parameters
+    ----------
+    guide : None | 'legend'
+        Whether to include a legend. Default is None.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_discrete`
+    """
     aesthetics = ['linetype']
     palette = staticmethod(identity)
     guide = None
 
 
 class scale_alpha_identity(MapTrainMixin, scale_continuous):
+    """
+    No alpha scaling
+
+    Parameters
+    ----------
+    guide : None | 'legend'
+        Whether to include a legend. Default is None.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_continuous`
+    """
     aesthetics = ['alpha']
     palette = staticmethod(identity)
     guide = None
 
 
 class scale_size_identity(MapTrainMixin, scale_continuous):
+    """
+    No size scaling
+
+    Parameters
+    ----------
+    guide : None | 'legend'
+        Whether to include a legend. Default is None.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_continuous`
+    """
     aesthetics = ['size']
     palette = staticmethod(identity)
     guide = None
