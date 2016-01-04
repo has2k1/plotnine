@@ -69,6 +69,8 @@ from .utils import date_breaks, date_format
 # format functions
 from .utils import dollar, currency, comma, millions
 from .utils import percent, scientific
+# limits
+from .limits import xlim, ylim, lims
 
 
 __all__ = [
@@ -125,5 +127,7 @@ __all__ = [
            'date_breaks', 'date_format',
            # format functions
            'dollar', 'currency', 'comma', 'millions',
-           'percent', 'scientific'
+           'percent', 'scientific',
+           # limits
+           'xlim', 'ylim', 'lims',
            ]

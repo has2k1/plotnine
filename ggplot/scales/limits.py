@@ -53,6 +53,3 @@ class lims(object):
             gg = gg + ylim(self._ylim)
 
         return gg
-
-
-
