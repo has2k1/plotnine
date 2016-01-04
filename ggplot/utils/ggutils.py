@@ -19,11 +19,15 @@ class _ggplot_options(dict):
             raise GgplotError("Unknown option '{}'".format(key))
         dict.__setitem__(self, key, val)
 
+    def __deepcopy__(self, memo):
+        return self
+
 
 ggplot_options = _ggplot_options(
     # Development flag, e.g. set to True to prevent
     # the queuing up of figures when errors happen.
-    close_all_figures=False)
+    close_all_figures=False,
+    current_theme=None)
 
 
 if not hasattr(mpl, 'rc_context'):

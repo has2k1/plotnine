@@ -3,6 +3,7 @@ from copy import copy, deepcopy
 import matplotlib as mpl
 
 from ..utils.exceptions import GgplotError
+from ..utils import ggplot_options
 from .themeable import make_themeable, merge_themeables
 from .themeable import scalar_themeables
 
@@ -195,7 +196,10 @@ class theme(object):
             if self.complete:
                 gg_copy.theme = self
             else:
-                gg_copy.theme = other.theme.add_theme(self)
+                # If no theme has been added yet,
+                # we modify the default theme
+                gg_copy.theme = gg_copy.theme or theme_get()
+                gg_copy.theme = gg_copy.theme.add_theme(self)
             return gg_copy
         # other _ self is theme + self
         else:
@@ -210,3 +214,49 @@ class theme(object):
                 theme_copy.element_themes.append(self)
                 theme_copy._params.update(other._params)
                 return theme_copy
+
+
+def theme_get():
+    """
+    Return the default theme
+
+    The default theme is the one set (using theme_set) by
+    the user. If none has been set, then theme_gray is
+    the default.
+    """
+    from .theme_gray import theme_gray
+    return ggplot_options['current_theme'] or theme_gray()
+
+
+def theme_set(new):
+    """
+    Change the current(default) theme
+
+    Parameters
+    ----------
+    new : theme
+        New default theme
+
+    Returns
+    -------
+    out : theme
+        Previous theme
+    """
+    if not issubclass(new.__class__, theme):
+        raise GgplotError("Expecting object to be a theme")
+
+    out = ggplot_options['current_theme']
+    ggplot_options['current_theme'] = new
+    return out
+
+
+def theme_update(**kwargs):
+    """
+    Modify elements of the current theme
+
+    Parameters
+    ----------
+    kwargs : dict
+        Theme elements
+    """
+    theme_set(theme_get() + theme(**kwargs))

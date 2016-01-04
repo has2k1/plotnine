@@ -14,7 +14,7 @@ from .components.aes import make_labels
 from .components.panel import Panel
 from .components.layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
-from .themes.theme_gray import theme_gray
+from .themes.theme import theme_get
 from .utils.ggutils import gg_context, ggplot_options
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
@@ -62,8 +62,7 @@ class ggplot(object):
         self.layers = Layers()
         self.guides = guides()
         self.scales = Scales()
-        # default theme is theme_gray
-        self.theme = theme_gray()
+        self.theme = None
         self.coordinates = coord_cartesian()
         self.plot_env = mapping.aes_env
         self.panel = None
@@ -133,8 +132,16 @@ class ggplot(object):
         """
         Render the complete plot and return the matplotlib figure
         """
+        # Prevent against any modifications to the users
+        # ggplot object. Do the copy here as we may/may not
+        # assign a default theme
+        self = deepcopy(self)
+
         if ggplot_options['close_all_figures']:
             plt.close("all")
+
+        # If no theme we use the default
+        self.theme = self.theme or theme_get()
 
         with gg_context(theme=self.theme):
             plot = self.draw_plot()
@@ -197,7 +204,7 @@ class ggplot(object):
         plot : ggplot
             A copy of the ggplot object
         """
-        plot = deepcopy(self)
+        plot = self
 
         if not plot.layers:
             plot += geom_blank()
