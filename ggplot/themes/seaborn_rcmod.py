@@ -1,6 +1,7 @@
 """Functions that alter the matplotlib rc dictionary on the fly."""
 import numpy as np
 import matplotlib as _mpl
+import functools
 
 # https://github.com/mwaskom/seaborn/seaborn/rcmod.py
 # commit: d19fff8
@@ -116,34 +117,6 @@ def set(context="notebook", style="darkgrid", palette="deep",
     if rc is not None:
         mpl.rcParams.update(rc)
     return mpl.rcParams
-
-
-class _AxesStyle(dict):
-    """Light wrapper on a dict to set style temporarily."""
-    def __enter__(self):
-        """Open the context."""
-        rc = mpl.rcParams
-        self._orig_style = {k: rc[k] for k in _style_keys}
-        set_style(self)
-        return self
-
-    def __exit__(self, *args):
-        """Close the context."""
-        set_style(self._orig_style)
-
-
-class _PlottingContext(dict):
-    """Light wrapper on a dict to set context temporarily."""
-    def __enter__(self):
-        """Open the context."""
-        rc = mpl.rcParams
-        self._orig_context = {k: rc[k] for k in _context_keys}
-        set_context(self)
-        return self
-
-    def __exit__(self, *args):
-        """Close the context."""
-        set_context(self._orig_context)
 
 
 def axes_style(style=None, rc=None):
@@ -432,3 +405,32 @@ def set_context(context=None, font_scale=1, rc=None):
     """
     context_object = plotting_context(context, font_scale, rc)
     mpl.rcParams.update(context_object)
+
+
+class _RCAesthetics(dict):
+    def __enter__(self):
+        rc = mpl.rcParams
+        self._orig = {k: rc[k] for k in self._keys}
+        self._set(self)
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self._set(self._orig)
+
+    def __call__(self, func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            with self:
+                return func(*args, **kwargs)
+        return wrapper
+
+
+class _AxesStyle(_RCAesthetics):
+    """Light wrapper on a dict to set style temporarily."""
+    _keys = _style_keys
+    _set = staticmethod(set_style)
+
+
+class _PlottingContext(_RCAesthetics):
+    """Light wrapper on a dict to set context temporarily."""
+    _keys = _context_keys
+    _set = staticmethod(set_context)

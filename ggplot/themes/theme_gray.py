@@ -3,17 +3,16 @@ from .theme import theme
 
 class theme_gray(theme):
     """
-    Standard theme for ggplot. Gray background w/ white gridlines.
+    A gray background with white gridlines.
 
-    Copied from the the ggplot2 codebase:
-        https://github.com/hadley/ggplot2/blob/master/R/theme-defaults.r
+    This is the default theme
     """
-    def __init__(self):
+    def __init__(self, base_size=11, base_family=''):
         # super does not work well with reloads
         theme.__init__(self, complete=True)
         d = {
             'axes.axisbelow': 'True',
-            'axes.edgecolor': 'bcbcbc',
+            'axes.edgecolor': 'BCBCBC',
             'axes.facecolor': '#E5E5E5',
             'axes.grid': 'True',
             'axes.grid.which': 'both',
@@ -56,4 +55,12 @@ class theme_gray(theme):
             'ytick.minor.pad': '0',
             'ytick.minor.size': '0',
         }
+
+        d['font.size'] = base_size
+        if base_family:
+            d['font.family'] = base_family
+
         self._rcParams.update(d)
+
+
+theme_grey = theme_gray()

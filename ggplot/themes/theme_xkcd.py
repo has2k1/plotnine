@@ -10,9 +10,6 @@ class theme_xkcd(theme):
     xkcd theme
 
     The theme internaly uses the settings from pyplot.xkcd().
-
-    @todo: testme.
-
     """
     def __init__(self, scale=1, length=100, randomness=2):
         theme.__init__(self, complete=True)
