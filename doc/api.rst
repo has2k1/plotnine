@@ -282,3 +282,20 @@ Scale limits
    lims
    xlim
    ylim
+
+
+positions
+=========
+.. currentmodule:: ggplot.positions
+
+.. autosummary::
+   :toctree: generated/
+   :template: only-docstring.rst
+
+   position_dodge
+   position_fill
+   position_identity
+   position_jitter
+   position_jitterdodge
+   position_nudge
+   position_stack

@@ -2,12 +2,22 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
-from .position import position
-from .collide import collide, pos_dodge
 from ..utils.exceptions import GgplotError
+from .collide import collide, pos_dodge
+from .position import position
 
 
 class position_dodge(position):
+    """
+    Dodge overlaps and place objects side-by-side
+
+    Parameters
+    ----------
+    width: float
+        Dodging width, when different to the width of the
+        individual elements. This is useful when you want
+        to align narrow geoms with wider geoms
+    """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'width': None}
 

@@ -1,13 +1,16 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from .position import position
-from .collide import collide, pos_fill
 from ..utils import suppress
 from ..utils.exceptions import gg_warn
+from .collide import collide, pos_fill
+from .position import position
 
 
 class position_fill(position):
+    """
+    Normalise stacked objects to unit height
+    """
     REQUIRED_AES = {'x', 'ymax'}
 
     def setup_data(self, data, params):

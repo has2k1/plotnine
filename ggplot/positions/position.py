@@ -14,9 +14,7 @@ class position(object):
     __base__ = True
 
     REQUIRED_AES = {}
-
-    def __init__(self, **kwargs):
-        self.params = deepcopy(kwargs)
+    params = {}
 
     def setup_params(self, data):
         """

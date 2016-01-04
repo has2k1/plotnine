@@ -5,6 +5,19 @@ from .position import position
 
 
 class position_nudge(position):
+    """
+    Nudge points
+
+    Useful to nudge labels away from the points
+    being labels.
+
+    Parameters
+    ----------
+    x : float
+        Horizontal nudge
+    y : float
+        Vertical nudge
+    """
     REQUIRED_AES = {'x', 'y'}
 
     def __init__(self, x=0, y=0):

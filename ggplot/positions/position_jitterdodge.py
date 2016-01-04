@@ -11,6 +11,25 @@ from .collide import collide, pos_dodge
 
 # Adjust position by simultaneously dodging and jittering
 class position_jitterdodge(position):
+    """
+    Dodge and jitter to minimise overlap
+
+    Useful when aligning points generated through
+    :class:`~ggplot.geoms.geom_point` with dodged a
+    :class:`~ggplot.geoms.geom_boxplot`.
+
+    Parameters
+    ----------
+    jitter_width : float
+        Proportion to jitter in horizontal direction.
+        Default is ``0.4`` of the resolution of the data.
+    jitter_height : float
+        Proportion to jitter in vertical direction.
+        Default is ``0.0`` of the resolution of the data.
+    dodge_width : float
+        Amount to dodge in horizontal direction.
+        Default is ``0.75``
+    """
     REQUIRED_AES = ['x', 'y', 'fill']
 
     def __init__(self, jitter_width=None, jitter_height=0,
