@@ -9,7 +9,7 @@ from six.moves import range
 
 from ..components.aes import aes_to_scale
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
-from ..utils import gg_import
+from ..utils import gg_import, suppress
 from ..utils.exceptions import gg_warn, GgplotError
 
 _TPL_DUPLICATE_SCALE = """\
@@ -288,7 +288,13 @@ def make_scale(ae, series, *args, **kwargs):
     The scale is for the aesthetic ae, and args & kwargs
     are passed on to the scale creating class
     """
-    _type = scale_type(series)
-    scale_name = 'scale_{}_{}'.format(ae, _type)
+    stype = scale_type(series)
+
+    # filter parameters by scale type
+    if stype == 'discrete':
+        with suppress(KeyError):
+            del kwargs['trans']
+
+    scale_name = 'scale_{}_{}'.format(ae, stype)
     scale_klass = gg_import(scale_name)
     return scale_klass(*args, **kwargs)
