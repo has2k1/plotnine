@@ -78,7 +78,7 @@ class geom_point(geom):
                             [0.5*da.height],
                             alpha=data['alpha'],
                             marker=data['shape'],
-                            markersize=data['size'],
+                            markersize=data['size']+data['stroke'],
                             markerfacecolor=data['fill'],
                             markeredgecolor=data['color'],
                             markeredgewidth=data['stroke'])

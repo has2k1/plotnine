@@ -203,11 +203,19 @@ class guide_legend(guide):
             for i in range(nbreak):
                 for gl in self.glayers:
                     pad = default_pad
+                    # Full size of object to appear in the
+                    # legend key
+                    if 'stroke' in gl.data:
+                        _size = (gl.data.ix[i, 'size'] +
+                                 2*gl.data.ix[i, 'stroke'])
+                    else:
+                        _size = gl.data.ix[i, 'size']
+
                     # special case, color does not apply to
                     # border/linewidth
                     if issubclass(gl.geom, geom_text):
                         pad = 0
-                        if gl.data.ix[i, 'size'] < default_size:
+                        if _size < default_size:
                             continue
 
                     try:
@@ -215,11 +223,10 @@ class guide_legend(guide):
                         # When the edge is not visible, we should
                         # not expand the size of the keys
                         if gl.data.ix[i, 'color'] is not None:
-                            size[i] = np.max([
-                                gl.data.ix[i, 'size'].max()+pad,
-                                size[i]])
+                            size[i] = np.max([_size+pad, size[i]])
                     except KeyError:
                         break
+
             return size
 
         if self.keywidth is None:
