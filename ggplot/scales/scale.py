@@ -141,6 +141,8 @@ class scale(object):
 
     @limits.setter
     def limits(self, value):
+        if isinstance(value, tuple):
+            value = list(value)
         self._limits = value
 
     def train_df(self, df):
