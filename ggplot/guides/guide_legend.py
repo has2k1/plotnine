@@ -202,14 +202,14 @@ class guide_legend(guide):
             size = np.ones(nbreak) * default_size
             for i in range(nbreak):
                 for gl in self.glayers:
+                    _size = 0
                     pad = default_pad
                     # Full size of object to appear in the
                     # legend key
-                    if 'stroke' in gl.data:
-                        _size = (gl.data.ix[i, 'size'] +
-                                 2*gl.data.ix[i, 'stroke'])
-                    else:
-                        _size = gl.data.ix[i, 'size']
+                    if 'size' in gl.data:
+                        _size = gl.data.iloc[i]['size']
+                        if 'stroke' in gl.data:
+                            _size += 2*gl.data.iloc[i]['stroke']
 
                     # special case, color does not apply to
                     # border/linewidth
@@ -222,7 +222,7 @@ class guide_legend(guide):
                         # color(edgecolor) affects size(linewidth)
                         # When the edge is not visible, we should
                         # not expand the size of the keys
-                        if gl.data.ix[i, 'color'] is not None:
+                        if gl.data.iloc[i]['color'] is not None:
                             size[i] = np.max([_size+pad, size[i]])
                     except KeyError:
                         break
