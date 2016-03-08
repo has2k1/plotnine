@@ -259,6 +259,13 @@ def _blankout_rect(rect):
 # element_text themeables
 
 class axis_title_x(themeable):
+    """
+    x axis label
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(axis_title_x, self).apply_figure(figure)
         with suppress(KeyError):
@@ -273,6 +280,13 @@ class axis_title_x(themeable):
 
 
 class axis_title_y(themeable):
+    """
+    y axis label
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(axis_title_y, self).apply_figure(figure)
         with suppress(KeyError):

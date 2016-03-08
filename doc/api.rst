@@ -312,3 +312,38 @@ positions
    position_jitterdodge
    position_nudge
    position_stack
+
+
+themes
+======
+
+
+Theme helper functions and classes
+----------------------------------
+.. currentmodule:: ggplot.themes
+
+.. autosummary::
+   :toctree: generated/
+   :template: only-docstring.rst
+
+   theme_set
+   theme_get
+   theme_update
+   element_line
+   element_rect
+   element_text
+
+
+coordinates
+===========
+
+.. currentmodule:: ggplot.themes
+
+.. autosummary::
+   :toctree: generated/
+   :template: only-docstring.rst
+
+
+
+datasets
+========

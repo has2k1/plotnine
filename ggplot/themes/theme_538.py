@@ -5,9 +5,7 @@ class theme_538(theme):
     """
     Theme for 538.
 
-    Copied from CamDavidsonPilon's gist:
-        https://gist.github.com/CamDavidsonPilon/5238b6499b14604367ac
-
+    Credit to `Cameron Davidson-Pilon <http://git.io/vuZNr>`_
     """
 
     def __init__(self):
