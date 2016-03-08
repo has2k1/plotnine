@@ -21,6 +21,32 @@ from .guide import guide
 
 
 class guide_colorbar(guide):
+    """
+    Guide colorbar
+
+    Parameters
+    ----------
+    barwidth : float
+        Width of the colorbar.
+    barheight : float
+        Height of the colorbar.
+    nbin : int
+        Number of bins for drawing a colorbar. A larger value yields
+        a smoother colorbar. Default is 20.
+    raster : bool
+        Whether to render the colorbar as a raster object.
+    ticks : bool
+        Whether tick marks on colorbar should be visible.
+    draw_ulim : bool
+        Whether to show the upper limit tick marks.
+    draw_llim : bool
+        Whether to show the lower limit tick marks.
+    direction : 'horizontal' | 'vertical'
+        Direction of the guide.
+    kwargs : dict
+        Parameters passed on to :class:`.guide`
+
+    """
     # bar
     barwidth = None
     barheight = None

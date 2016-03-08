@@ -22,6 +22,22 @@ from .guide import guide
 
 
 class guide_legend(guide):
+    """
+    Legend guide
+
+    Parameters
+    ----------
+    keyseparation : int
+        Space between legend keys
+    nrow : int
+        Number of rows of legends.
+    ncol : int
+        Number of columns of legends.
+    byrow : bool
+        Whether to fill the legend row-wise or column-wise.
+    kwargs : dict
+        Parameters passed on to :class:`.guide`
+    """
     # general
     nrow = None
     ncol = None

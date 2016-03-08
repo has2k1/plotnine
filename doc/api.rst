@@ -1,4 +1,3 @@
-
 .. _api:
 
 
@@ -272,7 +271,7 @@ Position scales
 
 
 Scale limits
--------------
+------------
 .. currentmodule:: ggplot.scales
 
 .. autosummary::
@@ -282,6 +281,20 @@ Scale limits
    lims
    xlim
    ylim
+
+
+Scale guides
+------------
+.. currentmodule:: ggplot.guides
+
+.. autosummary::
+   :toctree: generated/
+   :template: only-docstring.rst
+
+   guides
+   ~guide.guide
+   guide_legend
+   guide_colorbar
 
 
 positions

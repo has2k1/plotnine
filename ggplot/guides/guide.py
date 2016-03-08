@@ -9,6 +9,57 @@ from ..utils.exceptions import GgplotError
 
 @add_metaclass(Registry)
 class guide(object):
+    """
+    Base class for all guides
+
+    Parameters
+    ----------
+    title : str | None
+        Title of the guide. If ``None``, title is not shown.
+        Default is the name of the aesthetic or the name
+        specified using :class:`~ggplot.components.labels.lab`
+    title_position : 'top' | 'bottom' | 'left' | 'right'
+        Position of title
+    title_theme : element_text
+        Control over the title theme.
+        Default is to use ``legend_title`` in a theme.
+    title_hjust : float
+        Horizontal justification of title text.
+    title_vjust : float
+        Vertical justification of title text.
+    label : bool
+        Whether to show labels
+    label_position : 'top' | 'bottom' | 'left' | 'right'
+        Position of the labels.
+        The defaults are ``'bottom'`` for a horizontal guide and
+        '``right``' for a vertical guide.
+    label_theme : element_text
+        Control over the label theme.
+        Default is to use ``legend_text`` in a theme.
+    label_hjust : float
+        Horizontal justification of label text.
+    label_vjust : float
+        Vertical justification of label text.
+    keywidth : float
+        Width of the legend key.
+    keyheight : float
+        Height of the legend key.
+    direction : 'horizontal' | 'vertical'
+        Direction of the guide.
+    default_unit : str
+        Unit for ``keywidth`` and ``keyheight``
+    override_aes : list_like
+        Aesthetic parameters of legend key.
+    reverse : bool
+        Whether to reverse the order of the legends.
+    order : int
+        Order of this guide among multiple guides.
+        Should be in the range [0, 99]. Default is ``0``.
+
+    Note
+    ----
+    At the moment not all parameters have been fully implemented.
+    """
     __base__ = True
 
     # title

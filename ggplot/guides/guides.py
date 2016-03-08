@@ -11,23 +11,33 @@ from .guide import guide as guide_class
 from ..utils import is_string, is_waive, Registry
 from ..utils.exceptions import GgplotError
 
-"""
-Terminology
------------
-- A guide is either a legend or colorbar.
 
-- A guide definition (gdef) is an instantiated guide as it
-  is used in the process of creating the legend
-
-- The guides class holds all guides that will appear in the
-  plot
-
-- A guide box is a fully drawn out guide.
-  It is of subclass matplotlib.offsetbox.Offsetbox
-"""
+# Terminology
+# -----------
+# - A guide is either a legend or colorbar.
+#
+# - A guide definition (gdef) is an instantiated guide as it
+#   is used in the process of creating the legend
+#
+# - The guides class holds all guides that will appear in the
+#   plot
+#
+# - A guide box is a fully drawn out guide.
+#   It is of subclass matplotlib.offsetbox.Offsetbox
 
 
 class guides(dict):
+    """
+    Guides for each scale
+
+    Used to assign a particular guide to an aesthetic(s).
+
+    Parameters
+    ----------
+    kwargs : dict
+        aesthetic - guide pairings. e.g
+        ``color=guide_colorbar()``
+    """
 
     def __init__(self, **kwargs):
         aes_names = {'alpha', 'color', 'fill',
