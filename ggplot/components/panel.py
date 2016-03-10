@@ -22,14 +22,38 @@ class Panel(object):
     axs = None        # MPL axes
 
     def train_layout(self, facet, layer_data, plot_data):
+        """
+        Create a layout for the panels
+
+        The layout is a dataframe that stores all the
+        structual information about the panels that will
+        make up the plot. The actual layout depends on
+        the type of facet.
+        """
         self.layout = facet.train_layout([plot_data] + layer_data)
         self.shrink = facet.shrink
 
     def map_layout(self, facet, layer_data, plot_data):
+        """
+        Map data items to panel(s)
+
+        Each layer gets a complete data frame with each
+        and row in the dataframe(s) gets a new column
+        PANEL to indicate the panel to which it will be
+        plotted.
+
+        Returns
+        -------
+        out : list of dataframes
+            A dataframe for each layer.
+        """
         new_data = []
         for data in layer_data:
+            # Do not mess with the user supplied dataframes
             if data is None:
                 data = plot_data.copy()
+            else:
+                data = data.copy()
             new_data.append(facet.map_layout(data, self.layout))
         return new_data
 
@@ -37,7 +61,15 @@ class Panel(object):
         """
         Create all the required x_scales and y_scales
         and set the ranges for each scale according
-        to the data
+        to the data.
+
+        Note
+        ----
+        The number of x or y scales depends on the facetting,
+        particularly the scales parameter. e.g if `scales='free'`
+        then each panel will have separate x and y scales, and
+        if `scales='fixed'` then all panels will share an x
+        scale and a y scale.
         """
         layout = self.layout
         # Initialise scales if needed, and possible.
@@ -67,6 +99,14 @@ class Panel(object):
         return self
 
     def map_position(self, data, x_scale, y_scale):
+        """
+        Map x & y (position) aesthetics onto the scales.
+
+        e.g If the x scale is scale_x_log10, after this
+        function all x, xmax, xmin, ... columns in data
+        will be mapped onto log10 scale (log10 transformed).
+        The real mapping is handled by the scale.map
+        """
         layout = self.layout
 
         for layer_data in data:

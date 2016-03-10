@@ -10,12 +10,13 @@ import matplotlib.text as mtext
 import matplotlib.patches as mpatch
 from six.moves import zip
 
-from .components.aes import make_labels
+from .components.aes import aes, make_labels
 from .components.panel import Panel
 from .components.layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme import theme_get
 from .utils.ggutils import gg_context, ggplot_options
+from .utils.exceptions import GgplotError
 from .scales.scales import Scales
 from .scales.scales import scales_add_missing
 from .coords import coord_cartesian
@@ -51,9 +52,19 @@ class ggplot(object):
     CONTINUOUS = ['x', 'y', 'size', 'alpha']
     DISCRETE = ['color', 'shape', 'marker', 'alpha', 'linestyle']
 
-    def __init__(self, mapping, data):
-        if not isinstance(data, pd.DataFrame):
+    def __init__(self, mapping=None, data=None):
+        # Allow some sloppiness
+        if mapping is None:
+            mapping = aes()
+
+        if not isinstance(mapping, aes):
             mapping, data = data, mapping
+
+        if (data is not None and
+                not isinstance(data, pd.DataFrame)):
+            raise GgplotError(
+                'data must be a dataframe or None if each '
+                'layer will have separate data.')
 
         self.data = data
         self.mapping = mapping
