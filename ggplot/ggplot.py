@@ -291,15 +291,19 @@ class ggplot(object):
             return plot
 
         position = plot.theme._params['legend_position']
+
         # At what point (e.g [.94, .5]) on the figure
         # to place which point (e.g 6, for center left) of
         # the legend box
+        _x = 0.92
+        # Prevent overlap with the facet label
+        if isinstance(plot.facet, facet_grid):
+            _x += .025 * len(plot.facet.rows)
         lookup = {
-            'right':  (6, (0.92, 0.5)),  # center left
+            'right': (6, (_x, 0.5)),     # center left
             'left': (7, (0.07, 0.5)),    # center right
             'top': (8, (0.5, 0.92)),     # bottom center
-            'bottom': (9, (0.5, 0.07))   # upper center
-        }
+            'bottom': (9, (0.5, 0.07))}  # upper center
         loc, box_to_anchor = lookup[position]
         anchored_box = AnchoredOffsetbox(
             loc=loc,
@@ -309,8 +313,8 @@ class ggplot(object):
             # Spacing goes here
             bbox_to_anchor=box_to_anchor,
             bbox_transform=plot.figure.transFigure,
-            borderpad=0.,
-        )
+            borderpad=0.)
+
         plot.figure._themeable['legend_background'] = anchored_box
         ax = plot.axs[0]
         ax.add_artist(anchored_box)
@@ -387,14 +391,25 @@ def add_labels_and_title(plot):
     xlabel = plot.labels.get('x', '')
     ylabel = plot.labels.get('y', '')
     title = plot.labels.get('title', '')
+    center = 0.5
+
+    # This is finicky. Should be changed when MPL
+    # finally has a constraint based layout manager.
+    xtitle_y = 0.08
+    ytitle_x = 0.09
+    title_y = 0.92
+    if isinstance(plot.facet, facet_wrap):
+        title_y += 0.025 * len(plot.facet.vars)
+    elif isinstance(plot.facet, facet_grid):
+        title_y += 0.04 * len(plot.facet.cols)
 
     d = dict(
-        axis_title_x=fig.text(0.5, 0.08, xlabel,
+        axis_title_x=fig.text(center, xtitle_y, xlabel,
                               ha='center', va='top'),
-        axis_title_y=fig.text(0.09, 0.5, ylabel,
+        axis_title_y=fig.text(ytitle_x, center, ylabel,
                               ha='right', va='center',
                               rotation='vertical'),
-        plot_title=fig.text(0.5, 0.92, title,
+        plot_title=fig.text(center, title_y, title,
                             ha='center', va='bottom'))
 
     fig._themeable.update(d)
