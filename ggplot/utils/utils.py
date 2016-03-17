@@ -829,12 +829,21 @@ def get_kwarg_names(func):
     """
     Return a list of valid kwargs to function func
     """
-    kwarg_names = []
-    args, _, _, defaults = inspect.getargspec(func)
-    if defaults:
-        kwarg_names = args[-len(defaults):]
+    try:
+        # Python 3.5
+        sig = inspect.signature(func)
+    except AttributeError:
+        # Below Python 3.5
+        args, _, _, defaults = inspect.getargspec(func)
+        if defaults:
+            kwonlyargs = args[-len(defaults):]
+        else:
+            kwonlyargs = []
+    else:
+        kwonlyargs = [p.name for p in sig.parameters.values()
+                      if p.default is not p.empty]
 
-    return kwarg_names
+    return kwonlyargs
 
 
 def get_valid_kwargs(func, potential_kwargs):
