@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from matplotlib.collections import PolyCollection
 from six.moves import zip
 
-from ..utils import make_iterable, to_rgba
+from ..utils import to_rgba
 from .geom import geom
 
 
@@ -28,7 +28,6 @@ class geom_rect(geom):
 
     DEFAULT_AES = {'color': None, 'fill': '#595959',
                    'linetype': 'solid', 'size': 1.5, 'alpha': 1}
-
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     legend_geom = 'polygon'
@@ -39,37 +38,28 @@ class geom_rect(geom):
         Plot all groups
         """
         data = coord.transform(data, panel_scales, self._munch)
-        pinfos = self._make_pinfos(data, params)
-        for pinfo in pinfos:
-            self.draw_group(pinfo, panel_scales, coord, ax, **params)
+        self.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        def fn(key):
-            return make_iterable(pinfo.pop(key))
-
-        xmin = fn('xmin')
-        xmax = fn('xmax')
-        ymin = fn('ymin')
-        ymax = fn('ymax')
-
-        verts = [None] * len(xmin)
-        limits = zip(xmin, xmax, ymin, ymax)
+    def draw_group(data, panel_scales, coord, ax, **params):
+        verts = [None] * len(data)
+        limits = zip(data['xmin'], data['xmax'],
+                     data['ymin'], data['ymax'])
         for i, (l, r, b, t) in enumerate(limits):
             verts[i] = [(l, b), (l, t), (r, t), (r, b)]
 
-        pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
-        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
+        fill = to_rgba(data['fill'], data['alpha'])
+        color = to_rgba(data['color'], data['alpha'])
 
-        if pinfo['color'] is None:
-            pinfo['color'] = ''
+        if color is None:
+            color = ''
 
         col = PolyCollection(
             verts,
-            facecolors=pinfo['fill'],
-            edgecolors=pinfo['color'],
-            linestyles=pinfo['linetype'],
-            linewidths=pinfo['size'],
+            facecolors=fill,
+            edgecolors=color,
+            linestyles=data['linetype'].tolist(),
+            linewidths=data['size'].tolist(),
             transOffset=ax.transData,
-            zorder=pinfo['zorder'])
+            zorder=params['zorder'])
         ax.add_collection(col)

@@ -1,13 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from itertools import chain
-
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from ..utils import groupby_apply
+from ..utils import groupby_apply, interleave
 from ..scales.utils import resolution
 from .geom_polygon import geom_polygon
 from .geom_path import geom_path
@@ -67,8 +65,7 @@ class geom_violin(geom):
             polygon_df.loc[-1, :] = polygon_df.loc[0, :]
 
             # plot violin polygon
-            pinfo = self._make_pinfos(polygon_df, params)[0]
-            geom_polygon.draw_group(pinfo, panel_scales,
+            geom_polygon.draw_group(polygon_df, panel_scales,
                                     coord, ax, **params)
 
             if quantiles:
@@ -85,8 +82,7 @@ class geom_violin(geom):
                     axis=1)
 
                 # plot quantile segments
-                pinfo = self._make_pinfos(segment_df, params)[0]
-                geom_path.draw_group(pinfo, panel_scales, coord,
+                geom_path.draw_group(segment_df, panel_scales, coord,
                                      ax, **params)
 
 
@@ -103,8 +99,7 @@ def make_quantile_df(data, draw_quantiles):
     violin_xmaxvs = interp1d(data['y'], data['xmaxv'])(ys)
 
     data = pd.DataFrame({
-        'x': list(chain(*zip(violin_xminvs,  # interleave
-                             violin_xmaxvs))),
+        'x': interleave(violin_xminvs, violin_xmaxvs),
         'y': np.repeat(ys, 2),
         'group': np.repeat(np.arange(1, len(ys)+1), 2)})
 

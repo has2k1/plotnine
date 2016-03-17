@@ -27,19 +27,6 @@ class geom(object):
     # not implemented
     legend_geom = 'point'
 
-    # A matplotlib plot function may require that an aethestic have a
-    # single unique value. e.g. linestyle='dashed' and not
-    # linestyle=['dashed', 'dotted', ...].
-    # A single call to such a function can only plot lines with the
-    # same linestyle. However, if the plot we want has more than one
-    # line with different linestyles, we need to group the lines with
-    # the same linestyle and plot them as one unit.
-    #
-    # geoms should fill out this set with such aesthetics so that the
-    # plot information they receive can be plotted in a single call.
-    # See: geom_point
-    _units = set()
-
     # Whether to divide the distance between any two points into
     # multiple segments. This is done during coord.transform time
     _munch = False
@@ -167,12 +154,35 @@ class geom(object):
         """
         data = coord.transform(data, panel_scales, self._munch)
         for _, gdata in data.groupby('group'):
-            pinfos = self._make_pinfos(gdata, params)
-            for pinfo in pinfos:
-                self.draw_group(pinfo, panel_scales, coord, ax, **params)
+            gdata.reset_index(inplace=True, drop=True)
+            gdata.is_copy = None
+            self.draw_group(gdata, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_scales, coord, ax, **params):
+        """
+        Plot data
+        """
+        msg = "The geom should implement this method."
+        raise NotImplementedError(msg)
+
+    @staticmethod
+    def draw_unit(data, panel_scales, coord, ax, **params):
+        """
+        Plot data
+
+        A matplotlib plot function may require that an aethestic
+        have a single unique value. e.g. linestyle='dashed' and
+        not linestyle=['dashed', 'dotted', ...].
+        A single call to such a function can only plot lines with
+        the same linestyle. However, if the plot we want has more
+        than one line with different linestyles, we need to group
+        the lines with the same linestyle and plot them as one
+        unit. In this case, draw_group calls this function to do
+        the plotting.
+
+        See: geom_point
+        """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
@@ -284,55 +294,3 @@ class geom(object):
         if unknown:
             msg = 'Unknown parameters {}'
             raise GgplotError(msg.format(unknown))
-
-    def _make_pinfos(self, data, params):
-        units = []
-        for col in data.columns:
-            if col in self._units:
-                units.append(col)
-
-        shrinkable = {'alpha', 'fill', 'color', 'size', 'linetype',
-                      'shape'}
-
-        def prep(pinfo):
-            """
-            Reduce shrinkable parameters &  append zorder
-            """
-            # If it is the same value in the list make it a scalar
-            # This can help the matplotlib functions draw faster
-            for ae in set(pinfo) & shrinkable:
-                with suppress(TypeError, IndexError):
-                    if all(pinfo[ae][0] == v for v in pinfo[ae]):
-                        pinfo[ae] = pinfo[ae][0]
-            pinfo['zorder'] = params['zorder']
-            return pinfo
-
-        out = []
-        if units:
-            # Currently groupby does not like None values in any of
-            # the columns that participate in the grouping. These
-            # Nones come in when the default aesthetics are added to
-            # the data. We drop these columns and after turning the
-            # the dataframe into a dictionary insert a None for that
-            # aesthetic
-            _units = []
-            _none_units = []
-            for unit in units:
-                if data[unit].iloc[0] is None:
-                    _none_units.append(unit)
-                    del data[unit]
-                else:
-                    _units.append(unit)
-
-            for name, _data in data.groupby(_units):
-                pinfo = _data.to_dict('list')
-                for ae in _units:
-                    pinfo[ae] = pinfo[ae][0]
-                for ae in _none_units:
-                    pinfo[ae] = None
-                out.append(prep(pinfo))
-        else:
-            pinfo = data.to_dict('list')
-            out.append(prep(pinfo))
-
-        return out

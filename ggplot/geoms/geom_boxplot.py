@@ -1,12 +1,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import deepcopy
 
+import numpy as np
+import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
 from ..scales.utils import resolution
-from ..utils import make_iterable_ntimes, to_rgba
+from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
 from .geom_point import geom_point
 from .geom_segment import geom_segment
 from .geom_crossbar import geom_crossbar
@@ -22,7 +23,8 @@ class geom_boxplot(geom):
                       'outlier_alpha': 1, 'outlier_color': None,
                       'outlier_shape': 'o', 'outlier_size': 5,
                       'outlier_stroke': 0, 'notch': False,
-                      'varwidth': False, 'notchwidth': 0.5}
+                      'varwidth': False, 'notchwidth': 0.5,
+                      'fatten': 2}
 
     def setup_data(self, data):
         if 'width' not in data:
@@ -50,59 +52,63 @@ class geom_boxplot(geom):
         return data
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_scales, coord, ax, **params):
+        def flat(*args):
+            """Flatten list-likes"""
+            return np.hstack(args)
 
-        def subdict(keys):
-            d = {}
-            for key in keys:
-                d[key] = deepcopy(pinfo[key])
-            return d
-
-        common = subdict(('color', 'size', 'linetype',
-                          'fill', 'group', 'alpha',
-                          'zorder'))
-
-        whiskers = subdict(('x',))
-        whiskers.update(deepcopy(common))
-        whiskers['x'] = whiskers['x'] * 2
+        common_columns = ['color', 'size', 'linetype',
+                          'fill', 'group', 'alpha', 'shape']
+        # whiskers
+        whiskers = pd.DataFrame({
+            'x': flat(data['x'], data['x']),
+            'y': flat(data['upper'], data['lower']),
+            'yend': flat(data['ymax'], data['ymin'])})
         whiskers['xend'] = whiskers['x']
-        whiskers['y'] = pinfo['upper'] + pinfo['lower']
-        whiskers['yend'] = pinfo['ymax'] + pinfo['ymin']
+        copy_missing_columns(whiskers, data[common_columns])
 
-        box = subdict(('xmin', 'xmax', 'lower', 'middle', 'upper'))
-        box.update(deepcopy(common))
-        box['ymin'] = box.pop('lower')
-        box['y'] = box.pop('middle')
-        box['ymax'] = box.pop('upper')
-        box['notchwidth'] = params['notchwidth']
+        # box
+        box_columns = ['xmin', 'xmax', 'lower', 'middle', 'upper']
+        box = data[common_columns + box_columns].copy()
+        box.rename(columns={'lower': 'ymin',
+                            'middle': 'y',
+                            'upper': 'ymax'},
+                   inplace=True)
+
+        # notch
         if params['notch']:
-            box['ynotchlower'] = pinfo['notchlower']
-            box['ynotchupper'] = pinfo['notchupper']
+            box['ynotchlower'] = data['notchlower']
+            box['ynotchupper'] = data['notchupper']
 
-        if 'outliers' in pinfo and len(pinfo['outliers'][0]):
-            outliers = subdict(('alpha', 'zorder'))
+        # outliers
+        try:
+            num_outliers = len(data['outliers'].iloc[0])
+        except KeyError:
+            num_outliers = 0
 
+        if num_outliers:
             def outlier_value(param):
                 oparam = 'outlier_{}'.format(param)
                 if params[oparam] is not None:
                     return params[oparam]
-                return pinfo[param]
+                return data[param].iloc[0]
 
-            outliers['y'] = pinfo['outliers'][0]
-            outliers['x'] = make_iterable_ntimes(pinfo['x'][0],
-                                                 len(outliers['y']))
+            outliers = pd.DataFrame({
+                'y': data['outliers'].iloc[0],
+                'x': make_iterable_ntimes(data['x'][0],
+                                          num_outliers),
+                'fill': None})
             outliers['alpha'] = outlier_value('alpha')
             outliers['color'] = outlier_value('color')
-            outliers['fill'] = None
             outliers['shape'] = outlier_value('shape')
             outliers['size'] = outlier_value('size')
             outliers['stroke'] = outlier_value('stroke')
             geom_point.draw_group(outliers, panel_scales,
                                   coord, ax, **params)
 
+        # plot
         geom_segment.draw_group(whiskers, panel_scales,
                                 coord, ax, **params)
-        params['fatten'] = geom_crossbar.DEFAULT_PARAMS['fatten']
         geom_crossbar.draw_group(box, panel_scales,
                                  coord, ax, **params)
 

@@ -40,15 +40,15 @@ class geom_vline(geom):
         data = data.drop_duplicates()
 
         for _, gdata in data.groupby('group'):
-            pinfos = self._make_pinfos(gdata, params)
-            for pinfo in pinfos:
-                geom_segment.draw_group(pinfo, panel_scales,
-                                        coord, ax, **params)
+            gdata.reset_index(inplace=True)
+            gdata.is_copy = None
+            geom_segment.draw_group(gdata, panel_scales,
+                                    coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):
         """
-        Draw a horizontal line in the box
+        Draw a vertical line in the box
 
         Parameters
         ----------

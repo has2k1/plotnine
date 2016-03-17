@@ -1,8 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import numpy as np
-
 from .geom import geom
 from .geom_path import geom_path
 from .geom_point import geom_point
@@ -65,16 +63,13 @@ class geom_pointrange(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'fatten': 4}
 
-    _units = {'shape'}
-
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        y = pinfo['y']
-        geom_linerange.draw_group(pinfo, panel_scales, coord, ax, **params)
-        pinfo['size'] = np.asarray(pinfo['size']) * params['fatten']
-        pinfo['y'] = y
-        pinfo['stroke'] = 1
-        geom_point.draw_group(pinfo, panel_scales, coord, ax, **params)
+    def draw_group(data, panel_scales, coord, ax, **params):
+        geom_linerange.draw_group(data.copy(), panel_scales,
+                                  coord, ax, **params)
+        data['size'] = data['size'] * params['fatten']
+        data['stroke'] = 1
+        geom_point.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

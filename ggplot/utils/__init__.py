@@ -11,7 +11,9 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     remove_missing, round_any, seq,
                     to_rgba, groupby_apply, make_line_segments,
                     ColoredDrawingArea, suppress, copy_keys,
-                    RegisteredMeta, get_valid_kwargs)
+                    RegisteredMeta, get_valid_kwargs,
+                    copy_missing_columns, groupby_with_null,
+                    interleave)
 
 
 __all__ = ['ggsave']

@@ -1,7 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import pandas as pd
 from matplotlib.text import Text
 
 from .geom import geom
@@ -33,39 +32,38 @@ class geom_text(geom):
         geom.__init__(self, *args, **kwargs)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        # Not used by Text
-        del pinfo['PANEL']
-        del pinfo['group']
-
+    def draw_group(data, panel_scales, coord, ax, **params):
         # Bind color and alpha
-        color = to_rgba(pinfo['color'], pinfo['alpha'])
+        color = to_rgba(data['color'], data['alpha'])
+
         if isinstance(color, tuple):
-            color = [list(color)] * len(pinfo['x'])
+            color = [list(color)] * len(data['x'])
 
         # Parse latex
-        labels = pinfo.pop('label')
         if params['parse']:
-            labels = ['${}$'.format(l) for l in labels]
+            data['label'] = ['${}$'.format(l)
+                             for l in data['label']]
 
-        # Create ax.text parameters
-        pinfo['color'] = color
-        pinfo['s'] = labels
-        pinfo['linespacing'] = pinfo.pop('lineheight')
-        pinfo['rotation'] = pinfo.pop('angle')
-        pinfo['horizontalalignment'] = params['hjust']
-        pinfo['verticalalignment'] = params['vjust']
-        pinfo['family'] = params['family']
-        pinfo['fontweight'] = params['fontweight']
-        pinfo['clip_on'] = True
+        # Put all ax.text parameters in dataframe so
+        # that each row represents a text instance
+        data.rename(columns={'label': 's',
+                             'angle': 'rotation',
+                             'lineheight': 'linespacing'},
+                    inplace=True)
+        data['color'] = color
+        data['horizontalalignment'] = params['hjust']
+        data['verticalalignment'] = params['vjust']
+        data['family'] = params['family']
+        data['fontweight'] = params['fontweight']
+        data['clip_on'] = True
 
         # 'fill' indicates geom_label so we need an MPL bbox
-        draw_label = 'fill' in pinfo
+        draw_label = 'fill' in data
         if draw_label:
-            fill = to_rgba(pinfo.pop('fill'), pinfo['alpha'])
+            fill = to_rgba(data.pop('fill'), data['alpha'])
             if isinstance(fill, tuple):
-                fill = [list(fill)] * len(pinfo['x'])
-            pinfo['facecolor'] = fill
+                fill = [list(fill)] * len(data['x'])
+            data['facecolor'] = fill
 
             if params['boxstyle'] in ('round', 'round4'):
                 boxstyle = '{},pad={},rounding_size={}'.format(
@@ -81,12 +79,14 @@ class geom_text(geom):
         else:
             bbox = {}
 
-        # Put all params in dataframe so that each row
-        # represents a text instance & when there is a
-        # facecolor we add the bbox
-        df = pd.DataFrame(pinfo)
-        for i in range(len(df)):
-            kw = df[df.columns].iloc[i].to_dict()
+        # Unwanted
+        del data['PANEL']
+        del data['group']
+        del data['alpha']
+
+        # For labels add a bbox
+        for i in range(len(data)):
+            kw = data.iloc[i].to_dict()
             if draw_label:
                 kw['bbox'] = bbox
                 kw['bbox']['edgecolor'] = kw['color']

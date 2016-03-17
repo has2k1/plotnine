@@ -18,24 +18,20 @@ class geom_dotplot(geom):
                       'stackdir': 'up', 'stackratio': 1,
                       'dotsize': 1, 'stackgroups': False}
 
-    @classmethod
-    def _verify(cls, **params):
-        """
-        Issue warnings when parameters don't make sense
-        """
-        if params['position'] == 'stack':
-            gg_warn("position='stack' doesn't work properly with "
-                    "geom_dotplot. Use stackgroups=True instead.")
-        if (params['stackgroups'] and
-                params['method'] == 'dotdensity' and
-                params['binpositions'] == 'bygroup'):
-            gg_warn("geom_dotplot called with stackgroups=TRUE and "
-                    "method='dotdensity'. You probably want to set "
-                    "binpositions='all'")
-
     def setup_data(self, data):
         gp = self.params
         sp = self._stat.params
+
+        # Issue warnings when parameters don't make sense
+        if gp['position'] == 'stack':
+            gg_warn("position='stack' doesn't work properly with "
+                    "geom_dotplot. Use stackgroups=True instead.")
+        if (gp['stackgroups'] and
+                sp['method'] == 'dotdensity' and
+                sp['binpositions'] == 'bygroup'):
+            gg_warn("geom_dotplot called with stackgroups=TRUE and "
+                    "method='dotdensity'. You probably want to set "
+                    "binpositions='all'")
 
         if 'width' not in data:
             if sp['width']:
@@ -122,36 +118,33 @@ class geom_dotplot(geom):
         return data
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        geom_dotplot._verify(**params)
-
-        pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
-        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
-        x = np.asarray(pinfo['x'])
-        y = np.asarray(pinfo['y'])
+    def draw_group(data, panel_scales, coord, ax, **params):
+        fill = to_rgba(data['fill'], data['alpha'])
+        color = to_rgba(data['color'], data['alpha'])
         ranges = coord.range(panel_scales)
         # For perfect circles the width/height of the circle(ellipse)
         # should factor in the figure dimensions
         fw, fh = ax.figure.get_figwidth(), ax.figure.get_figheight()
         factor = ((fw/fh) *
                   np.ptp(ranges.y)/np.ptp(ranges.x))
-        size = pinfo['binwidth'][0] * params['dotsize']
-        offsets = np.asarray(pinfo['stackpos']) * params['stackratio']
+        size = data.loc[0, 'binwidth'] * params['dotsize']
+        offsets = data['stackpos'] * params['stackratio']
 
         if params['binaxis'] == 'x':
             width, height = size, size*factor
-            xpos, ypos = x, y + height*offsets
+            xpos, ypos = data['x'], data['y'] + height*offsets
         elif params['binaxis'] == 'y':
             width, height = size/factor, size
-            xpos, ypos = x + width*offsets, y
+            xpos, ypos = data['x'] + width*offsets, data['y']
 
         circles = []
         for xy in zip(xpos, ypos):
             patch = mpatches.Ellipse(xy, width=width, height=height)
             circles.append(patch)
+
         coll = mcoll.PatchCollection(circles,
-                                     edgecolors=pinfo['color'],
-                                     facecolors=pinfo['fill'])
+                                     edgecolors=color,
+                                     facecolors=fill)
         ax.add_collection(coll)
 
     @staticmethod

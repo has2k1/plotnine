@@ -2,10 +2,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
+import pandas as pd
 import matplotlib.collections as mcoll
 
 from .geom import geom
-from ..utils import to_rgba, make_line_segments
+from ..utils import to_rgba, make_line_segments, interleave
 
 
 class geom_segment(geom):
@@ -18,31 +19,30 @@ class geom_segment(geom):
     legend_geom = 'path'
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
-        x = np.zeros(len(pinfo['x'])*2)
-        y = np.zeros(len(pinfo['y'])*2)
+    def draw_group(data, panel_scales, coord, ax, **params):
+        color = to_rgba(data['color'], data['alpha'])
 
-        # interleave
-        x[::2], x[1::2] = pinfo['x'], pinfo['xend']
-        y[::2], y[1::2] = pinfo['y'], pinfo['yend']
-
+        # start point -> end point, sequence of xy points
+        # from which line segments are created
+        x = interleave(data['x'], data['xend'])
+        y = interleave(data['y'], data['yend'])
         segments = make_line_segments(x, y, ispath=False)
         coll = mcoll.LineCollection(segments,
-                                    edgecolor=pinfo['color'],
-                                    linewidth=pinfo['size'],
-                                    linestyle=pinfo['linetype'],
-                                    zorder=pinfo['zorder'])
+                                    edgecolor=color,
+                                    linewidth=data['size'],
+                                    linestyle=data['linetype'][0],
+                                    zorder=params['zorder'])
         ax.add_collection(coll)
 
         if 'arrow' in params and params['arrow']:
-            pinfo['group'] = np.tile(np.arange(1, len(pinfo['x'])+1), 2)
-            pinfo['x'] = pinfo['x'] + pinfo['xend']
-            pinfo['y'] = pinfo['y'] + pinfo['yend']
-            other = ['color', 'size', 'linetype']
+            adata = pd.DataFrame(index=range(len(data)*2))
+            idx = np.arange(1, len(data)+1)
+            adata['group'] = np.hstack([idx, idx])
+            adata['x'] = np.hstack([data['x'], data['xend']])
+            adata['y'] = np.hstack([data['y'], data['yend']])
+            other = ['color', 'alpha', 'size', 'linetype']
             for param in other:
-                if isinstance(pinfo[param], list):
-                    pinfo[param] = pinfo[param] * 2
+                adata[param] = np.hstack([data[param], data[param]])
 
             params['arrow'].draw(
-                pinfo, panel_scales, coord, ax, constant=False)
+                adata, panel_scales, coord, ax, constant=False)

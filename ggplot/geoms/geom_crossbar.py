@@ -2,12 +2,13 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
+import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
 from ..scales.utils import resolution
 from ..utils.exceptions import gg_warn
-from ..utils import to_rgba
+from ..utils import copy_missing_columns
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
@@ -33,39 +34,33 @@ class geom_crossbar(geom):
         return data
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        y = pinfo['y']
-        xmin = np.array(pinfo['xmin'])
-        xmax = np.array(pinfo['xmax'])
-        ymin = np.array(pinfo['ymin'])
-        ymax = np.array(pinfo['ymax'])
-        notchwidth = pinfo.get('notchwidth')
-        ynotchupper = pinfo.get('ynotchupper')
-        ynotchlower = pinfo.get('ynotchlower')
+    def draw_group(data, panel_scales, coord, ax, **params):
+        y = data['y']
+        xmin = data['xmin']
+        xmax = data['xmax']
+        ymin = data['ymin']
+        ymax = data['ymax']
+        group = data['group']
 
-        keys = ['alpha', 'color', 'fill', 'size',
-                'linetype', 'zorder']
-
-        def copy_keys(d):
-            for k in keys:
-                d[k] = pinfo[k]
+        # From violin
+        notchwidth = data.get('notchwidth')
+        ynotchupper = data.get('ynotchupper')
+        ynotchlower = data.get('ynotchlower')
 
         def flat(*args):
             """Flatten list-likes"""
-            return [i for arg in args for i in arg]
+            return np.hstack(args)
 
-        middle = {'x': xmin,
-                  'y': y,
-                  'xend': xmax,
-                  'yend': y,
-                  'group': pinfo['group']}
-        copy_keys(middle)
-        middle['size'] = np.asarray(middle['size'])*params['fatten'],
+        middle = pd.DataFrame({'x': xmin,
+                               'y': y,
+                               'xend': xmax,
+                               'yend': y,
+                               'group': group})
+        copy_missing_columns(middle, data)
+        middle['size'] *= params['fatten']
 
         has_notch = ynotchlower is not None and ynotchupper is not None
         if has_notch:  # 10 points + 1 closing
-            ynotchlower = np.array(ynotchlower)
-            ynotchupper = np.array(ynotchupper)
             if (any(ynotchlower < ymin) or any(ynotchupper > ymax)):
                 msg = ("Notch went outside hinges."
                        " Try setting notch=False.")
@@ -73,24 +68,24 @@ class geom_crossbar(geom):
 
             notchindent = (1 - notchwidth) * (xmax-xmin)/2
 
-            middle['x'] = np.array(middle['x']) + notchindent
-            middle['xend'] = np.array(middle['xend']) - notchindent
-            box = {
+            middle['x'] += notchindent
+            middle['xend'] -= notchindent
+            box = pd.DataFrame({
                 'x': flat(xmin, xmin, xmin+notchindent, xmin, xmin,
                           xmax, xmax, xmax-notchindent, xmax, xmax,
                           xmin),
                 'y': flat(ymax, ynotchupper, y, ynotchlower, ymin,
                           ymin, ynotchlower, y, ynotchupper, ymax,
                           ymax),
-                'group': np.tile(np.arange(1, len(pinfo['group'])+1), 11)}
+                'group': np.tile(np.arange(1, len(group)+1), 11)})
         else:
             # No notch, 4 points + 1 closing
-            box = {
+            box = pd.DataFrame({
                 'x': flat(xmin, xmin, xmax, xmax, xmin),
                 'y': flat(ymax, ymax, ymax, ymin, ymin),
-                'group': np.tile(np.arange(1, len(pinfo['group'])+1), 5)}
-        copy_keys(box)
+                'group': np.tile(np.arange(1, len(group)+1), 5)})
 
+        copy_missing_columns(box, data)
         geom_polygon.draw_group(box, panel_scales, coord, ax, **params)
         geom_segment.draw_group(middle, panel_scales, coord, ax, **params)
 

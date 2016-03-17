@@ -3,15 +3,13 @@ from __future__ import (absolute_import, division, print_function,
 from collections import Counter
 
 import numpy as np
-import pandas as pd
 import matplotlib.collections as mcoll
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
 from ..utils.exceptions import gg_warn
-from ..utils import to_rgba, make_iterable_ntimes
-from ..utils import make_line_segments, suppress, is_string
+from ..utils import to_rgba, make_line_segments, suppress
 from .geom import geom
 
 
@@ -54,36 +52,24 @@ class geom_path(geom):
         constant = len(df) == len(data['group'].unique())
         params['constant'] = constant
 
+        data = coord.transform(data, panel_scales, self._munch)
         if not constant:
-            data = coord.transform(data, panel_scales, self._munch)
-            # expects len(pinfos) == 1
-            pinfos = self._make_pinfos(data, params)
-            self.draw_group(pinfos[0], panel_scales, coord, ax, **params)
+            self.draw_group(data, panel_scales, coord, ax, **params)
         else:
-            geom.draw_panel(self, data, panel_scales, coord, ax, **params)
+            for _, gdata in data.groupby('group'):
+                self.draw_group(gdata, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-
-        with suppress(KeyError):
-            if params['linejoin'] == 'mitre':
-                params['linejoin'] = 'miter'
-
-        with suppress(KeyError):
-            if params['lineend'] == 'square':
-                params['lineend'] = 'projecting'
-
-        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
-
+    def draw_group(data, panel_scales, coord, ax, **params):
         constant = params.pop('constant', False)
         if not constant:
-            _draw_segments(pinfo, ax, **params)
+            _draw_segments(data, ax, **params)
         else:
-            _draw_lines(pinfo, ax, **params)
+            _draw_lines(data, ax, **params)
 
         if 'arrow' in params and params['arrow']:
             params['arrow'].draw(
-                pinfo, panel_scales, coord, ax, constant=constant)
+                data, panel_scales, coord, ax, constant=constant)
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -137,41 +123,14 @@ class arrow(object):
         self.length = length
         self.ends = ends
         self.type = type
-        self._cache = {}
 
-    def _init(self, panel_scales, coord, ax):
-        """
-        Calculate and cache the arrow edge lengths along both axes
-        """
-
-        with suppress(KeyError):
-            if (panel_scales is self._cache['panel_scales'] and
-                    ax is self._cache['ax']):
-                return
-        # A length for each dimension, makes the edges of
-        # all arrowheads to be drawn have the same length.
-        # i.e a perfect isosceles arrowhead
-        # The rotation angle calculation is also scaled with
-        # these values
-        fig = ax.get_figure()
-        width, height = fig.get_size_inches()
-        ranges = coord.range(panel_scales)
-        width_ = np.ptp(ranges.x)
-        height_ = np.ptp(ranges.y)
-
-        self._cache['panel_scales'] = panel_scales
-        self._cache['ax'] = ax
-        self._cache['lx'] = self.length * width_/width
-        self._cache['ly'] = self.length * height_/height
-        self._cache['radians'] = self.angle * np.pi / 180
-
-    def draw(self, pinfo, panel_scales, coord, ax, constant=True):
+    def draw(self, data, panel_scales, coord, ax, constant=True):
         """
         Draw arrows at the end(s) of the lines
 
         Parameters
         ----------
-        pinfo : dict
+        data : dict
             plot information as required by geom.draw
         scales : dict
             x scale, y scale
@@ -181,165 +140,212 @@ class arrow(object):
             If the path attributes vary along the way. If false,
             the arrows are per segment of the path
         """
-        self._init(panel_scales, coord, ax)
-        Path = mpath.Path
-
         first = self.ends in ('first', 'both')
         last = self.ends in ('last', 'both')
+
+        data = data.sort_values('group', kind='mergesort')
+        data['color'] = to_rgba(data['color'], data['alpha'])
+
         if self.type == 'open':
-            pinfo['facecolor'] = 'none'
+            data['facecolor'] = 'none'
         else:
-            pinfo['facecolor'] = pinfo['color']
-
-        # Create reusable lists of vertices and codes
-        paths = []
-        num = first + last         # No. of arrowheads per line
-        verts = [None] * 3 * num   # arrowhead path has 3 vertices
-        verts.append((0, 0))       # Dummy vertex for the STOP code
-        # codes list remains the same after initialization
-        codes = [Path.MOVETO, Path.LINETO, Path.LINETO] * num
-        codes.append(Path.STOP)
-        # Slices into the vertices list
-        slc1 = slice(0, 3)
-        slc2 = slice(3, 6) if first else slc1
-
-        def get_param(param, indices):
-            out = pinfo[param]
-            with suppress(TypeError):
-                if len(out) == len(pinfo['x']):
-                    out = [pinfo[param][i] for i in indices]
-            return out
+            data['facecolor'] = data['color']
 
         if not constant:
-            indices = []
-            df = pd.DataFrame({'group': pinfo['group']})
-            for _, _df in df.groupby('group'):
-                idx = _df.index.tolist()
-                indices[:-1] += idx  # One line from two points
-                for i1, i2 in zip(idx[:-1], idx[1:]):
-                    x1, x2 = pinfo['x'][i1], pinfo['x'][i2]
-                    y1, y2 = pinfo['y'][i1], pinfo['y'][i2]
-                    if first:
-                        verts[slc1] = self._vertices(x1, x2, y1, y2)
-                    if last:
-                        verts[slc2] = self._vertices(x2, x1, y2, y1)
-                    paths.append(Path(verts, codes))
-            edgecolor = get_param('color', indices)
-            facecolor = get_param('facecolor', indices)
-            linewidth = get_param('size', indices)
-            linestyle = get_param('linetype', indices)
-            coll = mcoll.PathCollection(paths,
-                                        edgecolor=edgecolor,
-                                        facecolor=facecolor,
-                                        linewidth=linewidth,
-                                        linestyle=linestyle)
+            # Get segments/points (x1, y1) -> (x2, y2)
+            # for which to calculate the arrow heads
+            idx1, idx2 = [], []
+            for _, df in data.groupby('group'):
+                idx1.extend(df.index[:-1])
+                idx2.extend(df.index[1:])
 
-            ax.add_collection(coll)
-        else:
+            d = dict(
+                edgecolor=data.loc[idx1, 'color'],
+                facecolor=data.loc[idx1, 'facecolor'],
+                linewidth=data.loc[idx1, 'size'],
+                linestyle=data.loc[idx1, 'linetype'].tolist())
+
+            x1 = data.loc[idx1, 'x'].values
+            y1 = data.loc[idx1, 'y'].values
+            x2 = data.loc[idx2, 'x'].values
+            y2 = data.loc[idx2, 'y'].values
+
             if first:
-                x1, x2 = pinfo['x'][0:2]
-                y1, y2 = pinfo['y'][0:2]
-                verts[slc1] = self._vertices(x1, x2, y1, y2)
+                paths = self.get_paths(x1, y1, x2, y2,
+                                       panel_scales, coord, ax)
+                coll = mcoll.PathCollection(paths, **d)
+                ax.add_collection(coll)
             if last:
-                x1, x2 = pinfo['x'][-2:]
-                y1, y2 = pinfo['y'][-2:]
-                verts[slc2] = self._vertices(x2, x1, y2, y1)
-            patch = mpatches.PathPatch(Path(verts, codes),
-                                       edgecolor=pinfo['color'],
-                                       facecolor=pinfo['facecolor'],
-                                       linewidth=pinfo['size'],
-                                       linestyle=pinfo['linetype'],
-                                       joinstyle='round',
-                                       capstyle='butt')
-            ax.add_artist(patch)
+                x1, y1, x2, y2 = x2, y2, x1, y1
+                paths = self.get_paths(x1, y1, x2, y2,
+                                       panel_scales, coord, ax)
+                coll = mcoll.PathCollection(paths, **d)
+                ax.add_collection(coll)
+        else:
+            d = dict(
+                edgecolor=data['color'].iloc[0],
+                facecolor=data['facecolor'].iloc[0],
+                linewidth=data['size'].iloc[0],
+                linestyle=data['linetype'].iloc[0],
+                joinstyle='round',
+                capstyle='butt')
 
-    def _vertices(self, x1, x2, y1, y2):
+            if first:
+                x1, x2 = data['x'].iloc[0:2]
+                y1, y2 = data['y'].iloc[0:2]
+                x1, y1, x2, y2 = [np.array([i])
+                                  for i in (x1, y1, x2, y2)]
+                paths = self.get_paths(x1, y1, x2, y2,
+                                       panel_scales, coord, ax)
+                patch = mpatches.PathPatch(paths[0], **d)
+                ax.add_artist(patch)
+
+            if last:
+                x1, x2 = data['x'].iloc[-2:]
+                y1, y2 = data['y'].iloc[-2:]
+                x1, y1, x2, y2 = x2, y2, x1, y1
+                x1, y1, x2, y2 = [np.array([i])
+                                  for i in (x1, y1, x2, y2)]
+                paths = self.get_paths(x1, y1, x2, y2,
+                                       panel_scales, coord, ax)
+                patch = mpatches.PathPatch(paths[0], **d)
+                ax.add_artist(patch)
+
+    def get_paths(self, x1, y1, x2, y2, panel_scales, coord, ax):
         """
-        Return the vertices that define the arrowhead
+        Compute paths that create the arrow heads
 
-        The line is assumed to run from (x1, y1) to
-        (x2, y2) and the vertices returned put the
-        arrowhead at (x1, y1)
+        Parameters
+        ----------
+        x1, y1, x2, y2 : array_like
+            List of points that define the tails of the arrows.
+            The arrow heads will be at x1, y1. If you need them
+            at x2, y2 reverse the input.
+
+        Returns
+        -------
+        out : list of Path
+            Paths that create arrow heads
         """
-        lx, ly = self._cache['lx'], self._cache['ly']
-        a = self._cache['radians']
-        yc = y2 - y1
-        xc = x2 - x1
-        rot = np.arctan2(yc/ly, xc/lx)
+        Path = mpath.Path
 
-        v1x = x1 + lx * np.cos(rot + a)
-        v1y = y1 + ly * np.sin(rot + a)
-        v2x = x1 + lx * np.cos(rot - a)
-        v2y = y1 + ly * np.sin(rot - a)
+        # Create reusable lists of vertices and codes
+        # arrowhead path has 3 vertices (Nones),
+        # plus dummy vertex for the STOP code
+        verts = [None, None, None,
+                 (0, 0)]
 
-        return [(v1x, v1y), (x1, y1), (v2x, v2y)]
+        # codes list remains the same after initialization
+        codes = [Path.MOVETO, Path.LINETO, Path.LINETO,
+                 Path.STOP]
+
+        # Slices into the vertices list
+        slc = slice(0, 3)
+
+        # We need the plot dimensions so that we can
+        # compute scaling factors
+        fig = ax.get_figure()
+        width, height = fig.get_size_inches()
+        ranges = coord.range(panel_scales)
+        width_ = np.ptp(ranges.x)
+        height_ = np.ptp(ranges.y)
+
+        # scaling factors to prevent skewed arrowheads
+        lx = self.length * width_/width
+        ly = self.length * height_/height
+
+        # angle in radians
+        a = self.angle * np.pi / 180
+
+        # direction of arrow head
+        xdiff, ydiff = x2 - x1, y2 - y1
+        rotations = np.arctan2(ydiff/ly, xdiff/lx)
+
+        # Arrow head vertices
+        v1x = x1 + lx * np.cos(rotations + a)
+        v1y = y1 + ly * np.sin(rotations + a)
+        v2x = x1 + lx * np.cos(rotations - a)
+        v2y = y1 + ly * np.sin(rotations - a)
+
+        # create a path for each arrow head
+        paths = []
+        for t in zip(v1x, v1y, x1, y1, v2x, v2y):
+            verts[slc] = [t[:2], t[2:4], t[4:]]
+            paths.append(Path(verts, codes))
+
+        return paths
 
 
-def _draw_segments(pinfo, ax, **params):
+def _draw_segments(data, ax, **params):
     """
     Draw independent line segments between all the
     points
     """
+    color = to_rgba(data['color'], data['alpha'])
     # All we do is line-up all the points in a group
     # into segments, all in a single list.
     # Along the way the other parameters are put in
     # sequences accordingly
-    group = make_iterable_ntimes(pinfo['group'], len(pinfo['x']))
-    df = pd.DataFrame({'group': group})
-
-    def get_param(param, indices):
-        """
-        Return values for a given parameter
-        """
-        out = pinfo[param]
-        with suppress(TypeError):
-            if not is_string(out) and len(out) == len(pinfo['x']):
-                out = [pinfo[param][i] for i in indices]
-        return out
-
     indices = []  # for attributes of starting point of each segment
     segments = []
-    for _, _df in df.groupby('group'):
-        idx = _df.index.tolist()
-        indices += idx[:-1]  # One line from two points
-        x = [pinfo['x'][i] for i in idx]
-        y = [pinfo['y'][i] for i in idx]
+    for _, df in data.groupby('group'):
+        idx = df.index
+        indices.extend(idx[:-1])  # One line from two points
+        x = data['x'].iloc[idx]
+        y = data['y'].iloc[idx]
         segments.append(make_line_segments(x, y, ispath=True))
 
     segments = np.vstack(segments)
-    edgecolor = get_param('color', indices)
-    linewidth = get_param('size', indices)
-    linestyle = get_param('linetype', indices)
+
+    if color is None:
+        edgecolor = color
+    else:
+        edgecolor = [color[i] for i in indices]
+
+    linewidth = data.loc[indices, 'size']
+    linestyle = data.loc[indices, 'linetype'].tolist()
 
     coll = mcoll.LineCollection(segments,
                                 edgecolor=edgecolor,
                                 linewidth=linewidth,
                                 linestyle=linestyle,
-                                zorder=pinfo['zorder'])
+                                zorder=params['zorder'])
     ax.add_collection(coll)
 
 
-def _draw_lines(pinfo, ax, **params):
+def _draw_lines(data, ax, **params):
     """
     Draw a path with the same characteristics from the
     first point to the last point
     """
+    color = to_rgba(data['color'].iloc[0], data['alpha'].iloc[0])
+    join_style = _get_joinstyle(data, params)
+    lines = mlines.Line2D(data['x'],
+                          data['y'],
+                          color=color,
+                          linewidth=data['size'].iloc[0],
+                          linestyle=data['linetype'].iloc[0],
+                          zorder=params['zorder'],
+                          **join_style)
+    ax.add_artist(lines)
+
+
+def _get_joinstyle(data, params):
+    with suppress(KeyError):
+        if params['linejoin'] == 'mitre':
+            params['linejoin'] = 'miter'
+
+    with suppress(KeyError):
+        if params['lineend'] == 'square':
+            params['lineend'] = 'projecting'
+
     joinstyle = params.get('linejoin', 'miter')
     capstyle = params.get('lineend', 'butt')
     d = {}
-    if pinfo['linetype'] == 'solid':
+    if data['linetype'].iloc[0] == 'solid':
         d['solid_joinstyle'] = joinstyle
         d['solid_capstyle'] = capstyle
-    elif pinfo['linetype'] == 'dashed':
+    elif data['linetype'].iloc[0] == 'dashed':
         d['dash_joinstyle'] = joinstyle
         d['dash_capstyle'] = capstyle
-
-    lines = mlines.Line2D(pinfo['x'],
-                          pinfo['y'],
-                          color=pinfo['color'],
-                          linewidth=pinfo['size'],
-                          linestyle=pinfo['linetype'],
-                          zorder=pinfo['zorder'],
-                          **d)
-    pinfo.update(d)
-    ax.add_artist(lines)
+    return d

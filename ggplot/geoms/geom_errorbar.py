@@ -1,8 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import copy
+
+import numpy as np
+import pandas as pd
 
 from ..scales.utils import resolution
+from ..utils import copy_missing_columns
 from .geom import geom
 from .geom_segment import geom_segment
 
@@ -28,11 +31,14 @@ class geom_errorbar(geom):
         return data
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_scales, coord, ax, **params):
+        f = np.hstack
         # create (two horizontal bars) + vertical bar
-        p1 = copy(pinfo)
-        p1['x'] = (pinfo['xmin']*2) + pinfo['x']
-        p1['xend'] = (pinfo['xmax']*2) + pinfo['x']
-        p1['y'] = (pinfo['ymin'] + pinfo['ymax']) + pinfo['ymin']
-        p1['yend'] = (pinfo['ymin'] + pinfo['ymax']) + pinfo['ymax']
-        geom_segment.draw_group(p1, panel_scales, coord, ax, **params)
+        df = pd.DataFrame({
+            'x': f([data['xmin'], data['xmin'], data['x']]),
+            'xend': f([data['xmax'], data['xmax'], data['x']]),
+            'y': f([data['ymin'], data['ymax'], data['ymax']]),
+            'yend': f([data['ymin'], data['ymax'], data['ymin']])})
+
+        copy_missing_columns(df, data)
+        geom_segment.draw_group(df, panel_scales, coord, ax, **params)

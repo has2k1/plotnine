@@ -1,4 +1,5 @@
 from __future__ import (absolute_import, division, print_function)
+
 import numpy as np
 import matplotlib.collections as mcoll
 
@@ -14,14 +15,12 @@ class geom_rug(geom):
     legend_geom = 'path'
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        has_x = 'x' in pinfo
-        has_y = 'y' in pinfo
+    def draw_group(data, panel_scales, coord, ax, **params):
+        has_x = 'x' in data.columns
+        has_y = 'y' in data.columns
 
-        if has_x:
-            n = len(pinfo['x'])
-        elif has_y:
-            n = len(pinfo['y'])
+        if has_x or has_y:
+            n = len(data)
         else:
             return
 
@@ -34,30 +33,30 @@ class geom_rug(geom):
 
         if has_x:
             if 'b' in sides:
-                x = np.repeat(pinfo['x'], 2)
+                x = np.repeat(data['x'].values, 2)
                 y = np.tile([ymin, ymin+yheight], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if 't' in sides:
-                x = np.repeat(pinfo['x'], 2)
+                x = np.repeat(data['x'].values, 2)
                 y = np.tile([ymax-yheight, ymax], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         if has_y:
             if 'l' in sides:
                 x = np.tile([xmin, xmin+xheight], n)
-                y = np.repeat(pinfo['y'], 2)
+                y = np.repeat(data['y'].values, 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if 'r' in sides:
                 x = np.tile([xmax-xheight, xmax], n)
-                y = np.repeat(pinfo['y'], 2)
+                y = np.repeat(data['y'].values, 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
-        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
+        color = to_rgba(data['color'], data['alpha'])
         coll = mcoll.LineCollection(rugs,
-                                    edgecolor=pinfo['color'],
-                                    linewidth=pinfo['size'],
-                                    linestyle=pinfo['linetype'],
-                                    zorder=pinfo['zorder'])
+                                    edgecolor=color,
+                                    linewidth=data['size'],
+                                    linestyle=data['linetype'].tolist(),
+                                    zorder=params['zorder'])
         ax.add_collection(coll)

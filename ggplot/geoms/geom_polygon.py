@@ -2,7 +2,6 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import numpy as np
-import pandas as pd
 from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 
@@ -22,34 +21,37 @@ class geom_polygon(geom):
         Plot all groups
         """
         data = coord.transform(data, panel_scales, self._munch)
-        pinfos = self._make_pinfos(data, params)
-        for pinfo in pinfos:
-            self.draw_group(pinfo, panel_scales, coord, ax, **params)
+        self.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_scales, coord, ax, **params):
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
-        grouped = pd.DataFrame(pinfo).groupby('group')
-        verts = [None] * grouped.ngroups
-        facecolor = [None] * grouped.ngroups
-        edgecolor = [None] * grouped.ngroups
-        for i, (group, df) in enumerate(grouped):
+        ngroups = data['group'].unique().size
+        verts = [None] * ngroups
+        facecolor = [None] * ngroups
+        edgecolor = [None] * ngroups
+        linestyle = [None] * ngroups
+        linewidth = [None] * ngroups
+
+        for i, (group, df) in enumerate(data.groupby('group')):
             verts[i] = tuple(zip(df['x'], df['y']))
             fill = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
             color = to_rgba(df['color'].iloc[0], df['alpha'].iloc[0])
             facecolor[i] = 'none' if fill is None else fill
             edgecolor[i] = 'none' if color is None else color
+            linestyle[i] = df['linetype'].iloc[0]
+            linewidth[i] = df['size'].iloc[0]
 
         col = PolyCollection(
             verts,
             facecolors=facecolor,
             edgecolors=edgecolor,
-            linestyles=pinfo['linetype'],
-            linewidths=pinfo['size'],
+            linestyles=linestyle,
+            linewidths=linewidth,
             transOffset=ax.transData,
-            zorder=pinfo['zorder']
-        )
+            zorder=params['zorder'])
+
         ax.add_collection(col)
 
     @staticmethod

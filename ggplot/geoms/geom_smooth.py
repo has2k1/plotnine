@@ -1,9 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import deepcopy
 
 from matplotlib.patches import Rectangle
 
+from ..utils import groupby_with_null
 from .geom import geom
 from .geom_ribbon import geom_ribbon
 from .geom_line import geom_line
@@ -17,20 +17,27 @@ class geom_smooth(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
 
-    _units = {'color', 'fill', 'linetype', 'size'}
+    @staticmethod
+    def draw_group(data, panel_scales, coord, ax, **params):
+        units = ['color', 'fill', 'linetype', 'size']
+        for _, udata in groupby_with_null(data, units):
+            udata.is_copy = None
+            udata.reset_index(inplace=True, drop=True)
+            geom_smooth.draw_unit(udata, panel_scales, coord,
+                                  ax, **params)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        has_ribbon = (pinfo['ymin'][0] is not None and
-                      pinfo['ymax'][0] is not None)
+    def draw_unit(data, panel_scales, coord, ax, **params):
+        has_ribbon = (data.ix[0, 'ymin'] is not None and
+                      data.ix[0, 'ymax'] is not None)
         if has_ribbon:
-            pinfo2 = deepcopy(pinfo)
-            pinfo2['color'] = ''
-            geom_ribbon.draw_group(pinfo2, panel_scales,
+            data2 = data.copy()
+            data2['color'] = ''
+            geom_ribbon.draw_group(data2, panel_scales,
                                    coord, ax, **params)
 
-        pinfo['alpha'] = 1
-        geom_line.draw_group(pinfo, panel_scales, coord, ax, **params)
+        data['alpha'] = 1
+        geom_line.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

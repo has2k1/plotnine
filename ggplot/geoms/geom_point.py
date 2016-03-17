@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import matplotlib.lines as mlines
 
-from ..utils import to_rgba
+from ..utils import to_rgba, groupby_with_null
 from .geom import geom
 
 
@@ -14,47 +14,36 @@ class geom_point(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
-    _units = {'shape'}
-
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
-        """
-        Plot all groups
-        """
-        data = coord.transform(data, panel_scales)
-        pinfos = self._make_pinfos(data, params)
-        for pinfo in pinfos:
-            self.draw_group(pinfo, panel_scales, coord, ax, **params)
+    @staticmethod
+    def draw_group(data, panel_scales, coord, ax, **params):
+        units = 'shape'
+        for _, udata in groupby_with_null(data, units):
+            udata.is_copy = None
+            udata.reset_index(inplace=True, drop=True)
+            geom_point.draw_unit(udata, panel_scales, coord,
+                                 ax, **params)
 
     @staticmethod
-    def draw_group(pinfo, panel_scales, coord, ax, **params):
-        pinfo['fill'] = to_rgba(pinfo['fill'], pinfo['alpha'])
-        pinfo['color'] = to_rgba(pinfo['color'], pinfo['alpha'])
+    def draw_unit(data, panel_scales, coord, ax, **params):
+        fill = to_rgba(data['fill'], data['alpha'])
+        color = to_rgba(data['color'], data['alpha'])
 
-        # A single RGBA color will be seen as 4 locations in a
-        # colormap by MPL if there are 4 points. We don't
-        # want that
-        if len(pinfo['x']) == 4:
-            if isinstance(pinfo['fill'], tuple):
-                pinfo['fill'] = [list(pinfo['fill'])] * 4
-            if isinstance(pinfo['color'], tuple):
-                pinfo['color'] = [list(pinfo['color'])] * 4
+        if fill is None:
+            fill = color
 
-        if pinfo['fill'] is None:
-            pinfo['fill'] = pinfo['color']
-
-        ax.scatter(x=pinfo['x'],
-                   y=pinfo['y'],
-                   facecolor=pinfo['fill'],
-                   edgecolor=pinfo['color'],
-                   linewidth=pinfo['stroke'],
-                   marker=pinfo['shape'],
+        ax.scatter(x=data['x'],
+                   y=data['y'],
+                   facecolor=fill,
+                   edgecolor=color,
+                   linewidth=data['stroke'],
+                   marker=data.loc[0, 'shape'],
                    # Our size is in 'points' while
                    # scatter wants 'points^2'. The
                    # stroke is outside.
                    s=np.square(
-                       np.array(pinfo['size']) +
-                       pinfo['stroke']),
-                   zorder=pinfo['zorder'])
+                       np.array(data['size']) +
+                       data['stroke']),
+                   zorder=params['zorder'])
 
     @staticmethod
     def draw_legend(data, da, lyr):

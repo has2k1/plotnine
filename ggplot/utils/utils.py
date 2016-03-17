@@ -615,21 +615,29 @@ def to_rgba(colors, alpha):
     However :), the colors can be rgba list-likes and
     the alpha dimension will be respected.
     """
-    if colors is None or colors == '':
-        return colors
-
     def is_iterable(var):
         return cbook.iterable(var) and not is_string(var)
 
     cc = colorConverter
-    if is_iterable(colors) and not is_iterable(alpha):
-        return cc.to_rgba_array(colors, alpha)
-    elif is_iterable(colors) and is_iterable(alpha):
-        return [cc.to_rgba(c, a) for c, a in zip(colors, alpha)]
-    elif not is_iterable(colors) and is_iterable(alpha):
-        return [cc.to_rgba(colors, a) for a in alpha]
-    else:  # not is_iterable(colors) and not is_iterable(alpha)
-        return cc.to_rgba(colors, alpha)
+
+    if is_iterable(colors):
+        if all(c is None for c in colors):
+            return None
+
+        if all(c == '' for c in colors):
+            return ''
+
+        if is_iterable(alpha):
+            return [cc.to_rgba(c, a) for c, a in zip(colors, alpha)]
+        if not is_iterable(alpha):
+            return cc.to_rgba_array(colors, alpha)
+    else:
+        if colors is None or colors == '':
+            return colors
+        if is_iterable(alpha):
+            return [cc.to_rgba(colors, a) for a in alpha]
+        else:
+            return cc.to_rgba(colors, alpha)
 
 
 def groupby_apply(df, cols, func, *args, **kwargs):
@@ -665,9 +673,60 @@ def groupby_apply(df, cols, func, *args, **kwargs):
     return pd.concat(lst, axis=axis, ignore_index=True)
 
 
+def groupby_with_null(data, *args, **kwargs):
+    """
+    Groupby on columns with NaN/None/Null values
+
+    Pandas currently does have proper support for
+    groupby on columns with null values. The nulls
+    are discarded and so not grouped on.
+    """
+    by = kwargs.get('by', args[0])
+    altered_columns = {}
+
+    if not isinstance(by, (list, tuple)):
+        by = [by]
+
+    # Convert NaNs & Nones in the grouping columns
+    # to sum unique string value. And, for those
+    # columns record which rows have been converted
+    # Note: this may affect the dtype of the column,
+    # so we record the dtype too. Both these changes
+    # are undone.
+    for col in by:
+        bool_idx = pd.isnull(data[col])
+        idx = bool_idx.index[bool_idx]
+        if idx.size:
+            altered_columns[col] = (idx, data[col].dtype)
+            data.loc[idx, col] = '-*-null-*-'
+
+    # Groupby on the columns, making sure to revert back
+    # to NaN/None and the correct dtype.
+    for group, df in data.groupby(*args, **kwargs):
+        df.is_copy = None
+        for col, (orig_idx, orig_dtype) in altered_columns.items():
+            # Indices in the grouped df that need correction
+            sub_idx = orig_idx.intersection(df[col].index)
+            # NaN/None
+            if sub_idx.size:
+                df.loc[sub_idx, col] = None
+            # dtype
+            if df[col].dtype != orig_dtype:
+                df[col] = df[col].astype(orig_dtype)
+
+        yield group, df
+
+    # Undo the NaN / None conversion and any dtype
+    # changes on the original dataframe
+    for col, (orig_idx, orig_dtype) in altered_columns.items():
+        data.loc[orig_idx, col] = None
+        if data[col].dtype != orig_dtype:
+            data[col] = data[col].astype(orig_dtype)
+
+
 def make_line_segments(x, y, ispath=True):
     """
-    Return an (n x 2 x 2) array of line segments
+    Return an (n x 2 x 2) array of n line segments
 
     Parameters
     ----------
@@ -681,18 +740,13 @@ def make_line_segments(x, y, ispath=True):
         of successive(even-odd pair) points yields a line.
     """
     if ispath:
-        num_segments = len(x)-1
-        xs = [None] * (2*num_segments)
-        ys = [None] * (2*num_segments)
-        xs[::2], xs[1::2] = x[:-1], x[1:]
-        ys[::2], ys[1::2] = y[:-1], y[1:]
-    else:
-        if len(x) % 2:
+        x = interleave(x[:-1], x[1:])
+        y = interleave(y[:-1], y[1:])
+    elif len(x) % 2:
             raise GgplotError("Expects an even number of points")
-        num_segments = len(x) // 2
-        xs, ys = x, y
-    segments = np.array(list(zip(xs, ys)))
-    segments = segments.reshape(num_segments, 2, 2)
+
+    n = len(x) // 2
+    segments = np.reshape(list(zip(x, y)), [n, 2, 2])
     return segments
 
 
@@ -792,3 +846,48 @@ def get_valid_kwargs(func, potential_kwargs):
         with suppress(KeyError):
             kwargs[name] = potential_kwargs[name]
     return kwargs
+
+
+def copy_missing_columns(df, ref_df):
+    """
+    Copy missing columns from ref_df to df
+
+    If df and ref_df are the same length, the
+    columns are copied in the entirety.
+    If not the same length, df gets a column
+    where all elements are the same as the
+    first element in ref_df
+
+    Parameters
+    ----------
+    df : dataframe
+        Dataframe to which columns will be added
+    ref_df : dataframe
+        Dataframe from which columns will be copied
+    """
+    cols = ref_df.columns.difference(df.columns)
+    same_length = len(df) == len(ref_df)
+    for col in cols:
+        if same_length:
+            df[col] = ref_df[col]
+        else:
+            df[col] = ref_df.loc[0, col]
+
+
+def interleave(*arrays):
+    """
+    Interleave arrays
+
+    All arrays/lists must be the same length
+
+    Parameters
+    ----------
+    arrays : tup
+        2 or more arrays to interleave
+
+    Return
+    ------
+    out : np.array
+        Result from interleaving the input arrays
+    """
+    return np.column_stack(arrays).ravel()
