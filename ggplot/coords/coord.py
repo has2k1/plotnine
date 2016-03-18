@@ -22,6 +22,9 @@ class coord(object):
         gg.coordinates = self
         return gg
 
+    def labels(self, panel_scales):
+        return panel_scales
+
     def transform(self, data, panel_scales, munch=False):
         """
         Transform data before it is plotted

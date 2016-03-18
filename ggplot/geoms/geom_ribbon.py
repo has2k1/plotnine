@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from ..coords import coord_flip
 from ..utils import to_rgba, groupby_with_null
 from .geom import geom
 
@@ -36,11 +37,16 @@ class geom_ribbon(geom):
         if fill is None:
             fill = ''
 
-        ax.fill_between(x=data['x'],
-                        y1=data['ymin'],
-                        y2=data['ymax'],
-                        facecolor=fill,
-                        edgecolor=color,
-                        linewidth=data['size'].iloc[0],
-                        linestyle=data['linetype'].iloc[0],
-                        zorder=params['zorder'])
+        if isinstance(coord, coord_flip):
+            fill_between = ax.fill_betweenx
+            _x, _min, _max = data['y'], data['xmin'], data['xmax']
+        else:
+            fill_between = ax.fill_between
+            _x, _min, _max = data['x'], data['ymin'], data['ymax']
+
+        fill_between(_x, _min, _max,
+                     facecolor=fill,
+                     edgecolor=color,
+                     linewidth=data['size'].iloc[0],
+                     linestyle=data['linetype'].iloc[0],
+                     zorder=params['zorder'])

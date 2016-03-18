@@ -388,8 +388,11 @@ def set_breaks_and_labels(plot, ranges, finfo, ax):
 
 def add_labels_and_title(plot):
     fig = plot.figure
-    xlabel = plot.labels.get('x', '')
-    ylabel = plot.labels.get('y', '')
+    # Get the axis labels (default or specified by user)
+    # and let the coordinate modify them e.g. flip
+    labels = plot.coordinates.labels(
+        {'x': plot.labels.get('x', ''),
+         'y': plot.labels.get('y', '')})
     title = plot.labels.get('title', '')
     center = 0.5
 
@@ -404,9 +407,9 @@ def add_labels_and_title(plot):
         title_y += 0.04 * len(plot.facet.cols)
 
     d = dict(
-        axis_title_x=fig.text(center, xtitle_y, xlabel,
+        axis_title_x=fig.text(center, xtitle_y, labels['x'],
                               ha='center', va='top'),
-        axis_title_y=fig.text(ytitle_x, center, ylabel,
+        axis_title_y=fig.text(ytitle_x, center, labels['y'],
                               ha='right', va='center',
                               rotation='vertical'),
         plot_title=fig.text(center, title_y, title,
