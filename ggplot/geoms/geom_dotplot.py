@@ -119,6 +119,7 @@ class geom_dotplot(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales)
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
         ranges = coord.range(panel_scales)

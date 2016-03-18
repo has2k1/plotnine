@@ -14,17 +14,16 @@ class geom_polygon(geom):
                    'linetype': 'solid', 'size': 1.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     REQUIRED_AES = {'x', 'y'}
-    _munch = True
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
-        data = coord.transform(data, panel_scales, self._munch)
         self.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales, munch=True)
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
         ngroups = data['group'].unique().size

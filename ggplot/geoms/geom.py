@@ -27,10 +27,6 @@ class geom(object):
     # not implemented
     legend_geom = 'point'
 
-    # Whether to divide the distance between any two points into
-    # multiple segments. This is done during coord.transform time
-    _munch = False
-
     def __init__(self, *args, **kwargs):
         kwargs = rename_aesthetics(kwargs)
         kwargs = self._sanitize_arguments(args, kwargs)
@@ -152,7 +148,6 @@ class geom(object):
             Combined parameters for the geom and stat. Also
             includes the 'zorder'.
         """
-        data = coord.transform(data, panel_scales, self._munch)
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True, drop=True)
             gdata.is_copy = None

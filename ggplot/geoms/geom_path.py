@@ -21,7 +21,6 @@ class geom_path(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'lineend': 'butt', 'linejoin': 'round',
                       'arrow': None}
-    _munch = True
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         if not any(data['group'].duplicated()):
@@ -52,7 +51,6 @@ class geom_path(geom):
         constant = len(df) == len(data['group'].unique())
         params['constant'] = constant
 
-        data = coord.transform(data, panel_scales, self._munch)
         if not constant:
             self.draw_group(data, panel_scales, coord, ax, **params)
         else:
@@ -61,6 +59,7 @@ class geom_path(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales, munch=True)
         constant = params.pop('constant', False)
         if not constant:
             _draw_segments(data, ax, **params)

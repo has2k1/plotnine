@@ -31,20 +31,20 @@ class geom_rect(geom):
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     legend_geom = 'polygon'
-    _munch = True
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
-        data = coord.transform(data, panel_scales, self._munch)
         self.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales, munch=True)
         verts = [None] * len(data)
         limits = zip(data['xmin'], data['xmax'],
                      data['ymin'], data['ymax'])
+
         for i, (l, r, b, t) in enumerate(limits):
             verts[i] = [(l, b), (l, t), (r, t), (r, b)]
 

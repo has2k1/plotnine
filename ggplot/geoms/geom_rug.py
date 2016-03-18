@@ -16,6 +16,8 @@ class geom_rug(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales)
+
         has_x = 'x' in data.columns
         has_y = 'y' in data.columns
 

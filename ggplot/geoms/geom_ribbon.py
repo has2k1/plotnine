@@ -12,17 +12,15 @@ class geom_ribbon(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     legend_geom = 'polygon'
 
-    _munch = True
-
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         """
         Plot all groups
         """
-        data = coord.transform(data, panel_scales, self._munch)
         self.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales, munch=True)
         units = ['color', 'fill', 'linetype', 'size']
         for _, udata in groupby_with_null(data, units):
             udata.is_copy = None

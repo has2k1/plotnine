@@ -16,6 +16,7 @@ class geom_point(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales)
         units = 'shape'
         for _, udata in groupby_with_null(data, units):
             udata.is_copy = None

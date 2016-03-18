@@ -20,6 +20,7 @@ class geom_segment(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales)
         color = to_rgba(data['color'], data['alpha'])
 
         # start point -> end point, sequence of xy points

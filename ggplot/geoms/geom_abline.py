@@ -42,7 +42,6 @@ class geom_abline(geom):
         """
         Plot all groups
         """
-        data = coord.transform(data, panel_scales)
         ranges = coord.range(panel_scales)
         data['x'] = ranges.x[0]
         data['xend'] = ranges.x[1]

@@ -33,6 +33,8 @@ class geom_text(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
+        data = coord.transform(data, panel_scales)
+
         # Bind color and alpha
         color = to_rgba(data['color'], data['alpha'])
 
