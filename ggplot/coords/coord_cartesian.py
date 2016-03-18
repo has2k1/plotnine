@@ -8,6 +8,22 @@ from .coord import coord, dist_euclidean
 
 
 class coord_cartesian(coord):
+    """
+    Cartesian coordinate system
+
+    Parameters
+    ----------
+    xlim : None | (float, float)
+        Limits for x axis. If None, then they are
+        automatically computed.
+    ylim : None | (float, float)
+        Limits for y axis. If None, then they are
+        automatically computed.
+    expand : bool
+        If `True`, expand the coordinate axes by
+        some factor. If `False`, use the limits
+        from the data.
+    """
 
     is_linear = True
 

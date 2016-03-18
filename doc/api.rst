@@ -169,9 +169,6 @@ Color and fill scales
    :toctree: generated/
    :template: only-docstring.rst
 
-   ~scale.scale
-   ~scale.scale_continuous
-
    scale_color_brewer
    scale_color_cmap
    scale_color_continuous
@@ -337,11 +334,15 @@ Theme helper functions and classes
 coordinates
 ===========
 
-.. currentmodule:: ggplot.themes
+.. currentmodule:: ggplot.coords
 
 .. autosummary::
    :toctree: generated/
    :template: only-docstring.rst
+
+   coord_cartesian
+   coord_flip
+   coord_trans
 
 
 

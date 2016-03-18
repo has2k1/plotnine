@@ -10,6 +10,24 @@ from .coord import coord, dist_euclidean
 
 
 class coord_trans(coord):
+    """
+    Transformed cartesian coordinate system
+
+    Parameters
+    ----------
+    x : str | trans
+        Name of transform or `trans` class to
+        transform the x axis
+    y : str | trans
+        Name of transform or `trans` class to
+        transform the y axis
+    xlim : None | (float, float)
+        Limits for x axis. If None, then they are
+        automatically computed.
+    ylim : None | (float, float)
+        Limits for y axis. If None, then they are
+        automatically computed.
+    """
 
     def __init__(self, x='identity', y='identity',
                  xlim=None, ylim=None):

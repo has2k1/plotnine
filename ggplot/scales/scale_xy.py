@@ -16,7 +16,7 @@ from .scale import scale_discrete, scale_continuous
 # scale_continuous methods
 #
 # scale_position_discrete and scale_position_continuous
-# are intermediate base classes where the required overiding
+# are intermediate base classes where the required overriding
 # is done
 class scale_position_discrete(scale_discrete):
     """

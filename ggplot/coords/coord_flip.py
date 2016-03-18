@@ -6,6 +6,17 @@ from .coord_cartesian import coord_cartesian
 
 
 class coord_flip(coord_cartesian):
+    """
+    Flipped cartesian coordinates
+
+
+    The horizontal becomes vertical, and vertical becomes
+    horizontal. This is primarily useful for converting
+    geoms and statistics which display y conditional
+    on x, to x conditional on y.
+
+    See :class:`.coord_cartesian` for documentation.
+    """
     def labels(self, panel_scales):
         return flip_labels(coord_cartesian.labels(self,
                                                   panel_scales))
