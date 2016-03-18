@@ -95,7 +95,10 @@ class Scales(list):
         data : dataframe
             data to use for training
         vars : list | tuple
-            columns in data to use for training
+            columns in data to use for training.
+            These should be all the aesthetics of
+            a scale type that are present in the
+            data. e.g x, xmin, xmax
         idx : array-like
             indices that map the data points to the
             scales. These start at 1, so subtract 1 to

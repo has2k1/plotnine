@@ -33,6 +33,14 @@ class geom_boxplot(geom):
             else:
                 data['width'] = resolution(data['x'], False) * 0.9
 
+        # min and max outlier values
+        omin = [np.min(lst) if len(lst) else +np.inf
+                for lst in data['outliers']]
+        omax = [np.max(lst) if len(lst) else -np.inf
+                for lst in data['outliers']]
+        data['ymin_final'] = np.min([data['ymin'], omin])
+        data['ymax_final'] = np.max([data['ymax'], omax])
+
         # if varwidth not requested or not available, don't use it
         if ('varwidth' not in self.params or
                 not self.params['varwidth'] or
@@ -81,11 +89,7 @@ class geom_boxplot(geom):
             box['ynotchupper'] = data['notchupper']
 
         # outliers
-        try:
-            num_outliers = len(data['outliers'].iloc[0])
-        except KeyError:
-            num_outliers = 0
-
+        num_outliers = len(data['outliers'].iloc[0])
         if num_outliers:
             def outlier_value(param):
                 oparam = 'outlier_{}'.format(param)
