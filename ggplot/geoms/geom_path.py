@@ -55,6 +55,8 @@ class geom_path(geom):
             self.draw_group(data, panel_scales, coord, ax, **params)
         else:
             for _, gdata in data.groupby('group'):
+                gdata.reset_index(inplace=True, drop=True)
+                gdata.is_copy = None
                 self.draw_group(gdata, panel_scales, coord, ax, **params)
 
     @staticmethod

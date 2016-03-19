@@ -118,6 +118,7 @@ def munch_data(data, dist):
         len(data)-1])
 
     munched = data.loc[idx, data.columns.difference(['x', 'y'])]
+    munched.is_copy = None
     munched['x'] = x
     munched['y'] = y
     munched.reset_index(drop=True, inplace=True)

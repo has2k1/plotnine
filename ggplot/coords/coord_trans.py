@@ -2,7 +2,8 @@ from __future__ import absolute_import, division, print_function
 
 from matplotlib.cbook import Bunch
 
-from ..scales.utils import expand_range, gettrans, squish_infinite
+from ..scales.transforms import gettrans
+from ..scales.utils import expand_range, squish_infinite
 from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
 
