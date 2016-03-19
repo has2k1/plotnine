@@ -14,7 +14,6 @@ import six
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
-import matplotlib as mpl
 import matplotlib.cbook as cbook
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
@@ -489,7 +488,7 @@ def gg_import(name):
               'scale': '..scales',
               'position': '..positions',
               'guide': '..guides',
-              'trans': '..scales.utils'}
+              'trans': '..scales.transforms'}
     patterns = [re.compile('([a-z]+)_'),
                 re.compile('_(trans)$')]
     base = None

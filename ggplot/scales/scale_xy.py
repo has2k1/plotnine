@@ -1,16 +1,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from types import MethodType
 
 import numpy as np
 import pandas as pd
 
-from ..utils import identity, match, is_waive
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
+from ..utils import identity, match, is_waive
 from ..utils.exceptions import GgplotError
-from .utils import expand_range
-from .utils import identity_trans
 from .scale import scale_discrete, scale_continuous
+from .utils import expand_range
 
 
 # positions scales have a couple of differences (quirks) that
