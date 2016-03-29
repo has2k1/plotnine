@@ -348,3 +348,25 @@ coordinates
 
 datasets
 ========
+
+.. currentmodule:: ggplot.data
+
+.. autosummary::
+   :toctree: generated/
+   :template: data.rst
+
+   diamonds
+   economics
+   economics_long
+   faithfuld
+   huron
+   luv_colours
+   meat
+   midwest
+   mpg
+   msleep
+   mtcars
+   pageviews
+   presidential
+   seals
+   txhousing
