@@ -7,6 +7,8 @@ import six
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
+import datetime
+from dateutil import tz
 from matplotlib.dates import AutoDateLocator, DateFormatter
 from matplotlib.dates import date2num, num2date, YEARLY
 from matplotlib.ticker import MaxNLocator, Formatter
@@ -324,7 +326,12 @@ def datetime_trans():
     def _DateFormatter():
         return DateFormatter('%Y-%m-%d')
 
-    _trans = trans_new('datetime', transform, inverse)
+    domain = (datetime.datetime(datetime.MINYEAR, 1, 1,
+                                tzinfo=tz.tzutc()),
+              datetime.datetime(datetime.MAXYEAR, 12, 31,
+                                tzinfo=tz.tzutc()))
+    _trans = trans_new('datetime', transform, inverse,
+                       domain=domain)
     _trans.dataspace_is_ordinal = False
     _trans._locator = DateLocator()
     _trans._formatter = DateFormatter('%Y-%m-%d')
@@ -355,7 +362,15 @@ def timedelta_trans():
             x = pd.Timedelta(int(x))
         return x
 
-    _trans = trans_new('timedelta', transform, inverse)
+    # FIXME: Use this version when it is merged and released
+    # in upstream pandas, probably version 0.18.1
+    # https://github.com/pydata/pandas/pull/12728
+    # domain = (pd.Timedelta.min, pd.Timedelta.max)
+
+    domain = (pd.Timedelta(-99999, 'D'), pd.Timedelta(99999, 'D'))
+
+    _trans = trans_new('timedelta', transform, inverse,
+                       domain=domain)
     _trans.dataspace_is_ordinal = False
     _trans._locator = TimedeltaLocator()
     _trans._formatter = TimedeltaFormatter()
