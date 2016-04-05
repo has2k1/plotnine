@@ -14,6 +14,7 @@
 
 import sys
 import os
+import glob
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -28,6 +29,7 @@ import os
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+sys.path.insert(0, os.path.abspath('.'))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
@@ -39,6 +41,8 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
+
+    'sphinxext.include_example',
 
     'matplotlib.sphinxext.only_directives',
     'matplotlib.sphinxext.plot_directive',
@@ -54,7 +58,7 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 
 # The encoding of source files.
-#source_encoding = 'utf-8-sig'
+# source_encoding = 'utf-8-sig'
 
 # The master toctree document.
 master_doc = 'index'
@@ -71,6 +75,8 @@ copyright = u'2013, yhat'
 
 # importing ggplot here has some sideeffects (plots pop up during
 # doc building), so use theversion extract from setup.py here as well.
+
+
 def extract_version():
     """
     Extracts version values from the main matplotlib __init__.py and
@@ -369,7 +375,7 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'matplotlib': ('http://matplotlib.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy', None),
-    'scipy': ('http://docs.scipy.org/doc/scipy', None),
+    'scipy': ('http://docs.scipy.org/doc/scipy/reference', None),
     'statsmodels': ('http://statsmodels.sourceforge.net/devel/', None), }
 
 
@@ -380,3 +386,12 @@ plot_html_show_source_link = False
 plot_html_show_formats = False
 plot_formats = ['png']
 plot_rcparams = {'savefig.bbox': 'tight'}
+
+
+# ifconfig
+example_files = {os.path.basename(s).replace('.ipynb', '.txt')
+                 for s in glob.glob('../../examples/*.ipynb')}
+
+
+def setup(app):
+    app.add_config_value('example_files', example_files, 'env')

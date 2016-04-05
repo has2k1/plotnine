@@ -12,7 +12,7 @@ geoms
 .. autosummary::
    :toctree: generated/
    :nosignatures:
-   :template: only-docstring.rst
+   :template: main.rst
 
    geom_abline
    geom_area
@@ -55,7 +55,7 @@ Related to geoms
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    annotate
    arrow
@@ -67,7 +67,7 @@ Labels
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    labs
    xlab
@@ -82,7 +82,7 @@ stats
 .. autosummary::
    :toctree: generated/
    :nosignatures:
-   :template: only-docstring.rst
+   :template: main.rst
 
    stat_bin
    stat_bin_2d
@@ -109,7 +109,7 @@ facets
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    facet_grid
    facet_null
@@ -130,7 +130,7 @@ Base scales
 -----------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    ~scale.scale
    ~scale.scale_discrete
@@ -141,7 +141,7 @@ Alpha scales
 ------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_alpha
    scale_alpha_discrete
@@ -152,7 +152,7 @@ Identity Scales
 ---------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_alpha_identity
    scale_color_identity
@@ -167,7 +167,7 @@ Color and fill scales
 ---------------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_color_brewer
    scale_color_cmap
@@ -199,7 +199,7 @@ Manual scales
 -------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_alpha_manual
    scale_color_manual
@@ -214,7 +214,7 @@ Linetype scales
 ---------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_linetype
    scale_linetype_discrete
@@ -224,7 +224,7 @@ Shape scales
 ------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_shape
    scale_shape_discrete
@@ -234,7 +234,7 @@ Size scales
 -----------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_size
    scale_size_area
@@ -247,7 +247,7 @@ Position scales
 ---------------
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    scale_x_continuous
    scale_x_date
@@ -273,7 +273,7 @@ Scale limits
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    lims
    xlim
@@ -286,7 +286,7 @@ Scale guides
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    guides
    ~guide.guide
@@ -300,7 +300,7 @@ positions
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    position_dodge
    position_fill
@@ -321,7 +321,7 @@ Theme helper functions and classes
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    theme_set
    theme_get
@@ -338,7 +338,7 @@ coordinates
 
 .. autosummary::
    :toctree: generated/
-   :template: only-docstring.rst
+   :template: main.rst
 
    coord_cartesian
    coord_flip
