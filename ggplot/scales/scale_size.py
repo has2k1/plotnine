@@ -14,7 +14,7 @@ class scale_size_discrete(scale_discrete):
 
     def __init__(self, range=(2, 6), **kwargs):
         def palette(n):
-            area = seq(range[0]**2, range[1]**2, n)
+            area = seq(range[0]**2, range[1]**2, length_out=n)
             return np.sqrt(area)
 
         self.palette = palette
