@@ -20,12 +20,12 @@ def test_stat_bin():
     # About the default bins
     gg = ggplot(aes(x='x'), df) + stat_bin()
     with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
+        warnings.simplefilter('always')
         gg.draw()
-        res = ['range/30' in str(item.message) for item in w]
+        res = ['bins' in str(item.message).lower() for item in w]
         assert any(res)
 
     # About the ignoring the y aesthetic
-    gg = ggplot(aes(x='x', y='y'), df)
+    gg = ggplot(aes(x='x', y='y'), df) + stat_bin()
     with assert_raises(GgplotError):
         gg.draw()

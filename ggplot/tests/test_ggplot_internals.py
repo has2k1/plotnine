@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from ggplot import *
+from ggplot.data import *
 from . import get_assert_same_ggplot, cleanup, assert_same_elements
 assert_same_ggplot = get_assert_same_ggplot(__file__)
 

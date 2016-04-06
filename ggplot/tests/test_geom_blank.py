@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ggplot import *
+from ggplot.data import *
 
 from . import image_comparison
 

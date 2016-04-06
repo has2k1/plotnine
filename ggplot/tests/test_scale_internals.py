@@ -1,12 +1,25 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from nose.tools import assert_equal, assert_true, assert_raises
+from nose.tools import assert_raises
 import six
 
-from ggplot import *
-from . import assert_prints_warning
+from ..scales import scale_color
+from ..scales import scale_identity
+from ..scales import scale_manual
+from ..scales import scale_xy
+from ..scales.scale_alpha import (scale_alpha_discrete,
+                                  scale_alpha_continuous)
+from ..scales.scale_linetype import (scale_linetype_discrete,
+                                     scale_linetype_continuous)
+from ..scales.scale_shape import (scale_shape_discrete,
+                                  scale_shape_continuous)
+from ..scales.scale_size import (scale_size_discrete,
+                                 scale_size_continuous,
+                                 scale_size_area,
+                                 scale_size_radius)
 from ..utils.exceptions import GgplotError
+from . import assert_prints_warning
 
 
 # test palettes
@@ -22,53 +35,55 @@ def test_discrete_color_palettes():
         if m > 0:
             assert(all([c is None for c in colors[-m:]]))
 
-    s = scale_color_hue()
+    sc = scale_color
+
+    s = sc.scale_color_hue()
     colors = s.palette(5)
     _assert_all_colors(colors, 5)
 
-    s = scale_color_grey()
+    s = sc.scale_color_grey()
     colors = s.palette(5)
     _assert_all_colors(colors, 5)
 
     # sequential palettes have a maximum of 9 colors
-    s = scale_color_brewer(type='seq')
+    s = sc.scale_color_brewer(type='seq')
     colors = s.palette(5)
     _assert_all_colors(colors, 5)
 
-    s = scale_color_brewer(type='seq')
+    s = sc.scale_color_brewer(type='seq')
     colors = s.palette(9)
     _assert_all_colors(colors, 9)
 
-    s = scale_color_brewer(type='seq')
+    s = sc.scale_color_brewer(type='seq')
     with assert_prints_warning():
         colors = s.palette(15)
     _assert_all_colors(colors, 9, 6)
 
     # diverging palettes have a maximum of 11 colors
-    s = scale_color_brewer(type='div')
+    s = sc.scale_color_brewer(type='div')
     colors = s.palette(5)
     _assert_all_colors(colors, 5)
 
-    s = scale_color_brewer(type='div')
+    s = sc.scale_color_brewer(type='div')
     colors = s.palette(11)
     _assert_all_colors(colors, 11)
 
-    s = scale_color_brewer(type='div')
+    s = sc.scale_color_brewer(type='div')
     with assert_prints_warning():
         colors = s.palette(21)
     _assert_all_colors(colors, 11, 10)
 
     # qualitative have varying maximum colors
-    s = scale_color_brewer(type='qual')
+    s = sc.scale_color_brewer(type='qual')
     colors = s.palette(5)
     _assert_all_colors(colors, 5)
 
-    s = scale_color_brewer(type='qual', palette='Accent')
+    s = sc.scale_color_brewer(type='qual', palette='Accent')
     with assert_prints_warning():
         colors = s.palette(12)
     _assert_all_colors(colors, 8, 4)
 
-    s = scale_color_brewer(type='qual', palette='Set3')
+    s = sc.scale_color_brewer(type='qual', palette='Set3')
     with assert_prints_warning():
         colors = s.palette(15)
     _assert_all_colors(colors, 12, 3)
@@ -78,7 +93,8 @@ def test_continuous_color_palettes():
     alpha = 0.6
     alphas = [0.1, 0.9, 0.32, 1.0, 0.65]
     colors1 = ['#000000', '#11BB20']
-    colors2 = ['#000000', '#003399', '#42BF63' , '#191141']
+    colors2 = ['#000000', '#003399', '#42BF63', '#191141']
+    sc = scale_color
 
     def _assert(cscale):
         """
@@ -90,43 +106,41 @@ def test_continuous_color_palettes():
         assert(color[0] == '#')
 
         colors = cscale.palette(alphas)
-        assert(all([c[0]=='#' for c in colors]))
+        assert(all([c[0] == '#' for c in colors]))
 
-    s = scale_color_gradient()
+    s = sc.scale_color_gradient()
     _assert(s)
 
-    s = scale_color_gradient2()
+    s = sc.scale_color_gradient2()
     _assert(s)
 
-    s = scale_color_gradientn(colors1)
+    s = sc.scale_color_gradientn(colors1)
     _assert(s)
 
-    s = scale_color_gradientn(colors2)
+    s = sc.scale_color_gradientn(colors2)
     _assert(s)
 
-    s = scale_color_distiller(type='seq')
+    s = sc.scale_color_distiller(type='seq')
     _assert(s)
 
-    s = scale_color_distiller(type='div')
+    s = sc.scale_color_distiller(type='div')
     _assert(s)
 
     with assert_prints_warning():
-        s = scale_color_distiller(type='qual')
+        s = sc.scale_color_distiller(type='qual')
     _assert(s)
 
 
 def test_fill_scale_aesthetics():
-    lst = [scale_fill_brewer, scale_fill_distiller,
-           scale_fill_gradient, scale_fill_gradient2,
-           scale_fill_gradientn, scale_fill_grey,
-           scale_fill_hue]
-    for scale in lst:
-        assert(scale.aesthetics == ['fill'])
+    for name in scale_color.__dict__:
+        if name.startswith('scale_fill'):
+            scale = getattr(scale_color, name)
+            assert(scale.aesthetics == ['fill'])
 
 
 def test_linetype_palettes():
     N = 4  # distinct linetypes
-    s = scale_linetype()
+    s = scale_linetype_discrete()
     items = s.palette(N)
     assert(len(items) == N)
     assert(all([isinstance(x, six.string_types) for x in items]))
@@ -141,7 +155,7 @@ def test_linetype_palettes():
 
 def test_shape_palettes():
     N = 10  # distinct shapes
-    s = scale_shape()
+    s = scale_shape_discrete()
     items = s.palette(N)
     assert(len(items) == N)
     assert(all([isinstance(x, six.string_types) for x in items]))
@@ -151,7 +165,7 @@ def test_shape_palettes():
     assert(all([x is None for x in items[N:]]))
 
     with assert_raises(GgplotError):
-        s = scale_shape_continuous()
+        scale_shape_continuous()
 
 
 def test_size_palette():
@@ -160,8 +174,43 @@ def test_size_palette():
     assert(len(items) == 9)
 
     s = scale_size_continuous(range=(1, 6))
-    value = s.palette(0.5)
-    assert(value == (1+6)/2.0)
+    frac = 0.5
+    value = s.palette(frac**2)
+    assert(value == (1+6)*frac)
+
+    # Just test that they work
+    s = scale_size_area(range=(1, 6))
+    s.palette(frac**2)
+
+    s = scale_size_radius(range=(1, 6))
+    s.palette(frac**2)
+
+
+def test_scale_identity():
+    def is_identity_scale(name):
+        return (name.startswith('scale_') and
+                name.endswith('_identity'))
+
+    for name in scale_identity.__dict__:
+        if is_identity_scale(name):
+            s = getattr(scale_identity, name)()
+            assert s.palette(5) == 5
+            assert s.palette([1, 2, 3]) == [1, 2, 3]
+
+
+def test_scale_manual():
+    def is_manual_scale(name):
+        return (name.startswith('scale_') and
+                name.endswith('_manual'))
+
+    values = [1, 2, 3, 4, 5]
+    for name in scale_manual.__dict__:
+        if is_manual_scale(name):
+            s = getattr(scale_manual, name)(values)
+            assert len(s.palette(2)) == len(values)
+            assert len(s.palette(len(values))) == len(values)
+            with assert_raises(GgplotError):
+                s.palette(len(values)+1)
 
 
 def test_alpha_palette():
@@ -175,18 +224,20 @@ def test_alpha_palette():
 
 
 def test_xy_palette():
-    s = scale_x_discrete()
+    sc = scale_xy
+
+    s = sc.scale_x_discrete()
     value = s.palette(3)
     assert(value == 3)
 
-    s = scale_y_discrete()
+    s = sc.scale_y_discrete()
     value = s.palette(11.5)
     assert(value == 11.5)
 
-    s = scale_x_continuous()
+    s = sc.scale_x_continuous()
     value = s.palette(3.63)
     assert(value == 3.63)
 
-    s = scale_y_continuous()
+    s = sc.scale_y_continuous()
     value = s.palette(11.52)
     assert(value == 11.52)

@@ -11,6 +11,7 @@ import sys
 import pandas as pd
 
 from ggplot import *
+from ggplot.data import *
 from . import ignore_warning
 
 
@@ -18,7 +19,7 @@ from . import ignore_warning
 
 def assert_file_exist(filename, msg=None):
     if not msg:
-        msg = "File %s does not exist".format(filename)
+        msg = "File {} does not exist".format(filename)
     assert_true(os.path.exists(filename), msg)
 
 
@@ -40,23 +41,13 @@ def assert_same_dims(orig, new, msg=None):
     assert_true(oh == nh, msg.format("y", oh, nh))
 
 
-# @cleanup
-# def test_ggsave_file():
-#     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
-#     # we must print the object otherwise it wont show up as a figure to save
-#     print(gg)
-#     fn = "filename.png"
-#     ggsave(fn)
-#     assert_exist_and_clean(fn)
-
-
 @ignore_warning(message='^Saving')
 @cleanup
 def test_ggsave_plot():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
     ggsave(gg)
-    assert_exist_and_clean(str(gg.__hash__())+".pdf")
+    assert_exist_and_clean('ggsave-'+str(abs(gg.__hash__()))+".pdf")
 
 
 @ignore_warning(message='^Saving')
@@ -73,7 +64,8 @@ def test_ggsave_arguments():
     assert_exist_and_clean(os.path.join(".", fn), "both fn, plot and path")
 
     ggsave(gg, format="png")
-    assert_exist_and_clean(str(gg.__hash__())+".png", "format png")
+    assert_exist_and_clean(
+        'ggsave-'+str(abs(gg.__hash__()))+".png", "format png")
 
     # travis setup has not tiff support
     # ggsave(fn, gg, device="tiff")
