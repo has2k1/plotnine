@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
 import matplotlib.text as mtext
 import matplotlib.patches as mpatch
+from patsy.eval import EvalEnvironment
 from six.moves import zip
 
 from .components.aes import aes, make_labels
@@ -31,28 +32,24 @@ if sys.flags.interactive:
 
 class ggplot(object):
     """
-    ggplot is the base layer or object that you use to define
-    the components of your chart (x and y axis, shapes, colors, etc.).
-    You can combine it with layers (or geoms) to make complex graphics
-    with minimal effort.
+    Create a new ggplot object
 
     Parameters
-    -----------
-    aesthetics :  aes (ggplot.components.aes.aes)
-        aesthetics of your plot
-    data :  pandas DataFrame (pd.DataFrame)
-        a DataFrame with the data you want to plot
-
-    Examples
     ----------
-    >>> p = ggplot(aes(x='x', y='y'), data=diamonds)
-    >>> print(p + geom_point())
+    aesthetics :  aes
+        Default aesthetics for the plot. These will be used
+        by all layers unless specifically overridden.
+    data :  dataframe
+        Default data for for plot. Every layer that does not
+        have data of its own will use this one.
+    environment : namespace
+        If an variable defined in the aesthetic mapping is not
+        found in the data, ggplot will look for it in this
+        namespace. It defaults to using the environment/namespace
+        in which `ggplot()` is called.
     """
 
-    CONTINUOUS = ['x', 'y', 'size', 'alpha']
-    DISCRETE = ['color', 'shape', 'marker', 'alpha', 'linestyle']
-
-    def __init__(self, mapping=None, data=None):
+    def __init__(self, mapping=None, data=None, environment=None):
         # Allow some sloppiness
         if mapping is None:
             mapping = aes()
@@ -75,7 +72,7 @@ class ggplot(object):
         self.scales = Scales()
         self.theme = None
         self.coordinates = coord_cartesian()
-        self.plot_env = mapping.aes_env
+        self.environment = environment or EvalEnvironment.capture(1)
         self.panel = None
 
     def __repr__(self):
@@ -95,8 +92,8 @@ class ggplot(object):
         result = cls.__new__(cls)
         memo[id(self)] = result
 
-        # don't make a deepcopy of data, or plot_env
-        shallow = {'data', 'plot_env'}
+        # don't make a deepcopy of data, or environment
+        shallow = {'data', 'environment'}
         for key, item in self.__dict__.items():
             if key in shallow:
                 result.__dict__[key] = self.__dict__[key]

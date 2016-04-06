@@ -61,4 +61,4 @@ def test_deepcopy():
     assert_is_not(p.layers[0].geom, p2.layers[0].geom)
     assert_equal(len(p.mapping), len(p2.mapping))
     assert_is_not(p.mapping, p2.mapping)
-    assert_is(p.mapping.aes_env, p2.mapping.aes_env)
+    assert_is(p.environment, p2.environment)

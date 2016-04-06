@@ -4,7 +4,6 @@ import re
 from copy import deepcopy
 
 import six
-from patsy.eval import EvalEnvironment
 
 from ..utils import suppress
 
@@ -68,8 +67,6 @@ class aes(dict):
         if kwargs:
             self.update(kwargs)
 
-        self.aes_env = EvalEnvironment.capture(1)
-
     def __deepcopy__(self, memo):
         """
         Deep copy without copying the environment
@@ -82,7 +79,6 @@ class aes(dict):
         for key, item in self.items():
             result[key] = deepcopy(self[key], memo)
 
-        result.aes_env = self.aes_env
         return result
 
 

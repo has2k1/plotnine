@@ -150,7 +150,7 @@ class layer(object):
         with suppress(KeyError):
             aesthetics['group'] = self.geom.aes_params['group']
 
-        env = EvalEnvironment.capture(eval_env=plot.plot_env)
+        env = EvalEnvironment.capture(eval_env=plot.environment)
         env = env.with_outer_namespace({'factor': pd.Categorical})
 
         evaled = pd.DataFrame(index=data.index)
