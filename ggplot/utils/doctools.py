@@ -3,6 +3,7 @@ from textwrap import dedent
 from collections import OrderedDict
 
 import numpy as np
+import six
 
 
 def indent(txt, level=1):
@@ -30,11 +31,19 @@ def dict_to_table(header, contents):
         name, value = row
         m = max_col1_size + 1 - len(name)
         spacing = ' ' * m
+
         return ''.join([name, spacing, value])
 
     thead = tuple(str(col) for col in header)
-    rows = [(name, '{}'.format(value))
-            for name, value in contents.items()]
+    rows = []
+    for name, value in contents.items():
+        # code highlighting
+        if value != '':
+            if isinstance(value, six.string_types):
+                value = "'{}'".format(value)
+            value = ':py:`{}`'.format(value)
+        rows.append((name, value))
+
     n = np.max([len(header[0])] +
                [len(col1) for col1, _ in rows])
     hborder = tuple('='*n for col in header)

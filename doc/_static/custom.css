@@ -14,6 +14,12 @@
    border-color: #ccc;
 }
 
+/* Parameter tables  */
+.wy-table-responsive table td code {
+   background: none;
+   border: none;
+}
+
 
 /* pandas dataframe */
 

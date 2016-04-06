@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.napoleon',
 
     'sphinxext.include_example',
+    'sphinxext.inline_code_highlight',
 
     'matplotlib.sphinxext.only_directives',
     'matplotlib.sphinxext.plot_directive',
