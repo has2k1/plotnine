@@ -1,0 +1,54 @@
+/* Something different for the top left region  */
+
+.wy-side-nav-search{
+   background: repeating-linear-gradient(
+      -45deg,
+      #2980B9,
+      #2980B9 10px,
+      #6ab0de 10px,
+      #6ab0de 20px
+   );
+}
+
+.wy-side-nav-search input[type=text] {
+   border-color: #ccc;
+}
+
+
+/* pandas dataframe */
+
+table.dataframe {
+   margin: 0 0 1em 0;
+   color: #000;
+   border-collapse: collapse;
+}
+
+table.dataframe th, table.dataframe td {
+   padding: .25em .5em;
+}
+
+table.dataframe thead th, table.dataframe tfoot th {
+   background: #333;
+   text-align: left;
+   color: #fff;
+}
+
+table.dataframe thead th {
+   font-weight: bold;
+   font-size: 1em;
+}
+
+table.dataframe tfoot th {
+   font-weight: normal;
+   font-size: 1em;
+}
+
+table.dataframe tbody th, table.dataframe tbody td, table.dataframe thead th {
+   font-size: .95em;
+   border: 1px solid #FFFFFF;
+}
+
+table.dataframe tbody tr:nth-child(odd) {
+   background: #E6E6E6;
+}
+
