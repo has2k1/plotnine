@@ -6,6 +6,6 @@ from .geom_path import geom_path
 
 class geom_quantile(geom_path):
     DEFAULT_AES = {'alpha': 1, 'color': '#3366FF',
-                   'linetype': 'solid', 'size': 1.5}
+                   'linetype': 'solid', 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'quantile', 'position': 'identity',
                       'lineend': 'butt', 'linejoin': 'round'}

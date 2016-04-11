@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from matplotlib.collections import PolyCollection
 from six.moves import zip
 
-from ..utils import to_rgba
+from ..utils import to_rgba, SIZE_FACTOR
 from .geom import geom
 
 
@@ -27,7 +27,7 @@ class geom_rect(geom):
     """
 
     DEFAULT_AES = {'color': None, 'fill': '#595959',
-                   'linetype': 'solid', 'size': 1.5, 'alpha': 1}
+                   'linetype': 'solid', 'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     legend_geom = 'polygon'
@@ -41,6 +41,7 @@ class geom_rect(geom):
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales, munch=True)
+        data['size'] *= SIZE_FACTOR
         verts = [None] * len(data)
         limits = zip(data['xmin'], data['xmax'],
                      data['ymin'], data['ymax'])

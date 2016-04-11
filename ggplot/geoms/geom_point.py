@@ -4,13 +4,13 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import matplotlib.lines as mlines
 
-from ..utils import to_rgba, groupby_with_null
+from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
 from .geom import geom
 
 
 class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'shape': 'o', 'size': 5, 'stroke': 1}
+                   'shape': 'o', 'size': 1.5, 'stroke': 0.5}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
@@ -26,6 +26,14 @@ class geom_point(geom):
 
     @staticmethod
     def draw_unit(data, panel_scales, coord, ax, **params):
+        # Our size is in 'points' while scatter wants
+        # 'points^2'. The stroke is outside. And pi
+        # gives a large enough scaling factor
+        # All other sizes for which the MPL units should
+        # be in points must scaled using sqrt(pi)
+        size = ((data['size']+data['stroke'])**2)*np.pi
+        stroke = data['stroke'] * SIZE_FACTOR
+
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
 
@@ -34,16 +42,11 @@ class geom_point(geom):
 
         ax.scatter(x=data['x'],
                    y=data['y'],
+                   s=size,
                    facecolor=fill,
                    edgecolor=color,
-                   linewidth=data['stroke'],
+                   linewidth=stroke,
                    marker=data.loc[0, 'shape'],
-                   # Our size is in 'points' while
-                   # scatter wants 'points^2'. The
-                   # stroke is outside.
-                   s=np.square(
-                       np.array(data['size']) +
-                       data['stroke']),
                    zorder=params['zorder'])
 
     @staticmethod
@@ -64,13 +67,15 @@ class geom_point(geom):
         if data['fill'] is None:
             data['fill'] = data['color']
 
+        size = (data['size']+data['stroke'])*SIZE_FACTOR
+        stroke = data['stroke'] * SIZE_FACTOR
         key = mlines.Line2D([0.5*da.width],
                             [0.5*da.height],
                             alpha=data['alpha'],
                             marker=data['shape'],
-                            markersize=data['size']+data['stroke'],
+                            markersize=size,
                             markerfacecolor=data['fill'],
                             markeredgecolor=data['color'],
-                            markeredgewidth=data['stroke'])
+                            markeredgewidth=stroke)
         da.add_artist(key)
         return da

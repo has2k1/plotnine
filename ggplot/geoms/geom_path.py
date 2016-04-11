@@ -10,12 +10,13 @@ import matplotlib.path as mpath
 
 from ..utils.exceptions import gg_warn
 from ..utils import to_rgba, make_line_segments, suppress
+from ..utils import SIZE_FACTOR
 from .geom import geom
 
 
 class geom_path(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
-                   'size': 1.5}
+                   'size': 0.5}
 
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
@@ -62,7 +63,9 @@ class geom_path(geom):
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales, munch=True)
+        data['size'] *= SIZE_FACTOR
         constant = params.pop('constant', False)
+
         if not constant:
             _draw_segments(data, ax, **params)
         else:
@@ -87,6 +90,7 @@ class geom_path(geom):
         -------
         out : DrawingArea
         """
+        data['size'] *= SIZE_FACTOR
         x = [0, da.width]
         y = [0.5 * da.height] * 2
         key = mlines.Line2D(x,

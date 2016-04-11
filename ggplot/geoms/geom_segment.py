@@ -7,11 +7,12 @@ import matplotlib.collections as mcoll
 
 from .geom import geom
 from ..utils import to_rgba, make_line_segments, interleave
+from ..utils import SIZE_FACTOR
 
 
 class geom_segment(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
-                   'size': 1.5}
+                   'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'arrow': None, 'lineend': 'butt'}
@@ -21,6 +22,7 @@ class geom_segment(geom):
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales)
+        data['size'] *= SIZE_FACTOR
         color = to_rgba(data['color'], data['alpha'])
 
         # start point -> end point, sequence of xy points

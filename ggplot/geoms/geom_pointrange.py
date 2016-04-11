@@ -58,7 +58,7 @@ class geom_pointrange(geom):
     """
 
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'linetype': 'solid', 'shape': 'o', 'size': 1.5}
+                   'linetype': 'solid', 'shape': 'o', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'fatten': 4}
@@ -68,7 +68,7 @@ class geom_pointrange(geom):
         geom_linerange.draw_group(data.copy(), panel_scales,
                                   coord, ax, **params)
         data['size'] = data['size'] * params['fatten']
-        data['stroke'] = 1
+        data['stroke'] = geom_point.DEFAULT_AES['stroke']
         geom_point.draw_group(data, panel_scales, coord, ax, **params)
 
     @staticmethod
@@ -88,6 +88,6 @@ class geom_pointrange(geom):
         """
         geom_path.draw_legend(data, da, lyr)
         data['size'] = data['size'] * lyr.geom.params['fatten']
-        data['stroke'] = 1
+        data['stroke'] = geom_point.DEFAULT_AES['stroke']
         geom_point.draw_legend(data, da, lyr)
         return da

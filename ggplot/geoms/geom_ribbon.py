@@ -2,13 +2,13 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ..coords import coord_flip
-from ..utils import to_rgba, groupby_with_null
+from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
 from .geom import geom
 
 
 class geom_ribbon(geom):
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.5}
+                   'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     legend_geom = 'polygon'
@@ -31,6 +31,7 @@ class geom_ribbon(geom):
 
     @staticmethod
     def draw_unit(data, panel_scales, coord, ax, **params):
+        data['size'] *= SIZE_FACTOR
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
 

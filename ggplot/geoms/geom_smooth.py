@@ -12,7 +12,7 @@ from .geom_line import geom_path
 
 class geom_smooth(geom):
     DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
-                   'linetype': 'solid', 'size': 1.5,
+                   'linetype': 'solid', 'size': 1,
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
@@ -61,7 +61,7 @@ class geom_smooth(geom):
                            height=da.height,
                            alpha=data['alpha'],
                            facecolor=data['fill'],
-                           edgecolor=data['color'])
+                           linewidth=0)
             da.add_artist(bg)
 
         data['alpha'] = 1

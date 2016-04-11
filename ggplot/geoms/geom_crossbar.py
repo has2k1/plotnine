@@ -8,7 +8,7 @@ from matplotlib.patches import Rectangle
 
 from ..scales.utils import resolution
 from ..utils.exceptions import gg_warn
-from ..utils import copy_missing_columns
+from ..utils import copy_missing_columns, SIZE_FACTOR
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
@@ -16,7 +16,7 @@ from .geom_segment import geom_segment
 
 class geom_crossbar(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'linetype': 'solid', 'size': 1.5}
+                   'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'width': 0.5, 'fatten': 2}
@@ -104,6 +104,8 @@ class geom_crossbar(geom):
         -------
         out : DrawingArea
         """
+        data['size'] *= SIZE_FACTOR
+
         # background
         if data['fill'] is None:
             data['fill'] = 'none'

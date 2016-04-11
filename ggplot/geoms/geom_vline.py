@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 import matplotlib.lines as mlines
 
-from ..utils import make_iterable, suppress
+from ..utils import make_iterable, suppress, SIZE_FACTOR
 from ..components import aes
 from .geom import geom
 from .geom_segment import geom_segment
@@ -12,7 +12,7 @@ from .geom_segment import geom_segment
 
 class geom_vline(geom):
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 1.5, 'alpha': 1}
+                   'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'inherit_aes': False}
@@ -61,6 +61,7 @@ class geom_vline(geom):
         """
         x = [0.5 * da.width] * 2
         y = [0, da.height]
+        data['size'] *= SIZE_FACTOR
         key = mlines.Line2D(x,
                             y,
                             alpha=data['alpha'],

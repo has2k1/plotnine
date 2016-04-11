@@ -14,7 +14,7 @@ from .geom import geom
 
 class geom_violin(geom):
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
-                   'linetype': 'solid', 'size': 1.5, 'weight': 1}
+                   'linetype': 'solid', 'size': 0.5, 'weight': 1}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'ydensity', 'position': 'dodge',
                       'draw_quantiles': None, 'scale': 'area',

@@ -25,6 +25,12 @@ from .exceptions import GgplotError, gg_warn
 DISCRETE_KINDS = 'Ob'
 CONTINUOUS_KINDS = 'if'
 
+# Points and lines of equal size should give the
+# same visual diameter (for points) and thickness
+# (for lines). Given the adjustments in geom_point,
+# this factor gives us the match.
+SIZE_FACTOR = np.sqrt(np.pi)
+
 # The x scale and y scale of a panel. Each may be None
 xy_panel_scales = collections.namedtuple('xy_panel_scales', 'x y')
 

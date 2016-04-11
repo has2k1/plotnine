@@ -5,13 +5,13 @@ import numpy as np
 from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 
-from ..utils import to_rgba
+from ..utils import to_rgba, SIZE_FACTOR
 from .geom import geom
 
 
 class geom_polygon(geom):
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 1.5}
+                   'linetype': 'solid', 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     REQUIRED_AES = {'x', 'y'}
 
@@ -24,6 +24,8 @@ class geom_polygon(geom):
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales, munch=True)
+        data['size'] *= SIZE_FACTOR
+
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
         ngroups = data['group'].unique().size
@@ -68,6 +70,7 @@ class geom_polygon(geom):
         -------
         out : DrawingArea
         """
+        data['size'] *= SIZE_FACTOR
         # We take into account that the linewidth
         # bestrides the boundary of the rectangle
         linewidth = np.min([data['size'],

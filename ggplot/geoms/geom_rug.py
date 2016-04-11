@@ -3,12 +3,12 @@ from __future__ import (absolute_import, division, print_function)
 import numpy as np
 import matplotlib.collections as mcoll
 
-from ..utils import to_rgba, make_line_segments
+from ..utils import to_rgba, make_line_segments, SIZE_FACTOR
 from .geom import geom
 
 
 class geom_rug(geom):
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 1.5,
+    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'sides': 'bl'}
@@ -17,6 +17,7 @@ class geom_rug(geom):
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales)
+        data['size'] *= SIZE_FACTOR
 
         has_x = 'x' in data.columns
         has_y = 'y' in data.columns

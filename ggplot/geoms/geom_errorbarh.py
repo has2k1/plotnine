@@ -12,7 +12,7 @@ from .geom_segment import geom_segment
 
 class geom_errorbarh(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black',
-                   'linetype': 'solid', 'size': 1.5}
+                   'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'y', 'xmin', 'xmax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'height': 0.5}

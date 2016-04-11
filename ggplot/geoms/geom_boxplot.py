@@ -8,6 +8,7 @@ from matplotlib.patches import Rectangle
 
 from ..scales.utils import resolution
 from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
+from ..utils import SIZE_FACTOR
 from .geom_point import geom_point
 from .geom_segment import geom_segment
 from .geom_crossbar import geom_crossbar
@@ -16,13 +17,13 @@ from .geom import geom
 
 class geom_boxplot(geom):
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
-                   'linetype': 'solid', 'shape': 'o', 'size': 1,
+                   'linetype': 'solid', 'shape': 'o', 'size': 0.5,
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge',
                       'outlier_alpha': 1, 'outlier_color': None,
-                      'outlier_shape': 'o', 'outlier_size': 5,
-                      'outlier_stroke': 0, 'notch': False,
+                      'outlier_shape': 'o', 'outlier_size': 1.5,
+                      'outlier_stroke': 0.5, 'notch': False,
                       'varwidth': False, 'notchwidth': 0.5,
                       'fatten': 2}
 
@@ -131,6 +132,8 @@ class geom_boxplot(geom):
         -------
         out : DrawingArea
         """
+        data['size'] *= SIZE_FACTOR
+
         # box
         facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:

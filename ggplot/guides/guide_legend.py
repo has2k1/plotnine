@@ -12,7 +12,7 @@ from matplotlib.cbook import Bunch
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
 from ..scales.scale import scale_continuous
-from ..utils import gg_import, ColoredDrawingArea, suppress
+from ..utils import gg_import, ColoredDrawingArea, suppress, SIZE_FACTOR
 from ..utils.exceptions import gg_warn, GgplotError
 from ..geoms import geom_text
 from .guide import guide
@@ -198,6 +198,8 @@ class guide_legend(guide):
         default_size = 20
         default_pad = 14
 
+        # FIXME: This should be in the geom instead of having
+        # special case conditional branches
         def determine_side_length():
             size = np.ones(nbreak) * default_size
             for i in range(nbreak):
@@ -207,9 +209,10 @@ class guide_legend(guide):
                     # Full size of object to appear in the
                     # legend key
                     if 'size' in gl.data:
-                        _size = gl.data.iloc[i]['size']
+                        _size = gl.data['size'].iloc[i] * SIZE_FACTOR
                         if 'stroke' in gl.data:
-                            _size += 2*gl.data.iloc[i]['stroke']
+                            _size += (2 * gl.data['stroke'].iloc[i] *
+                                      SIZE_FACTOR)
 
                     # special case, color does not apply to
                     # border/linewidth
@@ -222,7 +225,7 @@ class guide_legend(guide):
                         # color(edgecolor) affects size(linewidth)
                         # When the edge is not visible, we should
                         # not expand the size of the keys
-                        if gl.data.iloc[i]['color'] is not None:
+                        if gl.data['color'].iloc[i] is not None:
                             size[i] = np.max([_size+pad, size[i]])
                     except KeyError:
                         break
