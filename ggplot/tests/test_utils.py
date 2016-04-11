@@ -3,18 +3,16 @@ from __future__ import (absolute_import, division, print_function,
 import random
 import string
 import itertools
-from nose.tools import assert_equal, assert_true, assert_raises
+import warnings
 
 import numpy as np
 import pandas as pd
+import nose.tools as nt
 
-from . import get_assert_same_ggplot
 from ..data import mtcars
-from ..utils.utils import _margins, add_margins, ninteraction, join_keys
-from ..utils.utils import join_keys
-from ..scales.utils import censor, zero_range, expand_range
-
-assert_same_ggplot = get_assert_same_ggplot(__file__)
+from ..utils.utils import _margins, add_margins, ninteraction
+from ..utils.utils import join_keys, match, uniquecols, defaults
+from ..utils.utils import remove_missing, groupby_with_null
 
 
 def test__margins():
@@ -91,23 +89,6 @@ def test_add_margins():
     assert(all(dfx.loc[5*n:6*n-1, 'gear'] == all_lst))
 
 
-def test_censor():
-    x = list(range(10))
-    xx = censor(x, (2, 8))
-    assert(np.isnan(xx[0]))
-    assert(np.isnan(xx[1]))
-    assert(np.isnan(xx[9]))
-
-    df = pd.DataFrame({'x': x, 'y': range(10)})
-    df['x'] = censor(df['x'], (2, 8))
-    assert(np.isnan(df['x'][0]))
-    assert(np.isnan(df['x'][1]))
-    assert(np.isnan(df['x'][9]))
-
-    df['y'] = censor(df['y'], (-2, 18))
-    assert(issubclass(df['y'].dtype.type, np.integer))
-
-
 def test_ninteraction():
     simple_vectors = [
       list(string.ascii_lowercase),
@@ -148,8 +129,8 @@ def test_join_keys():
 
     # same array and columns the keys should be the same
     keys = join_keys(df1, df1, ['a', 'b'])
-    assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
-    assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
+    nt.assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
+    nt.assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
 
     # Every other element of df2['b'] is changed
     # so every other key should be different
@@ -158,38 +139,66 @@ def test_join_keys():
                         'c': [1, 2, 3, 4, 5, 6]})
 
     keys = join_keys(df1, df2, ['a', 'b'])
-    assert_equal(list(keys['x']), [1, 2, 4, 5, 7, 8])
-    assert_equal(list(keys['y']), [1, 3, 4, 6, 7, 9])
+    nt.assert_equal(list(keys['x']), [1, 2, 4, 5, 7, 8])
+    nt.assert_equal(list(keys['y']), [1, 3, 4, 6, 7, 9])
 
 
-def test_zero_range():
-    c = np.array
-    eps = np.finfo(float).eps
+def test_match():
+    v1 = [1, 1, 2, 2, 3, 3]
+    v2 = [1, 2, 3]
+    v3 = [0, 1, 2]
+    c = [1]
 
-    assert(zero_range(c((1, 1 + eps))))
-    assert(zero_range(c((1, 1 + 99 * eps))))
-    assert(not zero_range(c((1, 1 + 101 * eps))))  # Crossed the tol threshold
-    assert(not zero_range(c((1, 1 + 2 * eps)), tol=eps))  # Changed tol
-
-    # Scaling up or down all the values has no effect since the values
-    # are rescaled to 1 before checking against tol
-    assert(zero_range(100000 * c((1, 1 + eps))))
-    assert(not zero_range(100000 * c((1, 1 + 200 * eps))))
-    assert(zero_range(.00001 * c((1, 1 + eps))))
-    assert(not zero_range(.00001 * c((1, 1 + 200 * eps))))
-
-    # NA values
-    assert(zero_range((1, np.nan)))
-
-    # Infinite values
-    assert(not zero_range((1, np.inf)))
-    assert(not zero_range((-np.inf, np.inf)))
-    assert(zero_range((np.inf, np.inf)))
+    nt.assert_equal(match(v1, v2), [0, 0, 1, 1, 2, 2])
+    nt.assert_equal(match(v1, v2, incomparables=c), [-1, -1, 1, 1, 2, 2])
+    nt.assert_equal(match(v1, v3), [1, 1, 2, 2, -1, -1])
 
 
-def test_expand_range():
-    assert(expand_range((0, 1)) == (0, 1))
-    assert(expand_range((0, 1), mul=2) == (-2, 3))
-    assert(expand_range((0, 1), add=2) == (-2, 3))
-    assert(expand_range((0, 1), mul=2, add=2) == (-4, 5))
-    assert(expand_range((1, 1), mul=2, add=2, zero_width=1) == (0.5, 1.5))
+def test_uniquecols():
+    df = pd.DataFrame({'x': [1, 2, 3, 4],
+                       'y': ['a', 'b', 'c', 'd'],
+                       'z': [8] * 4,
+                       'other': ['same']*4})
+    df2 = pd.DataFrame({'z': [8],
+                        'other': ['same']})
+    result = uniquecols(df)
+    nt.assert_true(result.equals(df2))
+
+
+def test_defaults():
+    d1 = {'a': 1, 'b': 2, 'c': 3}
+    d2 = {'a': 11, 'd': 4}
+    d3 = {'a': 1, 'b': 2, 'c': 3, 'd': 4}
+
+    defaults(d1, d2)
+    nt.assert_dict_equal(d1, d3)
+
+
+def test_remove_missing():
+    df = pd.DataFrame({'a': [1.0, np.NaN, 3, np.inf],
+                       'b': [1, 2, 3, 4]})
+    df2 = pd.DataFrame({'a': [1.0, 3, np.inf],
+                       'b': [1, 3, 4]})
+    df3 = pd.DataFrame({'a': [1.0, 3],
+                       'b': [1, 3]})
+
+    with warnings.catch_warnings(record=True) as w:
+        res = remove_missing(df, na_rm=True, vars=['b'])
+        res.equals(df)
+
+        res = remove_missing(df)
+        res.equals(df2)
+
+        res = remove_missing(df, na_rm=True, finite=True)
+        res.equals(df3)
+        assert(len(w) == 1)
+
+
+def test_groupby_with_null():
+    df = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6],
+                       'y': ['a', 'a', None, None, 'b', 'b'],
+                       'z': [1, 1, np.NaN, np.NaN, 3, 3]})
+
+    assert(len(list(groupby_with_null(df, 'x'))) == 6)
+    assert(len(list(groupby_with_null(df, 'y'))) == 3)
+    assert(len(list(groupby_with_null(df, 'z'))) == 3)

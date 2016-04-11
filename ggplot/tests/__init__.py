@@ -22,6 +22,7 @@ default_test_modules = [
     'ggplot.tests.test_stat',
     'ggplot.tests.test_stat_calculate_methods',
     'ggplot.tests.test_utils',
+    'ggplot.tests.test_transforms',
 
     # 'ggplot.tests.test_stat_summary',
     # 'ggplot.tests.test_basic',
