@@ -169,10 +169,16 @@ class stat(object):
             msg.format(cls.__name__))
 
     def __radd__(self, gg):
-        geom = gg_import('geom_{}'.format(self.params['geom']))
-        _geom = geom(*self._cache['args'],
-                     stat=self,
-                     **self._cache['kwargs'])
+        geom_klass = self.params['geom']
+        if isinstance(geom_klass, six.string_types):
+            if not geom_klass.startswith('geom_'):
+                geom_klass = 'geom_{}'.format(geom_klass)
+
+            geom_klass = gg_import(geom_klass)
+
+        _geom = geom_klass(*self._cache['args'],
+                           stat=self,
+                           **self._cache['kwargs'])
         return gg + _geom
 
     def _verify_aesthetics(self, data):

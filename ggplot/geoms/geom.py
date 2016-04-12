@@ -221,16 +221,33 @@ class geom(object):
         kwargs
         """
         kwargs = self._cache['kwargs']
-        with suppress(KeyError):
-            if isinstance(kwargs['stat'], stat):
-                return kwargs['stat']
+        # The user (or DEFAULT_PARAMS) can specify one of;
+        # - a stat object
+        # - a stat class
+        # - the name of the stat (only the provided stats)
+        stat_klass = kwargs.get(
+            'stat', self.DEFAULT_PARAMS['stat'])
 
-        name = 'stat_{}'.format(
-            kwargs.get('stat', self.DEFAULT_PARAMS['stat']))
-        stat_klass = gg_import(name)
-        recognized = ((stat_klass.aesthetics() |
-                       six.viewkeys(stat_klass.DEFAULT_PARAMS)) &
-                      six.viewkeys(kwargs))
+        # More stable when reloading modules than
+        # using issubclass
+        if (not isinstance(stat_klass, type) and
+                hasattr(stat_klass, 'compute_layer')):
+            return stat_klass
+
+        if isinstance(stat_klass, six.string_types):
+            if not stat_klass.startswith('stat_'):
+                stat_klass = 'stat_{}'.format(stat_klass)
+            stat_klass = gg_import(stat_klass)
+
+        try:
+            recognized = (
+                (stat_klass.aesthetics() |
+                 six.viewkeys(stat_klass.DEFAULT_PARAMS)) &
+                six.viewkeys(kwargs))
+        except AttributeError:
+            msg = '{} is not a stat'.format(stat_klass)
+            raise GgplotError(msg)
+
         stat_params = {}
         for p in recognized:
             stat_params[p] = kwargs[p]
