@@ -33,7 +33,7 @@ class geom_smooth(geom):
                       data.ix[0, 'ymax'] is not None)
         if has_ribbon:
             data2 = data.copy()
-            data2['color'] = ''
+            data2['color'] = None
             geom_ribbon.draw_group(data2, panel_scales,
                                    coord, ax, **params)
 

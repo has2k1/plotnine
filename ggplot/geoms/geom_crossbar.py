@@ -8,7 +8,7 @@ from matplotlib.patches import Rectangle
 
 from ..scales.utils import resolution
 from ..utils.exceptions import gg_warn
-from ..utils import copy_missing_columns, SIZE_FACTOR
+from ..utils import copy_missing_columns, to_rgba, SIZE_FACTOR
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
@@ -107,15 +107,15 @@ class geom_crossbar(geom):
         data['size'] *= SIZE_FACTOR
 
         # background
-        if data['fill'] is None:
-            data['fill'] = 'none'
+        facecolor = to_rgba(data['fill'], data['alpha'])
+        if facecolor is None:
+            facecolor = 'none'
 
         bg = Rectangle((da.width*.125, da.height*.25),
                        width=da.width*.75,
                        height=da.height*.5,
                        linewidth=data['size'],
-                       alpha=data['alpha'],
-                       facecolor=data['fill'],
+                       facecolor=facecolor,
                        edgecolor=data['color'],
                        linestyle=data['linetype'],
                        capstyle='projecting',
@@ -126,7 +126,6 @@ class geom_crossbar(geom):
                                [da.height*.5, da.height*.5],
                                linestyle=data['linetype'],
                                linewidth=data['size'],
-                               alpha=data['alpha'],
                                color=data['color'])
         da.add_artist(strike)
         return da

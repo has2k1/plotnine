@@ -38,9 +38,8 @@ class geom_polygon(geom):
         for i, (group, df) in enumerate(data.groupby('group')):
             verts[i] = tuple(zip(df['x'], df['y']))
             fill = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
-            color = to_rgba(df['color'].iloc[0], df['alpha'].iloc[0])
             facecolor[i] = 'none' if fill is None else fill
-            edgecolor[i] = 'none' if color is None else color
+            edgecolor[i] = df['color'].iloc[0] or 'none'
             linestyle[i] = df['linetype'].iloc[0]
             linewidth[i] = df['size'].iloc[0]
 
@@ -78,16 +77,16 @@ class geom_polygon(geom):
         if data['color'] is None:
             linewidth = 0
 
-        if data['fill'] is None:
-            data['fill'] = 'none'
+        facecolor = to_rgba(data['fill'], data['alpha'])
+        if facecolor is None:
+            facecolor = 'none'
 
         rect = Rectangle((0+linewidth/2, 0+linewidth/2),
                          width=da.width-linewidth,
                          height=da.height-linewidth,
                          linewidth=linewidth,
                          linestyle=data['linetype'],
-                         alpha=data['alpha'],
-                         facecolor=data['fill'],
+                         facecolor=facecolor,
                          edgecolor=data['color'],
                          capstyle='projecting')
         da.add_artist(rect)

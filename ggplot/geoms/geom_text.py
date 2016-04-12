@@ -38,9 +38,6 @@ class geom_text(geom):
         # Bind color and alpha
         color = to_rgba(data['color'], data['alpha'])
 
-        if isinstance(color, tuple):
-            color = [list(color)] * len(data['x'])
-
         # Parse latex
         if params['parse']:
             data['label'] = ['${}$'.format(l)
