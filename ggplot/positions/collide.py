@@ -34,7 +34,7 @@ def collide(data, width=None, name='', strategy=None):
 
     # Reorder by x position, relying on stable sort to preserve existing
     # ordering, which may be by group or order.
-    idx = data['xmin'].sort_values().index
+    idx = data['xmin'].sort_values(kind='mergesort').index
     data = data.loc[idx, :]
 
     # Check for overlap
