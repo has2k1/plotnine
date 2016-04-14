@@ -156,11 +156,8 @@ def ggsave(filename=None, plot=None, device=None, format=None,
         figure = plt.gcf()
     else:
         if hasattr(plot, 'draw'):
-            # FIXME: user should be able to change the dpi without
-            # reaching into the rcParams
-            from ..themes.theme import theme_get
-            plot.theme = plot.theme or theme_get()
-            plot.theme._rcParams['figure.dpi'] = dpi
+            from ..themes.theme import theme, theme_get
+            plot.theme = (plot.theme or theme_get()) + theme(dpi=dpi)
             figure = plot.draw()
         else:
             raise GgplotError("plot is not a ggplot object")

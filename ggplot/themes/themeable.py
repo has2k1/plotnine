@@ -12,7 +12,6 @@ from __future__ import absolute_import
 from copy import deepcopy
 from collections import OrderedDict
 
-import six
 from six import add_metaclass
 
 from ..utils import RegisteredMeta, suppress
@@ -87,16 +86,13 @@ class themeable(object):
     def __init__(self, theme_element=None):
         # @todo: fix unittests in test_themeable or leave this as is?
         element_types = (element_text, element_line, element_rect)
-        scalar_types = (int, float, bool, six.string_types)
         if isinstance(theme_element, element_types):
             self.properties = theme_element.properties
-        elif isinstance(theme_element, scalar_types):
+        else:
             # The specific themeable takes this value and
             # does stuff with rcParams or sets something
             # on some object attached to the axes/figure
             self.properties = {'value': theme_element}
-        else:
-            self.properites = {}
 
     def __eq__(self, other):
         "Mostly for unittesting."
@@ -540,3 +536,29 @@ class aspect_ratio(themeable):
     def apply(self, ax):
         super(aspect_ratio, self).apply(ax)
         ax.set_aspect(self.properties['value'])
+
+
+class dpi(themeable):
+    @property
+    def rcParams(self):
+        rcParams = super(dpi, self).rcParams
+        val = self.properties['value']
+        rcParams['figure.dpi'] = val
+        rcParams['savefig.dpi'] = val
+        return rcParams
+
+
+class figure_size(themeable):
+    @property
+    def rcParams(self):
+        rcParams = super(figure_size, self).rcParams
+        try:
+            width, height = self.properties['value']
+        except ValueError:
+            raise GgplotError(
+                'figure_size should be a tuple (width, height) '
+                'with the values in inches')
+
+        rcParams['figure.figsize'] = '{}, {}'.format(width,
+                                                     height)
+        return rcParams
