@@ -60,7 +60,7 @@ class stat(object):
         """
         Return a set of all non-computed aesthetics for this stat.
         """
-        aesthetics = set()
+        aesthetics = cls.REQUIRED_AES.copy()
         for ae, value in six.iteritems(cls.DEFAULT_AES):
             with suppress(AttributeError):
                 if value.startswith('..'):
