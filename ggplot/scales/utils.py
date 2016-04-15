@@ -20,6 +20,7 @@ from matplotlib.dates import WeekdayLocator, MonthLocator, YearLocator
 from matplotlib.dates import DateFormatter
 from matplotlib.dates import date2num, num2date
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex
+from matplotlib.cm import get_cmap
 import palettable.colorbrewer as colorbrewer
 
 from ..utils import palettes
@@ -271,6 +272,30 @@ def brewer_pal(type='seq', palette=1):
     return func
 
 
+def ratios_to_colors(values, colormap):
+    """
+    Map values in the range [0, 1] onto colors
+
+    Parameters
+    ----------
+    values : array_like | float
+        Numeric(s) in the range [0, 1]
+    colormap : cmap
+        Matplotlib colormap to use for the mapping
+
+    Returns
+    -------
+    out : list | float
+        Color(s) corresponding to the values
+    """
+    color_tuples = colormap(values)
+    try:
+        hex_colors = [rgb2hex(t) for t in color_tuples]
+    except IndexError:
+        hex_colors = rgb2hex(color_tuples)
+    return hex_colors
+
+
 def gradient_n_pal(colors, values=None, name='gradientn'):
     # Note: For better results across devices and media types,
     # it would be better to do the interpolation in
@@ -282,23 +307,19 @@ def gradient_n_pal(colors, values=None, name='gradientn'):
         colormap = LinearSegmentedColormap.from_list(
             name, list(zip(values, colors)))
 
-    def func(vals):
+    def cmap_palette(vals):
+        return ratios_to_colors(vals, colormap)
 
-        """
-        Return colors along a colormap
+    return cmap_palette
 
-        Parameters
-        ----------
-        values : array_like | float
-            Numeric(s) in the range (0, 1)
-        """
-        color_tuples = colormap(vals)
-        try:
-            rgb_colors = [rgb2hex(t) for t in color_tuples]
-        except IndexError:
-            rgb_colors = rgb2hex(color_tuples)
-        return rgb_colors
-    return func
+
+def cmap_pal(name=None, lut=None):
+    colormap = get_cmap(name, lut)
+
+    def cmap_palette(vals):
+        return ratios_to_colors(vals, colormap)
+
+    return cmap_palette
 
 
 def abs_area(max):

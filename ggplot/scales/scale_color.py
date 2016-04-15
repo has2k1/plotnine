@@ -5,6 +5,7 @@ from ..utils.exceptions import gg_warn
 from ..utils import palettes
 from .utils import rescale_mid
 from .utils import hue_pal, brewer_pal, grey_pal, gradient_n_pal
+from .utils import cmap_pal
 from .scale import scale_discrete, scale_continuous
 
 
@@ -62,7 +63,7 @@ class scale_color_gradient(scale_continuous):
         Create colormap that will be used by the palette
         """
         self.palette = gradient_n_pal([low, high],
-                                           name='gradient')
+                                      name='gradient')
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -150,6 +151,19 @@ class scale_fill_distiller(scale_color_distiller):
     aesthetics = ['fill']
 
 
+# matplotlib colormaps
+class scale_color_cmap(scale_continuous):
+    aesthetics = ['color']
+    guide = 'colorbar'
+
+    def __init__(self, name='viridis', lut=None, **kwargs):
+        self.palette = cmap_pal(name, lut)
+        scale_continuous.__init__(self, **kwargs)
+
+
+class scale_fill_cmap(scale_color_cmap):
+    aesthetics = ['fill']
+
 # Default scales
 scale_color_discrete = scale_color_hue
 scale_color_continuous = scale_color_gradient
@@ -167,3 +181,4 @@ scale_colour_gradientn = scale_color_gradientn
 scale_colour_discrete = scale_color_discrete
 scale_colour_continuous = scale_color_continuous
 scale_colour_distiller = scale_color_distiller
+scale_colour_cmap = scale_color_cmap

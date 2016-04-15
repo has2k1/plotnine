@@ -6,6 +6,7 @@ from .scale_alpha import scale_alpha_continuous
 from .scale_alpha import scale_alpha_discrete
 # color
 from .scale_color import scale_color_brewer, scale_colour_brewer
+from .scale_color import scale_color_cmap, scale_colour_cmap
 from .scale_color import scale_color_continuous, scale_colour_continuous
 from .scale_color import scale_color_desaturate, scale_colour_desaturate
 from .scale_color import scale_color_discrete, scale_colour_discrete
@@ -17,6 +18,7 @@ from .scale_color import scale_color_grey, scale_colour_grey
 from .scale_color import scale_color_hue, scale_colour_hue
 # fill
 from .scale_color import scale_fill_brewer
+from .scale_color import scale_fill_cmap
 from .scale_color import scale_fill_continuous
 from .scale_color import scale_fill_desaturate
 from .scale_color import scale_fill_discrete
@@ -79,6 +81,7 @@ from .limits import xlim, ylim, lims
 __all__ = [
            # color
            'scale_color_brewer', 'scale_colour_brewer',
+           'scale_color_cmap', 'scale_colour_cmap',
            'scale_color_continuous', 'scale_colour_continuous',
            'scale_color_discrete', 'scale_colour_discrete',
            'scale_color_distiller', 'scale_colour_distiller',
@@ -89,7 +92,8 @@ __all__ = [
            'scale_color_grey', 'scale_colour_grey',
            'scale_color_hue', 'scale_colour_hue',
            # fill
-           'scale_fill_brewer', 'scale_fill_continuous',
+           'scale_fill_brewer', 'scale_fill_cmap',
+           'scale_fill_continuous',
            'scale_fill_desaturate', 'scale_fill_discrete',
            'scale_fill_distiller', 'scale_fill_gradient',
            'scale_fill_gradient2', 'scale_fill_gradientn',
