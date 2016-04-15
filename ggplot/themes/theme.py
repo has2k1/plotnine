@@ -120,6 +120,18 @@ class theme(object):
         """
         pass
 
+    def apply_figure(self, figure):
+        """
+        Makes any desired changes to the figure object
+
+        This method will be called once with a figure object
+        after plot has completed. Subclasses that override this
+        method should make sure that the base class method is
+        called.
+        """
+        for element_theme in self.element_themes:
+            element_theme.apply_figure(figure)
+
     @property
     def rcParams(self):
         """

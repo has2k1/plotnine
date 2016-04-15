@@ -158,6 +158,8 @@ class ggplot(object):
             for ax in plot.axs:
                 plot.theme.apply(ax)
 
+            plot.theme.apply_figure(plot.figure)
+
         return plot.figure
 
     def draw_plot(self):

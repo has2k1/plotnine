@@ -137,6 +137,9 @@ class themeable(object):
         """
         pass
 
+    def apply_figure(self, figure):
+        pass
+
 
 def make_themeable(name, theme_element):
     """
@@ -562,3 +565,10 @@ class figure_size(themeable):
         rcParams['figure.figsize'] = '{}, {}'.format(width,
                                                      height)
         return rcParams
+
+
+class facet_spacing(themeable):
+    def apply_figure(self, figure):
+        super(facet_spacing, self).apply_figure(figure)
+        kwargs = self.properties['value']
+        figure.subplots_adjust(**kwargs)
