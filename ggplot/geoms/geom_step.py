@@ -1,9 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import numpy as np
 import pandas as pd
 
-from ..utils import copy_missing_columns, interleave
+from ..utils import copy_missing_columns
 from .geom import geom
 from .geom_path import geom_path
 
@@ -15,18 +16,19 @@ class geom_step(geom_path):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
-        x = data['x'].values
-        y = data['y'].values
+        n = len(data)
+        data = data.sort_values('x', kind='mergesort')
 
         # create stepped path -- interleave x with
         # itself and y with itself
-        if params['direction'] == 'hv':
-            xs = interleave(x[:-1], x[1:])
-            ys = interleave(y[:-1], y[:-1])
-        elif params['direction'] == 'vh':
-            xs = interleave(x[:-1], x[:-1])
-            ys = interleave(y[:-1], y[1:])
+        xs = np.repeat(range(n), 2)[:-1]
+        ys = np.repeat(range(0, n), 2)[1:]
 
-        df = pd.DataFrame({'x': xs, 'y': ys})
+        # horizontal first
+        if params['direction'] == 'hv':
+            xs, ys = ys, xs
+
+        df = pd.DataFrame({'x': data['x'].values[xs],
+                           'y': data['y'].values[ys]})
         copy_missing_columns(df, data)
         geom_path.draw_group(df, panel_scales, coord, ax, **params)
