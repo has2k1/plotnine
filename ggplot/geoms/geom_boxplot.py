@@ -39,8 +39,11 @@ class geom_boxplot(geom):
                 for lst in data['outliers']]
         omax = [np.max(lst) if len(lst) else -np.inf
                 for lst in data['outliers']]
-        data['ymin_final'] = np.min([data['ymin'], omin])
-        data['ymax_final'] = np.max([data['ymax'], omax])
+
+        data['ymin_final'] = np.min(np.column_stack(
+            [data['ymin'], omin]), axis=1)
+        data['ymax_final'] = np.max(np.column_stack(
+            [data['ymax'], omax]), axis=1)
 
         # if varwidth not requested or not available, don't use it
         if ('varwidth' not in self.params or
