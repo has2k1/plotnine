@@ -93,8 +93,24 @@ class guide_colorbar(guide):
     def create_geoms(self, plot):
         """
         This guide is not geom based
+
+        Return self if colorbar will be drawn and None if not.
         """
-        self.glayers = []
+        for l in plot.layers:
+            all_ae = (six.viewkeys(l.mapping) |
+                      plot.mapping if l.inherit_aes else set() |
+                      six.viewkeys(l.stat.DEFAULT_AES))
+            geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
+            matched = all_ae & geom_ae & set(self.key.columns)
+            matched = matched - set(l.geom.aes_params)
+
+            # layer uses guide
+            if len(matched) and l.show_legend in (None, True):
+                break
+        # no break, no layer uses this guide
+        else:
+            return None
+
         return self
 
     def _set_defaults(self, theme):
