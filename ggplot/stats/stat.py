@@ -73,7 +73,7 @@ class stat(object):
                    six.viewkeys(self.aes_params) -
                    set(data.columns))
 
-        for ae in missing:
+        for ae in missing-self.REQUIRED_AES:
             if self.DEFAULT_AES[ae] is not None:
                 data[ae] = self.DEFAULT_AES[ae]
 
@@ -180,15 +180,3 @@ class stat(object):
                            stat=self,
                            **self._cache['kwargs'])
         return gg + _geom
-
-    def _verify_aesthetics(self, data):
-        """
-        Check if all the required aesthetics have been specified
-
-        Raise an Exception if an aesthetic is missing
-        """
-        missing_aes = self.REQUIRED_AES - set(data.columns)
-        if missing_aes:
-            msg = '{} requires the following missing aesthetics: {}'
-            raise GgplotError(msg.format(
-                self.__class__.__name__, ', '.join(missing_aes)))
