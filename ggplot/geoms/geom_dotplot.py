@@ -123,10 +123,14 @@ class geom_dotplot(geom):
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
         ranges = coord.range(panel_scales)
+
         # For perfect circles the width/height of the circle(ellipse)
-        # should factor in the figure dimensions
-        fw, fh = ax.figure.get_figwidth(), ax.figure.get_figheight()
-        factor = ((fw/fh) *
+        # should factor in the dimensions of axes
+        bbox = ax.get_window_extent().transformed(
+            ax.figure.dpi_scale_trans.inverted())
+        ax_width, ax_height = bbox.width, bbox.height
+
+        factor = ((ax_width/ax_height) *
                   np.ptp(ranges.y)/np.ptp(ranges.x))
         size = data.loc[0, 'binwidth'] * params['dotsize']
         offsets = data['stackpos'] * params['stackratio']
