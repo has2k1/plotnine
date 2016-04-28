@@ -51,11 +51,10 @@ class ggplot(object):
 
     def __init__(self, mapping=None, data=None, environment=None):
         # Allow some sloppiness
-        if mapping is None:
-            mapping = aes()
-
         if not isinstance(mapping, aes):
             mapping, data = data, mapping
+        if mapping is None:
+            mapping = aes()
 
         if (data is not None and
                 not isinstance(data, pd.DataFrame)):
