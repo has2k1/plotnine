@@ -132,6 +132,7 @@ class ggplot(object):
             ax.axis('off')
         axs = axs[:len(plot.panel.layout)]
 
+        plot.theme.setup_figure(figure)
         plot.axs = plot.panel.axs = axs
         plot.figure = plot.theme.figure = figure
 

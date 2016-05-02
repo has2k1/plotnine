@@ -71,7 +71,7 @@ class theme(object):
             These simply bind together all the aspects of a themeable
             that can be themed.
         """
-        self.element_themes = []
+        self.themeables = []
         self.complete = complete
         self._rcParams = {}
         # This is set when the figure is created,
@@ -79,12 +79,12 @@ class theme(object):
         self.figure = None
         self._params = scalar_themeables.copy()
 
-        for name, theme_element in kwargs.items():
+        for name, element in kwargs.items():
             if name in scalar_themeables:
-                self._params[name] = theme_element
+                self._params[name] = element
             else:
-                self.element_themes.append(
-                    make_themeable(name, theme_element))
+                self.themeables.append(
+                    make_themeable(name, element))
 
     def apply(self, ax):
         """
@@ -107,8 +107,8 @@ class theme(object):
         self.apply_more(ax)
 
         # does this need to be ordered first?
-        for element_theme in self.element_themes:
-            element_theme.apply(ax)
+        for themeable in self.themeables:
+            themeable.apply(ax)
 
     def apply_more(self, ax):
         """
@@ -120,6 +120,18 @@ class theme(object):
         """
         pass
 
+    def setup_figure(self, figure):
+        """
+        Makes any desired changes to the figure object
+
+        This method will be called once with a figure object
+        before any plotting has completed. Subclasses that
+        override this method should make sure that the base
+        class method is called.
+        """
+        for themeable in self.themeables:
+            themeable.setup_figure(figure)
+
     def apply_figure(self, figure):
         """
         Makes any desired changes to the figure object
@@ -129,8 +141,8 @@ class theme(object):
         method should make sure that the base class method is
         called.
         """
-        for element_theme in self.element_themes:
-            element_theme.apply_figure(figure)
+        for themeable in self.themeables:
+            themeable.apply_figure(figure)
 
     @property
     def rcParams(self):
@@ -162,9 +174,9 @@ class theme(object):
             # In particular, XKCD uses matplotlib.patheffects.withStrok
             rcParams = copy(self._rcParams)
 
-        if self.element_themes:
-            for element_theme in self.element_themes:
-                rcParams.update(element_theme.rcParams)
+        if self.themeables:
+            for themeable in self.themeables:
+                rcParams.update(themeable.rcParams)
         return rcParams
 
     def add_theme(self, other):
@@ -181,9 +193,9 @@ class theme(object):
             return other
         else:
             theme_copy = deepcopy(self)
-            theme_copy.element_themes = merge_themeables(
-                deepcopy(self.element_themes),
-                deepcopy(other.element_themes))
+            theme_copy.themeables = merge_themeables(
+                deepcopy(self.themeables),
+                deepcopy(other.themeables))
             theme_copy._params.update(other._params)
             return theme_copy
 
@@ -223,7 +235,7 @@ class theme(object):
             # else make a copy of other combined with self.
             else:
                 theme_copy = deepcopy(other)
-                theme_copy.element_themes.append(self)
+                theme_copy.themeables.append(self)
                 theme_copy._params.update(other._params)
                 return theme_copy
 

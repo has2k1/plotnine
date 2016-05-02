@@ -140,6 +140,9 @@ class themeable(object):
     def apply_figure(self, figure):
         pass
 
+    def setup_figure(self, figure):
+        pass
+
 
 def make_themeable(name, theme_element):
     """
@@ -194,16 +197,16 @@ def sorted_themeables(themeable_list):
 # element_text themeables
 
 class axis_title_x(themeable):
-    def apply(self, ax):
-        super(axis_title_x, self).apply(ax)
-        text = ax.figure._themeable['axis_title_x']
+    def apply_figure(self, figure):
+        super(axis_title_x, self).apply_figure(figure)
+        text = figure._themeable['axis_title_x']
         text.set(**self.properties)
 
 
 class axis_title_y(themeable):
-    def apply(self, ax):
-        super(axis_title_y, self).apply(ax)
-        text = ax.figure._themeable['axis_title_y']
+    def apply_figure(self, figure):
+        super(axis_title_y, self).apply_figure(figure)
+        text = figure._themeable['axis_title_y']
         text.set(**self.properties)
 
 
@@ -212,43 +215,43 @@ class axis_title(axis_title_x, axis_title_y):
 
 
 class legend_title(themeable):
-    def apply(self, ax):
-        super(legend_title, self).apply(ax)
+    def apply_figure(self, figure):
+        super(legend_title, self).apply_figure(figure)
         with suppress(KeyError):
-            textarea = ax.figure._themeable['legend_title']
+            textarea = figure._themeable['legend_title']
             textarea._text.set(**self.properties)
 
 
 class legend_text(legend_title):
-    def apply(self, ax):
-        super(legend_title, self).apply(ax)
+    def apply_figure(self, figure):
+        super(legend_title, self).apply_figure(figure)
         with suppress(KeyError):
-            texts = ax.figure._themeable['legend_text']
+            texts = figure._themeable['legend_text']
             for text in texts:
                 text.set(**self.properties)
 
 
 class plot_title(themeable):
-    def apply(self, ax):
-        super(plot_title, self).apply(ax)
-        text = ax.figure._themeable['plot_title']
+    def apply_figure(self, figure):
+        super(plot_title, self).apply_figure(figure)
+        text = figure._themeable['plot_title']
         text.set(**self.properties)
 
 
 class strip_text_x(themeable):
-    def apply(self, ax):
-        super(strip_text_x, self).apply(ax)
+    def apply_figure(self, figure):
+        super(strip_text_x, self).apply_figure(figure)
         with suppress(KeyError):
-            texts = ax.figure._themeable['strip_text_x']
+            texts = figure._themeable['strip_text_x']
             for text in texts:
                 text.set(**self.properties)
 
 
 class strip_text_y(themeable):
-    def apply(self, ax):
-        super(strip_text_y, self).apply(ax)
+    def apply_figure(self, figure):
+        super(strip_text_y, self).apply_figure(figure)
         with suppress(KeyError):
-            texts = ax.figure._themeable['strip_text_y']
+            texts = figure._themeable['strip_text_y']
             for text in texts:
                 text.set(**self.properties)
 
@@ -423,19 +426,19 @@ class line(axis_line, axis_ticks, panel_grid):
 
 
 class legend_key(themeable):
-    def apply(self, ax):
-        super(legend_key, self).apply(ax)
+    def apply_figure(self, figure):
+        super(legend_key, self).apply_figure(figure)
         with suppress(KeyError):
-            das = ax.figure._themeable['legend_key']
+            das = figure._themeable['legend_key']
             for da in das:
                 da.patch.set(**self.properties)
 
 
 class legend_background(themeable):
-    def apply(self, ax):
-        super(legend_background, self).apply(ax)
+    def apply_figure(self, figure):
+        super(legend_background, self).apply_figure(figure)
         with suppress(KeyError):
-            aob = ax.figure._themeable['legend_background']
+            aob = figure._themeable['legend_background']
             aob.patch.set(**self.properties)
             if self.properties:
                 aob._drawFrame = True
@@ -458,23 +461,22 @@ class panel_border(themeable):
 
 
 class plot_background(themeable):
-    def apply(self, ax):
-        super(plot_background, self).apply(ax)
-        ax.figure.patch.set(**self.properties)
+    def setup_figure(self, figure):
+        figure.patch.set(**self.properties)
 
 
 class strip_background_x(themeable):
-    def apply(self, ax):
-        super(strip_background_x, self).apply(ax)
-        bboxes = ax.figure._themeable.get('strip_background_x', [])
+    def apply_figure(self, figure):
+        super(strip_background_x, self).apply_figure(figure)
+        bboxes = figure._themeable.get('strip_background_x', [])
         for bbox in bboxes:
             bbox.set(**self.properties)
 
 
 class strip_background_y(themeable):
-    def apply(self, ax):
-        super(strip_background_y, self).apply(ax)
-        bboxes = ax.figure._themeable.get('strip_background_y', [])
+    def apply_figure(self, figure):
+        super(strip_background_y, self).apply_figure(figure)
+        bboxes = figure._themeable.get('strip_background_y', [])
         for bbox in bboxes:
             bbox.set(**self.properties)
 
@@ -502,17 +504,15 @@ class axis_ticks_length(themeable):
 
 
 class panel_margin_x(themeable):
-    def apply(self, ax):
-        super(panel_margin_x, self).apply(ax)
+    def setup_figure(self, figure):
         val = self.properties['value']
-        ax.figure.subplots_adjust(wspace=val)
+        figure.subplots_adjust(wspace=val)
 
 
 class panel_margin_y(themeable):
-    def apply(self, ax):
-        super(panel_margin_y, self).apply(ax)
+    def setup_figure(self, figure):
         val = self.properties['value']
-        ax.figure.subplots_adjust(hspace=val)
+        figure.subplots_adjust(hspace=val)
 
 
 class panel_margin(panel_margin_x, panel_margin_y):
@@ -520,13 +520,12 @@ class panel_margin(panel_margin_x, panel_margin_y):
 
 
 class plot_margin(themeable):
-    def apply(self, ax):
-        super(plot_margin, self).apply(ax)
+    def setup_figure(self, figure):
         val = self.properties['value']
-        ax.figure.subplots_adjust(left=val,
-                                  right=1-val,
-                                  bottom=val,
-                                  top=1-val)
+        figure.subplots_adjust(left=val,
+                               right=1-val,
+                               bottom=val,
+                               top=1-val)
 
 
 class panel_ontop(themeable):
@@ -568,7 +567,6 @@ class figure_size(themeable):
 
 
 class facet_spacing(themeable):
-    def apply_figure(self, figure):
-        super(facet_spacing, self).apply_figure(figure)
+    def setup_figure(self, figure):
         kwargs = self.properties['value']
         figure.subplots_adjust(**kwargs)
