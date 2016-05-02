@@ -101,14 +101,9 @@ class ggplot(object):
 
         return result
 
-    def _make_axes(self, plot):
+    def _make_axes(self):
         """
         Create MPL figure and axes
-
-        Parameters
-        ----------
-        plot : ggplot
-            built ggplot object
 
         Note
         ----
@@ -118,23 +113,36 @@ class ggplot(object):
         the figure to get a handle on objects that
         may be themed
         """
-        figure, axs = plt.subplots(plot.facet.nrow,
-                                   plot.facet.ncol,
+        if ggplot_options['close_all_figures']:
+            plt.close("all")
+
+        figure, axs = plt.subplots(self.facet.nrow,
+                                   self.facet.ncol,
                                    sharex=False,
                                    sharey=False)
+
+        # TODO: spaces should depend on the horizontal
+        # and vertical lengths of the axes since the
+        # spacing values are in transAxes dimensions
+        if isinstance(self.facet, facet_wrap):
+            hspace = len(self.facet.vars) * .20
+            plt.subplots_adjust(wspace=.05, hspace=hspace)
+        else:
+            plt.subplots_adjust(wspace=.05, hspace=.05)
+
         figure._themeable = {}
         try:
             axs = axs.flatten()
         except AttributeError:
             axs = [axs]
 
-        for ax in axs[len(plot.panel.layout):]:
+        for ax in axs[len(self.panel.layout):]:
             ax.axis('off')
-        axs = axs[:len(plot.panel.layout)]
+        axs = axs[:len(self.panel.layout)]
 
-        plot.theme.setup_figure(figure)
-        plot.axs = plot.panel.axs = axs
-        plot.figure = plot.theme.figure = figure
+        self.theme.setup_figure(figure)
+        self.axs = self.panel.axs = axs
+        self.figure = self.theme.figure = figure
 
     def draw(self):
         """
@@ -144,23 +152,23 @@ class ggplot(object):
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme
         self = deepcopy(self)
-
-        if ggplot_options['close_all_figures']:
-            plt.close("all")
+        self.build()
 
         # If no theme we use the default
         self.theme = self.theme or theme_get()
 
         with gg_context(theme=self.theme):
-            plot = self.draw_plot()
-            plot = self.draw_legend(plot)
+            self.draw_plot()
+            self.draw_legend()
+            add_labels_and_title(self)
+
             # Theming
-            for ax in plot.axs:
-                plot.theme.apply(ax)
+            for ax in self.axs:
+                self.theme.apply(ax)
 
-            plot.theme.apply_figure(plot.figure)
+            self.theme.apply_figure(self.figure)
 
-        return plot.figure
+        return self.figure
 
     def draw_plot(self):
         """
@@ -173,46 +181,31 @@ class ggplot(object):
                 - axs
                 - figure
         """
-        data, plot = self.build()
-        self._make_axes(plot)
-        panel = plot.panel
+        self._make_axes()
 
         # Draw the geoms
-        for l, ldata in zip(plot.layers, data):
-            l.draw(ldata, panel, plot.coordinates)
+        for layer in self.layers:
+            layer.draw(self.panel, self.coordinates)
 
         # Decorate the axes
         #   - xaxis & yaxis breaks, labels, limits, ...
         #   - facet labels
         #
         # ploc is the panel location (left to right, top to bottom)
-        for ploc, finfo in panel.layout.iterrows():
-            panel_scales = panel.ranges[ploc]
-            ax = panel.axs[ploc]
-            set_breaks_and_labels(plot, panel_scales, finfo, ax)
-            draw_facet_label(plot, finfo, ax)
-
-        apply_facet_spacing(plot)
-        add_labels_and_title(plot)
-
-        return plot
+        for ploc, finfo in self.panel.layout.iterrows():
+            panel_scales = self.panel.ranges[ploc]
+            ax = self.panel.axs[ploc]
+            set_breaks_and_labels(self, panel_scales, finfo, ax)
+            draw_facet_label(self, finfo, ax)
 
     def build(self):
         """
         Build ggplot for rendering.
 
-        This function takes the plot object, and performs all steps
-        necessary to produce an object that can be rendered.
-
-        Returns
-        -------
-        data : list
-            dataframes, one for each layer
-        panel : panel
-            panel object with all the finformation required
-            for ploting
-        plot : ggplot
-            A copy of the ggplot object
+        Note
+        ----
+        This method modifies the ggplot object. The caller is responsible
+        for making a copy and using that to make the method call.
         """
         plot = self
 
@@ -282,22 +275,24 @@ class ggplot(object):
         # fill in the defaults
         data = [l.use_defaults(d) for l, d in zip(layers, data)]
 
-        return data, plot
+        # Each layer gets the final data used for plotting
+        for layer, fdata in zip(layers, data):
+            layer.final_data = fdata
 
-    def draw_legend(self, plot):
-        legend_box = plot.guides.build(plot)
+    def draw_legend(self):
+        legend_box = self.guides.build(self)
         if not legend_box:
-            return plot
+            return
 
-        position = plot.theme._params['legend_position']
+        position = self.theme._params['legend_position']
 
         # At what point (e.g [.94, .5]) on the figure
         # to place which point (e.g 6, for center left) of
         # the legend box
         _x = 0.92
         # Prevent overlap with the facet label
-        if isinstance(plot.facet, facet_grid):
-            _x += .025 * len(plot.facet.rows)
+        if isinstance(self.facet, facet_grid):
+            _x += .025 * len(self.facet.rows)
         lookup = {
             'right': (6, (_x, 0.5)),     # center left
             'left': (7, (0.07, 0.5)),    # center right
@@ -311,13 +306,12 @@ class ggplot(object):
             frameon=False,
             # Spacing goes here
             bbox_to_anchor=box_to_anchor,
-            bbox_transform=plot.figure.transFigure,
+            bbox_transform=self.figure.transFigure,
             borderpad=0.)
 
-        plot.figure._themeable['legend_background'] = anchored_box
-        ax = plot.axs[0]
+        self.figure._themeable['legend_background'] = anchored_box
+        ax = self.axs[0]
         ax.add_artist(anchored_box)
-        return plot
 
 
 def set_breaks_and_labels(plot, ranges, finfo, ax):
@@ -550,14 +544,3 @@ def draw_facet_label(plot, finfo, ax):
         label_info._meta = {'dimension': 'rows'}
         label_info = plot.facet.labeller(label_info)
         draw_label(label_info, 'right')
-
-
-def apply_facet_spacing(plot):
-    # TODO: spaces should depend on the axis horizontal
-    # and vertical lengths since the values are in
-    # transAxes dimensions
-    if isinstance(plot.facet, facet_wrap):
-        hspace = len(plot.facet.vars) * .20
-        plt.subplots_adjust(wspace=.05, hspace=hspace)
-    else:
-        plt.subplots_adjust(wspace=.05, hspace=.05)

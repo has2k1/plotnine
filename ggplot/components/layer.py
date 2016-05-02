@@ -73,6 +73,8 @@ class layer(object):
         self.show_legend = show_legend
         self._active_mapping = {}
         self.zorder = 0
+        # The data used for plotting
+        self.final_data = None
 
     def __deepcopy__(self, memo):
         """
@@ -289,21 +291,22 @@ class layer(object):
         data = self.position.setup_data(data, params)
         return self.position.compute_layer(data, params, panel)
 
-    def draw(self, data, panel, coord):
+    def draw(self, panel, coord):
         """
         Draw geom
 
         Parameters
         ----------
-        data : DataFrame
-            DataFrame specific for this layer
         panel : Panel
             Panel object created when the plot is getting
             built
         coord : coord
             Type of coordinate axes
         """
-        self.geom.draw_layer(data, panel, coord, self.zorder)
+        # At this point each layer must have the data
+        # that is created by the plot build process
+        self.geom.draw_layer(self.final_data, panel,
+                             coord, self.zorder)
 
     def use_defaults(self, data):
         """
