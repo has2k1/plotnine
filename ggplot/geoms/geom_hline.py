@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 
 from ..utils import make_iterable, suppress
-from ..components import aes
+from ..aes import aes
 from .geom import geom
 from .geom_segment import geom_segment
 

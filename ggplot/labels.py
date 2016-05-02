@@ -1,8 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
 from copy import deepcopy
-from ..utils.exceptions import GgplotError
+
+from .utils.exceptions import GgplotError
+
+__all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
 
 
 class labs(object):

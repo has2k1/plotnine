@@ -9,7 +9,7 @@ import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
 
-from ..components.aes import is_position_aes
+from ..aes import is_position_aes
 from ..utils import match
 from ..utils import round_any, suppress, CONTINUOUS_KINDS
 from ..utils import waiver, is_waive

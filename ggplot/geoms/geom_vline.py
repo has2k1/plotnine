@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.lines as mlines
 
 from ..utils import make_iterable, suppress, SIZE_FACTOR
-from ..components import aes
+from ..aes import aes
 from .geom import geom
 from .geom_segment import geom_segment
 

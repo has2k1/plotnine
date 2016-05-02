@@ -11,9 +11,9 @@ import matplotlib.patches as mpatch
 from patsy.eval import EvalEnvironment
 from six.moves import zip
 
-from .components.aes import aes, make_labels
-from .components.panel import Panel
-from .components.layer import Layers
+from .aes import aes, make_labels
+from .panel import Panel
+from .layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme import theme_get
 from .utils.ggutils import gg_context, ggplot_options

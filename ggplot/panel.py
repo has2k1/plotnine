@@ -3,9 +3,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 
-from ..scales.scales import Scales
-from ..utils import match, xy_panel_scales, suppress
-from ..utils.exceptions import GgplotError
+from .scales.scales import Scales
+from .utils import match, xy_panel_scales, suppress
+from .utils.exceptions import GgplotError
 
 
 class Panel(object):

@@ -10,12 +10,12 @@ import matplotlib.cbook as cbook
 import pandas.core.common as com
 from patsy.eval import EvalEnvironment
 
-from ..scales.scales import scales_add_defaults
-from ..utils.exceptions import GgplotError
-from ..utils import DISCRETE_KINDS, ninteraction
-from ..utils import check_required_aesthetics, defaults
-from ..utils import is_string, gg_import, suppress
-from ..positions.position import position
+from .scales.scales import scales_add_defaults
+from .utils.exceptions import GgplotError
+from .utils import DISCRETE_KINDS, ninteraction
+from .utils import check_required_aesthetics, defaults
+from .utils import is_string, gg_import, suppress
+from .positions.position import position
 from .aes import aes, is_calculated_aes, strip_dots
 
 _TPL_EVAL_FAIL = """\

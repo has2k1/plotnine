@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..components.aes import all_aesthetics
+from ..aes import all_aesthetics
 from ..utils import groupby_apply
 from .stat import stat
 

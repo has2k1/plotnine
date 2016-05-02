@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 import six
 
-from ..components.aes import aes
+from ..aes import aes
 from ..utils import is_scalar_or_string, gg_import
 from ..utils.exceptions import GgplotError
 

@@ -7,7 +7,7 @@ import pandas as pd
 import pandas.core.common as com
 from six.moves import range
 
-from ..components.aes import aes_to_scale
+from ..aes import aes_to_scale
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
 from ..utils import gg_import, suppress
 from ..utils.exceptions import gg_warn, GgplotError

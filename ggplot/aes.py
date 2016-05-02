@@ -5,7 +5,9 @@ from copy import deepcopy
 
 import six
 
-from ..utils import suppress
+from .utils import suppress
+
+__all__ = ['aes']
 
 all_aesthetics = {
     'alpha', 'angle', 'color', 'colour', 'fill', 'group',

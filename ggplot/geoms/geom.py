@@ -5,11 +5,10 @@ from copy import deepcopy
 import pandas as pd
 import six
 
-from ..components.aes import aes, make_labels, rename_aesthetics
-from ..components.layer import layer
+from ..aes import aes, make_labels, rename_aesthetics
+from ..layer import layer
 from ..utils.exceptions import GgplotError
 from ..utils import gg_import, defaults, suppress, copy_keys
-from ..stats.stat import stat
 
 
 class geom(object):

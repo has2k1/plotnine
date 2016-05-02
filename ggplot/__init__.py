@@ -20,7 +20,8 @@ __version__ = '0.6.6'
 
 # from .qplot import qplot
 from .ggplot import ggplot
-from .components import *
+from .aes import *
+from .labels import *
 from .coords import *
 from .geoms import *
 from .stats import *
