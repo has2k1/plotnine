@@ -284,31 +284,55 @@ class ggplot(object):
         if not legend_box:
             return
 
+        fig = self.figure
+        left = fig.subplotpars.left
+        right = fig.subplotpars.right
+        top = fig.subplotpars.top
+        bottom = fig.subplotpars.bottom
+        width = fig.get_figwidth()
+        height = fig.get_figheight()
         position = self.theme._params['legend_position']
 
-        # At what point (e.g [.94, .5]) on the figure
-        # to place which point (e.g 6, for center left) of
-        # the legend box
-        _x = 0.92
-        # Prevent overlap with the facet label
-        if isinstance(self.facet, facet_grid):
-            _x += .025 * len(self.facet.rows)
-        lookup = {
-            'right': (6, (_x, 0.5)),     # center left
-            'left': (7, (0.07, 0.5)),    # center right
-            'top': (8, (0.5, 0.92)),     # bottom center
-            'bottom': (9, (0.5, 0.07))}  # upper center
-        loc, box_to_anchor = lookup[position]
+        # The margin between the plot and legend is
+        # a magic value(s) specified in inches, and
+        # used to compute but the x, y location in
+        # transFigure coordinates.
+        if position == 'right':
+            loc = 6
+            x = right + 0.2/width
+            y = 0.5
+            if isinstance(self.facet, facet_grid):
+                x += 0.25 * len(self.facet.rows)/width
+        elif position == 'left':
+            loc = 7
+            x = left - 0.3/width
+            y = 0.5
+            if isinstance(self.facet, facet_grid):
+                x -= 0.25 * len(self.facet.rows)/width
+        elif position == 'top':
+            loc = 8
+            x = 0.5
+            y = top + 0.6/height
+            if isinstance(self.facet, facet_grid):
+                y += 0.25 * len(self.facet.cols)/width
+        elif position == 'bottom':
+            loc = 9
+            x = 0.5
+            y = bottom - 0.6/height
+        else:
+            loc = 3
+            x, y = position
+
         anchored_box = AnchoredOffsetbox(
             loc=loc,
             child=legend_box,
             pad=0.,
             frameon=False,
-            # Spacing goes here
-            bbox_to_anchor=box_to_anchor,
+            bbox_to_anchor=(x, y),
             bbox_transform=self.figure.transFigure,
             borderpad=0.)
 
+        anchored_box.set_zorder(90.1)
         self.figure._themeable['legend_background'] = anchored_box
         ax = self.axs[0]
         ax.add_artist(anchored_box)
@@ -391,22 +415,34 @@ def add_labels_and_title(plot):
 
     # This is finicky. Should be changed when MPL
     # finally has a constraint based layout manager.
-    xtitle_y = 0.08
-    ytitle_x = 0.09
-    title_y = 0.92
-    if isinstance(plot.facet, facet_wrap):
-        title_y += 0.025 * len(plot.facet.vars)
-    elif isinstance(plot.facet, facet_grid):
-        title_y += 0.04 * len(plot.facet.cols)
 
-    d = dict(
-        axis_title_x=fig.text(center, xtitle_y, labels['x'],
-                              ha='center', va='top'),
-        axis_title_y=fig.text(ytitle_x, center, labels['y'],
-                              ha='right', va='center',
-                              rotation='vertical'),
-        plot_title=fig.text(center, title_y, title,
-                            ha='center', va='bottom'))
+    # Pick suitable values in inches and convert
+    # theme to transFigure dimension. This gives
+    # large spacing margins for oblong plots.
+    left = fig.subplotpars.left
+    top = fig.subplotpars.top
+    bottom = fig.subplotpars.bottom
+    width = fig.get_figwidth()
+    height = fig.get_figheight()
+
+    xtitle_y = bottom - 0.3/height
+    ytitle_x = left - 0.3/width
+    title_y = top + 0.1/height
+
+    if isinstance(plot.facet, facet_wrap):
+        title_y += 0.25 * len(plot.facet.vars)/height
+    elif isinstance(plot.facet, facet_grid):
+        title_y += 0.25 * len(plot.facet.cols)/height
+
+    d = {
+        'axis_title_x': fig.text(
+            center, xtitle_y, labels['x'], ha='center', va='top'),
+        'axis_title_y': fig.text(
+            ytitle_x, center, labels['y'], ha='right',
+            va='center', rotation='vertical'),
+        'plot_title': fig.text(
+            center, title_y, title, ha='center', va='bottom')
+    }
 
     fig._themeable.update(d)
 

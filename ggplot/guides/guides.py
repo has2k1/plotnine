@@ -70,10 +70,10 @@ class guides(dict):
             set_if_none('legend_direction', 'vertical')
 
         # justification of legend boxes
-        if position in {'top', 'bottom'}:
-            set_if_none('legend_box_just', 'center')
-        elif position in {'left', 'right'}:
+        if position in {'left', 'right'}:
             set_if_none('legend_box_just', 'left')
+        else:
+            set_if_none('legend_box_just', 'center')
 
         gdefs = self.train(plot)
         if not gdefs:
