@@ -31,7 +31,7 @@ class guides(dict):
 
     def __init__(self, **kwargs):
         aes_names = {'alpha', 'color', 'fill',
-                     'shape', 'size'}
+                     'linetype', 'shape', 'size'}
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
