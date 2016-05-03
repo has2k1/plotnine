@@ -1,14 +1,13 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 import warnings
+
 from nose.tools import (assert_equal, assert_is, assert_is_not,
                         assert_raises)
-
 import pandas as pd
-from ggplot import *
-from ggplot.utils.exceptions import GgplotError
 
-from . import cleanup
+from .. import ggplot, aes, stat_bin
+from ..utils.exceptions import GgplotError
+from .tools import cleanup
 
 
 @cleanup

@@ -1,14 +1,14 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
+
 from nose.tools import (assert_equal, assert_is, assert_is_not,
                         assert_raises)
 
-from ggplot import *
-from ggplot.data import *
-from ggplot.geoms.geom import geom
-from ggplot.stats.stat import stat
-from ggplot.utils.exceptions import GgplotError
-from . import cleanup
+from .. import ggplot, aes
+from ..data import mtcars
+from ..geoms.geom import geom
+from ..stats.stat import stat
+from ..utils.exceptions import GgplotError
+from .tools import cleanup
 
 
 @cleanup

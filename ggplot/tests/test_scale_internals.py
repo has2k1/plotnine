@@ -1,5 +1,4 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
 from nose.tools import assert_raises
 import six
@@ -18,8 +17,8 @@ from ..scales.scale_size import (scale_size_discrete,
                                  scale_size_continuous,
                                  scale_size_area,
                                  scale_size_radius)
-from ..utils.exceptions import GgplotError
-from . import assert_prints_warning
+from ..utils.exceptions import GgplotError, GgplotWarning
+from .tools import assert_warns
 
 
 # test palettes
@@ -55,7 +54,7 @@ def test_discrete_color_palettes():
     _assert_all_colors(colors, 9)
 
     s = sc.scale_color_brewer(type='seq')
-    with assert_prints_warning():
+    with assert_warns(UserWarning):
         colors = s.palette(15)
     _assert_all_colors(colors, 9, 6)
 
@@ -69,7 +68,7 @@ def test_discrete_color_palettes():
     _assert_all_colors(colors, 11)
 
     s = sc.scale_color_brewer(type='div')
-    with assert_prints_warning():
+    with assert_warns(UserWarning):
         colors = s.palette(21)
     _assert_all_colors(colors, 11, 10)
 
@@ -79,12 +78,12 @@ def test_discrete_color_palettes():
     _assert_all_colors(colors, 5)
 
     s = sc.scale_color_brewer(type='qual', palette='Accent')
-    with assert_prints_warning():
+    with assert_warns(UserWarning):
         colors = s.palette(12)
     _assert_all_colors(colors, 8, 4)
 
     s = sc.scale_color_brewer(type='qual', palette='Set3')
-    with assert_prints_warning():
+    with assert_warns(UserWarning):
         colors = s.palette(15)
     _assert_all_colors(colors, 12, 3)
 
@@ -126,7 +125,7 @@ def test_continuous_color_palettes():
     s = sc.scale_color_distiller(type='div')
     _assert(s)
 
-    with assert_prints_warning():
+    with assert_warns(GgplotWarning):
         s = sc.scale_color_distiller(type='qual')
     _assert(s)
 

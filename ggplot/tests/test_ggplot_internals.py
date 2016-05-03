@@ -1,16 +1,15 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
+from copy import deepcopy
+
 from nose.tools import (assert_true, assert_raises, assert_is,
                         assert_is_not, assert_equal)
-
-import six
 import numpy as np
 import pandas as pd
 
-from ggplot import *
-from ggplot.data import *
-from . import get_assert_same_ggplot, cleanup, assert_same_elements
-assert_same_ggplot = get_assert_same_ggplot(__file__)
+from .. import ggplot, aes, geom_point, geom_histogram
+from .. import xlab, ylab, labs, ggtitle
+from ..data import diamonds
+from .tools import cleanup
 
 
 def test_chart_components():
@@ -52,7 +51,6 @@ def test_data_transforms():
 
 
 def test_deepcopy():
-    from copy import deepcopy
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
     p2 = deepcopy(p)
     assert_is_not(p, p2)

@@ -1,18 +1,17 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
-from nose.tools import assert_equal, assert_true, assert_raises
-from matplotlib.testing.decorators import cleanup
-import matplotlib.pyplot as plt
+from __future__ import absolute_import, division, print_function
 
 import os
 import sys
 
+from nose.tools import assert_equal, assert_true, assert_raises
+import matplotlib.pyplot as plt
 import pandas as pd
 
-from ggplot import *
-from ggplot.data import *
-from . import ignore_warning
+from .. import ggplot, aes, geom_text, geom_line, ggsave
+from ..data import mtcars
+from ..utils.exceptions import GgplotWarning
+
+from .tools import ignore_warning, assert_warns, cleanup
 
 
 # TODO: test some real file content?

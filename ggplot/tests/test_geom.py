@@ -4,10 +4,9 @@ from __future__ import (absolute_import, division, print_function,
 from nose.tools import assert_raises
 import pandas as pd
 
-from ggplot import *
-from ggplot.data import *
-from ggplot.geoms.geom import geom
-from ggplot.utils.exceptions import GgplotError
+from .. import ggplot, aes
+from ..geoms.geom import geom
+from ..utils.exceptions import GgplotError
 
 df = pd.DataFrame({'col1': [1, 2, 3, 4],
                    'col2': 2,

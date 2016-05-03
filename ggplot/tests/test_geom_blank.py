@@ -1,14 +1,12 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
-from ggplot import *
-from ggplot.data import *
-
-from . import image_comparison
+from .. import ggplot, aes, geom_blank
+from ..data import mtcars
+from .tools import assert_ggplot_equal, cleanup
 
 
-@image_comparison(['blank'])
+@cleanup
 def test_blank():
     gg = ggplot(aes(x='wt', y='mpg'), data=mtcars)
     gg = gg + geom_blank()
-    print(gg)
+    assert_ggplot_equal(gg, 'blank')
