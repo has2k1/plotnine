@@ -60,12 +60,10 @@ class aes(dict):
     >>> aes(x='weight', y='height', color='salary')
     """
 
-    DEFAULT_ARGS = ['x', 'y', 'color']
-
     def __init__(self, *args, **kwargs):
         kwargs = rename_aesthetics(kwargs)
         if args:
-            dict.__init__(self, zip(self.DEFAULT_ARGS, args))
+            dict.__init__(self, zip(('x', 'y'), args))
         if kwargs:
             self.update(kwargs)
 
@@ -82,6 +80,13 @@ class aes(dict):
             result[key] = deepcopy(self[key], memo)
 
         return result
+
+    def __radd__(self, gg):
+        gg = deepcopy(gg)
+        self = deepcopy(self)
+        gg.mapping.update(self)
+        gg.labels.update(make_labels(self))
+        return gg
 
 
 def rename_aesthetics(d):
