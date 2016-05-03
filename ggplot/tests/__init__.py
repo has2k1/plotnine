@@ -9,7 +9,14 @@ import matplotlib as mpl
 # included here.
 default_test_modules = [
     'ggplot.tests.test_geom',
+    'ggplot.tests.test_geom_abline',
     'ggplot.tests.test_geom_blank',
+    'ggplot.tests.test_geom_hline',
+    'ggplot.tests.test_geom_path_line_step',
+    'ggplot.tests.test_geom_point',
+    'ggplot.tests.test_geom_rect_tile',
+    'ggplot.tests.test_geom_segment',
+    'ggplot.tests.test_geom_vline',
     'ggplot.tests.test_ggplot_internals',
     'ggplot.tests.test_ggsave',
     'ggplot.tests.test_scale_internals',
