@@ -80,7 +80,7 @@ class guide(object):
                 raise GgplotError(msg.format(self.label_position))
 
         # title alignment
-        self._title_align = theme._params['legend_title_align']
+        self._title_align = theme.params['legend_title_align']
         if self._title_align is None:
             if self.direction == 'vertical':
                 self._title_align = 'left'

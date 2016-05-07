@@ -291,7 +291,7 @@ class ggplot(object):
         bottom = fig.subplotpars.bottom
         width = fig.get_figwidth()
         height = fig.get_figheight()
-        position = self.theme._params['legend_position']
+        position = self.theme.params['legend_position']
 
         # The margin between the plot and legend is
         # a magic value(s) specified in inches, and

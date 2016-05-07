@@ -19,22 +19,6 @@ from ..utils.exceptions import GgplotError
 from .elements import element_line, element_rect, element_text
 
 
-# These do not have rcParams to modify
-scalar_themeables = {
-    'legend_box': None,
-    'legend_box_just': None,
-    'legend_direction': None,
-    'legend_justification': 'center',
-    'legend_key_height': None,
-    'legend_key_size': '1.2',
-    'legend_key_width': None,
-    'legend_margin': '0.2',
-    'legend_position': 'right',
-    'legend_text_align': None,
-    'legend_title_align': None,
-}
-
-
 @add_metaclass(RegisteredMeta)
 class themeable(object):
     """

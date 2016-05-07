@@ -46,7 +46,7 @@ class guides(dict):
         return gg
 
     def build(self, plot):
-        params = plot.theme._params
+        params = plot.theme.params
 
         def set_if_none(key, val):
             if params[key] is None:
@@ -125,7 +125,7 @@ class guides(dict):
 
             # direction
             if guide.direction is None:
-                guide.direction = plot.theme._params['legend_direction']
+                guide.direction = plot.theme.params['legend_direction']
 
             # each guide object trains scale within the object,
             # so Guides (i.e., the container of guides)
@@ -229,7 +229,7 @@ class guides(dict):
         gboxes = [gboxes[i] for i in idx]
 
         # direction when more than legend
-        direction = theme._params['legend_box']
+        direction = theme.params['legend_box']
         if direction == 'vertical':
             packer = VPacker
         elif direction == 'horizontal':
@@ -238,6 +238,6 @@ class guides(dict):
             raise GgplotError("'legend_box' should be either",
                               "'vertical' or 'horizontal'")
 
-        align = theme._params['legend_box_just']
+        align = theme.params['legend_box_just']
         box = packer(children=gboxes, align=align, pad=0, sep=20)
         return box

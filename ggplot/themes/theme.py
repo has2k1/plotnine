@@ -5,7 +5,6 @@ import matplotlib as mpl
 from ..utils.exceptions import GgplotError
 from ..utils import ggplot_options
 from .themeable import make_themeable, merge_themeables
-from .themeable import scalar_themeables
 
 
 class theme(object):
@@ -31,6 +30,19 @@ class theme(object):
     should modify the axes according.
 
     """
+    params = {
+        'legend_box': None,
+        'legend_box_just': None,
+        'legend_direction': None,
+        'legend_justification': 'center',
+        'legend_key_height': None,
+        'legend_key_size': 1.2,
+        'legend_key_width': None,
+        'legend_margin': 0.2,
+        'legend_position': 'right',
+        'legend_text_align': None,
+        'legend_title_align': None,
+    }
 
     def __init__(self, complete=False, **kwargs):
         """
@@ -74,14 +86,14 @@ class theme(object):
         self.themeables = []
         self.complete = complete
         self._rcParams = {}
+        self.params = self.params.copy()
         # This is set when the figure is created,
         # it is useful at legend drawing time.
         self.figure = None
-        self._params = scalar_themeables.copy()
 
         for name, element in kwargs.items():
-            if name in scalar_themeables:
-                self._params[name] = element
+            if name in self.params:
+                self.params[name] = element
             else:
                 self.themeables.append(
                     make_themeable(name, element))
@@ -196,7 +208,7 @@ class theme(object):
             theme_copy.themeables = merge_themeables(
                 deepcopy(self.themeables),
                 deepcopy(other.themeables))
-            theme_copy._params.update(other._params)
+            theme_copy.params.update(other.params)
             return theme_copy
 
     def __add__(self, other):
@@ -236,7 +248,7 @@ class theme(object):
             else:
                 theme_copy = deepcopy(other)
                 theme_copy.themeables.append(self)
-                theme_copy._params.update(other._params)
+                theme_copy.params.update(other.params)
                 return theme_copy
 
 
