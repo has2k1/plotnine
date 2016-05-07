@@ -6,18 +6,19 @@ class theme_matplotlib(theme):
     """
     The default matplotlib look and feel.
 
-    The theme can be used (and has the same parameter to customize) like a
-    matplotlib rc_context() manager.
+    The theme can be used (and has the same parameter
+    to customize) like a matplotlib rc_context() manager.
 
     Parameters
     -----------
     rc :  dict of rcParams
-        rcParams which should be aplied on top of mathplotlib default
+        rcParams which should be applied on top of
+        mathplotlib default.
     fname :  Filename (str)
         a filename to a matplotlibrc file
     matplotlib_defaults : bool
-        if True (the default) resets the plot setting to the (current)
-        matplotlib.rcParams values
+        if True (the default) resets the plot setting
+        to the (current) matplotlib.rcParams values
     """
 
     def __init__(self, rc=None, fname=None, matplotlib_defaults=True):

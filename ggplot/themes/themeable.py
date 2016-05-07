@@ -25,7 +25,8 @@ class themeable(object):
     themeable is an abstract class of things that can be themed.
 
     Every subclass of themeable is stored in a dict at
-    `themeable.register` with the name of the subclass as the key.
+    :python:`themeable.register` with the name of the subclass as
+    the key.
 
     It is the base of a class hierarchy that uses inheritance in a
     non-traditional manner. In the textbook use of class inheritance,
@@ -35,8 +36,8 @@ class themeable(object):
 
     It is probably better to think if this hierarchy of leveraging
     Python's multiple inheritance to implement composition. For example
-    the axis_title themeable is *composed of* the x_axis_title and the
-    y_axis_title. We are just using multiple inheritance to specify
+    the ``axis_title`` themeable is *composed of* the ``x_axis_title`` and the
+    ``y_axis_title``. We are just using multiple inheritance to specify
     this composition.
 
     When implementing a new themeable based on the ggplot2 documentation,
@@ -45,26 +46,31 @@ class themeable(object):
 
     For example, to implement,
 
-    axis.title.x x axis label (element_text; inherits from axis.title)
-    axis.title.y y axis label (element_text; inherits from axis.title)
+    ``axis_title_x`` `x`` axis label (element_text;
+    inherits from ``axis_title``)
+
+    ``axis_title_y`` ``y`` axis label (element_text;
+    inherits from ``axis_title``)
 
     You would have this implementation:
 
-    class axis_title_x(themeable):
-        ...
+    ::
 
-    class axis_title_y(themeable):
-        ...
+        class axis_title_x(themeable):
+            ...
 
-    class axis_title(axis_title_x, axis_title_y):
-       ...
+        class axis_title_y(themeable):
+            ...
+
+        class axis_title(axis_title_x, axis_title_y):
+           ...
 
 
     If the superclasses fully implement the subclass, the body of the
     subclass should be "pass". Python(__mro__) will do the right thing.
 
-    When a method does require implementation, call super() then add
-    the themeable's implementation to the axes.
+    When a method does require implementation, call :python:`super()`
+    then add the themeable's implementation to the axes.
     """
     order = 0
 
@@ -177,15 +183,36 @@ class themeable(object):
         pass
 
     def apply_figure(self, figure):
+        """
+        Apply theme to the figure
+
+        Compared to :meth:`setup_figure`, this method is called
+        after plotting and all the elements are drawn onto the
+        figure.
+        """
         pass
 
     def setup_figure(self, figure):
+        """
+        Apply theme to the figure
+
+        Compared to :meth:`apply_figure`, this method is called
+        before any plotting is done. This is necessary in some
+        cases where the drawing functions need(or can make use of)
+        this information.
+        """
         pass
 
     def blank(self, ax):
+        """
+        Blank out theme elements
+        """
         pass
 
     def blank_figure(self, figure):
+        """
+        Blank out elements on the figure
+        """
         pass
 
 
@@ -301,10 +328,24 @@ class axis_title_y(themeable):
 
 
 class axis_title(axis_title_x, axis_title_y):
+    """
+    Axis labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     pass
 
 
 class legend_title(themeable):
+    """
+    Legend title
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(legend_title, self).apply_figure(figure)
         with suppress(KeyError):
@@ -321,6 +362,13 @@ class legend_title(themeable):
 
 
 class legend_text(themeable):
+    """
+    Legend text
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(legend_text, self).apply_figure(figure)
         with suppress(KeyError):
@@ -339,6 +387,13 @@ class legend_text(themeable):
 
 
 class plot_title(themeable):
+    """
+    Plot title
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(plot_title, self).apply_figure(figure)
         with suppress(KeyError):
@@ -353,6 +408,13 @@ class plot_title(themeable):
 
 
 class strip_text_x(themeable):
+    """
+    Facet labels along the horizontal axis
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(strip_text_x, self).apply_figure(figure)
         with suppress(KeyError):
@@ -379,6 +441,13 @@ class strip_text_x(themeable):
 
 
 class strip_text_y(themeable):
+    """
+    Facet labels along the vertical axis
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply_figure(self, figure):
         super(strip_text_y, self).apply_figure(figure)
         with suppress(KeyError):
@@ -405,14 +474,35 @@ class strip_text_y(themeable):
 
 
 class strip_text(strip_text_x, strip_text_y):
+    """
+    Facet labels along both axes
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     pass
 
 
 class title(axis_title, legend_title, plot_title):
+    """
+    All titles on the plot
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     pass
 
 
 class axis_text_x(themeable):
+    """
+    x-axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply(self, ax):
         super(axis_text_x, self).apply(ax)
         labels = ax.get_xticklabels()
@@ -427,6 +517,13 @@ class axis_text_x(themeable):
 
 
 class axis_text_y(themeable):
+    """
+    x-axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
     def apply(self, ax):
         super(axis_text_y, self).apply(ax)
         labels = ax.get_yticklabels()
@@ -442,14 +539,22 @@ class axis_text_y(themeable):
 
 class axis_text(axis_text_x, axis_text_y):
     """
-    Set theme the text on x and y axis.
+    Axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
     """
     pass
 
 
 class text(axis_text, legend_text, strip_text, title):
     """
-    Scope of theme that applies to all text in plot
+    All text elements in the plot
+
+    Parameters
+    ----------
+    theme_element : element_text
     """
 
     @property
@@ -482,6 +587,13 @@ class text(axis_text, legend_text, strip_text, title):
 # element_line themeables
 
 class axis_line_x(themeable):
+    """
+    x-axis line
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     position = 'bottom'
 
     def apply(self, ax):
@@ -499,6 +611,13 @@ class axis_line_x(themeable):
 
 
 class axis_line_y(themeable):
+    """
+    y-axis line
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     position = 'left'
 
     def apply(self, ax):
@@ -516,10 +635,24 @@ class axis_line_y(themeable):
 
 
 class axis_line(axis_line_x, axis_line_y):
+    """
+    x & y axis lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     pass
 
 
 class axis_ticks_x(themeable):
+    """
+    x-axis tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     def apply(self, ax):
         super(axis_ticks_x, self).apply(ax)
 
@@ -536,6 +669,13 @@ class axis_ticks_x(themeable):
 
 
 class axis_ticks_y(themeable):
+    """
+    y-axis tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     def apply(self, ax):
         super(axis_ticks_y, self).apply(ax)
 
@@ -552,10 +692,24 @@ class axis_ticks_y(themeable):
 
 
 class axis_ticks(axis_ticks_x, axis_ticks_y):
+    """
+    x & y axis tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     pass
 
 
 class panel_grid_major_x(themeable):
+    """
+    Vertical major grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     def apply(self, ax):
         super(panel_grid_major_x, self).apply(ax)
         ax.xaxis.grid(which='major', **self.properties)
@@ -566,6 +720,13 @@ class panel_grid_major_x(themeable):
 
 
 class panel_grid_major_y(themeable):
+    """
+    Horizontal major grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     def apply(self, ax):
         super(panel_grid_major_y, self).apply(ax)
         ax.yaxis.grid(which='major', **self.properties)
@@ -576,6 +737,13 @@ class panel_grid_major_y(themeable):
 
 
 class panel_grid_minor_x(themeable):
+    """
+    Vertical minor grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     def apply(self, ax):
         super(panel_grid_minor_x, self).apply(ax)
         ax.xaxis.grid(which='minor', **self.properties)
@@ -586,6 +754,13 @@ class panel_grid_minor_x(themeable):
 
 
 class panel_grid_minor_y(themeable):
+    """
+    Horizontal minor grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     def apply(self, ax):
         super(panel_grid_minor_y, self).apply(ax)
         ax.yaxis.grid(which='minor', **self.properties)
@@ -596,18 +771,46 @@ class panel_grid_minor_y(themeable):
 
 
 class panel_grid_major(panel_grid_major_x, panel_grid_major_y):
+    """
+    Major grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     pass
 
 
 class panel_grid_minor(panel_grid_minor_x, panel_grid_minor_y):
+    """
+    Minor grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     pass
 
 
 class panel_grid(panel_grid_major, panel_grid_minor):
+    """
+    Grid lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
     pass
 
 
 class line(axis_line, axis_ticks, panel_grid):
+    """
+    All line elements
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
 
     @property
     def rcParams(self):
@@ -637,6 +840,13 @@ class line(axis_line, axis_ticks, panel_grid):
 
 
 class legend_key(themeable):
+    """
+    Legend key background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def apply_figure(self, figure):
         super(legend_key, self).apply_figure(figure)
         with suppress(KeyError):
@@ -653,6 +863,13 @@ class legend_key(themeable):
 
 
 class legend_background(themeable):
+    """
+    Legend background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def apply_figure(self, figure):
         super(legend_background, self).apply_figure(figure)
         # anchored offset box
@@ -673,6 +890,13 @@ class legend_background(themeable):
 
 
 class panel_background(themeable):
+    """
+    Panel background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def apply(self, ax):
         super(panel_background, self).apply(ax)
         ax.patch.set(**self.properties)
@@ -683,6 +907,13 @@ class panel_background(themeable):
 
 
 class panel_border(themeable):
+    """
+    Panel border
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def apply(self, ax):
         super(panel_border, self).apply(ax)
         d = deepcopy(self.properties)
@@ -701,6 +932,13 @@ class panel_border(themeable):
 
 
 class plot_background(themeable):
+    """
+    Plot background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def setup_figure(self, figure):
         figure.patch.set(**self.properties)
 
@@ -710,6 +948,13 @@ class plot_background(themeable):
 
 
 class strip_background_x(themeable):
+    """
+    Horizontal facet label background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def apply_figure(self, figure):
         super(strip_background_x, self).apply_figure(figure)
         with suppress(KeyError):
@@ -726,6 +971,13 @@ class strip_background_x(themeable):
 
 
 class strip_background_y(themeable):
+    """
+    Vertical facet label background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     def apply_figure(self, figure):
         super(strip_background_y, self).apply_figure(figure)
         with suppress(KeyError):
@@ -742,16 +994,37 @@ class strip_background_y(themeable):
 
 
 class strip_background(strip_background_x, strip_background_y):
+    """
+    Facet label background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     pass
 
 
 class rect(legend_key, legend_background,
            panel_background, panel_border,
            plot_background, strip_background):
+    """
+    All rectangle elements
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
     pass
 
 
 class axis_ticks_major_length(themeable):
+    """
+    Axis major-tick length
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     @property
     def rcParams(self):
         rcParams = super(axis_ticks_major_length, self).rcParams
@@ -762,6 +1035,13 @@ class axis_ticks_major_length(themeable):
 
 
 class axis_ticks_minor_length(themeable):
+    """
+    Axis minor-tick length
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     @property
     def rcParams(self):
         rcParams = super(axis_ticks_minor_length, self).rcParams
@@ -773,10 +1053,24 @@ class axis_ticks_minor_length(themeable):
 
 class axis_ticks_length(axis_ticks_major_length,
                         axis_ticks_minor_length):
+    """
+    Axis tick length
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     pass
 
 
 class axis_ticks_major_pad(themeable):
+    """
+    Axis major-tick padding
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     @property
     def rcParams(self):
         rcParams = super(axis_ticks_minor_pad, self).rcParams
@@ -787,6 +1081,13 @@ class axis_ticks_major_pad(themeable):
 
 
 class axis_ticks_minor_pad(themeable):
+    """
+    Axis minor-tick padding
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     @property
     def rcParams(self):
         rcParams = super(axis_ticks_minor_pad, self).rcParams
@@ -798,10 +1099,24 @@ class axis_ticks_minor_pad(themeable):
 
 class axis_ticks_pad(axis_ticks_major_pad,
                      axis_ticks_minor_pad):
+    """
+    Axis tick padding
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     pass
 
 
 class axis_ticks_direction_x(themeable):
+    """
+    x-axis tick direction
+
+    Parameters
+    ----------
+    theme_element : 'in' | 'out' | 'inout'
+    """
     @property
     def rcParams(self):
         rcParams = super(axis_ticks_direction_x, self).rcParams
@@ -810,6 +1125,13 @@ class axis_ticks_direction_x(themeable):
 
 
 class axis_ticks_direction_y(themeable):
+    """
+    y-axis tick direction
+
+    Parameters
+    ----------
+    theme_element : 'in' | 'out' | 'inout'
+    """
     @property
     def rcParams(self):
         rcParams = super(axis_ticks_direction_y, self).rcParams
@@ -819,10 +1141,26 @@ class axis_ticks_direction_y(themeable):
 
 class axis_ticks_direction(axis_ticks_direction_x,
                            axis_ticks_direction_y):
+    """
+    axis tick direction
+
+    Parameters
+    ----------
+    theme_element : 'in' | 'out' | 'inout'
+    """
     pass
 
 
 class panel_margin_x(themeable):
+    """
+    Horizontal margin around the facet panels
+
+    Parameters
+    ----------
+    theme_element : float
+        Must be in the [0, 1] range. It is specified
+        as a fraction of the panel width.
+    """
     def setup_figure(self, figure):
         val = self.properties['value']
         if val is not None:
@@ -830,6 +1168,15 @@ class panel_margin_x(themeable):
 
 
 class panel_margin_y(themeable):
+    """
+    Vertical margin around the facet panels
+
+    Parameters
+    ----------
+    theme_element : float
+        Must be in the [0, 1] range. It is specified
+        as a fraction of the panel height.
+    """
     def setup_figure(self, figure):
         val = self.properties['value']
         if val is not None:
@@ -837,10 +1184,31 @@ class panel_margin_y(themeable):
 
 
 class panel_margin(panel_margin_x, panel_margin_y):
+    """
+    Margin around the facet panels
+
+    Parameters
+    ----------
+    theme_element : float
+        Must be in the [0, 1] range. It is specified
+        as a fraction of the panel width and panel
+        height.
+    """
     pass
 
 
 class plot_margin(themeable):
+    """
+    Plot Margin
+
+    Parameters
+    ----------
+    theme_element : float
+        Must be in the [0, 1] range. It is specified
+        as a fraction of the figure width and figure
+        height. Values outside that range will
+        stretch the figure.
+    """
     def setup_figure(self, figure):
         val = self.properties['value']
         if val is not None:
@@ -851,18 +1219,40 @@ class plot_margin(themeable):
 
 
 class panel_ontop(themeable):
+    """
+    Place panel background & gridlines over/under the data layers
+
+    Parameters
+    ----------
+    theme_element : bool
+        Default is False.
+    """
     def apply(self, ax):
         super(panel_ontop, self).apply(ax)
         ax.set_axisbelow(self.properties['value'])
 
 
 class aspect_ratio(themeable):
+    """
+    Aspect ratio of the panel
+
+    Parameters
+    ----------
+    theme_element : float
+    """
     def apply(self, ax):
         super(aspect_ratio, self).apply(ax)
         ax.set_aspect(self.properties['value'])
 
 
 class dpi(themeable):
+    """
+    DPI with which to draw/save the figure
+
+    Parameters
+    ----------
+    theme_element : int
+    """
     @property
     def rcParams(self):
         rcParams = super(dpi, self).rcParams
@@ -873,6 +1263,14 @@ class dpi(themeable):
 
 
 class figure_size(themeable):
+    """
+    Figure size in inches
+
+    Parameters
+    ----------
+    theme_element : tuple
+        (width, height) in inches
+    """
     @property
     def rcParams(self):
         rcParams = super(figure_size, self).rcParams
@@ -889,6 +1287,18 @@ class figure_size(themeable):
 
 
 class facet_spacing(themeable):
+    """
+    Facet spacing
+
+    Full access to the underlying Matplolib subplot
+    adjustment parameters
+
+    Parameters
+    ----------
+    theme_element : dict
+        See :class:`matplotlib.figure.SubplotParams`
+        for the keys that the dictionary *can* have.
+    """
     def setup_figure(self, figure):
         kwargs = self.properties['value']
         figure.subplots_adjust(**kwargs)

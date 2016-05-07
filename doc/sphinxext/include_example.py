@@ -100,7 +100,11 @@ def process_object(objname):
         Name of ggplot object being documented
         e.g 'geom_point', 'facet_grid', ...
     """
-    src_filename = get_source_path(objname)
+    try:
+        src_filename = get_source_path(objname)
+    except AttributeError:
+        return
+
     notebook_filename = get_notebook_filename(objname)
     rst_filename = get_rst_filename(objname)
     filenames = (src_filename, notebook_filename, rst_filename)

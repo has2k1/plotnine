@@ -6,16 +6,18 @@ class theme_seaborn(theme):
     """
     Theme for seaborn.
 
-    Copied from mwaskom's seaborn:
-        https://github.com/mwaskom/seaborn/blob/master/seaborn/rcmod.py
+    Credit to Michael Waskom's seaborn:
+
+        - http://stanford.edu/~mwaskom/software/seaborn
+        - https://github.com/mwaskom/seaborn
 
     Parameters
     ----------
-    style: whitegrid | darkgrid | nogrid | ticks
+    style: 'whitegrid' | 'darkgrid' | 'nogrid' | 'ticks'
         Style of axis background.
-    context: notebook | talk | paper | poster
+    context: 'notebook' | 'talk' | 'paper' | 'poster'
         Intended context for resulting figures.
-    gridweight: extra heavy | heavy | medium | light
+    gridweight: 'extra heavy' | 'heavy' | 'medium' | 'light'
         Width of the grid lines. None
     """
 

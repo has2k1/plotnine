@@ -6,28 +6,48 @@ from .themeable import themeable, Themeables
 
 
 class theme(object):
-
     """
-    This is an abstract base class for themes.
+    This is a base class for themes.
 
-    In general, only complete themes should should subclass this class.
+    In general, only complete themes should subclass this class.
 
+    Parameters
+    -----------
+    complete : bool
+        Themes that are complete will override any existing themes.
+        themes that are not complete (ie. partial) will add to or
+        override specific elements of the current theme. e.g::
 
-    Notes
-    -----
-    When subclassing there are really only two methods that need to be
-    implemented.
+            theme_gray() + theme_xkcd()
 
-    __init__: This should call super().__init__ which will define
-    self._rcParams. Subclasses should customize self._rcParams after
-    calling super().__init__. That will ensure that the rcParams are
-    applied at the appropriate time.
+        will be completely determined by :class:`theme_xkcd`, but::
 
-    The other method is apply_more(ax). This method takes an axes
-    object that has been created during the plot process. The theme
-    should modify the axes according.
+            theme_gray() + theme(axis_text_x=element_text(angle=45))
 
+        will only modify the x-axis text.
+
+    **kwargs: dict
+        kwargs are either parameters or themeables.
+        The parameters are the keys to `theme.params`.
+        The themeables are elements that are subclasses of
+        `themeable`. Many themeables are defined using theme
+        elements i.e
+
+            - :class:`element_line`
+            - :class:`element_rect`
+            - :class:`element_text`
+
+        These simply bind together all the aspects of a themeable
+        that can be themed. See :class:`~ggplot.themes.themeable`.
+
+    Note
+    ----
+    When subclassing, make sure to call :python:`theme.__init__`.
+    After which you can customise :python:`self._rcParams` within
+    the ``__init__`` method of the new theme. The ``rcParams``
+    should not be modified after that.
     """
+
     params = {
         'legend_box': None,
         'legend_box_just': None,
@@ -45,44 +65,6 @@ class theme(object):
     }
 
     def __init__(self, complete=False, **kwargs):
-        """
-        Provide ggplot2 themeing capabilities.
-
-        Parameters
-        -----------
-        complete : bool
-            Themes that are complete will override any existing themes.
-            themes that are not complete (ie. partial) will add to or
-            override specific elements of the current theme.
-
-            eg.
-                theme_matplotlib() + theme_xkcd()
-
-            will be completely determined by theme_xkcd, but
-
-                (theme_matplotlib() +
-                    theme(axis_text_x=element_text(angle=45)))
-
-            will only modify the x axis text.
-
-        kwargs**: themeables
-            kwargs are themeables based on
-            http://docs.ggplot2.org/current/theme.html.
-            In addition, Python does not allow using '.' in argument
-            names, so we are using '_' instead.
-
-            For example, ggplot2 axis.ticks.y will be axis_ticks_y
-            in Python ggplot.
-
-            Many themeables are defined using theme elements i.e
-
-                - element_line
-                - element_rect
-                - element_text
-
-            These simply bind together all the aspects of a themeable
-            that can be themed.
-        """
         self.themeables = Themeables()
         self.complete = complete
         self._rcParams = {}
@@ -258,8 +240,8 @@ def theme_get():
     """
     Return the default theme
 
-    The default theme is the one set (using theme_set) by
-    the user. If none has been set, then theme_gray is
+    The default theme is the one set (using :func:`theme_set`) by
+    the user. If none has been set, then :class:`theme_gray` is
     the default.
     """
     from .theme_gray import theme_gray

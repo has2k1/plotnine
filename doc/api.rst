@@ -314,9 +314,104 @@ positions
 themes
 ======
 
+.. currentmodule:: ggplot.themes
+
+.. autosummary::
+   :toctree: generated/
+   :template: main.rst
+
+   theme
+   theme_538
+   theme_bw
+   theme_classic
+   theme_dark
+   theme_gray
+   theme_grey
+   theme_light
+   theme_linedraw
+   theme_matplotlib
+   theme_minimal
+   theme_seaborn
+   theme_void
+   theme_xkcd
+
+
+Themeables
+----------
+
+These define aspects of a plot that can be themed. They
+can be used to create a new theme or modify an existing theme.
+They define some of the keyword arguments to
+:class:`~ggplot.themes.theme`.
+
+.. currentmodule:: ggplot.themes.themeable
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: themeables.rst
+
+   aspect_ratio
+   axis_line
+   axis_line_x
+   axis_line_y
+   axis_text
+   axis_text_x
+   axis_text_y
+   axis_ticks
+   axis_ticks_direction
+   axis_ticks_direction_x
+   axis_ticks_direction_y
+   axis_ticks_length
+   axis_ticks_major_length
+   axis_ticks_major_pad
+   axis_ticks_minor_length
+   axis_ticks_minor_pad
+   axis_ticks_pad
+   axis_ticks_x
+   axis_ticks_y
+   axis_title
+   axis_title_x
+   axis_title_y
+   dpi
+   facet_spacing
+   figure_size
+   legend_background
+   legend_key
+   legend_text
+   legend_title
+   line
+   panel_background
+   panel_border
+   panel_grid
+   panel_grid_major
+   panel_grid_major_x
+   panel_grid_major_y
+   panel_grid_minor
+   panel_grid_minor_x
+   panel_grid_minor_y
+   panel_margin
+   panel_margin_x
+   panel_margin_y
+   panel_ontop
+   plot_background
+   plot_margin
+   plot_title
+   rect
+   strip_background
+   strip_background_x
+   strip_background_y
+   strip_text
+   strip_text_x
+   strip_text_y
+   text
+   title
+   themeable
+
 
 Theme helper functions and classes
 ----------------------------------
+
 .. currentmodule:: ggplot.themes
 
 .. autosummary::

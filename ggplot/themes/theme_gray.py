@@ -1,5 +1,6 @@
 from __future__ import division
 
+from ..utils import alias
 from .elements import (element_line, element_rect,
                        element_text, element_blank)
 from .theme import theme
@@ -96,5 +97,4 @@ class theme_gray(theme):
 
         self._rcParams.update(d)
 
-
-theme_grey = theme_gray()
+alias('theme_grey', theme_gray)

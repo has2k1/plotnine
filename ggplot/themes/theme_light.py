@@ -5,9 +5,8 @@ from .theme_gray import theme_gray
 
 class theme_light(theme_gray):
     """
-    A theme similar to :class:`theme_linedraw`
-    but with light grey lines and axes to
-    direct more attention towards the data.
+    A theme similar to :class:`theme_linedraw` but with light grey
+    lines and axes to direct more attention towards the data.
     """
 
     def __init__(self, base_size=12, base_family='sans-serif'):
