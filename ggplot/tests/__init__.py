@@ -12,6 +12,7 @@ default_test_modules = [
     'ggplot.tests.test_geom_abline',
     'ggplot.tests.test_geom_blank',
     'ggplot.tests.test_geom_hline',
+    'ggplot.tests.test_geom_linerange_pointrange',
     'ggplot.tests.test_geom_path_line_step',
     'ggplot.tests.test_geom_point',
     'ggplot.tests.test_geom_rect_tile',
