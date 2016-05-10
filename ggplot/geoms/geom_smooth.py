@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.patches import Rectangle
 
-from ..utils import groupby_with_null
 from .geom import geom
 from .geom_ribbon import geom_ribbon
 from .geom_line import geom_line
@@ -19,16 +18,6 @@ class geom_smooth(geom):
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales)
-        units = ['color', 'fill', 'linetype', 'size']
-        for _, udata in groupby_with_null(data, units):
-            udata.is_copy = None
-            udata.reset_index(inplace=True, drop=True)
-            geom_smooth.draw_unit(udata, panel_scales, coord,
-                                  ax, **params)
-
-    @staticmethod
-    def draw_unit(data, panel_scales, coord, ax, **params):
         has_ribbon = (data.ix[0, 'ymin'] is not None and
                       data.ix[0, 'ymax'] is not None)
         if has_ribbon:
