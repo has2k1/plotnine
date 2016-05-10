@@ -96,12 +96,13 @@ class guide_colorbar(guide):
 
         Return self if colorbar will be drawn and None if not.
         """
+        legend_ae = set(self.key.columns) - {'label'}
         for l in plot.layers:
             all_ae = (six.viewkeys(l.mapping) |
                       plot.mapping if l.inherit_aes else set() |
                       six.viewkeys(l.stat.DEFAULT_AES))
             geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
-            matched = all_ae & geom_ae & set(self.key.columns)
+            matched = all_ae & geom_ae & legend_ae
             matched = matched - set(l.geom.aes_params)
 
             # layer uses guide

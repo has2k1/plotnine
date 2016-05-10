@@ -116,13 +116,14 @@ class guide_legend(guide):
         # A layer either contributes to the guide, or it does not. The
         # guide entries may be ploted in the layers
         self.glayers = []
+        legend_ae = set(self.key.columns) - {'label'}
         for l in plot.layers:
             all_ae = (six.viewkeys(l.mapping) |
                       plot.mapping if l.inherit_aes else set() |
                       six.viewkeys(l.stat.DEFAULT_AES))
             geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
-            matched = all_ae & geom_ae & set(self.key.columns)
-            matched = matched - set(l.geom.aes_params)
+            matched = all_ae & geom_ae & legend_ae
+            matched -= set(l.geom.aes_params)
 
             if len(matched):
                 # This layer contributes to the legend
