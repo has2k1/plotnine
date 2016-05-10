@@ -19,6 +19,7 @@ default_test_modules = [
     'ggplot.tests.test_geom_rect_tile',
     'ggplot.tests.test_geom_ribbon_area',
     'ggplot.tests.test_geom_segment',
+    'ggplot.tests.test_geom_spoke',
     'ggplot.tests.test_geom_vline',
     'ggplot.tests.test_ggplot_internals',
     'ggplot.tests.test_ggsave',
