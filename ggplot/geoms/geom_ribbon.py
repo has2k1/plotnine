@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from ..coords import coord_flip
 from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
+from ..utils.exceptions import GgplotError
 from .geom import geom
 
 
@@ -13,16 +14,15 @@ class geom_ribbon(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
     legend_geom = 'polygon'
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
-        """
-        Plot all groups
-        """
-        self.draw_group(data, panel_scales, coord, ax, **params)
-
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales, munch=True)
-        units = ['color', 'fill', 'linetype', 'size']
+        units = ['alpha', 'color', 'fill', 'linetype', 'size']
+
+        if len(data[units].drop_duplicates()) > 1:
+            msg = "Aesthetics cannot vary within a ribbon."
+            raise GgplotError(msg)
+
         for _, udata in groupby_with_null(data, units):
             udata.is_copy = None
             udata.reset_index(inplace=True, drop=True)
