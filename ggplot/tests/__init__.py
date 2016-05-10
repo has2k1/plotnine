@@ -20,6 +20,7 @@ default_test_modules = [
     'ggplot.tests.test_geom_ribbon_area',
     'ggplot.tests.test_geom_segment',
     'ggplot.tests.test_geom_spoke',
+    'ggplot.tests.test_geom_text_label',
     'ggplot.tests.test_geom_vline',
     'ggplot.tests.test_ggplot_internals',
     'ggplot.tests.test_ggsave',
