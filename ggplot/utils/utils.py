@@ -866,11 +866,14 @@ def copy_missing_columns(df, ref_df):
     """
     Copy missing columns from ref_df to df
 
-    If df and ref_df are the same length, the
-    columns are copied in the entirety.
-    If not the same length, df gets a column
-    where all elements are the same as the
-    first element in ref_df
+    If df and ref_df are the same length, the columns are
+    copied in the entirety. If the length ofref_df is a
+    divisor of the length of df, then the values of the
+    columns from ref_df are repeated.
+
+    Otherwise if not the same length, df gets a column
+    where all elements are the same as the first element
+    in ref_df
 
     Parameters
     ----------
@@ -880,12 +883,15 @@ def copy_missing_columns(df, ref_df):
         Dataframe from which columns will be copied
     """
     cols = ref_df.columns.difference(df.columns)
-    same_length = len(df) == len(ref_df)
+
+    l1, l2 = len(df), len(ref_df)
+    if l1 >= l2 and l1 % l2 == 0:
+        idx = np.tile(range(l2), l1 // l2)
+    else:
+        idx = np.repeat(0, l1)
+
     for col in cols:
-        if same_length:
-            df[col] = ref_df[col]
-        else:
-            df[col] = ref_df.loc[0, col]
+        df[col] = ref_df.ix[idx, col].values
 
 
 def interleave(*arrays):
