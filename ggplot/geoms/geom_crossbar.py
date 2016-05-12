@@ -57,6 +57,7 @@ class geom_crossbar(geom):
                                'yend': y,
                                'group': group})
         copy_missing_columns(middle, data)
+        middle['alpha'] = 1
         middle['size'] *= params['fatten']
 
         has_notch = ynotchlower is not None and ynotchupper is not None
