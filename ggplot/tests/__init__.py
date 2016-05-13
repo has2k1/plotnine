@@ -11,6 +11,7 @@ default_test_modules = [
     'ggplot.tests.test_geom',
     'ggplot.tests.test_geom_abline',
     'ggplot.tests.test_geom_blank',
+    'ggplot.tests.test_geom_boxplot',
     'ggplot.tests.test_geom_crossbar',
     'ggplot.tests.test_geom_errorbar_errorbarh',
     'ggplot.tests.test_geom_hline',
