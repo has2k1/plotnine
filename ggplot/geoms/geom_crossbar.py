@@ -43,7 +43,7 @@ class geom_crossbar(geom):
         group = data['group']
 
         # From violin
-        notchwidth = data.get('notchwidth')
+        notchwidth = params.get('notchwidth')
         ynotchupper = data.get('ynotchupper')
         ynotchlower = data.get('ynotchlower')
 
