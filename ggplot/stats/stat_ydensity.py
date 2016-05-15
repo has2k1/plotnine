@@ -60,7 +60,8 @@ class stat_ydensity(stat):
         if params['scale'] == 'area':
             data['violinwidth'] = data['density']/data['density'].max()
         elif params['scale'] == 'count':
-            data['violinwidth'] = (data['density'].max() *
+            data['violinwidth'] = (data['density'] /
+                                   data['density'].max() *
                                    data['n']/data['n'].max())
         elif params['scale'] == 'width':
             data['violinwidth'] = data['scaled']
