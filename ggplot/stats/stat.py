@@ -136,7 +136,7 @@ class stat(object):
             values if user did not set a particular parameter.
         """
         if not len(data):
-            return pd.DataFrame()
+            return type(data)()
 
         stats = []
         for _, old in data.groupby('group'):
@@ -148,7 +148,7 @@ class stat(object):
             # concat can have problems with empty dataframes that
             # have an index
             if u.empty and len(u):
-                u = pd.DataFrame()
+                u = type(data)()
 
             df = pd.concat([new, u], axis=1)
             stats.append(df)

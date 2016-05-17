@@ -155,7 +155,8 @@ class layer(object):
         env = EvalEnvironment.capture(eval_env=plot.environment)
         env = env.with_outer_namespace({'factor': pd.Categorical})
 
-        evaled = pd.DataFrame(index=data.index)
+        # Using `type` preserves the subclass of pd.DataFrame
+        evaled = type(data)(index=data.index)
         has_aes_params = False  # aesthetic parameter in aes()
 
         # If a column name is not in the data, it is evaluated/transformed
@@ -218,7 +219,7 @@ class layer(object):
         Compute & return statistics for this layer
         """
         if not len(data):
-            return pd.DataFrame()
+            return type(data)()
 
         params = self.stat.setup_params(data)
         data = self.stat.use_defaults(data)
@@ -230,7 +231,7 @@ class layer(object):
         Mapping aesthetics to computed statistics
         """
         if len(data) == 0:
-            return pd.DataFrame()
+            return type(data)()
 
         # Assemble aesthetics from layer, plot and stat mappings
         aesthetics = deepcopy(self.mapping)
@@ -244,7 +245,7 @@ class layer(object):
         # e.g aes(y='..count..'), y is the new aesthetic and
         # 'count' is the computed column in data
         new = {}  # {'aesthetic_name': 'calculated_stat'}
-        stat_data = pd.DataFrame()
+        stat_data = type(data)()
         for ae in is_calculated_aes(aesthetics):
             new[ae] = strip_dots(aesthetics[ae])
             # In conjuction with the pd.concat at the end,
@@ -272,7 +273,7 @@ class layer(object):
         Prepare/modify data for plotting
         """
         if len(data) == 0:
-            return pd.DataFrame()
+            return type(data)()
 
         data = self.geom.setup_data(data)
 
@@ -343,5 +344,11 @@ def discrete_columns(df, ignore):
     lst = []
     for col in df:
         if (df[col].dtype.kind in DISCRETE_KINDS) and (col not in ignore):
+            # Some columns are represented as object dtype
+            # but may have compound structures as values.
+            try:
+                hash(df[col].iloc[0])
+            except TypeError:
+                continue
             lst.append(col)
     return lst
