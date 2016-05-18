@@ -1,12 +1,17 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
+
 from copy import deepcopy
+from six import add_metaclass
 
 from ..utils import check_required_aesthetics, groupby_apply
+from ..utils import Registry
 
 
+@add_metaclass(Registry)
 class position(object):
     """Base class for all positions"""
+    __base__ = True
+
     REQUIRED_AES = {}
 
     def __init__(self, **kwargs):

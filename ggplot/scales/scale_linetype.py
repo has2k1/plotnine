@@ -1,12 +1,13 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
 from ..utils.exceptions import GgplotError
+from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
 
 def linetype_pal():
     linetypes = ['solid', 'dashed', 'dashdot', 'dotted']
+
     def func(n):
         l = list(linetypes)
         if n <= len(linetypes):
@@ -27,4 +28,4 @@ class scale_linetype_continuous(scale_continuous):
             "A continuous variable can not be mapped to linetype")
 
 
-scale_linetype_discrete = scale_linetype
+alias('scale_linetype_discrete', scale_linetype)

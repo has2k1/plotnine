@@ -1,8 +1,8 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
-from .scale import scale_discrete
+from ..utils import alias
 from ..utils.exceptions import GgplotError
+from .scale import scale_discrete
 
 
 class _scale_manual(scale_discrete):
@@ -50,4 +50,4 @@ class scale_size_manual(_scale_manual):
 
 
 # American to British spelling
-scale_colour_manual = scale_color_manual
+alias('scale_colour_manual', scale_color_manual)

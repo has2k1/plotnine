@@ -1,11 +1,16 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
-from ..utils import waiver
+
+from six import add_metaclass
+
+from ..utils import waiver, Registry
 from ..utils.exceptions import GgplotError
 
 
+@add_metaclass(Registry)
 class guide(object):
+    __base__ = True
+
     # title
     title = waiver()
     title_position = None

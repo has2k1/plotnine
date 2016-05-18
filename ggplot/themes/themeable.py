@@ -14,12 +14,12 @@ from collections import OrderedDict
 
 from six import add_metaclass
 
-from ..utils import RegisteredMeta, suppress
+from ..utils import Registry, suppress
 from ..utils.exceptions import GgplotError
 from .elements import element_line, element_rect, element_text
 
 
-@add_metaclass(RegisteredMeta)
+@add_metaclass(Registry)
 class themeable(object):
     """
     themeable is an abstract class of things that can be themed.
@@ -132,11 +132,15 @@ def make_themeable(name, theme_element):
     """
     Create an themeable by name.
     """
+    msg = "No such themeable element {}".format(name)
     try:
-        klass = themeable.registry[name]
+        klass = Registry[name]
     except KeyError:
-        msg = "No such themeable element {}"
-        raise GgplotError(msg.format(name))
+        raise GgplotError(msg)
+
+    if not issubclass(klass, themeable):
+        raise GgplotError(msg)
+
     return klass(theme_element)
 
 

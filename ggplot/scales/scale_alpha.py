@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 
+from ..utils import alias
 from .utils import rescale_pal
 from .scale import scale_discrete, scale_continuous
 
@@ -15,7 +16,7 @@ class scale_alpha(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
-scale_alpha_continuous = scale_alpha
+alias('scale_alpha_continuous', scale_alpha)
 
 
 class scale_alpha_discrete(scale_discrete):

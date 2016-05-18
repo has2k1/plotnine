@@ -1,8 +1,8 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
-from .scale import scale_discrete, scale_continuous
+from ..utils import alias
 from ..utils.exceptions import GgplotError
+from .scale import scale_discrete, scale_continuous
 
 
 def shape_pal():
@@ -38,4 +38,4 @@ class scale_shape_continuous(scale_continuous):
             "A continuous variable can not be mapped to shape")
 
 
-scale_shape_discrete = scale_shape
+alias('scale_shape_discrete', scale_shape)

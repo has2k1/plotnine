@@ -14,7 +14,7 @@ from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import DISCRETE_KINDS, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .utils import is_string, gg_import, suppress
+from .utils import is_string, suppress, Registry
 from .positions.position import position
 from .aes import aes, is_calculated_aes, strip_dots
 
@@ -106,7 +106,7 @@ class layer(object):
         if not name.startswith('position_'):
             name = 'position_{}'.format(name)
 
-        return gg_import(name)()
+        return Registry[name]()
 
     def layer_mapping(self, mapping):
         """

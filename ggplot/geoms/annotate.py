@@ -5,7 +5,7 @@ import pandas as pd
 import six
 
 from ..aes import aes
-from ..utils import is_scalar_or_string, gg_import
+from ..utils import is_scalar_or_string, Registry
 from ..utils.exceptions import GgplotError
 
 
@@ -46,7 +46,7 @@ class annotate(object):
                 break
 
         data = pd.DataFrame(position)
-        geom = gg_import('geom_{}'.format(geom))
+        geom = Registry['geom_{}'.format(geom)]
         mappings = aes(**{ae: ae for ae in data.columns})
 
         # The positions are mapped, the rest are manual settings

@@ -4,14 +4,18 @@ from copy import deepcopy
 
 import six
 import pandas as pd
+from six import add_metaclass
 
-from ..utils import uniquecols, gg_import, check_required_aesthetics
+from ..utils import uniquecols, check_required_aesthetics
 from ..utils import groupby_apply, copy_keys, suppress
-from ..utils.exceptions import GgplotError
+from ..utils import Registry
 
 
+@add_metaclass(Registry)
 class stat(object):
     """Base class of all stats"""
+    __base__ = True
+
     REQUIRED_AES = set()
     DEFAULT_AES = dict()
     DEFAULT_PARAMS = dict()
@@ -174,7 +178,7 @@ class stat(object):
             if not geom_klass.startswith('geom_'):
                 geom_klass = 'geom_{}'.format(geom_klass)
 
-            geom_klass = gg_import(geom_klass)
+            geom_klass = Registry[geom_klass]
 
         _geom = geom_klass(*self._cache['args'],
                            stat=self,

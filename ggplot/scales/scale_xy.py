@@ -1,11 +1,10 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import pandas as pd
 
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
-from ..utils import identity, match, is_waive
+from ..utils import identity, match, is_waive, alias
 from ..utils.exceptions import GgplotError
 from .scale import scale_discrete, scale_continuous
 from .utils import expand_range
@@ -175,8 +174,8 @@ class scale_y_datetime(scale_position_continuous):
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
-scale_x_date = scale_x_datetime
-scale_y_date = scale_y_datetime
+alias('scale_x_date', scale_x_datetime)
+alias('scale_y_date', scale_y_datetime)
 
 
 class scale_x_timedelta(scale_position_continuous):

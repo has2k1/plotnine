@@ -1,9 +1,8 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 
-from ..utils import seq
+from ..utils import seq, alias
 from .scale import scale_discrete, scale_continuous
 from .utils import rescale_pal, rescale_max
 from .utils import abs_area, area_pal
@@ -29,7 +28,7 @@ class scale_size_continuous(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
-scale_size = scale_size_continuous
+alias('scale_size', scale_size_continuous)
 
 
 class scale_size_radius(scale_continuous):

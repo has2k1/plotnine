@@ -5,16 +5,16 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import collections
 import itertools
-import re
-import importlib
 import contextlib
 import inspect
+from weakref import WeakValueDictionary
 
 import six
 import numpy as np
 import pandas as pd
 import pandas.core.common as com
 import matplotlib.cbook as cbook
+from six import add_metaclass
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
@@ -479,46 +479,6 @@ def jitter(x, factor=1, amount=None):
     return x + np.random.uniform(-amount, amount, len(x))
 
 
-def gg_import(name):
-    """
-    Import and return ggplot component type.
-
-    The understood components are of base classes the
-    following base classes: geom, stat, scale, position, guide
-
-    Raises an exception if the component is not understood.
-    """
-    # relative pathnames from this package
-    lookup = {'geom': '..geoms',
-              'stat': '..stats',
-              'scale': '..scales',
-              'position': '..positions',
-              'guide': '..guides',
-              'trans': '..scales.transforms'}
-    patterns = [re.compile('([a-z]+)_'),
-                re.compile('_(trans)$')]
-    base = None
-    for p in patterns:
-        match = re.search(p, name)
-        if match and match.group(1) in lookup:
-            base = match.group(1)
-            break
-    else:
-        raise GgplotError("Cannot recognize '{}'".format(name))
-
-    try:
-        package = importlib.import_module(lookup[base], __package__)
-    except ImportError:
-        raise GgplotError("Failed to import '{}'".format(name))
-
-    try:
-        obj = getattr(package, name)
-    except AttributeError:
-        msg = "{} has no attribute '{}'"
-        raise GgplotError(msg.format(package, name))
-    return obj
-
-
 def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     """
     Convenience function to remove missing values from a dataframe
@@ -813,21 +773,79 @@ def copy_keys(source, destination, keys=None):
     return destination
 
 
-class RegisteredMeta(type):
+class RegistryMeta(type):
+    """
+    Make a metaclass scriptable
+    """
+    def __getitem__(meta, key):
+        try:
+            return meta._registry[key]
+        except KeyError:
+            msg = ("'{}' Not in Registry. Make sure the module in "
+                   "which it is defined has been imported.")
+            raise GgplotError(msg.format(key))
+
+    def __setitem__(meta, key, value):
+        meta._registry[key] = value
+
+
+@add_metaclass(RegistryMeta)
+class Registry(type):
     """
     Creates class that automatically registers all subclasses
 
-    The subclasses are held in the `registry` attribute of the
-    class. This is a `dict` of the form {name: class} and it
-    is accessed as `createdclass.registry`
-    """
+    To prevent the base class from showing up in the registry,
+    it should have an attribute `__base__ = True`. This metaclass
+    uses a single dictionary to register all types of subclasses.
 
-    def __init__(cls, name, bases, dct):
-        if not hasattr(cls, 'registry'):
-            cls.registry = {}
-        else:
-            cls.registry[name] = cls
-        super(RegisteredMeta, cls).__init__(name, bases, dct)
+    To access the registered objects, use:
+
+        obj = Registry['name']
+
+    To explicitly register objects
+
+        Registry['name'] = obj
+
+    Note
+    ----
+    When objects are deleted, they are automatically removed
+    from the Registry.
+    """
+    _registry = WeakValueDictionary()
+
+    def __new__(meta, name, bases, clsdict):
+        cls = super(Registry, meta).__new__(meta, name, bases, clsdict)
+        if not clsdict.pop('__base__', False):
+            meta._registry[name] = cls
+            if 'alias' in clsdict:
+                meta._registry[cls.alias] = cls
+        return cls
+
+
+def alias(name, class_object):
+    """
+    Create an alias of a class object
+
+    The objective of this method is to have
+    an alias that is Registered. i.e If we have
+
+        class_b = class_a
+
+    Makes `class_b` an alias of `class_a`, but if
+    `class_a` is registered by its metaclass,
+    `class_b` is not. The solution
+
+        alias('class_b', class_a)
+
+    is equivalent to:
+
+        class_b = class_a
+        Register['class_b'] = class_a
+    """
+    module = inspect.getmodule(class_object)
+    module.__dict__[name] = class_object
+    if isinstance(class_object, Registry):
+        Registry[name] = class_object
 
 
 def get_kwarg_names(func):

@@ -1,7 +1,6 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
-from ..utils import identity
+from ..utils import identity, alias
 from .scale import scale_discrete, scale_continuous
 
 
@@ -35,4 +34,4 @@ class scale_size_identity(scale_continuous):
 
 
 # American to British spelling
-scale_colour_identity = scale_color_identity
+alias('scale_colour_identity', scale_color_identity)

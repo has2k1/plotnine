@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib.offsetbox import (HPacker, VPacker)
 
 from .guide import guide as guide_class
-from ..utils import is_string, gg_import, is_waive
+from ..utils import is_string, is_waive, Registry
 from ..utils.exceptions import GgplotError
 
 """
@@ -142,9 +142,7 @@ class guides(dict):
         Validate guide object
         """
         if is_string(guide):
-            guide = 'guide_{}'.format(guide)
-            obj = gg_import(guide)
-            guide = obj()
+            guide = Registry['guide_{}'.format(guide)]()
 
         if not isinstance(guide, guide_class):
             raise GgplotError(

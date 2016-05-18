@@ -1,18 +1,21 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 
 import pandas as pd
 import six
+from six import add_metaclass
 
 from ..aes import aes, make_labels, rename_aesthetics
 from ..layer import layer
 from ..utils.exceptions import GgplotError
-from ..utils import gg_import, defaults, suppress, copy_keys
+from ..utils import defaults, suppress, copy_keys, Registry
 
 
+@add_metaclass(Registry)
 class geom(object):
     """Base class of all Geoms"""
+    __base__ = True
+
     DEFAULT_AES = dict()
     REQUIRED_AES = set()
     DEFAULT_PARAMS = dict()
@@ -236,7 +239,7 @@ class geom(object):
         if isinstance(stat_klass, six.string_types):
             if not stat_klass.startswith('stat_'):
                 stat_klass = 'stat_{}'.format(stat_klass)
-            stat_klass = gg_import(stat_klass)
+            stat_klass = Registry[stat_klass]
 
         try:
             recognized = (

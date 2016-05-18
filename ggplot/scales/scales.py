@@ -1,5 +1,4 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 import itertools
 
 import numpy as np
@@ -8,8 +7,8 @@ import pandas.core.common as com
 from six.moves import range
 
 from ..aes import aes_to_scale
-from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
-from ..utils import gg_import, suppress
+from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS, suppress
+from ..utils import Registry
 from ..utils.exceptions import gg_warn, GgplotError
 
 _TPL_DUPLICATE_SCALE = """\
@@ -263,7 +262,7 @@ def scales_add_missing(plot, aesthetics):
 
     for ae in aesthetics:
         scale_name = 'scale_{}_continuous'.format(ae)
-        scale_f = gg_import(scale_name)
+        scale_f = Registry[scale_name]
         plot.scales.append(scale_f())
 
 
@@ -299,5 +298,5 @@ def make_scale(ae, series, *args, **kwargs):
             del kwargs['trans']
 
     scale_name = 'scale_{}_{}'.format(ae, stype)
-    scale_klass = gg_import(scale_name)
+    scale_klass = Registry[scale_name]
     return scale_klass(*args, **kwargs)

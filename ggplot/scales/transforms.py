@@ -9,12 +9,13 @@ import pandas as pd
 import scipy.stats as stats
 import datetime
 from dateutil import tz
+from six import add_metaclass
 from matplotlib.dates import AutoDateLocator, DateFormatter
 from matplotlib.dates import date2num, num2date, YEARLY
 from matplotlib.ticker import MaxNLocator, Formatter
 from matplotlib.ticker import ScalarFormatter
 
-from ..utils import identity, gg_import
+from ..utils import identity, Registry
 from ..utils.exceptions import GgplotError
 
 
@@ -64,6 +65,68 @@ class DateLocator(AutoDateLocator):
         return num2date(ticks)
 
 
+@add_metaclass(Registry)
+class trans(object):
+    """
+    Base class for all transforms
+    """
+    aesthetic = None
+
+    @classmethod
+    def breaks(cls, limits):
+        """
+        Calculate breaks in data space and return them
+        in transformed space.
+
+        Expects limits to be in transform space
+        """
+        # clip the breaks to the domain,
+        # e.g. probabilities will be in [0, 1] domain
+        vmin = np.max([cls.domain[0], limits[0]])
+        vmax = np.min([cls.domain[1], limits[1]])
+        return cls._locator.tick_values(vmin, vmax)
+
+    @classmethod
+    def format(cls, x):
+        # For MPL to play nice
+        cls._formatter.create_dummy_axis()
+        # For sensible decimal places
+        cls._formatter.set_locs([i for i in x if ~np.isnan(i)])
+        labels = [cls._formatter(tick) for tick in x]
+
+        # Remove unnecessary decimals
+        pattern = re.compile(r'\.0+$')
+        for i, label in enumerate(labels):
+            match = re.search(pattern, label)
+            if match:
+                labels[i] = re.sub(pattern, '', label)
+
+        return labels
+
+    @classmethod
+    def minor_breaks(cls, breaks, limits):
+        if len(breaks) < 2:
+            return np.array([])
+
+        diff = np.diff(breaks)
+        step = diff[0]
+
+        # For equidistant breaks we can imagine more invisible
+        # breaks at either end and then add minor breaks
+        # accordingly
+        if all(step == diff):
+            breaks = np.hstack([-step+breaks[0],
+                                breaks,
+                                breaks[-1]+step])
+            minor = breaks[:-1] + step/2
+        else:
+            minor = breaks[:-1] + diff/2
+
+        minor = minor.compress(
+            (limits[0] <= minor) & (minor <= limits[1]))
+        return minor
+
+
 def trans_new(name, transform, inverse,
               breaks=None, format_=None,
               domain=(-np.inf, np.inf)):
@@ -98,81 +161,20 @@ def trans_new(name, transform, inverse,
     out : trans
         Transform class
     """
-    trans_name = str('{}_trans'.format(name))
-
-    class klass(object):
-        aesthetic = None
-
-        @classmethod
-        def breaks(cls, limits):
-            """
-            Calculate breaks in data space and return them
-            in transformed space.
-
-            Expects limits to be in transform space
-            """
-            # clip the breaks to the domain,
-            # e.g. probabilities will be in [0, 1] domain
-            vmin = np.max([cls.domain[0], limits[0]])
-            vmax = np.min([cls.domain[1], limits[1]])
-            return cls._locator.tick_values(vmin, vmax)
-
-        @classmethod
-        def format(cls, x):
-            # For MPL to play nice
-            cls._formatter.create_dummy_axis()
-            # For sensible decimal places
-            cls._formatter.set_locs([i for i in x if ~np.isnan(i)])
-            labels = [cls._formatter(tick) for tick in x]
-
-            # Remove unnecessary decimals
-            pattern = re.compile(r'\.0+$')
-            for i, label in enumerate(labels):
-                match = re.search(pattern, label)
-                if match:
-                    labels[i] = re.sub(pattern, '', label)
-
-            return labels
-
-        @classmethod
-        def minor_breaks(cls, breaks, limits):
-            if len(breaks) < 2:
-                return np.array([])
-
-            diff = np.diff(breaks)
-            step = diff[0]
-
-            # For equidistant breaks we can imagine more invisible
-            # breaks at either end and then add minor breaks
-            # accordingly
-            if all(step == diff):
-                breaks = np.hstack([-step+breaks[0],
-                                    breaks,
-                                    breaks[-1]+step])
-                minor = breaks[:-1] + step/2
-            else:
-                minor = breaks[:-1] + diff/2
-
-            minor = minor.compress(
-                (limits[0] <= minor) & (minor <= limits[1]))
-            return minor
-
-    klass.__name__ = trans_name
-    klass.name = name
-    klass.dataspace_is_ordinal = True
-    klass.transform = staticmethod(transform)
-    klass.inverse = staticmethod(inverse)
-    klass.domain = domain
-
+    klass_name = '{}_trans'.format(name)
+    d = {'transform': staticmethod(transform),
+         'inverse': staticmethod(inverse),
+         'name': name,
+         'dataspace_is_ordinal': True,
+         'domain': domain,
+         '_locator': defaultLocator(),
+         '_formatter': ScalarFormatter(useOffset=False)}
     if breaks is not None:
-        klass.breaks = classmethod(breaks)
-
+        d['breaks'] = classmethod(breaks)
     if format_ is not None:
-        klass.format = classmethod(format)
+        d['format'] = classmethod(format_)
 
-    klass._locator = defaultLocator()
-    klass._formatter = ScalarFormatter(useOffset=False)
-    return klass
+    return type(klass_name, (trans,), d)
 
 
 def log_trans(base=None):
@@ -383,7 +385,7 @@ def gettrans(t):
 
     Parameters
     ----------
-    t : string | function | class | object
+    t : string | function | class | trans object
         name of transformation function
 
     Returns
@@ -393,9 +395,14 @@ def gettrans(t):
     obj = t
     # Make sure trans object is instantiated
     if isinstance(obj, six.string_types):
-        obj = gg_import('{}_trans'.format(obj))()
+        name = '{}_trans'.format(obj)
+        obj = Registry[name]()
     if isinstance(obj, FunctionType):
         obj = obj()
     if isinstance(obj, type):
         obj = obj()
+
+    if not isinstance(obj, trans):
+        raise GgplotError("Could not get transform object.")
+
     return obj

@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 from collections import OrderedDict
+from six import add_metaclass
 from six.moves import zip
 
 import numpy as np
@@ -12,16 +13,19 @@ import matplotlib.cbook as cbook
 from ..aes import is_position_aes
 from ..utils import match
 from ..utils import round_any, suppress, CONTINUOUS_KINDS
-from ..utils import waiver, is_waive
+from ..utils import waiver, is_waive, Registry
 from ..utils.exceptions import gg_warn, GgplotError
 from .transforms import gettrans
 from .utils import rescale, censor, expand_range, zero_range
 
 
+@add_metaclass(Registry)
 class scale(object):
     """
     Base class for all scales
     """
+    __base__ = True
+
     aesthetics = []     # aesthetics affected by this scale
     range = None        # range of aesthetic
     na_value = np.NaN   # What to do with the NA values

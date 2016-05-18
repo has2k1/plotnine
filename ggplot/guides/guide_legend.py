@@ -12,7 +12,8 @@ from matplotlib.cbook import Bunch
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
 from ..scales.scale import scale_continuous
-from ..utils import gg_import, ColoredDrawingArea, suppress, SIZE_FACTOR
+from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
+from ..utils import Registry
 from ..utils.exceptions import gg_warn, GgplotError
 from ..geoms import geom_text
 from .guide import guide
@@ -148,7 +149,8 @@ class guide_legend(guide):
             if hasattr(l.geom, 'draw_legend'):
                 geom = l.geom.__class__
             else:
-                geom = gg_import('geom_{}'.format(l.geom.legend_geom))
+                name = 'geom_{}'.format(l.geom.legend_geom)
+                geom = Registry[name]
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
         if not self.glayers:

@@ -1,8 +1,7 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 
 from ..utils.exceptions import gg_warn
-from ..utils import palettes
+from ..utils import palettes, alias
 from .utils import rescale_mid
 from .utils import hue_pal, brewer_pal, grey_pal, gradient_n_pal
 from .utils import cmap_pal
@@ -165,20 +164,20 @@ class scale_fill_cmap(scale_color_cmap):
     aesthetics = ['fill']
 
 # Default scales
-scale_color_discrete = scale_color_hue
-scale_color_continuous = scale_color_gradient
-scale_fill_discrete = scale_fill_hue
-scale_fill_continuous = scale_fill_gradient
+alias('scale_color_discrete', scale_color_hue)
+alias('scale_color_continuous', scale_color_gradient)
+alias('scale_fill_discrete', scale_fill_hue)
+alias('scale_fill_continuous', scale_fill_gradient)
 
 # American to British spelling
-scale_colour_hue = scale_color_hue
-scale_colour_grey = scale_color_grey
-scale_colour_brewer = scale_color_brewer
-scale_colour_desaturate = scale_color_desaturate
-scale_colour_gradient = scale_color_gradient
-scale_colour_gradient2 = scale_color_gradient2
-scale_colour_gradientn = scale_color_gradientn
-scale_colour_discrete = scale_color_discrete
-scale_colour_continuous = scale_color_continuous
-scale_colour_distiller = scale_color_distiller
-scale_colour_cmap = scale_color_cmap
+alias('scale_colour_hue', scale_color_hue)
+alias('scale_colour_grey', scale_color_grey)
+alias('scale_colour_brewer', scale_color_brewer)
+alias('scale_colour_desaturate', scale_color_desaturate)
+alias('scale_colour_gradient', scale_color_gradient)
+alias('scale_colour_gradient2', scale_color_gradient2)
+alias('scale_colour_gradientn', scale_color_gradientn)
+alias('scale_colour_discrete', scale_color_hue)
+alias('scale_colour_continuous', scale_color_gradient)
+alias('scale_colour_distiller', scale_color_distiller)
+alias('scale_colour_cmap', scale_color_cmap)
