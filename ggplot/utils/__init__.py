@@ -9,12 +9,12 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     ninteraction, join_keys, match, add_margins,
                     check_required_aesthetics, xy_panel_scales,
                     uniquecols, defaults, jitter,
-                    remove_missing, round_any, seq,
+                    remove_missing,
                     to_rgba, groupby_apply, make_line_segments,
                     ColoredDrawingArea, suppress, copy_keys,
                     Registry, get_valid_kwargs,
                     copy_missing_columns, groupby_with_null,
-                    interleave)
+                    interleave, resolution)
 
 
 __all__ = ['ggsave']

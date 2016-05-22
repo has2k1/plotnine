@@ -1,10 +1,12 @@
 from __future__ import absolute_import, division, print_function
 
+from mizani.bounds import rescale_mid
+from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
+                             gradient_n_pal, cmap_pal,
+                             desaturate_pal)
+
 from ..utils.exceptions import gg_warn
-from ..utils import palettes, alias
-from .utils import rescale_mid
-from .utils import hue_pal, brewer_pal, grey_pal, gradient_n_pal
-from .utils import cmap_pal
+from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
 
@@ -70,16 +72,14 @@ class scale_fill_gradient(scale_color_gradient):
     aesthetics = ['fill']
 
 
-class scale_color_desaturate(scale_color_gradient):
+class scale_color_desaturate(scale_continuous):
     aesthetics = ['color']
     guide = 'colorbar'
 
-    def __init__(self, color='red', reverse=False, **kwargs):
-        color2 = palettes.desaturate(color, 0)
-        low, high = color, color2
-        if reverse:
-            low, high = high, low
-        scale_color_gradient.__init__(self, low, high, **kwargs)
+    def __init__(self, color='red', prop=0, reverse=False,
+                 **kwargs):
+        self.palette = desaturate_pal(color, prop, reverse)
+        scale_continuous.__init__(self, **kwargs)
 
 
 class scale_fill_desaturate(scale_color_desaturate):

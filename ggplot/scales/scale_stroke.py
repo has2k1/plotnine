@@ -1,9 +1,10 @@
 from __future__ import absolute_import, division, print_function
 
+from mizani.palettes import rescale_pal
+
 from ..utils.exceptions import GgplotError
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
-from .utils import rescale_pal
 
 
 class scale_stroke_continuous(scale_continuous):

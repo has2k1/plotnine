@@ -2,8 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from matplotlib.cbook import Bunch
+from mizani.bounds import expand_range
 
-from ..scales.utils import expand_range
 from .coord import coord, dist_euclidean
 
 
@@ -29,13 +29,15 @@ class coord_cartesian(coord):
         else:
             limits = self.limits.ylim
 
-        if limits is None:
-            rangee = scale.dimension()
-        else:
-            rangee = scale.transform(limits)
-
         if self.expand:
             expand = self.expand_default(scale)
+        else:
+            expand = (0, 0)
+
+        if limits is None:
+            rangee = scale.dimension(expand)
+        else:
+            rangee = scale.transform(limits)
             rangee = expand_range(rangee, expand[0], expand[1])
 
         out = scale.break_info(rangee)

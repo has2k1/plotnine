@@ -7,16 +7,14 @@ from six.moves import zip
 
 import numpy as np
 import pandas as pd
-import pandas.core.common as com
 import matplotlib.cbook as cbook
+from mizani.bounds import rescale, censor, expand_range, zero_range
+from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
-from ..utils import match
-from ..utils import round_any, suppress, CONTINUOUS_KINDS
-from ..utils import waiver, is_waive, Registry
 from ..utils.exceptions import gg_warn, GgplotError
-from .transforms import gettrans
-from .utils import rescale, censor, expand_range, zero_range
+from ..utils import match, suppress, waiver, is_waive, Registry
+from .range import Range, RangeContinuous, RangeDiscrete
 
 
 @add_metaclass(Registry)
@@ -27,16 +25,21 @@ class scale(object):
     __base__ = True
 
     aesthetics = []     # aesthetics affected by this scale
-    range = None        # range of aesthetic
     na_value = np.NaN   # What to do with the NA values
-    expand = waiver()   # multiplicative and additive expansion constants.
     name = None         # used as the axis label or legend title
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
     guide = 'legend'    # legend or any other guide
     _limits = None      # (min, max) - set by user
 
+    #: range of aesthetic, instantiated by :meth:`scale.__init__``
+    range = Range
+
+    #: multiplicative and additive expansion constants
+    expand = waiver()
+
     def __init__(self, **kwargs):
+        self.range = self.range()
         for k, v in kwargs.items():
             if hasattr(self, k):
                 setattr(self, k, v)
@@ -126,10 +129,10 @@ class scale(object):
 
         i.e Forget all the training
         """
-        self.range = None
+        self.range.reset()
 
     def is_empty(self):
-        return self.range is None and self._limits is None
+        return self.range.range is None and self._limits is None
 
     @property
     def limits(self):
@@ -141,7 +144,7 @@ class scale(object):
         if self._limits is not None:
             if not any(map(pd.isnull, self._limits)):
                 return self._limits
-        return self.range
+        return self.range.range
 
     @limits.setter
     def limits(self, value):
@@ -175,6 +178,7 @@ class scale_discrete(scale):
     """
     Base class for all discrete scales
     """
+    range = RangeDiscrete
     drop = True        # drop unused factor levels from the scale
 
     def train(self, x, drop=None):
@@ -188,27 +192,10 @@ class scale_discrete(scale):
 
         A discrete range is stored in a list
         """
-        if drop is None:
-            drop = self.drop
+        if not len(x):
+            return
 
-        if self.range is None:
-            self.range = []
-
-        # new range values
-        if com.is_categorical_dtype(x):
-            rng = list(x.cat.categories)
-            if drop:
-                present = set(x.drop_duplicates())
-                rng = [i for i in rng if i in present]
-        elif x.dtype.kind in CONTINUOUS_KINDS:
-            msg = "Continuous value supplied to discrete scale"
-            raise GgplotError(msg)
-        else:
-            rng = list(x.drop_duplicates().sort_values())
-
-        # update range
-        old_range = set(self.range)
-        self.range += [i for i in rng if (i not in old_range)]
+        self.range.train(x, drop)
 
     def dimension(self, expand=(0, 0)):
         """
@@ -349,6 +336,7 @@ class scale_continuous(scale):
     """
     Base class for all continuous scales
     """
+    range = RangeContinuous
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
@@ -396,14 +384,7 @@ class scale_continuous(scale):
         if not len(x):
             return
 
-        mn = x.min()
-        mx = x.max()
-        if not (self.range is None):
-            _mn, _mx = self.range
-            mn = np.min([mn, _mn])
-            mx = np.max([mx, _mx])
-
-        self.range = [mn, mx]
+        self.range.train(x)
 
     def transform_df(self, df):
         """
@@ -448,13 +429,8 @@ class scale_continuous(scale):
         if limits is None:
             limits = self.limits
 
-        x = self.oob(self.rescaler(x, from_=limits))
+        x = self.oob(self.rescaler(x, _from=limits))
 
-        # Points are rounded to the nearest 500th, to reduce the
-        # amount of work that the scale palette must do - this is
-        # particularly important for colour scales which are rather
-        # slow.  This shouldn't have any perceptual impacts.
-        x = round_any(x, 1 / 500)
         uniq = np.unique(x)
         pal = np.asarray(self.palette(uniq))
         scaled = pal[match(x, uniq)]
@@ -545,26 +521,19 @@ class scale_continuous(scale):
         """
         Return minor breaks
         """
-        if not is_waive(self.minor_breaks):
-            return self.minor_breaks
-
         if major is None:
             return []
 
         if limits is None:
             limits = self.limits
 
-        if self.trans.dataspace_is_ordinal:
-            # Calculations in data space
-            major = self.inverse(major)
-            limits = self.inverse(limits)
-            minor = self.transform(
-                self.trans.minor_breaks(major, limits))
-        else:
-            # Calculations in ordinal (transformed) space
-            minor = self.trans.minor_breaks(major, limits)
+        if callable(self.minor_breaks):
+            return self.minor_breaks(major, limits)
 
-        return minor
+        if not is_waive(self.minor_breaks):
+            return self.minor_breaks
+
+        return self.trans.minor_breaks(major, limits)
 
     def get_labels(self, breaks=None):
         """
@@ -573,8 +542,7 @@ class scale_continuous(scale):
         if breaks is None:
             breaks = self.get_breaks()
 
-        if self.trans.dataspace_is_ordinal:
-            breaks = self.inverse(breaks)
+        breaks = self.inverse(breaks)
 
         # The labels depend on the breaks if the breaks are None
         # or are waived, it is likewise for the labels

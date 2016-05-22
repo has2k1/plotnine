@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..scales.utils import resolution
+from ..utils import resolution
 from .geom_rect import geom_rect
 
 

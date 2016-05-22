@@ -5,9 +5,8 @@ import matplotlib.collections as mcoll
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 
-from ..utils import groupby_apply, to_rgba
+from ..utils import groupby_apply, to_rgba, resolution
 from ..utils.exceptions import gg_warn
-from ..scales.utils import resolution
 from .geom import geom
 
 

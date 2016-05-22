@@ -6,9 +6,8 @@ import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
-from ..scales.utils import resolution
 from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
-from ..utils import SIZE_FACTOR
+from ..utils import resolution, SIZE_FACTOR
 from .geom_point import geom_point
 from .geom_segment import geom_segment
 from .geom_crossbar import geom_crossbar

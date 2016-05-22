@@ -69,11 +69,6 @@ from .scale_xy import scale_x_timedelta
 from .scale_xy import scale_y_datetime, scale_y_date
 from .scale_xy import scale_y_discrete, scale_y_continuous
 from .scale_xy import scale_y_timedelta
-# date helper functions
-from .utils import date_breaks, date_format
-# format functions
-from .utils import dollar, currency, comma, millions
-from .utils import percent, scientific
 # limits
 from .limits import xlim, ylim, lims
 
@@ -132,11 +127,6 @@ __all__ = [
            'scale_y_datetime', 'scale_y_discrete',
            'scale_y_log10', 'scale_y_reverse',
            'scale_y_sqrt', 'scale_y_timedelta',
-           # date helper functions
-           'date_breaks', 'date_format',
-           # format functions
-           'dollar', 'currency', 'comma', 'millions',
-           'percent', 'scientific',
            # limits
            'xlim', 'ylim', 'lims',
            ]

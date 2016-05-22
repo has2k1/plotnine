@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
-from ..utils import alias
 from ..utils.exceptions import GgplotError
+from ..utils import alias
 from .scale import scale_discrete
 
 

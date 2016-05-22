@@ -6,7 +6,7 @@ import pandas as pd
 import pandas.core.common as com
 from matplotlib.cbook import boxplot_stats
 
-from ..scales.utils import resolution
+from ..utils import resolution
 from .stat import stat
 
 

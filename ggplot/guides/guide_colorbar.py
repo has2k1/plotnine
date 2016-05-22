@@ -12,11 +12,11 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from matplotlib.offsetbox import AuxTransformBox
 from matplotlib.colors import ListedColormap
+from mizani.bounds import rescale
 
-from ..utils import ColoredDrawingArea
-from ..utils.exceptions import gg_warn
-from ..scales.utils import rescale
 from ..scales.scale import scale_continuous
+from ..utils.exceptions import gg_warn
+from ..utils import ColoredDrawingArea
 from .guide import guide
 
 

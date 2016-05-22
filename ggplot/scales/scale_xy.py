@@ -2,12 +2,13 @@ from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import pandas as pd
+from mizani.bounds import expand_range
 
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
 from ..utils import identity, match, is_waive, alias
 from ..utils.exceptions import GgplotError
+from .range import RangeContinuous
 from .scale import scale_discrete, scale_continuous
-from .utils import expand_range
 
 
 # positions scales have a couple of differences (quirks) that
@@ -29,17 +30,21 @@ class scale_position_discrete(scale_discrete):
     palette = staticmethod(identity)
 
     # Keeps two ranges, range and range_c
-    range_c = None
+    range_c = RangeContinuous
+
+    def __init__(self, *args, **kwargs):
+        self.range_c = self.range_c()
+        scale_discrete.__init__(self, *args, **kwargs)
 
     def reset(self):
         # Can't reset discrete scale because
         # no way to recover values
-        self.range_c = None
+        self.range_c.reset()
 
     def is_empty(self):
-        return (self.range is None and
+        return (self.range.range is None and
                 self.limits is None and
-                self.range_c is None)
+                self.range_c.range is None)
 
     def train(self, series):
         # The discrete position scale is capable of doing
@@ -48,15 +53,9 @@ class scale_position_discrete(scale_discrete):
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
         if series.dtype.kind in CONTINUOUS_KINDS:
-            # trick the training method into training
-            # range_c by temporarily renaming it to range
-            backup, self.range = self.range, self.range_c
-            self.train_continuous(series)
-            # restore
-            self.range_c, self.range = self.range, backup
+            self.range_c.train(series)
         else:
-            # super() does not work well with reloads
-            scale_discrete.train(self, series)
+            self.range.train(series)
 
     def map(self, series, limits=None):
         # Discrete values are converted into integers starting
@@ -75,50 +74,35 @@ class scale_position_discrete(scale_discrete):
 
         if self._limits:
             return self._limits
-        elif self.range:
+        elif self.range.range:
             # discrete range
-            return self.range
-        elif self.range_c:
-            # discrete limits for a continuous range
-            mn = int(np.floor(np.min(self.range_c)))
-            mx = int(np.ceil(np.max(self.range_c)))
-            return list(range(mn, mx+1))
+            return self.range.range
         else:
             raise GgplotError(
                 'Lost, do not know what the limits are.')
-
-    def coord_range(self):
-        """
-        Return the range for the coordinate axis
-        """
-        if self._limits:
-            rng = self._limits
-        elif is_waive(self._expand):
-            rng = self.dimension((0, 0.6))
-        else:
-            rng = self.dimension(self._expand)
-
-        return rng
 
     def dimension(self, expand=(0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
         """
-        # This is special e.g x scale for a categorical bar plot
-        # calculate a dimension acc. to the discrete items(limits)
-        # and a dimension acc. to the continuous range (range_c)
-        # pick the (min, max)
-        disc_range = (1, len(self.limits))
-        disc = expand_range(disc_range, 0, expand[1], 1)
-        cont = expand_range(self.range_c, expand[0], 0, expand[1])
-        a = np.array([x for x in [disc, cont] if x is not None])
-        return (a.min(), a.max())
+        c_range = self.range_c.range
+        d_range = self.range.range
 
+        continuous = expand_range(c_range, expand[0], 0, 1)
+        discrete = expand_range((1, len(d_range)), 0, expand[1], 1)
 
-# Discrete position scales should be able to make use of the train
-# method bound to continuous scales
-scale_position_discrete.train_continuous = scale_continuous.__dict__['train']
+        if self.is_empty():
+            return (0, 1)
+        elif d_range is None:  # only continuous
+            return continuous
+        elif c_range is None:  # only discrete
+            return discrete
+        else:  # both
+            # e.g categorical bar plot have discrete items, but
+            # are plot on a continuous x scale
+            a = np.hstack([continuous, discrete])
+            return a.min(), a.max()
 
 
 class scale_position_continuous(scale_continuous):
@@ -179,12 +163,12 @@ alias('scale_y_date', scale_y_datetime)
 
 
 class scale_x_timedelta(scale_position_continuous):
-    _trans = 'timedelta'
+    _trans = 'pd_timedelta'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 class scale_y_timedelta(scale_position_continuous):
-    _trans = 'timedelta'
+    _trans = 'pd_timedelta'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 

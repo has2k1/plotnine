@@ -7,9 +7,9 @@ import pandas.core.common as com
 from six.moves import range
 
 from ..aes import aes_to_scale
+from ..utils.exceptions import gg_warn, GgplotError
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS, suppress
 from ..utils import Registry
-from ..utils.exceptions import gg_warn, GgplotError
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.

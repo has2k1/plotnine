@@ -5,10 +5,11 @@ import numpy as np
 import pandas as pd
 import pandas.core.common as com
 from six.moves import range, zip
+from mizani.utils import seq, fullseq
 
-from ..utils import seq, make_iterable_ntimes
+from ..utils import make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warn
-from ..scales.utils import fullseq, freedman_diaconis_bins
+from .utils import freedman_diaconis_bins
 from .stat import stat
 
 

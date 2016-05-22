@@ -4,8 +4,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from ..utils import jitter
-from ..scales.utils import resolution
+from ..utils import jitter, resolution
 from .position import position
 from .collide import collide, pos_dodge
 

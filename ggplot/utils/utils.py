@@ -18,6 +18,7 @@ from six import add_metaclass
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
+from mizani.bounds import zero_range
 
 from .exceptions import GgplotError, gg_warn
 
@@ -518,43 +519,6 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     return df
 
 
-def round_any(x, accuracy, f=np.round):
-    """
-    Round to multiple of any number.
-    """
-    return f(x / accuracy) * accuracy
-
-
-def seq(fromm=1, to=1, by=1, length_out=None):
-    """
-    Generate regular sequences
-
-    Parameters
-    ----------
-    fromm : numeric
-        start of the sequence.
-    to : numeric
-        end of the sequence.
-    by : numeric
-        increment of the sequence.
-    length_out : int
-        length of the sequence. If a float is supplied, it
-        will be rounded up
-
-    Meant to be the same as Rs seq to prevent
-    discrepancies at the margins
-    """
-    if length_out is not None:
-        if length_out < 0:
-            raise GgplotError('length_out must be non-negative number')
-        by = (to - fromm)/(np.ceil(length_out)-1)
-
-    x = np.arange(fromm, to+by, by)
-    if x[-1] > to:
-        x = x[:-1]
-    return x
-
-
 def to_rgba(colors, alpha):
     """
     Covert hex colors to rgba values.
@@ -929,3 +893,35 @@ def interleave(*arrays):
         Result from interleaving the input arrays
     """
     return np.column_stack(arrays).ravel()
+
+
+def resolution(x, zero=True):
+    """
+    Compute the resolution of a data vector
+
+    Resolution is smallest non-zero distance between adjacent values
+
+    Parameters
+    ----------
+    x    : 1D array-like
+    zero : Boolean
+        Whether to include zero values in the computation
+
+    Result
+    ------
+    res : resolution of x
+        If x is an integer array, then the resolution is 1
+    """
+    x = np.asarray(x)
+
+    # (unsigned) integers or an effective range of zero
+    _x = x[~np.isnan(x)]
+    _x = (x.min(), x.max())
+    if x.dtype.kind in ('i', 'u') or zero_range(_x):
+        return 1
+
+    x = np.unique(x)
+    if zero:
+        x = np.unique(np.hstack([0, x]))
+
+    return np.min(np.diff(np.sort(x)))

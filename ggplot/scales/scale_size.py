@@ -1,11 +1,12 @@
 from __future__ import absolute_import, division, print_function
 
 import numpy as np
+from mizani.bounds import rescale_max
+from mizani.palettes import abs_area, area_pal, rescale_pal
+from mizani.utils import seq
 
-from ..utils import seq, alias
+from ..utils import alias
 from .scale import scale_discrete, scale_continuous
-from .utils import rescale_pal, rescale_max
-from .utils import abs_area, area_pal
 
 
 class scale_size_discrete(scale_discrete):

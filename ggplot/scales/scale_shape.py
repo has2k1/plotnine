@@ -1,23 +1,24 @@
 from __future__ import absolute_import, division, print_function
 
-from ..utils import alias
 from ..utils.exceptions import GgplotError
+from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
 
 def shape_pal():
     shapes = [
-        'o',#circle
-        '^',#triangle up
-        's',#square
-        '+',#plus
-        'D',#diamond
-        'v',#triangle down
-        'x',#x
-        '*',#star
-        'p',#pentagon
-        '8'#octagon
+        'o',  # circle
+        '^',  # triangle up
+        's',  # square
+        '+',  # plus
+        'D',  # diamond
+        'v',  # triangle down
+        'x',  # x
+        '*',  # star
+        'p',  # pentagon
+        '8'   # octagon
     ]
+
     def func(n):
         l = list(shapes)
         if n <= len(shapes):

@@ -2,8 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
-from ..utils import jitter
-from ..scales.utils import resolution
+from ..utils import jitter, resolution
 from .position import position
 
 

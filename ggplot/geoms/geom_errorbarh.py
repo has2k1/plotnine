@@ -4,8 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 
-from ..scales.utils import resolution
-from ..utils import copy_missing_columns
+from ..utils import copy_missing_columns, resolution
 from .geom import geom
 from .geom_segment import geom_segment
 

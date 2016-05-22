@@ -6,9 +6,9 @@ import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
-from ..scales.utils import resolution
+from ..utils import copy_missing_columns, to_rgba
+from ..utils import resolution, SIZE_FACTOR
 from ..utils.exceptions import gg_warn
-from ..utils import copy_missing_columns, to_rgba, SIZE_FACTOR
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment

@@ -4,7 +4,6 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 
 from ..utils.exceptions import GgplotError, gg_warn
-from ..scales.utils import zero_range
 from ..utils import match, groupby_apply, suppress
 
 

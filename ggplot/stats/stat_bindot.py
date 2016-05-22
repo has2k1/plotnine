@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..utils.exceptions import GgplotError, gg_warn
-from ..scales.utils import freedman_diaconis_bins
+from .utils import freedman_diaconis_bins
 from .stat_bin import bin
 from .stat import stat
 

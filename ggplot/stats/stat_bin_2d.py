@@ -6,9 +6,9 @@ import pandas as pd
 import numpy as np
 from six.moves import range
 from matplotlib.cbook import Bunch
+from mizani.utils import round_any, seq
 
-from ..utils import is_scalar_or_string, round_any, seq
-from ..utils import suppress
+from ..utils import is_scalar_or_string, suppress
 from ..scales.scale import scale_discrete
 from .stat_bin import adjust_breaks
 from .stat import stat
