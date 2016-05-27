@@ -21,9 +21,8 @@ class theme_matplotlib(theme):
     """
 
     def __init__(self, rc=None, fname=None, matplotlib_defaults=True):
-        theme.__init__(self, complete=True)
+        theme.__init__(self, figure_size=(11, 8), complete=True)
 
-        self._rcParams = {}
         if matplotlib_defaults:
             _copy = mpl.rcParams.copy()
             # no need to a get a deprecate warning just because
@@ -34,11 +33,6 @@ class theme_matplotlib(theme):
             if 'tk.pythoninspect' in _copy:
                 del _copy['tk.pythoninspect']
             self._rcParams.update(_copy)
-
-        d = {
-             'figure.figsize': '11, 8',
-             'figure.subplot.hspace': '0.5'}
-        self._rcParams.update(d)
 
         if fname:
             self._rcParams.update(mpl.rc_params_from_file(fname))

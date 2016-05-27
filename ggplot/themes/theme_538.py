@@ -50,7 +50,8 @@ class theme_538(theme):
         }
         self._rcParams.update(d)
 
-    def apply_more(self, ax):
+    def apply(self, ax):
+        theme.apply(self, ax)
         # Only show bottom left ticks
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')

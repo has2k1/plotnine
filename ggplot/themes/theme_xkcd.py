@@ -1,19 +1,22 @@
 from copy import copy, deepcopy
 
-from .theme import theme
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+
+from .elements import element_rect
+from .theme import theme
 
 
 class theme_xkcd(theme):
     """
     xkcd theme
 
-    The theme internaly uses the settings from pyplot.xkcd().
+    The theme internally uses the settings from pyplot.xkcd().
     """
     def __init__(self, scale=1, length=100, randomness=2):
-        theme.__init__(self, complete=True)
-        with plt.xkcd(scale=scale, length=length, randomness=randomness):
+        with plt.xkcd(scale=scale,
+                      length=length,
+                      randomness=randomness):
             _xkcd = mpl.rcParams.copy()
 
         # no need to a get a deprecate warning for nothing...
@@ -24,12 +27,19 @@ class theme_xkcd(theme):
         if 'tk.pythoninspect' in _xkcd:
             del _xkcd['tk.pythoninspect']
 
-        self._rcParams.update(_xkcd)
+        fill = _xkcd.get('patch.facecolor', 'white')
+        if isinstance(fill, tuple):
+            d = {'fill': fill+(.1,)}
+        else:
+            d = {'fill': fill, 'alpha': .1}
 
-        d = {
-             'figure.figsize': '11, 8',
-             'figure.subplot.hspace': '0.5'}
-        self._rcParams.update(d)
+        theme.__init__(self,
+                       figure_size=(11, 8),
+                       legend_key=element_rect(**d),
+                       complete=True)
+
+        self._rcParams.update({'axes.grid': True})
+        self._rcParams.update(_xkcd)
 
     def __deepcopy__(self, memo):
         """
@@ -58,7 +68,3 @@ class theme_xkcd(theme):
                 result._rcParams[k] = copy(v)
 
         return result
-
-    def apply_more(self, ax):
-        for line in ax.get_xticklines() + ax.get_yticklines():
-            line.set_markeredgewidth(2)

@@ -485,7 +485,7 @@ def draw_facet_label(plot, finfo, ax):
         plot.figure.dpi_scale_trans.inverted())
     w, h = bbox.width, bbox.height  # in inches
 
-    fs = float(plot.theme._rcParams['font.size'])
+    fs = float(plot.theme.rcParams.get('font.size', 11))
 
     # linewidth in transAxes
     pad = linespacing = 1.5

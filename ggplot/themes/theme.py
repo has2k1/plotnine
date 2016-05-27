@@ -1,10 +1,8 @@
 from copy import copy, deepcopy
 
-import matplotlib as mpl
-
 from ..utils.exceptions import GgplotError
 from ..utils import ggplot_options
-from .themeable import make_themeable, merge_themeables
+from .themeable import themeable, Themeables
 
 
 class theme(object):
@@ -42,6 +40,8 @@ class theme(object):
         'legend_position': 'right',
         'legend_text_align': None,
         'legend_title_align': None,
+        # 'axis_line_x_position': 'bottom',
+        # 'axis_line_y_position': 'left',
     }
 
     def __init__(self, complete=False, **kwargs):
@@ -83,54 +83,32 @@ class theme(object):
             These simply bind together all the aspects of a themeable
             that can be themed.
         """
-        self.themeables = []
+        self.themeables = Themeables()
         self.complete = complete
         self._rcParams = {}
+        # FIXME: The params are still not properly integrated
         self.params = self.params.copy()
         # This is set when the figure is created,
-        # it is useful at legend drawing time.
+        # it is useful at legend drawing time and
+        # when applying the theme.
         self.figure = None
 
+        new = themeable.from_class_name
         for name, element in kwargs.items():
             if name in self.params:
                 self.params[name] = element
             else:
-                self.themeables.append(
-                    make_themeable(name, element))
+                self.themeables[name] = new(name, element)
 
     def apply(self, ax):
         """
         Apply this theme, then apply additional modifications in order.
 
-        This method should not be overridden. Subclasses should override
-        the apply_more method. This implementation will ensure that the
-        a theme that includes partial themes will be themed properly.
+        Subclasses that override this method should make sure that
+        the base class method is called.
         """
-        # Restyle the tick lines
-        for line in ax.get_xticklines() + ax.get_yticklines():
-            line.set_markeredgewidth(mpl.rcParams['grid.linewidth'])
-
-        # minor grid line
-        if mpl.rcParams['axes.grid.which'] in ('minor', 'both'):
-            lw = mpl.rcParams['grid.linewidth']/2.0
-            ax.xaxis.grid(which='minor', linewidth=lw)
-            ax.yaxis.grid(which='minor', linewidth=lw)
-
-        self.apply_more(ax)
-
-        # does this need to be ordered first?
-        for themeable in self.themeables:
-            themeable.apply(ax)
-
-    def apply_more(self, ax):
-        """
-        Makes any desired changes to the axes object
-
-        This method will be called with an axes object after plot
-        has completed. Complete themes should implement this method
-        if post plot themeing is required.
-        """
-        pass
+        for th in self.themeables.values():
+            th.apply(ax)
 
     def setup_figure(self, figure):
         """
@@ -141,8 +119,8 @@ class theme(object):
         override this method should make sure that the base
         class method is called.
         """
-        for themeable in self.themeables:
-            themeable.setup_figure(figure)
+        for th in self.themeables.values():
+            th.setup_figure(figure)
 
     def apply_figure(self, figure):
         """
@@ -153,8 +131,8 @@ class theme(object):
         method should make sure that the base class method is
         called.
         """
-        for themeable in self.themeables:
-            themeable.apply_figure(figure)
+        for th in self.themeables.values():
+            th.apply_figure(figure)
 
     @property
     def rcParams(self):
@@ -186,12 +164,11 @@ class theme(object):
             # In particular, XKCD uses matplotlib.patheffects.withStrok
             rcParams = copy(self._rcParams)
 
-        if self.themeables:
-            for themeable in self.themeables:
-                rcParams.update(themeable.rcParams)
+        for th in self.themeables.values():
+            rcParams.update(th.rcParams)
         return rcParams
 
-    def add_theme(self, other):
+    def add_theme(self, other, inplace=False):
         """Add themes together.
 
         Subclasses should not override this method.
@@ -203,53 +180,51 @@ class theme(object):
         """
         if other.complete:
             return other
-        else:
-            theme_copy = deepcopy(self)
-            theme_copy.themeables = merge_themeables(
-                deepcopy(self.themeables),
-                deepcopy(other.themeables))
-            theme_copy.params.update(other.params)
-            return theme_copy
+
+        theme_copy = self if inplace else deepcopy(self)
+        theme_copy.themeables.update(deepcopy(other.themeables))
+        theme_copy.params.update(other.params)
+        return theme_copy
 
     def __add__(self, other):
         if not isinstance(other, theme):
-            msg = ("Adding theme failed. ",
+            msg = ("Adding theme failed. "
                    "{} is not a theme").format(str(other))
             raise GgplotError(msg)
         return self.add_theme(other)
 
     def __radd__(self, other):
-        """Subclasses should not override this method.
-
-        This will be called in one of two ways:
-        gg + theme which is translated to self=theme, other=gg
-        or
-        theme1 + theme2 which is translated into self=theme2, other=theme1
-
         """
+        Add theme to ggplot object or to another theme
+
+        This will be called in one of two ways::
+
+             ggplot() + theme()
+             theme1() + theme2()
+
+        In both cases, `self` is the :class:`theme`
+        on the right hand side.
+
+        Subclasses should not override this method.
+        """
+        # ggplot() + theme
         if not isinstance(other, theme):
-            gg_copy = deepcopy(other)
+            gg = deepcopy(other)
             if self.complete:
-                gg_copy.theme = self
+                gg.theme = self
             else:
                 # If no theme has been added yet,
                 # we modify the default theme
-                gg_copy.theme = gg_copy.theme or theme_get()
-                gg_copy.theme = gg_copy.theme.add_theme(self)
-            return gg_copy
-        # other _ self is theme + self
+                gg.theme = gg.theme or theme_get()
+                gg.theme = gg.theme.add_theme(self)
+            return gg
+        # theme1 + theme2
         else:
-            # adding theme and theme here
-            # other + self
-            # if self is complete return self
             if self.complete:
                 return self
-            # else make a copy of other combined with self.
             else:
-                theme_copy = deepcopy(other)
-                theme_copy.themeables.append(self)
-                theme_copy.params.update(other.params)
-                return theme_copy
+                # other combined with self.
+                return other.add_theme(self)
 
 
 def theme_get():

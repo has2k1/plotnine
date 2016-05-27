@@ -21,12 +21,9 @@ class theme_seaborn(theme):
 
     def __init__(self, style='darkgrid', context='notebook',
                  font='sans-serif', font_scale=1):
-        theme.__init__(self, complete=True)
+        theme.__init__(self,
+                       figure_size=(11, 8),
+                       complete=True)
         d = seaborn_set(context=context, style=style,
                         font=font, font_scale=font_scale)
-        self._rcParams.update(d)
-
-        d = {
-             'figure.figsize': '11, 8',
-             'figure.subplot.hspace': '0.5'}
         self._rcParams.update(d)

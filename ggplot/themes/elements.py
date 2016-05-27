@@ -1,7 +1,9 @@
 """
-Theme elements used to decorate the graph. These conform
+Theme elements used to decorate the graph. These support
 to the ggplot2 API.
 """
+
+from ..utils import suppress
 
 
 class element_line(object):
@@ -59,9 +61,10 @@ class element_text(object):
     Theme element: Text
     """
 
-    def __init__(self, family='', face='', colour='', size='',
-                 hjust=None, vjust=None, angle=0, lineheight=0,
-                 color='', backgroundcolor='', **kwargs):
+    def __init__(self, family=None, style=None, weight=None,
+                 color=None, size=None, ha=None, va=None,
+                 rotation=0, linespacing=None, backgroundcolor=None,
+                 **kwargs):
         """
         Note
         ----
@@ -69,40 +72,39 @@ class element_text(object):
         translated to left, bottom; right, top. Any other value is
         translated to center.
         """
-        self.properties = {}
-        d = {}
-        if family:
-            d['family'] = family
-        if face:
-            if face == 'plain':
-                d['style'] = 'normal'
-            elif face == 'italic':
-                d['style'] = 'italic'
-            elif face == 'bold':
-                d['weight'] = 'bold'
-            elif face == 'bold.italic':
-                d['style'] = 'italic'
-                d['weight'] = 'bold'
-        if colour or color:
-            if colour:
-                d['color'] = colour
-            else:
-                d['color'] = color
-        if size:
-            d['size'] = size
-        if hjust is not None:
-            d['ha'] = self._translate_hjust(hjust)
-        if vjust is not None:
-            d['va'] = self._translate_vjust(vjust)
-        if angle:
-            d['rotation'] = angle
-        if lineheight is not None:
-            # I'm not sure if this is the right translation. Couldn't find an
-            # example and this property doesn't seem to have any effect.
-            # -gdowding
-            d['linespacing'] = lineheight
-        if backgroundcolor:
-            d['backgroundcolor'] = backgroundcolor
+        d = {'visible': True}
+
+        # ggplot2 translation
+        with suppress(KeyError):
+            linespacing = kwargs.pop('lineheight')
+        with suppress(KeyError):
+            color = color or kwargs.pop('colour')
+        with suppress(KeyError):
+            _face = kwargs.pop('face')
+            if _face == 'plain':
+                style = 'normal'
+            elif _face == 'italic':
+                style = 'italic'
+            elif _face == 'bold':
+                weight = 'bold'
+            elif _face == 'bold.italic':
+                style = 'italic'
+                weight = 'bold'
+        with suppress(KeyError):
+            ha = self._translate_hjust(kwargs.pop('hjust'))
+        with suppress(KeyError):
+            va = self._translate_vjust(kwargs.pop('vjust'))
+        with suppress(KeyError):
+            rotation = kwargs.pop('angle')
+
+        # Use the parameters that have been set
+        names = ('backgroundcolor', 'color', 'family', 'ha',
+                 'linespacing', 'rotation', 'size', 'style',
+                 'va', 'weight',)
+        variables = locals()
+        for name in names:
+            if variables[name] is not None:
+                d[name] = variables[name]
 
         d.update(**kwargs)
         self.properties = d
@@ -128,3 +130,11 @@ class element_text(object):
             return 'top'
         else:
             return 'center'
+
+
+class element_blank(object):
+    """
+    Theme element: Blank
+    """
+    def __init__(self):
+        self.properties = {}
