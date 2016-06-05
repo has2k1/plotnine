@@ -51,7 +51,8 @@ class theme_gray(theme):
             legend_key_size=1.2,  # convert lines -> pixels
             legend_key_height=None,
             legend_key_width=None,
-            legend_text=element_text(size=base_size*0.8),
+            legend_text=element_text(size=base_size*0.8,
+                                     ha='left', va='baseline'),
             legend_text_align=None,
             legend_title=element_text(hjust=0),
             legend_title_align=None,
