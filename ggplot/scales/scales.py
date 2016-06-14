@@ -66,6 +66,20 @@ class Scales(list):
         except ValueError:
             return None
 
+    @property
+    def x(self):
+        """
+        Return x scale
+        """
+        return self.get_scales('x')
+
+    @property
+    def y(self):
+        """
+        Return y scale
+        """
+        return self.get_scales('y')
+
     def non_position_scales(self):
         """
         Return a list of the non-position scales that
@@ -198,72 +212,68 @@ class Scales(list):
             df = sc.transform_df(df)
         return df
 
+    def add_defaults(self, data, aesthetics):
+        """
+        Add default scales for the aesthetics if none are
+        present
 
-def scales_add_defaults(scales, data, aesthetics):
-    """
-    Add default scales for the aesthetics if none are
-    present
+        Scales are added only if the aesthetic is mapped to
+        a column in the dataframe. This function may have to be
+        called separately after evaluating the aesthetics.
+        """
+        if not aesthetics:
+            return
 
-    Scales are added only if the aesthetic is mapped to
-    a column in the dataframe. This function may have to be
-    called separately after evaluating the aesthetics.
-    """
-    if not aesthetics:
-        return
+        # aesthetics with scales
+        aws = set()
+        if self:
+            for s in (set(sc.aesthetics) for sc in self):
+                aws.update(s)
 
-    # aesthetics with scales
-    aws = set()
-    if scales:
-        for s in (set(sc.aesthetics) for sc in scales):
-            aws.update(s)
+        # aesthetics that do not have scales present
+        new_aesthetics = set(aesthetics.keys()) - aws
+        if not new_aesthetics:
+            return
 
-    # aesthetics that do not have scales present
-    new_aesthetics = set(aesthetics.keys()) - aws
-    if not new_aesthetics:
-        return
+        # If a new aesthetic corresponds to a column in the data
+        # frame, find a default scale for the type of data in that
+        # column
+        ae_cols = []
+        for ae in new_aesthetics:
+            col = aesthetics[ae]
+            if col in data.columns:
+                ae_cols.append((ae, col))
 
-    # If a new aesthetic corresponds to a column in the data
-    # frame, find a default scale for the type of data in that
-    # column
-    ae_cols = []
-    for ae in new_aesthetics:
-        col = aesthetics[ae]
-        if col in data.columns:
-            ae_cols.append((ae, col))
+        seen = set()
+        for ae, col in ae_cols:
+            # add the cardinal scale only once e.g x for xmin and xmax
+            scale_var = aes_to_scale(ae)
+            if scale_var in seen:
+                continue
+            seen.add(scale_var)
+            try:
+                sc = make_scale(scale_var, data[col])
+            except GgplotError:
+                # Skip aesthetics with no scales (e.g. group, order, etc)
+                continue
+            self.append(sc)
 
-    seen = set()
-    for ae, col in ae_cols:
-        # add the cardinal scale only once e.g x for xmin and xmax
-        scale_var = aes_to_scale(ae)
-        if scale_var in seen:
-            continue
-        seen.add(scale_var)
-        try:
-            sc = make_scale(scale_var, data[col])
-        except GgplotError:
-            # Skip aesthetics with no scales (e.g. group, order, etc)
-            continue
-        scales.append(sc)
-    return scales
+    def add_missing(self, aesthetics):
+        """
+        Add missing but required scales.
 
+        Parameters
+        ----------
+        aesthetics : list | tuple
+            Aesthetic names. Typically, ('x', 'y').
+        """
+        # Keep only aesthetics that don't have scales
+        aesthetics = set(aesthetics) - set(self.input())
 
-def scales_add_missing(plot, aesthetics):
-    """
-    Add missing but required scales.
-
-    Parameters
-    ----------
-    aesthetics : list | tuple
-        aesthetic names. Typically, ('x', 'y').
-    """
-
-    # Keep only aesthetics that aren't already in plot$scales
-    aesthetics = set(aesthetics) - set(plot.scales.input())
-
-    for ae in aesthetics:
-        scale_name = 'scale_{}_continuous'.format(ae)
-        scale_f = Registry[scale_name]
-        plot.scales.append(scale_f())
+        for ae in aesthetics:
+            scale_name = 'scale_{}_continuous'.format(ae)
+            scale_f = Registry[scale_name]
+            self.append(scale_f())
 
 
 def scale_type(series):

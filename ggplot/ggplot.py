@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
+from collections import defaultdict
 from copy import deepcopy
 
 import pandas as pd
@@ -9,7 +10,6 @@ from matplotlib.offsetbox import AnchoredOffsetbox
 import matplotlib.text as mtext
 import matplotlib.patches as mpatch
 from patsy.eval import EvalEnvironment
-from six.moves import zip
 
 from .aes import aes, make_labels
 from .panel import Panel
@@ -19,7 +19,6 @@ from .themes.theme import theme_get
 from .utils.ggutils import gg_context, ggplot_options
 from .utils.exceptions import GgplotError
 from .scales.scales import Scales
-from .scales.scales import scales_add_missing
 from .coords import coord_cartesian
 from .guides.guides import guides
 from .geoms import geom_blank
@@ -159,14 +158,12 @@ class ggplot(object):
         self.theme = self.theme or theme_get()
 
         with gg_context(theme=self.theme):
+            # Drawing
             self.draw_plot()
             self.draw_legend()
             add_labels_and_title(self)
-
             # Theming
-            for ax in self.axs:
-                self.theme.apply(ax)
-
+            self.theme.apply_axs(self.axs)
             self.theme.apply_figure(self.figure)
 
         return self.figure
@@ -185,8 +182,7 @@ class ggplot(object):
         self._make_axes()
 
         # Draw the geoms
-        for layer in self.layers:
-            layer.draw(self.panel, self.coordinates)
+        self.layers.draw(self.panel, self.coordinates)
 
         # Decorate the axes
         #   - xaxis & yaxis breaks, labels, limits, ...
@@ -205,80 +201,67 @@ class ggplot(object):
 
         Note
         ----
-        This method modifies the ggplot object. The caller is responsible
-        for making a copy and using that to make the method call.
+        This method modifies the ggplot object. The caller is
+        responsible for making a copy and using that to make
+        the method call.
         """
-        plot = self
+        if not self.layers:
+            self += geom_blank()
 
-        if not plot.layers:
-            plot += geom_blank()
-
-        plot.panel = Panel()
-        layers = plot.layers
-        layer_data = [l.data for l in layers]
-        scales = plot.scales
-        panel = plot.panel
+        self.panel = Panel()
+        layers = self.layers
+        scales = self.scales
+        panel = self.panel
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
-        panel.train_layout(plot.facet, layer_data, plot.data)
-        data = panel.map_layout(plot.facet, layer_data, plot.data)
+        panel.train_layout(layers, self)
+        panel.map_layout(layers, self)
 
-        # Compute aesthetics to produce data with generalised variable names
-        data = [l.compute_aesthetics(d, plot) for l, d in zip(layers, data)]
+        # Compute aesthetics to produce data with generalised
+        # variable names
+        layers.compute_aesthetics(self)
 
         # Transform data using all scales
-        data = [scales.transform_df(d) for d in data]
+        layers.transform(scales)
 
         # Map and train positions so that statistics have access
         # to ranges and all positions are numeric
-        def scale_x():
-            return scales.get_scales('x')
-
-        def scale_y():
-            return scales.get_scales('y')
-
-        panel.train_position(data, scale_x(), scale_y())
-        data = panel.map_position(data, scale_x(), scale_y())
+        panel.train_position(layers, scales.x, scales.y)
+        panel.map_position(layers, scales.x, scales.y)
 
         # Apply and map statistics
-        data = [l.compute_statistic(d, panel)
-                for l, d in zip(layers, data)]
-        data = [l.map_statistic(d, plot) for l, d in zip(layers, data)]
+        layers.compute_statistic(panel)
+        layers.map_statistic(self)
 
         # Make sure missing (but required) aesthetics are added
-        scales_add_missing(plot, ('x', 'y'))
+        scales.add_missing(('x', 'y'))
 
-        # Prepare data in geoms from (e.g.) y and width to ymin and ymax
-        data = [l.setup_data(d) for l, d in zip(layers, data)]
+        # Prepare data in geoms
+        # e.g. from y and width to ymin and ymax
+        layers.setup_data()
 
         # Apply position adjustments
-        data = [l.compute_position(d, panel)
-                for l, d in zip(layers, data)]
+        layers.compute_position(panel)
 
-        # Reset position scales, then re-train and map.  This ensures
-        # that facets have control over the range of a plot:
-        #   - is it generated from what's displayed, or
-        #   - does it include the range of underlying data
-        panel.reset_scales()
-        panel.train_position(data, scale_x(), scale_y())
-        data = panel.map_position(data, scale_x(), scale_y())
+        # Reset position scales, then re-train and map.  This
+        # ensures that facets have control over the range of
+        # a plot.
+        panel.reset_position_scales()
+        panel.train_position(layers, scales.x, scales.y)
+        panel.map_position(layers, scales.x, scales.y)
 
         # Train and map non-position scales
         npscales = scales.non_position_scales()
         if len(npscales):
-            data = [npscales.train_df(d) for d in data]
-            data = [npscales.map_df(d) for d in data]
+            layers.train(npscales)
+            layers.map(npscales)
 
         # Train coordinate system
-        panel.train_ranges(plot.coordinates)
+        panel.train_ranges(self.coordinates)
 
         # fill in the defaults
-        data = [l.use_defaults(d) for l, d in zip(layers, data)]
-
-        # Each layer gets the final data used for plotting
-        for layer, fdata in zip(layers, data):
-            layer.final_data = fdata
+        layers.use_defaults()
 
     def draw_legend(self):
         legend_box = self.guides.build(self)

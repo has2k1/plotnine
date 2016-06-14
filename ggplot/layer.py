@@ -10,7 +10,6 @@ import matplotlib.cbook as cbook
 import pandas.core.common as com
 from patsy.eval import EvalEnvironment
 
-from .scales.scales import scales_add_defaults
 from .utils.exceptions import GgplotError
 from .utils import DISCRETE_KINDS, ninteraction
 from .utils import check_required_aesthetics, defaults
@@ -34,16 +33,14 @@ class Layers(list):
 
     Each layer knows its position/zorder (1 based) in the list.
     """
-
     def append(self, item):
         item.zorder = len(self) + 1
         return list.append(self, item)
 
-    def _set_zorder(self, lst2):
-        base = len(self)
-        for i, item in enumerate(lst2):
-            item.zorder = base + 1
-        return lst2
+    def _set_zorder(self, other):
+        for i, item in enumerate(other, start=len(self)+1):
+            item.zorder = i
+        return other
 
     def extend(self, other):
         other = self._set_zorder(other)
@@ -56,6 +53,50 @@ class Layers(list):
     def __add__(self, other):
         other = self._set_zorder(other)
         return list.__add__(self, other)
+
+    @property
+    def data(self):
+        return [l.data for l in self]
+
+    def setup_data(self):
+        for l in self:
+            l.setup_data()
+
+    def draw(self, panel, coord):
+        for l in self:
+            l.draw(panel, coord)
+
+    def compute_aesthetics(self, plot):
+        for l in self:
+            l.compute_aesthetics(plot)
+
+    def compute_statistic(self, panel):
+        for l in self:
+            l.compute_statistic(panel)
+
+    def map_statistic(self, plot):
+        for l in self:
+            l.map_statistic(plot)
+
+    def compute_position(self, panel):
+        for l in self:
+            l.compute_position(panel)
+
+    def use_defaults(self):
+        for l in self:
+            l.use_defaults()
+
+    def transform(self, scales):
+        for l in self:
+            l.data = scales.transform_df(l.data)
+
+    def train(self, scales):
+        for l in self:
+            l.data = scales.train_df(l.data)
+
+    def map(self, scales):
+        for l in self:
+            l.data = scales.map_df(l.data)
 
 
 class layer(object):
@@ -73,8 +114,6 @@ class layer(object):
         self.show_legend = show_legend
         self._active_mapping = {}
         self.zorder = 0
-        # The data used for plotting
-        self.final_data = None
 
     def __deepcopy__(self, memo):
         """
@@ -138,7 +177,7 @@ class layer(object):
         self._active_mapping = aes(**d)
         return self._active_mapping
 
-    def compute_aesthetics(self, data, plot):
+    def compute_aesthetics(self, plot):
         """
         Return a dataframe where the columns match the
         aesthetic mappings.
@@ -146,6 +185,7 @@ class layer(object):
         Transformations like 'factor(cyl)' and other
         expression evaluation are  made in here
         """
+        data = self.data
         aesthetics = self.layer_mapping(plot.mapping)
 
         # Override grouping if set in layer.
@@ -203,7 +243,7 @@ class layer(object):
                 evaled[col] = evaled[col].astype(np.float)
 
         evaled_aes = aes(**dict((col, col) for col in evaled))
-        scales_add_defaults(plot.scales, evaled, evaled_aes)
+        plot.scales.add_defaults(evaled, evaled_aes)
 
         if len(data) == 0 and has_aes_params:
             # No data, and vectors suppled to aesthetics
@@ -211,26 +251,28 @@ class layer(object):
         else:
             evaled['PANEL'] = data['PANEL']
 
-        evaled = add_group(evaled)
-        return evaled
+        self.data = add_group(evaled)
 
-    def compute_statistic(self, data, panel):
+    def compute_statistic(self, panel):
         """
         Compute & return statistics for this layer
         """
+        data = self.data
         if not len(data):
             return type(data)()
 
         params = self.stat.setup_params(data)
         data = self.stat.use_defaults(data)
         data = self.stat.setup_data(data)
-        return self.stat.compute_layer(data, params, panel)
+        data = self.stat.compute_layer(data, params, panel)
+        self.data = data
 
-    def map_statistic(self, data, plot):
+    def map_statistic(self, plot):
         """
         Mapping aesthetics to computed statistics
         """
-        if len(data) == 0:
+        data = self.data
+        if not len(data):
             return type(data)()
 
         # Assemble aesthetics from layer, plot and stat mappings
@@ -258,20 +300,20 @@ class layer(object):
             return data
 
         # Add any new scales, if needed
-        scales_add_defaults(plot.scales, data, new)
+        plot.scales.add_defaults(data, new)
 
         # Transform the values, if the scale say it's ok
         # (see stat_spoke for one exception)
         if self.stat.retransform:
             stat_data = plot.scales.transform_df(stat_data)
 
-        data = pd.concat([data, stat_data], axis=1)
-        return data
+        self.data = pd.concat([data, stat_data], axis=1)
 
-    def setup_data(self, data):
+    def setup_data(self):
         """
         Prepare/modify data for plotting
         """
+        data = self.data
         if len(data) == 0:
             return type(data)()
 
@@ -281,16 +323,18 @@ class layer(object):
             self.geom.REQUIRED_AES,
             set(data.columns) | set(self.geom.aes_params),
             self.geom.__class__.__name__)
-        return data
 
-    def compute_position(self, data, panel):
+        self.data = data
+
+    def compute_position(self, panel):
         """
         Compute the position of each geometric object
         in concert with the other objects in the panel
         """
-        params = self.position.setup_params(data)
-        data = self.position.setup_data(data, params)
-        return self.position.compute_layer(data, params, panel)
+        params = self.position.setup_params(self.data)
+        data = self.position.setup_data(self.data, params)
+        data = self.position.compute_layer(data, params, panel)
+        self.data = data
 
     def draw(self, panel, coord):
         """
@@ -306,13 +350,14 @@ class layer(object):
         """
         # At this point each layer must have the data
         # that is created by the plot build process
-        self.geom.draw_layer(self.final_data, panel,
-                             coord, self.zorder)
+        self.geom.draw_layer(self.data, panel, coord, self.zorder)
 
-    def use_defaults(self, data):
+    def use_defaults(self, data=None):
         """
         Prepare/modify data for plotting
         """
+        if data is None:
+            data = self.data
         return self.geom.use_defaults(data)
 
 

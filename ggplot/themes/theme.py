@@ -100,6 +100,18 @@ class theme(object):
             else:
                 self.themeables[name] = new(name, element)
 
+    def apply_axs(self, axs):
+        """
+        Apply this theme to all the axes
+
+        Parameters
+        ----------
+        axs : iterable
+            Sequence of axes to be themed
+        """
+        for ax in axs:
+            self.apply(ax)
+
     def apply(self, ax):
         """
         Apply this theme, then apply additional modifications in order.
