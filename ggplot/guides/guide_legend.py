@@ -273,7 +273,7 @@ class guide_legend(guide):
         # title
         title_box = TextArea(
             self.title, textprops=dict(color='k', weight='bold'))
-        themeable['legend_title'] = title_box
+        themeable['legend_title'].append(title_box)
 
         # labels
         labels = []
@@ -283,7 +283,7 @@ class guide_legend(guide):
             va = 'center' if self.label_position == 'top' else 'baseline'
             ta = TextArea(item, textprops=dict(color='k', va=va))
             labels.append(ta)
-        themeable['legend_text'] = labels
+            themeable['legend_text'].extend(labels)
 
         # Drawings
         drawings = []

@@ -54,7 +54,7 @@ class theme_gray(theme):
             legend_text=element_text(size=base_size*0.8,
                                      ha='left', va='baseline'),
             legend_text_align=None,
-            legend_title=element_text(hjust=0),
+            legend_title=element_text(ha='left'),
             legend_title_align=None,
             legend_position='right',
             legend_direction=None,

@@ -14,7 +14,7 @@ class element_line(object):
     def __init__(self, colour=None, size=None, linetype=None,
                  lineend=None, color=None, **kwargs):
         color = color if color else colour
-        d = {}
+        d = {'visible': True}
         if color:
             d['color'] = color
         if size:
@@ -42,7 +42,7 @@ class element_rect(object):
                  linetype=None, color=None, **kwargs):
 
         color = color if color else colour
-        d = {}
+        d = {'visible': True}
         if fill:
             d['facecolor'] = fill
         if color:

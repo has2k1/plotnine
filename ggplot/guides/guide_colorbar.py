@@ -167,7 +167,7 @@ class guide_colorbar(guide):
         # title #
         title_box = TextArea(
             self.title, textprops=dict(color='k', weight='bold'))
-        themeable['legend_title'] = title_box
+        themeable['legend_title'].append(title_box)
 
         # colorbar and ticks #
         da = ColoredDrawingArea(width, height, 0, 0)
@@ -181,10 +181,10 @@ class guide_colorbar(guide):
 
         # labels #
         if self.label:
-            labels_da, _themeable = create_labels(da, labels,
-                                                  tick_locations,
-                                                  direction)
-            themeable.update(_themeable)
+            labels_da, legend_text = create_labels(da, labels,
+                                                   tick_locations,
+                                                   direction)
+            themeable['legend_text'].extend(legend_text)
         else:
             labels_da = ColoredDrawingArea(0, 0)
 
@@ -355,7 +355,7 @@ def create_labels(da, labels, locations, direction):
                          verticalalignment=va)
         labels_box.add_artist(txt)
         legend_text.append(txt)
-    return labels_box, {'legend_text': legend_text}
+    return labels_box, legend_text
 
 
 guide_colourbar = guide_colorbar

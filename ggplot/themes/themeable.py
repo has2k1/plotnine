@@ -249,6 +249,7 @@ def _blankout_rect(rect):
     """
     Make rect invisible
     """
+    # set_visible(False) does not clear the attributes
     rect.set_edgecolor('None')
     rect.set_facecolor('None')
     rect.set_linewidth(0)
@@ -260,25 +261,29 @@ def _blankout_rect(rect):
 class axis_title_x(themeable):
     def apply_figure(self, figure):
         super(axis_title_x, self).apply_figure(figure)
-        text = figure._themeable['axis_title_x']
-        text.set(**self.properties)
+        with suppress(KeyError):
+            text = figure._themeable['axis_title_x']
+            text.set(**self.properties)
 
     def blank_figure(self, figure):
         super(axis_title_x, self).blank_figure(figure)
-        text = figure._themeable['axis_title_x']
-        text.remove()
+        with suppress(KeyError):
+            text = figure._themeable['axis_title_x']
+            text.set_visible(False)
 
 
 class axis_title_y(themeable):
     def apply_figure(self, figure):
         super(axis_title_y, self).apply_figure(figure)
-        text = figure._themeable['axis_title_y']
-        text.set(**self.properties)
+        with suppress(KeyError):
+            text = figure._themeable['axis_title_y']
+            text.set(**self.properties)
 
     def blank_figure(self, figure):
         super(axis_title_y, self).blank_figure(figure)
-        text = figure._themeable['axis_title_y']
-        text.remove()
+        with suppress(KeyError):
+            text = figure._themeable['axis_title_y']
+            text.set_visible(False)
 
 
 class axis_title(axis_title_x, axis_title_y):
@@ -289,42 +294,48 @@ class legend_title(themeable):
     def apply_figure(self, figure):
         super(legend_title, self).apply_figure(figure)
         with suppress(KeyError):
-            textarea = figure._themeable['legend_title']
-            textarea._text.set(**self.properties)
+            textareas = figure._themeable['legend_title']
+            for ta in textareas:
+                ta._text.set(**self.properties)
 
     def blank_figure(self, figure):
         super(legend_title, self).blank_figure(figure)
         with suppress(KeyError):
-            textarea = figure._themeable['legend_title']
-            textarea._text.set_text('')
+            textareas = figure._themeable['legend_title']
+            for ta in textareas:
+                ta.set_visible(False)
 
 
 class legend_text(themeable):
     def apply_figure(self, figure):
         super(legend_text, self).apply_figure(figure)
         with suppress(KeyError):
-            textareas = figure._themeable['legend_text']
-            for ta in textareas:
-                ta._text.set(**self.properties)
+            texts = figure._themeable['legend_text']
+            for text in texts:
+                if not hasattr(text, '_x'):  # textarea
+                    text = text._text
+                text.set(**self.properties)
 
     def blank_figure(self, figure):
         super(legend_text, self).blank_figure(figure)
         with suppress(KeyError):
-            textareas = figure._themeable['legend_text']
-            for ta in textareas:
-                ta._text.set_text('')
+            texts = figure._themeable['legend_text']
+            for text in texts:
+                text.set_visible(False)
 
 
 class plot_title(themeable):
     def apply_figure(self, figure):
         super(plot_title, self).apply_figure(figure)
-        text = figure._themeable['plot_title']
-        text.set(**self.properties)
+        with suppress(KeyError):
+            text = figure._themeable['plot_title']
+            text.set(**self.properties)
 
     def blank_figure(self, figure):
         super(plot_title, self).blank_figure(figure)
-        text = figure._themeable['plot_title']
-        text.remove()
+        with suppress(KeyError):
+            text = figure._themeable['plot_title']
+            text.set_visible(False)
 
 
 class strip_text_x(themeable):
@@ -335,17 +346,22 @@ class strip_text_x(themeable):
             for text in texts:
                 text.set(**self.properties)
 
+        with suppress(KeyError):
+            rects = figure._themeable['strip_background_x']
+            for rect in rects:
+                rect.set_visible(True)
+
     def blank_figure(self, figure):
         super(strip_text_x, self).blank_figure(figure)
         with suppress(KeyError):
             texts = figure._themeable['strip_text_x']
             for text in texts:
-                text.remove()
+                text.set_visible(False)
 
         with suppress(KeyError):
             rects = figure._themeable['strip_background_x']
             for rect in rects:
-                rect.remove()
+                rect.set_visible(False)
 
 
 class strip_text_y(themeable):
@@ -356,17 +372,22 @@ class strip_text_y(themeable):
             for text in texts:
                 text.set(**self.properties)
 
+        with suppress(KeyError):
+            rects = figure._themeable['strip_background_y']
+            for rect in rects:
+                rect.set_visible(True)
+
     def blank_figure(self, figure):
         super(strip_text_y, self).blank_figure(figure)
         with suppress(KeyError):
             texts = figure._themeable['strip_text_y']
             for text in texts:
-                text.remove()
+                text.set_visible(False)
 
         with suppress(KeyError):
             rects = figure._themeable['strip_background_y']
             for rect in rects:
-                rect.remove()
+                rect.set_visible(False)
 
 
 class strip_text(strip_text_x, strip_text_y):
@@ -386,7 +407,9 @@ class axis_text_x(themeable):
 
     def blank(self, ax):
         super(axis_text_x, self).blank(ax)
-        ax.set_xticklabels([])
+        labels = ax.get_xticklabels()
+        for l in labels:
+            l.set_visible(False)
 
 
 class axis_text_y(themeable):
@@ -398,7 +421,9 @@ class axis_text_y(themeable):
 
     def blank(self, ax):
         super(axis_text_y, self).blank(ax)
-        ax.set_yticklabels([])
+        labels = ax.get_yticklabels()
+        for l in labels:
+            l.set_visible(False)
 
 
 class axis_text(axis_text_x, axis_text_y):
@@ -452,7 +477,6 @@ class axis_line_x(themeable):
 
         ax.spines['top'].set_visible(False)
         ax.spines['bottom'].set(**self.properties)
-        ax.spines['bottom'].set_visible(True)
 
     def blank(self, ax):
         super(axis_line_x, self).blank(ax)
@@ -470,7 +494,6 @@ class axis_line_y(themeable):
 
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set(**self.properties)
-        ax.spines['left'].set_visible(True)
 
     def blank(self, ax):
         super(axis_line_y, self).blank(ax)
@@ -618,6 +641,7 @@ class legend_key(themeable):
 class legend_background(themeable):
     def apply_figure(self, figure):
         super(legend_background, self).apply_figure(figure)
+        # anchored offset box
         with suppress(KeyError):
             aob = figure._themeable['legend_background']
             aob.patch.set(**self.properties)
@@ -674,9 +698,10 @@ class plot_background(themeable):
 class strip_background_x(themeable):
     def apply_figure(self, figure):
         super(strip_background_x, self).apply_figure(figure)
-        bboxes = figure._themeable.get('strip_background_x', [])
-        for bbox in bboxes:
-            bbox.set(**self.properties)
+        with suppress(KeyError):
+            bboxes = figure._themeable['strip_background_x']
+            for bbox in bboxes:
+                bbox.set(**self.properties)
 
     def blank_figure(self, figure):
         super(strip_background_x, self).blank_figure(figure)
@@ -689,9 +714,10 @@ class strip_background_x(themeable):
 class strip_background_y(themeable):
     def apply_figure(self, figure):
         super(strip_background_y, self).apply_figure(figure)
-        bboxes = figure._themeable.get('strip_background_y', [])
-        for bbox in bboxes:
-            bbox.set(**self.properties)
+        with suppress(KeyError):
+            bboxes = figure._themeable['strip_background_y']
+            for bbox in bboxes:
+                bbox.set(**self.properties)
 
     def blank_figure(self, figure):
         super(strip_background_y, self).blank_figure(figure)

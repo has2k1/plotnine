@@ -130,7 +130,8 @@ class ggplot(object):
         else:
             plt.subplots_adjust(wspace=.05, hspace=.05)
 
-        figure._themeable = {}
+        figure._themeable = {'legend_title': [],
+                             'legend_text': []}
         try:
             axs = axs.flatten()
         except AttributeError:
