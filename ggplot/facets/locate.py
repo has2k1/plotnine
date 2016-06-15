@@ -9,8 +9,10 @@ from ..utils import match, add_margins, join_keys
 
 def locate_wrap(data, panels, vars):
     if not len(data):
-        data['PANEL'] = pd.Categorical([])
-        data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
+        data['PANEL'] = pd.Categorical(
+            [],
+            categories=panels['PANEL'].cat.categories,
+            ordered=True)
         return data
 
     data, facet_vals = add_missing_facets(data, panels, vars)
@@ -20,8 +22,10 @@ def locate_wrap(data, panels, vars):
     data['PANEL'] = match(keys['x'], keys['y'], start=1)
 
     # matching dtype
-    data['PANEL'] = pd.Categorical(data['PANEL'])
-    data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
+    data['PANEL'] = pd.Categorical(
+        data['PANEL'],
+        categories=panels['PANEL'].cat.categories,
+        ordered=True)
     data = data.sort_values('PANEL')
     data.reset_index(drop=True, inplace=True)
     return data
@@ -29,8 +33,10 @@ def locate_wrap(data, panels, vars):
 
 def locate_grid(data, panels, rows=None, cols=None, margins=False):
     if not len(data):
-        data['PANEL'] = pd.Categorical([])
-        data['PANEL'].cat.reorder_categories(panels['PANEL'].cat.categories)
+        data['PANEL'] = pd.Categorical(
+            [],
+            categories=panels['PANEL'].cat.categories,
+            ordered=True)
         return data
 
     rows = [] if rows is None else rows
@@ -53,10 +59,10 @@ def locate_grid(data, panels, rows=None, cols=None, margins=False):
     # the categories(panel numbers) for the data should be in the
     # same order as the panels. i.e the panels are the reference, they "know"
     # the right order
-    data['PANEL'] = pd.Categorical(data['PANEL'])
-    ordered_categories = [c for c in panels['PANEL'].cat.categories
-                          if c in data['PANEL'].cat.categories]
-    data['PANEL'].cat.categories = ordered_categories
+    data['PANEL'] = pd.Categorical(
+        data['PANEL'],
+        categories=panels['PANEL'].cat.categories,
+        ordered=True)
     data = data.sort_values('PANEL')
     data.reset_index(drop=True, inplace=True)
     return data
