@@ -5,6 +5,7 @@ from mizani.bounds import expand_range, squish_infinite
 from mizani.transforms import gettrans
 
 from ..positions.position import transform_position
+from ..utils.exceptions import gg_warn
 from .coord import coord, dist_euclidean
 
 
@@ -20,12 +21,20 @@ class coord_trans(coord):
             data = self.munch(data, panel_scales)
 
         def trans_x(data):
-            return transform_value(self.trans.x,
-                                   data, panel_scales['x_range'])
+            result = transform_value(self.trans.x,
+                                     data, panel_scales['x_range'])
+            if any(result.isnull()):
+                gg_warn("Coordinate transform of x aesthetic "
+                        "created one or more NaN values.")
+            return result
 
         def trans_y(data):
-            return transform_value(self.trans.y,
-                                   data, panel_scales['y_range'])
+            result = transform_value(self.trans.y,
+                                     data, panel_scales['y_range'])
+            if any(result.isnull()):
+                gg_warn("Coordinate transform of y aesthetic "
+                        "created one or more NaN values.")
+            return result
 
         data = transform_position(data, trans_x, trans_y)
         return transform_position(data, squish_infinite, squish_infinite)
