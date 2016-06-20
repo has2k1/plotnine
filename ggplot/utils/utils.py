@@ -23,8 +23,8 @@ from mizani.bounds import zero_range
 from .exceptions import GgplotError, gg_warn
 
 
-DISCRETE_KINDS = 'Ob'
-CONTINUOUS_KINDS = 'if'
+DISCRETE_KINDS = 'ObUS'
+CONTINUOUS_KINDS = 'ifuc'
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
