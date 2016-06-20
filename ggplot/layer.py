@@ -11,10 +11,8 @@ import pandas.core.common as com
 from patsy.eval import EvalEnvironment
 
 from .utils.exceptions import GgplotError
-from .utils import DISCRETE_KINDS, ninteraction
+from .utils import DISCRETE_KINDS, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
-from .utils import is_string, suppress, Registry
-from .positions.position import position
 from .aes import aes, is_calculated_aes, strip_dots
 
 _TPL_EVAL_FAIL = """\
@@ -109,11 +107,41 @@ class layer(object):
         self.stat = stat
         self.data = data
         self.mapping = mapping
-        self.position = self._position_object(position)
+        self.position = position
         self.inherit_aes = inherit_aes
         self.show_legend = show_legend
         self._active_mapping = {}
         self.zorder = 0
+
+    @staticmethod
+    def from_geom(geom):
+        """
+        Create a layer given a :class:`geom`
+
+        Parameters
+        ----------
+        geom : geom
+            `geom` from which a layer will be created
+
+        Returns
+        -------
+        out : layer
+            Layer that represents the specific `geom`.
+        """
+        kwargs = geom._kwargs
+        lkwargs = {'geom': geom,
+                   'mapping': geom.mapping,
+                   'data': geom.data,
+                   'stat': geom._stat,
+                   'position': geom._position}
+
+        for param in ('show_legend', 'inherit_aes'):
+            if param in kwargs:
+                lkwargs[param] = kwargs[param]
+            elif param in geom.DEFAULT_PARAMS:
+                lkwargs[param] = geom.DEFAULT_PARAMS[param]
+
+        return layer(**lkwargs)
 
     def __deepcopy__(self, memo):
         """
@@ -130,22 +158,6 @@ class layer(object):
                 result.__dict__[key] = deepcopy(self.__dict__[key], memo)
 
         return result
-
-    def _position_object(self, name):
-        """
-        Return an instantiated position object
-        """
-        if issubclass(type(name), position):
-            return name
-
-        if not is_string(name):
-            raise GgplotError(
-                'Unknown position of type {}'.format(type(name)))
-
-        if not name.startswith('position_'):
-            name = 'position_{}'.format(name)
-
-        return Registry[name]()
 
     def layer_mapping(self, mapping):
         """

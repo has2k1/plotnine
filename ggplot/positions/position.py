@@ -4,7 +4,8 @@ from copy import deepcopy
 from six import add_metaclass
 
 from ..utils import check_required_aesthetics, groupby_apply
-from ..utils import Registry
+from ..utils import is_string, Registry
+from ..utils.exceptions import GgplotError
 
 
 @add_metaclass(Registry)
@@ -101,6 +102,39 @@ class position(object):
             data[ys] = data[ys].apply(trans_y)
 
         return data
+
+    @staticmethod
+    def from_geom(geom):
+        """
+        Create and return a position object for the geom
+
+        Parameters
+        ----------
+        geom : geom
+            An instantiated geom object.
+
+        Returns
+        -------
+        out : position
+            A position object
+
+        Raises :class:`GgplotError` if unable to create a `position`.
+        """
+        name = geom.params['position']
+        if issubclass(type(name), position):
+            return name
+
+        if isinstance(name, position):
+            klass = name
+        elif is_string(name):
+            if not name.startswith('position_'):
+                name = 'position_{}'.format(name)
+            klass = Registry[name]
+        else:
+            raise GgplotError(
+                'Unknown position of type {}'.format(type(name)))
+
+        return klass()
 
 
 transform_position = position.transform_position

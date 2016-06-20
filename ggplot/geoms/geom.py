@@ -1,14 +1,16 @@
 from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 
-import pandas as pd
 import six
 from six import add_metaclass
 
-from ..aes import aes, make_labels, rename_aesthetics
+from ..stats.stat import stat
+from ..aes import make_labels, rename_aesthetics
 from ..layer import layer
+from ..positions.position import position
+from ..utils import data_mapping_as_kwargs
+from ..utils import defaults, copy_keys, is_string, Registry
 from ..utils.exceptions import GgplotError
-from ..utils import defaults, suppress, copy_keys, Registry
 
 
 @add_metaclass(Registry)
@@ -31,16 +33,50 @@ class geom(object):
 
     def __init__(self, *args, **kwargs):
         kwargs = rename_aesthetics(kwargs)
-        kwargs = self._sanitize_arguments(args, kwargs)
-        self._cache = {'kwargs': kwargs}  # for making stat & layer
-        self._stat = self._make_stat()
-        self.verify_arguments(kwargs)     # geom, stat, layer
+        kwargs = data_mapping_as_kwargs(args, kwargs)
+        self._kwargs = kwargs  # Will be used to create stat & layer
 
         # separate aesthetics and parameters
         self.aes_params = copy_keys(kwargs, {}, self.aesthetics())
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
         self.mapping = kwargs['mapping']
         self.data = kwargs['data']
+        self._stat = stat.from_geom(self)
+        self._position = position.from_geom(self)
+        self.verify_arguments(kwargs)     # geom, stat, layer
+
+    @staticmethod
+    def from_stat(stat):
+        """
+        Return an instantiated geom object
+
+        Parameters
+        ----------
+        stat : stat
+            `stat`
+
+        Returns
+        -------
+        out : geom
+            A geom object
+
+        Raises :class:`GgplotError` if unable to create a `geom`.
+        """
+        name = stat.params['geom']
+        if issubclass(type(name), geom):
+            return name
+
+        if isinstance(name, geom):
+            klass = name
+        elif is_string(name):
+            if not name.startswith('geom_'):
+                name = 'geom_{}'.format(name)
+            klass = Registry[name]
+        else:
+            raise GgplotError(
+                'Unknown geom of type {}'.format(type(name)))
+
+        return klass(stat=stat, **stat._kwargs)
 
     @classmethod
     def aesthetics(cls):
@@ -65,7 +101,7 @@ class geom(object):
         memo[id(self)] = result
 
         for key, item in self.__dict__.items():
-            if key == 'data':
+            if key in {'data', '_kwargs'}:
                 result.__dict__[key] = self.__dict__[key]
             else:
                 result.__dict__[key] = deepcopy(self.__dict__[key], memo)
@@ -187,7 +223,7 @@ class geom(object):
         gg = deepcopy(gg)
 
         # create and add layer
-        gg.layers.append(self._make_layer())
+        gg.layers.append(layer.from_geom(self))
 
         # Add any new labels
         mapping = make_labels(self.mapping)
@@ -196,115 +232,16 @@ class geom(object):
         gg.labels = defaults(gg.labels, new_labels)
         return gg
 
-    def _make_layer(self):
-        kwargs = self._cache['kwargs']
-        DP = self.DEFAULT_PARAMS
-        lkwargs = {'geom': self,
-                   'mapping': kwargs['mapping'],
-                   'data': kwargs['data'],
-                   'stat': self._stat,
-                   'position': kwargs.get('position',
-                                          DP['position'])}
-
-        for param in ('show_legend', 'inherit_aes'):
-            if param in kwargs:
-                lkwargs[param] = kwargs[param]
-            else:
-                with suppress(KeyError):
-                    lkwargs[param] = DP[param]
-
-        return layer(**lkwargs)
-
-    def _make_stat(self):
-        """
-        Return stat instance for this geom
-
-        Create a stat if none has been passed in the
-        kwargs
-        """
-        kwargs = self._cache['kwargs']
-        # The user (or DEFAULT_PARAMS) can specify one of;
-        # - a stat object
-        # - a stat class
-        # - the name of the stat (only the provided stats)
-        stat_klass = kwargs.get(
-            'stat', self.DEFAULT_PARAMS['stat'])
-
-        # More stable when reloading modules than
-        # using issubclass
-        if (not isinstance(stat_klass, type) and
-                hasattr(stat_klass, 'compute_layer')):
-            return stat_klass
-
-        if isinstance(stat_klass, six.string_types):
-            if not stat_klass.startswith('stat_'):
-                stat_klass = 'stat_{}'.format(stat_klass)
-            stat_klass = Registry[stat_klass]
-
-        try:
-            recognized = (
-                (stat_klass.aesthetics() |
-                 six.viewkeys(stat_klass.DEFAULT_PARAMS)) &
-                six.viewkeys(kwargs))
-        except AttributeError:
-            msg = '{} is not a stat'.format(stat_klass)
-            raise GgplotError(msg)
-
-        stat_params = {}
-        for p in recognized:
-            stat_params[p] = kwargs[p]
-        return stat_klass(geom=self.__class__.__name__[5:],
-                          **stat_params)
-
-    def _sanitize_arguments(self, args, kwargs):
-        """
-        Return kwargs with the mapping and data values
-        """
-        mapping, data = {}, None
-        aes_err = ('Found more than one aes argument. '
-                   'Expecting zero or one')
-        data_err = 'More than one dataframe argument'
-
-        # check args #
-        for arg in args:
-            if isinstance(arg, aes) and mapping:
-                raise GgplotError(aes_err)
-            if isinstance(arg, pd.DataFrame) and data:
-                raise GgplotError(data_err)
-
-            if isinstance(arg, aes):
-                mapping = arg
-            elif isinstance(arg, pd.DataFrame):
-                data = arg
-            else:
-                msg = "Unknown argument of type '{0}'."
-                raise GgplotError(msg.format(type(arg)))
-
-        # check kwargs #
-        # kwargs mapping has precedence over that in args
-        if 'mapping' not in kwargs:
-            kwargs['mapping'] = mapping
-
-        if data is not None and 'data' in kwargs:
-            raise GgplotError(data_err)
-        elif 'data' not in kwargs:
-            kwargs['data'] = data
-
-        duplicates = set(kwargs['mapping']) & set(kwargs)
-        if duplicates:
-            msg = 'Aesthetics {} specified two times.'
-            raise GgplotError(msg.format(duplicates))
-        return kwargs
-
     def verify_arguments(self, kwargs):
-        unknown = (six.viewkeys(kwargs) -
-                   self.aesthetics() -                  # geom aesthetics
-                   six.viewkeys(self.DEFAULT_PARAMS) -  # geom parameters
-                   {'data', 'mapping'} -                # layer parameters
-                   {'show_legend', 'inherit_aes'} -     # layer parameters
-                   self._stat.aesthetics() -            # stat aesthetics
-                   six.viewkeys(
-                       self._stat.DEFAULT_PARAMS))      # stat parameters
+        keys = six.viewkeys
+        unknown = (keys(kwargs) -
+                   self.aesthetics() -                # geom aesthetics
+                   keys(self.DEFAULT_PARAMS) -        # geom parameters
+                   self._stat.aesthetics() -          # stat aesthetics
+                   keys(self._stat.DEFAULT_PARAMS) -  # stat parameters
+                   {'data', 'mapping',                # layer parameters
+                    'show_legend', 'inherit_aes'})    # layer parameters
         if unknown:
-            msg = 'Unknown parameters {}'
+            msg = ("Parameters {}, are not understood by "
+                   "either the geom, stat or layer.")
             raise GgplotError(msg.format(unknown))

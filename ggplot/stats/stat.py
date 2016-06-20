@@ -6,9 +6,10 @@ import six
 import pandas as pd
 from six import add_metaclass
 
-from ..utils import uniquecols, check_required_aesthetics
-from ..utils import groupby_apply, copy_keys, suppress
-from ..utils import Registry
+from ..utils import data_mapping_as_kwargs
+from ..utils import groupby_apply, copy_keys, suppress, uniquecols
+from ..utils import is_string, Registry, check_required_aesthetics
+from ..utils.exceptions import GgplotError
 
 
 @add_metaclass(Registry)
@@ -34,14 +35,55 @@ class stat(object):
     CREATES = set()
 
     def __init__(self, *args, **kwargs):
+        kwargs = data_mapping_as_kwargs(args, kwargs)
+        self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
-
         self.aes_params = {ae: kwargs[ae]
                            for ae in (self.aesthetics() &
                                       six.viewkeys(kwargs))}
 
-        # Will be used to create the geom
-        self._cache = {'args': args, 'kwargs': kwargs}
+    @staticmethod
+    def from_geom(geom):
+        """
+        Return an instantiated stat object
+
+        Parameters
+        ----------
+        geom : geom
+            `geom`
+
+        Returns
+        -------
+        out : stat
+            A stat object
+
+        Raises :class:`GgplotError` if unable to create a `stat`.
+        """
+        name = geom.params['stat']
+        kwargs = geom._kwargs
+        # More stable when reloading modules than
+        # using issubclass
+        if (not isinstance(name, type) and
+                hasattr(name, 'compute_layer')):
+            return name
+
+        if isinstance(name, stat):
+            klass = name
+        elif is_string(name):
+            if not name.startswith('stat_'):
+                name = 'stat_{}'.format(name)
+            klass = Registry[name]
+        else:
+            raise GgplotError(
+                'Unknown stat of type {}'.format(type(name)))
+
+        valid_kwargs = (
+            (klass.aesthetics() |
+             six.viewkeys(klass.DEFAULT_PARAMS)) &
+            six.viewkeys(kwargs))
+
+        params = {k: kwargs[k] for k in valid_kwargs}
+        return klass(geom=geom, **params)
 
     def __deepcopy__(self, memo):
         """
@@ -52,7 +94,7 @@ class stat(object):
         memo[id(self)] = result
 
         for key, item in self.__dict__.items():
-            if key == '_cache':
+            if key == '_kwargs':
                 result.__dict__[key] = self.__dict__[key]
             else:
                 result.__dict__[key] = deepcopy(self.__dict__[key], memo)
@@ -175,14 +217,6 @@ class stat(object):
             msg.format(cls.__name__))
 
     def __radd__(self, gg):
-        geom_klass = self.params['geom']
-        if isinstance(geom_klass, six.string_types):
-            if not geom_klass.startswith('geom_'):
-                geom_klass = 'geom_{}'.format(geom_klass)
-
-            geom_klass = Registry[geom_klass]
-
-        _geom = geom_klass(*self._cache['args'],
-                           stat=self,
-                           **self._cache['kwargs'])
+        from ..geoms.geom import geom
+        _geom = geom.from_stat(self)
         return gg + _geom

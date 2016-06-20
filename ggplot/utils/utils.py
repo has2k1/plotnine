@@ -876,6 +876,61 @@ def copy_missing_columns(df, ref_df):
         df[col] = ref_df.ix[idx, col].values
 
 
+def data_mapping_as_kwargs(args, kwargs):
+    """
+    Return kwargs with the mapping and data values
+
+    Parameters
+    ----------
+    args : tuple
+        Arguments to :class:`geom` or :class:`stat`.
+    kwargs : dict
+        Keyword arguments to :class:`geom` or :class:`stat`.
+
+    Returns
+    -------
+    out : dict
+        kwargs that includes 'data' and 'mapping' keys.
+    """
+    # No need to be strict about the aesthetic superclass
+    aes = dict
+    mapping, data = aes(), None
+    aes_err = ("Found more than one aes argument. "
+               "Expecting zero or one")
+    data_err = "More than one dataframe argument."
+
+    # check args #
+    for arg in args:
+        if isinstance(arg, aes) and mapping:
+            raise GgplotError(aes_err)
+        if isinstance(arg, pd.DataFrame) and data:
+            raise GgplotError(data_err)
+
+        if isinstance(arg, aes):
+            mapping = arg
+        elif isinstance(arg, pd.DataFrame):
+            data = arg
+        else:
+            msg = "Unknown argument of type '{0}'."
+            raise GgplotError(msg.format(type(arg)))
+
+    # check kwargs #
+    # kwargs mapping has precedence over that in args
+    if 'mapping' not in kwargs:
+        kwargs['mapping'] = mapping
+
+    if data is not None and 'data' in kwargs:
+        raise GgplotError(data_err)
+    elif 'data' not in kwargs:
+        kwargs['data'] = data
+
+    duplicates = set(kwargs['mapping']) & set(kwargs)
+    if duplicates:
+        msg = "Aesthetics {} specified two times."
+        raise GgplotError(msg.format(duplicates))
+    return kwargs
+
+
 def interleave(*arrays):
     """
     Interleave arrays
