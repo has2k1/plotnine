@@ -7,25 +7,21 @@ import re
 import six
 
 from ..utils.exceptions import gg_warn, GgplotError
+from .facet import facet
 from .layouts import layout_wrap
 from .locate import locate_wrap
 
 
-class facet_wrap(object):
+class facet_wrap(facet):
 
     def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
                  shrink=True, labeller='label_value',
                  as_table=True, drop=True):
-        from .labelling import as_labeller
-
+        facet.__init__(
+            self, scales=scales, shrink=shrink, labeller=labeller,
+            as_table=as_table, drop=drop)
         self.vars = tuple(parse_wrap_facets(facets))
         self.nrow, self.ncol = check_dimensions(nrow, ncol)
-        self.shrink = shrink
-        self.labeller = as_labeller(labeller)
-        self.as_table = as_table
-        self.drop = drop
-        self.free = {'x': scales in ('free_x', 'free'),
-                     'y': scales in ('free_y', 'free')}
 
     def __radd__(self, gg):
         gg = deepcopy(gg)

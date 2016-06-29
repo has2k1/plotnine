@@ -6,25 +6,21 @@ import re
 import six
 
 from ..utils.exceptions import GgplotError
+from .facet import facet
 from .layouts import layout_grid
 from .locate import locate_grid
 
 
-class facet_grid(object):
+class facet_grid(facet):
 
     def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',
                  as_table=True, drop=True):
-        from .labelling import as_labeller
-
+        facet.__init__(
+            self, scales=scales, shrink=shrink, labeller=labeller,
+            as_table=as_table, drop=drop)
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
-        self.shrink = shrink
-        self.labeller = as_labeller(labeller)
-        self.as_table = as_table
-        self.drop = drop
-        self.free = {'x': scales in ('free_x', 'free'),
-                     'y': scales in ('free_y', 'free')}
         self.space_free = {'x': space in ('free_x', 'free'),
                            'y': space in ('free_y', 'free')}
 

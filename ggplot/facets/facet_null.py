@@ -1,14 +1,17 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 
 import pandas as pd
 
+from .facet import facet
 
-class facet_null(object):
+
+class facet_null(facet):
 
     def __init__(self, shrink=True):
-        self.shrink = shrink
+        facet.__init__(self, shrink=shrink)
+        self.nrow = 1
+        self.ncol = 1
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
@@ -19,8 +22,6 @@ class facet_null(object):
         layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
                                'SCALE_X': 1, 'SCALE_Y': 1},
                               index=[0])
-        self.nrow = 1
-        self.ncol = 1
         return layout
 
     def map_layout(self, data, layout):
