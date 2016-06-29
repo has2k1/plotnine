@@ -1,7 +1,7 @@
 from copy import copy, deepcopy
 
 from ..utils.exceptions import GgplotError
-from ..utils import ggplot_options
+from ..utils import gg_options
 from .themeable import themeable, Themeables
 
 
@@ -248,7 +248,7 @@ def theme_get():
     the default.
     """
     from .theme_gray import theme_gray
-    return ggplot_options['current_theme'] or theme_gray()
+    return gg_options['current_theme'] or theme_gray()
 
 
 def theme_set(new):
@@ -268,8 +268,8 @@ def theme_set(new):
     if not issubclass(new.__class__, theme):
         raise GgplotError("Expecting object to be a theme")
 
-    out = ggplot_options['current_theme']
-    ggplot_options['current_theme'] = new
+    out = gg_options['current_theme']
+    gg_options['current_theme'] = new
     return out
 
 

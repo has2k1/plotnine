@@ -12,7 +12,7 @@ import six
 from .exceptions import gg_warn, GgplotError
 
 
-class _ggplot_options(dict):
+class _gg_options(dict):
 
     def __setitem__(self, key, val):
         if key not in self:
@@ -23,7 +23,7 @@ class _ggplot_options(dict):
         return self
 
 
-ggplot_options = _ggplot_options(
+gg_options = _gg_options(
     # Development flag, e.g. set to True to prevent
     # the queuing up of figures when errors happen.
     close_all_figures=False,

@@ -15,7 +15,7 @@ from .panel import Panel
 from .layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme import theme_get
-from .utils.ggutils import gg_context, ggplot_options
+from .utils.ggutils import gg_context, gg_options
 from .utils.exceptions import GgplotError
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -73,13 +73,12 @@ class ggplot(object):
         self.panel = None
 
     def __repr__(self):
-        """Print/show the plot"""
-        # We're going to default to making the plot appear
-        # when __repr__ is called.
+        """
+        Print/show the plot
+        """
         self.draw()
         plt.show()
-        # TODO: We can probably get more sugary with this
-        return "<ggplot: (%d)>" % self.__hash__()
+        return '<ggplot: (%d)>' % self.__hash__()
 
     def __deepcopy__(self, memo):
         """
@@ -98,50 +97,6 @@ class ggplot(object):
                 result.__dict__[key] = deepcopy(self.__dict__[key], memo)
 
         return result
-
-    def _make_axes(self):
-        """
-        Create MPL figure and axes
-
-        Note
-        ----
-        This method creates a grid of axes and
-        unsed ones are turned off.
-        A dict `figure._themeable` is attached to
-        the figure to get a handle on objects that
-        may be themed
-        """
-        if ggplot_options['close_all_figures']:
-            plt.close("all")
-
-        figure, axs = plt.subplots(self.facet.nrow,
-                                   self.facet.ncol,
-                                   sharex=False,
-                                   sharey=False)
-
-        # TODO: spaces should depend on the horizontal
-        # and vertical lengths of the axes since the
-        # spacing values are in transAxes dimensions
-        if isinstance(self.facet, facet_wrap):
-            hspace = len(self.facet.vars) * .20
-            plt.subplots_adjust(wspace=.05, hspace=hspace)
-        else:
-            plt.subplots_adjust(wspace=.05, hspace=.05)
-
-        figure._themeable = {'legend_title': [],
-                             'legend_text': []}
-        try:
-            axs = axs.flatten()
-        except AttributeError:
-            axs = [axs]
-
-        for ax in axs[len(self.panel.layout):]:
-            ax.axis('off')
-        axs = axs[:len(self.panel.layout)]
-
-        self.theme.setup_figure(figure)
-        self.axs = self.panel.axs = axs
-        self.figure = self.theme.figure = figure
 
     def draw(self):
         """
@@ -178,7 +133,16 @@ class ggplot(object):
                 - axs
                 - figure
         """
-        self._make_axes()
+        # Good for development
+        if gg_options['close_all_figures']:
+            plt.close('all')
+
+        # Create figure and axes
+        figure, axs = self.facet.get_figure_and_axs(
+            len(self.panel.layout))
+        self.theme.setup_figure(figure)
+        self.axs = self.panel.axs = axs
+        self.figure = self.theme.figure = figure
 
         # Draw the geoms
         self.layers.draw(self.panel, self.coordinates)

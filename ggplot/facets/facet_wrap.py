@@ -74,6 +74,11 @@ class facet_wrap(facet):
         if layout_info['AXIS_Y']:
             ax.yaxis.set_ticks_position('left')
 
+    def adjust_facet_space(self):
+        import matplotlib.pyplot as plt
+        hspace = len(self.facet.vars) * .20
+        plt.subplots_adjust(wspace=.05, hspace=hspace)
+
 
 def check_dimensions(nrow, ncol):
     if nrow is not None:
