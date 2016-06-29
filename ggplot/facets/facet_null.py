@@ -37,3 +37,20 @@ class facet_null(facet):
         """
         data['PANEL'] = 1
         return data
+
+    def set_breaks_and_labels(self, ranges, layout_info, ax):
+        """
+        Add breaks and labels to the axes
+
+        Parameters
+        ----------
+        ranges : dict-like
+            range information for the axes
+        layout_info : dict-like
+            facet layout information
+        ax : axes
+            Axes to decorate.
+        """
+        facet.set_breaks_and_labels(self, ranges, layout_info, ax)
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')

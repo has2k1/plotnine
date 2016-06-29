@@ -55,6 +55,25 @@ class facet_grid(facet):
         return locate_grid(data, layout, self.rows, self.cols,
                            margins=self.margins)
 
+    def set_breaks_and_labels(self, ranges, layout_info, ax):
+        facet.set_breaks_and_labels(
+            self, ranges, layout_info, ax)
+
+        bottomrow = layout_info['ROW'] == self.nrow
+        leftcol = layout_info['COL'] == 1
+
+        if bottomrow:
+            ax.xaxis.set_ticks_position('bottom')
+        else:
+            ax.xaxis.set_ticks_position('none')
+            ax.xaxis.set_ticklabels([])
+
+        if leftcol:
+            ax.yaxis.set_ticks_position('left')
+        else:
+            ax.yaxis.set_ticks_position('none')
+            ax.yaxis.set_ticklabels([])
+
 
 def parse_grid_facets(facets):
     """

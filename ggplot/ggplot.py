@@ -1,7 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
-from collections import defaultdict
 from copy import deepcopy
 
 import pandas as pd
@@ -188,12 +187,13 @@ class ggplot(object):
         #   - xaxis & yaxis breaks, labels, limits, ...
         #   - facet labels
         #
-        # ploc is the panel location (left to right, top to bottom)
-        for ploc, finfo in self.panel.layout.iterrows():
-            panel_scales = self.panel.ranges[ploc]
-            ax = self.panel.axs[ploc]
-            set_breaks_and_labels(self, panel_scales, finfo, ax)
-            draw_facet_label(self, finfo, ax)
+        # pid is the panel location (left to right, top to bottom)
+        for pid, layout_info in self.panel.layout.iterrows():
+            panel_scales = self.panel.ranges[pid]
+            ax = self.panel.axs[pid]
+            self.facet.set_breaks_and_labels(panel_scales,
+                                             layout_info, ax)
+            draw_facet_label(self, layout_info, ax)
 
     def build(self):
         """
@@ -320,71 +320,6 @@ class ggplot(object):
         self.figure._themeable['legend_background'] = anchored_box
         ax = self.axs[0]
         ax.add_artist(anchored_box)
-
-
-def set_breaks_and_labels(plot, ranges, finfo, ax):
-    """
-    Set the limits, breaks and labels for the axis
-
-    Parameters
-    ----------
-    plot : ggplot
-        ggplot object
-    ranges : dict-like
-        range information for the axes
-    finfo : dict-like
-        facet layout information
-    ax : axes
-        current axes
-    """
-    # It starts out with axes and labels on
-    # all sides, we keep what we want and
-    # get rid of what we don't want depending
-    # on the plot
-
-    # limits
-    ax.set_xlim(ranges['x_range'])
-    ax.set_ylim(ranges['y_range'])
-
-    # breaks
-    ax.set_xticks(ranges['x_major'])
-    ax.set_yticks(ranges['y_major'])
-
-    # minor breaks
-    ax.set_xticks(ranges['x_minor'], minor=True)
-    ax.set_yticks(ranges['y_minor'], minor=True)
-
-    # labels
-    ax.set_xticklabels(ranges['x_labels'])
-    ax.set_yticklabels(ranges['y_labels'])
-
-    bottomrow = finfo['ROW'] == plot.facet.nrow
-    leftcol = finfo['COL'] == 1
-
-    # Remove unwanted
-    if isinstance(plot.facet, facet_wrap):
-        if not finfo['AXIS_X']:
-            ax.xaxis.set_ticks_position('none')
-            ax.xaxis.set_ticklabels([])
-        if not finfo['AXIS_Y']:
-            ax.yaxis.set_ticks_position('none')
-            ax.yaxis.set_ticklabels([])
-        if finfo['AXIS_X']:
-            ax.xaxis.set_ticks_position('bottom')
-        if finfo['AXIS_Y']:
-            ax.yaxis.set_ticks_position('left')
-    else:
-        if bottomrow:
-            ax.xaxis.set_ticks_position('bottom')
-        else:
-            ax.xaxis.set_ticks_position('none')
-            ax.xaxis.set_ticklabels([])
-
-        if leftcol:
-            ax.yaxis.set_ticks_position('left')
-        else:
-            ax.yaxis.set_ticks_position('none')
-            ax.yaxis.set_ticklabels([])
 
 
 def add_labels_and_title(plot):
