@@ -54,3 +54,6 @@ class facet_null(facet):
         facet.set_breaks_and_labels(self, ranges, layout_info, ax)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
+
+    def draw_label(self, layout_info, theme, ax):
+        pass

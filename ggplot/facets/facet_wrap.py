@@ -74,10 +74,30 @@ class facet_wrap(facet):
         if layout_info['AXIS_Y']:
             ax.yaxis.set_ticks_position('left')
 
-    def adjust_facet_space(self):
+    def adjust_space(self):
         import matplotlib.pyplot as plt
-        hspace = len(self.facet.vars) * .20
+        hspace = len(self.vars) * .20
         plt.subplots_adjust(wspace=.05, hspace=hspace)
+
+    def draw_label(self, layout_info, theme, ax):
+        """
+        Draw facet label onto the axes.
+
+        This function will only draw labels if they are needed.
+
+        Parameters
+        ----------
+        layout_info : dict-like
+            facet information
+        theme : theme
+            Theme
+        ax : axes
+            Axes to label
+        """
+        label_info = layout_info[list(self.vars)]
+        label_info._meta = {'dimension': 'cols'}
+        label_info = self.labeller(label_info)
+        self.draw_strip_text(label_info, 'top', theme, ax)
 
 
 def check_dimensions(nrow, ncol):

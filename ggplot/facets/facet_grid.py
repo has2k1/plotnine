@@ -74,6 +74,36 @@ class facet_grid(facet):
             ax.yaxis.set_ticks_position('none')
             ax.yaxis.set_ticklabels([])
 
+    def draw_label(self, layout_info, theme, ax):
+        """
+        Draw facet label onto the axes.
+
+        This function will only draw labels if they are needed.
+
+        Parameters
+        ----------
+        layout_info : dict-like
+            Layout information. Row from the `layout` table.
+        theme : theme
+            Theme
+        ax : axes
+            Axes to label
+        """
+        toprow = layout_info['ROW'] == 1
+        rightcol = layout_info['COL'] == self.ncol
+
+        if toprow and len(self.cols):
+            label_info = layout_info[list(self.cols)]
+            label_info._meta = {'dimension': 'cols'}
+            label_info = self.labeller(label_info)
+            self.draw_strip_text(label_info, 'top', theme, ax)
+
+        if rightcol and len(self.rows):
+            label_info = layout_info[list(self.rows)]
+            label_info._meta = {'dimension': 'rows'}
+            label_info = self.labeller(label_info)
+            self.draw_strip_text(label_info, 'right', theme, ax)
+
 
 def parse_grid_facets(facets):
     """
