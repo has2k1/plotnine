@@ -92,12 +92,14 @@ class stat(object):
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result
+        old = self.__dict__
+        new = result.__dict__
 
-        for key, item in self.__dict__.items():
+        for key, item in old.items():
             if key == '_kwargs':
-                result.__dict__[key] = self.__dict__[key]
+                new[key] = old[key]
             else:
-                result.__dict__[key] = deepcopy(self.__dict__[key], memo)
+                new[key] = deepcopy(old[key], memo)
 
         return result
 
