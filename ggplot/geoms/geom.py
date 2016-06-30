@@ -129,7 +129,7 @@ class geom(object):
 
         return data
 
-    def draw_layer(self, data, panel, coord, zorder):
+    def draw_layer(self, data, panel, coord, **params):
         """
         Draw layer across all panels
 
@@ -142,12 +142,11 @@ class geom(object):
             built
         coord : coord
             Type of coordinate axes
-        zorder : int
-            Stacking order of the layer in the plot
+        params : dict
+            Combined *geom* and *stat* parameters. Also
+            includes the stacking order of the layer in
+            the plot (*zorder*)
         """
-        params = deepcopy(self.params)
-        params.update(self._stat.params)
-        params['zorder'] = zorder
         for pid, pdata in data.groupby('PANEL'):
             if len(pdata) == 0:
                 continue

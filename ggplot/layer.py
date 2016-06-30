@@ -360,9 +360,12 @@ class layer(object):
         coord : coord
             Type of coordinate axes
         """
+        params = deepcopy(self.geom.params)
+        params.update(self.stat.params)
+        params['zorder'] = self.zorder
         # At this point each layer must have the data
         # that is created by the plot build process
-        self.geom.draw_layer(self.data, panel, coord, self.zorder)
+        self.geom.draw_layer(self.data, panel, coord, **params)
 
     def use_defaults(self, data=None):
         """
