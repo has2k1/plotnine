@@ -115,7 +115,7 @@ class ggplot(object):
             # Drawing
             self.draw_plot()
             self.draw_legend()
-            add_labels_and_title(self)
+            self.draw_labels_and_title()
             # Theming
             self.theme.apply_axs(self.axs)
             self.theme.apply_figure(self.figure)
@@ -285,46 +285,45 @@ class ggplot(object):
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
+    def draw_labels_and_title(self):
+        fig = self.figure
+        # Get the axis labels (default or specified by user)
+        # and let the coordinate modify them e.g. flip
+        labels = self.coordinates.labels(
+            {'x': self.labels.get('x', ''),
+             'y': self.labels.get('y', '')})
+        title = self.labels.get('title', '')
+        center = 0.5
 
-def add_labels_and_title(plot):
-    fig = plot.figure
-    # Get the axis labels (default or specified by user)
-    # and let the coordinate modify them e.g. flip
-    labels = plot.coordinates.labels(
-        {'x': plot.labels.get('x', ''),
-         'y': plot.labels.get('y', '')})
-    title = plot.labels.get('title', '')
-    center = 0.5
+        # This is finicky. Should be changed when MPL
+        # finally has a constraint based layout manager.
 
-    # This is finicky. Should be changed when MPL
-    # finally has a constraint based layout manager.
+        # Pick suitable values in inches and convert
+        # theme to transFigure dimension. This gives
+        # large spacing margins for oblong plots.
+        left = fig.subplotpars.left
+        top = fig.subplotpars.top
+        bottom = fig.subplotpars.bottom
+        width = fig.get_figwidth()
+        height = fig.get_figheight()
 
-    # Pick suitable values in inches and convert
-    # theme to transFigure dimension. This gives
-    # large spacing margins for oblong plots.
-    left = fig.subplotpars.left
-    top = fig.subplotpars.top
-    bottom = fig.subplotpars.bottom
-    width = fig.get_figwidth()
-    height = fig.get_figheight()
+        xtitle_y = bottom - 0.3/height
+        ytitle_x = left - 0.3/width
+        title_y = top + 0.1/height
 
-    xtitle_y = bottom - 0.3/height
-    ytitle_x = left - 0.3/width
-    title_y = top + 0.1/height
+        if isinstance(self.facet, facet_wrap):
+            title_y += 0.25 * len(self.facet.vars)/height
+        elif isinstance(self.facet, facet_grid):
+            title_y += 0.25 * len(self.facet.cols)/height
 
-    if isinstance(plot.facet, facet_wrap):
-        title_y += 0.25 * len(plot.facet.vars)/height
-    elif isinstance(plot.facet, facet_grid):
-        title_y += 0.25 * len(plot.facet.cols)/height
+        d = {
+            'axis_title_x': fig.text(
+                center, xtitle_y, labels['x'], ha='center', va='top'),
+            'axis_title_y': fig.text(
+                ytitle_x, center, labels['y'], ha='right',
+                va='center', rotation='vertical'),
+            'plot_title': fig.text(
+                center, title_y, title, ha='center', va='bottom')
+        }
 
-    d = {
-        'axis_title_x': fig.text(
-            center, xtitle_y, labels['x'], ha='center', va='top'),
-        'axis_title_y': fig.text(
-            ytitle_x, center, labels['y'], ha='right',
-            va='center', rotation='vertical'),
-        'plot_title': fig.text(
-            center, title_y, title, ha='center', va='bottom')
-    }
-
-    fig._themeable.update(d)
+        fig._themeable.update(d)
