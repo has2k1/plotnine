@@ -6,7 +6,7 @@ from nose.tools import (assert_true, assert_raises, assert_is,
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_point, geom_histogram
+from .. import ggplot, aes, geom_point, geom_histogram, geom_line
 from .. import xlab, ylab, labs, ggtitle
 from ..data import diamonds
 from .tools import cleanup
@@ -61,3 +61,17 @@ def test_deepcopy():
     assert_equal(len(p.mapping), len(p2.mapping))
     assert_is_not(p.mapping, p2.mapping)
     assert_is(p.environment, p2.environment)
+
+
+def test_aes():
+    result = aes('weight', 'hp', color='qsec')
+    expected = {'x': 'weight', 'y': 'hp', 'color': 'qsec'}
+    assert_equal(result, expected)
+
+
+@cleanup
+def test_nonzero_indexed_data():
+    df = pd.DataFrame({98: {'blip': 0, 'blop': 1},
+                       99: {'blip': 1, 'blop': 3}}).T
+    p = ggplot(aes(x='blip', y='blop'), data=df) + geom_line()
+    p.draw()

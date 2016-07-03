@@ -173,20 +173,3 @@ def test_ggsave_close_plot():
     ggsave(fn, gg)
     assert_exist_and_clean(fn, "exist")
     assert_true(plt.get_fignums() == [], "ggsave did not close the plot")
-
-
-@ignore_warning(message='^Saving')
-def test_aes_mixed_args():
-    result = aes("weight", "hp", color="qsec")
-    expected = {"x": "weight", "y": "hp", "color": "qsec"}
-    assert_equal(result, expected)
-
-
-@ignore_warning(message='^Saving')
-def test_nonzero_indexed_data():
-    df = pd.DataFrame({98: {"blip": 0, "blop": 1},
-                       99: {"blip": 1, "blop": 3}}).T
-    gg = ggplot(aes(x='blip', y='blop'), data=df) + geom_line()
-    fn = "filename.png"
-    ggsave(fn, gg)  # Will throw an exception if ggsave uses `[0]` to index
-    assert_exist_and_clean(fn, "exist")
