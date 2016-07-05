@@ -100,6 +100,21 @@ class theme(object):
             else:
                 self.themeables[name] = new(name, element)
 
+    def __eq__(self, other):
+        """
+        Test if themes are equal
+
+        Mostly for testing purposes
+        """
+        # criteria for equality are
+        # - Equal themeables
+        # - Equal rcParams
+        # - Equal params (not yet fully implemented)
+        c1 = self.themeables == other.themeables
+        c2 = self.rcParams == other.rcParams
+        c3 = self.params == other.params
+        return c1 and c2 and c3
+
     def apply_axs(self, axs):
         """
         Apply this theme to all the axes
