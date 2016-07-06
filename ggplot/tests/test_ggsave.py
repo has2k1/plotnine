@@ -1,17 +1,13 @@
 from __future__ import absolute_import, division, print_function
-
 import os
 import sys
 
-from nose.tools import assert_equal, assert_true, assert_raises
 import matplotlib.pyplot as plt
-import pandas as pd
+import pytest
 
-from .. import ggplot, aes, geom_text, geom_line, ggsave
+from .. import ggplot, aes, geom_text, ggsave
 from ..data import mtcars
-from ..utils.exceptions import GgplotWarning
-
-from .tools import ignore_warning, assert_warns, cleanup
+from .conftest import cleanup
 
 
 # TODO: test some real file content?
@@ -19,7 +15,7 @@ from .tools import ignore_warning, assert_warns, cleanup
 def assert_file_exist(filename, msg=None):
     if not msg:
         msg = "File {} does not exist".format(filename)
-    assert_true(os.path.exists(filename), msg)
+    assert os.path.exists(filename), msg
 
 
 def assert_exist_and_clean(filename, msg=None):
@@ -36,11 +32,10 @@ def assert_same_dims(orig, new, msg=None):
     ow, oh = orig
     nw, nh = new
 
-    assert_true(ow == nw, msg.format("x", ow, nw))
-    assert_true(oh == nh, msg.format("y", oh, nh))
+    assert ow == nw, msg.format("x", ow, nw)
+    assert oh == nh, msg.format("y", oh, nh)
 
 
-@ignore_warning(message='^Saving')
 @cleanup
 def test_ggsave_plot():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
@@ -49,7 +44,6 @@ def test_ggsave_plot():
     assert_exist_and_clean('ggsave-'+str(abs(gg.__hash__()))+".pdf")
 
 
-@ignore_warning(message='^Saving')
 @cleanup
 def test_ggsave_arguments():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
@@ -108,7 +102,6 @@ def test_ggsave_arguments():
     assert_exist_and_clean(fn, "dpi=100")
 
 
-@ignore_warning(message='^Saving')
 @cleanup
 def test_ggsave_big():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
@@ -119,7 +112,6 @@ def test_ggsave_big():
     assert_exist_and_clean(fn, "both height and width big")
 
 
-@ignore_warning(message='^Saving')
 @cleanup
 def test_ggsave_exceptions():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
@@ -129,33 +121,33 @@ def test_ggsave_exceptions():
     figure = gg.draw()
     orig = figure.get_size_inches()
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         ggsave(gg, format="unknown")
     assert_same_dims(orig, plt.gcf().get_size_inches(),
                      "size is different after unknown ending")
     ggsave(fn, gg)
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         ggsave(fn, gg, scale="x")
     assert_same_dims(orig, plt.gcf().get_size_inches(),
                      "size is different after unknown scale")
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         ggsave(fn, gg, width=300)
     assert_same_dims(orig, plt.gcf().get_size_inches(),
                      "size is different after too big width")
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         ggsave(fn, gg, height=300)
     assert_same_dims(orig, plt.gcf().get_size_inches(),
                      "size is different after too big height")
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         ggsave(fn, gg, width=1, heigth=1, units="xxx")
     assert_same_dims(orig, plt.gcf().get_size_inches(),
                      "size is different after unknown units")
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         ggsave(fn, gg, dpi="xxx")
 
     # This test has gotten unstable in PY3. Sometimes it passes
@@ -165,11 +157,10 @@ def test_ggsave_exceptions():
                          "size is different after unknown dpi")
 
 
-@ignore_warning(message='^Saving')
 @cleanup
 def test_ggsave_close_plot():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     fn = "filename.png"
     ggsave(fn, gg)
     assert_exist_and_clean(fn, "exist")
-    assert_true(plt.get_fignums() == [], "ggsave did not close the plot")
+    assert plt.get_fignums() == [], "ggsave did not close the plot"

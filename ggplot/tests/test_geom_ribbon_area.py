@@ -5,7 +5,7 @@ import pandas as pd
 
 from .. import (ggplot, aes, geom_area, geom_ribbon,
                 scale_x_continuous)
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4            # No. of ribbions in a vertical stack
 m = 100          # Points
@@ -38,7 +38,7 @@ def test_ribbon_aesthetics():
              labels=['0'] + ['${}\pi$'.format(2*i) for i in range(1, 7)])
          )
 
-    assert_ggplot_equal(p, 'ribbon_aesthetics')
+    assert p == 'ribbon_aesthetics'
 
 
 @cleanup
@@ -58,4 +58,4 @@ def test_area_aesthetics():
              labels=['0'] + ['${}\pi$'.format(2*i) for i in range(1, 7)])
          )
 
-    assert_ggplot_equal(p, 'area_aesthetics')
+    assert p == 'area_aesthetics'

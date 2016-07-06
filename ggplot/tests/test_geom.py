@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from nose.tools import assert_raises
 import pandas as pd
+import pytest
 
 from .. import ggplot, aes
 from ..geoms.geom import geom
@@ -37,7 +37,7 @@ def test_geom_basics():
     assert g.mapping['color'] == 'col2'
 
     # Multiple mappings
-    with assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         g = geom_abc(aes(color='col1'), aes(color='co1'))
 
     # setting, not mapping
@@ -51,5 +51,5 @@ def test_geom_with_invalid_argument():
         DEFAULT_PARAMS = {'stat': 'identity',
                           'position': 'identity'}
 
-    with assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         geom_abc(do_the_impossible=True)

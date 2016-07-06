@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 
 from .. import ggplot, aes, geom_polygon
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 df = pd.DataFrame({
         'x': ([1, 2, 3, 2] +
@@ -29,4 +29,4 @@ def test_aesthetics():
          geom_polygon(aes(y='y+15', size='z'),
                       color='yellow', show_legend=False))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'

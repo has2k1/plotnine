@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from .. import ggplot, aes, geom_violin, coord_flip, theme
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4
 m = 10
@@ -26,8 +26,8 @@ def test_aesthetics():
          geom_violin(df[2*m:], aes(y='y+25', color='x'), size=2) +
          geom_violin(df[2*m:], aes(y='y+50', linetype='x'), size=2))
 
-    assert_ggplot_equal(p, 'aesthetics')
-    assert_ggplot_equal(p + coord_flip(), 'aesthetics+coord_flip')
+    assert p == 'aesthetics'
+    assert p + coord_flip() == 'aesthetics+coord_flip'
 
 
 @cleanup
@@ -45,7 +45,7 @@ def test_scale():
                      color='yellow', fill='yellow', size=2) +
          geom_violin(df[:36], aes(y='y+25'), scale='count',
                      color='green', fill='green', size=2))
-    assert_ggplot_equal(p, 'scale')
+    assert p == 'scale'
 
 
 @cleanup
@@ -58,11 +58,11 @@ def test_quantiles_width_dodge():
          geom_violin(aes(y='y+50', fill='factor(y%2)'),
                      size=2) +
          theme(facet_spacing={'right': 0.85}))
-    assert_ggplot_equal(p, 'quantiles_width_dodge')
+    assert p == 'quantiles_width_dodge'
 
 
 @cleanup
 def test_no_trim():
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'), trim=False, size=2))
-    assert_ggplot_equal(p, 'no_trim')
+    assert p == 'no_trim'

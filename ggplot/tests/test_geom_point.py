@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 
 from .. import ggplot, aes, geom_point
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 
 @cleanup
@@ -36,4 +36,4 @@ def test_aesthetics():
          geom_point(aes(x='i', shape='factor(a)'),
                     fill='brown', stroke=2, size=10, show_legend=False))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'

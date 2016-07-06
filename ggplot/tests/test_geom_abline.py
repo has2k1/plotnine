@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 
 from .. import ggplot, aes, geom_abline, geom_point
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 df = pd.DataFrame({
         'slope': [1, 1],
@@ -35,7 +35,7 @@ def test_aesthetics():
          geom_abline(
              aes(slope='slope', intercept='intercept+.4', size='z')))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'
 
 
 @cleanup
@@ -46,4 +46,4 @@ def test_aes_inheritance():
          geom_point(size=10, show_legend=False) +
          geom_abline(size=2))
 
-    assert_ggplot_equal(p, 'aes_inheritance')
+    assert p == 'aes_inheritance'

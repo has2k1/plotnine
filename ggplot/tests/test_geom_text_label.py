@@ -5,7 +5,7 @@ import numpy as np
 
 from .. import (ggplot, aes, geom_text, geom_label,
                 scale_size_continuous, scale_y_continuous)
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 5
 labels = ['ggplot', 'aesthetics', 'data', 'geoms',
@@ -34,7 +34,7 @@ def test_text_aesthetics():
          scale_size_continuous(range=(12, 30)) +
          scale_y_continuous(limits=(-0.5, n-0.5)))
 
-    assert_ggplot_equal(p, 'text_aesthetics')
+    assert p == 'text_aesthetics'
 
 
 @cleanup
@@ -53,4 +53,4 @@ def test_label_aesthetics():
          scale_size_continuous(range=(12, 30)) +
          scale_y_continuous(limits=(-0.5, n-0.5)))
 
-    assert_ggplot_equal(p, 'label_aesthetics')
+    assert p == 'label_aesthetics'

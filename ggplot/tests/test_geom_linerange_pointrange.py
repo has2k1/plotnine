@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from .. import ggplot, aes, geom_linerange, geom_pointrange
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4
 df = pd.DataFrame({
@@ -29,7 +29,7 @@ def test_linerange_aesthetics():
                         size=2) +
          geom_linerange(aes(ymin='ymin+4', ymax='ymax+4', size='z'))
          )
-    assert_ggplot_equal(p, 'linerange_aesthetics')
+    assert p == 'linerange_aesthetics'
 
 
 @cleanup
@@ -49,4 +49,4 @@ def test_pointrange_aesthetics():
                              size='z'),
                          show_legend=False)
          )
-    assert_ggplot_equal(p, 'pointrange_aesthetics')
+    assert p == 'pointrange_aesthetics'

@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 
 from .. import ggplot, aes, geom_rect, geom_tile, labs, theme
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4
 
@@ -46,7 +46,7 @@ def test_aesthetics():
          # has labels by default
          labs(x='x', y='y'))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'
 
     # tile
     p = (ggplot(df, aes('x', 'y', width=1, height=1)) +
@@ -59,4 +59,4 @@ def test_aesthetics():
                    color='yellow', size=2) +
          _theme)
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'

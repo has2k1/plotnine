@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from .. import ggplot, aes, geom_rug
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4
 seq = np.arange(1, n+1)
@@ -28,4 +28,4 @@ def test_aesthetics():
          geom_rug(aes('x+8*n', 'y+8*n', size='z'),
                   sides='tblr'))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'

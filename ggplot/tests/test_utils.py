@@ -7,7 +7,6 @@ import warnings
 
 import numpy as np
 import pandas as pd
-import nose.tools as nt
 
 from ..data import mtcars
 from ..utils.utils import _margins, add_margins, ninteraction
@@ -100,7 +99,7 @@ def test_ninteraction():
         rank = pd.DataFrame(case).rank(method='min')
         rank = rank[0].astype(int).tolist()
         rank_df = ninteraction(pd.DataFrame(case))
-        assert(rank == rank_df)
+        assert rank == rank_df
 
     # duplicates are numbered sequentially
     # df                    ids
@@ -110,16 +109,16 @@ def test_ninteraction():
         rank = rank[0].astype(int).repeat(2).tolist()
         rank_df = ninteraction(
             pd.DataFrame(np.array(case).repeat(2)))
-        assert(rank == rank_df)
+        assert rank == rank_df
 
     # grids are correctly ranked
     df = pd.DataFrame(list(itertools.product([1, 2], range(1, 11))))
-    assert(ninteraction(df) == list(range(1, len(df)+1)))
-    assert(ninteraction(df, drop=True) == list(range(1, len(df)+1)))
+    assert ninteraction(df) == list(range(1, len(df)+1))
+    assert ninteraction(df, drop=True) == list(range(1, len(df)+1))
 
     # zero length dataframe
     df = pd.DataFrame()
-    assert(ninteraction(df) == [])
+    assert ninteraction(df) == []
 
 
 def test_join_keys():
@@ -129,8 +128,8 @@ def test_join_keys():
 
     # same array and columns the keys should be the same
     keys = join_keys(df1, df1, ['a', 'b'])
-    nt.assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
-    nt.assert_equal(list(keys['x']), [1, 2, 3, 4, 5, 6])
+    assert list(keys['x']) == [1, 2, 3, 4, 5, 6]
+    assert list(keys['x']) == [1, 2, 3, 4, 5, 6]
 
     # Every other element of df2['b'] is changed
     # so every other key should be different
@@ -139,8 +138,8 @@ def test_join_keys():
                         'c': [1, 2, 3, 4, 5, 6]})
 
     keys = join_keys(df1, df2, ['a', 'b'])
-    nt.assert_equal(list(keys['x']), [1, 2, 4, 5, 7, 8])
-    nt.assert_equal(list(keys['y']), [1, 3, 4, 6, 7, 9])
+    assert list(keys['x']) == [1, 2, 4, 5, 7, 8]
+    assert list(keys['y']) == [1, 3, 4, 6, 7, 9]
 
 
 def test_match():
@@ -149,9 +148,9 @@ def test_match():
     v3 = [0, 1, 2]
     c = [1]
 
-    nt.assert_equal(match(v1, v2), [0, 0, 1, 1, 2, 2])
-    nt.assert_equal(match(v1, v2, incomparables=c), [-1, -1, 1, 1, 2, 2])
-    nt.assert_equal(match(v1, v3), [1, 1, 2, 2, -1, -1])
+    assert match(v1, v2) == [0, 0, 1, 1, 2, 2]
+    assert match(v1, v2, incomparables=c) == [-1, -1, 1, 1, 2, 2]
+    assert match(v1, v3) == [1, 1, 2, 2, -1, -1]
 
 
 def test_uniquecols():
@@ -162,7 +161,7 @@ def test_uniquecols():
     df2 = pd.DataFrame({'z': [8],
                         'other': ['same']})
     result = uniquecols(df)
-    nt.assert_true(result.equals(df2))
+    assert result.equals(df2)
 
 
 def test_defaults():
@@ -171,7 +170,7 @@ def test_defaults():
     d3 = {'a': 1, 'b': 2, 'c': 3, 'd': 4}
 
     defaults(d1, d2)
-    nt.assert_dict_equal(d1, d3)
+    assert d1 == d3
 
 
 def test_remove_missing():
@@ -191,7 +190,7 @@ def test_remove_missing():
 
         res = remove_missing(df, na_rm=True, finite=True)
         res.equals(df3)
-        assert(len(w) == 1)
+        assert len(w) == 1
 
 
 def test_groupby_with_null():

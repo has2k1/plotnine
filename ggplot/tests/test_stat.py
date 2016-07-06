@@ -1,14 +1,13 @@
 from __future__ import absolute_import, division, print_function
 
-from nose.tools import (assert_equal, assert_is, assert_is_not,
-                        assert_raises)
+import pytest
 
 from .. import ggplot, aes
 from ..data import mtcars
 from ..geoms.geom import geom
 from ..stats.stat import stat
 from ..utils.exceptions import GgplotError
-from .tools import cleanup
+from .conftest import cleanup
 
 
 @cleanup
@@ -25,11 +24,11 @@ def test_stat_basics():
     gg = ggplot(aes(x='wt', y='mpg'), mtcars)
 
     # stat_abc has no _calculate method
-    with assert_raises(NotImplementedError):
+    with pytest.raises(NotImplementedError):
         print(gg + stat_abc())
 
     # stat_efg requires 'weight' aesthetic
-    with assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         print(gg + stat_efg())
 
 

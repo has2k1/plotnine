@@ -1,13 +1,12 @@
 from __future__ import absolute_import, division, print_function
 import warnings
 
-from nose.tools import (assert_equal, assert_is, assert_is_not,
-                        assert_raises)
 import pandas as pd
+import pytest
 
 from .. import ggplot, aes, stat_bin
 from ..utils.exceptions import GgplotError
-from .tools import cleanup
+from .conftest import cleanup
 
 
 @cleanup
@@ -26,5 +25,5 @@ def test_stat_bin():
 
     # About the ignoring the y aesthetic
     gg = ggplot(aes(x='x', y='y'), df) + stat_bin()
-    with assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         gg.draw()

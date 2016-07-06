@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 
 from .. import ggplot, aes, geom_segment, arrow
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 
 n = 4
@@ -30,7 +30,7 @@ def test_aesthetics():
          geom_segment(aes(yend='yend+4', alpha='z'), size=2,
                       show_legend=False))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'
 
 
 @cleanup
@@ -44,4 +44,4 @@ def test_arrow():
                       arrow=arrow(ends='both'), size=2)
          )
 
-    assert_ggplot_equal(p, 'arrow')
+    assert p == 'arrow'

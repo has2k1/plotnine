@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from .. import ggplot, aes, geom_boxplot, coord_flip, theme
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4
 m = 10
@@ -27,8 +27,8 @@ def test_aesthetics():
          geom_boxplot(df[2*m:], aes(y='y+55', linetype='x'), size=2)
          )
 
-    assert_ggplot_equal(p, 'aesthetics')
-    assert_ggplot_equal(p + coord_flip(), 'aesthetics+coord_flip')
+    assert p == 'aesthetics'
+    assert p + coord_flip() == 'aesthetics+coord_flip'
 
 
 @cleanup
@@ -48,4 +48,4 @@ def test_params():
          geom_boxplot(df[3*m:4*m], aes(y='y', fill='factor(y%2)')) +
          theme(facet_spacing={'right': 0.85})
          )
-    assert_ggplot_equal(p, 'params')
+    assert p == 'params'

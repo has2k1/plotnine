@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from .. import ggplot, aes, geom_spoke
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 n = 4
 df = pd.DataFrame({
@@ -25,4 +25,4 @@ def test_aesthetics():
          geom_spoke(aes('x+6', color='factor(z)'), size=2) +
          geom_spoke(aes('x+8', size='z')))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'

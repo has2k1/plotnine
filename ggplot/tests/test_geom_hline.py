@@ -1,11 +1,11 @@
 from __future__ import absolute_import, division, print_function
 
 import pandas as pd
-import nose.tools as nt
+import pytest
 
 from .. import ggplot, aes, geom_hline, geom_point
 from ..utils.exceptions import GgplotError
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 df = pd.DataFrame({
         'yintercept': [1, 2],
@@ -30,12 +30,12 @@ def test_aesthetics():
                     size=2) +
          geom_hline(aes(yintercept='yintercept+.4', size='z')))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'
 
 
 @cleanup
 def test_aes_inheritance():
-    with nt.assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         p = (ggplot(df, aes('x', 'y', yintercept='yintercept')) +
              geom_point() +
              geom_hline(size=2))

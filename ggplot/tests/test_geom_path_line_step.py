@@ -4,7 +4,7 @@ import pandas as pd
 
 from .. import (ggplot, aes, geom_path, geom_line,
                 geom_step, arrow)
-from .tools import assert_ggplot_equal, cleanup
+from .conftest import cleanup
 
 
 # steps with diagonals at the ends
@@ -26,7 +26,7 @@ def test_aesthetics():
                    show_legend=False) +
          geom_path(aes(y='y+8', color='x'), size=4))
 
-    assert_ggplot_equal(p, 'aesthetics')
+    assert p == 'aesthetics'
 
 
 @cleanup
@@ -38,7 +38,7 @@ def test_arrow():
          geom_path(aes(y='y+4'), color='blue', size=2,
                    arrow=arrow(length=1)))
 
-    assert_ggplot_equal(p, 'arrow')
+    assert p == 'arrow'
 
 
 @cleanup
@@ -48,7 +48,7 @@ def test_step():
          geom_step(aes(y='y+2'), color='red',
                    direction='vh', size=4))
 
-    assert_ggplot_equal(p, 'step')
+    assert p == 'step'
 
 
 @cleanup
@@ -64,4 +64,4 @@ def test_line():
          geom_line(aes(y='y+2'), color='blue', size=4) +
          geom_step(aes(y='y+4'), color='red', size=4))
 
-    assert_ggplot_equal(p, 'path_line_step')
+    assert p == 'path_line_step'

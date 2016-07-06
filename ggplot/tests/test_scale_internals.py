@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
-from nose.tools import assert_raises
+import pytest
 import six
 
 from ..scales import scale_color
@@ -18,7 +18,6 @@ from ..scales.scale_size import (scale_size_discrete,
                                  scale_size_area,
                                  scale_size_radius)
 from ..utils.exceptions import GgplotError, GgplotWarning
-from .tools import assert_warns
 
 
 # test palettes
@@ -54,7 +53,7 @@ def test_discrete_color_palettes():
     _assert_all_colors(colors, 9)
 
     s = sc.scale_color_brewer(type='seq')
-    with assert_warns(UserWarning):
+    with pytest.warns(UserWarning):
         colors = s.palette(15)
     _assert_all_colors(colors, 9, 6)
 
@@ -68,7 +67,7 @@ def test_discrete_color_palettes():
     _assert_all_colors(colors, 11)
 
     s = sc.scale_color_brewer(type='div')
-    with assert_warns(UserWarning):
+    with pytest.warns(UserWarning):
         colors = s.palette(21)
     _assert_all_colors(colors, 11, 10)
 
@@ -78,12 +77,12 @@ def test_discrete_color_palettes():
     _assert_all_colors(colors, 5)
 
     s = sc.scale_color_brewer(type='qual', palette='Accent')
-    with assert_warns(UserWarning):
+    with pytest.warns(UserWarning):
         colors = s.palette(12)
     _assert_all_colors(colors, 8, 4)
 
     s = sc.scale_color_brewer(type='qual', palette='Set3')
-    with assert_warns(UserWarning):
+    with pytest.warns(UserWarning):
         colors = s.palette(15)
     _assert_all_colors(colors, 12, 3)
 
@@ -125,7 +124,7 @@ def test_continuous_color_palettes():
     s = sc.scale_color_distiller(type='div')
     _assert(s)
 
-    with assert_warns(GgplotWarning):
+    with pytest.warns(GgplotWarning):
         s = sc.scale_color_distiller(type='qual')
     _assert(s)
 
@@ -148,7 +147,7 @@ def test_linetype_palettes():
     assert(all([isinstance(x, six.string_types) for x in items[:N]]))
     assert(all([x is None for x in items[N:]]))
 
-    with assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         s = scale_linetype_continuous()
 
 
@@ -163,7 +162,7 @@ def test_shape_palettes():
     assert(all([isinstance(x, six.string_types) for x in items[:N]]))
     assert(all([x is None for x in items[N:]]))
 
-    with assert_raises(GgplotError):
+    with pytest.raises(GgplotError):
         scale_shape_continuous()
 
 
@@ -208,7 +207,7 @@ def test_scale_manual():
             s = getattr(scale_manual, name)(values)
             assert len(s.palette(2)) == len(values)
             assert len(s.palette(len(values))) == len(values)
-            with assert_raises(GgplotError):
+            with pytest.raises(GgplotError):
                 s.palette(len(values)+1)
 
 

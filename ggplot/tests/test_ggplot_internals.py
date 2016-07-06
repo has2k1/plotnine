@@ -1,15 +1,14 @@
 from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 
-from nose.tools import (assert_true, assert_raises, assert_is,
-                        assert_is_not, assert_equal)
 import numpy as np
 import pandas as pd
+import pytest
 
 from .. import ggplot, aes, geom_point, geom_histogram, geom_line
 from .. import xlab, ylab, labs, ggtitle
 from ..data import diamonds
-from .tools import cleanup
+from .conftest import cleanup
 
 
 def test_chart_components():
@@ -26,14 +25,14 @@ def test_chart_components():
     gg = gg + ylab('ylab')
     gg = gg + ggtitle('title')
 
-    assert_equal(gg.labels['x'], 'xlab')
-    assert_equal(gg.labels['y'], 'ylab')
-    assert_equal(gg.labels['title'], 'title')
+    assert gg.labels['x'] == 'xlab'
+    assert gg.labels['y'] == 'ylab'
+    assert gg.labels['title'] == 'title'
 
     gg = gg + labs(x='xlab2', y='ylab2', title='title2')
-    assert_equal(gg.labels['x'], 'xlab2')
-    assert_equal(gg.labels['y'], 'ylab2')
-    assert_equal(gg.labels['title'], 'title2')
+    assert gg.labels['x'] == 'xlab2'
+    assert gg.labels['y'] == 'ylab2'
+    assert gg.labels['title'] == 'title2'
 
 
 @cleanup
@@ -43,7 +42,7 @@ def test_data_transforms():
     p = p + geom_point()
     p.draw()
 
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         # no numpy available
         p = ggplot(aes(x='depth', y="ap.log(price)"), data)
         p = p + geom_point()
@@ -53,20 +52,20 @@ def test_data_transforms():
 def test_deepcopy():
     p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
     p2 = deepcopy(p)
-    assert_is_not(p, p2)
+    assert p is not p2
     # Not sure what we have to do for that...
-    assert_is(p.data, p2.data)
-    assert_equal(len(p.layers), len(p2.layers))
-    assert_is_not(p.layers[0].geom, p2.layers[0].geom)
-    assert_equal(len(p.mapping), len(p2.mapping))
-    assert_is_not(p.mapping, p2.mapping)
-    assert_is(p.environment, p2.environment)
+    assert p.data is p2.data
+    assert len(p.layers) == len(p2.layers)
+    assert p.layers[0].geom is not p2.layers[0].geom
+    assert len(p.mapping) == len(p2.mapping)
+    assert p.mapping is not p2.mapping
+    assert p.environment is p2.environment
 
 
 def test_aes():
     result = aes('weight', 'hp', color='qsec')
     expected = {'x': 'weight', 'y': 'hp', 'color': 'qsec'}
-    assert_equal(result, expected)
+    assert result == expected
 
 
 @cleanup
