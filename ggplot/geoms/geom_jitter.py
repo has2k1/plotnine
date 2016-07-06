@@ -1,7 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..utils import suppress
 from ..utils.exceptions import GgplotError
 from ..positions import position_jitter
 from .geom_point import geom_point
@@ -17,13 +16,15 @@ class geom_jitter(geom_point):
                 raise GgplotError(
                     "Specify either 'position' or 'width'/'height'")
 
-            with suppress(KeyError):
-                width = None
+            try:
                 width = kwargs.pop('width')
+            except KeyError:
+                width = None
 
-            with suppress(KeyError):
-                height = None
+            try:
                 height = kwargs.pop('height')
+            except KeyError:
+                height = None
 
             kwargs['position'] = position_jitter(
                 width=width, height=height)
