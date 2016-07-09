@@ -6,11 +6,9 @@ import pandas as pd
 import numpy as np
 from six.moves import range
 from matplotlib.cbook import Bunch
-from mizani.utils import round_any, seq
 
 from ..utils import is_scalar_or_string, suppress
-from ..scales.scale import scale_discrete
-from .stat_bin import adjust_breaks
+from .binning import fuzzybreaks
 from .stat import stat
 
 
@@ -53,10 +51,10 @@ class stat_bin_2d(stat):
         y = np.append(data['y'], range_y)
 
         # create the cutting parameters
-        xbreaks = bin_breaks(scales.x, breaks.x, origin.x,
-                             binwidth.x, bins.x)
-        ybreaks = bin_breaks(scales.y, breaks.y, origin.y,
-                             binwidth.y, bins.y)
+        xbreaks = fuzzybreaks(scales.x, breaks.x, origin.x,
+                              binwidth.x, bins.x)
+        ybreaks = fuzzybreaks(scales.y, breaks.y, origin.y,
+                              binwidth.y, bins.y)
         xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)
         ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)
 
@@ -114,27 +112,3 @@ def dual_param(value):
         return Bunch(x=value[0], y=value[1])
     else:
         return Bunch(x=value, y=value)
-
-
-def bin_breaks(scale, breaks=None, origin=None,
-               binwidth=None, bins=30, right=True):
-    # Bins for categorical data should take the width
-    # of one level, and should show up centered over
-    # their tick marks. All other parameters are ignored.
-    if isinstance(scale, scale_discrete):
-        breaks = scale.get_breaks()
-        return -0.5 + np.arange(1, len(breaks)+2)
-
-    if breaks is not None:
-        return breaks
-
-    srange = scale.limits
-
-    if binwidth is None or np.isnan(binwidth):
-        binwidth = np.diff(srange) / bins
-
-    if origin is None or np.isnan(origin):
-        origin = round_any(srange[0], binwidth, np.floor)
-
-    breaks = seq(origin, srange[1]+binwidth, binwidth)
-    return adjust_breaks(breaks, right)

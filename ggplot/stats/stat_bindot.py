@@ -6,8 +6,8 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..utils.exceptions import GgplotError, gg_warn
-from .utils import freedman_diaconis_bins
-from .stat_bin import bin
+from .binning import (breaks_from_bins, breaks_from_binwidth,
+                      assign_bins, freedman_diaconis_bins)
 from .stat import stat
 
 
@@ -86,16 +86,18 @@ class stat_bindot(stat):
             # The middle of each group, on the stack axis
             midline = np.mean([data['x'].min(), data['x'].max()])
 
-        values_are_ints = values.dtype == np.dtype('int')
-        if (params['breaks'] is None and
-                params['binwidth'] is None and
-                not values_are_ints):
-            params['binwidth'] = np.ptp(rangee) / params['bins']
-
         if params['method'] == 'histodot':
-            params['range'] = rangee
-            params['weight'] = weight
-            data = bin(values, **params)
+            if params['binwidth'] is not None:
+                breaks = breaks_from_binwidth(
+                    rangee, params['binwidth'], boundary=params['origin'])
+            else:
+                breaks = breaks_from_bins(
+                    rangee, params['bins'], boundary=params['origin'])
+
+            closed = 'right' if params['right'] else 'left'
+            data = assign_bins(
+                values, breaks, data.get('weight'),
+                pad=False, closed=closed)
             # for consistency
             data.rename(columns={'width': 'binwidth',
                                  'x': 'bincenter'},
@@ -141,6 +143,7 @@ class stat_bindot(stat):
             # For y binning, set the x midline.
             # This is needed for continuous x axis
             data['x'] = midline
+
         return data
 
 

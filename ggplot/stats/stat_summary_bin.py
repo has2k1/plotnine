@@ -7,8 +7,8 @@ import pandas as pd
 from ..utils import groupby_apply
 from ..utils.exceptions import GgplotError
 from ..scales.scale import scale_discrete
+from .binning import fuzzybreaks
 from .stat_summary import make_summary_fun
-from .stat_bin_2d import bin_breaks
 from .stat import stat
 
 
@@ -38,23 +38,27 @@ class stat_summary_bin(stat):
                                 params['fun_ymin'], params['fun_ymax'],
                                 params['fun_args'])
 
-        breaks = bin_breaks(scales.x, breaks, origin, binwidth, bins)
+        breaks = fuzzybreaks(scales.x, breaks, origin, binwidth, bins)
         data['bin'] = pd.cut(data['x'], bins=breaks, labels=False,
                              include_lowest=True)
 
         def func_wrapper(data):
-            res = func(data)
-            res['bin'] = data['bin'].iloc[0]
-            return res
+            """
+            Add `bin` column to each summary result.
+            """
+            result = func(data)
+            result['bin'] = data['bin'].iloc[0]
+            return result
 
         # This is a plyr::ddply
         out = groupby_apply(data, 'bin', func_wrapper)
-        bin_centers = ((breaks[:-1] + breaks[1:])/2)[out['bin'].values]
+        centers = (breaks[:-1] + breaks[1:]) * 0.5
+        bin_centers = centers[out['bin'].values]
         out['x'] = bin_centers
         out['bin'] += 1
         if isinstance(scales.x, scale_discrete):
             out['width'] = 0.9
         else:
-            out['width'] = np.diff(breaks)[bins]
+            out['width'] = np.diff(breaks)[bins-1]
 
         return out

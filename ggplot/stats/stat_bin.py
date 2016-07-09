@@ -1,24 +1,19 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import numpy as np
-import pandas as pd
-import pandas.core.common as com
-from six.moves import range, zip
-from mizani.utils import seq, fullseq
-
-from ..utils import make_iterable_ntimes
 from ..utils.exceptions import GgplotError, gg_warn
-from .utils import freedman_diaconis_bins
+from .binning import (breaks_from_bins, breaks_from_binwidth,
+                      assign_bins, freedman_diaconis_bins)
 from .stat import stat
 
 
 class stat_bin(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
-                      'width': 0.9, 'drop': False, 'right': False,
                       'binwidth': None, 'bins': None,
-                      'origin': None, 'breaks': None}
+                      'breaks': None, 'center': None,
+                      'boundary': None, 'closed': 'right',
+                      'pad': False}
     DEFAULT_AES = {'y': '..count..', 'weight': None}
     CREATES = {'y', 'width'}
 
@@ -35,6 +30,10 @@ class stat_bin(stat):
                    "Perhaps you want stat='count'?")
             raise GgplotError(msg)
 
+        if params['closed'] not in ('right', 'left'):
+            raise GgplotError(
+                "`closed` should either 'right' or 'left'")
+
         if (params['breaks'] is None and
                 params['binwidth'] is None and
                 params['bins'] is None):
@@ -48,103 +47,18 @@ class stat_bin(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        params['range'] = np.asarray(scales.x.dimension())
-        return bin(data['x'], data.get('weight'), **params)
+        if params['breaks'] is not None:
+            breaks = params['breaks']
+        elif params['binwidth'] is not None:
+            breaks = breaks_from_binwidth(
+                scales.x.dimension(), params['binwidth'],
+                params['center'], params['boundary'])
+        else:
+            breaks = breaks_from_bins(
+                scales.x.dimension(), params['bins'],
+                params['center'], params['boundary'])
 
-
-def bin(x, weight, **params):
-    x = np.asarray(x)
-    breaks = params['breaks']
-    right = params['right']
-    origin = params['origin']
-    rangee = params['range']
-    binwidth = params['binwidth']
-    num_bins = params['bins']
-
-    if num_bins is None:
-        num_bins = 30
-    if binwidth is None:
-        binwidth = np.ptp(rangee) / num_bins
-
-    if x.dtype == np.int:
-        bins = x
-        x = np.unique(x)
-        width = make_iterable_ntimes(params['width'], len(x))
-    elif np.diff(rangee) == 0:
-        bins = x
-        width = make_iterable_ntimes(params['width'], len(x))
-    elif com.is_numeric_dtype(x):
-        if breaks is None:
-            if origin is None:
-                breaks = fullseq(rangee, binwidth, pad=True)
-            else:
-                breaks = seq(origin, np.max(rangee)+binwidth,
-                             binwidth)
-
-        fuzzybreaks = adjust_breaks(breaks, right)
-        bins = pd.cut(x, bins=fuzzybreaks, labels=False,
-                      right=right)
-        width = np.diff(breaks)
-        x = [b+w/2 for (b, w) in zip(breaks[:-1], width)]
-    else:
-        # Proper scale trainning and mapping should never let
-        # the code path get here. If there is a problem here,
-        # something is probably wrong with the chosen scale
-        raise GgplotError("Cannot recognise the type of x")
-
-    # If weight not supplied to, use one (no weight)
-    if weight is None:
-        weight = np.ones(len(bins))
-    else:
-        weight = np.asarray(
-            make_iterable_ntimes(weight, len(bins)))
-        weight[np.isnan(weight)] = 0
-
-    # Create a dataframe with two columns:
-    #   - the bins to which each x is assigned
-    #   - the weight of each x value
-    # Then create a weighted frequency table
-    df = pd.DataFrame({'bins': bins,
-                       'weight': weight})
-    wftable = pd.pivot_table(df, values='weight',
-                             index=['bins'], aggfunc=np.sum)
-    # for categorical x
-    # Empty bins have NaN value, turn them to zeros
-    wftable.fillna(0, inplace=True)
-
-    # For numerical x values, empty bins get no value
-    # in the computed frequency table. We need to add the
-    # zeros and since frequency table is a Series object,
-    # we need to keep it ordered
-    if len(wftable) < len(x):
-        empty_bins = set(range(len(x))) - set(bins)
-        for b in empty_bins:
-            wftable.loc[b] = 0
-        wftable = wftable.sort_index()
-    count = wftable.tolist()
-
-    res = pd.DataFrame({
-        'x': x,
-        'count': count,
-        'width': width})
-
-    # other computed stats
-    res['density'] = (res['count'] / width) / res['count'].abs().sum()
-    res['ncount'] = res['count'] / res['count'].abs().max()
-    res['ndensity'] = res['density'] / res['density'].abs().max()
-
-    return res
-
-
-def adjust_breaks(breaks, right):
-    # fuzzy breaks to protect from floating point rounding errors
-    diddle = 1e-07 * np.median(np.diff(breaks))
-    if right:
-        fuzz = np.hstack(
-            [-diddle, np.repeat(diddle, len(breaks)-1)])
-    else:
-        fuzz = np.hstack(
-            [np.repeat(-diddle, len(breaks)-1), diddle])
-
-    fuzzybreaks = breaks + fuzz
-    return fuzzybreaks
+        new_data = assign_bins(
+            data['x'], breaks, data.get('weight'),
+            params['pad'], params['closed'])
+        return new_data
