@@ -1,0 +1,25 @@
+from .elements import element_line, element_rect, element_text
+from .theme import theme
+from .theme_gray import theme_gray
+
+
+class theme_dark(theme_gray):
+    """
+    The dark cousin of :class:`theme_light`, with similar line
+    sizes but a dark background. Useful to make thin colored
+    lines pop out.
+    """
+
+    def __init__(self, base_size=12, base_family='sans-serif'):
+        theme_gray.__init__(self, base_size, base_family)
+        self.add_theme(theme(
+            axis_ticks=element_line(color='#666666', size=0.5),
+            legend_key=element_rect(
+                fill='#7F7F7F', color='#666666', size=0.5),
+            panel_background=element_rect(fill='#7F7F7F', color='None'),
+            panel_grid_major=element_line(color='#666666', size=0.5),
+            panel_grid_minor=element_line(color='#737373', size=0.25),
+            strip_background=element_rect(fill='#333333', color='None'),
+            strip_text_x=element_text(color='white'),
+            strip_text_y=element_text(color='white', angle=-90)
+        ), inplace=True)

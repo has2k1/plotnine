@@ -8,7 +8,7 @@ class theme_bw(theme_gray):
     White background with black gridlines
     """
 
-    def __init__(self, base_size=12, base_family=''):
+    def __init__(self, base_size=12, base_family='sans-serif'):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(
             theme(axis_text=element_text(size=0.8*base_size),
