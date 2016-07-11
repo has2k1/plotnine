@@ -43,7 +43,7 @@ class scale_position_discrete(scale_discrete):
 
     def is_empty(self):
         return (self.range.range is None and
-                self.limits is None and
+                self._limits is None and
                 self.range_c.range is None)
 
     def train(self, series):

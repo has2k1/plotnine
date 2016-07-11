@@ -41,10 +41,10 @@ class scale(object):
     def __init__(self, **kwargs):
         self.range = self.range()
         for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
-            elif hasattr(self, '_'+k):
+            if hasattr(self, '_'+k):
                 setattr(self, '_'+k, v)
+            elif hasattr(self, k):
+                setattr(self, k, v)
             else:
                 msg = '{} could not recognise parameter `{}`'
                 gg_warn(msg.format(self.__class__.__name__, k))
