@@ -98,8 +98,25 @@ def compute_density(x, weight, range, **params):
     try:
         y = kde.evaluate(x2)
     except ValueError:
-        y = np.array([kde.evaluate(_x)[0] for _x in x2])
+        y = []
+        for _x in x2:
+            result = kde.evaluate(_x)
+            try:
+                y.append(result[0])
+            except TypeError:
+                y.append(result)
 
+    y = np.asarray(y)
+
+    # Evaluations outside the kernel domain return np.nan,
+    # these values and corresponding x2s are dropped.
+    # The kernel domain is defined by the values in x, but
+    # the evaluated values in x2 could have a much wider range.
+    not_nan = ~np.isnan(y)
+    x2 = x2[not_nan]
+    y = y[not_nan]
+
+    # print(np.sum(np.isnan(y)))
     return pd.DataFrame({'x': x2,
                          'density': y,
                          'scaled': y / np.max(y),
