@@ -142,9 +142,8 @@ class ggplot(object):
         Return
         ------
         out : ggplot
-            ggplot object with two new properties
-                - axs
-                - figure
+            ggplot object with two new properties;
+            ``axs`` and ``figure``.
         """
         # Good for development
         if gg_options['close_all_figures']:
@@ -241,6 +240,9 @@ class ggplot(object):
         layers.use_defaults()
 
     def draw_legend(self):
+        """
+        Draw legend onto the figure
+        """
         legend_box = self.guides.build(self)
         if not legend_box:
             return
@@ -299,6 +301,9 @@ class ggplot(object):
         ax.add_artist(anchored_box)
 
     def draw_labels_and_title(self):
+        """
+        Draw labels and title onto the figure
+        """
         fig = self.figure
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip

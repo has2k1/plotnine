@@ -5,6 +5,18 @@
 API Reference
 #############
 
+Plot creation
+=============
+.. currentmodule:: ggplot
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: members-example.rst
+
+   ggplot
+   qplot
+
+
 geoms
 =====
 .. currentmodule:: ggplot.geoms
