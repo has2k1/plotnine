@@ -211,7 +211,6 @@ class layer(object):
 
         # Using `type` preserves the subclass of pd.DataFrame
         evaled = type(data)(index=data.index)
-        has_aes_params = False  # aesthetic parameter in aes()
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
@@ -238,11 +237,14 @@ class layer(object):
                     raise GgplotError(
                         "Aesthetics must either be length one, " +
                         "or the same length as the data")
-                elif n == 1:
+                # An empty dataframe does not admit a scalar value
+                elif len(evaled) and n == 1:
                     col = col[0]
-                has_aes_params = True
                 evaled[ae] = col
             elif not cbook.iterable(col) and cbook.is_numlike(col):
+                # An empty dataframe does not admit a scalar value
+                if not len(evaled):
+                    col = [col]
                 evaled[ae] = col
             else:
                 msg = "Do not know how to deal with aesthetic '{}'"
@@ -253,13 +255,13 @@ class layer(object):
         # they create int columns.
         # Some stats e.g stat_bin need this distinction
         for col in evaled:
-            if evaled[col].dtype == np.int:
+            if evaled[col].dtype.kind == 'i':
                 evaled[col] = evaled[col].astype(np.float)
 
         evaled_aes = aes(**dict((col, col) for col in evaled))
         plot.scales.add_defaults(evaled, evaled_aes)
 
-        if len(data) == 0 and has_aes_params:
+        if len(data) == 0 and len(evaled) > 0:
             # No data, and vectors suppled to aesthetics
             evaled['PANEL'] = 1
         else:
