@@ -13,7 +13,7 @@ from .panel import Panel
 from .layer import Layers
 from .facets import facet_null, facet_grid, facet_wrap
 from .themes.theme import theme_get
-from .utils.ggutils import gg_context, gg_options
+from .utils.ggutils import gg_context, gg_options, ggsave
 from .utils.exceptions import GgplotError
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -97,6 +97,19 @@ class ggplot(object):
                 new[key] = deepcopy(old[key], memo)
 
         return result
+
+    def save(self, filename=None, **kwargs):
+        """
+        Save plot image
+
+        Parameters
+        ----------
+        filename : str
+            Filename
+        kwargs : dict
+            Arguments passed to :func:`~ggplot.ggutils.ggsave`
+        """
+        ggsave(filename=filename, plot=self, **kwargs)
 
     def draw(self):
         """
