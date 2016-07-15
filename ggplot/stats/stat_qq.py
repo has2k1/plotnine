@@ -11,7 +11,7 @@ from .stat import stat
 class stat_qq(stat):
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': '..theoretical..', 'y': '..sample..'}
-    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
+    DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
                       'distribution': 'norm', 'dparams': ()}
 
     @classmethod
