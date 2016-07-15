@@ -444,12 +444,40 @@ def defaults(d1, d2):
     return d1
 
 
-def jitter(x, factor=1, amount=None):
+def jitter(x, factor=1, amount=None, prng=None):
     """
     Add a small amount of noise to values in an array_like
+
+    Parameters
+    ----------
+    x : array_like
+        Values to apply a jitter
+    factor : float
+        Multiplicative value to used in automatically determining
+        the `amount`. If the `amount` is given then the `factor`
+        has no effect.
+    amount : float
+        This defines the range ([-amount, amount]) of the jitter to
+        apply to the values. If `0` then ``amount = factor * z/50``.
+        If `None` then ``amount = factor * d/5``, where d is about
+        the smallest difference between `x` values and `z` is the
+        range of the `x` values.
+    prng : numpy.random.RandomState
+        Random number generator to use. If `None`, then numpy global
+        generator (``np.random``) is used.
+
+
+    References:
+
+        - Chambers, J. M., Cleveland, W. S., Kleiner, B. and Tukey,
+          P.A. (1983) *Graphical Methods for Data Analysis*. Wadsworth;
+          figures 2.8, 4.22, 5.4.
     """
     if len(x) == 0:
         return x
+
+    if prng is None:
+        prng = np.random
 
     x = np.asarray(x)
 
@@ -477,7 +505,7 @@ def jitter(x, factor=1, amount=None):
     elif amount == 0:
         amount = factor * (z / 50.)
 
-    return x + np.random.uniform(-amount, amount, len(x))
+    return x + prng.uniform(-amount, amount, len(x))
 
 
 def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
