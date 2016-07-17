@@ -16,6 +16,8 @@ all_aesthetics = {
     'xmin', 'xintercept', 'y', 'yend', 'ymax', 'ymin',
     'yintercept', 'z'}
 
+CALCULATED_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
+
 
 class aes(dict):
     """
@@ -101,20 +103,33 @@ def is_calculated_aes(aesthetics):
     """
     Return a list of the aesthetics that are calculated
     """
-    pattern = "^\.\.([a-zA-Z._]+)\.\.$"
     calculated_aesthetics = []
     for k, v in aesthetics.items():
         if not isinstance(v, six.string_types):
             continue
-        if re.match(pattern, v):
+        if CALCULATED_RE.search(v):
             calculated_aesthetics.append(k)
     return calculated_aesthetics
 
 
-def strip_dots(ae):
-    with suppress(AttributeError):
-        ae = ae.strip('..')
-    return ae
+def strip_dots(value):
+    """
+    Remove dots(if any) that mark calculated aesthetics
+
+    Parameters
+    ----------
+    value : object
+        Aesthetic value. In most cases this will be a string
+        but other types will pass through unmodified.
+
+    Return
+    ------
+    out : object
+        Aesthetic value with the dots removed.
+    """
+    with suppress(TypeError):
+        value = CALCULATED_RE.sub(r'\1', value)
+    return value
 
 
 def aes_to_scale(var):
