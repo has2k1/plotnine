@@ -104,11 +104,12 @@ class guide_legend(guide):
     def merge(self, other):
         """
         Merge overlapped guides
-        e.g
-        >>> from ggplot import *
-        >>> gg = ggplot(aes(x='cut', fill='cut', color='cut'), data=diamonds)
-        >>> gg = gg + stat_bin()
-        >>> gg
+
+        For example::
+
+            from ggplot import *
+            gg = ggplot(aes(x='cut', fill='cut', color='cut'), data=diamonds)
+            gg + stat_bin()
 
         This would create similar guides for fill and color where only
         a single guide would do

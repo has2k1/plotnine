@@ -53,12 +53,6 @@ class aes(dict):
         Specific to geom_abline
     intercept : intercept of an abline
         Specific to geom_abline
-
-    Examples
-    --------
-    >>> aes(x='x', y='y')
-    >>> aes('x', 'y')
-    >>> aes(x='weight', y='height', color='salary')
     """
 
     def __init__(self, *args, **kwargs):

@@ -1,11 +1,15 @@
 [run]
+branch = True
 source = ggplotx
+include = ggplotx/*
 omit =
-    */python?.?/*
-    */lib-python/?.?/*.py
-    */lib_pypy/_*.py
-    */site-packages/ordereddict.py
-    */site-packages/nose/*
-    */unittest2/*
+    setup.py
+    ggplotx/_version.py
+    ggplotx/tests/*
 
-
+[report]
+exclude_lines =
+    pragma: no cover
+    ^def test_
+    if __name__ == .__main__.:
+precision = 1

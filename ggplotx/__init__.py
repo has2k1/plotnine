@@ -1,9 +1,13 @@
 from __future__ import absolute_import
 
+from ._version import get_versions
+
+__version__ = get_versions()['version']
+del get_versions
+
 # This is the only place the version is specified and
 # used in both setup.py and docs/conf.py to set the
 # version of ggplotx.
-__version__ = '0.1.0'
 
 from .qplot import qplot
 from .ggplot import ggplot
@@ -42,7 +46,3 @@ def _get_all_imports():
 
 
 __all__ = _get_all_imports()
-
-from ._version import get_versions
-__version__ = get_versions()['version']
-del get_versions

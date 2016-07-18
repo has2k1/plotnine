@@ -1,67 +1,66 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
-*.pyc
+*$py.class
 
 # C extensions
 *.so
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
 .installed.cfg
-lib
-lib64
+*.egg
 
-# generated docs
-doc/_build
-doc/generated/
-examples/.ipynb_checkpoints/
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
 
 # Installer logs
 pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+htmlcov/
+.tox/
 .coverage
-.tox
+.coverage.*
+.cache
 nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# ggplotx testing
+result_images/
+notes.txt
+examples/.ipynb_checkpoints
 
 # Translations
 *.mo
+*.pot
 
-*.swp
+# Django stuff:
+*.log
 
-# Testing
-result_images
-tmp
+# Sphinx documentation
+doc/_build/
+doc/generated/
 
-# docs
-docs/_static/*.png
-docs/generated/
-
-release.sh
-reset-images.sh
-
-## Tools and IDEs ##
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-#pycharm
-.idea/
-
-# rope
-.ropeproject
-
-# spyder
-.spyderproject
-.spyderworkspace
+# PyBuilder
+target/
 

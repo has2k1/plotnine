@@ -163,12 +163,13 @@ class guides(dict):
         """
         Merge overlapped guides
 
-        e.g
-        >>> from ggplotx import *
-        >>> gg = ggplot(mtcars, aes(y='wt', x='mpg', colour='factor(cyl)'))
-        >>> gg = gg + stat_smooth(aes(fill='factor(cyl)'), method='lm')
-        >>> gg = gg + geom_point()
-        >>> gg
+        For example::
+
+            from ggplotx import *
+            gg = ggplot(mtcars, aes(y='wt', x='mpg', colour='factor(cyl)'))
+            gg = gg + stat_smooth(aes(fill='factor(cyl)'), method='lm')
+            gg = gg + geom_point()
+            gg
 
         This would create two guides with the same hash
         """
