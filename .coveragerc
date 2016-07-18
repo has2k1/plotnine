@@ -1,5 +1,5 @@
 [run]
-source = ggplot
+source = ggplotx
 omit =
     */python?.?/*
     */lib-python/?.?/*.py

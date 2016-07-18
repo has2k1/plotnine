@@ -12,7 +12,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 from nbconvert import RSTExporter
 from nbconvert.writers import FilesWriter
 
-package = importlib.import_module('ggplot')
+package = importlib.import_module('ggplotx')
 base_path = os.path.dirname(package.__path__[0])
 
 

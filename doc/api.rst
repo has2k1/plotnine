@@ -7,7 +7,7 @@ API Reference
 
 Plot creation
 =============
-.. currentmodule:: ggplot
+.. currentmodule:: ggplotx
 .. autosummary::
    :toctree: generated/
    :nosignatures:
@@ -19,7 +19,7 @@ Plot creation
 
 geoms
 =====
-.. currentmodule:: ggplot.geoms
+.. currentmodule:: ggplotx.geoms
 
 .. autosummary::
    :toctree: generated/
@@ -75,7 +75,7 @@ Related to geoms
 
 Labels
 ------
-.. currentmodule:: ggplot.labels
+.. currentmodule:: ggplotx.labels
 
 .. autosummary::
    :toctree: generated/
@@ -89,7 +89,7 @@ Labels
 
 stats
 =====
-.. currentmodule:: ggplot.stats
+.. currentmodule:: ggplotx.stats
 
 .. autosummary::
    :toctree: generated/
@@ -117,7 +117,7 @@ stats
 
 facets
 ======
-.. currentmodule:: ggplot.facets
+.. currentmodule:: ggplotx.facets
 
 .. autosummary::
    :toctree: generated/
@@ -135,7 +135,7 @@ facets
 
 scales
 ======
-.. currentmodule:: ggplot.scales
+.. currentmodule:: ggplotx.scales
 
 
 Base scales
@@ -281,7 +281,7 @@ Position scales
 
 Scale limits
 ------------
-.. currentmodule:: ggplot.scales
+.. currentmodule:: ggplotx.scales
 
 .. autosummary::
    :toctree: generated/
@@ -294,7 +294,7 @@ Scale limits
 
 Scale guides
 ------------
-.. currentmodule:: ggplot.guides
+.. currentmodule:: ggplotx.guides
 
 .. autosummary::
    :toctree: generated/
@@ -308,7 +308,7 @@ Scale guides
 
 positions
 =========
-.. currentmodule:: ggplot.positions
+.. currentmodule:: ggplotx.positions
 
 .. autosummary::
    :toctree: generated/
@@ -326,7 +326,7 @@ positions
 themes
 ======
 
-.. currentmodule:: ggplot.themes
+.. currentmodule:: ggplotx.themes
 
 .. autosummary::
    :toctree: generated/
@@ -354,9 +354,9 @@ Themeables
 These define aspects of a plot that can be themed. They
 can be used to create a new theme or modify an existing theme.
 They define some of the keyword arguments to
-:class:`~ggplot.themes.theme`.
+:class:`~ggplotx.themes.theme`.
 
-.. currentmodule:: ggplot.themes.themeable
+.. currentmodule:: ggplotx.themes.themeable
 
 .. autosummary::
    :toctree: generated/
@@ -424,7 +424,7 @@ They define some of the keyword arguments to
 Theme helper functions and classes
 ----------------------------------
 
-.. currentmodule:: ggplot.themes
+.. currentmodule:: ggplotx.themes
 
 .. autosummary::
    :toctree: generated/
@@ -441,7 +441,7 @@ Theme helper functions and classes
 coordinates
 ===========
 
-.. currentmodule:: ggplot.coords
+.. currentmodule:: ggplotx.coords
 
 .. autosummary::
    :toctree: generated/
@@ -456,7 +456,7 @@ coordinates
 datasets
 ========
 
-.. currentmodule:: ggplot.data
+.. currentmodule:: ggplotx.data
 
 .. autosummary::
    :toctree: generated/

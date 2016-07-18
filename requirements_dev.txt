@@ -1,0 +1,19 @@
+# Testing
+pytest-cov
+
+# Documentation
+sphinx
+sphinx_rtd_theme
+scipy
+statsmodels
+pandas
+matplotlib
+jupyter
+notebook
+
+# Release
+wheel
+
+# Linting
+pep8
+flake8

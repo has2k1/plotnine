@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# ggplot documentation build configuration file, created by
+# ggplotx documentation build configuration file, created by
 # sphinx-quickstart on Wed Dec 23 22:32:29 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -65,8 +65,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ggplot'
-copyright = u'2013, yhat'
+project = u'ggplotx'
+copyright = u'2016, Hassan Kibirige'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -74,7 +74,7 @@ copyright = u'2013, yhat'
 #
 # The short X.Y version.
 
-# importing ggplot here has some sideeffects (plots pop up during
+# importing ggplotx here has some sideeffects (plots pop up during
 # doc building), so use theversion extract from setup.py here as well.
 
 
@@ -83,7 +83,7 @@ def extract_version():
     Extracts version values from the main matplotlib __init__.py and
     returns them as a dictionary.
     """
-    with open('../ggplot/__init__.py') as fd:
+    with open('../ggplotx/__init__.py') as fd:
         for line in fd.readlines():
             if (line.startswith('__version__')):
                 exec(line.strip())
@@ -216,7 +216,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ggplotdoc'
+htmlhelp_basename = 'ggplotxdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -239,8 +239,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'ggplot.tex', u'ggplot Documentation',
-   u'yhat', 'manual'),
+  ('index', 'ggplotx.tex', u'ggplotx Documentation',
+   u'Hassan Kibirige', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -269,8 +269,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ggplot', u'ggplot Documentation',
-     [u'yhat'], 1)
+    ('index', 'ggplotx', u'ggplotx Documentation',
+     ['Hassan Kibirige'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -283,8 +283,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ggplot', u'ggplot Documentation',
-   u'yhat', 'ggplot', 'One line description of project.',
+  ('index', 'ggplotx', 'ggplotx Documentation',
+   'Hassan Kibirige', 'ggplotx', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -304,13 +304,13 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'ggplot'
-epub_author = u'yhat'
-epub_publisher = u'yhat'
-epub_copyright = u'2013, yhat'
+epub_title = u'ggplotx'
+epub_author = u'Hassan Kibirige'
+epub_publisher = u'Hassan Kibirige'
+epub_copyright = u'2016, Hassan Kibirige'
 
 # The basename for the epub file. It defaults to the project name.
-#epub_basename = u'ggplot'
+#epub_basename = u'ggplotx'
 
 # The HTML theme for the epub output. Since the default themes are not optimized
 # for small screen space, using the same theme for HTML and epub output is
