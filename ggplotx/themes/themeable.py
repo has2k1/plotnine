@@ -361,7 +361,76 @@ class legend_title(themeable):
                 ta.set_visible(False)
 
 
-class legend_text(themeable):
+class legend_text_legend(themeable):
+    """
+    Legend text for the common legend
+
+    Parameters
+    ----------
+    theme_element : element_text
+
+    Note
+    ----
+    This themeable exists mainly to cater for differences
+    in how the text is aligned, compared to the colorbar.
+    Unless you experience those alignment issues (i.e when
+    using parameters **va** or **ha**), you should use
+    :class:`legend_text`.
+    """
+    def apply_figure(self, figure):
+        super(legend_text_legend, self).apply_figure(figure)
+        with suppress(KeyError):
+            texts = figure._themeable['legend_text_legend']
+            for text in texts:
+                if not hasattr(text, '_x'):  # textarea
+                    text = text._text
+                text.set(**self.properties)
+
+    def blank_figure(self, figure):
+        super(legend_text_legend, self).blank_figure(figure)
+        with suppress(KeyError):
+            texts = figure._themeable['legend_text_legend']
+            for text in texts:
+                text.set_visible(False)
+
+
+class legend_text_colorbar(themeable):
+    """
+    Colorbar text
+
+    Parameters
+    ----------
+    theme_element : element_text
+
+    Note
+    ----
+    This themeable exists mainly to cater for differences
+    in how the text is aligned, compared to the entry based
+    legend. Unless you experience those alignment issues
+    (i.e when using parameters **va** or **ha**), you should
+    use :class:`legend_text`.
+    """
+    def apply_figure(self, figure):
+        super(legend_text_colorbar, self).apply_figure(figure)
+        with suppress(KeyError):
+            texts = figure._themeable['legend_colorbar_text']
+            for text in texts:
+                if not hasattr(text, '_x'):  # textarea
+                    text = text._text
+                text.set(**self.properties)
+
+    def blank_figure(self, figure):
+        super(legend_text_colorbar, self).blank_figure(figure)
+        with suppress(KeyError):
+            texts = figure._themeable['legend_colorbar_text']
+            for text in texts:
+                text.set_visible(False)
+
+
+legend_text_colourbar = legend_text_colorbar
+
+
+class legend_text(legend_text_legend, legend_text_colorbar):
     """
     Legend text
 
@@ -369,21 +438,6 @@ class legend_text(themeable):
     ----------
     theme_element : element_text
     """
-    def apply_figure(self, figure):
-        super(legend_text, self).apply_figure(figure)
-        with suppress(KeyError):
-            texts = figure._themeable['legend_text']
-            for text in texts:
-                if not hasattr(text, '_x'):  # textarea
-                    text = text._text
-                text.set(**self.properties)
-
-    def blank_figure(self, figure):
-        super(legend_text, self).blank_figure(figure)
-        with suppress(KeyError):
-            texts = figure._themeable['legend_text']
-            for text in texts:
-                text.set_visible(False)
 
 
 class plot_title(themeable):

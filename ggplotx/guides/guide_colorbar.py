@@ -164,7 +164,6 @@ class guide_colorbar(guide):
         reverse = slice(None, None, -1)
         width = self.barwidth
         height = self.barheight
-        sep = .13 * width  # gap between the bar and labels
         nbars = len(self.bar)
         length = height
         direction = self.direction
@@ -191,8 +190,8 @@ class guide_colorbar(guide):
             tick_locations = length - tick_locations[::-1]
 
         # title #
-        title_box = TextArea(
-            self.title, textprops=dict(color='k', weight='bold'))
+        title_box = TextArea(self.title,
+                             textprops=dict(color='black'))
         themeable['legend_title'].append(title_box)
 
         # colorbar and ticks #
@@ -210,7 +209,7 @@ class guide_colorbar(guide):
             labels_da, legend_text = create_labels(da, labels,
                                                    tick_locations,
                                                    direction)
-            themeable['legend_text'].extend(legend_text)
+            themeable['legend_text_colorbar'].extend(legend_text)
         else:
             labels_da = ColoredDrawingArea(0, 0)
 
@@ -227,7 +226,9 @@ class guide_colorbar(guide):
         else:
             slc = reverse
         main_box = packer(children=[da, labels_da][slc],
-                          align=align, pad=0, sep=sep)
+                          sep=self.label_separation,
+                          align=align,
+                          pad=0)
 
         # title + colorbar(with labels) #
         lookup = {
@@ -237,8 +238,10 @@ class guide_colorbar(guide):
             'top': (VPacker, obverse)}
         packer, slc = lookup[self.title_position]
         children = [title_box, main_box][slc]
-        box = packer(children=children, pad=0, sep=sep,
-                     align=self._title_align)
+        box = packer(children=children,
+                     sep=self.title_separation,
+                     align=self._title_align,
+                     pad=0)
         return box
 
 

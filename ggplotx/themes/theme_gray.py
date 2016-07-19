@@ -12,7 +12,7 @@ class theme_gray(theme):
 
     This is the default theme
     """
-    def __init__(self, base_size=11, base_family='sans-serif'):
+    def __init__(self, base_size=12, base_family='sans-serif'):
         half_line = base_size/2
         # super does not work well with reloads
         theme.__init__(
@@ -52,8 +52,9 @@ class theme_gray(theme):
             legend_key_size=1.2,  # convert lines -> pixels
             legend_key_height=None,
             legend_key_width=None,
-            legend_text=element_text(size=base_size*0.8,
-                                     ha='left', va='baseline'),
+            legend_text=element_text(size=base_size*0.8, ha='left'),
+            legend_text_legend=element_text(va='baseline'),
+            legend_text_colorbar=element_text(va='center'),
             legend_text_align=None,
             legend_title=element_text(ha='left'),
             legend_title_align=None,

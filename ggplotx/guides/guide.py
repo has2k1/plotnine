@@ -27,6 +27,9 @@ class guide(object):
         Horizontal justification of title text.
     title_vjust : float
         Vertical justification of title text.
+    title_separation : float
+        Separation between the title text and the colorbar.
+        Value is in pixels.
     label : bool
         Whether to show labels
     label_position : 'top' | 'bottom' | 'left' | 'right'
@@ -40,6 +43,9 @@ class guide(object):
         Horizontal justification of label text.
     label_vjust : float
         Vertical justification of label text.
+    label_separation : float
+        Separation between the label text and the colorbar.
+        Value is in pixels.
     keywidth : float
         Width of the legend key.
     keyheight : float
@@ -68,6 +74,7 @@ class guide(object):
     title_theme = None
     title_hjust = None
     title_vjust = None
+    title_separation = 8
 
     # label
     label = True
@@ -75,6 +82,7 @@ class guide(object):
     label_theme = None
     label_hjust = None
     label_vjust = None
+    label_separation = 3
 
     # key
     keywidth = None

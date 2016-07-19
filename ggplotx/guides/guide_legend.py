@@ -288,8 +288,7 @@ class guide_legend(guide):
         themeable = theme.figure._themeable
 
         # title
-        title_box = TextArea(
-            self.title, textprops=dict(color='k', weight='bold'))
+        title_box = TextArea(self.title, textprops=dict(color='black'))
         themeable['legend_title'].append(title_box)
 
         # labels
@@ -298,9 +297,9 @@ class guide_legend(guide):
             if isinstance(item, np.float) and np.float.is_integer(item):
                 item = np.int(item)  # 1.0 to 1
             va = 'center' if self.label_position == 'top' else 'baseline'
-            ta = TextArea(item, textprops=dict(color='k', va=va))
+            ta = TextArea(item, textprops=dict(color='black', va=va))
             labels.append(ta)
-            themeable['legend_text'].extend(labels)
+            themeable['legend_text_legend'].extend(labels)
 
         # Drawings
         drawings = []
@@ -328,8 +327,9 @@ class guide_legend(guide):
         label_align = 'center' if packer == HPacker else 'left'
         for d, l in zip(drawings, labels):
             e = packer(children=[l, d][slc],
+                       sep=self.label_separation,
                        align=label_align,
-                       pad=0, sep=sep)
+                       pad=0)
             entries.append(e)
 
         # Put the entries together in rows or columns
@@ -360,13 +360,15 @@ class guide_legend(guide):
 
         # Put all the entries (row & columns) together
         entries_box = packers[1](children=chunk_boxes,
+                                 sep=sep,
                                  align='baseline',
-                                 pad=0,
-                                 sep=sep)
+                                 pad=0)
         # TODO: theme me
         # Put the title and entries together
         packer, slc = lookup[self.title_position]
         children = [title_box, entries_box][slc]
-        box = packer(children=children, align=self._title_align,
-                     pad=0, sep=sep)
+        box = packer(children=children,
+                     sep=self.title_separation,
+                     align=self._title_align,
+                     pad=0)
         return box

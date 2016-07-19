@@ -17,15 +17,15 @@ class theme_void(theme):
             text=element_text(
                 family=base_family, style='normal', color='black',
                 size=base_size, linespacing=0.9, ha='center',
-                va='center', rotaion=0),
+                va='center', rotation=0),
             figure_size=(11, 8),
             plot_margin=None,
             axis_text_x=element_blank(),
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),
             axis_title_y=element_blank(),
-            legend_text=element_text(
-                size=base_size*0.8, ha='left', va='baseline'),
+            legend_text=element_text(size=base_size*0.8, ha='left'),
+            legend_text_legend=element_text(va='baseline'),
             legend_title=element_blank(),
             strip_text=element_text(
                 size=base_size*0.8, linespacing=1.8),
