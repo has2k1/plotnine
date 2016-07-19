@@ -18,6 +18,9 @@ def test_arrays():
     p = qplot(x=np.arange(5), y=np.arange(5))
     assert p == 'arrays'
 
+
+@cleanup
+def test_string_arrays():
     p = qplot(x='np.arange(5)', y='np.arange(5)')
     assert p == 'string-arrays'
 

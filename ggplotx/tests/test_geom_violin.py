@@ -18,16 +18,20 @@ df = pd.DataFrame({
 })
 
 
-@cleanup
-def test_aesthetics():
+class TestAesthetics(object):
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'), size=2) +
          geom_violin(df[:2*m], aes(y='y+25', fill='x'), size=2) +
          geom_violin(df[2*m:], aes(y='y+25', color='x'), size=2) +
          geom_violin(df[2*m:], aes(y='y+50', linetype='x'), size=2))
 
-    assert p == 'aesthetics'
-    assert p + coord_flip() == 'aesthetics+coord_flip'
+    @cleanup
+    def test_aesthetics(self):
+        assert self.p == 'aesthetics'
+
+    @cleanup
+    def test_aesthetics_coordflip(self):
+        assert self.p + coord_flip() == 'aesthetics+coord_flip'
 
 
 @cleanup

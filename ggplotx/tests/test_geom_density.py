@@ -12,15 +12,22 @@ n = 6  # Some even number greater than 2
 df = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                    'z': np.repeat(range(n//2), range(3, n*2, 4))})
 
+p = ggplot(df, aes('x', fill='factor(z)'))
+
 
 @cleanup
-def test_basic():
-    p = ggplot(df, aes('x', fill='factor(z)'))
-
+def test_gaussian():
     p1 = p + geom_density(kernel='gaussian', alpha=.3)
-    p2 = p + geom_density(kernel='gaussian', alpha=.3, trim=True)
-    p3 = p + geom_density(kernel='triangular', alpha=.3)  # other
-
     assert p1 == 'gaussian'
+
+
+@cleanup
+def test_gaussian_trimmed():
+    p2 = p + geom_density(kernel='gaussian', alpha=.3, trim=True)
     assert p2 == 'gaussian-trimmed'
+
+
+@cleanup
+def test_triangular():
+    p3 = p + geom_density(kernel='triangular', alpha=.3)  # other
     assert p3 == 'triangular'

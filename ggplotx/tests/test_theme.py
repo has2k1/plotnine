@@ -15,7 +15,6 @@ def test_add_complete_partial():
     assert theme2 != theme1
     assert theme2.themeables != theme1.themeables
     assert theme2.rcParams == theme1.rcParams
-    assert theme2.params == theme1.params
 
     # specific difference
     for name in theme2.themeables:

@@ -21,11 +21,12 @@ df = pd.DataFrame({
 df['x'] = df['xmin'] + 0.5
 df['y'] = df['ymin'] + 0.5
 
+# To leave enough room for the legend
+_theme = theme(facet_spacing={'right': 0.8})
+
 
 @cleanup
-def test_aesthetics():
-    # leave enough room for the legend
-    _theme = theme(facet_spacing={'right': 0.8})
+def test_rect_aesthetics():
 
     # rect
     p = (ggplot(df, aes(xmin='xmin', xmax='xmax',
@@ -46,9 +47,11 @@ def test_aesthetics():
          # has labels by default
          labs(x='x', y='y'))
 
-    assert p == 'aesthetics'
+    assert p == 'rect-aesthetics'
 
-    # tile
+
+@cleanup
+def test_tile_aesthetics():
     p = (ggplot(df, aes('x', 'y', width=1, height=1)) +
          geom_tile() +
          geom_tile(aes(y='y+2', alpha='z'),
@@ -59,4 +62,4 @@ def test_aesthetics():
                    color='yellow', size=2) +
          _theme)
 
-    assert p == 'aesthetics'
+    assert p == 'tile-aesthetics'
