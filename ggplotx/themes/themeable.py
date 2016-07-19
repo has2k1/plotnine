@@ -904,16 +904,20 @@ class legend_key(themeable):
     def apply_figure(self, figure):
         super(legend_key, self).apply_figure(figure)
         with suppress(KeyError):
-            das = figure._themeable['legend_key']
-            for da in das:
-                da.patch.set(**self.properties)
+            # list of lists
+            all_drawings = figure._themeable['legend_key']
+            for drawings in all_drawings:
+                for da in drawings:
+                    da.patch.set(**self.properties)
 
     def blank_figure(self, figure):
         super(legend_key, self).blank_figure(figure)
         with suppress(KeyError):
-            das = figure._themeable['legend_key']
-            for da in das:
-                _blankout_rect(da.patch)
+            # list of lists
+            all_drawings = figure._themeable['legend_key']
+            for drawings in all_drawings:
+                for da in drawings:
+                    _blankout_rect(da.patch)
 
 
 class legend_background(themeable):

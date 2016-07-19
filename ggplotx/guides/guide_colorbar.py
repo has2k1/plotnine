@@ -171,6 +171,13 @@ class guide_colorbar(guide):
         labels = self.key['label'].tolist()
         themeable = theme.figure._themeable
 
+        # When there is more than one guide, we keep
+        # record of all of them using lists
+        if 'legend_title' not in themeable:
+            themeable['legend_title'] = []
+        if 'legend_text_colorbar' not in themeable:
+            themeable['legend_text_colorbar'] = []
+
         # .5 puts the ticks in the middle of the bars when
         # raster=False. So when raster=True the ticks are
         # in between interpolation points and the matching is

@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, print_function
-from collections import defaultdict
 
 from ..utils import suppress
 
@@ -86,7 +85,7 @@ class facet(object):
                                    sharex=False, sharey=False)
         # Dictionary to collect matplotlib objects that will
         # be targeted for theming by the themeables
-        figure._themeable = defaultdict(list)
+        figure._themeable = {}
         self.figure = figure
         self.adjust_space()
 

@@ -287,6 +287,14 @@ class guide_legend(guide):
         sep = 5  # gap between the legends
         themeable = theme.figure._themeable
 
+        # When there is more than one guide, we keep
+        # record of all of them using lists
+        if 'legend_title' not in themeable:
+            themeable['legend_title'] = []
+        if 'legend_text_legend' not in themeable:
+            themeable['legend_key'] = []
+            themeable['legend_text_legend'] = []
+
         # title
         title_box = TextArea(self.title, textprops=dict(color='black'))
         themeable['legend_title'].append(title_box)
@@ -313,7 +321,7 @@ class guide_legend(guide):
                 data.is_copy = None
                 da = gl.geom.draw_legend(data, da, gl.layer)
             drawings.append(da)
-        themeable['legend_key'] = drawings
+        themeable['legend_key'].append(drawings)
 
         # Match Drawings with labels to create the entries
         # TODO: theme me
