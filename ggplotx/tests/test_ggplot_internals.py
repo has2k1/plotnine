@@ -8,18 +8,17 @@ import pytest
 from .. import ggplot, aes, geom_point, geom_histogram, geom_line
 from .. import xlab, ylab, labs, ggtitle
 from ..aes import is_calculated_aes, strip_dots
-from ..data import diamonds
+from ..utils.exceptions import GgplotError
 from .conftest import cleanup
 
+df = pd.DataFrame({'x': np.arange(10),
+                   'y': np.arange(10)})
 
-def test_chart_components():
+
+def test_labels():
     """
     Test invalid arguments to chart components
     """
-
-    df = pd.DataFrame({'x': np.arange(10),
-                       'y': np.arange(10)})
-
     gg = ggplot(df, aes(x='x', y='y'))
     gg = gg + geom_point()
     gg = gg + xlab('xlab')
@@ -35,23 +34,45 @@ def test_chart_components():
     assert gg.labels['y'] == 'ylab2'
     assert gg.labels['title'] == 'title2'
 
+    with pytest.raises(GgplotError):
+        gg = gg + xlab(None)
+
+    with pytest.raises(GgplotError):
+        gg = gg + ylab(None)
+
+    with pytest.raises(GgplotError):
+        gg = gg + ggtitle(None)
+
+    with pytest.raises(GgplotError):
+        gg = gg + labs('x', 'y')
+
+
+def test_ggplot_parameters():
+    p = ggplot(df, aes('x'))
+    assert p.data is df
+    assert p.mapping == aes('x')
+    assert p.environment.namespace['np'] is np
+    assert p.environment.namespace['pd'] is pd
+
+    with pytest.raises(GgplotError):
+        ggplot([1, 2, 3], aes('x'))
+
 
 @cleanup
 def test_data_transforms():
-    data = diamonds[:200]
-    p = ggplot(aes(x='depth', y='np.log(price)'), data)
+    p = ggplot(aes(x='x', y='np.log(y)'), df)
     p = p + geom_point()
     p.draw()
 
     with pytest.raises(Exception):
         # no numpy available
-        p = ggplot(aes(x='depth', y="ap.log(price)"), data)
+        p = ggplot(aes(x='depth', y="ap.log(price)"), df)
         p = p + geom_point()
         p.draw()
 
 
 def test_deepcopy():
-    p = ggplot(aes(x="price"), data=diamonds) + geom_histogram()
+    p = ggplot(aes('x'), data=df) + geom_histogram()
     p2 = deepcopy(p)
     assert p is not p2
     # Not sure what we have to do for that...
@@ -84,6 +105,17 @@ def test_calculated_aes():
     assert strip_dots(mapping2['y']) == 'density*2'
     assert strip_dots(mapping3['y']) == 'density + count'
     assert strip_dots(mapping4['y']) == 'func(density)'
+
+
+def test_add_aes():
+    df = pd.DataFrame({'var1': [1, 2, 3, 4],
+                       'var2': 2})
+    p = ggplot(df) + geom_point()
+    p += aes('var1', 'var2')
+
+    assert p.mapping == aes('var1', 'var2')
+    assert p.labels['x'] == 'var1'
+    assert p.labels['y'] == 'var2'
 
 
 @cleanup

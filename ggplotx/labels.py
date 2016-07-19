@@ -22,7 +22,7 @@ class labs(object):
     def __init__(self, *args, **kwargs):
         if args and not isinstance(args, dict):
             raise GgplotError(
-                "'labs' accepts either a dictionary as",
+                "'labs' accepts either a dictionary as "
                 "an argument or keyword arguments")
             self.labels = args
         else:
@@ -46,9 +46,8 @@ class xlab(labs):
 
     def __init__(self, xlab):
         if xlab is None:
-            raise GgplotError("Arguments to",
-                              self.__class__.__name__,
-                              "cannot be None")
+            raise GgplotError(
+                "Arguments to xlab cannot be None")
         self.labels = {'x': xlab}
 
 
@@ -64,9 +63,8 @@ class ylab(labs):
 
     def __init__(self, ylab):
         if ylab is None:
-            raise GgplotError("Arguments to",
-                              self.__class__.__name__,
-                              "cannot be None")
+            raise GgplotError(
+                "Arguments to ylab cannot be None")
         self.labels = {'y': ylab}
 
 
@@ -81,7 +79,6 @@ class ggtitle(labs):
     """
     def __init__(self, title):
         if title is None:
-            raise GgplotError("Arguments to",
-                              self.__class__.__name__,
-                              "cannot be None")
+            raise GgplotError(
+                "Arguments to ggtitle cannot be None")
         self.labels = {'title': title}
