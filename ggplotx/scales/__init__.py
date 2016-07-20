@@ -60,6 +60,7 @@ from .scale_size import scale_size_radius
 # stroke
 from .scale_stroke import scale_stroke
 from .scale_stroke import scale_stroke_continuous
+from .scale_stroke import scale_stroke_discrete
 # xy position and transforms
 from .scale_xy import scale_x_datetime, scale_x_date
 from .scale_xy import scale_x_discrete, scale_x_continuous
@@ -111,6 +112,7 @@ __all__ = [
            'scale_size_radius',
            # stroke
            'scale_stroke', 'scale_stroke_continuous',
+           'scale_stroke_discrete',
            # identity
            'scale_alpha_identity', 'scale_color_identity',
            'scale_colour_identity', 'scale_fill_identity',

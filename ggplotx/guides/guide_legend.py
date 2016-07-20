@@ -65,7 +65,8 @@ class guide_legend(guide):
             - label : labels for each value
 
         scale name is one of the aesthetics
-        ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha']
+        ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha',
+         'stroke']
 
         Returns this guide if training is successful and None
         if it fails
