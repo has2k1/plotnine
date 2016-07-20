@@ -35,9 +35,9 @@ class position_jitter(position):
         params = deepcopy(self.params)
         if not params['width']:
             params['width'] = resolution(data['x']) * .4
-        if not self.params['height']:
+        if not params['height']:
             params['height'] = resolution(data['y']) * .4
-        if not self.params['prng']:
+        if not params['prng']:
             params['prng'] = np.random
         return params
 
@@ -48,10 +48,10 @@ class position_jitter(position):
 
         if params['width']:
             def trans_x(x):
-                return jitter(x, params['width'])
+                return jitter(x, params['width'], prng=params['prng'])
 
         if params['height']:
             def trans_y(y):
-                return jitter(y, params['height'])
+                return jitter(y, params['height'], prng=params['prng'])
 
         return cls.transform_position(data, trans_x, trans_y)

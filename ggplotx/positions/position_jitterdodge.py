@@ -2,9 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
-import numpy as np
-
-from ..utils import jitter, resolution
+from ..utils import jitter, resolution, suppress
+from ..utils.exceptions import GgplotError
 from .position import position
 from .collide import collide, pos_dodge
 
@@ -29,14 +28,18 @@ class position_jitterdodge(position):
     dodge_width : float
         Amount to dodge in horizontal direction.
         Default is ``0.75``
+    prng : numpy.random.RandomState
+        Random number generator to use. If `None`, then numpy
+        global generator (``np.random``) is used.
     """
-    REQUIRED_AES = ['x', 'y', 'fill']
+    REQUIRED_AES = ['x', 'y']
 
     def __init__(self, jitter_width=None, jitter_height=0,
-                 dodge_width=0.75):
+                 dodge_width=0.75, prng=None):
         self.params = {'jitter_width': jitter_width,
                        'jitter_height': jitter_height,
-                       'dodge_width': dodge_width}
+                       'dodge_width': dodge_width,
+                       'prng': prng}
 
     def setup_params(self, data):
         params = deepcopy(self.params)
@@ -45,13 +48,22 @@ class position_jitterdodge(position):
             width = resolution(data['x']) * .4
 
         # Adjust the x transformation based on the number
-        # of 'fill' variables
-        try:
-            nfill = len(data['fill'].cat.categories)
-        except AttributeError:
-            nfill = len(np.unique(data['fill']))
+        # of dodge variables
+        dvars = {'alpha', 'colour', 'fill', 'linetype',
+                 'shape', 'size', 'stroke'}
+        dodge_columns = data.columns.intersection(dvars)
+        if len(dodge_columns) == 0:
+            raise GgplotError(
+                "'position_jitterdodge' requires at least one "
+                "aesthetic to dodge by.")
 
-        params['jitter_width'] = width/(nfill+2)
+        s = set()
+        for col in dodge_columns:
+            with suppress(AttributeError):
+                s.update(data[col].cat.categories)
+        ndodge = len(s)
+
+        params['jitter_width'] = width/(ndodge+2)
         return params
 
     @classmethod
@@ -61,11 +73,13 @@ class position_jitterdodge(position):
 
         if params['jitter_width'] > 0:
             def trans_x(x):
-                return jitter(x, amount=params['jitter_width'])
+                return jitter(x, amount=params['jitter_width'],
+                              prng=params['prng'])
 
         if params['jitter_height'] > 0:
             def trans_y(y):
-                return jitter(y, amount=params['jitter_height'])
+                return jitter(y, amount=params['jitter_height'],
+                              prng=params['prng'])
 
         # dodge, then jitter
         data = collide(data, width=params['dodge_width'],

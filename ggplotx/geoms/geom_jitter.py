@@ -13,15 +13,21 @@ class geom_jitter(geom_point):
     Scatter plot with points jittered to reduce overplotting
 
     {documentation}
+
+    See Also
+    --------
+    :class:`~ggplotx.positions.position_jitter` for the documentation
+    of the parameters that affect the jittering.
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
-                      'width': None, 'height': None}
+                      'width': None, 'height': None, 'prng': None}
 
     def __init__(self, *args, **kwargs):
-        if 'width' in kwargs or 'height' in kwargs:
+        if {'width', 'height', 'prng'} & set(kwargs):
             if 'position' in kwargs:
                 raise GgplotError(
-                    "Specify either 'position' or 'width'/'height'")
+                    "Specify either 'position' or "
+                    "'width'/'height'/'prng'")
 
             try:
                 width = kwargs.pop('width')
@@ -33,6 +39,11 @@ class geom_jitter(geom_point):
             except KeyError:
                 height = None
 
+            try:
+                prng = kwargs.pop('prng')
+            except KeyError:
+                prng = None
+
             kwargs['position'] = position_jitter(
-                width=width, height=height)
+                width=width, height=height, prng=prng)
         geom_point.__init__(self, *args, **kwargs)

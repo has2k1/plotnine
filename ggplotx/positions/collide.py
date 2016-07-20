@@ -48,8 +48,6 @@ def collide(data, width=None, name='', strategy=None):
     if 'ymax' in data:
         data = groupby_apply(data, 'xmin', strategy, width)
     elif 'y' in data:
-        gg_warn('ymax not defined: adjusting position using y instead')
-
         data['ymax'] = data['y']
         data = groupby_apply(data, 'xmin', strategy, width)
         data['y'] = data['ymax']
