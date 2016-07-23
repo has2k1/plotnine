@@ -109,7 +109,6 @@ class guide(object):
         """
         valid_locations = {'top', 'bottom', 'left', 'right'}
         horizontal_locations = {'left', 'right'}
-        vertical_locations = {'top', 'bottom'}
         # title position
         if self.title_position is None:
             if self.direction == 'vertical':
@@ -117,8 +116,14 @@ class guide(object):
             elif self.direction == 'horizontal':
                 self.title_position = 'left'
         if self.title_position not in valid_locations:
-            msg = 'title position "{}" is invalid'
+            msg = "title position '{}' is invalid"
             raise GgplotError(msg.format(self.title_position))
+
+        # label position
+        self.label_position = self.label_position or 'right'
+        if self.label_position not in valid_locations:
+            msg = "label position '{}' is invalid"
+            raise GgplotError(msg.format(self.label_position))
 
         # direction of guide
         if self.direction is None:
@@ -126,22 +131,6 @@ class guide(object):
                 self.direction = 'vertical'
             else:
                 self.direction = 'horizontal'
-
-        # label position
-        msg = 'label position {} is invalid'
-        if self.label_position is None:
-            if self.direction == 'vertical':
-                self.label_position = 'right'
-            else:
-                self.label_position = 'bottom'
-        if self.label_position not in valid_locations:
-            raise GgplotError(msg.format(self.label_position))
-        if self.direction == 'vertical':
-            if self.label_position not in horizontal_locations:
-                raise GgplotError(msg.format(self.label_position))
-        else:
-            if self.label_position not in vertical_locations:
-                raise GgplotError(msg.format(self.label_position))
 
         # title alignment
         self._title_align = theme.params['legend_title_align']

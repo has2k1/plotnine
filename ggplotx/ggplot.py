@@ -268,14 +268,14 @@ class ggplot(object):
                 x += 0.25 * len(self.facet.rows)/width
         elif position == 'left':
             loc = 7
-            x = left - 0.3/width
+            x = left - 0.6/width
             y = 0.5
             if isinstance(self.facet, facet_grid):
                 x -= 0.25 * len(self.facet.rows)/width
         elif position == 'top':
             loc = 8
             x = 0.5
-            y = top + 0.6/height
+            y = top + 0.25/height
             if isinstance(self.facet, facet_grid):
                 y += 0.25 * len(self.facet.cols)/width
         elif position == 'bottom':
@@ -283,7 +283,7 @@ class ggplot(object):
             x = 0.5
             y = bottom - 0.6/height
         else:
-            loc = 3
+            loc = 7
             x, y = position
 
         anchored_box = AnchoredOffsetbox(
@@ -316,19 +316,21 @@ class ggplot(object):
         # This is finicky. Should be changed when MPL
         # finally has a constraint based layout manager.
 
-        # Pick suitable values in inches and convert
-        # theme to transFigure dimension. This gives
-        # large spacing margins for oblong plots.
+        # Pick suitable values in inches and convert them to
+        # transFigure dimension. This gives fixed spacing
+        # margins which work for oblong plots.
         left = fig.subplotpars.left
         top = fig.subplotpars.top
         bottom = fig.subplotpars.bottom
         width = fig.get_figwidth()
         height = fig.get_figheight()
 
-        xtitle_y = bottom - 0.3/height
-        ytitle_x = left - 0.3/width
-        title_y = top + 0.1/height
+        xtitle_y = bottom - 0.35/height
+        ytitle_x = left - 0.45/width
+        title_y = top + 0.2/height
 
+        # Adjust the title to avoid overlap with the facet
+        # labels on the top row
         if isinstance(self.facet, facet_wrap):
             title_y += 0.25 * len(self.facet.vars)/height
         elif isinstance(self.facet, facet_grid):

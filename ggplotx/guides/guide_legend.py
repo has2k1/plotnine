@@ -185,21 +185,14 @@ class guide_legend(guide):
                     "nrow x ncol need to be larger",
                     "than the number of breaks")
 
-        if self.nrow is None:
-            if self.ncol is not None:
-                self.nrow = int(np.ceil(nbreak/self.ncol))
-            elif self.direction == 'horizontal':
-                self.nrow = 1
+        if self.nrow is None and self.ncol is None:
+            if self.direction == 'horizontal':
+                self.nrow = int(np.ceil(nbreak/5))
             else:
-                self.nrow = nbreak
+                self.ncol = int(np.ceil(nbreak/20))
 
-        if self.ncol is None:
-            if self.nrow is not None:
-                self.ncol = int(np.ceil(nbreak/self.nrow))
-            elif self.direction == 'horizontal':
-                self.ncol = nbreak
-            else:
-                self.ncol = 1
+        self.nrow = self.nrow or int(np.ceil(nbreak/self.ncol))
+        self.ncol = self.ncol or int(np.ceil(nbreak/self.nrow))
 
         if self.keyseparation is None:
             self.keyseparation = 2
@@ -332,11 +325,10 @@ class guide_legend(guide):
             'top': (VPacker, obverse)}
         packer, slc = lookup[self.label_position]
         entries = []
-        label_align = 'center' if packer == HPacker else 'left'
         for d, l in zip(drawings, labels):
             e = packer(children=[l, d][slc],
                        sep=self.label_separation,
-                       align=label_align,
+                       align='center',
                        pad=0)
             entries.append(e)
 
