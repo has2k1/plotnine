@@ -35,6 +35,10 @@ class guide_legend(guide):
         Number of columns of legends.
     byrow : bool
         Whether to fill the legend row-wise or column-wise.
+    keywidth : float
+        Width of the legend key.
+    keyheight : float
+        Height of the legend key.
     kwargs : dict
         Parameters passed on to :class:`.guide`
     """
@@ -42,6 +46,10 @@ class guide_legend(guide):
     nrow = None
     ncol = None
     byrow = False
+
+    # key
+    keywidth = None
+    keyheight = None
 
     keyseparation = None
 
@@ -174,8 +182,9 @@ class guide_legend(guide):
             return None
         return self
 
-    def _set_defaults(self, theme):
-        guide._set_defaults(self, theme)
+    def _set_defaults(self):
+        guide._set_defaults(self)
+
         nbreak = len(self.key)
 
         # rows and columns
@@ -245,8 +254,10 @@ class guide_legend(guide):
 
             return size
 
+        # keysize
         if self.keywidth is None:
-            width = determine_side_length()
+            width = self._default('legend_key_width',
+                                  determine_side_length())
             if self.direction == 'vertical':
                 width[:] = width.max()
             self._keywidth = width
@@ -254,20 +265,17 @@ class guide_legend(guide):
             self._keywidth = [self.keywidth]*nbreak
 
         if self.keyheight is None:
-            height = determine_side_length()
+            height = self._default('legend_key_height',
+                                   determine_side_length())
             if self.direction == 'horizontal':
                 height[:] = height.max()
             self._keyheight = height
         else:
             self._keyheight = [self.keyheight]*nbreak
 
-    def draw(self, theme):
+    def draw(self):
         """
         Draw guide
-
-        Parameters
-        ----------
-        theme : theme
 
         Returns
         -------
@@ -278,7 +286,7 @@ class guide_legend(guide):
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
         sep = 5  # gap between the legends
-        themeable = theme.figure._themeable
+        themeable = self.theme.figure._themeable
 
         # When there is more than one guide, we keep
         # record of all of them using lists

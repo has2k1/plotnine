@@ -26,19 +26,18 @@ class theme(object):
 
         will only modify the x-axis text.
 
-    **kwargs: dict
-        kwargs are either parameters or themeables.
-        The parameters are the keys to `theme.params`.
-        The themeables are elements that are subclasses of
-        `themeable`. Many themeables are defined using theme
-        elements i.e
+    kwargs: dict
+        kwargs are themeables. The themeables are elements that
+        are subclasses of `themeable`. Many themeables are defined
+        using theme elements i.e
 
             - :class:`element_line`
             - :class:`element_rect`
             - :class:`element_text`
 
         These simply bind together all the aspects of a themeable
-        that can be themed. See :class:`~ggplotx.themes.themeable`.
+        that can be themed. See
+        :class:`~ggplotx.themes.themeable.themeable`.
 
     Note
     ----
@@ -48,28 +47,10 @@ class theme(object):
     should not be modified after that.
     """
 
-    params = {
-        'legend_box': None,
-        'legend_box_just': None,
-        'legend_direction': None,
-        'legend_justification': 'center',
-        'legend_key_height': None,
-        'legend_key_size': 1.2,
-        'legend_key_width': None,
-        'legend_margin': 0.2,
-        'legend_position': 'right',
-        'legend_text_align': None,
-        'legend_title_align': None,
-        # 'axis_line_x_position': 'bottom',
-        # 'axis_line_y_position': 'left',
-    }
-
     def __init__(self, complete=False, **kwargs):
         self.themeables = Themeables()
         self.complete = complete
         self._rcParams = {}
-        # FIXME: The params are still not properly integrated
-        self.params = self.params.copy()
         # This is set when the figure is created,
         # it is useful at legend drawing time and
         # when applying the theme.
@@ -77,10 +58,7 @@ class theme(object):
 
         new = themeable.from_class_name
         for name, element in kwargs.items():
-            if name in self.params:
-                self.params[name] = element
-            else:
-                self.themeables[name] = new(name, element)
+            self.themeables[name] = new(name, element)
 
     def __eq__(self, other):
         """
@@ -91,11 +69,9 @@ class theme(object):
         # criteria for equality are
         # - Equal themeables
         # - Equal rcParams
-        # - Equal params (not yet fully implemented)
         c1 = self.themeables == other.themeables
         c2 = self.rcParams == other.rcParams
-        c3 = self.params == other.params
-        return c1 and c2 and c3
+        return c1 and c2
 
     def apply_axs(self, axs):
         """
@@ -192,7 +168,6 @@ class theme(object):
 
         theme_copy = self if inplace else deepcopy(self)
         theme_copy.themeables.update(deepcopy(other.themeables))
-        theme_copy.params.update(other.params)
         return theme_copy
 
     def __add__(self, other):

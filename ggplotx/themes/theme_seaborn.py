@@ -25,6 +25,7 @@ class theme_seaborn(theme):
                  font='sans-serif', font_scale=1):
         theme.__init__(self,
                        figure_size=(11, 8),
+                       panel_margin=0.1,
                        complete=True)
         d = seaborn_set(context=context, style=style,
                         font=font, font_scale=font_scale)

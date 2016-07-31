@@ -15,7 +15,7 @@ class theme_bw(theme_gray):
                   axis_ticks=element_line(color='black'),
                   legend_key=element_rect(color='#CCCCCC'),
                   panel_background=element_rect(
-                      fill='white', color='None'),
+                      fill='white'),
                   panel_border=element_rect(
                       fill='None', color='#7f7f7f'),
                   panel_grid_major=element_line(
@@ -23,5 +23,5 @@ class theme_bw(theme_gray):
                   panel_grid_minor=element_line(
                       color='#FAFAFA', size=1),
                   strip_background=element_rect(
-                      fill='#CCCCCC', color='#7F7F7F', size=0.2)),
+                      fill='#CCCCCC', color='#7F7F7F', size=1)),
             inplace=True)

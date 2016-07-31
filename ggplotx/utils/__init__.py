@@ -12,9 +12,9 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     remove_missing,
                     to_rgba, groupby_apply, make_line_segments,
                     ColoredDrawingArea, suppress, copy_keys,
-                    Registry, get_valid_kwargs, data_mapping_as_kwargs,
-                    copy_missing_columns, groupby_with_null,
-                    interleave, resolution)
+                    Registry, RegistryHierarchyMeta, get_valid_kwargs,
+                    data_mapping_as_kwargs, copy_missing_columns,
+                    groupby_with_null, interleave, resolution)
 
 
 __all__ = ['ggsave']

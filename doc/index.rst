@@ -1,11 +1,11 @@
 .. _index:
 
 
-ggplot for python
-=================
+A Grammar of Graphics for Python
+================================
 
-This is a ``Python`` port of Hadley Wickham's
-`ggplot2 <http://ggplot2.org/>`__ which is written in ``R``.
+**ggplotx** is an implementation of a grammar of graphics. It is based
+is based on Hadley Wickham's `ggplot2 <http://ggplot2.org/>`__.
 
 
 Built with
@@ -21,4 +21,4 @@ Overview
    :maxdepth: 2
 
    api
-
+   changelog

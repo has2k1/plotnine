@@ -15,7 +15,7 @@ def layout_null(data):
 
 
 def layout_wrap(data, vars=None, nrow=None, ncol=None,
-                as_table=True, drop=True):
+                as_table=True, drop=True, dir='h'):
     """
     Layout panels in a 1d ribbon.
 
@@ -31,10 +31,13 @@ def layout_wrap(data, vars=None, nrow=None, ncol=None,
     ncol : int
         number of col
     as_table : bool
-        d
+        If ``True``, row ids are generated top to bottom.
     drop : bool
-        Whether to exclude missing combinations of facet variables
-        from the plot
+        Whether to exclude missing combinations of facet
+        variables from the plot.
+    dir : 'h' | 'v'
+        If 'v' then the result panels should be laid out
+        vertically.
     """
     if not vars:
         return layout_null(data)
@@ -50,6 +53,9 @@ def layout_wrap(data, vars=None, nrow=None, ncol=None,
         row = dims[0] - (_id - 1) // dims[1]
 
     col = (_id - 1) % dims[1] + 1
+
+    if dir == 'v':
+        row, col = col, row
 
     layout = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
                            'ROW': row.astype(int),
@@ -73,7 +79,7 @@ def layout_grid(data, rows=None, cols=None, margins=None,
     cols : tuple | list
         number of col
     as_table : bool
-        d
+        If ``True``, row ids are generated top to bottom.
     drop : bool
         Whether to exclude missing combinations of facet variables
         from the plot

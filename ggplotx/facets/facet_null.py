@@ -47,7 +47,7 @@ class facet_null(facet):
         data['PANEL'] = 1
         return data
 
-    def set_breaks_and_labels(self, ranges, layout_info, ax):
+    def set_breaks_and_labels(self, ranges, layout_info, pidx):
         """
         Add breaks and labels to the axes
 
@@ -57,12 +57,42 @@ class facet_null(facet):
             range information for the axes
         layout_info : dict-like
             facet layout information
-        ax : axes
-            Axes to decorate.
+        pidx : int
+            Panel index
         """
-        facet.set_breaks_and_labels(self, ranges, layout_info, ax)
+        ax = self.axs[pidx]
+        facet.set_breaks_and_labels(self, ranges, layout_info, pidx)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
 
-    def draw_label(self, layout_info, theme, ax):
+    def spaceout_and_resize_panels(self):
+        """
+        Adjust the space between the panels
+        """
+        # Only deal with the aspect ratio
+        figure = self.figure
+        theme = self.theme
+
+        try:
+            aspect_ratio = theme.themeables.property('aspect_ratio')
+        except KeyError:
+            aspect_ratio = self.coordinates.aspect(
+                    self.panel.ranges[0])
+
+        if aspect_ratio is None:
+            return
+
+        left = figure.subplotpars.left
+        right = figure.subplotpars.right
+        top = figure.subplotpars.top
+        bottom = figure.subplotpars.bottom
+        W, H = figure.get_size_inches()
+
+        w = (right-left)*W
+        h = w*aspect_ratio
+        H = h / (top-bottom)
+
+        figure.set_figheight(H)
+
+    def draw_label(self, layout_info, pidx):
         pass

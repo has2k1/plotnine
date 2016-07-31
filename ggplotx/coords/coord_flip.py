@@ -17,9 +17,9 @@ class coord_flip(coord_cartesian):
 
     See :class:`.coord_cartesian` for documentation.
     """
-    def labels(self, panel_scales):
-        return flip_labels(coord_cartesian.labels(self,
-                                                  panel_scales))
+    def labels(self, label_lookup):
+        return flip_labels(coord_cartesian.labels(
+            self, label_lookup))
 
     def transform(self, data, panel_scales, munch=False):
         data = flip_labels(data)
@@ -30,12 +30,13 @@ class coord_flip(coord_cartesian):
     def train(self, scale):
         return flip_labels(coord_cartesian.train(self, scale))
 
-    def range(self, scales):
+    def range(self, panel_scales):
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return Bunch(x=scales['y_range'], y=scales['x_range'])
+        return Bunch(x=panel_scales['y_range'],
+                     y=panel_scales['x_range'])
 
 
 def flip_labels(obj):

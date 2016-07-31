@@ -27,9 +27,9 @@ class guide_colorbar(guide):
     Parameters
     ----------
     barwidth : float
-        Width of the colorbar.
+        Width (in pixels) of the colorbar.
     barheight : float
-        Height of the colorbar.
+        Height (in pixels) of the colorbar.
     nbin : int
         Number of bins for drawing a colorbar. A larger value yields
         a smoother colorbar. Default is 20.
@@ -48,8 +48,8 @@ class guide_colorbar(guide):
 
     """
     # bar
-    barwidth = None
-    barheight = None
+    barwidth = 23
+    barheight = 23*5
     nbin = 20  # maximum number of bins
     raster = True
 
@@ -140,20 +140,9 @@ class guide_colorbar(guide):
 
         return self
 
-    def _set_defaults(self, theme):
-        guide._set_defaults(self, theme)
-        if self.barwidth is None:
-            self.barwidth = 23
-        if self.barheight is None:
-            self.barheight = self.barwidth*5
-
-    def draw(self, theme):
+    def draw(self):
         """
         Draw guide
-
-        Parameters
-        ----------
-        theme : theme
 
         Returns
         -------
@@ -169,7 +158,7 @@ class guide_colorbar(guide):
         direction = self.direction
         colors = self.bar['color'].tolist()
         labels = self.key['label'].tolist()
-        themeable = theme.figure._themeable
+        themeable = self.theme.figure._themeable
 
         # When there is more than one guide, we keep
         # record of all of them using lists

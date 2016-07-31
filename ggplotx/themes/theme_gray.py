@@ -39,14 +39,20 @@ class theme_gray(theme):
             axis_ticks_minor_length=0,
             axis_ticks_direction='out',
             axis_ticks_pad=2,
-            axis_title_x=element_text(),
-            axis_title_y=element_text(angle=90),
+            axis_title_x=element_text(va='top'),
+            axis_title_y=element_text(angle=90, va='bottom'),
+            axis_title_margin=5,
+            axis_title_margin_x=5,
+            axis_title_margin_y=5,
 
             dpi=300,
             figure_size=(11, 8),
 
+            # legend, None values are for parameters where the
+            # drawing routines can make better decisions than
+            # can be pre-determined in the theme.
             legend_background=element_rect(color='None'),
-            legend_margin=0.2,    # covert cm -> pixels
+            legend_margin=0.1,    # In inches
             legend_key=element_rect(fill='#F2F2F2',
                                     colour='white'),
             legend_key_size=1.2,  # convert lines -> pixels
@@ -55,26 +61,26 @@ class theme_gray(theme):
             legend_text=element_text(size=base_size*0.8, ha='left'),
             legend_text_legend=element_text(va='baseline'),
             legend_text_colorbar=element_text(va='center'),
-            legend_text_align=None,
             legend_title=element_text(ha='left'),
             legend_title_align=None,
             legend_position='right',
-            legend_direction=None,
-            legend_justification='center',
             legend_box=None,
+            legend_box_margin=20,  # points
+            legend_box_just=None,
+            legend_direction=None,
 
-            panel_background=element_rect(fill='#EBEBEB', color='None'),
+            panel_background=element_rect(fill='#EBEBEB'),
             panel_border=element_blank(),
             panel_grid_major=element_line(color='white', size=1),
             panel_grid_minor=element_line(color='white', size=0.5),
-            panel_margin=None,
-            panel_margin_x=None,
-            panel_margin_y=None,
+            panel_margin=0.1,
+            panel_margin_x=0.1,
+            panel_margin_y=0.1,
             panel_ontop=True,
 
             strip_background=element_rect(fill='#D9D9D9', color='None'),
             strip_text=element_text(color='#1A1A1A', size=base_size*0.8,
-                                    linespacing=2),
+                                    linespacing=1.1),
             strip_text_x=element_text(),
             strip_text_y=element_text(rotation=-90),
 

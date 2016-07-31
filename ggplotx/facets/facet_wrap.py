@@ -47,16 +47,21 @@ class facet_wrap(facet):
         will automatically be dropped. If ``False``, all
         factor levels will be shown, regardless of whether
         or not they appear in the data. Default is ``True``.
+    dir : 'h' | 'v'
+        Direction in which to layout the panels. ``h`` for
+        horizontal and ``v`` for vertical.
     """
 
     def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
                  shrink=True, labeller='label_value',
-                 as_table=True, drop=True):
+                 as_table=True, drop=True, dir='h'):
         facet.__init__(
             self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop)
+            as_table=as_table, drop=drop, dir=dir)
         self.vars = tuple(parse_wrap_facets(facets))
         self.nrow, self.ncol = check_dimensions(nrow, ncol)
+        # facet_wrap gets its labelling at the top
+        self.num_vars_x = len(self.vars)
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
@@ -66,7 +71,7 @@ class facet_wrap(facet):
     def train_layout(self, data):
         layout = layout_wrap(data, vars=self.vars, nrow=self.nrow,
                              ncol=self.ncol, as_table=self.as_table,
-                             drop=self.drop)
+                             drop=self.drop, dir=self.dir)
         n = layout.shape[0]
         nrow = layout['ROW'].max()
 
@@ -95,9 +100,10 @@ class facet_wrap(facet):
         """
         return locate_wrap(data, layout, self.vars)
 
-    def set_breaks_and_labels(self, ranges, layout_info, ax):
+    def set_breaks_and_labels(self, ranges, layout_info, pidx):
+        ax = self.axs[pidx]
         facet.set_breaks_and_labels(
-            self, ranges, layout_info, ax)
+            self, ranges, layout_info, pidx)
         if not layout_info['AXIS_X']:
             ax.xaxis.set_ticks_position('none')
             ax.xaxis.set_ticklabels([])
@@ -109,12 +115,68 @@ class facet_wrap(facet):
         if layout_info['AXIS_Y']:
             ax.yaxis.set_ticks_position('left')
 
-    def adjust_space(self):
-        import matplotlib.pyplot as plt
-        hspace = len(self.vars) * .20
-        plt.subplots_adjust(wspace=.05, hspace=hspace)
+    def spaceout_and_resize_panels(self):
+        """
+        Adjust the spacing between the panels and resize them
+        to meet the aspect ratio
+        """
+        ncol = self.ncol
+        nrow = self.nrow
+        figure = self.figure
+        theme = self.theme
+        get_property = theme.themeables.property
 
-    def draw_label(self, layout_info, theme, ax):
+        left = figure.subplotpars.left
+        right = figure.subplotpars.right
+        top = figure.subplotpars.top
+        bottom = figure.subplotpars.bottom
+        top_strip_height = self.strip_size('top')
+        W, H = figure.get_size_inches()
+
+        try:
+            marginx = get_property('panel_margin_x')
+        except KeyError:
+            marginx = 0.1
+
+        try:
+            marginy = get_property('panel_margin_y')
+        except KeyError:
+            marginy = 0.1
+
+        try:
+            aspect_ratio = get_property('aspect_ratio')
+        except KeyError:
+            # If the panels have different limits the coordinates
+            # cannot compute a common aspect ratio
+            if not self.free['x'] and not self.free['y']:
+                aspect_ratio = self.coordinates.aspect(
+                    self.panel.ranges[0])
+
+        if theme.themeables.is_blank('strip_text_x'):
+            top_strip_height = 0
+
+        # The goal is to have equal spacing along the vertical
+        # and the horizontal. We use the wspace and compute
+        # the appropriate hspace. It would be a lot easier if
+        # MPL had a better layout manager.
+
+        # width of axes and height of axes
+        w = ((right-left)*W - marginx*(ncol-1)) / ncol
+        h = ((top-bottom)*H - (marginy+top_strip_height)*(nrow-1)) / nrow
+
+        # aspect ratio changes the size of the figure
+        if aspect_ratio is not None:
+            h = w*aspect_ratio
+            H = (h*nrow + (marginy+top_strip_height)*(nrow-1)) / \
+                (top-bottom)
+            figure.set_figheight(H)
+
+        # spacing
+        wspace = marginx/w
+        hspace = (marginy + top_strip_height) / h
+        figure.subplots_adjust(wspace=wspace, hspace=hspace)
+
+    def draw_label(self, layout_info, ax):
         """
         Draw facet label onto the axes.
 
@@ -124,15 +186,13 @@ class facet_wrap(facet):
         ----------
         layout_info : dict-like
             facet information
-        theme : theme
-            Theme
         ax : axes
             Axes to label
         """
         label_info = layout_info[list(self.vars)]
         label_info._meta = {'dimension': 'cols'}
         label_info = self.labeller(label_info)
-        self.draw_strip_text(label_info, 'top', theme, ax)
+        self.draw_strip_text(label_info, 'top', ax)
 
 
 def check_dimensions(nrow, ncol):

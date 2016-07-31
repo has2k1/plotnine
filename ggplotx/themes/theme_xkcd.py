@@ -35,6 +35,7 @@ class theme_xkcd(theme):
 
         theme.__init__(self,
                        figure_size=(11, 8),
+                       panel_margin=0.1,
                        legend_key=element_rect(**d),
                        complete=True)
 

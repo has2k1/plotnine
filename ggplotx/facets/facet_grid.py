@@ -62,6 +62,8 @@ class facet_grid(facet):
         self.margins = margins
         self.space_free = {'x': space in ('free_x', 'free'),
                            'y': space in ('free_y', 'free')}
+        self.num_vars_x = len(self.cols)
+        self.num_vars_y = len(self.rows)
 
     def __radd__(self, gg):
         gg = deepcopy(gg)
@@ -94,9 +96,10 @@ class facet_grid(facet):
         return locate_grid(data, layout, self.rows, self.cols,
                            margins=self.margins)
 
-    def set_breaks_and_labels(self, ranges, layout_info, ax):
+    def set_breaks_and_labels(self, ranges, layout_info, pidx):
+        ax = self.axs[pidx]
         facet.set_breaks_and_labels(
-            self, ranges, layout_info, ax)
+            self, ranges, layout_info, pidx)
 
         bottomrow = layout_info['ROW'] == self.nrow
         leftcol = layout_info['COL'] == 1
@@ -113,7 +116,64 @@ class facet_grid(facet):
             ax.yaxis.set_ticks_position('none')
             ax.yaxis.set_ticklabels([])
 
-    def draw_label(self, layout_info, theme, ax):
+    def spaceout_and_resize_panels(self):
+        """
+        Adjust the spacing between the panels and resize them
+        to meet the aspect ratio
+        """
+        ncol = self.ncol
+        nrow = self.nrow
+        figure = self.figure
+        theme = self.theme
+        get_property = theme.themeables.property
+
+        left = figure.subplotpars.left
+        right = figure.subplotpars.right
+        top = figure.subplotpars.top
+        bottom = figure.subplotpars.bottom
+        wspace = figure.subplotpars.wspace
+        W, H = figure.get_size_inches()
+
+        try:
+            marginx = get_property('panel_margin_x')
+        except KeyError:
+            marginx = 0.1
+
+        try:
+            marginy = get_property('panel_margin_y')
+        except KeyError:
+            marginy = 0.1
+
+        try:
+            aspect_ratio = get_property('aspect_ratio')
+        except KeyError:
+            # If the panels have different limits the coordinates
+            # cannot compute a common aspect ratio
+            if not self.free['x'] and not self.free['y']:
+                aspect_ratio = self.coordinates.aspect(
+                    self.panel.ranges[0])
+
+        # The goal is to have equal spacing along the vertical
+        # and the horizontal. We use the wspace and compute
+        # the appropriate hspace. It would be a lot easier if
+        # MPL had a better layout manager.
+
+        # width of axes and height of axes
+        w = ((right-left)*W - marginx*(ncol-1)) / ncol
+        h = ((top-bottom)*H - marginy*(nrow-1)) / nrow
+
+        # aspect ratio changes the size of the figure
+        if aspect_ratio is not None:
+            h = w*aspect_ratio
+            H = (h*nrow + marginy*(nrow-1)) / (top-bottom)
+            figure.set_figheight(H)
+
+        # spacing
+        wspace = marginx/w
+        hspace = marginy/h
+        figure.subplots_adjust(wspace=wspace, hspace=hspace)
+
+    def draw_label(self, layout_info, ax):
         """
         Draw facet label onto the axes.
 
@@ -123,8 +183,6 @@ class facet_grid(facet):
         ----------
         layout_info : dict-like
             Layout information. Row from the `layout` table.
-        theme : theme
-            Theme
         ax : axes
             Axes to label
         """
@@ -135,13 +193,13 @@ class facet_grid(facet):
             label_info = layout_info[list(self.cols)]
             label_info._meta = {'dimension': 'cols'}
             label_info = self.labeller(label_info)
-            self.draw_strip_text(label_info, 'top', theme, ax)
+            self.draw_strip_text(label_info, 'top', ax)
 
         if rightcol and len(self.rows):
             label_info = layout_info[list(self.rows)]
             label_info._meta = {'dimension': 'rows'}
             label_info = self.labeller(label_info)
-            self.draw_strip_text(label_info, 'right', theme, ax)
+            self.draw_strip_text(label_info, 'right', ax)
 
 
 def parse_grid_facets(facets):

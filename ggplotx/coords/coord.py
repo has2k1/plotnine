@@ -22,8 +22,34 @@ class coord(object):
         gg.coordinates = self
         return gg
 
-    def labels(self, panel_scales):
-        return panel_scales
+    def aspect(self, panel_scales):
+        """
+        Return desired aspect ratio for the plot
+
+        If not overridden by the subclass, this method
+        returns ``None``, which means that the coordinate
+        system does not influence the aspect ratio.
+        """
+        return None
+
+    def labels(self, label_lookup):
+        """
+        Modify labels
+
+        Parameters
+        ----------
+        label_lookup : dict_like
+            Dictionary is in which to lookup the current label
+            values. The keys are the axes e.g. 'x', 'y' and
+            the values are strings.
+
+        Returns
+        -------
+        out : dict
+            Modified labels. The dictionary is of the same form
+            as ``label_lookup``.
+        """
+        return label_lookup
 
     def transform(self, data, panel_scales, munch=False):
         """
@@ -51,12 +77,13 @@ class coord(object):
         else:
             return scale.expand
 
-    def range(self, scales):
+    def range(self, panel_scales):
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return Bunch(x=scales['x_range'], y=scales['y_range'])
+        return Bunch(x=panel_scales['x_range'],
+                     y=panel_scales['y_range'])
 
     def distance(self, x, y, panel_scales):
         msg = "The coordinate should implement this method."

@@ -67,8 +67,8 @@ class element_rect(object):
     kwargs : dict
         Parameters recognised by
         :class:`matplotlib.patches.Rectangle`. In some cases
-        you use the fancy parameters from
-        :class:`matplotlib.patches.FancyBboxPatch`
+        you can use the fancy parameters from
+        :class:`matplotlib.patches.FancyBboxPatch`.
     """
 
     def __init__(self, fill=None, color=None, size=None,
@@ -128,7 +128,7 @@ class element_text(object):
 
     def __init__(self, family=None, style=None, weight=None,
                  color=None, size=None, ha=None, va=None,
-                 rotation=0, linespacing=None, backgroundcolor=None,
+                 rotation=None, linespacing=None, backgroundcolor=None,
                  **kwargs):
         d = {'visible': True}
 

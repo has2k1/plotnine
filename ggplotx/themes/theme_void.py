@@ -20,6 +20,7 @@ class theme_void(theme):
                 va='center', rotation=0),
             figure_size=(11, 8),
             plot_margin=None,
+            panel_margin=0,
             axis_text_x=element_blank(),
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),

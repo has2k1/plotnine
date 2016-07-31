@@ -1,5 +1,7 @@
-from .theme import theme
 import matplotlib as mpl
+
+from .theme import theme
+from .elements import element_rect
 
 
 class theme_matplotlib(theme):
@@ -22,7 +24,14 @@ class theme_matplotlib(theme):
     """
 
     def __init__(self, rc=None, fname=None, matplotlib_defaults=True):
-        theme.__init__(self, figure_size=(11, 8), complete=True)
+        theme.__init__(
+            self,
+            figure_size=(11, 8),
+            panel_margin=0.1,
+            strip_background=element_rect(
+                fill='#D9D9D9', color='#D9D9D9', size=1),
+            legend_key=element_rect(fill='None', colour='None'),
+            complete=True)
 
         if matplotlib_defaults:
             _copy = mpl.rcParams.copy()

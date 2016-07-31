@@ -13,13 +13,13 @@ from copy import deepcopy
 
 from six import add_metaclass
 
-from ..utils import Registry, suppress
+from ..utils import suppress, RegistryHierarchyMeta
 from ..utils.exceptions import GgplotError
 from .elements import (element_line, element_rect,
                        element_text, element_blank)
 
 
-@add_metaclass(Registry)
+@add_metaclass(RegistryHierarchyMeta)
 class themeable(object):
     """
     themeable is an abstract class of things that can be themed.
@@ -46,11 +46,11 @@ class themeable(object):
 
     For example, to implement,
 
-    ``axis_title_x`` `x`` axis label (element_text;
-    inherits from ``axis_title``)
+    - ``axis_title_x`` - ``x`` axis label (element_text;
+      inherits from ``axis_title``)
+    - ``axis_title_y`` - ``y`` axis label (element_text;
+      inherits from ``axis_title``)
 
-    ``axis_title_y`` ``y`` axis label (element_text;
-    inherits from ``axis_title``)
 
     You would have this implementation:
 
@@ -63,7 +63,7 @@ class themeable(object):
             ...
 
         class axis_title(axis_title_x, axis_title_y):
-           ...
+            ...
 
 
     If the superclasses fully implement the subclass, the body of the
@@ -71,6 +71,11 @@ class themeable(object):
 
     When a method does require implementation, call :python:`super()`
     then add the themeable's implementation to the axes.
+
+    Note
+    ----
+    A user should never create instances of class :class:`themeable` or
+    subclasses of it.
     """
     order = 0
 
@@ -107,13 +112,9 @@ class themeable(object):
         -------
         out : Themeable
         """
-        # FIXME: There is no need of a the global registry,
-        # a local one would do. i.e. change the metaclass
-        # ideas - GlobalRegistry, ClassRegistry, Registry
-        # GgplotRegistry
         msg = "No such themeable element {}".format(name)
         try:
-            klass = Registry[name]
+            klass = themeable._registry[name]
         except KeyError:
             raise GgplotError(msg)
 
@@ -271,6 +272,61 @@ class Themeables(dict):
 
         return sorted(dict.values(self), key=key, reverse=True)
 
+    def property(self, name, key='value'):
+        """
+        Get the value a specific themeable(s) property
+
+        Themeables store theming attribute values in the
+        :attr:`Themeable.properties` :class:`dict`. The goal
+        of this method is to look a value from that dictionary,
+        and fallback along the inheritance heirarchy of themeables.
+
+        Parameters
+        ----------
+        name : str
+            Themeable name
+        key : str
+            Property name to lookup
+
+        Returns
+        -------
+        out : object
+            Value
+
+        Raises
+        ------
+        KeyError
+            If key is in not in any of themeables
+        """
+        hlist = themeable._hierarchy[name]
+        for th in hlist:
+            with suppress(KeyError):
+                return self[th].properties[key]
+
+        msg = "'{}' is not in the properties of {} "
+        raise KeyError(msg.format(key, hlist))
+
+    def is_blank(self, name):
+        """
+        Return True if the themeable *name* is blank
+
+        This if the *name* is not in the list of themeables
+        then the lookup falls back to inheritance hierarchy
+        is considered. If the none of the themeables in the
+        hierary are present, ``False`` will be returned.
+
+        Parameters
+        ----------
+        names : str
+            Themeable, in order of most specific to most
+            general.
+        """
+        for th in themeable._hierarchy[name]:
+            with suppress(KeyError):
+                return self[th].is_blank()
+
+        return False
+
 
 def _blankout_rect(rect):
     """
@@ -280,7 +336,6 @@ def _blankout_rect(rect):
     rect.set_edgecolor('None')
     rect.set_facecolor('None')
     rect.set_linewidth(0)
-    rect.set_fill(False)
 
 
 # element_text themeables
@@ -893,6 +948,8 @@ class line(axis_line, axis_ticks, panel_grid):
         return rcParams
 
 
+# element_rect themeables
+
 class legend_key(themeable):
     """
     Legend key background
@@ -1075,6 +1132,8 @@ class rect(legend_key, legend_background,
     pass
 
 
+# value base themeables
+
 class axis_ticks_major_length(themeable):
     """
     Axis major-tick length
@@ -1216,13 +1275,10 @@ class panel_margin_x(themeable):
     Parameters
     ----------
     theme_element : float
-        Must be in the [0, 1] range. It is specified
-        as a fraction of the panel width.
+        Size in inches horizontal margins between the
+        facet panels.
     """
-    def setup_figure(self, figure):
-        val = self.properties['value']
-        if val is not None:
-            figure.subplots_adjust(wspace=val)
+    pass
 
 
 class panel_margin_y(themeable):
@@ -1232,13 +1288,10 @@ class panel_margin_y(themeable):
     Parameters
     ----------
     theme_element : float
-        Must be in the [0, 1] range. It is specified
-        as a fraction of the panel height.
+        Size in inches vertical margins between the
+        facet panels.
     """
-    def setup_figure(self, figure):
-        val = self.properties['value']
-        if val is not None:
-            figure.subplots_adjust(hspace=val)
+    pass
 
 
 class panel_margin(panel_margin_x, panel_margin_y):
@@ -1248,9 +1301,8 @@ class panel_margin(panel_margin_x, panel_margin_y):
     Parameters
     ----------
     theme_element : float
-        Must be in the [0, 1] range. It is specified
-        as a fraction of the panel width and panel
-        height.
+        Size in inches of the margins between the
+        facet panels.
     """
     pass
 
@@ -1292,15 +1344,18 @@ class panel_ontop(themeable):
 
 class aspect_ratio(themeable):
     """
-    Aspect ratio of the panel
+    Aspect ratio of the panel(s)
 
     Parameters
     ----------
     theme_element : float
+        :math:`panel\_height/panel\_width`
+
+    Note
+    ----
+    For a fixed relationship between the ``x`` and ``y`` scales,
+    use :class:`~ggplotx.coords.coord_fixed`.
     """
-    def apply(self, ax):
-        super(aspect_ratio, self).apply(ax)
-        ax.set_aspect(self.properties['value'])
 
 
 class dpi(themeable):
@@ -1360,3 +1415,152 @@ class facet_spacing(themeable):
     def setup_figure(self, figure):
         kwargs = self.properties['value']
         figure.subplots_adjust(**kwargs)
+
+
+class axis_title_margin_x(themeable):
+    """
+    Margin between the x-axis title and the x-axis
+
+    Parameters
+    ----------
+    theme_element : int
+        Value in points.
+    """
+
+
+class axis_title_margin_y(themeable):
+    """
+    Margin between the x-axis title and the y-axis
+
+    Parameters
+    ----------
+    theme_element : int
+        Value in points.
+    """
+
+
+class axis_title_margin(axis_title_margin_x, axis_title_margin_y):
+    """
+    Margin between the axis title and the axis texts / ticks
+
+    Parameters
+    ----------
+    theme_element : int
+        Value in points.
+    """
+
+
+class legend_box(themeable):
+    """
+    How to box up multiple legends
+
+    Parameters
+    ----------
+    theme_element : 'vertical' | 'horizontal'
+        Whether to stack up the legends vertically or
+        horizontally.
+    """
+
+
+class legend_box_margin(themeable):
+    """
+    Separation between multiple legends
+
+    Parameters
+    ----------
+    theme_element : int
+        Separation in points.
+    """
+
+
+class legend_box_just(themeable):
+    """
+    Justification of legend boxes
+
+    Parameters
+    ----------
+    theme_element : str
+        One of *left*, *right*, *center*, *top* or *bottom*
+        depending the value of :class:`legend_box`.
+    """
+
+
+class legend_direction(themeable):
+    """
+    Layout items in the legend
+
+    Parameters
+    ----------
+    theme_element : 'vertical' | 'horizontal'
+        Vertically or horizontally
+    """
+
+
+class legend_key_width(themeable):
+    """
+    Legend key background width
+
+    Parameters
+    ----------
+    theme_element : float
+        Value in points
+    """
+
+
+class legend_key_height(themeable):
+    """
+    Legend key background height
+
+    Parameters
+    ----------
+    theme_element : float
+        Value in points.
+    """
+
+
+class legend_key_size(legend_key_width, legend_key_height):
+    """
+    Legend key background width and height
+
+    Parameters
+    ----------
+    theme_element : float
+        Value in points.
+    """
+
+
+class legend_margin(themeable):
+    """
+    Spacing between legend and the anchor point
+
+    Parameters
+    ----------
+    theme_element : float
+        Value in inches.
+    """
+
+
+class legend_position(themeable):
+    """
+    Location of legend
+
+    Parameters
+    ----------
+    theme_element : str | tuple
+        If a string it should be one of *right*, *left*, *top*
+        or *bottom*. If a tuple, it should be two floats each
+        in the approximate range [0, 1]. The tuple specifies the
+        location of the legend in screen coordinates.
+    """
+
+
+class legend_title_align(themeable):
+    """
+    Alignment of legend title
+
+    Parameters
+    ----------
+    theme_element : str | tuple
+        If a string it should be one of *right*, *left*, *center*,
+        *top* or *bottom*.
+    """

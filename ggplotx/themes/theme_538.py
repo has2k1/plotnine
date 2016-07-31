@@ -9,7 +9,7 @@ class theme_538(theme):
     """
 
     def __init__(self):
-        theme.__init__(self, complete=True)
+        theme.__init__(self, panel_margin=0.1, complete=True)
         d = {
             'axes.axisbelow': 'True',
             'axes.edgecolor': '#F0F0F0',

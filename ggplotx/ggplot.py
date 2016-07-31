@@ -6,12 +6,13 @@ from copy import deepcopy
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
+import matplotlib.transforms as mtransforms
 from patsy.eval import EvalEnvironment
 
 from .aes import aes, make_labels
 from .panel import Panel
 from .layer import Layers
-from .facets import facet_null, facet_grid, facet_wrap
+from .facets import facet_null
 from .themes.theme import theme_get
 from .utils.ggutils import gg_context, gg_options, ggsave
 from .utils.exceptions import GgplotError
@@ -128,7 +129,8 @@ class ggplot(object):
             # Drawing
             self.draw_plot()
             self.draw_legend()
-            self.draw_labels_and_title()
+            self.draw_labels()
+            self.draw_title()
             # Theming
             self.theme.apply_axs(self.axs)
             self.theme.apply_figure(self.figure)
@@ -150,9 +152,8 @@ class ggplot(object):
             plt.close('all')
 
         # Create figure and axes
-        figure, axs = self.facet.get_figure_and_axs(
-            len(self.panel.layout))
-        self.theme.setup_figure(figure)
+        figure, axs = self.facet.make_figure_and_axs(
+            self.panel, self.theme, self.coordinates)
         self.axs = self.panel.axs = axs
         self.figure = self.theme.figure = figure
 
@@ -163,13 +164,12 @@ class ggplot(object):
         #   - xaxis & yaxis breaks, labels, limits, ...
         #   - facet labels
         #
-        # pid is the panel location (left to right, top to bottom)
-        for pid, layout_info in self.panel.layout.iterrows():
-            panel_scales = self.panel.ranges[pid]
-            ax = self.panel.axs[pid]
-            self.facet.set_breaks_and_labels(panel_scales,
-                                             layout_info, ax)
-            self.facet.draw_label(layout_info, self.theme, ax)
+        # pidx is the panel index (location left to right, top to bottom)
+        for pidx, layout_info in self.panel.layout.iterrows():
+            panel_scales = self.panel.ranges[pidx]
+            self.facet.set_breaks_and_labels(
+                panel_scales, layout_info, pidx)
+            self.facet.draw_label(layout_info, pidx)
 
     def build(self):
         """
@@ -247,43 +247,44 @@ class ggplot(object):
         if not legend_box:
             return
 
-        fig = self.figure
-        left = fig.subplotpars.left
-        right = fig.subplotpars.right
-        top = fig.subplotpars.top
-        bottom = fig.subplotpars.bottom
-        width = fig.get_figwidth()
-        height = fig.get_figheight()
-        position = self.theme.params['legend_position']
+        figure = self.figure
+        left = figure.subplotpars.left
+        right = figure.subplotpars.right
+        top = figure.subplotpars.top
+        bottom = figure.subplotpars.bottom
+        W, H = figure.get_size_inches()
+        position = self.guides.position
+        try:
+            margin = self.theme.themeables.property('legend_margin')
+        except KeyError:
+            margin = 0.1
+        right_strip_width = self.facet.strip_size('right')
+        top_strip_height = self.facet.strip_size('top')
 
-        # The margin between the plot and legend is
-        # a magic value(s) specified in inches, and
-        # used to compute but the x, y location in
-        # transFigure coordinates.
+        # Other than when the legend is on the right the rest of
+        # the computed x, y locations are not gauranteed not to
+        # overlap with the axes or the labels. The user must then
+        # use the legend_margin theme parameter to adjust the
+        # location. This should get fixed when MPL has a better
+        # layout manager.
         if position == 'right':
             loc = 6
-            x = right + 0.2/width
+            x = right + (right_strip_width+margin)/W
             y = 0.5
-            if isinstance(self.facet, facet_grid):
-                x += 0.25 * len(self.facet.rows)/width
         elif position == 'left':
             loc = 7
-            x = left - 0.6/width
+            x = left - margin/W
             y = 0.5
-            if isinstance(self.facet, facet_grid):
-                x -= 0.25 * len(self.facet.rows)/width
         elif position == 'top':
             loc = 8
             x = 0.5
-            y = top + 0.25/height
-            if isinstance(self.facet, facet_grid):
-                y += 0.25 * len(self.facet.cols)/width
+            y = top + (top_strip_height+margin)/H
         elif position == 'bottom':
             loc = 9
             x = 0.5
-            y = bottom - 0.6/height
+            y = bottom - margin/H
         else:
-            loc = 7
+            loc = 10
             x, y = position
 
         anchored_box = AnchoredOffsetbox(
@@ -292,7 +293,7 @@ class ggplot(object):
             pad=0.,
             frameon=False,
             bbox_to_anchor=(x, y),
-            bbox_transform=self.figure.transFigure,
+            bbox_transform=figure.transFigure,
             borderpad=0.)
 
         anchored_box.set_zorder(90.1)
@@ -300,50 +301,91 @@ class ggplot(object):
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
-    def draw_labels_and_title(self):
+    def draw_labels(self):
         """
-        Draw labels and title onto the figure
+        Draw x and y labels onto the figure
         """
-        fig = self.figure
+        # This is very laboured. Should be changed when MPL
+        # finally has a constraint based layout manager.
+        figure = self.figure
+        get_property = self.theme.themeables.property
+
+        try:
+            xmargin = get_property('axis_title_margin_x')
+        except KeyError:
+            xmargin = 5
+
+        try:
+            ymargin = get_property('axis_title_margin_y')
+        except KeyError:
+            ymargin = 5
+
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
         labels = self.coordinates.labels(
             {'x': self.labels.get('x', ''),
              'y': self.labels.get('y', '')})
-        title = self.labels.get('title', '')
-        center = 0.5
 
-        # This is finicky. Should be changed when MPL
+        # The first axes object is on left, and the last axes object
+        # is at the bottom. We change the transform so that the relevant
+        # coordinate is in figure coordinates. This way we take
+        # advantage of how MPL adjusts the label position so that they
+        # do not overlap with the tick text. This works well for
+        # facetting with scales='fixed' and also when not facetting.
+        # first_ax = self.axs[0]
+        # last_ax = self.axs[-1]
+
+        xlabel = self.facet.last_ax.set_xlabel(
+            labels['x'], labelpad=xmargin)
+        ylabel = self.facet.first_ax.set_ylabel(
+            labels['y'], labelpad=ymargin)
+
+        xlabel.set_transform(mtransforms.blended_transform_factory(
+            figure.transFigure, mtransforms.IdentityTransform()))
+        ylabel.set_transform(mtransforms.blended_transform_factory(
+            mtransforms.IdentityTransform(), figure.transFigure))
+
+        figure._themeable['axis_title_x'] = xlabel
+        figure._themeable['axis_title_y'] = ylabel
+
+    def draw_title(self):
+        """
+        Draw title onto the figure
+        """
+        # This is very laboured. Should be changed when MPL
         # finally has a constraint based layout manager.
+        figure = self.figure
+        title = self.labels.get('title', '')
+        get_property = self.theme.themeables.property
 
         # Pick suitable values in inches and convert them to
         # transFigure dimension. This gives fixed spacing
         # margins which work for oblong plots.
-        left = fig.subplotpars.left
-        top = fig.subplotpars.top
-        bottom = fig.subplotpars.bottom
-        width = fig.get_figwidth()
-        height = fig.get_figheight()
-
-        xtitle_y = bottom - 0.35/height
-        ytitle_x = left - 0.45/width
-        title_y = top + 0.2/height
+        top = figure.subplotpars.top
+        W, H = figure.get_size_inches()
 
         # Adjust the title to avoid overlap with the facet
         # labels on the top row
-        if isinstance(self.facet, facet_wrap):
-            title_y += 0.25 * len(self.facet.vars)/height
-        elif isinstance(self.facet, facet_grid):
-            title_y += 0.25 * len(self.facet.cols)/height
+        # 0.1/H is 0.1 inches in transFigure coordinates A fixed
+        # margin value in inches prevents oblong plots from
+        # getting unpredictably large spaces.
+        try:
+            fontsize = get_property('plot_title', 'size')
+        except KeyError:
+            fontsize = self.theme.rcParams.get('font.size', 12)
 
-        d = {
-            'axis_title_x': fig.text(
-                center, xtitle_y, labels['x'], ha='center', va='top'),
-            'axis_title_y': fig.text(
-                ytitle_x, center, labels['y'], ha='right',
-                va='center', rotation='vertical'),
-            'plot_title': fig.text(
-                center, title_y, title, ha='center', va='bottom')
-        }
+        try:
+            linespacing = get_property('plot_title', 'linespacing')
+        except KeyError:
+            linespacing = 1.2
 
-        fig._themeable.update(d)
+        line_size = fontsize / 72.27
+        num_lines = len(title.split('\n'))
+        title_size = line_size * linespacing * num_lines
+        strip_height = self.facet.strip_size('top')
+
+        x = 0.5
+        y = top + (strip_height+title_size/2+0.1)/H
+
+        text = figure.text(x, y, title, ha='center', va='center')
+        figure._themeable['plot_title'] = text

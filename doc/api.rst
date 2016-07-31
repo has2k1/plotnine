@@ -353,8 +353,8 @@ Themeables
 
 These define aspects of a plot that can be themed. They
 can be used to create a new theme or modify an existing theme.
-They define some of the keyword arguments to
-:class:`~ggplotx.themes.theme`.
+They define the keyword arguments to :class:`~ggplotx.themes.theme`.
+Users should never create instances of *themeable*.
 
 .. currentmodule:: ggplotx.themes.themeable
 
@@ -383,15 +383,30 @@ They define some of the keyword arguments to
    axis_ticks_x
    axis_ticks_y
    axis_title
+   axis_title_margin
+   axis_title_margin_x
+   axis_title_margin_y
    axis_title_x
    axis_title_y
    dpi
    facet_spacing
    figure_size
    legend_background
+   legend_box
+   legend_box_just
+   legend_box_margin
+   legend_direction
    legend_key
+   legend_key_height
+   legend_key_size
+   legend_key_width
+   legend_margin
+   legend_position
    legend_text
+   legend_text_colorbar
+   legend_text_legend
    legend_title
+   legend_title_align
    line
    panel_background
    panel_border
@@ -448,6 +463,8 @@ coordinates
    :template: main.rst
 
    coord_cartesian
+   coord_equal
+   coord_fixed
    coord_flip
    coord_trans
 

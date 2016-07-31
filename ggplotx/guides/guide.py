@@ -46,10 +46,6 @@ class guide(object):
     label_separation : float
         Separation between the label text and the colorbar.
         Value is in pixels.
-    keywidth : float
-        Width of the legend key.
-    keyheight : float
-        Height of the legend key.
     direction : 'horizontal' | 'vertical'
         Direction of the guide.
     default_unit : str
@@ -84,10 +80,6 @@ class guide(object):
     label_vjust = None
     label_separation = 3
 
-    # key
-    keywidth = None
-    keyheight = None
-
     # general
     direction = None
     default_unit = 'line'
@@ -103,21 +95,30 @@ class guide(object):
                 tpl = "{} does not undestand attribute '{}'"
                 raise GgplotError(tpl.format(self.__class__.__name__, k))
 
-    def _set_defaults(self, theme):
+        # Must be updated before the draw method is called
+        self.theme = None
+
+    def _default(self, key, default=None):
+        """
+        Lookup value of *key* themeable
+
+        If *key* not in themeable or value is None,
+        return the *default* value.
+        """
+        try:
+            value = self.theme.themeables.property(key)
+        except KeyError:
+            value = None
+
+        return value if value is not None else default
+
+    def _set_defaults(self):
         """
         Set configuration parameters for drawing guide
         """
         valid_locations = {'top', 'bottom', 'left', 'right'}
         horizontal_locations = {'left', 'right'}
-        # title position
-        if self.title_position is None:
-            if self.direction == 'vertical':
-                self.title_position = 'top'
-            elif self.direction == 'horizontal':
-                self.title_position = 'left'
-        if self.title_position not in valid_locations:
-            msg = "title position '{}' is invalid"
-            raise GgplotError(msg.format(self.title_position))
+        get_property = self.theme.themeables.property
 
         # label position
         self.label_position = self.label_position or 'right'
@@ -132,10 +133,29 @@ class guide(object):
             else:
                 self.direction = 'horizontal'
 
-        # title alignment
-        self._title_align = theme.params['legend_title_align']
-        if self._title_align is None:
+        # title position
+        if self.title_position is None:
             if self.direction == 'vertical':
-                self._title_align = 'left'
-            else:
-                self._title_align = 'center'
+                self.title_position = 'top'
+            elif self.direction == 'horizontal':
+                self.title_position = 'left'
+        if self.title_position not in valid_locations:
+            msg = "title position '{}' is invalid"
+            raise GgplotError(msg.format(self.title_position))
+
+        # title alignment
+        tmp = 'left' if self.direction == 'vertical' else 'center'
+        self._title_align = self._default('legend_title_align', tmp)
+
+        # by default, direction of each guide depends on
+        # the position all the guides
+        try:
+            position = get_property('legend_position')
+        except KeyError:
+            position = 'right'
+
+        if position in {'top', 'bottom'}:
+            tmp = 'horizontal'
+        else:  # left, right, (default)
+            tmp = 'vertical'
+        self.direction = self._default('legend_direction', tmp)
