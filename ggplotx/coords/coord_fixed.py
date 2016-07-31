@@ -29,6 +29,11 @@ class coord_fixed(coord_cartesian):
     :class:`~ggplotx.themes.themeable.aspect_ratio` themeable::
 
         ggplot(data, aes('x', 'y')) + theme(aspect_ratio=0.5)
+
+    When changing the `aspect_ratio` in either way, the `width` of the
+    panel remains constant (as derived from the
+    :class:`ggplotx.themes.themeable.figure_size` themeable) and the
+    `height` is altered to achieve desired ratio.
     """
 
     def __init__(self, ratio=1, xlim=None, ylim=None, expand=True):
