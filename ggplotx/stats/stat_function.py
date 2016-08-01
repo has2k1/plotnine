@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 import pandas as pd
 
+from ..utils import suppress
 from ..utils.doctools import document
 from ..utils.exceptions import GgplotError
 from .stat import stat
@@ -17,8 +18,10 @@ class stat_function(stat):
     {documentation}
     """
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
-                      'fun': None, 'n': 101, 'args': None}
+                      'fun': None, 'n': 101, 'args': None,
+                      'xlim': None}
 
+    DEFAULT_AES = {'y': '..y..'}
     CREATES = {'y'}
 
     @classmethod
@@ -26,8 +29,13 @@ class stat_function(stat):
         fun = params['fun']
         n = params['n']
         args = params['args']
+        xlim = params['xlim']
 
-        range_x = scales.x.dimension((0, 0))
+        try:
+            range_x = xlim or scales.x.dimension((0, 0))
+        except AttributeError:
+            raise GgplotError(
+                "Missing 'x' aesthetic and 'xlim' is {}".format(xlim))
 
         if not hasattr(fun, '__call__'):
             raise GgplotError(
@@ -35,7 +43,7 @@ class stat_function(stat):
                 "a function or any other callable object")
 
         old_fun = fun
-        if isinstance(args, list):
+        if isinstance(args, (list, tuple)):
             def fun(x):
                 return old_fun(x, *args)
         elif isinstance(args, dict):
@@ -49,7 +57,16 @@ class stat_function(stat):
                 return old_fun(x)
 
         x = np.linspace(range_x[0], range_x[1], n)
-        y = [fun(val) for val in x]
+
+        # continuous scale
+        with suppress(AttributeError):
+            x = scales.x.trans.inverse(x)
+
+        # We know these can handle array-likes
+        if isinstance(old_fun, (np.ufunc, np.vectorize)):
+            y = fun(x)
+        else:
+            y = [fun(val) for val in x]
 
         new_data = pd.DataFrame({'x': x, 'y': y})
         return new_data
