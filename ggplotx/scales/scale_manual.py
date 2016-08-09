@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
-from ..utils.exceptions import GgplotError
+from mizani.palettes import manual_pal
+
 from ..utils import alias
 from .scale import scale_discrete
 
@@ -10,17 +11,7 @@ class _scale_manual(scale_discrete):
     Abstract class for manual scales
     """
     def __init__(self, values, **kwargs):
-
-        def palette(n):
-            msg = ("Insufficient values in manual "
-                   "scale. {}, needed but only {} "
-                   "provided.")
-            if n > len(values):
-                raise GgplotError(
-                    msg.format(n, len(values)))
-            return values
-
-        self.palette = palette
+        self.palette = manual_pal(values)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -59,9 +50,15 @@ class scale_shape_manual(_scale_manual):
     Parameters
     ----------
     values : array_like
-        Shapes  that make up the palette
+        Shapes that make up the palette. See
+        :mod:`matplotlib.markers.` for list of all possible
+        shapes.
     kwargs : dict
         Parameters passed on to :class:`.scale_discrete`
+
+    See Also
+    --------
+    :mod:`matplotlib.markers`
     """
     aesthetics = ['shape']
 
@@ -76,6 +73,10 @@ class scale_linetype_manual(_scale_manual):
         Linetypes that make up the palette
     kwargs : dict
         Parameters passed on to :class:`.scale_discrete`
+
+    See Also
+    --------
+    :mod:`matplotlib.markers`
     """
     aesthetics = ['linetype']
 

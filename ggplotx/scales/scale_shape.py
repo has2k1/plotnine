@@ -1,42 +1,66 @@
 from __future__ import absolute_import, division, print_function
 
+from mizani.palettes import manual_pal
+
 from ..utils.exceptions import GgplotError
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
+# All these shapes are filled
+shapes = (
+    'o',  # circle
+    '^',  # triangle up
+    's',  # square
+    'D',  # Diamond
+    'v',  # triangle down
+    '*',  # star
+    'p',  # pentagon
+    '8',  # octagon
+    '<',  # triangle left
+    'h',  # hexagon1
+    '>',  # triangle right
+    'H',  # hexagon1
+    'd',  # thin diamond
+)
 
-def shape_pal():
-    shapes = [
-        'o',  # circle
-        '^',  # triangle up
-        's',  # square
-        '+',  # plus
-        'D',  # diamond
-        'v',  # triangle down
-        'x',  # x
-        '*',  # star
-        'p',  # pentagon
-        '8'   # octagon
-    ]
-
-    def func(n):
-        l = list(shapes)
-        if n <= len(shapes):
-            return l[:n]
-        else:
-            return l + [None] * (n - len(shapes))
-
-    return func
+unfilled_shapes = (
+    '+',  # plus
+    'x',  # x
+    '.',  # point
+    '1',  # tri_down
+    '2',  # tri_up
+    '3',  # tri_left
+    '4',  # tri_right
+    ',',  # pixel
+    '_',  # hline
+    '|',  # vline
+    1,    # tickleft
+    2,    # tickright
+    3,    # tickup
+    4,    # tickdown
+)
 
 
 class scale_shape(scale_discrete):
     """
     Scale for shapes
 
-    Has the same arguments as :class:`~scale_discrete`
+    Parameters
+    ----------
+    unfilled : bool
+        If ``True``, then all shapes will have no interiors
+        that can be a filled.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_discrete`
     """
     aesthetics = ['shape']
-    palette = staticmethod(shape_pal())
+
+    def __init__(self, unfilled=False, **kwargs):
+        if unfilled:
+            self.palette = manual_pal(unfilled_shapes)
+        else:
+            self.palette = manual_pal(shapes)
+        scale_discrete.__init__(self, **kwargs)
 
 
 class scale_shape_continuous(scale_continuous):

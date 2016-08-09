@@ -1,21 +1,13 @@
 from __future__ import absolute_import, division, print_function
 
+from mizani.palettes import manual_pal
+
 from ..utils.exceptions import GgplotError
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
 
-def linetype_pal():
-    linetypes = ['solid', 'dashed', 'dashdot', 'dotted']
-
-    def func(n):
-        l = list(linetypes)
-        if n <= len(linetypes):
-            return l[:n]
-        else:
-            return l + [None] * (n - len(linetypes))
-
-    return func
+linetypes = ['solid', 'dashed', 'dashdot', 'dotted']
 
 
 class scale_linetype(scale_discrete):
@@ -25,7 +17,7 @@ class scale_linetype(scale_discrete):
     Has the same arguments as :class:`~scale_discrete`
     """
     aesthetics = ['linetype']
-    palette = staticmethod(linetype_pal())
+    palette = staticmethod(manual_pal(linetypes))
 
 
 class scale_linetype_continuous(scale_continuous):
