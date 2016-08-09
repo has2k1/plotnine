@@ -1,3 +1,11 @@
+/* Some more horizontal space for the content */
+
+.wy-nav-content {
+   padding-left: 1.618em;
+   padding-right: 1.618em;
+   max-width: 850px;
+}
+
 /* Something different for the top left region  */
 
 .wy-side-nav-search{
