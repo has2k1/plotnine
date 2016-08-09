@@ -145,7 +145,6 @@ def test_linetype_palettes():
 
     items = s.palette(N+5)
     assert(all([isinstance(x, six.string_types) for x in items[:N]]))
-    assert(all([x is None for x in items[N:]]))
 
     with pytest.raises(GgplotError):
         s = scale_linetype_continuous()
@@ -160,7 +159,6 @@ def test_shape_palettes():
 
     items = s.palette(N+5)
     assert(all([isinstance(x, six.string_types) for x in items[:N]]))
-    assert(all([x is None for x in items[N:]]))
 
     with pytest.raises(GgplotError):
         scale_shape_continuous()
@@ -205,9 +203,9 @@ def test_scale_manual():
     for name in scale_manual.__dict__:
         if is_manual_scale(name):
             s = getattr(scale_manual, name)(values)
-            assert len(s.palette(2)) == len(values)
-            assert len(s.palette(len(values))) == len(values)
-            with pytest.raises(GgplotError):
+            assert s.palette(2) == values[:2]
+            assert s.palette(len(values)) == values
+            with pytest.warns(UserWarning):
                 s.palette(len(values)+1)
 
 

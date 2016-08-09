@@ -155,3 +155,58 @@ def make_labels(mapping):
     for ae in labels:
         labels[ae] = strip_dots(labels[ae])
     return labels
+
+
+def is_valid_aesthetic(value, ae):
+    """
+    Return True if `value` looks valid.
+
+    Parameters
+    ----------
+    value : object
+        Value to check
+    ae : str
+        Aesthetic name
+
+    Returns
+    -------
+    out : bool
+        Whether the value is of a valid looking form.
+
+    Note
+    ----
+    There are no guarantees that he value is spot on
+    valid.
+    """
+
+    if ae == 'linetype':
+        named = {'solid', 'dashed', 'dashdot', 'dotted',
+                 '_', '--', '-.', ':', 'None', ' ', ''}
+        if value in named:
+            return True
+        if (isinstance(value, tuple) and
+                isinstance(value[1], tuple)):
+            return True
+        return False
+
+    elif ae == 'shape':
+        if isinstance(value, six.string_types):
+            return True
+        if (isinstance(value, (tuple, list)) and
+                all(isinstance(x, int) for x in value)):
+            return True
+        return False
+
+    elif ae in {'color', 'fill'}:
+        if isinstance(value, six.string_types):
+            return True
+        with suppress(TypeError):
+            if (isinstance(value, (tuple, list)) and
+                    all(0 <= x <= 1 for x in value)):
+                return True
+        return False
+
+    # For any other aesthetics we return False to allow
+    # for special cases to be discovered and then coded
+    # for appropriately.
+    return False

@@ -5,7 +5,7 @@ import six
 from six import add_metaclass
 
 from ..stats.stat import stat
-from ..aes import make_labels, rename_aesthetics
+from ..aes import make_labels, rename_aesthetics, is_valid_aesthetic
 from ..layer import layer
 from ..positions.position import position
 from ..utils import data_mapping_as_kwargs
@@ -125,8 +125,18 @@ class geom(object):
             data[ae] = self.DEFAULT_AES[ae]
 
         # If set, use it
-        for ae in self.aes_params:
-            data[ae] = self.aes_params[ae]
+        for ae, value in self.aes_params.items():
+            try:
+                data[ae] = value
+            except ValueError:
+                # sniff out the special cases, like custom
+                # tupled linetypes, shapes and colors
+                if is_valid_aesthetic(value, ae):
+                    data[ae] = [value]*len(data)
+                else:
+                    msg = ("'{}' does not look like a "
+                           "valid value for `{}`")
+                    raise GgplotError(msg.format(value, ae))
 
         return data
 
