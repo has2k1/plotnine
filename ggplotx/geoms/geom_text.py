@@ -61,6 +61,7 @@ class geom_text(geom):
         data['verticalalignment'] = params['vjust']
         data['family'] = params['family']
         data['fontweight'] = params['fontweight']
+        data['zorder'] = params['zorder']
         data['clip_on'] = True
 
         # 'fill' indicates geom_label so we need an MPL bbox
