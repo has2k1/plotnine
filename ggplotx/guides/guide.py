@@ -70,7 +70,6 @@ class guide(object):
     title_theme = None
     title_hjust = None
     title_vjust = None
-    title_separation = 8
 
     # label
     label = True
@@ -78,7 +77,6 @@ class guide(object):
     label_theme = None
     label_hjust = None
     label_vjust = None
-    label_separation = 3
 
     # general
     direction = None
@@ -119,12 +117,26 @@ class guide(object):
         valid_locations = {'top', 'bottom', 'left', 'right'}
         horizontal_locations = {'left', 'right'}
         get_property = self.theme.themeables.property
+        margin_location_lookup = {'t': 'b', 'b': 't',
+                                  'l': 'r', 'r': 'l'}
 
         # label position
         self.label_position = self.label_position or 'right'
         if self.label_position not in valid_locations:
             msg = "label position '{}' is invalid"
             raise GgplotError(msg.format(self.label_position))
+
+        # label margin
+        # legend_text_legend or legend_text_colorbar
+        name = 'legend_text_{}'.format(
+            self.__class__.__name__.split('_')[-1])
+        loc = margin_location_lookup[self.label_position[0]]
+        try:
+            margin = get_property(name, 'margin')
+        except KeyError:
+            self._label_margin = 3
+        else:
+            self._label_margin = margin.get_as(loc, 'pt')
 
         # direction of guide
         if self.direction is None:
@@ -159,3 +171,12 @@ class guide(object):
         else:  # left, right, (default)
             tmp = 'vertical'
         self.direction = self._default('legend_direction', tmp)
+
+        # title margin
+        loc = margin_location_lookup[self.title_position[0]]
+        try:
+            margin = get_property('legend_title', 'margin')
+        except KeyError:
+            self._title_margin = 8
+        else:
+            self._title_margin = margin.get_as(loc, 'pt')

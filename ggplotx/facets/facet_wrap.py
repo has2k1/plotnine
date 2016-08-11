@@ -7,6 +7,7 @@ import re
 import six
 
 from ..utils.exceptions import gg_warn, GgplotError
+from ..utils import suppress
 from .facet import facet
 from .layouts import layout_wrap
 from .locate import locate_wrap
@@ -154,6 +155,11 @@ class facet_wrap(facet):
 
         if theme.themeables.is_blank('strip_text_x'):
             top_strip_height = 0
+
+        # Account for the vertical sliding of the strip if any
+        with suppress(KeyError):
+            strip_margin_x = get_property('strip_margin_x')
+            top_strip_height *= (1 + strip_margin_x)
 
         # The goal is to have equal spacing along the vertical
         # and the horizontal. We use the wspace and compute

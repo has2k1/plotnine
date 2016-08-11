@@ -383,9 +383,6 @@ Users should never create instances of *themeable*.
    axis_ticks_x
    axis_ticks_y
    axis_title
-   axis_title_margin
-   axis_title_margin_x
-   axis_title_margin_y
    axis_title_x
    axis_title_y
    dpi
@@ -428,6 +425,9 @@ Users should never create instances of *themeable*.
    strip_background
    strip_background_x
    strip_background_y
+   strip_margin
+   strip_margin_x
+   strip_margin_y
    strip_text
    strip_text_x
    strip_text_y
@@ -468,6 +468,27 @@ coordinates
    coord_flip
    coord_trans
 
+
+options
+=======
+
+When working interactively, some of the options make it convenient to
+create plots that have a common look and feel. Another way to do it,
+to set a default theme using :func:`~ggplotx.themes.theme_set`.
+
+.. currentmodule:: ggplotx.options
+
+.. autosummary::
+   :toctree: generated/
+   :template: main.rst
+
+   aspect_ratio
+   close_all_figures
+   current_theme
+   dpi
+   figure_size
+   get_option
+   set_option
 
 
 datasets

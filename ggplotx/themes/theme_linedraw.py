@@ -21,5 +21,5 @@ class theme_linedraw(theme_gray):
             strip_background=element_rect(
                 fill='black', color='black', size=1),
             strip_text_x=element_text(color='white'),
-            strip_text_y=element_text(color='white', angle=90)
+            strip_text_y=element_text(color='white', angle=-90)
         ), inplace=True)

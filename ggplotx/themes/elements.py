@@ -1,6 +1,7 @@
 """
 Theme elements used to decorate the graph.
 """
+import copy
 
 from ..utils import suppress
 
@@ -116,6 +117,13 @@ class element_text(object):
         Line spacing
     backgroundcolor : str | tuple
         Background color
+    margin : dict
+        Margin around the text. The keys are one of
+        ``['t', 'b', 'l', 'r']`` and ``units``. The units are
+        one of ``['pt', 'lines', 'in']``. The *units* default
+        to ``pt`` and the other keys to ``0``. Not all text
+        themeables support margin parameters and other than the
+        ``units``, only some of the other keys will a.
     kwargs : dict
         Parameters recognised by :class:`matplotlib.text.Text`
 
@@ -129,7 +137,7 @@ class element_text(object):
     def __init__(self, family=None, style=None, weight=None,
                  color=None, size=None, ha=None, va=None,
                  rotation=None, linespacing=None, backgroundcolor=None,
-                 **kwargs):
+                 margin=None, **kwargs):
         d = {'visible': True}
 
         # ggplot2 translation
@@ -155,10 +163,14 @@ class element_text(object):
         with suppress(KeyError):
             rotation = kwargs.pop('angle')
 
+        if margin is not None:
+            margin = Margin(self, **margin)
+
+        # margin.update(kwargs.get('margin', {}))
         # Use the parameters that have been set
         names = ('backgroundcolor', 'color', 'family', 'ha',
                  'linespacing', 'rotation', 'size', 'style',
-                 'va', 'weight',)
+                 'va', 'weight', 'margin')
         variables = locals()
         for name in names:
             if variables[name] is not None:
@@ -196,3 +208,41 @@ class element_blank(object):
     """
     def __init__(self):
         self.properties = {}
+
+
+class Margin(dict):
+    def __init__(self, element, t=0, b=0, l=0, r=0, units='pt'):
+        # Make do with some sloppiness
+        if units in {'pts', 'points', 'px', 'pixels'}:
+            units = 'pt'
+        elif units in {'in', 'inch', 'inches'}:
+            units = 'in'
+
+        self.element = element
+        dict.__init__(self, t=t, b=b, l=l, r=r, units=units)
+
+    def get_as(self, key, units='pt'):
+        """
+        Return key in given units
+        """
+        dpi = 72.27
+        size = self.element.properties.get('size', 0)
+        value = self[key]
+
+        functions = {
+            'pt-lines': lambda x: x/size,
+            'pt-in': lambda x: x/dpi,
+            'lines-pt': lambda x: x*size,
+            'lines-in': lambda x: x*size/dpi,
+            'in-pt': lambda x: x*dpi,
+            'in-lines': lambda x: x*dpi/size
+        }
+
+        if self['units'] != units:
+            conversion = '{}-{}'.format(self['units'], units)
+            try:
+                value = functions[conversion](value)
+            except ZeroDivisionError:
+                value = 0
+
+        return value

@@ -222,7 +222,7 @@ class guide_colorbar(guide):
         else:
             slc = reverse
         main_box = packer(children=[da, labels_da][slc],
-                          sep=self.label_separation,
+                          sep=self._label_margin,
                           align=align,
                           pad=0)
 
@@ -235,7 +235,7 @@ class guide_colorbar(guide):
         packer, slc = lookup[self.title_position]
         children = [title_box, main_box][slc]
         box = packer(children=children,
-                     sep=self.title_separation,
+                     sep=self._title_margin,
                      align=self._title_align,
                      pad=0)
         return box

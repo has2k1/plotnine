@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import numpy as np
+from matplotlib.cbook import Bunch
 
 from ..utils import suppress
 
@@ -99,6 +100,25 @@ class facet(object):
         ax.set_xticklabels(ranges['x_labels'])
         ax.set_yticklabels(ranges['y_labels'])
 
+        get_property = self.theme.themeables.property
+        # Padding between ticks and text
+        try:
+            margin = get_property('axis_text_x', 'margin')
+        except KeyError:
+            pad_x = 2.4
+        else:
+            pad_x = margin.get_as('t', 'pt')
+
+        try:
+            margin = get_property('axis_text_y', 'margin')
+        except KeyError:
+            pad_y = 2.4
+        else:
+            pad_y = margin.get_as('r', 'pt')
+
+        ax.tick_params(axis='x', which='major', pad=pad_x)
+        ax.tick_params(axis='y', which='major', pad=pad_y)
+
     def make_figure_and_axs(self, panel, theme, coordinates):
         num_panels = len(panel.layout)
         figure, axs = plt.subplots(self.nrow, self.ncol,
@@ -144,6 +164,25 @@ class facet(object):
         """
         pass
 
+    def inner_strip_margins(self, location):
+        if location == 'right':
+            strip_name = 'strip_text_y'
+            side1, side2 = 'l', 'r'
+        else:
+            strip_name = 'strip_text_x'
+            side1, side2 = 't', 'b'
+
+        try:
+            margin = self.theme.themeables.property(
+                strip_name, 'margin')
+        except:
+            m1, m2 = 3, 3
+        else:
+            m1 = margin.get_as(side1, 'pt')
+            m2 = margin.get_as(side2, 'pt')
+
+        return m1, m2
+
     def strip_size(self, location='top', num_lines=None):
         """
         Breadth of the strip background in inches
@@ -155,6 +194,7 @@ class facet(object):
         num_lines : int
             Number of text lines
         """
+        dpi = 72.27
         theme = self.theme
         get_property = theme.themeables.property
 
@@ -182,57 +222,129 @@ class facet(object):
         except KeyError:
             linespacing = 1
 
-        # +1, for a half a line of padding at top and at the
-        # bottom. This is appropriate for small fontsizes
+        # margins on either side of the strip text
+        m1, m2 = self.inner_strip_margins(location)
         # Using figure.dpi value here does not workout well!
-        breadth = (linespacing*fontsize) * (num_lines+1) / 72.27
+        breadth = (linespacing*fontsize) * num_lines / dpi
+        breadth = breadth + (m1 + m2) / dpi
         return breadth
 
-    def draw_strip_text(self, text_lines, location, pid):
+    def strip_text_position(self, location, strip_size, pid):
+        dpi = 72.27
+        t, b, l, r = self.strip_background_limits(location, pid)
+        m1, m2 = self.inner_strip_margins(location)
+        m1, m2 = m1/dpi, m2/dpi
+
+        if location == 'top':
+            t = b + strip_size
+            x = (l + r)/2
+            y = (b + t + m1 - m2)/2
+        else:
+            r = l + strip_size
+            x = (l + r - m1 + m2)/2
+            y = (t + b)/2
+
+        return x, y
+
+    def strip_dimensions(self, text_lines, location, pid):
         """
-        Create a background patch and put a label on it
+        Calculate the dimension
+
+        Returns
+        -------
+        out : Bunch
+            A structure with all the coordinates required
+            to draw the strip text and the background box.
         """
+        dpi = 72.27
         num_lines = len(text_lines)
-        themeable = self.figure._themeable
+        get_property = self.theme.themeables.property
         ax = self.axs[pid]
         bbox = ax.get_window_extent().transformed(
             self.figure.dpi_scale_trans.inverted())
         ax_width, ax_height = bbox.width, bbox.height  # in inches
         strip_size = self.strip_size(location, num_lines)
+        m1, m2 = self.inner_strip_margins(location)
+        m1, m2 = m1/dpi, m2/dpi
+        margin = 0  # default
 
         if location == 'right':
+            box_x = 1
+            box_y = 0
             box_width = strip_size/ax_width
             box_height = 1
-            x, y = 1 + box_width/2, 0.5
-            xy = (1, 0)
+            # y & height properties of the background slide and
+            # shrink the strip vertically. The y margin slides
+            # it horizontally.
+            with suppress(KeyError):
+                box_y = get_property('strip_background_y', 'y')
+            with suppress(KeyError):
+                box_height = get_property('strip_background_y', 'height')
+            with suppress(KeyError):
+                margin = get_property('strip_margin_y')
+            x = 1 + (strip_size-m2+m1) / (2*ax_width)
+            y = (2*box_y+box_height)/2
+            # margin adjustment
+            hslide = 1 + margin*strip_size/ax_width
+            x *= hslide
+            box_x *= hslide
+        else:
+            box_x = 0
+            box_y = 1
+            box_width = 1
+            box_height = strip_size/ax_height
+            # x & width properties of the background slide and
+            # shrink the strip horizontally. The y margin slides
+            # it vertically.
+            with suppress(KeyError):
+                box_x = get_property('strip_background_x', 'x')
+            with suppress(KeyError):
+                box_width = get_property('strip_background_x', 'width')
+            with suppress(KeyError):
+                margin = get_property('strip_margin_x')
+            x = (2*box_x+box_width)/2
+            y = 1 + (strip_size-m1+m2)/(2*ax_height)
+            # margin adjustment
+            vslide = 1 + margin*strip_size/ax_height
+            y *= vslide
+            box_y *= vslide
+
+        dimensions = Bunch(x=x, y=y, box_x=box_x, box_y=box_y,
+                           box_width=box_width,
+                           box_height=box_height)
+        return dimensions
+
+    def draw_strip_text(self, text_lines, location, pid):
+        """
+        Create a background patch and put a label on it
+        """
+        ax = self.axs[pid]
+        themeable = self.figure._themeable
+        dim = self.strip_dimensions(text_lines, location, pid)
+
+        if location == 'right':
             rotation = -90
             label = '\n'.join(reversed(text_lines))
         else:
-            box_width = 1
-            box_height = strip_size/ax_height
-            x, y = 0.5, 1 + box_height/2
-            xy = (0, 1)
             rotation = 0
             label = '\n'.join(text_lines)
 
-        rect = mpatch.FancyBboxPatch(xy,
-                                     width=box_width,
-                                     height=box_height,
+        rect = mpatch.FancyBboxPatch((dim.box_x, dim.box_y),
+                                     width=dim.box_width,
+                                     height=dim.box_height,
                                      facecolor='lightgrey',
                                      edgecolor='None',
-                                     linewidth=0,
                                      transform=ax.transAxes,
-                                     zorder=1,
+                                     zorder=2.2,  # > ax line & boundary
                                      boxstyle='square, pad=0',
                                      clip_on=False)
 
-        text = mtext.Text(x, y, label,
-                          transform=ax.transAxes,
+        text = mtext.Text(dim.x, dim.y, label,
                           rotation=rotation,
                           verticalalignment='center',
                           horizontalalignment='center',
-                          linespacing=1.5,
-                          zorder=1.2,  # higher than rect
+                          transform=ax.transAxes,
+                          zorder=3.3,  # > rect
                           clip_on=False)
 
         ax.add_artist(rect)

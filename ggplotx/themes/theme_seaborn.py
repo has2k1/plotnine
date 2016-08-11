@@ -1,3 +1,4 @@
+from ..options import get_option
 from .theme import theme
 from .seaborn_rcmod import set as seaborn_set
 
@@ -24,7 +25,9 @@ class theme_seaborn(theme):
     def __init__(self, style='darkgrid', context='notebook',
                  font='sans-serif', font_scale=1):
         theme.__init__(self,
-                       figure_size=(11, 8),
+                       aspect_ratio=get_option('aspect_ratio'),
+                       dpi=get_option('dpi'),
+                       figure_size=get_option('figure_size'),
                        panel_margin=0.1,
                        complete=True)
         d = seaborn_set(context=context, style=style,

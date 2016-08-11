@@ -4,6 +4,7 @@ import sys
 from copy import deepcopy
 
 import pandas as pd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredOffsetbox
 import matplotlib.transforms as mtransforms
@@ -13,8 +14,10 @@ from .aes import aes, make_labels
 from .panel import Panel
 from .layer import Layers
 from .facets import facet_null
+from .options import get_option
 from .themes.theme import theme_get
-from .utils.ggutils import gg_context, gg_options, ggsave
+from .utils import suppress
+from .utils.ggutils import ggsave
 from .utils.exceptions import GgplotError
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -125,13 +128,15 @@ class ggplot(object):
         # If no theme we use the default
         self.theme = self.theme or theme_get()
 
-        with gg_context(theme=self.theme):
+        with mpl.rc_context():
+            # rcparams theming
+            self.theme.apply_rcparams()
             # Drawing
             self.draw_plot()
             self.draw_legend()
             self.draw_labels()
             self.draw_title()
-            # Theming
+            # Artist object theming
             self.theme.apply_axs(self.axs)
             self.theme.apply_figure(self.figure)
 
@@ -148,7 +153,7 @@ class ggplot(object):
             ``axs`` and ``figure``.
         """
         # Good for development
-        if gg_options['close_all_figures']:
+        if get_option('close_all_figures'):
             plt.close('all')
 
         # Create figure and axes
@@ -254,10 +259,19 @@ class ggplot(object):
         bottom = figure.subplotpars.bottom
         W, H = figure.get_size_inches()
         position = self.guides.position
-        try:
-            margin = self.theme.themeables.property('legend_margin')
-        except KeyError:
-            margin = 0.1
+        get_property = self.theme.themeables.property
+        # defaults
+        margin = 0.1
+        strip_margin_x = 0
+        strip_margin_y = 0
+
+        with suppress(KeyError):
+            margin = get_property('legend_margin')
+        with suppress(KeyError):
+            strip_margin_x = get_property('strip_margin_x')
+        with suppress(KeyError):
+            strip_margin_y = get_property('strip_margin_y')
+
         right_strip_width = self.facet.strip_size('right')
         top_strip_height = self.facet.strip_size('top')
 
@@ -269,7 +283,8 @@ class ggplot(object):
         # layout manager.
         if position == 'right':
             loc = 6
-            x = right + (right_strip_width+margin)/W
+            pad = right_strip_width*(1+strip_margin_x) + margin
+            x = right + pad/W
             y = 0.5
         elif position == 'left':
             loc = 7
@@ -278,7 +293,8 @@ class ggplot(object):
         elif position == 'top':
             loc = 8
             x = 0.5
-            y = top + (top_strip_height+margin)/H
+            pad = top_strip_height*(1+strip_margin_y) + margin
+            y = top + pad/H
         elif position == 'bottom':
             loc = 9
             x = 0.5
@@ -311,14 +327,18 @@ class ggplot(object):
         get_property = self.theme.themeables.property
 
         try:
-            xmargin = get_property('axis_title_margin_x')
+            margin = get_property('axis_title_x', 'margin')
         except KeyError:
-            xmargin = 5
+            pad_x = 5
+        else:
+            pad_x = margin.get_as('t', 'pt')
 
         try:
-            ymargin = get_property('axis_title_margin_y')
+            margin = get_property('axis_title_y', 'margin')
         except KeyError:
-            ymargin = 5
+            pad_y = 5
+        else:
+            pad_y = margin.get_as('r', 'pt')
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -336,9 +356,9 @@ class ggplot(object):
         # last_ax = self.axs[-1]
 
         xlabel = self.facet.last_ax.set_xlabel(
-            labels['x'], labelpad=xmargin)
+            labels['x'], labelpad=pad_x)
         ylabel = self.facet.first_ax.set_ylabel(
-            labels['y'], labelpad=ymargin)
+            labels['y'], labelpad=pad_y)
 
         xlabel.set_transform(mtransforms.blended_transform_factory(
             figure.transFigure, mtransforms.IdentityTransform()))
@@ -356,6 +376,7 @@ class ggplot(object):
         # finally has a constraint based layout manager.
         figure = self.figure
         title = self.labels.get('title', '')
+        rcParams = self.theme.rcParams
         get_property = self.theme.themeables.property
 
         # Pick suitable values in inches and convert them to
@@ -366,26 +387,40 @@ class ggplot(object):
 
         # Adjust the title to avoid overlap with the facet
         # labels on the top row
-        # 0.1/H is 0.1 inches in transFigure coordinates A fixed
+        # pad/H is inches in transFigure coordinates. A fixed
         # margin value in inches prevents oblong plots from
         # getting unpredictably large spaces.
         try:
             fontsize = get_property('plot_title', 'size')
         except KeyError:
-            fontsize = self.theme.rcParams.get('font.size', 12)
+            fontsize = float(rcParams.get('font.size', 12))
 
         try:
             linespacing = get_property('plot_title', 'linespacing')
         except KeyError:
             linespacing = 1.2
 
+        try:
+            margin = get_property('plot_title', 'margin')
+        except KeyError:
+            pad = 0.09
+        else:
+            pad = margin.get_as('b', 'in')
+
+        try:
+            strip_margin_x = get_property('strip_margin_x')
+        except KeyError:
+            strip_margin_x = 0
+
         line_size = fontsize / 72.27
         num_lines = len(title.split('\n'))
         title_size = line_size * linespacing * num_lines
         strip_height = self.facet.strip_size('top')
+        # vertical adjustment
+        strip_height *= (1 + strip_margin_x)
 
         x = 0.5
-        y = top + (strip_height+title_size/2+0.1)/H
+        y = top + (strip_height+title_size/2+pad)/H
 
         text = figure.text(x, y, title, ha='center', va='center')
         figure._themeable['plot_title'] = text

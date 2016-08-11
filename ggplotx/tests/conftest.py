@@ -8,16 +8,22 @@ import functools
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.backends import backend_agg, backend_pdf, backend_svg
 from matplotlib.testing.compare import compare_images
 from matplotlib import cbook
 import six
 
-from .. import ggplot
+from .. import ggplot, theme
 
 __all__ = ['cleanup']
 
-TOLERANCE = 17
+TOLERANCE = 5           # Default tolerance for the tests
+DPI = 100               # Default DPI for the tests
+
+# This partial theme modifies all themes that are used in
+# the test. It is limited to setting the size of the test
+# images Should a test require a larger or smaller figure
+# size, the dpi or aspect_ratio should be modified.
+test_theme = theme(figure_size=(6.4, 4.8))
 
 if not os.path.exists(os.path.join(
         os.path.dirname(__file__), 'baseline_images')):
@@ -38,17 +44,33 @@ def ggplot_equals(gg, right):
         ggplot object
     right : str | tuple
         Identifier. If a tuple, then first element is the
-        identifier and the second element is the tolerance
-        for the image comparison.
+        identifier and the second element is a `dict`.
+        The `dict` can have two keys
+            - tol - tolerance for the image comparison, a float.
+            - savefig_kwargs - Parameter used by MPL to save
+                               the figure. This is a `dict`.
+
+    The right looks like any one of the following::
+
+       - 'identifier'
+       - ('identifier', {'tol': 17})
+       - ('identifier', {'tol': 17, 'savefig_kwargs': {'dpi': 80}})
 
     This function is meant to monkey patch ggplot.__eq__
     so that tests can use the `assert` statement.
     """
     if isinstance(right, (tuple, list)):
-        name, tol = right
+        name, params = right
+        tol = params.get('tol', TOLERANCE)
+        _savefig_kwargs = params.get('savefig_kwargs', {})
     else:
         name, tol = right, TOLERANCE
+        _savefig_kwargs = {}
 
+    savefig_kwargs = {'dpi': DPI}
+    savefig_kwargs.update(_savefig_kwargs)
+
+    gg += test_theme
     fig = gg.draw()
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
@@ -56,7 +78,7 @@ def ggplot_equals(gg, right):
     # Save the figure before testing whether the original image
     # actually exists. This make creating new tests much easier,
     # as the result image can afterwards just be copied.
-    fig.savefig(filenames.result)
+    fig.savefig(filenames.result, **savefig_kwargs)
     if os.path.exists(filenames.baseline):
         shutil.copyfile(filenames.baseline, filenames.expected)
     else:
@@ -159,13 +181,8 @@ def _setup():
     mpl.rcdefaults()  # Start with all defaults
     mpl.rcParams['text.hinting'] = True
     mpl.rcParams['text.antialiased'] = True
-    # mpl.rcParams['text.hinting_factor'] = 8
+    mpl.rcParams['text.hinting_factor'] = 8
 
-    # Clear the font caches.  Otherwise, the hinting mode can travel
-    # from one test to another.
-    backend_agg.RendererAgg._fontd.clear()
-    backend_pdf.RendererPdf.truetype_font_cache.clear()
-    backend_svg.RendererSVG.fontd.clear()
     # make sure we don't carry over bad plots from former tests
     msg = ("no of open figs: {} -> find the last test with ' "
            "python tests.py -v' and add a '@cleanup' decorator.")

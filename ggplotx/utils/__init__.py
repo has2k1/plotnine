@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .ggutils import ggsave, gg_options
+from .ggutils import ggsave
 from .utils import (pop, is_string, is_scalar_or_string,
                     is_sequence_of_booleans, is_sequence_of_strings,
                     make_iterable, make_iterable_ntimes, waiver,

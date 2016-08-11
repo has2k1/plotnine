@@ -1,46 +1,49 @@
 from copy import copy, deepcopy
 
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+from matplotlib import patheffects
 
-from .elements import element_rect
+from .elements import (element_line, element_rect, element_blank,
+                       element_text)
 from .theme import theme
+from .theme_gray import theme_gray
 
 
-class theme_xkcd(theme):
+class theme_xkcd(theme_gray):
     """
     xkcd theme
 
-    The theme internally uses the settings from pyplot.xkcd().
+    Parameters
+    ----------
     """
-    def __init__(self, scale=1, length=100, randomness=2):
-        with plt.xkcd(scale=scale,
-                      length=length,
-                      randomness=randomness):
-            _xkcd = mpl.rcParams.copy()
+    def __init__(self, base_size=14, scale=1, length=100, randomness=2):
+        theme_gray.__init__(self, base_size)
+        self.add_theme(
+            theme(
+                text=element_text(
+                    family=['xkcd', 'Humor Sans', 'Comic Sans MS']),
+                axis_ticks=element_line(color='black', size=3),
+                axis_ticks_direction='in',
+                axis_ticks_major_length=8,
+                legend_background=element_rect(
+                    color='black', fill='None'),
+                legend_key=element_rect(fill='None'),
+                panel_border=element_rect(color='black', size=1.5),
+                panel_grid=element_blank(),
+                panel_background=element_rect(fill='white'),
+                strip_background=element_rect(
+                    color='black', fill='white'),
+                strip_background_x=element_rect(width=2/3),
+                strip_background_y=element_rect(height=2/3),
+                strip_margin=-0.5,
+            ),
+            inplace=True)
 
-        # no need to a get a deprecate warning for nothing...
-        for key in mpl._deprecated_map:
-            if key in _xkcd:
-                del _xkcd[key]
-
-        if 'tk.pythoninspect' in _xkcd:
-            del _xkcd['tk.pythoninspect']
-
-        fill = _xkcd.get('patch.facecolor', 'white')
-        if isinstance(fill, tuple):
-            d = {'fill': fill+(.1,)}
-        else:
-            d = {'fill': fill, 'alpha': .1}
-
-        theme.__init__(self,
-                       figure_size=(11, 8),
-                       panel_margin=0.1,
-                       legend_key=element_rect(**d),
-                       complete=True)
-
-        self._rcParams.update({'axes.grid': True})
-        self._rcParams.update(_xkcd)
+        d = {'axes.unicode_minus': False,
+             'path.sketch':  (scale, length, randomness),
+             'path.effects':  [
+                 patheffects.withStroke(linewidth=4, foreground='white')]
+             }
+        self._rcParams.update(d)
 
     def __deepcopy__(self, memo):
         """

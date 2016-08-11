@@ -217,13 +217,13 @@ class guide_legend(guide):
 
         Note the different height sizes for the entries
         """
-        default_size = 20
-        default_pad = 14
 
         # FIXME: This should be in the geom instead of having
         # special case conditional branches
-        def determine_side_length():
-            size = np.ones(nbreak) * default_size
+        def determine_side_length(initial_size):
+            default_pad = initial_size * 0.5
+            # default_pad = 0
+            size = np.ones(nbreak) * initial_size
             for i in range(nbreak):
                 for gl in self.glayers:
                     _size = 0
@@ -240,7 +240,7 @@ class guide_legend(guide):
                     # border/linewidth
                     if issubclass(gl.geom, geom_text):
                         pad = 0
-                        if _size < default_size:
+                        if _size < initial_size:
                             continue
 
                     try:
@@ -256,8 +256,8 @@ class guide_legend(guide):
 
         # keysize
         if self.keywidth is None:
-            width = self._default('legend_key_width',
-                                  determine_side_length())
+            width = determine_side_length(
+                self._default('legend_key_width', 18))
             if self.direction == 'vertical':
                 width[:] = width.max()
             self._keywidth = width
@@ -265,8 +265,8 @@ class guide_legend(guide):
             self._keywidth = [self.keywidth]*nbreak
 
         if self.keyheight is None:
-            height = self._default('legend_key_height',
-                                   determine_side_length())
+            height = determine_side_length(
+                self._default('legend_key_height', 18))
             if self.direction == 'horizontal':
                 height[:] = height.max()
             self._keyheight = height
@@ -335,7 +335,7 @@ class guide_legend(guide):
         entries = []
         for d, l in zip(drawings, labels):
             e = packer(children=[l, d][slc],
-                       sep=self.label_separation,
+                       sep=self._label_margin,
                        align='center',
                        pad=0)
             entries.append(e)
@@ -376,7 +376,7 @@ class guide_legend(guide):
         packer, slc = lookup[self.title_position]
         children = [title_box, entries_box][slc]
         box = packer(children=children,
-                     sep=self.title_separation,
+                     sep=self._title_margin,
                      align=self._title_align,
                      pad=0)
         return box

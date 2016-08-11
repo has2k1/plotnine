@@ -1,3 +1,4 @@
+from ..options import get_option
 from .elements import element_text, element_blank
 from .theme import theme
 
@@ -18,7 +19,9 @@ class theme_void(theme):
                 family=base_family, style='normal', color='black',
                 size=base_size, linespacing=0.9, ha='center',
                 va='center', rotation=0),
-            figure_size=(11, 8),
+            aspect_ratio=get_option('aspect_ratio'),
+            dpi=get_option('dpi'),
+            figure_size=get_option('figure_size'),
             plot_margin=None,
             panel_margin=0,
             axis_text_x=element_blank(),

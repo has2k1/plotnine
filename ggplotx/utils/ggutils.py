@@ -6,90 +6,15 @@ from __future__ import (absolute_import, division, print_function,
 
 import os
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import six
 
 from .exceptions import gg_warn, GgplotError
 
 
-class _gg_options(dict):
-
-    def __setitem__(self, key, val):
-        if key not in self:
-            raise GgplotError("Unknown option '{}'".format(key))
-        dict.__setitem__(self, key, val)
-
-    def __deepcopy__(self, memo):
-        return self
-
-
-gg_options = _gg_options(
-    # Development flag, e.g. set to True to prevent
-    # the queuing up of figures when errors happen.
-    close_all_figures=False,
-    current_theme=None)
-
-
-if not hasattr(mpl, 'rc_context'):
-    from .utils import _rc_context
-    mpl.rc_context = _rc_context
-
-
-class gg_context(object):
-    def __init__(self, fname=None, theme=None):
-        self.fname = fname
-        self.theme = theme
-
-    def __enter__(self):
-        # Outer matplotlib context
-        try:
-            self._rc_context = mpl.rc_context()
-        except AttributeError:
-            # Workaround for matplotlib 1.1.1 not having a rc_context
-            self._rcparams = mpl.rcParams.copy()
-            if self.fname:
-                mpl.rcfile(self.fname)
-        else:
-            self._rc_context.__enter__()
-
-        # Inside self._rc_context, modify rc params
-        if self.theme:
-            # Use a throw away rcParams, so subsequent plots
-            # will not have any residual from this plot
-            for key, val in six.iteritems(self.theme.rcParams):
-                # there is a bug in matplotlib which does not allow
-                # None directly
-                # https://github.com/matplotlib/matplotlib/issues/2543
-                try:
-                    if key == 'text.dvipnghack' and val is None:
-                        val = "none"
-                    mpl.rcParams[key] = val
-                except Exception as e:
-                    msg = ("""Setting "mpl.rcParams['{}']={}" """
-                           "raised an Exception: {}")
-                    raise GgplotError(msg.format(key, val, e))
-        mpl.interactive(False)
-
-    def __exit__(self, type, value, tb):
-        # restore rc params
-        try:
-            self._rc_context.__exit__(type, value, tb)
-        except AttributeError:
-            mpl.rcParams.update(self._rcparams)
-
-        # other clean up
-        self.reset()
-
-    def reset(self):
-        pass
-
-
-# API-docs from ggplot2: GPL-2 licensed
-
 def ggsave(filename=None, plot=None, device=None, format=None,
            path=None, scale=1, width=None, height=None, units="in",
-           dpi=300, limitsize=True, **kwargs):
+           dpi=None, limitsize=True, **kwargs):
     """
     Save a ggplot with sensible defaults
 
@@ -120,8 +45,9 @@ def ggsave(filename=None, plot=None, device=None, format=None,
     units : str
         Units for width and height when either one is explicitly
         specified (in, cm, or mm).
-    dpi : number
-        DPI to use for raster graphics.
+    dpi : float
+        DPI to use for raster graphics. If None, defaults to using
+        the `dpi` of theme, if none is set then a `dpi` of 100.
     limitsize : bool
         If ``True`` (the default), ggsave will not save images
         larger than 50x50 inches, to prevent the common error
@@ -146,7 +72,16 @@ def ggsave(filename=None, plot=None, device=None, format=None,
     else:
         if hasattr(plot, 'draw'):
             from ..themes.theme import theme, theme_get
-            plot.theme = (plot.theme or theme_get()) + theme(dpi=dpi)
+            plot.theme = plot.theme or theme_get()
+            if dpi is None:
+                try:
+                    dpi = plot.theme.themeables.property('dpi')
+                except KeyError:
+                    dpi = 100
+                    plot.theme += theme(dpi=dpi)
+
+            # Should not need this with MPL 2.0
+            fig_kwargs['dpi'] = dpi
             figure = plot.draw()
         else:
             raise GgplotError("plot is not a ggplot object")

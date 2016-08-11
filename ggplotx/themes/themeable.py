@@ -299,9 +299,15 @@ class Themeables(dict):
             If key is in not in any of themeables
         """
         hlist = themeable._hierarchy[name]
+        scalar = key == 'value'
         for th in hlist:
-            with suppress(KeyError):
-                return self[th].properties[key]
+            try:
+                value = self[th].properties[key]
+            except KeyError:
+                continue
+            else:
+                if not scalar or value is not None:
+                    return value
 
         msg = "'{}' is not in the properties of {} "
         raise KeyError(msg.format(key, hlist))
@@ -350,12 +356,18 @@ class axis_title_x(themeable):
     """
     def apply_figure(self, figure):
         super(axis_title_x, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             text = figure._themeable['axis_title_x']
-            text.set(**self.properties)
+            text.set(**properties)
 
     def blank_figure(self, figure):
         super(axis_title_x, self).blank_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             text = figure._themeable['axis_title_x']
             text.set_visible(False)
@@ -371,9 +383,12 @@ class axis_title_y(themeable):
     """
     def apply_figure(self, figure):
         super(axis_title_y, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             text = figure._themeable['axis_title_y']
-            text.set(**self.properties)
+            text.set(**properties)
 
     def blank_figure(self, figure):
         super(axis_title_y, self).blank_figure(figure)
@@ -403,10 +418,13 @@ class legend_title(themeable):
     """
     def apply_figure(self, figure):
         super(legend_title, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             textareas = figure._themeable['legend_title']
             for ta in textareas:
-                ta._text.set(**self.properties)
+                ta._text.set(**properties)
 
     def blank_figure(self, figure):
         super(legend_title, self).blank_figure(figure)
@@ -434,12 +452,15 @@ class legend_text_legend(themeable):
     """
     def apply_figure(self, figure):
         super(legend_text_legend, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             texts = figure._themeable['legend_text_legend']
             for text in texts:
                 if not hasattr(text, '_x'):  # textarea
                     text = text._text
-                text.set(**self.properties)
+                text.set(**properties)
 
     def blank_figure(self, figure):
         super(legend_text_legend, self).blank_figure(figure)
@@ -467,12 +488,15 @@ class legend_text_colorbar(themeable):
     """
     def apply_figure(self, figure):
         super(legend_text_colorbar, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             texts = figure._themeable['legend_colorbar_text']
             for text in texts:
                 if not hasattr(text, '_x'):  # textarea
                     text = text._text
-                text.set(**self.properties)
+                text.set(**properties)
 
     def blank_figure(self, figure):
         super(legend_text_colorbar, self).blank_figure(figure)
@@ -505,9 +529,12 @@ class plot_title(themeable):
     """
     def apply_figure(self, figure):
         super(plot_title, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             text = figure._themeable['plot_title']
-            text.set(**self.properties)
+            text.set(**properties)
 
     def blank_figure(self, figure):
         super(plot_title, self).blank_figure(figure)
@@ -526,10 +553,13 @@ class strip_text_x(themeable):
     """
     def apply_figure(self, figure):
         super(strip_text_x, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             texts = figure._themeable['strip_text_x']
             for text in texts:
-                text.set(**self.properties)
+                text.set(**properties)
 
         with suppress(KeyError):
             rects = figure._themeable['strip_background_x']
@@ -559,10 +589,13 @@ class strip_text_y(themeable):
     """
     def apply_figure(self, figure):
         super(strip_text_y, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         with suppress(KeyError):
             texts = figure._themeable['strip_text_y']
             for text in texts:
-                text.set(**self.properties)
+                text.set(**properties)
 
         with suppress(KeyError):
             rects = figure._themeable['strip_background_y']
@@ -614,9 +647,12 @@ class axis_text_x(themeable):
     """
     def apply(self, ax):
         super(axis_text_x, self).apply(ax)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         labels = ax.get_xticklabels()
         for l in labels:
-            l.set(**self.properties)
+            l.set(**properties)
 
     def blank(self, ax):
         super(axis_text_x, self).blank(ax)
@@ -635,9 +671,12 @@ class axis_text_y(themeable):
     """
     def apply(self, ax):
         super(axis_text_y, self).apply(ax)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
         labels = ax.get_yticklabels()
         for l in labels:
-            l.set(**self.properties)
+            l.set(**properties)
 
     def blank(self, ax):
         super(axis_text_y, self).blank(ax)
@@ -1371,7 +1410,7 @@ class dpi(themeable):
         rcParams = super(dpi, self).rcParams
         val = self.properties['value']
         rcParams['figure.dpi'] = val
-        rcParams['savefig.dpi'] = val
+        rcParams['savefig.dpi'] = 'figure'
         return rcParams
 
 
@@ -1415,39 +1454,6 @@ class facet_spacing(themeable):
     def setup_figure(self, figure):
         kwargs = self.properties['value']
         figure.subplots_adjust(**kwargs)
-
-
-class axis_title_margin_x(themeable):
-    """
-    Margin between the x-axis title and the x-axis
-
-    Parameters
-    ----------
-    theme_element : int
-        Value in points.
-    """
-
-
-class axis_title_margin_y(themeable):
-    """
-    Margin between the x-axis title and the y-axis
-
-    Parameters
-    ----------
-    theme_element : int
-        Value in points.
-    """
-
-
-class axis_title_margin(axis_title_margin_x, axis_title_margin_y):
-    """
-    Margin between the axis title and the axis texts / ticks
-
-    Parameters
-    ----------
-    theme_element : int
-        Value in points.
-    """
 
 
 class legend_box(themeable):
@@ -1563,4 +1569,46 @@ class legend_title_align(themeable):
     theme_element : str | tuple
         If a string it should be one of *right*, *left*, *center*,
         *top* or *bottom*.
+    """
+
+
+class strip_margin_x(themeable):
+    """
+    Vertical margin between the strip background and the panel border
+
+    Parameters
+    ----------
+    theme_element : float
+        Value as a proportion of the strip size. A good value
+        should be the range :math:`[-1, 0.5]`. A negative value
+        puts the strip inside the axes and a positive value
+        creates a space between the strip and the axes.
+    """
+
+
+class strip_margin_y(themeable):
+    """
+    Horizontal margin between the strip background and the panel border
+
+    Parameters
+    ----------
+    theme_element : float
+        Value as a proportion of the strip size. A good value
+        should be the range :math:`[-1, 0.5]`. A negative value
+        puts the strip inside the axes and a positive value
+        creates a space between the strip and the axes.
+    """
+
+
+class strip_margin(strip_margin_x, strip_margin_y):
+    """
+    Margin between the strip background and the panel border
+
+    Parameters
+    ----------
+    theme_element : float
+        Value as a proportion of the strip size. A good value
+        should be the range :math:`[-1, 0.5]`. A negative value
+        puts the strip inside the axes and a positive value
+        creates a space between the strip and the axes.
     """

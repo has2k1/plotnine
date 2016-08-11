@@ -1,8 +1,29 @@
 from copy import copy, deepcopy
 
+from ..options import get_option, set_option
 from ..utils.exceptions import GgplotError
-from ..utils import gg_options
 from .themeable import themeable, Themeables
+
+
+# All complete themes are initiated with these rcparams. They
+# can be overridden.
+default_rcparams = {
+    'axes.axisbelow': 'True',
+    'font.sans-serif': ['Helvetica', 'Avant Garde',
+                        'Computer Modern Sans serif', 'Arial'],
+    'font.serif': ['Times', 'Palatino',
+                   'New Century Schoolbook', 'Bookman',
+                   'Computer Modern Roman', 'Times New Roman'],
+    'lines.antialiased': 'True',
+    'patch.antialiased': 'True',
+    'timezone': 'UTC',
+    # Choosen to match MPL 2.0 defaults
+    'savefig.dpi': 'figure',
+    'figure.subplot.left': 0.125,
+    'figure.subplot.right': 0.9,
+    'figure.subplot.top': 0.88,
+    'figure.subplot.bottom': 0.11,
+}
 
 
 class theme(object):
@@ -50,7 +71,12 @@ class theme(object):
     def __init__(self, complete=False, **kwargs):
         self.themeables = Themeables()
         self.complete = complete
-        self._rcParams = {}
+
+        if complete:
+            self._rcParams = deepcopy(default_rcparams)
+        else:
+            self._rcParams = {}
+
         # This is set when the figure is created,
         # it is useful at legend drawing time and
         # when applying the theme.
@@ -118,6 +144,19 @@ class theme(object):
         """
         for th in self.themeables.values():
             th.apply_figure(figure)
+
+    def apply_rcparams(self):
+        """
+        Set the rcParams
+        """
+        from matplotlib import rcParams
+        for key, val in self.rcParams.items():
+            try:
+                rcParams[key] = val
+            except Exception as e:
+                msg = ("""Setting "mpl.rcParams['{}']={}" """
+                       "raised an Exception: {}")
+                raise GgplotError(msg.format(key, val, e))
 
     @property
     def rcParams(self):
@@ -220,7 +259,10 @@ def theme_get():
     the default.
     """
     from .theme_gray import theme_gray
-    return gg_options['current_theme'] or theme_gray()
+    _theme = get_option('current_theme')
+    if isinstance(_theme, type):
+        _theme = _theme()
+    return _theme or theme_gray()
 
 
 def theme_set(new):
@@ -237,11 +279,12 @@ def theme_set(new):
     out : theme
         Previous theme
     """
-    if not issubclass(new.__class__, theme):
+    if (not isinstance(new, theme) and
+            not issubclass(new, theme)):
         raise GgplotError("Expecting object to be a theme")
 
-    out = gg_options['current_theme']
-    gg_options['current_theme'] = new
+    out = get_option('current_theme')
+    set_option('current_theme', new)
     return out
 
 
