@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, print_function
-from copy import deepcopy
 
 import pandas as pd
 
@@ -21,11 +20,6 @@ class facet_null(facet):
         facet.__init__(self, shrink=shrink)
         self.nrow = 1
         self.ncol = 1
-
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
-        gg.facet = self
-        return gg
 
     def train_layout(self, data):
         layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,

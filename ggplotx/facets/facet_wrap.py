@@ -1,7 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from copy import deepcopy
 import re
 
 import six
@@ -63,11 +62,6 @@ class facet_wrap(facet):
         self.nrow, self.ncol = check_dimensions(nrow, ncol)
         # facet_wrap gets its labelling at the top
         self.num_vars_x = len(self.vars)
-
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
-        gg.facet = self
-        return gg
 
     def train_layout(self, data):
         layout = layout_wrap(data, vars=self.vars, nrow=self.nrow,

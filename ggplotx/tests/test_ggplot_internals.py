@@ -6,7 +6,9 @@ import pandas as pd
 import pytest
 
 from .. import ggplot, aes, geom_point, geom_histogram, geom_line
-from .. import xlab, ylab, labs, ggtitle
+from .. import xlab, ylab, labs, ggtitle, xlim, lims, guides
+from .. import scale_x_continuous, coord_trans, annotate
+from .. import stat_identity, facet_null, theme, theme_gray
 from ..aes import is_calculated_aes, strip_dots
 from ..utils.exceptions import GgplotError
 from .conftest import cleanup
@@ -124,3 +126,47 @@ def test_nonzero_indexed_data():
                        99: {'blip': 1, 'blop': 3}}).T
     p = ggplot(aes(x='blip', y='blop'), data=df) + geom_line()
     p.draw()
+
+
+def test_inplace_add():
+    p = _p = ggplot(df)
+
+    p += aes('x', 'y')
+    assert p is _p
+
+    p += geom_point()
+    assert p is _p
+
+    p += stat_identity()
+    assert p is _p
+
+    p += scale_x_continuous()
+    assert p is _p
+
+    p += xlim(0, 10)
+    assert p is _p
+
+    p += lims(y=(0, 10))
+    assert p is _p
+
+    p += labs(x='x')
+    assert p is _p
+
+    p += coord_trans()
+    assert p is _p
+
+    p += facet_null()
+    assert p is _p
+
+    p += annotate('point', 5, 5, color='red', size=5)
+    assert p is _p
+
+    p += guides()
+    assert p is _p
+
+    p += theme_gray()
+    assert p is _p
+
+    th = _th = theme_gray()
+    th += theme(aspect_ratio=1)
+    assert th is _th

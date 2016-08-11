@@ -70,8 +70,8 @@ class _lim(object):
                           limits=self.limits,
                           trans=self.trans)
 
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
+    def __radd__(self, gg, inplace=False):
+        gg = gg if inplace else deepcopy(gg)
         scale = self.get_scale(gg)
         gg.scales.append(scale)
         return gg
@@ -157,13 +157,17 @@ class lims(object):
     def __init__(self, **kwargs):
         self._kwargs = kwargs
 
-    def __radd__(self, gg):
+    def __radd__(self, gg, inplace=False):
         thismodule = sys.modules[__name__]
         for ae, value in self._kwargs.items():
             try:
                 klass = getattr(thismodule, '{}lim'.format(ae))
             except AttributeError:
                 raise GgplotError("Cannot change limits for '{}'")
-            gg = gg + klass(value)
+
+            if inplace:
+                gg += klass(value)
+            else:
+                gg = gg + klass(value)
 
         return gg

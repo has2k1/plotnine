@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
+from copy import deepcopy
+
 import numpy as np
 from matplotlib.cbook import Bunch
 
@@ -78,6 +80,11 @@ class facet(object):
         self.dir = dir
         self.free = {'x': scales in ('free_x', 'free'),
                      'y': scales in ('free_y', 'free')}
+
+    def __radd__(self, gg, inplace=False):
+        gg = gg if inplace else deepcopy(gg)
+        gg.facet = self
+        return gg
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):
         ax = self.axs[pidx]

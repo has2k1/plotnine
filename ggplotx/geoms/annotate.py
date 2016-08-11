@@ -92,5 +92,5 @@ class annotate(object):
                                      show_legend=False,
                                      **kwargs)
 
-    def __radd__(self, gg):
-        return gg + self._annotation_geom
+    def __radd__(self, gg, inplace=False):
+        return self._annotation_geom.__radd__(gg, inplace=inplace)

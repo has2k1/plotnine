@@ -28,8 +28,8 @@ class labs(object):
         else:
             self.labels = kwargs
 
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
+    def __radd__(self, gg, inplace=False):
+        gg = gg if inplace else deepcopy(gg)
         gg.labels.update(self.labels)
         return gg
 

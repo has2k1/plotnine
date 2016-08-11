@@ -102,6 +102,15 @@ class ggplot(object):
 
         return result
 
+    def __iadd__(self, other):
+        """
+        Add other to ggplot object
+        """
+        try:
+            return other.__radd__(self, inplace=True)
+        except TypeError:
+            return other.__radd__(self)
+
     def save(self, filename=None, **kwargs):
         """
         Save plot image

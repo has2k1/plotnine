@@ -56,7 +56,8 @@ class guides(dict):
         self.box_align = None
         self.box_margin = None
 
-    def __radd__(self, gg):
+    def __radd__(self, gg, inplace=False):
+        gg = gg if inplace else deepcopy(gg)
         new_guides = {}
         for k in self:
             new_guides[k] = deepcopy(self[k])

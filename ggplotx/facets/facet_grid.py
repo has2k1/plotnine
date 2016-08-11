@@ -1,7 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from copy import deepcopy
 import re
 
 import six
@@ -64,11 +63,6 @@ class facet_grid(facet):
                            'y': space in ('free_y', 'free')}
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
-
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
-        gg.facet = self
-        return gg
 
     def train_layout(self, data):
         layout = layout_grid(data, rows=self.rows, cols=self.cols,

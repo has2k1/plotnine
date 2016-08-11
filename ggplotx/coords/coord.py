@@ -17,8 +17,8 @@ class coord(object):
     # If the coordinate system is linear
     is_linear = False
 
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
+    def __radd__(self, gg, inplace=False):
+        gg = gg if inplace else deepcopy(gg)
         gg.coordinates = self
         return gg
 

@@ -217,7 +217,7 @@ class stat(object):
         raise NotImplementedError(
             msg.format(cls.__name__))
 
-    def __radd__(self, gg):
+    def __radd__(self, gg, inplace=False):
         from ..geoms.geom import geom
         _geom = geom.from_stat(self)
-        return gg + _geom
+        return _geom.__radd__(gg, inplace=inplace)

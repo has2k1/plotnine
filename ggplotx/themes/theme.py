@@ -216,7 +216,7 @@ class theme(object):
             raise GgplotError(msg)
         return self.add_theme(other)
 
-    def __radd__(self, other):
+    def __radd__(self, other, inplace=False):
         """
         Add theme to ggplot object or to another theme
 
@@ -231,15 +231,15 @@ class theme(object):
         Subclasses should not override this method.
         """
         # ggplot() + theme
-        if not isinstance(other, theme):
-            gg = deepcopy(other)
+        if hasattr(other, 'theme'):
+            gg = other if inplace else deepcopy(other)
             if self.complete:
                 gg.theme = self
             else:
                 # If no theme has been added yet,
                 # we modify the default theme
                 gg.theme = gg.theme or theme_get()
-                gg.theme = gg.theme.add_theme(self)
+                gg.theme = gg.theme.add_theme(self, inplace=inplace)
             return gg
         # theme1 + theme2
         else:
@@ -247,7 +247,13 @@ class theme(object):
                 return self
             else:
                 # other combined with self.
-                return other.add_theme(self)
+                return other.add_theme(self, inplace=inplace)
+
+    def __iadd__(self, other):
+        """
+        Add theme to theme
+        """
+        return self.add_theme(other, inplace=True)
 
 
 def theme_get():

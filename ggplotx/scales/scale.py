@@ -94,12 +94,12 @@ class scale(object):
                 self.guide is not None):
             self.guide = None
 
-    def __radd__(self, gg):
+    def __radd__(self, gg, inplace=False):
         """
         Add this scales to the list of scales for the
         ggplot object
         """
-        gg = deepcopy(gg)
+        gg = gg if inplace else deepcopy(gg)
         gg.scales.append(self)
         return gg
 

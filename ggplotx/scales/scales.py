@@ -30,7 +30,7 @@ class Scales(list):
         if any(cover_ae):
             gg_warn(_TPL_DUPLICATE_SCALE.format(ae))
             idx = cover_ae.index(True)
-            self.remove(idx)
+            self.pop(idx)
         # super() does not work well with reloads
         list.append(self, sc)
 

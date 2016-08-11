@@ -229,8 +229,8 @@ class geom(object):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
-    def __radd__(self, gg):
-        gg = deepcopy(gg)
+    def __radd__(self, gg, inplace=False):
+        gg = gg if inplace else deepcopy(gg)
 
         # create and add layer
         gg.layers.append(layer.from_geom(self))
