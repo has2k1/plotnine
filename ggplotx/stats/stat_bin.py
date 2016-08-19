@@ -39,12 +39,6 @@ class stat_bin(stat):
             msg = "stat_bin() must not be used with a y aesthetic."
             raise GgplotError(msg)
 
-        if data['x'].dtype.kind == 'i':
-            msg = ("stat_bin requires a continuous x variable the x "
-                   "variable is discrete. "
-                   "Perhaps you want stat='count'?")
-            raise GgplotError(msg)
-
         if params['closed'] not in ('right', 'left'):
             raise GgplotError(
                 "`closed` should either 'right' or 'left'")
