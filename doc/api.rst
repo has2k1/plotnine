@@ -375,13 +375,17 @@ Users should never create instances of *themeable*.
    axis_ticks_direction_x
    axis_ticks_direction_y
    axis_ticks_length
+   axis_ticks_major
    axis_ticks_major_length
    axis_ticks_major_pad
+   axis_ticks_major_x
+   axis_ticks_major_y
+   axis_ticks_minor
    axis_ticks_minor_length
    axis_ticks_minor_pad
+   axis_ticks_minor_x
+   axis_ticks_minor_y
    axis_ticks_pad
-   axis_ticks_x
-   axis_ticks_y
    axis_title
    axis_title_x
    axis_title_y
@@ -434,7 +438,6 @@ Users should never create instances of *themeable*.
    text
    title
    themeable
-
 
 Theme helper functions and classes
 ----------------------------------

@@ -793,7 +793,7 @@ class axis_line(axis_line_x, axis_line_y):
     pass
 
 
-class axis_ticks_x(themeable):
+class axis_ticks_minor_x(themeable):
     """
     x-axis tick lines
 
@@ -802,46 +802,118 @@ class axis_ticks_x(themeable):
     theme_element : element_line
     """
     def apply(self, ax):
-        super(axis_ticks_x, self).apply(ax)
+        super(axis_ticks_minor_x, self).apply(ax)
 
         d = deepcopy(self.properties)
         with suppress(KeyError):
             d['markeredgewidth'] = d.pop('linewidth')
 
-        for line in ax.get_xticklines():
+        for line in ax.xaxis.get_minorticklines():
             line.set(**d)
 
     def blank(self, ax):
-        super(axis_ticks_x, self).blank(ax)
-        ax.tick_params(axis='x', which='both', length=0)
+        super(axis_ticks_minor_x, self).blank(ax)
+        for line in ax.xaxis.get_minorticklines():
+            line.set_visible(False)
 
 
-class axis_ticks_y(themeable):
+class axis_ticks_minor_y(themeable):
     """
-    y-axis tick lines
+    y-axis minor tick lines
 
     Parameters
     ----------
     theme_element : element_line
     """
     def apply(self, ax):
-        super(axis_ticks_y, self).apply(ax)
+        super(axis_ticks_minor_y, self).apply(ax)
 
         d = deepcopy(self.properties)
         with suppress(KeyError):
             d['markeredgewidth'] = d.pop('linewidth')
 
-        for line in ax.get_yticklines():
+        for line in ax.yaxis.get_minorticklines():
             line.set(**d)
 
     def blank(self, ax):
-        super(axis_ticks_y, self).blank(ax)
-        ax.tick_params(axis='y', which='both', length=0)
+        super(axis_ticks_minor_y, self).blank(ax)
+        for line in ax.yaxis.get_minorticklines():
+            line.set_visible(False)
 
 
-class axis_ticks(axis_ticks_x, axis_ticks_y):
+class axis_ticks_major_x(themeable):
     """
-    x & y axis tick lines
+    x-axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+    def apply(self, ax):
+        super(axis_ticks_major_x, self).apply(ax)
+
+        d = deepcopy(self.properties)
+        with suppress(KeyError):
+            d['markeredgewidth'] = d.pop('linewidth')
+
+        for line in ax.xaxis.get_majorticklines():
+            line.set(**d)
+
+    def blank(self, ax):
+        super(axis_ticks_major_x, self).blank(ax)
+        for line in ax.xaxis.get_majorticklines():
+            line.set_visible(False)
+
+
+class axis_ticks_major_y(themeable):
+    """
+    y-axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+    def apply(self, ax):
+        super(axis_ticks_major_y, self).apply(ax)
+
+        d = deepcopy(self.properties)
+        with suppress(KeyError):
+            d['markeredgewidth'] = d.pop('linewidth')
+
+        for line in ax.yaxis.get_majorticklines():
+            line.set(**d)
+
+    def blank(self, ax):
+        super(axis_ticks_major_y, self).blank(ax)
+        for line in ax.yaxis.get_majorticklines():
+            line.set_visible(False)
+
+
+class axis_ticks_major(axis_ticks_major_x, axis_ticks_major_y):
+    """
+    x & y axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+    pass
+
+
+class axis_ticks_minor(axis_ticks_minor_x, axis_ticks_minor_y):
+    """
+    x & y axis minor tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+    pass
+
+
+class axis_ticks(axis_ticks_major, axis_ticks_minor):
+    """
+    x & y major and minor axis tick lines
 
     Parameters
     ----------
