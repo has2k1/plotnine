@@ -413,6 +413,10 @@ class scale_continuous(scale):
     def __init__(self, **kwargs):
         # Make sure we have a transform.
         self.trans = kwargs.pop('trans', self._trans)
+
+        with suppress(KeyError):
+            self.limits = kwargs.pop('limits')
+
         scale.__init__(self, **kwargs)
 
     @property
@@ -437,7 +441,8 @@ class scale_continuous(scale):
         labeling of the plot axis and the guides are in
         the original dataspace.
         """
-        self._limits = self.trans.transform(value)
+        limits = self.trans.transform(value)
+        self._limits = np.sort(limits)
 
     def train(self, x):
         """

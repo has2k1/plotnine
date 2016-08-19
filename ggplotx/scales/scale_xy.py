@@ -5,7 +5,7 @@ import pandas as pd
 from mizani.bounds import expand_range
 
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
-from ..utils import identity, match, is_waive, alias
+from ..utils import identity, match, alias
 from ..utils.exceptions import GgplotError
 from .range import RangeContinuous
 from .scale import scale_discrete, scale_continuous
