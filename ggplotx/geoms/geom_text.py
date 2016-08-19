@@ -26,7 +26,8 @@ class geom_text(geom):
                       'parse': False, 'hjust': 'center',
                       'family': None, 'fontweight': 'bold',
                       'fontstyle': 'normal', 'vjust': 'center',
-                      'nudge_x': 0, 'nudge_y': 0}
+                      'nudge_x': 0, 'nudge_y': 0,
+                      'format_string': None}
 
     def __init__(self, *args, **kwargs):
         nudge_kwargs = {}
@@ -38,17 +39,28 @@ class geom_text(geom):
             kwargs['position'] = position_nudge(**nudge_kwargs)
         geom.__init__(self, *args, **kwargs)
 
+    def setup_data(self, data):
+        parse = self.params['parse']
+        format_string = self.params['format_string']
+
+        # format
+        if format_string:
+            data['label'] = [
+                format_string.format(l) for l in data['label']]
+
+        # Parse latex
+        if parse:
+            data['label'] = [
+                '${}$'.format(l) for l in data['label']]
+
+        return data
+
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):
         data = coord.transform(data, panel_scales)
 
         # Bind color and alpha
         color = to_rgba(data['color'], data['alpha'])
-
-        # Parse latex
-        if params['parse']:
-            data['label'] = ['${}$'.format(l)
-                             for l in data['label']]
 
         # Put all ax.text parameters in dataframe so
         # that each row represents a text instance
@@ -64,8 +76,8 @@ class geom_text(geom):
         data['zorder'] = params['zorder']
         data['clip_on'] = True
 
-        # 'fill' indicates geom_label so we need an MPL bbox
-        draw_label = 'fill' in data
+        # 'boxstyle' indicates geom_label so we need an MPL bbox
+        draw_label = 'boxstyle' in params
         if draw_label:
             fill = to_rgba(data.pop('fill'), data['alpha'])
             if isinstance(fill, tuple):
@@ -84,6 +96,8 @@ class geom_text(geom):
             bbox = {'linewidth': params['label_size'],
                     'boxstyle': boxstyle}
         else:
+            with suppress(KeyError):
+                del data['fill']
             bbox = {}
 
         # Unwanted
