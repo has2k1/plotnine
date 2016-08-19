@@ -12,7 +12,7 @@ aspect_ratio = None
 dpi = 100
 
 #: Default figure size inches
-figure_size = (6.4, 4.8)
+figure_size = (640/dpi, 480/dpi)
 
 
 def get_option(name):

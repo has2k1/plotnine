@@ -17,13 +17,13 @@ from .. import ggplot, theme
 __all__ = ['cleanup']
 
 TOLERANCE = 5           # Default tolerance for the tests
-DPI = 100               # Default DPI for the tests
+DPI = 72.27               # Default DPI for the tests
 
 # This partial theme modifies all themes that are used in
 # the test. It is limited to setting the size of the test
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
-test_theme = theme(figure_size=(6.4, 4.8))
+test_theme = theme(figure_size=(640/DPI, 480/DPI))
 
 if not os.path.exists(os.path.join(
         os.path.dirname(__file__), 'baseline_images')):
