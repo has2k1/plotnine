@@ -101,6 +101,7 @@ def compute_density(x, weight, range, **params):
     else:
         fft = False
 
+    x = np.asarray(x, dtype=np.float)
     kde = sm.nonparametric.KDEUnivariate(x)
     kde.fit(
         kernel=params['kernel'],

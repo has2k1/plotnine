@@ -489,7 +489,6 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         _lst = [x for x in vars if x in df]
         if _lst:
             values.append(df[_lst])
-    print(values)
 
     # Form the base data frame which contains all combinations
     # of facetting variables that appear in the data

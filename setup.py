@@ -29,7 +29,7 @@ def get_required_packages():
                         'scipy',
                         'patsy >= 0.4.1',
                         'statsmodels >= 0.6',
-                        'pandas >= 0.18.1',
+                        'pandas >= 0.19.0',
                         ]
     return install_requires
 

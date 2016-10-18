@@ -3,7 +3,8 @@ import itertools
 
 import numpy as np
 import pandas as pd
-import pandas.core.common as com
+import pandas.api.types as pdtypes
+
 from six.moves import range
 
 from ..aes import aes_to_scale
@@ -151,7 +152,7 @@ class Scales(list):
         # Loop through each variable, mapping across each scale,
         # then joining back into the copy of the data
         for col in vars:
-            use_df = com.is_categorical_dtype(data[col])
+            use_df = pdtypes.is_categorical_dtype(data[col])
             if use_df:
                 cat_cols.append(col)
             for i, sc in enumerate(self, start=1):

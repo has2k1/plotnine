@@ -12,7 +12,7 @@ from weakref import WeakValueDictionary
 import six
 import numpy as np
 import pandas as pd
-import pandas.core.common as com
+import pandas.api.types as pdtypes
 import matplotlib.cbook as cbook
 from six import add_metaclass
 from matplotlib.colors import colorConverter
@@ -267,16 +267,6 @@ def add_margins(df, vars, margins=True):
     if not margin_vars:
         return df
 
-    # all margin columns become categoricals
-    all_vars = set([v for vlst in margin_vars for v in vlst])
-    for v in all_vars:
-        df[v] = pd.Categorical(df[v])
-        try:
-            df[v].cat.add_categories('(all)', inplace=True)
-        except ValueError:
-            # Already a categorical with '(all)' level
-            pass
-
     # create margin dataframes
     margin_dfs = [df]
     for vlst in margin_vars[1:]:
@@ -287,6 +277,23 @@ def add_margins(df, vars, margins=True):
 
     merged = pd.concat(margin_dfs, axis=0)
     merged.reset_index(drop=True, inplace=True)
+
+    # All margin columns become categoricals. The margin indicator
+    # (all) needs to be added as the last level of the categories.
+    categories = {}
+    for v in itertools.chain(*vars):
+        col = df[v]
+        if not pdtypes.is_categorical_dtype(df[v].dtype):
+            col = pd.Categorical(df[v])
+        categories[v] = col.categories
+        if '(all)' not in categories[v]:
+            categories[v] = categories[v].insert(
+                len(categories[v]), '(all)')
+
+    for v in merged.columns.intersection(set(categories)):
+        merged[v] = merged[v].astype(
+            'category', categories=categories[v])
+
     return merged
 
 
@@ -351,7 +358,7 @@ def _id_var(x, drop=False):
     if len(x) == 0:
         return []
 
-    if com.is_categorical_dtype(x) and not drop:
+    if pdtypes.is_categorical_dtype(x) and not drop:
         x = x.copy()
         x.cat.categories = range(1, len(x.cat.categories) + 1)
         lst = x.tolist()

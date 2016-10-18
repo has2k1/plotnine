@@ -111,7 +111,7 @@ class geom_boxplot(geom):
                 'y': data['outliers'].iloc[0],
                 'x': make_iterable_ntimes(data['x'][0],
                                           num_outliers),
-                'fill': None})
+                'fill': [None]*num_outliers})
             outliers['alpha'] = outlier_value('alpha')
             outliers['color'] = outlier_value('color')
             outliers['shape'] = outlier_value('shape')

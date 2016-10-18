@@ -98,8 +98,9 @@ class coord(object):
         data.loc[data['y'] == np.inf, 'y'] = ranges.y[1]
 
         dist = self.distance(data['x'], data['y'], panel_scales)
-        bool_idx = data['group'].iloc[1:] != data['group'].iloc[:-1]
-        dist[bool_idx.values] = np.nan
+        bool_idx = data['group'].iloc[1:].values != \
+            data['group'].iloc[:-1].values
+        dist[bool_idx] = np.nan
 
         # Munch
         munched = munch_data(data, dist)

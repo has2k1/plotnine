@@ -169,10 +169,11 @@ class stat_summary(stat):
         # NOTE: This is a temporary fix due to bug
         # https://github.com/pydata/pandas/issues/10409
         # Remove when that bug is fixed
-        import pandas.core.common as com
+        import pandas.api.types as pdtypes
+
         def preserve_categories(ref, other):
             for col in ref.columns & other.columns:
-                if com.is_categorical_dtype(ref[col]):
+                if pdtypes.is_categorical_dtype(ref[col]):
                     other[col] = other[col].astype(
                         'category', categories=ref[col].cat.categories)
 

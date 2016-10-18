@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import pandas as pd
 import matplotlib.cbook as cbook
-import pandas.core.common as com
+import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
 from .utils.exceptions import GgplotError
@@ -234,7 +234,7 @@ class layer(object):
                         raise GgplotError(
                             _TPL_BAD_EVAL_TYPE.format(
                                 ae, col, str(type(new_val)), str(e)))
-            elif com.is_list_like(col):
+            elif pdtypes.is_list_like(col):
                 n = len(col)
                 if len(data) and n != len(data) and n != 1:
                     raise GgplotError(
