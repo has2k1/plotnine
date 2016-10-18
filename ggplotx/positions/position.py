@@ -33,7 +33,7 @@ class position(object):
         return data
 
     @classmethod
-    def compute_layer(cls, data, params, panel):
+    def compute_layer(cls, data, params, layout):
         """
         Compute position for the layer in all panels
 
@@ -50,8 +50,8 @@ class position(object):
             # that does the real computation
             if len(pdata) == 0:
                 return pdata
-            pscales = panel.panel_scales(pdata['PANEL'].iat[0])
-            return cls.compute_panel(pdata, pscales, params)
+            scales = layout.get_scales(pdata['PANEL'].iat[0])
+            return cls.compute_panel(pdata, scales, params)
 
         return groupby_apply(data, 'PANEL', fn)
 

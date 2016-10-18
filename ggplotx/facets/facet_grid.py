@@ -3,12 +3,14 @@ from __future__ import (absolute_import, division, print_function,
 
 import re
 
+import pandas as pd
 import six
 
+
+from ..utils import ninteraction, add_margins, cross_join
+from ..utils import match, join_keys
 from ..utils.exceptions import GgplotError
-from .facet import facet
-from .layouts import layout_grid
-from .locate import locate_grid
+from .facet import facet, layout_null, combine_vars, add_missing_facets
 
 
 class facet_grid(facet):
@@ -64,10 +66,46 @@ class facet_grid(facet):
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
 
-    def train_layout(self, data):
-        layout = layout_grid(data, rows=self.rows, cols=self.cols,
-                             margins=self.margins, as_table=self.as_table,
-                             drop=self.drop)
+    def train(self, data):
+        if not self.rows and not self.cols:
+            return layout_null()
+
+        base_rows = combine_vars(data, self.plot_environment,
+                                 self.rows, drop=self.drop)
+
+        if not self.as_table:
+            # Reverse the order of the rows
+            base_rows = base_rows[::-1]
+        base_cols = combine_vars(data, self.plot_environment,
+                                 self.cols, drop=self.drop)
+
+        base = cross_join(base_rows, base_cols)
+
+        if self.margins:
+            base = add_margins(base, [self.rows, self.cols], self.margins)
+            base = base.drop_duplicates().reset_index(drop=True)
+
+        n = len(base)
+        panel = ninteraction(base, drop=True)
+        panel = pd.Categorical(panel, categories=range(1, n+1))
+
+        if self.rows:
+            rows = ninteraction(base[self.rows], drop=True)
+        else:
+            rows = 1
+
+        if self.cols:
+            cols = ninteraction(base[self.cols], drop=True)
+        else:
+            cols = 1
+
+        layout = pd.DataFrame({'PANEL': panel,
+                               'ROW': rows,
+                               'COL': cols})
+        layout = pd.concat([layout, base], axis=1)
+        layout = layout.sort_values('PANEL')
+        layout.reset_index(drop=True, inplace=True)
+
         # Relax constraints, if necessary
         layout['SCALE_X'] = layout['COL'] if self.free['x'] else 1
         layout['SCALE_Y'] = layout['ROW'] if self.free['y'] else 1
@@ -76,19 +114,39 @@ class facet_grid(facet):
         self.ncol = layout['COL'].max()
         return layout
 
-    def map_layout(self, data, layout):
-        """
-        Assign a data points to panels
+    def map(self, data, panel_layout):
+        if not len(data):
+            data['PANEL'] = pd.Categorical(
+                [],
+                categories=panel_layout['PANEL'].cat.categories,
+                ordered=True)
+            return data
 
-        Parameters
-        ----------
-        data : DataFrame
-            dataframe for a layer
-        layout : dataframe
-            As returned by self.train_layout
-        """
-        return locate_grid(data, layout, self.rows, self.cols,
-                           margins=self.margins)
+        vars = [x for x in self.rows + self.cols]
+        margin_vars = [list(data.columns & self.rows),
+                       list(data.columns & self.cols)]
+        data = add_margins(data, margin_vars, self.margins)
+        data, facet_vals = add_missing_facets(data, panel_layout, vars)
+
+        # assign each point to a panel
+        if len(facet_vals) == 0:
+            # Special case of no facetting
+            data['PANEL'] = 1
+        else:
+            keys = join_keys(facet_vals, panel_layout, vars)
+            data['PANEL'] = match(keys['x'], keys['y'], start=1)
+
+        # matching dtype and
+        # the categories(panel numbers) for the data should be in the
+        # same order as the panels. i.e the panels are the reference,
+        # they "know" the right order
+        data['PANEL'] = pd.Categorical(
+            data['PANEL'],
+            categories=panel_layout['PANEL'].cat.categories,
+            ordered=True)
+        data = data.sort_values('PANEL')
+        data.reset_index(drop=True, inplace=True)
+        return data
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):
         ax = self.axs[pidx]
@@ -145,7 +203,7 @@ class facet_grid(facet):
             # cannot compute a common aspect ratio
             if not self.free['x'] and not self.free['y']:
                 aspect_ratio = self.coordinates.aspect(
-                    self.panel.ranges[0])
+                    self.layout.ranges[0])
 
         # The goal is to have equal spacing along the vertical
         # and the horizontal. We use the wspace and compute

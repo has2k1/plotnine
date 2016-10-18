@@ -140,7 +140,7 @@ class geom(object):
 
         return data
 
-    def draw_layer(self, data, panel, coord, **params):
+    def draw_layer(self, data, layout, coord, **params):
         """
         Draw layer across all panels
 
@@ -148,8 +148,8 @@ class geom(object):
         ----------
         data : DataFrame
             DataFrame specific for this layer
-        panel : Panel
-            Panel object created when the plot is getting
+        layout : Lanel
+            Layout object created when the plot is getting
             built
         coord : coord
             Type of coordinate axes
@@ -163,8 +163,8 @@ class geom(object):
                 continue
             pdata.is_copy = None
             ploc = pid - 1
-            panel_scales = panel.ranges[ploc]
-            ax = panel.axs[ploc]
+            panel_scales = layout.ranges[ploc]
+            ax = layout.axs[ploc]
             self.draw_panel(pdata, panel_scales, coord, ax, **params)
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):

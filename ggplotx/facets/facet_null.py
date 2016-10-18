@@ -1,8 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
-import pandas as pd
-
-from .facet import facet
+from .facet import facet, layout_null
 
 
 class facet_null(facet):
@@ -21,25 +19,12 @@ class facet_null(facet):
         self.nrow = 1
         self.ncol = 1
 
-    def train_layout(self, data):
-        layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
-                               'SCALE_X': 1, 'SCALE_Y': 1},
-                              index=[0])
-        return layout
-
-    def map_layout(self, data, layout):
-        """
-        Assign a data points to panels
-
-        Parameters
-        ----------
-        data : DataFrame
-            dataframe for a layer
-        layout : DataFrame
-            As returned by self.train_layout
-        """
+    def map(self, data, panel_layout):
         data['PANEL'] = 1
         return data
+
+    def train(self, data):
+        return layout_null()
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):
         """
@@ -71,7 +56,7 @@ class facet_null(facet):
             aspect_ratio = theme.themeables.property('aspect_ratio')
         except KeyError:
             aspect_ratio = self.coordinates.aspect(
-                    self.panel.ranges[0])
+                    self.layout.ranges[0])
 
         if aspect_ratio is None:
             return

@@ -24,7 +24,7 @@ class position_nudge(position):
         self.params = {'x': x, 'y': y}
 
     @classmethod
-    def compute_layer(cls, data, params, panel):
+    def compute_layer(cls, data, params, layout):
         def trans_x(x):
             return x + params['x']
 

@@ -4,7 +4,6 @@ from __future__ import (absolute_import, division, print_function,
 import six
 from copy import deepcopy
 
-import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
 import pandas.core.common as com
@@ -60,25 +59,25 @@ class Layers(list):
         for l in self:
             l.setup_data()
 
-    def draw(self, panel, coord):
+    def draw(self, layout, coord):
         for l in self:
-            l.draw(panel, coord)
+            l.draw(layout, coord)
 
     def compute_aesthetics(self, plot):
         for l in self:
             l.compute_aesthetics(plot)
 
-    def compute_statistic(self, panel):
+    def compute_statistic(self, layout):
         for l in self:
-            l.compute_statistic(panel)
+            l.compute_statistic(layout)
 
     def map_statistic(self, plot):
         for l in self:
             l.map_statistic(plot)
 
-    def compute_position(self, panel):
+    def compute_position(self, layout):
         for l in self:
-            l.compute_position(panel)
+            l.compute_position(layout)
 
     def use_defaults(self):
         for l in self:
@@ -95,6 +94,10 @@ class Layers(list):
     def map(self, scales):
         for l in self:
             l.data = scales.map_df(l.data)
+
+    def finish_statistics(self):
+        for l in self:
+            l.finish_statistics()
 
 
 class layer(object):
@@ -261,7 +264,7 @@ class layer(object):
 
         self.data = add_group(evaled)
 
-    def compute_statistic(self, panel):
+    def compute_statistic(self, layout):
         """
         Compute & return statistics for this layer
         """
@@ -272,7 +275,7 @@ class layer(object):
         params = self.stat.setup_params(data)
         data = self.stat.use_defaults(data)
         data = self.stat.setup_data(data)
-        data = self.stat.compute_layer(data, params, panel)
+        data = self.stat.compute_layer(data, params, layout)
         self.data = data
 
     def map_statistic(self, plot):
@@ -334,24 +337,24 @@ class layer(object):
 
         self.data = data
 
-    def compute_position(self, panel):
+    def compute_position(self, layout):
         """
         Compute the position of each geometric object
         in concert with the other objects in the panel
         """
         params = self.position.setup_params(self.data)
         data = self.position.setup_data(self.data, params)
-        data = self.position.compute_layer(data, params, panel)
+        data = self.position.compute_layer(data, params, layout)
         self.data = data
 
-    def draw(self, panel, coord):
+    def draw(self, layout, coord):
         """
         Draw geom
 
         Parameters
         ----------
-        panel : Panel
-            Panel object created when the plot is getting
+        layout : Layout
+            Layout object created when the plot is getting
             built
         coord : coord
             Type of coordinate axes
@@ -361,7 +364,7 @@ class layer(object):
         params['zorder'] = self.zorder
         # At this point each layer must have the data
         # that is created by the plot build process
-        self.geom.draw_layer(self.data, panel, coord, **params)
+        self.geom.draw_layer(self.data, layout, coord, **params)
 
     def use_defaults(self, data=None):
         """
@@ -370,6 +373,13 @@ class layer(object):
         if data is None:
             data = self.data
         return self.geom.use_defaults(data)
+
+    def finish_statistics(self):
+        """
+        Prepare/modify data for plotting
+        """
+        # params = self.stat.setup_params(self.data)
+        self.stat.finish_layer(self.data, self.stat.params)
 
 
 NO_GROUP = -1

@@ -10,5 +10,5 @@ class position_identity(position):
     """
 
     @classmethod
-    def compute_layer(cls, data, params, panel):
+    def compute_layer(cls, data, params, layout):
         return data

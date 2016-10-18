@@ -144,8 +144,36 @@ class stat(object):
         """
         return data
 
+    def finish_layer(self, data, params):
+        """
+        Modify data after the aesthetics have been mapped
+
+        This can be used by stats that require access to the mapped
+        values of the computed aesthetics, part 3 as shown below.
+
+            1. stat computes and creates variables
+            2. variables mapped to aesthetics
+            3. stat sees and modifies data according to the
+               aesthetic values
+
+        The default to is to do nothing.
+
+        Parameters
+        ----------
+        data : dataframe
+            Data for the layer
+        params : dict
+            Paremeters
+
+        Returns
+        -------
+        data : dataframe
+            Modified data
+        """
+        return data
+
     @classmethod
-    def compute_layer(cls, data, params, panel):
+    def compute_layer(cls, data, params, layout):
         check_required_aesthetics(
             cls.REQUIRED_AES,
             list(data.columns) + list(params.keys()),
@@ -160,7 +188,7 @@ class stat(object):
             # that does the real computation
             if len(pdata) == 0:
                 return pdata
-            pscales = panel.panel_scales(pdata['PANEL'].iat[0])
+            pscales = layout.get_scales(pdata['PANEL'].iat[0])
             return cls.compute_panel(pdata, pscales, **params)
 
         return groupby_apply(data, 'PANEL', fn)
@@ -178,7 +206,7 @@ class stat(object):
         ----------
         data : dataframe
             data for the computing
-        scales : namedtuple
+        scales : Bunch
             x & y scales
         params : dict
             The parameters for the stat. It includes default

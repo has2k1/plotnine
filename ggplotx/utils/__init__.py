@@ -14,7 +14,8 @@ from .utils import (pop, is_string, is_scalar_or_string,
                     ColoredDrawingArea, suppress, copy_keys,
                     Registry, RegistryHierarchyMeta, get_valid_kwargs,
                     data_mapping_as_kwargs, copy_missing_columns,
-                    groupby_with_null, interleave, resolution)
+                    groupby_with_null, interleave, resolution,
+                    cross_join)
 
 
 __all__ = ['ggsave']

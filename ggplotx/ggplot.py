@@ -11,9 +11,9 @@ import matplotlib.transforms as mtransforms
 from patsy.eval import EvalEnvironment
 
 from .aes import aes, make_labels
-from .panel import Panel
 from .layer import Layers
 from .facets import facet_null
+from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme_get
 from .utils import suppress
@@ -72,7 +72,7 @@ class ggplot(object):
         self.theme = None
         self.coordinates = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
-        self.panel = None
+        self.layout = None
 
     def __repr__(self):
         """
@@ -97,6 +97,7 @@ class ggplot(object):
         for key, item in old.items():
             if key in shallow:
                 new[key] = old[key]
+                memo[id(new[key])] = new[key]
             else:
                 new[key] = deepcopy(old[key], memo)
 
@@ -167,20 +168,20 @@ class ggplot(object):
 
         # Create figure and axes
         figure, axs = self.facet.make_figure_and_axs(
-            self.panel, self.theme, self.coordinates)
-        self.axs = self.panel.axs = axs
+            self.layout, self.theme, self.coordinates)
+        self.axs = self.layout.axs = axs
         self.figure = self.theme.figure = figure
 
         # Draw the geoms
-        self.layers.draw(self.panel, self.coordinates)
+        self.layers.draw(self.layout, self.coordinates)
 
         # Decorate the axes
         #   - xaxis & yaxis breaks, labels, limits, ...
         #   - facet labels
         #
         # pidx is the panel index (location left to right, top to bottom)
-        for pidx, layout_info in self.panel.layout.iterrows():
-            panel_scales = self.panel.ranges[pidx]
+        for pidx, layout_info in self.layout.panel_layout.iterrows():
+            panel_scales = self.layout.ranges[pidx]
             self.facet.set_breaks_and_labels(
                 panel_scales, layout_info, pidx)
             self.facet.draw_label(layout_info, pidx)
@@ -198,15 +199,15 @@ class ggplot(object):
         if not self.layers:
             self += geom_blank()
 
-        self.panel = Panel()
+        self.layout = Layout()
         layers = self.layers
         scales = self.scales
-        panel = self.panel
+        layout = self.layout
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
-        panel.train_layout(layers, self)
-        panel.map_layout(layers, self)
+        layout.setup(layers, self)
+        layout.map(layers, self)
 
         # Compute aesthetics to produce data with generalised
         # variable names
@@ -217,11 +218,11 @@ class ggplot(object):
 
         # Map and train positions so that statistics have access
         # to ranges and all positions are numeric
-        panel.train_position(layers, scales.x, scales.y)
-        panel.map_position(layers, scales.x, scales.y)
+        layout.train_position(layers, scales.x, scales.y)
+        layout.map_position(layers)
 
         # Apply and map statistics
-        layers.compute_statistic(panel)
+        layers.compute_statistic(layout)
         layers.map_statistic(self)
 
         # Make sure missing (but required) aesthetics are added
@@ -232,14 +233,14 @@ class ggplot(object):
         layers.setup_data()
 
         # Apply position adjustments
-        layers.compute_position(panel)
+        layers.compute_position(layout)
 
         # Reset position scales, then re-train and map.  This
         # ensures that facets have control over the range of
         # a plot.
-        panel.reset_position_scales()
-        panel.train_position(layers, scales.x, scales.y)
-        panel.map_position(layers, scales.x, scales.y)
+        layout.reset_position_scales()
+        layout.train_position(layers, scales.x, scales.y)
+        layout.map_position(layers)
 
         # Train and map non-position scales
         npscales = scales.non_position_scales()
@@ -248,10 +249,16 @@ class ggplot(object):
             layers.map(npscales)
 
         # Train coordinate system
-        panel.train_ranges(self.coordinates)
+        layout.train_ranges(self.coordinates)
 
         # fill in the defaults
         layers.use_defaults()
+
+        # Allow stats to modify the layer data
+        layers.finish_statistics()
+
+        # Allow layout to modify data before rendering
+        layout.finish_data(layers)
 
     def draw_legend(self):
         """

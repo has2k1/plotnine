@@ -42,7 +42,7 @@ class position_jitter(position):
         return params
 
     @classmethod
-    def compute_layer(cls, data, params, panel):
+    def compute_layer(cls, data, params, layout):
         trans_x = None
         trans_y = None
 

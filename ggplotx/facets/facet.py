@@ -1,11 +1,15 @@
 from __future__ import absolute_import, division, print_function
 
 from copy import deepcopy
+import itertools
 
 import numpy as np
+import pandas as pd
 from matplotlib.cbook import Bunch
 
-from ..utils import suppress
+from ..utils import suppress, cross_join, match
+from ..utils.exceptions import GgplotError
+from ..scales.scales import Scales
 
 # For default matplotlib backend
 with suppress(ImportError):
@@ -60,14 +64,15 @@ class facet(object):
     figure = None
     # coord object, automatically updated before drawing the plot
     coordinates = None
-    # panel object, automatically updated before drawing the plot
-    panel = None
+    # layout object, automatically updated before drawing the plot
+    layout = None
     # Axes
     axs = None
     # Number of facet variables along the horizontal axis
     num_vars_x = 0
     # Number of facet variables along the vertical axis
     num_vars_y = 0
+    plot_environment = None
 
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
@@ -83,8 +88,102 @@ class facet(object):
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)
+        self.plot_environment = gg.environment
         gg.facet = self
         return gg
+
+    def setup_data(self, data):
+        return data
+
+    def init_scales(self, panel_layout, x_scale=None, y_scale=None):
+        scales = Bunch()
+
+        if x_scale is not None:
+            n = panel_layout['SCALE_X'].max()
+            scales.x = Scales([x_scale.clone() for i in range(n)])
+
+        if y_scale is not None:
+            n = panel_layout['SCALE_Y'].max()
+            scales.y = Scales([y_scale.clone() for i in range(n)])
+
+        return scales
+
+    def map(self, data, panel_layout):
+        """
+        Assign a data points to panels
+
+        Parameters
+        ----------
+        data : DataFrame
+            Data for a layer
+        panel_layout : DataFrame
+            As returned by self.train_layout
+
+        Returns
+        -------
+        data : DataFrame
+            Data with all points mapped to the panels
+            on which they will be plotted.
+        """
+        msg = "{} should implement this method."
+        raise NotImplementedError(
+            msg.format(self.__class.__name__))
+
+    def train(self, data):
+        """
+        Compute layout
+        """
+        msg = "{} should implement this method."
+        raise NotImplementedError(
+            msg.format(self.__class.__name__))
+
+    def finish_data(self, data, layout):
+        """
+        Modify data before it is drawn out by the geom
+
+        The default is to return the data without modification.
+        Subclasses should override this method as the require.
+
+        Parameters
+        ----------
+        data : DataFrame
+            Layer data.
+        layout : Layout
+            Layout
+
+        Returns
+        -------
+        data : DataFrame
+            Modified layer data
+        """
+        return data
+
+    def train_position_scales(self, layout, layers):
+        """
+        Compute ranges for the x and y scales
+        """
+        _layout = layout.panel_layout
+        scales = layout.panel_scales
+
+        # loop over each layer, training x and y scales in turn
+        for layer in layers:
+            data = layer.data
+            match_id = match(data['PANEL'], _layout['PANEL'])
+            if scales.x:
+                x_vars = list(set(scales.x[0].aesthetics) &
+                              set(data.columns))
+                # the scale index for each data point
+                SCALE_X = _layout['SCALE_X'].iloc[match_id].tolist()
+                scales.x.train(data, x_vars, SCALE_X)
+
+            if scales.y:
+                y_vars = list(set(scales.y[0].aesthetics) &
+                              set(data.columns))
+                # the scale index for each data point
+                SCALE_Y = _layout['SCALE_Y'].iloc[match_id].tolist()
+                scales.y.train(data, y_vars, SCALE_Y)
+
+        return self
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):
         ax = self.axs[pidx]
@@ -126,8 +225,8 @@ class facet(object):
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
 
-    def make_figure_and_axs(self, panel, theme, coordinates):
-        num_panels = len(panel.layout)
+    def make_figure_and_axs(self, layout, theme, coordinates):
+        num_panels = len(layout.panel_layout)
         figure, axs = plt.subplots(self.nrow, self.ncol,
                                    sharex=False, sharey=False)
         axs = np.asarray(axs)
@@ -156,10 +255,10 @@ class facet(object):
 
         axs = axs[:num_panels]
         self.axs = axs
-        self.panel = panel
         self.theme = theme
         self.coordinates = coordinates
         self.figure = figure
+        self.layout = layout
         self.theme.setup_figure(figure)
         self.spaceout_and_resize_panels()
         return figure, axs
@@ -368,3 +467,112 @@ class facet(object):
         else:
             themeable['strip_background_x'].append(rect)
             themeable['strip_text_x'].append(text)
+
+
+def combine_vars(data, environment=None, vars=None, drop=True):
+    """
+    Base layout function that generates all combinations of data
+    needed for facetting
+    The first data frame in the list should be the default data
+    for the plot. Other data frames in the list are ones that are
+    added to the layers.
+    """
+    if not vars:
+        return pd.DataFrame()
+
+    # For each layer, compute the facet values
+    # TODO: Use the environment
+    values = []
+    for df in data:
+        if df is None:
+            continue
+        _lst = [x for x in vars if x in df]
+        if _lst:
+            values.append(df[_lst])
+    print(values)
+
+    # Form the base data frame which contains all combinations
+    # of facetting variables that appear in the data
+    has_all = [x.shape[1] == len(vars) for x in values]
+    if not any(has_all):
+        raise GgplotError(
+            "At least one layer must contain all variables " +
+            "used for facetting")
+    base = pd.concat([x for i, x in enumerate(values) if has_all[i]],
+                     axis=0)
+    base = base.drop_duplicates()
+
+    if not drop:
+        base = unique_combs(base)
+
+    # sorts according to order of factor levels
+    base = base.sort_values(list(base.columns))
+
+    # Systematically add on missing combinations
+    for i, value in enumerate(values):
+        if has_all[i]:
+            continue
+        old = base.loc[:, base.columns - value.columns]
+        new = value.loc[:, base.columns & value.columns].drop_duplicates()
+        if not drop:
+            new = unique_combs(new)
+        base = base.append(cross_join(old, new), ignore_index=True)
+
+    if len(base) == 0:
+        raise GgplotError(
+            "Faceting variables must have at least one value")
+
+    base = base.reset_index(drop=True)
+    return base
+
+
+def unique_combs(df):
+    """
+    Return data frame with all possible combinations
+    of the values in the columns
+    """
+    # A sliced copy with zero rows so as to
+    # preserve the column dtypes
+    _df = df.ix[0:-1, df.columns]
+
+    # List of unique values from every column
+    lst = [x.unique().tolist() for x in (df[c] for c in df)]
+    rows = itertools.product(*lst)
+    for i, row in enumerate(rows):
+        _df.loc[i] = row
+    return _df
+
+
+def layout_null():
+    layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
+                           'SCALE_X': 1, 'SCALE_Y': 1},
+                          index=[0])
+    return layout
+
+
+def add_missing_facets(data, panel_layout, vars):
+    # The columns that are facetted
+    vars_ = [v for v in vars if v in data.columns]
+    facet_vals = data.loc[:, vars_].reset_index(drop=True)
+
+    # When in a dataframe some layer does not have all
+    # the facet variables, add the missing facet variables
+    # and create new data where the points(duplicates) are
+    # present in all the facets
+    missing_facets = set(vars) - set(vars_)
+    if missing_facets:
+        to_add = panel_layout.loc[:, missing_facets].drop_duplicates()
+        to_add.reset_index(drop=True, inplace=True)
+
+        # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]
+        data_rep = np.tile(np.arange(len(data)), len(to_add))
+        # a facet for each point, [0, 0, 0, 1, 1, 1, ... n-1, n-1, n-1]
+        facet_rep = np.repeat(np.arange(len(to_add)), len(data))
+
+        data = data.iloc[data_rep, :].reset_index(drop=True)
+        facet_vals = facet_vals.iloc[data_rep, :].reset_index(drop=True)
+        to_add = to_add.iloc[facet_rep, :].reset_index(drop=True)
+        facet_vals = pd.concat([facet_vals, to_add],
+                               axis=1, ignore_index=False)
+
+    return data, facet_vals

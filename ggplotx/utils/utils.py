@@ -1042,3 +1042,24 @@ def resolution(x, zero=True):
         x = np.unique(np.hstack([0, x]))
 
     return np.min(np.diff(np.sort(x)))
+
+
+def cross_join(df1, df2):
+    """
+    Return a dataframe that is a cross between dataframes
+    df1 and df2
+
+    ref: https://github.com/pydata/pandas/issues/5401
+    """
+    if len(df1) == 0:
+        return df2
+
+    if len(df2) == 0:
+        return df1
+
+    # Add as lists so that the new index keeps the items in
+    # the order that they are added together
+    all_columns = pd.Index(list(df1.columns) + list(df2.columns))
+    df1['key'] = 1
+    df2['key'] = 1
+    return pd.merge(df1, df2, on='key').loc[:, all_columns]

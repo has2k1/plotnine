@@ -3,13 +3,14 @@ from __future__ import (absolute_import, division, print_function,
 
 import re
 
+import numpy as np
+import pandas as pd
 import six
 
 from ..utils.exceptions import gg_warn, GgplotError
-from ..utils import suppress
-from .facet import facet
-from .layouts import layout_wrap
-from .locate import locate_wrap
+from ..utils import suppress, match, join_keys
+from .facet import facet, combine_vars, layout_null
+from .facet import add_missing_facets
 
 
 class facet_wrap(facet):
@@ -63,10 +64,31 @@ class facet_wrap(facet):
         # facet_wrap gets its labelling at the top
         self.num_vars_x = len(self.vars)
 
-    def train_layout(self, data):
-        layout = layout_wrap(data, vars=self.vars, nrow=self.nrow,
-                             ncol=self.ncol, as_table=self.as_table,
-                             drop=self.drop, dir=self.dir)
+    def train(self, data):
+        if not self.vars:
+            return layout_null()
+
+        base = combine_vars(data, self.plot_environment,
+                            self.vars, drop=self.drop)
+        n = len(base)
+        dims = wrap_dims(n, self.nrow, self.ncol)
+        _id = np.arange(1, n+1)
+
+        if self.as_table:
+            row = (_id - 1) // dims[1] + 1
+        else:
+            row = dims[0] - (_id - 1) // dims[1]
+
+        col = (_id - 1) % dims[1] + 1
+
+        if dir == 'v':
+            row, col = col, row
+
+        layout = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
+                               'ROW': row.astype(int),
+                               'COL': col.astype(int)})
+        layout = pd.concat([layout, base], axis=1)
+
         n = layout.shape[0]
         nrow = layout['ROW'].max()
 
@@ -82,18 +104,29 @@ class facet_wrap(facet):
         self.ncol = layout['COL'].max()
         return layout
 
-    def map_layout(self, data, layout):
-        """
-        Assign a data points to panels
+    def map(self, data, panel_layout):
+        if not len(data):
+            data['PANEL'] = pd.Categorical(
+                [],
+                categories=panel_layout['PANEL'].cat.categories,
+                ordered=True)
+            return data
 
-        Parameters
-        ----------
-        data : DataFrame
-            dataframe for a layer
-        layout : DataFrame
-            As returned by self.train_layout
-        """
-        return locate_wrap(data, layout, self.vars)
+        data, facet_vals = add_missing_facets(
+            data, panel_layout, self.vars)
+
+        # assign each point to a panel
+        keys = join_keys(facet_vals, panel_layout, self.vars)
+        data['PANEL'] = match(keys['x'], keys['y'], start=1)
+
+        # matching dtype
+        data['PANEL'] = pd.Categorical(
+            data['PANEL'],
+            categories=panel_layout['PANEL'].cat.categories,
+            ordered=True)
+        data = data.sort_values('PANEL')
+        data.reset_index(drop=True, inplace=True)
+        return data
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):
         ax = self.axs[pidx]
@@ -145,7 +178,7 @@ class facet_wrap(facet):
             # cannot compute a common aspect ratio
             if not self.free['x'] and not self.free['y']:
                 aspect_ratio = self.coordinates.aspect(
-                    self.panel.ranges[0])
+                    self.layout.ranges[0])
 
         if theme.themeables.is_blank('strip_text_x'):
             top_strip_height = 0
@@ -244,3 +277,37 @@ def parse_wrap_facets(facets):
         raise GgplotError(error_msg)
 
     return facets
+
+
+def wrap_dims(n, nrow=None, ncol=None):
+    if not nrow and not ncol:
+        ncol, nrow = n2mfrow(n)
+    elif not ncol:
+        ncol = int(np.ceil(n/nrow))
+    elif not nrow:
+        nrow = int(np.ceil(n/ncol))
+    if not nrow * ncol >= n:
+        raise GgplotError(
+            "Allocated fewer panels than are required. "
+            "Make sure the number of rows and columns can "
+            "hold all the plot panels.")
+    return (nrow, ncol)
+
+
+def n2mfrow(nr_plots):
+    """
+    Compute the rows and columns given the number
+    of plots.
+
+    This is a port of grDevices::n2mfrow from R
+    """
+    if nr_plots <= 3:
+        nrow, ncol = nr_plots, 1
+    elif nr_plots <= 6:
+        nrow, ncol = (nr_plots + 1) // 2, 2
+    elif nr_plots <= 12:
+        nrow, ncol = (nr_plots + 2) // 3, 3
+    else:
+        nrow = int(np.ceil(np.sqrt(nr_plots)))
+        ncol = int(np.ceil(nr_plots/nrow))
+    return (nrow, ncol)
