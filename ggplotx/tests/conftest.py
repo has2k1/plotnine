@@ -23,6 +23,7 @@ DPI = 72.27               # Default DPI for the tests
 # the test. It is limited to setting the size of the test
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
+DPI=100
 test_theme = theme(figure_size=(640/DPI, 480/DPI))
 
 if not os.path.exists(os.path.join(

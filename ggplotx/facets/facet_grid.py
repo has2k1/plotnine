@@ -11,6 +11,7 @@ from ..utils import ninteraction, add_margins, cross_join
 from ..utils import match, join_keys
 from ..utils.exceptions import GgplotError
 from .facet import facet, layout_null, combine_vars, add_missing_facets
+from .facet import eval_facet_vars
 
 
 class facet_grid(facet):
@@ -19,12 +20,14 @@ class facet_grid(facet):
 
     Parameters
     ----------
-    facets : formula
+    facets : formula | tuple | list
         A formula with the rows (of the tabular display) on
         the LHS and the columns (of the tabular display) on
         the RHS; the dot in the formula is used to indicate
         there should be no faceting on this dimension
-        (either row or column).
+        (either row or column). If a tuple/list is used, it
+        must of size two, the elements of which must be
+        strings or lists.
     scales : 'fixed' | 'free' | 'free_x' | 'free_y'
         Whether ``x`` or ``y`` scales should be allowed (free)
         to vary according to the data on each of the panel.
@@ -70,13 +73,13 @@ class facet_grid(facet):
         if not self.rows and not self.cols:
             return layout_null()
 
-        base_rows = combine_vars(data, self.plot_environment,
+        base_rows = combine_vars(data, self.plot.environment,
                                  self.rows, drop=self.drop)
 
         if not self.as_table:
             # Reverse the order of the rows
             base_rows = base_rows[::-1]
-        base_cols = combine_vars(data, self.plot_environment,
+        base_cols = combine_vars(data, self.plot.environment,
                                  self.cols, drop=self.drop)
 
         base = cross_join(base_rows, base_cols)
@@ -126,7 +129,10 @@ class facet_grid(facet):
         margin_vars = [list(data.columns & self.rows),
                        list(data.columns & self.cols)]
         data = add_margins(data, margin_vars, self.margins)
-        data, facet_vals = add_missing_facets(data, panel_layout, vars)
+
+        facet_vals = eval_facet_vars(data, vars, self.plot.environment)
+        data, facet_vals = add_missing_facets(data, panel_layout,
+                                              vars, facet_vals)
 
         # assign each point to a panel
         if len(facet_vals) == 0:
@@ -259,19 +265,40 @@ def parse_grid_facets(facets):
     Return two lists of facetting variables, for the rows & columns
     """
     valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
-                   'var1 + var2 ~ var3 + var4']
-    error_msg = ("'facets' should be a formula string. Valid formula "
-                 "look like {}").format(valid_forms)
+                   'var1 + var2 ~ var3 + var4',
+                   "('var1', '.')", "('var1', 'var2')",
+                   "('.', 'var1')", "((var1, var2), (var3, var4))",
+                   ]
+    error_msg_f = ("Valid formula for 'facet_grid' look like"
+                   " {}".format(valid_forms))
+
+    valid_seqs = ["('var1', '.')", "('var1', 'var2')",
+                  "('.', 'var1')", "((var1, var2), (var3, var4))"]
+    error_msg_s = ("Valid sequences for specifying 'facets' look like"
+                   " {}".format(valid_seqs))
+
+    if isinstance(facets, (tuple, list)):
+        if len(facets) != 2:
+            raise GgplotError(error_msg_s)
+
+        rows, cols = facets
+
+        if isinstance(rows, six.string_types):
+            rows = [] if rows == '.' else [rows]
+        if isinstance(cols, six.string_types):
+            cols = [] if cols == '.' else [cols]
+
+        return rows, cols
 
     if not isinstance(facets, six.string_types):
-        raise GgplotError(error_msg)
+        raise GgplotError(error_msg_f)
 
     variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
     pattern = '\s*{0}\s*~\s*{0}\s*'.format(variables_pattern)
     match = re.match(pattern, facets)
 
     if not match:
-        raise GgplotError(error_msg)
+        raise GgplotError(error_msg_s)
 
     lhs = match.group(1)
     rhs = match.group(2)

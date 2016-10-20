@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import deepcopy
+from copy import deepcopy, copy
 
 import numpy as np
 from matplotlib.cbook import Bunch
@@ -19,7 +19,7 @@ class coord(object):
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)
-        gg.coordinates = self
+        gg.coordinates = copy(self)
         return gg
 
     def aspect(self, panel_scales):

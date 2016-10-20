@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
-from copy import deepcopy
+from copy import deepcopy, copy
 import itertools
 
 import numpy as np
@@ -72,7 +72,8 @@ class facet(object):
     num_vars_x = 0
     # Number of facet variables along the vertical axis
     num_vars_y = 0
-    plot_environment = None
+    # ggplot object that the facet belongs to
+    plot = None
 
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
@@ -88,8 +89,8 @@ class facet(object):
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)
-        self.plot_environment = gg.environment
-        gg.facet = self
+        gg.facet = copy(self)
+        gg.facet.plot = gg
         return gg
 
     def setup_data(self, data):
@@ -481,14 +482,8 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         return pd.DataFrame()
 
     # For each layer, compute the facet values
-    # TODO: Use the environment
-    values = []
-    for df in data:
-        if df is None:
-            continue
-        _lst = [x for x in vars if x in df]
-        if _lst:
-            values.append(df[_lst])
+    values = [eval_facet_vars(df, vars, environment)
+              for df in data if df is not None]
 
     # Form the base data frame which contains all combinations
     # of facetting variables that appear in the data
@@ -549,16 +544,12 @@ def layout_null():
     return layout
 
 
-def add_missing_facets(data, panel_layout, vars):
-    # The columns that are facetted
-    vars_ = [v for v in vars if v in data.columns]
-    facet_vals = data.loc[:, vars_].reset_index(drop=True)
-
+def add_missing_facets(data, panel_layout, vars, facet_vals):
     # When in a dataframe some layer does not have all
     # the facet variables, add the missing facet variables
     # and create new data where the points(duplicates) are
     # present in all the facets
-    missing_facets = set(vars) - set(vars_)
+    missing_facets = set(vars) - set(facet_vals)
     if missing_facets:
         to_add = panel_layout.loc[:, missing_facets].drop_duplicates()
         to_add.reset_index(drop=True, inplace=True)
@@ -575,3 +566,36 @@ def add_missing_facets(data, panel_layout, vars):
                                axis=1, ignore_index=False)
 
     return data, facet_vals
+
+
+def eval_facet_vars(data, vars, env):
+    """
+    Evaluate facet variables
+
+    Parameters
+    ----------
+    data : DataFrame
+        Factet dataframe
+    vars : list
+        Facet variables
+    env : environment
+        Plot environment
+
+    Returns
+    -------
+    facet_vals : DataFrame
+        Facet values that correspond to the specified
+        variables.
+    """
+    # To allow expressions in facet formula
+    def I(value):
+        return value
+
+    env = env.with_outer_namespace({'I': I})
+    facet_vals = pd.DataFrame(index=data.index)
+
+    for name in vars:
+        res = env.eval(name, inner_namespace=data)
+        facet_vals[name] = res
+
+    return facet_vals

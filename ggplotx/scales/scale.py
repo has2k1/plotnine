@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import deepcopy
+from copy import deepcopy, copy
 from collections import OrderedDict
 from six import add_metaclass
 from six.moves import zip
@@ -100,7 +100,7 @@ class scale(object):
         ggplot object
         """
         gg = gg if inplace else deepcopy(gg)
-        gg.scales.append(self)
+        gg.scales.append(copy(self))
         return gg
 
     @staticmethod

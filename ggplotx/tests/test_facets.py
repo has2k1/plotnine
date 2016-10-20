@@ -24,6 +24,12 @@ def test_facet_wrap_one_var():
 
 
 @cleanup
+def test_facet_wrap_expression():
+    p = g + facet_wrap('pd.cut(var1, (0, 2, 4), include_lowest=True)')
+    assert p == 'facet_wrap_expression'
+
+
+@cleanup
 def test_facet_wrap_two_vars():
     p = g + facet_wrap('~var1+var2')
     assert p == 'facet_wrap_two_vars'
@@ -51,6 +57,13 @@ def test_facet_wrap_direction_h():
 def test_facet_grid_one_by_one_var():
     p = g + facet_grid('var1~var2')
     assert p == 'facet_grid_one_by_one_var'
+
+
+@cleanup
+def test_facet_grid_expression():
+    p = g + facet_grid(
+        ['var2', 'pd.cut(var1, (0, 2, 4), include_lowest=True)'])
+    assert p == 'facet_grid_expression'
 
 
 @cleanup

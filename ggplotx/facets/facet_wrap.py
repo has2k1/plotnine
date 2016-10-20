@@ -10,7 +10,7 @@ import six
 from ..utils.exceptions import gg_warn, GgplotError
 from ..utils import suppress, match, join_keys
 from .facet import facet, combine_vars, layout_null
-from .facet import add_missing_facets
+from .facet import add_missing_facets, eval_facet_vars
 
 
 class facet_wrap(facet):
@@ -68,7 +68,7 @@ class facet_wrap(facet):
         if not self.vars:
             return layout_null()
 
-        base = combine_vars(data, self.plot_environment,
+        base = combine_vars(data, self.plot.environment,
                             self.vars, drop=self.drop)
         n = len(base)
         dims = wrap_dims(n, self.nrow, self.ncol)
@@ -112,8 +112,9 @@ class facet_wrap(facet):
                 ordered=True)
             return data
 
-        data, facet_vals = add_missing_facets(
-            data, panel_layout, self.vars)
+        facet_vals = eval_facet_vars(data, self.vars, self.plot.environment)
+        data, facet_vals = add_missing_facets(data, panel_layout,
+                                              self.vars, facet_vals)
 
         # assign each point to a panel
         keys = join_keys(facet_vals, panel_layout, self.vars)
@@ -253,8 +254,8 @@ def parse_wrap_facets(facets):
     Return list of facetting variables
     """
     valid_forms = ['~ var1', '~ var1 + var2']
-    error_msg = ("'facets' should be a formula string. Valid formula "
-                 "look like {}").format(valid_forms)
+    error_msg = ("Valid formula for 'facet_wrap' look like"
+                 " {}".format(valid_forms))
 
     if isinstance(facets, (list, tuple)):
         return facets
