@@ -87,21 +87,23 @@ class scale_position_discrete(scale_discrete):
         Unlike limits, this always returns a numeric vector of length 2
         """
         c_range = self.range_c.range
-        d_range = self.range.range
-
-        continuous = expand_range(c_range, expand[0], 0, 1)
-        discrete = expand_range((1, len(d_range)), 0, expand[1], 1)
+        d_range = self.limits
 
         if self.is_empty():
             return (0, 1)
-        elif d_range is None:  # only continuous
-            return continuous
+        elif self.range.range is None:  # only continuous
+            return expand_range(c_range, expand[0], expand[1], 1)
         elif c_range is None:  # only discrete
-            return discrete
+            # FIXME: I think this branch should not exist
+            return expand_range((1, len(d_range)), expand[0],
+                                expand[1], 1)
         else:  # both
             # e.g categorical bar plot have discrete items, but
             # are plot on a continuous x scale
-            a = np.hstack([continuous, discrete])
+            a = np.hstack([
+                expand_range(c_range, expand[0], 0, 1),
+                expand_range((1, len(d_range)), 0, expand[1], 1)
+                ])
             return a.min(), a.max()
 
 
