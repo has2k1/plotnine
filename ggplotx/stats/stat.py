@@ -69,6 +69,8 @@ class stat(object):
             return name
 
         if isinstance(name, stat):
+            return name
+        elif isinstance(name, type) and issubclass(name, stat):
             klass = name
         elif is_string(name):
             if not name.startswith('stat_'):

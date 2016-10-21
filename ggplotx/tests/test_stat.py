@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pytest
 
-from .. import ggplot, aes
+from .. import ggplot, aes, geom_bar
 from ..data import mtcars
 from ..geoms.geom import geom
 from ..stats.stat import stat
@@ -49,17 +49,12 @@ def test_stat_parameter_sharing():
             return data
 
     class geom_abc(geom):
-        DEFAULT_PARAMS = {'stat': 'abc', 'position': 'identity'}
+        DEFAULT_PARAMS = {'stat': stat_abc, 'position': 'identity'}
         REQUIRED_AES = {'x', 'weight'}
 
         @staticmethod
         def draw(pinfo, panel_scales, coord, ax, **kwargs):
             pass
-
-    # TODO: Should allow for checking the environment
-    # instead of monkey patching
-    import ggplotx
-    ggplotx.stats.stat_abc = stat_abc
 
     # weight is manually set, it should be a stat parameter and
     # not a geom manual setting
