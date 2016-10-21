@@ -26,12 +26,12 @@ def test_jitter():
     p = (ggplot(df1, aes('x', 'y')) +
          geom_point(size=10) +
          geom_jitter(size=10, color='red', prng=prng) +
-         geom_jitter(size=10, color='blue', width=1,
-                     height=1, prng=prng))
+         geom_jitter(size=10, color='blue', width=0.1,
+                     height=0.1, prng=prng))
     assert p == 'jitter'
 
     with pytest.raises(GgplotError):
-        geom_jitter(position=position_jitter(), width=1)
+        geom_jitter(position=position_jitter(), width=0.1)
 
 
 @cleanup

@@ -48,10 +48,12 @@ class position_jitter(position):
 
         if params['width']:
             def trans_x(x):
-                return jitter(x, params['width'], prng=params['prng'])
+                return jitter(x, amount=params['width'],
+                              prng=params['prng'])
 
         if params['height']:
             def trans_y(y):
-                return jitter(y, params['height'], prng=params['prng'])
+                return jitter(y, amount=params['height'],
+                              prng=params['prng'])
 
         return cls.transform_position(data, trans_x, trans_y)
