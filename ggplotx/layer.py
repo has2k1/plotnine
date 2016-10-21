@@ -304,8 +304,9 @@ class layer(object):
             # In conjuction with the pd.concat at the end,
             # be careful not to create duplicate columns
             # for cases like y='..y..'
-            if ae != new[ae]:
-                stat_data[ae] = data[new[ae]]
+            if new[ae] != ae:
+                stat_data[ae] = plot.environment.eval(
+                    new[ae], inner_namespace=data)
 
         if not new:
             return data
