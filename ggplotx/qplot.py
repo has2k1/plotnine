@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import pandas as pd
+import pandas.api.types as pdtypes
 import numpy as np
 from patsy.eval import EvalEnvironment
 import six
@@ -132,7 +133,15 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
         else:
             if x is None:
-                aesthetics['x'] = 'range(1, len(y)+1)'
+                if pdtypes.is_list_like(aesthetics['y']):
+                    aesthetics['x'] = range(len(aesthetics['y']))
+                    xlab = 'range(len(y))'
+                    ylab = 'y'
+                else:
+                    # We could solve the issue in layer.compute_asthetics
+                    # but it is not worth the extra complexity
+                    raise GgplotError(
+                        "Cannot infer how long x should be.")
             replace_auto(geom, 'point')
 
     p = ggplot(aes(**aesthetics), data=data, environment=environment)

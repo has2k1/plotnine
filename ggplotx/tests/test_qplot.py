@@ -38,6 +38,12 @@ def test_onlyx():
 
 
 @cleanup
+def test_onlyy():
+    p = qplot(y=np.arange(5))
+    assert p == 'onlyy'
+
+
+@cleanup
 def test_sample():
     p = qplot(sample='np.arange(5)')
     assert p == 'sample'
