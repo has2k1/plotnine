@@ -2,10 +2,7 @@ from __future__ import absolute_import, division, print_function
 import itertools
 
 import numpy as np
-import pandas as pd
 import pandas.api.types as pdtypes
-
-from six.moves import range
 
 from ..aes import aes_to_scale
 from ..utils.exceptions import gg_warn, GgplotError
@@ -146,7 +143,8 @@ class Scales(list):
         # discrete scales change the dtype
         # from category to int. Use a new dataframe
         # to collect these results.
-        df = pd.DataFrame({}, index=range(len(data)))
+        # Using `type` preserves the subclass of pd.DataFrame
+        df = type(data)(index=data.index)
         cat_cols = []
 
         # Loop through each variable, mapping across each scale,
