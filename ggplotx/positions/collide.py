@@ -9,7 +9,7 @@ from ..utils import match, groupby_apply, suppress
 
 # Detect and prevent collisions.
 # Powers dodging, stacking and filling.
-def collide(data, width=None, name='', strategy=None):
+def collide(data, width=None, name='', strategy=None, params=None):
     xminmax = ['xmin', 'xmax']
     # Determine width
     if width is not None:
@@ -31,9 +31,18 @@ def collide(data, width=None, name='', strategy=None):
         #     gg_warn(msg.format(name))
         width = widths.iloc[0]
 
-    # Reorder by x position, relying on stable sort to preserve existing
-    # ordering, which may be by group or order.
-    idx = data['xmin'].sort_values(kind='mergesort').index
+    # Reorder by x position then on group, relying on stable sort to
+    # preserve existing ordering. The default stacking order reverses
+    # the group in order to match the legend order.
+    if params and 'reverse' in params and params['reverse']:
+        idx = data.sort_values(
+            ['xmin', 'group'], kind='mergesort').index
+    else:
+        data['-group'] = -data['group']
+        idx = data.sort_values(
+            ['xmin', '-group'], kind='mergesort').index
+        data.pop('-group')
+
     data = data.loc[idx, :]
 
     # Check for overlap
@@ -46,10 +55,10 @@ def collide(data, width=None, name='', strategy=None):
         gg_warn(msg.format(name))
 
     if 'ymax' in data:
-        data = groupby_apply(data, 'xmin', strategy, width)
+        data = groupby_apply(data, 'xmin', strategy, width, params)
     elif 'y' in data:
         data['ymax'] = data['y']
-        data = groupby_apply(data, 'xmin', strategy, width)
+        data = groupby_apply(data, 'xmin', strategy, width, params)
         data['y'] = data['ymax']
     else:
         raise GgplotError('Neither y nor ymax defined')
@@ -59,38 +68,28 @@ def collide(data, width=None, name='', strategy=None):
 
 # Stack overlapping intervals.
 # Assumes that each set has the same horizontal position
-def pos_stack(df, width):
-    if len(df) == 1:
-        return df
+def pos_stack(df, width, params):
+    vjust = params['vjust']
 
-    n = len(df) + 1
+    y = df['y'].copy()
+    y[np.isnan(y)] = 0
+    heights = np.append(0, y.cumsum())
 
-    if all(np.isnan(df['x'])):
-        heights = [np.nan] * n
-    else:
-        y = df['y'].copy()
-        y[np.isnan(y)] = 0
-        heights = np.append(0, y.cumsum())
+    if params['fill']:
+        heights = heights / np.abs(heights[-1])
 
-    df['ymin'] = heights[:-1]
-    df['ymax'] = heights[1:]
-    df['y'] = df['ymax']
-    return df
-
-
-# Stack overlapping intervals and set height to 1.
-# Assumes that each set has the same horizontal position.
-def pos_fill(df, width):
-    df = pos_stack(df, width)
-    df['ymin'] = df['ymin'] / df['ymax'].max()
-    df['ymax'] = df['ymax'] / df['ymax'].max()
-    df['y'] = df['ymax']
+    df['ymin'] = np.min([heights[:-1], heights[1:]], axis=0)
+    df['ymax'] = np.max([heights[:-1], heights[1:]], axis=0)
+    # less intuitive than (ymin + vjust(ymax-ymin)), but
+    # this way avoids subtracting numbers of potentially
+    # similar precision
+    df['y'] = ((1-vjust)*df['ymin'] + vjust*df['ymax'])
     return df
 
 
 # Dodge overlapping interval.
 # Assumes that each set has the same horizontal position.
-def pos_dodge(df, width):
+def pos_dodge(df, width, params):
 
     with suppress(TypeError):
         iter(width)
