@@ -6,8 +6,9 @@ import pandas as pd
 import pytest
 
 from .. import (ggplot, aes, geom_point, geom_jitter, geom_bar,
-                position_jitter, position_jitterdodge,
-                position_nudge)
+                geom_col, geom_text, position_jitter,
+                position_jitterdodge, position_nudge,
+                position_stack)
 from ..utils.exceptions import GgplotError
 from .conftest import cleanup
 
@@ -22,7 +23,7 @@ df2 = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
 @cleanup
 def test_jitter():
     df1 = pd.DataFrame({'x': [1, 2, 1, 2],
-                       'y': [1, 1, 2, 2]})
+                        'y': [1, 1, 2, 2]})
     p = (ggplot(df1, aes('x', 'y')) +
          geom_point(size=10) +
          geom_jitter(size=10, color='red', prng=prng) +
@@ -48,6 +49,21 @@ def test_stack():
     p = (ggplot(df2, aes('factor(z)')) +
          geom_bar(aes(fill='factor(x)'), position='stack'))
     assert p == 'stack'
+
+
+@cleanup
+def test_stack_negative():
+    df = df1.copy()
+    df.ix[0, 'y'] *= -1
+    df.ix[len(df)-1, 'y'] *= -1
+    p = (ggplot(df)
+         + geom_col(aes('factor(x)', 'y', fill='factor(y)'),
+                    position='stack')
+         + geom_text(aes('factor(x)', 'y', label='y'),
+                     position=position_stack(vjust=0.5))
+         )
+
+    assert p == 'stack-negative'
 
 
 @cleanup

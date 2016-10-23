@@ -24,7 +24,7 @@ class geom_text(geom):
     REQUIRED_AES = {'label', 'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'parse': False, 'hjust': 'center',
-                      'family': None, 'fontweight': 'bold',
+                      'family': None, 'fontweight': 'normal',
                       'fontstyle': 'normal', 'vjust': 'center',
                       'nudge_x': 0, 'nudge_y': 0,
                       'format_string': None}
@@ -104,6 +104,9 @@ class geom_text(geom):
         del data['PANEL']
         del data['group']
         del data['alpha']
+        for key in ('xmin', 'xmax', 'ymin', 'ymax'):
+            with suppress(KeyError):
+                del data[key]
 
         # For labels add a bbox
         for i in range(len(data)):
