@@ -8,6 +8,7 @@ from .geom_area import geom_area
 from .geom_bar import geom_bar
 from .geom_blank import geom_blank
 from .geom_boxplot import geom_boxplot
+from .geom_col import geom_col
 from .geom_crossbar import geom_crossbar
 from .geom_density import geom_density
 from .geom_dotplot import geom_dotplot
@@ -43,8 +44,8 @@ from .geom_path import arrow
 from .annotate import annotate
 
 
-__all__ = ['geom_abline', 'geom_area', 'geom_bar',
-           'geom_blank', 'geom_boxplot', 'geom_crossbar',
+__all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_blank',
+           'geom_boxplot', 'geom_col', 'geom_crossbar',
            'geom_density', 'geom_dotplot', 'geom_errorbar',
            'geom_errorbarh', 'geom_freqpoly', 'geom_histogram',
            'geom_hline', 'geom_jitter', 'geom_label', 'geom_line',

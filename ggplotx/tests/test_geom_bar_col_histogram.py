@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_bar, geom_histogram
+from .. import ggplot, aes, geom_bar, geom_col, geom_histogram
 from .conftest import cleanup
 
 n = 10  # Some even number greater than 2
@@ -19,6 +19,16 @@ def test_bar_count():
          geom_bar(aes(fill='factor(z)')))
 
     assert p == 'bar-count'
+
+
+@cleanup
+def test_col():
+    # The color indicates reveals the edges and the stacking
+    # that is going on.
+    p = (ggplot(df) +
+         geom_col(aes('x', 'z', fill='factor(z)'), color='black'))
+
+    assert p == 'col'
 
 
 @cleanup

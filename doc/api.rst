@@ -31,6 +31,7 @@ geoms
    geom_bar
    geom_blank
    geom_boxplot
+   geom_col
    geom_crossbar
    geom_density
    geom_dotplot
