@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
-
+import six
 from six import add_metaclass
 
 from ..utils import waiver, Registry
@@ -50,7 +50,7 @@ class guide(object):
         Direction of the guide.
     default_unit : str
         Unit for ``keywidth`` and ``keyheight``
-    override_aes : list_like
+    override_aes : dict
         Aesthetic parameters of legend key.
     reverse : bool
         Whether to reverse the order of the legends.
@@ -180,3 +180,30 @@ class guide(object):
             self._title_margin = 8
         else:
             self._title_margin = margin.get_as(loc, 'pt')
+
+    def legend_aesthetics(self, layer, plot):
+        """
+        Return the aesthetics that contribute to the legend
+
+        Parameters
+        ----------
+        layer : Layer
+            Layer whose legend is to be drawn
+        plot : ggplot
+            Plot object
+
+        Returns
+        -------
+        matched : list
+            List of the names of the aethetics that contribute
+            to the legend.
+        """
+        l = layer
+        legend_ae = set(self.key.columns) - {'label'}
+        all_ae = (six.viewkeys(l.mapping) |
+                  plot.mapping if l.inherit_aes else set() |
+                  six.viewkeys(l.stat.DEFAULT_AES))
+        geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
+        matched = all_ae & geom_ae & legend_ae
+        matched = list(matched - set(l.geom.aes_params))
+        return matched

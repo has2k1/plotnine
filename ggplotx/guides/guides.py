@@ -57,6 +57,24 @@ class guides(dict):
         self.box_margin = None
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add guides to the plot
+
+        Parameters
+        ----------
+        gg : ggplot
+            ggplot object being created
+        inplace : bool
+            If **False**, the guides are added to
+            a copy of the the ggplot object.
+
+        Returns
+        -------
+        out : gglot
+            ggplot object with guides. If *inplace*
+            is **False** this is a copy of the original
+            ggplot object.
+        """
         gg = gg if inplace else deepcopy(gg)
         new_guides = {}
         for k in self:
@@ -65,6 +83,20 @@ class guides(dict):
         return gg
 
     def build(self, plot):
+        """
+        Build the guides
+
+        Parameters
+        ----------
+        plot : ggplot
+            ggplot object being drawn
+
+        Returns
+        -------
+        box : matplotlib.offsetbox.Offsetbox | None
+            A box that contains all the guides for the plot.
+            If there are no guides, **None** is returned.
+        """
         get_property = plot.theme.themeables.property
 
         # by default, guide boxes are vertically aligned
@@ -108,6 +140,19 @@ class guides(dict):
         return bigbox
 
     def train(self, plot):
+        """
+        Compute all the required guides
+
+        Parameters
+        ----------
+        plot : ggplot
+            ggplot object
+
+        Returns
+        -------
+        gdefs : list
+            Guides for the plots
+        """
         gdefs = []
 
         for scale in plot.scales:
@@ -214,6 +259,7 @@ class guides(dict):
         gdefs : list of guide_legend|guide_colorbar
             guide definitions
         theme : theme
+            Plot theme
 
         Returns
         -------
@@ -228,6 +274,21 @@ class guides(dict):
     def assemble(self, gboxes, gdefs, theme):
         """
         Put together all the guide boxes
+
+        Parameters
+        ----------
+        gboxes : list
+            List of :class:`~matplotlib.offsetbox.Offsetbox`,
+            where each item is a legend for a single aesthetic.
+        gdefs : list of guide_legend|guide_colorbar
+            guide definitions
+        theme : theme
+            Plot theme
+
+        Returns
+        -------
+        box : OffsetBox
+            A box than can be placed onto a plot
         """
         # place the guides according to the guide.order
         # 0 do not sort

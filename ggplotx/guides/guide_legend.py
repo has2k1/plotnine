@@ -140,43 +140,34 @@ class guide_legend(guide):
         to draw the guide together with the data and the parameters that
         will be used in the call to geom.
         """
+        def get_legend_geom(layer):
+            if hasattr(layer.geom, 'draw_legend'):
+                geom = layer.geom.__class__
+            else:
+                name = 'geom_{}'.format(layer.geom.legend_geom)
+                geom = Registry[name]
+            return geom
+
         # A layer either contributes to the guide, or it does not. The
         # guide entries may be ploted in the layers
         self.glayers = []
-        legend_ae = set(self.key.columns) - {'label'}
         for l in plot.layers:
-            all_ae = (six.viewkeys(l.mapping) |
-                      plot.mapping if l.inherit_aes else set() |
-                      six.viewkeys(l.stat.DEFAULT_AES))
-            geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
-            matched = all_ae & geom_ae & legend_ae
-            matched -= set(l.geom.aes_params)
+            if l.show_legend not in (None, True):
+                continue
 
-            if len(matched):
-                # This layer contributes to the legend
-                if l.show_legend is None or l.show_legend:
-                    # Default is to include it
-                    tmp = self.key[list(matched)].copy()
-                    data = l.use_defaults(tmp)
-                else:
-                    continue
-            else:
-                # This layer does not contribute to the legend
-                if l.show_legend is None or not l.show_legend:
-                    continue
-                else:
-                    zeros = [0] * len(self.key)
-                    data = l.use_defaults(pd.DataFrame())[zeros]
+            matched = self.legend_aesthetics(l, plot)
+            # This layer does not contribute to the legend
+            if not matched:
+                continue
+
+            data = self.key[matched].copy()
+            data = l.use_defaults(data)
 
             # override.aes in guide_legend manually changes the geom
             for ae in set(self.override_aes) & set(data.columns):
                 data[ae] = self.override_aes[ae]
 
-            if hasattr(l.geom, 'draw_legend'):
-                geom = l.geom.__class__
-            else:
-                name = 'geom_{}'.format(l.geom.legend_geom)
-                geom = Registry[name]
+            geom = get_legend_geom(l)
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
         if not self.glayers:

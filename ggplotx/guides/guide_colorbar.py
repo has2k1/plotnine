@@ -10,7 +10,7 @@ import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
 from matplotlib.ticker import MaxNLocator
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
-from matplotlib.offsetbox import AuxTransformBox
+from matplotlib.offsetbox import AuxTransformBox, PaddedBox
 from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
 
@@ -122,17 +122,14 @@ class guide_colorbar(guide):
 
         Return self if colorbar will be drawn and None if not.
         """
-        legend_ae = set(self.key.columns) - {'label'}
         for l in plot.layers:
-            all_ae = (six.viewkeys(l.mapping) |
-                      plot.mapping if l.inherit_aes else set() |
-                      six.viewkeys(l.stat.DEFAULT_AES))
-            geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
-            matched = all_ae & geom_ae & legend_ae
-            matched = matched - set(l.geom.aes_params)
+            if l.show_legend not in (None, True):
+                continue
+
+            matched = self.legend_aesthetics(l, plot)
 
             # layer uses guide
-            if len(matched) and l.show_legend in (None, True):
+            if matched:
                 break
         # no break, no layer uses this guide
         else:
