@@ -180,6 +180,8 @@ class facet_wrap(facet):
             if not self.free['x'] and not self.free['y']:
                 aspect_ratio = self.coordinates.aspect(
                     self.layout.ranges[0])
+            else:
+                aspect_ratio = None
 
         if theme.themeables.is_blank('strip_text_x'):
             top_strip_height = 0

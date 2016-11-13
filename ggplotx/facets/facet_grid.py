@@ -210,6 +210,8 @@ class facet_grid(facet):
             if not self.free['x'] and not self.free['y']:
                 aspect_ratio = self.coordinates.aspect(
                     self.layout.ranges[0])
+            else:
+                aspect_ratio = None
 
         # The goal is to have equal spacing along the vertical
         # and the horizontal. We use the wspace and compute
