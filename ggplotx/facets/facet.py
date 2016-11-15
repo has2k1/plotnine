@@ -188,8 +188,8 @@ class facet(object):
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):
         ax = self.axs[pidx]
-        # Add axes and labels on all sides. The super
-        # class should remove what is unnecessary
+        # Add axes and labels on all sides. The sub-sclass
+        # should remove what is unnecessary
 
         # limits
         ax.set_xlim(ranges['x_range'])
@@ -235,12 +235,12 @@ class facet(object):
         # be targeted for theming by the themeables
         figure._themeable = {}
 
-        # Used for labelling the x and y axes
-        self.first_ax = axs.ravel()[0]
-        self.last_ax = axs.ravel()[num_panels-1]
+        # Used for labelling the x and y axes, the first and
+        # last axes according to how MPL creates them.
+        _raveled_axs = axs.ravel()
+        self.first_ax = _raveled_axs[0]
+        self.last_ax = _raveled_axs[num_panels-1]
 
-        # FIXME: The logic below does not handle the
-        # rare case when as_table=False and direction='v'
         if not self.as_table:
             axs = axs[::-1]
 
