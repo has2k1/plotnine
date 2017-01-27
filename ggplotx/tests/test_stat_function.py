@@ -4,16 +4,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ..utils.exceptions import GgplotError
-from .. import ggplot, aes, arrow, stat_function
-from .conftest import cleanup
+from ggplotx.utils.exceptions import GgplotError
+from ggplotx import ggplot, aes, arrow, stat_function
 
 
 n = 10
 df = pd.DataFrame({'x': range(1, n+1)})
 
 
-@cleanup
 def test_limits():
     p = (ggplot(df, aes('x')) +
          stat_function(fun=np.cos, size=2,

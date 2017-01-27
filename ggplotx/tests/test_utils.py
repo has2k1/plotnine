@@ -8,10 +8,10 @@ import warnings
 import numpy as np
 import pandas as pd
 
-from ..data import mtcars
-from ..utils.utils import _margins, add_margins, ninteraction
-from ..utils.utils import join_keys, match, uniquecols, defaults
-from ..utils.utils import remove_missing, groupby_with_null
+from ggplotx.data import mtcars
+from ggplotx.utils.utils import _margins, add_margins, ninteraction
+from ggplotx.utils.utils import join_keys, match, uniquecols, defaults
+from ggplotx.utils.utils import remove_missing, groupby_with_null
 
 
 def test__margins():

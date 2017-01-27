@@ -4,9 +4,9 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 import pytest
 
-from .. import ggplot, aes
-from ..geoms.geom import geom
-from ..utils.exceptions import GgplotError
+from ggplotx import ggplot, aes
+from ggplotx.geoms.geom import geom
+from ggplotx.utils.exceptions import GgplotError
 
 df = pd.DataFrame({'col1': [1, 2, 3, 4],
                    'col2': 2,

@@ -3,9 +3,8 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import (ggplot, aes, geom_area, geom_ribbon,
-                scale_x_continuous)
-from .conftest import cleanup
+from ggplotx import (ggplot, aes, geom_area, geom_ribbon,
+                     scale_x_continuous)
 
 n = 4            # No. of ribbions in a vertical stack
 m = 100          # Points
@@ -20,7 +19,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_ribbon_aesthetics():
     p = (ggplot(df, aes('x', ymin='ymin', ymax='ymax',
                         group='factor(z)')) +
@@ -41,7 +39,6 @@ def test_ribbon_aesthetics():
     assert p == 'ribbon_aesthetics'
 
 
-@cleanup
 def test_area_aesthetics():
     p = (ggplot(df, aes('x', 'ymax+2', group='factor(z)')) +
          geom_area() +

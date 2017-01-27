@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_density
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_density
 
 n = 6  # Some even number greater than 2
 
@@ -15,19 +14,16 @@ df = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
 p = ggplot(df, aes('x', fill='factor(z)'))
 
 
-@cleanup
 def test_gaussian():
     p1 = p + geom_density(kernel='gaussian', alpha=.3)
     assert p1 == 'gaussian'
 
 
-@cleanup
 def test_gaussian_trimmed():
     p2 = p + geom_density(kernel='gaussian', alpha=.3, trim=True)
     assert p2 == 'gaussian-trimmed'
 
 
-@cleanup
 def test_triangular():
     p3 = p + geom_density(kernel='triangular', alpha=.3)  # other
     assert p3 == 'triangular'

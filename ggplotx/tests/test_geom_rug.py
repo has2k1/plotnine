@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_rug
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_rug
 
 n = 4
 seq = np.arange(1, n+1)
@@ -15,7 +14,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df) +
          geom_rug(aes('x', 'y'), size=2) +

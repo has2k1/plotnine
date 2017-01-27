@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_boxplot, coord_flip, theme
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_boxplot, coord_flip, theme
 
 n = 4
 m = 10
@@ -26,16 +25,13 @@ class TestAesthetics(object):
          geom_boxplot(df[2*m:], aes(y='y+55', linetype='x'), size=2)
          )
 
-    @cleanup
     def test_aesthetics(self):
         assert self.p == 'aesthetics'
 
-    @cleanup
     def test_aesthetics_coordflip(self):
         assert self.p + coord_flip() == 'aesthetics+coord_flip'
 
 
-@cleanup
 def test_params():
     p = (ggplot(df, aes('x')) +
          geom_boxplot(df[:m], aes(y='y'), size=2, notch=True) +

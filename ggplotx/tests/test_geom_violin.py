@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_violin, coord_flip, theme
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_violin, coord_flip, theme
 
 n = 4
 m = 10
@@ -25,16 +24,13 @@ class TestAesthetics(object):
          geom_violin(df[2*m:], aes(y='y+25', color='x'), size=2) +
          geom_violin(df[2*m:], aes(y='y+50', linetype='x'), size=2))
 
-    @cleanup
     def test_aesthetics(self):
         assert self.p == 'aesthetics'
 
-    @cleanup
     def test_aesthetics_coordflip(self):
         assert self.p + coord_flip() == 'aesthetics+coord_flip'
 
 
-@cleanup
 def test_scale():
     p = (ggplot(df, aes('x')) +
          # Red should envelop blue
@@ -52,7 +48,6 @@ def test_scale():
     assert p == 'scale'
 
 
-@cleanup
 def test_quantiles_width_dodge():
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'),
@@ -65,7 +60,6 @@ def test_quantiles_width_dodge():
     assert p == 'quantiles_width_dodge'
 
 
-@cleanup
 def test_no_trim():
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'), trim=False, size=2))

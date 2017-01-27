@@ -2,15 +2,13 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_point, annotate
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_point, annotate
 
 n = 4
 df = pd.DataFrame({'x': range(n),
                    'y': range(n)})
 
 
-@cleanup
 def test_multiple_annotation_geoms():
     p = (ggplot(df, aes('x', 'y')) +
          geom_point() +

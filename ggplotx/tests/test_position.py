@@ -5,12 +5,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from .. import (ggplot, aes, geom_point, geom_jitter, geom_bar,
-                geom_col, geom_text, position_jitter,
-                position_jitterdodge, position_nudge,
-                position_stack)
-from ..utils.exceptions import GgplotError
-from .conftest import cleanup
+from ggplotx import (ggplot, aes, geom_point, geom_jitter, geom_bar,
+                     geom_col, geom_text, position_jitter,
+                     position_jitterdodge, position_nudge,
+                     position_stack)
+from ggplotx.utils.exceptions import GgplotError
 
 n = 6
 prng = np.random.RandomState(1234567890)
@@ -20,7 +19,6 @@ df2 = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                     'z': np.repeat(range(n//2), range(3, n*2, 4))})
 
 
-@cleanup
 def test_jitter():
     df1 = pd.DataFrame({'x': [1, 2, 1, 2],
                         'y': [1, 1, 2, 2]})
@@ -35,7 +33,6 @@ def test_jitter():
         geom_jitter(position=position_jitter(), width=0.1)
 
 
-@cleanup
 def test_nudge():
     p = (ggplot(df1, aes('x', 'y')) +
          geom_point(size=10) +
@@ -44,14 +41,12 @@ def test_nudge():
     assert p == 'nudge'
 
 
-@cleanup
 def test_stack():
     p = (ggplot(df2, aes('factor(z)')) +
          geom_bar(aes(fill='factor(x)'), position='stack'))
     assert p == 'stack'
 
 
-@cleanup
 def test_stack_negative():
     df = df1.copy()
     df.ix[0, 'y'] *= -1
@@ -66,21 +61,18 @@ def test_stack_negative():
     assert p == 'stack-negative'
 
 
-@cleanup
 def test_fill():
     p = (ggplot(df2, aes('factor(z)')) +
          geom_bar(aes(fill='factor(x)'), position='fill'))
     assert p == 'fill'
 
 
-@cleanup
 def test_dodge():
     p = (ggplot(df2, aes('factor(z)')) +
          geom_bar(aes(fill='factor(x)'), position='dodge'))
     assert p == 'dodge'
 
 
-@cleanup
 def test_jitterdodge():
     df = pd.DataFrame({
         'x': np.ones(n*2),

@@ -3,9 +3,8 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import pytest
 
-from .. import ggplot, aes, geom_hline, geom_point
-from ..utils.exceptions import GgplotError
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_hline, geom_point
+from ggplotx.utils.exceptions import GgplotError
 
 df = pd.DataFrame({
         'yintercept': [1, 2],
@@ -15,7 +14,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df) +
          geom_point(aes('x', 'y')) +
@@ -33,7 +31,6 @@ def test_aesthetics():
     assert p == 'aesthetics'
 
 
-@cleanup
 def test_aes_inheritance():
     with pytest.raises(GgplotError):
         p = (ggplot(df, aes('x', 'y', yintercept='yintercept')) +

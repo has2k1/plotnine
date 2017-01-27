@@ -2,8 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_rect, geom_tile, labs, theme
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_rect, geom_tile, labs, theme
 
 n = 4
 
@@ -25,7 +24,6 @@ df['y'] = df['ymin'] + 0.5
 _theme = theme(facet_spacing={'right': 0.8})
 
 
-@cleanup
 def test_rect_aesthetics():
 
     # rect
@@ -50,7 +48,6 @@ def test_rect_aesthetics():
     assert p == 'rect-aesthetics'
 
 
-@cleanup
 def test_tile_aesthetics():
     p = (ggplot(df, aes('x', 'y', width=1, height=1)) +
          geom_tile() +

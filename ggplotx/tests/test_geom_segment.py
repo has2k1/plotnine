@@ -2,8 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_segment, arrow
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_segment, arrow
 
 
 n = 4
@@ -18,7 +17,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df, aes('x', 'y', xend='xend', yend='yend')) +
          geom_segment(size=2) +
@@ -33,7 +31,6 @@ def test_aesthetics():
     assert p == 'aesthetics'
 
 
-@cleanup
 def test_arrow():
     p = (ggplot(df, aes('x', 'y', xend='xend', yend='yend')) +
          geom_segment(aes('x+2', xend='xend+2'),

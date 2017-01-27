@@ -4,7 +4,6 @@ import warnings
 import inspect
 import shutil
 import locale
-import functools
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -12,9 +11,8 @@ from matplotlib.testing.compare import compare_images
 from matplotlib import cbook
 import six
 
-from .. import ggplot, theme
+from ggplotx import ggplot, theme
 
-__all__ = ['cleanup']
 
 TOLERANCE = 5           # Default tolerance for the tests
 DPI = 72.27               # Default DPI for the tests
@@ -23,7 +21,7 @@ DPI = 72.27               # Default DPI for the tests
 # the test. It is limited to setting the size of the test
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
-DPI=100
+DPI = 100
 test_theme = theme(figure_size=(640/DPI, 480/DPI))
 
 if not os.path.exists(os.path.join(
@@ -60,6 +58,7 @@ def ggplot_equals(gg, right):
     This function is meant to monkey patch ggplot.__eq__
     so that tests can use the `assert` statement.
     """
+    _setup()
     if isinstance(right, (tuple, list)):
         name, params = right
         tol = params.get('tol', TOLERANCE)
@@ -80,6 +79,7 @@ def ggplot_equals(gg, right):
     # actually exists. This make creating new tests much easier,
     # as the result image can afterwards just be copied.
     fig.savefig(filenames.result, **savefig_kwargs)
+    _teardown()
     if os.path.exists(filenames.baseline):
         shutil.copyfile(filenames.baseline, filenames.expected)
     else:
@@ -157,7 +157,7 @@ def make_test_image_filenames(name, test_file):
     return filenames
 
 
-# This is called from the cleanup decorator
+# This is called from the leanup decorator
 def _setup():
     # The baseline images are created in this locale, so we should use
     # it during all of the tests.
@@ -194,22 +194,3 @@ def _teardown():
     plt.close('all')
     # reset any warning filters set in tests
     warnings.resetwarnings()
-
-
-def cleanup(testfunc):
-    """
-    Decorator to add cleanup to the testing function
-
-      @cleanup
-      def test_something():
-          " ... "
-
-    Note that `@cleanup` is useful *only* for test functions
-    that draw plots.
-    """
-    @functools.wraps(testfunc)
-    def wrapper(*args, **kwargs):
-        _setup()
-        testfunc(*args, **kwargs)
-        _teardown()
-    return wrapper

@@ -2,11 +2,9 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_point
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_point
 
 
-@cleanup
 def test_aesthetics():
     df = pd.DataFrame({
             'a': range(5),

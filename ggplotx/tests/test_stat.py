@@ -2,15 +2,13 @@ from __future__ import absolute_import, division, print_function
 
 import pytest
 
-from .. import ggplot, aes, geom_bar
-from ..data import mtcars
-from ..geoms.geom import geom
-from ..stats.stat import stat
-from ..utils.exceptions import GgplotError
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_bar
+from ggplotx.data import mtcars
+from ggplotx.geoms.geom import geom
+from ggplotx.stats.stat import stat
+from ggplotx.utils.exceptions import GgplotError
 
 
-@cleanup
 def test_stat_basics():
     class stat_abc(stat):
         DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}

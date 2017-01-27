@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import numpy as np
 
-from .. import ggplot, aes, geom_linerange, geom_pointrange
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_linerange, geom_pointrange
 
 n = 4
 df = pd.DataFrame({
@@ -16,7 +15,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_linerange_aesthetics():
     p = (ggplot(df, aes('x')) +
          geom_linerange(aes(ymin='ymin', ymax='ymax'), size=2) +
@@ -32,7 +30,6 @@ def test_linerange_aesthetics():
     assert p == 'linerange_aesthetics'
 
 
-@cleanup
 def test_pointrange_aesthetics():
     p = (ggplot(df, aes('x')) +
          geom_pointrange(aes(y='y', ymin='ymin', ymax='ymax'), size=2) +

@@ -1,5 +1,5 @@
-from .. import theme, theme_gray, theme_matplotlib
-from .. import element_line, element_blank
+from ggplotx import theme, theme_gray, theme_matplotlib
+from ggplotx import element_line, element_blank
 
 
 def test_add_complete_complete():

@@ -2,8 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_errorbar, geom_errorbarh
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_errorbar, geom_errorbarh
 
 n = 4
 df = pd.DataFrame({
@@ -14,7 +13,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_errorbar_aesthetics():
     p = (ggplot(df, aes(ymin='ymin', ymax='ymax')) +
          geom_errorbar(aes('x'), size=2) +
@@ -27,7 +25,6 @@ def test_errorbar_aesthetics():
     assert p == 'errorbar_aesthetics'
 
 
-@cleanup
 def test_errorbarh_aesthetics():
     p = (ggplot(df, aes(xmin='ymin', xmax='ymax')) +
          geom_errorbarh(aes(y='x'), size=2) +

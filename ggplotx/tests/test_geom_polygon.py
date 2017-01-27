@@ -2,8 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_polygon
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_polygon
 
 df = pd.DataFrame({
         'x': ([1, 2, 3, 2] +
@@ -16,7 +15,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df, aes('x', group='factor(z)')) +
          geom_polygon(aes(y='y')) +

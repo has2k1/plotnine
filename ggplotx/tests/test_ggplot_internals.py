@@ -5,13 +5,12 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from .. import ggplot, aes, geom_point, geom_histogram, geom_line
-from .. import xlab, ylab, labs, ggtitle, xlim, lims, guides
-from .. import scale_x_continuous, coord_trans, annotate
-from .. import stat_identity, facet_null, theme, theme_gray
-from ..aes import is_calculated_aes, strip_dots
-from ..utils.exceptions import GgplotError
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_point, geom_histogram, geom_line
+from ggplotx import xlab, ylab, labs, ggtitle, xlim, lims, guides
+from ggplotx import scale_x_continuous, coord_trans, annotate
+from ggplotx import stat_identity, facet_null, theme, theme_gray
+from ggplotx.aes import is_calculated_aes, strip_dots
+from ggplotx.utils.exceptions import GgplotError
 
 df = pd.DataFrame({'x': np.arange(10),
                    'y': np.arange(10)})
@@ -60,7 +59,6 @@ def test_ggplot_parameters():
         ggplot([1, 2, 3], aes('x'))
 
 
-@cleanup
 def test_data_transforms():
     p = ggplot(aes(x='x', y='np.log(y)'), df)
     p = p + geom_point()
@@ -120,7 +118,6 @@ def test_add_aes():
     assert p.labels['y'] == 'var2'
 
 
-@cleanup
 def test_nonzero_indexed_data():
     df = pd.DataFrame({98: {'blip': 0, 'blop': 1},
                        99: {'blip': 1, 'blop': 3}}).T

@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_histogram, geom_freqpoly, geom_point
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_histogram, geom_freqpoly, geom_point
 
 n = 10  # Some even number greater than 2
 
@@ -13,7 +12,6 @@ df = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                    'z': np.repeat(range(n//2), range(3, n*2, 4))})
 
 
-@cleanup
 def test_midpoint():
     p = (ggplot(df, aes('x')) +
          geom_histogram(aes(fill='factor(z)'), bins=n, alpha=0.25) +

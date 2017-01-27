@@ -4,12 +4,10 @@ import warnings
 import pandas as pd
 import pytest
 
-from .. import ggplot, aes, stat_bin
-from ..utils.exceptions import GgplotError
-from .conftest import cleanup
+from ggplotx import ggplot, aes, stat_bin
+from ggplotx.utils.exceptions import GgplotError
 
 
-@cleanup
 def test_stat_bin():
     x = [1, 2, 3]
     y = [1, 2, 3]

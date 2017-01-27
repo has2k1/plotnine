@@ -2,9 +2,8 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import (ggplot, aes, geom_path, geom_line,
-                geom_step, arrow)
-from .conftest import cleanup
+from ggplotx import (ggplot, aes, geom_path, geom_line,
+                     geom_step, arrow)
 
 
 # steps with diagonals at the ends
@@ -14,7 +13,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df, aes('x', 'y')) +
          geom_path(size=4) +
@@ -29,7 +27,6 @@ def test_aesthetics():
     assert p == 'aesthetics'
 
 
-@cleanup
 def test_arrow():
     p = (ggplot(df, aes('x', 'y')) +
          geom_path(size=2, arrow=arrow(ends='both', type='closed')) +
@@ -41,7 +38,6 @@ def test_arrow():
     assert p == 'arrow'
 
 
-@cleanup
 def test_step():
     p = (ggplot(df, aes('x')) +
          geom_step(aes(y='y'), size=4) +
@@ -51,7 +47,6 @@ def test_step():
     assert p == 'step'
 
 
-@cleanup
 def test_line():
     df2 = df.copy()
 

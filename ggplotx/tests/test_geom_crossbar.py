@@ -2,8 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from .. import ggplot, aes, geom_crossbar
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_crossbar
 
 n = 4
 df = pd.DataFrame({
@@ -15,7 +14,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df, aes(y='y', ymin='ymin', ymax='ymax')) +
          geom_crossbar(aes('x'), size=2) +

@@ -5,9 +5,8 @@ import sys
 import matplotlib.pyplot as plt
 import pytest
 
-from .. import ggplot, aes, geom_text, ggsave
-from ..data import mtcars
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_text, ggsave
+from ggplotx.data import mtcars
 
 
 # TODO: test some real file content?
@@ -36,7 +35,6 @@ def assert_same_dims(orig, new, msg=None):
     assert oh == nh, msg.format("y", oh, nh)
 
 
-@cleanup
 def test_ggsave_plot():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
@@ -44,7 +42,6 @@ def test_ggsave_plot():
     assert_exist_and_clean('ggsave-'+str(abs(gg.__hash__()))+".pdf")
 
 
-@cleanup
 def test_ggsave_arguments():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
@@ -102,7 +99,6 @@ def test_ggsave_arguments():
     assert_exist_and_clean(fn, "dpi=100")
 
 
-@cleanup
 def test_ggsave_big():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     # supplying the ggplot object will work without printing it first!
@@ -112,7 +108,6 @@ def test_ggsave_big():
     assert_exist_and_clean(fn, "both height and width big")
 
 
-@cleanup
 def test_ggsave_exceptions():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     fn = "filename.png"
@@ -157,7 +152,6 @@ def test_ggsave_exceptions():
                          "size is different after unknown dpi")
 
 
-@cleanup
 def test_ggsave_close_plot():
     gg = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
     fn = "filename.png"

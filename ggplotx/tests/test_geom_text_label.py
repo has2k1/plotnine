@@ -3,9 +3,8 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import numpy as np
 
-from .. import (ggplot, aes, geom_text, geom_label,
-                scale_size_continuous, scale_y_continuous)
-from .conftest import cleanup
+from ggplotx import (ggplot, aes, geom_text, geom_label,
+                     scale_size_continuous, scale_y_continuous)
 
 n = 5
 labels = ['ggplot', 'aesthetics', 'data', 'geoms',
@@ -19,7 +18,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_text_aesthetics():
     p = (ggplot(df, aes(y='y', label='label')) +
          geom_text(aes('x', label='label'), size=15, hjust='left') +
@@ -37,7 +35,6 @@ def test_text_aesthetics():
     assert p == 'text_aesthetics'
 
 
-@cleanup
 def test_label_aesthetics():
     p = (ggplot(df, aes(y='y', label='label')) +
          geom_label(aes('x', label='label', fill='z'),

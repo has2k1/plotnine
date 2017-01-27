@@ -1,8 +1,8 @@
 from __future__ import division
 
-from ..scales import scale_x_discrete, scale_x_continuous
-from ..stats.binning import (breaks_from_bins, breaks_from_binwidth,
-                             fuzzybreaks)
+from ggplotx.scales import scale_x_discrete, scale_x_continuous
+from ggplotx.stats.binning import (breaks_from_bins, breaks_from_binwidth,
+                                   fuzzybreaks)
 
 
 def test_breaks_from_bins():

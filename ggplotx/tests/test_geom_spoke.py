@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import numpy as np
 
-from .. import ggplot, aes, geom_spoke
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_spoke
 
 n = 4
 df = pd.DataFrame({
@@ -16,7 +15,6 @@ df = pd.DataFrame({
     })
 
 
-@cleanup
 def test_aesthetics():
     p = (ggplot(df, aes(y='y', angle='angle', radius='radius')) +
          geom_spoke(aes('x'), size=2) +

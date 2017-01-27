@@ -3,21 +3,21 @@ from __future__ import absolute_import, division, print_function
 import pytest
 import six
 
-from ..scales import scale_color
-from ..scales import scale_identity
-from ..scales import scale_manual
-from ..scales import scale_xy
-from ..scales.scale_alpha import (scale_alpha_discrete,
-                                  scale_alpha_continuous)
-from ..scales.scale_linetype import (scale_linetype_discrete,
-                                     scale_linetype_continuous)
-from ..scales.scale_shape import (scale_shape_discrete,
-                                  scale_shape_continuous)
-from ..scales.scale_size import (scale_size_discrete,
-                                 scale_size_continuous,
-                                 scale_size_area,
-                                 scale_size_radius)
-from ..utils.exceptions import GgplotError, GgplotWarning
+from ggplotx.scales import scale_color
+from ggplotx.scales import scale_identity
+from ggplotx.scales import scale_manual
+from ggplotx.scales import scale_xy
+from ggplotx.scales.scale_alpha import (scale_alpha_discrete,
+                                        scale_alpha_continuous)
+from ggplotx.scales.scale_linetype import (scale_linetype_discrete,
+                                           scale_linetype_continuous)
+from ggplotx.scales.scale_shape import (scale_shape_discrete,
+                                        scale_shape_continuous)
+from ggplotx.scales.scale_size import (scale_size_discrete,
+                                       scale_size_continuous,
+                                       scale_size_area,
+                                       scale_size_radius)
+from ggplotx.utils.exceptions import GgplotError, GgplotWarning
 
 
 # test palettes

@@ -3,8 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from .. import ggplot, aes, geom_point, geom_quantile
-from .conftest import cleanup
+from ggplotx import ggplot, aes, geom_point, geom_quantile
 
 n = 200  # Should not be too big, affects the test duration
 prng = np.random.RandomState(1234567890)
@@ -14,7 +13,6 @@ df = pd.DataFrame({'x': np.arange(n),
                    })
 
 
-@cleanup
 def test_lines():
     p = (ggplot(df, aes(x='x', y='y')) +
          geom_point(alpha=.5) +
