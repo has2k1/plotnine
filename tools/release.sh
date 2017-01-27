@@ -9,19 +9,24 @@ tcolor=$(tput setaf 2)  # tag color
 reset=$(tput sgr0)      # reset color codes
 describe=$(git describe --always)
 
+# Regexes to identify the release and pre-release parts of a
+# valid (PEP440) python package version
+release_re='[0-9]\+\.[0-9]\+\.[0-9]\+'
+pre_re='\(\(a\|b\|rc\|alpha\|beta\)[0-9]*\)\?'
+
 # The tag is FULLY recognised as a nice version
-good_version=$(echo $describe | grep '^v[0-9]\+\.[0-9]\+\.[0-9]\+$')
+VERSION=$(echo $describe | grep "^v${release_re}${pre_re}$")
 
 # Partial recognition of a nice version, and maybe more stuff
 # This may give us the previous version.
-known_version=$(echo $describe | grep -o '^v[0-9]\+\.[0-9]\+\.[0-9]\+')
+PREVIOUS_VERSION=$(echo $describe | grep "^v${release_re}${pre_re}")
 
-if [[ $good_version ]];  then
+if [[ $VERSION ]];  then
    python setup.py sdist bdist_wheel
    twine upload dist/*
 
-elif [[ $known_version ]]; then
-  last_release=$(echo $known_version | tr -d v)
+elif [[ $PREVIOUS_VERSION ]]; then
+  last_release=$(echo $PREVIOUS_VERSION | tr -d v)
   major_minor=$(echo $last_release | grep -o '^[0-9]\+\.[0-9]\+')
   major=$(echo $last_release | grep -o '^[0-9]\+')
   minor=$(echo $major_minor | grep -o '[0-9]\+$')
@@ -37,7 +42,10 @@ git describe gives: $tcolor $describe $color
 Create a version tag, here are some suggestions:
   - patch release:$tcolor git tag -a v$tpatch -m 'Version: $tpatch' $color
   - minor release:$tcolor git tag -a v$tminor -m 'Version: $tminor' $color
-  - major release:$tcolor git tag -a v$tmajor -m 'Version: $tmajor'\
+  - major release:$tcolor git tag -a v$tmajor -m 'Version: $tmajor' $color
+  - rc candidate :$tcolor git tag -a v${tmajor}rc -m 'Version: $rcmajor' $color
+  - alpha release:$tcolor git tag -a v${tmajor}alpha1 -m 'Version: $rcmajor' $color
+  - beta release :$tcolor git tag -a v${tmajor}beta1 -m 'Version: $rcmajor'\
 $reset"
 
 else
@@ -50,3 +58,4 @@ For example: $tcolor
 $reset"
 
 fi
+

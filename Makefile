@@ -38,8 +38,8 @@ clean-test:
 lint:
 	flake8 ggplotx tests
 
-test:
-	py.test
+test: clean-test
+	pytest
 
 test-all:
 	tox
