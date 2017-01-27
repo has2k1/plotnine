@@ -55,4 +55,5 @@ class geom_segment(geom):
                 adata[param] = np.hstack([data[param], data[param]])
 
             params['arrow'].draw(
-                adata, panel_scales, coord, ax, constant=False)
+                adata, panel_scales, coord, ax,
+                params['zorder'], constant=False)

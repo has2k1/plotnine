@@ -85,7 +85,8 @@ class geom_path(geom):
 
         if 'arrow' in params and params['arrow']:
             params['arrow'].draw(
-                data, panel_scales, coord, ax, constant=constant)
+                data, panel_scales, coord,
+                ax, zorder=params['zorder'], constant=constant)
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -145,7 +146,7 @@ class arrow(object):
         self.ends = ends
         self.type = type
 
-    def draw(self, data, panel_scales, coord, ax, constant=True):
+    def draw(self, data, panel_scales, coord, ax, zorder, constant=True):
         """
         Draw arrows at the end(s) of the lines
 
@@ -181,6 +182,7 @@ class arrow(object):
                 idx2.extend(df.index[1:])
 
             d = dict(
+                zorder=zorder,
                 edgecolor=data.loc[idx1, 'color'],
                 facecolor=data.loc[idx1, 'facecolor'],
                 linewidth=data.loc[idx1, 'size'],
@@ -204,6 +206,7 @@ class arrow(object):
                 ax.add_collection(coll)
         else:
             d = dict(
+                zorder=zorder,
                 edgecolor=data['color'].iloc[0],
                 facecolor=data['facecolor'].iloc[0],
                 linewidth=data['size'].iloc[0],
