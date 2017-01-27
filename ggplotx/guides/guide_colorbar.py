@@ -350,7 +350,7 @@ def create_labels(da, labels, locations, direction):
     # the labels in the labels_box matchup with the ticks.
     fontsize = 9
     aux_transform = mtransforms.IdentityTransform()
-    labels_box = AuxTransformBox(aux_transform)
+    labels_box = MyAuxTransformBox(aux_transform)
     xs, ys = [0]*len(labels), locations
     ha, va = 'left', 'center'
 
@@ -381,3 +381,34 @@ def create_labels(da, labels, locations, direction):
 
 
 guide_colourbar = guide_colorbar
+
+
+# Fix AuxTransformBox, Adds a dpi_transform
+# See https://github.com/matplotlib/matplotlib/pull/7344
+class MyAuxTransformBox(AuxTransformBox):
+    def __init__(self, aux_transform):
+        AuxTransformBox.__init__(self, aux_transform)
+        self.dpi_transform = mtransforms.Affine2D()
+
+    def get_transform(self):
+        """
+        Return the :class:`~matplotlib.transforms.Transform` applied
+        to the children
+        """
+        return self.aux_transform + \
+            self.ref_offset_transform + \
+            self.dpi_transform + \
+            self.offset_transform
+
+    def draw(self, renderer):
+        """
+        Draw the children
+        """
+        dpi_cor = renderer.points_to_pixels(1.)
+        self.dpi_transform.clear()
+        self.dpi_transform.scale(dpi_cor, dpi_cor)
+
+        for c in self._children:
+            c.draw(renderer)
+
+        self.stale = False
