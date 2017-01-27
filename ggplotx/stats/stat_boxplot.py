@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 import pandas as pd
-import pandas.core.common as com
+import pandas.api.types as pdtypes
 from matplotlib.cbook import boxplot_stats
 
 from ..utils import resolution
@@ -46,7 +46,7 @@ class stat_boxplot(stat):
         else:
             width = params['width']
 
-        if com.is_categorical(data['x']):
+        if pdtypes.is_categorical(data['x']):
             x = data['x'].iloc[0]
         else:
             x = np.mean([data['x'].min(), data['x'].max()])
