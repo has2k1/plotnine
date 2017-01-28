@@ -225,7 +225,7 @@ class Margin(dict):
         """
         Return key in given units
         """
-        dpi = 72.27
+        dpi = 72
         size = self.element.properties.get('size', 0)
         value = self[key]
 

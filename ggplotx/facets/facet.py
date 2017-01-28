@@ -301,7 +301,7 @@ class facet(object):
         num_lines : int
             Number of text lines
         """
-        dpi = 72.27
+        dpi = 72
         theme = self.theme
         get_property = theme.themeables.property
 
@@ -337,7 +337,7 @@ class facet(object):
         return breadth
 
     def strip_text_position(self, location, strip_size, pid):
-        dpi = 72.27
+        dpi = 72
         t, b, l, r = self.strip_background_limits(location, pid)
         m1, m2 = self.inner_strip_margins(location)
         m1, m2 = m1/dpi, m2/dpi
@@ -363,7 +363,7 @@ class facet(object):
             A structure with all the coordinates required
             to draw the strip text and the background box.
         """
-        dpi = 72.27
+        dpi = 72
         num_lines = len(text_lines)
         get_property = self.theme.themeables.property
         ax = self.axs[pid]
