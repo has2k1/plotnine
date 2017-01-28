@@ -24,11 +24,11 @@ def get_required_packages():
     """
     install_requires = ['six',
                         'mizani',
-                        'matplotlib >= 1.5.1',
+                        'matplotlib >= 2.0.0',
                         'numpy',
                         'scipy',
                         'patsy >= 0.4.1',
-                        'statsmodels >= 0.6',
+                        'statsmodels >= 0.8.0',
                         'pandas >= 0.19.0',
                         ]
     return install_requires

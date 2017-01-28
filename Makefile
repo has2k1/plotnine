@@ -36,7 +36,7 @@ clean-test:
 	rm -fr htmlcov/
 
 lint:
-	flake8 plotnine tests
+	flake8 plotnine
 
 test: clean-test
 	pytest
@@ -55,7 +55,7 @@ docs:
 	$(BROWSER) doc/_build/html/index.html
 
 release: clean
-	bash ./release.sh
+	bash ./tools/release.sh
 
 dist: clean
 	python setup.py sdist bdist_wheel
