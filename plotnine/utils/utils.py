@@ -20,7 +20,7 @@ from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 
-from .exceptions import GgplotError, gg_warn
+from .exceptions import PlotnineError, gg_warn
 
 
 DISCRETE_KINDS = 'ObUS'
@@ -113,7 +113,7 @@ def make_iterable_ntimes(val, n):
     """
     if cbook.iterable(val) and not is_string(val):
         if len(val) != n:
-            raise GgplotError(
+            raise PlotnineError(
                 '`val` is an iterable of length not equal to n.')
         return val
     return [val] * n
@@ -410,7 +410,7 @@ def check_required_aesthetics(required, present, name):
 
     if missing_aes:
         msg = '{} requires the following missing aesthetics: {}'
-        raise GgplotError(
+        raise PlotnineError(
             msg.format(name, ', '.join(missing_aes)))
 
 
@@ -707,7 +707,7 @@ def make_line_segments(x, y, ispath=True):
         x = interleave(x[:-1], x[1:])
         y = interleave(y[:-1], y[1:])
     elif len(x) % 2:
-            raise GgplotError("Expects an even number of points")
+            raise PlotnineError("Expects an even number of points")
 
     n = len(x) // 2
     segments = np.reshape(list(zip(x, y)), [n, 2, 2])
@@ -782,7 +782,7 @@ class RegistryMeta(type):
         except KeyError:
             msg = ("'{}' Not in Registry. Make sure the module in "
                    "which it is defined has been imported.")
-            raise GgplotError(msg.format(key))
+            raise PlotnineError(msg.format(key))
 
     def __setitem__(meta, key, value):
         meta._registry[key] = value
@@ -971,9 +971,9 @@ def data_mapping_as_kwargs(args, kwargs):
     # check args #
     for arg in args:
         if isinstance(arg, aes) and mapping:
-            raise GgplotError(aes_err)
+            raise PlotnineError(aes_err)
         if isinstance(arg, pd.DataFrame) and data:
-            raise GgplotError(data_err)
+            raise PlotnineError(data_err)
 
         if isinstance(arg, aes):
             mapping = arg
@@ -981,7 +981,7 @@ def data_mapping_as_kwargs(args, kwargs):
             data = arg
         else:
             msg = "Unknown argument of type '{0}'."
-            raise GgplotError(msg.format(type(arg)))
+            raise PlotnineError(msg.format(type(arg)))
 
     # check kwargs #
     # kwargs mapping has precedence over that in args
@@ -989,14 +989,14 @@ def data_mapping_as_kwargs(args, kwargs):
         kwargs['mapping'] = mapping
 
     if data is not None and 'data' in kwargs:
-        raise GgplotError(data_err)
+        raise PlotnineError(data_err)
     elif 'data' not in kwargs:
         kwargs['data'] = data
 
     duplicates = set(kwargs['mapping']) & set(kwargs)
     if duplicates:
         msg = "Aesthetics {} specified two times."
-        raise GgplotError(msg.format(duplicates))
+        raise PlotnineError(msg.format(duplicates))
     return kwargs
 
 

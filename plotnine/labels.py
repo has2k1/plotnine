@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 
-from .utils.exceptions import GgplotError
+from .utils.exceptions import PlotnineError
 
 __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
 
@@ -21,7 +21,7 @@ class labs(object):
 
     def __init__(self, *args, **kwargs):
         if args and not isinstance(args, dict):
-            raise GgplotError(
+            raise PlotnineError(
                 "'labs' accepts either a dictionary as "
                 "an argument or keyword arguments")
             self.labels = args
@@ -46,7 +46,7 @@ class xlab(labs):
 
     def __init__(self, xlab):
         if xlab is None:
-            raise GgplotError(
+            raise PlotnineError(
                 "Arguments to xlab cannot be None")
         self.labels = {'x': xlab}
 
@@ -63,7 +63,7 @@ class ylab(labs):
 
     def __init__(self, ylab):
         if ylab is None:
-            raise GgplotError(
+            raise PlotnineError(
                 "Arguments to ylab cannot be None")
         self.labels = {'y': ylab}
 
@@ -79,6 +79,6 @@ class ggtitle(labs):
     """
     def __init__(self, title):
         if title is None:
-            raise GgplotError(
+            raise PlotnineError(
                 "Arguments to ggtitle cannot be None")
         self.labels = {'title': title}

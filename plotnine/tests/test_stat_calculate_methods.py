@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, stat_bin
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 
 
 def test_stat_bin():
@@ -23,5 +23,5 @@ def test_stat_bin():
 
     # About the ignoring the y aesthetic
     gg = ggplot(aes(x='x', y='y'), df) + stat_bin()
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         gg.draw()

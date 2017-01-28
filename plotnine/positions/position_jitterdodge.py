@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 
 from ..utils import jitter, resolution, suppress
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .position import position
 from .collide import collide, pos_dodge
 
@@ -53,7 +53,7 @@ class position_jitterdodge(position):
                  'shape', 'size', 'stroke'}
         dodge_columns = data.columns.intersection(dvars)
         if len(dodge_columns) == 0:
-            raise GgplotError(
+            raise PlotnineError(
                 "'position_jitterdodge' requires at least one "
                 "aesthetic to dodge by.")
 

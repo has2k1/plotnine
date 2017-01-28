@@ -8,7 +8,7 @@ import pandas as pd
 from matplotlib.cbook import Bunch
 
 from ..utils import suppress, cross_join, match
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..scales.scales import Scales
 
 # For default matplotlib backend
@@ -489,7 +489,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
     # of facetting variables that appear in the data
     has_all = [x.shape[1] == len(vars) for x in values]
     if not any(has_all):
-        raise GgplotError(
+        raise PlotnineError(
             "At least one layer must contain all variables " +
             "used for facetting")
     base = pd.concat([x for i, x in enumerate(values) if has_all[i]],
@@ -513,7 +513,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         base = base.append(cross_join(old, new), ignore_index=True)
 
     if len(base) == 0:
-        raise GgplotError(
+        raise PlotnineError(
             "Faceting variables must have at least one value")
 
     base = base.reset_index(drop=True)

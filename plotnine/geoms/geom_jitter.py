@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..positions import position_jitter
 from .geom_point import geom_point
 
@@ -25,7 +25,7 @@ class geom_jitter(geom_point):
     def __init__(self, *args, **kwargs):
         if {'width', 'height', 'prng'} & set(kwargs):
             if 'position' in kwargs:
-                raise GgplotError(
+                raise PlotnineError(
                     "Specify either 'position' or "
                     "'width'/'height'/'prng'")
 

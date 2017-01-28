@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import resolution
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .stat import stat
 
 
@@ -38,7 +38,7 @@ class stat_count(stat):
         x = data['x']
         if ('y' in data) or ('y' in params):
             msg = 'stat_count() must not be used with a y aesthetic'
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
 
         weight = data.get('weight', np.ones(len(x)))
         width = params['width']

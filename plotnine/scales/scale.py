@@ -12,7 +12,7 @@ from mizani.bounds import rescale, censor, expand_range, zero_range
 from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
-from ..utils.exceptions import gg_warn, GgplotError
+from ..utils.exceptions import gg_warn, PlotnineError
 from ..utils import match, suppress, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
 
@@ -86,7 +86,7 @@ class scale(object):
 
         if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
             if len(self.breaks) != len(self.labels):
-                raise GgplotError(
+                raise PlotnineError(
                     "Breaks and labels have unequal lengths")
 
         if (self.breaks is None and
@@ -631,7 +631,7 @@ class scale_continuous(scale):
             labels = self.labels
 
         if len(labels) != len(breaks):
-            raise GgplotError(
+            raise PlotnineError(
                 "Breaks and labels are different lengths")
 
         return labels

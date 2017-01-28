@@ -5,7 +5,7 @@ import numpy as np
 import pandas.api.types as pdtypes
 
 from ..aes import aes_to_scale
-from ..utils.exceptions import gg_warn, GgplotError
+from ..utils.exceptions import gg_warn, PlotnineError
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS, suppress
 from ..utils import Registry
 
@@ -252,7 +252,7 @@ class Scales(list):
             seen.add(scale_var)
             try:
                 sc = make_scale(scale_var, data[col])
-            except GgplotError:
+            except PlotnineError:
                 # Skip aesthetics with no scales (e.g. group, order, etc)
                 continue
             self.append(sc)

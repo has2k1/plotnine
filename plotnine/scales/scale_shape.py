@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from mizani.palettes import manual_pal
 
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
@@ -65,7 +65,7 @@ class scale_shape(scale_discrete):
 
 class scale_shape_continuous(scale_continuous):
     def __init__(self):
-        raise GgplotError(
+        raise PlotnineError(
             "A continuous variable can not be mapped to shape")
 
 

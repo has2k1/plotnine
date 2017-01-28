@@ -10,7 +10,7 @@ from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
 from plotnine.aes import is_calculated_aes, strip_dots
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 
 df = pd.DataFrame({'x': np.arange(10),
                    'y': np.arange(10)})
@@ -35,16 +35,16 @@ def test_labels():
     assert gg.labels['y'] == 'ylab2'
     assert gg.labels['title'] == 'title2'
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         gg = gg + xlab(None)
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         gg = gg + ylab(None)
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         gg = gg + ggtitle(None)
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         gg = gg + labs('x', 'y')
 
 
@@ -55,7 +55,7 @@ def test_ggplot_parameters():
     assert p.environment.namespace['np'] is np
     assert p.environment.namespace['pd'] is pd
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         ggplot([1, 2, 3], aes('x'))
 
 

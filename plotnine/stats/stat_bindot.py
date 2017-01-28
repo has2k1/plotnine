@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError, gg_warn
+from ..utils.exceptions import PlotnineError, gg_warn
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)
 from .stat import stat
@@ -94,7 +94,7 @@ class stat_bindot(stat):
         if weight is not None:
             int_status = [(w*1.0).is_integer() for w in weight]
             if not all(int_status):
-                raise GgplotError(
+                raise PlotnineError(
                     "Weights for stat_bindot must be nonnegative integers.")
 
         if params['binaxis'] == 'x':

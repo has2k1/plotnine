@@ -6,7 +6,7 @@ import scipy.stats as stats
 from mizani.utils import round_any
 
 from ..scales.scale import scale_discrete
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 __all__ = ['freedman_diaconis_bins', 'breaks_from_bins',
            'breaks_from_binwidth', 'assign_bins',
@@ -63,11 +63,11 @@ def breaks_from_binwidth(x_range, binwidth=None, center=None,
         Sequence of break points.
     """
     if binwidth <= 0:
-        raise GgplotError("The 'binwidth' must be positive.")
+        raise PlotnineError("The 'binwidth' must be positive.")
 
     if boundary is not None and center is not None:
-        raise GgplotError("Only one of 'boundary' and 'center' "
-                          "may be specified.")
+        raise PlotnineError("Only one of 'boundary' and 'center' "
+                            "may be specified.")
     elif boundary is None:
         if center is None:
             # This puts min and max of data in outer half
@@ -109,7 +109,7 @@ def breaks_from_bins(x_range, bins=30, center=None, boundary=None):
         Sequence of break points.
     """
     if bins < 1:
-        raise GgplotError("Need at least one bin.")
+        raise PlotnineError("Need at least one bin.")
     elif bins == 1:
         binwidth = x_range[1] - x_range[0]
         boundary = x_range[1]

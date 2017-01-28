@@ -14,7 +14,7 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
 from ..utils import Registry
-from ..utils.exceptions import gg_warn, GgplotError
+from ..utils.exceptions import gg_warn, PlotnineError
 from ..geoms import geom_text
 from .guide import guide
 
@@ -182,7 +182,7 @@ class guide_legend(guide):
         # rows and columns
         if self.nrow is not None and self.ncol is not None:
             if guide.nrow * guide.ncol < nbreak:
-                raise GgplotError(
+                raise PlotnineError(
                     "nrow x ncol need to be larger",
                     "than the number of breaks")
 

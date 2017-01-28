@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 from plotnine import ggplot, aes, arrow, stat_function
 
 
@@ -39,11 +39,11 @@ def test_args():
 
 def test_exceptions():
     # no x limits
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         p = ggplot(df)
         print(p + stat_function(fun=np.sin))
 
     # fun not callable
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         p = ggplot(df, aes('x'))
         print(p + stat_function(fun=1))

@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError, gg_warn
+from ..utils.exceptions import PlotnineError, gg_warn
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)
 from .stat import stat
@@ -37,10 +37,10 @@ class stat_bin(stat):
 
         if 'y' in data or 'y' in params:
             msg = "stat_bin() must not be used with a y aesthetic."
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
 
         if params['closed'] not in ('right', 'left'):
-            raise GgplotError(
+            raise PlotnineError(
                 "`closed` should either 'right' or 'left'")
 
         if (params['breaks'] is None and

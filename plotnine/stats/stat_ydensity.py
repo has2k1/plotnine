@@ -7,7 +7,7 @@ import six
 
 from ..utils import suppress
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .stat_density import stat_density, compute_density
 from .stat import stat
 
@@ -36,7 +36,7 @@ class stat_ydensity(stat):
         valid_scale = ('area', 'count', 'width')
         if params['scale'] not in valid_scale:
             msg = "Parameter scale should be one of {}"
-            raise GgplotError(msg.format(valid_scale))
+            raise PlotnineError(msg.format(valid_scale))
 
         lookup = {
             'biweight': 'biw',
@@ -54,8 +54,8 @@ class stat_ydensity(stat):
         if params['kernel'] not in six.viewvalues(lookup):
             msg = ("kernel should be one of {}. "
                    "You may use the abbreviations {}")
-            raise GgplotError(msg.format(six.viewkeys(lookup),
-                                         six.viewvalues()))
+            raise PlotnineError(msg.format(six.viewkeys(lookup),
+                                           six.viewvalues()))
 
         missing_params = (six.viewkeys(stat_density.DEFAULT_PARAMS) -
                           six.viewkeys(params))
@@ -78,7 +78,7 @@ class stat_ydensity(stat):
             data['violinwidth'] = data['scaled']
         else:
             msg = "Unknown scale value '{}'"
-            raise GgplotError(msg.format(params['scale']))
+            raise PlotnineError(msg.format(params['scale']))
 
         return data
 

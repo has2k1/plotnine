@@ -4,7 +4,7 @@ from textwrap import dedent
 import warnings
 
 
-class GgplotError(Exception):
+class PlotnineError(Exception):
     """
     Exception for ggplot errors
     """

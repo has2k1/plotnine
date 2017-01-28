@@ -13,7 +13,7 @@ from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
 from .utils import Registry, is_string, DISCRETE_KINDS, suppress
-from .utils.exceptions import GgplotError, gg_warn
+from .utils.exceptions import PlotnineError, gg_warn
 from .scales import scale_x_log10, scale_y_log10
 from .themes import theme
 
@@ -122,7 +122,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
                     x = env.eval(aesthetics['x'], inner_namespace=data)
                 except Exception:
                     msg = "Could not evaluate aesthetic 'x={}'"
-                    raise GgplotError(msg.format(aesthetics['x']))
+                    raise PlotnineError(msg.format(aesthetics['x']))
             elif not hasattr(aesthetics['x'], 'dtype'):
                 x = np.asarray(aesthetics['x'])
 
@@ -140,18 +140,18 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
                 else:
                     # We could solve the issue in layer.compute_asthetics
                     # but it is not worth the extra complexity
-                    raise GgplotError(
+                    raise PlotnineError(
                         "Cannot infer how long x should be.")
             replace_auto(geom, 'point')
 
     p = ggplot(aes(**aesthetics), data=data, environment=environment)
 
     def get_facet_type(facets):
-        with suppress(GgplotError):
+        with suppress(PlotnineError):
             parse_grid_facets(facets)
             return 'grid'
 
-        with suppress(GgplotError):
+        with suppress(PlotnineError):
             parse_wrap_facets(facets)
             return 'wrap'
 

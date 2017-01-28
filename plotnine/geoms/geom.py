@@ -10,7 +10,7 @@ from ..layer import layer
 from ..positions.position import position
 from ..utils import data_mapping_as_kwargs
 from ..utils import defaults, copy_keys, is_string, Registry
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 
 @add_metaclass(Registry)
@@ -59,7 +59,7 @@ class geom(object):
         out : geom
             A geom object
 
-        Raises :class:`GgplotError` if unable to create a `geom`.
+        Raises :class:`PlotnineError` if unable to create a `geom`.
         """
         name = stat.params['geom']
         if issubclass(type(name), geom):
@@ -72,7 +72,7 @@ class geom(object):
                 name = 'geom_{}'.format(name)
             klass = Registry[name]
         else:
-            raise GgplotError(
+            raise PlotnineError(
                 'Unknown geom of type {}'.format(type(name)))
 
         return klass(stat=stat, **stat._kwargs)
@@ -136,7 +136,7 @@ class geom(object):
                 else:
                     msg = ("'{}' does not look like a "
                            "valid value for `{}`")
-                    raise GgplotError(msg.format(value, ae))
+                    raise PlotnineError(msg.format(value, ae))
 
         return data
 
@@ -254,4 +254,4 @@ class geom(object):
         if unknown:
             msg = ("Parameters {}, are not understood by "
                    "either the geom, stat or layer.")
-            raise GgplotError(msg.format(unknown))
+            raise PlotnineError(msg.format(unknown))

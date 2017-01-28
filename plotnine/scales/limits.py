@@ -8,7 +8,7 @@ import pandas as pd
 import six
 
 from ..scales.scales import make_scale
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..utils import suppress
 
 
@@ -20,7 +20,7 @@ class _lim(object):
     def __init__(self, *limits):
         if not limits:
             msg = '{}lim(), is missing limits'
-            raise GgplotError(msg.format(self.aesthetic))
+            raise PlotnineError(msg.format(self.aesthetic))
         elif len(limits) == 1:
             limits = limits[0]
 
@@ -163,7 +163,7 @@ class lims(object):
             try:
                 klass = getattr(thismodule, '{}lim'.format(ae))
             except AttributeError:
-                raise GgplotError("Cannot change limits for '{}'")
+                raise PlotnineError("Cannot change limits for '{}'")
 
             if inplace:
                 gg += klass(value)

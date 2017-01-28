@@ -9,7 +9,7 @@ from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
                       geom_col, geom_text, position_jitter,
                       position_jitterdodge, position_nudge,
                       position_stack)
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 
 n = 6
 prng = np.random.RandomState(1234567890)
@@ -29,7 +29,7 @@ def test_jitter():
                      height=0.1, prng=prng))
     assert p == 'jitter'
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         geom_jitter(position=position_jitter(), width=0.1)
 
 

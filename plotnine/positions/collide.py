@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 
-from ..utils.exceptions import GgplotError, gg_warn
+from ..utils.exceptions import PlotnineError, gg_warn
 from ..utils import match, groupby_apply, suppress
 
 
@@ -61,7 +61,7 @@ def collide(data, width=None, name='', strategy=None, params=None):
         data = groupby_apply(data, 'xmin', strategy, width, params)
         data['y'] = data['ymax']
     else:
-        raise GgplotError('Neither y nor ymax defined')
+        raise PlotnineError('Neither y nor ymax defined')
 
     return data
 

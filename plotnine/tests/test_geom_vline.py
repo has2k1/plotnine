@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_vline, geom_point
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 
 df = pd.DataFrame({
         'xintercept': [1, 2],
@@ -32,7 +32,7 @@ def test_aesthetics():
 
 
 def test_aes_inheritance():
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         p = (ggplot(df, aes('x', 'y', xintercept='xintercept')) +
              geom_point() +
              geom_vline(size=2))

@@ -4,7 +4,7 @@ import six
 from six import add_metaclass
 
 from ..utils import waiver, Registry
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 
 @add_metaclass(Registry)
@@ -91,7 +91,7 @@ class guide(object):
                 setattr(self, k, v)
             else:
                 tpl = "{} does not undestand attribute '{}'"
-                raise GgplotError(tpl.format(self.__class__.__name__, k))
+                raise PlotnineError(tpl.format(self.__class__.__name__, k))
 
         # Must be updated before the draw method is called
         self.theme = None
@@ -124,7 +124,7 @@ class guide(object):
         self.label_position = self.label_position or 'right'
         if self.label_position not in valid_locations:
             msg = "label position '{}' is invalid"
-            raise GgplotError(msg.format(self.label_position))
+            raise PlotnineError(msg.format(self.label_position))
 
         # label margin
         # legend_text_legend or legend_text_colorbar
@@ -153,7 +153,7 @@ class guide(object):
                 self.title_position = 'left'
         if self.title_position not in valid_locations:
             msg = "title position '{}' is invalid"
-            raise GgplotError(msg.format(self.title_position))
+            raise PlotnineError(msg.format(self.title_position))
 
         # title alignment
         tmp = 'left' if self.direction == 'vertical' else 'center'

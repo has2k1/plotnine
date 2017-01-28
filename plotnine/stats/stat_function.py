@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import suppress
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .stat import stat
 
 
@@ -34,11 +34,11 @@ class stat_function(stat):
         try:
             range_x = xlim or scales.x.dimension((0, 0))
         except AttributeError:
-            raise GgplotError(
+            raise PlotnineError(
                 "Missing 'x' aesthetic and 'xlim' is {}".format(xlim))
 
         if not hasattr(fun, '__call__'):
-            raise GgplotError(
+            raise PlotnineError(
                 "stat_function requires parameter 'fun' to be " +
                 "a function or any other callable object")
 

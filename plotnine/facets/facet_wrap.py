@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import six
 
-from ..utils.exceptions import gg_warn, GgplotError
+from ..utils.exceptions import gg_warn, PlotnineError
 from ..utils import suppress, match, join_keys
 from .facet import facet, combine_vars, layout_null
 from .facet import add_missing_facets, eval_facet_vars
@@ -273,21 +273,21 @@ def parse_wrap_facets(facets):
         return facets
 
     if not isinstance(facets, six.string_types):
-        raise GgplotError(error_msg)
+        raise PlotnineError(error_msg)
 
     if '~' in facets:
         variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
         pattern = '\s*~\s*{0}\s*'.format(variables_pattern)
         match = re.match(pattern, facets)
         if not match:
-            raise GgplotError(error_msg)
+            raise PlotnineError(error_msg)
 
         facets = [var.strip() for var in match.group(1).split('+')]
     elif re.match('\w+', facets):
         # allow plain string as the variable name
         facets = [facets]
     else:
-        raise GgplotError(error_msg)
+        raise PlotnineError(error_msg)
 
     return facets
 
@@ -300,7 +300,7 @@ def wrap_dims(n, nrow=None, ncol=None):
     elif not nrow:
         nrow = int(np.ceil(n/ncol))
     if not nrow * ncol >= n:
-        raise GgplotError(
+        raise PlotnineError(
             "Allocated fewer panels than are required. "
             "Make sure the number of rows and columns can "
             "hold all the plot panels.")

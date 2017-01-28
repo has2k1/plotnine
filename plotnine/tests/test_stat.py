@@ -6,7 +6,7 @@ from plotnine import ggplot, aes, geom_bar
 from plotnine.data import mtcars
 from plotnine.geoms.geom import geom
 from plotnine.stats.stat import stat
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 
 
 def test_stat_basics():
@@ -26,7 +26,7 @@ def test_stat_basics():
         print(gg + stat_abc())
 
     # stat_efg requires 'weight' aesthetic
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         print(gg + stat_efg())
 
 

@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..scales.scale import scale_discrete
 from .binning import fuzzybreaks
 from .stat_summary import make_summary_fun
@@ -34,7 +34,7 @@ class stat_summary_bin(stat):
     def setup_params(self, data):
         keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
         if not any(self.params[k] for k in keys):
-            raise GgplotError('No summary function')
+            raise PlotnineError('No summary function')
 
         return self.params
 

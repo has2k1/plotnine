@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from ..coords import coord_flip
 from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .geom import geom
 
 
@@ -28,7 +28,7 @@ class geom_ribbon(geom):
 
         if len(data[units].drop_duplicates()) > 1:
             msg = "Aesthetics cannot vary within a ribbon."
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
 
         for _, udata in groupby_with_null(data, units):
             udata.is_copy = None

@@ -9,7 +9,7 @@ import matplotlib.cbook as cbook
 import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
-from .utils.exceptions import GgplotError
+from .utils.exceptions import PlotnineError
 from .utils import DISCRETE_KINDS, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
 from .aes import aes, is_calculated_aes, strip_dots
@@ -225,19 +225,19 @@ class layer(object):
                     try:
                         new_val = env.eval(col, inner_namespace=data)
                     except Exception as e:
-                        raise GgplotError(
+                        raise PlotnineError(
                             _TPL_EVAL_FAIL.format(ae, col, str(e)))
 
                     try:
                         evaled[ae] = new_val
                     except Exception as e:
-                        raise GgplotError(
+                        raise PlotnineError(
                             _TPL_BAD_EVAL_TYPE.format(
                                 ae, col, str(type(new_val)), str(e)))
             elif pdtypes.is_list_like(col):
                 n = len(col)
                 if len(data) and n != len(data) and n != 1:
-                    raise GgplotError(
+                    raise PlotnineError(
                         "Aesthetics must either be length one, " +
                         "or the same length as the data")
                 # An empty dataframe does not admit a scalar value
@@ -251,7 +251,7 @@ class layer(object):
                 evaled[ae] = col
             else:
                 msg = "Do not know how to deal with aesthetic '{}'"
-                raise GgplotError(msg.format(ae))
+                raise PlotnineError(msg.format(ae))
 
         evaled_aes = aes(**dict((col, col) for col in evaled))
         plot.scales.add_defaults(evaled, evaled_aes)

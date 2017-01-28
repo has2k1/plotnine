@@ -6,7 +6,7 @@ import pytest
 
 from plotnine import ggplot, aes
 from plotnine.geoms.geom import geom
-from plotnine.utils.exceptions import GgplotError
+from plotnine.utils.exceptions import PlotnineError
 
 df = pd.DataFrame({'col1': [1, 2, 3, 4],
                    'col2': 2,
@@ -37,7 +37,7 @@ def test_geom_basics():
     assert g.mapping['color'] == 'col2'
 
     # Multiple mappings
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         g = geom_abc(aes(color='col1'), aes(color='co1'))
 
     # setting, not mapping
@@ -51,5 +51,5 @@ def test_geom_with_invalid_argument():
         DEFAULT_PARAMS = {'stat': 'identity',
                           'position': 'identity'}
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         geom_abc(do_the_impossible=True)

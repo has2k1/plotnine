@@ -10,7 +10,7 @@ from ..aes import is_calculated_aes
 from ..utils import data_mapping_as_kwargs
 from ..utils import groupby_apply, copy_keys, uniquecols
 from ..utils import is_string, Registry, check_required_aesthetics
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 
 @add_metaclass(Registry)
@@ -58,7 +58,7 @@ class stat(object):
         out : stat
             A stat object
 
-        Raises :class:`GgplotError` if unable to create a `stat`.
+        Raises :class:`PlotnineError` if unable to create a `stat`.
         """
         name = geom.params['stat']
         kwargs = geom._kwargs
@@ -77,7 +77,7 @@ class stat(object):
                 name = 'stat_{}'.format(name)
             klass = Registry[name]
         else:
-            raise GgplotError(
+            raise PlotnineError(
                 'Unknown stat of type {}'.format(type(name)))
 
         valid_kwargs = (

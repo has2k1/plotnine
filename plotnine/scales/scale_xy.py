@@ -6,7 +6,7 @@ from mizani.bounds import expand_range
 
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
 from ..utils import identity, match, alias
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .range import RangeContinuous
 from .scale import scale_discrete, scale_continuous
 
@@ -78,7 +78,7 @@ class scale_position_discrete(scale_discrete):
             # discrete range
             return self.range.range
         else:
-            raise GgplotError(
+            raise PlotnineError(
                 'Lost, do not know what the limits are.')
 
     def dimension(self, expand=(0, 0)):

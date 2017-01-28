@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import six
 
-from .exceptions import gg_warn, GgplotError
+from .exceptions import gg_warn, PlotnineError
 
 
 def ggsave(filename=None, plot=None, device=None, format=None,
@@ -84,10 +84,10 @@ def ggsave(filename=None, plot=None, device=None, format=None,
             fig_kwargs['dpi'] = dpi
             figure = plot.draw()
         else:
-            raise GgplotError("plot is not a ggplot object")
+            raise PlotnineError("plot is not a ggplot object")
 
     if format and device:
-        raise GgplotError(
+        raise PlotnineError(
             "Both 'format' and 'device' given: only use one")
 
     # in the end the image format is in format
@@ -95,7 +95,7 @@ def ggsave(filename=None, plot=None, device=None, format=None,
         format = device
     if format:
         if format not in figure.canvas.get_supported_filetypes():
-            raise GgplotError("Unknown format: {}".format(format))
+            raise PlotnineError("Unknown format: {}".format(format))
         fig_kwargs['format'] = format
 
     print_filename = False
@@ -108,12 +108,12 @@ def ggsave(filename=None, plot=None, device=None, format=None,
         else:
             # ggplot2 has a way to get to the last plot,
             # but we currently dont't
-            raise GgplotError("No plot given: please supply a plot")
+            raise PlotnineError("No plot given: please supply a plot")
 
     if not isinstance(filename, six.string_types):
         # so probably a file object
         if format is None:
-            raise GgplotError(
+            raise PlotnineError(
                 "filename is not a string and no format given:",
                 "please supply a format!")
 
@@ -121,7 +121,7 @@ def ggsave(filename=None, plot=None, device=None, format=None,
         filename = os.path.join(path, filename)
 
     if units not in ['in', 'cm', 'mm']:
-        raise GgplotError("units not one of 'in', 'cm', or 'mm'")
+        raise PlotnineError("units not one of 'in', 'cm', or 'mm'")
 
     to_inch = {'in': lambda x: x,
                'cm': lambda x: x/2.54,
@@ -148,7 +148,7 @@ def ggsave(filename=None, plot=None, device=None, format=None,
         scale = float(scale)
     except:
         msg = "Can't convert scale argument to a number: {}"
-        raise GgplotError(msg.format(scale))
+        raise PlotnineError(msg.format(scale))
 
     # ggplot2: if you specify a width *and* a scale,
     # you get the width*scale image!
@@ -172,7 +172,7 @@ def ggsave(filename=None, plot=None, device=None, format=None,
                "(height and width are specified in inches/cm/mm, "
                "not pixels). If you are sure you want these "
                "dimensions, use 'limitsize=False'.")
-        raise GgplotError(msg)
+        raise PlotnineError(msg)
 
     figure.set_size_inches(width, height)
     figure.savefig(filename, **fig_kwargs)

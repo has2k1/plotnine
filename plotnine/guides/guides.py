@@ -9,7 +9,7 @@ from matplotlib.offsetbox import (HPacker, VPacker)
 
 from .guide import guide as guide_class
 from ..utils import is_string, is_waive, Registry, suppress
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 
 # Terminology
@@ -175,7 +175,7 @@ class guides(dict):
             # check the consistency of the guide and scale.
             if (guide.available_aes != 'any' and
                     scale.aesthetics[0] not in guide.available_aes):
-                raise GgplotError(
+                raise PlotnineError(
                     "{} cannot be used for {}".format(
                         guide.__class__.__name__, scale.aesthetics))
 
@@ -204,7 +204,7 @@ class guides(dict):
             guide = Registry['guide_{}'.format(guide)]()
 
         if not isinstance(guide, guide_class):
-            raise GgplotError(
+            raise PlotnineError(
                 "Unknown guide: {}".format(guide))
         return guide
 
@@ -297,8 +297,9 @@ class guides(dict):
             if gdef.order == 0:
                 gdef.order = 100
             elif not 0 <= gdef.order <= 99:
-                raise GgplotError("'order' for a guide should be",
-                                  "between 0 and 99")
+                raise PlotnineError(
+                    "'order' for a guide should be "
+                    "between 0 and 99")
         orders = [gdef.order for gdef in gdefs]
         idx = np.argsort(orders)
         gboxes = [gboxes[i] for i in idx]
@@ -309,8 +310,9 @@ class guides(dict):
         elif self.box_direction == 'horizontal':
             packer = HPacker
         else:
-            raise GgplotError("'legend_box' should be either",
-                              "'vertical' or 'horizontal'")
+            raise PlotnineError(
+                "'legend_box' should be either "
+                "'vertical' or 'horizontal'")
 
         box = packer(children=gboxes, align=self.box_align,
                      pad=0, sep=self.box_margin)

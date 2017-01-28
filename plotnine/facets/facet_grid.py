@@ -9,7 +9,7 @@ import six
 
 from ..utils import ninteraction, add_margins, cross_join
 from ..utils import match, join_keys
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .facet import facet, layout_null, combine_vars, add_missing_facets
 from .facet import eval_facet_vars
 
@@ -281,7 +281,7 @@ def parse_grid_facets(facets):
 
     if isinstance(facets, (tuple, list)):
         if len(facets) != 2:
-            raise GgplotError(error_msg_s)
+            raise PlotnineError(error_msg_s)
 
         rows, cols = facets
 
@@ -293,14 +293,14 @@ def parse_grid_facets(facets):
         return rows, cols
 
     if not isinstance(facets, six.string_types):
-        raise GgplotError(error_msg_f)
+        raise PlotnineError(error_msg_f)
 
     variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
     pattern = '\s*{0}\s*~\s*{0}\s*'.format(variables_pattern)
     match = re.match(pattern, facets)
 
     if not match:
-        raise GgplotError(error_msg_s)
+        raise PlotnineError(error_msg_s)
 
     lhs = match.group(1)
     rhs = match.group(2)

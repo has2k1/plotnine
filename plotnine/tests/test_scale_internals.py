@@ -17,7 +17,7 @@ from plotnine.scales.scale_size import (scale_size_discrete,
                                         scale_size_continuous,
                                         scale_size_area,
                                         scale_size_radius)
-from plotnine.utils.exceptions import GgplotError, GgplotWarning
+from plotnine.utils.exceptions import PlotnineError, GgplotWarning
 
 
 # test palettes
@@ -146,7 +146,7 @@ def test_linetype_palettes():
     items = s.palette(N+5)
     assert(all([isinstance(x, six.string_types) for x in items[:N]]))
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         s = scale_linetype_continuous()
 
 
@@ -160,7 +160,7 @@ def test_shape_palettes():
     items = s.palette(N+5)
     assert(all([isinstance(x, six.string_types) for x in items[:N]]))
 
-    with pytest.raises(GgplotError):
+    with pytest.raises(PlotnineError):
         scale_shape_continuous()
 
 

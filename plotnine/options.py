@@ -27,8 +27,8 @@ def get_option(name):
     d = globals()
 
     if name in {'get_option', 'set_option'} or name not in d:
-        from ..utils.exceptions import GgplotError
-        raise GgplotError("Unknown option {}".format(name))
+        from ..utils.exceptions import PlotnineError
+        raise PlotnineError("Unknown option {}".format(name))
 
     return d[name]
 
@@ -52,8 +52,8 @@ def set_option(name, value):
     d = globals()
 
     if name in {'get_option', 'set_option'} or name not in d:
-        from ..utils.exceptions import GgplotError
-        raise GgplotError("Unknown option {}".format(name))
+        from ..utils.exceptions import PlotnineError
+        raise PlotnineError("Unknown option {}".format(name))
 
     old = d[name]
     d[name] = value

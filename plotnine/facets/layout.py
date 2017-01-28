@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib.cbook import Bunch
 
 from ..coords import coord_flip
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..utils import match, suppress
 
 
@@ -37,7 +37,7 @@ class Layout(object):
         if len(self.panel_layout.columns.intersection(
                 {'PANEL', 'SCALE_X', 'SCALE_Y'})) != 3:
 
-            raise GgplotError(
+            raise PlotnineError(
                 "Facet layout has bad format. It must contains "
                 "the columns 'PANEL', 'SCALE_X', and 'SCALE_Y'")
 
@@ -175,10 +175,10 @@ class Layout(object):
             Coordinate
         """
         if not self.panel_scales.x:
-            raise GgplotError('Missing an x scale')
+            raise PlotnineError('Missing an x scale')
 
         if not self.panel_scales.y:
-            raise GgplotError('Missing a y scale')
+            raise PlotnineError('Missing a y scale')
 
         # ranges
         self.ranges = []

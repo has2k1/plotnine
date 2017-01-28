@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
 
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .collide import collide, pos_dodge
 from .position import position
 
@@ -30,7 +30,7 @@ class position_dodge(position):
                 (self.params['width'] is None)):
             msg = ("Width not defined. "
                    "Set with `position_dodge(width = ?)`")
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
         return deepcopy(self.params)
 
     @classmethod

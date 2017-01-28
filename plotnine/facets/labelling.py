@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 
 from ..utils import suppress
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 
 def collapse_label_lines(label_info):
@@ -151,7 +151,7 @@ def as_labeller(x, default=label_value, multi_line=True):
             return label_info
         else:
             msg = "Could not use '{0}' for labelling."
-            raise GgplotError(msg.format(x))
+            raise PlotnineError(msg.format(x))
 
     return _labeller
 

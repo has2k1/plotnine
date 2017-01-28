@@ -8,7 +8,7 @@ import pandas as pd
 
 from ..utils import uniquecols, get_valid_kwargs
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .stat import stat
 
 
@@ -156,7 +156,7 @@ class stat_summary(stat):
     def setup_params(self, data):
         keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
         if not any(self.params[k] for k in keys):
-            raise GgplotError('No summary function')
+            raise PlotnineError('No summary function')
 
         return self.params
 

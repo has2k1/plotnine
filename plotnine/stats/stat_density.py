@@ -6,7 +6,7 @@ import statsmodels.api as sm
 import six
 
 from ..utils.doctools import document
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..utils import suppress
 from .stat import stat
 
@@ -59,8 +59,8 @@ class stat_density(stat):
         if params['kernel'] not in six.viewvalues(lookup):
             msg = ("kernel should be one of {}. "
                    "You may use the abbreviations {}")
-            raise GgplotError(msg.format(six.viewkeys(lookup),
-                                         six.viewvalues(lookup)))
+            raise PlotnineError(msg.format(six.viewkeys(lookup),
+                                           six.viewvalues(lookup)))
 
         return params
 

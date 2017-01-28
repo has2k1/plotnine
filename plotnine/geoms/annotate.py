@@ -6,7 +6,7 @@ import six
 
 from ..aes import aes
 from ..utils import is_scalar_or_string, Registry
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 
 
 class annotate(object):
@@ -72,7 +72,7 @@ class annotate(object):
             details = ', '.join(['{} ({})'.format(n, l)
                                  for n, l in info_tokens])
             msg = 'Unequal parameter lengths: {}'.format(details)
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
 
         # Stop pandas from complaining about all scalars
         if all(is_scalar_or_string(val) for val in position.values()):

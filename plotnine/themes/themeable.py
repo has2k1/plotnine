@@ -14,7 +14,7 @@ from copy import deepcopy
 from six import add_metaclass
 
 from ..utils import suppress, RegistryHierarchyMeta
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .elements import (element_line, element_rect,
                        element_text, element_blank)
 
@@ -116,10 +116,10 @@ class themeable(object):
         try:
             klass = themeable._registry[name]
         except KeyError:
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
 
         if not issubclass(klass, themeable):
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
 
         return klass(theme_element)
 
@@ -1501,7 +1501,7 @@ class figure_size(themeable):
         try:
             width, height = self.properties['value']
         except ValueError:
-            raise GgplotError(
+            raise PlotnineError(
                 'figure_size should be a tuple (width, height) '
                 'with the values in inches')
 

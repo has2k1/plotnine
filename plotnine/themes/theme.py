@@ -1,7 +1,7 @@
 from copy import copy, deepcopy
 
 from ..options import get_option, set_option
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from .themeable import themeable, Themeables
 
 
@@ -156,7 +156,7 @@ class theme(object):
             except Exception as e:
                 msg = ("""Setting "mpl.rcParams['{}']={}" """
                        "raised an Exception: {}")
-                raise GgplotError(msg.format(key, val, e))
+                raise PlotnineError(msg.format(key, val, e))
 
     @property
     def rcParams(self):
@@ -213,7 +213,7 @@ class theme(object):
         if not isinstance(other, theme):
             msg = ("Adding theme failed. "
                    "{} is not a theme").format(str(other))
-            raise GgplotError(msg)
+            raise PlotnineError(msg)
         return self.add_theme(other)
 
     def __radd__(self, other, inplace=False):
@@ -287,7 +287,7 @@ def theme_set(new):
     """
     if (not isinstance(new, theme) and
             not issubclass(new, theme)):
-        raise GgplotError("Expecting object to be a theme")
+        raise PlotnineError("Expecting object to be a theme")
 
     out = get_option('current_theme')
     set_option('current_theme', new)

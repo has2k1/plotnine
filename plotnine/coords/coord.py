@@ -6,7 +6,7 @@ import numpy as np
 from matplotlib.cbook import Bunch
 
 from ..utils import is_waive
-from ..utils.exceptions import GgplotError
+from ..utils.exceptions import PlotnineError
 from ..scales.scale import scale_continuous, scale_discrete
 
 
@@ -73,7 +73,7 @@ class coord(object):
             else:
                 name = scale.__class__.__name__
                 msg = "Failed to expand scale '{}'".format(name)
-                raise GgplotError(msg)
+                raise PlotnineError(msg)
         else:
             return scale.expand
 
