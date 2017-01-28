@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from ggplotx import ggplot, aes, geom_point
+from ggplotx import ggplot, aes, geom_point, theme
 
 
 def test_aesthetics():
@@ -32,6 +32,7 @@ def test_aesthetics():
          geom_point(aes(x='h', stroke='a'), fill='white',
                     color='green', size=10) +
          geom_point(aes(x='i', shape='factor(a)'),
-                    fill='brown', stroke=2, size=10, show_legend=False))
+                    fill='brown', stroke=2, size=10, show_legend=False) +
+         theme(facet_spacing={'right': 0.85}))
 
     assert p == 'aesthetics'
