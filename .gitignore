@@ -45,7 +45,7 @@ coverage.xml
 *,cover
 .hypothesis/
 
-# ggplotx testing
+# plotnine testing
 result_images/
 notes.txt
 examples/.ipynb_checkpoints

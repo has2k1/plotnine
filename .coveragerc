@@ -1,11 +1,11 @@
 [run]
 branch = True
-source = ggplotx
-include = ggplotx/*
+source = plotnine
+include = plotnine/*
 omit =
     setup.py
-    ggplotx/_version.py
-    ggplotx/tests/*
+    plotnine/_version.py
+    plotnine/tests/*
 
 [report]
 exclude_lines =

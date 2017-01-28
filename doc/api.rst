@@ -7,7 +7,7 @@ API Reference
 
 Plot creation
 =============
-.. currentmodule:: ggplotx
+.. currentmodule:: plotnine
 .. autosummary::
    :toctree: generated/
    :nosignatures:
@@ -19,7 +19,7 @@ Plot creation
 
 geoms
 =====
-.. currentmodule:: ggplotx.geoms
+.. currentmodule:: plotnine.geoms
 
 .. autosummary::
    :toctree: generated/
@@ -76,7 +76,7 @@ Related to geoms
 
 Labels
 ------
-.. currentmodule:: ggplotx.labels
+.. currentmodule:: plotnine.labels
 
 .. autosummary::
    :toctree: generated/
@@ -90,7 +90,7 @@ Labels
 
 stats
 =====
-.. currentmodule:: ggplotx.stats
+.. currentmodule:: plotnine.stats
 
 .. autosummary::
    :toctree: generated/
@@ -118,7 +118,7 @@ stats
 
 facets
 ======
-.. currentmodule:: ggplotx.facets
+.. currentmodule:: plotnine.facets
 
 .. autosummary::
    :toctree: generated/
@@ -136,7 +136,7 @@ facets
 
 scales
 ======
-.. currentmodule:: ggplotx.scales
+.. currentmodule:: plotnine.scales
 
 
 Base scales
@@ -282,7 +282,7 @@ Position scales
 
 Scale limits
 ------------
-.. currentmodule:: ggplotx.scales
+.. currentmodule:: plotnine.scales
 
 .. autosummary::
    :toctree: generated/
@@ -295,7 +295,7 @@ Scale limits
 
 Scale guides
 ------------
-.. currentmodule:: ggplotx.guides
+.. currentmodule:: plotnine.guides
 
 .. autosummary::
    :toctree: generated/
@@ -309,7 +309,7 @@ Scale guides
 
 positions
 =========
-.. currentmodule:: ggplotx.positions
+.. currentmodule:: plotnine.positions
 
 .. autosummary::
    :toctree: generated/
@@ -327,7 +327,7 @@ positions
 themes
 ======
 
-.. currentmodule:: ggplotx.themes
+.. currentmodule:: plotnine.themes
 
 .. autosummary::
    :toctree: generated/
@@ -354,10 +354,10 @@ Themeables
 
 These define aspects of a plot that can be themed. They
 can be used to create a new theme or modify an existing theme.
-They define the keyword arguments to :class:`~ggplotx.themes.theme`.
+They define the keyword arguments to :class:`~plotnine.themes.theme`.
 Users should never create instances of *themeable*.
 
-.. currentmodule:: ggplotx.themes.themeable
+.. currentmodule:: plotnine.themes.themeable
 
 .. autosummary::
    :toctree: generated/
@@ -443,7 +443,7 @@ Users should never create instances of *themeable*.
 Theme helper functions and classes
 ----------------------------------
 
-.. currentmodule:: ggplotx.themes
+.. currentmodule:: plotnine.themes
 
 .. autosummary::
    :toctree: generated/
@@ -460,7 +460,7 @@ Theme helper functions and classes
 coordinates
 ===========
 
-.. currentmodule:: ggplotx.coords
+.. currentmodule:: plotnine.coords
 
 .. autosummary::
    :toctree: generated/
@@ -478,9 +478,9 @@ options
 
 When working interactively, some of the options make it convenient to
 create plots that have a common look and feel. Another way to do it,
-to set a default theme using :func:`~ggplotx.themes.theme_set`.
+to set a default theme using :func:`~plotnine.themes.theme_set`.
 
-.. currentmodule:: ggplotx.options
+.. currentmodule:: plotnine.options
 
 .. autosummary::
    :toctree: generated/
@@ -498,7 +498,7 @@ to set a default theme using :func:`~ggplotx.themes.theme_set`.
 datasets
 ========
 
-.. currentmodule:: ggplotx.data
+.. currentmodule:: plotnine.data
 
 .. autosummary::
    :toctree: generated/

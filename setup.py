@@ -6,7 +6,7 @@ __author__ = 'Hassan Kibirige'
 __email__ = 'has2k1@gmail.com'
 __description__ = "A grammar of graphics for python"
 __license__ = 'GPL-2'
-__url__ = 'https://github.com/has2k1/ggplotx'
+__url__ = 'https://github.com/has2k1/plotnine'
 
 
 def check_dependencies():
@@ -51,16 +51,16 @@ def get_package_data():
     """
     baseline_images = [
         'tests/baseline_images/%s/*' % x
-        for x in os.listdir('ggplotx/tests/baseline_images')]
+        for x in os.listdir('plotnine/tests/baseline_images')]
     csv_data = ['data/*.csv']
-    package_data = {'ggplotx': baseline_images + csv_data}
+    package_data = {'plotnine': baseline_images + csv_data}
     return package_data
 
 
 if __name__ == '__main__':
     check_dependencies()
 
-    setup(name='ggplotx',
+    setup(name='plotnine',
           maintainer=__author__,
           maintainer_email=__email__,
           description=__description__,

@@ -4,7 +4,7 @@
 A Grammar of Graphics for Python
 ================================
 
-**ggplotx** is an implementation of a grammar of graphics. It is based
+**plotnine** is an implementation of a grammar of graphics. It is based
 is based on Hadley Wickham's `ggplot2 <http://ggplot2.org/>`__.
 
 

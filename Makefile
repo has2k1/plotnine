@@ -36,7 +36,7 @@ clean-test:
 	rm -fr htmlcov/
 
 lint:
-	flake8 ggplotx tests
+	flake8 plotnine tests
 
 test: clean-test
 	pytest
