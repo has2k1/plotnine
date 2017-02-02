@@ -19,6 +19,7 @@ from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
+from mizani.utils import multitype_sort
 
 from .exceptions import PlotnineError, gg_warn
 
@@ -363,7 +364,12 @@ def _id_var(x, drop=False):
         x.cat.categories = range(1, len(x.cat.categories) + 1)
         lst = x.tolist()
     else:
-        levels = np.sort(np.unique(x))
+        try:
+            levels = np.sort(np.unique(x))
+        except TypeError:
+            # x probably has NANs
+            levels = multitype_sort(set(x))
+
         lst = match(x, levels)
         lst = [item + 1 for item in lst]
 
@@ -536,7 +542,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     if vars is None:
         vars = df.columns
     else:
-        vars = [v for v in vars if v in df.columns]
+        vars = df.columns.intersection(vars)
 
     if finite:
         lst = [np.inf, -np.inf]
@@ -546,7 +552,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     else:
         txt = 'missing'
 
-    df = df.dropna()
+    df = df.dropna(subset=vars)
     df.reset_index(drop=True, inplace=True)
     if len(df) < n and not na_rm:
         msg = '{} : Removed {} rows containing {} values.'
@@ -1070,3 +1076,5 @@ def cross_join(df1, df2):
     df1['key'] = 1
     df2['key'] = 1
     return pd.merge(df1, df2, on='key').loc[:, all_columns]
+
+
