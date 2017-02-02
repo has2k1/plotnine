@@ -181,6 +181,12 @@ class guide(object):
         else:
             self._title_margin = margin.get_as(loc, 'pt')
 
+        # legend_margin
+        try:
+            self._legend_margin = get_property('legend_margin')
+        except KeyError:
+            self._legend_margin = 10
+
     def legend_aesthetics(self, layer, plot):
         """
         Return the aesthetics that contribute to the legend

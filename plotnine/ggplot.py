@@ -277,12 +277,12 @@ class ggplot(object):
         position = self.guides.position
         get_property = self.theme.themeables.property
         # defaults
-        margin = 0.1
+        spacing = 0.1
         strip_margin_x = 0
         strip_margin_y = 0
 
         with suppress(KeyError):
-            margin = get_property('legend_margin')
+            spacing = get_property('legend_box_spacing')
         with suppress(KeyError):
             strip_margin_x = get_property('strip_margin_x')
         with suppress(KeyError):
@@ -299,22 +299,22 @@ class ggplot(object):
         # layout manager.
         if position == 'right':
             loc = 6
-            pad = right_strip_width*(1+strip_margin_x) + margin
+            pad = right_strip_width*(1+strip_margin_x) + spacing
             x = right + pad/W
             y = 0.5
         elif position == 'left':
             loc = 7
-            x = left - margin/W
+            x = left - spacing/W
             y = 0.5
         elif position == 'top':
             loc = 8
             x = 0.5
-            pad = top_strip_height*(1+strip_margin_y) + margin
+            pad = top_strip_height*(1+strip_margin_y) + spacing
             y = top + pad/H
         elif position == 'bottom':
             loc = 9
             x = 0.5
-            y = bottom - margin/H
+            y = bottom - spacing/H
         else:
             loc = 10
             x, y = position

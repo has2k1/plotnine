@@ -1115,6 +1115,22 @@ class legend_background(themeable):
             _blankout_rect(aob.patch)
 
 
+class legend_box_background(themeable):
+    """
+    Legend box background
+
+    Parameters
+    ----------
+    theme_element : element_rect
+
+    Note
+    ----
+    Not Implemented. We would have to place the outermost
+    VPacker/HPacker boxes that hold the individual legends
+    onto an object that has a patch.
+    """
+
+
 class panel_background(themeable):
     """
     Panel background
@@ -1542,12 +1558,12 @@ class legend_box(themeable):
 
 class legend_box_margin(themeable):
     """
-    Separation between multiple legends
+    Padding between the legends and the box
 
     Parameters
     ----------
     theme_element : int
-        Separation in points.
+        Value in points.
     """
 
 
@@ -1609,12 +1625,34 @@ class legend_key_size(legend_key_width, legend_key_height):
 
 class legend_margin(themeable):
     """
+    Padding between the legend the inner box
+
+    Parameters
+    ----------
+    theme_element : float
+        Value in points
+    """
+
+
+class legend_box_spacing(themeable):
+    """
     Spacing between legend and the anchor point
 
     Parameters
     ----------
     theme_element : float
         Value in inches.
+    """
+
+
+class legend_spacing(themeable):
+    """
+    Spacing between two adjacent legends
+
+    Parameters
+    ----------
+    theme_element : float
+        Value in points.
     """
 
 

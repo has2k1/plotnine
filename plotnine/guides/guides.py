@@ -55,6 +55,7 @@ class guides(dict):
         self.box_direction = None
         self.box_align = None
         self.box_margin = None
+        self.spacing = None
 
     def __radd__(self, gg, inplace=False):
         """
@@ -123,7 +124,12 @@ class guides(dict):
         with suppress(KeyError):
             self.box_margin = get_property('legend_box_margin')
         if self.box_margin is None:
-            self.box_margin = 20
+            self.box_margin = 10
+
+        with suppress(KeyError):
+            self.spacing = get_property('legend_spacing')
+        if self.spacing is None:
+            self.spacing = 10
 
         gdefs = self.train(plot)
         if not gdefs:
@@ -315,5 +321,5 @@ class guides(dict):
                 "'vertical' or 'horizontal'")
 
         box = packer(children=gboxes, align=self.box_align,
-                     pad=0, sep=self.box_margin)
+                     pad=self.box_margin, sep=self.spacing)
         return box

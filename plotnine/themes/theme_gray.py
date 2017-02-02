@@ -55,12 +55,13 @@ class theme_gray(theme):
             # drawing routines can make better decisions than
             # can be pre-determined in the theme.
             legend_background=element_rect(color='None'),
-            legend_margin=0.1,    # In inches
             legend_key=element_rect(fill='#F2F2F2',
                                     colour='None'),
             legend_key_size=base_size*0.8*1.8,
             legend_key_height=None,
             legend_key_width=None,
+            legend_margin=0,     # points
+            legend_spacing=10,   # points
             legend_text=element_text(
                 size=base_size*0.8, ha='left',
                 margin={'t': 3, 'b': 3, 'l': 3, 'r': 3,
@@ -76,8 +77,9 @@ class theme_gray(theme):
             legend_title_align=None,
             legend_position='right',
             legend_box=None,
-            legend_box_margin=20,  # points
+            legend_box_margin=10,    # points
             legend_box_just=None,
+            legend_box_spacing=0.1,  # In inches
             legend_direction=None,
 
             panel_background=element_rect(fill='#EBEBEB'),

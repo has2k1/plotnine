@@ -370,5 +370,6 @@ class guide_legend(guide):
         box = packer(children=children,
                      sep=self._title_margin,
                      align=self._title_align,
-                     pad=0)
+                     pad=self._legend_margin)
+        # pad = legend_margin
         return box
