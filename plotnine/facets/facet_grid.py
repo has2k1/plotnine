@@ -193,14 +193,14 @@ class facet_grid(facet):
         W, H = figure.get_size_inches()
 
         try:
-            marginx = get_property('panel_margin_x')
+            spacing_x = get_property('panel_spacing_x')
         except KeyError:
-            marginx = 0.1
+            spacing_x = 0.1
 
         try:
-            marginy = get_property('panel_margin_y')
+            spacing_y = get_property('panel_spacing_y')
         except KeyError:
-            marginy = 0.1
+            spacing_y = 0.1
 
         try:
             aspect_ratio = get_property('aspect_ratio')
@@ -219,18 +219,18 @@ class facet_grid(facet):
         # MPL had a better layout manager.
 
         # width of axes and height of axes
-        w = ((right-left)*W - marginx*(ncol-1)) / ncol
-        h = ((top-bottom)*H - marginy*(nrow-1)) / nrow
+        w = ((right-left)*W - spacing_x*(ncol-1)) / ncol
+        h = ((top-bottom)*H - spacing_y*(nrow-1)) / nrow
 
         # aspect ratio changes the size of the figure
         if aspect_ratio is not None:
             h = w*aspect_ratio
-            H = (h*nrow + marginy*(nrow-1)) / (top-bottom)
+            H = (h*nrow + spacing_y*(nrow-1)) / (top-bottom)
             figure.set_figheight(H)
 
         # spacing
-        wspace = marginx/w
-        hspace = marginy/h
+        wspace = spacing_x/w
+        hspace = spacing_y/h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
 
     def draw_label(self, layout_info, ax):

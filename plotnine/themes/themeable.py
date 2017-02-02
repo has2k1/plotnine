@@ -1395,41 +1395,40 @@ class axis_ticks_direction(axis_ticks_direction_x,
     pass
 
 
-class panel_margin_x(themeable):
+class panel_spacing_x(themeable):
     """
-    Horizontal margin around the facet panels
+    Horizontal spacing betweend the facet panels
 
     Parameters
     ----------
     theme_element : float
-        Size in inches horizontal margins between the
+        Size in inches of the horizontal margins between the
         facet panels.
     """
     pass
 
 
-class panel_margin_y(themeable):
+class panel_spacing_y(themeable):
     """
-    Vertical margin around the facet panels
+    Vertical spacing between the facet panels
 
     Parameters
     ----------
     theme_element : float
-        Size in inches vertical margins between the
-        facet panels.
+        Size in inches of the vertical space between the
+        facet panels
     """
     pass
 
 
-class panel_margin(panel_margin_x, panel_margin_y):
+class panel_spacing(panel_spacing_x, panel_spacing_y):
     """
-    Margin around the facet panels
+    Spacing between the facet panels
 
     Parameters
     ----------
     theme_element : float
-        Size in inches of the margins between the
-        facet panels.
+        Size in inches of the space between the facet panels
     """
     pass
 

@@ -86,9 +86,9 @@ class theme_gray(theme):
             panel_border=element_blank(),
             panel_grid_major=element_line(color='white', size=1),
             panel_grid_minor=element_line(color='white', size=0.5),
-            panel_margin=0.07,
-            panel_margin_x=0.07,
-            panel_margin_y=0.07,
+            panel_spacing=0.07,
+            panel_spacing_x=0.07,
+            panel_spacing_y=0.07,
             panel_ontop=True,
 
             strip_background=element_rect(fill='#D9D9D9', color='None'),
