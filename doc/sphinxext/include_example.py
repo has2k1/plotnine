@@ -69,7 +69,7 @@ def notebook_to_rst(notebook_filename, rst_filename):
         nb = nbformat.read(f, as_version=4)
 
     # Execute
-    ep = ExecutePreprocessor(kernel_name='python2')
+    ep = ExecutePreprocessor(kernel_name='python')
     ep.preprocess(nb, resources_d)
 
     # Export

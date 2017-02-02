@@ -395,15 +395,19 @@ Users should never create instances of *themeable*.
    figure_size
    legend_background
    legend_box
+   legend_box_background
    legend_box_just
    legend_box_margin
+   legend_box_spacing
    legend_direction
+   legend_entry_spacing
    legend_key
    legend_key_height
    legend_key_size
    legend_key_width
    legend_margin
    legend_position
+   legend_spacing
    legend_text
    legend_text_colorbar
    legend_text_legend
@@ -419,10 +423,10 @@ Users should never create instances of *themeable*.
    panel_grid_minor
    panel_grid_minor_x
    panel_grid_minor_y
-   panel_margin
-   panel_margin_x
-   panel_margin_y
    panel_ontop
+   panel_spacing
+   panel_spacing_x
+   panel_spacing_y
    plot_background
    plot_margin
    plot_title
@@ -439,6 +443,7 @@ Users should never create instances of *themeable*.
    text
    title
    themeable
+
 
 Theme helper functions and classes
 ----------------------------------
