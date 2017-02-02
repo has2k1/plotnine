@@ -27,8 +27,6 @@ class guide_legend(guide):
 
     Parameters
     ----------
-    keyseparation : int
-        Space between legend keys
     nrow : int
         Number of rows of legends.
     ncol : int
@@ -50,8 +48,6 @@ class guide_legend(guide):
     # key
     keywidth = None
     keyheight = None
-
-    keyseparation = None
 
     # parameter
     available_aes = 'any'
@@ -194,9 +190,6 @@ class guide_legend(guide):
 
         self.nrow = self.nrow or int(np.ceil(nbreak/self.ncol))
         self.ncol = self.ncol or int(np.ceil(nbreak/self.nrow))
-
-        if self.keyseparation is None:
-            self.keyseparation = 2
 
         # key width and key height for each legend entry
         #
@@ -355,7 +348,8 @@ class guide_legend(guide):
         for chunk in chunks:
             d1 = packers[0](children=chunk,
                             align='left', pad=0,
-                            sep=self.keyseparation)
+                            sep=self._legend_entry_spacing,
+                            )
             chunk_boxes.append(d1)
 
         # Put all the entries (row & columns) together
@@ -363,7 +357,7 @@ class guide_legend(guide):
                                  sep=sep,
                                  align='baseline',
                                  pad=0)
-        # TODO: theme me
+
         # Put the title and entries together
         packer, slc = lookup[self.title_position]
         children = [title_box, entries_box][slc]
@@ -371,5 +365,5 @@ class guide_legend(guide):
                      sep=self._title_margin,
                      align=self._title_align,
                      pad=self._legend_margin)
-        # pad = legend_margin
+
         return box

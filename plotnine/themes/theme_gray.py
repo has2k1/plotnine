@@ -55,6 +55,7 @@ class theme_gray(theme):
             # drawing routines can make better decisions than
             # can be pre-determined in the theme.
             legend_background=element_rect(color='None'),
+            legend_entry_spacing=2,
             legend_key=element_rect(fill='#F2F2F2',
                                     colour='None'),
             legend_key_size=base_size*0.8*1.8,

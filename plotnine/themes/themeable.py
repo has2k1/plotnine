@@ -1681,6 +1681,17 @@ class legend_title_align(themeable):
     """
 
 
+class legend_entry_spacing(themeable):
+    """
+    Spacing between two entries in a legend
+
+    Parameters
+    ----------
+    theme_element : float
+        Size in points
+    """
+
+
 class strip_margin_x(themeable):
     """
     Vertical margin between the strip background and the panel border
