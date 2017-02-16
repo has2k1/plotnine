@@ -363,6 +363,7 @@ class layer(object):
         params = deepcopy(self.geom.params)
         params.update(self.stat.params)
         params['zorder'] = self.zorder
+        self.data = self.geom.handle_na(self.data)
         # At this point each layer must have the data
         # that is created by the plot build process
         self.geom.draw_layer(self.data, layout, coord, **params)

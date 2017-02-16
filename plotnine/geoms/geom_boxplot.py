@@ -27,6 +27,7 @@ class geom_boxplot(geom):
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge',
+                      'na_rm': False,
                       'outlier_alpha': 1, 'outlier_color': None,
                       'outlier_shape': 'o', 'outlier_size': 1.5,
                       'outlier_stroke': 0.5, 'notch': False,

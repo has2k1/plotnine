@@ -18,7 +18,7 @@ class geom_rug(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'sides': 'bl'}
+                      'sides': 'bl', 'na_rm': False}
     legend_geom = 'path'
 
     @staticmethod

@@ -22,7 +22,8 @@ class geom_dotplot(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',
                       'stackdir': 'up', 'stackratio': 1,
-                      'dotsize': 1, 'stackgroups': False}
+                      'dotsize': 1, 'stackgroups': False,
+                      'na_rm': False}
 
     def setup_data(self, data):
         gp = self.params

@@ -22,7 +22,8 @@ class geom_segment(geom):
                    'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'arrow': None, 'lineend': 'butt'}
+                      'arrow': None, 'lineend': 'butt',
+                      'na_rm': False}
 
     legend_geom = 'path'
 

@@ -21,7 +21,7 @@ class geom_hline(geom):
                    'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'inherit_aes': False}
+                      'na_rm': False, 'inherit_aes': False}
     legend_geom = 'path'
 
     def __init__(self, *args, **kwargs):

@@ -20,7 +20,7 @@ class geom_pointrange(geom):
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'fatten': 4}
+                      'fatten': 4, 'na_rm': False}
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):

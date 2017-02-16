@@ -21,7 +21,7 @@ class geom_errorbarh(geom):
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'y', 'xmin', 'xmax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'height': 0.5}
+                      'height': 0.5, 'na_rm': False}
     legend_geom = 'path'
 
     def setup_data(self, data):

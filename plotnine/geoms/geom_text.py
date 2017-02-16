@@ -27,7 +27,7 @@ class geom_text(geom):
                       'family': None, 'fontweight': 'normal',
                       'fontstyle': 'normal', 'vjust': 'center',
                       'nudge_x': 0, 'nudge_y': 0,
-                      'format_string': None}
+                      'format_string': None, 'na_rm': False}
 
     def __init__(self, *args, **kwargs):
         nudge_kwargs = {}

@@ -8,7 +8,7 @@ from ..stats.stat import stat
 from ..aes import make_labels, rename_aesthetics, is_valid_aesthetic
 from ..layer import layer
 from ..positions.position import position
-from ..utils import data_mapping_as_kwargs
+from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import defaults, copy_keys, is_string, Registry
 from ..utils.exceptions import PlotnineError
 
@@ -255,3 +255,27 @@ class geom(object):
             msg = ("Parameters {}, are not understood by "
                    "either the geom, stat or layer.")
             raise PlotnineError(msg.format(unknown))
+
+    def handle_na(self, data):
+        """
+        Remove rows with NaN values
+
+        Parameters
+        ----------
+        data : dataframe
+            Data
+
+        Returns
+        -------
+        out : dataframe
+            Data without the NaNs
+
+        Note
+        ----
+        Shows a warning if the any rows are removed and the
+        `na_rm` parameter is False. It only takes into account
+        the columns of the required aesthetics.
+        """
+        return remove_missing(data, self.params['na_rm'],
+                              list(self.REQUIRED_AES),
+                              self.__class__.__name__)

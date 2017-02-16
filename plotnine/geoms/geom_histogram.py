@@ -12,4 +12,5 @@ class geom_histogram(geom_bar):
 
     {documentation}
     """
-    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack'}
+    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack',
+                      'na_rm': False}

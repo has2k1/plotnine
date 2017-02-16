@@ -21,7 +21,8 @@ class geom_smooth(geom):
                    'linetype': 'solid', 'size': 1,
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity',
+                      'na_rm': False}
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):

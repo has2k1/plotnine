@@ -24,7 +24,7 @@ class geom_violin(geom):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'ydensity', 'position': 'dodge',
                       'draw_quantiles': None, 'scale': 'area',
-                      'trim': True, 'width': None}
+                      'trim': True, 'width': None, 'na_rm': False}
     legend_geom = 'polygon'
 
     def setup_data(self, data):

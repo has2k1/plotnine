@@ -19,7 +19,8 @@ class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 1.5, 'stroke': 0.5}
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'na_rm': False}
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):

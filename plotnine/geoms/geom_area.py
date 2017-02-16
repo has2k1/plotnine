@@ -17,7 +17,8 @@ class geom_area(geom_ribbon):
     {documentation}
     """
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',
+                      'na_rm': False}
 
     def setup_data(self, data):
         data['ymin'] = 0

@@ -15,4 +15,5 @@ class geom_quantile(geom_path):
     DEFAULT_AES = {'alpha': 1, 'color': '#3366FF',
                    'linetype': 'solid', 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'quantile', 'position': 'identity',
-                      'lineend': 'butt', 'linejoin': 'round'}
+                      'lineend': 'butt', 'linejoin': 'round',
+                      'na_rm': False}

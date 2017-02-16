@@ -11,7 +11,7 @@ import matplotlib.path as mpath
 from ..utils.doctools import document
 from ..utils.exceptions import gg_warn
 from ..utils import to_rgba, make_line_segments, suppress
-from ..utils import SIZE_FACTOR
+from ..utils import SIZE_FACTOR, match
 from .geom import geom
 
 
@@ -32,8 +32,37 @@ class geom_path(geom):
 
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'na_rm': False,
                       'lineend': 'butt', 'linejoin': 'round',
                       'arrow': None}
+
+    def handle_na(self, data):
+        def keep(x):
+            # first non-missing to last non-missing
+            first = match([False], x, nomatch=1, start=0)[0]
+            last = len(x) - match([False], x[::-1], nomatch=1, start=0)[0]
+            bool_idx = np.hstack([np.repeat(False, first),
+                                  np.repeat(True, last-first),
+                                  np.repeat(False, len(x)-last)])
+            return bool_idx
+
+        # Get indices where any row for the select aesthetics has
+        # NaNs at the beginning or the end. Those we drop
+        bool_idx = (data[['x', 'y', 'size', 'color', 'linetype']]
+                    .isnull()             # Missing
+                    .apply(keep, axis=0)  # Beginning or the End
+                    .apply(all, axis=1))  # Across the aesthetics
+
+        n1 = len(data)
+        data = data[bool_idx]
+        data.reset_index(drop=True, inplace=True)
+        n2 = len(data)
+
+        if (n2 != n1 and not self.params['na_rm']):
+            msg = "geom_path: Removed {} rows containing missing values."
+            gg_warn(msg.format(n1-n2))
+
+        return data
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         if not any(data['group'].duplicated()):

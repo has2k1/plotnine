@@ -20,7 +20,8 @@ class geom_jitter(geom_point):
     of the parameters that affect the jittering.
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
-                      'width': None, 'height': None, 'prng': None}
+                      'width': None, 'height': None, 'prng': None,
+                      'na_rm': False}
 
     def __init__(self, *args, **kwargs):
         if {'width', 'height', 'prng'} & set(kwargs):

@@ -12,7 +12,11 @@ class geom_blank(geom):
 
     {documentation}
     """
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'na_rm': False}
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         pass
+
+    def handle_na(self, data):
+        return data

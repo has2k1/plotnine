@@ -15,7 +15,7 @@ class geom_bar(geom_rect):
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
-                      'width': None}
+                      'width': None, 'na_rm': False}
 
     def setup_data(self, data):
         if 'width' not in data:

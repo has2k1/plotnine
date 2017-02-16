@@ -26,7 +26,7 @@ class geom_crossbar(geom):
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'width': 0.5, 'fatten': 2}
+                      'width': 0.5, 'fatten': 2, 'na_rm': False}
 
     def setup_data(self, data):
         if 'width' not in data:

@@ -18,7 +18,7 @@ class geom_step(geom_path):
     {documentation}
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'direction': 'hv'}
+                      'direction': 'hv', 'na_rm': False}
     draw_panel = geom.draw_panel
 
     @staticmethod

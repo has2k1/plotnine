@@ -11,4 +11,5 @@ class geom_qq(geom_point):
 
     {documentation}
     """
-    DEFAULT_PARAMS = {'stat': 'qq', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'qq', 'position': 'identity',
+                      'na_rm': False}

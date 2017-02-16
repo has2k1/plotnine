@@ -20,7 +20,8 @@ class geom_rect(geom):
     DEFAULT_AES = {'color': None, 'fill': '#595959',
                    'linetype': 'solid', 'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'na_rm': False}
     legend_geom = 'polygon'
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):

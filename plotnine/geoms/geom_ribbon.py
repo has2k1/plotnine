@@ -18,8 +18,12 @@ class geom_ribbon(geom):
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'na_rm': False}
     legend_geom = 'polygon'
+
+    def handle_na(self, data):
+        return data
 
     @staticmethod
     def draw_group(data, panel_scales, coord, ax, **params):

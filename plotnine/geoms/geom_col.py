@@ -18,4 +18,4 @@ class geom_col(geom_bar):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',
-                      'width': None}
+                      'width': None, 'na_rm': False}

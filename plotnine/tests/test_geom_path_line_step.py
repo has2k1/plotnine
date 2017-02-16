@@ -1,6 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
+import numpy as np
 import pandas as pd
+import pytest
 
 from plotnine import (ggplot, aes, geom_path, geom_line,
                       geom_step, arrow)
@@ -60,3 +62,24 @@ def test_line():
          geom_step(aes(y='y+4'), color='red', size=4))
 
     assert p == 'path_line_step'
+
+
+df_missing = pd.DataFrame({
+        'x': [1, 2, 3, 4, 5, 6, 7],
+        'y1': [np.nan, 1, 2, 3, 4, np.nan, np.nan],
+        'y2': [1, 2, 3, np.nan, np.nan, 6, 7]})
+
+
+def test_missing_values():
+    p = (ggplot(df_missing, aes(x='x'))
+         + geom_line(aes(y='y1'), size=2))
+
+    with pytest.warns(UserWarning):
+        assert p == 'missing_values'
+
+
+def test_no_missing_values():
+    p = (ggplot(df_missing, aes(x='x'))
+         + geom_line(aes(y='y2'), size=2))
+
+    assert p == 'no_missing_values'
