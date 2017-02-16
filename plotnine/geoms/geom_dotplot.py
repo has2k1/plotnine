@@ -1,5 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from warnings import warn
+
 import numpy as np
 import matplotlib.collections as mcoll
 import matplotlib.patches as mpatches
@@ -7,7 +9,6 @@ import matplotlib.lines as mlines
 
 from ..utils import groupby_apply, to_rgba, resolution
 from ..utils.doctools import document
-from ..utils.exceptions import gg_warn
 from .geom import geom
 
 
@@ -31,14 +32,14 @@ class geom_dotplot(geom):
 
         # Issue warnings when parameters don't make sense
         if gp['position'] == 'stack':
-            gg_warn("position='stack' doesn't work properly with "
-                    "geom_dotplot. Use stackgroups=True instead.")
+            warn("position='stack' doesn't work properly with "
+                 "geom_dotplot. Use stackgroups=True instead.")
         if (gp['stackgroups'] and
                 sp['method'] == 'dotdensity' and
                 sp['binpositions'] == 'bygroup'):
-            gg_warn("geom_dotplot called with stackgroups=TRUE and "
-                    "method='dotdensity'. You probably want to set "
-                    "binpositions='all'")
+            warn("geom_dotplot called with stackgroups=TRUE and "
+                 "method='dotdensity'. You probably want to set "
+                 "binpositions='all'")
 
         if 'width' not in data:
             if sp['width']:

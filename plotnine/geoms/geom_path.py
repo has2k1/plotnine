@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from collections import Counter
+from warnings import warn
 
 import numpy as np
 import matplotlib.collections as mcoll
@@ -9,7 +10,6 @@ import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
 from ..utils.doctools import document
-from ..utils.exceptions import gg_warn
 from ..utils import to_rgba, make_line_segments, suppress
 from ..utils import SIZE_FACTOR, match
 from .geom import geom
@@ -60,16 +60,15 @@ class geom_path(geom):
 
         if (n2 != n1 and not self.params['na_rm']):
             msg = "geom_path: Removed {} rows containing missing values."
-            gg_warn(msg.format(n1-n2))
+            warn(msg.format(n1-n2))
 
         return data
 
     def draw_panel(self, data, panel_scales, coord, ax, **params):
         if not any(data['group'].duplicated()):
-            msg = ("geom_path: Each group consist of only one "
-                   "observation. Do you need to adjust the "
-                   "group aesthetic?")
-            gg_warn(msg)
+            warn("geom_path: Each group consist of only one "
+                 "observation. Do you need to adjust the "
+                 "group aesthetic?")
 
         # dataframe mergesort is stable, we rely on that here
         data = data.sort_values('group', kind='mergesort')

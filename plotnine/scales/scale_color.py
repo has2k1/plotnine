@@ -1,11 +1,12 @@
 from __future__ import absolute_import, division, print_function
 
+from warnings import warn
+
 from mizani.bounds import rescale_mid
 from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
                              gradient_n_pal, cmap_pal,
                              desaturate_pal)
 
-from ..utils.exceptions import gg_warn
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
@@ -303,9 +304,8 @@ class scale_color_distiller(scale_color_gradientn):
         Create colormap that will be used by the palette
         """
         if type.lower() in ('qual', 'qualitative'):
-            msg = ("Using a discrete color palette in a continuous scale."
-                   "Consider using type = 'seq' or type = 'div' instead")
-            gg_warn(msg)
+            warn("Using a discrete color palette in a continuous scale."
+                 "Consider using type = 'seq' or type = 'div' instead")
 
         # Grab 6 colors from brewer and create a gradient palette
         colors = brewer_pal(type, palette)(6)

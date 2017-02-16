@@ -5,11 +5,12 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import os
+from warnings import warn
 
 import matplotlib.pyplot as plt
 import six
 
-from .exceptions import gg_warn, PlotnineError
+from .exceptions import PlotnineError
 
 
 def ggsave(filename=None, plot=None, device=None, format=None,
@@ -165,7 +166,7 @@ def ggsave(filename=None, plot=None, device=None, format=None,
         if print_filename:
             msg += '\nFilename: {}'.format(filename)
 
-        gg_warn(msg)
+        warn(msg)
 
     if limitsize and (width > 25 or height > 25):
         msg = ("Dimensions exceed 25 inches "

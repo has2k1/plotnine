@@ -2,12 +2,13 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import re
+from warnings import warn
 
 import numpy as np
 import pandas as pd
 import six
 
-from ..utils.exceptions import gg_warn, PlotnineError
+from ..utils.exceptions import PlotnineError
 from ..utils import suppress, match, join_keys
 from .facet import facet, combine_vars, layout_null
 from .facet import add_missing_facets, eval_facet_vars
@@ -244,16 +245,16 @@ class facet_wrap(facet):
 def check_dimensions(nrow, ncol):
     if nrow is not None:
         if nrow < 1:
-            gg_warn("'nrow' must be greater than 0. "
-                    "Your value has been ignored.")
+            warn("'nrow' must be greater than 0. "
+                 "Your value has been ignored.")
             nrow = None
         else:
             nrow = int(nrow)
 
     if ncol is not None:
         if ncol < 1:
-            gg_warn("'ncol' must be greater than 0. "
-                    "Your value has been ignored.")
+            warn("'ncol' must be greater than 0. "
+                 "Your value has been ignored.")
             ncol = None
         else:
             ncol = int(ncol)

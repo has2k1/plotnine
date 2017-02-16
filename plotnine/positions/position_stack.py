@@ -1,10 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from warnings import warn
 import pandas as pd
 
 from ..utils import remove_missing
-from ..utils.exceptions import gg_warn
 from .collide import collide, pos_stack
 from .position import position
 
@@ -29,15 +29,14 @@ class position_stack(position):
         # Variable for which to do the stacking
         if 'ymax' in data:
             if any((data['ymin'] != 0) & (data['ymax'] != 0)):
-                gg_warn("Stacking not well defined when not "
-                        "anchored on the axis.")
+                warn("Stacking not well defined when not "
+                     "anchored on the axis.")
             var = 'ymax'
         elif 'y' in data:
             var = 'y'
         else:
-            gg_warn(
-                "Stacking requires either ymin & ymax or y "
-                "aesthetics. Maybe you want position = 'identity'?")
+            warn("Stacking requires either ymin & ymax or y "
+                 "aesthetics. Maybe you want position = 'identity'?")
             var = None
 
         params = self.params.copy()

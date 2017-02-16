@@ -8,6 +8,7 @@ import itertools
 import contextlib
 import inspect
 from weakref import WeakValueDictionary
+from warnings import warn
 
 import six
 import numpy as np
@@ -21,7 +22,7 @@ from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
 
-from .exceptions import PlotnineError, gg_warn
+from .exceptions import PlotnineError
 
 
 DISCRETE_KINDS = 'ObUS'
@@ -556,7 +557,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     df.reset_index(drop=True, inplace=True)
     if len(df) < n and not na_rm:
         msg = '{} : Removed {} rows containing {} values.'
-        gg_warn(msg.format(name, n-len(df), txt), stacklevel=3)
+        warn(msg.format(name, n-len(df), txt), stacklevel=3)
     return df
 
 

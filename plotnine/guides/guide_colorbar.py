@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import hashlib
+from warnings import warn
 
 import six
 import numpy as np
@@ -15,7 +16,6 @@ from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
 
 from ..scales.scale import scale_continuous
-from ..utils.exceptions import gg_warn
 from ..utils import ColoredDrawingArea
 from .guide import guide
 
@@ -64,11 +64,11 @@ class guide_colorbar(guide):
     def train(self, scale):
         # Do nothing if scales are inappropriate
         if set(scale.aesthetics) & {'color', 'colour', 'fill'} == 0:
-            gg_warn('colorbar guide needs color or fill scales.')
+            warn("colorbar guide needs color or fill scales.")
             return None
 
         if not issubclass(scale.__class__, scale_continuous):
-            gg_warn('colorbar guide needs continuous scales')
+            warn("colorbar guide needs continuous scales")
             return None
 
         # value = breaks (numeric) is used for determining the

@@ -2,6 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy, copy
 from collections import OrderedDict
+from warnings import warn
+
 from six import add_metaclass
 from six.moves import zip
 
@@ -12,7 +14,7 @@ from mizani.bounds import rescale, censor, expand_range, zero_range
 from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
-from ..utils.exceptions import gg_warn, PlotnineError
+from ..utils.exceptions import PlotnineError
 from ..utils import match, suppress, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
 
@@ -81,8 +83,8 @@ class scale(object):
             elif hasattr(self, k):
                 setattr(self, k, v)
             else:
-                msg = '{} could not recognise parameter `{}`'
-                gg_warn(msg.format(self.__class__.__name__, k))
+                msg = "{} could not recognise parameter `{}`"
+                warn(msg.format(self.__class__.__name__, k))
 
         if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
             if len(self.breaks) != len(self.labels):

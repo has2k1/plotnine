@@ -1,11 +1,12 @@
 from __future__ import absolute_import, division, print_function
 import itertools
+from warnings import warn
 
 import numpy as np
 import pandas.api.types as pdtypes
 
 from ..aes import aes_to_scale
-from ..utils.exceptions import gg_warn, PlotnineError
+from ..utils.exceptions import PlotnineError
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS, suppress
 from ..utils import Registry
 
@@ -26,7 +27,7 @@ class Scales(list):
         ae = sc.aesthetics[0]
         cover_ae = self.find(ae)
         if any(cover_ae):
-            gg_warn(_TPL_DUPLICATE_SCALE.format(ae))
+            warn(_TPL_DUPLICATE_SCALE.format(ae))
             idx = cover_ae.index(True)
             self.pop(idx)
         # super() does not work well with reloads
@@ -287,7 +288,7 @@ def scale_type(series):
     else:
         msg = ("Don't know how to automatically pick scale for "
                "object of type {}. Defaulting to 'continuous'")
-        gg_warn(msg.format(series.dtype))
+        warn(msg.format(series.dtype))
         stype = 'continuous'
     return stype
 

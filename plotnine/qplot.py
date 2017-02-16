@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
+from warnings import warn
+
 import pandas as pd
 import pandas.api.types as pdtypes
 import numpy as np
@@ -13,7 +15,7 @@ from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
 from .utils import Registry, is_string, DISCRETE_KINDS, suppress
-from .utils.exceptions import PlotnineError, gg_warn
+from .utils.exceptions import PlotnineError
 from .scales import scale_x_log10, scale_y_log10
 from .themes import theme
 
@@ -155,8 +157,8 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             parse_wrap_facets(facets)
             return 'wrap'
 
-        gg_warn("Could not determine the type of faceting, "
-                "therefore no faceting.")
+        warn("Could not determine the type of faceting, "
+             "therefore no faceting.")
         return 'null'
 
     if facets:

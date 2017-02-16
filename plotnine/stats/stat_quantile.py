@@ -1,10 +1,11 @@
 from __future__ import absolute_import, division, print_function
 
+from warnings import warn
+
 import pandas as pd
 import statsmodels.formula.api as smf
 
 from ..utils.doctools import document
-from ..utils.exceptions import gg_warn
 from .stat import stat
 
 
@@ -30,8 +31,7 @@ class stat_quantile(stat):
         params = self.params.copy()
         if params['formula'] is None:
             params['formula'] = 'y ~ x'
-            msg = "Formula not specified, using '{}'"
-            gg_warn(msg.format(params['formula']))
+            warn("Formula not specified, using '{}'")
         try:
             iter(params['quantiles'])
         except TypeError:

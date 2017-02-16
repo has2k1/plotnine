@@ -1,11 +1,12 @@
 from __future__ import absolute_import, division, print_function
 
+from warnings import warn
+
 from matplotlib.cbook import Bunch
 from mizani.bounds import expand_range, squish_infinite
 from mizani.transforms import gettrans
 
 from ..positions.position import transform_position
-from ..utils.exceptions import gg_warn
 from .coord import coord, dist_euclidean
 
 
@@ -42,16 +43,16 @@ class coord_trans(coord):
             result = transform_value(self.trans.x,
                                      data, panel_scales['x_range'])
             if any(result.isnull()):
-                gg_warn("Coordinate transform of x aesthetic "
-                        "created one or more NaN values.")
+                warn("Coordinate transform of x aesthetic "
+                     "created one or more NaN values.")
             return result
 
         def trans_y(data):
             result = transform_value(self.trans.y,
                                      data, panel_scales['y_range'])
             if any(result.isnull()):
-                gg_warn("Coordinate transform of y aesthetic "
-                        "created one or more NaN values.")
+                warn("Coordinate transform of y aesthetic "
+                     "created one or more NaN values.")
             return result
 
         data = transform_position(data, trans_x, trans_y)

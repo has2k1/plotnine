@@ -1,7 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from textwrap import dedent
-import warnings
 
 
 class PlotnineError(Exception):
@@ -14,23 +13,3 @@ class PlotnineError(Exception):
 
     def __str__(self):
         return repr(self.message)
-
-
-class GgplotWarning(UserWarning):
-    pass
-
-
-def gg_warn(message, category=GgplotWarning, stacklevel=2):
-    """
-    Show warning message
-
-    Users of this function can use triple quoted strings or
-    lists/tuples with worry less about indentation and the
-    79 character limit.
-    """
-    if isinstance(message, (list, tuple)):
-        message = ' '.join([dedent(s) for s in message])
-    else:
-        message = dedent(message)
-
-    warnings.warn(message, category=category, stacklevel=stacklevel)

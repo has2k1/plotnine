@@ -17,7 +17,7 @@ from plotnine.scales.scale_size import (scale_size_discrete,
                                         scale_size_continuous,
                                         scale_size_area,
                                         scale_size_radius)
-from plotnine.utils.exceptions import PlotnineError, GgplotWarning
+from plotnine.utils.exceptions import PlotnineError
 
 
 # test palettes
@@ -124,7 +124,7 @@ def test_continuous_color_palettes():
     s = sc.scale_color_distiller(type='div')
     _assert(s)
 
-    with pytest.warns(GgplotWarning):
+    with pytest.warns(UserWarning):
         s = sc.scale_color_distiller(type='qual')
     _assert(s)
 

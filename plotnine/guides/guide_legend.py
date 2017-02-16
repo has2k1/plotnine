@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 import hashlib
 from itertools import islice
 from collections import OrderedDict
+from warnings import warn
 
 import six
 from six.moves import zip, range
@@ -14,7 +15,7 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
 from ..utils import Registry
-from ..utils.exceptions import gg_warn, PlotnineError
+from ..utils.exceptions import PlotnineError
 from ..geoms import geom_text
 from .guide import guide
 
@@ -122,7 +123,7 @@ class guide_legend(guide):
         self.key = pd.merge(self.key, other.key)
         duplicated = set(self.override_aes) & set(other.override_aes)
         if duplicated:
-            gg_warn("Duplicated override_aes is ignored.")
+            warn("Duplicated override_aes is ignored.")
         self.override_aes.update(other.override_aes)
         for ae in duplicated:
             self.override_aes.pop(ae)

@@ -1,9 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from warnings import warn
 import numpy as np
 
-from ..utils.exceptions import PlotnineError, gg_warn
+from ..utils.exceptions import PlotnineError
 from ..utils import match, groupby_apply, suppress
 
 
@@ -25,10 +26,6 @@ def collide(data, width=None, name='', strategy=None, params=None):
         # Width determined from data, must be floating point constant
         widths = (data['xmax'] - data['xmin']).drop_duplicates()
         widths = widths[~np.isnan(widths)]
-        # # Suppress warning message since it's not reliable
-        # if not zero_range([widths.min(), widths.max()]):
-        #     msg = '{} requires constant width: output may be incorrect'
-        #     gg_warn(msg.format(name))
         width = widths.iloc[0]
 
     # Reorder by x position then on group, relying on stable sort to
@@ -51,8 +48,8 @@ def collide(data, width=None, name='', strategy=None, params=None):
 
     if (len(np.unique(intervals)) > 1 and
             any(np.diff(intervals - intervals.mean()) < -1e-6)):
-        msg = '{} requires non-overlapping x intervals'
-        gg_warn(msg.format(name))
+        msg = "{} requires non-overlapping x intervals"
+        warn(msg.format(name))
 
     if 'ymax' in data:
         data = groupby_apply(data, 'xmin', strategy, width, params)

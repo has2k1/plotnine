@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from warnings import warn
+
 import numpy as np
 import pandas as pd
 import matplotlib.lines as mlines
@@ -9,7 +11,6 @@ from matplotlib.patches import Rectangle
 from ..utils import copy_missing_columns, to_rgba
 from ..utils import resolution, SIZE_FACTOR
 from ..utils.doctools import document
-from ..utils.exceptions import gg_warn
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
@@ -70,9 +71,8 @@ class geom_crossbar(geom):
         has_notch = ynotchlower is not None and ynotchupper is not None
         if has_notch:  # 10 points + 1 closing
             if (any(ynotchlower < ymin) or any(ynotchupper > ymax)):
-                msg = ("Notch went outside hinges."
-                       " Try setting notch=False.")
-                gg_warn(msg)
+                warn("Notch went outside hinges."
+                     " Try setting notch=False.")
 
             notchindent = (1 - notchwidth) * (xmax-xmin)/2
 

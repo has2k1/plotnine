@@ -1,8 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from warnings import warn
 
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError, gg_warn
+from ..utils.exceptions import PlotnineError
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)
 from .stat import stat
@@ -50,7 +51,7 @@ class stat_bin(stat):
             params['bins'] = freedman_diaconis_bins(data['x'])
             msg = ("'stat_bin()' using 'bins = {}'. "
                    "Pick better value with 'binwidth'.")
-            gg_warn(msg.format(params['bins']))
+            warn(msg.format(params['bins']))
 
         return params
 
