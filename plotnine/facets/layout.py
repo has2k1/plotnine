@@ -31,6 +31,11 @@ class Layout(object):
         structual information about the panels that will
         make up the plot. The actual layout depends on
         the type of facet.
+
+        This method ensures that each layer has a copy of the
+        data it needs in `layer.data`. That data is also has
+        column `PANEL` that indicates the panel onto which each
+        data row/item will be plotted.
         """
         self.facet = plot.facet
         data = [plot.data] + [l.data for l in layers]
@@ -50,28 +55,11 @@ class Layout(object):
             _t = self.panel_layout
             _t['SCALE_X'], _t['SCALE_Y'] = _t['SCALE_Y'], _t['SCALE_X']
 
-    def map(self, layers, plot):
-        """
-        Map layer data to the panels
-
-        This method creates a dataframe copy (``layer.data``)
-        for each layer.
-
-        Parameters
-        ----------
-        plot : ggplot
-            Object being built
-        layers : Layers
-            List of layers
-        """
+        # Map the data to the panels
+        # Make copies, do not mess with the user supplied dataframes
         for layer in layers:
-            # Do not mess with the user supplied dataframes
-            if layer.data is None:
-                data = plot.data.copy()
-            else:
-                data = layer.data.copy()
-            layer.data = self.facet.map(
-                data, self.panel_layout)
+            df = plot.data if layer.data is None else layer.data
+            layer.data = self.facet.map(df.copy(), self.panel_layout)
 
     def train_position(self, layers, x_scale, y_scale):
         """

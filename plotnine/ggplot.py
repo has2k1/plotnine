@@ -207,7 +207,6 @@ class ggplot(object):
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
         layout.setup(layers, self)
-        layout.map(layers, self)
 
         # Compute aesthetics to produce data with generalised
         # variable names
