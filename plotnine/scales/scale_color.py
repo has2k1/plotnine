@@ -364,9 +364,9 @@ class scale_fill_cmap(scale_color_cmap):
 
 # Default scales
 alias('scale_color_discrete', scale_color_hue)
-alias('scale_color_continuous', scale_color_gradient)
+alias('scale_color_continuous', scale_color_cmap)
 alias('scale_fill_discrete', scale_fill_hue)
-alias('scale_fill_continuous', scale_fill_gradient)
+alias('scale_fill_continuous', scale_fill_cmap)
 
 # American to British spelling
 alias('scale_colour_hue', scale_color_hue)
