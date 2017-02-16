@@ -66,7 +66,7 @@ class coord_cartesian(coord):
         return out
 
     @staticmethod
-    def distance(x, y, panel_scales):
-        max_dist = dist_euclidean(panel_scales['x_range'],
-                                  panel_scales['y_range'])[0]
+    def distance(x, y, panel_params):
+        max_dist = dist_euclidean(panel_params['x_range'],
+                                  panel_params['y_range'])[0]
         return dist_euclidean(x, y) / max_dist

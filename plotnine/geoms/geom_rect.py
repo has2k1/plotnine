@@ -24,15 +24,15 @@ class geom_rect(geom):
                       'na_rm': False}
     legend_geom = 'polygon'
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         """
         Plot all groups
         """
-        self.draw_group(data, panel_scales, coord, ax, **params)
+        self.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales, munch=True)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
         verts = [None] * len(data)
         limits = zip(data['xmin'], data['xmax'],

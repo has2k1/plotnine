@@ -21,10 +21,10 @@ class geom_linerange(geom):
     legend_geom = 'path'
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         data.eval("""
                      xend = x
                      y = ymin
                      yend = ymax""",
                   inplace=True)
-        geom_segment.draw_group(data, panel_scales, coord, ax, **params)
+        geom_segment.draw_group(data, panel_params, coord, ax, **params)

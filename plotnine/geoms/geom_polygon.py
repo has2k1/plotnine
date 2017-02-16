@@ -26,15 +26,15 @@ class geom_polygon(geom):
     def handle_na(self, data):
         return data
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         """
         Plot all groups
         """
-        self.draw_group(data, panel_scales, coord, ax, **params)
+        self.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales, munch=True)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
 
         # Each group is a polygon with a single facecolor

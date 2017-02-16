@@ -71,7 +71,7 @@ class geom_boxplot(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         def flat(*args):
             """Flatten list-likes"""
             return np.hstack(args)
@@ -118,13 +118,13 @@ class geom_boxplot(geom):
             outliers['shape'] = outlier_value('shape')
             outliers['size'] = outlier_value('size')
             outliers['stroke'] = outlier_value('stroke')
-            geom_point.draw_group(outliers, panel_scales,
+            geom_point.draw_group(outliers, panel_params,
                                   coord, ax, **params)
 
         # plot
-        geom_segment.draw_group(whiskers, panel_scales,
+        geom_segment.draw_group(whiskers, panel_params,
                                 coord, ax, **params)
-        geom_crossbar.draw_group(box, panel_scales,
+        geom_crossbar.draw_group(box, panel_params,
                                  coord, ax, **params)
 
     @staticmethod

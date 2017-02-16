@@ -28,8 +28,8 @@ class geom_segment(geom):
     legend_geom = 'path'
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params)
         data['size'] *= SIZE_FACTOR
         color = to_rgba(data['color'], data['alpha'])
 
@@ -56,5 +56,5 @@ class geom_segment(geom):
                 adata[param] = np.hstack([data[param], data[param]])
 
             params['arrow'].draw(
-                adata, panel_scales, coord, ax,
+                adata, panel_params, coord, ax,
                 params['zorder'], constant=False)

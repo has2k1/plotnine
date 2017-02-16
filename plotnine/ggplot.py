@@ -181,9 +181,9 @@ class ggplot(object):
         #
         # pidx is the panel index (location left to right, top to bottom)
         for pidx, layout_info in self.layout.panel_layout.iterrows():
-            panel_scales = self.layout.ranges[pidx]
+            panel_params = self.layout.ranges[pidx]
             self.facet.set_breaks_and_labels(
-                panel_scales, layout_info, pidx)
+                panel_params, layout_info, pidx)
             self.facet.draw_label(layout_info, pidx)
 
     def build(self):

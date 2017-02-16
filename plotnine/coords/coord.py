@@ -22,7 +22,7 @@ class coord(object):
         gg.coordinates = copy(self)
         return gg
 
-    def aspect(self, panel_scales):
+    def aspect(self, panel_params):
         """
         Return desired aspect ratio for the plot
 
@@ -51,7 +51,7 @@ class coord(object):
         """
         return label_lookup
 
-    def transform(self, data, panel_scales, munch=False):
+    def transform(self, data, panel_params, munch=False):
         """
         Transform data before it is plotted
 
@@ -77,27 +77,27 @@ class coord(object):
         else:
             return scale.expand
 
-    def range(self, panel_scales):
+    def range(self, panel_params):
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return Bunch(x=panel_scales['x_range'],
-                     y=panel_scales['y_range'])
+        return Bunch(x=panel_params['x_range'],
+                     y=panel_params['y_range'])
 
-    def distance(self, x, y, panel_scales):
+    def distance(self, x, y, panel_params):
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
 
-    def munch(self, data, panel_scales):
-        ranges = self.range(panel_scales)
+    def munch(self, data, panel_params):
+        ranges = self.range(panel_params)
 
         data.loc[data['x'] == -np.inf, 'x'] = ranges.x[0]
         data.loc[data['x'] == np.inf, 'x'] = ranges.x[1]
         data.loc[data['y'] == -np.inf, 'y'] = ranges.y[0]
         data.loc[data['y'] == np.inf, 'y'] = ranges.y[1]
 
-        dist = self.distance(data['x'], data['y'], panel_scales)
+        dist = self.distance(data['x'], data['y'], panel_params)
         bool_idx = data['group'].iloc[1:].values != \
             data['group'].iloc[:-1].values
         dist[bool_idx] = np.nan

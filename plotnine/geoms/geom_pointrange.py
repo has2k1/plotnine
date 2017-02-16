@@ -23,12 +23,12 @@ class geom_pointrange(geom):
                       'fatten': 4, 'na_rm': False}
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        geom_linerange.draw_group(data.copy(), panel_scales,
+    def draw_group(data, panel_params, coord, ax, **params):
+        geom_linerange.draw_group(data.copy(), panel_params,
                                   coord, ax, **params)
         data['size'] = data['size'] * params['fatten']
         data['stroke'] = geom_point.DEFAULT_AES['stroke']
-        geom_point.draw_group(data, panel_scales, coord, ax, **params)
+        geom_point.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

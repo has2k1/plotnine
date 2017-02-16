@@ -21,22 +21,22 @@ class coord_flip(coord_cartesian):
         return flip_labels(coord_cartesian.labels(
             self, label_lookup))
 
-    def transform(self, data, panel_scales, munch=False):
+    def transform(self, data, panel_params, munch=False):
         data = flip_labels(data)
         return coord_cartesian.transform(self, data,
-                                         panel_scales,
+                                         panel_params,
                                          munch=munch)
 
     def train(self, scale):
         return flip_labels(coord_cartesian.train(self, scale))
 
-    def range(self, panel_scales):
+    def range(self, panel_params):
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return Bunch(x=panel_scales['y_range'],
-                     y=panel_scales['x_range'])
+        return Bunch(x=panel_params['y_range'],
+                     y=panel_params['x_range'])
 
 
 def flip_labels(obj):

@@ -45,11 +45,11 @@ class geom_abline(geom):
 
         geom.__init__(self, *args, **kwargs)
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         """
         Plot all groups
         """
-        ranges = coord.range(panel_scales)
+        ranges = coord.range(panel_params)
         data['x'] = ranges.x[0]
         data['xend'] = ranges.x[1]
         data['y'] = ranges.x[0] * data['slope'] + data['intercept']
@@ -59,5 +59,5 @@ class geom_abline(geom):
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
             gdata.is_copy = None
-            geom_segment.draw_group(gdata, panel_scales,
+            geom_segment.draw_group(gdata, panel_params,
                                     coord, ax, **params)

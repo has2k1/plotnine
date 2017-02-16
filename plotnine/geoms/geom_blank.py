@@ -15,7 +15,7 @@ class geom_blank(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         pass
 
     def handle_na(self, data):

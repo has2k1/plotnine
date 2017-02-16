@@ -15,9 +15,9 @@ class Layout(object):
     panel_layout = None
     #: A :class:`Bunch` of lists for x and y scales
     panel_scales = None
-    #: ranges
-    panel_ranges = None
     axs = None        # MPL axes
+    #: A list of trainned ranges for each panel
+    ranges = None
 
     def setup(self, layers, plot):
         """

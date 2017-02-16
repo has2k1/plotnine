@@ -34,11 +34,11 @@ class geom_vline(geom):
 
         geom.__init__(self, *args, **kwargs)
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         """
         Plot all groups
         """
-        ranges = coord.range(panel_scales)
+        ranges = coord.range(panel_params)
         data['x'] = data['xintercept']
         data['xend'] = data['xintercept']
         data['y'] = ranges.y[0]
@@ -48,7 +48,7 @@ class geom_vline(geom):
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
             gdata.is_copy = None
-            geom_segment.draw_group(gdata, panel_scales,
+            geom_segment.draw_group(gdata, panel_params,
                                     coord, ax, **params)
 
     @staticmethod

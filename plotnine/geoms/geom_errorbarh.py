@@ -37,7 +37,7 @@ class geom_errorbarh(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         f = np.hstack
         # create (two vertical bars) + horizontal bar
         df = pd.DataFrame({
@@ -47,4 +47,4 @@ class geom_errorbarh(geom):
             'xend': f([data['xmin'], data['xmax'], data['xmax']])})
 
         copy_missing_columns(df, data)
-        geom_segment.draw_group(df, panel_scales, coord, ax, **params)
+        geom_segment.draw_group(df, panel_params, coord, ax, **params)

@@ -163,11 +163,11 @@ class geom(object):
                 continue
             pdata.is_copy = None
             ploc = pid - 1
-            panel_scales = layout.ranges[ploc]
+            panel_params = layout.ranges[ploc]
             ax = layout.axs[ploc]
-            self.draw_panel(pdata, panel_scales, coord, ax, **params)
+            self.draw_panel(pdata, panel_params, coord, ax, **params)
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         """
         Plot all groups
 
@@ -199,10 +199,10 @@ class geom(object):
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True, drop=True)
             gdata.is_copy = None
-            self.draw_group(gdata, panel_scales, coord, ax, **params)
+            self.draw_group(gdata, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         """
         Plot data
         """
@@ -210,7 +210,7 @@ class geom(object):
         raise NotImplementedError(msg)
 
     @staticmethod
-    def draw_unit(data, panel_scales, coord, ax, **params):
+    def draw_unit(data, panel_params, coord, ax, **params):
         """
         Plot data
 

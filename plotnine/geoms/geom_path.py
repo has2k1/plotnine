@@ -64,7 +64,7 @@ class geom_path(geom):
 
         return data
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         if not any(data['group'].duplicated()):
             warn("geom_path: Each group consist of only one "
                  "observation. Do you need to adjust the "
@@ -93,16 +93,16 @@ class geom_path(geom):
         params['constant'] = constant
 
         if not constant:
-            self.draw_group(data, panel_scales, coord, ax, **params)
+            self.draw_group(data, panel_params, coord, ax, **params)
         else:
             for _, gdata in data.groupby('group'):
                 gdata.reset_index(inplace=True, drop=True)
                 gdata.is_copy = None
-                self.draw_group(gdata, panel_scales, coord, ax, **params)
+                self.draw_group(gdata, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales, munch=True)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
         constant = params.pop('constant', False)
 
@@ -113,7 +113,7 @@ class geom_path(geom):
 
         if 'arrow' in params and params['arrow']:
             params['arrow'].draw(
-                data, panel_scales, coord,
+                data, panel_params, coord,
                 ax, zorder=params['zorder'], constant=constant)
 
     @staticmethod
@@ -174,7 +174,7 @@ class arrow(object):
         self.ends = ends
         self.type = type
 
-    def draw(self, data, panel_scales, coord, ax, zorder, constant=True):
+    def draw(self, data, panel_params, coord, ax, zorder, constant=True):
         """
         Draw arrows at the end(s) of the lines
 
@@ -223,13 +223,13 @@ class arrow(object):
 
             if first:
                 paths = self.get_paths(x1, y1, x2, y2,
-                                       panel_scales, coord, ax)
+                                       panel_params, coord, ax)
                 coll = mcoll.PathCollection(paths, **d)
                 ax.add_collection(coll)
             if last:
                 x1, y1, x2, y2 = x2, y2, x1, y1
                 paths = self.get_paths(x1, y1, x2, y2,
-                                       panel_scales, coord, ax)
+                                       panel_params, coord, ax)
                 coll = mcoll.PathCollection(paths, **d)
                 ax.add_collection(coll)
         else:
@@ -248,7 +248,7 @@ class arrow(object):
                 x1, y1, x2, y2 = [np.array([i])
                                   for i in (x1, y1, x2, y2)]
                 paths = self.get_paths(x1, y1, x2, y2,
-                                       panel_scales, coord, ax)
+                                       panel_params, coord, ax)
                 patch = mpatches.PathPatch(paths[0], **d)
                 ax.add_artist(patch)
 
@@ -259,11 +259,11 @@ class arrow(object):
                 x1, y1, x2, y2 = [np.array([i])
                                   for i in (x1, y1, x2, y2)]
                 paths = self.get_paths(x1, y1, x2, y2,
-                                       panel_scales, coord, ax)
+                                       panel_params, coord, ax)
                 patch = mpatches.PathPatch(paths[0], **d)
                 ax.add_artist(patch)
 
-    def get_paths(self, x1, y1, x2, y2, panel_scales, coord, ax):
+    def get_paths(self, x1, y1, x2, y2, panel_params, coord, ax):
         """
         Compute paths that create the arrow heads
 
@@ -298,7 +298,7 @@ class arrow(object):
         # compute scaling factors
         fig = ax.get_figure()
         width, height = fig.get_size_inches()
-        ranges = coord.range(panel_scales)
+        ranges = coord.range(panel_params)
         width_ = np.ptp(ranges.x)
         height_ = np.ptp(ranges.y)
 

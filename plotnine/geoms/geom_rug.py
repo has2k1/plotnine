@@ -22,8 +22,8 @@ class geom_rug(geom):
     legend_geom = 'path'
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params)
         data['size'] *= SIZE_FACTOR
 
         has_x = 'x' in data.columns
@@ -36,8 +36,8 @@ class geom_rug(geom):
 
         rugs = []
         sides = params['sides']
-        xmin, xmax = panel_scales['x_range']
-        ymin, ymax = panel_scales['y_range']
+        xmin, xmax = panel_params['x_range']
+        ymin, ymax = panel_params['y_range']
         xheight = (xmax-xmin)*0.03
         yheight = (ymax-ymin)*0.03
 

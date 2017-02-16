@@ -126,11 +126,11 @@ class geom_dotplot(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params)
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
-        ranges = coord.range(panel_scales)
+        ranges = coord.range(panel_params)
 
         # For perfect circles the width/height of the circle(ellipse)
         # should factor in the dimensions of axes

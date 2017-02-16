@@ -35,13 +35,13 @@ class coord_trans(coord):
         self.trans = Bunch(x=gettrans(x), y=gettrans(y))
         self.limits = Bunch(xlim=xlim, ylim=ylim)
 
-    def transform(self, data, panel_scales, munch=False):
+    def transform(self, data, panel_params, munch=False):
         if not self.is_linear and munch:
-            data = self.munch(data, panel_scales)
+            data = self.munch(data, panel_params)
 
         def trans_x(data):
             result = transform_value(self.trans.x,
-                                     data, panel_scales['x_range'])
+                                     data, panel_params['x_range'])
             if any(result.isnull()):
                 warn("Coordinate transform of x aesthetic "
                      "created one or more NaN values.")
@@ -49,7 +49,7 @@ class coord_trans(coord):
 
         def trans_y(data):
             result = transform_value(self.trans.y,
-                                     data, panel_scales['y_range'])
+                                     data, panel_params['y_range'])
             if any(result.isnull()):
                 warn("Coordinate transform of y aesthetic "
                      "created one or more NaN values.")
@@ -92,9 +92,9 @@ class coord_trans(coord):
 
         return out
 
-    def distance(self, x, y, panel_scales):
-        max_dist = dist_euclidean(panel_scales['x_range'],
-                                  panel_scales['y_range'])[0]
+    def distance(self, x, y, panel_params):
+        max_dist = dist_euclidean(panel_params['x_range'],
+                                  panel_params['y_range'])[0]
         return dist_euclidean(self.trans.x.transform(x),
                               self.trans.y.transform(y)) / max_dist
 

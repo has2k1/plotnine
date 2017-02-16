@@ -45,7 +45,7 @@ class geom_violin(geom):
         data = groupby_apply(data, 'group', func)
         return data
 
-    def draw_panel(self, data, panel_scales, coord, ax, **params):
+    def draw_panel(self, data, panel_params, coord, ax, **params):
         quantiles = params['draw_quantiles']
 
         for _, df in data.groupby('group'):
@@ -71,7 +71,7 @@ class geom_violin(geom):
             polygon_df.loc[-1, :] = polygon_df.loc[0, :]
 
             # plot violin polygon
-            geom_polygon.draw_group(polygon_df, panel_scales,
+            geom_polygon.draw_group(polygon_df, panel_params,
                                     coord, ax, **params)
 
             if quantiles:
@@ -88,7 +88,7 @@ class geom_violin(geom):
                     axis=1)
 
                 # plot quantile segments
-                geom_path.draw_group(segment_df, panel_scales, coord,
+                geom_path.draw_group(segment_df, panel_params, coord,
                                      ax, **params)
 
 

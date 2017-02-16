@@ -34,9 +34,6 @@ CONTINUOUS_KINDS = 'ifuc'
 # this factor gives us the match.
 SIZE_FACTOR = np.sqrt(np.pi)
 
-# The x scale and y scale of a panel. Each may be None
-xy_panel_scales = collections.namedtuple('xy_panel_scales', 'x y')
-
 
 def pop(dataframe, key, default):
     """

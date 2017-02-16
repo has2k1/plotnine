@@ -25,17 +25,17 @@ class geom_smooth(geom):
                       'na_rm': False}
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         has_ribbon = (data.ix[0, 'ymin'] is not None and
                       data.ix[0, 'ymax'] is not None)
         if has_ribbon:
             data2 = data.copy()
             data2['color'] = None
-            geom_ribbon.draw_group(data2, panel_scales,
+            geom_ribbon.draw_group(data2, panel_params,
                                    coord, ax, **params)
 
         data['alpha'] = 1
-        geom_line.draw_group(data, panel_scales, coord, ax, **params)
+        geom_line.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

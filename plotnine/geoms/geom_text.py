@@ -56,8 +56,8 @@ class geom_text(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params)
 
         # Bind color and alpha
         color = to_rgba(data['color'], data['alpha'])

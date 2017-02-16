@@ -42,7 +42,7 @@ class geom_crossbar(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         y = data['y']
         xmin = data['xmin']
         xmax = data['xmax']
@@ -94,8 +94,8 @@ class geom_crossbar(geom):
                 'group': np.tile(np.arange(1, len(group)+1), 5)})
 
         copy_missing_columns(box, data)
-        geom_polygon.draw_group(box, panel_scales, coord, ax, **params)
-        geom_segment.draw_group(middle, panel_scales, coord, ax, **params)
+        geom_polygon.draw_group(box, panel_params, coord, ax, **params)
+        geom_segment.draw_group(middle, panel_params, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):

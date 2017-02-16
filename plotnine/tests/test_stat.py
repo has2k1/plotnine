@@ -51,7 +51,7 @@ def test_stat_parameter_sharing():
         REQUIRED_AES = {'x', 'weight'}
 
         @staticmethod
-        def draw(pinfo, panel_scales, coord, ax, **kwargs):
+        def draw(pinfo, panel_params, coord, ax, **kwargs):
             pass
 
     # weight is manually set, it should be a stat parameter and

@@ -22,7 +22,7 @@ class geom_step(geom_path):
     draw_panel = geom.draw_panel
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
+    def draw_group(data, panel_params, coord, ax, **params):
         n = len(data)
         data = data.sort_values('x', kind='mergesort')
 
@@ -38,4 +38,4 @@ class geom_step(geom_path):
         df = pd.DataFrame({'x': data['x'].values[xs],
                            'y': data['y'].values[ys]})
         copy_missing_columns(df, data)
-        geom_path.draw_group(df, panel_scales, coord, ax, **params)
+        geom_path.draw_group(df, panel_params, coord, ax, **params)

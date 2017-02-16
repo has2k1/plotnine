@@ -26,8 +26,8 @@ class geom_ribbon(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales, munch=True)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params, munch=True)
         units = ['alpha', 'color', 'fill', 'linetype', 'size']
 
         if len(data[units].drop_duplicates()) > 1:
@@ -37,11 +37,11 @@ class geom_ribbon(geom):
         for _, udata in groupby_with_null(data, units):
             udata.is_copy = None
             udata.reset_index(inplace=True, drop=True)
-            geom_ribbon.draw_unit(udata, panel_scales, coord,
+            geom_ribbon.draw_unit(udata, panel_params, coord,
                                   ax, **params)
 
     @staticmethod
-    def draw_unit(data, panel_scales, coord, ax, **params):
+    def draw_unit(data, panel_params, coord, ax, **params):
         data['size'] *= SIZE_FACTOR
         fill = to_rgba(data['fill'], data['alpha'])
         color = data['color']

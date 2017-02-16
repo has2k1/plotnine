@@ -23,17 +23,17 @@ class geom_point(geom):
                       'na_rm': False}
 
     @staticmethod
-    def draw_group(data, panel_scales, coord, ax, **params):
-        data = coord.transform(data, panel_scales)
+    def draw_group(data, panel_params, coord, ax, **params):
+        data = coord.transform(data, panel_params)
         units = 'shape'
         for _, udata in groupby_with_null(data, units):
             udata.is_copy = None
             udata.reset_index(inplace=True, drop=True)
-            geom_point.draw_unit(udata, panel_scales, coord,
+            geom_point.draw_unit(udata, panel_params, coord,
                                  ax, **params)
 
     @staticmethod
-    def draw_unit(data, panel_scales, coord, ax, **params):
+    def draw_unit(data, panel_params, coord, ax, **params):
         # Our size is in 'points' while scatter wants
         # 'points^2'. The stroke is outside. And pi
         # gives a large enough scaling factor
