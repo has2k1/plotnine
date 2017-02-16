@@ -56,7 +56,7 @@ class facet_null(facet):
             aspect_ratio = theme.themeables.property('aspect_ratio')
         except KeyError:
             aspect_ratio = self.coordinates.aspect(
-                    self.layout.ranges[0])
+                    self.layout.panel_params[0])
 
         if aspect_ratio is None:
             return

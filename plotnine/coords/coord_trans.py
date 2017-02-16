@@ -58,38 +58,43 @@ class coord_trans(coord):
         data = transform_position(data, trans_x, trans_y)
         return transform_position(data, squish_infinite, squish_infinite)
 
-    def train(self, scale):
-        name = scale.aesthetics[0]
-        if name == 'x':
-            limits = self.limits.xlim
-            trans = self.trans.x
-        else:
-            limits = self.limits.ylim
-            trans = self.trans.y
+    def setup_panel_params(self, scale_x, scale_y):
+        """
+        Compute the range and break information for the panel
 
-        if limits is None:
-            rangee = scale.dimension()
-        else:
-            rangee = scale.transform(limits)
+        """
+        def train(scale, limits, trans, name):
+            """
+            Train a single coordinate axis
+            """
+            if limits is None:
+                rangee = scale.dimension()
+            else:
+                rangee = scale.transform(limits)
 
-        # data space
-        out = scale.break_info(rangee)
+            # data space
+            out = scale.break_info(rangee)
 
-        # trans'd range
-        out['range'] = trans.transform(out['range'])
+            # trans'd range
+            out['range'] = trans.transform(out['range'])
 
-        if limits is None:
-            expand = self.expand_default(scale)
-            out['range'] = expand_range(out['range'], expand[0], expand[1])
+            if limits is None:
+                expand = self.expand_default(scale)
+                out['range'] = expand_range(out['range'], expand[0], expand[1])
 
-        # major and minor breaks in plot space
-        out['major'] = transform_value(trans, out['major'], out['range'])
-        out['minor'] = transform_value(trans, out['minor'], out['range'])
+            # major and minor breaks in plot space
+            out['major'] = transform_value(trans, out['major'], out['range'])
+            out['minor'] = transform_value(trans, out['minor'], out['range'])
 
-        for key in list(out.keys()):
-            new_key = '{}_{}'.format(name, key)
-            out[new_key] = out.pop(key)
+            for key in list(out.keys()):
+                new_key = '{}_{}'.format(name, key)
+                out[new_key] = out.pop(key)
 
+            return out
+
+        # When Python 2.7 end of life, change this to dict(**a, **b)
+        out = train(scale_x, self.limits.xlim, self.trans.x, 'x')
+        out.update(train(scale_y, self.limits.xlim, self.trans.y, 'y'))
         return out
 
     def distance(self, x, y, panel_params):

@@ -77,6 +77,12 @@ class coord(object):
         else:
             return scale.expand
 
+    def setup_panel_params(self, scale_x, scale_y):
+        """
+        Compute the range and break information for the panel
+        """
+        return dict()
+
     def range(self, panel_params):
         """
         Return the range along the dimensions of the coordinate system

@@ -181,7 +181,7 @@ class ggplot(object):
         #
         # pidx is the panel index (location left to right, top to bottom)
         for pidx, layout_info in self.layout.panel_layout.iterrows():
-            panel_params = self.layout.ranges[pidx]
+            panel_params = self.layout.panel_params[pidx]
             self.facet.set_breaks_and_labels(
                 panel_params, layout_info, pidx)
             self.facet.draw_label(layout_info, pidx)
@@ -249,7 +249,7 @@ class ggplot(object):
             layers.map(npscales)
 
         # Train coordinate system
-        layout.train_ranges(self.coordinates)
+        layout.setup_panel_params(self.coordinates)
 
         # fill in the defaults
         layers.use_defaults()

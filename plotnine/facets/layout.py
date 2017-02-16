@@ -11,13 +11,17 @@ from ..utils import match, suppress
 class Layout(object):
     #: facet
     facet = None
+
     #: A dataframe with the layout information of the plot
     panel_layout = None
+
     #: A :class:`Bunch` of lists for x and y scales
     panel_scales = None
+
+    #: Range & breaks information for each panel
+    panel_params = None
+
     axs = None        # MPL axes
-    #: A list of trainned ranges for each panel
-    ranges = None
 
     def setup(self, layers, plot):
         """
@@ -165,9 +169,9 @@ class Layout(object):
         with suppress(AttributeError):
             self.panel_scales.y.reset()
 
-    def train_ranges(self, coord):
+    def setup_panel_params(self, coord):
         """
-        Calculate the x & y ranges for each panel
+        Calculate the x & y range & breaks information for each panel
 
         Parameters
         ----------
@@ -180,15 +184,14 @@ class Layout(object):
         if not self.panel_scales.y:
             raise PlotnineError('Missing a y scale')
 
-        # ranges
-        self.ranges = []
+        self.panel_params = []
         cols = ['SCALE_X', 'SCALE_Y']
         for i, j in self.panel_layout[cols].itertuples(index=False):
             i, j = i-1, j-1
-            xinfo = coord.train(self.panel_scales.x[i])
-            yinfo = coord.train(self.panel_scales.y[j])
-            xinfo.update(yinfo)
-            self.ranges.append(xinfo)
+            params = coord.setup_panel_params(
+                self.panel_scales.x[i],
+                self.panel_scales.y[j])
+            self.panel_params.append(params)
 
     def finish_data(self, layers):
         """

@@ -27,8 +27,10 @@ class coord_flip(coord_cartesian):
                                          panel_params,
                                          munch=munch)
 
-    def train(self, scale):
-        return flip_labels(coord_cartesian.train(self, scale))
+    def setup_panel_params(self, scale_x, scale_y):
+        panel_params = coord_cartesian.setup_panel_params(
+            self, scale_x, scale_y)
+        return flip_labels(panel_params)
 
     def range(self, panel_params):
         """

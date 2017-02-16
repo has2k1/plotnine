@@ -31,38 +31,41 @@ class coord_cartesian(coord):
         self.limits = Bunch(xlim=xlim, ylim=ylim)
         self.expand = expand
 
-    def train(self, scale):
+    def setup_panel_params(self, scale_x, scale_y):
         """
-        Train a single coordinate axis
+        Compute the range and break information for the panel
         """
-        # Which axis are we dealing with
-        name = scale.aesthetics[0]
 
-        # If the coordinate axis has limits of
-        # its own we use those for the final range
-        if name == 'x':
-            limits = self.limits.xlim
-        else:
-            limits = self.limits.ylim
+        def train(scale, limits, name):
+            """
+            Train a single coordinate axis
+            """
+            # Which axis are we dealing with
+            name = scale.aesthetics[0]
 
-        if self.expand:
-            expand = self.expand_default(scale)
-        else:
-            expand = (0, 0)
+            if self.expand:
+                expand = self.expand_default(scale)
+            else:
+                expand = (0, 0)
 
-        if limits is None:
-            rangee = scale.dimension(expand)
-        else:
-            rangee = scale.transform(limits)
-            rangee = expand_range(rangee, expand[0], expand[1])
+            if limits is None:
+                rangee = scale.dimension(expand)
+            else:
+                rangee = scale.transform(limits)
+                rangee = expand_range(rangee, expand[0], expand[1])
 
-        out = scale.break_info(rangee)
-        # This is where
-        # x_major, x_labels, x_minor, ...
-        # range keys are created
-        for key in list(out.keys()):
-            new_key = '{}_{}'.format(name, key)
-            out[new_key] = out.pop(key)
+            out = scale.break_info(rangee)
+            # This is where
+            # x_major, x_labels, x_minor, ...
+            # range keys are created
+            for key in list(out.keys()):
+                new_key = '{}_{}'.format(name, key)
+                out[new_key] = out.pop(key)
+            return out
+
+        # When Python 2.7 end of life, change this to dict(**a, **b)
+        out = train(scale_x, self.limits.xlim, 'x')
+        out.update(train(scale_y, self.limits.xlim, 'y'))
         return out
 
     @staticmethod

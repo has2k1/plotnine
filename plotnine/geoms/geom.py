@@ -163,7 +163,7 @@ class geom(object):
                 continue
             pdata.is_copy = None
             ploc = pid - 1
-            panel_params = layout.ranges[ploc]
+            panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
             self.draw_panel(pdata, panel_params, coord, ax, **params)
 

@@ -190,7 +190,7 @@ class facet_wrap(facet):
             # cannot compute a common aspect ratio
             if not self.free['x'] and not self.free['y']:
                 aspect_ratio = self.coordinates.aspect(
-                    self.layout.ranges[0])
+                    self.layout.panel_params[0])
             else:
                 aspect_ratio = None
 
