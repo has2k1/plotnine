@@ -58,6 +58,9 @@ class facet(object):
     shrink = True
     #: Which axis scales are free
     free = {'x': True, 'y': True}
+    #: A dict of parameters created depending on the data
+    #: (Intended for extensions)
+    params = None
     # Theme object, automatically updated before drawing the plot
     theme = None
     # Figure object on which the facet panels are created
@@ -94,22 +97,51 @@ class facet(object):
         return gg
 
     def setup_data(self, data):
+        """
+        Allow the facet to manipulate the data
+
+        Parameters
+        ----------
+        data : list of dataframes
+            Data for each of the layers
+
+        Returns
+        -------
+        data : list of dataframes
+            Data for each of the layers
+
+        Note
+        ----
+        This method will be called after :meth:`setup_params`,
+        therefore the `params` property will be set.
+        """
         return data
 
-    def init_scales(self, panel_layout, x_scale=None, y_scale=None):
+    def setup_params(self, data):
+        """
+        Create facet parameters
+
+        Parameters
+        ----------
+        data : list of dataframes
+            Plot data and data for the layers
+        """
+        self.params = {}
+
+    def init_scales(self, layout, x_scale=None, y_scale=None):
         scales = Bunch()
 
         if x_scale is not None:
-            n = panel_layout['SCALE_X'].max()
+            n = layout['SCALE_X'].max()
             scales.x = Scales([x_scale.clone() for i in range(n)])
 
         if y_scale is not None:
-            n = panel_layout['SCALE_Y'].max()
+            n = layout['SCALE_Y'].max()
             scales.y = Scales([y_scale.clone() for i in range(n)])
 
         return scales
 
-    def map(self, data, panel_layout):
+    def map(self, data, layout):
         """
         Assign a data points to panels
 
@@ -117,8 +149,8 @@ class facet(object):
         ----------
         data : DataFrame
             Data for a layer
-        panel_layout : DataFrame
-            As returned by self.train_layout
+        layout : DataFrame
+            As returned by self.compute_layout
 
         Returns
         -------
@@ -130,7 +162,7 @@ class facet(object):
         raise NotImplementedError(
             msg.format(self.__class.__name__))
 
-    def train(self, data):
+    def compute_layout(self, data):
         """
         Compute layout
         """
@@ -163,26 +195,27 @@ class facet(object):
         """
         Compute ranges for the x and y scales
         """
-        _layout = layout.panel_layout
-        scales = layout.panel_scales
+        _layout = layout.layout
+        panel_scales_x = layout.panel_scales_x
+        panel_scales_y = layout.panel_scales_y
 
         # loop over each layer, training x and y scales in turn
         for layer in layers:
             data = layer.data
             match_id = match(data['PANEL'], _layout['PANEL'])
-            if scales.x:
-                x_vars = list(set(scales.x[0].aesthetics) &
+            if panel_scales_x:
+                x_vars = list(set(panel_scales_x[0].aesthetics) &
                               set(data.columns))
                 # the scale index for each data point
                 SCALE_X = _layout['SCALE_X'].iloc[match_id].tolist()
-                scales.x.train(data, x_vars, SCALE_X)
+                panel_scales_x.train(data, x_vars, SCALE_X)
 
-            if scales.y:
-                y_vars = list(set(scales.y[0].aesthetics) &
+            if panel_scales_y:
+                y_vars = list(set(panel_scales_y[0].aesthetics) &
                               set(data.columns))
                 # the scale index for each data point
                 SCALE_Y = _layout['SCALE_Y'].iloc[match_id].tolist()
-                scales.y.train(data, y_vars, SCALE_Y)
+                panel_scales_y.train(data, y_vars, SCALE_Y)
 
         return self
 
@@ -227,7 +260,7 @@ class facet(object):
         ax.tick_params(axis='y', which='major', pad=pad_y)
 
     def make_figure_and_axs(self, layout, theme, coordinates):
-        num_panels = len(layout.panel_layout)
+        num_panels = len(layout.layout)
         figure, axs = plt.subplots(self.nrow, self.ncol,
                                    sharex=False, sharey=False)
         axs = np.asarray(axs)
@@ -544,14 +577,14 @@ def layout_null():
     return layout
 
 
-def add_missing_facets(data, panel_layout, vars, facet_vals):
+def add_missing_facets(data, layout, vars, facet_vals):
     # When in a dataframe some layer does not have all
     # the facet variables, add the missing facet variables
     # and create new data where the points(duplicates) are
     # present in all the facets
     missing_facets = set(vars) - set(facet_vals)
     if missing_facets:
-        to_add = panel_layout.loc[:, missing_facets].drop_duplicates()
+        to_add = layout.loc[:, missing_facets].drop_duplicates()
         to_add.reset_index(drop=True, inplace=True)
 
         # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]

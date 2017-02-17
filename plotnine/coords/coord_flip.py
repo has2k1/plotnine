@@ -32,6 +32,11 @@ class coord_flip(coord_cartesian):
             self, scale_x, scale_y)
         return flip_labels(panel_params)
 
+    def setup_layout(self, layout):
+        # switch the scales
+        x, y = 'SCALE_X', 'SCALE_Y'
+        layout[x], layout[y] = layout[y], layout[x]
+
     def range(self, panel_params):
         """
         Return the range along the dimensions of the coordinate system

@@ -19,11 +19,11 @@ class facet_null(facet):
         self.nrow = 1
         self.ncol = 1
 
-    def map(self, data, panel_layout):
+    def map(self, data, layout):
         data['PANEL'] = 1
         return data
 
-    def train(self, data):
+    def compute_layout(self, data):
         return layout_null()
 
     def set_breaks_and_labels(self, ranges, layout_info, pidx):

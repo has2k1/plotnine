@@ -69,7 +69,7 @@ class facet_grid(facet):
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
 
-    def train(self, data):
+    def compute_layout(self, data):
         if not self.rows and not self.cols:
             return layout_null()
 
@@ -117,11 +117,11 @@ class facet_grid(facet):
         self.ncol = layout['COL'].max()
         return layout
 
-    def map(self, data, panel_layout):
+    def map(self, data, layout):
         if not len(data):
             data['PANEL'] = pd.Categorical(
                 [],
-                categories=panel_layout['PANEL'].cat.categories,
+                categories=layout['PANEL'].cat.categories,
                 ordered=True)
             return data
 
@@ -131,7 +131,7 @@ class facet_grid(facet):
         data = add_margins(data, margin_vars, self.margins)
 
         facet_vals = eval_facet_vars(data, vars, self.plot.environment)
-        data, facet_vals = add_missing_facets(data, panel_layout,
+        data, facet_vals = add_missing_facets(data, layout,
                                               vars, facet_vals)
 
         # assign each point to a panel
@@ -139,7 +139,7 @@ class facet_grid(facet):
             # Special case of no facetting
             data['PANEL'] = 1
         else:
-            keys = join_keys(facet_vals, panel_layout, vars)
+            keys = join_keys(facet_vals, layout, vars)
             data['PANEL'] = match(keys['x'], keys['y'], start=1)
 
         # matching dtype and
@@ -148,7 +148,7 @@ class facet_grid(facet):
         # they "know" the right order
         data['PANEL'] = pd.Categorical(
             data['PANEL'],
-            categories=panel_layout['PANEL'].cat.categories,
+            categories=layout['PANEL'].cat.categories,
             ordered=True)
         data = data.sort_values('PANEL')
         data.reset_index(drop=True, inplace=True)

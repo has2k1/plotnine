@@ -55,6 +55,10 @@ class Layers(list):
     def data(self):
         return [l.data for l in self]
 
+    def generate_data(self, plot_data):
+        for l in self:
+            l.generate_data(plot_data)
+
     def setup_data(self):
         for l in self:
             l.setup_data()
@@ -163,6 +167,28 @@ class layer(object):
                 new[key] = deepcopy(old[key], memo)
 
         return result
+
+    def generate_data(self, plot_data):
+        """
+        Generate data to be used by this layer
+
+        Parameters
+        ----------
+        plot_data : dataframe
+            ggplot object data
+        """
+        # Each layer that does not have data gets a copy of
+        # of the ggplot.data. If the has data it is replaced
+        # by copy so that we do not alter the users data
+        if self.data is None:
+            self.data = plot_data.copy()
+        elif hasattr(self.data, '__call__'):
+            self.data = self.data(plot_data)
+            if not isinstance(self.data, pd.DataFrame):
+                raise PlotnineError(
+                    "Data function must return a dataframe")
+        else:
+            self.data = self.data.copy()
 
     def layer_mapping(self, mapping):
         """

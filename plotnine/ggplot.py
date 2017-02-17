@@ -180,7 +180,7 @@ class ggplot(object):
         #   - facet labels
         #
         # pidx is the panel index (location left to right, top to bottom)
-        for pidx, layout_info in self.layout.panel_layout.iterrows():
+        for pidx, layout_info in self.layout.layout.iterrows():
             panel_params = self.layout.panel_params[pidx]
             self.facet.set_breaks_and_labels(
                 panel_params, layout_info, pidx)
@@ -203,6 +203,9 @@ class ggplot(object):
         layers = self.layers
         scales = self.scales
         layout = self.layout
+
+        # Give each layer a copy of the data that it will need
+        layers.generate_data(self.data)
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data

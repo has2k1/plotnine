@@ -65,7 +65,7 @@ class facet_wrap(facet):
         # facet_wrap gets its labelling at the top
         self.num_vars_x = len(self.vars)
 
-    def train(self, data):
+    def compute_layout(self, data):
         if not self.vars:
             return layout_null()
 
@@ -115,26 +115,26 @@ class facet_wrap(facet):
 
         return layout
 
-    def map(self, data, panel_layout):
+    def map(self, data, layout):
         if not len(data):
             data['PANEL'] = pd.Categorical(
                 [],
-                categories=panel_layout['PANEL'].cat.categories,
+                categories=layout['PANEL'].cat.categories,
                 ordered=True)
             return data
 
         facet_vals = eval_facet_vars(data, self.vars, self.plot.environment)
-        data, facet_vals = add_missing_facets(data, panel_layout,
+        data, facet_vals = add_missing_facets(data, layout,
                                               self.vars, facet_vals)
 
         # assign each point to a panel
-        keys = join_keys(facet_vals, panel_layout, self.vars)
+        keys = join_keys(facet_vals, layout, self.vars)
         data['PANEL'] = match(keys['x'], keys['y'], start=1)
 
         # matching dtype
         data['PANEL'] = pd.Categorical(
             data['PANEL'],
-            categories=panel_layout['PANEL'].cat.categories,
+            categories=layout['PANEL'].cat.categories,
             ordered=True)
         data = data.sort_values('PANEL')
         data.reset_index(drop=True, inplace=True)

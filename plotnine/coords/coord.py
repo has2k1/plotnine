@@ -22,6 +22,58 @@ class coord(object):
         gg.coordinates = copy(self)
         return gg
 
+    def setup_data(self, data):
+        """
+        Allow the coordinate system to manipulate the layer data
+
+        Parameters
+        ----------
+        data : list of dataframes
+            Data for each layer
+
+        Returns
+        -------
+        out : list of dataframes
+            Data for each layer
+        """
+        return data
+
+    def setup_params(self, data):
+        """
+        Create additional parameters
+
+        A coordinate system may need to create parameters
+        depending on the *original* data that the layers get.
+
+        Parameters
+        ----------
+        data : list of dataframes
+            Data for each layer before it is manipulated in
+            any way.
+        """
+        self.params = {}
+
+    def setup_layout(self, layout):
+        """
+        Allow the coordinate system alter the layout dataframe
+
+        Parameters
+        ----------
+        layout : dataframe
+            Dataframe in which data is assigned to panels and scales
+
+        Returns
+        -------
+        out : dataframe
+            layout dataframe altered to according to the requirements
+            of the coordinate system.
+
+        Note
+        ----
+        The input dataframe may be changed.
+        """
+        return layout
+
     def aspect(self, panel_params):
         """
         Return desired aspect ratio for the plot
