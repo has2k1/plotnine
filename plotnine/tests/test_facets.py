@@ -16,6 +16,8 @@ g = (ggplot(df, aes('x', 'y')) +
                 size=5, show_legend=False))
 
 
+# facet_wrap
+
 def test_facet_wrap_one_var():
     p = g + facet_wrap('~var1')
     assert p == 'facet_wrap_one_var'
@@ -41,10 +43,17 @@ def test_facet_wrap_not_as_table():
     assert p == 'facet_wrap_not_as_table'
 
 
-def test_facet_wrap_direction_h():
-    p = g + facet_wrap('~var1', as_table=False)
-    assert p == 'facet_wrap_direction_h'
+def test_facet_wrap_direction_v():
+    p = g + facet_wrap('~var1', dir='v')
+    assert p == 'facet_wrap_direction_v'
 
+
+def test_facet_wrap_not_as_table_direction_v():
+    p = g + facet_wrap('~var1', as_table=False, dir='v')
+    assert p == 'facet_wrap_not_as_table_direction_v'
+
+
+# facet_grid
 
 def test_facet_grid_one_by_one_var():
     p = g + facet_grid('var1~var2')

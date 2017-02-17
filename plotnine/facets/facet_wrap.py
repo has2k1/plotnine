@@ -101,7 +101,7 @@ class facet_wrap(facet):
         # Figure out where axes should go.
         # The bottom-most row of each column and the left most
         # column of each row
-        if self.as_table:
+        if self.as_table or self.dir == 'h':
             x_idx = (df['ROW'].argmax() for _, df in layout.groupby('COL'))
             y_idx = (df['COL'].argmin() for _, df in layout.groupby('ROW'))
         else:
