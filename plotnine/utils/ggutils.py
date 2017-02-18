@@ -14,7 +14,7 @@ from .exceptions import PlotnineError
 
 
 def ggsave(filename=None, plot=None, device=None, format=None,
-           path=None, scale=1, width=None, height=None, units="in",
+           path=None, scale=1, width=None, height=None, units='in',
            dpi=None, limitsize=True, **kwargs):
     """
     Save a ggplot with sensible defaults
@@ -63,42 +63,38 @@ def ggsave(filename=None, plot=None, device=None, format=None,
     """
     fig_kwargs = {'bbox_inches': 'tight'}  # 'tight' is a good default
     fig_kwargs.update(kwargs)
+    figure = [None]  # Python 3 a nonlocal
+
+    # Input verification #
 
     # This is the case when we just use "ggsave(plot)"
     if hasattr(filename, 'draw'):
         plot, filename = filename, plot
 
-    if plot is None:
-        figure = plt.gcf()
+    # dpi
+    if hasattr(plot, 'draw'):
+        from ..themes.theme import theme, theme_get
+        plot.theme = plot.theme or theme_get()
+        if dpi is None:
+            try:
+                dpi = plot.theme.themeables.property('dpi')
+            except KeyError:
+                dpi = 100
+                plot.theme += theme(dpi=dpi)
+        # Should not need this with MPL 2.0
+        fig_kwargs['dpi'] = dpi
     else:
-        if hasattr(plot, 'draw'):
-            from ..themes.theme import theme, theme_get
-            plot.theme = plot.theme or theme_get()
-            if dpi is None:
-                try:
-                    dpi = plot.theme.themeables.property('dpi')
-                except KeyError:
-                    dpi = 100
-                    plot.theme += theme(dpi=dpi)
+        raise PlotnineError("plot is not a ggplot object")
 
-            # Should not need this with MPL 2.0
-            fig_kwargs['dpi'] = dpi
-            figure = plot.draw()
-        else:
-            raise PlotnineError("plot is not a ggplot object")
-
+    # format
     if format and device:
         raise PlotnineError(
-            "Both 'format' and 'device' given: only use one")
-
-    # in the end the image format is in format
-    if device:
+            "Both 'format' and 'device' given: use only one")
+    elif device:
+        # in the end the image format is in format
         format = device
-    if format:
-        if format not in figure.canvas.get_supported_filetypes():
-            raise PlotnineError("Unknown format: {}".format(format))
-        fig_kwargs['format'] = format
 
+    # filename
     print_filename = False
     if filename is None:
         if plot:
@@ -117,68 +113,102 @@ def ggsave(filename=None, plot=None, device=None, format=None,
             raise PlotnineError(
                 "filename is not a string and no format given:",
                 "please supply a format!")
-
     if path:
         filename = os.path.join(path, filename)
 
-    if units not in ['in', 'cm', 'mm']:
+    # units
+    if units not in {'in', 'cm', 'mm'}:
         raise PlotnineError("units not one of 'in', 'cm', or 'mm'")
 
-    to_inch = {'in': lambda x: x,
-               'cm': lambda x: x/2.54,
-               'mm': lambda x: x/(2.54*10)}
-
-    from_inch = {'in': lambda x: x,
-                 'cm': lambda x: x*2.54,
-                 'mm': lambda x: x*2.54*10}
-
-    w, h = figure.get_size_inches()
-    print_size = False
-    if width is None:
-        width = w
-        print_size = True
-    else:
-        width = to_inch[units](width)
-    if height is None:
-        height = h
-        print_size = True
-    else:
-        height = to_inch[units](height)
-
+    # scale
     try:
         scale = float(scale)
     except:
         msg = "Can't convert scale argument to a number: {}"
         raise PlotnineError(msg.format(scale))
 
-    # ggplot2: if you specify a width *and* a scale,
-    # you get the width*scale image!
-    width = width * scale
-    height = height * scale
+    _width, _height = width, height  # Python 3 nonlocal
 
-    if print_size or print_filename:
-        msg = ''
-        if print_size:
-            msg = "\nSaving {0} x {1} {2} image.".format(
-                       from_inch[units](width),
-                       from_inch[units](height),
-                       units)
-        if print_filename:
-            msg += '\nFilename: {}'.format(filename)
+    # The function the does the work #
+    def _ggsave():
+        width, height = _width, _height  # Python 3 nonlocal
 
-        warn(msg)
+        # figure
+        if plot is None:
+            figure[0] = plt.gcf()
+        else:
+            figure[0] = plot.draw()
 
-    if limitsize and (width > 25 or height > 25):
-        msg = ("Dimensions exceed 25 inches "
-               "(height and width are specified in inches/cm/mm, "
-               "not pixels). If you are sure you want these "
-               "dimensions, use 'limitsize=False'.")
-        raise PlotnineError(msg)
+        filetypes = figure[0].canvas.get_supported_filetypes()
+        if format and format not in filetypes:
+            raise PlotnineError("Unknown format: {}".format(format))
 
-    figure.set_size_inches(width, height)
-    figure.savefig(filename, **fig_kwargs)
-    figure.set_size_inches(w, h)
+        fig_kwargs['format'] = format
 
-    # close figure, if it was drawn by ggsave
-    if plot is not None:
-        plt.close(figure)
+        to_inch = {'in': lambda x: x,
+                   'cm': lambda x: x/2.54,
+                   'mm': lambda x: x/(2.54*10)}
+
+        from_inch = {'in': lambda x: x,
+                     'cm': lambda x: x*2.54,
+                     'mm': lambda x: x*2.54*10}
+
+        w, h = figure[0].get_size_inches()
+        print_size = False
+        if width is None:
+            width = w
+            print_size = True
+        else:
+            width = to_inch[units](width)
+
+        if height is None:
+            height = h
+            print_size = True
+        else:
+            height = to_inch[units](height)
+
+        # ggplot2: if you specify a width *and* a scale,
+        # you get the width*scale image!
+        width = width * scale
+        height = height * scale
+
+        if print_size or print_filename:
+            msg = ''
+            if print_size:
+                msg = "\nSaving {0} x {1} {2} image.".format(
+                           from_inch[units](width),
+                           from_inch[units](height),
+                           units)
+            if print_filename:
+                msg += '\nFilename: {}'.format(filename)
+
+            warn(msg)
+
+        if limitsize and (width > 25 or height > 25):
+            msg = ("Dimensions exceed 25 inches "
+                   "(height and width are specified in inches/cm/mm, "
+                   "not pixels). If you are sure you want these "
+                   "dimensions, use 'limitsize=False'.")
+            raise PlotnineError(msg)
+
+        figure[0].set_size_inches(width, height)
+        figure[0].savefig(filename, **fig_kwargs)
+        figure[0].set_size_inches(w, h)
+
+    # Call to main method wrapped in clean-up code #
+
+    def close_figure():
+        """
+        Any figure created in this function is closed before exit
+        """
+        # close figure, if it was drawn by ggsave
+        if plot is not None and figure[0] is not None:
+            plt.close(figure[0])
+
+    try:
+        _ggsave()
+    except Exception as err:
+        close_figure()
+        raise err
+    else:
+        close_figure()
