@@ -1,18 +1,9 @@
 from __future__ import absolute_import, division, print_function
-from textwrap import dedent
+from textwrap import dedent, wrap
 from collections import OrderedDict
 
 import numpy as np
 import six
-
-
-def indent(txt, level=1):
-    """
-    Indent text
-    """
-    tpl = ' '*(level*4) + '{}'
-    lines = [tpl.format(line) for line in txt.split('\n')]
-    return '\n'.join(lines)
 
 
 def dict_to_table(header, contents):
@@ -77,6 +68,70 @@ def fillin_documentation(docstring, documentation_text):
     return new_docstring
 
 
+def make_signature(name, params, preferred, default_values):
+    tokens = []
+    seen = set()
+
+    def tokens_append(key, value):
+        if isinstance(value, six.string_types):
+            value = "'{}'".format(value)
+        tokens.append('{}={}'.format(key, value))
+
+    # preferred params come first
+    for key in preferred:
+        seen.add(key)
+        try:
+            value = params[key]
+        except KeyError:
+            value = default_values[key]
+        tokens_append(key, value)
+
+    # other params (these are the geom/stat specific parameters
+    for key in (set(params) - seen):
+        tokens_append(key, params[key])
+
+    # name, 1 opening bracket, 4 spaces in SIGNATURE_TPL
+    s1 = name + '('
+    s2 = ', '.join(tokens) + ', **kwargs)'
+    line_width = 78 - len(s1)
+    indent_spaces = ' ' * (len(s1) + 4)
+    s2_lines = wrap(s2, width=line_width, subsequent_indent=indent_spaces)
+    return s1 + '\n'.join(s2_lines)
+
+
+GEOM_SIGNATURE_TPL = """
+.. rubric:: Usage
+
+::
+
+    {signature}
+
+Only the ``mapping`` and ``data`` can be positional, the rest must
+be keyword arguments. ``**kwargs`` can be aesthetics (or parameters)
+used by the ``stat``.
+"""
+
+AESTHETICS_TPL = """
+.. rubric:: Aesthetics
+
+{aesthetics_table}
+
+The **bold** aesthetics are required.
+"""
+
+STAT_SIGNATURE_TPL = """
+.. rubric:: Usage
+
+::
+
+    {signature}
+
+Only the ``mapping`` and ``data`` can be positional, the rest must
+be keyword arguments. ``**kwargs`` can be aesthetics (or parameters)
+used by the ``geom``.
+"""
+
+
 def get_geom_documentation(geom):
     """
     Create a structured documentation for the geom
@@ -86,35 +141,13 @@ def get_geom_documentation(geom):
         return ''
 
     def usage():
-        name = geom.__name__
-        line1 = ("{name}(mapping=None, data=None, stat='{stat}', "
-                 "position='{position}', ").format(
-                 name=name,
-                 stat=geom.DEFAULT_PARAMS['stat'],
-                 position=geom.DEFAULT_PARAMS['position'])
-
-        line2 = ("show_legend={show_legend}, inherit_aes={inherit_aes}, "
-                 "**kwargs)").format(
-                     indent=' '*(len(name)+1),
-                     show_legend=geom.DEFAULT_PARAMS.get('show_legend', None),
-                     inherit_aes=geom.DEFAULT_PARAMS.get('inherit_aes', True))
-
-        out = """
-        .. rubric:: Usage
-
-        ::
-
-            {line1}
-            {indent}{line2}
-
-        Only the ``mapping`` and ``data`` can be positional, the
-        ``**kwargs`` can be aesthetics (or parameters) used by ``geom``,
-        or if the ``geom`` does not recognise them, they are passed on to
-        the ``stat``.
-        """.format(indent=' '*(len(name)+1),
-                   line1=line1,
-                   line2=line2)
-        return out
+        preferred = ['mapping', 'data', 'stat', 'position',
+                     'na_rm', 'inherit_aes', 'show_legend']
+        default_values = {'mapping': None, 'data': None,
+                          'inherit_aes': True, 'show_legend': None}
+        signature = make_signature(geom.__name__, geom.DEFAULT_PARAMS,
+                                   preferred, default_values)
+        return GEOM_SIGNATURE_TPL.format(signature=signature)
 
     def aesthetics():
         contents = OrderedDict(('**{}**'.format(ae), '')
@@ -122,25 +155,9 @@ def get_geom_documentation(geom):
         contents.update(sorted(geom.DEFAULT_AES.items()))
         table = dict_to_table(('Aesthetic', 'Default value'),
                               contents)
-        table = indent(table, 2)
-        out = """
-        .. rubric:: Aesthetics \n\n{table}\n
+        return AESTHETICS_TPL.format(aesthetics_table=table)
 
-        The **bold** aesthetics are required.
-        """.format(table=table)
-        return out
-
-    def parameters():
-        params = OrderedDict(sorted(geom.DEFAULT_PARAMS.items()))
-        table = dict_to_table(('Parameter', 'Default value'),
-                              params)
-        table = indent(table, 2)
-        out = """
-        .. rubric:: Parameters \n\n{table}\n
-        """.format(table=table)
-        return out
-
-    return ''.join([usage(), aesthetics(), parameters()])
+    return ''.join([usage(), aesthetics()])
 
 
 def get_stat_documentation(stat):
@@ -152,59 +169,22 @@ def get_stat_documentation(stat):
         return ''
 
     def usage():
-        name = stat.__name__
-        line1 = ("{name}(mapping=None, data=None, geom='{geom}', "
-                 "position='{position}', ").format(
-                     name=name,
-                     geom=stat.DEFAULT_PARAMS['geom'],
-                     position=stat.DEFAULT_PARAMS['position'])
-        line2 = '**kwargs)'
-        out = """
-        .. rubric:: Usage
-
-        ::
-
-            {line1}
-            {indent}{line2}
-
-        Only the ``mapping`` and ``data`` can be positional, the
-        ``**kwargs`` can be aesthetics (or parameters) used by ``stat``,
-        or if the ``stat`` does not recognise them, they are passed on to
-        the ``geom``.
-        """.format(indent=' '*(len(name)+1),
-                   line1=line1,
-                   line2=line2)
-        return out
+        preferred = ['mapping', 'data', 'geom', 'position']
+        default_values = {'mapping': None, 'data': None,
+                          'inherit_aes': True, 'show_legend': None}
+        signature = make_signature(stat.__name__, stat.DEFAULT_PARAMS,
+                                   preferred, default_values)
+        return STAT_SIGNATURE_TPL.format(signature=signature)
 
     def aesthetics():
         contents = OrderedDict(('**{}**'.format(ae), '')
                                for ae in sorted(stat.REQUIRED_AES))
         contents.update(sorted(stat.DEFAULT_AES.items()))
-
-        if not contents:
-            return ''
-
         table = dict_to_table(('Aesthetic', 'Default value'),
                               contents)
-        table = indent(table, 2)
-        out = """
-        .. rubric:: Aesthetics \n\n{table}\n
+        return AESTHETICS_TPL.format(aesthetics_table=table)
 
-        The **bold** aesthetics are required.
-        """.format(table=table)
-        return out
-
-    def parameters():
-        params = OrderedDict(sorted(stat.DEFAULT_PARAMS.items()))
-        table = dict_to_table(('Parameter', 'Default value'),
-                              params)
-        table = indent(table, 2)
-        out = """
-        .. rubric:: Parameters \n\n{table}\n
-        """.format(table=table)
-        return out
-
-    return ''.join([usage(), aesthetics(), parameters()])
+    return ''.join([usage(), aesthetics()])
 
 
 def document(klass):
