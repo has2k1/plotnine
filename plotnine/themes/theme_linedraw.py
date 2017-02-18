@@ -8,7 +8,7 @@ class theme_linedraw(theme_gray):
     A theme with only black lines of various widths on white backgrounds
     """
 
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(theme(
             axis_text=element_text(color='black', size=base_size*0.8),

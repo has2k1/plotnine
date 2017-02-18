@@ -9,7 +9,7 @@ class theme_classic(theme_bw):
     no gridlines.
     """
 
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_bw.__init__(self, base_size, base_family)
         self.add_theme(
             theme(panel_border=element_blank(),

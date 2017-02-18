@@ -13,7 +13,7 @@ class theme_gray(theme):
 
     This is the default theme
     """
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         half_line = base_size/2
         # super does not work well with reloads
         theme.__init__(

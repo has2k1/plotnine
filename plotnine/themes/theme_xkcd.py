@@ -15,7 +15,7 @@ class theme_xkcd(theme_gray):
     Parameters
     ----------
     """
-    def __init__(self, base_size=14, scale=1, length=100, randomness=2):
+    def __init__(self, base_size=12, scale=1, length=100, randomness=2):
         theme_gray.__init__(self, base_size)
         self.add_theme(
             theme(

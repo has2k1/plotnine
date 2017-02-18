@@ -8,7 +8,7 @@ class theme_538(theme_gray):
     """
     Theme in the likeness of fivethirtyeight.com plots
     """
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
         bgcolor = '#F0F0F0'
         self.add_theme(

@@ -8,7 +8,7 @@ class theme_minimal(theme_bw):
     A minimalistic theme with no background annotations
     """
 
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_bw.__init__(self, base_size, base_family)
         self.add_theme(
             theme(legend_background=element_blank(),

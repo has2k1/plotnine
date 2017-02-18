@@ -9,7 +9,7 @@ class theme_void(theme):
     no gridlines.
     """
 
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         # Use only inherited elements and make everything blank
         theme.__init__(
             self,

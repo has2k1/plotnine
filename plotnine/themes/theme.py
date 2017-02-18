@@ -9,7 +9,7 @@ from .themeable import themeable, Themeables
 # can be overridden.
 default_rcparams = {
     'axes.axisbelow': 'True',
-    'font.sans-serif': ['Helvetica', 'Avant Garde',
+    'font.sans-serif': ['DejaVu Sans', 'Helvetica', 'Avant Garde',
                         'Computer Modern Sans serif', 'Arial'],
     'font.serif': ['Times', 'Palatino',
                    'New Century Schoolbook', 'Bookman',

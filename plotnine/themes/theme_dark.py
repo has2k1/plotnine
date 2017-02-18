@@ -10,7 +10,7 @@ class theme_dark(theme_gray):
     lines pop out.
     """
 
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(theme(
             axis_ticks=element_line(color='#666666', size=0.5),

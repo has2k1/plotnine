@@ -9,7 +9,7 @@ class theme_light(theme_gray):
     lines and axes to direct more attention towards the data.
     """
 
-    def __init__(self, base_size=12, base_family='sans-serif'):
+    def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(theme(
             axis_ticks=element_line(color='#B3B3B3', size=0.5),
