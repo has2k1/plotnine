@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -16,6 +17,65 @@ class stat_smooth(stat):
 
     {documentation}
 
+    Parameters
+    ----------
+    method : str or callable, optional
+        The available methods are::
+
+            'lm', 'ols'  # Linear Model
+            'wls'        # Weighted Linear Model
+            'rlm'        # Robust Linear Model
+            'glm'        # Generalized linear Model
+            'gls'        # Generalized Least Squares
+            'lowess'     # Locally Weighted Regression (simple)
+            'loess'      # Locally Weighted Regression
+            'mavg'       # Moving Average
+            'gpr'        # Gaussian Process Regressor
+
+        If a `callable` is passed, it must have the signature::
+
+            def my_smoother(data, xseq, **params):
+                # * data - has the x and y values for the model
+                # * xseq - x values to be predicted
+                # * params - stat parameters
+                #
+                # It must return a new dataframe. Below is the
+                # template used internally by Plotnine
+
+                # Input data into the model
+                x, y = data['x'], data['y']
+
+                # Create and fit a model
+                model = Model(x, y)
+                results = Model.fit()
+
+                # Create output data by getting predictions on
+                # the xseq values
+                data = pd.DataFrame({
+                    'x': xseq,
+                    'y': results.predict(xseq)})
+
+                # Compute confidence intervals, this depends on
+                # the model. However, given standard errors and the
+                # degrees of freedom we can compute the confidence
+                # intervals using the t-distribution.
+                #
+                # For an alternative, implement confidence interals by
+                # the bootstrap method
+                if params['se']:
+                    from plotnine.utils.smoothers import tdist_ci
+                    y = data['y']            # The predicted value
+                    df = 123                 # Degrees of freedom
+                    stderr = results.stderr  # Standard error
+                    level = params['level']  # The parameter value
+                    low, high = tdist_ci(y, df, stderr, level)
+                    data['se'] = stderr
+                    data['ymin'] = low
+                    data['ymax'] = high
+
+                return data
+
+
     Note
     ----
     :class:`~plotnine.geoms.geom_smooth` and :class:`.stat_smooth` are
@@ -27,42 +87,66 @@ class stat_smooth(stat):
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
                       'method': 'auto', 'se': True, 'n': 80,
                       'fullrange': False, 'level': 0.95,
-                      'span': 2/3., 'window': None}
-    CREATES = {'ymin', 'ymax'}
+                      'span': 2/3., 'method_args': {}}
+    CREATES = {'se', 'ymin', 'ymax'}
+
+    def setup_data(self, data):
+        """
+        Overide to modify data before compute_layer is called
+        """
+        data = data[np.isfinite(data['x']) &
+                    np.isfinite(data['y'])]
+        data.is_copy = None
+        return data
+
+    def setup_params(self, data):
+        params = self.params.copy()
+        # Use loess/lowess for small datasets
+        # and glm for large
+        if params['method'] == 'auto':
+            max_group = data['group'].value_counts().max()
+            if max_group < 1000:
+                try:
+                    from skmisc.loess import loess  # noqa: F401
+                    params['method'] = 'loess'
+                except ImportError:
+                    params['method'] = 'lowess'
+            else:
+                params['method'] = 'glm'
+
+        if params['method'] == 'mavg':
+            if 'window' not in params['method_args']:
+                window = len(data) // 10
+                warnings.warn(
+                    "No 'window' specified in the method_args. "
+                    "Using window = {}. "
+                    "The same window is used for all groups or "
+                    "facets".format(window))
+                params['method_args']['window'] = window
+
+        return params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        # sort data by x and
-        # convert x and y to lists so that the Series index
-        # does not mess with the smoothing functions
         data = data.sort_values('x')
-        x = list(data.pop('x'))
-        y = list(data.pop('y'))
+        n = params['n']
 
-        se = params['se']
-        level = params['level']
-        method = params['method']
-        span = params['span']
-        window = params['window']
-        weight = data.get('weight', 1)  # should make use of this
+        x_unique = data['x'].unique()
 
-        if window is None:
-            window = int(np.ceil(len(x) / 10.0))
+        if len(x_unique) < 2:
+            # Not enough data to fit
+            return pd.DataFrame()
 
-        # TODO: fix the smoothers
-        #   - lm : y1, y2 are NaNs
-        #   - mvg: investigate unexpected looking output
-        if method == "lm":
-            x, y, y1, y2 = smoothers.lm(x, y, 1-level)
-        elif method == "ma":
-            x, y, y1, y2 = smoothers.mavg(x, y, window=window)
+        if data['x'].dtype.kind == 'i':
+            if params['fullrange']:
+                xseq = scales.x.dimension()
+            else:
+                xseq = np.sort(x_unique)
         else:
-            # TODO: deal with timestamp
-            x, y, y1, y2 = smoothers.lowess(x, y, span=span)
+            if params['fullrange']:
+                rangee = scales.x.dimension()
+            else:
+                rangee = [data['x'].min(), data['x'].max()]
+            xseq = np.linspace(rangee[0], rangee[1], n)
 
-        new_data = pd.DataFrame({'x': x, 'y': y})
-        if se:
-            new_data['ymin'] = y1
-            new_data['ymax'] = y2
-
-        return new_data
+        return smoothers.predictdf(data, xseq, **params)
