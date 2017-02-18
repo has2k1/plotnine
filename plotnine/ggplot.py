@@ -73,6 +73,7 @@ class ggplot(object):
         self.coordinates = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = None
+        self.figure = None
 
     def __repr__(self):
         """
@@ -138,17 +139,22 @@ class ggplot(object):
         # If no theme we use the default
         self.theme = self.theme or theme_get()
 
-        with mpl.rc_context():
-            # rcparams theming
-            self.theme.apply_rcparams()
-            # Drawing
-            self.draw_plot()
-            self.draw_legend()
-            self.draw_labels()
-            self.draw_title()
-            # Artist object theming
-            self.theme.apply_axs(self.axs)
-            self.theme.apply_figure(self.figure)
+        try:
+            with mpl.rc_context():
+                # rcparams theming
+                self.theme.apply_rcparams()
+                # Drawing
+                self.draw_plot()
+                self.draw_legend()
+                self.draw_labels()
+                self.draw_title()
+                # Artist object theming
+                self.theme.apply_axs(self.axs)
+                self.theme.apply_figure(self.figure)
+        except Exception as err:
+            if self.figure is not None:
+                plt.close(self.figure)
+            raise err
 
         return self.figure
 

@@ -62,13 +62,13 @@ def test_ggplot_parameters():
 def test_data_transforms():
     p = ggplot(aes(x='x', y='np.log(y)'), df)
     p = p + geom_point()
-    p.draw()
+    p.draw_test()
 
     with pytest.raises(Exception):
         # no numpy available
         p = ggplot(aes(x='depth', y="ap.log(price)"), df)
         p = p + geom_point()
-        p.draw()
+        p.draw_test()
 
 
 def test_deepcopy():
@@ -122,7 +122,7 @@ def test_nonzero_indexed_data():
     df = pd.DataFrame({98: {'blip': 0, 'blop': 1},
                        99: {'blip': 1, 'blop': 3}}).T
     p = ggplot(aes(x='blip', y='blop'), data=df) + geom_line()
-    p.draw()
+    p.draw_test()
 
 
 def test_inplace_add():

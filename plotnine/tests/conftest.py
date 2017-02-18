@@ -99,6 +99,27 @@ def ggplot_equals(gg, right):
 ggplot.__eq__ = ggplot_equals
 
 
+def draw_test(self):
+    """
+    Compare ggplot object to image determined by `right`
+
+    Parameters
+    ----------
+    self : ggplot
+        ggplot object
+
+    This function is meant to monkey patch ggplot.draw_test
+    so that tests can draw and not care about cleaning up
+    the MPL figure.
+    """
+    figure = self.draw()
+    if figure:
+        plt.close(figure)
+
+
+ggplot.draw_test = draw_test
+
+
 def pytest_assertrepr_compare(op, left, right):
     if (isinstance(left, ggplot) and
             isinstance(right, (six.string_types, tuple)) and

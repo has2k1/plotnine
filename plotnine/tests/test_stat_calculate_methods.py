@@ -17,11 +17,11 @@ def test_stat_bin():
     gg = ggplot(aes(x='x'), df) + stat_bin()
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter('always')
-        gg.draw()
+        gg.draw_test()
         res = ['bins' in str(item.message).lower() for item in w]
         assert any(res)
 
     # About the ignoring the y aesthetic
     gg = ggplot(aes(x='x', y='y'), df) + stat_bin()
     with pytest.raises(PlotnineError):
-        gg.draw()
+        gg.draw_test()
