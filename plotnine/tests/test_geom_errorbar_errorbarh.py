@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_errorbar, geom_errorbarh
+from plotnine import ggplot, aes, geom_errorbar, geom_errorbarh, theme
 
 n = 4
 df = pd.DataFrame({
@@ -11,6 +11,7 @@ df = pd.DataFrame({
         'ymax': range(2, 2*n+2, 2),
         'z': range(n)
     })
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_errorbar_aesthetics():
@@ -22,7 +23,7 @@ def test_errorbar_aesthetics():
          geom_errorbar(aes('x+4', size='z'))
          )
 
-    assert p == 'errorbar_aesthetics'
+    assert p + _theme == 'errorbar_aesthetics'
 
 
 def test_errorbarh_aesthetics():
@@ -34,4 +35,4 @@ def test_errorbarh_aesthetics():
          geom_errorbarh(aes(y='x+4', size='z'))
          )
 
-    assert p == 'errorbarh_aesthetics'
+    assert p + _theme == 'errorbarh_aesthetics'

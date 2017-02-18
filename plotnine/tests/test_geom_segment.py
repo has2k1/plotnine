@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_segment, arrow
+from plotnine import ggplot, aes, geom_segment, arrow, theme
 
 
 n = 4
@@ -15,6 +15,7 @@ df = pd.DataFrame({
         'yend': range(n, 0, -1),
         'z': range(1, n+1)
     })
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -28,7 +29,7 @@ def test_aesthetics():
          geom_segment(aes(yend='yend+4', alpha='z'), size=2,
                       show_legend=False))
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'
 
 
 def test_arrow():

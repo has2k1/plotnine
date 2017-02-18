@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_polygon
+from plotnine import ggplot, aes, geom_polygon, theme
 
 df = pd.DataFrame({
         'x': ([1, 2, 3, 2] +
@@ -13,6 +13,7 @@ df = pd.DataFrame({
               [1.5, 2.5, 3, 2.5, 1.5, 1]),
         'z': ([1]*4 + [2]*3 + [3]*6)
     })
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -27,4 +28,4 @@ def test_aesthetics():
          geom_polygon(aes(y='y+15', size='z'),
                       color='yellow', show_legend=False))
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'

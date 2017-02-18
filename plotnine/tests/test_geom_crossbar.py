@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_crossbar
+from plotnine import ggplot, aes, geom_crossbar, theme
 
 n = 4
 df = pd.DataFrame({
@@ -12,6 +12,8 @@ df = pd.DataFrame({
         'ymax': range(2, 2*n+2, 2),
         'z': range(n)
     })
+
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -24,4 +26,4 @@ def test_aesthetics():
          geom_crossbar(aes('x+4', size='z'))
          )
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'

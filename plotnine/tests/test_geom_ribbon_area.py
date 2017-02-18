@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from plotnine import (ggplot, aes, geom_area, geom_ribbon,
-                      scale_x_continuous)
+                      scale_x_continuous, theme)
 
 n = 4            # No. of ribbions in a vertical stack
 m = 100          # Points
@@ -17,6 +17,7 @@ df = pd.DataFrame({
         'ymax': np.hstack([np.sin(x)+2*i+1 for i in range(n)]),
         'z': np.repeat(range(n), m)
     })
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_ribbon_aesthetics():
@@ -36,7 +37,7 @@ def test_ribbon_aesthetics():
              labels=['0'] + ['${}\pi$'.format(2*i) for i in range(1, 7)])
          )
 
-    assert p == 'ribbon_aesthetics'
+    assert p + _theme == 'ribbon_aesthetics'
 
 
 def test_area_aesthetics():
@@ -55,4 +56,4 @@ def test_area_aesthetics():
              labels=['0'] + ['${}\pi$'.format(2*i) for i in range(1, 7)])
          )
 
-    assert p == 'area_aesthetics'
+    assert p + _theme == 'area_aesthetics'

@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import numpy as np
 
-from plotnine import ggplot, aes, geom_spoke
+from plotnine import ggplot, aes, geom_spoke, theme
 
 n = 4
 df = pd.DataFrame({
@@ -13,6 +13,7 @@ df = pd.DataFrame({
         'radius': range(1, n+1),
         'z': range(n)
     })
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -23,4 +24,4 @@ def test_aesthetics():
          geom_spoke(aes('x+6', color='factor(z)'), size=2) +
          geom_spoke(aes('x+8', size='z')))
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from plotnine import ggplot, aes, geom_bar, geom_col, geom_histogram
+from plotnine import theme
 
 n = 10  # Some even number greater than 2
 
@@ -11,12 +12,13 @@ n = 10  # Some even number greater than 2
 df = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                    'z': np.repeat(range(n//2), range(3, n*2, 4))})
 
+_theme = theme(facet_spacing={'right': 0.85})
+
 
 def test_bar_count():
-    p = (ggplot(df, aes('x')) +
-         geom_bar(aes(fill='factor(z)')))
+    p = ggplot(df, aes('x')) + geom_bar(aes(fill='factor(z)'))
 
-    assert p == 'bar-count'
+    assert p + _theme == 'bar-count'
 
 
 def test_col():
@@ -25,11 +27,11 @@ def test_col():
     p = (ggplot(df) +
          geom_col(aes('x', 'z', fill='factor(z)'), color='black'))
 
-    assert p == 'col'
+    assert p + _theme == 'col'
 
 
 def test_histogram_count():
     p = (ggplot(df, aes('x')) +
          geom_histogram(aes(fill='factor(z)'), bins=n))
 
-    assert p == 'histogram-count'
+    assert p + _theme == 'histogram-count'

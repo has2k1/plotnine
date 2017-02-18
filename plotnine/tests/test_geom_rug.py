@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_rug
+from plotnine import ggplot, aes, geom_rug, theme
 
 n = 4
 seq = np.arange(1, n+1)
@@ -12,6 +12,7 @@ df = pd.DataFrame({
         'y': seq,
         'z': seq,
     })
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -26,4 +27,4 @@ def test_aesthetics():
          geom_rug(aes('x+8*n', 'y+8*n', size='z'),
                   sides='tblr'))
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'
