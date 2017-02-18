@@ -36,6 +36,7 @@ class coord_flip(coord_cartesian):
         # switch the scales
         x, y = 'SCALE_X', 'SCALE_Y'
         layout[x], layout[y] = layout[y], layout[x]
+        return layout
 
     def range(self, panel_params):
         """
