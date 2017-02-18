@@ -32,6 +32,10 @@ if not os.path.exists(os.path.join(
         "test data.")
 
 
+def raise_no_baseline_image(filename):
+    raise Exception("Baseline image {} is missing".format(filename))
+
+
 def ggplot_equals(gg, right):
     """
     Compare ggplot object to image determined by `right`
@@ -82,8 +86,9 @@ def ggplot_equals(gg, right):
     if os.path.exists(filenames.baseline):
         shutil.copyfile(filenames.baseline, filenames.expected)
     else:
-        msg = "Baseline image {} is missing"
-        raise Exception(msg.format(filenames.baseline))
+        # Putting the exception in short function makes for
+        #  short pytest error messages
+        raise_no_baseline_image(filenames.baseline)
 
     err = compare_images(filenames.expected, filenames.result,
                          tol, in_decorator=True)
