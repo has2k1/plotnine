@@ -28,7 +28,7 @@ class theme_seaborn(theme):
                        aspect_ratio=get_option('aspect_ratio'),
                        dpi=get_option('dpi'),
                        figure_size=get_option('figure_size'),
-                       panel_margin=0.1,
+                       panel_spacing=0.1,
                        complete=True)
         d = seaborn_set(context=context, style=style,
                         font=font, font_scale=font_scale)

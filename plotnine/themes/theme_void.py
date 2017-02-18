@@ -23,7 +23,7 @@ class theme_void(theme):
             dpi=get_option('dpi'),
             figure_size=get_option('figure_size'),
             plot_margin=None,
-            panel_margin=0,
+            panel_spacing=0,
             axis_text_x=element_blank(),
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),

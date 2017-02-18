@@ -31,7 +31,7 @@ class theme_matplotlib(theme):
             dpi=get_option('dpi'),
             figure_size=get_option('figure_size'),
             legend_key=element_rect(fill='None', colour='None'),
-            panel_margin=0.1,
+            panel_spacing=0.1,
             strip_background=element_rect(
                 fill='#D9D9D9', color='#D9D9D9', size=1),
             complete=True)
