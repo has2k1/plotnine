@@ -9,7 +9,13 @@ class geom_qq(geom_point):
     """
     Quantile-Quantile plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = {'stat': 'qq', 'position': 'identity',
                       'na_rm': False}

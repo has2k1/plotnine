@@ -15,7 +15,13 @@ class geom_abline(geom):
     """
     Lines specified by slope and intercept
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'alpha': 1, 'size': 0.5}

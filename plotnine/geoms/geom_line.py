@@ -10,7 +10,13 @@ class geom_line(geom_path):
     """
     Connected points
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
 
     def setup_data(self, data):

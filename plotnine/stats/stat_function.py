@@ -15,7 +15,13 @@ class stat_function(stat):
     """
     Superimpose a function onto a plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
                       'fun': None, 'n': 101, 'args': None,

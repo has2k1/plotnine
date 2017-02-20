@@ -13,7 +13,13 @@ class geom_rug(geom):
     """
     Marginal rug plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}

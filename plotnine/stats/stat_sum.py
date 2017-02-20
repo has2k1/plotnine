@@ -14,7 +14,13 @@ class stat_sum(stat):
 
     Useful for overplotting on scatterplots.
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

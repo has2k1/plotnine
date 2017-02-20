@@ -120,11 +120,11 @@ class stat_summary(stat):
     """
     Calculate summary statistics depending on x
 
-    {documentation}
+    {usage}
 
     Parameters
     ----------
-
+    {common_parameters}
     fun_data : string or function
         One of ``"mean_cl_boot"``, ``"mean_cl_normal"``,
         ``"mean_sdl"``, ``"median_hilow"`` or any function that takes a
@@ -136,6 +136,8 @@ class stat_summary(stat):
         Any function that takes a pandas series and returns a value
     fun_ymax : function
         Any function that takes a pandas series and returns a value
+
+    {aesthetics}
 
     Note
     ----

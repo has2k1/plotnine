@@ -18,7 +18,13 @@ class stat_bin_2d(stat):
     """
     2 Dimensional bin counts
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

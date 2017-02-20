@@ -17,7 +17,13 @@ class stat_ydensity(stat):
     """
     Density estimate
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     See Also
     --------

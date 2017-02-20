@@ -15,7 +15,13 @@ class geom_smooth(geom):
     """
     A smoothed conditional mean
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
                    'linetype': 'solid', 'size': 1,

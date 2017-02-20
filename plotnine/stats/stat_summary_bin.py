@@ -18,7 +18,13 @@ class stat_summary_bin(stat):
     """
     Summarise y values at x intervals
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     See Also
     --------

@@ -17,7 +17,13 @@ class geom_text(geom):
     """
     Textual annotations
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
                    'size': 11, 'lineheight': 1.2}

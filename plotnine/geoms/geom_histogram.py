@@ -10,7 +10,13 @@ class geom_histogram(geom_bar):
     """
     Histogram
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack',
                       'na_rm': False}

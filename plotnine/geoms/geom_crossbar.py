@@ -21,7 +21,13 @@ class geom_crossbar(geom):
     """
     Vertical interval represented by a crossbar
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 0.5}

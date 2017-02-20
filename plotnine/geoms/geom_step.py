@@ -15,7 +15,13 @@ class geom_step(geom_path):
     """
     Stepped connected points
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'direction': 'hv', 'na_rm': False}

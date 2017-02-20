@@ -18,7 +18,13 @@ class stat_density(stat):
     """
     Compute density estimate
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

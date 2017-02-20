@@ -15,7 +15,13 @@ class geom_hline(geom):
     """
     Horizontal line
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'size': 0.5, 'alpha': 1}

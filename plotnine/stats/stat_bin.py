@@ -14,7 +14,13 @@ class stat_bin(stat):
     """
     Count cases in each interval
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

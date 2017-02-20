@@ -14,7 +14,13 @@ class stat_ecdf(stat):
     """
     Emperical Cumulative Density Function
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

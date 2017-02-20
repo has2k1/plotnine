@@ -13,6 +13,12 @@ class geom_freqpoly(geom_path):
     """
     Frequency polygon
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = _params

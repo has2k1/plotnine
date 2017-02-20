@@ -13,7 +13,13 @@ class geom_pointrange(geom):
     """
     Vertical interval represented by a line with a point
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
 
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,

@@ -20,7 +20,13 @@ class geom_path(geom):
     """
     Connected points
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     See Also
     --------

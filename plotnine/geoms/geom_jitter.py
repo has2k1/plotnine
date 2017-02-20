@@ -12,7 +12,13 @@ class geom_jitter(geom_point):
     """
     Scatter plot with points jittered to reduce overplotting
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     See Also
     --------

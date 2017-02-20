@@ -14,7 +14,13 @@ class geom_col(geom_bar):
     you want the height of the bar to represent a count of cases,
     use :class:`geom_bar`.
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',

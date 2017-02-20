@@ -12,7 +12,13 @@ class geom_spoke(geom_segment):
     """
     Line segment parameterised by location, direction and distance
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     REQUIRED_AES = {'x', 'y', 'angle', 'radius'}
 

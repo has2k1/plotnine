@@ -14,7 +14,13 @@ class geom_area(geom_ribbon):
     where the minimum of the range is fixed to 0,
     and the position adjustment defaults to 'stack'.
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',

@@ -10,7 +10,13 @@ class geom_quantile(geom_path):
     """
     Quantile lines from a quantile regression
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': '#3366FF',
                    'linetype': 'solid', 'size': 0.5}

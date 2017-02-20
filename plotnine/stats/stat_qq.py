@@ -14,7 +14,13 @@ class stat_qq(stat):
     """
     Calculation for quantile-quantile plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

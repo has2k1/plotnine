@@ -15,7 +15,11 @@ class stat_smooth(stat):
     """
     Calculate a smoothed conditional mean
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
 
     Parameters
     ----------
@@ -75,6 +79,7 @@ class stat_smooth(stat):
 
                 return data
 
+    {aesthetics}
 
     Note
     ----

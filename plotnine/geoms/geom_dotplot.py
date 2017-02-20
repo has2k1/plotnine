@@ -17,7 +17,13 @@ class geom_dotplot(geom):
     """
     Dot plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}

@@ -18,7 +18,13 @@ class stat_bindot(stat):
     """
     Binning for a dot plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

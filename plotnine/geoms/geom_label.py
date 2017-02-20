@@ -28,7 +28,13 @@ class geom_label(geom_text):
     """
     Textual annotations with a bacground
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = _aes
     DEFAULT_PARAMS = _params

@@ -10,7 +10,13 @@ class stat_unique(stat):
     """
     Remove duplicates
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}
 

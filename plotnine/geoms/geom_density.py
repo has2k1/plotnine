@@ -10,7 +10,13 @@ class geom_density(geom_area):
     """
     Smooth density estimate
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}

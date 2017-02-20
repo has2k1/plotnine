@@ -17,7 +17,13 @@ class geom_violin(geom):
     """
     Violin Plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}

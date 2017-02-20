@@ -16,7 +16,13 @@ class geom_vline(geom):
     """
     Vertical line
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
                    'size': 0.5, 'alpha': 1}

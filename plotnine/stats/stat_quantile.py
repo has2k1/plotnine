@@ -16,7 +16,14 @@ class stat_quantile(stat):
     """
     Compute quantile regression lines
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
+
 
     See Also
     --------

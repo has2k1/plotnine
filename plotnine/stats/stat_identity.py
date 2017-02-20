@@ -10,7 +10,13 @@ class stat_identity(stat):
     """
     Identity (do nothing) statistic
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}
 

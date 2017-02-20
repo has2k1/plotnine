@@ -16,7 +16,13 @@ class stat_boxplot(stat):
     """
     Compute boxplot statistics
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     See Also
     --------

@@ -15,7 +15,13 @@ class stat_count(stat):
     """
     Counts the number of cases at each x position
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 

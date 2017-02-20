@@ -11,7 +11,13 @@ class geom_bar(geom_rect):
     """
     Bar plot
 
-    {documentation}
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+
+    {aesthetics}
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
