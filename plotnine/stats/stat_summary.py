@@ -92,12 +92,7 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     if isinstance(fun_data, string_types):
         fun_data = function_dict[fun_data]
 
-    if fun_data:
-        kwargs = get_valid_kwargs(fun_data, fun_args)
-
-        def func(df):
-            return fun_data(df['y'], **kwargs)
-    elif any([fun_y, fun_ymin, fun_ymax]):
+    if any([fun_y, fun_ymin, fun_ymax]):
 
         def func(df):
             d = {}
@@ -111,6 +106,11 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
                 kwargs = get_valid_kwargs(fun_ymax, fun_args)
                 d['ymax'] = [fun_ymax(df['y'], **kwargs)]
             return pd.DataFrame(d)
+    elif fun_data:
+        kwargs = get_valid_kwargs(fun_data, fun_args)
+
+        def func(df):
+            return fun_data(df['y'], **kwargs)
 
     return func
 
@@ -152,13 +152,16 @@ class stat_summary(stat):
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
                       'fun_data': None, 'fun_y': None,
                       'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': dict()}
+                      'fun_args': None}
     CREATES = {'ymin', 'ymax'}
 
     def setup_params(self, data):
         keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
         if not any(self.params[k] for k in keys):
             raise PlotnineError('No summary function')
+
+        if self.params['fun_args'] is None:
+            self.params['fun_args'] = {}
 
         return self.params
 
