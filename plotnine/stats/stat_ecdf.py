@@ -42,26 +42,11 @@ class stat_ecdf(stat):
     def compute_group(cls, data, scales, **params):
         # If n is None, use raw values; otherwise interpolate
         if params['n'] is None:
-            xvals = np.unique(data['x'])
+            x = np.unique(data['x'])
         else:
-            xvals = np.linspace(data['x'].min(), data['x'].max(),
-                                params['n'])
+            x = np.linspace(data['x'].min(), data['x'].max(),
+                            params['n'])
 
-        y = ECDF(data['x'])(xvals)
-
-        # make point with y = 0, from plot.stepfun
-        rx = xvals.min(), xvals.max()
-        if len(xvals) > 1:
-            dr = np.max([.08*np.diff(rx)[0], np.median(np.diff(xvals))])
-        else:
-            dr = np.abs(xvals)/16
-
-        x0 = rx[0] - dr
-        x1 = rx[1] + dr
-        y0 = 0
-        y1 = 1
-
-        res = pd.DataFrame({
-            'x': np.hstack([x0, xvals, x1]),
-            'y': np.hstack([y0, y, y1])})
+        y = ECDF(data['x'])(x)
+        res = pd.DataFrame({'x': x, 'y': y})
         return res
