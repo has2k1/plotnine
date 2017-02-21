@@ -211,7 +211,7 @@ def result_dataframe(count, x, width, xmin=None, xmax=None):
     return out
 
 
-def fuzzybreaks(scale, breaks=None, origin=None,
+def fuzzybreaks(scale, breaks=None, boundary=None,
                 binwidth=None, bins=30, right=True):
     """
     Compute fuzzy breaks
@@ -227,7 +227,7 @@ def fuzzybreaks(scale, breaks=None, origin=None,
     breaks : array_like
         Sequence of break points. If provided and the scale is not
         discrete, they are returned.
-    origin : float
+    boundary : float
         First break. If `None` a suitable on is computed using
         the range of the scale and the binwidth.
     binwidth : float
@@ -259,17 +259,17 @@ def fuzzybreaks(scale, breaks=None, origin=None,
     if binwidth is None or np.isnan(binwidth):
         binwidth = (srange[1]-srange[0]) / bins
 
-    if origin is None or np.isnan(origin):
-        origin = round_any(srange[0], binwidth, np.floor)
+    if boundary is None or np.isnan(boundary):
+        boundary = round_any(srange[0], binwidth, np.floor)
 
     if recompute_bins:
-        bins = np.int(np.ceil((srange[1]-origin)/binwidth))
+        bins = np.int(np.ceil((srange[1]-boundary)/binwidth))
 
-    # To minimise precision errors, we do not pass the origin and
+    # To minimise precision errors, we do not pass the boundary and
     # binwidth into np.arange as params. The resulting breaks
     # can then be adjusted with finer(epsilon based rather than
     # some arbitrary small number) precision.
-    breaks = origin + np.arange(bins+1) * binwidth
+    breaks = boundary + np.arange(bins+1) * binwidth
     return _adjust_breaks(breaks, right)
 
 

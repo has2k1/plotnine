@@ -34,8 +34,8 @@ class stat_bin_2d(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
-                      'bins': 30, 'breaks': None, 'origin': None,
-                      'binwidth': None, 'drop': True}
+                      'bins': 30, 'breaks': None, 'binwidth': None,
+                      'drop': True}
     DEFAULT_AES = {'fill': '..count..', 'weight': None}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
 
@@ -44,7 +44,6 @@ class stat_bin_2d(stat):
         params['bins'] = dual_param(params['bins'])
         params['breaks'] = dual_param(params['breaks'])
         params['binwidth'] = dual_param(params['binwidth'])
-        params['origin'] = dual_param(params['origin'])
         return params
 
     @classmethod
@@ -52,7 +51,6 @@ class stat_bin_2d(stat):
         bins = params['bins']
         breaks = params['breaks']
         binwidth = params['binwidth']
-        origin = params['origin']
         drop = params['drop']
         weight = data.get('weight')
 
@@ -70,10 +68,8 @@ class stat_bin_2d(stat):
         y = np.append(data['y'], range_y)
 
         # create the cutting parameters
-        xbreaks = fuzzybreaks(scales.x, breaks.x, origin.x,
-                              binwidth.x, bins.x)
-        ybreaks = fuzzybreaks(scales.y, breaks.y, origin.y,
-                              binwidth.y, bins.y)
+        xbreaks = fuzzybreaks(scales.x, breaks.x, binwidth.x, bins.x)
+        ybreaks = fuzzybreaks(scales.y, breaks.y, binwidth.y, bins.y)
         xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)
         ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)
 

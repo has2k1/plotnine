@@ -33,14 +33,17 @@ class stat_summary_bin(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
                       'bins': 30, 'breaks': None, 'binwidth': None,
-                      'origin': None, 'fun_data': None, 'fun_y': None,
+                      'boundary': None, 'fun_data': None, 'fun_y': None,
                       'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': dict()}
+                      'fun_args': None}
 
     def setup_params(self, data):
         keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
         if not any(self.params[k] for k in keys):
             raise PlotnineError('No summary function')
+
+        if self.params['fun_args'] is None:
+            self.params['fun_args'] = {}
 
         return self.params
 
@@ -49,13 +52,13 @@ class stat_summary_bin(stat):
         bins = params['bins']
         breaks = params['breaks']
         binwidth = params['binwidth']
-        origin = params['origin']
+        boundary = params['boundary']
 
         func = make_summary_fun(params['fun_data'], params['fun_y'],
                                 params['fun_ymin'], params['fun_ymax'],
                                 params['fun_args'])
 
-        breaks = fuzzybreaks(scales.x, breaks, origin, binwidth, bins)
+        breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
         data['bin'] = pd.cut(data['x'], bins=breaks, labels=False,
                              include_lowest=True)
 
