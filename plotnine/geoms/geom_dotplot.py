@@ -23,14 +23,22 @@ class geom_dotplot(geom):
     ----------
     {common_parameters}
 
+    stackdir : str (default: up)
+    stackratio : float (default: 1)
+    dotsize : float (default: 1)
+    stackgroups : bool (default: False)
+
     {aesthetics}
+
+    See Also
+    --------
+    :class:`~plotnine.stats.stat_bindot`
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',
-                      'stackdir': 'up', 'stackratio': 1,
-                      'dotsize': 1, 'stackgroups': False,
-                      'na_rm': False}
+                      'na_rm': False, 'stackdir': 'up', 'stackratio': 1,
+                      'dotsize': 1, 'stackgroups': False}
 
     def setup_data(self, data):
         gp = self.params

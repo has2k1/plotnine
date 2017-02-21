@@ -18,6 +18,9 @@ class geom_pointrange(geom):
     Parameters
     ----------
     {common_parameters}
+    fatten : float, optional (default: 2)
+        A multiplicative factor used to increase the size of the
+        point along the line-range.
 
     {aesthetics}
     """
@@ -26,7 +29,7 @@ class geom_pointrange(geom):
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'fatten': 4, 'na_rm': False}
+                      'na_rm': False, 'fatten': 4}
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):

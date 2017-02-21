@@ -26,6 +26,12 @@ class geom_crossbar(geom):
     Parameters
     ----------
     {common_parameters}
+    width : float or None, optional (default: 0.5)
+        Box width. If :py:`None`, the width is set to
+        `90%` of the resolution of the data.
+    fatten : float, optional (default: 2)
+        A multiplicative factor used to increase the size of the
+        middle bar across the box.
 
     {aesthetics}
     """
@@ -33,7 +39,7 @@ class geom_crossbar(geom):
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'width': 0.5, 'fatten': 2, 'na_rm': False}
+                      'na_rm': False, 'width': 0.5, 'fatten': 2}
 
     def setup_data(self, data):
         if 'width' not in data:

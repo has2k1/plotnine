@@ -18,13 +18,17 @@ class geom_rug(geom):
     Parameters
     ----------
     {common_parameters}
+    sides : str (default: bl)
+        Sides onto which to draw the marks. Any combination
+        chosen from the characters ``btlr``, for *bottom*, *top*,
+        *left* or *right* side marks.
 
     {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'sides': 'bl', 'na_rm': False}
+                      'na_rm': False, 'sides': 'bl'}
     legend_geom = 'path'
 
     @staticmethod

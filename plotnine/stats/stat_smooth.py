@@ -23,9 +23,10 @@ class stat_smooth(stat):
 
     Parameters
     ----------
-    method : str or callable, optional
+    method : str or callable, optional (default: 'auto')
         The available methods are::
 
+            'auto'       # Use loess if (n<1000), glm otherwise
             'lm', 'ols'  # Linear Model
             'wls'        # Weighted Linear Model
             'rlm'        # Robust Linear Model
@@ -78,8 +79,37 @@ class stat_smooth(stat):
                     data['ymax'] = high
 
                 return data
+    se : bool (default: True)
+        If :py:`True` draw confidence interval around the smooth line.
+    n : int (default: 80)
+        Number of points to evaluate the smoother at. Some smoothers
+        like *mavg* do not support this.
+    fullrange : bool (default: False)
+        If :py:`True` the fit will span the full range of the plot.
+    level : float (default: 0.95)
+        Level of confidence to use if :py:`se=True`.
+    span : float (default: 2/3.)
+        Controls the amount of smoothing for the *loess* smoother.
+        Larger number means more smoothing. It should be in the
+        ``(0, 1)`` range.
+    method_args : dict (default: {})
+        Additional arguments passed on to the modelling method.
 
     {aesthetics}
+
+    See Also
+    --------
+    The models that do the smoothing:
+
+    * :class:`statsmodels.regression.linear_model.OLS`
+    * :class:`statsmodels.regression.linear_model.WLS`
+    * :class:`statsmodels.robust.robust_linear_model.RLM`
+    * :class:`statsmodels.genmod.generalized_linear_model.GLM`
+    * :class:`statsmodels.regression.linear_model.GLS`
+    * :func:`statsmodels.nonparametric.smoothers_lowess.lowess`
+    * :class:`skmisc.loess.loess`
+    * :meth:`pandas.DataFrame.rolling`
+    * :class:`sklearn.gaussian_process.GaussianProcessRegressor`
 
     Note
     ----

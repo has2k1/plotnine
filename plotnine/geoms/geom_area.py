@@ -21,6 +21,10 @@ class geom_area(geom_ribbon):
     {common_parameters}
 
     {aesthetics}
+
+    See Also
+    --------
+    See :class:`~plotnine.geoms.geom_ribbon`
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',

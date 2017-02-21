@@ -21,12 +21,20 @@ class stat_quantile(stat):
     Parameters
     ----------
     {common_parameters}
+    quatiles : tuple, optional (default: (0.25, 0.5, 0.75))
+        Quantiles of y to compute
+    formula : str, optional (default: 'y ~ x')
+        Formula relating y variables to x variables
+    method_args : dict, optional
+        Extra arguments passed on to the model fitting method,
+        :meth:`statsmodels.regression.quantile_regression.QuantReg.fit`.
 
     {aesthetics}
 
 
     See Also
     --------
+    :class:`statsmodels.regression.quantile_regression.QuantReg`
     :class:`~plotnine.geoms.geom_quantile`
     """
     REQUIRED_AES = {'x', 'y'}

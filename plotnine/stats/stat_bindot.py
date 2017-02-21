@@ -23,17 +23,52 @@ class stat_bindot(stat):
     Parameters
     ----------
     {common_parameters}
+    bins : int, optional (default: None)
+        Number of bins. Overridden by binwidth. If :py:`None`,
+        a number is computed using the freedman-diaconis method.
+    binwidth : float, optional (default: None)
+        When :py:`method='dotdensity'`, this specifies the maximum
+        binwidth. When :py:`method='histodot'`, this specifies the
+        binwidth. This supercedes the ``bins``.
+    origin : float, optional (default: None)
+        When :py:`method='histodot'`, origin of the first bin.
+    width : float, optional (default: 0.9)
+        When :py:`binaxis='y'`, the spacing of the dotstacks for
+        dodging.
+    binaxis : str, optional (default: x)
+        Axis to bin along. Either :py:`'x'` or :py:`'y'`
+    method : str, optional (default: dotdensity)
+        One of *dotdensity* or *histodot*. These provide either of
+        dot-density binning or fixed bin widths.
+    binpositions : str, optional (default: bygroup)
+        Position of the bins when :py:`method='dotdensity'`. The value
+        is one of::
+
+            'bygroup'  # positions of the bins for each group are
+                       # determined separately.
+            'all'      # positions of the bins are determined with all
+                       # data taken together. This aligns the dots
+                       # stacks across multiple groups.
+
+    drop : bool, optional (default: False)
+        If :py:`True`, remove all bins with zero counts.
+    right : bool, optional (default: True)
+        When :py:`method='histodot'`, :py:`True` means include right
+        edge of the bins and if :py:`False` the left edge is included.
+    breaks : array-like, optional (default: None)
+        Bin boundaries for :py:`method='histodot'`. This supercedes the
+        ``binwidth`` and ``bins``.
 
     {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 
-    y
-        - ``..count..`` - number of points in bin
-        - ``..density..`` - density of points in bin,
-          scaled to integrate to 1
-        - ``..ncount..`` - count, scaled to maximum of 1
-        - ``..ndensity..`` - density, scaled to maximum of 1
+    **y**::
+
+         '..count..'    # number of points in bin
+         '..density..'  # density of points in bin, scaled to integrate to 1
+         '..ncount..'   # count, scaled to maximum of 1
+         '..ndensity..' # density, scaled to maximum of 1
 
     See Also
     --------

@@ -21,15 +21,24 @@ class geom_segment(geom):
     Parameters
     ----------
     {common_parameters}
+    lineend : str (default: butt)
+        Line end style, of of *butt*, *round* or *projecting.*
+        This option is applied for solid linetypes.
+    arrow : plotnine.geoms.geom_path.arrow (default: None)
+        Arrow specification. Default is no arrow.
 
     {aesthetics}
+
+    See Also
+    --------
+    :class:`~plotnine.geoms.geom_path.arrow` for adding arrowhead(s)
+    to segments.
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'arrow': None, 'lineend': 'butt',
-                      'na_rm': False}
+                      'na_rm': False, 'lineend': 'butt', 'arrow': None}
 
     legend_geom = 'path'
 

@@ -125,17 +125,23 @@ class stat_summary(stat):
     Parameters
     ----------
     {common_parameters}
-    fun_data : string or function
+    fun_data : str or function, optional
         One of ``"mean_cl_boot"``, ``"mean_cl_normal"``,
         ``"mean_sdl"``, ``"median_hilow"`` or any function that takes a
-        pandas series and returns a series with three rows indexed
+        array and returns a dataframe with three rows indexed
         as ``y``, ``ymin`` and ``ymax``. Defaults to ``"mean_cl_boot"``.
-    fun_y : function
-        Any function that takes a pandas series and returns a value
-    fun_ymin : function
-        Any function that takes a pandas series and returns a value
-    fun_ymax : function
-        Any function that takes a pandas series and returns a value
+    fun_y : function, optional (default: None)
+        Any function that takes a array-like and returns a value
+        fun_ymin : function (default:None)
+        Any function that takes an array-like and returns a value
+    fun_ymax : function, optional (default: None)
+        Any function that takes an array-like and returns a value
+    fun_args : dict, optional (default: None)
+        Arguments to any of the functions. Provided the names of the
+        arguments of the different functions are in not conflict, the
+        arguments will be assigned to the right functions. If there is
+        a conflict, create a wrapper function that resolves the
+        ambiguity in the argument names.
 
     {aesthetics}
 

@@ -17,6 +17,10 @@ class geom_density(geom_area):
     {common_parameters}
 
     {aesthetics}
+
+    See Also
+    --------
+    :class:`~plotnine.geoms.geom_ribbon`
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}

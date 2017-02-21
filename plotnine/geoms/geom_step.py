@@ -20,11 +20,19 @@ class geom_step(geom_path):
     Parameters
     ----------
     {common_parameters}
+    direction : str, optional (default: hv)
+        One of *hv* or *vh*, for horizontal-vertical or
+        vertical-horizontal steps.
 
     {aesthetics}
+
+    See Also
+    --------
+    :class:`~plotnine.geoms.geom_path` for documentation of extra
+    parameters.
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'direction': 'hv', 'na_rm': False}
+                      'na_rm': False, 'direction': 'hv'}
     draw_panel = geom.draw_panel
 
     @staticmethod

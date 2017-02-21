@@ -15,10 +15,7 @@ class geom_freqpoly(geom_path):
 
     {usage}
 
-    Parameters
-    ----------
-    {common_parameters}
-
-    {aesthetics}
+    See :class:`~plotnine.geoms.geom_path` for documentation
+    of the parameters.
     """
     DEFAULT_PARAMS = _params

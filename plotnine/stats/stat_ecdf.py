@@ -19,14 +19,18 @@ class stat_ecdf(stat):
     Parameters
     ----------
     {common_parameters}
+    n  : int (default: None)
+        This is the number of points to interpolate with.
+        If :py:`None`, do not interpolate.
 
     {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 
-    y
-        - ``..x..`` - x in the data
-        - ``..y..`` - cumulative density corresponding to x
+    **y**::
+
+        '..x..'  # x in the data
+        '..y..'  # cumulative density corresponding to x
 
     See Also
     --------

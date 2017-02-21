@@ -22,12 +22,51 @@ class stat_ydensity(stat):
     Parameters
     ----------
     {common_parameters}
+    kernel : str, optional (default: 'gaussian')
+        Kernel used for density estimation. One of::
+
+            'biweight'
+            'cosine'
+            'cosine2'
+            'epanechnikov'
+            'gaussian'
+            'triangular'
+            'triweight'
+            'uniform'
+
+    adjust : float, optional (default: 1)
+        An adjustment factor for the ``bw``. Bandwidth becomes
+        :py:`bw * adjust`.
+        Adjustment of the bandwidth.
+    trim : bool, optional (default: False)
+        This parameter only matters if you are displaying multiple
+        densities in one plot. If :py:`False`, the default, each
+        density is computed on the full range of the data. If
+        :py:`True`, each density is computed over the range of that
+        group; this typically means the estimated x values will not
+        line-up, and hence you won't be able to stack density values.
+    n : int, optional(default: 1024)
+        Number of equally spaced points at which the density is to
+        be estimated. For efficient computation, it should be a power
+        of two.
+    scale : (default: area)
+        How to scale the violins. The options are::
+
+            'area'   # all violins have the same area, before
+                     # trimming the tails.
+
+            'count'  # areas are scaled proportionally to the number
+                     # of observations.
+
+            'width'  # all violins have the same maximum width.
 
     {aesthetics}
 
     See Also
     --------
     :class:`~plotnine.geoms.geom_violin`
+    * :class:`statsmodels.nonparametric.kde.KDEUnivariate`
+    * :meth:`statsmodels.nonparametric.kde.KDEUnivariate.fit`
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'violin', 'position': 'dodge',

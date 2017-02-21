@@ -16,12 +16,19 @@ class geom_bar(geom_rect):
     Parameters
     ----------
     {common_parameters}
+    width : float, optional (default None)
+        Bar width. If :py:`None`, the width is set to
+        `90%` of the resolution of the data.
 
     {aesthetics}
+
+    See Also
+    --------
+    :class:`~plotnine.geoms.geom_histogram`
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
-                      'width': None, 'na_rm': False}
+                      'na_rm': False, 'width': None}
 
     def setup_data(self, data):
         if 'width' not in data:

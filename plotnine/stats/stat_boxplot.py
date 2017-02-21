@@ -21,6 +21,9 @@ class stat_boxplot(stat):
     Parameters
     ----------
     {common_parameters}
+    coef : float, optional (default: 1.5)
+        Length of the whiskers as a multiple of the Interquartile
+        Range.
 
     {aesthetics}
 

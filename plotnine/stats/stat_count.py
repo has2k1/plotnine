@@ -20,14 +20,18 @@ class stat_count(stat):
     Parameters
     ----------
     {common_parameters}
+    width : float, optional (default: None)
+        Bar width. By default, set to 90% of the
+        resolution of the data
 
     {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 
-    size
-        - ``..count..`` - Number of observations at a position
-        - ``..prop..`` - Ratio of points in the panel at a position
+    **y**::
+
+        '..count..'  # Number of observations at a position
+        '..prop..'   # Ratio of points in the panel at a position
 
     See Also
     --------

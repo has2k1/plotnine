@@ -20,8 +20,25 @@ class stat_function(stat):
     Parameters
     ----------
     {common_parameters}
+    fun : function
+        Function to evaluate.
+    n : int, optional (default: 101)
+        Number of points at which to evaluate the function.
+    xlim : tuple (default: None)
+        ``x`` limits for the range. The default depends on
+        the ``x`` aesthetic. There is not an ``x`` aesthetic
+        then the ``xlim`` must be provided.
+    args : tuple or dict (default: None)
+        Arguments to pass to ``fun``.
 
     {aesthetics}
+
+    .. rubric:: Options for computed aesthetics
+
+    **y**::
+
+        '..x..'  # x points are which the function is evaluated
+        '..y..'  # Points evaluated at x
     """
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
                       'fun': None, 'n': 101, 'args': None,

@@ -366,7 +366,10 @@ intersphinx_mapping = {
     'matplotlib': ('http://matplotlib.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy', None),
     'scipy': ('http://docs.scipy.org/doc/scipy/reference', None),
-    'statsmodels': ('http://statsmodels.sourceforge.net/devel/', None), }
+    'statsmodels': ('http://www.statsmodels.org/stable/', None),
+    'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
+    'sklearn': ('http://scikit-learn.org/stable/', None),
+    'skmisc': ('https://has2k1.github.io/scikit-misc/', None)}
 
 
 # -- Extension configuration ----------------------------------------------

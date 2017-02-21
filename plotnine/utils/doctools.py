@@ -262,6 +262,10 @@ def document(klass):
     if docstring is None:
         return klass
 
+    # Dedented so that it lineups (in sphinx) with the part
+    # generated parts when put together
+    docstring = dedent(docstring)
+
     if klass.__name__.startswith('geom'):
         func = get_geom_documentation
     elif klass.__name__.startswith('stat'):
@@ -270,11 +274,6 @@ def document(klass):
         return klass
 
     usage, common_parameters, aesthetics = func(klass)
-    # All docstrings parts are dedented so that
-    # they lineup (in sphinx) when put together
-    docstring = dedent(docstring)
-    # documentation = dedent(documentation)
-    # common_parameters = dedent(common_parameters)
     docstring = docstring.replace('{usage}', usage)
     docstring = docstring.replace('{common_parameters}',
                                   common_parameters)

@@ -25,25 +25,25 @@ class geom_boxplot(geom):
     Parameters
     ----------
     {common_parameters}
-    outlier_alpha: float, optional (default: 1)
+    outlier_alpha : float, optional (default: 1)
         Transparency of the outlier points.
-    outlier_color: str or tuple, optional (default: None)
+    outlier_color : str or tuple, optional (default: None)
         Color of the outlier points.
-    outlier_shape: str, optional (default: o)
+    outlier_shape : str, optional (default: o)
         Shape of the outlier points.
-    outlier_size: float, optional (default: 1.5)
+    outlier_size : float, optional (default: 1.5)
         Size of the outlier points.
-    outlier_stroke: float, optional (default: 0.5)
+    outlier_stroke : float, optional (default: 0.5)
         Stroke-size of the outlier points.
-    notch: bool, optional (default: False)
+    notch : bool, optional (default: False)
         Whether the boxes should have a notch.
-    varwidth: bool, optional (default: False)
+    varwidth : bool, optional (default: False)
         If :py:`True`, boxes are drawn with widths proportional to
         the square-roots of the number of observations in the
         groups.
-    notchwidth: float, optional (default: 0.5)
+    notchwidth : float, optional (default: 0.5)
         Width of notch relative to the body width.
-    fatten: float, optional (default: 2)
+    fatten : float, optional (default: 2)
         A multiplicative factor used to increase the size of the
         middle bar across the box.
 

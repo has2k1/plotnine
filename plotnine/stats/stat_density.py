@@ -23,20 +23,69 @@ class stat_density(stat):
     Parameters
     ----------
     {common_parameters}
+    kernel : str, optional (default: 'gaussian')
+        Kernel used for density estimation. One of::
+
+            'biweight'
+            'cosine'
+            'cosine2'
+            'epanechnikov'
+            'gaussian'
+            'triangular'
+            'triweight'
+            'uniform'
+
+    adjust : float, optional (default: 1)
+        An adjustment factor for the ``bw``. Bandwidth becomes
+        :py:`bw * adjust`.
+        Adjustment of the bandwidth.
+    trim : bool, optional (default: False)
+        This parameter only matters if you are displaying multiple
+        densities in one plot. If :py:`False`, the default, each
+        density is computed on the full range of the data. If
+        :py:`True`, each density is computed over the range of that
+        group; this typically means the estimated x values will not
+        line-up, and hence you won't be able to stack density values.
+    n : int, optional(default: 1024)
+        Number of equally spaced points at which the density is to
+        be estimated. For efficient computation, it should be a power
+        of two.
+    gridsize : int, optional (default: None)
+        If gridsize is :py:`None`, :py:`max(len(x), 50)` is used.
+    bw : str or float, optional (default: 'normal_reference')
+        The bandwidth to use, If a float is given, it is the bandwidth.
+        The :py:`str` choices are::
+
+            'normal_reference'
+            'scott'
+            'silverman'
+
+    cut :, optional (default: 3)
+        Defines the length of the grid past the lowest and highest
+        values of ``x`` so that the kernel goes to zero. The end points
+        are ``-/+ cut*bw*{min(x) or max(x)}``.
+    clip : tuple, optional (default: (-np.inf, np.inf))
+        Values in ``x`` that are outside of the range given by clip are
+        dropped. The number of values in ``x`` is then shortened.
 
     {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 
-    y
-        - ``..density..`` - density estimate
-        - ``..count..`` - density \* number of points,
-          useful for stacked density plots
-        - ``..scaled..`` - density estimate, scaled to maximum of 1
+    **y**::
+
+        '..density..'   # density estimate
+
+        '..count..'     # density * number of points,
+                        # useful for stacked density plots
+
+        '..scaled..'    # density estimate, scaled to maximum of 1
 
     See Also
     --------
-    :class:`~plotnine.geoms.geom_density`
+    * :class:`~plotnine.geoms.geom_density`
+    * :class:`statsmodels.nonparametric.kde.KDEUnivariate`
+    * :meth:`statsmodels.nonparametric.kde.KDEUnivariate.fit`
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',

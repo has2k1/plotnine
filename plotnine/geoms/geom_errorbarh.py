@@ -20,6 +20,9 @@ class geom_errorbarh(geom):
     Parameters
     ----------
     {common_parameters}
+    height : float or None, optional (default: 0.5)
+        Bar height. If :py:`None`, the height is set to
+        `90%` of the resolution of the data.
 
     {aesthetics}
     """
@@ -27,7 +30,7 @@ class geom_errorbarh(geom):
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'y', 'xmin', 'xmax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'height': 0.5, 'na_rm': False}
+                      'na_rm': False, 'height': 0.5}
     legend_geom = 'path'
 
     def setup_data(self, data):

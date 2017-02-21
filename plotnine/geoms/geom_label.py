@@ -20,7 +20,8 @@ _params.update({
     'boxstyle': 'round',
     'label_padding': 0.25,
     'label_r': 0.25,
-    'label_size': 0.7})
+    'label_size': 0.7,
+    'tooth_size': None})
 
 
 @document
@@ -33,6 +34,35 @@ class geom_label(geom_text):
     Parameters
     ----------
     {common_parameters}
+    boxstyle : str, optional (default: round)
+        Options are::
+
+            'circle'
+            'darrow'
+            'larrow'
+            'rarrow'
+            'round '
+            'round4'
+            'roundtooth'
+            'sawtooth'
+            'square'
+
+    label_padding : float, optional (default: 0.25)
+        Amount of padding
+    label_r : float, optional (default: 0.25)
+        Rounding radius of corners.
+    label_size : float, optional (default: 0.7)
+        Linewidth of the label boundary.
+    tooth_size : float, optional (default: None)
+        Size of the ``roundtooth`` or ``sawtooth`` if they
+        are the chosen *boxstyle*. The default depends
+        on Matplotlib
+
+    See Also
+    --------
+    :class:`~plotnine.geoms.geom_text` for documentation of the
+    parameters. :class:`matplotlib.patches.BoxStyle` for the
+    parameters that affect the boxstyle.
 
     {aesthetics}
     """

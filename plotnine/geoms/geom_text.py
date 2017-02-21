@@ -22,18 +22,43 @@ class geom_text(geom):
     Parameters
     ----------
     {common_parameters}
+    parse : bool (default: False)
+        If :py:`True`, the labels will be rendered with
+        :ref:`latex <matplotlib:usetex-tutorial>`.
+    family : str (default: None)
+        Font family.
+    fontweight : int or str (default: normal)
+        Font weight.
+    fontstyle : str (default: normal)
+        Font style. One of *normal*, *italic* or *oblique*
+    hjust : str (default: center)
+        Horizontal alignment. One of *left*, *center* or *right.*
+    vjust : str (default: center)
+        Vertical alignment. One of *top*, *center* or *bottom.*
+    nudge_x : float (default: 0)
+        Horizontal adjustment to apply to the text
+    nudge_y : float (default: 0)
+        Vertical adjustment to apply to the text
+    format_string : str (default: None)
+        If not :py:`None`, then the text if formatted with this
+        string using :meth:`str.format`
 
     {aesthetics}
+
+    See Also
+    --------
+    :class:`matplotlib.text.Text`
+
     """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
                    'size': 11, 'lineheight': 1.2}
     REQUIRED_AES = {'label', 'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'parse': False, 'hjust': 'center',
+                      'na_rm': False, 'parse': False,
                       'family': None, 'fontweight': 'normal',
-                      'fontstyle': 'normal', 'vjust': 'center',
-                      'nudge_x': 0, 'nudge_y': 0,
-                      'format_string': None, 'na_rm': False}
+                      'fontstyle': 'normal', 'hjust': 'center',
+                      'vjust': 'center', 'nudge_x': 0, 'nudge_y': 0,
+                      'format_string': None}
 
     def __init__(self, *args, **kwargs):
         nudge_kwargs = {}
@@ -95,6 +120,11 @@ class geom_text(geom):
                     params['boxstyle'],
                     params['label_padding'],
                     params['label_r'])
+            elif params['boxstyle'] in ('roundtooth', 'sawtooth'):
+                boxstyle = '{},pad={},tooth_size={}'.format(
+                    params['boxstyle'],
+                    params['label_padding'],
+                    params['tooth_size'])
             else:
                 boxstyle = '{},pad={}'.format(
                     params['boxstyle'],

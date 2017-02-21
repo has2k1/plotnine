@@ -19,16 +19,31 @@ class stat_qq(stat):
     Parameters
     ----------
     {common_parameters}
+    distribution : str (default: norm)
+        Distribution or distribution function name. The default is
+        *norm* for a normal probability plot. Objects that look enough
+        like a stats.distributions instance (i.e. they have a ppf
+        method) are also accepted. See :mod:`scipy stats <scipy.stats>`
+        for available distributions.
+    dparams : dict
+        Distribution-specific shape parameters (shape parameters plus
+        location and scale).
 
     {aesthetics}
 
     .. rubric:: Options for computed aesthetics
 
-    x
-        - ``..theoretical..`` - theoretical quantiles
+    **x**::
 
-    y
-        - ``..sample..`` - sample quantiles
+         '..theoretical..'  # theoretical quantiles
+
+    **y**::
+
+         '..sample..'  # sample quantiles
+
+    See Also
+    --------
+    :func:`scipy.stats.probplot` calculates the quantiles.
     """
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': '..theoretical..', 'y': '..sample..'}

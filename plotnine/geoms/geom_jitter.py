@@ -17,17 +17,28 @@ class geom_jitter(geom_point):
     Parameters
     ----------
     {common_parameters}
+    width : float, optional
+        Proportion to jitter in horizontal direction.
+        The default value is that from
+        :class:`~plotnine.positions.position_jitter`
+    height : float, optional
+        Proportion to jitter in vertical direction.
+        The default value is that from
+        :class:`~plotnine.positions.position_jitter`.
+    prng : numpy.random.RandomState, optional
+        Random number generator to use. If `None`, then numpy
+        global generator :class:`numpy.random` is used.
 
     {aesthetics}
 
     See Also
     --------
-    :class:`~plotnine.positions.position_jitter` for the documentation
-    of the parameters that affect the jittering.
+    :class:`~plotnine.positions.position_jitter`
+    :class:`~plotnine.geoms.geom_point`
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
-                      'width': None, 'height': None, 'prng': None,
-                      'na_rm': False}
+                      'na_rm': False, 'width': None, 'height': None,
+                      'prng': None}
 
     def __init__(self, *args, **kwargs):
         if {'width', 'height', 'prng'} & set(kwargs):

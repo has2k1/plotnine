@@ -23,8 +23,47 @@ class stat_summary_bin(stat):
     Parameters
     ----------
     {common_parameters}
+    binwidth : float or tuple, optional (default: None)
+        The width of the bins. The default is to use bins bins that
+        cover the range of the data. You should always override this
+        value, exploring multiple widths to find the best to illustrate
+        the stories in your data.
+    bins : int or tuple, optional (default: 30)
+        Number of bins. Overridden by binwidth.
+    breaks : array-like(s), optional (default: None)
+        Bin boundaries. This supercedes the ``binwidth``, ``bins``
+        and ``boundary`` arguments.
+    boundary : float or tuple, optional (default: None)
+        A boundary between two bins. As with center, things are
+        shifted when boundary is outside the range of the data.
+        For example, to center on integers, use :py:`width=1` and
+        :py:`boundary=0.5`, even if 1 is outside the range of the
+        data. At most one of center and boundary may be specified.
+    fun_data : str or function, optional
+        One of ``"mean_cl_boot"``, ``"mean_cl_normal"``,
+        ``"mean_sdl"``, ``"median_hilow"`` or any function that takes a
+        array and returns a dataframe with three rows indexed
+        as ``y``, ``ymin`` and ``ymax``. Defaults to ``"mean_cl_boot"``.
+    fun_y : function, optional (default: None)
+        Any function that takes a array-like and returns a value
+        fun_ymin : function (default:None)
+        Any function that takes an array-like and returns a value
+    fun_ymax : function, optional (default: None)
+        Any function that takes an array-like and returns a value
+    fun_args : dict, optional (default: None)
+        Arguments to any of the functions. Provided the names of the
+        arguments of the different functions are in not conflict, the
+        arguments will be assigned to the right functions. If there is
+        a conflict, create a wrapper function that resolves the
+        ambiguity in the argument names.
 
     {aesthetics}
+
+    Note
+    ----
+    The *binwidth*, *bins*, *breaks* and *bounary* arguments can be a
+    tuples with two values (``(xaxis-value, yaxis-value)``) of the
+    required type.
 
     See Also
     --------
