@@ -74,6 +74,7 @@ class stat_ydensity(stat):
                       'n': 1024, 'trim': True,
                       'scale': 'area'}
     DEFAULT_AES = {'weight': None}
+    CREATES = {'width'}
 
     def setup_params(self, data):
         params = self.params.copy()

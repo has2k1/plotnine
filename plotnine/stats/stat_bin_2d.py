@@ -52,7 +52,7 @@ class stat_bin_2d(stat):
                       'bins': 30, 'breaks': None, 'binwidth': None,
                       'drop': True}
     DEFAULT_AES = {'fill': '..count..', 'weight': None}
-    CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'fill'}
+    CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density'}
 
     def setup_params(self, data):
         params = self.params.copy()

@@ -82,7 +82,7 @@ class stat_bindot(stat):
                       'drop': False, 'right': True, 'na_rm': False,
                       'breaks': None}
     DEFAULT_AES = {'y': '..count..'}
-    CREATES = {'y', 'width'}
+    CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
     def setup_params(self, data):
         params = self.params

@@ -67,7 +67,7 @@ class stat_bin(stat):
                       'boundary': None, 'closed': 'right',
                       'pad': False}
     DEFAULT_AES = {'y': '..count..', 'weight': None}
-    CREATES = {'y', 'width'}
+    CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
     def setup_params(self, data):
         params = self.params

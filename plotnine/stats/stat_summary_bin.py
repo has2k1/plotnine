@@ -75,6 +75,7 @@ class stat_summary_bin(stat):
                       'boundary': None, 'fun_data': None, 'fun_y': None,
                       'fun_ymin': None, 'fun_ymax': None,
                       'fun_args': None}
+    CREATES = {'bin', 'width', 'ymin', 'ymax'}
 
     def setup_params(self, data):
         keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')

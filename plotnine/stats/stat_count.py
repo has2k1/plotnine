@@ -41,7 +41,7 @@ class stat_count(stat):
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': None}
     DEFAULT_AES = {'y': '..count..'}
-    CREATES = {'y', 'width'}
+    CREATES = {'width', 'count', 'prop'}
 
     @classmethod
     def compute_group(cls, data, scales, **params):

@@ -26,7 +26,7 @@ class geom_bar(geom_rect):
     --------
     :class:`~plotnine.geoms.geom_histogram`
     """
-    REQUIRED_AES = {'x'}
+    REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
                       'na_rm': False, 'width': None}
 

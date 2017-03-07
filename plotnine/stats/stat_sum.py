@@ -33,7 +33,7 @@ class stat_sum(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}
     DEFAULT_AES = {'size': '..prop..'}  # options: ..prop.., ..n..
-    CREATES = {'size'}
+    CREATES = {'n', 'prop'}
 
     @classmethod
     def compute_panel(cls, data, scales, **params):
