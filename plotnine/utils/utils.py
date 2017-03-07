@@ -791,6 +791,18 @@ class RegistryMeta(type):
     def __setitem__(meta, key, value):
         meta._registry[key] = value
 
+    def __iter__(meta):
+        return meta._registry.__iter__()
+
+    def keys(meta):
+        return meta._registry.keys()
+
+    def values(meta):
+        return meta._registry.values()
+
+    def items(meta):
+        return meta._registry.items()
+
 
 @add_metaclass(RegistryMeta)
 class Registry(type):
