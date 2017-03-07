@@ -40,8 +40,8 @@ class stat_quantile(stat):
 
     See Also
     --------
-    :class:`statsmodels.regression.quantile_regression.QuantReg`
-    :class:`~plotnine.geoms.geom_quantile`
+    * :class:`statsmodels.regression.quantile_regression.QuantReg`
+    * :class:`~plotnine.geoms.geom_quantile`
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'quantile', 'position': 'identity',

@@ -33,8 +33,8 @@ class geom_jitter(geom_point):
 
     See Also
     --------
-    :class:`~plotnine.positions.position_jitter`
-    :class:`~plotnine.geoms.geom_point`
+    * :class:`~plotnine.positions.position_jitter`
+    * :class:`~plotnine.geoms.geom_point`
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
                       'na_rm': False, 'width': None, 'height': None,

@@ -70,7 +70,7 @@ class stat_ydensity(stat):
 
     See Also
     --------
-    :class:`~plotnine.geoms.geom_violin`
+    * :class:`~plotnine.geoms.geom_violin`
     * :class:`statsmodels.nonparametric.kde.KDEUnivariate`
     * :meth:`statsmodels.nonparametric.kde.KDEUnivariate.fit`
     """
