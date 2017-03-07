@@ -15,6 +15,7 @@ Plot creation
 
    ggplot
    qplot
+   aes
 
 
 geoms
