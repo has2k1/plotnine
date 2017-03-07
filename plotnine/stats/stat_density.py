@@ -72,7 +72,7 @@ class stat_density(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **y**::
+    ::
 
         '..density..'   # density estimate
 

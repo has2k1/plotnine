@@ -27,7 +27,7 @@ class stat_ecdf(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **y**::
+    ::
 
         '..x..'  # x in the data
         '..y..'  # cumulative density corresponding to x

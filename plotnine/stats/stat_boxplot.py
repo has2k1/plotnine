@@ -27,6 +27,27 @@ class stat_boxplot(stat):
 
     {aesthetics}
 
+    .. rubric:: Options for computed aesthetics
+
+    ::
+
+        '..width..'  # width of boxplot
+        '..lower..'  # lower hinge, 25% quantile
+        '..middle..' # median, 50% quantile
+        '..upper..'  # upper hinge, 75% quantile
+
+        '..notchlower..' #  lower edge of notch, computed as;
+                         # :py:`median - 1.58 * IQR / sqrt(n)`
+
+        '..notchupper..' # upper edge of notch, computed as;
+                         # :py:`median + 1.58 * IQR / sqrt(n)`
+
+        '..ymin..'  # lower whisker, computed as; smallest observation
+                    # greater than or equal to lower hinge - 1.5 * IQR
+
+        '..ymax..'  # upper whisker, computed as; largest observation
+                    # less than or equal to upper hinge + 1.5 * IQR
+
     See Also
     --------
     :class:`~plotnine.geoms.geom_boxplot`

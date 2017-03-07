@@ -33,13 +33,10 @@ class stat_qq(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **x**::
+    ::
 
          '..theoretical..'  # theoretical quantiles
-
-    **y**::
-
-         '..sample..'  # sample quantiles
+         '..sample..'       # sample quantiles
 
     See Also
     --------

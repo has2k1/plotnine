@@ -59,6 +59,15 @@ class stat_summary_bin(stat):
 
     {aesthetics}
 
+    .. rubric:: Options for computed aesthetics
+
+    ::
+
+        '..bin..'    # bin identifier
+        '..width..'  # bin width
+        '..ymin..'   # ymin computed by the summary function
+        '..ymax..'   # ymax computed by the summary function
+
     Note
     ----
     The *binwidth*, *bins*, *breaks* and *bounary* arguments can be a

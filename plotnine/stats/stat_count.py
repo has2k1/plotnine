@@ -28,7 +28,7 @@ class stat_count(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **y**::
+    ::
 
         '..count..'  # Number of observations at a position
         '..prop..'   # Ratio of points in the panel at a position
@@ -41,7 +41,7 @@ class stat_count(stat):
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'width': None}
     DEFAULT_AES = {'y': '..count..'}
-    CREATES = {'width', 'count', 'prop'}
+    CREATES = {'count', 'prop'}
 
     @classmethod
     def compute_group(cls, data, scales, **params):

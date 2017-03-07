@@ -31,6 +31,12 @@ class stat_quantile(stat):
 
     {aesthetics}
 
+    .. rubric:: Options for computed aesthetics
+
+    ::
+
+         '..quantile..'  # quantile
+         '..group..'     # group identifier
 
     See Also
     --------

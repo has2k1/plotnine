@@ -24,7 +24,7 @@ class stat_sum(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **size**::
+    ::
 
         '..n..'     # Number of observations at a position
         '..prop..'  # Ratio of points in that panel at a position

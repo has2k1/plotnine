@@ -62,6 +62,12 @@ class stat_ydensity(stat):
 
     {aesthetics}
 
+    .. rubric:: Options for computed aesthetics
+
+    ::
+
+         '..width..'  # Maximum width of density, [0, 1] range.
+
     See Also
     --------
     :class:`~plotnine.geoms.geom_violin`

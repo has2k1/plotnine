@@ -145,6 +145,13 @@ class stat_summary(stat):
 
     {aesthetics}
 
+    .. rubric:: Options for computed aesthetics
+
+    ::
+
+        '..ymin..'  # ymin computed by the summary function
+        '..ymax..'  # ymax computed by the summary function
+
     Note
     ----
     If any of ``fun_y``, ``fun_ymin`` or ``fun_ymax`` are provided, the

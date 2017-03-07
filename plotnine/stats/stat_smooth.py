@@ -97,6 +97,14 @@ class stat_smooth(stat):
 
     {aesthetics}
 
+    .. rubric:: Options for computed aesthetics
+
+    ::
+
+         '..se..'    # Standard error of points in bin
+         '..ymin..'  # Lower confidence limit
+         '..ymax..'  # Upper confidence limit
+
     See Also
     --------
     The models that do the smoothing:

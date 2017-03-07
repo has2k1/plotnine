@@ -42,7 +42,7 @@ class stat_bin_2d(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **y**::
+    ::
 
         '..count..'   # number of points in bin
         '..density..' # density of points in bin, scaled to integrate to 1

@@ -35,7 +35,7 @@ class stat_function(stat):
 
     .. rubric:: Options for computed aesthetics
 
-    **y**::
+    ::
 
         '..x..'  # x points are which the function is evaluated
         '..y..'  # Points evaluated at x
