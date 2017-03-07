@@ -127,7 +127,7 @@ def glm(data, xseq, **params):
         # https://github.com/statsmodels/statsmodels/pull/3406
         # Remove the try/except when a compatible version is released
         try:
-            prediction = results.get_prediction(X)
+            prediction = results.get_prediction(Xseq)
             ci = prediction.conf_int(1 - params['level'])
             data['ymin'] = ci[:, 0]
             data['ymax'] = ci[:, 1]
@@ -203,6 +203,7 @@ def mavg(data, xseq, **params):
     stderr = rolling.std()[window:]
     x = data['x'][window:]
     data = pd.DataFrame({'x': x, 'y': y})
+    data.reset_index(inplace=True, drop=True)
 
     if params['se']:
         df = n - window  # Original - Used
