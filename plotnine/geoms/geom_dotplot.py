@@ -24,9 +24,15 @@ class geom_dotplot(geom):
     {common_parameters}
 
     stackdir : str (default: up)
+        Direction in which to stack the dots. Options are
+        :py:`['up', 'down', 'center', 'centerwhole']`
     stackratio : float (default: 1)
+        How close to stack the dots. If value is less than 1,
+        the dots overlap, if greater than 1 they are spaced.
     dotsize : float (default: 1)
+        Diameter of dots relative to ``binwidth``.
     stackgroups : bool (default: False)
+        If :py:`True`, the dots are stacked across groups.
 
     {aesthetics}
 
