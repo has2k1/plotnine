@@ -40,10 +40,11 @@ class stat_summary_bin(stat):
         :py:`boundary=0.5`, even if 1 is outside the range of the
         data. At most one of center and boundary may be specified.
     fun_data : str or function, optional
-        One of ``"mean_cl_boot"``, ``"mean_cl_normal"``,
-        ``"mean_sdl"``, ``"median_hilow"`` or any function that takes a
-        array and returns a dataframe with three rows indexed
-        as ``y``, ``ymin`` and ``ymax``. Defaults to ``"mean_cl_boot"``.
+        One of
+        :py:`['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow']`
+        or any function that takes a array and returns a dataframe
+        with three rows indexed as ``y``, ``ymin`` and ``ymax``.
+        Defaults to :py:`'mean_cl_boot'`.
     fun_y : function, optional (default: None)
         Any function that takes a array-like and returns a value
         fun_ymin : function (default:None)
@@ -56,6 +57,9 @@ class stat_summary_bin(stat):
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
+    prng : numpy.random.RandomState
+        Random number generator to use for bootstrap statistics.
+        If `None`, then numpy global generator (``np.random``) is used.
 
     {aesthetics}
 
@@ -83,7 +87,7 @@ class stat_summary_bin(stat):
                       'bins': 30, 'breaks': None, 'binwidth': None,
                       'boundary': None, 'fun_data': None, 'fun_y': None,
                       'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': None}
+                      'fun_args': None, 'prng': None}
     CREATES = {'bin', 'width', 'ymin', 'ymax'}
 
     def setup_params(self, data):
@@ -93,6 +97,14 @@ class stat_summary_bin(stat):
 
         if self.params['fun_args'] is None:
             self.params['fun_args'] = {}
+
+        if 'prng' not in self.params['fun_args']:
+            if self.params['prng']:
+                prng = self.params['prng']
+            else:
+                prng = np.random
+
+            self.params['fun_args']['prng'] = prng
 
         return self.params
 
