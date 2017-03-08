@@ -112,9 +112,14 @@ def draw_test(self):
     so that tests can draw and not care about cleaning up
     the MPL figure.
     """
-    figure = self.draw()
-    if figure:
-        plt.close(figure)
+    try:
+        figure = self.draw()
+    except Exception as err:
+        plt.close('all')
+        raise err
+    else:
+        if figure:
+            plt.close(figure)
 
 
 ggplot.draw_test = draw_test
@@ -182,7 +187,7 @@ def make_test_image_filenames(name, test_file):
     return filenames
 
 
-# This is called from the leanup decorator
+# This is called from the cleanup decorator
 def _setup():
     # The baseline images are created in this locale, so we should use
     # it during all of the tests.
