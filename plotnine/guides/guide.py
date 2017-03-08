@@ -214,7 +214,7 @@ class guide(object):
         l = layer
         legend_ae = set(self.key.columns) - {'label'}
         all_ae = (six.viewkeys(l.mapping) |
-                  plot.mapping if l.inherit_aes else set() |
+                  (plot.mapping if l.inherit_aes else set()) |
                   six.viewkeys(l.stat.DEFAULT_AES))
         geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
         matched = all_ae & geom_ae & legend_ae

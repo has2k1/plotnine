@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_abline, geom_point
+from plotnine import ggplot, aes, geom_abline, geom_point, theme
 
 df = pd.DataFrame({
         'slope': [1, 1],
@@ -11,6 +11,8 @@ df = pd.DataFrame({
         'y': [-1, 1],
         'z': range(2)
     })
+
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -33,7 +35,7 @@ def test_aesthetics():
          geom_abline(
              aes(slope='slope', intercept='intercept+.4', size='z')))
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'
 
 
 def test_aes_inheritance():

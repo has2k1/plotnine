@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_vline, geom_point
+from plotnine import ggplot, aes, geom_vline, geom_point, theme
 from plotnine.utils.exceptions import PlotnineError
 
 df = pd.DataFrame({
@@ -12,6 +12,8 @@ df = pd.DataFrame({
         'y': [-1, 1],
         'z': range(2)
     })
+
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_aesthetics():
@@ -28,7 +30,7 @@ def test_aesthetics():
                     size=2) +
          geom_vline(aes(xintercept='xintercept+.4', size='z')))
 
-    assert p == 'aesthetics'
+    assert p + _theme == 'aesthetics'
 
 
 def test_aes_inheritance():
@@ -36,4 +38,4 @@ def test_aes_inheritance():
         p = (ggplot(df, aes('x', 'y', xintercept='xintercept')) +
              geom_point() +
              geom_vline(size=2))
-        print(p)
+        p.draw_test()
