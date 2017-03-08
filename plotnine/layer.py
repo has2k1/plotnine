@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import six
-from copy import deepcopy
+from copy import copy, deepcopy
 
 import pandas as pd
 import matplotlib.cbook as cbook
@@ -386,7 +386,7 @@ class layer(object):
         coord : coord
             Type of coordinate axes
         """
-        params = deepcopy(self.geom.params)
+        params = copy(self.geom.params)
         params.update(self.stat.params)
         params['zorder'] = self.zorder
         self.data = self.geom.handle_na(self.data)

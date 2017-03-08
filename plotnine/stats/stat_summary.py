@@ -13,13 +13,16 @@ from .stat import stat
 
 
 def bootstrap_statistics(series, statistic, n_samples=1000,
-                         confidence_interval=0.95):
+                         confidence_interval=0.95, prng=None):
     """
     Default parameters taken from
     R's Hmisc smean.cl.boot
     """
+    if prng is None:
+        prng = np.random
+
     alpha = 1 - confidence_interval
-    inds = np.random.randint(0, len(series), size=(n_samples, len(series)))
+    inds = prng.randint(0, len(series), size=(n_samples, len(series)))
     samples = series.values[inds]
     means = np.sort(statistic(samples, axis=1))
     return pd.DataFrame({'ymin': means[int((alpha/2)*n_samples)],
@@ -27,13 +30,15 @@ def bootstrap_statistics(series, statistic, n_samples=1000,
                          'y': [statistic(series)]})
 
 
-def mean_cl_boot(series, n_samples=1000, confidence_interval=0.95):
+def mean_cl_boot(series, n_samples=1000, confidence_interval=0.95,
+                 prng=None):
     """
     Bootstrapped mean with confidence limits
     """
     return bootstrap_statistics(series, np.mean,
                                 n_samples=n_samples,
-                                confidence_interval=confidence_interval)
+                                confidence_interval=confidence_interval,
+                                prng=prng)
 
 
 def mean_cl_normal(series, confidence_interval=0.95):
@@ -126,10 +131,11 @@ class stat_summary(stat):
     ----------
     {common_parameters}
     fun_data : str or function, optional
-        One of ``"mean_cl_boot"``, ``"mean_cl_normal"``,
-        ``"mean_sdl"``, ``"median_hilow"`` or any function that takes a
-        array and returns a dataframe with three rows indexed
-        as ``y``, ``ymin`` and ``ymax``. Defaults to ``"mean_cl_boot"``.
+        One of
+        :py:`['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow']`
+        or any function that takes a array and returns a dataframe
+        with three rows indexed as ``y``, ``ymin`` and ``ymax``.
+        Defaults to :py:`'mean_cl_boot'`.
     fun_y : function, optional (default: None)
         Any function that takes a array-like and returns a value
         fun_ymin : function (default:None)
@@ -142,6 +148,9 @@ class stat_summary(stat):
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
+    prng : numpy.random.RandomState
+        Random number generator to use for bootstrap statistics.
+        If `None`, then numpy global generator (``np.random``) is used.
 
     {aesthetics}
 
@@ -163,9 +172,9 @@ class stat_summary(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
-                      'fun_data': None, 'fun_y': None,
+                      'fun_data': 'mean_cl_boot', 'fun_y': None,
                       'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': None}
+                      'fun_args': None, 'prng': None}
     CREATES = {'ymin', 'ymax'}
 
     def setup_params(self, data):
@@ -175,6 +184,14 @@ class stat_summary(stat):
 
         if self.params['fun_args'] is None:
             self.params['fun_args'] = {}
+
+        if 'prng' not in self.params['fun_args']:
+            if self.params['prng']:
+                prng = self.params['prng']
+            else:
+                prng = np.random
+
+            self.params['fun_args']['prng'] = prng
 
         return self.params
 
@@ -204,6 +221,8 @@ class stat_summary(stat):
             summary['x'] = x
             summary['group'] = group
             unique = uniquecols(df)
+            if 'y' in unique:
+                unique = unique.drop('y', axis=1)
             merged = summary.merge(unique, on=['group', 'x'])
             preserve_categories(unique, merged)  # see above note
             summaries.append(merged)
