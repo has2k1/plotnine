@@ -32,13 +32,13 @@ class stat_sum(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}
-    DEFAULT_AES = {'size': '..prop..'}  # options: ..prop.., ..n..
+    DEFAULT_AES = {'size': '..prop..', 'weight': 1}
     CREATES = {'n', 'prop'}
 
     @classmethod
     def compute_panel(cls, data, scales, **params):
         if 'weight' not in data:
-            data['weight'] = params.get('weight', 1)
+            data['weight'] = 1
 
         def count(df):
             """

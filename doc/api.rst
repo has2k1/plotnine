@@ -33,6 +33,7 @@ geoms
    geom_blank
    geom_boxplot
    geom_col
+   geom_count
    geom_crossbar
    geom_density
    geom_dotplot
