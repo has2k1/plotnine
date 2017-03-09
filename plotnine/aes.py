@@ -224,16 +224,29 @@ def is_valid_aesthetic(value, ae):
                  '_', '--', '-.', ':', 'None', ' ', ''}
         if value in named:
             return True
-        if (isinstance(value, tuple) and
-                isinstance(value[1], tuple)):
+
+        # tuple of the form (offset, (on, off, on, off, ...))
+        # e.g (0, (1, 2))
+        conditions = [isinstance(value, tuple),
+                      isinstance(value[0], int),
+                      isinstance(value[1], tuple),
+                      len(value[1]) % 2 == 0,
+                      all(isinstance(x, int) for x in value[1])]
+        if all(conditions):
             return True
         return False
 
     elif ae == 'shape':
         if isinstance(value, six.string_types):
             return True
-        if (isinstance(value, (tuple, list)) and
-                all(isinstance(x, int) for x in value)):
+
+        # tuple of the form (numsides, style, angle)
+        # where style is in the range [0, 3]
+        # e.g (4, 1, 45)
+        conditions = [isinstance(value, tuple),
+                      all(isinstance(x, int) for x in value),
+                      0 <= value[1] < 3]
+        if all(conditions):
             return True
         return False
 

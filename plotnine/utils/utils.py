@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 import matplotlib.cbook as cbook
+import matplotlib.colors as mcolors
 from six import add_metaclass
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
@@ -580,13 +581,36 @@ def to_rgba(colors, alpha):
     alpha values. Hence no two objects with different
     alpha values may be plotted in one call. This would
     make plots with continuous alpha values innefficient.
-    However :), the colors can be rgba list-likes and
-    the alpha dimension will be respected.
+    However :), the colors can be rgba hex values or
+    list-likes and the alpha dimension will be respected.
     """
     def is_iterable(var):
         return cbook.iterable(var) and not is_string(var)
 
-    cc = colorConverter
+    def has_alpha(c):
+        if isinstance(c, tuple):
+            if len(c) == 4:
+                return True
+        elif isinstance(c, six.string_types):
+            if c[0] == '#' and len(c) == 9:
+                return True
+        return False
+
+    def to_rgba_hex(c, a):
+        """
+        Conver rgb color to rgba hex value
+
+        If color c has an alpha channel, then alpha value
+        a is ignored
+        """
+        _has_alpha = has_alpha(c)
+        c = mcolors.to_hex(c, keep_alpha=_has_alpha)
+
+        if not _has_alpha:
+            arr = colorConverter.to_rgba(c, a)
+            return mcolors.to_hex(arr, keep_alpha=True)
+
+        return c
 
     if is_iterable(colors):
         if all(c is None for c in colors):
@@ -596,16 +620,16 @@ def to_rgba(colors, alpha):
             return ''
 
         if is_iterable(alpha):
-            return [cc.to_rgba(c, a) for c, a in zip(colors, alpha)]
-        if not is_iterable(alpha):
-            return cc.to_rgba_array(colors, alpha)
+            return [to_rgba_hex(c, a) for c, a in zip(colors, alpha)]
+        else:
+            return [to_rgba_hex(c, alpha) for c in colors]
     else:
         if colors is None or colors == '':
             return colors
         if is_iterable(alpha):
-            return [cc.to_rgba(colors, a) for a in alpha]
+            return [to_rgba_hex(colors, a) for a in alpha]
         else:
-            return cc.to_rgba(colors, alpha)
+            return to_rgba_hex(colors, alpha)
 
 
 def groupby_apply(df, cols, func, *args, **kwargs):

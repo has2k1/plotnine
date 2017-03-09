@@ -10,6 +10,7 @@ from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
 from plotnine.aes import is_calculated_aes, strip_dots
+from plotnine.aes import is_valid_aesthetic
 from plotnine.utils.exceptions import PlotnineError
 
 df = pd.DataFrame({'x': np.arange(10),
@@ -88,6 +89,30 @@ def test_aes():
     result = aes('weight', 'hp', color='qsec')
     expected = {'x': 'weight', 'y': 'hp', 'color': 'qsec'}
     assert result == expected
+
+
+def test_valid_aes_linetypes():
+    assert is_valid_aesthetic('solid', 'linetype')
+    assert is_valid_aesthetic('--', 'linetype')
+    assert not is_valid_aesthetic('tada', 'linetype')
+    assert is_valid_aesthetic((0, (3, 2)), 'linetype')
+    assert not is_valid_aesthetic((0, (3, 2.0)), 'linetype')
+    assert not is_valid_aesthetic((0, (3, 2, 1)), 'linetype')
+
+
+def test_valid_aes_shapes():
+    assert is_valid_aesthetic('o', 'shape')
+    assert is_valid_aesthetic((4, 1, 45), 'shape')
+    assert not is_valid_aesthetic([4, 1, 45], 'shape')
+
+
+def test_valid_aes_colors():
+    assert is_valid_aesthetic('red', 'color')
+    assert is_valid_aesthetic('#FF0000', 'color')
+    assert is_valid_aesthetic('#FF000080', 'color')
+    assert is_valid_aesthetic((1, 0, 0), 'color')
+    assert is_valid_aesthetic((1, 0, 0), 'color')
+    assert is_valid_aesthetic((1, 0, 0, 0.5), 'color')
 
 
 def test_calculated_aes():
