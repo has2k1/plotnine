@@ -9,11 +9,11 @@ import pandas as pd
 import matplotlib.collections as mcoll
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
-from matplotlib.ticker import MaxNLocator
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
-from matplotlib.offsetbox import AuxTransformBox, PaddedBox
+from matplotlib.offsetbox import AuxTransformBox
 from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
+from mizani.breaks import extended_breaks
 
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea
@@ -86,17 +86,7 @@ class guide_colorbar(guide):
             'label': scale.get_labels(breaks),
             'value': breaks})
 
-        if self.draw_ulim and self.draw_llim:
-            prune = None
-        elif not self.draw_ulim and not self.draw_llim:
-            prune = 'both'
-        elif not self.draw_ulim:
-            prune = 'upper'
-        elif not self.draw_llim:
-            prune = 'lower'
-        bar = MaxNLocator(self.nbin,
-                          steps=[1, 2, 5, 10],
-                          prune=prune).tick_values(*limits)
+        bar = extended_breaks(n=self.nbin, Q=[1, 2, 5, 10])(limits)
         # discard locations in bar not in scale.limits
         bar = bar.compress((limits[0] <= bar) & (bar <= limits[1]))
         self.bar = pd.DataFrame({
@@ -195,7 +185,14 @@ class guide_colorbar(guide):
             add_segmented_colorbar(da, colors, direction)
 
         if self.ticks:
-            add_ticks(da, tick_locations, direction)
+            _locations = tick_locations
+            if not self.draw_ulim:
+                _locations = _locations[:-1]
+
+            if not self.draw_llim:
+                _locations = _locations[1:]
+
+            add_ticks(da, _locations, direction)
 
         # labels #
         if self.label:
