@@ -40,6 +40,7 @@ geoms
    geom_errorbar
    geom_errorbarh
    geom_freqpoly
+   geom_bin2d
    geom_histogram
    geom_hline
    geom_jitter
