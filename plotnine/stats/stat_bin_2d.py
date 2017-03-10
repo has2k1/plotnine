@@ -69,7 +69,7 @@ class stat_bin_2d(stat):
         drop = params['drop']
         weight = data.get('weight')
 
-        if not weight:
+        if weight is None:
             weight = np.ones(len(data['x']))
 
         # The bins will be over the dimension(full size) of the
@@ -83,8 +83,10 @@ class stat_bin_2d(stat):
         y = np.append(data['y'], range_y)
 
         # create the cutting parameters
-        xbreaks = fuzzybreaks(scales.x, breaks.x, binwidth.x, bins.x)
-        ybreaks = fuzzybreaks(scales.y, breaks.y, binwidth.y, bins.y)
+        xbreaks = fuzzybreaks(scales.x, breaks=breaks.x,
+                              binwidth=binwidth.x, bins=bins.x)
+        ybreaks = fuzzybreaks(scales.y, breaks.y,
+                              binwidth=binwidth.y, bins=bins.y)
         xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)
         ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)
 
