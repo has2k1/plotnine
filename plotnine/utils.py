@@ -23,7 +23,7 @@ from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
 
-from ..exceptions import PlotnineError
+from .exceptions import PlotnineError
 
 
 DISCRETE_KINDS = 'ObUS'
