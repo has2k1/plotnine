@@ -167,6 +167,12 @@ def loess(data, xseq, **params):
         weights = None
 
     kwargs = params['method_args']
+
+    # Creates a loess model that allows extrapolation
+    # when making predictions
+    if 'surface' not in kwargs:
+        kwargs['surface'] = 'direct'
+
     if 'span' not in kwargs:
         kwargs['span'] = params['span']
     lo = loess_klass(data['x'], data['y'], weights, **kwargs)
