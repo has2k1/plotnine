@@ -23,6 +23,16 @@ y = np.sin(x)
 y_noisy = y + .1*prng.randn(n)
 df_non_linear = pd.DataFrame({'x': x, 'y': y, 'y_noisy': y_noisy})
 
+# discrete_x
+df_discrete_x = pd.DataFrame({
+    'x': range(10),
+    'y': [1, 2, 3, 4, 4, 5, 6, 7, 8, 9]})
+
+# continuous_x
+df_continuous_x = pd.DataFrame({
+    'x': np.arange(1, 21) + .2,
+    'y': range(1, 21)})
+
 
 def test_linear_smooth():
     p = (ggplot(df_linear, aes('x'))
@@ -64,6 +74,41 @@ def test_non_linear_smooth_no_ci():
     assert p == 'non_linear_smooth_no_ci'
 
 
+def test_discrete_x():
+    p = (ggplot(df_discrete_x, aes('x', 'y'))
+         + geom_point()
+         + geom_smooth(color='blue'))
+
+    assert p == 'discrete_x'
+
+
+def test_discrete_x_fullrange():
+    p = (ggplot(df_discrete_x, aes('x', 'y'))
+         + geom_point()
+         + geom_smooth(color='blue', fullrange=True))
+
+    assert p == 'discrete_x_fullrange'
+
+
+def test_continuous_x():
+    n = len(df_continuous_x)
+    p = (ggplot(df_continuous_x, aes('x', 'y'))
+         + geom_point()
+         + geom_smooth(df_continuous_x[3:n-3], method='loess',
+                       color='blue', fullrange=False))
+    assert p == 'continuous_x'
+
+
+def test_continuous_x_fullrange():
+    n = len(df_continuous_x)
+    p = (ggplot(df_continuous_x, aes('x', 'y'))
+         + geom_point()
+         + geom_smooth(df_continuous_x[3:n-3], method='loess',
+                       color='blue', fullrange=True))
+
+    assert p == 'continuous_x_fullrange'
+
+
 class TestOther(object):
     p = ggplot(df_linear, aes('x')) + geom_point(aes(y='y_noisy'))
 
@@ -98,3 +143,11 @@ class TestOther(object):
 
         p = self.p + geom_smooth(aes(y='y_noisy'), method='gpr')
         p.draw_test()
+
+
+def test_sorts_by_x():
+    df = pd.DataFrame({'x': [5, 0, 1, 2, 3, 4],
+                       'y': range(6)})
+    p = ggplot(df, aes('x', 'y')) + geom_smooth(stat='identity')
+
+    assert p == 'sorts_by_x'

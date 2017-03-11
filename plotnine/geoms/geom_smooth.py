@@ -30,6 +30,9 @@ class geom_smooth(geom):
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity',
                       'na_rm': False}
 
+    def setup_data(self, data):
+        return data.sort_values(['PANEL', 'group', 'x'])
+
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
         has_ribbon = (data.ix[0, 'ymin'] is not None and
