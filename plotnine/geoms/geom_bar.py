@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from ..utils import resolution
-from ..utils.doctools import document
+from ..doctools import document
 from .geom_rect import geom_rect
 
 

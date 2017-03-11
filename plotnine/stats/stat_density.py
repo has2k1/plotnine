@@ -5,7 +5,7 @@ import pandas as pd
 import statsmodels.api as sm
 import six
 
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import suppress
 from .stat import stat

@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.patches import Rectangle
 
-from ..utils.doctools import document
+from ..doctools import document
 from .geom import geom
 from .geom_ribbon import geom_ribbon
 from .geom_line import geom_line

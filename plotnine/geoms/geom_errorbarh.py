@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import copy_missing_columns, resolution
-from ..utils.doctools import document
+from ..doctools import document
 from .geom import geom
 from .geom_segment import geom_segment
 

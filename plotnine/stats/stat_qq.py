@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 from scipy.stats import probplot
 
-from ..utils.doctools import document
+from ..doctools import document
 from .stat import stat
 
 

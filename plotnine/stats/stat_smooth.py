@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-from ..utils.doctools import document
+from ..doctools import document
 from .smoothers import predictdf
 from .stat import stat
 

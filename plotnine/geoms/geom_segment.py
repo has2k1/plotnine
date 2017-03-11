@@ -7,7 +7,7 @@ import matplotlib.collections as mcoll
 
 from ..utils import to_rgba, make_line_segments, interleave
 from ..utils import SIZE_FACTOR
-from ..utils.doctools import document
+from ..doctools import document
 from .geom import geom
 
 

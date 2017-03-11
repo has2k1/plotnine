@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
-from ..utils.doctools import document
+from ..doctools import document
 from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
 from ..utils import resolution, SIZE_FACTOR
 from .geom_point import geom_point

@@ -5,7 +5,7 @@ from warnings import warn
 import pandas as pd
 import statsmodels.formula.api as smf
 
-from ..utils.doctools import document
+from ..doctools import document
 from .stat import stat
 
 

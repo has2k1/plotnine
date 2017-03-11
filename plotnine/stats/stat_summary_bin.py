@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import groupby_apply
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from ..scales.scale import scale_discrete
 from .binning import fuzzybreaks

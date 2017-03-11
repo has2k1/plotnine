@@ -8,7 +8,7 @@ from six.moves import range
 from matplotlib.cbook import Bunch
 
 from ..utils import is_scalar_or_string, suppress
-from ..utils.doctools import document
+from ..doctools import document
 from .binning import fuzzybreaks
 from .stat import stat
 

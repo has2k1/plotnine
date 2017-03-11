@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.lines as mlines
 
 from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
-from ..utils.doctools import document
+from ..doctools import document
 from .geom import geom
 
 

@@ -6,7 +6,7 @@ import pandas as pd
 import six
 
 from ..utils import suppress
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat_density import stat_density, compute_density
 from .stat import stat

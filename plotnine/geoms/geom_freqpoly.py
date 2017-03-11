@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, division, print_function)
 
-from ..utils.doctools import document
+from ..doctools import document
 from .geom_path import geom_path
 
 

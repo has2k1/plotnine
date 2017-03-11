@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from statsmodels.distributions.empirical_distribution import ECDF
 
-from ..utils.doctools import document
+from ..doctools import document
 from .stat import stat
 
 

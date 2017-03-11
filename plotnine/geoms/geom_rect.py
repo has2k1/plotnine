@@ -5,7 +5,7 @@ from matplotlib.collections import PolyCollection
 from six.moves import zip
 
 from ..utils import to_rgba, SIZE_FACTOR
-from ..utils.doctools import document
+from ..doctools import document
 from .geom import geom
 
 

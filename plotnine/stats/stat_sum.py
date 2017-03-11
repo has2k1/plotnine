@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from ..aes import all_aesthetics
 from ..utils import groupby_apply
-from ..utils.doctools import document
+from ..doctools import document
 from .stat import stat
 
 

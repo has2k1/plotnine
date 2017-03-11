@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.patches import Rectangle
 
-from ..utils.doctools import document
+from ..doctools import document
 from .geom_text import geom_text
 
 _aes = geom_text.DEFAULT_AES.copy()

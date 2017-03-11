@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from ..positions import position_jitter
 from .geom_point import geom_point

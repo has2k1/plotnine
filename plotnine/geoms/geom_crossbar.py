@@ -10,7 +10,7 @@ from matplotlib.patches import Rectangle
 
 from ..utils import copy_missing_columns, to_rgba
 from ..utils import resolution, SIZE_FACTOR
-from ..utils.doctools import document
+from ..doctools import document
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment

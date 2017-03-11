@@ -6,7 +6,7 @@ import pandas as pd
 from scipy.interpolate import interp1d
 
 from ..utils import groupby_apply, interleave, resolution
-from ..utils.doctools import document
+from ..doctools import document
 from .geom_polygon import geom_polygon
 from .geom_path import geom_path
 from .geom import geom

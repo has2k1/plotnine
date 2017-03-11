@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import resolution
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
 

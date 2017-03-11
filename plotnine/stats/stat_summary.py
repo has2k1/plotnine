@@ -7,7 +7,7 @@ import scipy.stats
 import pandas as pd
 
 from ..utils import uniquecols, get_valid_kwargs
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
 

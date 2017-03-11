@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import numpy as np
 
-from ..utils.doctools import document
+from ..doctools import document
 from .geom_segment import geom_segment
 
 

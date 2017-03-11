@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import groupby_apply
-from ..utils.doctools import document
+from ..doctools import document
 from ..exceptions import PlotnineError
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)

@@ -7,7 +7,7 @@ import pandas.api.types as pdtypes
 from matplotlib.cbook import boxplot_stats
 
 from ..utils import resolution
-from ..utils.doctools import document
+from ..doctools import document
 from .stat import stat
 
 
