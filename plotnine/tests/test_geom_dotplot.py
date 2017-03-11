@@ -2,10 +2,11 @@ from __future__ import absolute_import, division, print_function
 
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_dotplot
+from plotnine import ggplot, aes, geom_dotplot, theme
 
 
 df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+_theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_dotdensity():
@@ -54,3 +55,38 @@ def test_stackdir_centerwhole():
          + geom_dotplot(bins=15, stackdir='centerwhole'))
 
     assert p == 'stackdir_centerwhole'
+
+
+class TestGrouping(object):
+    df = pd.DataFrame({
+        'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4],
+        'g': [1, 2, 22, 3, 33, 333, 4, 44, 444, 4444]})
+
+    p = (ggplot(df, aes('x', 'x', fill='factor(g)',
+                       color='factor(g)'))
+         + _theme)
+
+    def test_group_basic(self):
+        p = self.p + geom_dotplot(bins=15)
+
+        assert p == 'group_basic'
+
+    def test_group_binpositions_all(self):
+        p = (self.p
+             + geom_dotplot(bins=15, binpositions='all'))
+
+        assert p == 'group_basic'  # Yes same as above
+
+    def test_group_stackgroups(self):
+        p = (self.p
+             + geom_dotplot(bins=15, binpositions='all',
+                            stackgroups=True))
+
+        assert p == 'group_stackgroups'
+
+    def test_group_stackgroups_binaxis_y(self):
+        p = (self.p
+             + geom_dotplot(bins=15, binpositions='all',
+                            stackgroups=True, binaxis='y'))
+
+        assert p == 'group_stackgroups_binaxis_y'
