@@ -1112,3 +1112,43 @@ def cross_join(df1, df2):
     return pd.merge(df1, df2, on='key').loc[:, all_columns]
 
 
+def to_inches(value, units):
+    """
+    Convert value to inches
+
+    Parameters
+    ----------
+    value : float
+        Value to be converted
+    units : str
+        Units of value. Must be one of
+        `['in', 'cm', 'mm']`.
+    """
+    lookup = {'in': lambda x: x,
+              'cm': lambda x: x/2.54,
+              'mm': lambda x: x/(2.54*10)}
+    try:
+        return lookup[units](value)
+    except KeyError:
+        raise PlotnineError("Unknown units '{}'".format(units))
+
+
+def from_inches(value, units):
+    """
+    Convert value in inches to given units
+
+    Parameters
+    ----------
+    value : float
+        Value to be converted
+    units : str
+        Units to convert value to. Must be one of
+        `['in', 'cm', 'mm']`.
+    """
+    lookup = {'in': lambda x: x,
+              'cm': lambda x: x*2.54,
+              'mm': lambda x: x*2.54*10}
+    try:
+        return lookup[units](value)
+    except KeyError:
+        raise PlotnineError("Unknown units '{}'".format(units))

@@ -10,7 +10,7 @@ del get_versions
 # version of plotnine.
 
 from .qplot import qplot
-from .ggplot import ggplot
+from .ggplot import ggplot, ggsave
 from .aes import *
 from .labels import *
 from .coords import *
@@ -19,7 +19,6 @@ from .stats import *
 from .scales import *
 from .facets import *
 from .themes import *
-from .utils import *
 from .positions import *
 from .guides import *
 

@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
 import os
-from copy import copy
 
 import matplotlib.pyplot as plt
 import pytest
@@ -11,8 +10,6 @@ from plotnine.exceptions import PlotnineError
 
 p = (ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars)
      + geom_text())
-
-# filename = 'filename.png'
 
 
 def sequential_filenames():
@@ -26,7 +23,6 @@ def sequential_filenames():
 filename_gen = sequential_filenames()
 
 
-# TODO: test some real file content?
 def assert_file_exist(filename, msg=None):
     if not msg:
         msg = "File {} does not exist".format(filename)
@@ -40,76 +36,72 @@ def assert_exist_and_clean(filename, msg=None):
 
 class TestArguments(object):
     def test_default_filename(self):
-        ggsave(p)
-        tokens = ('ggsave-', str(abs(p.__hash__())), '.pdf')
-        fn = ''.join(tokens)
+        p.save()
+        fn = p._save_filename('pdf')
         assert_exist_and_clean(fn, "default filename")
 
     def test_filename_plot(self):
         fn = next(filename_gen)
-        ggsave(fn, p)
+        p.save(fn)
         assert_exist_and_clean(fn, "filename and plot")
 
     def test_save_method(self):
         fn = next(filename_gen)
-        g = copy(p)
-        g.save(fn)
+        p.save(fn)
         assert_exist_and_clean(fn, "save method")
 
     def test_filename_plot_path(self):
         fn = next(filename_gen)
-        ggsave(fn, p, path='.')
+        p.save(fn, path='.')
         assert_exist_and_clean(fn, "fn, plot and path")
 
     def test_format_png(self):
-        ggsave(p, format='png')
-        tokens = ('ggsave-', str(abs(p.__hash__())), '.png')
-        fn = ''.join(tokens)
+        p.save(format='png')
+        fn = p._save_filename('png')
         assert_exist_and_clean(fn, "format png")
 
     def test_dpi(self):
         fn = next(filename_gen)
-        ggsave(fn, p, dpi=100)
+        p.save(fn, dpi=100)
         assert_exist_and_clean(fn, "dpi = 100")
 
-    def test_ggsave_big(self):
+    def test_ggsave(self):
+        ggsave(p)
+        fn = p._save_filename('pdf')
+        assert_exist_and_clean(fn, "default filename")
+
+    def test_save_big(self):
         fn = next(filename_gen)
         # supplying the ggplot object will work without
         # printing it first! 26 is the current limit, just go
         # over it to not use too much memory
-        ggsave(fn, p, width=26, height=26,
-               limitsize=False)
+        p.save(fn, width=26, height=26, limitsize=False)
         assert_exist_and_clean(fn, "big height and width")
 
 
 class TestExceptions(object):
     def test_unknown_format(self):
-        with pytest.raises(PlotnineError):
-            ggsave(p, format='unknown')
-
-    def test_bad_scale(self):
         with pytest.raises(Exception):
-            ggsave(p, scale='x')
+            p.save(format='unknown')
 
     def test_large_width(self):
         with pytest.raises(PlotnineError):
-            ggsave(p, width=300)
+            p.save(width=300)
 
     def test_large_height(self):
         with pytest.raises(PlotnineError):
-            ggsave(p, height=300)
+            p.save(height=300)
 
     def test_bad_units(self):
         with pytest.raises(Exception):
-            ggsave(p, width=1, heigth=1, units='xxx')
-
-    def test_bad_dpi(self):
-        with pytest.raises(Exception):
-            ggsave(p,  dpi='xxx')
+            p.save(width=1, heigth=1, units='xxx')
 
 
-def test_ggsave_close_plot():
+# This should be the last function in the file since it can catch
+# "leakages" due to the tests in this test module.
+def test_ggsave_closes_plot():
+    assert plt.get_fignums() == [], "There are unsaved test plots"
     fn = next(filename_gen)
-    ggsave(fn, p)
+    p.save(fn)
     assert_exist_and_clean(fn, "exist")
-    assert plt.get_fignums() == [], "ggsave did not close the plot"
+    assert plt.get_fignums() == [], "ggplot.save did not close the plot"

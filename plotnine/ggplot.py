@@ -1,7 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import os
 import sys
-from copy import deepcopy
+from copy import copy, deepcopy
+from warnings import warn
 
 import pandas as pd
 import matplotlib as mpl
@@ -15,9 +17,8 @@ from .layer import Layers
 from .facets import facet_null
 from .facets.layout import Layout
 from .options import get_option
-from .themes.theme import theme_get
-from .utils import suppress
-from .utils.ggutils import ggsave
+from .themes.theme import theme, theme_get
+from .utils import suppress, to_inches, from_inches
 from .exceptions import PlotnineError
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -112,19 +113,6 @@ class ggplot(object):
             return other.__radd__(self, inplace=True)
         except TypeError:
             return other.__radd__(self)
-
-    def save(self, filename=None, **kwargs):
-        """
-        Save plot image
-
-        Parameters
-        ----------
-        filename : str
-            Filename
-        kwargs : dict
-            Arguments passed to :func:`~plotnine.ggutils.ggsave`
-        """
-        ggsave(filename=filename, plot=self, **kwargs)
 
     def draw(self):
         """
@@ -448,3 +436,122 @@ class ggplot(object):
 
         text = figure.text(x, y, title, ha='center', va='center')
         figure._themeable['plot_title'] = text
+
+    def _save_filename(self, ext):
+        """
+        Default filename used by the save method
+
+        Parameters
+        ----------
+        ext : str
+            Extension e.g. png, pdf, ...
+        """
+        hash_token = abs(self.__hash__())
+        return 'plotnine-save-{}.{}'.format(hash_token, ext)
+
+    def save(self, filename=None, format=None, path=None,
+             width=None, height=None, units='in',
+             dpi=None, limitsize=True, **kwargs):
+        """
+        Save a ggplot object as an image file
+
+        Parameters
+        ----------
+        filename : str or file
+            File name or file to write the plot to.
+        format : str
+            Image format to use, automatically extract from
+            file name extension.
+        path : str
+            Path to save plot to (if you just want to set path and
+            not filename).
+        width : number
+            Width (defaults to the width of current plotting window).
+        height : number
+            Height (defaults to the height of current plotting window).
+        units : str
+            Units for width and height when either one is explicitly
+            specified (in, cm, or mm).
+        dpi : float
+            DPI to use for raster graphics. If None, defaults to using
+            the `dpi` of theme, if none is set then a `dpi` of 100.
+        limitsize : bool
+            If ``True`` (the default), ggsave will not save images
+            larger than 50x50 inches, to prevent the common error
+            of specifying dimensions in pixels.
+        kwargs : dict
+            Additional arguments to pass to matplotlib `savefig()`.
+        """
+        fig_kwargs = {'bbox_inches': 'tight',  # 'tight' is a good default
+                      'format': format}
+        fig_kwargs.update(kwargs)
+        figure = [None]  # Python 3 a nonlocal
+
+        # theme
+        self.theme = self.theme or theme_get()
+
+        # dpi
+        if dpi is None:
+            try:
+                dpi = self.theme.themeables.property('dpi')
+            except KeyError:
+                dpi = 100
+                # Do not modify original
+                self.theme = copy(self.theme) + theme(dpi=dpi)
+
+            # Should not need this with MPL 2.0
+            fig_kwargs['dpi'] = dpi
+
+        # filename
+        print_filename = False
+        if filename is None:
+            ext = format if format else 'pdf'
+            filename = self._save_filename(ext)
+            print_filename = True
+
+        if path:
+            filename = os.path.join(path, filename)
+
+        # Helper function so that we can clean up when it fails
+        def _save():
+            fig = figure[0] = self.draw()
+            _w, _h = fig.get_size_inches()
+            print_size = width is None or height is None
+            w = _w if width is None else to_inches(width, units)
+            h = _h if height is None else to_inches(height, units)
+
+            if print_size:
+                warn("Saving {0} x {1} {2} image.".format(
+                     from_inches(w, units),
+                     from_inches(h, units), units))
+
+            if print_filename:
+                warn('Filename: {}'.format(filename))
+
+            if limitsize and (w > 25 or h > 25):
+                raise PlotnineError(
+                       "Dimensions exceed 25 inches "
+                       "(height and width are specified in inches/cm/mm, "
+                       "not pixels). If you are sure you want these "
+                       "dimensions, use 'limitsize=False'.")
+
+            fig.set_size_inches(w, h)
+            fig.savefig(filename, **fig_kwargs)
+            fig.set_size_inches(w, h)
+
+        try:
+            _save()
+        except Exception as err:
+            figure[0] and plt.close(figure[0])
+            raise err
+        else:
+            figure[0] and plt.close(figure[0])
+
+
+def ggsave(plot, *arg, **kwargs):
+    """
+    Save a ggplot object as an image file
+
+    Use :meth:`ggplot.save` instead
+    """
+    return plot.save(*arg, **kwargs)
