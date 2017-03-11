@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils.doctools import document
-from ..utils import smoothers
+from .smoothers import predictdf
 from .stat import stat
 
 
@@ -192,4 +192,4 @@ class stat_smooth(stat):
                 rangee = [data['x'].min(), data['x'].max()]
             xseq = np.linspace(rangee[0], rangee[1], n)
 
-        return smoothers.predictdf(data, xseq, **params)
+        return predictdf(data, xseq, **params)
