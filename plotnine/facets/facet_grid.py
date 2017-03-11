@@ -9,7 +9,7 @@ import six
 
 from ..utils import ninteraction, add_margins, cross_join
 from ..utils import match, join_keys
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .facet import facet, layout_null, combine_vars, add_missing_facets
 from .facet import eval_facet_vars
 

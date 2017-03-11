@@ -8,7 +8,7 @@ import pandas as pd
 import six
 
 from ..scales.scales import make_scale
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import suppress
 
 

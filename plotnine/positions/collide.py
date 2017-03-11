@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from warnings import warn
 import numpy as np
 
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import match, groupby_apply, suppress
 
 

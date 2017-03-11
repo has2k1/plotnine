@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 from plotnine import ggplot, aes, arrow, stat_function
 
 

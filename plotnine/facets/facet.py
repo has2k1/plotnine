@@ -8,7 +8,7 @@ import pandas as pd
 from matplotlib.cbook import Bunch
 
 from ..utils import suppress, cross_join, match
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..scales.scales import Scales
 
 # For default matplotlib backend

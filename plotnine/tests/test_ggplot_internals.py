@@ -11,7 +11,7 @@ from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
 from plotnine.aes import is_calculated_aes, strip_dots
 from plotnine.aes import is_valid_aesthetic
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 df = pd.DataFrame({'x': np.arange(10),
                    'y': np.arange(10)})

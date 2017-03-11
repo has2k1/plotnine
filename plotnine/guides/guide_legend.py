@@ -15,7 +15,7 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
 from ..utils import Registry
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..geoms import geom_text
 from .guide import guide
 

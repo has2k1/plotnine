@@ -14,7 +14,7 @@ from copy import deepcopy
 from six import add_metaclass
 
 from ..utils import suppress, RegistryHierarchyMeta
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .elements import (element_line, element_rect,
                        element_text, element_blank)
 

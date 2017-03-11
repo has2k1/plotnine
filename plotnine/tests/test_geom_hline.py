@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_hline, geom_point, theme
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 df = pd.DataFrame({
         'yintercept': [1, 2],

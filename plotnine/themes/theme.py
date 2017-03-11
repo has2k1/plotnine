@@ -1,7 +1,7 @@
 from copy import copy, deepcopy
 
 from ..options import get_option, set_option
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .themeable import themeable, Themeables
 
 

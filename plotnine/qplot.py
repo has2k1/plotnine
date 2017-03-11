@@ -15,7 +15,7 @@ from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
 from .utils import Registry, is_string, DISCRETE_KINDS, suppress
-from .utils.exceptions import PlotnineError
+from .exceptions import PlotnineError
 from .scales import scale_x_log10, scale_y_log10
 from .themes import theme
 

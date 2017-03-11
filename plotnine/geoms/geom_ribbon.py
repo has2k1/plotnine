@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from ..coords import coord_flip
 from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .geom import geom
 
 

@@ -10,7 +10,7 @@ import scipy.stats as stats
 import statsmodels.api as sm
 from statsmodels.sandbox.regression.predstd import wls_prediction_std
 
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 smlowess = sm.nonparametric.lowess
 

@@ -6,7 +6,7 @@ import six
 
 from ..aes import aes
 from ..utils import is_scalar_or_string, Registry
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 class annotate(object):

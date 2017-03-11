@@ -6,7 +6,7 @@ import pytest
 
 from plotnine import ggplot, aes
 from plotnine.geoms.geom import geom
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 df = pd.DataFrame({'col1': [1, 2, 3, 4],
                    'col2': 2,

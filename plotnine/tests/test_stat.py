@@ -6,7 +6,7 @@ from plotnine import ggplot, aes, geom_bar
 from plotnine.data import mtcars
 from plotnine.geoms.geom import geom
 from plotnine.stats.stat import stat
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 
 def test_stat_basics():

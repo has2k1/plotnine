@@ -10,7 +10,7 @@ from ..layer import layer
 from ..positions.position import position
 from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import defaults, copy_keys, is_string, Registry
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 @add_metaclass(Registry)

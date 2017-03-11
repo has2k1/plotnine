@@ -18,7 +18,7 @@ from .options import get_option
 from .themes.theme import theme_get
 from .utils import suppress
 from .utils.ggutils import ggsave
-from .utils.exceptions import PlotnineError
+from .exceptions import PlotnineError
 from .scales.scales import Scales
 from .coords import coord_cartesian
 from .guides.guides import guides

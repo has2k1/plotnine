@@ -8,7 +8,7 @@ import pandas as pd
 
 from ..utils import uniquecols, get_valid_kwargs
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .stat import stat
 
 

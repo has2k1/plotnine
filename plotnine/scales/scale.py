@@ -14,7 +14,7 @@ from mizani.bounds import rescale, censor, expand_range, zero_range
 from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import match, suppress, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
 

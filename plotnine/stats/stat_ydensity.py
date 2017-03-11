@@ -7,7 +7,7 @@ import six
 
 from ..utils import suppress
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .stat_density import stat_density, compute_density
 from .stat import stat
 

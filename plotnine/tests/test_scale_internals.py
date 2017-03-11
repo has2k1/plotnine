@@ -17,7 +17,7 @@ from plotnine.scales.scale_size import (scale_size_discrete,
                                         scale_size_continuous,
                                         scale_size_area,
                                         scale_size_radius)
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 
 # test palettes

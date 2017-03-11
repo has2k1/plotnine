@@ -4,7 +4,7 @@ import six
 from six import add_metaclass
 
 from ..utils import waiver, Registry
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 @add_metaclass(Registry)

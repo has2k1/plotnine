@@ -9,7 +9,7 @@ import matplotlib.cbook as cbook
 import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
-from .utils.exceptions import PlotnineError
+from .exceptions import PlotnineError
 from .utils import DISCRETE_KINDS, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
 from .aes import aes, is_calculated_aes, strip_dots

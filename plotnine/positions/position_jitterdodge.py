@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 
 from ..utils import jitter, resolution, suppress
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .position import position
 from .collide import collide, pos_dodge
 

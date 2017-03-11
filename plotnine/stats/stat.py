@@ -10,7 +10,7 @@ from ..aes import is_calculated_aes
 from ..utils import data_mapping_as_kwargs
 from ..utils import groupby_apply, copy_keys, uniquecols
 from ..utils import is_string, Registry, check_required_aesthetics
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 @add_metaclass(Registry)

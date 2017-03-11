@@ -6,7 +6,7 @@ import statsmodels.api as sm
 import six
 
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import suppress
 from .stat import stat
 

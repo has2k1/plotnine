@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import suppress
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .stat import stat
 
 

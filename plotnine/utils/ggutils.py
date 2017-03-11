@@ -10,7 +10,7 @@ from warnings import warn
 import matplotlib.pyplot as plt
 import six
 
-from .exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 def ggsave(filename=None, plot=None, device=None, format=None,

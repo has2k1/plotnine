@@ -6,7 +6,7 @@ import scipy.stats as stats
 from mizani.utils import round_any
 
 from ..scales.scale import scale_discrete
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 __all__ = ['freedman_diaconis_bins', 'breaks_from_bins',
            'breaks_from_binwidth', 'assign_bins',

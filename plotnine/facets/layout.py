@@ -3,7 +3,7 @@ from __future__ import division
 import numpy as np
 from matplotlib.cbook import Bunch
 
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import match, suppress
 
 

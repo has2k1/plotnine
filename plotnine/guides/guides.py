@@ -9,7 +9,7 @@ from matplotlib.offsetbox import (HPacker, VPacker)
 
 from .guide import guide as guide_class
 from ..utils import is_string, is_waive, Registry, suppress
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 # Terminology

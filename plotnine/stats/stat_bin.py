@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from warnings import warn
 
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)
 from .stat import stat

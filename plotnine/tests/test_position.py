@@ -9,7 +9,7 @@ from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
                       geom_col, geom_text, position_jitter,
                       position_jitterdodge, position_nudge,
                       position_stack, theme)
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 n = 6
 prng = np.random.RandomState(1234567890)

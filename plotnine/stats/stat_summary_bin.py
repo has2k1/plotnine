@@ -6,7 +6,7 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..utils.doctools import document
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..scales.scale import scale_discrete
 from .binning import fuzzybreaks
 from .stat_summary import make_summary_fun

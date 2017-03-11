@@ -6,7 +6,7 @@ import numpy as np
 import pandas.api.types as pdtypes
 
 from ..aes import aes_to_scale
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS, suppress
 from ..utils import Registry
 

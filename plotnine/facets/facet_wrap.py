@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import six
 
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..utils import suppress, match, join_keys
 from .facet import facet, combine_vars, layout_null
 from .facet import add_missing_facets, eval_facet_vars

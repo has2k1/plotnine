@@ -7,7 +7,7 @@ import pytest
 
 from plotnine import ggplot, aes, geom_text, ggsave
 from plotnine.data import mtcars
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 p = (ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars)
      + geom_text())

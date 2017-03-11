@@ -6,7 +6,7 @@ import numpy as np
 from matplotlib.cbook import Bunch
 
 from ..utils import is_waive
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 from ..scales.scale import scale_continuous, scale_discrete
 
 

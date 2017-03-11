@@ -5,7 +5,7 @@ from six import add_metaclass
 
 from ..utils import check_required_aesthetics, groupby_apply
 from ..utils import is_string, Registry
-from ..utils.exceptions import PlotnineError
+from ..exceptions import PlotnineError
 
 
 @add_metaclass(Registry)

@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, stat_bin
-from plotnine.utils.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError
 
 
 def test_stat_bin():
