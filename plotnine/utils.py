@@ -81,7 +81,7 @@ def make_iterable_ntimes(val, n):
     return [val] * n
 
 
-class _waiver(object):
+class waiver(object):
     def __repr__(self):
         return 'waiver()'
 
@@ -89,22 +89,12 @@ class _waiver(object):
         return self
 
 
-_waiver_ = _waiver()
-
-
-def waiver():
-    """
-    Return an object to imply 'default'.
-    """
-    return _waiver_
-
-
 def is_waive(x):
     """
     Return True if x object implies use
     default and False otherwise.
     """
-    return x is _waiver_
+    return isinstance(x, waiver)
 
 
 def identity(*args):
