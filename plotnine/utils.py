@@ -36,18 +36,6 @@ CONTINUOUS_KINDS = 'ifuc'
 SIZE_FACTOR = np.sqrt(np.pi)
 
 
-def pop(dataframe, key, default):
-    """
-    Pop element *key* from dataframe and return it. Return default
-    if it *key* not in dataframe
-    """
-    try:
-        value = dataframe.pop(key)
-    except KeyError:
-        value = default
-    return value
-
-
 def is_scalar_or_string(val):
     """
     Return whether the given object is a scalar or string like.
@@ -62,32 +50,6 @@ def is_string(obj):
     if isinstance(obj, six.string_types):
         return True
     return False
-
-
-def is_sequence_of_strings(obj):
-    """
-    Returns true if *obj* is iterable and contains strings
-    """
-    # Note: cbook.is_sequence_of_strings has a bug because
-    # a numpy array of strings is recognized as being
-    # string_like and therefore not a sequence of strings
-    if not cbook.iterable(obj):
-        return False
-    if cbook.is_string_like(obj) and not isinstance(obj, np.ndarray):
-        return False
-    for o in obj:
-        if not cbook.is_string_like(o):
-            return False
-    return True
-
-
-def is_sequence_of_booleans(obj):
-    """
-    Return True if *obj* is array-like and contains boolean values
-    """
-    if not cbook.iterable(obj):
-        return False
-    return all(isinstance(o, bool) for o in obj)
 
 
 def make_iterable(val):
