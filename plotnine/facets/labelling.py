@@ -88,7 +88,7 @@ def label_context(label_info, multi_line=True, sep=': '):
         Contatenated label values (or pairs of variable names
         & values)
     """
-    if len(label_info) > 1:
+    if len(label_info) == 1:
         return label_value(label_info, multi_line)
     else:
         return label_both(label_info, multi_line, sep)
