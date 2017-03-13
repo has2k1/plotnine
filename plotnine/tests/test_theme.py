@@ -1,5 +1,12 @@
-from plotnine import theme, theme_gray, theme_matplotlib
+from plotnine import ggplot, aes, geom_point, labs, facet_grid
+from plotnine import (theme, theme_538, theme_bw, theme_classic,
+                      theme_dark, theme_gray, theme_light,
+                      theme_linedraw, theme_matplotlib, theme_minimal,
+                      theme_seaborn, theme_void, theme_xkcd)
 from plotnine import element_line, element_blank
+from plotnine.data import mtcars
+
+_theme = theme(facet_spacing={'right': 0.80})
 
 
 def test_add_complete_complete():
@@ -82,3 +89,69 @@ def test_add_element_blank():
     th3 = theme3.themeables['axis_line_x']
     assert th2.apply.__name__ == 'blank'
     assert th3.apply.__name__ == 'apply'
+
+
+class TestThemes(object):
+    g = (ggplot(mtcars, aes(x='wt', y='mpg', color='factor(gear)'))
+         + geom_point()
+         + facet_grid('vs ~ am'))
+
+    def test_theme_538(self):
+        p = self.g + labs(title='Theme 538') + theme_538()
+
+        assert p + _theme == 'theme_538'
+
+    def test_theme_bw(self):
+        p = self.g + labs(title='Theme BW') + theme_bw()
+
+        assert p + _theme == 'theme_bw'
+
+    def test_theme_classic(self):
+        p = self.g + labs(title='Theme Classic') + theme_classic()
+
+        assert p + _theme == 'theme_classic'
+
+    def test_theme_dark(self):
+        p = self.g + labs(title='Theme Dark') + theme_dark()
+
+        assert p + _theme == 'theme_dark'
+
+    def test_theme_gray(self):
+        p = self.g + labs(title='Theme Gray') + theme_gray()
+
+        assert p + _theme == 'theme_gray'
+
+    def test_theme_light(self):
+        p = self.g + labs(title='Theme Light') + theme_light()
+
+        assert p + _theme == 'theme_light'
+
+    def test_theme_linedraw(self):
+        p = self.g + labs(title='Theme Linedraw') + theme_linedraw()
+
+        assert p + _theme == 'theme_linedraw'
+
+    def test_theme_matplotlib(self):
+        p = self.g + labs(title='Theme Matplotlib') + theme_matplotlib()
+
+        assert p + _theme == 'theme_matplotlib'
+
+    def test_theme_minimal(self):
+        p = self.g + labs(title='Theme Minimal') + theme_minimal()
+
+        assert p + _theme == 'theme_minimal'
+
+    def test_theme_seaborn(self):
+        p = self.g + labs(title='Theme Seaborn') + theme_seaborn()
+
+        assert p + _theme == 'theme_seaborn'
+
+    def test_theme_void(self):
+        p = self.g + labs(title='Theme Void') + theme_void()
+
+        assert p + _theme == 'theme_void'
+
+    def test_theme_xkcd(self):
+        p = self.g + labs(title='Theme Xkcd') + theme_xkcd()
+
+        assert p + _theme == 'theme_xkcd'

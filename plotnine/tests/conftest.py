@@ -78,8 +78,17 @@ def ggplot_equals(gg, right):
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
 
+    # savefig ignores the figure face & edge colors
+    facecolor = fig.get_facecolor()
+    edgecolor = fig.get_edgecolor()
+    if edgecolor:
+        savefig_kwargs['facecolor'] = facecolor
+    if edgecolor:
+        savefig_kwargs['edgecolor'] = edgecolor
+        savefig_kwargs['frameon'] = True
+
     # Save the figure before testing whether the original image
-    # actually exists. This make creating new tests much easier,
+    # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
     fig.savefig(filenames.result, **savefig_kwargs)
     _teardown()

@@ -515,6 +515,16 @@ class ggplot(object):
         # Helper function so that we can clean up when it fails
         def _save():
             fig = figure[0] = self.draw()
+
+            # savefig ignores the figure face & edge colors
+            facecolor = fig.get_facecolor()
+            edgecolor = fig.get_edgecolor()
+            if edgecolor:
+                fig_kwargs['facecolor'] = facecolor
+            if edgecolor:
+                fig_kwargs['edgecolor'] = edgecolor
+                fig_kwargs['frameon'] = True
+
             _w, _h = fig.get_size_inches()
             print_size = width is None or height is None
             w = _w if width is None else to_inches(width, units)
@@ -537,7 +547,6 @@ class ggplot(object):
 
             fig.set_size_inches(w, h)
             fig.savefig(filename, **fig_kwargs)
-            fig.set_size_inches(w, h)
 
         try:
             _save()
