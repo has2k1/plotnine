@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build docs clean
+.PHONY: clean-pyc clean-build docs clean visualize-tests
 BROWSER := python -mwebbrowser
 
 help:
@@ -14,6 +14,7 @@ help:
 	@echo "release - package and upload a release"
 	@echo "dist - package"
 	@echo "install - install the package to the active Python's site-packages"
+	@echo "develop - install the package in development mode"
 
 clean: clean-build clean-pyc clean-test
 
@@ -41,6 +42,9 @@ lint:
 test: clean-test
 	pytest
 
+visualize-tests:
+	python tools/visualize_tests.py
+
 test-all:
 	tox
 
@@ -63,3 +67,6 @@ dist: clean
 
 install: clean
 	python setup.py install
+
+develop: clean-pyc
+	python setup.py develop
