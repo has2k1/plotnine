@@ -125,6 +125,10 @@ class TestOther(object):
         p = self.p + geom_smooth(aes(y='y_noisy'), method='glm')
         p.draw_test()
 
+    def test_gls(self):
+        p = self.p + geom_smooth(aes(y='y_noisy'), method='gls')
+        p.draw_test()
+
     def test_lowess(self):
         p = self.p + geom_smooth(aes(y='y_noisy'), method='lowess')
         with pytest.warns(UserWarning):
