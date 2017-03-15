@@ -1,7 +1,10 @@
 from __future__ import absolute_import, division, print_function
 
-from copy import deepcopy
+from copy import copy
 from six import add_metaclass
+from warnings import warn
+
+import numpy as np
 
 from ..utils import check_required_aesthetics, groupby_apply
 from ..utils import is_string, Registry
@@ -20,7 +23,7 @@ class position(object):
         """
         Verify, modify & return a copy of the params.
         """
-        return deepcopy(self.params)
+        return copy(self.params)
 
     def setup_data(self, data, params):
         """
@@ -133,6 +136,73 @@ class position(object):
                 'Unknown position of type {}'.format(type(name)))
 
         return klass()
+
+    @staticmethod
+    def strategy(data, params):
+        """
+        Calculate boundaries of geometry object
+        """
+        return data
+
+    @classmethod
+    def collide(cls, data, params):
+        """
+        Calculate boundaries of geometry object
+
+        Uses Strategy
+        """
+        xminmax = ['xmin', 'xmax']
+        width = params.get('width', None)
+
+        # Determine width
+        if width is not None:
+            # Width set manually
+            if not all([col in data.columns for col in xminmax]):
+                data['xmin'] = data['x'] - width / 2
+                data['xmax'] = data['x'] - width / 2
+        else:
+            if not all([col in data.columns for col in xminmax]):
+                data['xmin'] = data['x']
+                data['xmax'] = data['x']
+
+            # Width determined from data, must be floating point constant
+            widths = (data['xmax'] - data['xmin']).drop_duplicates()
+            widths = widths[~np.isnan(widths)]
+            params['width'] = widths.iloc[0]
+
+        # Reorder by x position then on group, relying on stable sort to
+        # preserve existing ordering. The default stacking order reverses
+        # the group in order to match the legend order.
+        if params and 'reverse' in params and params['reverse']:
+            idx = data.sort_values(
+                ['xmin', 'group'], kind='mergesort').index
+        else:
+            data['-group'] = -data['group']
+            idx = data.sort_values(
+                ['xmin', '-group'], kind='mergesort').index
+            data.pop('-group')
+
+        data = data.loc[idx, :]
+
+        # Check for overlap
+        intervals = data[xminmax].drop_duplicates().as_matrix().flatten()
+        intervals = intervals[~np.isnan(intervals)]
+
+        if (len(np.unique(intervals)) > 1 and
+                any(np.diff(intervals - intervals.mean()) < -1e-6)):
+            msg = "{} requires non-overlapping x intervals"
+            warn(msg.format(cls.__name__))
+
+        if 'ymax' in data:
+            data = groupby_apply(data, 'xmin', cls.strategy, params)
+        elif 'y' in data:
+            data['ymax'] = data['y']
+            data = groupby_apply(data, 'xmin', cls.strategy, params)
+            data['y'] = data['ymax']
+        else:
+            raise PlotnineError('Neither y nor ymax defined')
+
+        return data
 
 
 transform_position = position.transform_position

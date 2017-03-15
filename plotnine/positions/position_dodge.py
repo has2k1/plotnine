@@ -1,9 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from copy import deepcopy
+import numpy as np
 
 from ..exceptions import PlotnineError
-from .collide import collide, pos_dodge
+from ..utils import match, suppress
 from .position import position
 
 
@@ -35,6 +36,46 @@ class position_dodge(position):
 
     @classmethod
     def compute_panel(cls, data, scales, params):
-        return collide(data, width=params['width'],
-                       name='position_dodge',
-                       strategy=pos_dodge)
+        return cls.collide(data, params=params)
+
+    @staticmethod
+    def strategy(data, params):
+        """
+        Dodge overlapping interval
+
+        Assumes that each set has the same horizontal position.
+        """
+        width = params['width']
+        with suppress(TypeError):
+            iter(width)
+            width = np.asarray(width)
+            width = width[data.index]
+
+        udata_group = data['group'].drop_duplicates()
+
+        n = params.get('n', None)
+        if n is None:
+            n = len(udata_group)
+        if n == 1:
+            return data
+
+        if not all([col in data.columns for col in ['xmin', 'xmax']]):
+            data['xmin'] = data['x']
+            data['xmax'] = data['x']
+
+        d_width = np.max(data['xmax'] - data['xmin'])
+
+        # Have a new group index from 1 to number of groups.
+        # This might be needed if the group numbers in this set don't
+        # include all of 1:n
+        udata_group = udata_group.sort_values()
+        groupidx = match(data['group'], udata_group)
+        groupidx = np.asarray(groupidx) + 1
+
+        # Find the center for each group, then use that to
+        # calculate xmin and xmax
+        data['x'] = data['x'] + width * ((groupidx - 0.5) / n - 0.5)
+        data['xmin'] = data['x'] - (d_width / n) / 2
+        data['xmax'] = data['x'] + (d_width / n) / 2
+
+        return data

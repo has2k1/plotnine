@@ -2,10 +2,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from warnings import warn
+
+import numpy as np
 import pandas as pd
 
 from ..utils import remove_missing
-from .collide import collide, pos_stack
 from .position import position
 
 
@@ -73,12 +74,34 @@ class position_stack(position):
         pos.is_copy = None
 
         if len(neg):
-            neg = collide(neg, width=None, name=cls.__name__,
-                          strategy=pos_stack, params=params)
+            neg = cls.collide(neg, params=params)
 
         if len(pos):
-            pos = collide(pos, width=None, name=cls.__name__,
-                          strategy=pos_stack, params=params)
+            pos = cls.collide(pos, params=params)
 
         data = pd.concat([neg, pos], axis=0, ignore_index=True)
+        return data
+
+    @staticmethod
+    def strategy(data, params):
+        """
+        Stack overlapping intervals.
+
+        Assumes that each set has the same horizontal position
+        """
+        vjust = params['vjust']
+
+        y = data['y'].copy()
+        y[np.isnan(y)] = 0
+        heights = np.append(0, y.cumsum())
+
+        if params['fill']:
+            heights = heights / np.abs(heights[-1])
+
+        data['ymin'] = np.min([heights[:-1], heights[1:]], axis=0)
+        data['ymax'] = np.max([heights[:-1], heights[1:]], axis=0)
+        # less intuitive than (ymin + vjust(ymax-ymin)), but
+        # this way avoids subtracting numbers of potentially
+        # similar precision
+        data['y'] = ((1-vjust)*data['ymin'] + vjust*data['ymax'])
         return data

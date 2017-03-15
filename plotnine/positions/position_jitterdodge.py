@@ -1,11 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import deepcopy
+from copy import copy
 
 from ..utils import jitter, resolution, suppress
 from ..exceptions import PlotnineError
 from .position import position
-from .collide import collide, pos_dodge
+from .position_dodge import position_dodge
 
 
 # Adjust position by simultaneously dodging and jittering
@@ -33,6 +33,7 @@ class position_jitterdodge(position):
         global generator (``np.random``) is used.
     """
     REQUIRED_AES = ['x', 'y']
+    strategy = position_dodge.strategy
 
     def __init__(self, jitter_width=None, jitter_height=0,
                  dodge_width=0.75, prng=None):
@@ -42,7 +43,7 @@ class position_jitterdodge(position):
                        'prng': prng}
 
     def setup_params(self, data):
-        params = deepcopy(self.params)
+        params = copy(self.params)
         width = params['jitter_width']
         if width is None:
             width = resolution(data['x']) * .4
@@ -64,6 +65,7 @@ class position_jitterdodge(position):
         ndodge = len(s)
 
         params['jitter_width'] = width/(ndodge+2)
+        params['width'] = params['dodge_width']
         return params
 
     @classmethod
@@ -82,8 +84,6 @@ class position_jitterdodge(position):
                               prng=params['prng'])
 
         # dodge, then jitter
-        data = collide(data, width=params['dodge_width'],
-                       name='position_jitterdodge',
-                       strategy=pos_dodge)
+        data = cls.collide(data, params=params)
         data = cls.transform_position(data, trans_x, trans_y)
         return data
