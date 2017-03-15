@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from copy import deepcopy
+from copy import copy
 import numpy as np
 
 from ..exceptions import PlotnineError
@@ -18,12 +18,14 @@ class position_dodge(position):
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
+    preserve: 'total' or 'single'
+        Should dodging preserve the total width of all elements
+        at a position, or the width of a single element?
     """
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'width': None}
 
-    def __init__(self, width=None):
-        self.params = {'width': width}
+    def __init__(self, width=None, preserve='total'):
+        self.params = {'width': width, 'preserve': preserve}
 
     def setup_params(self, data):
         if (('xmin' not in data) and
@@ -32,7 +34,15 @@ class position_dodge(position):
             msg = ("Width not defined. "
                    "Set with `position_dodge(width = ?)`")
             raise PlotnineError(msg)
-        return deepcopy(self.params)
+
+        params = copy(self.params)
+
+        if params['preserve'] == 'total':
+            params['n'] = None
+        else:
+            params['n'] = data['xmin'].value_counts().max()
+
+        return params
 
     @classmethod
     def compute_panel(cls, data, scales, params):

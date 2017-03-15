@@ -6,9 +6,9 @@ import pandas as pd
 import pytest
 
 from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
-                      geom_col, geom_text, position_jitter,
-                      position_jitterdodge, position_nudge,
-                      position_stack, theme)
+                      geom_col, geom_text, position_dodge,
+                      position_jitter, position_jitterdodge,
+                      position_nudge, position_stack, theme)
 from plotnine.exceptions import PlotnineError
 
 n = 6
@@ -72,6 +72,14 @@ def test_dodge():
     p = (ggplot(df2, aes('factor(z)')) +
          geom_bar(aes(fill='factor(x)'), position='dodge'))
     assert p + _theme == 'dodge'
+
+
+def test_dodge_preserve_single():
+    df1 = pd.DataFrame({'x': ['a', 'b', 'b'],
+                        'y': ['a', 'a', 'b']})
+    p = (ggplot(df1, aes('x', fill='y')) +
+         geom_bar(position=position_dodge(preserve='single')))
+    assert p + _theme == 'dodge_preserve_single'
 
 
 def test_jitterdodge():
