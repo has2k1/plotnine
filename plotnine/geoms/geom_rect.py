@@ -58,8 +58,8 @@ class geom_rect(geom):
             verts,
             facecolors=fill,
             edgecolors=color,
-            linestyles=data['linetype'].tolist(),
-            linewidths=data['size'].tolist(),
+            linestyles=data['linetype'],
+            linewidths=data['size'],
             transOffset=ax.transData,
             zorder=params['zorder'])
         ax.add_collection(col)

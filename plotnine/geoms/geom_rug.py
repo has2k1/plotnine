@@ -77,6 +77,6 @@ class geom_rug(geom):
         coll = mcoll.LineCollection(rugs,
                                     edgecolor=color,
                                     linewidth=data['size'],
-                                    linestyle=data['linetype'].tolist(),
+                                    linestyle=data['linetype'],
                                     zorder=params['zorder'])
         ax.add_collection(coll)

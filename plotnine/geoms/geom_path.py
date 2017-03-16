@@ -227,7 +227,7 @@ class arrow(object):
                 edgecolor=data.loc[idx1, 'color'],
                 facecolor=data.loc[idx1, 'facecolor'],
                 linewidth=data.loc[idx1, 'size'],
-                linestyle=data.loc[idx1, 'linetype'].tolist())
+                linestyle=data.loc[idx1, 'linetype'])
 
             x1 = data.loc[idx1, 'x'].values
             y1 = data.loc[idx1, 'y'].values
@@ -368,7 +368,7 @@ def _draw_segments(data, ax, **params):
         edgecolor = [color[i] for i in indices]
 
     linewidth = data.loc[indices, 'size']
-    linestyle = data.loc[indices, 'linetype'].tolist()
+    linestyle = data.loc[indices, 'linetype']
 
     coll = mcoll.LineCollection(segments,
                                 edgecolor=edgecolor,
