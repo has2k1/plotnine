@@ -60,7 +60,7 @@ class stat_count(stat):
                                index=['x'],
                                aggfunc=np.sum)
         count = count.values
-        return pd.DataFrame({'count': count,
+        return pd.DataFrame({'count': count.astype(int),
                              'prop': count / np.abs(count).sum(),
                              'x': x.unique(),
                              'width': width})
