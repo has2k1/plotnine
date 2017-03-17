@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import pandas as pd
 from matplotlib.text import Text
 
 from ..utils import to_rgba, suppress
@@ -72,17 +73,15 @@ class geom_text(geom):
 
     def setup_data(self, data):
         parse = self.params['parse']
-        format_string = self.params['format_string']
+        fmt = self.params['format_string']
 
         # format
-        if format_string:
-            data['label'] = [
-                format_string.format(l) for l in data['label']]
+        if fmt:
+            data['label'] = [fmt.format(l) for l in data['label']]
 
         # Parse latex
         if parse:
-            data['label'] = [
-                '${}$'.format(l) for l in data['label']]
+            data['label'] = ['${}$'.format(l) for l in data['label']]
 
         return data
 
@@ -93,19 +92,19 @@ class geom_text(geom):
         # Bind color and alpha
         color = to_rgba(data['color'], data['alpha'])
 
-        # Put all ax.text parameters in dataframe so
-        # that each row represents a text instance
-        data.rename(columns={'label': 's',
-                             'angle': 'rotation',
-                             'lineheight': 'linespacing'},
-                    inplace=True)
-        data['color'] = color
-        data['horizontalalignment'] = params['hjust']
-        data['verticalalignment'] = params['vjust']
-        data['family'] = params['family']
-        data['fontweight'] = params['fontweight']
-        data['zorder'] = params['zorder']
-        data['clip_on'] = True
+        # Create a dataframe for the plotting data required
+        # by ax.text
+        df = data[['x', 'y', 'size']].copy()
+        df['s'] = data['label']
+        df['rotation'] = data['angle']
+        df['linespacing'] = data['lineheight']
+        df['color'] = color
+        df['horizontalalignment'] = params['hjust']
+        df['verticalalignment'] = params['vjust']
+        df['family'] = params['family']
+        df['fontweight'] = params['fontweight']
+        df['zorder'] = params['zorder']
+        df['clip_on'] = True
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox
         draw_label = 'boxstyle' in params
@@ -113,7 +112,7 @@ class geom_text(geom):
             fill = to_rgba(data.pop('fill'), data['alpha'])
             if isinstance(fill, tuple):
                 fill = [list(fill)] * len(data['x'])
-            data['facecolor'] = fill
+            df['facecolor'] = fill
 
             if params['boxstyle'] in ('round', 'round4'):
                 boxstyle = '{},pad={},rounding_size={}'.format(
@@ -132,21 +131,11 @@ class geom_text(geom):
             bbox = {'linewidth': params['label_size'],
                     'boxstyle': boxstyle}
         else:
-            with suppress(KeyError):
-                del data['fill']
             bbox = {}
-
-        # Unwanted
-        del data['PANEL']
-        del data['group']
-        del data['alpha']
-        for key in ('xmin', 'xmax', 'ymin', 'ymax'):
-            with suppress(KeyError):
-                del data[key]
 
         # For labels add a bbox
         for i in range(len(data)):
-            kw = data.iloc[i].to_dict()
+            kw = df.iloc[i].to_dict()
             if draw_label:
                 kw['bbox'] = bbox
                 kw['bbox']['edgecolor'] = kw['color']
