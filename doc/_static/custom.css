@@ -1,31 +1,39 @@
-/* Some more horizontal space for the content */
+/* Adjust the tables */
 
-.wy-nav-content {
-   padding-left: 1.618em;
-   padding-right: 1.618em;
-   max-width: 850px;
+/*
+ * The !important are necessary to because the
+ * sphinx_bootstrap_theme does not insert this
+ * file last.
+ */
+table.table, table.longtable {
+   border: 1px solid #DDD;
+   border-collapse: collapse;
 }
 
-/* Something different for the top left region  */
-
-.wy-side-nav-search{
-   background: repeating-linear-gradient(
-      -45deg,
-      #2980B9,
-      #2980B9 10px,
-      #6ab0de 10px,
-      #6ab0de 20px
-   );
+table.table {
+   width: initial !important;
 }
 
-.wy-side-nav-search input[type=text] {
-   border-color: #ccc;
+table.longtable {
+   width: 100% !important;
 }
 
-/* Parameter tables  */
-.wy-table-responsive table td code {
-   background: none;
+table.table td,
+table.table th {
+   border-left: 1px solid #DDD !important;
+}
+
+table.field-list {
    border: none;
+}
+
+table.field-list td,
+table.field-list th{
+   border-left: none !important;
+}
+
+tr.row-even td {
+   background-color: #F0F6F6;
 }
 
 
@@ -34,35 +42,56 @@
 table.dataframe {
    margin: 0 0 1em 0;
    color: #000;
+   font-family: Ubuntu, Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
    border-collapse: collapse;
 }
 
-table.dataframe th, table.dataframe td {
+table.dataframe,
+table.dataframe tr,
+table.dataframe th,
+table.dataframe td {
+   border: 1px solid #DDD;
+}
+
+table.dataframe th,
+table.dataframe td {
    padding: .25em .5em;
 }
 
-table.dataframe thead th, table.dataframe tfoot th {
-   background: #333;
+table.dataframe thead th,
+table.dataframe tfoot th {
+   color: #333;
    text-align: left;
-   color: #fff;
+   background-color: #fff;
 }
 
 table.dataframe thead th {
    font-weight: bold;
    font-size: 1em;
+   border-bottom: 2px solid #DDD;
+}
+
+table.dataframe tbody th,
+table.dataframe thead tr th:first-child {
+   border-right: 2px solid #DDD;
+}
+
+table.dataframe tbody th {
+   text-align: right;
 }
 
 table.dataframe tfoot th {
    font-weight: normal;
    font-size: 1em;
+   border-top: 2px solid #DDD;
 }
 
-table.dataframe tbody th, table.dataframe tbody td, table.dataframe thead th {
+table.dataframe tbody th,
+table.dataframe tbody td,
+table.dataframe thead th {
    font-size: .95em;
-   border: 1px solid #FFFFFF;
 }
 
 table.dataframe tbody tr:nth-child(odd) {
-   background: #E6E6E6;
+   background: #F0F6F6;
 }
-
