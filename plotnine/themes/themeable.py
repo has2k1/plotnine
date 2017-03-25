@@ -1268,6 +1268,7 @@ class axis_ticks_major_length(themeable):
     Parameters
     ----------
     theme_element : float
+        Value in points.
     """
     @property
     def rcParams(self):
@@ -1285,6 +1286,7 @@ class axis_ticks_minor_length(themeable):
     Parameters
     ----------
     theme_element : float
+        Value in points.
     """
     @property
     def rcParams(self):
@@ -1303,6 +1305,7 @@ class axis_ticks_length(axis_ticks_major_length,
     Parameters
     ----------
     theme_element : float
+        Value in points.
     """
     pass
 
@@ -1314,6 +1317,7 @@ class axis_ticks_major_pad(themeable):
     Parameters
     ----------
     theme_element : float
+        Value in points.
     """
     @property
     def rcParams(self):
@@ -1349,6 +1353,7 @@ class axis_ticks_pad(axis_ticks_major_pad,
     Parameters
     ----------
     theme_element : float
+        Value in points.
     """
     pass
 
@@ -1359,7 +1364,10 @@ class axis_ticks_direction_x(themeable):
 
     Parameters
     ----------
-    theme_element : 'in' | 'out' | 'inout'
+    theme_element : {'in', 'out', 'inout'}
+        - ``in`` - ticks inside the panel
+        - ``out`` - ticks outside the panel
+        - ``inout`` - ticks inside and outside the panel
     """
     @property
     def rcParams(self):
@@ -1374,7 +1382,10 @@ class axis_ticks_direction_y(themeable):
 
     Parameters
     ----------
-    theme_element : 'in' | 'out' | 'inout'
+    theme_element : {'in', 'out', 'inout'}
+        - ``in`` - ticks inside the panel
+        - ``out`` - ticks outside the panel
+        - ``inout`` - ticks inside and outside the panel
     """
     @property
     def rcParams(self):
@@ -1390,7 +1401,10 @@ class axis_ticks_direction(axis_ticks_direction_x,
 
     Parameters
     ----------
-    theme_element : 'in' | 'out' | 'inout'
+    theme_element : {'in', 'out', 'inout'}
+        - ``in`` - ticks inside the panel
+        - ``out`` - ticks outside the panel
+        - ``inout`` - ticks inside and outside the panel
     """
     pass
 
@@ -1549,7 +1563,7 @@ class legend_box(themeable):
 
     Parameters
     ----------
-    theme_element : 'vertical' | 'horizontal'
+    theme_element : {'vertical', 'horizontal'}
         Whether to stack up the legends vertically or
         horizontally.
     """
@@ -1584,7 +1598,7 @@ class legend_direction(themeable):
 
     Parameters
     ----------
-    theme_element : 'vertical' | 'horizontal'
+    theme_element : {'vertical', 'horizontal'}
         Vertically or horizontally
     """
 
@@ -1661,7 +1675,7 @@ class legend_position(themeable):
 
     Parameters
     ----------
-    theme_element : str | tuple
+    theme_element : str or tuple
         If a string it should be one of *right*, *left*, *top*
         or *bottom*. If a tuple, it should be two floats each
         in the approximate range [0, 1]. The tuple specifies the
@@ -1675,7 +1689,7 @@ class legend_title_align(themeable):
 
     Parameters
     ----------
-    theme_element : str | tuple
+    theme_element : str or tuple
         If a string it should be one of *right*, *left*, *center*,
         *top* or *bottom*.
     """

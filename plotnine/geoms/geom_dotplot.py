@@ -22,7 +22,6 @@ class geom_dotplot(geom):
     Parameters
     ----------
     {common_parameters}
-
     stackdir : str (default: up)
         Direction in which to stack the dots. Options are
         :py:`['up', 'down', 'center', 'centerwhole']`
