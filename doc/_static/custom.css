@@ -1,26 +1,22 @@
 /* Adjust the tables */
 
-/*
- * The !important are necessary to because the
- * sphinx_bootstrap_theme does not insert this
- * file last.
- */
-table.table, table.longtable {
+table.table,
+table.longtable {
    border: 1px solid #DDD;
    border-collapse: collapse;
 }
 
 table.table {
-   width: initial !important;
+   width: initial;
 }
 
 table.longtable {
-   width: 100% !important;
+   width: 100%;
 }
 
 table.table td,
 table.table th {
-   border-left: 1px solid #DDD !important;
+   border-left: 1px solid #DDD;
 }
 
 table.field-list {
@@ -29,7 +25,7 @@ table.field-list {
 
 table.field-list td,
 table.field-list th{
-   border-left: none !important;
+   border-left: none;
 }
 
 tr.row-even td {
