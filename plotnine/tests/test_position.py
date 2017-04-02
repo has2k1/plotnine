@@ -12,7 +12,7 @@ from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
 from plotnine.exceptions import PlotnineError
 
 n = 6
-prng = np.random.RandomState(1234567890)
+random_state = np.random.RandomState(1234567890)
 df1 = pd.DataFrame({'x': [1, 2, 1, 2],
                     'y': [1, 1, 2, 2]})
 df2 = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
@@ -25,9 +25,9 @@ def test_jitter():
                         'y': [1, 1, 2, 2]})
     p = (ggplot(df1, aes('x', 'y')) +
          geom_point(size=10) +
-         geom_jitter(size=10, color='red', prng=prng) +
+         geom_jitter(size=10, color='red', random_state=random_state) +
          geom_jitter(size=10, color='blue', width=0.1,
-                     height=0.1, prng=prng))
+                     height=0.1, random_state=random_state))
     assert p + _theme == 'jitter'
 
     with pytest.raises(PlotnineError):
@@ -87,8 +87,9 @@ def test_jitterdodge():
         'x': np.ones(n*2),
         'y': np.repeat(np.arange(n), 2),
         'letters': np.repeat(list(string.ascii_lowercase[:n]), 2)})
+    position = position_jitterdodge(random_state=random_state)
 
     p = (ggplot(df, aes('x', 'y', fill='letters')) +
          geom_point(size=10, fill='black') +
-         geom_point(size=10, position=position_jitterdodge(prng=prng)))
+         geom_point(size=10, position=position))
     assert p + _theme == 'jitterdodge'

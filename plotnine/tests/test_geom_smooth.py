@@ -7,20 +7,20 @@ import pytest
 from plotnine import ggplot, aes, geom_point, geom_smooth
 
 
-prng = np.random.RandomState(1234567890)
+random_state = np.random.RandomState(1234567890)
 n = 100
 
 # linear relationship
 x = np.linspace(0, 1, n)
 y = 4*x + 5
-y_noisy = y + .1*prng.randn(n)
+y_noisy = y + .1*random_state.randn(n)
 df_linear = pd.DataFrame({'x': x, 'y': y, 'y_noisy': y_noisy})
 
 
 # non-linear relationship
 x = np.linspace(-2*np.pi, 2*np.pi, n)
 y = np.sin(x)
-y_noisy = y + .1*prng.randn(n)
+y_noisy = y + .1*random_state.randn(n)
 df_non_linear = pd.DataFrame({'x': x, 'y': y, 'y_noisy': y_noisy})
 
 # discrete_x

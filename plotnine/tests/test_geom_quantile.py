@@ -6,10 +6,10 @@ import pandas as pd
 from plotnine import ggplot, aes, geom_point, geom_quantile
 
 n = 200  # Should not be too big, affects the test duration
-prng = np.random.RandomState(1234567890)
+random_state = np.random.RandomState(1234567890)
 # points that diverge like a point flash-light
 df = pd.DataFrame({'x': np.arange(n),
-                   'y': np.arange(n) * (1 + prng.rand(n))
+                   'y': np.arange(n) * (1 + random_state.rand(n))
                    })
 
 

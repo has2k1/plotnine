@@ -408,7 +408,7 @@ def defaults(d1, d2):
     return d1
 
 
-def jitter(x, factor=1, amount=None, prng=None):
+def jitter(x, factor=1, amount=None, random_state=None):
     """
     Add a small amount of noise to values in an array_like
 
@@ -426,10 +426,9 @@ def jitter(x, factor=1, amount=None, prng=None):
         If `None` then ``amount = factor * d/5``, where d is about
         the smallest difference between `x` values and `z` is the
         range of the `x` values.
-    prng : numpy.random.RandomState
-        Random number generator to use. If `None`, then numpy global
-        generator (``np.random``) is used.
-
+    random_state : int or numpy.random.RandomState, optional
+        Seed or Random number generator to use. If ``None``, then
+        numpy global generator :class:`numpy.random` is used.
 
     References:
 
@@ -440,8 +439,10 @@ def jitter(x, factor=1, amount=None, prng=None):
     if len(x) == 0:
         return x
 
-    if prng is None:
-        prng = np.random
+    if random_state is None:
+        random_state = np.random
+    elif isinstance(random_state, int):
+        random_state = np.random.RandomState(random_state)
 
     x = np.asarray(x)
 
@@ -469,7 +470,7 @@ def jitter(x, factor=1, amount=None, prng=None):
     elif amount == 0:
         amount = factor * (z / 50.)
 
-    return x + prng.uniform(-amount, amount, len(x))
+    return x + random_state.uniform(-amount, amount, len(x))
 
 
 def remove_missing(df, na_rm=False, vars=None, name='', finite=False):

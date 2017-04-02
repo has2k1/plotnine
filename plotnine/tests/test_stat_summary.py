@@ -6,7 +6,7 @@ import pandas as pd
 from plotnine import ggplot, aes, stat_summary
 
 
-prng = np.random.RandomState(1234567890)
+random_state = np.random.RandomState(1234567890)
 
 df = pd.DataFrame({
     'x': list('aaaaabbbbcccccc'),
@@ -15,7 +15,8 @@ df = pd.DataFrame({
 
 def test_mean_cl_boot():
     p = (ggplot(df, aes('x', 'y'))
-         + stat_summary(fun_data='mean_cl_boot', prng=prng, size=2))
+         + stat_summary(fun_data='mean_cl_boot',
+                        random_state=random_state, size=2))
 
     assert p == 'mean_cl_boot'
 

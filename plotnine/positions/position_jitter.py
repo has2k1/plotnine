@@ -20,16 +20,16 @@ class position_jitter(position):
     height : float
         Proportion to jitter in vertical direction.
         Default is ``0.4`` of the resolution of the data.
-    prng : numpy.random.RandomState
-        Random number generator to use. If `None`, then numpy
-        global generator (``np.random``) is used.
+    random_state : int or numpy.random.RandomState, optional
+        Seed or Random number generator to use. If ``None``, then
+        numpy global generator :class:`numpy.random` is used.
     """
     REQUIRED_AES = {'x', 'y'}
 
-    def __init__(self, width=None, height=None, prng=None):
+    def __init__(self, width=None, height=None, random_state=None):
         self.params = {'width': width,
                        'height': height,
-                       'prng': prng}
+                       'random_state': random_state}
 
     def setup_params(self, data):
         params = deepcopy(self.params)
@@ -37,8 +37,8 @@ class position_jitter(position):
             params['width'] = resolution(data['x']) * .4
         if not params['height']:
             params['height'] = resolution(data['y']) * .4
-        if not params['prng']:
-            params['prng'] = np.random
+        if not params['random_state']:
+            params['random_state'] = np.random
         return params
 
     @classmethod
@@ -49,11 +49,11 @@ class position_jitter(position):
         if params['width']:
             def trans_x(x):
                 return jitter(x, amount=params['width'],
-                              prng=params['prng'])
+                              random_state=params['random_state'])
 
         if params['height']:
             def trans_y(y):
                 return jitter(y, amount=params['height'],
-                              prng=params['prng'])
+                              random_state=params['random_state'])
 
         return cls.transform_position(data, trans_x, trans_y)

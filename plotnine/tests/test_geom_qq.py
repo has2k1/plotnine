@@ -5,11 +5,11 @@ import pandas as pd
 
 from plotnine import ggplot, aes, geom_qq
 
-prng = np.random.RandomState(1234567890)
+random_state = np.random.RandomState(1234567890)
 
 
 def test_normal():
-    df = pd.DataFrame({'x': prng.normal(size=100)})
+    df = pd.DataFrame({'x': random_state.normal(size=100)})
     p = ggplot(df, aes(sample='x')) + geom_qq()
     # Roughly a straight line of points through the origin
     assert p == 'normal'

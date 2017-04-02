@@ -57,9 +57,9 @@ class stat_summary_bin(stat):
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
-    prng : numpy.random.RandomState
-        Random number generator to use for bootstrap statistics.
-        If `None`, then numpy global generator (``np.random``) is used.
+    random_state : int or numpy.random.RandomState, optional
+        Seed or Random number generator to use. If ``None``, then
+        numpy global generator :class:`numpy.random` is used.
 
     {aesthetics}
 
@@ -87,7 +87,7 @@ class stat_summary_bin(stat):
                       'bins': 30, 'breaks': None, 'binwidth': None,
                       'boundary': None, 'fun_data': None, 'fun_y': None,
                       'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': None, 'prng': None}
+                      'fun_args': None, 'random_state': None}
     CREATES = {'bin', 'width', 'ymin', 'ymax'}
 
     def setup_params(self, data):
@@ -98,13 +98,15 @@ class stat_summary_bin(stat):
         if self.params['fun_args'] is None:
             self.params['fun_args'] = {}
 
-        if 'prng' not in self.params['fun_args']:
-            if self.params['prng']:
-                prng = self.params['prng']
-            else:
-                prng = np.random
+        if 'random_state' not in self.params['fun_args']:
+            if self.params['random_state']:
+                random_state = self.params['random_state']
+                if random_state is None:
+                    random_state = np.random
+                elif isinstance(random_state, int):
+                    random_state = np.random.RandomState(random_state)
 
-            self.params['fun_args']['prng'] = prng
+                self.params['fun_args']['random_state'] = random_state
 
         return self.params
 

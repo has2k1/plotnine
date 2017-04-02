@@ -25,9 +25,9 @@ class geom_jitter(geom_point):
         Proportion to jitter in vertical direction.
         The default value is that from
         :class:`~plotnine.positions.position_jitter`.
-    prng : numpy.random.RandomState, optional
-        Random number generator to use. If `None`, then numpy
-        global generator :class:`numpy.random` is used.
+    random_state : int or numpy.random.RandomState, optional
+        Seed or Random number generator to use. If ``None``, then
+        numpy global generator :class:`numpy.random` is used.
 
     {aesthetics}
 
@@ -38,14 +38,14 @@ class geom_jitter(geom_point):
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
                       'na_rm': False, 'width': None, 'height': None,
-                      'prng': None}
+                      'random_state': None}
 
     def __init__(self, *args, **kwargs):
-        if {'width', 'height', 'prng'} & set(kwargs):
+        if {'width', 'height', 'random_state'} & set(kwargs):
             if 'position' in kwargs:
                 raise PlotnineError(
                     "Specify either 'position' or "
-                    "'width'/'height'/'prng'")
+                    "'width'/'height'/'random_state'")
 
             try:
                 width = kwargs.pop('width')
@@ -58,10 +58,10 @@ class geom_jitter(geom_point):
                 height = None
 
             try:
-                prng = kwargs.pop('prng')
+                random_state = kwargs.pop('random_state')
             except KeyError:
-                prng = None
+                random_state = None
 
             kwargs['position'] = position_jitter(
-                width=width, height=height, prng=prng)
+                width=width, height=height, random_state=random_state)
         geom_point.__init__(self, *args, **kwargs)

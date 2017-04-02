@@ -28,19 +28,19 @@ class position_jitterdodge(position):
     dodge_width : float
         Amount to dodge in horizontal direction.
         Default is ``0.75``
-    prng : numpy.random.RandomState
-        Random number generator to use. If `None`, then numpy
-        global generator (``np.random``) is used.
+    random_state : int or numpy.random.RandomState, optional
+        Seed or Random number generator to use. If ``None``, then
+        numpy global generator :class:`numpy.random` is used.
     """
     REQUIRED_AES = ['x', 'y']
     strategy = position_dodge.strategy
 
     def __init__(self, jitter_width=None, jitter_height=0,
-                 dodge_width=0.75, prng=None):
+                 dodge_width=0.75, random_state=None):
         self.params = {'jitter_width': jitter_width,
                        'jitter_height': jitter_height,
                        'dodge_width': dodge_width,
-                       'prng': prng}
+                       'random_state': random_state}
 
     def setup_params(self, data):
         params = copy(self.params)
@@ -76,12 +76,12 @@ class position_jitterdodge(position):
         if params['jitter_width'] > 0:
             def trans_x(x):
                 return jitter(x, amount=params['jitter_width'],
-                              prng=params['prng'])
+                              random_state=params['random_state'])
 
         if params['jitter_height'] > 0:
             def trans_y(y):
                 return jitter(y, amount=params['jitter_height'],
-                              prng=params['prng'])
+                              random_state=params['random_state'])
 
         # dodge, then jitter
         data = cls.collide(data, params=params)
