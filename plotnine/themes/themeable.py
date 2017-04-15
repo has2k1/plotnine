@@ -1181,7 +1181,7 @@ class plot_background(themeable):
     ----------
     theme_element : element_rect
     """
-    def setup_figure(self, figure):
+    def apply_figure(self, figure):
         figure.patch.set(**self.properties)
 
     def blank_figure(self, figure):
