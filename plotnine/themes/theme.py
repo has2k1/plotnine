@@ -255,6 +255,24 @@ class theme(object):
         """
         return self.add_theme(other, inplace=True)
 
+    def __deepcopy__(self, memo):
+        """
+        Deep copy without copying the figure
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        old = self.__dict__
+        new = result.__dict__
+
+        for key, item in old.items():
+            if key in {'figure'}:
+                new[key] = old[key]
+            else:
+                new[key] = deepcopy(old[key], memo)
+
+        return result
+
 
 def theme_get():
     """
