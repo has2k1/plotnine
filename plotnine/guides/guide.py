@@ -189,10 +189,16 @@ class guide(object):
 
         # legend_entry_spacing
         try:
-            self._legend_entry_spacing = get_property(
-                'legend_entry_spacing')
+            self._legend_entry_spacing_x = get_property(
+                'legend_entry_spacing_x')
         except KeyError:
-            self._legend_entry_spacing = 2
+            self._legend_entry_spacing_x = 5
+
+        try:
+            self._legend_entry_spacing_y = get_property(
+                'legend_entry_spacing_y')
+        except KeyError:
+            self._legend_entry_spacing_y = 2
 
     def legend_aesthetics(self, layer, plot):
         """

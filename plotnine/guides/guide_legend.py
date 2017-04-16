@@ -271,7 +271,6 @@ class guide_legend(guide):
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
-        sep = 5  # gap between the legends
         themeable = self.theme.figure._themeable
 
         # When there is more than one guide, we keep
@@ -311,7 +310,6 @@ class guide_legend(guide):
         themeable['legend_key'].append(drawings)
 
         # Match Drawings with labels to create the entries
-        # TODO: theme me
         lookup = {
             'right': (HPacker, reverse),
             'left': (HPacker, obverse),
@@ -331,8 +329,12 @@ class guide_legend(guide):
         # for a single legend
         if self.byrow:
             chunk_size, packers = self.ncol, [HPacker, VPacker]
+            sep1 = self._legend_entry_spacing_x
+            sep2 = self._legend_entry_spacing_y
         else:
             chunk_size, packers = self.nrow, [VPacker, HPacker]
+            sep1 = self._legend_entry_spacing_y
+            sep2 = self._legend_entry_spacing_x
 
         if self.reverse:
             entries = entries[::-1]
@@ -348,16 +350,14 @@ class guide_legend(guide):
         chunk_boxes = []
         for chunk in chunks:
             d1 = packers[0](children=chunk,
-                            align='left', pad=0,
-                            sep=self._legend_entry_spacing,
-                            )
+                            align='left',
+                            sep=sep1, pad=0,)
             chunk_boxes.append(d1)
 
         # Put all the entries (row & columns) together
         entries_box = packers[1](children=chunk_boxes,
-                                 sep=sep,
                                  align='baseline',
-                                 pad=0)
+                                 sep=sep2, pad=0)
 
         # Put the title and entries together
         packer, slc = lookup[self.title_position]

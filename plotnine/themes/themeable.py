@@ -1695,7 +1695,29 @@ class legend_title_align(themeable):
     """
 
 
-class legend_entry_spacing(themeable):
+class legend_entry_spacing_x(themeable):
+    """
+    Horizontal spacing between two entries in a legend
+
+    Parameters
+    ----------
+    theme_element : float
+        Size in points
+    """
+
+
+class legend_entry_spacing_y(themeable):
+    """
+    Vertical spacing between two entries in a legend
+
+    Parameters
+    ----------
+    theme_element : float
+        Size in points
+    """
+
+
+class legend_entry_spacing(legend_entry_spacing_x, legend_entry_spacing_y):
     """
     Spacing between two entries in a legend
 

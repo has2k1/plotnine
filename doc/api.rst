@@ -404,6 +404,8 @@ Users should never create instances of *themeable*.
    legend_box_spacing
    legend_direction
    legend_entry_spacing
+   legend_entry_spacing_x
+   legend_entry_spacing_y
    legend_key
    legend_key_height
    legend_key_size

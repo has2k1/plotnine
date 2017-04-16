@@ -28,6 +28,8 @@ class theme_void(theme):
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),
             axis_title_y=element_blank(),
+            legend_entry_spacing_x=5,
+            legend_entry_spacing_y=2,
             legend_text=element_text(size=base_size*0.8, ha='left'),
             legend_text_legend=element_text(va='baseline'),
             legend_title=element_blank(),
