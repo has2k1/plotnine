@@ -13,7 +13,7 @@ from copy import deepcopy
 
 from six import add_metaclass
 
-from ..utils import suppress, RegistryHierarchyMeta
+from ..utils import suppress, RegistryHierarchyMeta, to_rgba
 from ..exceptions import PlotnineError
 from .elements import (element_line, element_rect,
                        element_text, element_blank)
@@ -1141,7 +1141,11 @@ class panel_background(themeable):
     """
     def apply(self, ax):
         super(panel_background, self).apply(ax)
-        ax.patch.set(**self.properties)
+        d = deepcopy(self.properties)
+        if 'facecolor' in d and 'alpha' in d:
+            d['facecolor'] = to_rgba(d['facecolor'], d['alpha'])
+            del d['alpha']
+        ax.patch.set(**d)
 
     def blank(self, ax):
         super(panel_background, self).blank(ax)
@@ -1165,6 +1169,10 @@ class panel_border(themeable):
 
         with suppress(KeyError):
             del d['facecolor']
+
+        if 'edgecolor' in d and 'alpha' in d:
+            d['edgecolor'] = to_rgba(d['edgecolor'], d['alpha'])
+            del d['alpha']
 
         ax.patch.set(**d)
 
