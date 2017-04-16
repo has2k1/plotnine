@@ -39,8 +39,8 @@ class theme_gray(theme):
                 ha='right', margin={'r': half_line*0.8/2}),
             axis_ticks=element_line(color='#333333'),
             axis_ticks_length=0,
-            axis_ticks_major_length=half_line/2,
-            axis_ticks_minor_length=0,
+            axis_ticks_length_major=half_line/2,
+            axis_ticks_length_minor=0,
             axis_ticks_direction='out',
             axis_ticks_pad=2,
             axis_title_x=element_text(

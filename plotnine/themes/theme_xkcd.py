@@ -23,7 +23,7 @@ class theme_xkcd(theme_gray):
                     family=['xkcd', 'Humor Sans', 'Comic Sans MS']),
                 axis_ticks=element_line(color='black', size=3),
                 axis_ticks_direction='in',
-                axis_ticks_major_length=8,
+                axis_ticks_length_major=8,
                 legend_background=element_rect(
                     color='black', fill='None'),
                 legend_key=element_rect(fill='None'),

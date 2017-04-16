@@ -1261,7 +1261,7 @@ class rect(legend_key, legend_background,
 
 # value base themeables
 
-class axis_ticks_major_length(themeable):
+class axis_ticks_length_major(themeable):
     """
     Axis major-tick length
 
@@ -1272,14 +1272,14 @@ class axis_ticks_major_length(themeable):
     """
     @property
     def rcParams(self):
-        rcParams = super(axis_ticks_major_length, self).rcParams
+        rcParams = super(axis_ticks_length_major, self).rcParams
         val = self.properties['value']
         rcParams['xtick.major.size'] = val
         rcParams['ytick.major.size'] = val
         return rcParams
 
 
-class axis_ticks_minor_length(themeable):
+class axis_ticks_length_minor(themeable):
     """
     Axis minor-tick length
 
@@ -1290,15 +1290,15 @@ class axis_ticks_minor_length(themeable):
     """
     @property
     def rcParams(self):
-        rcParams = super(axis_ticks_minor_length, self).rcParams
+        rcParams = super(axis_ticks_length_minor, self).rcParams
         val = self.properties['value']
         rcParams['xtick.minor.size'] = val
         rcParams['ytick.minor.size'] = val
         return rcParams
 
 
-class axis_ticks_length(axis_ticks_major_length,
-                        axis_ticks_minor_length):
+class axis_ticks_length(axis_ticks_length_major,
+                        axis_ticks_length_minor):
     """
     Axis tick length
 
@@ -1310,7 +1310,7 @@ class axis_ticks_length(axis_ticks_major_length,
     pass
 
 
-class axis_ticks_major_pad(themeable):
+class axis_ticks_pad_major(themeable):
     """
     Axis major-tick padding
 
@@ -1321,14 +1321,14 @@ class axis_ticks_major_pad(themeable):
     """
     @property
     def rcParams(self):
-        rcParams = super(axis_ticks_minor_pad, self).rcParams
+        rcParams = super(axis_ticks_pad_major, self).rcParams
         val = self.properties['value']
         rcParams['xtick.major.pad'] = val
         rcParams['ytick.major.pad'] = val
         return rcParams
 
 
-class axis_ticks_minor_pad(themeable):
+class axis_ticks_pad_minor(themeable):
     """
     Axis minor-tick padding
 
@@ -1338,15 +1338,15 @@ class axis_ticks_minor_pad(themeable):
     """
     @property
     def rcParams(self):
-        rcParams = super(axis_ticks_minor_pad, self).rcParams
+        rcParams = super(axis_ticks_pad_minor, self).rcParams
         val = self.properties['value']
         rcParams['xtick.minor.pad'] = val
         rcParams['ytick.minor.pad'] = val
         return rcParams
 
 
-class axis_ticks_pad(axis_ticks_major_pad,
-                     axis_ticks_minor_pad):
+class axis_ticks_pad(axis_ticks_pad_major,
+                     axis_ticks_pad_minor):
     """
     Axis tick padding
 
