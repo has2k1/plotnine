@@ -1,8 +1,6 @@
 """
 Theme elements used to decorate the graph.
 """
-import copy
-
 from ..utils import suppress
 
 

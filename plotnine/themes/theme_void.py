@@ -32,7 +32,7 @@ class theme_void(theme):
             legend_entry_spacing_y=2,
             legend_text=element_text(size=base_size*0.8, ha='left'),
             legend_text_legend=element_text(va='baseline'),
-            legend_title=element_blank(),
+            legend_title=element_text(ha='left'),
             strip_text=element_text(
                 size=base_size*0.8, linespacing=1.8),
 
