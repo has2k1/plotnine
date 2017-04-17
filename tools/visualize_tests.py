@@ -38,6 +38,10 @@ tbody tr:nth-child(even) {{
     background-color:  #dbcdad;
 }}
 
+tbody tr td img{{
+    background-color:  #FFFFFF;
+}}
+
 </style>
 </head><body>
 {failed}
