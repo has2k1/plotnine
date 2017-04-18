@@ -10,21 +10,21 @@ class theme_matplotlib(theme):
     The default matplotlib look and feel.
 
     The theme can be used (and has the same parameter
-    to customize) like a matplotlib rc_context() manager.
+    to customize) like a :class:`matplotlib.rc_context` manager.
 
     Parameters
     -----------
-    rc :  dict of rcParams
+    rc :  dict, optional
         rcParams which should be applied on top of
         mathplotlib default.
-    fname :  Filename (str)
-        a filename to a matplotlibrc file
-    matplotlib_defaults : bool
-        if True (the default) resets the plot setting
-        to the (current) matplotlib.rcParams values
+    fname : str, optional
+        Filename to a matplotlibrc file
+    use_defaults : bool
+        If `True` (the default) resets the plot setting
+        to the (current) `matplotlib.rcParams` values
     """
 
-    def __init__(self, rc=None, fname=None, matplotlib_defaults=True):
+    def __init__(self, rc=None, fname=None, use_defaults=True):
         theme.__init__(
             self,
             aspect_ratio=get_option('aspect_ratio'),
@@ -36,7 +36,7 @@ class theme_matplotlib(theme):
                 fill='#D9D9D9', color='#D9D9D9', size=1),
             complete=True)
 
-        if matplotlib_defaults:
+        if use_defaults:
             _copy = mpl.rcParams.copy()
             # no need to a get a deprecate warning just because
             # they are still included in rcParams...

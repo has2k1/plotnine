@@ -6,6 +6,14 @@ from .theme_bw import theme_bw
 class theme_minimal(theme_bw):
     """
     A minimalistic theme with no background annotations
+
+    Parameters
+    ----------
+    base_size : int, optional
+        Base font size. All text sizes are a scaled versions of
+        the base font size. Default is 11.
+    base_family : str, optional
+        Base font family.
     """
 
     def __init__(self, base_size=11, base_family='DejaVu Sans'):

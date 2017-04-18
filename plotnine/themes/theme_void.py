@@ -7,6 +7,14 @@ class theme_void(theme):
     """
     A classic-looking theme, with x & y axis lines and
     no gridlines.
+
+    Parameters
+    ----------
+    base_size : int, optional
+        Base font size. All text sizes are a scaled versions of
+        the base font size. Default is 11.
+    base_family : int, optional
+        Base font family.
     """
 
     def __init__(self, base_size=11, base_family='DejaVu Sans'):

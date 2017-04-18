@@ -7,6 +7,14 @@ class theme_light(theme_gray):
     """
     A theme similar to :class:`theme_linedraw` but with light grey
     lines and axes to direct more attention towards the data.
+
+    Parameters
+    ----------
+    base_size : int, optional
+        Base font size. All text sizes are a scaled versions of
+        the base font size. Default is 11.
+    base_family : str, optional
+        Base font family.
     """
 
     def __init__(self, base_size=11, base_family='DejaVu Sans'):

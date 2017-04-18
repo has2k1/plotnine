@@ -18,8 +18,11 @@ class theme_seaborn(theme):
         Style of axis background.
     context: 'notebook' | 'talk' | 'paper' | 'poster'
         Intended context for resulting figures.
-    gridweight: 'extra heavy' | 'heavy' | 'medium' | 'light'
-        Width of the grid lines. None
+    font : str
+        Font family, see matplotlib font manager.
+    font_scale : float, optional
+        Separate scaling factor to independently scale the
+        size of the font elements.
     """
 
     def __init__(self, style='darkgrid', context='notebook',

@@ -7,6 +7,14 @@ from .theme_gray import theme_gray
 class theme_538(theme_gray):
     """
     Theme in the likeness of fivethirtyeight.com plots
+
+    Parameters
+    ----------
+    base_size : int, optional
+        Base font size. All text sizes are a scaled versions of
+        the base font size. Default is 11.
+    base_family : str, optional
+        Base font family.
     """
     def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)

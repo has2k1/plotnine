@@ -6,6 +6,14 @@ from .theme_gray import theme_gray
 class theme_linedraw(theme_gray):
     """
     A theme with only black lines of various widths on white backgrounds
+
+    Parameters
+    ----------
+    base_size : int, optional
+        Base font size. All text sizes are a scaled versions of
+        the base font size. Default is 11.
+    base_family : str, optional
+        Base font family.
     """
 
     def __init__(self, base_size=11, base_family='DejaVu Sans'):

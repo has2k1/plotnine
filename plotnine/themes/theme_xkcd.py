@@ -14,6 +14,24 @@ class theme_xkcd(theme_gray):
 
     Parameters
     ----------
+    base_size : int, optional
+        Base font size. All text sizes are a scaled versions of
+        the base font size. Default is 12.
+    scale : float, optional
+        The amplitude of the wiggle perpendicular to the line
+        (in pixels). Default is 1.
+    length : float, optional
+        The length of the wiggle along the line (in pixels).
+        Default is 100.
+    randomness : float, optional
+        The factor by which the length is randomly scaled.
+        Default is 2.
+    stroke_size : float, optional
+        Size of the stroke to apply to the lines and text paths.
+        Default is 4.
+    stroke_color : str or tuple, optional
+        Color of the strokes. Default is ``white``.
+        For no color, use ``'none'``.
     """
     def __init__(self, base_size=12, scale=1, length=100, randomness=2,
                  stroke_size=4, stroke_color='white'):
