@@ -15,15 +15,16 @@ class theme_xkcd(theme_gray):
     Parameters
     ----------
     """
-    def __init__(self, base_size=12, scale=1, length=100, randomness=2):
+    def __init__(self, base_size=12, scale=1, length=100, randomness=2,
+                 stroke_size=4, stroke_color='white'):
         theme_gray.__init__(self, base_size)
         self.add_theme(
             theme(
                 text=element_text(
                     family=['xkcd', 'Humor Sans', 'Comic Sans MS']),
-                axis_ticks=element_line(color='black', size=3),
+                axis_ticks=element_line(color='black', size=1.5),
                 axis_ticks_direction='in',
-                axis_ticks_length_major=8,
+                axis_ticks_length_major=6,
                 legend_background=element_rect(
                     color='black', fill='None'),
                 legend_key=element_rect(fill='None'),
@@ -41,7 +42,9 @@ class theme_xkcd(theme_gray):
         d = {'axes.unicode_minus': False,
              'path.sketch':  (scale, length, randomness),
              'path.effects':  [
-                 patheffects.withStroke(linewidth=4, foreground='white')]
+                 patheffects.withStroke(
+                     linewidth=stroke_size,
+                     foreground=stroke_color)]
              }
         self._rcParams.update(d)
 
