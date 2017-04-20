@@ -1,24 +1,41 @@
 .. _index:
 
+.. figure:: ./images/logo-180.png
+    :alt: plotnine
+    :align: right
 
 A Grammar of Graphics for Python
 ================================
 
-**plotnine** is an implementation of a grammar of graphics. It is based
-is based on Hadley Wickham's `ggplot2 <http://ggplot2.org/>`__.
+plotnine is an implementation of a *grammar of graphics* in Python,
+it is based on ggplot2_. The grammar allows users to compose plots
+by explicitly mapping data to the visual objects that make up the
+plot.
 
+Plotting with a grammar is powerful, it makes custom (and otherwise
+complex) plots are easy to think about and then create, while the
+simple plots remain simple.
 
-Built with
-~~~~~~~~~~
-- Matplotlib
-- Pandas
+Example
+-------
+.. code:: python
 
+    (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+     + geom_point())
+     + stat_smooth(method='lm')
+     + facet_wrap('~gear'))
 
-Overview
-========
+.. figure:: ./images/readme-image-4.png
+
+Documentation
+-------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    api
+   installation
    changelog
+   about-plotnine
+
+.. _ggplot2: http://ggplot2.org

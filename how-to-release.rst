@@ -2,6 +2,10 @@
 How to release
 ##############
 
+Documentation
+=============
+Do a `plotnine-examples` release if necessary.
+
 Testing
 =======
 

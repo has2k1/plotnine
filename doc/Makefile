@@ -23,7 +23,7 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext theme
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext theme logo readme_images
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -183,3 +183,23 @@ pseudoxml:
 theme:
 	../tools/build_theme.sh --theme $(BOOTSWATCHTHEME) \
 	   --brand-primary '$(PRIMARY)'
+
+logo:
+	cd images; \
+	python logo.py; \
+	convert -trim -density 100 -alpha remove -background '#FFFFFF' \
+	   -gravity center -scale 176x176 -extent 180x180 \
+	   -border 2 -bordercolor '#441A3F'\
+	   logo.pdf logo-180.png; \
+	convert -trim -density 100 -alpha remove -background '#FFFFFF' \
+	   -gravity center -scale 32x32 \
+	   -border 2 -bordercolor '#441A3F'\
+	   logo-small.pdf logo-32.png; \
+	convert -trim -density 100 -alpha remove -background '#FFFFFF' \
+	   -gravity center -scale 32x32 \
+	   -border 2 -bordercolor '#441A3F'\
+	   logo-small.pdf favicon.ico;
+
+readme_images:
+	cd images; \
+	python readme_images.py

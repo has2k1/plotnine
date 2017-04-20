@@ -34,6 +34,18 @@ def get_required_packages():
     return install_requires
 
 
+def get_extra_packages():
+    """
+    Return extra packages
+
+    Plus any version tests and warnings
+    """
+    extras_require = {
+        'all':  ['scikit-learn', 'scikit-misc']
+    }
+    return extras_require
+
+
 def get_package_data():
     """
     Return package data
@@ -70,6 +82,7 @@ if __name__ == '__main__':
           cmdclass=versioneer.get_cmdclass(),
           url=__url__,
           install_requires=get_required_packages(),
+          extras_require=get_extra_packages(),
           packages=find_packages(),
           package_data=get_package_data(),
           classifiers=['Intended Audience :: Science/Research',
