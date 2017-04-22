@@ -7,6 +7,15 @@ __email__ = 'has2k1@gmail.com'
 __description__ = "A grammar of graphics for python"
 __license__ = 'GPL-2'
 __url__ = 'https://github.com/has2k1/plotnine'
+__classifiers__ = [
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 3'
+]
 
 
 def check_dependencies():
@@ -23,7 +32,7 @@ def get_required_packages():
     Plus any version tests and warnings
     """
     install_requires = ['six',
-                        'mizani',
+                        'mizani >= 0.3.0',
                         'matplotlib >= 2.0.0',
                         'numpy',
                         'scipy',
@@ -85,11 +94,5 @@ if __name__ == '__main__':
           extras_require=get_extra_packages(),
           packages=find_packages(),
           package_data=get_package_data(),
-          classifiers=['Intended Audience :: Science/Research',
-                       'License :: OSI Approved :: GPL-2',
-                       'Operating System :: Microsoft :: Windows',
-                       'Operating System :: Unix',
-                       'Operating System :: MacOS',
-                       'Programming Language :: Python :: 2',
-                       'Programming Language :: Python :: 3'],
+          classifiers=__classifiers__,
           zip_safe=False)

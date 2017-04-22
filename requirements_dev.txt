@@ -3,7 +3,7 @@ pytest-cov
 
 # Documentation
 sphinx
-sphinx_bootstrap_theme
+plotnine-examples
 scipy
 statsmodels
 pandas
