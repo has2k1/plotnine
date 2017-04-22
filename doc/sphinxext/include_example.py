@@ -2,36 +2,24 @@
 from __future__ import print_function
 
 import os
-import sys
 import importlib
 
 import nbformat
 import sphinx
+import nbsphinx
 from docutils.parsers.rst.directives.misc import Include as BaseInclude
-from nbconvert.preprocessors import ExecutePreprocessor
-from nbconvert import RSTExporter
 from nbconvert.writers import FilesWriter
+from plotnine_examples.notebooks import NBPATH
 
 package = importlib.import_module('plotnine')
 base_path = os.path.dirname(package.__path__[0])
-
-
-def get_source_path(objname):
-    """
-    Return the source filename for the object
-    """
-    obj = getattr(package, objname)
-    module_file = sys.modules[obj.__module__].__file__
-    if module_file.endswith('.pyc'):
-        module_file = module_file[:-1]
-    return module_file
 
 
 def get_notebook_filename(objname):
     """
     Return the notebook filename with examples for the object
     """
-    filename = '{}/examples/{}.ipynb'.format(base_path, objname)
+    filename = '{}/{}.ipynb'.format(NBPATH, objname)
     if not os.path.exists(filename):
         filename = ''
     return filename
@@ -58,22 +46,18 @@ def notebook_to_rst(notebook_filename, rst_filename):
         note be part of the `toctree`.
     """
     path = os.path.dirname(rst_filename)
-    basename = os.path.splitext(
-        os.path.basename(rst_filename))[0]
-    output_files_dir = basename
-    resources_d = {'metadata': {'path': path},
-                   'output_files_dir': output_files_dir}
+    basename = os.path.splitext(os.path.basename(rst_filename))[0]
+    resources_d = {
+        'metadata': {'path': path},
+        'output_files_dir': basename
+    }
 
     # Read notebook
     with open(notebook_filename, 'r') as f:
         nb = nbformat.read(f, as_version=4)
 
-    # Execute
-    ep = ExecutePreprocessor(kernel_name='python')
-    ep.preprocess(nb, resources_d)
-
     # Export
-    rst_exporter = RSTExporter()
+    rst_exporter = nbsphinx.Exporter(execute='never', allow_errors=True)
     (body, resources) = rst_exporter.from_notebook_node(
         nb, resources_d)
 
@@ -100,26 +84,10 @@ def process_object(objname):
         Name of ggplot object being documented
         e.g 'geom_point', 'facet_grid', ...
     """
-    try:
-        src_filename = get_source_path(objname)
-    except AttributeError:
-        return
-
     notebook_filename = get_notebook_filename(objname)
-    rst_filename = get_rst_filename(objname)
-    filenames = (src_filename, notebook_filename, rst_filename)
-
     if not os.path.exists(notebook_filename):
         return
-
-    if (os.path.exists(notebook_filename) and
-            os.path.exists(rst_filename)):
-        # If rst is uptodate
-        mtimes = [os.stat(s).st_mtime for s in filenames]
-        if (mtimes[0] < mtimes[2] and
-                mtimes[1] < mtimes[2]):
-            return rst_filename
-
+    rst_filename = get_rst_filename(objname)
     return notebook_to_rst(notebook_filename, rst_filename)
 
 
