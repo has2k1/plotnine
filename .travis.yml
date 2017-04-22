@@ -2,27 +2,43 @@ sudo: false
 
 language: python
 
-
-python:
-   - 2.7
-   - 3.4
-   - 3.5
-
+matrix:
+  fast_finish: true
+  include:
+    - python: 2.7
+      env:
+        - JOB: 'UNITTEST'
+        - FULL_DEPS: true
+    - python: 3.5
+      env:
+        - JOB: 'UNITTEST'
+        - FULL_DEPS: true
+    - python: 3.6
+      env:
+        - JOB: 'UNITTEST'
+        - FULL_DEPS: true
+    - python: 3.6
+      env:
+        - JOB: 'DOCS'
+        - FULL_DEPS: true
+    - python: 3.6
+      env:
+        - JOB: 'LINT'
+        - FULL_DEPS: false
 
 cache: pip
-
 
 notifications:
   email: false
 
-
 # miniconda recipe
 # http://conda.pydata.org/docs/travis.html#using-conda-with-travis-ci
 before_install:
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+  - |
+    if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
     else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
     fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
@@ -32,26 +48,43 @@ before_install:
    # Useful for debugging any issues with conda
   - conda info -a
 
-
 # Install packages
 install:
   # Install dependencies
-  - conda create -q -n ggplot-test python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose pandas statsmodels six
-  - source activate ggplot-test
-  - python setup.py install
-  - pip install python-coveralls
-  - pip install palettable
-  - pip install nose-cov
-  - python setup.py install
-  - export MATPLOTLIB_BACKEND=agg
+  - conda create -q -n plotnine-test python=$TRAVIS_PYTHON_VERSION
+  - source activate plotnine-test
+  - |
+    if [[ "$FULL_DEPS" ]]; then
+      conda install matplotlib scipy pandas statsmodels scikit-learn
+      pip install -e .
+    fi
+  - |
+    if [[ "$JOB" == "UNITTEST" ]]; then
+      conda install pytest-cov
+      pip install coveralls
+    elif [[ "$JOB" == "DOCS" ]]; then
+      pip install sphinx
+      pip install nbsphinx
+      pip install plotnine-examples
+    elif [[ "$JOB" == "LINT" ]]; then
+      pip install flake8
+    fi
   # List all conda and pip packages
   - conda list
+  - export MATPLOTLIB_BACKEND=agg
 
-
-# Run test
 script:
-  # only use the unittests under ggplot/tests/ and not the manual tests in tests/
-  - nosetests ggplot --with-cov --cov ggplot --cov-config .coveragerc --logging-level=INFO
+  - |
+    if [[ "$JOB" == "UNITTEST" ]]; then
+      coverage erase
+      make test
+    elif [[ "$JOB" == "DOCS" ]]; then
+      pushd doc
+      make html SPHINXOPTS=-W
+      popd;
+    elif [[ "$JOB" == "LINT" ]]; then
+      make lint
+    fi
 
 
 # Calculate coverage
