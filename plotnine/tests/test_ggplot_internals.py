@@ -192,3 +192,14 @@ def test_inplace_add():
     th = _th = theme_gray()
     th += theme(aspect_ratio=1)
     assert th is _th
+
+
+def test_rrshift_piping():
+    p = df >> ggplot(aes('x', 'y')) + geom_point()
+    assert p.data is df
+
+    with pytest.raises(PlotnineError):
+        df >> ggplot(df.copy(), aes('x', 'y')) + geom_point()
+
+    with pytest.raises(TypeError):
+        'not a dataframe' >> ggplot(aes('x', 'y')) + geom_point()

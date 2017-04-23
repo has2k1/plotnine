@@ -114,6 +114,21 @@ class ggplot(object):
         except TypeError:
             return other.__radd__(self)
 
+    def __rrshift__(self, other):
+        """
+        Overload the >> operator to receive a dataframe
+        """
+        if isinstance(other, pd.DataFrame):
+            if self.data is None:
+                self.data = other
+            else:
+                raise PlotnineError(
+                    "`>>` failed, ggplot object has data.")
+        else:
+            msg = "Unknown type of data -- {!r}"
+            raise TypeError(msg.format(type(other)))
+        return self
+
     def draw(self):
         """
         Render the complete plot and return the matplotlib figure
