@@ -63,7 +63,7 @@ class TestGrouping(object):
         'g': [1, 2, 22, 3, 33, 333, 4, 44, 444, 4444]})
 
     p = (ggplot(df, aes('x', 'x', fill='factor(g)',
-                       color='factor(g)'))
+                        color='factor(g)'))
          + _theme)
 
     def test_group_basic(self):

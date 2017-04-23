@@ -21,6 +21,7 @@ import functools
 class dummy(object):
     pass
 
+
 mpl = dummy()
 mpl.__version__ = _mpl.__version__
 

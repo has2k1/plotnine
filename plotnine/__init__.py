@@ -1,26 +1,22 @@
 from __future__ import absolute_import
 
+from .qplot import qplot            # noqa: F401
+from .ggplot import ggplot, ggsave  # noqa: F401
+from .aes import *                  # noqa: F403, E261
+from .labels import *               # noqa: F403, E261
+from .coords import *               # noqa: F403, E261
+from .geoms import *                # noqa: F403, E261
+from .stats import *                # noqa: F403, E261
+from .scales import *               # noqa: F403, E261
+from .facets import *               # noqa: F403, E261
+from .themes import *               # noqa: F403, E261
+from .positions import *            # noqa: F403, E261
+from .guides import *               # noqa: F403, E261
+
 from ._version import get_versions
 
 __version__ = get_versions()['version']
 del get_versions
-
-# This is the only place the version is specified and
-# used in both setup.py and docs/conf.py to set the
-# version of plotnine.
-
-from .qplot import qplot
-from .ggplot import ggplot, ggsave
-from .aes import *
-from .labels import *
-from .coords import *
-from .geoms import *
-from .stats import *
-from .scales import *
-from .facets import *
-from .themes import *
-from .positions import *
-from .guides import *
 
 
 def _get_all_imports():
