@@ -69,4 +69,4 @@ def test_calculated_expressions():
     p = (ggplot(mtcars, aes(x='factor(cyl)', y='..count..+1'))
          + geom_bar())
     # No exception
-    p.build()
+    p._build()

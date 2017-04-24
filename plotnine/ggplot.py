@@ -137,7 +137,7 @@ class ggplot(object):
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme
         self = deepcopy(self)
-        self.build()
+        self._build()
 
         # If no theme we use the default
         self.theme = self.theme or theme_get()
@@ -147,10 +147,10 @@ class ggplot(object):
                 # rcparams theming
                 self.theme.apply_rcparams()
                 # Drawing
-                self.draw_plot()
-                self.draw_legend()
-                self.draw_labels()
-                self.draw_title()
+                self._draw_plot()
+                self._draw_legend()
+                self._draw_labels()
+                self._draw_title()
                 # Artist object theming
                 self.theme.apply_axs(self.axs)
                 self.theme.apply_figure(self.figure)
@@ -161,7 +161,7 @@ class ggplot(object):
 
         return self.figure
 
-    def draw_plot(self):
+    def _draw_plot(self):
         """
         Draw the main plot(s) onto the axes.
 
@@ -195,7 +195,7 @@ class ggplot(object):
                 panel_params, layout_info, pidx)
             self.facet.draw_label(layout_info, pidx)
 
-    def build(self):
+    def _build(self):
         """
         Build ggplot for rendering.
 
@@ -271,7 +271,7 @@ class ggplot(object):
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
 
-    def draw_legend(self):
+    def _draw_legend(self):
         """
         Draw legend onto the figure
         """
@@ -344,7 +344,7 @@ class ggplot(object):
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
-    def draw_labels(self):
+    def _draw_labels(self):
         """
         Draw x and y labels onto the figure
         """
@@ -395,7 +395,7 @@ class ggplot(object):
         figure._themeable['axis_title_x'] = xlabel
         figure._themeable['axis_title_y'] = ylabel
 
-    def draw_title(self):
+    def _draw_title(self):
         """
         Draw title onto the figure
         """
