@@ -58,6 +58,7 @@ install:
       conda install scipy pandas statsmodels scikit-learn
       export MPLLOCALFREETYPE=1
       pip install matplotlib --no-binary matplotlib
+      pip install scikit-misc
       pip install -e .
     fi
   - |
