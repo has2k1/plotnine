@@ -55,7 +55,9 @@ install:
   - source activate plotnine-test
   - |
     if [[ "$FULL_DEPS" ]]; then
-      conda install matplotlib scipy pandas statsmodels scikit-learn
+      conda install scipy pandas statsmodels scikit-learn
+      export MPLLOCALFREETYPE=1
+      pip install matplotlib --no-binary matplotlib
       pip install -e .
     fi
   - |
