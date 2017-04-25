@@ -14,12 +14,24 @@
 
 import sys
 import os
-import glob
 
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('.'))
+CUR_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_PATH = os.path.abspath(CUR_PATH + '/../')
+sys.path.insert(0, CUR_PATH)
+sys.path.insert(0, PROJECT_PATH)
+
+if on_rtd:
+    import mock
+    from pprint import pprint
+    MOCK_MODULES = []
+    for mod_name in MOCK_MODULES:
+        sys.modules[mod_name] = mock.Mock()
+    pprint(os.environ)
+    pprint(sys.path)
 
 # -- General configuration ------------------------------------------------
 
@@ -80,6 +92,13 @@ try:
     version = plotnine.__version__
 except ImportError:
     version = 'unknown'
+
+# readthedocs modifies the repository which messes up the version.
+if on_rtd:
+    import re
+    version = version.rstrip('.dirty')
+    version = re.sub('\+0\..+', '', version)
+    version
 
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -389,12 +408,3 @@ plot_html_show_source_link = False
 plot_html_show_formats = False
 plot_formats = ['png']
 plot_rcparams = {'savefig.bbox': 'tight'}
-
-
-# ifconfig
-example_files = {os.path.basename(s).replace('.ipynb', '.txt')
-                 for s in glob.glob('../../examples/*.ipynb')}
-
-
-def setup(app):
-    app.add_config_value('example_files', example_files, 'env')
