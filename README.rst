@@ -2,10 +2,6 @@
 plotnine
 ########
 
-.. figure:: ./doc/images/logo-180.png
-    :alt: plotnine
-    :align: right
-
 =================    =================
 Latest Release       |release|_
 License              |license|_
@@ -13,6 +9,10 @@ Build Status         |buildstatus|_
 Coverage             |coverage|_
 Documentation        |documentation|_
 =================    =================
+
+.. raw:: html
+
+      <img src="https://github.com/has2k1/plotnine/blob/master/doc/images/logo-180.png" align="right"'>
 
 plotnine is an implementation of a *grammar of graphics* in Python,
 it is based on ggplot2_. The grammar allows users to compose plots
