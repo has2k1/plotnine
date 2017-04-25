@@ -1,0 +1,10 @@
+# For RTD virtual environment
+numpy
+scipy
+pandas
+matplotlib
+mizani
+
+plotnine-examples
+jupyter
+nbsphinx
