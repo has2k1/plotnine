@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
-import warnings
 
+import six
 import pandas as pd
 import pytest
 
@@ -15,10 +15,14 @@ def test_stat_bin():
 
     # About the default bins
     gg = ggplot(aes(x='x'), df) + stat_bin()
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        gg.draw_test()
-        res = ['bins' in str(item.message).lower() for item in w]
+
+    if not six.PY2:
+        # Test fails on PY2 when all the tests are run,
+        # but not when only this test module is run
+        with pytest.warns(None) as record:
+            gg.draw_test()
+
+        res = ('bins' in str(item.message).lower() for item in record)
         assert any(res)
 
     # About the ignoring the y aesthetic

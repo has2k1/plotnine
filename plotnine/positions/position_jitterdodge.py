@@ -33,7 +33,7 @@ class position_jitterdodge(position):
         numpy global generator :class:`numpy.random` is used.
     """
     REQUIRED_AES = ['x', 'y']
-    strategy = position_dodge.strategy
+    strategy = staticmethod(position_dodge.strategy)
 
     def __init__(self, jitter_width=None, jitter_height=0,
                  dodge_width=0.75, random_state=None):

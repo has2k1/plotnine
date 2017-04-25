@@ -51,8 +51,8 @@ class theme_xkcd(theme_gray):
                 panel_background=element_rect(fill='white'),
                 strip_background=element_rect(
                     color='black', fill='white'),
-                strip_background_x=element_rect(width=2/3),
-                strip_background_y=element_rect(height=2/3),
+                strip_background_x=element_rect(width=2/3.),
+                strip_background_y=element_rect(height=2/3.),
                 strip_margin=-0.5,
             ),
             inplace=True)

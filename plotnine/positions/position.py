@@ -1,9 +1,9 @@
 from __future__ import absolute_import, division, print_function
 
 from copy import copy
-from six import add_metaclass
 from warnings import warn
 
+from six import add_metaclass
 import numpy as np
 
 from ..utils import check_required_aesthetics, groupby_apply

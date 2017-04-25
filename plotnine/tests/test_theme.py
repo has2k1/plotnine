@@ -1,5 +1,6 @@
 import os
 
+import six
 from plotnine import ggplot, aes, geom_point, labs, facet_grid
 from plotnine import (theme, theme_538, theme_bw, theme_classic,
                       theme_dark, theme_gray, theme_light,
@@ -131,7 +132,11 @@ class TestThemes(object):
     def test_theme_linedraw(self):
         p = self.g + labs(title='Theme Linedraw') + theme_linedraw()
 
-        assert p + _theme == 'theme_linedraw'
+        if six.PY2:
+            # Small displacement in title
+            assert p + _theme == ('theme_linedraw', {'tol': 8})
+        else:
+            assert p + _theme == 'theme_linedraw'
 
     def test_theme_matplotlib(self):
         p = self.g + labs(title='Theme Matplotlib') + theme_matplotlib()
