@@ -14,7 +14,7 @@ import six
 from plotnine import ggplot, theme
 
 
-TOLERANCE = 5           # Default tolerance for the tests
+TOLERANCE = 2           # Default tolerance for the tests
 DPI = 72                # Default DPI for the tests
 
 # This partial theme modifies all themes that are used in
