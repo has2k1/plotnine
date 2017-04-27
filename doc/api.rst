@@ -16,6 +16,8 @@ Plot creation
    ggplot
    qplot
    aes
+   ~layer.layer
+   ~layer.Layers
 
 
 geoms

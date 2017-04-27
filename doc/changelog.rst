@@ -12,6 +12,10 @@ API Changes
   is what matplotlib users expect. The previous names ``hjust`` and
   ``vjust`` are silently accepted.
 
+- :func:`~plotnine.layer.Layers` can now be used to bundle up ``geoms``
+  and ``stats``. This makes it easy to reuse ``geoms`` and `stats` or
+  organise them in sensible bundles when making complex plots.
+
 v0.1.0
 ------
 *(2017-04-25)*

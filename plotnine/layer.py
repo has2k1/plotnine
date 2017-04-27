@@ -12,7 +12,7 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import DISCRETE_KINDS, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, is_calculated_aes, strip_dots
+from .aes import aes, is_calculated_aes, strip_dots, make_labels
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -28,6 +28,17 @@ class Layers(list):
     """
     List of layers
 
+    The list should contain one of:
+
+    1. :class:`~plotnine.layer.layer` objects - This is how
+       it is used internally.
+    2. ``geom`` or ``stat`` objects - In this use case it holds
+       a group of ``geoms`` or ``stats`` that can be added to a
+       :class:`~plotnine.ggplot` object as single unit.
+
+    ``Layers`` is used internally and you should rarely need to
+    use it as described in the 2nd case. When you have to use it
+    you will know.
     """
 
     def __iadd__(self, other):
@@ -36,8 +47,25 @@ class Layers(list):
     def __add__(self, other):
         return Layers(super(Layers, self).__add__(other))
 
-    def __getslice__(self, i, j):
-        return Layers(super(Layers, self).__getslice__(i, j))
+    def __radd__(self, other, inplace=False):
+        """
+        Add layers to ggplot object
+        """
+        from .ggplot import ggplot
+        if isinstance(other, ggplot):
+            other = other if inplace else deepcopy(other)
+            for obj in self:
+                other += obj
+        else:
+            msg = "Cannot add Layers to object of type {!r}".format
+            raise PlotnineError(msg(type(other)))
+        return other
+
+    def __getitem__(self, key):
+        result = super(Layers, self).__getitem__(key)
+        if not isinstance(key, int):
+            result = Layers(result)
+        return result
 
     @property
     def data(self):
@@ -95,11 +123,43 @@ class Layers(list):
 
 
 class layer(object):
+    """
+    Layer
 
-    def __init__(self, geom=None, stat=None,
-                 data=None, mapping=None,
-                 position=None, inherit_aes=True,
-                 show_legend=None):
+    When a ``geom`` or ``stat`` is added to a
+    :class:`~plotnine.ggplot` object, it creates a single layer.
+    This class is a representation of that layer.
+
+    Parameters
+    ----------
+    geom : geom, optional
+        geom to used to draw this layer.
+    stat : stat, optional
+        stat used for the statistical transformation of
+        data in this layer
+    data : pandas.DataFrame, optional
+        Data plotted in this layer. If ``None``, the data from
+        the :class:`~plotnine.ggplot` object will be used.
+    mapping : aes, optional
+        Aesthetic mappings.
+    position : position, optional
+        Position object to adjust the geometries in this layer.
+    inherit_aes : bool, optional
+        If ``True`` inherit from the aesthetic mappings of
+        the :class:`~plotnine.ggplot` object. Default ``True``.
+    show_legend : bool or None, optional
+        Whether to make up and show a legend for the mappings
+        of this layer. If ``None`` then an automatic/good choice
+        is made. Default is ``None``.
+
+    Note
+    ----
+    There is no benefit to manually creating a layer. You should
+    always use a ``geom`` or ``stat``.
+    """
+
+    def __init__(self, geom=None, stat=None, data=None, mapping=None,
+                 position=None, inherit_aes=True, show_legend=None):
         self.geom = geom
         self.stat = stat
         self.data = data
@@ -139,6 +199,23 @@ class layer(object):
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
 
         return layer(**lkwargs)
+
+    def __radd__(self, gg):
+        """
+        Add layer to ggplot object
+        """
+        try:
+            gg.layers.append(self)
+        except AttributeError:
+            msg = "Cannot add layer to object of type {!r}".format
+            raise PlotnineError(msg(type(gg)))
+
+        # Add any new labels
+        mapping = make_labels(self.mapping)
+        default = make_labels(self.stat.DEFAULT_AES)
+        new_labels = defaults(mapping, default)
+        gg.labels = defaults(gg.labels, new_labels)
+        return gg
 
     def __deepcopy__(self, memo):
         """

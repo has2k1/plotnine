@@ -5,11 +5,11 @@ import six
 from six import add_metaclass
 
 from ..stats.stat import stat
-from ..aes import make_labels, rename_aesthetics, is_valid_aesthetic
+from ..aes import rename_aesthetics, is_valid_aesthetic
 from ..layer import layer
 from ..positions.position import position
 from ..utils import data_mapping_as_kwargs, remove_missing
-from ..utils import defaults, copy_keys, is_string, Registry
+from ..utils import copy_keys, is_string, Registry
 from ..exceptions import PlotnineError
 
 
@@ -233,13 +233,7 @@ class geom(object):
         gg = gg if inplace else deepcopy(gg)
 
         # create and add layer
-        gg.layers.append(layer.from_geom(self))
-
-        # Add any new labels
-        mapping = make_labels(self.mapping)
-        default = make_labels(self._stat.DEFAULT_AES)
-        new_labels = defaults(mapping, default)
-        gg.labels = defaults(gg.labels, new_labels)
+        gg += layer.from_geom(self)
         return gg
 
     def verify_arguments(self, kwargs):
