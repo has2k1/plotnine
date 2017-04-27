@@ -28,28 +28,16 @@ class Layers(list):
     """
     List of layers
 
-    Each layer knows its position/zorder (1 based) in the list.
     """
-    def append(self, item):
-        item.zorder = len(self) + 1
-        return list.append(self, item)
-
-    def _set_zorder(self, other):
-        for i, item in enumerate(other, start=len(self)+1):
-            item.zorder = i
-        return other
-
-    def extend(self, other):
-        other = self._set_zorder(other)
-        return list.extend(self, other)
 
     def __iadd__(self, other):
-        other = self._set_zorder(other)
-        return list.__iadd__(self, other)
+        return Layers(super(Layers, self).__iadd__(other))
 
     def __add__(self, other):
-        other = self._set_zorder(other)
-        return list.__add__(self, other)
+        return Layers(super(Layers, self).__add__(other))
+
+    def __getslice__(self, i, j):
+        return Layers(super(Layers, self).__getslice__(i, j))
 
     @property
     def data(self):
@@ -64,7 +52,9 @@ class Layers(list):
             l.setup_data()
 
     def draw(self, layout, coord):
-        for l in self:
+        # If zorder is 0, it is left to MPL
+        for i, l in enumerate(self, start=1):
+            l.zorder = i
             l.draw(layout, coord)
 
     def compute_aesthetics(self, plot):
