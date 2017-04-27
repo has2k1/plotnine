@@ -31,9 +31,9 @@ class geom_text(geom):
         Font weight.
     fontstyle : str (default: normal)
         Font style. One of *normal*, *italic* or *oblique*
-    hjust : str (default: center)
+    ha : str (default: center)
         Horizontal alignment. One of *left*, *center* or *right.*
-    vjust : str (default: center)
+    va : str (default: center)
         Vertical alignment. One of *top*, *center* or *bottom.*
     nudge_x : float (default: 0)
         Horizontal adjustment to apply to the text
@@ -56,8 +56,8 @@ class geom_text(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'parse': False,
                       'family': None, 'fontweight': 'normal',
-                      'fontstyle': 'normal', 'hjust': 'center',
-                      'vjust': 'center', 'nudge_x': 0, 'nudge_y': 0,
+                      'fontstyle': 'normal', 'ha': 'center',
+                      'va': 'center', 'nudge_x': 0, 'nudge_y': 0,
                       'format_string': None}
 
     def __init__(self, *args, **kwargs):
@@ -68,6 +68,14 @@ class geom_text(geom):
             nudge_kwargs['y'] = kwargs['nudge_y']
         if nudge_kwargs:
             kwargs['position'] = position_nudge(**nudge_kwargs)
+
+        # Accomodate for the old names
+        if 'hjust' in kwargs:
+            kwargs['ha'] = kwargs['hjust']
+
+        if 'vjust' in kwargs:
+            kwargs['va'] = kwargs['vjust']
+
         geom.__init__(self, *args, **kwargs)
 
     def setup_data(self, data):
@@ -98,8 +106,8 @@ class geom_text(geom):
         df['rotation'] = data['angle']
         df['linespacing'] = data['lineheight']
         df['color'] = color
-        df['horizontalalignment'] = params['hjust']
-        df['verticalalignment'] = params['vjust']
+        df['ha'] = params['ha']
+        df['va'] = params['va']
         df['family'] = params['family']
         df['fontweight'] = params['fontweight']
         df['zorder'] = params['zorder']
