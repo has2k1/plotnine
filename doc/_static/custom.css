@@ -38,7 +38,6 @@ tr.row-even td {
 table.dataframe {
    margin: 0 0 1em 0;
    color: #000;
-   font-family: Ubuntu, Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
    border-collapse: collapse;
 }
 

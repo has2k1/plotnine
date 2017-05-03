@@ -9,7 +9,9 @@ BUILDDIR      = _build
 
 # For make theme
 BOOTSWATCHTHEME = united
-PRIMARY = \#9E2F68
+brand-primary = \#9E2F68
+headings-font-weight = bold
+font-family-sans-serif = '"Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif'
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -182,7 +184,9 @@ pseudoxml:
 
 theme:
 	../tools/build_theme.sh --theme $(BOOTSWATCHTHEME) \
-	   --brand-primary '$(PRIMARY)'
+	   --brand-primary '$(brand-primary)' \
+	   --headings-font-weight $(headings-font-weight) \
+	   --font-family-sans-serif '$(font-family-sans-serif)'
 
 logo:
 	cd images; \
