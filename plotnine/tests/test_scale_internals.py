@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
+import numpy as np
+import pandas as pd
 import pytest
 import six
 
@@ -237,3 +239,15 @@ def test_xy_palette():
     s = sc.scale_y_continuous()
     value = s.palette(11.52)
     assert(value == 11.52)
+
+
+def test_xy_limits():
+    sc = scale_xy
+    lst = [1, 2, 3]
+    arr = np.array(lst)
+    series = pd.Series(lst)
+    s1 = sc.scale_x_discrete(limits=lst)
+    s2 = sc.scale_x_discrete(limits=arr)
+    s3 = sc.scale_x_discrete(limits=series)
+    assert all(s2.limits == s1.limits)
+    assert all(s3.limits == s1.limits)

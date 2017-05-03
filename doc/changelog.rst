@@ -3,6 +3,13 @@ Changelog
 
 v0.1.1
 ------
+*(unreleased)*
+
+- Fixed bug in :class:`~plotnine.scales.scale_x_discrete` and
+  :class:`~plotnine.scales.scale_y_discrete` where if they were
+  instantiated with parameter ``limits`` that is either a numpy
+  array or a pandas series, plotting would fail with a
+  :class:`ValueError`.
 
 API Changes
 ***********

@@ -60,7 +60,7 @@ class scale_position_discrete(scale_discrete):
     def map(self, series, limits=None):
         # Discrete values are converted into integers starting
         # at 1
-        if not limits:
+        if limits is None:
             limits = self.limits
         if series.dtype.kind in DISCRETE_KINDS:
             seq = np.arange(1, len(limits)+1)
@@ -72,7 +72,7 @@ class scale_position_discrete(scale_discrete):
         if self.is_empty():
             return (0, 1)
 
-        if self._limits:
+        if self._limits is not None:
             return self._limits
         elif self.range.range:
             # discrete range
@@ -124,7 +124,7 @@ class scale_position_continuous(scale_continuous):
         # But the continuous scale has to deal with out of bound points
         if not len(series):
             return series
-        if not limits:
+        if limits is None:
             limits = self.limits
         scaled = self.oob(series, limits)
         scaled[pd.isnull(scaled)] = self.na_value
