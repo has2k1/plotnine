@@ -57,11 +57,6 @@ extensions = [
     'sphinxext.include_example',
     'sphinxext.inline_code_highlight',
 
-    'matplotlib.sphinxext.only_directives',
-    'matplotlib.sphinxext.plot_directive',
-
-    'IPython.sphinxext.ipython_directive',
-    'IPython.sphinxext.ipython_console_highlighting',
     'nbsphinx'
 ]
 
@@ -115,7 +110,7 @@ release = version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = ['_build']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -330,10 +325,10 @@ epub_copyright = u'2016, Hassan Kibirige'
 # The basename for the epub file. It defaults to the project name.
 # epub_basename = u'plotnine'
 
-# The HTML theme for the epub output. Since the default themes are not optimized
-# for small screen space, using the same theme for HTML and epub output is
-# usually not wise. This defaults to 'epub', a theme designed to save visual
-# space.
+# The HTML theme for the epub output. Since the default themes are not
+# optimized for small screen space, using the same theme for HTML and epub
+# output is usually not wise. This defaults to 'epub', a theme designed to
+# save visual space.
 # epub_theme = 'epub'
 
 # The language of the text. It defaults to the language option
@@ -393,8 +388,8 @@ epub_exclude_files = ['search.html']
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'matplotlib': ('http://matplotlib.org/', None),
-    'numpy': ('http://docs.scipy.org/doc/numpy', None),
-    'scipy': ('http://docs.scipy.org/doc/scipy/reference', None),
+    'numpy': ('https://docs.scipy.org/doc/numpy', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
     'statsmodels': ('http://www.statsmodels.org/stable/', None),
     'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
     'sklearn': ('http://scikit-learn.org/stable/', None),
@@ -404,7 +399,3 @@ intersphinx_mapping = {
 # -- Extension configuration ----------------------------------------------
 autodoc_member_order = 'bysource'
 autosummary_generate = True
-plot_html_show_source_link = False
-plot_html_show_formats = False
-plot_formats = ['png']
-plot_rcparams = {'savefig.bbox': 'tight'}

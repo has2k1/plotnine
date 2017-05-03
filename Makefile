@@ -53,7 +53,7 @@ coverage:
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
-docs:
+doc:
 	$(MAKE) -C doc clean
 	$(MAKE) -C doc html
 	$(BROWSER) doc/_build/html/index.html
