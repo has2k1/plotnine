@@ -5,4 +5,4 @@
 
 .. auto{{ objtype }}:: {{ objname }}
 
-.. include_examples:: {{ objname }}
+.. include_examples:: {{ objname }}.ipynb

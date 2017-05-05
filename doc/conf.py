@@ -54,7 +54,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
 
-    'sphinxext.include_example',
+    'sphinxext.examples_and_gallery',
     'sphinxext.inline_code_highlight',
 
     'nbsphinx'
@@ -155,6 +155,7 @@ html_theme_options = {
     'navbar_sidebarrel': False,
     'navbar_links': [
         ('API', 'api'),
+        ('Gallery', 'gallery')
     ],
 }
 

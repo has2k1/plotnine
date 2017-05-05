@@ -35,6 +35,7 @@ Documentation
 
    api
    installation
+   gallery
    changelog
    about-plotnine
 
