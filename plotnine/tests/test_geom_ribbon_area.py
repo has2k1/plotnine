@@ -34,7 +34,7 @@ def test_ribbon_aesthetics():
                      color='black', fill=None) +
          scale_x_continuous(
              breaks=[i*2*np.pi for i in range(7)],
-             labels=['0'] + ['${}\pi$'.format(2*i) for i in range(1, 7)])
+             labels=['0'] + [r'${}\pi$'.format(2*i) for i in range(1, 7)])
          )
 
     assert p + _theme == 'ribbon_aesthetics'
@@ -53,7 +53,7 @@ def test_area_aesthetics():
                    color='black', fill=None) +
          scale_x_continuous(
              breaks=[i*2*np.pi for i in range(7)],
-             labels=['0'] + ['${}\pi$'.format(2*i) for i in range(1, 7)])
+             labels=['0'] + [r'${}\pi$'.format(2*i) for i in range(1, 7)])
          )
 
     assert p + _theme == 'area_aesthetics'

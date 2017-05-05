@@ -339,7 +339,7 @@ A data frame with 53940 rows and 10 variables:
 ========  ==================================
 Column    Description
 ========  ==================================
-price     price in US dollars (\$326–\$18,823)
+price     price in US dollars ($326–$18,823)
 carat     weight of the diamond (0.2–5.01)
 cut       quality of the cut (Fair, Good, Very Good, Premium, Ideal)
 color     diamond colour, from J (worst) to D (best)
@@ -453,9 +453,9 @@ genus
 vore           carnivore, omnivore or herbivore?
 order
 conservation   the conservation status of the animal
-sleep\_total   total amount of sleep, in hours
-sleep\_rem     rem sleep, in hours
-sleep\_cycle   length of sleep cycle, in hours
+sleep_total    total amount of sleep, in hours
+sleep_rem      rem sleep, in hours
+sleep_cycle    length of sleep cycle, in hours
 awake          amount of time spent awake, in hours
 brainwt        brain weight in kilograms
 bodywt         body weight in kilograms

@@ -295,8 +295,8 @@ def parse_grid_facets(facets):
     if not isinstance(facets, six.string_types):
         raise PlotnineError(error_msg_f)
 
-    variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
-    pattern = '\s*{0}\s*~\s*{0}\s*'.format(variables_pattern)
+    variables_pattern = r'(\w+(?:\s*\+\s*\w+)*|\.)'
+    pattern = r'\s*{0}\s*~\s*{0}\s*'.format(variables_pattern)
     match = re.match(pattern, facets)
 
     if not match:

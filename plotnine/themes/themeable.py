@@ -1497,7 +1497,7 @@ class aspect_ratio(themeable):
     Parameters
     ----------
     theme_element : float
-        :math:`panel\_height/panel\_width`
+        `panel_height / panel_width`
 
     Note
     ----

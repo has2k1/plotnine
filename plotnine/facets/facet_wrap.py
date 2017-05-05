@@ -277,14 +277,14 @@ def parse_wrap_facets(facets):
         raise PlotnineError(error_msg)
 
     if '~' in facets:
-        variables_pattern = '(\w+(?:\s*\+\s*\w+)*|\.)'
-        pattern = '\s*~\s*{0}\s*'.format(variables_pattern)
+        variables_pattern = r'(\w+(?:\s*\+\s*\w+)*|\.)'
+        pattern = r'\s*~\s*{0}\s*'.format(variables_pattern)
         match = re.match(pattern, facets)
         if not match:
             raise PlotnineError(error_msg)
 
         facets = [var.strip() for var in match.group(1).split('+')]
-    elif re.match('\w+', facets):
+    elif re.match(r'\w+', facets):
         # allow plain string as the variable name
         facets = [facets]
     else:
