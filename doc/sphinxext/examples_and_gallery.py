@@ -43,10 +43,10 @@ from __future__ import print_function
 import os
 import re
 
-from PIL import Image
 import nbformat
 import sphinx
 import nbsphinx
+from PIL import Image
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.misc import Include
@@ -85,6 +85,12 @@ def only_filename(filepath):
 
 def only_filename_no_ext(filepath):
     return os.path.splitext(only_filename(filepath))[0]
+
+
+def has_gallery(builder_name):
+    # RTD builder name is not html!
+    # We only create a gallery for selected builders
+    return builder_name in {'html', 'readthedocs'}
 
 
 class GalleryEntry(object):
@@ -156,7 +162,6 @@ class GalleryEntryExtractor(object):
             ReST file (coverted).
         """
         builddir = self.env.app.outdir
-        # build_image_dir = os.path.join(self.env.app.outdir, '_images')
 
         imgfilename_src = os.path.join(DOC_PATH, imgfilename_inrst)
 
@@ -265,8 +270,7 @@ def notebooks_to_rst(app):
 
 
 def extract_gallery_entries(app, doctree):
-    # We only create a gallery for html
-    if app.builder.name != 'html':
+    if not has_gallery(app.builder.name):
         return
 
     env = app.env
@@ -295,10 +299,10 @@ def add_entries_to_gallery(app, doctree, docname):
     if docname != 'gallery':
         return
 
-    # We only create a gallery for html
-    if app.builder.name != 'html':
+    if not has_gallery(app.builder.name):
         return
 
+    # Find gallery node
     try:
         node = doctree.traverse(gallery)[0]
     except TypeError:
@@ -309,8 +313,7 @@ def add_entries_to_gallery(app, doctree, docname):
         raw_html_node = nodes.raw('', text=entry.html, format='html')
         content.append(raw_html_node)
 
-    # Even when content is empty, we want the gallery node
-    # replace.
+    # Even when content is empty, we want the gallery node replaced
     node.replace_self(content)
 
 

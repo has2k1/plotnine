@@ -66,9 +66,7 @@ install:
       conda install pytest-cov
       pip install coveralls
     elif [[ "$JOB" == "DOCS" ]]; then
-      pip install sphinx
-      pip install nbsphinx
-      pip install plotnine-examples
+      pip -r requirements_doc.txt
     elif [[ "$JOB" == "LINT" ]]; then
       pip install flake8
     fi

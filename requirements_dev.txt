@@ -1,15 +1,14 @@
-# Testing
-pytest-cov
-
-# Documentation
-sphinx
-plotnine-examples
 scipy
 statsmodels
 pandas
 matplotlib
-jupyter
-notebook
+mizani
+
+# Testing
+pytest-cov
+
+# Documentation
+-r requirements_doc.txt
 
 # Release
 wheel

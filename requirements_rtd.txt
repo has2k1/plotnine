@@ -1,10 +1,8 @@
 # For RTD virtual environment
-numpy
 scipy
+statsmodels
 pandas
 matplotlib
 mizani
 
-plotnine-examples
-jupyter
-nbsphinx
+-r requirements_doc.txt
