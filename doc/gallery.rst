@@ -89,8 +89,8 @@
 
 .. only:: html
 
-    Example gallery
-    ===============
+    Gallery
+    =======
 
     .. gallery::
 
