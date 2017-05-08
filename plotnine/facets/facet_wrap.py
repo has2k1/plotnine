@@ -102,16 +102,17 @@ class facet_wrap(facet):
         # The bottom-most row of each column and the left most
         # column of each row
         if self.as_table or self.dir == 'h':
-            x_idx = (df['ROW'].argmax() for _, df in layout.groupby('COL'))
-            y_idx = (df['COL'].argmin() for _, df in layout.groupby('ROW'))
+            x_idx = [df['ROW'].argmax() for _, df in layout.groupby('COL')]
+            y_idx = [df['COL'].argmin() for _, df in layout.groupby('ROW')]
         else:
-            x_idx = (df['ROW'].argmin() for _, df in layout.groupby('COL'))
-            y_idx = (df['COL'].argmax() for _, df in layout.groupby('ROW'))
+            x_idx = [df['ROW'].argmin() for _, df in layout.groupby('COL')]
+            y_idx = [df['COL'].argmax() for _, df in layout.groupby('ROW')]
 
         layout['AXIS_X'] = False
         layout['AXIS_Y'] = False
-        layout.ix[x_idx, 'AXIS_X'] = True
-        layout.ix[y_idx, 'AXIS_Y'] = True
+        _loc = layout.columns.get_loc
+        layout.iloc[x_idx, _loc('AXIS_X')] = True
+        layout.iloc[y_idx, _loc('AXIS_Y')] = True
 
         return layout
 

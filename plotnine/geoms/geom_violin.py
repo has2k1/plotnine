@@ -70,8 +70,11 @@ class geom_violin(geom):
             polygon_df = pd.concat(
                 [df.sort_values('y'), df.sort_values('y', ascending=False)],
                 axis=0, ignore_index=True)
-            polygon_df.ix[:n, 'x'] = polygon_df.ix[:n, 'xminv']
-            polygon_df.ix[n:, 'x'] = polygon_df.ix[n:, 'xmaxv']
+
+            _df = polygon_df.iloc
+            _loc = polygon_df.columns.get_loc
+            _df[:n, _loc('x')] = _df[:n, _loc('xminv')]
+            _df[n:, _loc('x')] = _df[n:, _loc('xmaxv')]
 
             # Close the polygon: set first and last point the same
             polygon_df.loc[-1, :] = polygon_df.loc[0, :]
@@ -88,7 +91,7 @@ class geom_violin(geom):
                 aes_df = df.drop(['x', 'y', 'group'], axis=1)
                 aes_df.reset_index(inplace=True)
                 idx = [0] * 2 * len(quantiles)
-                aes_df = aes_df.ix[idx, :].reset_index(drop=True)
+                aes_df = aes_df.iloc[idx, :].reset_index(drop=True)
                 segment_df = pd.concat(
                     [make_quantile_df(df, quantiles), aes_df],
                     axis=1)

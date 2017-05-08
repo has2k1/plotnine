@@ -35,8 +35,9 @@ class geom_smooth(geom):
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
-        has_ribbon = (data.ix[0, 'ymin'] is not None and
-                      data.ix[0, 'ymax'] is not None)
+        _loc = data.columns.get_loc
+        has_ribbon = (data.iloc[0, _loc('ymin')] is not None and
+                      data.iloc[0, _loc('ymax')] is not None)
         if has_ribbon:
             data2 = data.copy()
             data2['color'] = None

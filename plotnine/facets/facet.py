@@ -558,15 +558,14 @@ def unique_combs(df):
     Return data frame with all possible combinations
     of the values in the columns
     """
-    # A sliced copy with zero rows so as to
-    # preserve the column dtypes
-    _df = df.ix[0:-1, df.columns]
-
     # List of unique values from every column
-    lst = [x.unique().tolist() for x in (df[c] for c in df)]
-    rows = itertools.product(*lst)
-    for i, row in enumerate(rows):
-        _df.loc[i] = row
+    lst = (x.unique() for x in (df[c] for c in df))
+    rows = list(itertools.product(*lst))
+    _df = pd.DataFrame(rows, columns=df.columns)
+
+    # preserve the column dtypes
+    for col in df:
+        _df[col] = _df[col].astype(df[col].dtype, copy=False)
     return _df
 
 

@@ -50,8 +50,9 @@ def test_stack():
 
 def test_stack_negative():
     df = df1.copy()
-    df.ix[0, 'y'] *= -1
-    df.ix[len(df)-1, 'y'] *= -1
+    _loc = df.columns.get_loc
+    df.iloc[0, _loc('y')] *= -1
+    df.iloc[len(df)-1, _loc('y')] *= -1
     p = (ggplot(df)
          + geom_col(aes('factor(x)', 'y', fill='factor(y)'),
                     position='stack')
