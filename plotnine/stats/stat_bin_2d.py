@@ -101,9 +101,9 @@ class stat_bin_2d(stat):
 
         df = pd.DataFrame({'xbins': xbins,
                            'ybins': ybins,
-                           'weights': weight})
-        table = pd.pivot_table(df, values='weights',
-                               index=['xbins', 'ybins'], aggfunc=np.sum)
+                           'weight': weight})
+        table = df.pivot_table(
+            'weight', index=['xbins', 'ybins'], aggfunc=np.sum)['weight']
 
         # create rectangles
         rects = []

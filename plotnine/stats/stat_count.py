@@ -56,10 +56,8 @@ class stat_count(stat):
             width = resolution(x, False) * 0.9
         df = pd.DataFrame({'weight': weight, 'x': x})
         # weighted frequency count
-        count = pd.pivot_table(df, values='weight',
-                               index=['x'],
-                               aggfunc=np.sum)
-        count = count.values
+        count = df.pivot_table(
+            'weight', index=['x'], aggfunc=np.sum)['weight'].values
         return pd.DataFrame({'count': count.astype(int),
                              'prop': count / np.abs(count).sum(),
                              'x': x.unique(),

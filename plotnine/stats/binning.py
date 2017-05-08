@@ -161,8 +161,8 @@ def assign_bins(x, breaks, weight=None, pad=False, closed='right'):
     #   - the weight of each x value
     # Then create a weighted frequency table
     df = pd.DataFrame({'bin_idx': bin_idx, 'weight': weight})
-    wftable = pd.pivot_table(
-        df, values='weight', index=['bin_idx'], aggfunc=np.sum)
+    wftable = df.pivot_table(
+        'weight', index=['bin_idx'], aggfunc=np.sum)['weight']
 
     # Empty bins get no value in the computed frequency table.
     # We need to add the zeros and since frequency table is a
