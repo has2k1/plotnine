@@ -102,7 +102,7 @@ class geom_path(geom):
         cols = {'color', 'size', 'linetype', 'alpha', 'group'}
         cols = cols & set(data.columns)
         df = data.drop_duplicates(cols)
-        constant = len(df) == len(data['group'].unique())
+        constant = len(df) == data['group'].nunique()
         params['constant'] = constant
 
         if not constant:
@@ -117,7 +117,7 @@ class geom_path(geom):
     def draw_group(data, panel_params, coord, ax, **params):
         data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
-        constant = params.pop('constant', False)
+        constant = params.pop('constant', data['group'].nunique() == 1)
 
         if not constant:
             _draw_segments(data, ax, **params)

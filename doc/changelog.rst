@@ -14,6 +14,10 @@ v0.1.1
 - Fixed exceptions when using :func:`pandas.pivot_table` for Pandas v0.20.0.
   The API was `fixed <http://pandas.pydata.org/pandas-docs/version/0.20/whatsnew.html#pivot-table-always-returns-a-dataframe>`_.
 
+- Fixed issues where lines/paths with segments that all belonged in the
+  same group had joins that in some cases were "butted".
+
+
 API Changes
 ***********
 
