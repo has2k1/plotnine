@@ -90,4 +90,7 @@ script:
 
 # Calculate coverage
 after_success:
-  - coveralls --config_file .coveragerc
+  - |
+    if [[ "$JOB" == "UNITTEST" ]]; then
+      coveralls --config_file .coveragerc
+    fi
