@@ -1,43 +1,12 @@
 {% extends "basic/layout.html" %}
 
-{% set theme_css_files = [] %}
 {% if theme_bootstrap_version == "3" %}
-  {% set bootstrap_version, bootstrap_additional_css, navbar_version = "3.3.6", "theme", "" %}
+  {% set bootstrap_version, navbar_version = "3.3.6", "" %}
   {% set bs_span_prefix = "col-md-" %}
 {% else %}
-  {% set bootstrap_version, bootstrap_additional_css, navbar_version = "2.3.2", "responsive", "-2" %}
+  {% set bootstrap_version, navbar_version = "2.3.2", "-2" %}
   {% set bs_span_prefix = "span" %}
 {% endif %}
-
-{% if theme_bootswatch_theme and theme_bootswatch_theme != "\"\"" %}
-  {# BS2 needs "bootstrap-responsive.css". BS3 doesn't. #}
-  {% if theme_bootstrap_version == "3" %}
-    {% set theme_css_files = theme_css_files + [
-        '_static/bootswatch-' + bootstrap_version + '/' + theme_bootswatch_theme + '/bootstrap.min.css',
-        '_static/bootstrap-sphinx.css'
-      ]
-    %}
-  {% else %}
-    {% set theme_css_files = theme_css_files + [
-        '_static/bootswatch-' + bootstrap_version + '/' + theme_bootswatch_theme + '/bootstrap.min.css',
-        '_static/bootstrap-' + bootstrap_version + '/css/bootstrap-' + bootstrap_additional_css + '.min.css',
-        '_static/bootstrap-sphinx.css'
-      ]
-    %}
-  {% endif %}
-{% else %}
-  {% set theme_css_files = theme_css_files + [
-      '_static/bootstrap-' + bootstrap_version + '/css/bootstrap.min.css',
-      '_static/bootstrap-' + bootstrap_version + '/css/bootstrap-' + bootstrap_additional_css + '.min.css',
-      '_static/bootstrap-sphinx.css'
-    ]
-  %}
-{% endif %}
-
-{% if not bootswatch_css_custom %}
-  {% set bootswatch_css_custom = [] %}
-{% endif %}
-{% set css_files = css_files + theme_css_files + bootswatch_css_custom %}
 
 {% set script_files = script_files + [
     '_static/js/jquery-1.11.0.min.js',

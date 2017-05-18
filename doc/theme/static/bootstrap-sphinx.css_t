@@ -5,6 +5,43 @@
  * Sphinx stylesheet -- Bootstrap theme.
  */
 
+/*
+ * Imports to aggregate everything together.
+ */
+
+@import url("basic.css");
+
+{% if theme_bootstrap_version == "3" %}
+  {% set bootstrap_version, bootstrap_additional_css = "3.3.6", "theme" %}
+  {% set bs_span_prefix = "col-md-" %}
+{% else %}
+  {% set bootstrap_version, bootstrap_additional_css = "2.3.2", "responsive" %}
+  {% set bs_span_prefix = "span" %}
+{% endif %}
+
+{% if theme_bootswatch_theme and theme_bootswatch_theme != "\"\"" %}
+  {# BS2 needs "bootstrap-responsive.css". BS3 doesn't. #}
+  {% if theme_bootstrap_version == "3" %}
+    @import url("{{ 'bootswatch-' + bootstrap_version + '/' + theme_bootswatch_theme + '/bootstrap.min.css' }}");
+  {% else %}
+    @import url("{{ 'bootswatch-' + bootstrap_version + '/' + theme_bootswatch_theme + '/bootstrap.min.css' }}");
+    @import url("{{ 'bootstrap-' + bootstrap_version + '/css/bootstrap-' + bootstrap_additional_css + '.min.css' }}");
+  {% endif %}
+{% else %}
+    @import url("{{ 'bootstrap-' + bootstrap_version + '/css/bootstrap.min.css' }}");
+    @import url("{{ 'bootstrap-' + bootstrap_version + '/css/bootstrap-' + bootstrap_additional_css + '.min.css' }}");
+{% endif %}
+
+{% if bootswatch_css_custom %}
+  {%- for css_custom in bootswatch_css_custom %}
+    @import url("{{ css_custom }}");
+  {%- endfor %}
+{% endif %}
+
+/*
+ * Styles
+ */
+
 .navbar-inverse .brand {
   color: #FFF;
 }
