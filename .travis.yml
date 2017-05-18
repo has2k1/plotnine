@@ -92,5 +92,5 @@ script:
 after_success:
   - |
     if [[ "$JOB" == "UNITTEST" ]]; then
-      coveralls --config_file .coveragerc
+      coveralls --rcfile=.coveragerc
     fi

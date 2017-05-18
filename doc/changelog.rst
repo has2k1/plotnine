@@ -1,9 +1,14 @@
 Changelog
 =========
 
-v0.1.1
+v0.2.1
 ------
 *(unreleased)*
+
+
+v0.2.0
+------
+*(2017-05-18)*
 
 - Fixed bug in :class:`~plotnine.scales.scale_x_discrete` and
   :class:`~plotnine.scales.scale_y_discrete` where if they were
