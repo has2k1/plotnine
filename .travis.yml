@@ -21,12 +21,17 @@ matrix:
       env:
         - JOB: 'DOCS'
         - FULL_DEPS: true
+      addons:
+        apt:
+          packages:
+          - pandoc
     - python: 3.6
       env:
         - JOB: 'LINT'
         - FULL_DEPS: false
 
 cache: pip
+
 
 notifications:
   email: false
@@ -81,8 +86,9 @@ script:
       make test
     elif [[ "$JOB" == "DOCS" ]]; then
       pushd doc
-      make html SPHINXOPTS=-W
-      popd;
+      # low pandoc version leads to a warning so
+      # SPHINXOPTS=-W fails
+      make html && popd
     elif [[ "$JOB" == "LINT" ]]; then
       make lint
     fi
