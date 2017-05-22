@@ -214,7 +214,10 @@ def get_geom_documentation(geom):
     # aesthetics
     contents = OrderedDict(('**{}**'.format(ae), '')
                            for ae in sorted(geom.REQUIRED_AES))
-    contents.update(sorted(geom.DEFAULT_AES.items()))
+    if geom.DEFAULT_AES:
+        d = geom.DEFAULT_AES.copy()
+        d['group'] = ''  # All geoms understand the group aesthetic
+        contents.update(sorted(d.items()))
     table = dict_to_table(('Aesthetic', 'Default value'),
                           contents)
     aesthetics = AESTHETICS_TPL.format(aesthetics_table=table)

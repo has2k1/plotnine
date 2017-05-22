@@ -83,13 +83,21 @@ class aes(dict):
       This is okay::
 
         # 'gam ma' is a column in the dataframe
-        ggplot(df, aes('x'='df.index', 'y'='gam ma'))
+        ggplot(df, aes(x='df.index', y='gam ma'))
 
       While this is not::
 
         # 'gam ma' is a column in the dataframe, but not
         # valid python variable name
-        ggplot(df, aes('x'='df.index', 'y'='np.sin(gam ma)'))
+        ggplot(df, aes(x='df.index', y='np.sin(gam ma)'))
+
+    .. rubric:: The group aesthetic
+
+    ``group`` is a special aesthetic that the user can *map* to.
+    It is used to group the plotted items. If not specified, it
+    is automatically computed and in most cases the computed
+    groups are sufficient. However, there may be cases were it is
+    handy to map to it.
 
     Note
     ----
