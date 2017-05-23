@@ -38,5 +38,6 @@ Documentation
    gallery
    changelog
    about-plotnine
+   external-resources
 
 .. _ggplot2: http://ggplot2.org
