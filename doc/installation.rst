@@ -11,10 +11,14 @@ can choose one these two commands:
 
 .. code-block:: console
 
-    $ pip install plotnine        # 1. should be sufficient for most
-    $ pip install plotnine[all]   # 2. includes extra/optional packages
+    # Using pip
+    $ pip install plotnine         # 1. should be sufficient for most
+    $ pip install 'plotnine[all]'  # 2. includes extra/optional packages
 
-The second command also installs packages that are required for some
+    # Or using conda
+    $ conda install -c conda-forge plotnine
+
+The second pip command also installs packages that are required for some
 specific functionality that may not be frequently used. Those packages
 are:
 
