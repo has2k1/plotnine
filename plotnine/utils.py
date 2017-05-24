@@ -549,6 +549,9 @@ def to_rgba(colors, alpha):
                 return True
         return False
 
+    def no_color(c):
+        return c is None or c == '' or c.lower() == 'none'
+
     def to_rgba_hex(c, a):
         """
         Conver rgb color to rgba hex value
@@ -566,18 +569,15 @@ def to_rgba(colors, alpha):
         return c
 
     if is_iterable(colors):
-        if all(c is None for c in colors):
+        if all(no_color(c) for c in colors):
             return None
-
-        if all(c == '' for c in colors):
-            return ''
 
         if is_iterable(alpha):
             return [to_rgba_hex(c, a) for c, a in zip(colors, alpha)]
         else:
             return [to_rgba_hex(c, alpha) for c in colors]
     else:
-        if colors is None or colors == '':
+        if no_color(colors):
             return colors
         if is_iterable(alpha):
             return [to_rgba_hex(colors, a) for a in alpha]

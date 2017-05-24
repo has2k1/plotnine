@@ -5,6 +5,10 @@ v0.2.1
 ------
 *(unreleased)*
 
+- Fixed bug where manually setting the aesthetic ``fill=None`` or
+  ``fill='None'`` could lead to a black fill instead of an empty
+  fill.
+
 
 v0.2.0
 ------
