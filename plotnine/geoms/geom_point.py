@@ -47,12 +47,15 @@ class geom_point(geom):
         # be in points must scaled using sqrt(pi)
         size = ((data['size']+data['stroke'])**2)*np.pi
         stroke = data['stroke'] * SIZE_FACTOR
-
-        fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
 
-        if fill is None:
+        # It is common to forget that scatter points are
+        # filled and slip-up by manually assigning to the
+        # color instead of the fill. We forgive.
+        if all(c is None for c in data['fill']):
             fill = color
+        else:
+            fill = to_rgba(data['fill'], data['alpha'])
 
         ax.scatter(x=data['x'],
                    y=data['y'],

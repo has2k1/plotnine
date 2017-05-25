@@ -25,8 +25,6 @@ _theme = theme(facet_spacing={'right': 0.85})
 
 
 def test_rect_aesthetics():
-
-    # rect
     p = (ggplot(df, aes(xmin='xmin', xmax='xmax',
                         ymin='ymin', ymax='ymax')) +
          geom_rect() +
@@ -46,6 +44,20 @@ def test_rect_aesthetics():
          labs(x='x', y='y'))
 
     assert p == 'rect-aesthetics'
+
+
+def test_rect_nofill():
+    p = (ggplot(df)
+         + aes(xmin='xmin', xmax='xmax', ymin='ymin', ymax='ymax')
+         + geom_rect(color='red', fill=None, size=2)
+         + geom_rect(aes(ymin='ymin+2', ymax='ymax+2'),
+                     color='blue', fill='None', size=2)
+         + geom_rect(aes(ymin='ymin+4', ymax='ymax+4'),
+                     color='green', fill='', size=2)
+         + geom_rect(aes(ymin='ymin+6', ymax='ymax+6'),
+                     color='yellow', fill='gray', size=2))
+
+    assert p == 'rect-nofill'
 
 
 def test_tile_aesthetics():

@@ -36,3 +36,18 @@ def test_aesthetics():
          theme(facet_spacing={'right': 0.85}))
 
     assert p == 'aesthetics'
+
+
+def test_no_fill():
+    df = pd.DataFrame({'x': range(5), 'y': range(5)})
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point(color='red', fill=None, size=5, stroke=1.5)
+         + geom_point(aes(y='y+1'),
+                      color='blue', fill='none', size=5, stroke=1.5)
+         + geom_point(aes(y='y+2'),
+                      color='green', fill='', size=5, stroke=1.5)
+         + geom_point(aes(y='y+3'),
+                      color='yellow', fill='gray', size=5, stroke=1.5))
+
+    assert p == 'no_fill'

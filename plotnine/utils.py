@@ -570,7 +570,7 @@ def to_rgba(colors, alpha):
 
     if is_iterable(colors):
         if all(no_color(c) for c in colors):
-            return None
+            return 'none'
 
         if is_iterable(alpha):
             return [to_rgba_hex(c, a) for c, a in zip(colors, alpha)]
