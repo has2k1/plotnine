@@ -9,6 +9,9 @@ v0.2.1
   ``fill='None'`` could lead to a black fill instead of an empty
   fill.
 
+- Fixed bug where computed aesthetics could not be used in larger
+  statements. (:issue:`7`)
+
 
 v0.2.0
 ------

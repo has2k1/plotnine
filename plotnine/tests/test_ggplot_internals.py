@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, geom_histogram, geom_line
+from plotnine import ggplot, aes, geom_point, geom_histogram
+from plotnine import geom_line, geom_bar
 from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
@@ -130,6 +131,10 @@ def test_calculated_aes():
     assert strip_dots(mapping2['y']) == 'density*2'
     assert strip_dots(mapping3['y']) == 'density + count'
     assert strip_dots(mapping4['y']) == 'func(density)'
+
+    df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    p = ggplot(df) + geom_bar(aes(x='x', fill='..count.. + 2'))
+    p.draw_test()
 
 
 def test_add_aes():

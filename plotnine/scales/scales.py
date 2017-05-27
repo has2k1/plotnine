@@ -238,18 +238,12 @@ class Scales(list):
         # If a new aesthetic corresponds to a column in the data
         # frame, find a default scale for the type of data in that
         # column
-        ae_cols = []
+        seen = set()
         for ae in new_aesthetics:
             col = aesthetics[ae]
-            if col in data.columns:
-                ae_cols.append((ae, col))
-
-        seen = set()
-        for ae, col in ae_cols:
-            # add the cardinal scale only once e.g x for xmin and xmax
+            if col not in data:
+                col = ae
             scale_var = aes_to_scale(ae)
-            if scale_var in seen:
-                continue
             seen.add(scale_var)
             try:
                 sc = make_scale(scale_var, data[col])

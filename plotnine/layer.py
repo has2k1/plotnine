@@ -402,17 +402,16 @@ class layer(object):
                     new[ae], inner_namespace=data)
 
         if not new:
-            return data
+            return
 
-        # Add any new scales, if needed
-        plot.scales.add_defaults(data, new)
-
-        # Transform the values, if the scale say it's ok
         # (see stat_spoke for one exception)
         if self.stat.retransform:
             stat_data = plot.scales.transform_df(stat_data)
 
         self.data = pd.concat([data, stat_data], axis=1)
+
+        # Add any new scales, if needed
+        plot.scales.add_defaults(self.data, new)
 
     def setup_data(self):
         """
