@@ -69,7 +69,7 @@ Building a complex plot piece by piece.
    .. code:: python
 
        (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
-        + geom_point())
+        + geom_point()
         + stat_smooth(method='lm')
         + facet_wrap('~gear'))
 
@@ -80,7 +80,7 @@ Building a complex plot piece by piece.
    .. code:: python
 
        (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
-        + geom_point())
+        + geom_point()
         + stat_smooth(method='lm')
         + facet_wrap('~gear')
         + theme_xkcd())
