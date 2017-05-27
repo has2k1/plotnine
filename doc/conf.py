@@ -45,6 +45,7 @@ sys.path.insert(0, os.path.abspath('.'))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
+    'sphinx.ext.extlinks',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
@@ -400,6 +401,10 @@ intersphinx_mapping = {
 # -- Extension configuration ----------------------------------------------
 autodoc_member_order = 'bysource'
 autosummary_generate = True
+
+extlinks = {
+    'issue': ('https://github.com/has2k1/plotnine/issues/%s', 'GH')
+}
 
 
 def setup(app):
