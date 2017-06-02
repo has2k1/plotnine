@@ -244,6 +244,10 @@ class Scales(list):
             if col not in data:
                 col = ae
             scale_var = aes_to_scale(ae)
+
+            if self.get_scales(scale_var):
+                continue
+
             seen.add(scale_var)
             try:
                 sc = make_scale(scale_var, data[col])
