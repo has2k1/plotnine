@@ -407,5 +407,25 @@ extlinks = {
 }
 
 
+def link_to_tutorials():
+    # Linking to the directory does not work well with
+    # nbsphinx. We link to the files themselves
+    from glob import glob
+    from plotnine_examples.tutorials import TUTPATH
+
+    dest_dir = os.path.join(CUR_PATH, 'tutorials')
+
+    # Unlink files from previous build
+    for old_file in glob(dest_dir + '/*.ipynb'):
+        os.unlink(old_file)
+
+    # Link files for this build
+    for file in glob(TUTPATH + '/*.ipynb'):
+        basename = os.path.basename(file)
+        dest = os.path.join(dest_dir, basename)
+        os.symlink(file, dest)
+
+
 def setup(app):
+    link_to_tutorials()
     app.add_stylesheet('custom.css')

@@ -9,7 +9,7 @@ How to use the extension
 
 1. Create a galley.rst page with a `gallery` directive.
 2. Define the path to the notebooks and the notebook filenames
-   as `NBPATH` (str), `NBFILES` (set). Together they give
+   as `EXPATH` (str), `EXFILES` (set). Together they give
    you the path each notebook file that will converted to ReST.
 3. In the Sphinx template used to generate documentation, use::
 
@@ -51,7 +51,7 @@ from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.misc import Include
 from nbconvert.writers import FilesWriter
-from plotnine_examples.notebooks import NBPATH, NBFILES
+from plotnine_examples.examples import EXPATH, EXFILES
 
 # Use build enviroment to get the paths
 CUR_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -227,7 +227,7 @@ def get_rstfilename(nbfilename):
 
 
 def notebook_to_rst(nbfilename):
-    nbfilepath = os.path.join(NBPATH, nbfilename)
+    nbfilepath = os.path.join(EXPATH, nbfilename)
     rstfilename = get_rstfilename(nbfilename)
     output_files_dir = only_filename_no_ext(rstfilename)
     metadata_path = os.path.dirname(rstfilename)
@@ -265,7 +265,7 @@ def notebooks_to_rst(app):
     """
     Convert notebooks to rst
     """
-    for filename in NBFILES:
+    for filename in EXFILES:
         notebook_to_rst(filename)
 
 
