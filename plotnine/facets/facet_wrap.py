@@ -114,6 +114,12 @@ class facet_wrap(facet):
         layout.iloc[x_idx, _loc('AXIS_X')] = True
         layout.iloc[y_idx, _loc('AXIS_Y')] = True
 
+        if self.free['x']:
+            layout.loc[:, 'AXIS_X'] = True
+
+        if self.free['y']:
+            layout.loc[:, 'AXIS_Y'] = True
+
         return layout
 
     def map(self, data, layout):
@@ -180,7 +186,7 @@ class facet_wrap(facet):
             spacing_x = 0.1
 
         try:
-            spacing_y = get_property('panel_spacing_x')
+            spacing_y = get_property('panel_spacing_y')
         except KeyError:
             spacing_y = 0.1
 

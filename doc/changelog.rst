@@ -17,6 +17,10 @@ v0.2.1
   
 - Fixed bug where ``ggplot(data=df)`` resulted in an exception.
 
+- Fixed missing axis ticks and labels for :class:`~plotnine.facet_wrap`
+  when the scales are allowed to vary (e.g `scales='free'`) between
+  the panels.
+
 
 v0.2.0
 ------
