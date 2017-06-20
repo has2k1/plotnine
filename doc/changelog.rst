@@ -15,6 +15,10 @@ v0.2.1
 - Fixed bug in :class:`~plotnine.stat_summary` where the you got
   an exception for some types of the `x` aesthetic values.
 
+- Fixed missing axis ticks and labels for :class:`~plotnine.facet_wrap`
+  when the scales are allowed to vary (e.g `scales='free'`) between
+  the panels.
+
 
 v0.2.0
 ------
