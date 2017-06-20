@@ -12,6 +12,9 @@ v0.2.1
 - Fixed bug where computed aesthetics could not be used in larger
   statements. (:issue:`7`)
 
+- Fixed bug in :class:`~plotnine.stat_summary` where the you got
+  an exception for some types of the `x` aesthetic values.
+
 
 v0.2.0
 ------

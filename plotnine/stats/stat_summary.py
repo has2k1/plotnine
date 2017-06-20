@@ -204,17 +204,6 @@ class stat_summary(stat):
                                 params['fun_ymin'], params['fun_ymax'],
                                 params['fun_args'])
 
-        # NOTE: This is a temporary fix due to bug
-        # https://github.com/pydata/pandas/issues/10409
-        # Remove when that bug is fixed
-        import pandas.api.types as pdtypes
-
-        def preserve_categories(ref, other):
-            for col in ref.columns & other.columns:
-                if pdtypes.is_categorical_dtype(ref[col]):
-                    other[col] = other[col].astype(
-                        'category', categories=ref[col].cat.categories)
-
         # break a dataframe into pieces, summarise each piece,
         # and join the pieces back together, retaining original
         # columns unaffected by the summary.
@@ -227,7 +216,6 @@ class stat_summary(stat):
             if 'y' in unique:
                 unique = unique.drop('y', axis=1)
             merged = summary.merge(unique, on=['group', 'x'])
-            preserve_categories(unique, merged)  # see above note
             summaries.append(merged)
 
         new_data = pd.concat(summaries, axis=0, ignore_index=True)
