@@ -52,10 +52,27 @@ def test_labels():
 
 def test_ggplot_parameters():
     p = ggplot(df, aes('x'))
+
     assert p.data is df
     assert p.mapping == aes('x')
     assert p.environment.namespace['np'] is np
     assert p.environment.namespace['pd'] is pd
+
+    p = ggplot(data=df, mapping=aes('x'))
+    assert p.data is df
+    assert p.mapping == aes('x')
+
+    p = ggplot(data=df)
+    assert p.data is df
+    assert p.mapping == aes()
+
+    p = ggplot(mapping=aes('x'))
+    assert p.data is None
+    assert p.mapping == aes('x')
+
+    p = ggplot()
+    assert p.data is None
+    assert p.mapping == aes()
 
     with pytest.raises(PlotnineError):
         ggplot([1, 2, 3], aes('x'))

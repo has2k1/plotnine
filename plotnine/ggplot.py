@@ -52,7 +52,8 @@ class ggplot(object):
 
     def __init__(self, mapping=None, data=None, environment=None):
         # Allow some sloppiness
-        if not isinstance(mapping, aes):
+        if (isinstance(mapping, pd.DataFrame) and
+                (data is None or isinstance(data, aes))):
             mapping, data = data, mapping
         if mapping is None:
             mapping = aes()
