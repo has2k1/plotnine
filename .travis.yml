@@ -71,7 +71,7 @@ install:
       conda install pytest-cov
       pip install coveralls
     elif [[ "$JOB" == "DOCS" ]]; then
-      pip install -r requirements_doc.txt
+      pip install -r requirements/doc.txt
     elif [[ "$JOB" == "LINT" ]]; then
       pip install flake8
     fi
