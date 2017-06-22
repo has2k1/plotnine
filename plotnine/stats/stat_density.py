@@ -132,6 +132,10 @@ class stat_density(stat):
 
 
 def compute_density(x, weight, range, **params):
+    x = np.asarray(x, dtype=np.float)
+    not_nan = ~np.isnan(x)
+    x = x[not_nan]
+
     n = len(x)
 
     if weight is None:
@@ -156,7 +160,6 @@ def compute_density(x, weight, range, **params):
     else:
         fft = False
 
-    x = np.asarray(x, dtype=np.float)
     kde = sm.nonparametric.KDEUnivariate(x)
     kde.fit(
         kernel=params['kernel'],
@@ -190,8 +193,6 @@ def compute_density(x, weight, range, **params):
     not_nan = ~np.isnan(y)
     x2 = x2[not_nan]
     y = y[not_nan]
-
-    # print(np.sum(np.isnan(y)))
     return pd.DataFrame({'x': x2,
                          'density': y,
                          'scaled': y / np.max(y),
