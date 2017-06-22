@@ -3,7 +3,7 @@ Changelog
 
 v0.2.1
 ------
-*(unreleased)*
+*(2017-06-22)*
 
 - Fixed bug where manually setting the aesthetic ``fill=None`` or
   ``fill='None'`` could lead to a black fill instead of an empty
