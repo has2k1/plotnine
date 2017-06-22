@@ -1,8 +1,0 @@
-# For RTD virtual environment
-scipy
-statsmodels
-pandas
-matplotlib
-mizani
-
--r requirements_doc.txt

@@ -4,15 +4,11 @@ pandas
 matplotlib
 mizani
 
+# Documentation
+-r doc.txt
+
 # Testing
 pytest-cov
-
-# Documentation
--r requirements_doc.txt
-
-# Release
 wheel
-
-# Linting
 pep8
 flake8
