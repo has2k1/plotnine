@@ -167,13 +167,19 @@ def loess(data, xseq, **params):
 
     kwargs = params['method_args']
 
-    # Creates a loess model that allows extrapolation
-    # when making predictions
-    if 'surface' not in kwargs:
+    extrapolate = (min(xseq) < min(data['x']) or
+                   max(xseq) > max(data['x']))
+    if 'surface' not in kwargs and extrapolate:
+        # Creates a loess model that allows extrapolation
+        # when making predictions
         kwargs['surface'] = 'direct'
+        warnings.warn(
+            "Making prediction outside the data range, "
+            "setting loess control parameter `surface='direct'`.")
 
     if 'span' not in kwargs:
         kwargs['span'] = params['span']
+
     lo = loess_klass(data['x'], data['y'], weights, **kwargs)
     lo.fit()
 

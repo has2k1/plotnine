@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.2.2
+------
+*(Unreleased)*
+
+- Changed parameter settings for :class:`~plotnine.stat_smooth`.
+
+  #. Default ``span=0.75`` instead of ``2/3``
+  #. When using loess smoothing, the control parameter ``surface``
+     is only set to the value ``'direct'`` if predictions will
+     be made outside the data range.
+
 v0.2.1
 ------
 *(2017-06-22)*

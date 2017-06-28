@@ -130,7 +130,7 @@ class stat_smooth(stat):
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
                       'method': 'auto', 'se': True, 'n': 80,
                       'fullrange': False, 'level': 0.95,
-                      'span': 2/3., 'method_args': {}}
+                      'span': 0.75, 'method_args': {}}
     CREATES = {'se', 'ymin', 'ymax'}
 
     def setup_data(self, data):
