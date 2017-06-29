@@ -12,6 +12,10 @@ v0.2.2
      is only set to the value ``'direct'`` if predictions will
      be made outside the data range.
 
+- Fixed bug where facetting led to a reordering of the data. This
+  would manifest as a bug for ``geoms`` where order was important.
+  (:issue:`26`)
+
 v0.2.1
 ------
 *(2017-06-22)*
@@ -33,7 +37,7 @@ v0.2.1
   the panels.
 
 - Fixed bug in :class:`~plotnine.stat_density` where changing the
-  x limits lead to an exception (:issue: `22`)
+  x limits lead to an exception (:issue:`22`)
 
 
 v0.2.0

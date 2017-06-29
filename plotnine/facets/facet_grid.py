@@ -142,6 +142,8 @@ class facet_grid(facet):
             keys = join_keys(facet_vals, layout, vars)
             data['PANEL'] = match(keys['x'], keys['y'], start=1)
 
+        data = data.sort_values('PANEL', kind='mergesort')
+
         # matching dtype and
         # the categories(panel numbers) for the data should be in the
         # same order as the panels. i.e the panels are the reference,
@@ -150,7 +152,7 @@ class facet_grid(facet):
             data['PANEL'],
             categories=layout['PANEL'].cat.categories,
             ordered=True)
-        data = data.sort_values('PANEL')
+
         data.reset_index(drop=True, inplace=True)
         return data
 

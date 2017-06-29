@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from plotnine import (ggplot, aes, geom_area, geom_ribbon,
-                      scale_x_continuous, theme)
+                      facet_wrap, scale_x_continuous, theme)
 
 n = 4            # No. of ribbions in a vertical stack
 m = 100          # Points
@@ -57,3 +57,13 @@ def test_area_aesthetics():
          )
 
     assert p + _theme == 'area_aesthetics'
+
+
+def test_ribbon_facetting():
+    p = (ggplot(df, aes('x', ymin='ymin', ymax='ymax',
+                        fill='factor(z)')) +
+         geom_ribbon() +
+         facet_wrap('~ z')
+         )
+
+    assert p + _theme == 'ribbon_facetting'
