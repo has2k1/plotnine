@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from copy import deepcopy, copy
 import itertools
+import keyword
 
 import numpy as np
 import pandas as pd
@@ -16,6 +17,8 @@ with suppress(ImportError):
     import matplotlib.pyplot as plt
     import matplotlib.text as mtext
     import matplotlib.patches as mpatch
+
+KEYWORDS = set(keyword.kwlist)
 
 
 class facet(object):
@@ -627,7 +630,13 @@ def eval_facet_vars(data, vars, env):
     facet_vals = pd.DataFrame(index=data.index)
 
     for name in vars:
-        res = env.eval(name, inner_namespace=data)
+        if name in KEYWORDS:
+            # This is a limited solution. If a keyword is
+            # part of an expression it will fail in the
+            # else statement below
+            res = data[name]
+        else:
+            res = env.eval(name, inner_namespace=data)
         facet_vals[name] = res
 
     return facet_vals

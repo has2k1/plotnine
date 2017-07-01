@@ -15,6 +15,9 @@ v0.2.2
 - Fixed bug where facetting led to a reordering of the data. This
   would manifest as a bug for ``geoms`` where order was important.
   (:issue:`26`)
+  
+- Fix bug where facetting by a column whose name (eg. ``class``) is
+  a python keyword resulted in an exception. (:issue:`28`)
 
 v0.2.1
 ------

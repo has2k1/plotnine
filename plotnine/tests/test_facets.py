@@ -10,7 +10,9 @@ n = 10
 df = pd.DataFrame({'x': range(n),
                    'y': range(n),
                    'var1': np.repeat(range(n//2), 2),
-                   'var2': np.tile(['a', 'b'], n//2)})
+                   'var2': np.tile(['a', 'b'], n//2),
+                   })
+df['class'] = df['var1']  # python keyword as column
 
 g = (ggplot(df, aes('x', 'y')) +
      geom_point(aes(color='factor(var1)'),
@@ -21,7 +23,9 @@ g = (ggplot(df, aes('x', 'y')) +
 
 def test_facet_wrap_one_var():
     p = g + facet_wrap('~var1')
+    p2 = g + facet_wrap('~class')  # python keyword in formula
     assert p == 'facet_wrap_one_var'
+    assert p2 == 'facet_wrap_one_var'
 
 
 # https://github.com/pandas-dev/pandas/issues/16276
@@ -33,7 +37,9 @@ def test_facet_wrap_expression():
 
 def test_facet_wrap_two_vars():
     p = g + facet_wrap('~var1+var2')
+    p2 = g + facet_wrap('~class+var2')  # python keyword in formula
     assert p == 'facet_wrap_two_vars'
+    assert p2 == 'facet_wrap_two_vars'
 
 
 def test_facet_wrap_label_both():
@@ -60,7 +66,9 @@ def test_facet_wrap_not_as_table_direction_v():
 
 def test_facet_grid_one_by_one_var():
     p = g + facet_grid('var1~var2')
+    p2 = g + facet_grid('class~var2')  # python keyword in formula
     assert p == 'facet_grid_one_by_one_var'
+    assert p2 == 'facet_grid_one_by_one_var'
 
 
 # https://github.com/pandas-dev/pandas/issues/16276
