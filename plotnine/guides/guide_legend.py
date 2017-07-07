@@ -300,7 +300,7 @@ class guide_legend(guide):
         for i in range(nbreak):
             da = ColoredDrawingArea(self._keywidth[i],
                                     self._keyheight[i],
-                                    0, 0, color='#E5E5E5')
+                                    0, 0, color='white')
             # overlay geoms
             for gl in self.glayers:
                 data = gl.data.iloc[i]
