@@ -21,6 +21,10 @@ v0.3.0
 
 - Fix bug where y-axis scaling was calculated from the ``xlim`` argument.
 
+- Fix bug where initialising geoms from stats, and positions from geoms,
+  when passed as classes (e.g. ``stat_smooth(geom=geom_point)``, would
+  fail.
+
 API Changes
 ***********
 

@@ -9,6 +9,7 @@ from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
                       geom_col, geom_text, position_dodge,
                       position_jitter, position_jitterdodge,
                       position_nudge, position_stack, theme)
+from plotnine.positions.position import position
 from plotnine.exceptions import PlotnineError
 
 n = 6
@@ -94,3 +95,16 @@ def test_jitterdodge():
          geom_point(size=10, fill='black') +
          geom_point(size=10, position=position))
     assert p + _theme == 'jitterdodge'
+
+def test_position_from_geom():
+    geom = geom_point(position='jitter')
+    assert isinstance(position.from_geom(geom), position_jitter)
+
+    geom = geom_point(position='position_jitter')
+    assert isinstance(position.from_geom(geom), position_jitter)
+
+    geom = geom_point(position=position_jitter())
+    assert isinstance(position.from_geom(geom), position_jitter)
+
+    geom = geom_point(position=position_jitter)
+    assert isinstance(position.from_geom(geom), position_jitter)

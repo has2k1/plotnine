@@ -65,7 +65,7 @@ class geom(object):
         if issubclass(type(name), geom):
             return name
 
-        if isinstance(name, geom):
+        if isinstance(name, type) and issubclass(name, geom):
             klass = name
         elif is_string(name):
             if not name.startswith('geom_'):

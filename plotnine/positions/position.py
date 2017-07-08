@@ -125,7 +125,7 @@ class position(object):
         if issubclass(type(name), position):
             return name
 
-        if isinstance(name, position):
+        if isinstance(name, type) and issubclass(name, position):
             klass = name
         elif is_string(name):
             if not name.startswith('position_'):

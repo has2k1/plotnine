@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import pandas as pd
 import pytest
 
+import plotnine as p9
 from plotnine import ggplot, aes
 from plotnine.geoms.geom import geom
 from plotnine.exceptions import PlotnineError
@@ -53,3 +54,16 @@ def test_geom_with_invalid_argument():
 
     with pytest.raises(PlotnineError):
         geom_abc(do_the_impossible=True)
+
+def test_geom_from_stat():
+    stat = p9.stat_identity(geom='point')
+    assert isinstance(geom.from_stat(stat), p9.geom_point)
+
+    stat = p9.stat_identity(geom='geom_point')
+    assert isinstance(geom.from_stat(stat), p9.geom_point)
+
+    stat = p9.stat_identity(geom=p9.geom_point())
+    assert isinstance(geom.from_stat(stat), p9.geom_point)
+
+    stat = p9.stat_identity(geom=p9.geom_point)
+    assert isinstance(geom.from_stat(stat), p9.geom_point)
