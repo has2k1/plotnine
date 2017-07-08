@@ -1,7 +1,7 @@
 Changelog
 =========
 
-v0.2.2
+v0.3.0
 ------
 *(Unreleased)*
 
@@ -20,6 +20,13 @@ v0.2.2
   a python keyword resulted in an exception. (:issue:`28`)
 
 - Fix bug where y-axis scaling was calculated from the ``xlim`` argument.
+
+API Changes
+***********
+
+- :class:`~plotnine.geom_smooth` gained an extra parameter `legend_fill_ratio`
+  that control the area of the legend that is filled to indicate confidence
+  intervals. (:issue:`32`)
 
 v0.2.1
 ------

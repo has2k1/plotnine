@@ -20,6 +20,10 @@ class geom_smooth(geom):
     Parameters
     ----------
     {common_parameters}
+    legend_fill_ratio : float (default: 0.5)
+        How much (vertically) of the legend box should be filled by
+        the color that indicates the confidence intervals. Should be
+        in the range [0, 1].
 
     {aesthetics}
     """
@@ -28,7 +32,7 @@ class geom_smooth(geom):
                    'ymin': None, 'ymax': None}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity',
-                      'na_rm': False}
+                      'na_rm': False, 'legend_fill_ratio': 0.5}
 
     def setup_data(self, data):
         return data.sort_values(['PANEL', 'group', 'x'])
@@ -63,9 +67,10 @@ class geom_smooth(geom):
         out : DrawingArea
         """
         if lyr.stat.params['se']:
-            bg = Rectangle((0, 0),
+            r = lyr.geom.params['legend_fill_ratio']
+            bg = Rectangle((0, (1-r)*da.height/2),
                            width=da.width,
-                           height=da.height,
+                           height=r*da.height,
                            alpha=data['alpha'],
                            facecolor=data['fill'],
                            linewidth=0)

@@ -155,3 +155,12 @@ def test_sorts_by_x():
     p = ggplot(df, aes('x', 'y')) + geom_smooth(stat='identity')
 
     assert p == 'sorts_by_x'
+
+
+def test_legend_fill_ratio():
+    p = (ggplot(df_linear, aes('x', color='x<0.5'))
+         + geom_point(aes(y='y_noisy'))
+         + geom_smooth(aes(y='y_noisy'), method='lm', size=0.5, span=.3)
+         )
+
+    assert p == 'legend_fill_ratio'
