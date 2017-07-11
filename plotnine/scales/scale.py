@@ -29,9 +29,10 @@ class scale(object):
     range : array_like
         Range of aesthetic. Default is to automatically
         determine the range from the data points.
-    breaks : array_like, optional
-        Major break points. Default is to automatically
-        calculate them.
+    breaks : array_like or callable, optional
+        Major break points. Alternatively, a callable that
+        takes a tuple of limits and returns a list of breaks.
+        Default is to automatically calculate the breaks.
     expand : array_like, optional
         Multiplicative and additive expansion constants
         that determine how the scale is expanded. If
@@ -41,8 +42,10 @@ class scale(object):
         Name used as the label of the scale. This is what
         shows up as the axis label or legend title. Suitable
         defaults are chosen depending on the type of scale.
-    labels : list, optional
+    labels : list or callable, optional
         List of :class:`str`. Labels at the `breaks`.
+        Alternatively, a callable that takes an array_like of
+        break points as input and returns a list of strings.
     limits : array_like, optional
         Limits of the scale. Most commonly, these are the
         min & max values for the scales. For scales that
