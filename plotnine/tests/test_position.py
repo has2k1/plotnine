@@ -96,6 +96,7 @@ def test_jitterdodge():
          geom_point(size=10, position=position))
     assert p + _theme == 'jitterdodge'
 
+
 def test_position_from_geom():
     geom = geom_point(position='jitter')
     assert isinstance(position.from_geom(geom), position_jitter)
