@@ -29,9 +29,10 @@ class scale(object):
     range : array_like
         Range of aesthetic. Default is to automatically
         determine the range from the data points.
-    breaks : array_like, optional
-        Major break points. Default is to automatically
-        calculate them.
+    breaks : array_like or callable, optional
+        Major break points. Alternatively, a callable that
+        takes a tuple of limits and returns a list of breaks.
+        Default is to automatically calculate the breaks.
     expand : array_like, optional
         Multiplicative and additive expansion constants
         that determine how the scale is expanded. If
