@@ -10,7 +10,8 @@ from six.moves import zip
 import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
-from mizani.bounds import rescale, censor, expand_range, zero_range
+from mizani.bounds import rescale, censor
+from mizani.bounds import expand_range_distinct, zero_range
 from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
@@ -36,8 +37,13 @@ class scale(object):
     expand : array_like, optional
         Multiplicative and additive expansion constants
         that determine how the scale is expanded. If
-        specified must of of length 2. Otherwise suitable
-        defaults are chosen.
+        specified must of of length 2 or 4. Specifically the
+        the values are of this order::
+
+            (mul, add)
+            (mul_low, add_low, mul_high, add_high)
+
+        If not specified, suitable defaults are chosen.
     name : str, optional
         Name used as the label of the scale. This is what
         shows up as the axis label or legend title. Suitable
@@ -245,12 +251,12 @@ class scale_discrete(scale):
 
         self.range.train(x, drop)
 
-    def dimension(self, expand=(0, 0)):
+    def dimension(self, expand=(0, 0, 0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
         """
-        return expand_range(len(self.limits), expand[0], expand[1])
+        return expand_range_distinct(len(self.limits), expand)
 
     def map(self, x, limits=None):
         """
@@ -496,12 +502,12 @@ class scale_continuous(scale):
         except TypeError:
             return np.array([self.trans.inverse(val) for val in x])
 
-    def dimension(self, expand=(0, 0)):
+    def dimension(self, expand=(0, 0, 0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
         """
-        return expand_range(self.limits, expand[0], expand[1])
+        return expand_range_distinct(self.limits, expand)
 
     def map(self, x, limits=None):
         if limits is None:

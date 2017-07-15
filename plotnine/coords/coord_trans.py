@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 from warnings import warn
 
 from matplotlib.cbook import Bunch
-from mizani.bounds import expand_range, squish_infinite
+from mizani.bounds import expand_range_distinct, squish_infinite
 from mizani.transforms import gettrans
 
 from ..positions.position import transform_position
@@ -80,7 +80,7 @@ class coord_trans(coord):
 
             if limits is None:
                 expand = self.expand_default(scale)
-                out['range'] = expand_range(out['range'], expand[0], expand[1])
+                out['range'] = expand_range_distinct(out['range'], expand)
 
             # major and minor breaks in plot space
             out['major'] = transform_value(trans, out['major'], out['range'])

@@ -25,6 +25,9 @@ v0.3.0
   when passed as classes (e.g. ``stat_smooth(geom=geom_point)``, would
   fail.
 
+- Low and high :class:`~plotnine.scales.scale` limits can now be expanded
+  separately with different factors multiplicative and additive factors.
+
 API Changes
 ***********
 

@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import pandas as pd
-from mizani.bounds import expand_range
+from mizani.bounds import expand_range_distinct
 
 from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
 from ..utils import identity, match, alias
@@ -81,7 +81,7 @@ class scale_position_discrete(scale_discrete):
             raise PlotnineError(
                 'Lost, do not know what the limits are.')
 
-    def dimension(self, expand=(0, 0)):
+    def dimension(self, expand=(0, 0, 0, 0)):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
@@ -92,17 +92,16 @@ class scale_position_discrete(scale_discrete):
         if self.is_empty():
             return (0, 1)
         elif self.range.range is None:  # only continuous
-            return expand_range(c_range, expand[0], expand[1], 1)
+            return expand_range_distinct(c_range, expand)
         elif c_range is None:  # only discrete
             # FIXME: I think this branch should not exist
-            return expand_range((1, len(d_range)), expand[0],
-                                expand[1], 1)
+            return expand_range_distinct((1, len(d_range)), expand)
         else:  # both
             # e.g categorical bar plot have discrete items, but
             # are plot on a continuous x scale
             a = np.hstack([
-                expand_range(c_range, expand[0], 0, 1),
-                expand_range((1, len(d_range)), 0, expand[1], 1)
+                c_range,
+                expand_range_distinct((1, len(d_range)), expand)
                 ])
             return a.min(), a.max()
 
