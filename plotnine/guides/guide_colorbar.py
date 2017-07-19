@@ -15,6 +15,7 @@ from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
 from mizani.breaks import extended_breaks
 
+from ..aes import rename_aesthetics
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea
 from .guide import guide
@@ -113,13 +114,18 @@ class guide_colorbar(guide):
         Return self if colorbar will be drawn and None if not.
         """
         for l in plot.layers:
-            if l.show_legend not in (None, True):
+            exclude = set()
+            if isinstance(l.show_legend, dict):
+                l.show_legend = rename_aesthetics(l.show_legend)
+                exclude = {ae for ae, val in l.show_legend.items()
+                           if not val}
+            elif l.show_legend not in (None, True):
                 continue
 
             matched = self.legend_aesthetics(l, plot)
 
             # layer uses guide
-            if matched:
+            if set(matched) - exclude:
                 break
         # no break, no layer uses this guide
         else:

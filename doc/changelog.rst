@@ -28,6 +28,10 @@ v0.3.0
 - Low and high :class:`~plotnine.scales.scale` limits can now be expanded
   separately with different factors multiplicative and additive factors.
 
+- The layer parameter `show_legend` can now accept a ``dict`` for finer
+  grained control of which aesthetics to exclude in the legend.
+
+
 API Changes
 ***********
 

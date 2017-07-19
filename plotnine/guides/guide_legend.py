@@ -17,6 +17,7 @@ from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
 from ..utils import Registry
 from ..exceptions import PlotnineError
 from ..geoms import geom_text
+from ..aes import rename_aesthetics
 from .guide import guide
 
 # See guides.py for terminology
@@ -149,12 +150,18 @@ class guide_legend(guide):
         # guide entries may be ploted in the layers
         self.glayers = []
         for l in plot.layers:
-            if l.show_legend not in (None, True):
+            exclude = set()
+            if isinstance(l.show_legend, dict):
+                l.show_legend = rename_aesthetics(l.show_legend)
+                exclude = {ae for ae, val in l.show_legend.items()
+                           if not val}
+            elif l.show_legend not in (None, True):
                 continue
 
             matched = self.legend_aesthetics(l, plot)
+
             # This layer does not contribute to the legend
-            if not matched:
+            if not set(matched) - exclude:
                 continue
 
             data = self.key[matched].copy()
