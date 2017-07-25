@@ -372,23 +372,6 @@ class facet(object):
         breadth = breadth + (m1 + m2) / dpi
         return breadth
 
-    def strip_text_position(self, location, strip_size, pid):
-        dpi = 72
-        t, b, l, r = self.strip_background_limits(location, pid)
-        m1, m2 = self.inner_strip_margins(location)
-        m1, m2 = m1/dpi, m2/dpi
-
-        if location == 'top':
-            t = b + strip_size
-            x = (l + r)/2
-            y = (b + t + m1 - m2)/2
-        else:
-            r = l + strip_size
-            x = (l + r - m1 + m2)/2
-            y = (t + b)/2
-
-        return x, y
-
     def strip_dimensions(self, text_lines, location, pid):
         """
         Calculate the dimension
