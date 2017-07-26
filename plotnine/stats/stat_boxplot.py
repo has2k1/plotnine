@@ -54,7 +54,7 @@ class stat_boxplot(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'boxplot', 'position': 'dodge',
-                      'coef': 1.5}
+                      'na_rm': False, 'coef': 1.5}
     CREATES = {'lower', 'upper', 'middle', 'ymin', 'ymax',
                'outliers', 'notchupper', 'notchlower', 'width',
                'relvarwidth'}

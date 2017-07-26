@@ -7,7 +7,7 @@ import pandas as pd
 from six import add_metaclass
 
 from ..aes import is_calculated_aes
-from ..utils import data_mapping_as_kwargs
+from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import groupby_apply, copy_keys, uniquecols
 from ..utils import is_string, Registry, check_required_aesthetics
 from ..exceptions import PlotnineError
@@ -180,6 +180,14 @@ class stat(object):
             cls.REQUIRED_AES,
             list(data.columns) + list(params.keys()),
             cls.__name__)
+
+        data = remove_missing(
+            data,
+            na_rm=params.get('na_rm', False),
+            vars=list(cls.REQUIRED_AES),
+            name=cls.__name__,
+            finite=True)
+        print(cls.__name__)
 
         def fn(pdata):
             """

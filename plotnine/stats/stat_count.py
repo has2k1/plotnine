@@ -39,7 +39,7 @@ class stat_count(stat):
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
-                      'width': None}
+                      'na_rm': False, 'width': None}
     DEFAULT_AES = {'y': '..count..'}
     CREATES = {'count', 'prop'}
 

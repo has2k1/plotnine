@@ -31,7 +31,8 @@ class stat_sum(stat):
 
     """
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}
+    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
+                      'na_rm': False}
     DEFAULT_AES = {'size': '..prop..', 'weight': 1}
     CREATES = {'n', 'prop'}
 

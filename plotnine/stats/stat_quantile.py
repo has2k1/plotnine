@@ -45,7 +45,7 @@ class stat_quantile(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'quantile', 'position': 'identity',
-                      'quantiles': (0.25, 0.5, 0.75),
+                      'na_rm': False, 'quantiles': (0.25, 0.5, 0.75),
                       'formula': 'y ~ x', 'method_args': {}}
     CREATES = {'quantile', 'group'}
 

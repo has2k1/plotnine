@@ -89,6 +89,7 @@ class stat_density(stat):
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',
+                      'na_rm': False,
                       'kernel': 'gaussian', 'adjust': 1,
                       'trim': False, 'n': 1024, 'gridsize': None,
                       'bw': 'normal_reference', 'cut': 3,

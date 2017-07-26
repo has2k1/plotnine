@@ -62,7 +62,7 @@ class stat_bin(stat):
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
-                      'binwidth': None, 'bins': None,
+                      'na_rm': False, 'binwidth': None, 'bins': None,
                       'breaks': None, 'center': None,
                       'boundary': None, 'closed': 'right',
                       'pad': False}

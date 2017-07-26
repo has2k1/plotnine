@@ -41,6 +41,7 @@ class stat_function(stat):
         '..y..'  # Points evaluated at x
     """
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
+                      'na_rm': False,
                       'fun': None, 'n': 101, 'args': None,
                       'xlim': None}
 

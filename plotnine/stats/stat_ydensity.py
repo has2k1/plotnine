@@ -76,6 +76,7 @@ class stat_ydensity(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'violin', 'position': 'dodge',
+                      'na_rm': False,
                       'adjust': 1, 'kernel': 'gaussian',
                       'n': 1024, 'trim': True,
                       'scale': 'area'}

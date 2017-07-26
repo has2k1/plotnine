@@ -14,7 +14,7 @@ common_geom_params = ['mapping', 'data', 'stat', 'position',
 common_geom_param_values = {'mapping': None, 'data': None,
                             'inherit_aes': True, 'show_legend': None}
 
-common_stat_params = ['mapping', 'data', 'geom', 'position']
+common_stat_params = ['mapping', 'data', 'geom', 'position', 'na_rm']
 common_stat_param_values = common_geom_param_values
 
 # Templates for docstrings
@@ -114,6 +114,8 @@ geom: str or stat, optional (default: {default_geom})
     {stat}
 position: str or position, optional (default: {default_position})
     {position}
+na_rm: bool, optional (default: {default_na_rm})
+    {na_rm}
 """
 
 
@@ -244,6 +246,7 @@ def get_stat_documentation(stat):
     common_parameters = STAT_PARAMS_TPL.format(
             default_geom=d['geom'],
             default_position=d['position'],
+            default_na_rm=d['na_rm'],
             **common_params_doc)
 
     # aesthetics

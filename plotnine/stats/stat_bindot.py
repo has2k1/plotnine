@@ -76,6 +76,7 @@ class stat_bindot(stat):
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'dotplot', 'position': 'identity',
+                      'na_rm': False,
                       'bins': None, 'binwidth': None, 'origin': None,
                       'width': 0.9, 'binaxis': 'x',
                       'method': 'dotdensity', 'binpositions': 'bygroup',

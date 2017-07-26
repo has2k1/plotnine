@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import pytest
+import numpy as np
 
 from plotnine import ggplot, aes, geom_bar
 from plotnine.data import mtcars
@@ -70,3 +71,21 @@ def test_calculated_expressions():
          + geom_bar())
     # No exception
     p._build()
+
+
+def test_removes_infinite_values():
+    df = mtcars.copy()
+    df.loc[[0, 5], 'wt'] = [np.inf, -np.inf]
+    p = ggplot(df, aes(x='wt')) + geom_bar()
+
+    with pytest.warns(UserWarning) as record:
+        p._build()
+
+    def removed_2_row_with_infinites(record):
+        for item in record:
+            msg = str(item.message).lower()
+            if '2 rows' in msg and 'non-finite' in msg:
+                return True
+        return False
+
+    assert removed_2_row_with_infinites(record)

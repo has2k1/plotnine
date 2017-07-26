@@ -18,7 +18,8 @@ class stat_unique(stat):
 
     {aesthetics}
     """
-    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity'}
+    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
+                      'na_rm': False}
 
     @classmethod
     def compute_panel(cls, data, scales, **params):

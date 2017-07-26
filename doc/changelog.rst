@@ -31,6 +31,12 @@ v0.3.0
 - The layer parameter `show_legend` can now accept a ``dict`` for finer
   grained control of which aesthetics to exclude in the legend.
 
+- Infinite value are removed before statistical computations ``stats``
+  (:issue:`40`).
+
+  ``stats`` also gained new parameter ``na_rm``, that controls whether
+  missing values are removed before statistical computations.
+
 
 API Changes
 ***********
