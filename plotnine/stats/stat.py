@@ -187,7 +187,6 @@ class stat(object):
             vars=list(cls.REQUIRED_AES),
             name=cls.__name__,
             finite=True)
-        print(cls.__name__)
 
         def fn(pdata):
             """
