@@ -3,6 +3,7 @@ import os
 
 import matplotlib.pyplot as plt
 import pytest
+import six
 
 from plotnine import ggplot, aes, geom_text, ggsave
 from plotnine.data import mtcars
@@ -40,15 +41,36 @@ class TestArguments(object):
         fn = p._save_filename('pdf')
         assert_exist_and_clean(fn, "default filename")
 
-    def test_filename_plot(self):
-        fn = next(filename_gen)
-        p.save(fn)
-        assert_exist_and_clean(fn, "filename and plot")
-
+    @pytest.mark.skipif(six.PY2,
+                        reason="pesky string complications in py2")
     def test_save_method(self):
         fn = next(filename_gen)
-        p.save(fn)
+        with pytest.warns(UserWarning) as record:
+            p.save(fn)
+
         assert_exist_and_clean(fn, "save method")
+
+        res = ('saving' in str(item.message).lower()
+               for item in record)
+        assert any(res)
+
+        res = ('filename' in str(item.message).lower()
+               for item in record)
+        assert any(res)
+
+        # verbose
+        fn = next(filename_gen)
+        with pytest.warns(None) as record:
+            p.save(fn, verbose=False)
+        assert_exist_and_clean(fn, "save method")
+
+        res = ('saving' in str(item.message).lower()
+               for item in record)
+        assert not any(res)
+
+        res = ('filename' in str(item.message).lower()
+               for item in record)
+        assert not any(res)
 
     def test_filename_plot_path(self):
         fn = next(filename_gen)
@@ -84,13 +106,21 @@ class TestExceptions(object):
         with pytest.raises(Exception):
             p.save(format='unknown')
 
+    def test_width_only(self):
+        with pytest.raises(PlotnineError):
+            p.save(width=11)
+
+    def test_height_only(self):
+        with pytest.raises(PlotnineError):
+            p.save(height=8)
+
     def test_large_width(self):
         with pytest.raises(PlotnineError):
-            p.save(width=300)
+            p.save(width=300, height=8)
 
     def test_large_height(self):
         with pytest.raises(PlotnineError):
-            p.save(height=300)
+            p.save(widhth=11, height=300)
 
     def test_bad_units(self):
         with pytest.raises(Exception):

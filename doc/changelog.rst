@@ -5,7 +5,7 @@ v0.3.0
 ------
 *(Unreleased)*
 
-- Changed parameter settings for :class:`~plotnine.stat_smooth`.
+- Changed parameter settings for :class:`~plotnine.stats.stat_smooth`.
 
   #. Default ``span=0.75`` instead of ``2/3``
   #. When using loess smoothing, the control parameter ``surface``
@@ -37,13 +37,20 @@ v0.3.0
   ``stats`` also gained new parameter ``na_rm``, that controls whether
   missing values are removed before statistical computations.
 
+- Fixed bug in :meth:`plotnine.ggplot.save` where specifying the ``width``
+  and ``height`` would mess up the ``strip_text`` and ``spacing`` for the
+  facetted plots. (:issue:`44`).
+
 
 API Changes
 ***********
 
-- :class:`~plotnine.geom_smooth` gained an extra parameter `legend_fill_ratio`
-  that control the area of the legend that is filled to indicate confidence
-  intervals. (:issue:`32`)
+- :class:`~plotnine.geoms.geom_smooth` gained an extra parameter
+  ``legend_fill_ratio`` that control the area of the legend that is filled
+  to indicate confidence intervals. (:issue:`32`)
+
+- :meth:`plotnine.ggplot.save` gained and extra parameter ``verbose``.
+  It no longer guesses when to print information and when not to.
 
 v0.2.1
 ------
@@ -56,16 +63,16 @@ v0.2.1
 - Fixed bug where computed aesthetics could not be used in larger
   statements. (:issue:`7`)
 
-- Fixed bug in :class:`~plotnine.stat_summary` where the you got
+- Fixed bug in :class:`~plotnine.stats.stat_summary` where the you got
   an exception for some types of the `x` aesthetic values.
 
 - Fixed bug where ``ggplot(data=df)`` resulted in an exception.
 
-- Fixed missing axis ticks and labels for :class:`~plotnine.facet_wrap`
+- Fixed missing axis ticks and labels for :class:`~plotnine.facets.facet_wrap`
   when the scales are allowed to vary (e.g `scales='free'`) between
   the panels.
 
-- Fixed bug in :class:`~plotnine.stat_density` where changing the
+- Fixed bug in :class:`~plotnine.stats.stat_density` where changing the
   x limits lead to an exception (:issue:`22`)
 
 

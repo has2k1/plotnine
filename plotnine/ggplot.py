@@ -467,7 +467,7 @@ class ggplot(object):
 
     def save(self, filename=None, format=None, path=None,
              width=None, height=None, units='in',
-             dpi=None, limitsize=True, **kwargs):
+             dpi=None, limitsize=True, verbose=True, **kwargs):
         """
         Save a ggplot object as an image file
 
@@ -481,10 +481,12 @@ class ggplot(object):
         path : str
             Path to save plot to (if you just want to set path and
             not filename).
-        width : number
-            Width (defaults to the width of current plotting window).
-        height : number
-            Height (defaults to the height of current plotting window).
+        width : number, optional
+            Width (defaults to value set by the theme). If specified
+            the `height` must also be given.
+        height : number, optional
+            Height (defaults to value set by the theme). If specified
+            the `width` must also be given.
         units : str
             Units for width and height when either one is explicitly
             specified (in, cm, or mm).
@@ -495,16 +497,49 @@ class ggplot(object):
             If ``True`` (the default), ggsave will not save images
             larger than 50x50 inches, to prevent the common error
             of specifying dimensions in pixels.
+        verbose : bool
+            If ``True``, print the saving information.
         kwargs : dict
             Additional arguments to pass to matplotlib `savefig()`.
         """
         fig_kwargs = {'bbox_inches': 'tight',  # 'tight' is a good default
                       'format': format}
         fig_kwargs.update(kwargs)
+
         figure = [None]  # Python 3 a nonlocal
+
+        # filename, depends on the object
+        if filename is None:
+            ext = format if format else 'pdf'
+            filename = self._save_filename(ext)
+
+        if path:
+            filename = os.path.join(path, filename)
+
+        # Preserve the users object
+        self = copy(self)
 
         # theme
         self.theme = self.theme or theme_get()
+
+        # The figure size should be known by the theme
+        if width is not None and height is not None:
+            width = to_inches(width, units)
+            height = to_inches(height, units)
+            self += theme(figure_size=(width, height))
+        elif (width is None and height is not None or
+              width is not None and height is None):
+            raise PlotnineError(
+                "You must specify both width and height")
+
+        width, height = self.theme.themeables.property('figure_size')
+
+        if limitsize and (width > 25 or height > 25):
+            raise PlotnineError(
+                "Dimensions (width={}, height={}) exceed 25 inches "
+                "(height and width are specified in inches/cm/mm, "
+                "not pixels). If you are sure you want these "
+                "dimensions, use 'limitsize=False'.".format(width, height))
 
         # dpi
         if dpi is None:
@@ -518,15 +553,11 @@ class ggplot(object):
             # Should not need this with MPL 2.0
             fig_kwargs['dpi'] = dpi
 
-        # filename
-        print_filename = False
-        if filename is None:
-            ext = format if format else 'pdf'
-            filename = self._save_filename(ext)
-            print_filename = True
-
-        if path:
-            filename = os.path.join(path, filename)
+        if verbose:
+            warn("Saving {0} x {1} {2} image.".format(
+                 from_inches(width, units),
+                 from_inches(height, units), units))
+            warn('Filename: {}'.format(filename))
 
         # Helper function so that we can clean up when it fails
         def _save():
@@ -541,27 +572,6 @@ class ggplot(object):
                 fig_kwargs['edgecolor'] = edgecolor
                 fig_kwargs['frameon'] = True
 
-            _w, _h = fig.get_size_inches()
-            print_size = width is None or height is None
-            w = _w if width is None else to_inches(width, units)
-            h = _h if height is None else to_inches(height, units)
-
-            if print_size:
-                warn("Saving {0} x {1} {2} image.".format(
-                     from_inches(w, units),
-                     from_inches(h, units), units))
-
-            if print_filename:
-                warn('Filename: {}'.format(filename))
-
-            if limitsize and (w > 25 or h > 25):
-                raise PlotnineError(
-                       "Dimensions exceed 25 inches "
-                       "(height and width are specified in inches/cm/mm, "
-                       "not pixels). If you are sure you want these "
-                       "dimensions, use 'limitsize=False'.")
-
-            fig.set_size_inches(w, h)
             fig.savefig(filename, **fig_kwargs)
 
         try:
