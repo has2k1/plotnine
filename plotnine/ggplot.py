@@ -76,6 +76,7 @@ class ggplot(object):
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = None
         self.figure = None
+        self.axs = None
 
     def __repr__(self):
         """
@@ -96,7 +97,7 @@ class ggplot(object):
         new = result.__dict__
 
         # don't make a deepcopy of data, or environment
-        shallow = {'data', 'environment'}
+        shallow = {'data', 'environment', 'figure'}
         for key, item in old.items():
             if key in shallow:
                 new[key] = old[key]
@@ -130,9 +131,27 @@ class ggplot(object):
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self):
+    def draw(self, return_ggplot=False):
         """
-        Render the complete plot and return the matplotlib figure
+        Render the complete plot
+
+        Parameters
+        ----------
+        return_ggplot : bool
+            If ``True``, return ggplot object.
+
+        Returns
+        -------
+        fig : maptlotplib.figure.Figure
+            Matplotlib figure
+        plot : ggplot (optional)
+            The ggplot object used for drawn, if ``return_ggplot`` is
+            ``True``.
+
+        Note
+        ----
+        This method does not modify the original ggplot object. You can
+        get the modified ggplot object with :py:`return_ggplot=True`.
         """
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
@@ -145,56 +164,67 @@ class ggplot(object):
 
         try:
             with mpl.rc_context():
-                # rcparams theming
+                # setup & rcparams theming
                 self.theme.apply_rcparams()
+                figure, axs = self._create_figure()
+                self._setup_parameters()
+                self._resize_panels()
                 # Drawing
-                self._draw_plot()
-                self._draw_legend()
+                self._draw_layers()
+                self._draw_facet_labels()
                 self._draw_labels()
+                self._draw_legend()
                 self._draw_title()
                 # Artist object theming
-                self.theme.apply_axs(self.axs)
-                self.theme.apply_figure(self.figure)
+                self._apply_theme()
         except Exception as err:
             if self.figure is not None:
                 plt.close(self.figure)
             raise err
 
-        return self.figure
+        if return_ggplot:
+            output = self.figure, self
+        else:
+            output = self.figure
 
-    def _draw_plot(self):
+        return output
+
+    def _draw_using_figure(self, figure, axs):
         """
-        Draw the main plot(s) onto the axes.
+        Draw onto already created figure and axes
 
-        Return
-        ------
-        out : ggplot
-            ggplot object with two new properties;
-            ``axs`` and ``figure``.
+        This is can be used to draw animation frames,
+        or inset plots. It is intended to be used
+        after the key plot has been drawn.
+
+        Parameters
+        ----------
+        figure : matplotlib.figure.Figure
+            Matplotlib figure
+        axs : array_like
+            Array of Axes onto which to draw the plots
         """
-        # Good for development
-        if get_option('close_all_figures'):
-            plt.close('all')
+        self = deepcopy(self)
+        self._build()
 
-        # Create figure and axes
-        figure, axs = self.facet.make_figure_and_axs(
-            self.layout, self.theme, self.coordinates)
-        self.axs = self.layout.axs = axs
-        self.figure = self.theme.figure = figure
+        self.theme = self.theme or theme_get()
+        self.figure = figure
+        self.axs = axs
 
-        # Draw the geoms
-        self.layers.draw(self.layout, self.coordinates)
+        try:
+            with mpl.rc_context():
+                self.theme.apply_rcparams()
+                self._setup_parameters()
+                self._draw_layers()
+                self._draw_facet_labels()
+                self._draw_legend()
+                self._apply_theme()
+        except Exception as err:
+            if self.figure is not None:
+                plt.close(self.figure)
+            raise err
 
-        # Decorate the axes
-        #   - xaxis & yaxis breaks, labels, limits, ...
-        #   - facet labels
-        #
-        # pidx is the panel index (location left to right, top to bottom)
-        for pidx, layout_info in self.layout.layout.iterrows():
-            panel_params = self.layout.panel_params[pidx]
-            self.facet.set_breaks_and_labels(
-                panel_params, layout_info, pidx)
-            self.facet.draw_label(layout_info, pidx)
+        return self
 
     def _build(self):
         """
@@ -271,6 +301,75 @@ class ggplot(object):
 
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
+
+    def _setup_parameters(self):
+        """
+        Set facet properties
+        """
+        # facet
+        self.facet.set(
+            layout=self.layout,
+            theme=self.theme,
+            coordinates=self.coordinates,
+            figure=self.figure,
+            axs=self.axs
+        )
+
+        # layout
+        self.layout.axs = self.axs
+        # theme
+        self.theme.figure = self.figure
+
+    def _create_figure(self):
+        """
+        Create Matplotlib figure and axes
+        """
+        # Good for development
+        if get_option('close_all_figures'):
+            plt.close('all')
+
+        figure = plt.figure()
+        axs = self.facet.make_axes(
+            figure,
+            len(self.layout.layout),
+            self.coordinates)
+
+        # Dictionary to collect matplotlib objects that will
+        # be targeted for theming by the themeables
+        figure._themeable = {}
+
+        self.figure = figure
+        self.axs = axs
+        return figure, axs
+
+    def _resize_panels(self):
+        """
+        Resize panels
+        """
+        self.theme.setup_figure(self.figure)
+        self.facet.spaceout_and_resize_panels()
+
+    def _draw_layers(self):
+        """
+        Draw the main plot(s) onto the axes.
+        """
+        # Draw the geoms
+        self.layers.draw(self.layout, self.coordinates)
+
+    def _draw_facet_labels(self):
+        """
+        Draw facet labels a.k.a strip texts
+        """
+        # Decorate the axes
+        #   - xaxis & yaxis breaks, labels, limits, ...
+        #   - facet labels
+        #
+        # pidx is the panel index (location left to right, top to bottom)
+        for pidx, layout_info in self.layout.layout.iterrows():
+            panel_params = self.layout.panel_params[pidx]
+            self.facet.set_breaks_and_labels(
+                panel_params, layout_info, pidx)
+            self.facet.draw_label(layout_info, pidx)
 
     def _draw_legend(self):
         """
@@ -452,6 +551,13 @@ class ggplot(object):
 
         text = figure.text(x, y, title, ha='center', va='center')
         figure._themeable['plot_title'] = text
+
+    def _apply_theme(self):
+        """
+        Apply theme attributes to Matplotlib objects
+        """
+        self.theme.apply_axs(self.axs)
+        self.theme.apply_figure(self.figure)
 
     def _save_filename(self, ext):
         """

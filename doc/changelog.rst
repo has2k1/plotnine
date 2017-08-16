@@ -67,8 +67,10 @@ API Changes
   ``legend_fill_ratio`` that control the area of the legend that is filled
   to indicate confidence intervals. (:issue:`32`)
 
-- :meth:`plotnine.ggplot.save` gained and extra parameter ``verbose``.
+- :meth:`plotnine.ggplot.save` gained an extra parameter ``verbose``.
   It no longer guesses when to print information and when not to.
+
+- :meth:`plotnine.ggplot.draw` gained an extra parameter ``return_ggplot``.
 
 v0.2.1
 ------

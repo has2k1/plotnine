@@ -74,6 +74,10 @@ class facet(object):
     layout = None
     # Axes
     axs = None
+    # The first and last axes according to how MPL creates them.
+    # Used for labelling the x and y axes,
+    first_ax = None
+    last_ax = None
     # Number of facet variables along the horizontal axis
     num_vars_x = 0
     # Number of facet variables along the vertical axis
@@ -98,6 +102,19 @@ class facet(object):
         gg.facet = copy(self)
         gg.facet.plot = gg
         return gg
+
+    def set(self, **kwargs):
+        """
+        Set properties
+        """
+        for name, value in kwargs.items():
+            if hasattr(self, name):
+                setattr(self, name, value)
+            else:
+                raise AttributeError(
+                    "{!r} object has no attribute {}".format(
+                        self.__class__.__name__,
+                        name))
 
     def setup_data(self, data):
         """
@@ -262,17 +279,48 @@ class facet(object):
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
 
-    def make_figure_and_axs(self, layout, theme, coordinates):
-        num_panels = len(layout.layout)
-        figure, axs = plt.subplots(self.nrow, self.ncol,
-                                   sharex=False, sharey=False)
-        axs = np.asarray(axs)
-        # Dictionary to collect matplotlib objects that will
-        # be targeted for theming by the themeables
-        figure._themeable = {}
+    def __deepcopy__(self, memo):
+        """
+        Deep copy without copying the dataframe and environment
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        old = self.__dict__
+        new = result.__dict__
+
+        # don't make a deepcopy of the figure & the axes
+        shallow = {'figure', 'axs', 'first_ax', 'last_ax'}
+        for key, item in old.items():
+            if key in shallow:
+                new[key] = old[key]
+                memo[id(new[key])] = new[key]
+            else:
+                new[key] = deepcopy(old[key], memo)
+
+        return result
+
+    def _create_subplots(self, fig):
+        """
+        Create suplots and return axs
+        """
+        axarr = np.empty((self.nrow, self.ncol), dtype=object)
+        i = 1
+        for row in range(self.nrow):
+            for col in range(self.ncol):
+                axarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
+                i += 1
+        return axarr
+
+    def make_axes(self, figure, num_panels, coordinates):
+        """
+        Create and return Matplotlib axes
+        """
+        axs = self._create_subplots(figure)
 
         # Used for labelling the x and y axes, the first and
         # last axes according to how MPL creates them.
+        # num_panels = len(self.layout.layout)
         _raveled_axs = axs.ravel()
         self.first_ax = _raveled_axs[0]
         self.last_ax = _raveled_axs[num_panels-1]
@@ -285,20 +333,49 @@ class facet(object):
             axs = axs.ravel(order)
         except AttributeError:
             axs = [axs]
-
         # No panel, do not let MPL put axes
         for ax in axs[num_panels:]:
             figure.delaxes(ax)
 
         axs = axs[:num_panels]
-        self.axs = axs
-        self.theme = theme
-        self.coordinates = coordinates
         self.figure = figure
-        self.layout = layout
-        self.theme.setup_figure(figure)
-        self.spaceout_and_resize_panels()
-        return figure, axs
+        self.axs = axs
+        return axs
+
+    def make_figure_and_axs(self):
+        def create_subplots(fig):
+            axarr = np.empty((self.nrow, self.ncol), dtype=object)
+            i = 1
+            for row in range(self.nrow):
+                for col in range(self.ncol):
+                    axarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
+                    i += 1
+            return axarr
+
+        self.figure = figure = plt.figure()
+        axs = create_subplots(figure)
+
+        # Used for labelling the x and y axes, the first and
+        # last axes according to how MPL creates them.
+        num_panels = len(self.layout.layout)
+        _raveled_axs = axs.ravel()
+        self.first_ax = _raveled_axs[0]
+        self.last_ax = _raveled_axs[num_panels-1]
+
+        if not self.as_table:
+            axs = axs[::-1]
+
+        order = 'C' if self.dir == 'h' else 'F'
+        try:
+            axs = axs.ravel(order)
+        except AttributeError:
+            axs = [axs]
+        # No panel, do not let MPL put axes
+        for ax in axs[num_panels:]:
+            figure.delaxes(ax)
+
+        self.axs = axs[:num_panels]
+        return figure, self.axs
 
     def spaceout_and_resize_panels(self):
         """

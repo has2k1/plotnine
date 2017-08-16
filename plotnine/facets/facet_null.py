@@ -14,7 +14,7 @@ class facet_null(facet):
         statistics instead of the raw data. Default is ``True``.
     """
 
-    def __init__(self, shrink=True):
+    def __init__(self, shrink=True, figure=None):
         facet.__init__(self, shrink=shrink)
         self.nrow = 1
         self.ncol = 1
