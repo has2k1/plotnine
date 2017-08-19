@@ -52,6 +52,7 @@ def test_fuzzybreaks():
     limits = min(x), max(x)
     # continuous scale
     cscale = scale_x_continuous(limits=limits)
+    cscale.train(x)
 
     breaks = fuzzybreaks(cscale, bins=n-1, right=True)
     assert breaks[0] <= limits[0]

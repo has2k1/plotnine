@@ -42,6 +42,19 @@ v0.3.0
   facetted plots. (:issue:`44`).
 
 
+Enhancements
+************
+
+- Better control of scale limits. You can now specify individual limits of a scale.
+
+  .. code-block:: python
+
+     scale_y_continuous(limits=(0, None))
+     xlim(None, 100)
+
+  You can also use :func:`~plotnine.scales.expand_limits`
+
+
 API Changes
 ***********
 

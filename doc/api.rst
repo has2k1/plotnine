@@ -296,6 +296,7 @@ Scale limits
    lims
    xlim
    ylim
+   expand_limits
 
 
 Scale guides

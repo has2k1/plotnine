@@ -72,7 +72,7 @@ from .scale_xy import scale_y_datetime, scale_y_date
 from .scale_xy import scale_y_discrete, scale_y_continuous
 from .scale_xy import scale_y_timedelta
 # limits
-from .limits import xlim, ylim, lims
+from .limits import xlim, ylim, lims, expand_limits
 
 
 __all__ = [
@@ -133,5 +133,5 @@ __all__ = [
            'scale_y_log10', 'scale_y_reverse',
            'scale_y_sqrt', 'scale_y_timedelta',
            # limits
-           'xlim', 'ylim', 'lims',
+           'xlim', 'ylim', 'lims', 'expand_limits'
            ]

@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 import six
 
+from plotnine import ggplot, aes, geom_point, expand_limits
 from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -251,3 +252,33 @@ def test_xy_limits():
     s3 = sc.scale_x_discrete(limits=series)
     assert all(s2.limits == s1.limits)
     assert all(s3.limits == s1.limits)
+
+
+def test_setting_limits():
+    sc = scale_xy
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    s = sc.scale_x_continuous()
+    s.train(lst)
+    assert s.limits == (1, 10)
+
+    s = sc.scale_x_continuous(limits=(3, 7))
+    s.train(lst)
+    assert s.limits == (3, 7)
+
+    s = sc.scale_x_continuous(limits=(3, None))
+    s.train(lst)
+    assert s.limits == (3, 10)
+
+    s = sc.scale_x_continuous(limits=(None, 7))
+    s.train(lst)
+    assert s.limits == (1, 7)
+
+
+def test_expand_limits():
+    df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
+    p = (ggplot(aes('x', 'y'), data=df)
+         + geom_point()
+         + expand_limits(y=(0, None))
+         )
+    assert p == 'expand_limits'

@@ -7,6 +7,8 @@ import sys
 import pandas as pd
 import six
 
+from ..aes import all_aesthetics
+from ..geoms import geom_blank
 from ..scales.scales import make_scale
 from ..exceptions import PlotnineError
 from ..utils import suppress
@@ -24,7 +26,7 @@ class _lim(object):
         elif len(limits) == 1:
             limits = limits[0]
 
-        if limits[0] > limits[1]:
+        if not any(x is None for x in limits) and limits[0] > limits[1]:
             self.trans = 'reverse'
         else:
             self.trans = 'identity'
@@ -171,3 +173,33 @@ class lims(object):
                 gg = gg + klass(value)
 
         return gg
+
+
+def expand_limits(**kwargs):
+    """
+    Expand the limits any aesthetic using data
+
+    Parameters
+    ----------
+    kwargs : dict or pandas.DataFrame
+        Data to use in expanding the limits.
+        The keys should be aesthetic names
+        e.g. *x*, *y*, *colour*, ...
+    """
+    def as_list(key):
+        with suppress(KeyError):
+            if isinstance(kwargs[key], (int, float, six.string_types)):
+                kwargs[key] = [kwargs[key]]
+
+    if isinstance(kwargs, dict):
+        as_list('x')
+        as_list('y')
+        data = pd.DataFrame(kwargs)
+    else:
+        data = kwargs
+
+    mapping = {}
+    for ae in set(kwargs) & all_aesthetics:
+        mapping[ae] = ae
+
+    return geom_blank(mapping=mapping, data=data, inherit_aes=False)

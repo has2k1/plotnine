@@ -4,6 +4,7 @@ from copy import deepcopy, copy
 from collections import OrderedDict
 from warnings import warn
 
+import six
 from six import add_metaclass
 from six.moves import zip
 
@@ -186,10 +187,13 @@ class scale(object):
             return (0, 1)
 
         # Fall back to the range if the limits
-        # are not set or if any is NaN
+        # are not set or if any is None or NaN
         if self._limits is not None:
-            if not any(map(pd.isnull, self._limits)):
-                return self._limits
+            limits = []
+            for l, r in zip(self._limits, self.range.range):
+                value = r if pd.isnull(l) else l
+                limits.append(value)
+            return tuple(limits)
         return self.range.range
 
     @limits.setter
@@ -453,7 +457,20 @@ class scale_continuous(scale):
         the original dataspace.
         """
         limits = self.trans.transform(value)
-        self._limits = np.sort(limits)
+        if six.PY2:
+            # np.sort is not strict enough in python 2.7
+            if any(x is None for x in limits):
+                self._limits = limits
+            else:
+                try:
+                    self._limits = np.sort(limits)
+                except TypeError:
+                    self._limits = limits
+        else:
+            try:
+                self._limits = np.sort(limits)
+            except TypeError:
+                self._limits = limits
 
     def train(self, x):
         """
