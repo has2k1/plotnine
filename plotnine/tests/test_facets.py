@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, facet_grid, facet_wrap
+from plotnine import geom_abline
 
 n = 10
 df = pd.DataFrame({'x': range(n),
@@ -82,3 +83,13 @@ def test_facet_grid_expression():
 def test_facet_grid_margins():
     p = g + facet_grid('var1~var2', margins=True)
     assert p == 'facet_grid_margins'
+
+
+# Edge cases
+
+def test_non_mapped_facetting():
+    p = (g
+         + geom_abline(intercept=0, slope=1, size=1)
+         + facet_wrap('var1')
+         )
+    assert p == 'non_mapped_facetting'

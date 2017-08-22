@@ -41,6 +41,11 @@ v0.3.0
   and ``height`` would mess up the ``strip_text`` and ``spacing`` for the
   facetted plots. (:issue:`44`).
 
+- Fixed bug in :class:`~plotnine.geoms.geom_abline`,
+  :class:`~plotnine.geoms.geom_hline` and :class:`~plotnine.geoms.geom_vline`
+  where facetting on a column that is not mapped to an aesthetic fails.
+  (:issue:`48`)
+
 
 Enhancements
 ************

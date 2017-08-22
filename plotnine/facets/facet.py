@@ -523,7 +523,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
 
     # Systematically add on missing combinations
     for i, value in enumerate(values):
-        if has_all[i]:
+        if has_all[i] or len(value.columns) == 0:
             continue
         old = base.loc[:, base.columns - value.columns]
         new = value.loc[:, base.columns & value.columns].drop_duplicates()
@@ -619,7 +619,10 @@ def eval_facet_vars(data, vars, env):
             # else statement below
             res = data[name]
         else:
-            res = env.eval(name, inner_namespace=data)
+            try:
+                res = env.eval(name, inner_namespace=data)
+            except NameError:
+                continue
         facet_vals[name] = res
 
     return facet_vals
