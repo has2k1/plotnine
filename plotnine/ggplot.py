@@ -541,17 +541,13 @@ class ggplot(object):
                 "not pixels). If you are sure you want these "
                 "dimensions, use 'limitsize=False'.".format(width, height))
 
-        # dpi
         if dpi is None:
             try:
-                dpi = self.theme.themeables.property('dpi')
+                self.theme.themeables.property('dpi')
             except KeyError:
-                dpi = 100
-                # Do not modify original
-                self.theme = copy(self.theme) + theme(dpi=dpi)
-
-            # Should not need this with MPL 2.0
-            fig_kwargs['dpi'] = dpi
+                self.theme = self.theme + theme(dpi=100)
+        else:
+            self.theme = self.theme + theme(dpi=dpi)
 
         if verbose:
             warn("Saving {0} x {1} {2} image.".format(
