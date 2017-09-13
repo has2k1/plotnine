@@ -13,7 +13,7 @@ df = pd.DataFrame({
         'y': seq,
         'z': seq,
     })
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_aesthetics():

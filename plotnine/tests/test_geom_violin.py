@@ -56,7 +56,7 @@ def test_quantiles_width_dodge():
                      width=0.5, size=2) +
          geom_violin(aes(y='y+50', fill='factor(y%2)'),
                      size=2) +
-         theme(facet_spacing={'right': 0.85}))
+         theme(subplots_adjust={'right': 0.85}))
     assert p == 'quantiles_width_dodge'
 
 

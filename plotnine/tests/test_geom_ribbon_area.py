@@ -17,7 +17,7 @@ df = pd.DataFrame({
         'ymax': np.hstack([np.sin(x)+2*i+1 for i in range(n)]),
         'z': np.repeat(range(n), m)
     })
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_ribbon_aesthetics():

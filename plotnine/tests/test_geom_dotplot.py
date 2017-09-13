@@ -6,7 +6,7 @@ from plotnine import ggplot, aes, geom_dotplot, theme
 
 
 df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_dotdensity():

@@ -18,7 +18,7 @@ df1 = pd.DataFrame({'x': [1, 2, 1, 2],
                     'y': [1, 1, 2, 2]})
 df2 = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                     'z': np.repeat(range(n//2), range(3, n*2, 4))})
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_jitter():

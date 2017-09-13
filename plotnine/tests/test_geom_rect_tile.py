@@ -21,7 +21,7 @@ df['x'] = df['xmin'] + 0.5
 df['y'] = df['ymin'] + 0.5
 
 # To leave enough room for the legend
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_rect_aesthetics():

@@ -9,7 +9,7 @@ from plotnine import (theme, theme_538, theme_bw, theme_classic,
 from plotnine import element_line, element_blank
 from plotnine.data import mtcars
 
-_theme = theme(facet_spacing={'right': 0.80})
+_theme = theme(subplots_adjust={'right': 0.80})
 
 
 def test_add_complete_complete():

@@ -33,7 +33,7 @@ def test_aesthetics():
                     color='green', size=10) +
          geom_point(aes(x='i', shape='factor(a)'),
                     fill='brown', stroke=2, size=10, show_legend=False) +
-         theme(facet_spacing={'right': 0.85}))
+         theme(subplots_adjust={'right': 0.85}))
 
     assert p == 'aesthetics'
 

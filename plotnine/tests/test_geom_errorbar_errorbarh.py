@@ -11,7 +11,7 @@ df = pd.DataFrame({
         'ymax': range(2, 2*n+2, 2),
         'z': range(n)
     })
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_errorbar_aesthetics():

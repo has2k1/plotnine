@@ -15,7 +15,7 @@ df = pd.DataFrame({
         'yend': range(n, 0, -1),
         'z': range(1, n+1)
     })
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_aesthetics():

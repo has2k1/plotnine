@@ -397,7 +397,6 @@ Users should never create instances of *themeable*.
    axis_title_x
    axis_title_y
    dpi
-   facet_spacing
    figure_size
    legend_background
    legend_box
@@ -448,6 +447,7 @@ Users should never create instances of *themeable*.
    strip_text
    strip_text_x
    strip_text_y
+   subplots_adjust
    text
    title
    themeable

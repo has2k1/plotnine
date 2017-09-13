@@ -46,6 +46,6 @@ def test_params():
                       outlier_size=4, outlier_shape='D') +
          # position dodge
          geom_boxplot(df[3*m:4*m], aes(y='y', fill='factor(y%2)')) +
-         theme(facet_spacing={'right': 0.85})
+         theme(subplots_adjust={'right': 0.85})
          )
     assert p == 'params'

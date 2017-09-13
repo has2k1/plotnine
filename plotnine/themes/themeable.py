@@ -1547,9 +1547,12 @@ class figure_size(themeable):
         return rcParams
 
 
-class facet_spacing(themeable):
+class subplots_adjust(themeable):
     """
-    Facet spacing
+    Adjust position of subplots on in the figure
+
+    Useful if part of the plot (most likely the legend)
+    are cut off.
 
     Full access to the underlying Matplolib subplot
     adjustment parameters
@@ -1563,6 +1566,16 @@ class facet_spacing(themeable):
     def setup_figure(self, figure):
         kwargs = self.properties['value']
         figure.subplots_adjust(**kwargs)
+
+
+# Deprecated
+class facet_spacing(subplots_adjust):
+    def __init__(self, *args, **kwargs):
+        from warnings import warn
+        warn("'facet_spacing' has been renamed to "
+             "'subplots_adjust' and it will be removed "
+             "in the future.", FutureWarning)
+        super(facet_spacing, self).__init__(*args, **kwargs)
 
 
 class legend_box(themeable):

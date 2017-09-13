@@ -13,7 +13,7 @@ df = pd.DataFrame({
         'ymax': range(1, n+1),
         'z': range(n)
     })
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_linerange_aesthetics():

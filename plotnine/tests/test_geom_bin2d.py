@@ -14,7 +14,7 @@ df = pd.DataFrame({
     'x': np.hstack([diagonal, diagonal]),
     'y': np.hstack([diagonal, diagonal[::-1]])})
 
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_drop_true():

@@ -4,7 +4,7 @@ import pandas as pd
 
 from plotnine import ggplot, aes, geom_count, theme
 
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 df = pd.DataFrame({
     'x': list('aaaaaaaaaabbbbbbbbbbcccccccccc'),

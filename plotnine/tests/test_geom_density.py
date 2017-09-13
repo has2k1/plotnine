@@ -12,7 +12,7 @@ df = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                    'z': np.repeat(range(n//2), range(3, n*2, 4))})
 
 p = ggplot(df, aes('x', fill='factor(z)'))
-_theme = theme(facet_spacing={'right': 0.85})
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_gaussian():
