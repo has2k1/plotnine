@@ -110,6 +110,7 @@ class geom_text(geom):
         df['va'] = params['va']
         df['family'] = params['family']
         df['fontweight'] = params['fontweight']
+        df['fontstyle'] = params['fontstyle']
         df['zorder'] = params['zorder']
         df['clip_on'] = True
 

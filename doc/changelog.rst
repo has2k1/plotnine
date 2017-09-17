@@ -46,6 +46,9 @@ v0.3.0
   where facetting on a column that is not mapped to an aesthetic fails.
   (:issue:`48`)
 
+- Fixed bug in :class:`~plotnine.geoms.geom_text`, the ``fontstyle`` parameter
+  was being ignored.
+
 
 Enhancements
 ************
