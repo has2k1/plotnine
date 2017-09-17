@@ -3,12 +3,10 @@ import itertools
 from warnings import warn
 
 import numpy as np
-import pandas.api.types as pdtypes
 
 from ..aes import aes_to_scale
 from ..exceptions import PlotnineError
-from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS, suppress
-from ..utils import Registry
+from ..utils import suppress, Registry, array_kind
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -146,14 +144,14 @@ class Scales(list):
         # to collect these results.
         # Using `type` preserves the subclass of pd.DataFrame
         df = type(data)(index=data.index)
-        cat_cols = []
+        discrete_cols = []
 
         # Loop through each variable, mapping across each scale,
         # then joining back into the copy of the data
         for col in vars:
-            use_df = pdtypes.is_categorical_dtype(data[col])
+            use_df = array_kind.discrete(data[col])
             if use_df:
-                cat_cols.append(col)
+                discrete_cols.append(col)
             for i, sc in enumerate(self, start=1):
                 bool_idx = (i == idx)
                 results = sc.map(data.loc[bool_idx, col])
@@ -162,7 +160,7 @@ class Scales(list):
                 else:
                     data.loc[bool_idx, col] = results
 
-        for col in cat_cols:
+        for col in discrete_cols:
             data[col] = df[col]
 
     def reset(self):
@@ -275,13 +273,13 @@ class Scales(list):
 
 
 def scale_type(series):
-    if series.dtype.kind in CONTINUOUS_KINDS:
+    if array_kind.continuous(series):
         stype = 'continuous'
-    elif series.dtype.kind in DISCRETE_KINDS:
+    elif array_kind.discrete(series):
         stype = 'discrete'
-    elif series.dtype.kind == 'M':
+    elif array_kind.datetime(series):
         stype = 'datetime'
-    elif series.dtype.kind == 'm':
+    elif array_kind.timedelta(series):
         stype = 'timedelta'
     else:
         msg = ("Don't know how to automatically pick scale for "

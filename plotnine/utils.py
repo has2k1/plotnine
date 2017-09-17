@@ -26,9 +26,6 @@ from mizani.utils import multitype_sort
 from .exceptions import PlotnineError
 
 
-DISCRETE_KINDS = 'ObUS'
-CONTINUOUS_KINDS = 'ifuc'
-
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
 # (for lines). Given the adjustments in geom_point,
@@ -1106,3 +1103,47 @@ def from_inches(value, units):
         return lookup[units](value)
     except KeyError:
         raise PlotnineError("Unknown units '{}'".format(units))
+
+
+class array_kind(object):
+    @staticmethod
+    def discrete(arr):
+        """
+        Return True if array is discrete
+
+        Parameters
+        ----------
+        arr : numpy.array
+            Must have a dtype
+
+        Returns
+        -------
+        out : bool
+            Whether array `arr` is discrete
+        """
+        return arr.dtype.kind in 'ObUS'
+
+    @staticmethod
+    def continuous(arr):
+        """
+        Return True if array is continuous
+
+        Parameters
+        ----------
+        arr : numpy.array or pandas.series
+            Must have a dtype
+
+        Returns
+        -------
+        out : bool
+            Whether array `arr` is continuous
+        """
+        return arr.dtype.kind in 'ifuc'
+
+    @staticmethod
+    def datetime(arr):
+        return arr.dtype.kind == 'M'
+
+    @staticmethod
+    def timedelta(arr):
+        return arr.dtype.kind == 'm'

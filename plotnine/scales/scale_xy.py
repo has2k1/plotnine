@@ -4,8 +4,7 @@ import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
 
-from ..utils import DISCRETE_KINDS, CONTINUOUS_KINDS
-from ..utils import identity, match, alias
+from ..utils import identity, match, alias, array_kind
 from ..exceptions import PlotnineError
 from .range import RangeContinuous
 from .scale import scale_discrete, scale_continuous
@@ -52,7 +51,7 @@ class scale_position_discrete(scale_discrete):
         # This complicates training and mapping, but makes it
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
-        if series.dtype.kind in CONTINUOUS_KINDS:
+        if array_kind.continuous(series):
             self.range_c.train(series)
         else:
             self.range.train(series)
@@ -62,7 +61,7 @@ class scale_position_discrete(scale_discrete):
         # at 1
         if limits is None:
             limits = self.limits
-        if series.dtype.kind in DISCRETE_KINDS:
+        if array_kind.discrete(series):
             seq = np.arange(1, len(limits)+1)
             return seq[match(series, limits)]
         return series

@@ -10,7 +10,7 @@ import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
 from .exceptions import PlotnineError
-from .utils import DISCRETE_KINDS, ninteraction, suppress
+from .utils import array_kind, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
 from .aes import aes, is_calculated_aes, strip_dots, make_labels
 
@@ -503,7 +503,7 @@ def discrete_columns(df, ignore):
     """
     lst = []
     for col in df:
-        if (df[col].dtype.kind in DISCRETE_KINDS) and (col not in ignore):
+        if array_kind.discrete(df[col]) and (col not in ignore):
             # Some columns are represented as object dtype
             # but may have compound structures as values.
             try:

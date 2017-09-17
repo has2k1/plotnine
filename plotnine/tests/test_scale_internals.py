@@ -282,3 +282,12 @@ def test_expand_limits():
          + expand_limits(y=(0, None))
          )
     assert p == 'expand_limits'
+
+
+def test_bool_mapping():
+    df = pd.DataFrame({
+        'x': [1, 2, 3],
+        'y': [True, False, False]
+    })
+    p = ggplot(df, aes('x', 'y')) + geom_point()
+    assert p == 'bool_mapping'

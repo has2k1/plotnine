@@ -49,6 +49,8 @@ v0.3.0
 - Fixed bug in :class:`~plotnine.geoms.geom_text`, the ``fontstyle`` parameter
   was being ignored.
 
+- Fixed bug where boolean data was mapped to the same value on the coordinate
+  axis. (:issue:`57`)
 
 Enhancements
 ************

@@ -14,7 +14,7 @@ from .labels import ggtitle, xlab as xlabel, ylab as ylabel
 from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
-from .utils import Registry, is_string, DISCRETE_KINDS, suppress
+from .utils import Registry, is_string, array_kind, suppress
 from .exceptions import PlotnineError
 from .scales import scale_x_log10, scale_y_log10
 from .themes import theme
@@ -128,7 +128,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             elif not hasattr(aesthetics['x'], 'dtype'):
                 x = np.asarray(aesthetics['x'])
 
-            if x.dtype.kind in DISCRETE_KINDS:
+            if array_kind.discrete(x):
                 replace_auto(geom, 'bar')
             else:
                 replace_auto(geom, 'histogram')
