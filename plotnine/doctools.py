@@ -80,10 +80,10 @@ If :py:`False`, overrides the default aesthetics.""",
 
     'show_legend': """\
 Whether this layer should be included in the legends. :py:`None` the \
-default, includes any aesthetics that are mapped. If a :class:`bool`,
-:py:`False` never \ includes and :py:`True` always includes. A
-:class:`dict` can be used to *exclude* specific aesthetis of the layer
-from showing in the legend. e.g :py:`show_legend={'color': False}`,
+default, includes any aesthetics that are mapped. If a :class:`bool`, \
+:py:`False` never \ includes and :py:`True` always includes. A \
+:class:`dict` can be used to *exclude* specific aesthetis of the layer \
+from showing in the legend. e.g :py:`show_legend={'color': False}`, \
 any other aesthetic are included by default."""
 }
 
