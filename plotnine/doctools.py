@@ -192,8 +192,9 @@ def make_signature(name, params, common_params, common_param_values):
     s2 = ', '.join(tokens) + ', **kwargs)'
     line_width = 78 - len(s1)
     indent_spaces = ' ' * (len(s1) + 4)
-    s2_lines = wrap(s2, width=line_width, subsequent_indent=indent_spaces)
-    return s1 + '\n'.join(s2_lines)
+    newline_and_space = '\n' + indent_spaces
+    s2_lines = wrap(s2, width=line_width)
+    return s1 + newline_and_space.join(s2_lines)
 
 
 def get_geom_documentation(geom):
