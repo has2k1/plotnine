@@ -18,6 +18,7 @@ Plot creation
    aes
    ~layer.layer
    ~layer.Layers
+   ~animation.PlotnineAnimation
 
 
 geoms

@@ -18,6 +18,11 @@ API Changes
 
 - :meth:`plotnine.ggplot.draw` gained an extra parameter ``return_ggplot``.
 
+New Features
+************
+
+- Added :class:`~plotnine.animation.PlotnineAnimation` for animations.
+
 Enhancements
 ************
 
