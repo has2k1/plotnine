@@ -5,12 +5,53 @@ v0.3.0
 ------
 *(Unreleased)*
 
+
+API Changes
+***********
+
+- :class:`~plotnine.geoms.geom_smooth` gained an extra parameter
+  ``legend_fill_ratio`` that control the area of the legend that is filled
+  to indicate confidence intervals. (:issue:`32`)
+
+- :meth:`plotnine.ggplot.save` gained an extra parameter ``verbose``.
+  It no longer guesses when to print information and when not to.
+
+- :meth:`plotnine.ggplot.draw` gained an extra parameter ``return_ggplot``.
+
+Enhancements
+************
+
 - Changed parameter settings for :class:`~plotnine.stats.stat_smooth`.
 
   #. Default ``span=0.75`` instead of ``2/3``
   #. When using loess smoothing, the control parameter ``surface``
      is only set to the value ``'direct'`` if predictions will
      be made outside the data range.
+
+
+- Better control of scale limits. You can now specify individual limits of a scale.
+
+  .. code-block:: python
+
+     scale_y_continuous(limits=(0, None))
+     xlim(None, 100)
+
+  You can also use :func:`~plotnine.scales.expand_limits`
+
+- Low and high :class:`~plotnine.scales.scale` limits can now be expanded
+  separately with different factors multiplicative and additive factors.
+
+- The layer parameter `show_legend` can now accept a ``dict`` for finer
+  grained control of which aesthetics to exclude in the legend.
+
+- Infinite values are removed before statistical computations ``stats``
+  (:issue:`40`).
+
+  ``stats`` also gained new parameter ``na_rm``, that controls whether
+  missing values are removed before statistical computations.
+
+Bug Fixes
+*********
 
 - Fixed bug where facetting led to a reordering of the data. This
   would manifest as a bug for ``geoms`` where order was important.
@@ -24,18 +65,6 @@ v0.3.0
 - Fix bug where initialising geoms from stats, and positions from geoms,
   when passed as classes (e.g. ``stat_smooth(geom=geom_point)``, would
   fail.
-
-- Low and high :class:`~plotnine.scales.scale` limits can now be expanded
-  separately with different factors multiplicative and additive factors.
-
-- The layer parameter `show_legend` can now accept a ``dict`` for finer
-  grained control of which aesthetics to exclude in the legend.
-
-- Infinite value are removed before statistical computations ``stats``
-  (:issue:`40`).
-
-  ``stats`` also gained new parameter ``na_rm``, that controls whether
-  missing values are removed before statistical computations.
 
 - Fixed bug in :meth:`plotnine.ggplot.save` where specifying the ``width``
   and ``height`` would mess up the ``strip_text`` and ``spacing`` for the
@@ -51,31 +80,6 @@ v0.3.0
 
 - Fixed bug where boolean data was mapped to the same value on the coordinate
   axis. (:issue:`57`)
-
-Enhancements
-************
-
-- Better control of scale limits. You can now specify individual limits of a scale.
-
-  .. code-block:: python
-
-     scale_y_continuous(limits=(0, None))
-     xlim(None, 100)
-
-  You can also use :func:`~plotnine.scales.expand_limits`
-
-
-API Changes
-***********
-
-- :class:`~plotnine.geoms.geom_smooth` gained an extra parameter
-  ``legend_fill_ratio`` that control the area of the legend that is filled
-  to indicate confidence intervals. (:issue:`32`)
-
-- :meth:`plotnine.ggplot.save` gained an extra parameter ``verbose``.
-  It no longer guesses when to print information and when not to.
-
-- :meth:`plotnine.ggplot.draw` gained an extra parameter ``return_ggplot``.
 
 v0.2.1
 ------
