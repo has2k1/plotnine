@@ -81,6 +81,9 @@ Bug Fixes
 - Fixed bug where boolean data was mapped to the same value on the coordinate
   axis. (:issue:`57`)
 
+- Fixed bug in :class:`~plotnine.facets.facet_grid` where the ``scales``
+  sometimes has no effect. (:issue:`58`)
+
 v0.2.1
 ------
 *(2017-06-22)*

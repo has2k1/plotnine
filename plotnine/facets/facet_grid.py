@@ -110,8 +110,8 @@ class facet_grid(facet):
         layout.reset_index(drop=True, inplace=True)
 
         # Relax constraints, if necessary
-        layout['SCALE_X'] = layout['COL'] if self.free['x'] else 1
-        layout['SCALE_Y'] = layout['ROW'] if self.free['y'] else 1
+        layout['SCALE_X'] = range(1, n+1) if self.free['x'] else 1
+        layout['SCALE_Y'] = range(1, n+1) if self.free['y'] else 1
 
         self.nrow = layout['ROW'].max()
         self.ncol = layout['COL'].max()
@@ -161,8 +161,8 @@ class facet_grid(facet):
         facet.set_breaks_and_labels(
             self, ranges, layout_info, pidx)
 
-        bottomrow = layout_info['ROW'] == self.nrow
-        leftcol = layout_info['COL'] == 1
+        bottomrow = layout_info['ROW'] == self.nrow or self.free['x']
+        leftcol = layout_info['COL'] == 1 or self.free['y']
 
         if bottomrow:
             ax.xaxis.set_ticks_position('bottom')

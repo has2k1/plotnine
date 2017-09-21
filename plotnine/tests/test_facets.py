@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, facet_grid, facet_wrap
-from plotnine import geom_abline
+from plotnine import geom_abline, theme
 
 n = 10
 df = pd.DataFrame({'x': range(n),
@@ -83,6 +83,21 @@ def test_facet_grid_expression():
 def test_facet_grid_margins():
     p = g + facet_grid('var1~var2', margins=True)
     assert p == 'facet_grid_margins'
+
+
+def test_facet_grid_scales_free_y():
+    p = (g
+         + facet_grid(['.', 'var1>2'], scales='free_y')
+         + theme(panel_spacing_x=0.3))
+    assert p == 'facet_grid_scales_free_y'
+
+
+def test_facet_grid_scales_free_x():
+    p = (g
+         + facet_grid(['var1>2', '.'], scales='free_x')
+
+         + theme(panel_spacing_y=0.3))
+    assert p == 'facet_grid_scales_free_x'
 
 
 # Edge cases
