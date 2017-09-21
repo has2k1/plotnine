@@ -1,11 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import re
-
 import pandas as pd
 import six
-
 
 from ..utils import ninteraction, add_margins, cross_join
 from ..utils import match, join_keys
@@ -20,14 +17,25 @@ class facet_grid(facet):
 
     Parameters
     ----------
-    facets : formula | tuple | list
+    facets : str | tuple | list
         A formula with the rows (of the tabular display) on
         the LHS and the columns (of the tabular display) on
         the RHS; the dot in the formula is used to indicate
         there should be no faceting on this dimension
         (either row or column). If a tuple/list is used, it
         must of size two, the elements of which must be
-        strings or lists.
+        strings or lists. If string formula is not processed
+        as you may expect, use tuple/list. For example, the
+        follow two specifications are equivalent::
+
+            'func(var4) ~ func(var1+var3) + func(var2)'
+            ['func(var4)', ('func(var1+var3)', 'func(var2)')]
+
+        There may be cases where you cannot use a
+        use a pure string formula, e.g.::
+
+            ['var4', ('var1+var3', 'var2')]
+
     scales : 'fixed' | 'free' | 'free_x' | 'free_y'
         Whether ``x`` or ``y`` scales should be allowed (free)
         to vary according to the data on each of the panel.
@@ -268,18 +276,18 @@ def parse_grid_facets(facets):
     """
     Return two lists of facetting variables, for the rows & columns
     """
-    valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
-                   'var1 + var2 ~ var3 + var4',
-                   "('var1', '.')", "('var1', 'var2')",
-                   "('.', 'var1')", "((var1, var2), (var3, var4))",
-                   ]
-    error_msg_f = ("Valid formula for 'facet_grid' look like"
-                   " {}".format(valid_forms))
-
     valid_seqs = ["('var1', '.')", "('var1', 'var2')",
                   "('.', 'var1')", "((var1, var2), (var3, var4))"]
     error_msg_s = ("Valid sequences for specifying 'facets' look like"
                    " {}".format(valid_seqs))
+
+    valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
+                   'var1 + var2 ~ var3 + var4',
+                   '. ~ func(var1) + func(var2)',
+                   '. ~ func(var1+var3) + func(var2)'
+                   ] + valid_seqs
+    error_msg_f = ("Valid formula for 'facet_grid' look like"
+                   " {}".format(valid_forms))
 
     if isinstance(facets, (tuple, list)):
         if len(facets) != 2:
@@ -297,24 +305,29 @@ def parse_grid_facets(facets):
     if not isinstance(facets, six.string_types):
         raise PlotnineError(error_msg_f)
 
-    variables_pattern = r'(\w+(?:\s*\+\s*\w+)*|\.)'
-    pattern = r'\s*{0}\s*~\s*{0}\s*'.format(variables_pattern)
-    match = re.match(pattern, facets)
-
-    if not match:
+    # Example of allowed formulae
+    # 'c ~ a + b'
+    # '. ~ func(a) + func(b)'
+    # 'func(c) ~ func(a+1) + func(b+2)'
+    try:
+        lhs, rhs = facets.split('~')
+    except ValueError:
         raise PlotnineError(error_msg_s)
+    else:
+        lhs = lhs.strip()
+        rhs = rhs.strip()
 
-    lhs = match.group(1)
-    rhs = match.group(2)
+    lsplitter = ' + ' if ' + ' in lhs else '+'
+    rsplitter = ' + ' if ' + ' in rhs else '+'
 
     if lhs == '.':
         rows = []
     else:
-        rows = [var.strip() for var in lhs.split('+')]
+        rows = [var.strip() for var in lhs.split(lsplitter)]
 
     if rhs == '.':
         cols = []
     else:
-        cols = [var.strip() for var in rhs.split('+')]
+        cols = [var.strip() for var in rhs.split(rsplitter)]
 
     return rows, cols
