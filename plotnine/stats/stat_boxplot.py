@@ -54,13 +54,13 @@ class stat_boxplot(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'boxplot', 'position': 'dodge',
-                      'na_rm': False, 'coef': 1.5}
+                      'na_rm': False, 'coef': 1.5, 'width': None}
     CREATES = {'lower', 'upper', 'middle', 'ymin', 'ymax',
                'outliers', 'notchupper', 'notchlower', 'width',
                'relvarwidth'}
 
     def setup_params(self, data):
-        if 'width' not in self.params:
+        if self.params['width'] is None:
             self.params['width'] = resolution(data['x'], False) * 0.75
         return self.params
 

@@ -84,6 +84,9 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.facets.facet_grid` where the ``scales``
   sometimes has no effect. (:issue:`58`)
 
+- Fixed bug in :class:`~plotnine.stats.stat_boxplot` where setting the
+  ``width`` parameter caused an exception.
+
 v0.2.1
 ------
 *(2017-06-22)*
