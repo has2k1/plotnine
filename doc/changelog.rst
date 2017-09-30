@@ -50,6 +50,9 @@ Enhancements
   ``stats`` also gained new parameter ``na_rm``, that controls whether
   missing values are removed before statistical computations.
 
+- :func:`~plotnine.qplot` can now use the name and a Pandas series to
+  label the scales of the aesthetics.
+
 Bug Fixes
 *********
 

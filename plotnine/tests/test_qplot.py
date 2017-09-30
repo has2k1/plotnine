@@ -5,7 +5,9 @@ import pandas as pd
 import pytest
 import six
 
-from plotnine import qplot
+from plotnine import qplot, theme
+
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_scalars():
@@ -55,3 +57,11 @@ def test_multiple_geoms():
                        'y': np.linspace(0, n, n*m)})
     p = qplot('factor(x)', 'y', data=df, geom=("boxplot", "point"))
     assert p == 'multiple_geoms'
+
+
+def test_series_labelling():
+    df = pd.DataFrame({'x_axis_label': [1, 2, 3],
+                       'y_axis_label': [1, 2, 3],
+                       'color_label': ['a', 'b', 'c']})
+    p = qplot(df.x_axis_label, df.y_axis_label, color=df.color_label)
+    assert p + _theme == 'series_labelling'

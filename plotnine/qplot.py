@@ -9,8 +9,8 @@ from patsy.eval import EvalEnvironment
 import six
 
 from .ggplot import ggplot
-from .aes import aes, all_aesthetics
-from .labels import ggtitle, xlab as xlabel, ylab as ylabel
+from .aes import aes, all_aesthetics, scaled_aesthetics
+from .labels import ggtitle, labs
 from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
@@ -186,17 +186,27 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
         params = {ae: kwargs[ae] for ae in recognized}
         p += geom_klass(**params)
 
+    # pd.Series objects have name attributes. In a dataframe, the
+    # series have the name of the column.
+    labels = {}
+    for ae in scaled_aesthetics & six.viewkeys(kwargs):
+        with suppress(AttributeError):
+            labels[ae] = kwargs[ae].name
+
+    with suppress(AttributeError):
+        labels['x'] = xlab if xlab is not None else x.name
+
+    with suppress(AttributeError):
+        labels['y'] = ylab if ylab is not None else y.name
+
     if 'x' in log:
         p += scale_x_log10()
 
     if 'y' in log:
         p += scale_y_log10()
 
-    if xlab:
-        p += xlabel(xlab)
-
-    if ylab:
-        p += ylabel(ylab)
+    if labels:
+        p += labs(**labels)
 
     if main:
         p += ggtitle(main)
