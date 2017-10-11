@@ -3,6 +3,8 @@ from copy import copy
 import matplotlib.pyplot as plt
 from matplotlib.animation import ArtistAnimation
 
+from .exceptions import PlotnineError
+
 
 class PlotnineAnimation(ArtistAnimation):
     """
@@ -74,6 +76,8 @@ class PlotnineAnimation(ArtistAnimation):
             'artists': []
         }
 
+        scale_limits = dict()
+
         def initialise_artist_offsets(n):
             """
             Initilise artists_offsets arrays to zero
@@ -108,6 +112,58 @@ class PlotnineAnimation(ArtistAnimation):
                     artist_offsets[name][i] += len(new_artists)
             return frame_artists
 
+        def set_scale_limits(plot):
+            """
+            Set limits of all the scales in the animation
+
+            Should be called before :func:`check_scale_limits`.
+
+            Parameters
+            ----------
+            plot : ggplot
+                First ggplot object that has been drawn
+            """
+            for sc in plot.scales:
+                ae = sc.aesthetics[0]
+                scale_limits[ae] = sc.limits
+
+        def check_scale_limits(plot, frame_no):
+            """
+            Check limits of the scales of a plot in the animation
+
+            Raises a PlotnineError if any of the scales has limits
+            that do not match those of the first plot/frame.
+
+            Should be called after :func:`set_scale_limits`.
+
+            Parameters
+            ----------
+            plot : ggplot
+                ggplot object that has been drawn
+
+            frame_no : int
+                Frame number
+            """
+            if len(scale_limits) != len(plot.scales):
+                raise PlotnineError(
+                    "All plots must have the same number of scales "
+                    "as the first plot of the animation."
+                )
+
+            for sc in plot.scales:
+                ae = sc.aesthetics[0]
+                if ae not in scale_limits:
+                    raise PlotnineError(
+                        "The plot for frame {} does not have a scale "
+                        "for the {} aesthetic.".format(frame_no, ae)
+                    )
+                if sc.limits != scale_limits[ae]:
+                    raise PlotnineError(
+                        "The {} scale of plot for frame {} has different "
+                        "limits from those of the first frame."
+                        "".format(ae, frame_no)
+                    )
+
         figure = None
         axs = None
         artists = []
@@ -116,14 +172,20 @@ class PlotnineAnimation(ArtistAnimation):
         # frame of the animation. The rest of the ggplots draw
         # onto the figure and axes created by the first ggplot and
         # they create the subsequent frames.
-        for p in plots:
+        for frame_no, p in enumerate(plots):
             if figure is None:
                 figure, plot = p.draw(return_ggplot=True)
                 axs = plot.axs
                 initialise_artist_offsets(len(axs))
+                set_scale_limits(plot)
             else:
                 p = copy(p)
                 plot = p._draw_using_figure(figure, axs)
+                try:
+                    check_scale_limits(plot, frame_no)
+                except PlotnineError as err:
+                    plt.close(figure)
+                    raise err
             artists.append(get_frame_artists(plot))
 
         if figure is None:
