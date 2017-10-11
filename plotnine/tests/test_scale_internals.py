@@ -274,6 +274,10 @@ def test_setting_limits():
     s.train(lst)
     assert s.limits == (1, 7)
 
+    s = scale_color.scale_color_hue(limits=tuple('abcdefg'))
+    s.train(['a', 'b', 'a'])
+    assert s.limits == tuple('abcdefg')
+
 
 def test_expand_limits():
     df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})

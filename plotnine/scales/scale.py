@@ -190,9 +190,12 @@ class scale(object):
         # are not set or if any is None or NaN
         if self._limits is not None:
             limits = []
-            for l, r in zip(self._limits, self.range.range):
-                value = r if pd.isnull(l) else l
-                limits.append(value)
+            if len(self._limits) == len(self.range.range):
+                for l, r in zip(self._limits, self.range.range):
+                    value = r if pd.isnull(l) else l
+                    limits.append(value)
+            else:
+                limits = self._limits
             return tuple(limits)
         return self.range.range
 
@@ -270,7 +273,7 @@ class scale_discrete(scale):
         if limits is None:
             limits = self.limits
 
-        n = sum(~pd.isnull(limits))
+        n = sum(~pd.isnull(list(limits)))
         pal = self.palette(n)
         if isinstance(pal, dict):
             # manual palette with specific assignments
