@@ -14,7 +14,6 @@ from ..scales.scales import Scales
 
 # For default matplotlib backend
 with suppress(ImportError):
-    import matplotlib.pyplot as plt
     import matplotlib.text as mtext
     import matplotlib.patches as mpatch
 
