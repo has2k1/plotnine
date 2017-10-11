@@ -342,41 +342,6 @@ class facet(object):
         self.axs = axs
         return axs
 
-    def make_figure_and_axs(self):
-        def create_subplots(fig):
-            axarr = np.empty((self.nrow, self.ncol), dtype=object)
-            i = 1
-            for row in range(self.nrow):
-                for col in range(self.ncol):
-                    axarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
-                    i += 1
-            return axarr
-
-        self.figure = figure = plt.figure()
-        axs = create_subplots(figure)
-
-        # Used for labelling the x and y axes, the first and
-        # last axes according to how MPL creates them.
-        num_panels = len(self.layout.layout)
-        _raveled_axs = axs.ravel()
-        self.first_ax = _raveled_axs[0]
-        self.last_ax = _raveled_axs[num_panels-1]
-
-        if not self.as_table:
-            axs = axs[::-1]
-
-        order = 'C' if self.dir == 'h' else 'F'
-        try:
-            axs = axs.ravel(order)
-        except AttributeError:
-            axs = [axs]
-        # No panel, do not let MPL put axes
-        for ax in axs[num_panels:]:
-            figure.delaxes(ax)
-
-        self.axs = axs[:num_panels]
-        return figure, self.axs
-
     def spaceout_and_resize_panels(self):
         """
         Adjust the spacing between the panels and resize them
