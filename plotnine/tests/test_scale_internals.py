@@ -279,6 +279,40 @@ def test_setting_limits():
     assert s.limits == tuple('abcdefg')
 
 
+def test_minor_breaks():
+    n = 10
+    x = np.arange(n)
+
+    # Default
+    s = scale_xy.scale_x_continuous()
+    s.train(x)
+    breaks = s.get_breaks()
+    minor_breaks = s.get_minor_breaks(breaks)
+    expected_minor_breaks = (breaks[:-1] + breaks[1:])/2
+    assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
+
+    # List
+    expected_minor_breaks = [2, 4, 6, 8]
+    s = scale_xy.scale_x_continuous(minor_breaks=expected_minor_breaks)
+    s.train(x)
+    breaks = s.get_breaks()
+    minor_breaks = s.get_minor_breaks(breaks)
+    assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
+
+    # Callable
+    def func(limits):
+        return np.linspace(limits[0], limits[1], n)
+
+    s = scale_xy.scale_x_continuous(minor_breaks=func)
+    s.train(x)
+    breaks = s.get_breaks()
+    minor_breaks = s.get_minor_breaks(breaks)
+    _breaks = set(breaks)
+    expected_minor_breaks = [x for x in np.arange(n) if x not in _breaks]
+    assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
+    assert not (_breaks & set(minor_breaks))
+
+
 def test_expand_limits():
     df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
     p = (ggplot(aes('x', 'y'), data=df)

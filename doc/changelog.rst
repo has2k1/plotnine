@@ -18,6 +18,10 @@ API Changes
 
 - :meth:`plotnine.ggplot.draw` gained an extra parameter ``return_ggplot``.
 
+- If the ``minor_breaks`` parameter of scales is a callable, it now
+  expects one argument, the ``limits``. Previously it accepted
+  ``breaks`` and ``limits``.
+
 New Features
 ************
 
@@ -94,6 +98,7 @@ Bug Fixes
 
 - Fixed bug in :class:`~plotnine.stats.stat_boxplot` where setting the
   ``width`` parameter caused an exception.
+
 
 v0.2.1
 ------
