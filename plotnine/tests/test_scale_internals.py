@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -20,6 +22,7 @@ from plotnine.scales.scale_size import (scale_size_discrete,
                                         scale_size_continuous,
                                         scale_size_area,
                                         scale_size_radius)
+from plotnine.scales.scales import make_scale
 from plotnine.exceptions import PlotnineError
 
 
@@ -329,3 +332,25 @@ def test_bool_mapping():
     })
     p = ggplot(df, aes('x', 'y')) + geom_point()
     assert p == 'bool_mapping'
+
+
+def test_make_scale_and_datetimes():
+    def correct_scale(scale, name):
+        return scale.__class__.__name__ == name
+
+    # cpython
+    x = pd.Series([datetime(year, 1, 1) for year in [2010, 2026, 2015]])
+
+    assert correct_scale(make_scale('x', x), 'scale_x_datetime')
+    assert correct_scale(make_scale('color', x), 'scale_color_datetime')
+    assert correct_scale(make_scale('fill', x), 'scale_fill_datetime')
+    assert correct_scale(make_scale('size', x), 'scale_size_datetime')
+    assert correct_scale(make_scale('alpha', x), 'scale_alpha_datetime')
+
+    # numpy
+    x = pd.Series([np.datetime64(i*10, 'D') for i in range(1, 10)])
+    assert correct_scale(make_scale('x', x), 'scale_x_datetime')
+    assert correct_scale(make_scale('color', x), 'scale_color_datetime')
+    assert correct_scale(make_scale('fill', x), 'scale_fill_datetime')
+    assert correct_scale(make_scale('size', x), 'scale_size_datetime')
+    assert correct_scale(make_scale('alpha', x), 'scale_alpha_datetime')

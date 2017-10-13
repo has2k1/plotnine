@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from .scale_alpha import scale_alpha
 from .scale_alpha import scale_alpha_continuous
 from .scale_alpha import scale_alpha_discrete
+from .scale_alpha import scale_alpha_datetime
 # color
 from .scale_color import scale_color_brewer, scale_colour_brewer
 from .scale_color import scale_color_cmap, scale_colour_cmap
@@ -17,6 +18,7 @@ from .scale_color import scale_color_gradientn, scale_colour_gradientn
 from .scale_color import scale_color_grey, scale_colour_grey
 from .scale_color import scale_color_gray, scale_colour_gray
 from .scale_color import scale_color_hue, scale_colour_hue
+from .scale_color import scale_color_datetime, scale_colour_datetime
 # fill
 from .scale_color import scale_fill_brewer
 from .scale_color import scale_fill_cmap
@@ -29,6 +31,7 @@ from .scale_color import scale_fill_gradient2
 from .scale_color import scale_fill_gradientn
 from .scale_color import scale_fill_grey, scale_fill_gray
 from .scale_color import scale_fill_hue
+from .scale_color import scale_fill_datetime
 # identity
 from .scale_identity import scale_alpha_identity
 from .scale_identity import scale_color_identity, scale_colour_identity
@@ -57,6 +60,7 @@ from .scale_size import scale_size_area
 from .scale_size import scale_size_continuous
 from .scale_size import scale_size_discrete
 from .scale_size import scale_size_radius
+from .scale_size import scale_size_datetime
 # stroke
 from .scale_stroke import scale_stroke
 from .scale_stroke import scale_stroke_continuous
@@ -89,6 +93,7 @@ __all__ = [
            'scale_color_grey', 'scale_colour_grey',
            'scale_color_gray', 'scale_colour_gray',
            'scale_color_hue', 'scale_colour_hue',
+           'scale_color_datetime', 'scale_colour_datetime',
            # fill
            'scale_fill_brewer', 'scale_fill_cmap',
            'scale_fill_continuous',
@@ -96,10 +101,10 @@ __all__ = [
            'scale_fill_distiller', 'scale_fill_gradient',
            'scale_fill_gradient2', 'scale_fill_gradientn',
            'scale_fill_grey', 'scale_fill_gray',
-           'scale_fill_hue',
+           'scale_fill_hue', 'scale_fill_datetime',
            # alpha
            'scale_alpha', 'scale_alpha_discrete',
-           'scale_alpha_continuous',
+           'scale_alpha_continuous', 'scale_alpha_datetime',
            # linetype
            'scale_linetype', 'scale_linetype_discrete',
            'scale_linetype_continuous',
@@ -109,7 +114,7 @@ __all__ = [
            # size
            'scale_size', 'scale_size_area',
            'scale_size_discrete', 'scale_size_continuous',
-           'scale_size_radius',
+           'scale_size_radius', 'scale_size_datetime',
            # stroke
            'scale_stroke', 'scale_stroke_continuous',
            'scale_stroke_discrete',

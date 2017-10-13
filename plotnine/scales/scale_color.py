@@ -8,7 +8,7 @@ from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
                              desaturate_pal)
 
 from ..utils import alias
-from .scale import scale_discrete, scale_continuous
+from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
 # Discrete color scales #
@@ -350,7 +350,7 @@ class scale_color_cmap(scale_continuous):
 
     def __init__(self, name='viridis', lut=None, **kwargs):
         self.palette = cmap_pal(name, lut)
-        scale_continuous.__init__(self, **kwargs)
+        super(scale_color_cmap, self).__init__(**kwargs)
 
 
 class scale_fill_cmap(scale_color_cmap):
@@ -360,6 +360,24 @@ class scale_fill_cmap(scale_color_cmap):
     See :class:`.scale_color_cmap` for documentation.
     """
     aesthetics = ['fill']
+
+
+class scale_color_datetime(scale_color_cmap, scale_datetime):
+    """
+    Datetime color scale
+
+    See :class:`.scale_color_cmap` and :class:`.scale_datetime`
+    for documentation.
+    """
+
+
+class scale_fill_datetime(scale_fill_cmap, scale_datetime):
+    """
+    Datetime fill scale
+
+    See :class:`.scale_color_cmap` and :class:`.scale_datetime`
+    for documentation.
+    """
 
 
 # Default scales
@@ -383,3 +401,4 @@ alias('scale_colour_discrete', scale_color_hue)
 alias('scale_colour_continuous', scale_color_gradient)
 alias('scale_colour_distiller', scale_color_distiller)
 alias('scale_colour_cmap', scale_color_cmap)
+alias('scale_colour_datetime', scale_color_datetime)

@@ -166,6 +166,7 @@ Alpha scales
    scale_alpha
    scale_alpha_discrete
    scale_alpha_continuous
+   scale_alpha_datetime
 
 
 Identity Scales
@@ -193,6 +194,7 @@ Color and fill scales
    scale_color_cmap
    scale_color_continuous
    scale_color_desaturate
+   scale_color_datetime
    scale_color_discrete
    scale_color_distiller
    scale_color_gradient
@@ -204,6 +206,7 @@ Color and fill scales
    scale_fill_brewer
    scale_fill_cmap
    scale_fill_continuous
+   scale_fill_datetime
    scale_fill_desaturate
    scale_fill_discrete
    scale_fill_distiller
@@ -261,6 +264,7 @@ Size scales
    scale_size_continuous
    scale_size_discrete
    scale_size_radius
+   scale_size_datetime
 
 
 Position scales

@@ -5,7 +5,7 @@ from mizani.bounds import rescale_max
 from mizani.palettes import abs_area, area_pal, rescale_pal
 
 from ..utils import alias
-from .scale import scale_discrete, scale_continuous
+from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
 class scale_size_discrete(scale_discrete):
@@ -89,3 +89,22 @@ class scale_size_area(scale_continuous):
     def __init__(self, max_size=6, **kwargs):
         self.palette = abs_area(max_size)
         scale_continuous.__init__(self, **kwargs)
+
+
+class scale_size_datetime(scale_datetime):
+    """
+    Datetime area-size scale
+
+    Parameters
+    ----------
+    range : array_like
+        Minimum and maximum area of the plotting symbol.
+        It must be of size 2.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_datetime`
+    """
+    aesthetics = ['size']
+
+    def __init__(self, range=(1, 6), **kwargs):
+        self.palette = area_pal(range)
+        scale_datetime.__init__(self, **kwargs)

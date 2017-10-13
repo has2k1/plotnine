@@ -26,6 +26,8 @@ New Features
 ************
 
 - Added :class:`~plotnine.animation.PlotnineAnimation` for animations.
+- Added datetime scales for ``alpha``, ``colour``, ``fill`` and ``size``
+  aesthetics
 
 Enhancements
 ************

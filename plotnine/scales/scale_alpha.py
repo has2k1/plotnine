@@ -5,7 +5,7 @@ import numpy as np
 from mizani.palettes import rescale_pal
 
 from ..utils import alias
-from .scale import scale_discrete, scale_continuous
+from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
 class scale_alpha(scale_continuous):
@@ -50,3 +50,22 @@ class scale_alpha_discrete(scale_discrete):
 
         self.palette = palette
         scale_discrete.__init__(self, **kwargs)
+
+
+class scale_alpha_datetime(scale_datetime):
+    """
+    Datetime Alpha Scale
+
+    Parameters
+    ----------
+    range : array_like
+        Range ([Minimum, Maximum]) of output alpha values.
+        Should be between 0 and 1. Default is ``(0.1, 1)``
+    kwargs : dict
+        Parameters passed on to :class:`.scale_datetime`
+    """
+    aesthetics = ['alpha']
+
+    def __init__(self, range=(0.1, 1), **kwargs):
+        self.palette = rescale_pal(range)
+        scale_datetime.__init__(self, **kwargs)
