@@ -7,7 +7,7 @@ from mizani.bounds import expand_range_distinct
 from ..utils import identity, match, alias, array_kind
 from ..exceptions import PlotnineError
 from .range import RangeContinuous
-from .scale import scale_discrete, scale_continuous
+from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
 # positions scales have a couple of differences (quirks) that
@@ -168,24 +168,21 @@ class scale_y_continuous(scale_position_continuous):
 
 
 # Transformed scales
-class scale_x_datetime(scale_position_continuous):
+class scale_x_datetime(scale_position_continuous, scale_datetime):
     """
     Continuous x position for datetime data points
 
     See :class:`.scale_continuous` for parameter documentation
     """
-    _trans = 'datetime'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
-class scale_y_datetime(scale_position_continuous):
+class scale_y_datetime(scale_position_continuous, scale_datetime):
     """
     Continuous y position for datetime data points
 
-
     See :class:`.scale_continuous` for parameter documentation
     """
-    _trans = 'datetime'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 

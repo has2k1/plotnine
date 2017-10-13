@@ -11,8 +11,10 @@ from six.moves import zip
 import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
-from mizani.bounds import rescale, censor
 from mizani.bounds import expand_range_distinct, zero_range
+from mizani.bounds import rescale, censor
+from mizani.breaks import date_breaks
+from mizani.formatters import date_format
 from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
@@ -670,3 +672,58 @@ class scale_continuous(scale):
                 "Breaks and labels are different lengths")
 
         return labels
+
+
+class scale_datetime(scale_continuous):
+    """
+    Base class for all date/datetime scales
+
+    Parameters
+    ----------
+    date_breaks : str
+        A string giving the distance between major breaks.
+        For example `'2 weeks'`, `'5 years'`. If specified,
+        ``date_breaks`` takes precedence over
+        ``breaks``.
+    date_labels : str
+        Format string for the labels.
+        See :ref:`strftime <strftime-strptime-behavior>`.
+        If specified, ``date_labels`` takes precedence over
+        ``labels``.
+    date_minor_breaks : str
+        A string giving the distance between minor breaks.
+        For example `'2 weeks'`, `'5 years'`. If specified,
+        ``date_minor_breaks`` takes precedence over
+        ``minor_breaks``.
+    kwargs : dict
+        Parameters passed on to :class:`.scale_continuous`
+    """
+    _trans = 'datetime'
+
+    def __init__(self, **kwargs):
+        # Permit the use of the general parameters for
+        # specifying the format strings
+        with suppress(KeyError):
+            breaks = kwargs['breaks']
+            if isinstance(breaks, six.string_types):
+                kwargs['breaks'] = date_breaks(breaks)
+
+        with suppress(KeyError):
+            minor_breaks = kwargs['minor_breaks']
+            if isinstance(minor_breaks, six.string_types):
+                kwargs['minor_breaks'] = date_breaks(minor_breaks)
+
+        # Using the more specific parameters take precedence
+        with suppress(KeyError):
+            breaks_fmt = kwargs.pop('date_breaks')
+            kwargs['breaks'] = date_breaks(breaks_fmt)
+
+        with suppress(KeyError):
+            labels_fmt = kwargs.pop('date_labels')
+            kwargs['labels'] = date_format(labels_fmt)
+
+        with suppress(KeyError):
+            minor_breaks_fmt = kwargs.pop('date_minor_breaks')
+            kwargs['minor_breaks'] = date_breaks(minor_breaks_fmt)
+
+        scale_continuous.__init__(self, **kwargs)

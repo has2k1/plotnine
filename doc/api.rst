@@ -154,6 +154,7 @@ Base scales
    ~scale.scale
    ~scale.scale_discrete
    ~scale.scale_continuous
+   ~scale.scale_datetime
 
 
 Alpha scales
