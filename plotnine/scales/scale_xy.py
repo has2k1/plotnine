@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
 
+from ..doctools import document
 from ..utils import identity, match, alias, array_kind
 from ..exceptions import PlotnineError
 from .range import RangeContinuous
@@ -129,38 +130,50 @@ class scale_position_continuous(scale_continuous):
         return scaled
 
 
+@document
 class scale_x_discrete(scale_position_discrete):
     """
     Discrete x position
 
-    See :class:`.scale_discrete` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
+@document
 class scale_y_discrete(scale_position_discrete):
     """
     Discrete y position
 
-    See :class:`.scale_discrete` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['y', 'ymin', 'ymax', 'yend']
 
 
+@document
 class scale_x_continuous(scale_position_continuous):
     """
     Continuous x position
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['x', 'xmin', 'xmax', 'xend', 'xintercept']
 
 
+@document
 class scale_y_continuous(scale_position_continuous):
     """
     Continuous y position
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
                   'ymin_final', 'ymax_final',
@@ -168,20 +181,26 @@ class scale_y_continuous(scale_position_continuous):
 
 
 # Transformed scales
+@document
 class scale_x_datetime(scale_position_continuous, scale_datetime):
     """
     Continuous x position for datetime data points
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
+@document
 class scale_y_datetime(scale_position_continuous, scale_datetime):
     """
     Continuous y position for datetime data points
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
@@ -190,75 +209,99 @@ alias('scale_x_date', scale_x_datetime)
 alias('scale_y_date', scale_y_datetime)
 
 
+@document
 class scale_x_timedelta(scale_position_continuous):
     """
     Continuous x position for timedelta data points
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'pd_timedelta'
     aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
+@document
 class scale_y_timedelta(scale_position_continuous):
     """
     Continuous y position for timedelta data points
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'pd_timedelta'
     aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
+@document
 class scale_x_sqrt(scale_x_continuous):
     """
     Continuous x position sqrt transformed scale
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'sqrt'
 
 
+@document
 class scale_y_sqrt(scale_y_continuous):
     """
     Continuous y position sqrt transformed scale
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'sqrt'
 
 
+@document
 class scale_x_log10(scale_x_continuous):
     """
     Continuous x position log10 transformed scale
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'log10'
 
 
+@document
 class scale_y_log10(scale_y_continuous):
     """
     Continuous y position log10 transformed scale
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'log10'
 
 
+@document
 class scale_x_reverse(scale_x_continuous):
     """
     Continuous x position reverse transformed scale
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'reverse'
 
 
+@document
 class scale_y_reverse(scale_y_continuous):
     """
     Continuous y position reverse transformed scale
 
-    See :class:`.scale_continuous` for parameter documentation
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     _trans = 'reverse'

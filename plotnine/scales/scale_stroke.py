@@ -3,10 +3,12 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 from mizani.palettes import rescale_pal
 
+from ..doctools import document
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
 
+@document
 class scale_stroke_continuous(scale_continuous):
     """
     Continuous Stroke Scale
@@ -16,8 +18,7 @@ class scale_stroke_continuous(scale_continuous):
     range : array_like
         Range ([Minimum, Maximum]) of output stroke values.
         Should be between 0 and 1. Default is ``(1, 6)``
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['stroke']
 
@@ -26,6 +27,7 @@ class scale_stroke_continuous(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
+@document
 class scale_stroke_discrete(scale_discrete):
     """
     Discrete Stroke Scale
@@ -35,8 +37,7 @@ class scale_stroke_discrete(scale_discrete):
     range : array_like
         Range ([Minimum, Maximum]) of output stroke values.
         Should be between 0 and 1. Default is ``(1, 6)``
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['stroke']
 

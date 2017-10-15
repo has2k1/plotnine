@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
+from ..doctools import document
 from ..utils import identity, alias
 from .scale import scale_discrete, scale_continuous
 
@@ -20,6 +21,7 @@ class MapTrainMixin(object):
         return super(MapTrainMixin, self).train(x)
 
 
+@document
 class scale_color_identity(MapTrainMixin, scale_discrete):
     """
     No color scaling
@@ -28,23 +30,26 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     ----------
     guide : None | 'legend'
         Whether to include a legend. Default is None.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['color']
     palette = staticmethod(identity)
     guide = None
 
 
+@document
 class scale_fill_identity(scale_color_identity):
     """
     No color scaling
 
-    See :class:`.scale_color_identity` for documentation.
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     aesthetics = ['fill']
 
 
+@document
 class scale_shape_identity(MapTrainMixin, scale_discrete):
     """
     No shape scaling
@@ -53,14 +58,14 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     ----------
     guide : None | 'legend'
         Whether to include a legend. Default is None.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['shape']
     palette = staticmethod(identity)
     guide = None
 
 
+@document
 class scale_linetype_identity(MapTrainMixin, scale_discrete):
     """
     No linetype scaling
@@ -69,14 +74,14 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     ----------
     guide : None | 'legend'
         Whether to include a legend. Default is None.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['linetype']
     palette = staticmethod(identity)
     guide = None
 
 
+@document
 class scale_alpha_identity(MapTrainMixin, scale_continuous):
     """
     No alpha scaling
@@ -84,15 +89,15 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     guide : None | 'legend'
-        Whether to include a legend. Default is None.
-    kwargs : dict
         Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['alpha']
     palette = staticmethod(identity)
     guide = None
 
 
+@document
 class scale_size_identity(MapTrainMixin, scale_continuous):
     """
     No size scaling
@@ -101,8 +106,7 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     ----------
     guide : None | 'legend'
         Whether to include a legend. Default is None.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['size']
     palette = staticmethod(identity)

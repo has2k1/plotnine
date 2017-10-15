@@ -18,6 +18,7 @@ from mizani.formatters import date_format
 from mizani.transforms import gettrans
 
 from ..aes import is_position_aes
+from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import match, suppress, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
@@ -229,17 +230,17 @@ class scale(object):
         return df
 
 
+@document
 class scale_discrete(scale):
     """
     Base class for all discrete scales
 
     Parameters
     ----------
+    {superclass_parameters}
     drop : bool
         Whether to drop unused categories from
         the scale
-    kwargs : dict
-        Parameters passed on to :class:`.scale`
     """
     range = RangeDiscrete
     drop = True        # drop unused factor levels from the scale
@@ -395,12 +396,14 @@ class scale_discrete(scale):
         return x
 
 
+@document
 class scale_continuous(scale):
     """
     Base class for all continuous scales
 
     Parameters
     ----------
+    {superclass_parameters}
     trans : str | function
         Name of a trans function or a trans function
     oob : function
@@ -417,8 +420,6 @@ class scale_continuous(scale):
         be handled by the palette. Default is to rescale
         them onto the [0, 1] range. Scales that inherit
         from this class may have another default.
-    kwargs : dict
-        Parameters passed on to :class:`.scale`
 
     Note
     ----
@@ -674,6 +675,7 @@ class scale_continuous(scale):
         return labels
 
 
+@document
 class scale_datetime(scale_continuous):
     """
     Base class for all date/datetime scales
@@ -695,8 +697,7 @@ class scale_datetime(scale_continuous):
         For example `'2 weeks'`, `'5 years'`. If specified,
         ``date_minor_breaks`` takes precedence over
         ``minor_breaks``.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     _trans = 'datetime'
 

@@ -4,10 +4,12 @@ from __future__ import (absolute_import, division, print_function,
 import numpy as np
 from mizani.palettes import rescale_pal
 
+from ..doctools import document
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
+@document
 class scale_alpha(scale_continuous):
     """
     Continuous Alpha Scale
@@ -17,8 +19,7 @@ class scale_alpha(scale_continuous):
     range : array_like
         Range ([Minimum, Maximum]) of output alpha values.
         Should be between 0 and 1. Default is ``(0.1, 1)``
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['alpha']
 
@@ -30,6 +31,7 @@ class scale_alpha(scale_continuous):
 alias('scale_alpha_continuous', scale_alpha)
 
 
+@document
 class scale_alpha_discrete(scale_discrete):
     """
     Discrete Alpha Scale
@@ -39,8 +41,7 @@ class scale_alpha_discrete(scale_discrete):
     range : array_like
         Range ([Minimum, Maximum]) of output alpha values.
         Should be between 0 and 1. Default is ``(0.1, 1)``
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['alpha']
 
@@ -52,6 +53,7 @@ class scale_alpha_discrete(scale_discrete):
         scale_discrete.__init__(self, **kwargs)
 
 
+@document
 class scale_alpha_datetime(scale_datetime):
     """
     Datetime Alpha Scale
@@ -61,8 +63,7 @@ class scale_alpha_datetime(scale_datetime):
     range : array_like
         Range ([Minimum, Maximum]) of output alpha values.
         Should be between 0 and 1. Default is ``(0.1, 1)``
-    kwargs : dict
-        Parameters passed on to :class:`.scale_datetime`
+    {superclass_parameters}
     """
     aesthetics = ['alpha']
 

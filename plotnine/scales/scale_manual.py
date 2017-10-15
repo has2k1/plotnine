@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from mizani.palettes import manual_pal
 
+from ..doctools import document
 from ..utils import alias
 from .scale import scale_discrete
 
@@ -15,6 +16,7 @@ class _scale_manual(scale_discrete):
         scale_discrete.__init__(self, **kwargs)
 
 
+@document
 class scale_color_manual(_scale_manual):
     """
     Custom discrete color scale
@@ -23,12 +25,12 @@ class scale_color_manual(_scale_manual):
     ----------
     values : array_like
         Colors that make up the palette
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['color']
 
 
+@document
 class scale_fill_manual(_scale_manual):
     """
     Custom discrete fill scale
@@ -37,12 +39,12 @@ class scale_fill_manual(_scale_manual):
     ----------
     values : array_like
         Colors that make up the palette
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['fill']
 
 
+@document
 class scale_shape_manual(_scale_manual):
     """
     Custom discrete shape scale
@@ -53,8 +55,7 @@ class scale_shape_manual(_scale_manual):
         Shapes that make up the palette. See
         :mod:`matplotlib.markers.` for list of all possible
         shapes.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
 
     See Also
     --------
@@ -63,6 +64,7 @@ class scale_shape_manual(_scale_manual):
     aesthetics = ['shape']
 
 
+@document
 class scale_linetype_manual(_scale_manual):
     """
     Custom discrete linetype scale
@@ -71,8 +73,7 @@ class scale_linetype_manual(_scale_manual):
     ----------
     values : array_like
         Linetypes that make up the palette
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
 
     See Also
     --------
@@ -81,6 +82,7 @@ class scale_linetype_manual(_scale_manual):
     aesthetics = ['linetype']
 
 
+@document
 class scale_alpha_manual(_scale_manual):
     """
     Custom discrete alpha scale
@@ -90,12 +92,12 @@ class scale_alpha_manual(_scale_manual):
     values : array_like
         Alpha values (in the [0, 1] range) that make up
         the palette
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['alpha']
 
 
+@document
 class scale_size_manual(_scale_manual):
     """
     Custom discrete size scale
@@ -104,8 +106,7 @@ class scale_size_manual(_scale_manual):
     ----------
     values : array_like
         Sizes that make up the palette
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['size']
 

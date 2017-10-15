@@ -4,10 +4,12 @@ import numpy as np
 from mizani.bounds import rescale_max
 from mizani.palettes import abs_area, area_pal, rescale_pal
 
+from ..doctools import document
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
+@document
 class scale_size_discrete(scale_discrete):
     """
     Discrete area size scale
@@ -17,8 +19,7 @@ class scale_size_discrete(scale_discrete):
     range : array_like
         Minimum and maximum size of the plotting symbol.
         It must be of size 2.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['size']
 
@@ -31,6 +32,7 @@ class scale_size_discrete(scale_discrete):
         scale_discrete.__init__(self, **kwargs)
 
 
+@document
 class scale_size_continuous(scale_continuous):
     """
     Continuous area size scale
@@ -40,8 +42,7 @@ class scale_size_continuous(scale_continuous):
     range : array_like
         Minimum and maximum area of the plotting symbol.
         It must be of size 2.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['size']
 
@@ -53,6 +54,7 @@ class scale_size_continuous(scale_continuous):
 alias('scale_size', scale_size_continuous)
 
 
+@document
 class scale_size_radius(scale_continuous):
     """
     Continuous radius size scale
@@ -62,8 +64,7 @@ class scale_size_radius(scale_continuous):
     range : array_like
         Minimum and maximum radius of the plotting symbol.
         It must be of size 2.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['size']
 
@@ -72,6 +73,7 @@ class scale_size_radius(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
+@document
 class scale_size_area(scale_continuous):
     """
     Continuous area size scale
@@ -80,8 +82,7 @@ class scale_size_area(scale_continuous):
     ----------
     max_size : float
         Maximum size of the plotting symbol.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
     """
     aesthetics = ['size']
     rescaler = staticmethod(rescale_max)
@@ -91,6 +92,7 @@ class scale_size_area(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
+@document
 class scale_size_datetime(scale_datetime):
     """
     Datetime area-size scale
@@ -100,8 +102,7 @@ class scale_size_datetime(scale_datetime):
     range : array_like
         Minimum and maximum area of the plotting symbol.
         It must be of size 2.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_datetime`
+    {superclass_parameters}
     """
     aesthetics = ['size']
 

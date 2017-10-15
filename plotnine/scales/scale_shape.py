@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from mizani.palettes import manual_pal
 
+from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
@@ -41,6 +42,7 @@ unfilled_shapes = (
 )
 
 
+@document
 class scale_shape(scale_discrete):
     """
     Scale for shapes
@@ -50,8 +52,7 @@ class scale_shape(scale_discrete):
     unfilled : bool
         If ``True``, then all shapes will have no interiors
         that can be a filled.
-    kwargs : dict
-        Parameters passed on to :class:`.scale_discrete`
+    {superclass_parameters}
     """
     aesthetics = ['shape']
 
