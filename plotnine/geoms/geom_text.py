@@ -24,7 +24,7 @@ class geom_text(geom):
     {common_parameters}
     parse : bool (default: False)
         If :py:`True`, the labels will be rendered with
-        :ref:`latex <matplotlib:usetex-tutorial>`.
+        `latex <http://matplotlib.org/users/usetex.html>`_.
     family : str (default: None)
         Font family.
     fontweight : int or str (default: normal)

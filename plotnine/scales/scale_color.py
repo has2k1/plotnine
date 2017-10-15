@@ -22,7 +22,6 @@ class scale_color_hue(scale_discrete):
 
     Parameters
     ----------
-    {superclass_parameters}
     h : float
         first hue. Must be in the range [0, 1]
         Default is ``0.01``
@@ -38,6 +37,7 @@ class scale_color_hue(scale_discrete):
         `husl <http://www.husl-colors.org/>`_
     na_value : str
         Color of missing values. Default is ``'#7F7F7F'``
+    {superclass_parameters}
     """
     aesthetics = ['color']
     na_value = '#7F7F7F'
@@ -68,13 +68,13 @@ class scale_color_brewer(scale_discrete):
 
     Parameters
     ----------
-    {superclass_parameters}
     type : 'seq' | 'div' | 'qual'
         Type of data. Sequential, diverging or qualitative
     palette : int | str
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
+    {superclass_parameters}
     """
     aesthetics = ['color']
 
@@ -356,16 +356,16 @@ class scale_color_cmap(scale_continuous):
 
     Parameters
     ----------
-    {superclass_parameters}
     name : str
-        A standard Matplotlib colormap name. The default
-        is `viridis`. For the list of names checkout the
-        output of ``matplotlib.cm.cmap_d.keys()`` or see
-        the :ref:`documentation <matplotlib:colormaps>`.
+        A standard Matplotlib colormap name. The default is
+        `viridis`. For the list of names checkout the output
+        of ``matplotlib.cm.cmap_d.keys()`` or see the
+        `documentation <http://matplotlib.org/users/colormaps.html>`_.
     lut : None | int
         This is the number of entries desired in the
         lookup table. Default is `None`, leave it up
         Matplotlib.
+    {superclass_parameters}
 
     See Also
     --------
