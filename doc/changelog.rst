@@ -26,6 +26,7 @@ New Features
 ************
 
 - Added :class:`~plotnine.animation.PlotnineAnimation` for animations.
+- Added :class:`~plotnine.watermark.watermark` for watermarks.
 - Added datetime scales for ``alpha``, ``colour``, ``fill`` and ``size``
   aesthetics
 

@@ -16,6 +16,7 @@ Plot creation
    ggplot
    qplot
    aes
+   ~watermark.watermark
    ~layer.layer
    ~layer.Layers
    ~animation.PlotnineAnimation

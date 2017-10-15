@@ -76,6 +76,7 @@ class ggplot(object):
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = None
         self.figure = None
+        self.watermarks = []
         self.axs = None
 
     def __repr__(self):
@@ -175,6 +176,7 @@ class ggplot(object):
                 self._draw_labels()
                 self._draw_legend()
                 self._draw_title()
+                self._draw_watermarks()
                 # Artist object theming
                 self._apply_theme()
         except Exception as err:
@@ -551,6 +553,13 @@ class ggplot(object):
 
         text = figure.text(x, y, title, ha='center', va='center')
         figure._themeable['plot_title'] = text
+
+    def _draw_watermarks(self):
+        """
+        Draw watermark onto figure
+        """
+        for wm in self.watermarks:
+            wm.draw(self.figure)
 
     def _apply_theme(self):
         """

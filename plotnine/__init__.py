@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from .qplot import qplot            # noqa: F401
 from .ggplot import ggplot, ggsave  # noqa: F401
+from .watermark import watermark    # noqa: F401
 from .aes import *                  # noqa: F401,F403,E261
 from .labels import *               # noqa: F401,F403,E261
 from .coords import *               # noqa: F401,F403,E261
