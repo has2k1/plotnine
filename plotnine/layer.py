@@ -28,17 +28,9 @@ class Layers(list):
     """
     List of layers
 
-    The list should contain one of:
-
-    1. :class:`~plotnine.layer.layer` objects - This is how
-       it is used internally.
-    2. ``geom`` or ``stat`` objects - In this use case it holds
-       a group of ``geoms`` or ``stats`` that can be added to a
-       :class:`~plotnine.ggplot` object as single unit.
-
-    ``Layers`` is used internally and you should rarely need to
-    use it as described in the 2nd case. When you have to use it
-    you will know.
+    During the plot building pipeline, many operations are
+    applied at all layers in the plot. This class makes those
+    tasks easier.
     """
 
     def __iadd__(self, other):

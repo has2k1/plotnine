@@ -225,3 +225,16 @@ def test_rrshift_piping():
 
     with pytest.raises(TypeError):
         'not a dataframe' >> ggplot(aes('x', 'y')) + geom_point()
+
+
+def test_adding_list_ggplot():
+    lst = [
+        geom_point(),
+        geom_point(aes('x+1', 'y+1')),
+        xlab('x-label'),
+        coord_trans()
+    ]
+    g = ggplot() + lst
+    assert len(g.layers) == 2
+    assert g.labels['x'] == 'x-label'
+    assert isinstance(g.coordinates, coord_trans)

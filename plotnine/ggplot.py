@@ -117,6 +117,24 @@ class ggplot(object):
         except TypeError:
             return other.__radd__(self)
 
+    def __add__(self, other):
+        """
+        Add to ggitems from a list
+
+        Parameters
+        ----------
+        other : object or list
+            Either an object that knows how to "radd"
+            itself to a ggplot, or a list of such objects.
+        """
+        if isinstance(other, list):
+            self = deepcopy(self)
+            for item in other:
+                self += item
+            return self
+        else:
+            return other.__radd__(self)
+
     def __rrshift__(self, other):
         """
         Overload the >> operator to receive a dataframe

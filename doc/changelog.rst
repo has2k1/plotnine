@@ -65,6 +65,19 @@ Enhancements
 - :func:`~plotnine.qplot` can now use the name and a Pandas series to
   label the scales of the aesthetics.
 
+- You can now put stuff to add to a ggplot object into a list and add that
+  that instead. No need to wrap the list around the internal class
+  `Layers`.
+
+  .. code-block:: python
+
+     lst = [geom_point(), geom_line()]
+     g = ggplot(df, aes('x', 'y'))
+     print(g + lst)
+
+  Using a list allows you to bundle up objects. I can be convenient when
+  creating some complicated plots. See the Periodic Table Example.
+
 Bug Fixes
 *********
 
