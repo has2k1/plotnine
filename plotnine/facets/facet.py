@@ -359,7 +359,7 @@ class facet(object):
         try:
             margin = self.theme.themeables.property(
                 strip_name, 'margin')
-        except:
+        except KeyError:
             m1, m2 = 3, 3
         else:
             m1 = margin.get_as(side1, 'pt')
