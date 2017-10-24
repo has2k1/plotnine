@@ -354,3 +354,16 @@ def test_make_scale_and_datetimes():
     assert correct_scale(make_scale('fill', x), 'scale_fill_datetime')
     assert correct_scale(make_scale('size', x), 'scale_size_datetime')
     assert correct_scale(make_scale('alpha', x), 'scale_alpha_datetime')
+
+
+def test_scale_continous_breaks():
+    sc = scale_xy
+    x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    breaks = [2, 4, 6, 8, 10]
+
+    # Array breaks should not trip up the conditional checks
+    s1 = sc.scale_x_continuous(breaks=breaks, limits=(1, 10))
+    s2 = sc.scale_x_continuous(breaks=np.array(breaks), limits=(1, 10))
+    s1.train(x)
+    s2.train(x)
+    assert list(s1.get_breaks()) == list(s2.get_breaks())

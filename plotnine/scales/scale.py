@@ -605,7 +605,7 @@ class scale_continuous(scale):
 
         if self.is_empty():
             breaks = []
-        elif self.breaks in (None, False):
+        elif self.breaks is None or self.breaks is False:
             breaks = []
         elif zero_range(_limits):
             breaks = [_limits[0]]
