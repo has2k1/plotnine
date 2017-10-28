@@ -50,7 +50,7 @@ def get_required_packages():
                         'mizani >= 0.3.4',
                         'matplotlib >= 2.0.0',
                         'numpy',
-                        'scipy',
+                        'scipy >= 1.0.0',
                         'patsy >= 0.4.1',
                         'statsmodels >= 0.8.0',
                         'pandas >= 0.20.1',
