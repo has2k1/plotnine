@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import, unicode_literals
+import os
 
 import pandas as pd
-import os
+from pandas.api.types import CategoricalDtype
 
 __all__ = ['diamonds', 'economics', 'economics_long',
            'midwest', 'mpg', 'msleep', 'presidential',
@@ -43,14 +44,14 @@ def _ordered_categories(df, categories):
         the ordered category list
     """
     for col, cats in categories.items():
-        df[col] = df[col].astype('category', categories=cats, ordered=True)
+        df[col] = df[col].astype(CategoricalDtype(cats, ordered=True))
     return df
 
 
 def _unordered_categories(df, columns):
     """Make the columns in df categorical"""
     for col in columns:
-        df[col] = df[col].astype('category', ordered=False)
+        df[col] = df[col].astype(CategoricalDtype(ordered=False))
     return df
 
 
