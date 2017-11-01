@@ -367,3 +367,14 @@ def test_scale_continous_breaks():
     s1.train(x)
     s2.train(x)
     assert list(s1.get_breaks()) == list(s2.get_breaks())
+
+
+def test_scale_without_a_mapping():
+    df = pd.DataFrame({
+        'x': [1, 2, 3],
+    })
+    p = (ggplot(df, aes('x', 'x'))
+         + geom_point()
+         + scale_color.scale_color_continuous())
+    with pytest.warns(UserWarning):
+        p.draw_test()

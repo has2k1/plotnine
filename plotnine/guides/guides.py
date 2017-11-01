@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from copy import deepcopy
+from warnings import warn
 
 import pandas as pd
 import numpy as np
@@ -190,7 +191,13 @@ class guides(dict):
                 if scale.name:
                     guide.title = scale.name
                 else:
-                    guide.title = str(plot.labels[output])
+                    try:
+                        guide.title = str(plot.labels[output])
+                    except KeyError:
+                        warn("Cannot generate legend for the {!r} "
+                             "aesthetic. Make sure you have mapped a "
+                             "variable to it".format(output))
+                        continue
 
             # each guide object trains scale within the object,
             # so Guides (i.e., the container of guides)
