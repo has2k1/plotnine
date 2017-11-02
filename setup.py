@@ -47,7 +47,7 @@ def get_required_packages():
     Plus any version tests and warnings
     """
     install_requires = ['six',
-                        'mizani >= 0.3.4',
+                        'mizani >= 0.4.0',
                         'matplotlib >= 2.0.0',
                         'numpy',
                         'scipy',
