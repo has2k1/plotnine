@@ -7,9 +7,14 @@ from ..utils import alias
 from .scale import scale_discrete
 
 
+@document
 class _scale_manual(scale_discrete):
     """
     Abstract class for manual scales
+
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     def __init__(self, values, **kwargs):
         self.palette = manual_pal(values)
@@ -24,7 +29,7 @@ class scale_color_manual(_scale_manual):
     Parameters
     ----------
     values : array_like
-        Colors that make up the palette
+        Colors that make up the palette.
     {superclass_parameters}
     """
     aesthetics = ['color']
@@ -38,7 +43,7 @@ class scale_fill_manual(_scale_manual):
     Parameters
     ----------
     values : array_like
-        Colors that make up the palette
+        Colors that make up the palette.
     {superclass_parameters}
     """
     aesthetics = ['fill']
@@ -72,7 +77,7 @@ class scale_linetype_manual(_scale_manual):
     Parameters
     ----------
     values : array_like
-        Linetypes that make up the palette
+        Linetypes that make up the palette.
     {superclass_parameters}
 
     See Also
@@ -91,7 +96,7 @@ class scale_alpha_manual(_scale_manual):
     ----------
     values : array_like
         Alpha values (in the [0, 1] range) that make up
-        the palette
+        the palette.
     {superclass_parameters}
     """
     aesthetics = ['alpha']
@@ -105,7 +110,7 @@ class scale_size_manual(_scale_manual):
     Parameters
     ----------
     values : array_like
-        Sizes that make up the palette
+        Sizes that make up the palette.
     {superclass_parameters}
     """
     aesthetics = ['size']

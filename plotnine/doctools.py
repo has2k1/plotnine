@@ -502,10 +502,9 @@ def document(cls):
     if cls.__doc__ is None:
         return cls
 
-    end = cls.__name__.find('_')
-    basename = cls.__name__[:end]
+    baseclass_name = cls.mro()[-2].__name__
 
     try:
-        return DOC_FUNCTIONS[basename](cls)
+        return DOC_FUNCTIONS[baseclass_name](cls)
     except KeyError:
         return cls

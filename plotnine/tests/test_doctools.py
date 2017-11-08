@@ -36,7 +36,7 @@ class mixin(object):
 
 
 @document
-class scale_expand_earth(scale_expand, mixin):
+class scale_expand_earth(mixin, scale_expand):
     """
     Expand Earth
 

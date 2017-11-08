@@ -18,9 +18,14 @@ from .scale import scale_discrete, scale_continuous, scale_datetime
 # scale_position_discrete and scale_position_continuous
 # are intermediate base classes where the required overriding
 # is done
+@document
 class scale_position_discrete(scale_discrete):
     """
     Base class for discrete position scales
+
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     # All positions have no guide
     guide = None
@@ -106,9 +111,14 @@ class scale_position_discrete(scale_discrete):
             return a.min(), a.max()
 
 
+@document
 class scale_position_continuous(scale_continuous):
     """
     Base class for continuous position scales
+
+    Parameters
+    ----------
+    {superclass_parameters}
     """
     # All positions have no guide
     guide = None
