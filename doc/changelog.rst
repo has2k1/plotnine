@@ -20,6 +20,9 @@ New Features
 - Add :class:`~plotnine.stats.geom_qq_line` and
   :class:`~plotnine.stats.stat_qq_line`, for lines through Q-Q plots.
 
+- Added :class:`~plotnine.geoms.geom_density_2d` and
+  :class:`~plotnine.geoms.geom_stat_2d`.
+
 Bug Fixes
 *********
 

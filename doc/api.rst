@@ -39,6 +39,7 @@ geoms
    geom_count
    geom_crossbar
    geom_density
+   geom_density_2d
    geom_dotplot
    geom_errorbar
    geom_errorbarh
@@ -110,6 +111,7 @@ stats
    stat_boxplot
    stat_count
    stat_density
+   stat_density_2d
    stat_ecdf
    stat_function
    stat_identity
@@ -528,6 +530,7 @@ datasets
    diamonds
    economics
    economics_long
+   faithful
    faithfuld
    huron
    luv_colours

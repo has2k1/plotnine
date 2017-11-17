@@ -13,6 +13,7 @@ from .geom_col import geom_col
 from .geom_count import geom_count
 from .geom_crossbar import geom_crossbar
 from .geom_density import geom_density
+from .geom_density_2d import geom_density_2d
 from .geom_dotplot import geom_dotplot
 from .geom_errorbar import geom_errorbar
 from .geom_errorbarh import geom_errorbarh
@@ -50,7 +51,8 @@ from .annotate import annotate
 __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
            'geom_blank',
            'geom_boxplot', 'geom_col', 'geom_count', 'geom_crossbar',
-           'geom_density', 'geom_dotplot', 'geom_errorbar',
+           'geom_density', 'geom_density_2d',
+           'geom_dotplot', 'geom_errorbar',
            'geom_errorbarh', 'geom_freqpoly', 'geom_histogram',
            'geom_hline', 'geom_jitter', 'geom_label', 'geom_line',
            'geom_linerange', 'geom_path', 'geom_point',

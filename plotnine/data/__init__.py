@@ -9,7 +9,7 @@ from pandas.api.types import CategoricalDtype
 __all__ = ['diamonds', 'economics', 'economics_long',
            'midwest', 'mpg', 'msleep', 'presidential',
            'seals', 'txhousing', 'luv_colours',
-           'faithfuld',
+           'faithful', 'faithfuld',
            # extras for backward compatibility!
            'huron', 'meat', 'mtcars', 'pageviews']
 
@@ -29,6 +29,7 @@ presidential = pd.read_csv(os.path.join(_ROOT, 'presidential.csv'),
 txhousing = pd.read_csv(os.path.join(_ROOT, 'txhousing.csv'))
 luv_colours = pd.read_csv(os.path.join(_ROOT, 'luv_colours.csv'))
 faithfuld = pd.read_csv(os.path.join(_ROOT, 'faithfuld.csv'))
+faithful = pd.read_csv(os.path.join(_ROOT, 'faithful.csv'))
 
 
 # add factors
@@ -282,7 +283,7 @@ col     Colour name
 ======  ============================
 """
 
-faithfuld.__doc__ = """
+faithful.__doc__ = """
 Old Faithful Geyser Data
 
 .. rubric:: Description
@@ -300,6 +301,51 @@ Column       Description
 ==========   ========================================
 eruptions    Eruption time in mins
 waiting	     Waiting time to next eruption (in mins)
+==========   ========================================
+
+.. rubric:: Details
+
+A closer look at `faithful.eruptions` reveals that these are
+heavily rounded times originally in seconds, where multiples
+of 5 are more frequent than expected under non-human measurement.
+For a better version of the eruption times, see the example below.
+
+There are many versions of this dataset around:
+Azzalini and Bowman (1990) use a more complete version.
+
+.. rubric:: Source
+
+W. Härdle.
+
+.. rubric:: References
+
+Härdle, W. (1991) *Smoothing Techniques with Implementation in S*.
+New York: Springer.
+
+Azzalini, A. and Bowman, A. W. (1990). A look at some data
+on the Old Faithful geyser. **Applied Statistics** *39*, 357–365.
+"""
+
+faithfuld.__doc__ = """
+Old Faithful Geyser Data
+
+.. rubric:: Description
+
+Waiting time between eruptions and the duration of the
+eruption for the Old Faithful geyser in Yellowstone
+National Park, Wyoming, USA.
+
+.. rubric:: Format
+
+A data frame with *grid data* for 272 observations on 2
+variables and the density at those locations.
+
+==========   ========================================
+Column       Description
+==========   ========================================
+eruptions    Eruption time in mins
+waiting	     Waiting time to next eruption (in mins)
+density	     Density Estimate
 ==========   ========================================
 
 .. rubric:: Details

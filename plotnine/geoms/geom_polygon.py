@@ -54,7 +54,11 @@ class geom_polygon(geom):
         linestyle = [None] * ngroups
         linewidth = [None] * ngroups
 
-        for i, (group, df) in enumerate(data.groupby('group')):
+        # Some stats may order the data in ways that prevent
+        # objects from occluding other objects. We do not want
+        # to undo that order.
+        grouper = data.groupby('group', sort=False)
+        for i, (group, df) in enumerate(grouper):
             verts[i] = tuple(zip(df['x'], df['y']))
             fill = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
             facecolor[i] = 'none' if fill is None else fill
