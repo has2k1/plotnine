@@ -74,12 +74,12 @@ class stat_density(stat):
 
     ::
 
-        '..density..'   # density estimate
+        'density'   # density estimate
 
-        '..count..'     # density * number of points,
-                        # useful for stacked density plots
+        'count'     # density * number of points,
+                      # useful for stacked density plots
 
-        '..scaled..'    # density estimate, scaled to maximum of 1
+        'scaled'    # density estimate, scaled to maximum of 1
 
     See Also
     --------
@@ -94,7 +94,7 @@ class stat_density(stat):
                       'trim': False, 'n': 1024, 'gridsize': None,
                       'bw': 'normal_reference', 'cut': 3,
                       'clip': (-np.inf, np.inf)}
-    DEFAULT_AES = {'y': '..density..'}
+    DEFAULT_AES = {'y': 'calc(density)'}
     CREATES = {'density', 'count', 'scaled', 'n'}
 
     def setup_params(self, data):

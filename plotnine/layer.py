@@ -12,7 +12,8 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, is_calculated_aes, strip_dots, make_labels
+from .aes import aes, get_calculated_aes, calc, make_labels
+from .aes import strip_calculated_markers
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -272,7 +273,7 @@ class layer(object):
             aesthetics = self.mapping
 
         # drop aesthetic parameters or the calculated aesthetics
-        calculated = set(is_calculated_aes(aesthetics))
+        calculated = set(get_calculated_aes(aesthetics))
         d = dict((ae, v) for ae, v in aesthetics.items()
                  if (ae not in self.geom.aes_params) and
                  (ae not in calculated))
@@ -384,13 +385,15 @@ class layer(object):
         # 'count' is the computed column in data
         new = {}  # {'aesthetic_name': 'calculated_stat'}
         stat_data = type(data)()
-        for ae in is_calculated_aes(aesthetics):
-            new[ae] = strip_dots(aesthetics[ae])
+        calc_namespace = dict(calc=calc)
+        env = plot.environment.with_outer_namespace(calc_namespace)
+        for ae in get_calculated_aes(aesthetics):
+            new[ae] = strip_calculated_markers(aesthetics[ae])
             # In conjuction with the pd.concat at the end,
             # be careful not to create duplicate columns
             # for cases like y='..y..'
             if new[ae] != ae:
-                stat_data[ae] = plot.environment.eval(
+                stat_data[ae] = env.eval(
                     new[ae], inner_namespace=data)
 
         if not new:

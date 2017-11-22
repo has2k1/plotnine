@@ -67,10 +67,13 @@ class stat_summary_bin(stat):
 
     ::
 
-        '..bin..'    # bin identifier
-        '..width..'  # bin width
-        '..ymin..'   # ymin computed by the summary function
-        '..ymax..'   # ymax computed by the summary function
+        'bin'    # bin identifier
+        'width'  # bin width
+        'ymin'   # ymin computed by the summary function
+        'ymax'   # ymax computed by the summary function
+
+    Calculated aesthetics are accessed using the `calc` function.
+    e.g. :py:`'calc(ymin)'`.
 
     Note
     ----

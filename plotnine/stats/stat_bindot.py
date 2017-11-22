@@ -65,10 +65,10 @@ class stat_bindot(stat):
 
     ::
 
-         '..count..'    # number of points in bin
-         '..density..'  # density of points in bin, scaled to integrate to 1
-         '..ncount..'   # count, scaled to maximum of 1
-         '..ndensity..' # density, scaled to maximum of 1
+         'count'    # number of points in bin
+         'density'  # density of points in bin, scaled to integrate to 1
+         'ncount'   # count, scaled to maximum of 1
+         'ndensity' # density, scaled to maximum of 1
 
     See Also
     --------
@@ -82,7 +82,7 @@ class stat_bindot(stat):
                       'method': 'dotdensity', 'binpositions': 'bygroup',
                       'drop': False, 'right': True, 'na_rm': False,
                       'breaks': None}
-    DEFAULT_AES = {'y': '..count..'}
+    DEFAULT_AES = {'y': 'calc(count)'}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
     def setup_params(self, data):

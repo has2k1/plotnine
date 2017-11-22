@@ -35,15 +35,15 @@ class stat_qq(stat):
 
     ::
 
-         '..theoretical..'  # theoretical quantiles
-         '..sample..'       # sample quantiles
+         'theoretical'  # theoretical quantiles
+         'sample'       # sample quantiles
 
     See Also
     --------
     :func:`scipy.stats.probplot` calculates the quantiles.
     """
     REQUIRED_AES = {'sample'}
-    DEFAULT_AES = {'x': '..theoretical..', 'y': '..sample..'}
+    DEFAULT_AES = {'x': 'calc(theoretical)', 'y': 'calc(sample)'}
     DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
                       'na_rm': False,
                       'distribution': 'norm', 'dparams': ()}

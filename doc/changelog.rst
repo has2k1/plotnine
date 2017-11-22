@@ -11,6 +11,12 @@ Bug Fixes
 - Fixed issue where colorbars may chop off the colors at the limits
   of a scale.
 
+API Changes
+***********
+
+- Calculated aesthetics are accessed using the `~plotnine.aes.calc` function.
+  The old method (double dots ``..name..``) still works.
+
 v0.3.0
 ------
 *(2017-11-08)*

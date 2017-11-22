@@ -30,8 +30,8 @@ class stat_count(stat):
 
     ::
 
-        '..count..'  # Number of observations at a position
-        '..prop..'   # Ratio of points in the panel at a position
+        'count'  # Number of observations at a position
+        'prop'   # Ratio of points in the panel at a position
 
     See Also
     --------
@@ -40,7 +40,7 @@ class stat_count(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'na_rm': False, 'width': None}
-    DEFAULT_AES = {'y': '..count..'}
+    DEFAULT_AES = {'y': 'calc(count)'}
     CREATES = {'count', 'prop'}
 
     @classmethod

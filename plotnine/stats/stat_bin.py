@@ -55,10 +55,10 @@ class stat_bin(stat):
 
     ::
 
-         '..count..'    # number of points in bin
-         '..density..'  # density of points in bin, scaled to integrate to 1
-         '..ncount..'   # count, scaled to maximum of 1
-         '..ndensity..' # density, scaled to maximum of 1
+         'count'    # number of points in bin
+         'density'  # density of points in bin, scaled to integrate to 1
+         'ncount'   # count, scaled to maximum of 1
+         'ndensity' # density, scaled to maximum of 1
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
@@ -66,7 +66,7 @@ class stat_bin(stat):
                       'breaks': None, 'center': None,
                       'boundary': None, 'closed': 'right',
                       'pad': False}
-    DEFAULT_AES = {'y': '..count..', 'weight': None}
+    DEFAULT_AES = {'y': 'calc(count)', 'weight': None}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
     def setup_params(self, data):

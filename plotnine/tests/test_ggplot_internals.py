@@ -10,7 +10,7 @@ from plotnine import geom_line, geom_bar
 from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
-from plotnine.aes import is_calculated_aes, strip_dots
+from plotnine.aes import get_calculated_aes, strip_calculated_markers
 from plotnine.aes import is_valid_aesthetic
 from plotnine.exceptions import PlotnineError
 
@@ -134,22 +134,44 @@ def test_valid_aes_colors():
 
 
 def test_calculated_aes():
+    _strip = strip_calculated_markers
+
+    # calc(ae)
+    mapping1 = aes('x', y='calc(density)')
+    mapping2 = aes('x', y='calc(density*2)')
+    mapping3 = aes('x', y='calc(density + count)')
+    mapping4 = aes('x', y='func(calc(density))')
+
+    assert get_calculated_aes(mapping1) == ['y']
+    assert get_calculated_aes(mapping2) == ['y']
+    assert get_calculated_aes(mapping3) == ['y']
+    assert get_calculated_aes(mapping4) == ['y']
+
+    assert _strip(mapping1['y']) == 'density'
+    assert _strip(mapping2['y']) == 'density*2'
+    assert _strip(mapping3['y']) == 'density + count'
+    assert _strip(mapping4['y']) == 'func(density)'
+
+    # ..ae..
     mapping1 = aes('x', y='..density..')
     mapping2 = aes('x', y='..density..*2')
     mapping3 = aes('x', y='..density.. + ..count..')
     mapping4 = aes('x', y='func(..density..)')
 
-    assert is_calculated_aes(mapping1) == ['y']
-    assert is_calculated_aes(mapping2) == ['y']
-    assert is_calculated_aes(mapping3) == ['y']
-    assert is_calculated_aes(mapping4) == ['y']
+    assert get_calculated_aes(mapping1) == ['y']
+    assert get_calculated_aes(mapping2) == ['y']
+    assert get_calculated_aes(mapping3) == ['y']
+    assert get_calculated_aes(mapping4) == ['y']
 
-    assert strip_dots(mapping1['y']) == 'density'
-    assert strip_dots(mapping2['y']) == 'density*2'
-    assert strip_dots(mapping3['y']) == 'density + count'
-    assert strip_dots(mapping4['y']) == 'func(density)'
+    assert _strip(mapping1['y']) == 'density'
+    assert _strip(mapping2['y']) == 'density*2'
+    assert _strip(mapping3['y']) == 'density + count'
+    assert _strip(mapping4['y']) == 'func(density)'
 
     df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    p = ggplot(df) + geom_bar(aes(x='x', fill='calc(count + 2)'))
+    p.draw_test()
+
     p = ggplot(df) + geom_bar(aes(x='x', fill='..count.. + 2'))
     p.draw_test()
 

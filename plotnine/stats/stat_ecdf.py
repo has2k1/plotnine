@@ -29,8 +29,8 @@ class stat_ecdf(stat):
 
     ::
 
-        '..x..'  # x in the data
-        '..y..'  # cumulative density corresponding to x
+        'x'  # x in the data
+        'y'  # cumulative density corresponding to x
 
     See Also
     --------
@@ -39,7 +39,7 @@ class stat_ecdf(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
                       'na_rm': False, 'n': None}
-    DEFAULT_AES = {'y': '..y..'}
+    DEFAULT_AES = {'y': 'calc(y)'}
     CREATES = {'y'}
 
     @classmethod

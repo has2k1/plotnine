@@ -101,9 +101,12 @@ class stat_smooth(stat):
 
     ::
 
-         '..se..'    # Standard error of points in bin
-         '..ymin..'  # Lower confidence limit
-         '..ymax..'  # Upper confidence limit
+         'se'    # Standard error of points in bin
+         'ymin'  # Lower confidence limit
+         'ymax'  # Upper confidence limit
+
+    Calculated aesthetics are accessed using the `calc` function.
+    e.g. :py:`'calc(se)'`.
 
     See Also
     --------

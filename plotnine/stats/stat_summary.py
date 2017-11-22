@@ -159,8 +159,12 @@ class stat_summary(stat):
 
     ::
 
-        '..ymin..'  # ymin computed by the summary function
-        '..ymax..'  # ymax computed by the summary function
+        'ymin'  # ymin computed by the summary function
+        'ymax'  # ymax computed by the summary function
+
+
+    Calculated aesthetics are accessed using the `calc` function.
+    e.g. :py:`'calc(ymin)'`.
 
     Note
     ----

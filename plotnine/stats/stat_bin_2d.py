@@ -44,15 +44,15 @@ class stat_bin_2d(stat):
 
     ::
 
-        '..count..'   # number of points in bin
-        '..density..' # density of points in bin, scaled to integrate to 1
+        'count'   # number of points in bin
+        'density' # density of points in bin, scaled to integrate to 1
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
                       'na_rm': False,
                       'bins': 30, 'breaks': None, 'binwidth': None,
                       'drop': True}
-    DEFAULT_AES = {'fill': '..count..', 'weight': None}
+    DEFAULT_AES = {'fill': 'calc(count)', 'weight': None}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density'}
 
     def setup_params(self, data):

@@ -20,7 +20,10 @@ scaled_aesthetics = {
     'linetype', 'shape', 'size', 'stroke'
 }
 
-CALCULATED_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
+
+# Calculated aesthetics searchers
+CALC_RE = re.compile(r'\bcalc\(')
+DOTS_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
 
 
 class aes(dict):
@@ -75,10 +78,15 @@ class aes(dict):
             ggplot(df, aes(x='alpha', y='np.sin(beta)'))
             ggplot(df, aes(x='df.index', y='beta'))
 
+            # If `count` is an aesthetic calculated by a stat
+            ggplot(df, aes(x='alpha', y='calc(count)'))
+            ggplot(df, aes(x='alpha', y='calc(count/np.max(count))'))
+
       The strings in the expression can refer to;
 
         1. columns in the dataframe
         2. variables in the namespace
+        3. aesthetic values (columns) calculated by the ``stat``
 
       with the column names having precedence over the variables.
       For expressions, columns in the dataframe that are mapped to
@@ -145,17 +153,129 @@ def rename_aesthetics(d):
     return d
 
 
-def is_calculated_aes(aesthetics):
+def get_calculated_aes(aesthetics):
     """
     Return a list of the aesthetics that are calculated
     """
     calculated_aesthetics = []
-    for k, v in aesthetics.items():
-        if not isinstance(v, six.string_types):
-            continue
-        if CALCULATED_RE.search(v):
-            calculated_aesthetics.append(k)
+    for name, value in aesthetics.items():
+        if is_calculated_aes(value):
+            calculated_aesthetics.append(name)
     return calculated_aesthetics
+
+
+def is_calculated_aes(ae):
+    """
+    Return a True if of the aesthetics that are calculated
+
+    Parameters
+    ----------
+    ae : object
+        Aesthetic mapping
+
+    >>> is_calculated_aes('density')
+    False
+
+    >>> is_calculated_aes(4)
+    False
+
+    >>> is_calculated_aes('..density..')
+    True
+
+    >>> is_calculated_aes('calc(density)')
+    True
+
+    >>> is_calculated_aes('calc(100*density)')
+    True
+
+    >>> is_calculated_aes('100*calc(density)')
+    True
+    """
+    if not isinstance(ae, six.string_types):
+        return False
+
+    for pattern in (CALC_RE, DOTS_RE):
+        if pattern.search(ae):
+            return True
+
+    return False
+
+
+def calc(x):
+    """
+    Return calculated aesthetic
+
+    Aesthetics wrapped around the calc function evaluated
+    *after* the statistics have been calculated. This gives
+    the user a chance to use any aesthetic columns created
+    by the statistic.
+
+    Paremeters
+    ----------
+    x : object
+        An expression
+    """
+    return x
+
+
+def strip_calc(value):
+    """
+    Remove calc function that mark calculated aesthetics
+
+    Parameters
+    ----------
+    value : object
+        Aesthetic value. In most cases this will be a string
+        but other types will pass through unmodified.
+
+    Return
+    ------
+    out : object
+        Aesthetic value with the dots removed.
+
+    >>> strip_calc('calc(density + calc(count))')
+    density + count
+
+    >>> strip_calc('calc(density) + 5')
+    density + 5
+
+    >>> strip_calc('5 + calc(func(density))')
+    5 + func(density)
+
+    >>> strip_calc('calc(func(density) + var1)')
+    func(density) + var1
+
+    >>> strip_calc('calc + var1')
+    calc + var1
+
+    >>> strip_calc(4)
+    4
+    """
+    def strip_hanging_closing_parens(s):
+        """
+        Remove leftover  parens
+        """
+        # Use and integer stack to track parens
+        # and ignore leftover closing parens
+        stack = 0
+        idx = []
+        for i, c in enumerate(s):
+            if c == '(':
+                stack += 1
+            elif c == ')':
+                stack -= 1
+                if stack < 0:
+                    idx.append(i)
+                    stack = 0
+                    continue
+            yield c
+
+    with suppress(TypeError):
+        if CALC_RE.search(value):
+            value = re.sub(r'\bcalc\(', '', value)
+            value = ''.join(strip_hanging_closing_parens(value))
+
+    return value
 
 
 def strip_dots(value):
@@ -174,8 +294,26 @@ def strip_dots(value):
         Aesthetic value with the dots removed.
     """
     with suppress(TypeError):
-        value = CALCULATED_RE.sub(r'\1', value)
+        value = DOTS_RE.sub(r'\1', value)
     return value
+
+
+def strip_calculated_markers(value):
+    """
+    Remove markers for calculated aesthetics
+
+    Parameters
+    ----------
+    value : object
+        Aesthetic value. In most cases this will be a string
+        but other types will pass through unmodified.
+
+    Return
+    ------
+    out : object
+        Aesthetic value with the dots removed.
+    """
+    return strip_calc(strip_dots(value))
 
 
 def aes_to_scale(var):
@@ -205,7 +343,7 @@ def make_labels(mapping):
     """
     labels = mapping.copy()
     for ae in labels:
-        labels[ae] = strip_dots(labels[ae])
+        labels[ae] = strip_calculated_markers(labels[ae])
     return labels
 
 

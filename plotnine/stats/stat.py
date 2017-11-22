@@ -6,7 +6,7 @@ import six
 import pandas as pd
 from six import add_metaclass
 
-from ..aes import is_calculated_aes
+from ..aes import get_calculated_aes
 from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import groupby_apply, copy_keys, uniquecols
 from ..utils import is_string, Registry, check_required_aesthetics
@@ -112,7 +112,7 @@ class stat(object):
         Return a set of all non-computed aesthetics for this stat.
         """
         aesthetics = cls.REQUIRED_AES.copy()
-        calculated = is_calculated_aes(cls.DEFAULT_AES)
+        calculated = get_calculated_aes(cls.DEFAULT_AES)
         for ae in set(cls.DEFAULT_AES) - set(calculated):
             aesthetics.add(ae)
         return aesthetics

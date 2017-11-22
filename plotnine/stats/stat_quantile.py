@@ -35,8 +35,11 @@ class stat_quantile(stat):
 
     ::
 
-         '..quantile..'  # quantile
-         '..group..'     # group identifier
+         'quantile'  # quantile
+         'group'     # group identifier
+
+    Calculated aesthetics are accessed using the `calc` function.
+    e.g. :py:`'calc(quantile)'`.
 
     See Also
     --------
