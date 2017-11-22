@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.3.1
+------
+*(not-yet-released)*
+
+Bug Fixes
+*********
+
+- Fixed issue where colorbars may chop off the colors at the limits
+  of a scale.
+
 v0.3.0
 ------
 *(2017-11-08)*

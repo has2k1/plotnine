@@ -241,7 +241,7 @@ class guides(dict):
         df = pd.DataFrame({
             'gdef': gdefs,
             'hash': [g.hash for g in gdefs]})
-        grouped = df.groupby('hash')
+        grouped = df.groupby('hash', sort=False)
         gdefs = []
         for name, group in grouped:
             # merge

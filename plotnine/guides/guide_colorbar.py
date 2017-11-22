@@ -13,7 +13,6 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from matplotlib.offsetbox import AuxTransformBox
 from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
-from mizani.breaks import extended_breaks
 
 from ..aes import rename_aesthetics
 from ..scales.scale import scale_continuous
@@ -87,9 +86,7 @@ class guide_colorbar(guide):
             'label': scale.get_labels(breaks),
             'value': breaks})
 
-        bar = extended_breaks(n=self.nbin, Q=[1, 2, 5, 10])(limits)
-        # discard locations in bar not in scale.limits
-        bar = bar.compress((limits[0] <= bar) & (bar <= limits[1]))
+        bar = np.linspace(*limits, self.nbin)
         self.bar = pd.DataFrame({
             'color': scale.map(bar),
             'value': bar})
