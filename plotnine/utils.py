@@ -241,7 +241,7 @@ def add_margins(df, vars, margins=True):
 
     for v in merged.columns.intersection(set(categories)):
         merged[v] = merged[v].astype(
-            'category', categories=categories[v])
+           pdtypes.CategoricalDtype(categories[v]))
 
     return merged
 
