@@ -88,8 +88,8 @@ class stat_density_2d(stat):
         group = data['group'].iloc[0]
         range_x = scales.x.dimension()
         range_y = scales.y.dimension()
-        x = np.linspace(*range_x, params['n'])
-        y = np.linspace(*range_y, params['n'])
+        x = np.linspace(range_x[0], range_x[1], params['n'])
+        y = np.linspace(range_y[0], range_y[1], params['n'])
 
         # The grid must have a "similar" shape (n, p) to the var_data
         X, Y = np.meshgrid(x, y)
