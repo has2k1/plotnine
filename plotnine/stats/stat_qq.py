@@ -35,7 +35,8 @@ class stat_qq(stat):
         Probability points at which to calculate the theoretical
         quantile values. If provided, must be the same number as
         as the sample data points. The default is to use calculated
-        theoretical points,   the ``alpha_beta``.
+        theoretical points, use to ``alpha_beta`` control how
+        these points are generated.
     alpha_beta : tuple
         Parameter values to use when calculating the quantiles.
         Default is :py:`(3/8, 3/8)`.
@@ -51,7 +52,8 @@ class stat_qq(stat):
 
     See Also
     --------
-    :func:`scipy.stats.plotting_positions` calculates the quantiles.
+    :func:`scipy.stats.mstats.plotting_positions` uses ``alpha_beta``
+    to calculate the quantiles.
     """
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': 'calc(theoretical)', 'y': 'calc(sample)'}

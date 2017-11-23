@@ -49,7 +49,8 @@ class stat_qq_line(stat):
 
     See Also
     --------
-    :func:`scipy.stats.plotting_positions` calculates the ``quantiles``.
+    :func:`scipy.stats.mstats.plotting_positions` uses ``alpha_beta``
+    to calculate the quantiles.
     """
 
     REQUIRED_AES = {'sample'}
