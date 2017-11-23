@@ -86,7 +86,7 @@ class guide_colorbar(guide):
             'label': scale.get_labels(breaks),
             'value': breaks})
 
-        bar = np.linspace(*limits, self.nbin)
+        bar = np.linspace(limits[0], limits[1], self.nbin)
         self.bar = pd.DataFrame({
             'color': scale.map(bar),
             'value': bar})
