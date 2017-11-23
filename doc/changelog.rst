@@ -5,17 +5,26 @@ v0.3.1
 ------
 *(not-yet-released)*
 
+API Changes
+***********
+
+- Calculated aesthetics are accessed using the :func:`~plotnine.aes.calc`
+  function. The old method (double dots ``..name..``) still works.
+
+- :class:`~plotnine.stats.stat_qq` calculates slightly different points
+  for the theoretical quantiles.
+
+New Features
+************
+
+- Add :class:`~plotnine.stats.geom_qq_line` and
+  :class:`~plotnine.stats.stat_qq_line`, for lines through Q-Q plots.
+
 Bug Fixes
 *********
 
 - Fixed issue where colorbars may chop off the colors at the limits
   of a scale.
-
-API Changes
-***********
-
-- Calculated aesthetics are accessed using the `~plotnine.aes.calc` function.
-  The old method (double dots ``..name..``) still works.
 
 v0.3.0
 ------

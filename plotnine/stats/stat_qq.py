@@ -1,10 +1,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import numpy as np
 import pandas as pd
-from scipy.stats import probplot
+from scipy.stats.mstats import plotting_positions
 
 from ..doctools import document
+from ..exceptions import PlotnineError
+from .distributions import get_continuous_distribution
 from .stat import stat
 
 
@@ -28,6 +31,14 @@ class stat_qq(stat):
     dparams : dict
         Distribution-specific shape parameters (shape parameters plus
         location and scale).
+    quantiles : array_like, optional
+        Probability points at which to calculate the theoretical
+        quantile values. If provided, must be the same number as
+        as the sample data points. The default is to use calculated
+        theoretical points,   the ``alpha_beta``.
+    alpha_beta : tuple
+        Parameter values to use when calculating the quantiles.
+        Default is :py:`(3/8, 3/8)`.
 
     {aesthetics}
 
@@ -40,19 +51,30 @@ class stat_qq(stat):
 
     See Also
     --------
-    :func:`scipy.stats.probplot` calculates the quantiles.
+    :func:`scipy.stats.plotting_positions` calculates the quantiles.
     """
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': 'calc(theoretical)', 'y': 'calc(sample)'}
     DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
                       'na_rm': False,
-                      'distribution': 'norm', 'dparams': ()}
+                      'distribution': 'norm', 'dparams': (),
+                      'quantiles': None, 'alpha_beta': (3/8, 3/8)}
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        theoretical, sample = probplot(data['sample'],
-                                       dist=params['distribution'],
-                                       sparams=params['dparams'],
-                                       fit=False)
+        sample = data['sample'].sort_values()
+        alpha, beta = params['alpha_beta']
+        quantiles = params['quantiles']
+
+        if quantiles is None:
+            quantiles = plotting_positions(sample, alpha, beta)
+        elif len(quantiles) != len(sample):
+            raise PlotnineError(
+                "The number of quantile values is not the same as "
+                "the number of sample values.")
+
+        quantiles = np.asarray(quantiles)
+        cdist = get_continuous_distribution(params['distribution'])
+        theoretical = cdist.ppf(quantiles, *params['dparams'])
         return pd.DataFrame({'sample': sample,
                              'theoretical': theoretical})

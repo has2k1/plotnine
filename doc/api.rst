@@ -56,6 +56,7 @@ geoms
    geom_polygon
    geom_quantile
    geom_qq
+   geom_qq_line
    geom_rect
    geom_ribbon
    geom_rug
@@ -113,6 +114,7 @@ stats
    stat_function
    stat_identity
    stat_qq
+   stat_qq_line
    stat_quantile
    stat_smooth
    stat_sum

@@ -10,6 +10,7 @@ from .stat_ecdf import stat_ecdf
 from .stat_function import stat_function
 from .stat_identity import stat_identity
 from .stat_qq import stat_qq
+from .stat_qq_line import stat_qq_line
 from .stat_quantile import stat_quantile
 from .stat_smooth import stat_smooth
 from .stat_sum import stat_sum
@@ -24,7 +25,8 @@ __all__ = ['stat_count', 'stat_bin',
            'stat_bindot', 'stat_boxplot',
            'stat_density', 'stat_ecdf',
            'stat_function', 'stat_identity',
-           'stat_qq', 'stat_quantile',
+           'stat_qq', 'stat_qq_line',
+           'stat_quantile',
            'stat_smooth', 'stat_sum',
            'stat_summary', 'stat_summary_bin',
            'stat_unique', 'stat_ydensity']
