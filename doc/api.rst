@@ -113,6 +113,7 @@ stats
    stat_density
    stat_density_2d
    stat_ecdf
+   stat_ellipse
    stat_function
    stat_identity
    stat_qq
