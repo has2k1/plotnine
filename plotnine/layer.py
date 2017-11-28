@@ -5,6 +5,7 @@ import six
 from copy import copy, deepcopy
 
 import pandas as pd
+import numpy as np
 import matplotlib.cbook as cbook
 import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
@@ -330,8 +331,7 @@ class layer(object):
                 elif len(evaled) and n == 1:
                     col = col[0]
                 evaled[ae] = col
-            elif not cbook.iterable(col) and cbook.is_numlike(col):
-                # An empty dataframe does not admit a scalar value
+            elif is_known_scalar(col):
                 if not len(evaled):
                     col = [col]
                 evaled[ae] = col
@@ -507,3 +507,16 @@ def discrete_columns(df, ignore):
                 continue
             lst.append(col)
     return lst
+
+
+def is_known_scalar(value):
+    """
+    Return True if value is a type we expect in a dataframe
+    """
+    def _is_datetime_or_timedelta(value):
+        # Using pandas.Series helps catch python, numpy and pandas
+        # versions of these types
+        return pd.Series(value).dtype.kind in ('M', 'm')
+
+    return not cbook.iterable(value) and (cbook.is_numlike(value) or
+                                          _is_datetime_or_timedelta(value))

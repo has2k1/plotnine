@@ -29,6 +29,9 @@ Bug Fixes
 - Fixed issue where colorbars may chop off the colors at the limits
   of a scale.
 
+- Fixed issue with creating fixed mappings to datetime and timedelta
+  type values.(:issue:`88`)
+
 v0.3.0
 ------
 *(2017-11-08)*
