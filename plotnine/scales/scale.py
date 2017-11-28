@@ -191,7 +191,7 @@ class scale(object):
 
         # Fall back to the range if the limits
         # are not set or if any is None or NaN
-        if self._limits is not None:
+        if self._limits is not None and self.range.range is not None:
             limits = []
             if len(self._limits) == len(self.range.range):
                 for l, r in zip(self._limits, self.range.range):
