@@ -5,7 +5,6 @@ import six
 from copy import copy, deepcopy
 
 import pandas as pd
-import numpy as np
 import matplotlib.cbook as cbook
 import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment

@@ -143,7 +143,7 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
     ----------
     - J. T. Kent, D. E. Tyler and Y. Vardi (1994) A curious likelihood
       identity for the multivariate t-distribution. *Communications in
-      Statistics—Simulation and Computation* **23**, 441–453.
+      Statistics-Simulation and Computation* **23**, 441-453.
 
     - Venables, W. N. and Ripley, B. D. (1999) *Modern Applied
       Statistics with S-PLUS*. Third Edition. Springer.
@@ -201,8 +201,10 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
         w0 = w
         X = scale_simp(x, loc, n, p)
         _, s, v = linalg.svd(np.sqrt(w/np.sum(w)) * X)
-        wX = X @ v.T @ np.diag(np.full(p, 1/s))
-        Q = np.squeeze((wX**2) @ np.ones(p))
+        # wX = X @ v.T @ np.diag(np.full(p, 1/s))
+        wX = np.dot(np.dot(X,  v.T), np.diag(np.full(p, 1/s)))
+        # Q = np.squeeze((wX**2) @ np.ones(p))
+        Q = np.squeeze(np.dot(wX**2, np.ones(p)))
         w = (wt * (nu + p)) / (nu + Q)[:, np.newaxis]
         if use_loc:
             loc = np.sum(w*x, axis=0) / w.sum()
@@ -214,7 +216,8 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
             warn("Probable convergence failure.")
 
     _a = np.sqrt(w) * X
-    cov = (_a.T @ _a) / np.sum(wt)
+    # cov = (_a.T @ _a) / np.sum(wt)
+    cov = np.dot(_a.T, _a) / np.sum(wt)
 
     if miss_wt:
         ans = dict(cov=cov, center=loc, n_obs=n)
