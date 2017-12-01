@@ -64,6 +64,11 @@ class ggplot(object):
                 'data must be a dataframe or None if each '
                 'layer will have separate data.')
 
+        # Recognize plydata groups
+        if hasattr(data, 'group_indices') and 'group' not in mapping:
+            mapping = mapping.copy()
+            mapping['group'] = data.group_indices()
+
         self.data = data
         self.mapping = mapping
         self.facet = facet_null()
