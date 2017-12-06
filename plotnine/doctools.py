@@ -478,8 +478,12 @@ def document_scale(cls):
         if i == 0:
             # Compensate for the indentation of the
             # {superclass_parameters} string
-            param_string = param_string.lstrip()
+            param_string = param_string.strip()
         params_list.append(param_string)
+
+        # Prevent the next base classes from bringing in the
+        # same parameters.
+        cls_params |= base_params
 
     # Fill in the processed superclass parameters
     superclass_parameters = '\n'.join(params_list)

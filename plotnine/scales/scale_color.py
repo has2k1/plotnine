@@ -35,9 +35,9 @@ class scale_color_hue(scale_discrete):
         Color space to use.
         `hls <https://en.wikipedia.org/wiki/HSL_and_HSV>`_
         `husl <http://www.husl-colors.org/>`_
+    {superclass_parameters}
     na_value : str
         Color of missing values. Default is ``'#7F7F7F'``
-    {superclass_parameters}
     """
     aesthetics = ['color']
     na_value = '#7F7F7F'
@@ -75,8 +75,11 @@ class scale_color_brewer(scale_discrete):
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
     {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
     """
     aesthetics = ['color']
+    na_value = 'None'
 
     def __init__(self, type='seq', palette=1, **kwargs):
         self.palette = brewer_pal(type, palette)
@@ -102,13 +105,13 @@ class scale_color_grey(scale_discrete):
 
     Parameters
     ----------
-    {superclass_parameters}
     start : float
         grey value at low end of palette.
         Default is 0.2
     end : float
         grey value at high end of palette
         Default is 0.8
+    {superclass_parameters}
     """
     aesthetics = ['color']
 
@@ -138,13 +141,13 @@ class scale_color_gradient(scale_continuous):
 
     Parameters
     ----------
-    {superclass_parameters}
     low : str
         low color
     high : str
         high color
-    kwargs : dict
-        Parameters passed on to :class:`.scale_continuous`
+    {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
 
     See Also
     --------
@@ -153,6 +156,7 @@ class scale_color_gradient(scale_continuous):
     """
     aesthetics = ['color']
     guide = 'colorbar'
+    na_value = 'None'
 
     def __init__(self, low='#132B43', high='#56B1F7', **kwargs):
         """
@@ -182,15 +186,21 @@ class scale_color_desaturate(scale_continuous):
 
     Parameters
     ----------
-    {superclass_parameters}
-    color : str
+    color : str, optional (Default: 'red')
         Color to desaturate
-    reverse : bool
+    prop : float, optional (Default: 0)
+        Saturation channel of color will be multiplied by
+        this value.
+    reverse : bool, optional (Default: False)
         Whether to go from color to desaturated color
         or desaturated color to color.
+    {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
     """
     aesthetics = ['color']
     guide = 'colorbar'
+    na_value = 'None'
 
     def __init__(self, color='red', prop=0, reverse=False,
                  **kwargs):
@@ -217,13 +227,17 @@ class scale_color_gradient2(scale_continuous):
 
     Parameters
     ----------
-    {superclass_parameters}
-    low : str
+    low : str, optional
         low color
-    mid : str
+    mid : str, optional
         mid point color
-    high : str
+    high : str, optional
         high color
+    midpoint : float, optional (Default: 0)
+        Mid point of the input data range.
+    {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
 
     See Also
     --------
@@ -232,6 +246,7 @@ class scale_color_gradient2(scale_continuous):
     """
     aesthetics = ['color']
     guide = 'colorbar'
+    na_value = 'None'
 
     def __init__(self, low='#832424', mid='#FFFFFF',
                  high='#3A3A98', midpoint=0,
@@ -265,13 +280,15 @@ class scale_color_gradientn(scale_continuous):
 
     Parameters
     ----------
-    {superclass_parameters}
     colors : list
         list of colors
     values : list, optional
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
+    {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
 
     See Also
     --------
@@ -280,6 +297,7 @@ class scale_color_gradientn(scale_continuous):
     """
     aesthetics = ['color']
     guide = 'colorbar'
+    na_value = 'None'
 
     def __init__(self, colors, values=None, **kwargs):
         self.palette = gradient_n_pal(colors, values, 'gradientn')
@@ -308,7 +326,6 @@ class scale_color_distiller(scale_color_gradientn):
 
     Parameters
     ----------
-    {superclass_parameters}
     type : 'seq' | 'div'
         Type of data. Sequential, diverging or qualitative
     palette : int | str
@@ -319,9 +336,13 @@ class scale_color_distiller(scale_color_gradientn):
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
+    {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
     """
     aesthetics = ['color']
     guide = 'colorbar'
+    na_value = 'None'
 
     def __init__(self, type='seq', palette=1, values=None, **kwargs):
         """
@@ -366,6 +387,8 @@ class scale_color_cmap(scale_continuous):
         lookup table. Default is `None`, leave it up
         Matplotlib.
     {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
 
     See Also
     --------
@@ -374,6 +397,7 @@ class scale_color_cmap(scale_continuous):
     """
     aesthetics = ['color']
     guide = 'colorbar'
+    na_value = 'None'
 
     def __init__(self, name='viridis', lut=None, **kwargs):
         self.palette = cmap_pal(name, lut)
@@ -393,7 +417,7 @@ class scale_fill_cmap(scale_color_cmap):
 
 
 @document
-class scale_color_datetime(scale_color_cmap, scale_datetime):
+class scale_color_datetime(scale_datetime, scale_color_cmap):
     """
     Datetime color scale
 
@@ -404,7 +428,7 @@ class scale_color_datetime(scale_color_cmap, scale_datetime):
 
 
 @document
-class scale_fill_datetime(scale_fill_cmap, scale_datetime):
+class scale_fill_datetime(scale_datetime, scale_fill_cmap):
     """
     Datetime fill scale
 

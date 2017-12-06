@@ -54,16 +54,16 @@ class scale_expand_earth(mixin, scale_expand):
 
 def test_document_scale():
     doc = scale_expand_earth.__doc__
-    assert 'base_param_1' in doc
-    assert 'base_param_2' in doc
-    assert 'base_param_3' in doc
-    assert 'derived_param_1' in doc
-    assert 'derived_param_2' in doc
-    assert 'mixin_param_1' in doc
-    assert 'mixin_param_2' in doc
+    assert doc.count('base_param_1') == 1
+    assert doc.count('base_param_2') == 1
+    assert doc.count('base_param_3') == 1
+    assert doc.count('derived_param_1') == 1
+    assert doc.count('derived_param_2') == 1
+    assert doc.count('mixin_param_1') == 1
+    assert doc.count('mixin_param_2') == 1
 
     # overridden parameter
     assert 'specific_parameter : str, optional' not in doc
     assert 'Base Specific Parameter Description' not in doc
-    assert 'specific_parameter : str' in doc
-    assert 'Derived Specific Parameter Description' in doc
+    assert doc.count('specific_parameter : str') == 1
+    assert doc.count('Derived Specific Parameter Description') == 1
