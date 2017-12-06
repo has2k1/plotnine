@@ -88,7 +88,11 @@ class ggplot(object):
         """
         Print/show the plot
         """
-        self.draw()
+        # Do not draw if drawn already.
+        # This prevents a needless error when reusing figure & axes
+        # in the jupyter notebook.
+        if not self.figure:
+            self.draw()
         plt.show()
         return '<ggplot: (%d)>' % self.__hash__()
 
