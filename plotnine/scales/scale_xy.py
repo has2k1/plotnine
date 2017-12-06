@@ -192,7 +192,7 @@ class scale_y_continuous(scale_position_continuous):
 
 # Transformed scales
 @document
-class scale_x_datetime(scale_position_continuous, scale_datetime):
+class scale_x_datetime(scale_datetime, scale_x_continuous):
     """
     Continuous x position for datetime data points
 
@@ -200,11 +200,10 @@ class scale_x_datetime(scale_position_continuous, scale_datetime):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 @document
-class scale_y_datetime(scale_position_continuous, scale_datetime):
+class scale_y_datetime(scale_datetime, scale_y_continuous):
     """
     Continuous y position for datetime data points
 
@@ -212,7 +211,6 @@ class scale_y_datetime(scale_position_continuous, scale_datetime):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
 alias('scale_x_date', scale_x_datetime)
@@ -220,7 +218,7 @@ alias('scale_y_date', scale_y_datetime)
 
 
 @document
-class scale_x_timedelta(scale_position_continuous):
+class scale_x_timedelta(scale_x_continuous):
     """
     Continuous x position for timedelta data points
 
@@ -229,11 +227,10 @@ class scale_x_timedelta(scale_position_continuous):
     {superclass_parameters}
     """
     _trans = 'pd_timedelta'
-    aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 @document
-class scale_y_timedelta(scale_position_continuous):
+class scale_y_timedelta(scale_y_continuous):
     """
     Continuous y position for timedelta data points
 
@@ -242,7 +239,6 @@ class scale_y_timedelta(scale_position_continuous):
     {superclass_parameters}
     """
     _trans = 'pd_timedelta'
-    aesthetics = ['y', 'ymin', 'ymay', 'yend']
 
 
 @document

@@ -5,6 +5,10 @@ v0.3.1
 ------
 *(not-yet-released)*
 
+- Fixed :class:`~plotnine.scales.scale_x_datetime` and
+  :class:`~plotnine.scales.scale_y_datetime` to handle the intercepts
+  along the axes (:issue:`97`).
+
 API Changes
 ***********
 
