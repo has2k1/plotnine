@@ -5,10 +5,6 @@ v0.3.1
 ------
 *(not-yet-released)*
 
-- Fixed :class:`~plotnine.scales.scale_x_datetime` and
-  :class:`~plotnine.scales.scale_y_datetime` to handle the intercepts
-  along the axes (:issue:`97`).
-
 API Changes
 ***********
 
@@ -39,6 +35,14 @@ Bug Fixes
 
 - Fixed issue with creating fixed mappings to datetime and timedelta
   type values.(:issue:`88`)
+
+- Fixed :class:`~plotnine.scales.scale_x_datetime` and
+  :class:`~plotnine.scales.scale_y_datetime` to handle the intercepts
+  along the axes (:issue:`97`).
+
+- Fixed :class:`~plotnine.stats.stat_bin` and
+  :class:`~plotnine.stats.stat_bin_2d` to properly handle the
+  ``breaks`` parameter when used with a transforming scale.
 
 v0.3.0
 ------

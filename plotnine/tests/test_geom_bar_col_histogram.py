@@ -4,7 +4,9 @@ import numpy as np
 import pandas as pd
 
 from plotnine import ggplot, aes, geom_bar, geom_col, geom_histogram
-from plotnine import theme
+from plotnine import theme, scale_x_sqrt
+from plotnine.tests import layer_data
+
 
 n = 10  # Some even number greater than 2
 
@@ -35,3 +37,12 @@ def test_histogram_count():
          geom_histogram(aes(fill='factor(z)'), bins=n))
 
     assert p + _theme == 'histogram-count'
+
+
+def test_scale_transformed_breaks():
+    df = pd.DataFrame({'x': np.repeat(range(1, 5), range(1, 5))})
+    p = ggplot(df, aes('x')) + geom_histogram(breaks=[1, 2.5, 4])
+    out1 = layer_data(p)
+    out2 = layer_data(p + scale_x_sqrt())
+    np.testing.assert_allclose(out1.xmin, [1, 2.5])
+    np.testing.assert_allclose(out2.xmin, np.sqrt([1, 2.5]))

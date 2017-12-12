@@ -3,7 +3,8 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_bin2d, theme
+from plotnine import ggplot, aes, geom_bin2d, theme, scale_x_log10
+from plotnine.tests import layer_data
 
 n = 20  # Make even for best results
 reps = np.hstack([np.arange(int(np.ceil(n/2))),
@@ -25,3 +26,17 @@ def test_drop_true():
 def test_drop_false():
     p = ggplot(df, aes('x', 'y')) + geom_bin2d(binwidth=2, drop=False)
     assert p + _theme == 'drop_false'
+
+
+def test_scale_transformed_breaks():
+    df = pd.DataFrame({
+        'x': [1, 10, 100, 1000],
+        'y': range(4)
+    })
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_bin2d(breaks=([5, 50, 500], [0.5, 1.5, 2.5]))
+         )
+    out1 = layer_data(p)
+    out2 = layer_data(p + scale_x_log10())
+    np.testing.assert_allclose(out1.xmax, [50, 500])
+    np.testing.assert_allclose(out2.xmax, np.log10([50, 500]))

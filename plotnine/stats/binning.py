@@ -249,6 +249,9 @@ def fuzzybreaks(scale, breaks=None, boundary=None,
     if isinstance(scale, scale_discrete):
         breaks = scale.get_breaks()
         return -0.5 + np.arange(1, len(breaks)+2)
+    else:
+        if breaks is not None:
+            breaks = scale.transform(breaks)
 
     if breaks is not None:
         return breaks

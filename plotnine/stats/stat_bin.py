@@ -2,6 +2,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from warnings import warn
 
+import numpy as np
+
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .binning import (breaks_from_bins, breaks_from_binwidth,
@@ -94,7 +96,9 @@ class stat_bin(stat):
     @classmethod
     def compute_group(cls, data, scales, **params):
         if params['breaks'] is not None:
-            breaks = params['breaks']
+            breaks = np.asarray(params['breaks'])
+            if hasattr(scales.x, 'transform'):
+                breaks = scales.x.transform(breaks)
         elif params['binwidth'] is not None:
             breaks = breaks_from_binwidth(
                 scales.x.dimension(), params['binwidth'],
