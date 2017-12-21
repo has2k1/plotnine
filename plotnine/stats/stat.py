@@ -48,6 +48,8 @@ class stat(object):
         """
         Return an instantiated stat object
 
+        stats should not override this method.
+
         Parameters
         ----------
         geom : geom
@@ -58,7 +60,9 @@ class stat(object):
         out : stat
             A stat object
 
-        Raises :class:`PlotnineError` if unable to create a `stat`.
+        Raises
+        ------
+        :class:`PlotnineError` if unable to create a `stat`.
         """
         name = geom.params['stat']
         kwargs = geom._kwargs
@@ -91,6 +95,8 @@ class stat(object):
     def __deepcopy__(self, memo):
         """
         Deep copy without copying the self.data dataframe
+
+        stats should not override this method.
         """
         cls = self.__class__
         result = cls.__new__(cls)
@@ -110,6 +116,8 @@ class stat(object):
     def aesthetics(cls):
         """
         Return a set of all non-computed aesthetics for this stat.
+
+        stats should not override this method.
         """
         aesthetics = cls.REQUIRED_AES.copy()
         calculated = get_calculated_aes(cls.DEFAULT_AES)
@@ -118,6 +126,21 @@ class stat(object):
         return aesthetics
 
     def use_defaults(self, data):
+        """
+        Combine data with defaults and set aesthetics from parameters
+
+        stats should not override this method.
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Data used for drawing the geom.
+
+        Returns
+        -------
+        out : pandas.DataFrame
+            Data used for drawing the geom.
+        """
         missing = (self.aesthetics() -
                    six.viewkeys(self.aes_params) -
                    set(data.columns))
@@ -136,13 +159,33 @@ class stat(object):
 
     def setup_params(self, data):
         """
-        Overide this to verify parameters
+        Overide this to verify or adjust parameters
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Data
+
+        Returns
+        -------
+        out : dict
+            Parameters used by the stats.
         """
         return self.params
 
     def setup_data(self, data):
         """
         Overide to modify data before compute_layer is called
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Data
+
+        Returns
+        -------
+        out : pandas.DataFrame
+            Data
         """
         return data
 
@@ -176,6 +219,25 @@ class stat(object):
 
     @classmethod
     def compute_layer(cls, data, params, layout):
+        """
+        Calculate statistics for this layers
+
+        This is the top-most computation method for the
+        stat. It does not do any computations, but it
+        knows how to verify the data, partition it call the
+        next computation method and merge results.
+
+        stats should not override this method.
+
+        Parameters
+        ----------
+        data : panda.DataFrame
+            Data points for all objects in a layer.
+        params : dict
+            Stat parameters
+        layout : plotnine.layout.Layout
+            Panel layout information
+        """
         check_required_aesthetics(
             cls.REQUIRED_AES,
             list(data.columns) + list(params.keys()),
@@ -213,10 +275,15 @@ class stat(object):
 
         Parameters
         ----------
-        data : dataframe
+        data : pandas.dataframe
             data for the computing
         scales : Bunch
-            x & y scales
+            x (``scales.x``) and y (``scales.y``) scale objects.
+            The most likely reason to use scale information is
+            to find out the physical size of a scale. e.g::
+
+                range_x = scales.x.dimension()
+
         params : dict
             The parameters for the stat. It includes default
             values if user did not set a particular parameter.
@@ -250,11 +317,45 @@ class stat(object):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        """
+        Calculate statistics for the group
+
+        All stats should implement this method
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Data for a group
+        scales : Bunch
+            x (``scales.x``) and y (``scales.y``) scale objects.
+            The most likely reason to use scale information is
+            to find out the physical size of a scale. e.g::
+
+                range_x = scales.x.dimension()
+
+        params : dict
+            Parameters
+        """
         msg = "{} should implement this method."
         raise NotImplementedError(
             msg.format(cls.__name__))
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add layer representing stat object on the right
+
+        Parameters
+        ----------
+        gg : ggplot
+            ggplot object
+        inplace : bool
+            If True, modify ``gg``.
+
+        Returns
+        -------
+        out : ggplot
+            ggplot object with added layer
+        """
         from ..geoms.geom import geom
         _geom = geom.from_stat(self)
         return _geom.__radd__(gg, inplace=inplace)

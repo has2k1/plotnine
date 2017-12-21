@@ -7,7 +7,9 @@ API Reference
 
 Plot creation
 =============
+
 .. currentmodule:: plotnine
+
 .. autosummary::
    :toctree: generated/
    :nosignatures:
@@ -20,10 +22,24 @@ Plot creation
    ~layer.layer
    ~animation.PlotnineAnimation
 
-
 geoms
 =====
+
+Geometric objects (geoms) are responsible for the visual representation
+of data points. ``geom_*`` classes determine the kind of geometric
+objects and every plot must have at least one ``geom`` added to it. The
+distinct visual aspects of the representation are controlled by the
+:class:`~plotnine.aes` mapping.
+
+
 .. currentmodule:: plotnine.geoms
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: members-example.rst
+
+   ~geom.geom
 
 .. autosummary::
    :toctree: generated/
@@ -70,7 +86,6 @@ geoms
    geom_violin
    geom_vline
 
-
 Related to geoms
 ----------------
 
@@ -98,7 +113,22 @@ Labels
 
 stats
 =====
+
+Statistical transformations (stats) do aggregations and other
+computations on data before it is drawn out. ``stat_*`` determine
+the type of computation done on the data. Different types of
+computations yield varied results, so a ``stat`` must be paired
+with a ``geom`` that can represent all or some of the computations.
+
+
 .. currentmodule:: plotnine.stats
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: members-example.rst
+
+   ~stat.stat
 
 .. autosummary::
    :toctree: generated/
@@ -129,7 +159,17 @@ stats
 
 facets
 ======
+
+Faceting is a way to subset data and plot it on different panels.
+
 .. currentmodule:: plotnine.facets
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: members-example.rst
+
+   ~facet.facet
 
 .. autosummary::
    :toctree: generated/
@@ -147,14 +187,18 @@ facets
 
 scales
 ======
-.. currentmodule:: plotnine.scales
 
+Scales control the mapping from data to aesthetics. They take data and
+adjust it to fit the different aspects of the visual sense i.e. length,
+colour, size and shape.
+
+.. currentmodule:: plotnine.scales
 
 Base scales
 -----------
 .. autosummary::
    :toctree: generated/
-   :template: main.rst
+   :template: members-example.rst
 
    ~scale.scale
    ~scale.scale_discrete
@@ -312,6 +356,9 @@ Scale limits
 
 Scale guides
 ------------
+Guides allow you to interpret data represented on a scales.
+Guides include the ``x`` and ``y`` axes, legends and colorbars.
+
 .. currentmodule:: plotnine.guides
 
 .. autosummary::
@@ -326,6 +373,11 @@ Scale guides
 
 positions
 =========
+
+Overlapping objects can be visualized better if their positions
+are adjusted. That is what the ``position_*`` class do. Each
+``geom`` is associated with one position adjustment class.
+
 .. currentmodule:: plotnine.positions
 
 .. autosummary::
@@ -343,6 +395,8 @@ positions
 
 themes
 ======
+
+Themes control the visual appearance of the non-data elements the plot.
 
 .. currentmodule:: plotnine.themes
 
@@ -484,6 +538,9 @@ Theme helper functions and classes
 coordinates
 ===========
 
+Coordinate systems put together the two position scales to produce
+a 2d location.
+
 .. currentmodule:: plotnine.coords
 
 .. autosummary::
@@ -521,6 +578,9 @@ to set a default theme using :func:`~plotnine.themes.theme_set`.
 
 datasets
 ========
+
+These datasets ship with the plotnine and you can import them
+with from the ``plotnine.data`` sub-package.
 
 .. currentmodule:: plotnine.data
 

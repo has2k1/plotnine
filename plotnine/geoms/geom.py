@@ -21,10 +21,10 @@ class geom(object):
     REQUIRED_AES = set()     #: Required aesthetics for the geom
     DEFAULT_PARAMS = dict()  #: Required parameters for the geom
 
-    data = None           #: geom/layer specific dataframe
-    mapping = None        #: mappings i.e aes(x=col1, fill=col2, ...)
-    aes_params = None     # setting of aesthetic
-    params = None         # parameter settings
+    data = None        #: geom/layer specific dataframe
+    mapping = None     #: mappings i.e. :py:`aes(x='col1', fill='col2')`
+    aes_params = None  # setting of aesthetic
+    params = None      # parameter settings
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
@@ -42,12 +42,14 @@ class geom(object):
         self.data = kwargs['data']
         self._stat = stat.from_geom(self)
         self._position = position.from_geom(self)
-        self.verify_arguments(kwargs)     # geom, stat, layer
+        self._verify_arguments(kwargs)     # geom, stat, layer
 
     @staticmethod
     def from_stat(stat):
         """
         Return an instantiated geom object
+
+        geoms should not override this method.
 
         Parameters
         ----------
@@ -59,7 +61,9 @@ class geom(object):
         out : geom
             A geom object
 
-        Raises :class:`PlotnineError` if unable to create a `geom`.
+        Raises
+        ------
+        :class:`PlotnineError` if unable to create a `geom`.
         """
         name = stat.params['geom']
         if issubclass(type(name), geom):
@@ -81,6 +85,8 @@ class geom(object):
     def aesthetics(cls):
         """
         Return all the aesthetics for this geom
+
+        geoms should not override this method.
         """
         main = six.viewkeys(cls.DEFAULT_AES) | cls.REQUIRED_AES
         other = {'group'}
@@ -94,6 +100,8 @@ class geom(object):
     def __deepcopy__(self, memo):
         """
         Deep copy without copying the self.data dataframe
+
+        geoms should not override this method.
         """
         cls = self.__class__
         result = cls.__new__(cls)
@@ -110,11 +118,53 @@ class geom(object):
         return result
 
     def setup_data(self, data):
+        """
+        Modify the data before drawing takes place
+
+        This function is called *before* position adjustments are done.
+        It is used by geoms to create the final aesthetics used for
+        drawing. The base class method does nothing, geoms can override
+        this method for two reasons:
+
+        1. The ``stat`` does not create all the aesthetics (usually
+           position aesthetics) required for drawing the ``geom``,
+           but those aesthetics can be computed from the available
+           data. For example :class:`~plotnine.geoms.geom_boxplot`
+           and :class:`~plotnine.geoms.geom_violin`.
+
+        2. The ``geom`` inherits from another ``geom`` (superclass) which
+           does the drawing and the superclass requires certain aesthetics
+           to be present in the data. For example
+           :class:`~plotnine.geoms.geom_tile` and
+           :class:`~plotnine.geoms.geom_area`.
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Data used for drawing the geom.
+
+        Returns
+        -------
+        out : pandas.DataFrame
+            Data used for drawing the geom.
+        """
         return data
 
     def use_defaults(self, data):
         """
         Combine data with defaults and set aesthetics from parameters
+
+        geoms should not override this method.
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Data used for drawing the geom.
+
+        Returns
+        -------
+        out : pandas.DataFrame
+            Data used for drawing the geom.
         """
         missing_aes = (six.viewkeys(self.DEFAULT_AES) -
                        six.viewkeys(self.aes_params) -
@@ -143,6 +193,8 @@ class geom(object):
     def draw_layer(self, data, layout, coord, **params):
         """
         Draw layer across all panels
+
+        geoms should not override this method.
 
         Parameters
         ----------
@@ -179,19 +231,21 @@ class geom(object):
         ----------
         data : dataframe
             Data to be plotted by this geom. This is the
-            dataframe created in the plot_build pipeline
+            dataframe created in the plot_build pipeline.
         scales : dict
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
-            the geom are:
-                - 'x_range' -- tuple
-                - 'y_range' -- tuple
+            the geom are::
+
+                'x_range'  # tuple
+                'y_range'  # tuple
+
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the
-            geom
+            geom.
         ax : axes
-            Axes on which to plot
+            Axes on which to plot.
         params : dict
             Combined parameters for the geom and stat. Also
             includes the 'zorder'.
@@ -204,7 +258,30 @@ class geom(object):
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
         """
-        Plot data
+        Plot data belonging to a group.
+
+        Parameters
+        ----------
+        data : dataframe
+            Data to be plotted by this geom. This is the
+            dataframe created in the plot_build pipeline.
+        scales : dict
+            The scale information as may be required by the
+            axes. At this point, that information is about
+            ranges, ticks and labels. Keys of interest to
+            the geom are::
+
+                'x_range'  # tuple
+                'y_range'  # tuple
+
+        coord : coord
+            Coordinate (e.g. coord_cartesian) system of the
+            geom.
+        ax : axes
+            Axes on which to plot.
+        params : dict
+            Combined parameters for the geom and stat. Also
+            includes the 'zorder'.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
@@ -212,7 +289,7 @@ class geom(object):
     @staticmethod
     def draw_unit(data, panel_params, coord, ax, **params):
         """
-        Plot data
+        Plot data belonging to a unit.
 
         A matplotlib plot function may require that an aethestic
         have a single unique value. e.g. linestyle='dashed' and
@@ -222,21 +299,61 @@ class geom(object):
         than one line with different linestyles, we need to group
         the lines with the same linestyle and plot them as one
         unit. In this case, draw_group calls this function to do
-        the plotting.
+        the plotting. For an example see
+        :class:`~plotnine.geoms.geom_point`.
 
-        See: geom_point
+        Parameters
+        ----------
+        data : dataframe
+            Data to be plotted by this geom. This is the
+            dataframe created in the plot_build pipeline.
+        scales : dict
+            The scale information as may be required by the
+            axes. At this point, that information is about
+            ranges, ticks and labels. Keys of interest to
+            the geom are::
+
+                'x_range'  # tuple
+                'y_range'  # tuple
+
+        coord : coord
+            Coordinate (e.g. coord_cartesian) system of the
+            geom.
+        ax : axes
+            Axes on which to plot.
+        params : dict
+            Combined parameters for the geom and stat. Also
+            includes the 'zorder'.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add layer representing geom object on the right
+
+        Parameters
+        ----------
+        gg : ggplot
+            ggplot object
+        inplace : bool
+            If True, modify ``gg``.
+
+        Returns
+        -------
+        out : ggplot
+            ggplot object with added layer.
+        """
         gg = gg if inplace else deepcopy(gg)
 
         # create and add layer
         gg += layer.from_geom(self)
         return gg
 
-    def verify_arguments(self, kwargs):
+    def _verify_arguments(self, kwargs):
+        """
+        Verify arguments passed to the geom
+        """
         keys = six.viewkeys
         unknown = (keys(kwargs) -
                    self.aesthetics() -                # geom aesthetics
@@ -254,6 +371,10 @@ class geom(object):
         """
         Remove rows with NaN values
 
+        geoms that infer extra information from missing values
+        should override this method. For example
+        :class:`~plotnine.geoms.geom_path`.
+
         Parameters
         ----------
         data : dataframe
@@ -262,7 +383,7 @@ class geom(object):
         Returns
         -------
         out : dataframe
-            Data without the NaNs
+            Data without the NaNs.
 
         Note
         ----
