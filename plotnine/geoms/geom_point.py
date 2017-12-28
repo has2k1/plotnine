@@ -57,7 +57,6 @@ class geom_point(geom):
         else:
             fill = to_rgba(data['fill'], data['alpha'])
 
-        print(color)
         ax.scatter(x=data['x'],
                    y=data['y'],
                    s=size,

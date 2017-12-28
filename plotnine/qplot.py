@@ -10,7 +10,7 @@ import six
 
 from .ggplot import ggplot
 from .aes import aes, all_aesthetics, scaled_aesthetics
-from .labels import ggtitle, labs
+from .labels import labs
 from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
@@ -199,6 +199,9 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
     with suppress(AttributeError):
         labels['y'] = ylab if ylab is not None else y.name
 
+    if main is not None:
+        labels['title'] = main
+
     if 'x' in log:
         p += scale_x_log10()
 
@@ -207,9 +210,6 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     if labels:
         p += labs(**labels)
-
-    if main:
-        p += ggtitle(main)
 
     if asp:
         p += theme(aspect_ratio=asp)
