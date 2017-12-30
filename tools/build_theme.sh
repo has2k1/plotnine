@@ -21,6 +21,6 @@ cp -rf theme $toplevel/doc
 # Do a hotswap (it may be enough for us to see the results compared to
 # regenerating the html)
 cd $toplevel
-cp $toplevel/doc/{theme/static,_build/html/_static}/bootstrap-3.3.6/css/bootstrap.min.css
+cp $toplevel/doc/{theme/static,_build/html/_static}/bootstrap-*/css/bootstrap.min.css
 
 echo "${color5}success${reset}"
