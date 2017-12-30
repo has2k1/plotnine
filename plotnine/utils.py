@@ -278,7 +278,7 @@ def ninteraction(df, drop=False):
     # Calculate dimensions
     def len_unique(x):
         return len(np.unique(x))
-    ndistinct = ids.apply(len_unique, axis=0).as_matrix()
+    ndistinct = ids.apply(len_unique, axis=0).values
 
     combs = np.matrix(
         np.hstack([1, np.cumprod(ndistinct[:-1])]))

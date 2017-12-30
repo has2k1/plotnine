@@ -185,7 +185,7 @@ class position(object):
         data = data.loc[idx, :]
 
         # Check for overlap
-        intervals = data[xminmax].drop_duplicates().as_matrix().flatten()
+        intervals = data[xminmax].drop_duplicates().values.flatten()
         intervals = intervals[~np.isnan(intervals)]
 
         if (len(np.unique(intervals)) > 1 and
