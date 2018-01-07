@@ -11,6 +11,11 @@ warnings.filterwarnings(
     category=FutureWarning,
     module='statsmodels')
 
+warnings.filterwarnings(
+    'ignore',
+    category=FutureWarning,
+    module='pandas')
+
 # These are rare
 warnings.filterwarnings(
     'ignore',
