@@ -44,6 +44,10 @@ Bug Fixes
   :class:`~plotnine.stats.stat_bin_2d` to properly handle the
   ``breaks`` parameter when used with a transforming scale.
 
+- Fixed issue with x and y scales where the ``name`` of the scale was
+  ignored when determining the axis titles. Now, the ``name`` parameter
+  is specified, it is used as the title. (:issue:`105`)
+
 v0.3.0
 ------
 *(2017-11-08)*

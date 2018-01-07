@@ -498,9 +498,10 @@ class ggplot(object):
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
-        labels = self.coordinates.labels(
-            {'x': self.labels.get('x', ''),
-             'y': self.labels.get('y', '')})
+        labels = self.coordinates.labels({
+            'x': self.layout.xlabel(self.labels),
+            'y': self.layout.ylabel(self.labels)
+        })
 
         # The first axes object is on left, and the last axes object
         # is at the bottom. We change the transform so that the relevant

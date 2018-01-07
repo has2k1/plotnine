@@ -202,3 +202,37 @@ class Layout(object):
             raise PlotnineError(
                 "Facet layout has bad format. It must contain "
                 "the columns '{}'".format(required))
+
+    def xlabel(self, labels):
+        """
+        Determine x-axis label
+
+        Parameters
+        ----------
+        labels : dict
+            Labels as specified by the user through the ``labs`` or
+            ``xlab`` calls.
+
+        Returns
+        -------
+        out : str
+            x-axis label
+        """
+        return self.panel_scales_x[0].name or labels.get('x', '')
+
+    def ylabel(self, labels):
+        """
+        Determine x-axis label
+
+        Parameters
+        ----------
+        labels : dict
+            Labels as specified by the user through the ``labs`` or
+            ``ylab`` calls.
+
+        Returns
+        -------
+        out : str
+            y-axis label
+        """
+        return self.panel_scales_y[0].name or labels.get('y', '')
