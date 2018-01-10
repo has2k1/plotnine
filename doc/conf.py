@@ -392,11 +392,11 @@ epub_exclude_files = ['search.html']
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
-    'matplotlib': ('http://matplotlib.org/', None),
+    'matplotlib': ('https://matplotlib.org/', None),
     'numpy': ('https://docs.scipy.org/doc/numpy', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
     'statsmodels': ('http://www.statsmodels.org/stable/', None),
-    'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'sklearn': ('http://scikit-learn.org/stable/', None),
     'skmisc': ('https://has2k1.github.io/scikit-misc/', None)}
 
