@@ -125,8 +125,8 @@ class element_text(object):
     kwargs : dict
         Parameters recognised by :class:`matplotlib.text.Text`
 
-    Note
-    ----
+    Notes
+    -----
     :class:`element_text` will accept parameters that conform to the
     **ggplot2** *element_text* API, but it is preferable the
     **Matplotlib** based API described above.

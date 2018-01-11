@@ -176,8 +176,8 @@ class ggplot(object):
             The ggplot object used for drawn, if ``return_ggplot`` is
             ``True``.
 
-        Note
-        ----
+        Notes
+        -----
         This method does not modify the original ggplot object. You can
         get the modified ggplot object with :py:`return_ggplot=True`.
         """
@@ -259,8 +259,8 @@ class ggplot(object):
         """
         Build ggplot for rendering.
 
-        Note
-        ----
+        Notes
+        -----
         This method modifies the ggplot object. The caller is
         responsible for making a copy and using that to make
         the method call.

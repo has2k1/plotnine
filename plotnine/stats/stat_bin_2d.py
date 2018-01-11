@@ -37,8 +37,10 @@ class stat_bin_2d(stat):
         the stories in your data.
     drop : bool, optional (default: False)
         If :py:`True`, removes all cells with zero counts.
+    """
 
-    {aesthetics}
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -46,6 +48,7 @@ class stat_bin_2d(stat):
 
         'count'   # number of points in bin
         'density' # density of points in bin, scaled to integrate to 1
+
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',

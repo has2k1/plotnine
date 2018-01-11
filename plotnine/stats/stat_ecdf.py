@@ -23,7 +23,13 @@ class stat_ecdf(stat):
         This is the number of points to interpolate with.
         If :py:`None`, do not interpolate.
 
-    {aesthetics}
+    See Also
+    --------
+    plotnine.geoms.geom_step
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -32,10 +38,8 @@ class stat_ecdf(stat):
         'x'  # x in the data
         'y'  # cumulative density corresponding to x
 
-    See Also
-    --------
-    :class:`~plotnine.geoms.geom_step`
     """
+
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
                       'na_rm': False, 'n': None}

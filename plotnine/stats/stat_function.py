@@ -30,8 +30,10 @@ class stat_function(stat):
         then the ``xlim`` must be provided.
     args : tuple or dict (default: None)
         Arguments to pass to ``fun``.
+    """
 
-    {aesthetics}
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -40,6 +42,7 @@ class stat_function(stat):
         'x'  # x points are which the function is evaluated
         'y'  # Points evaluated at x
     """
+
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
                       'na_rm': False,
                       'fun': None, 'n': 101, 'args': None,

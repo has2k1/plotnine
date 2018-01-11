@@ -20,11 +20,9 @@ class geom_bar(geom_rect):
         Bar width. If :py:`None`, the width is set to
         `90%` of the resolution of the data.
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_histogram`
+    plotnine.geoms.geom_histogram
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',

@@ -32,8 +32,6 @@ class geom_crossbar(geom):
     fatten : float, optional (default: 2)
         A multiplicative factor used to increase the size of the
         middle bar across the box.
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 0.5}

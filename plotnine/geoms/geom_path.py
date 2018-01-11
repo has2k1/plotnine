@@ -34,11 +34,9 @@ class geom_path(geom):
     arrow : plotnine.geoms.geom_path.arrow (default: None)
         Arrow specification. Default is no arrow.
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`.arrow` for adding arrowhead(s) to paths.
+    plotnine.geoms.arrow : for adding arrowhead(s) to paths.
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}

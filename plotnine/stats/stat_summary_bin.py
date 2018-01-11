@@ -61,7 +61,19 @@ class stat_summary_bin(stat):
         Seed or Random number generator to use. If ``None``, then
         numpy global generator :class:`numpy.random` is used.
 
-    {aesthetics}
+    Notes
+    -----
+    The *binwidth*, *bins*, *breaks* and *bounary* arguments can be a
+    tuples with two values (``(xaxis-value, yaxis-value)``) of the
+    required type.
+
+    See Also
+    --------
+    plotnine.geoms.geom_pointrange
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -74,17 +86,8 @@ class stat_summary_bin(stat):
 
     Calculated aesthetics are accessed using the `calc` function.
     e.g. :py:`'calc(ymin)'`.
-
-    Note
-    ----
-    The *binwidth*, *bins*, *breaks* and *bounary* arguments can be a
-    tuples with two values (``(xaxis-value, yaxis-value)``) of the
-    required type.
-
-    See Also
-    --------
-    :class:`~plotnine.geoms.geom_pointrange`
     """
+
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
                       'na_rm': False,

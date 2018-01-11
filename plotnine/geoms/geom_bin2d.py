@@ -21,8 +21,6 @@ class geom_bin2d(geom_rect):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_PARAMS = {'stat': 'bin_2d', 'position': 'identity',
                       'na_rm': False}

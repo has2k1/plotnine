@@ -53,12 +53,12 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon',
 
     'sphinxext.examples_and_gallery',
     'sphinxext.inline_code_highlight',
 
-    'nbsphinx'
+    'nbsphinx',
+    'numpydoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -407,6 +407,34 @@ autosummary_generate = True
 
 extlinks = {
     'issue': ('https://github.com/has2k1/plotnine/issues/%s', 'GH')
+}
+
+
+numpydoc_show_class_members = False
+numpydoc_class_members_toctree = False
+numpydoc_xref_param_type = True
+numpydoc_xref_aliases = {
+    # python
+    'sequence': ':term:`python:sequence`',
+    'iterable': ':term:`python:iterable`',
+    'string': 'str',
+    'tuples': 'tuple',
+    'boolean': 'bool',
+    # numpy
+    'array': 'numpy.ndarray',
+    'np.array': 'numpy.ndarray',
+    'ndarray': 'numpy.ndarray',
+    'array-like': ':term:`array-like<numpy:array_like>`',
+    'array_like': ':term:`numpy:array_like`',
+    # pandas
+    'dataframe': 'pandas.DataFrame',
+    'DataFrame': 'pandas.DataFrame',
+    'Series': 'pandas.Series',
+    'series': 'pandas.Series',
+    # plotnine
+    'geom': ':term:`geom`',
+    'stat': ':term:`stat`',
+    'position': ':term:`position`',
 }
 
 

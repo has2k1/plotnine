@@ -18,8 +18,6 @@ class geom_ribbon(geom):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5}

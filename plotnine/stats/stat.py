@@ -35,6 +35,12 @@ class stat(object):
     # see: stat_bin
     CREATES = set()
 
+    # Documentation for the aesthetics. It is added under the
+    # documentation for mapping parameter. Use {aesthetics_table}
+    # placeholder to insert a table for all the aesthetics and
+    # their default values.
+    _aesthetics_doc = '{aesthetics_table}'
+
     def __init__(self, *args, **kwargs):
         kwargs = data_mapping_as_kwargs(args, kwargs)
         self._kwargs = kwargs  # Will be used to create the geom

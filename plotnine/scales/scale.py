@@ -82,7 +82,7 @@ class scale(object):
     guide = 'legend'    # legend or any other guide
     _limits = None      # (min, max) - set by user
 
-    #: range of aesthetic, instantiated by :meth:`scale.__init__``
+    # range of aesthetic, instantiated by __init__
     range = Range
 
     #: multiplicative and additive expansion constants
@@ -421,8 +421,8 @@ class scale_continuous(scale):
         them onto the [0, 1] range. Scales that inherit
         from this class may have another default.
 
-    Note
-    ----
+    Notes
+    -----
     If using the class directly all arguments must be
     keyword arguments.
     """
@@ -455,8 +455,8 @@ class scale_continuous(scale):
         """
         Limits for the continuous scale
 
-        Note
-        ----
+        Notes
+        -----
         The limits are given in original dataspace
         but they are stored in transformed space since
         all computations happen on transformed data. The
@@ -591,8 +591,8 @@ class scale_continuous(scale):
         -------
         out : array-like
 
-        Note
-        ----
+        Notes
+        -----
         Breaks are calculated in data space and
         returned in transformed space since all
         data is plotted in transformed space.

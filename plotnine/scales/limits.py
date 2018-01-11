@@ -104,8 +104,8 @@ class ylim(_lim):
         You can also pass two values e.g
         ``ylim(40, 100)``
 
-    Note
-    ----
+    Notes
+    -----
     If the 2nd value of ``limits`` is less than
     the first, a reversed scale will be created.
     """
@@ -150,8 +150,8 @@ class lims(object):
         Aesthetic and the values of the limits.
         e.g ``x=(40, 100)``
 
-    Note
-    ----
+    Notes
+    -----
     If the 2nd value of ``limits`` is less than
     the first, a reversed scale will be created.
     """

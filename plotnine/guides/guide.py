@@ -58,8 +58,8 @@ class guide(object):
         Order of this guide among multiple guides.
         Should be in the range [0, 99]. Default is ``0``.
 
-    Note
-    ----
+    Notes
+    -----
     At the moment not all parameters have been fully implemented.
     """
     __base__ = True

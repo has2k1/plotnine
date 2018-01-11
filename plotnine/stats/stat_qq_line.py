@@ -45,12 +45,10 @@ class stat_qq_line(stat):
     fullrange : bool
         If :py:`True` the fit will span the full range of the plot.
 
-    {aesthetics}
-
     See Also
     --------
-    :func:`scipy.stats.mstats.plotting_positions` uses ``alpha_beta``
-    to calculate the quantiles.
+    scipy.stats.mstats.plotting_positions : Uses ``alpha_beta``
+        to calculate the quantiles.
     """
 
     REQUIRED_AES = {'sample'}

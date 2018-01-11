@@ -41,7 +41,14 @@ class stat_qq(stat):
         Parameter values to use when calculating the quantiles.
         Default is :py:`(3/8, 3/8)`.
 
-    {aesthetics}
+    See Also
+    --------
+    scipy.stats.mstats.plotting_positions - Uses ``alpha_beta``
+        to calculate the quantiles.
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -50,10 +57,6 @@ class stat_qq(stat):
          'theoretical'  # theoretical quantiles
          'sample'       # sample quantiles
 
-    See Also
-    --------
-    :func:`scipy.stats.mstats.plotting_positions` uses ``alpha_beta``
-    to calculate the quantiles.
     """
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': 'calc(theoretical)', 'y': 'calc(sample)'}

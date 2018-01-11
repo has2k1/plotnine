@@ -23,8 +23,8 @@ class watermark(object):
         Additional parameters passed to
         :meth:`matplotlib.figure.figimage`.
 
-    Note
-    ----
+    Notes
+    -----
     You can add more than one watermark to a plot.
     """
 

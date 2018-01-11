@@ -25,7 +25,13 @@ class stat_boxplot(stat):
         Length of the whiskers as a multiple of the Interquartile
         Range.
 
-    {aesthetics}
+    See Also
+    --------
+    plotnine.geoms.geom_boxplot
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -50,11 +56,8 @@ class stat_boxplot(stat):
 
     Calculated aesthetics are accessed using the `calc` function.
     e.g. :py:`'calc(width)'`.
-
-    See Also
-    --------
-    :class:`~plotnine.geoms.geom_boxplot`
     """
+
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'boxplot', 'position': 'dodge',
                       'na_rm': False, 'coef': 1.5, 'width': None}

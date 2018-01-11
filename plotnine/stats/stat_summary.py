@@ -153,7 +153,18 @@ class stat_summary(stat):
         Seed or Random number generator to use. If ``None``, then
         numpy global generator :class:`numpy.random` is used.
 
-    {aesthetics}
+    Notes
+    -----
+    If any of ``fun_y``, ``fun_ymin`` or ``fun_ymax`` are provided, the
+    value of ``fun_data`` will be ignored.
+
+    See Also
+    --------
+    plotnine.geoms.geom_pointrange
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -162,19 +173,10 @@ class stat_summary(stat):
         'ymin'  # ymin computed by the summary function
         'ymax'  # ymax computed by the summary function
 
-
     Calculated aesthetics are accessed using the `calc` function.
     e.g. :py:`'calc(ymin)'`.
-
-    Note
-    ----
-    If any of ``fun_y``, ``fun_ymin`` or ``fun_ymax`` are provided, the
-    value of ``fun_data`` will be ignored.
-
-    See Also
-    --------
-    :class:`~plotnine.geoms.geom_pointrange`
     """
+
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
                       'na_rm': False,

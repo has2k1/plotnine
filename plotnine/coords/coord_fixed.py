@@ -23,8 +23,8 @@ class coord_fixed(coord_cartesian):
         some factor. If `False`, use the limits
         from the data.
 
-    Note
-    ----
+    Notes
+    -----
     To specify aspect ratio of the visual size for the axes use the
     :class:`~plotnine.themes.themeable.aspect_ratio` themeable::
 

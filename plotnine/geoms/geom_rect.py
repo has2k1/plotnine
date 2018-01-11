@@ -19,8 +19,6 @@ class geom_rect(geom):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
 
     DEFAULT_AES = {'color': None, 'fill': '#595959',

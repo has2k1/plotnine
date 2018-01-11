@@ -24,7 +24,13 @@ class stat_count(stat):
         Bar width. By default, set to 90% of the
         resolution of the data
 
-    {aesthetics}
+    See Also
+    --------
+    plotnine.stats.stat_bin
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -33,10 +39,8 @@ class stat_count(stat):
         'count'  # Number of observations at a position
         'prop'   # Ratio of points in the panel at a position
 
-    See Also
-    --------
-    :class:`~plotnine.stats.stat_bin`
     """
+
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'na_rm': False, 'width': None}

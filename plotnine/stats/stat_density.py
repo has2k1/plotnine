@@ -68,7 +68,15 @@ class stat_density(stat):
         Values in ``x`` that are outside of the range given by clip are
         dropped. The number of values in ``x`` is then shortened.
 
-    {aesthetics}
+    See Also
+    --------
+    plotnine.geoms.geom_density
+    statsmodels.nonparametric.kde.KDEUnivariate
+    statsmodels.nonparametric.kde.KDEUnivariate.fit
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -81,11 +89,6 @@ class stat_density(stat):
 
         'scaled'    # density estimate, scaled to maximum of 1
 
-    See Also
-    --------
-    * :class:`~plotnine.geoms.geom_density`
-    * :class:`statsmodels.nonparametric.kde.KDEUnivariate`
-    * :meth:`statsmodels.nonparametric.kde.KDEUnivariate.fit`
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',

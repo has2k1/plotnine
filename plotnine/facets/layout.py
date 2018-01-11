@@ -69,8 +69,8 @@ class Layout(object):
         Create all the required x & y panel_scales y_scales
         and set the ranges for each scale according to the data.
 
-        Note
-        ----
+        Notes
+        -----
         The number of x or y scales depends on the facetting,
         particularly the scales parameter. e.g if `scales='free'`
         then each panel will have separate x and y scales, and

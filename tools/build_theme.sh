@@ -9,6 +9,7 @@ color5=$(tput setaf 5)
 reset=$(tput sgr0)      # reset color codes
 
 toplevel=$(git rev-parse --show-toplevel)
+bootstrap=$(basename $(ls -d theme/static/bootstrap-*/))
 
 # Compile theme
 cd $toplevel/../sphinx-bootstrap-theme-customizer/
@@ -20,7 +21,8 @@ cp -rf theme $toplevel/doc
 
 # Do a hotswap (it may be enough for us to see the results compared to
 # regenerating the html)
+
 cd $toplevel
-cp $toplevel/doc/{theme/static,_build/html/_static}/bootstrap-*/css/bootstrap.min.css
+cp $toplevel/doc/{theme/static,_build/html/_static}/$bootstrap/css/bootstrap.min.css
 
 echo "${color5}success${reset}"

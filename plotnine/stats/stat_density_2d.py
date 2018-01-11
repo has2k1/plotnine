@@ -37,7 +37,15 @@ class stat_density_2d(stat):
     kde_params : dict
         Keyword arguments to pass on to the kde class.
 
-    {aesthetics}
+    See Also
+    --------
+    statsmodels.nonparametric.kde.KDEMultivariate
+    scipy.stats.gaussian_kde
+    sklearn.neighbors.KernelDensity
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -50,12 +58,6 @@ class stat_density_2d(stat):
     `level` is only relevant when contours are computed. `density`
     is available only when no contours are computed. `piece` is
     largely irrelevant.
-
-    See Also
-    --------
-    * :class:`statsmodels.nonparametric.kde.KDEMultivariate`
-    * :class:`scipy.stats.gaussian_kde`
-    * :class:`sklearn.neighbors.KernelDensity`
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'density_2d', 'position': 'identity',

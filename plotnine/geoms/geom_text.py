@@ -43,11 +43,9 @@ class geom_text(geom):
         If not :py:`None`, then the text if formatted with this
         string using :meth:`str.format`
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`matplotlib.text.Text`
+    matplotlib.text.Text
 
     """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',

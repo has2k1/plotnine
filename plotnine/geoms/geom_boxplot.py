@@ -46,8 +46,6 @@ class geom_boxplot(geom):
     fatten : float, optional (default: 2)
         A multiplicative factor used to increase the size of the
         middle bar across the box.
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5,

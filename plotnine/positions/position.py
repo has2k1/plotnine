@@ -63,14 +63,16 @@ class position(object):
         """
         Positions must override this function
 
-        How?
-        ----
+        Notes
+        -----
         Make necessary adjustments to the columns in the dataframe.
 
         Create the position transformation functions and
         use self.transform_position() do the rest.
 
-        See: position_jitter.compute_panel()
+        See Also
+        --------
+        position_jitter.compute_panel
         """
         msg = '{} needs to implement this method'
         raise NotImplementedError(msg.format(cls.__name__))

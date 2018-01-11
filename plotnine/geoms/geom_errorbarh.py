@@ -23,8 +23,6 @@ class geom_errorbarh(geom):
     height : float or None, optional (default: 0.5)
         Bar height. If :py:`None`, the height is set to
         `90%` of the resolution of the data.
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}

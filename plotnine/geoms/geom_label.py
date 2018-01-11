@@ -27,7 +27,7 @@ _params.update({
 @document
 class geom_label(geom_text):
     """
-    Textual annotations with a bacground
+    Textual annotations with a background
 
     {usage}
 
@@ -60,11 +60,9 @@ class geom_label(geom_text):
 
     See Also
     --------
-    :class:`~plotnine.geoms.geom_text` for documentation of the
-    parameters. :class:`matplotlib.patches.BoxStyle` for the
-    parameters that affect the boxstyle.
-
-    {aesthetics}
+    plotnine.geoms.geom_text : For documentation of the
+        parameters. :class:`matplotlib.patches.BoxStyle` for the
+        parameters that affect the boxstyle.
     """
     DEFAULT_AES = _aes
     DEFAULT_PARAMS = _params

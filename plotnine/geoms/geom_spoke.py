@@ -18,12 +18,10 @@ class geom_spoke(geom_segment):
     ----------
     {common_parameters}
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_segment` for documentation of extra
-    parameters.
+    plotnine.geoms.geom_segment : For documentation of extra
+        parameters.
     """
     REQUIRED_AES = {'x', 'y', 'angle', 'radius'}
 

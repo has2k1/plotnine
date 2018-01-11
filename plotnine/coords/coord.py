@@ -68,8 +68,8 @@ class coord(object):
             layout dataframe altered to according to the requirements
             of the coordinate system.
 
-        Note
-        ----
+        Notes
+        -----
         The input dataframe may be changed.
         """
         return layout

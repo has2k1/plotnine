@@ -15,8 +15,6 @@ class geom_blank(geom):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}

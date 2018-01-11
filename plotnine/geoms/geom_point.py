@@ -19,8 +19,6 @@ class geom_point(geom):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 1.5, 'stroke': 0.5}

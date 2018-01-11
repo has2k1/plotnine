@@ -34,8 +34,6 @@ class stat_ellipse(stat):
         The confidence level at which to draw the ellipse.
     segments : int, optional (default: 51)
         Number of segments to be used in drawing the ellipse.
-
-    {aesthetics}
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',

@@ -72,8 +72,8 @@ class themeable(object):
     When a method does require implementation, call :python:`super()`
     then add the themeable's implementation to the axes.
 
-    Note
-    ----
+    Notes
+    -----
     A user should never create instances of class :class:`themeable` or
     subclasses of it.
     """
@@ -442,8 +442,8 @@ class legend_text_legend(themeable):
     ----------
     theme_element : element_text
 
-    Note
-    ----
+    Notes
+    -----
     This themeable exists mainly to cater for differences
     in how the text is aligned, compared to the colorbar.
     Unless you experience those alignment issues (i.e when
@@ -478,8 +478,8 @@ class legend_text_colorbar(themeable):
     ----------
     theme_element : element_text
 
-    Note
-    ----
+    Notes
+    -----
     This themeable exists mainly to cater for differences
     in how the text is aligned, compared to the entry based
     legend. Unless you experience those alignment issues
@@ -1123,8 +1123,8 @@ class legend_box_background(themeable):
     ----------
     theme_element : element_rect
 
-    Note
-    ----
+    Notes
+    -----
     Not Implemented. We would have to place the outermost
     VPacker/HPacker boxes that hold the individual legends
     onto an object that has a patch.
@@ -1499,8 +1499,8 @@ class aspect_ratio(themeable):
     theme_element : float
         `panel_height / panel_width`
 
-    Note
-    ----
+    Notes
+    -----
     For a fixed relationship between the ``x`` and ``y`` scales,
     use :class:`~plotnine.coords.coord_fixed`.
     """

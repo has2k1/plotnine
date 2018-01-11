@@ -16,8 +16,6 @@ class geom_linerange(geom):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}

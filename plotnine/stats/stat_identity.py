@@ -15,8 +15,6 @@ class stat_identity(stat):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
                       'na_rm': False}

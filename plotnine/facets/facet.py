@@ -129,8 +129,8 @@ class facet(object):
         data : list of dataframes
             Data for each of the layers
 
-        Note
-        ----
+        Notes
+        -----
         This method will be called after :meth:`setup_params`,
         therefore the `params` property will be set.
         """

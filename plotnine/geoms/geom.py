@@ -30,6 +30,12 @@ class geom(object):
     # not implemented
     legend_geom = 'point'
 
+    # Documentation for the aesthetics. It is added under the
+    # documentation for mapping parameter. Use {aesthetics}
+    # placeholder to insert a table for all the aesthetics and
+    # their default values.
+    _aesthetics_doc = '{aesthetics_table}'
+
     def __init__(self, *args, **kwargs):
         kwargs = rename_aesthetics(kwargs)
         kwargs = data_mapping_as_kwargs(args, kwargs)
@@ -385,8 +391,8 @@ class geom(object):
         out : dataframe
             Data without the NaNs.
 
-        Note
-        ----
+        Notes
+        -----
         Shows a warning if the any rows are removed and the
         `na_rm` parameter is False. It only takes into account
         the columns of the required aesthetics.

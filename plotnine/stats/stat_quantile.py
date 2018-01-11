@@ -29,7 +29,14 @@ class stat_quantile(stat):
         Extra arguments passed on to the model fitting method,
         :meth:`statsmodels.regression.quantile_regression.QuantReg.fit`.
 
-    {aesthetics}
+    See Also
+    --------
+    statsmodels.regression.quantile_regression.QuantReg
+    plotnine.geoms.geom_quantile
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -40,12 +47,8 @@ class stat_quantile(stat):
 
     Calculated aesthetics are accessed using the `calc` function.
     e.g. :py:`'calc(quantile)'`.
-
-    See Also
-    --------
-    * :class:`statsmodels.regression.quantile_regression.QuantReg`
-    * :class:`~plotnine.geoms.geom_quantile`
     """
+
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'quantile', 'position': 'identity',
                       'na_rm': False, 'quantiles': (0.25, 0.5, 0.75),

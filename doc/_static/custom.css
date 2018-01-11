@@ -90,3 +90,21 @@ table.dataframe thead th {
 table.dataframe tbody tr:nth-child(odd) {
    background: #F0F6F6;
 }
+
+
+/* Aesthetics table */
+
+table.field-list dd table>tbody>tr>td,
+table.field-list dd table>tbody>tr>th,
+table.field-list dd table>tfoot>tr>td,
+table.field-list dd table>tfoot>tr>th,
+table.field-list dd table>thead>tr>td,
+table.field-list dd table>thead>tr>th {
+    padding: 0.5em;
+}
+
+/* Computed aesthetics */
+
+.content table.field-list dd>p.rubric {
+    margin: 1.5em 0 1em;
+}

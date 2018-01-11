@@ -21,8 +21,6 @@ class stat_smooth(stat):
     ----------
     {common_parameters}
 
-    Parameters
-    ----------
     method : str or callable, optional (default: 'auto')
         The available methods are::
 
@@ -95,7 +93,28 @@ class stat_smooth(stat):
     method_args : dict (default: {})
         Additional arguments passed on to the modelling method.
 
-    {aesthetics}
+    See Also
+    --------
+    statsmodels.regression.linear_model.OLS : OLS method
+    statsmodels.regression.linear_model.WLS : WLS method
+    statsmodels.robust.robust_linear_model.RLM : RLM method
+    statsmodels.genmod.generalized_linear_model.GLM : GLM method
+    statsmodels.regression.linear_model.GLS : GLS method
+    statsmodels.nonparametric.smoothers_lowess.lowess : lowess method
+    skmisc.loess.loess : loess method
+    pandas.DataFrame.rolling : mavg
+    sklearn.gaussian_process.GaussianProcessRegressor : gpr method
+
+    Notes
+    -----
+    :class:`~plotnine.geoms.geom_smooth` and :class:`.stat_smooth` are
+    effectively aliases, they both use the same arguments.
+    Use :class:`~plotnine.geoms.geom_smooth` unless
+    you want to display the results with a non-standard geom.
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -107,28 +126,8 @@ class stat_smooth(stat):
 
     Calculated aesthetics are accessed using the `calc` function.
     e.g. :py:`'calc(se)'`.
-
-    See Also
-    --------
-    The models that do the smoothing:
-
-    * :class:`statsmodels.regression.linear_model.OLS`
-    * :class:`statsmodels.regression.linear_model.WLS`
-    * :class:`statsmodels.robust.robust_linear_model.RLM`
-    * :class:`statsmodels.genmod.generalized_linear_model.GLM`
-    * :class:`statsmodels.regression.linear_model.GLS`
-    * :func:`statsmodels.nonparametric.smoothers_lowess.lowess`
-    * :class:`skmisc.loess.loess`
-    * :meth:`pandas.DataFrame.rolling`
-    * :class:`sklearn.gaussian_process.GaussianProcessRegressor`
-
-    Note
-    ----
-    :class:`~plotnine.geoms.geom_smooth` and :class:`.stat_smooth` are
-    effectively aliases, they both use the same arguments.
-    Use :class:`~plotnine.geoms.geom_smooth` unless
-    you want to display the results with a non-standard geom.
     """
+
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
                       'na_rm': False,

@@ -60,8 +60,8 @@ class theme(object):
         that can be themed. See
         :class:`~plotnine.themes.themeable.themeable`.
 
-    Note
-    ----
+    Notes
+    -----
     When subclassing, make sure to call :python:`theme.__init__`.
     After which you can customise :python:`self._rcParams` within
     the ``__init__`` method of the new theme. The ``rcParams``

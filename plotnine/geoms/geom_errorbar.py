@@ -23,8 +23,6 @@ class geom_errorbar(geom):
     width : float or None, optional (default: 0.5)
         Bar width. If :py:`None`, the width is set to
         `90%` of the resolution of the data.
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}

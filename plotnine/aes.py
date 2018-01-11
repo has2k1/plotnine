@@ -36,12 +36,15 @@ class aes(dict):
         x aesthetic mapping
     y : str | array_like | scalar | str-expression
         y aesthetic mapping
-
-    **kwargs : dict
+    \*\*kwargs : dict
         Other aesthetic mappings
 
+    Notes
+    -----
+    Only the **x** and **y** aesthetic mappings can be specified as
+    positional arguments. All the rest must be keyword arguments.
 
-    The value of each mapping must be one of;
+    The value of each mapping must be one of:
 
     - **string**::
 
@@ -111,10 +114,6 @@ class aes(dict):
     groups are sufficient. However, there may be cases were it is
     handy to map to it.
 
-    Note
-    ----
-    Only the **x** and **y** aesthetic mappings can be specified as
-    positional arguments. All the rest must be keyword arguments.
     """
 
     def __init__(self, *args, **kwargs):
@@ -363,8 +362,8 @@ def is_valid_aesthetic(value, ae):
     out : bool
         Whether the value is of a valid looking form.
 
-    Note
-    ----
+    Notes
+    -----
     There are no guarantees that he value is spot on
     valid.
     """

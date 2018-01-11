@@ -24,12 +24,10 @@ class geom_step(geom_path):
         One of *hv* or *vh*, for horizontal-vertical or
         vertical-horizontal steps.
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_path` for documentation of extra
-    parameters.
+    plotnine.geoms.geom_path : For documentation of extra
+        parameters.
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'direction': 'hv'}

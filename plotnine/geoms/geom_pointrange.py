@@ -21,8 +21,6 @@ class geom_pointrange(geom):
     fatten : float, optional (default: 2)
         A multiplicative factor used to increase the size of the
         point along the line-range.
-
-    {aesthetics}
     """
 
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,

@@ -259,8 +259,8 @@ def ninteraction(df, drop=False):
         The columns to consider for uniquness. If None, then
         it is all the columns
 
-    Note
-    ----
+    Notes
+    -----
     So far there has been no need not to drop unused levels
     of categorical variables.
     """
@@ -525,8 +525,8 @@ def to_rgba(colors, alpha):
     out : ndarray | tuple
         rgba color(s)
 
-    Note
-    ----
+    Notes
+    -----
     Matplotlib plotting functions only accept scalar
     alpha values. Hence no two objects with different
     alpha values may be plotted in one call. This would
@@ -795,8 +795,8 @@ class Registry(type):
 
         Registry['name'] = obj
 
-    Note
-    ----
+    Notes
+    -----
     When objects are deleted, they are automatically removed
     from the Registry.
     """

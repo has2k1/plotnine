@@ -59,7 +59,13 @@ class stat_bindot(stat):
         Bin boundaries for :py:`method='histodot'`. This supercedes the
         ``binwidth`` and ``bins``.
 
-    {aesthetics}
+    See Also
+    --------
+    plotnine.stats.stat_bin
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -70,10 +76,8 @@ class stat_bindot(stat):
          'ncount'   # count, scaled to maximum of 1
          'ndensity' # density, scaled to maximum of 1
 
-    See Also
-    --------
-    :class:`~plotnine.stats.stat_bin`
     """
+
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'dotplot', 'position': 'identity',
                       'na_rm': False,

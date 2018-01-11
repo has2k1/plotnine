@@ -22,8 +22,6 @@ class geom_rug(geom):
         Sides onto which to draw the marks. Any combination
         chosen from the characters ``btlr``, for *bottom*, *top*,
         *left* or *right* side marks.
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}

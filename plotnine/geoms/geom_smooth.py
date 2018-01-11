@@ -24,8 +24,6 @@ class geom_smooth(geom):
         How much (vertically) of the legend box should be filled by
         the color that indicates the confidence intervals. Should be
         in the range [0, 1].
-
-    {aesthetics}
     """
     DEFAULT_AES = {'alpha': 0.4, 'color': 'black', 'fill': '#999999',
                    'linetype': 'solid', 'size': 1,

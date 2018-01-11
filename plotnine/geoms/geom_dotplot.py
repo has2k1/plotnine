@@ -33,11 +33,9 @@ class geom_dotplot(geom):
     stackgroups : bool (default: False)
         If :py:`True`, the dots are stacked across groups.
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.stats.stat_bindot`
+    plotnine.stats.stat_bindot
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}

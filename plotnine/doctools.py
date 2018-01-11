@@ -2,6 +2,28 @@ from __future__ import absolute_import, division, print_function
 
 import re
 from textwrap import dedent, wrap
+
+try:
+    from textwrap import indent
+except ImportError:
+    # Python 2.7
+    def indent(text, prefix, predicate=None):
+        """Adds 'prefix' to the beginning of selected lines in 'text'.
+        If 'predicate' is provided, 'prefix' will only be added to the lines
+        where 'predicate(line)' is True. If 'predicate' is not provided,
+        it will default to adding 'prefix' to all non-empty lines that do not
+        consist solely of whitespace characters.
+        """
+        if predicate is None:
+            def predicate(line):
+                return line.strip()
+
+        def prefixed_lines():
+            for line in text.splitlines(True):
+                yield (prefix + line if predicate(line) else line)
+        return ''.join(prefixed_lines())
+
+
 from collections import OrderedDict
 try:
     from functools import lru_cache
@@ -41,10 +63,8 @@ be keyword arguments. ``**kwargs`` can be aesthetics (or parameters)
 used by the ``stat``.
 """
 
-AESTHETICS_TPL = """
-.. rubric:: Aesthetics
-
-{aesthetics_table}
+AESTHETICS_TABLE_TPL = """
+{table}
 
 The **bold** aesthetics are required.
 """
@@ -99,32 +119,34 @@ any other aesthetic are included by default."""
 
 
 GEOM_PARAMS_TPL = """\
-mapping: aes, optional
+mapping : ~plotnine.aes.aes, optional
     {mapping}
-data: dataframe, optional
+    {_aesthetics_doc}
+data : dataframe, optional
     {data}
-stat: str or stat, optional (default: {default_stat})
+stat : str or stat, optional (default: {default_stat})
     {stat}
-position: str or position, optional (default: {default_position})
+position : str or position, optional (default: {default_position})
     {position}
-na_rm: bool, optional (default: {default_na_rm})
+na_rm : bool, optional (default: {default_na_rm})
     {na_rm}
-inherit_aes: bool, optional (default: {default_inherit_aes})
+inherit_aes : bool, optional (default: {default_inherit_aes})
     {inherit_aes}
-show_legend: bool or dict, optional (default: None)
+show_legend : bool or dict, optional (default: None)
     {show_legend}
 """
 
 STAT_PARAMS_TPL = """\
-mapping: aes, optional
+mapping : aes, optional
     {mapping}
-data: dataframe, optional
+    {_aesthetics_doc}
+data : dataframe, optional
     {data}
-geom: str or stat, optional (default: {default_geom})
+geom : str or stat, optional (default: {default_geom})
     {stat}
-position: str or position, optional (default: {default_position})
+position : str or position, optional (default: {default_position})
     {position}
-na_rm: bool, optional (default: {default_na_rm})
+na_rm : bool, optional (default: {default_na_rm})
     {na_rm}
 """
 
@@ -366,15 +388,6 @@ def document_geom(geom):
                                common_geom_param_values)
     usage = GEOM_SIGNATURE_TPL.format(signature=signature)
 
-    # common_parameters
-    d = geom.DEFAULT_PARAMS
-    common_parameters = GEOM_PARAMS_TPL.format(
-        default_stat=d['stat'],
-        default_position=d['position'],
-        default_na_rm=d['na_rm'],
-        default_inherit_aes=d.get('inherit_aes', True),
-        **common_params_doc)
-
     # aesthetics
     contents = OrderedDict(('**{}**'.format(ae), '')
                            for ae in sorted(geom.REQUIRED_AES))
@@ -382,13 +395,26 @@ def document_geom(geom):
         d = geom.DEFAULT_AES.copy()
         d['group'] = ''  # All geoms understand the group aesthetic
         contents.update(sorted(d.items()))
-    table = dict_to_table(('Aesthetic', 'Default value'),
-                          contents)
-    aesthetics = AESTHETICS_TPL.format(aesthetics_table=table)
+
+    table = dict_to_table(('Aesthetic', 'Default value'), contents)
+    aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
+    tpl = dedent(geom._aesthetics_doc.lstrip('\n'))
+    aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
+    aesthetics_doc = indent(aesthetics_doc, ' '*4)
+
+    # common_parameters
+    d = geom.DEFAULT_PARAMS
+    common_parameters = GEOM_PARAMS_TPL.format(
+        default_stat=d['stat'],
+        default_position=d['position'],
+        default_na_rm=d['na_rm'],
+        default_inherit_aes=d.get('inherit_aes', True),
+        _aesthetics_doc=aesthetics_doc,
+        **common_params_doc)
+
     docstring = docstring.replace('{usage}', usage)
     docstring = docstring.replace('{common_parameters}',
                                   common_parameters)
-    docstring = docstring.replace('{aesthetics}', aesthetics)
     geom.__doc__ = docstring
     return geom
 
@@ -411,26 +437,28 @@ def document_stat(stat):
                                common_stat_param_values)
     usage = STAT_SIGNATURE_TPL.format(signature=signature)
 
+    # aesthetics
+    contents = OrderedDict(('**{}**'.format(ae), '')
+                           for ae in sorted(stat.REQUIRED_AES))
+    contents.update(sorted(stat.DEFAULT_AES.items()))
+    table = dict_to_table(('Aesthetic', 'Default value'), contents)
+    aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
+    tpl = dedent(stat._aesthetics_doc.lstrip('\n'))
+    aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
+    aesthetics_doc = indent(aesthetics_doc, ' '*4)
+
     # common_parameters
     d = stat.DEFAULT_PARAMS
     common_parameters = STAT_PARAMS_TPL.format(
             default_geom=d['geom'],
             default_position=d['position'],
             default_na_rm=d['na_rm'],
+            _aesthetics_doc=aesthetics_doc,
             **common_params_doc)
-
-    # aesthetics
-    contents = OrderedDict(('**{}**'.format(ae), '')
-                           for ae in sorted(stat.REQUIRED_AES))
-    contents.update(sorted(stat.DEFAULT_AES.items()))
-    table = dict_to_table(('Aesthetic', 'Default value'),
-                          contents)
-    aesthetics = AESTHETICS_TPL.format(aesthetics_table=table)
 
     docstring = docstring.replace('{usage}', usage)
     docstring = docstring.replace('{common_parameters}',
                                   common_parameters)
-    docstring = docstring.replace('{aesthetics}', aesthetics)
     stat.__doc__ = docstring
     return stat
 

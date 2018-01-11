@@ -26,8 +26,8 @@ class PlotnineAnimation(ArtistAnimation):
         Controls whether blitting is used to optimize drawing. Defaults
         to `False`.
 
-    Note
-    ----
+    Notes
+    -----
     1. The plots should have the same `facet` and
        the facet should not have fixed x and y scales.
     2. The scales of all the plots should have the same limits. It is

@@ -16,12 +16,10 @@ class geom_line(geom_path):
     ----------
     {common_parameters}
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_path` for documentation of
-    other parameters.
+    plotnine.geoms.geom_path - For documentation of
+        other parameters.
     """
 
     def setup_data(self, data):

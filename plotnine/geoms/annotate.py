@@ -36,8 +36,8 @@ class annotate(object):
     kwargs : dict
         Other aesthetics
 
-    Note
-    ----
+    Notes
+    -----
     The positioning aethetics `x`, `y`, `xmin`, `ymin`, `xmax`,
     `ymax`, `xend` and `yend` depend on which `geom` is used.
     You need to choose or ignore accordingly.

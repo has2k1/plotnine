@@ -145,8 +145,8 @@ class layer(object):
         of this layer. If ``None`` then an automatic/good choice
         is made. Default is ``None``.
 
-    Note
-    ----
+    Notes
+    -----
     There is no benefit to manually creating a layer. You should
     always use a ``geom`` or ``stat``.
     """
@@ -259,8 +259,8 @@ class layer(object):
         mapping : aes
             mappings in the ggplot call
 
-        Note
-        ----
+        Notes
+        -----
         Once computed the layer mappings are also stored
         in self._active_mapping
         """

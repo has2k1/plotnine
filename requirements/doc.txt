@@ -1,4 +1,5 @@
 git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
+git+https://github.com/has2k1/numpydoc@xref-param-type#egg=xref_param_type
 jupyter
 sphinx>=1.6.1
 nbsphinx

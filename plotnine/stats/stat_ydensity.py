@@ -60,7 +60,15 @@ class stat_ydensity(stat):
 
             'width'  # all violins have the same maximum width.
 
-    {aesthetics}
+    See Also
+    --------
+    plotnine.geoms.geom_violin
+    statsmodels.nonparametric.kde.KDEUnivariate
+    statsmodels.nonparametric.kde.KDEUnivariate.fit
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -70,12 +78,6 @@ class stat_ydensity(stat):
 
     Calculated aesthetics are accessed using the `calc` function.
     e.g. :py:`'calc(width)'`.
-
-    See Also
-    --------
-    * :class:`~plotnine.geoms.geom_violin`
-    * :class:`statsmodels.nonparametric.kde.KDEUnivariate`
-    * :meth:`statsmodels.nonparametric.kde.KDEUnivariate.fit`
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'violin', 'position': 'dodge',

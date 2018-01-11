@@ -19,8 +19,6 @@ class geom_count(geom_point):
     Parameters
     ----------
     {common_parameters}
-
-    {aesthetics}
     """
     DEFAULT_PARAMS = {'stat': 'sum', 'position': 'identity',
                       'na_rm': False}

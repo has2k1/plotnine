@@ -19,8 +19,10 @@ class stat_sum(stat):
     Parameters
     ----------
     {common_parameters}
+    """
 
-    {aesthetics}
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -30,6 +32,7 @@ class stat_sum(stat):
         'prop'  # Ratio of points in that panel at a position
 
     """
+
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
                       'na_rm': False}

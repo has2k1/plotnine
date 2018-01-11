@@ -50,8 +50,10 @@ class stat_bin(stat):
     pad : bool, optional (default: False)
         If :py:`True`, adds empty bins at either side of x.
         This ensures that frequency polygons touch 0.
+    """
 
-    {aesthetics}
+    _aesthetics_doc = """
+    {aesthetics_table}
 
     .. rubric:: Options for computed aesthetics
 
@@ -61,6 +63,7 @@ class stat_bin(stat):
          'density'  # density of points in bin, scaled to integrate to 1
          'ncount'   # count, scaled to maximum of 1
          'ndensity' # density, scaled to maximum of 1
+
     """
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',

@@ -16,11 +16,9 @@ class geom_histogram(geom_bar):
     ----------
     {common_parameters}
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_bar`
+    plotnine.geoms.geom_bar
     """
     DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack',
                       'na_rm': False}

@@ -27,12 +27,10 @@ class geom_segment(geom):
     arrow : plotnine.geoms.geom_path.arrow (default: None)
         Arrow specification. Default is no arrow.
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_path.arrow` for adding arrowhead(s)
-    to segments.
+    plotnine.geoms.geom_path.arrow : for adding arrowhead(s)
+        to segments.
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}

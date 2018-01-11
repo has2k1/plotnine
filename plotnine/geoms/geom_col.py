@@ -23,11 +23,9 @@ class geom_col(geom_bar):
         Bar width. If :py:`None`, the width is set to
         `90%` of the resolution of the data.
 
-    {aesthetics}
-
     See Also
     --------
-    :class:`~plotnine.geoms.geom_bar`
+    plotnine.geoms.geom_bar
     """
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',

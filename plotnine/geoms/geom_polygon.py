@@ -21,8 +21,8 @@ class geom_polygon(geom):
     ----------
     {common_parameters}
 
-    {aesthetics}
-
+    Notes
+    -----
     All paths in the same ``group`` aesthetic value make up a polygon.
     """
     DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',

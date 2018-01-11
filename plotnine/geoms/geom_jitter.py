@@ -29,12 +29,10 @@ class geom_jitter(geom_point):
         Seed or Random number generator to use. If ``None``, then
         numpy global generator :class:`numpy.random` is used.
 
-    {aesthetics}
-
     See Also
     --------
-    * :class:`~plotnine.positions.position_jitter`
-    * :class:`~plotnine.geoms.geom_point`
+    plotnine.positions.position_jitter
+    plotnine.geoms.geom_point
     """
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
                       'na_rm': False, 'width': None, 'height': None,
