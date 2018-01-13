@@ -31,7 +31,6 @@ class geom_point(geom):
         data = coord.transform(data, panel_params)
         units = 'shape'
         for _, udata in groupby_with_null(data, units):
-            udata.is_copy = None
             udata.reset_index(inplace=True, drop=True)
             geom_point.draw_unit(udata, panel_params, coord,
                                  ax, **params)

@@ -610,7 +610,6 @@ def groupby_apply(df, cols, func, *args, **kwargs):
     for _, d in df.groupby(cols):
         # function fn should be free to modify dataframe d, therefore
         # do not mark d as a slice of df i.e no SettingWithCopyWarning
-        d.is_copy = None
         lst.append(func(d, *args, **kwargs))
     return pd.concat(lst, axis=axis, ignore_index=True)
 
@@ -645,7 +644,6 @@ def groupby_with_null(data, *args, **kwargs):
     # Groupby on the columns, making sure to revert back
     # to NaN/None and the correct dtype.
     for group, df in data.groupby(*args, **kwargs):
-        df.is_copy = None
         for col, (orig_idx, orig_dtype) in altered_columns.items():
             # Indices in the grouped df that need correction
             sub_idx = orig_idx.intersection(df[col].index)

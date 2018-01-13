@@ -89,7 +89,6 @@ class geom_path(geom):
         c = Counter(data['group'])
         counts = np.array([c[v] for v in data['group']])
         data = data[counts >= 2]
-        data.is_copy = None
 
         if len(data) < 2:
             return
@@ -108,7 +107,6 @@ class geom_path(geom):
         else:
             for _, gdata in data.groupby('group'):
                 gdata.reset_index(inplace=True, drop=True)
-                gdata.is_copy = None
                 self.draw_group(gdata, panel_params, coord, ax, **params)
 
     @staticmethod

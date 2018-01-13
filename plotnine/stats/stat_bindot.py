@@ -198,7 +198,6 @@ class stat_bindot(stat):
                 if params['drop']:
                     data = data[data['count'] > 0]
                     data.reset_index(inplace=True, drop=True)
-                    data.is_copy = None
 
         if params['binaxis'] == 'x':
             data['x'] = data.pop('bincenter')

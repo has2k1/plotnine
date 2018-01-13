@@ -53,8 +53,6 @@ class geom_violin(geom):
         quantiles = params['draw_quantiles']
 
         for _, df in data.groupby('group'):
-            df.is_copy = None
-
             # Find the points for the line to go all the way around
             df['xminv'] = (df['x'] - df['violinwidth'] *
                            (df['x'] - df['xmin']))

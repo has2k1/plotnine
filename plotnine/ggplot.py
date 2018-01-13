@@ -181,6 +181,13 @@ class ggplot(object):
         This method does not modify the original ggplot object. You can
         get the modified ggplot object with :py:`return_ggplot=True`.
         """
+        # Pandas deprecated is_copy, and when we create new dataframes
+        # from slices we do not want complaints. We always uses the
+        # new frames knowing that they are separate from the original.
+        with pd.option_context('mode.chained_assignment', None):
+            return self._draw(return_ggplot)
+
+    def _draw(self, return_ggplot=False):
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme

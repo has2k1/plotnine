@@ -51,6 +51,5 @@ class geom_hline(geom):
 
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
-            gdata.is_copy = None
             geom_segment.draw_group(gdata, panel_params,
                                     coord, ax, **params)

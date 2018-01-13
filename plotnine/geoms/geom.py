@@ -219,7 +219,6 @@ class geom(object):
         for pid, pdata in data.groupby('PANEL'):
             if len(pdata) == 0:
                 continue
-            pdata.is_copy = None
             ploc = pid - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
@@ -258,7 +257,6 @@ class geom(object):
         """
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True, drop=True)
-            gdata.is_copy = None
             self.draw_group(gdata, panel_params, coord, ax, **params)
 
     @staticmethod

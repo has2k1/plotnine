@@ -70,8 +70,6 @@ class position_stack(position):
         negative = data['ymax'] < 0
         neg = data.loc[negative]
         pos = data.loc[~negative]
-        neg.is_copy = None
-        pos.is_copy = None
 
         if len(neg):
             neg = cls.collide(neg, params=params)

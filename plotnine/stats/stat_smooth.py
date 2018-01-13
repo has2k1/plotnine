@@ -142,7 +142,6 @@ class stat_smooth(stat):
         """
         data = data[np.isfinite(data['x']) &
                     np.isfinite(data['y'])]
-        data.is_copy = None
         return data
 
     def setup_params(self, data):

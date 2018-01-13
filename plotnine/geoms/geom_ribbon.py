@@ -39,7 +39,6 @@ class geom_ribbon(geom):
             raise PlotnineError(msg)
 
         for _, udata in groupby_with_null(data, units):
-            udata.is_copy = None
             udata.reset_index(inplace=True, drop=True)
             geom_ribbon.draw_unit(udata, panel_params, coord,
                                   ax, **params)

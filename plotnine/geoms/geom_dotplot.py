@@ -92,7 +92,6 @@ class geom_dotplot(geom):
                for j in range(int(c))]
         data = data.iloc[idx]
         data.reset_index(inplace=True, drop=True)
-        data.is_copy = None
         # Next part will set the position of each dot within each stack
         # If stackgroups=TRUE, split only on x (or y) and panel;
         # if not stacking, also split by group
