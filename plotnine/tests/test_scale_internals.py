@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function
 from datetime import datetime
 
 import numpy as np
+import numpy.testing as npt
 import pandas as pd
 import pytest
 import six
@@ -22,6 +23,7 @@ from plotnine.scales.scale_size import (scale_size_discrete,
                                         scale_size_continuous,
                                         scale_size_area,
                                         scale_size_radius)
+from plotnine.scales.scale_manual import _scale_manual
 from plotnine.scales.scales import make_scale
 from plotnine.exceptions import PlotnineError
 
@@ -378,3 +380,21 @@ def test_scale_without_a_mapping():
          + scale_color.scale_color_continuous())
     with pytest.warns(UserWarning):
         p.draw_test()
+
+
+def scale_scale_discrete_mapping_nulls():
+    a = np.array([1, 2, 3], dtype=object)
+
+    sc = _scale_manual([1, 2, 3, 4, 5])
+    sc.train(a)
+    res = sc.map([1, 2, 3])
+    expected = np.array([1, 2, 3])
+    npt.assert_array_equal(res, expected)
+
+    sc = _scale_manual([1, None, 3, 4, 5])
+    sc.train(a)
+    res = sc.map([1, 2, 3])
+    expected = np.array([1, np.nan, 3])
+    assert res[0] == expected[0]
+    assert res[1] is expected[1]
+    assert res[2] == expected[2]

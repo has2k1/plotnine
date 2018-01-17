@@ -48,6 +48,9 @@ Bug Fixes
   ignored when determining the axis titles. Now, the ``name`` parameter
   is specified, it is used as the title. (:issue:`105`)
 
+- Fixed bug in discrete scales where a column could not be mapped
+  to integer values. (:issue:`108`)
+
 v0.3.0
 ------
 *(2017-11-08)*

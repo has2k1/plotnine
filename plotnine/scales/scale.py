@@ -284,7 +284,9 @@ class scale_discrete(scale):
         else:
             pal = np.asarray(pal)
             pal_match = pal[match(x, limits)]
-            pal_match[pd.isnull(pal_match)] = self.na_value
+            bool_idx = pd.isnull(pal_match)
+            if np.any(bool_idx):
+                pal_match[bool_idx] = self.na_value
         return pal_match
 
     def break_info(self, range=None):
