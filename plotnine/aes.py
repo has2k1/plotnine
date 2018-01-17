@@ -32,11 +32,11 @@ class aes(dict):
 
     Parameters
     ----------
-    x : str | array_like | scalar | str-expression
+    x : expression | array_like | scalar
         x aesthetic mapping
-    y : str | array_like | scalar | str-expression
+    y : expression | array_like | scalar
         y aesthetic mapping
-    \*\*kwargs : dict
+    **kwargs : dict
         Other aesthetic mappings
 
     Notes

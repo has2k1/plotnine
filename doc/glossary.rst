@@ -15,3 +15,16 @@ Glossary of Common Terms
 
     position
         A subclass of :class:`~plotnine.positions.position.position`.
+
+    expression
+        A python expression wrapped in a string. The expression can
+        refer to variables in the user environment and columns in
+        the dataframe.
+
+        The following may be valid expressions::
+
+            'col1'
+            'col1 + col2'
+            'np.sin(col1)'
+            '"string-value"'
+

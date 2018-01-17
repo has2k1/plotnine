@@ -435,6 +435,7 @@ numpydoc_xref_aliases = {
     'geom': ':term:`geom`',
     'stat': ':term:`stat`',
     'position': ':term:`position`',
+    'expression': ':term:`expression`',
 }
 
 
