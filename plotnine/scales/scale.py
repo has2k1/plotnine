@@ -82,14 +82,14 @@ class scale(object):
     guide = 'legend'    # legend or any other guide
     _limits = None      # (min, max) - set by user
 
-    # range of aesthetic, instantiated by __init__
-    range = Range
+    # range of aesthetic, instantiated by __init__ from the
+    range = None
+    _range_class = Range
 
     #: multiplicative and additive expansion constants
     expand = waiver()
 
     def __init__(self, **kwargs):
-        self.range = self.range()
         for k, v in kwargs.items():
             if hasattr(self, '_'+k):
                 setattr(self, '_'+k, v)
@@ -98,6 +98,9 @@ class scale(object):
             else:
                 msg = "{} could not recognise parameter `{}`"
                 warn(msg.format(self.__class__.__name__, k))
+
+        if self.range is None:
+            self.range = self._range_class()
 
         if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
             if len(self.breaks) != len(self.labels):
@@ -242,7 +245,7 @@ class scale_discrete(scale):
         Whether to drop unused categories from
         the scale
     """
-    range = RangeDiscrete
+    _range_class = RangeDiscrete
     drop = True        # drop unused factor levels from the scale
 
     def train(self, x, drop=None):
@@ -428,7 +431,7 @@ class scale_continuous(scale):
     If using the class directly all arguments must be
     keyword arguments.
     """
-    range = RangeContinuous
+    _range_class = RangeContinuous
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
