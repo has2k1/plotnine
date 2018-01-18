@@ -28,33 +28,33 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     Parameters
     ----------
-    x: str | array_like
+    x : str | array_like
         x aesthetic
-    y: str | array_like
+    y : str | array_like
         y aesthetic
-    data: pandas.DataFrame
+    data : dataframe
         Data frame to use (optional). If not specified,
         will create one, extracting arrays from the
         current environment.
-    geom: str | list
+    geom : str | list
         *geom(s)* to do the drawing. If ``auto``, defaults
         to 'point' if ``x`` and ``y`` are specified or
         'histogram' if only ``x`` is specified.
-    xlim: tuple
+    xlim : tuple
         x-axis limits
-    ylim: tuple
+    ylim : tuple
         y-axis limits
-    log: 'x' | 'y' | 'xy'
+    log : str in ``{'x', 'y', 'xy'}``
         Which variables to log transform.
-    main: str
+    main : str
         Plot title
-    xlab: str
+    xlab : str
         x-axis label
-    ylab: str
+    ylab : str
         y-axis label
-    asp: str | float
+    asp : str | float
         The y/x aspect ratio.
-    kwargs: dict
+    **kwargs : dict
         Arguments passed on to the geom.
 
     Returns

@@ -410,6 +410,7 @@ extlinks = {
 }
 
 
+# numpydoc
 numpydoc_show_class_members = False
 numpydoc_class_members_toctree = False
 numpydoc_xref_param_type = True
@@ -436,6 +437,11 @@ numpydoc_xref_aliases = {
     'stat': ':term:`stat`',
     'position': ':term:`position`',
     'expression': ':term:`expression`',
+    'aes': 'plotnine.aes',
+    'ggplot': 'plotnine.ggplot',
+    'element_line': 'plotnine.themes.element_line',
+    'element_rect': 'plotnine.themes.element_rect',
+    'element_text': 'plotnine.themes.element_text',
 }
 
 

@@ -130,7 +130,7 @@ class layer(object):
     stat : stat, optional
         stat used for the statistical transformation of
         data in this layer
-    data : pandas.DataFrame, optional
+    data : dataframe, optional
         Data plotted in this layer. If ``None``, the data from
         the :class:`~plotnine.ggplot` object will be used.
     mapping : aes, optional

@@ -16,7 +16,7 @@ def layer_data(p, i=0):
 
     Returns
     -------
-    out : pandas.DataFrame
+    out : dataframe
         Layer information
     """
     p = deepcopy(p)

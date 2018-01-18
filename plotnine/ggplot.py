@@ -37,7 +37,7 @@ class ggplot(object):
 
     Parameters
     ----------
-    aesthetics :  aes
+    aesthetics : aes
         Default aesthetics for the plot. These will be used
         by all layers unless specifically overridden.
     data :  dataframe

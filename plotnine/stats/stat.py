@@ -139,12 +139,12 @@ class stat(object):
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : dataframe
             Data used for drawing the geom.
 
         Returns
         -------
-        out : pandas.DataFrame
+        out : dataframe
             Data used for drawing the geom.
         """
         missing = (self.aesthetics() -
@@ -169,7 +169,7 @@ class stat(object):
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : dataframe
             Data
 
         Returns
@@ -185,12 +185,12 @@ class stat(object):
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : dataframe
             Data
 
         Returns
         -------
-        out : pandas.DataFrame
+        out : dataframe
             Data
         """
         return data
@@ -281,7 +281,7 @@ class stat(object):
 
         Parameters
         ----------
-        data : pandas.dataframe
+        data : dataframe
             data for the computing
         scales : Bunch
             x (``scales.x``) and y (``scales.y``) scale objects.
@@ -329,7 +329,7 @@ class stat(object):
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : dataframe
             Data for a group
         scales : Bunch
             x (``scales.x``) and y (``scales.y``) scale objects.

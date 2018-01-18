@@ -146,12 +146,12 @@ class geom(object):
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : dataframe
             Data used for drawing the geom.
 
         Returns
         -------
-        out : pandas.DataFrame
+        out : dataframe
             Data used for drawing the geom.
         """
         return data
@@ -164,12 +164,12 @@ class geom(object):
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : dataframe
             Data used for drawing the geom.
 
         Returns
         -------
-        out : pandas.DataFrame
+        out : dataframe
             Data used for drawing the geom.
         """
         missing_aes = (six.viewkeys(self.DEFAULT_AES) -

@@ -140,7 +140,7 @@ def assign_bins(x, breaks, weight=None, pad=False, closed='right'):
 
     Returns
     -------
-    out : pandas.DataFrame
+    out : dataframe
         Bin count and density information.
     """
     right = closed == 'right'
