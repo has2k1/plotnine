@@ -64,7 +64,7 @@ class scale(object):
     na_value : scalar
         What value to assign to missing values. Default
         is to assign ``np.nan``.
-    palette : function, optional
+    palette : callable, optional
         Function to map data points onto the scale. Most
         scales define their own palettes.
     aesthetics : list, very optional

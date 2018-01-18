@@ -119,7 +119,7 @@ any other aesthetic are included by default."""
 
 
 GEOM_PARAMS_TPL = """\
-mapping : ~plotnine.aes.aes, optional
+mapping : aes, optional
     {mapping}
     {_aesthetics_doc}
 data : dataframe, optional

@@ -43,10 +43,10 @@ class ggplot(object):
     data :  dataframe
         Default data for for plot. Every layer that does not
         have data of its own will use this one.
-    environment : namespace
-        If an variable defined in the aesthetic mapping is not
+    environment : dict, ~patsy.Eval.EvalEnvironment
+        If a variable defined in the aesthetic mapping is not
         found in the data, ggplot will look for it in this
-        namespace. It defaults to using the environment/namespace
+        namespace. It defaults to using the environment/namespace.
         in which `ggplot()` is called.
     """
 
@@ -170,7 +170,7 @@ class ggplot(object):
 
         Returns
         -------
-        fig : maptlotplib.figure.Figure
+        fig : ~matplotlib.figure.Figure
             Matplotlib figure
         plot : ggplot (optional)
             The ggplot object used for drawn, if ``return_ggplot`` is
@@ -235,7 +235,7 @@ class ggplot(object):
 
         Parameters
         ----------
-        figure : matplotlib.figure.Figure
+        figure : ~matplotlib.figure.Figure
             Matplotlib figure
         axs : array_like
             Array of Axes onto which to draw the plots
