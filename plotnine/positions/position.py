@@ -182,7 +182,7 @@ class position(object):
             data['-group'] = -data['group']
             idx = data.sort_values(
                 ['xmin', '-group'], kind='mergesort').index
-            data.pop('-group')
+            del data['-group']
 
         data = data.loc[idx, :]
 

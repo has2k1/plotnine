@@ -127,7 +127,7 @@ class guide_legend(guide):
             warn("Duplicated override_aes is ignored.")
         self.override_aes.update(other.override_aes)
         for ae in duplicated:
-            self.override_aes.pop(ae)
+            del self.override_aes[ae]
         return self
 
     def create_geoms(self, plot):
