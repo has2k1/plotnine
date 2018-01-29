@@ -25,6 +25,8 @@ New Features
 
 - Added :class:`~plotnine.stats.stat_ellipse`.
 
+- Added :class:`~plotnine.geom.geom_map`.
+
 - Plotnine learned to respect plydata groups.
 
 Bug Fixes

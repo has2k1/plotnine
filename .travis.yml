@@ -64,7 +64,7 @@ install:
     fi
   - |
     if [[ "$JOB" == "UNITTEST" ]]; then
-      conda install pytest-cov
+      conda install pytest-cov pyshp
       pip install coveralls
     elif [[ "$JOB" == "DOCS" ]]; then
       pip install -r requirements/doc.txt

@@ -67,6 +67,7 @@ distinct visual aspects of the representation are controlled by the
    geom_label
    geom_line
    geom_linerange
+   geom_map
    geom_path
    geom_point
    geom_pointrange

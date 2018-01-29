@@ -54,6 +54,8 @@ def get_required_packages():
                         'patsy >= 0.4.1',
                         'statsmodels >= 0.8.0',
                         'pandas >= 0.21.0',
+                        'geopandas >= 0.3.0',
+                        'descartes >= 1.1.0'
                         ]
     return install_requires
 

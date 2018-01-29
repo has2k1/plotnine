@@ -3,11 +3,14 @@ statsmodels
 pandas
 matplotlib
 mizani
+geopandas
+descartes
 
 # Documentation
 -r doc.txt
 
 # Testing
+pyshp
 pytest-cov
 wheel
 pep8

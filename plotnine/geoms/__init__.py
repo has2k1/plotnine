@@ -24,6 +24,7 @@ from .geom_jitter import geom_jitter
 from .geom_label import geom_label
 from .geom_line import geom_line
 from .geom_linerange import geom_linerange
+from .geom_map import geom_map
 from .geom_path import geom_path
 from .geom_point import geom_point
 from .geom_pointrange import geom_pointrange
@@ -55,7 +56,7 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
            'geom_dotplot', 'geom_errorbar',
            'geom_errorbarh', 'geom_freqpoly', 'geom_histogram',
            'geom_hline', 'geom_jitter', 'geom_label', 'geom_line',
-           'geom_linerange', 'geom_path', 'geom_point',
+           'geom_linerange', 'geom_map', 'geom_path', 'geom_point',
            'geom_pointrange', 'geom_pointrange',
            'geom_quantile', 'geom_qq', 'geom_qq_line',
            'geom_polygon', 'geom_rect',
