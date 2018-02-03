@@ -29,6 +29,8 @@ New Features
 
 - Plotnine learned to respect plydata groups.
 
+- Added :class:`~plotnine.stats.stat_hull`.
+
 Bug Fixes
 *********
 

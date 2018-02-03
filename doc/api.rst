@@ -146,6 +146,7 @@ with a ``geom`` that can represent all or some of the computations.
    stat_ecdf
    stat_ellipse
    stat_function
+   stat_hull
    stat_identity
    stat_qq
    stat_qq_line
