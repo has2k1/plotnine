@@ -218,7 +218,10 @@ class Layout(object):
         out : str
             x-axis label
         """
-        return self.panel_scales_x[0].name or labels.get('x', '')
+        if self.panel_scales_x[0].name is not None:
+            return self.panel_scales_x[0].name
+        else:
+            return labels.get('x', '')
 
     def ylabel(self, labels):
         """
@@ -235,4 +238,7 @@ class Layout(object):
         out : str
             y-axis label
         """
-        return self.panel_scales_y[0].name or labels.get('y', '')
+        if self.panel_scales_y[0].name is not None:
+            return self.panel_scales_y[0].name
+        else:
+            return labels.get('y', '')
