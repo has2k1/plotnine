@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from warnings import warn
 
+import matplotlib as mpl
 from mizani.bounds import rescale_mid
 from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
                              gradient_n_pal, cmap_pal,
@@ -370,8 +371,22 @@ class scale_fill_distiller(scale_color_distiller):
 
 
 # matplotlib colormaps
+def scale_color_cmap(cmap, *args, **kwargs):
+    if isinstance(cmap, mpl.colors.ListedColormap):
+        return scale_color_manual([mpl.colors.to_hex(x) for x in cmap.colors], *args, **kwargs)
+    else:
+        return _scale_color_cmap(cmap, *args, **kwargs)
+
+
+def scale_fill_cmap(cmap, *args, **kwargs):
+    if isinstance(cmap, mpl.colors.ListedColormap):
+        return scale_fill_manual([mpl.colors.to_hex(x) for x in cmap.colors], *args, **kwargs)
+    else:
+        return _scale_fill_cmap(cmap, *args, **kwargs)
+
+
 @document
-class scale_color_cmap(scale_continuous):
+class _scale_color_cmap(scale_continuous):
     """
     Create color scales using Matplotlib colormaps
 
@@ -405,7 +420,7 @@ class scale_color_cmap(scale_continuous):
 
 
 @document
-class scale_fill_cmap(scale_color_cmap):
+class _scale_fill_cmap(scale_color_cmap):
     """
     Create color scales using Matplotlib colormaps
 
