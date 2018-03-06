@@ -52,7 +52,7 @@ class guides(dict):
 
         # Determined from the theme when the guides are
         # getting built
-        self.position = None
+        self.position = 'right'
         self.box_direction = None
         self.box_align = None
         self.box_margin = None
@@ -109,8 +109,9 @@ class guides(dict):
 
         with suppress(KeyError):
             self.position = get_property('legend_position')
-        if self.position is None:
-            self.position = 'right'
+
+        if self.position == 'none':
+            return
 
         # justification of legend boxes
         with suppress(KeyError):

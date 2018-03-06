@@ -1698,7 +1698,7 @@ class legend_position(themeable):
     ----------
     theme_element : str or tuple
         If a string it should be one of *right*, *left*, *top*
-        or *bottom*. If a tuple, it should be two floats each
+        *bottom* or *none*. If a tuple, it should be two floats each
         in the approximate range [0, 1]. The tuple specifies the
         location of the legend in screen coordinates.
     """

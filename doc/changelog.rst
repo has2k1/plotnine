@@ -55,6 +55,9 @@ Bug Fixes
 - Fixed bug in discrete scales where a column could not be mapped
   to integer values. (:issue:`108`)
 
+- Make it possible to hide the legend with ``theme(legend_position='none')``.
+  (:issue:`119`)
+
 v0.3.0
 ------
 *(2017-11-08)*
