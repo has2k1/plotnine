@@ -674,8 +674,14 @@ class scale_continuous(scale):
             labels = self.labels
 
         if len(labels) != len(breaks):
-            raise PlotnineError(
-                "Breaks and labels are different lengths")
+            if not is_waive(self.breaks) and not is_waive(self.labels):
+                raise PlotnineError(
+                    "Breaks and labels are different lengths. "
+                    "Make sure all the breaks you specify are with in "
+                    "the limits.")
+            else:
+                raise PlotnineError(
+                    "Breaks and labels are different lengths")
 
         return labels
 
