@@ -272,7 +272,7 @@ def fuzzybreaks(scale, breaks=None, boundary=None,
     # binwidth into np.arange as params. The resulting breaks
     # can then be adjusted with finer(epsilon based rather than
     # some arbitrary small number) precision.
-    breaks = boundary + np.arange(bins+1) * binwidth
+    breaks = np.arange(boundary, srange[1]+binwidth, binwidth)
     return _adjust_breaks(breaks, right)
 
 

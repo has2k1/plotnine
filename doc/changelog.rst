@@ -58,6 +58,9 @@ Bug Fixes
 - Make it possible to hide the legend with ``theme(legend_position='none')``.
   (:issue:`119`)
 
+- Fixed issue in :class:`~plotnine.stats.stat_summary_bin` where some input
+  values gave an error. (:issue:`123`)
+
 v0.3.0
 ------
 *(2017-11-08)*
