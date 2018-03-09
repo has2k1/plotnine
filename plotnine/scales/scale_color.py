@@ -4,7 +4,7 @@ from warnings import warn
 
 from mizani.bounds import rescale_mid
 from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
-                             gradient_n_pal, cmap_pal,
+                             gradient_n_pal, cmap_pal, cmap_d_pal,
                              desaturate_pal)
 
 from ..utils import alias
@@ -417,6 +417,52 @@ class scale_fill_cmap(scale_color_cmap):
 
 
 @document
+class scale_color_cmap_d(scale_discrete):
+    """
+    A discrete color scales using Matplotlib colormaps
+
+    Parameters
+    ----------
+    name : str
+        A standard Matplotlib colormap name. It must be of type
+        :class:`matplotlib.colors.ListedColormap`.
+        . The default is `viridis`. For the list of names checkout
+        the output of ``matplotlib.cm.cmap_d.keys()`` or see the
+        `documentation <http://matplotlib.org/users/colormaps.html>`_.
+    lut : None | int
+        This is the number of entries desired in the
+        lookup table. Default is `None`, leave it up
+        Matplotlib.
+    {superclass_parameters}
+    na_value : str
+        Color of missing values. Default is ``'None'``
+
+    See Also
+    --------
+    :mod:`matplotlib.cm`
+    :mod:`matplotlib.colors`
+    """
+    aesthetics = ['color']
+    na_value = '#7F7F7F'
+
+    def __init__(self, name='viridis', lut=None, **kwargs):
+        self.palette = cmap_d_pal(name, lut)
+        super(scale_color_cmap_d, self).__init__(**kwargs)
+
+
+@document
+class scale_fill_cmap_d(scale_color_cmap_d):
+    """
+    Create color scales using Matplotlib colormaps
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+    aesthetics = ['fill']
+
+
+@document
 class scale_color_datetime(scale_datetime, scale_color_cmap):
     """
     Datetime color scale
@@ -459,4 +505,5 @@ alias('scale_colour_discrete', scale_color_hue)
 alias('scale_colour_continuous', scale_color_gradient)
 alias('scale_colour_distiller', scale_color_distiller)
 alias('scale_colour_cmap', scale_color_cmap)
+alias('scale_colour_cmap_d', scale_color_cmap_d)
 alias('scale_colour_datetime', scale_color_datetime)

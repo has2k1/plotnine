@@ -8,6 +8,7 @@ from .scale_alpha import scale_alpha_datetime
 # color
 from .scale_color import scale_color_brewer, scale_colour_brewer
 from .scale_color import scale_color_cmap, scale_colour_cmap
+from .scale_color import scale_color_cmap_d, scale_colour_cmap_d
 from .scale_color import scale_color_continuous, scale_colour_continuous
 from .scale_color import scale_color_desaturate, scale_colour_desaturate
 from .scale_color import scale_color_discrete, scale_colour_discrete
@@ -22,6 +23,7 @@ from .scale_color import scale_color_datetime, scale_colour_datetime
 # fill
 from .scale_color import scale_fill_brewer
 from .scale_color import scale_fill_cmap
+from .scale_color import scale_fill_cmap_d
 from .scale_color import scale_fill_continuous
 from .scale_color import scale_fill_desaturate
 from .scale_color import scale_fill_discrete
@@ -83,6 +85,7 @@ __all__ = [
            # color
            'scale_color_brewer', 'scale_colour_brewer',
            'scale_color_cmap', 'scale_colour_cmap',
+           'scale_color_cmap_d', 'scale_colour_cmap_d',
            'scale_color_continuous', 'scale_colour_continuous',
            'scale_color_discrete', 'scale_colour_discrete',
            'scale_color_distiller', 'scale_colour_distiller',
@@ -96,6 +99,7 @@ __all__ = [
            'scale_color_datetime', 'scale_colour_datetime',
            # fill
            'scale_fill_brewer', 'scale_fill_cmap',
+           'scale_fill_cmap_d',
            'scale_fill_continuous',
            'scale_fill_desaturate', 'scale_fill_discrete',
            'scale_fill_distiller', 'scale_fill_gradient',
