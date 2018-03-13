@@ -4,6 +4,16 @@
 Tutorials
 #########
 
+Using Plotnine
+==============
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   tutorials/using-*
+
+
 Miscellaneous
 =============
 
