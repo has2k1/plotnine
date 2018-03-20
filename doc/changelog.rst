@@ -61,6 +61,9 @@ Bug Fixes
 - Fixed issue in :class:`~plotnine.stats.stat_summary_bin` where some input
   values gave an error. (:issue:`123`)
 
+- Fixed :class:`~plotnine.geoms.geom_ribbon` to sort data before plotting.
+  (:issue:`127`)
+
 v0.3.0
 ------
 *(2017-11-08)*
