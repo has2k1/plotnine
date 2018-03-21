@@ -159,7 +159,8 @@ html_theme_options = {
     'navbar_sidebarrel': False,
     'navbar_links': [
         ('API', 'api'),
-        ('Gallery', 'gallery')
+        ('Gallery', 'gallery'),
+        ('Tutorials', 'tutorials')
     ],
 }
 
@@ -200,8 +201,18 @@ html_static_path = ['_static']
 # typographically correct entities.
 # html_use_smartypants = True
 
-# Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+# The default sidebars (for documents that don't match any pattern) are
+# defined by theme itself.  Builtin themes are using these templates by
+# default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
+# 'searchbox.html']``.
+#
+html_sidebars = {
+    # Default to no sidebar
+    '**': [],
+
+    # local table of contents for the API page
+    'api': ['localtoc.html']
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.

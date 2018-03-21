@@ -108,3 +108,16 @@ table.field-list dd table>thead>tr>th {
 .content table.field-list dd>p.rubric {
     margin: 1.5em 0 1em;
 }
+
+/* sidebar */
+div#sidebar > ul.nav > li > ul.nav > li > ul.nav {
+   margin-bottom: .5em;
+}
+
+div#sidebar > ul.nav > li > a {
+   font-size: 1.2em;
+}
+
+div#sidebar > ul.nav > li > ul.nav > li > a {
+   font-size: 1.0em;
+}
