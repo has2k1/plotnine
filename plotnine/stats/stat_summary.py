@@ -149,7 +149,7 @@ class stat_summary(stat):
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
-    random_state : int or numpy.random.RandomState, optional
+    random_state : int or ~numpy.random.RandomState, optional
         Seed or Random number generator to use. If ``None``, then
         numpy global generator :class:`numpy.random` is used.
 

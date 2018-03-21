@@ -25,7 +25,7 @@ class geom_jitter(geom_point):
         Proportion to jitter in vertical direction.
         The default value is that from
         :class:`~plotnine.positions.position_jitter`.
-    random_state : int or numpy.random.RandomState, optional
+    random_state : int or ~numpy.random.RandomState, optional
         Seed or Random number generator to use. If ``None``, then
         numpy global generator :class:`numpy.random` is used.
 
