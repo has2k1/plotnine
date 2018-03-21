@@ -95,15 +95,15 @@ class stat_smooth(stat):
 
     See Also
     --------
-    statsmodels.regression.linear_model.OLS : OLS method
-    statsmodels.regression.linear_model.WLS : WLS method
-    statsmodels.robust.robust_linear_model.RLM : RLM method
-    statsmodels.genmod.generalized_linear_model.GLM : GLM method
-    statsmodels.regression.linear_model.GLS : GLS method
-    statsmodels.nonparametric.smoothers_lowess.lowess : lowess method
-    skmisc.loess.loess : loess method
-    pandas.DataFrame.rolling : mavg
-    sklearn.gaussian_process.GaussianProcessRegressor : gpr method
+    statsmodels.regression.linear_model.OLS
+    statsmodels.regression.linear_model.WLS
+    statsmodels.robust.robust_linear_model.RLM
+    statsmodels.genmod.generalized_linear_model.GLM
+    statsmodels.regression.linear_model.GLS
+    statsmodels.nonparametric.smoothers_lowess.lowess
+    skmisc.loess.loess
+    pandas.DataFrame.rolling
+    sklearn.gaussian_process.GaussianProcessRegressor
 
     Notes
     -----
