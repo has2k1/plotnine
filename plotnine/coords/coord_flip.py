@@ -9,13 +9,23 @@ class coord_flip(coord_cartesian):
     """
     Flipped cartesian coordinates
 
-
     The horizontal becomes vertical, and vertical becomes
     horizontal. This is primarily useful for converting
     geoms and statistics which display y conditional
     on x, to x conditional on y.
 
-    See :class:`.coord_cartesian` for documentation.
+    Parameters
+    ----------
+    xlim : None | (float, float)
+        Limits for x axis. If None, then they are
+        automatically computed.
+    ylim : None | (float, float)
+        Limits for y axis. If None, then they are
+        automatically computed.
+    expand : bool
+        If `True`, expand the coordinate axes by
+        some factor. If `False`, use the limits
+        from the data.
     """
     def labels(self, label_lookup):
         return flip_labels(coord_cartesian.labels(
