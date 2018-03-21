@@ -18,7 +18,7 @@ class guide(object):
         Title of the guide. If ``None``, title is not shown.
         Default is the name of the aesthetic or the name
         specified using :class:`~plotnine.components.labels.lab`
-    title_position : 'top' | 'bottom' | 'left' | 'right'
+    title_position : str in ``['top', 'bottom', 'left', 'right']``
         Position of title
     title_theme : element_text
         Control over the title theme.
@@ -32,7 +32,7 @@ class guide(object):
         Value is in pixels.
     label : bool
         Whether to show labels
-    label_position : 'top' | 'bottom' | 'left' | 'right'
+    label_position : str in ``['top', 'bottom', 'left', 'right']``
         Position of the labels.
         The defaults are ``'bottom'`` for a horizontal guide and
         '``right``' for a vertical guide.
@@ -46,7 +46,7 @@ class guide(object):
     label_separation : float
         Separation between the label text and the colorbar.
         Value is in pixels.
-    direction : 'horizontal' | 'vertical'
+    direction : str in ``['horizontal', 'vertical']
         Direction of the guide.
     default_unit : str
         Unit for ``keywidth`` and ``keyheight``

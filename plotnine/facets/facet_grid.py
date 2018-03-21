@@ -36,11 +36,11 @@ class facet_grid(facet):
 
             ['var4', ('var1+var3', 'var2')]
 
-    scales : 'fixed' | 'free' | 'free_x' | 'free_y'
+    scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether ``x`` or ``y`` scales should be allowed (free)
         to vary according to the data on each of the panel.
         Default is ``'fixed'``.
-    space : 'fixed' | 'free' | 'free_x' | 'free_y'
+    space : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether the ``x`` or ``y`` sides of the panels
         should have the size. It also depends to the
         ``scales`` parameter. Default is ``'fixed'``.

@@ -31,7 +31,7 @@ class stat_density_2d(stat):
         Contour levels. If an integer, it specifies the maximum number
         of levels, if array_like it is the levels themselves. Default
         is 5.
-    package : 'statsmodels' | 'scipy' | 'sklearn'
+    package : str in ``['statsmodels', 'scipy', 'sklearn']``
         Package whose kernel density estimation to use. Default is
         statsmodels.
     kde_params : dict

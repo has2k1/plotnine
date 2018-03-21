@@ -31,7 +31,7 @@ class scale_color_hue(scale_discrete):
     s : float
         saturation. Must be in the range [0, 1]
         Default is ``0.65``
-    colorspace : 'hls' | 'husl'
+    colorspace : str in ``['hls', 'husl']``
         Color space to use.
         `hls <https://en.wikipedia.org/wiki/HSL_and_HSV>`_
         `husl <http://www.husl-colors.org/>`_
@@ -68,7 +68,7 @@ class scale_color_brewer(scale_discrete):
 
     Parameters
     ----------
-    type : 'seq' | 'div' | 'qual'
+    type : str in ``['seq', 'div', 'qual']``
         Type of data. Sequential, diverging or qualitative
     palette : int | str
          If a string, will use that named palette.
@@ -326,7 +326,7 @@ class scale_color_distiller(scale_color_gradientn):
 
     Parameters
     ----------
-    type : 'seq' | 'div'
+    type : str in ``['seq', 'div']``
         Type of data. Sequential, diverging or qualitative
     palette : int | str
          If a string, will use that named palette.

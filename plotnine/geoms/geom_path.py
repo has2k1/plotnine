@@ -169,10 +169,10 @@ class arrow(object):
         single edge.
     length : int | float
         of the edge in "inches"
-    ends : 'last' | 'first' | 'both'
+    ends : str in ``['last', 'first', 'both']``
         At which end of the line to draw the
         arrowhead
-    type : 'open' | 'closed'
+    type : str in ``['open', 'closed']``
         When it is closed, it is also filled
     """
 

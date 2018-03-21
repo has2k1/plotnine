@@ -41,7 +41,7 @@ class guide_colorbar(guide):
         Whether to show the upper limit tick marks.
     draw_llim : bool
         Whether to show the lower limit tick marks.
-    direction : 'horizontal' | 'vertical'
+    direction : str in ``['horizontal', 'vertical']``
         Direction of the guide.
     kwargs : dict
         Parameters passed on to :class:`.guide`

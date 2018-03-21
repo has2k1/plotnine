@@ -23,7 +23,7 @@ class geom_map(geom):
     Parameters
     ----------
     {common_parameters}
-    draw : 'Polygon' | 'Point' | 'LineString'
+    draw : str in ``['Polygon', 'Point', 'LineString']``
         What geometry types to draw. Note that *Polygon*
         includes MultiPolygon type.
 

@@ -14,9 +14,9 @@ class theme_seaborn(theme):
 
     Parameters
     ----------
-    style: 'whitegrid' | 'darkgrid' | 'nogrid' | 'ticks'
+    style: str in ``['whitegrid', 'darkgrid', 'nogrid', 'ticks']``
         Style of axis background.
-    context: 'notebook' | 'talk' | 'paper' | 'poster'
+    context: str in ``['notebook', 'talk', 'paper', 'poster']``
         Intended context for resulting figures.
     font : str
         Font family, see matplotlib font manager.

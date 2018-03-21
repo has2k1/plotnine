@@ -26,7 +26,7 @@ class facet(object):
 
     Parameters
     ----------
-    scales : 'fixed' | 'free' | 'free_x' | 'free_y'
+    scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether ``x`` or ``y`` scales should be allowed (free)
         to vary according to the data on each of the panel.
         Default is ``'fixed'``.
@@ -47,7 +47,7 @@ class facet(object):
         will automatically be dropped. If ``False``, all
         factor levels will be shown, regardless of whether
         or not they appear in the data. Default is ``True``.
-    dir : 'h' | 'v'
+    dir : str in ``['h', 'v']
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
     """
@@ -373,7 +373,7 @@ class facet(object):
 
         Parameters
         ----------
-        location : 'top' | 'right'
+        location : str in ``['top', 'right']``
             Location of the strip text
         num_lines : int
             Number of text lines

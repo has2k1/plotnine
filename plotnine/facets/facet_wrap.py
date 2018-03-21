@@ -28,7 +28,7 @@ class facet_wrap(facet):
         Number of rows
     ncol : int, optional
         Number of columns
-    scales : 'fixed' | 'free' | 'free_x' | 'free_y'
+    scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether ``x`` or ``y`` scales should be allowed (free)
         to vary according to the data on each of the panel.
         Default is ``'fixed'``.
@@ -49,7 +49,7 @@ class facet_wrap(facet):
         will automatically be dropped. If ``False``, all
         factor levels will be shown, regardless of whether
         or not they appear in the data. Default is ``True``.
-    dir : 'h' | 'v'
+    dir : str in ``['h', 'v']``
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
     """

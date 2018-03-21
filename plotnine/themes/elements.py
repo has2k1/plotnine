@@ -96,7 +96,7 @@ class element_text(object):
     ----------
     family : str
         Font family
-    style : 'normal' | 'italic' | 'oblique'
+    style : str in ``['normal', 'italic', 'oblique']``
         Font style
     color : str | tuple
         Text color
@@ -105,9 +105,9 @@ class element_text(object):
         *ultrabold* or *ultralight*.
     size : float
         text size
-    ha : 'center' | 'left' | 'right'
+    ha : str in ``['center', 'left', 'right']``
         Horizontal Alignment.
-    va : 'center' | 'top' | 'bottom' | 'baseline'
+    va : str in ``['center' , 'top', 'bottom', 'baseline']``
         Vertical alignment.
     rotation : float
         Rotation angle in the range [0, 360]

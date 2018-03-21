@@ -18,7 +18,7 @@ class position_dodge(position):
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
-    preserve: 'total' or 'single'
+    preserve: str in ``['total', 'single']``
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
     """
