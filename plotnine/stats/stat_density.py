@@ -60,7 +60,7 @@ class stat_density(stat):
             'scott'
             'silverman'
 
-    cut :, optional (default: 3)
+    cut : float, optional (default: 3)
         Defines the length of the grid past the lowest and highest
         values of ``x`` so that the kernel goes to zero. The end points
         are ``-/+ cut*bw*{min(x) or max(x)}``.
