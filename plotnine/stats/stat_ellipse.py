@@ -21,7 +21,7 @@ class stat_ellipse(stat):
     Parameters
     ----------
     {common_parameters}
-    type : 't', 'norm' or 'euclid', (default: 't')
+    type : str in ['t', 'norm', 'euclid'] (default: 't')
         The type of ellipse.
 
         - ``'t'`` - assumes a multivariate t-distribution, and
@@ -30,7 +30,7 @@ class stat_ellipse(stat):
           `level`, representing the euclidean distance from the
           center.
 
-    level: float, optional (default: 0.95)
+    level : float, optional (default: 0.95)
         The confidence level at which to draw the ellipse.
     segments : int, optional (default: 51)
         Number of segments to be used in drawing the ellipse.
