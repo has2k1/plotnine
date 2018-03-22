@@ -5,6 +5,7 @@ matplotlib
 mizani
 geopandas
 descartes
+scikit-misc
 
 # Documentation
 -r doc.txt
