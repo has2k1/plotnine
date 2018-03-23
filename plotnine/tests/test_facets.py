@@ -92,10 +92,22 @@ def test_facet_grid_scales_free_y():
     assert p == 'facet_grid_scales_free_y'
 
 
+def test_facet_grid_scales_free_y_formula_dot_notation():
+    p = (g+facet_grid('. ~ var1>2', scales='free_y')
+         + theme(panel_spacing_x=0.3))
+    assert p == 'facet_grid_scales_free_y'
+
+
+def test_facet_grid_scales_free_y_formula_no_dot():
+    p = (g
+         + facet_grid('~var1>2', scales='free_y')
+         + theme(panel_spacing_x=0.3))
+    assert p == 'facet_grid_scales_free_y'
+
+
 def test_facet_grid_scales_free_x():
     p = (g
          + facet_grid(['var1>2', '.'], scales='free_x')
-
          + theme(panel_spacing_y=0.3))
     assert p == 'facet_grid_scales_free_x'
 

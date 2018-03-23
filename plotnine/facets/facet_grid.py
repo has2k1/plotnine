@@ -317,6 +317,9 @@ def parse_grid_facets(facets):
         lhs = lhs.strip()
         rhs = rhs.strip()
 
+    lhs = ensure_var_or_dot(lhs)
+    rhs = ensure_var_or_dot(rhs)
+
     lsplitter = ' + ' if ' + ' in lhs else '+'
     rsplitter = ' + ' if ' + ' in rhs else '+'
 
@@ -331,3 +334,10 @@ def parse_grid_facets(facets):
         cols = [var.strip() for var in rhs.split(rsplitter)]
 
     return rows, cols
+
+
+def ensure_var_or_dot(formula_term):
+    """
+    Ensure that a non specified formula term is transformed into a dot.
+    """
+    return formula_term if formula_term else '.'
