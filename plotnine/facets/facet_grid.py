@@ -335,6 +335,7 @@ def parse_grid_facets(facets):
 
     return rows, cols
 
+
 def ensure_var_or_dot(formula_term):
     """
     Ensure that a non specified formula term is transformed into a dot.
