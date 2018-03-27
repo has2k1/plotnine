@@ -96,9 +96,10 @@ def test_ninteraction():
 
     # vector of unique values is equivalent to rank
     for case in simple_vectors:
-        rank = pd.DataFrame(case).rank(method='min')
+        df = pd.DataFrame(case)
+        rank = df.rank(method='min')
         rank = rank[0].astype(int).tolist()
-        rank_df = ninteraction(pd.DataFrame(case))
+        rank_df = ninteraction(df)
         assert rank == rank_df
 
     # duplicates are numbered sequentially
@@ -119,6 +120,13 @@ def test_ninteraction():
     # zero length dataframe
     df = pd.DataFrame()
     assert ninteraction(df) == []
+
+    # dataframe with single variable
+    df = pd.DataFrame({'a': ['a']})
+    assert ninteraction(df) == [1]
+
+    df = pd.DataFrame({'a': ['b']})
+    assert ninteraction(df) == [1]
 
 
 def test_join_keys():

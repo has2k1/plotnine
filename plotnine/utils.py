@@ -255,9 +255,15 @@ def ninteraction(df, drop=False):
     Parameters
     ----------
     df : dataframe
-    columns : list
-        The columns to consider for uniquness. If None, then
-        it is all the columns
+        Rows
+    drop : bool
+        If true, drop unused categorical levels leaving no
+        gaps in the assignments.
+
+    Returns
+    -------
+    out : list
+        Row asssignments.
 
     Notes
     -----
@@ -268,8 +274,8 @@ def ninteraction(df, drop=False):
         return []
 
     # Special case for single variable
-    if len(df) == 1:
-        return _id_var(df, drop)
+    if len(df.columns) == 1:
+        return _id_var(df[df.columns[0]], drop)
 
     # Calculate individual ids
     ids = df.apply(_id_var, axis=0)
@@ -307,10 +313,21 @@ def _id_var(x, drop=False):
     if len(x) == 0:
         return []
 
-    if pdtypes.is_categorical_dtype(x) and not drop:
-        x = x.copy()
-        x.cat.categories = range(1, len(x.cat.categories) + 1)
-        lst = x.tolist()
+    categorical = pdtypes.is_categorical_dtype(x)
+
+    if categorical:
+        if drop:
+            x = x.cat.remove_unused_categories()
+            lst = list(x.cat.codes + 1)
+        else:
+            has_nan = any(np.isnan(i) for i in x if isinstance(i, float))
+            if has_nan:
+                # NaNs are -1, we give them the highest code
+                nan_code = -1
+                new_nan_code = np.max(x.cat.codes) + 1
+                lst = [val if val != nan_code else new_nan_code for val in x]
+            else:
+                lst = list(x.cat.codes + 1)
     else:
         try:
             levels = np.sort(np.unique(x))

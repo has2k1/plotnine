@@ -64,6 +64,9 @@ Bug Fixes
 - Fixed :class:`~plotnine.geoms.geom_ribbon` to sort data before plotting.
   (:issue:`127`)
 
+- Fixed ``IndexError`` in :class:`~plotnine.facets.facet_grid` when row/column
+  variable has 1 unique value. (:issue:`129`)
+
 v0.3.0
 ------
 *(2017-11-08)*
