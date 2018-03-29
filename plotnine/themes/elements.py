@@ -95,7 +95,8 @@ class element_text(object):
     Parameters
     ----------
     family : str
-        Font family
+        Font family. See :meth:`matplotlib.text.Text.set_family`
+        for supported values.
     style : str in ``['normal', 'italic', 'oblique']``
         Font style
     color : str | tuple
