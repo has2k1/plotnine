@@ -199,6 +199,6 @@ def compute_density(x, weight, range, **params):
     y = y[not_nan]
     return pd.DataFrame({'x': x2,
                          'density': y,
-                         'scaled': y / np.max(y),
+                         'scaled': y / np.max(y) if len(y) else [],
                          'count': y * n,
                          'n': n})

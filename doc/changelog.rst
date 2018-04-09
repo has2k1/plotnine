@@ -79,6 +79,9 @@ Bug Fixes
 - Fixed :class:`~plotnine.geoms.geom_boxplot` so that user can create a boxplot
   by specifying all required aesthetics. (:issue:`136`)
 
+- Fixed :class:`~plotnine.geoms.geom_violin` to work when some groups are empty.
+  (:issue:`131`)
+
 v0.3.0
 ------
 *(2017-11-08)*
