@@ -31,9 +31,6 @@ class scale(object):
 
     Parameters
     ----------
-    range : array_like
-        Range of aesthetic. Default is to automatically
-        determine the range from the data points.
     breaks : array_like or callable, optional
         Major break points. Alternatively, a callable that
         takes a tuple of limits and returns a list of breaks.
@@ -82,12 +79,12 @@ class scale(object):
     guide = 'legend'    # legend or any other guide
     _limits = None      # (min, max) - set by user
 
+    #: multiplicative and additive expansion constants
+    expand = waiver()
+
     # range of aesthetic, instantiated by __init__ from the
     range = None
     _range_class = Range
-
-    #: multiplicative and additive expansion constants
-    expand = waiver()
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -99,8 +96,7 @@ class scale(object):
                 msg = "{} could not recognise parameter `{}`"
                 warn(msg.format(self.__class__.__name__, k))
 
-        if self.range is None:
-            self.range = self._range_class()
+        self.range = self._range_class()
 
         if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
             if len(self.breaks) != len(self.labels):
