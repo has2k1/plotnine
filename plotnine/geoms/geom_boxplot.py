@@ -66,6 +66,9 @@ class geom_boxplot(geom):
             else:
                 data['width'] = resolution(data['x'], False) * 0.9
 
+        if 'outliers' not in data:
+            data['outliers'] = [[] for i in range(len(data))]
+
         # min and max outlier values
         omin = [np.min(lst) if len(lst) else +np.inf
                 for lst in data['outliers']]

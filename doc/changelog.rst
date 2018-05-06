@@ -76,6 +76,9 @@ Bug Fixes
   ``scale='free_x'`` or ``scale='free_y'``, the panels share axes
   along the row or column.
 
+- Fixed :class:`~plotnine.geoms.geom_boxplot` so that user can create a boxplot
+  by specifying all required aesthetics. (:issue:`136`)
+
 v0.3.0
 ------
 *(2017-11-08)*
