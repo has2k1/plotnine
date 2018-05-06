@@ -38,8 +38,9 @@ class facet_grid(facet):
 
     scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether ``x`` or ``y`` scales should be allowed (free)
-        to vary according to the data on each of the panel.
-        Default is ``'fixed'``.
+        to vary according to the data along rows or columns.
+        Default is ``'fixed'``, the same scales for all the
+        panels.
     space : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether the ``x`` or ``y`` sides of the panels
         should have the size. It also depends to the
@@ -118,8 +119,10 @@ class facet_grid(facet):
         layout.reset_index(drop=True, inplace=True)
 
         # Relax constraints, if necessary
-        layout['SCALE_X'] = range(1, n+1) if self.free['x'] else 1
-        layout['SCALE_Y'] = range(1, n+1) if self.free['y'] else 1
+        layout['SCALE_X'] = layout['COL'] if self.free['x'] else 1
+        layout['SCALE_Y'] = layout['ROW'] if self.free['y'] else 1
+        layout['AXIS_X'] = layout['ROW'] == layout['ROW'].max()
+        layout['AXIS_Y'] = layout['COL'] == layout['COL'].min()
 
         self.nrow = layout['ROW'].max()
         self.ncol = layout['COL'].max()
@@ -163,26 +166,6 @@ class facet_grid(facet):
 
         data.reset_index(drop=True, inplace=True)
         return data
-
-    def set_breaks_and_labels(self, ranges, layout_info, pidx):
-        ax = self.axs[pidx]
-        facet.set_breaks_and_labels(
-            self, ranges, layout_info, pidx)
-
-        bottomrow = layout_info['ROW'] == self.nrow or self.free['x']
-        leftcol = layout_info['COL'] == 1 or self.free['y']
-
-        if bottomrow:
-            ax.xaxis.set_ticks_position('bottom')
-        else:
-            ax.xaxis.set_ticks_position('none')
-            ax.xaxis.set_ticklabels([])
-
-        if leftcol:
-            ax.yaxis.set_ticks_position('left')
-        else:
-            ax.yaxis.set_ticks_position('none')
-            ax.yaxis.set_ticklabels([])
 
     def spaceout_and_resize_panels(self):
         """

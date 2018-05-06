@@ -148,21 +148,6 @@ class facet_wrap(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def set_breaks_and_labels(self, ranges, layout_info, pidx):
-        ax = self.axs[pidx]
-        facet.set_breaks_and_labels(
-            self, ranges, layout_info, pidx)
-        if not layout_info['AXIS_X']:
-            ax.xaxis.set_ticks_position('none')
-            ax.xaxis.set_ticklabels([])
-        if not layout_info['AXIS_Y']:
-            ax.yaxis.set_ticks_position('none')
-            ax.yaxis.set_ticklabels([])
-        if layout_info['AXIS_X']:
-            ax.xaxis.set_ticks_position('bottom')
-        if layout_info['AXIS_Y']:
-            ax.yaxis.set_ticks_position('left')
-
     def spaceout_and_resize_panels(self):
         """
         Adjust the spacing between the panels and resize them

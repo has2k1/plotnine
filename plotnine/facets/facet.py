@@ -238,11 +238,7 @@ class facet(object):
 
         return self
 
-    def set_breaks_and_labels(self, ranges, layout_info, pidx):
-        ax = self.axs[pidx]
-        # Add axes and labels on all sides. The sub-sclass
-        # should remove what is unnecessary
-
+    def _set_limits_and_ranges(self, ax, ranges):
         # limits
         ax.set_xlim(ranges['x_range'])
         ax.set_ylim(ranges['y_range'])
@@ -277,6 +273,24 @@ class facet(object):
 
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
+
+    def set_breaks_and_labels(self, ranges, layout_info, pidx):
+        ax = self.axs[pidx]
+
+        # Add axes and labels on all sides
+        self._set_limits_and_ranges(ax, ranges)
+
+        # Remove unnecessary axes
+        if not layout_info['AXIS_X']:
+            ax.xaxis.set_ticks_position('none')
+            ax.xaxis.set_ticklabels([])
+        if not layout_info['AXIS_Y']:
+            ax.yaxis.set_ticks_position('none')
+            ax.yaxis.set_ticklabels([])
+        if layout_info['AXIS_X']:
+            ax.xaxis.set_ticks_position('bottom')
+        if layout_info['AXIS_Y']:
+            ax.yaxis.set_ticks_position('left')
 
     def __deepcopy__(self, memo):
         """
@@ -598,7 +612,8 @@ def unique_combs(df):
 
 def layout_null():
     layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
-                           'SCALE_X': 1, 'SCALE_Y': 1},
+                           'SCALE_X': 1, 'SCALE_Y': 1,
+                           'AXIS_X': True, 'AXIS_Y': True},
                           index=[0])
     return layout
 

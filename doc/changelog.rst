@@ -14,6 +14,11 @@ API Changes
 - :class:`~plotnine.stats.stat_qq` calculates slightly different points
   for the theoretical quantiles.
 
+- The ``scales`` (when set to *free*, *free_x* or *free_y*') parameter of
+  :class:`~plotnine.facets.facet_grid` and :class:`~plotnine.facets.facet_wrap`
+  assigns the same scale across the rows and columns.
+
+
 New Features
 ************
 
@@ -66,6 +71,10 @@ Bug Fixes
 
 - Fixed ``IndexError`` in :class:`~plotnine.facets.facet_grid` when row/column
   variable has 1 unique value. (:issue:`129`)
+
+- Fixed :class:`~plotnine.facets.facet_grid` when ``scale='free'``,
+  ``scale='free_x'`` or ``scale='free_y'``, the panels share axes
+  along the row or column.
 
 v0.3.0
 ------
