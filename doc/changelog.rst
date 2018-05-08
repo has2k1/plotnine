@@ -82,6 +82,8 @@ Bug Fixes
 - Fixed :class:`~plotnine.geoms.geom_violin` to work when some groups are empty.
   (:issue:`131`)
 
+- Fixed continuous scales to accept ``minor=None`` (:issue:`120`)
+
 v0.3.0
 ------
 *(2017-11-08)*
