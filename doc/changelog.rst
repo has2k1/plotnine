@@ -84,6 +84,9 @@ Bug Fixes
 
 - Fixed continuous scales to accept ``minor=None`` (:issue:`120`)
 
+- Fixed bug for discrete position scales, where ``drop=False`` did not drop
+  unused categories (:issue:`139`)
+
 v0.3.0
 ------
 *(2017-11-08)*

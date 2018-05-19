@@ -60,7 +60,7 @@ class scale_position_discrete(scale_discrete):
         if array_kind.continuous(series):
             self.range_c.train(series)
         else:
-            self.range.train(series)
+            self.range.train(series, drop=self.drop)
 
     def map(self, series, limits=None):
         # Discrete values are converted into integers starting
