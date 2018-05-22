@@ -59,11 +59,10 @@ class geom_path(geom):
 
         # Get indices where any row for the select aesthetics has
         # NaNs at the beginning or the end. Those we drop
-        # TODO: This is slow
         bool_idx = (data[['x', 'y', 'size', 'color', 'linetype']]
                     .isnull()             # Missing
-                    .apply(keep, axis=0)  # Beginning or the End
-                    .apply(all, axis=1))  # Across the aesthetics <--- CULPRIT
+                    .apply(keep, axis=0))  # Beginning or the End
+        bool_idx = np.all(bool_idx, axis=1)  # Across the aesthetics
 
         # return data
         n1 = len(data)
