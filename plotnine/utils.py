@@ -136,7 +136,7 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
         if x in skip:
             continue
 
-        with suppress(KeyError):
+        if x in lookup:
             lst[i] = lookup[x] + start
 
     return lst
