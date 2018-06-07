@@ -143,13 +143,32 @@ class aes(dict):
         return gg
 
 
-def rename_aesthetics(d):
-    with suppress(KeyError):
-        d['color'] = d.pop('colour')
+def rename_aesthetics(obj):
+    """
+    Rename aesthetics in obj
 
-    with suppress(KeyError):
-        d['outlier_color'] = d.pop('outlier_colour')
-    return d
+    Parameters
+    ----------
+    obj : dict or list
+        Object that contains aesthetics names
+
+    Returns
+    -------
+    obj : dict or list
+        Object that contains aesthetics names
+    """
+    lookup = {
+        'colour': 'color',
+        'outlier_colour': 'outlier_color',
+    }
+
+    if isinstance(obj, dict):
+        for k in lookup:
+            with suppress(KeyError):
+                obj['color'] = obj.pop('colour')
+    else:
+        obj = [lookup[x] if x in lookup else x for x in obj]
+    return obj
 
 
 def get_calculated_aes(aesthetics):

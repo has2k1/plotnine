@@ -47,6 +47,9 @@ class scale_position_discrete(scale_discrete):
         self.range_c.reset()
 
     def is_empty(self):
+        if self.range is None:
+            return True
+
         return (self.range.range is None and
                 self._limits is None and
                 self.range_c.range is None)
@@ -85,6 +88,12 @@ class scale_position_discrete(scale_discrete):
         else:
             raise PlotnineError(
                 'Lost, do not know what the limits are.')
+
+    @limits.setter
+    def limits(self, value):
+        if isinstance(value, tuple):
+            value = list(value)
+        self._limits = value
 
     def dimension(self, expand=(0, 0, 0, 0)):
         """
@@ -149,7 +158,7 @@ class scale_x_discrete(scale_position_discrete):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['x', 'xmin', 'xmax', 'xend']
+    _aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
 @document
@@ -161,7 +170,7 @@ class scale_y_discrete(scale_position_discrete):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['y', 'ymin', 'ymax', 'yend']
+    _aesthetics = ['y', 'ymin', 'ymax', 'yend']
 
 
 @document
@@ -173,7 +182,7 @@ class scale_x_continuous(scale_position_continuous):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['x', 'xmin', 'xmax', 'xend', 'xintercept']
+    _aesthetics = ['x', 'xmin', 'xmax', 'xend', 'xintercept']
 
 
 @document
@@ -185,9 +194,9 @@ class scale_y_continuous(scale_position_continuous):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
-                  'ymin_final', 'ymax_final',
-                  'lower', 'middle', 'upper']
+    _aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
+                   'ymin_final', 'ymax_final',
+                   'lower', 'middle', 'upper']
 
 
 # Transformed scales

@@ -21,7 +21,7 @@ class scale_size_discrete(scale_discrete):
         It must be of size 2.
     {superclass_parameters}
     """
-    aesthetics = ['size']
+    _aesthetics = ['size']
 
     def __init__(self, range=(2, 6), **kwargs):
         def palette(n):
@@ -44,7 +44,7 @@ class scale_size_continuous(scale_continuous):
         It must be of size 2.
     {superclass_parameters}
     """
-    aesthetics = ['size']
+    _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
         self.palette = area_pal(range)
@@ -66,7 +66,7 @@ class scale_size_radius(scale_continuous):
         It must be of size 2.
     {superclass_parameters}
     """
-    aesthetics = ['size']
+    _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
         self.palette = rescale_pal(range)
@@ -84,7 +84,7 @@ class scale_size_area(scale_continuous):
         Maximum size of the plotting symbol.
     {superclass_parameters}
     """
-    aesthetics = ['size']
+    _aesthetics = ['size']
     rescaler = staticmethod(rescale_max)
 
     def __init__(self, max_size=6, **kwargs):
@@ -104,7 +104,7 @@ class scale_size_datetime(scale_datetime):
         It must be of size 2.
     {superclass_parameters}
     """
-    aesthetics = ['size']
+    _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
         self.palette = area_pal(range)

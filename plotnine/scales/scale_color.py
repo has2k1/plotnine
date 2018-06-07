@@ -39,7 +39,7 @@ class scale_color_hue(scale_discrete):
     na_value : str
         Color of missing values. Default is ``'#7F7F7F'``
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     na_value = '#7F7F7F'
 
     def __init__(self, h=.01, l=.6, s=.65, color_space='hls', **kwargs):
@@ -56,7 +56,7 @@ class scale_fill_hue(scale_color_hue):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -78,7 +78,7 @@ class scale_color_brewer(scale_discrete):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     na_value = 'None'
 
     def __init__(self, type='seq', palette=1, **kwargs):
@@ -95,7 +95,7 @@ class scale_fill_brewer(scale_color_brewer):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -113,7 +113,7 @@ class scale_color_grey(scale_discrete):
         Default is 0.8
     {superclass_parameters}
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
 
     def __init__(self, start=0.2, end=0.8, **kwargs):
         self.palette = grey_pal(start, end)
@@ -129,7 +129,7 @@ class scale_fill_grey(scale_color_grey):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 # Continuous color scales #
@@ -154,7 +154,7 @@ class scale_color_gradient(scale_continuous):
     :class:`.scale_color_gradient2`
     :class:`.scale_color_gradientn`
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     guide = 'colorbar'
     na_value = 'None'
 
@@ -176,7 +176,7 @@ class scale_fill_gradient(scale_color_gradient):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -198,7 +198,7 @@ class scale_color_desaturate(scale_continuous):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     guide = 'colorbar'
     na_value = 'None'
 
@@ -217,7 +217,7 @@ class scale_fill_desaturate(scale_color_desaturate):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -244,7 +244,7 @@ class scale_color_gradient2(scale_continuous):
     :class:`.scale_color_gradient`
     :class:`.scale_color_gradientn`
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     guide = 'colorbar'
     na_value = 'None'
 
@@ -270,7 +270,7 @@ class scale_fill_gradient2(scale_color_gradient2):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -295,7 +295,7 @@ class scale_color_gradientn(scale_continuous):
     :class:`.scale_color_gradient`
     :class:`.scale_color_gradientn`
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     guide = 'colorbar'
     na_value = 'None'
 
@@ -313,7 +313,7 @@ class scale_fill_gradientn(scale_color_gradientn):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -340,7 +340,7 @@ class scale_color_distiller(scale_color_gradientn):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     guide = 'colorbar'
     na_value = 'None'
 
@@ -366,7 +366,7 @@ class scale_fill_distiller(scale_color_distiller):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 # matplotlib colormaps
@@ -395,7 +395,7 @@ class scale_color_cmap(scale_continuous):
     :mod:`matplotlib.cm`
     :mod:`matplotlib.colors`
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     guide = 'colorbar'
     na_value = 'None'
 
@@ -413,7 +413,7 @@ class scale_fill_cmap(scale_color_cmap):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -442,7 +442,7 @@ class scale_color_cmap_d(scale_discrete):
     :mod:`matplotlib.cm`
     :mod:`matplotlib.colors`
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
     na_value = '#7F7F7F'
 
     def __init__(self, name='viridis', lut=None, **kwargs):
@@ -459,7 +459,7 @@ class scale_fill_cmap_d(scale_color_cmap_d):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document

@@ -20,7 +20,7 @@ class scale_stroke_continuous(scale_continuous):
         Should be between 0 and 1. Default is ``(1, 6)``
     {superclass_parameters}
     """
-    aesthetics = ['stroke']
+    _aesthetics = ['stroke']
 
     def __init__(self, range=(1, 6), **kwargs):
         self.palette = rescale_pal(range)
@@ -39,7 +39,7 @@ class scale_stroke_discrete(scale_discrete):
         Should be between 0 and 1. Default is ``(1, 6)``
     {superclass_parameters}
     """
-    aesthetics = ['stroke']
+    _aesthetics = ['stroke']
 
     def __init__(self, range=(1, 6), **kwargs):
         def palette(n):

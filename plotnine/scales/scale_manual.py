@@ -32,7 +32,7 @@ class scale_color_manual(_scale_manual):
         Colors that make up the palette.
     {superclass_parameters}
     """
-    aesthetics = ['color']
+    _aesthetics = ['color']
 
 
 @document
@@ -46,7 +46,7 @@ class scale_fill_manual(_scale_manual):
         Colors that make up the palette.
     {superclass_parameters}
     """
-    aesthetics = ['fill']
+    _aesthetics = ['fill']
 
 
 @document
@@ -66,7 +66,7 @@ class scale_shape_manual(_scale_manual):
     --------
     :mod:`matplotlib.markers`
     """
-    aesthetics = ['shape']
+    _aesthetics = ['shape']
 
 
 @document
@@ -84,7 +84,7 @@ class scale_linetype_manual(_scale_manual):
     --------
     :mod:`matplotlib.markers`
     """
-    aesthetics = ['linetype']
+    _aesthetics = ['linetype']
 
 
 @document
@@ -99,7 +99,7 @@ class scale_alpha_manual(_scale_manual):
         the palette.
     {superclass_parameters}
     """
-    aesthetics = ['alpha']
+    _aesthetics = ['alpha']
 
 
 @document
@@ -113,7 +113,7 @@ class scale_size_manual(_scale_manual):
         Sizes that make up the palette.
     {superclass_parameters}
     """
-    aesthetics = ['size']
+    _aesthetics = ['size']
 
 
 # American to British spelling

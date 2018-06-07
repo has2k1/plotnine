@@ -20,7 +20,7 @@ class scale_linetype(scale_discrete):
     ----------
     {superclass_parameters}
     """
-    aesthetics = ['linetype']
+    _aesthetics = ['linetype']
     palette = staticmethod(manual_pal(linetypes))
 
 

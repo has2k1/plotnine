@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 import six
 
-from plotnine import ggplot, aes, geom_point, expand_limits
+from plotnine import ggplot, aes, geom_point, expand_limits, theme
 from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -26,6 +26,8 @@ from plotnine.scales.scale_size import (scale_size_discrete,
 from plotnine.scales.scale_manual import _scale_manual
 from plotnine.scales.scales import make_scale
 from plotnine.exceptions import PlotnineError
+
+_theme = theme(subplots_adjust={'right': 0.85})
 
 
 # test palettes
@@ -141,7 +143,7 @@ def test_fill_scale_aesthetics():
     for name in scale_color.__dict__:
         if name.startswith('scale_fill'):
             scale = getattr(scale_color, name)
-            assert(scale.aesthetics == ['fill'])
+            assert(scale._aesthetics == ['fill'])
 
 
 def test_linetype_palettes():
@@ -398,3 +400,20 @@ def scale_scale_discrete_mapping_nulls():
     assert res[0] == expected[0]
     assert res[1] is expected[1]
     assert res[2] == expected[2]
+
+
+@pytest.mark.skipif(
+    six.PY2, reason="I do not know why it fails on travis")
+def test_multiple_aesthetics():
+
+    df = pd.DataFrame({
+        'x': [1, 2, 3],
+        'y': [-1, -2, -3]
+
+    })
+    p = (ggplot(df, aes('x', 'x', color='factor(x)', fill='factor(y)'))
+         + geom_point(size=9, stroke=2)
+         + scale_color.scale_color_brewer(
+             type='qual', palette=1, aesthetics=['fill', 'color'])
+         )
+    assert p + _theme == 'multiple_aesthetics'

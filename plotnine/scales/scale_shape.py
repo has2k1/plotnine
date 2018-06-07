@@ -54,7 +54,7 @@ class scale_shape(scale_discrete):
         that can be a filled.
     {superclass_parameters}
     """
-    aesthetics = ['shape']
+    _aesthetics = ['shape']
 
     def __init__(self, unfilled=False, **kwargs):
         if unfilled:

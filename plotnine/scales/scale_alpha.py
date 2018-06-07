@@ -21,7 +21,7 @@ class scale_alpha(scale_continuous):
         Should be between 0 and 1. Default is ``(0.1, 1)``
     {superclass_parameters}
     """
-    aesthetics = ['alpha']
+    _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
         self.palette = rescale_pal(range)
@@ -43,7 +43,7 @@ class scale_alpha_discrete(scale_discrete):
         Should be between 0 and 1. Default is ``(0.1, 1)``
     {superclass_parameters}
     """
-    aesthetics = ['alpha']
+    _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
         def palette(n):
@@ -65,7 +65,7 @@ class scale_alpha_datetime(scale_datetime):
         Should be between 0 and 1. Default is ``(0.1, 1)``
     {superclass_parameters}
     """
-    aesthetics = ['alpha']
+    _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
         self.palette = rescale_pal(range)

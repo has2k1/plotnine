@@ -17,7 +17,7 @@ from mizani.breaks import date_breaks
 from mizani.formatters import date_format
 from mizani.transforms import gettrans
 
-from ..aes import is_position_aes
+from ..aes import is_position_aes, rename_aesthetics
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import match, suppress, waiver, is_waive, Registry
@@ -64,14 +64,14 @@ class scale(object):
     palette : callable, optional
         Function to map data points onto the scale. Most
         scales define their own palettes.
-    aesthetics : list, very optional
+    aesthetics : list, optional
         list of :class:`str`. Aesthetics covered by the
         scale. These are defined by each scale and the
         user should probably not change them. Have fun.
     """
     __base__ = True
 
-    aesthetics = []     # aesthetics affected by this scale
+    _aesthetics = []     # aesthetics affected by this scale
     na_value = np.NaN   # What to do with the NA values
     name = None         # used as the axis label or legend title
     breaks = waiver()   # major breaks
@@ -88,9 +88,7 @@ class scale(object):
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
-            if hasattr(self, '_'+k):
-                setattr(self, '_'+k, v)
-            elif hasattr(self, k):
+            if hasattr(self, k):
                 setattr(self, k, v)
             else:
                 msg = "{} could not recognise parameter `{}`"
@@ -107,6 +105,16 @@ class scale(object):
                 not is_position_aes(self.aesthetics) and
                 self.guide is not None):
             self.guide = None
+
+    @property
+    def aesthetics(self):
+        return self._aesthetics
+
+    @aesthetics.setter
+    def aesthetics(self, value):
+        if isinstance(value, six.string_types):
+            value = [value]
+        self._aesthetics = rename_aesthetics(value)
 
     def __radd__(self, gg, inplace=False):
         """
@@ -181,6 +189,8 @@ class scale(object):
         self.range.reset()
 
     def is_empty(self):
+        if self.range is None:
+            return True
         return self.range.range is None and self._limits is None
 
     @property
