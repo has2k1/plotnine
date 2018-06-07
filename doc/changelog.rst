@@ -87,6 +87,9 @@ Bug Fixes
 - Fixed bug for discrete position scales, where ``drop=False`` did not drop
   unused categories (:issue:`139`)
 
+- Fixed bug in :class:`~plotnine.stats.stat_ydensity` that caused an exception
+  when a panel had no data :issue:`147`.
+
 v0.3.0
 ------
 *(2017-11-08)*

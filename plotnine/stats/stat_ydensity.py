@@ -126,6 +126,9 @@ class stat_ydensity(stat):
     def compute_panel(cls, data, scales, **params):
         data = super(cls, cls).compute_panel(data, scales, **params)
 
+        if not len(data):
+            return data
+
         if params['scale'] == 'area':
             data['violinwidth'] = data['density']/data['density'].max()
         elif params['scale'] == 'count':
