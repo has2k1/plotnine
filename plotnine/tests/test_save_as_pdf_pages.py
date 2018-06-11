@@ -8,6 +8,7 @@ import six
 from plotnine import ggplot, aes, geom_text, ggtitle
 from plotnine.data import mtcars
 from plotnine.ggplot import save_as_pdf_pages
+from plotnine.exceptions import PlotnineError
 
 
 def p(N=3):
@@ -83,6 +84,13 @@ class TestExceptions(object):
         # Iterable includes elements that are not ggplot objects
         plots = list(p()) + ['foo']
         with pytest.raises(TypeError):
+            save_as_pdf_pages(plots)
+
+    def test_plot_exception(self):
+        # Force an error in drawing
+        plots = list(p())
+        plots[0] += aes(color='unknown')
+        with pytest.raises(PlotnineError):
             save_as_pdf_pages(plots)
 
 
