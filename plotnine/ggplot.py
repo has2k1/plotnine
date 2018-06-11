@@ -623,8 +623,9 @@ class ggplot(object):
 
         Parameters
         ----------
-        filename : str or file
-            File name or file to write the plot to.
+        filename : str, optional
+            File name to write the plot to. If not specified, a name
+            like `plotnine-save-<hash>.ext` is used.
         format : str
             Image format to use, automatically extract from
             file name extension.
@@ -736,3 +737,77 @@ def ggsave(plot, *arg, **kwargs):
     Use :meth:`ggplot.save` instead
     """
     return plot.save(*arg, **kwargs)
+
+
+def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
+    """
+    Save a collection of ggplot to a PDF file, one per page.
+
+    Parameters
+    ----------
+    plots : iterable of ggplot
+        Plot objects to write to file.
+    filename : str, optional
+        File name to write the plot to. If not specified, a name
+        like `plotnine-save-<hash>.pdf` is used.
+    path : str, optional
+        Path to save plot to (if you just want to set path and
+        not filename).
+    verbose : bool
+        If ``True``, print the saving information.
+    kwargs : dict
+        Additional arguments to pass to matplotlib `savefig()`.
+    """
+    from itertools import chain
+    from matplotlib.backends.backend_pdf import PdfPages
+
+    # as in ggplot.save()
+    fig_kwargs = {'bbox_inches': 'tight'}
+    fig_kwargs.update(kwargs)
+
+    figure = [None]
+
+    # If plots is already an iterator, this is a no-op; otherwise convert a
+    # list, etc. to an iterator
+    plots = iter(plots)
+    peek = []
+
+    # filename, depends on the object
+    if filename is None:
+        # Take the first element from the iterator, store it, and use it to
+        # generate a file name
+        peek = [next(plots)]
+        filename = peek[0]._save_filename('pdf')
+
+    if path:
+        filename = os.path.join(path, filename)
+
+    if verbose:
+        warn('Filename: {}'.format(filename))
+
+    with PdfPages(filename) as pdf:
+        # Re-add the first element to the iterator, if it was removed
+        for plot in chain(peek, plots):
+            try:
+                fig = figure[0] = plot.draw()
+
+                # as in ggplot.save()
+                facecolor = fig.get_facecolor()
+                edgecolor = fig.get_edgecolor()
+                if edgecolor:
+                    fig_kwargs['facecolor'] = facecolor
+                if edgecolor:
+                    fig_kwargs['edgecolor'] = edgecolor
+                    fig_kwargs['frameon'] = True
+
+                # Save as a page in the PDF file
+                pdf.savefig(figure[0], **fig_kwargs)
+            except AttributeError as err:
+                raise TypeError('non-ggplot object of %s: %s' %
+                                (type(plot), plot)) from err
+            except Exception as err:
+                raise
+            finally:
+                # Close the figure whether or not there was an exception, to
+                # conserve memory when plotting a large number of pages
+                figure[0] and plt.close(figure[0])
