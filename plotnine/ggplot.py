@@ -759,7 +759,9 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
         Additional arguments to pass to matplotlib `savefig()`.
     """
     from itertools import chain
+
     from matplotlib.backends.backend_pdf import PdfPages
+    from six import raise_from
 
     # as in ggplot.save()
     fig_kwargs = {'bbox_inches': 'tight'}
@@ -803,8 +805,8 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
                 # Save as a page in the PDF file
                 pdf.savefig(figure[0], **fig_kwargs)
             except AttributeError as err:
-                raise TypeError('non-ggplot object of %s: %s' %
-                                (type(plot), plot)) from err
+                raise_from(TypeError('non-ggplot object of %s: %s' %
+                           (type(plot), plot)), err)
             except Exception as err:
                 raise
             finally:
