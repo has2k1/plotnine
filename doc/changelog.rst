@@ -36,6 +36,8 @@ New Features
 
 - Added :class:`~plotnine.stats.stat_hull`.
 
+- Added :meth:`~plotnine.ggplot.save_as_pdf_pages`.
+
 Bug Fixes
 *********
 
