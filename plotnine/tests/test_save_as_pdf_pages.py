@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import pytest
 import six
 
-from plotnine import ggplot, aes, geom_text, ggtitle
+from plotnine import ggplot, aes, geom_text, ggtitle, theme
 from plotnine.data import mtcars
 from plotnine.ggplot import save_as_pdf_pages
 from plotnine.exceptions import PlotnineError
@@ -77,6 +77,16 @@ class TestArguments(object):
         fn = next(filename_gen)
         save_as_pdf_pages(p(), fn, path='.')
         assert_exist_and_clean(fn, "fn, plot and path")
+
+    @pytest.mark.skip("Results of this test can only be confirmed by"
+                      "inspecting the generated PDF.")
+    def test_height_width(self):
+        plots = []
+        for i, plot in enumerate(p()):
+            plots.append(plot + theme(figure_size=(8+i, 6+i)))
+        fn = next(filename_gen)
+        save_as_pdf_pages(plots, fn)
+        # assert False, "Check %s" % fn  # Uncomment to check
 
 
 class TestExceptions(object):
