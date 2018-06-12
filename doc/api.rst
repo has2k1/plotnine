@@ -21,6 +21,7 @@ Plot creation
    ~watermark.watermark
    ~layer.layer
    ~animation.PlotnineAnimation
+   ~ggplot.save_as_pdf_pages
 
 geoms
 =====

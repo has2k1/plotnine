@@ -625,7 +625,7 @@ class ggplot(object):
         ----------
         filename : str, optional
             File name to write the plot to. If not specified, a name
-            like `plotnine-save-<hash>.ext` is used.
+            like “plotnine-save-<hash>.<format>” is used.
         format : str
             Image format to use, automatically extract from
             file name extension.
@@ -746,33 +746,36 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
     Parameters
     ----------
     plots : collection or generator of :class:`ggplot`
-        Plot objects to write to file.
-    filename : str, optional
+        Plot objects to write to file. `plots` may be either a
+        collection such as a :py:class:`list` or :py:class:`set`:
+
+        >>> base_plot = ggplot(…)
+        >>> plots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]
+        >>> save_as_pdf_pages(plots)
+
+        or, a generator that yields :class:`ggplot` objects:
+
+        >>> def myplots():
+        >>>     for i in range(1, 3):
+        >>>         yield ggplot(…) + ggtitle('%d of 3' % i)
+        >>> save_as_pdf_pages(myplots())
+
+    filename : :py:class:`str`, optional
         File name to write the plot to. If not specified, a name
-        like `plotnine-save-<hash>.pdf` is used.
-    path : str, optional
+        like “plotnine-save-<hash>.pdf” is used.
+    path : :py:class:`str`, optional
         Path to save plot to (if you just want to set path and
         not filename).
-    verbose : bool
+    verbose : :py:class:`bool`
         If ``True``, print the saving information.
-    kwargs : dict
-        Additional arguments to pass to matplotlib `savefig()`.
+    kwargs : :py:class:`dict`
+        Additional arguments to pass to
+        :py:meth:`matplotlib.figure.Figure.savefig`.
 
-    `plots` may be either a collection such as a :python:class:`list`
-    or :python:class:`set`:
-
-    >>> base_plot = ggplot(…)
-    >>> plots = [base_plot + ggtitle('%d of 3' % i) for i in range(3)]
-    >>> save_as_pdf_pages(plots)
-
-    …or a generator that yields :class:`ggplot` objects:
-
-    >>> def myplots():
-    >>>     for i in range(3):
-    >>>         yield ggplot(…) + ggtitle('%d of 3' % i)
-    >>> save_as_pdf_pages(myplots())
-
-    Using pandas' groupby methods, plots can be “faceted” across pages:
+    Notes
+    -----
+    Using pandas' :meth:`~pandas.DataFrame.groupby` methods, tidy data
+    can be “faceted” across pages:
 
     >>> from plotnine.data import mtcars
     >>> def facet_pages(column)
@@ -786,7 +789,8 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
 
     Unlike :meth:`ggplot.save`, :meth:`save_as_pdf_pages` does not
     process arguments for `height` or `width`. To set the figure size,
-    add :class:`theme` to each individual :class:`ggplot` in `plots`:
+    add :class:`~plotnine.themes.themeable.figure_size` to the theme
+    for some or all of the objects in `plots`:
 
     >>> plot = ggplot(…)
     >>> # The following are equivalent
