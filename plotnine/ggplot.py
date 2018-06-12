@@ -741,11 +741,11 @@ def ggsave(plot, *arg, **kwargs):
 
 def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
     """
-    Save a collection of ggplot to a PDF file, one per page.
+    Save multiple :class:`ggplot` objects to a PDF file, one per page.
 
     Parameters
     ----------
-    plots : iterable of ggplot
+    plots : collection or generator of :class:`ggplot`
         Plot objects to write to file.
     filename : str, optional
         File name to write the plot to. If not specified, a name
@@ -757,6 +757,41 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
         If ``True``, print the saving information.
     kwargs : dict
         Additional arguments to pass to matplotlib `savefig()`.
+
+    `plots` may be either a collection such as a :python:class:`list`
+    or :python:class:`set`:
+
+    >>> base_plot = ggplot(…)
+    >>> plots = [base_plot + ggtitle('%d of 3' % i) for i in range(3)]
+    >>> save_as_pdf_pages(plots)
+
+    …or a generator that yields :class:`ggplot` objects:
+
+    >>> def myplots():
+    >>>     for i in range(3):
+    >>>         yield ggplot(…) + ggtitle('%d of 3' % i)
+    >>> save_as_pdf_pages(myplots())
+
+    Using pandas' groupby methods, plots can be “faceted” across pages:
+
+    >>> from plotnine.data import mtcars
+    >>> def facet_pages(column)
+    >>>     base_plot = [
+    >>>         aes(x='wt', y='mpg', label='name'),
+    >>>         geom_text(),
+    >>>         ]
+    >>>     for label, group_data in mtcars.groupby(column):
+    >>>         yield ggplot(group_data) + base_plot + ggtitle(label)
+    >>> save_as_pdf_pages(facet_pages('cyl'))
+
+    Unlike :meth:`ggplot.save`, :meth:`save_as_pdf_pages` does not
+    process arguments for `height` or `width`. To set the figure size,
+    add :class:`theme` to each individual :class:`ggplot` in `plots`:
+
+    >>> plot = ggplot(…)
+    >>> # The following are equivalent
+    >>> plot.save('filename.pdf', height=6, width=8)
+    >>> save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
     """
     from itertools import chain
 
