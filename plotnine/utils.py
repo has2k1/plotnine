@@ -125,20 +125,22 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
     start: int
         type of indexing to use. Most likely 0 or 1
     """
+    # NOTE: This function gets called a lot. If it can
+    # be optimised, it should.
     lookup = {}
     for i, x in enumerate(v2):
         if x not in lookup:
             lookup[x] = i
 
-    lst = [nomatch] * len(v1)
-    skip = set(incomparables) if incomparables else set()
-    for i, x in enumerate(v1):
-        if x in skip:
-            continue
-
-        if x in lookup:
-            lst[i] = lookup[x] + start
-
+    if incomparables:
+        skip = set(incomparables) if incomparables else set()
+        lst = [lookup[x]+start
+               if x not in skip and x in lookup else nomatch
+               for x in v1]
+    else:
+        lst = [lookup[x]+start
+               if x in lookup else nomatch
+               for x in v1]
     return lst
 
 
