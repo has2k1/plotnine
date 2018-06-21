@@ -200,8 +200,8 @@ def munch_data(data, dist):
     # Replicate other aesthetics: defined by start point
     # but also must include final point
     idx = np.hstack([
-        np.repeat(np.arange(len(data)-1), extra),
-        len(data)-1])
+        np.repeat(data.index[:-1], extra),
+        data.index[-1]])
 
     munched = data.loc[idx, data.columns.difference(['x', 'y'])]
     munched['x'] = x

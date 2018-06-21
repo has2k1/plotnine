@@ -90,7 +90,10 @@ Bug Fixes
   unused categories (:issue:`139`)
 
 - Fixed bug in :class:`~plotnine.stats.stat_ydensity` that caused an exception
-  when a panel had no data :issue:`147`.
+  when a panel had no data. (:issue:`147`)
+
+- Fixed bug in :class:`~plotnine.coords.coord_trans` where coordinate
+  transformation and facetting could fail with a ``KeyError``. (:issue:`151`)
 
 v0.3.0
 ------
