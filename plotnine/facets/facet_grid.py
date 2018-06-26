@@ -45,7 +45,7 @@ class facet_grid(facet):
         Whether the ``x`` or ``y`` sides of the panels
         should have the size. It also depends to the
         ``scales`` parameter. Default is ``'fixed'``.
-        This setting is not properly supported at the moment.
+        This setting is not yet supported.
     shrink : bool
         Whether to shrink the scales to the output of the
         statistics instead of the raw data. Default is ``True``.
