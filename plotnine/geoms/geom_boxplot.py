@@ -110,7 +110,9 @@ class geom_boxplot(geom):
         whiskers = pd.DataFrame({
             'x': flat(data['x'], data['x']),
             'y': flat(data['upper'], data['lower']),
-            'yend': flat(data['ymax'], data['ymin'])})
+            'yend': flat(data['ymax'], data['ymin']),
+            'alpha': 1
+        })
         whiskers['xend'] = whiskers['x']
         copy_missing_columns(whiskers, data[common_columns])
 
@@ -170,8 +172,6 @@ class geom_boxplot(geom):
         -------
         out : DrawingArea
         """
-        data['size'] *= SIZE_FACTOR
-
         # box
         facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
@@ -193,6 +193,8 @@ class geom_boxplot(geom):
 
         kwargs['solid_capstyle'] = 'butt'
         kwargs['color'] = data['color']
+        kwargs['linewidth'] *= SIZE_FACTOR
+
         # middle strike through
         strike = mlines.Line2D([da.width*.125, da.width*.875],
                                [da.height*.5, da.height*.5],
