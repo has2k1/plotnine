@@ -663,7 +663,7 @@ class axis_text_x(themeable):
 
 class axis_text_y(themeable):
     """
-    x-axis tick labels
+    y-axis tick labels
 
     Parameters
     ----------
