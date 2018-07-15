@@ -125,7 +125,7 @@ class stat_smooth(stat):
          'ymax'  # Upper confidence limit
 
     Calculated aesthetics are accessed using the `calc` function.
-    e.g. :py:`'calc(se)'`.
+    e.g. :py:`'stat(se)'`.
     """
 
     REQUIRED_AES = {'x', 'y'}

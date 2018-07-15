@@ -59,7 +59,7 @@ class stat_qq(stat):
 
     """
     REQUIRED_AES = {'sample'}
-    DEFAULT_AES = {'x': 'calc(theoretical)', 'y': 'calc(sample)'}
+    DEFAULT_AES = {'x': 'stat(theoretical)', 'y': 'stat(sample)'}
     DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
                       'na_rm': False,
                       'distribution': 'norm', 'dparams': (),

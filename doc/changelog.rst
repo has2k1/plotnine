@@ -8,7 +8,7 @@ v0.3.1
 API Changes
 ***********
 
-- Calculated aesthetics are accessed using the :func:`~plotnine.aes.calc`
+- Calculated aesthetics are accessed using the :func:`~plotnine.aes.stat`
   function. The old method (double dots ``..name..``) still works.
 
 - :class:`~plotnine.stats.stat_qq` calculates slightly different points

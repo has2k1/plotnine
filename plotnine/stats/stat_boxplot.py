@@ -55,7 +55,7 @@ class stat_boxplot(stat):
                 # less than or equal to upper hinge + 1.5 * IQR
 
     Calculated aesthetics are accessed using the `calc` function.
-    e.g. :py:`'calc(width)'`.
+    e.g. :py:`'stat(width)'`.
     """
 
     REQUIRED_AES = {'x', 'y'}

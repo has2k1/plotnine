@@ -48,7 +48,7 @@ class stat_function(stat):
                       'fun': None, 'n': 101, 'args': None,
                       'xlim': None}
 
-    DEFAULT_AES = {'y': 'calc(y)'}
+    DEFAULT_AES = {'y': 'stat(y)'}
     CREATES = {'y'}
 
     @classmethod

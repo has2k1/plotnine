@@ -97,7 +97,7 @@ class stat_density(stat):
                       'trim': False, 'n': 1024, 'gridsize': None,
                       'bw': 'normal_reference', 'cut': 3,
                       'clip': (-np.inf, np.inf)}
-    DEFAULT_AES = {'y': 'calc(density)'}
+    DEFAULT_AES = {'y': 'stat(density)'}
     CREATES = {'density', 'count', 'scaled', 'n'}
 
     def setup_params(self, data):

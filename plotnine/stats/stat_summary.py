@@ -174,7 +174,7 @@ class stat_summary(stat):
         'ymax'  # ymax computed by the summary function
 
     Calculated aesthetics are accessed using the `calc` function.
-    e.g. :py:`'calc(ymin)'`.
+    e.g. :py:`'stat(ymin)'`.
     """
 
     REQUIRED_AES = {'x', 'y'}

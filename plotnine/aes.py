@@ -22,7 +22,7 @@ scaled_aesthetics = {
 
 
 # Calculated aesthetics searchers
-CALC_RE = re.compile(r'\bcalc\(')
+STAT_RE = re.compile(r'\bstat\(')
 DOTS_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
 
 
@@ -82,8 +82,8 @@ class aes(dict):
             ggplot(df, aes(x='df.index', y='beta'))
 
             # If `count` is an aesthetic calculated by a stat
-            ggplot(df, aes(x='alpha', y='calc(count)'))
-            ggplot(df, aes(x='alpha', y='calc(count/np.max(count))'))
+            ggplot(df, aes(x='alpha', y='stat(count)'))
+            ggplot(df, aes(x='alpha', y='stat(count/np.max(count))'))
 
       The strings in the expression can refer to;
 
@@ -200,26 +200,26 @@ def is_calculated_aes(ae):
     >>> is_calculated_aes('..density..')
     True
 
-    >>> is_calculated_aes('calc(density)')
+    >>> is_calculated_aes('stat(density)')
     True
 
-    >>> is_calculated_aes('calc(100*density)')
+    >>> is_calculated_aes('stat(100*density)')
     True
 
-    >>> is_calculated_aes('100*calc(density)')
+    >>> is_calculated_aes('100*stat(density)')
     True
     """
     if not isinstance(ae, six.string_types):
         return False
 
-    for pattern in (CALC_RE, DOTS_RE):
+    for pattern in (STAT_RE, DOTS_RE):
         if pattern.search(ae):
             return True
 
     return False
 
 
-def calc(x):
+def stat(x):
     """
     Return calculated aesthetic
 
@@ -236,7 +236,7 @@ def calc(x):
     return x
 
 
-def strip_calc(value):
+def strip_stat(value):
     """
     Remove calc function that mark calculated aesthetics
 
@@ -251,22 +251,22 @@ def strip_calc(value):
     out : object
         Aesthetic value with the dots removed.
 
-    >>> strip_calc('calc(density + calc(count))')
+    >>> strip_stat('stat(density + stat(count))')
     density + count
 
-    >>> strip_calc('calc(density) + 5')
+    >>> strip_stat('stat(density) + 5')
     density + 5
 
-    >>> strip_calc('5 + calc(func(density))')
+    >>> strip_stat('5 + stat(func(density))')
     5 + func(density)
 
-    >>> strip_calc('calc(func(density) + var1)')
+    >>> strip_stat('stat(func(density) + var1)')
     func(density) + var1
 
-    >>> strip_calc('calc + var1')
+    >>> strip_stat('calc + var1')
     calc + var1
 
-    >>> strip_calc(4)
+    >>> strip_stat(4)
     4
     """
     def strip_hanging_closing_parens(s):
@@ -289,8 +289,8 @@ def strip_calc(value):
             yield c
 
     with suppress(TypeError):
-        if CALC_RE.search(value):
-            value = re.sub(r'\bcalc\(', '', value)
+        if STAT_RE.search(value):
+            value = re.sub(r'\bstat\(', '', value)
             value = ''.join(strip_hanging_closing_parens(value))
 
     return value
@@ -331,7 +331,7 @@ def strip_calculated_markers(value):
     out : object
         Aesthetic value with the dots removed.
     """
-    return strip_calc(strip_dots(value))
+    return strip_stat(strip_dots(value))
 
 
 def aes_to_scale(var):

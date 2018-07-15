@@ -86,7 +86,7 @@ class stat_bindot(stat):
                       'method': 'dotdensity', 'binpositions': 'bygroup',
                       'drop': False, 'right': True, 'na_rm': False,
                       'breaks': None}
-    DEFAULT_AES = {'y': 'calc(count)'}
+    DEFAULT_AES = {'y': 'stat(count)'}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
     def setup_params(self, data):

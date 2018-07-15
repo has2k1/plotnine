@@ -17,14 +17,14 @@ p0 = (ggplot(df, aes('x', 'y'))
 
 
 def test_contours():
-    p = p0 + geom_density_2d(aes(color='calc(level)'))
+    p = p0 + geom_density_2d(aes(color='stat(level)'))
     assert p == 'contours'
 
 
 def test_points():
     p = (p0
          + geom_point(
-             aes(fill='calc(density)', size='calc(density)'),
+             aes(fill='stat(density)', size='stat(density)'),
              stat='density_2d',
              stroke=0, n=16, contour=False)
          + scale_size_radius(range=(0, 6)))
@@ -33,5 +33,5 @@ def test_points():
 
 
 def test_polygon():
-    p = p0 + stat_density_2d(aes(fill='calc(level)'), geom='polygon')
+    p = p0 + stat_density_2d(aes(fill='stat(level)'), geom='polygon')
     assert p == 'polygon'

@@ -12,7 +12,7 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction, suppress
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, get_calculated_aes, calc, make_labels
+from .aes import aes, get_calculated_aes, stat, make_labels
 from .aes import strip_calculated_markers
 
 _TPL_EVAL_FAIL = """\
@@ -384,8 +384,8 @@ class layer(object):
         # 'count' is the computed column in data
         new = {}  # {'aesthetic_name': 'calculated_stat'}
         stat_data = type(data)()
-        calc_namespace = dict(calc=calc)
-        env = plot.environment.with_outer_namespace(calc_namespace)
+        stat_namespace = dict(stat=stat)
+        env = plot.environment.with_outer_namespace(stat_namespace)
         for ae in get_calculated_aes(aesthetics):
             new[ae] = strip_calculated_markers(aesthetics[ae])
             # In conjuction with the pd.concat at the end,

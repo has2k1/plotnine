@@ -136,11 +136,11 @@ def test_valid_aes_colors():
 def test_calculated_aes():
     _strip = strip_calculated_markers
 
-    # calc(ae)
-    mapping1 = aes('x', y='calc(density)')
-    mapping2 = aes('x', y='calc(density*2)')
-    mapping3 = aes('x', y='calc(density + count)')
-    mapping4 = aes('x', y='func(calc(density))')
+    # stat(ae)
+    mapping1 = aes('x', y='stat(density)')
+    mapping2 = aes('x', y='stat(density*2)')
+    mapping3 = aes('x', y='stat(density + count)')
+    mapping4 = aes('x', y='func(stat(density))')
 
     assert get_calculated_aes(mapping1) == ['y']
     assert get_calculated_aes(mapping2) == ['y']
@@ -169,7 +169,7 @@ def test_calculated_aes():
     assert _strip(mapping4['y']) == 'func(density)'
 
     df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-    p = ggplot(df) + geom_bar(aes(x='x', fill='calc(count + 2)'))
+    p = ggplot(df) + geom_bar(aes(x='x', fill='stat(count + 2)'))
     p.draw_test()
 
     p = ggplot(df) + geom_bar(aes(x='x', fill='..count.. + 2'))

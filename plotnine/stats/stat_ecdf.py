@@ -43,7 +43,7 @@ class stat_ecdf(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
                       'na_rm': False, 'n': None}
-    DEFAULT_AES = {'y': 'calc(y)'}
+    DEFAULT_AES = {'y': 'stat(y)'}
     CREATES = {'y'}
 
     @classmethod
