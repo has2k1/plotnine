@@ -629,13 +629,14 @@ class scale_continuous(scale):
             breaks = self.breaks
 
         breaks = self.transform(breaks)
+        breaks = np.asarray(breaks)
         # At this point, any breaks beyond the limits
         # are kept since they may be used to calculate
         # minor breaks
         if strict:
             cond = (breaks >= limits[0]) & (limits[1] >= breaks)
             breaks = np.compress(cond, breaks)
-        return np.asarray(breaks)
+        return breaks
 
     def get_minor_breaks(self, major, limits=None):
         """

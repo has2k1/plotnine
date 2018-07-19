@@ -95,6 +95,10 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.coords.coord_trans` where coordinate
   transformation and facetting could fail with a ``KeyError``. (:issue:`151`)
 
+- Fixed bug that lead to a ``TypeError`` when aesthetic mappings to could be
+  recognised as being groupable. It was easy to stumble on this bug when using
+  :class:`~plotnine.geoms.geom_density`. (:issue:`165`)
+
 v0.3.0
 ------
 *(2017-11-08)*
