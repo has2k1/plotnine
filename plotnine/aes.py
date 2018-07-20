@@ -62,10 +62,10 @@ class aes(dict):
     - **array_like**::
 
             # A variable
-            ggplot(df, aes(x='alpha', y=[4, 5, 6]))
+            ggplot(df, aes(x='alpha', y=arr))
 
             # or an inplace list
-            ggplot(df, aes(x='alpha', y=arr))
+            ggplot(df, aes(x='alpha', y=[4, 5, 6]))
 
     - **scalar**::
 
