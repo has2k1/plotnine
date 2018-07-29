@@ -369,7 +369,7 @@ class ggplot(object):
         figure = plt.figure()
         axs = self.facet.make_axes(
             figure,
-            len(self.layout.layout),
+            self.layout.layout,
             self.coordinates)
 
         # Dictionary to collect matplotlib objects that will

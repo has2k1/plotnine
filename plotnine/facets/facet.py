@@ -313,44 +313,49 @@ class facet(object):
 
         return result
 
-    def _create_subplots(self, fig):
+    def _create_subplots(self, fig, layout):
         """
         Create suplots and return axs
         """
-        axarr = np.empty((self.nrow, self.ncol), dtype=object)
+        num_panels = len(layout)
+        axsarr = np.empty((self.nrow, self.ncol), dtype=object)
+
+        # Create axes
         i = 1
         for row in range(self.nrow):
             for col in range(self.ncol):
-                axarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
+                axsarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
                 i += 1
-        return axarr
 
-    def make_axes(self, figure, num_panels, coordinates):
+        # Rearrange axes
+        # They are ordered to match the positions in the layout table
+        if self.dir == 'h':
+            order = 'C'
+            if not self.as_table:
+                axsarr = axsarr[::-1]
+        elif self.dir == 'v':
+            order = 'F'
+            if not self.as_table:
+                axsarr = np.array([row[::-1] for row in axsarr])
+
+        axs = axsarr.ravel(order)
+
+        # Delete unused axes
+        for ax in axs[num_panels:]:
+            fig.delaxes(ax)
+        axs = axs[:num_panels]
+        return axs
+
+    def make_axes(self, figure, layout, coordinates):
         """
         Create and return Matplotlib axes
         """
-        axs = self._create_subplots(figure)
+        axs = self._create_subplots(figure, layout)
 
         # Used for labelling the x and y axes, the first and
         # last axes according to how MPL creates them.
-        # num_panels = len(self.layout.layout)
-        _raveled_axs = axs.ravel()
-        self.first_ax = _raveled_axs[0]
-        self.last_ax = _raveled_axs[num_panels-1]
-
-        if not self.as_table:
-            axs = axs[::-1]
-
-        order = 'C' if self.dir == 'h' else 'F'
-        try:
-            axs = axs.ravel(order)
-        except AttributeError:
-            axs = [axs]
-        # No panel, do not let MPL put axes
-        for ax in axs[num_panels:]:
-            figure.delaxes(ax)
-
-        axs = axs[:num_panels]
+        self.first_ax = figure.axes[0]
+        self.last_ax = figure.axes[-1]
         self.figure = figure
         self.axs = axs
         return axs

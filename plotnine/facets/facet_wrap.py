@@ -75,6 +75,9 @@ class facet_wrap(facet):
         dims = wrap_dims(n, self.nrow, self.ncol)
         _id = np.arange(1, n+1)
 
+        if self.dir == 'v':
+            dims = dims[::-1]
+
         if self.as_table:
             row = (_id - 1) // dims[1] + 1
         else:
@@ -82,17 +85,20 @@ class facet_wrap(facet):
 
         col = (_id - 1) % dims[1] + 1
 
-        if self.dir == 'v':
-            row, col = col, row
-
         layout = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
                                'ROW': row.astype(int),
                                'COL': col.astype(int)})
-        layout = pd.concat([layout, base], axis=1)
+        if self.dir == 'v':
+            layout.rename(
+                columns={'ROW': 'COL',
+                         'COL': 'ROW'},
+                inplace=True
+            )
 
+        layout = pd.concat([layout, base], axis=1)
+        self.nrow = layout['ROW'].nunique()
+        self.ncol = layout['COL'].nunique()
         n = layout.shape[0]
-        self.nrow = layout['ROW'].max()
-        self.ncol = layout['COL'].max()
 
         # Add scale identification
         layout['SCALE_X'] = range(1, n+1) if self.free['x'] else 1
@@ -101,13 +107,8 @@ class facet_wrap(facet):
         # Figure out where axes should go.
         # The bottom-most row of each column and the left most
         # column of each row
-        if self.as_table or self.dir == 'h':
-            x_idx = [df['ROW'].idxmax() for _, df in layout.groupby('COL')]
-            y_idx = [df['COL'].idxmin() for _, df in layout.groupby('ROW')]
-        else:
-            x_idx = [df['ROW'].idxmin() for _, df in layout.groupby('COL')]
-            y_idx = [df['COL'].idxmax() for _, df in layout.groupby('ROW')]
-
+        x_idx = [df['ROW'].idxmax() for _, df in layout.groupby('COL')]
+        y_idx = [df['COL'].idxmin() for _, df in layout.groupby('ROW')]
         layout['AXIS_X'] = False
         layout['AXIS_Y'] = False
         _loc = layout.columns.get_loc

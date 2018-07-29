@@ -99,6 +99,9 @@ Bug Fixes
   recognised as being groupable. It was easy to stumble on this bug when using
   :class:`~plotnine.geoms.geom_density`. (:issue:`165`)
 
+- Fixed bug in :class:`~plotnine.facets.facet_wrap` where some combination of
+  parameters lead to unexpected panel arrangements. (:issue:`163`)
+
 v0.3.0
 ------
 *(2017-11-08)*

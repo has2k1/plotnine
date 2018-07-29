@@ -6,6 +6,7 @@ import pytest
 
 from plotnine import ggplot, aes, geom_point, facet_grid, facet_wrap
 from plotnine import geom_abline
+from plotnine.data import mpg
 
 n = 10
 df = pd.DataFrame({'x': range(n),
@@ -113,3 +114,12 @@ def test_non_mapped_facetting():
          + facet_wrap('var1')
          )
     assert p == 'non_mapped_facetting'
+
+
+def test_dir_v_ncol():
+    p = (ggplot(mpg)
+         + aes(x='displ', y='hwy')
+         + facet_wrap('class', dir='v', ncol=4, as_table=False)
+         + geom_point()
+         )
+    assert p == 'dir_v_ncol'
