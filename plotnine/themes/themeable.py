@@ -492,7 +492,7 @@ class legend_text_colorbar(themeable):
         with suppress(KeyError):
             del properties['margin']
         with suppress(KeyError):
-            texts = figure._themeable['legend_colorbar_text']
+            texts = figure._themeable['legend_text_colorbar']
             for text in texts:
                 if not hasattr(text, '_x'):  # textarea
                     text = text._text
@@ -501,7 +501,7 @@ class legend_text_colorbar(themeable):
     def blank_figure(self, figure):
         super(legend_text_colorbar, self).blank_figure(figure)
         with suppress(KeyError):
-            texts = figure._themeable['legend_colorbar_text']
+            texts = figure._themeable['legend_text_colorbar']
             for text in texts:
                 text.set_visible(False)
 

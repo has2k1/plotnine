@@ -102,6 +102,8 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.facets.facet_wrap` where some combination of
   parameters lead to unexpected panel arrangements. (:issue:`163`)
 
+- Fixed bug where the legend text of colorbars could not be themed. (:issue:`171`)
+
 v0.3.0
 ------
 *(2017-11-08)*
