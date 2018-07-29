@@ -163,9 +163,9 @@ def rename_aesthetics(obj):
     }
 
     if isinstance(obj, dict):
-        for k in lookup:
+        for eng, us in lookup.items():
             with suppress(KeyError):
-                obj['color'] = obj.pop('colour')
+                obj[us] = obj.pop(eng)
     else:
         obj = [lookup[x] if x in lookup else x for x in obj]
     return obj
