@@ -402,8 +402,6 @@ def scale_scale_discrete_mapping_nulls():
     assert res[2] == expected[2]
 
 
-@pytest.mark.skipif(
-    six.PY2, reason="I do not know why it fails on travis")
 def test_multiple_aesthetics():
 
     df = pd.DataFrame({

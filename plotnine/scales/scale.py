@@ -221,7 +221,7 @@ class scale(object):
         """
         Train scale from a dataframe
         """
-        aesthetics = set(self.aesthetics) & set(df.columns)
+        aesthetics = sorted(set(self.aesthetics) & set(df.columns))
         for ae in aesthetics:
             self.train(df[ae])
 
