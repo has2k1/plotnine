@@ -5,6 +5,7 @@ plotnine
 =================    =================
 Latest Release       |release|_
 License              |license|_
+DOI                  |doi|_
 Build Status         |buildstatus|_
 Coverage             |coverage|_
 Documentation        |documentation|_
@@ -141,6 +142,9 @@ And if you can fix a bug, your contribution is welcome.
 
 .. |documentation| image:: https://readthedocs.org/projects/plotnine/badge/?version=latest
 .. _documentation: https://plotnine.readthedocs.io/en/latest/
+
+.. |doi| image:: https://zenodo.org/badge/89276692.svg
+.. _doi: https://zenodo.org/badge/latestdoi/89276692
 
 .. _ggplot2: https://github.com/tidyverse/ggplot2
 
