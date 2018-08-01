@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from matplotlib.collections import PolyCollection
 from six.moves import zip
+import numpy as np
 
 from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
@@ -39,6 +40,15 @@ class geom_rect(geom):
         data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
         verts = [None] * len(data)
+
+        # Make it easy to specify rects that fill the x|y range
+        xlimits = panel_params['x_range']
+        ylimits = panel_params['y_range']
+        data['xmin'].replace(-np.inf, xlimits[0], inplace=True)
+        data['xmax'].replace(np.inf, xlimits[1], inplace=True)
+        data['ymin'].replace(-np.inf, ylimits[0], inplace=True)
+        data['ymax'].replace(np.inf, ylimits[1], inplace=True)
+
         limits = zip(data['xmin'], data['xmax'],
                      data['ymin'], data['ymax'])
 

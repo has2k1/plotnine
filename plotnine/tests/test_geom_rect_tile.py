@@ -1,8 +1,9 @@
 from __future__ import absolute_import, division, print_function
 
 import pandas as pd
+import numpy as np
 
-from plotnine import ggplot, aes, geom_rect, geom_tile, labs, theme
+from plotnine import ggplot, aes, geom_point, geom_rect, geom_tile, labs, theme
 
 n = 4
 
@@ -72,3 +73,27 @@ def test_tile_aesthetics():
          _theme)
 
     assert p == 'tile-aesthetics'
+
+
+def test_infinite_rects():
+    df = pd.DataFrame({
+        'x': range(10),
+        'y': range(10)
+    })
+    rdf = pd.DataFrame({
+        'xmin': [3],
+        'xmax': 7,
+        'ymin': -np.inf,
+        'ymax': np.inf,
+    })
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point()
+         + geom_rect(
+             data=rdf,
+             mapping=aes(xmin='xmin', xmax='xmax', ymin='ymin', ymax='ymax'),
+             alpha=0.2,
+             inherit_aes=False)
+         )
+
+    assert p == 'infinite-rects'

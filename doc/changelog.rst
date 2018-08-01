@@ -183,6 +183,9 @@ Enhancements
 - You can now use a ``dict`` (with manual scales) to map data values to
   aesthetics (:issue:`169`).
 
+- You can now specify infinite coordinates with :class:`plotnine.geoms.geom_rect`
+  (:issue:`166`)
+
 Bug Fixes
 *********
 
