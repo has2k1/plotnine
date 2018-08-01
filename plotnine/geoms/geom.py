@@ -19,6 +19,7 @@ class geom(object):
     __base__ = True
     DEFAULT_AES = dict()     #: Default aesthetics for the geom
     REQUIRED_AES = set()     #: Required aesthetics for the geom
+    NON_MISSING_AES = set()  #: Required aesthetics for the geom
     DEFAULT_PARAMS = dict()  #: Required parameters for the geom
 
     data = None        #: geom/layer specific dataframe
@@ -395,6 +396,7 @@ class geom(object):
         `na_rm` parameter is False. It only takes into account
         the columns of the required aesthetics.
         """
-        return remove_missing(data, self.params['na_rm'],
-                              list(self.REQUIRED_AES),
+        return remove_missing(data,
+                              self.params['na_rm'],
+                              list(self.REQUIRED_AES | self.NON_MISSING_AES),
                               self.__class__.__name__)

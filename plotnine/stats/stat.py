@@ -20,6 +20,7 @@ class stat(object):
 
     REQUIRED_AES = set()
     DEFAULT_AES = dict()
+    NON_MISSING_AES = set()
     DEFAULT_PARAMS = dict()
 
     # Should the values produced by the statistic also
@@ -35,7 +36,7 @@ class stat(object):
     # see: stat_bin
     CREATES = set()
 
-    # Documentation for the aesthetics. It is added under the
+    # Documentation for the aesthetics. It ie added under the
     # documentation for mapping parameter. Use {aesthetics_table}
     # placeholder to insert a table for all the aesthetics and
     # their default values.
@@ -252,7 +253,7 @@ class stat(object):
         data = remove_missing(
             data,
             na_rm=params.get('na_rm', False),
-            vars=list(cls.REQUIRED_AES),
+            vars=list(cls.REQUIRED_AES | cls.NON_MISSING_AES),
             name=cls.__name__,
             finite=True)
 

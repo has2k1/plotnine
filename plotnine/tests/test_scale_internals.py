@@ -209,14 +209,21 @@ def test_scale_manual():
         return (name.startswith('scale_') and
                 name.endswith('_manual'))
 
+    manual_scales = [getattr(scale_manual, name)
+                     for name in scale_manual.__dict__
+                     if is_manual_scale(name)]
+
     values = [1, 2, 3, 4, 5]
-    for name in scale_manual.__dict__:
-        if is_manual_scale(name):
-            s = getattr(scale_manual, name)(values)
-            assert s.palette(2) == values[:2]
-            assert s.palette(len(values)) == values
-            with pytest.warns(UserWarning):
-                s.palette(len(values)+1)
+    for _scale in manual_scales:
+        s = _scale(values)
+        assert s.palette(2) == values
+        assert s.palette(len(values)) == values
+        with pytest.warns(UserWarning):
+            s.palette(len(values)+1)
+
+    values = {'A': 'red', 'B': 'violet', 'C': 'blue'}
+    sc = scale_manual.scale_color_manual(values)
+    assert sc.palette(3) == values
 
 
 def test_alpha_palette():
@@ -415,3 +422,19 @@ def test_multiple_aesthetics():
              type='qual', palette=1, aesthetics=['fill', 'color'])
          )
     assert p + _theme == 'multiple_aesthetics'
+
+
+def test_missing_manual_dict_aesthetic():
+    df = pd.DataFrame({
+        'x': range(15),
+        'y': range(15),
+        'c': np.repeat(list('ABC'), 5)
+    })
+
+    values = {'A': 'red', 'B': 'violet', 'D': 'blue'}
+
+    p = (ggplot(df, aes('x', 'y', color='c'))
+         + geom_point(size=3)
+         + scale_manual.scale_color_manual(values)
+         )
+    assert p + _theme == 'missing_manual_dict_aesthetic'

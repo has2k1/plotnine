@@ -14,7 +14,7 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
-from ..utils import Registry
+from ..utils import Registry, remove_missing
 from ..exceptions import PlotnineError
 from ..geoms import geom_text
 from ..aes import rename_aesthetics
@@ -172,6 +172,10 @@ class guide_legend(guide):
                 data[ae] = self.override_aes[ae]
 
             geom = get_legend_geom(l)
+            data = remove_missing(
+                data, l.geom.params['na_rm'],
+                list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
+                '{} legend'.format(l.geom.__class__.__name__))
             self.glayers.append(Bunch(geom=geom, data=data, layer=l))
 
         if not self.glayers:
@@ -223,27 +227,28 @@ class guide_legend(guide):
                     pad = default_pad
                     # Full size of object to appear in the
                     # legend key
-                    if 'size' in gl.data:
-                        _size = gl.data['size'].iloc[i] * SIZE_FACTOR
-                        if 'stroke' in gl.data:
-                            _size += (2 * gl.data['stroke'].iloc[i] *
-                                      SIZE_FACTOR)
+                    with suppress(IndexError):
+                        if 'size' in gl.data:
+                            _size = gl.data['size'].iloc[i] * SIZE_FACTOR
+                            if 'stroke' in gl.data:
+                                _size += (2 * gl.data['stroke'].iloc[i] *
+                                          SIZE_FACTOR)
 
-                    # special case, color does not apply to
-                    # border/linewidth
-                    if issubclass(gl.geom, geom_text):
-                        pad = 0
-                        if _size < initial_size:
-                            continue
+                        # special case, color does not apply to
+                        # border/linewidth
+                        if issubclass(gl.geom, geom_text):
+                            pad = 0
+                            if _size < initial_size:
+                                continue
 
-                    try:
-                        # color(edgecolor) affects size(linewidth)
-                        # When the edge is not visible, we should
-                        # not expand the size of the keys
-                        if gl.data['color'].iloc[i] is not None:
-                            size[i] = np.max([_size+pad, size[i]])
-                    except KeyError:
-                        break
+                        try:
+                            # color(edgecolor) affects size(linewidth)
+                            # When the edge is not visible, we should
+                            # not expand the size of the keys
+                            if gl.data['color'].iloc[i] is not None:
+                                size[i] = np.max([_size+pad, size[i]])
+                        except KeyError:
+                            break
 
             return size
 
@@ -310,8 +315,9 @@ class guide_legend(guide):
                                     0, 0, color='white')
             # overlay geoms
             for gl in self.glayers:
-                data = gl.data.iloc[i]
-                da = gl.geom.draw_legend(data, da, gl.layer)
+                with suppress(IndexError):
+                    data = gl.data.iloc[i]
+                    da = gl.geom.draw_legend(data, da, gl.layer)
             drawings.append(da)
         themeable['legend_key'].append(drawings)
 

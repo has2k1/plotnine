@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
-
-from mizani.palettes import manual_pal
+from warnings import warn
 
 from ..doctools import document
 from ..utils import alias
@@ -17,8 +16,16 @@ class _scale_manual(scale_discrete):
     {superclass_parameters}
     """
     def __init__(self, values, **kwargs):
-        self.palette = manual_pal(values)
+        self._values = values
         scale_discrete.__init__(self, **kwargs)
+
+    def palette(self, n):
+        max_n = len(self._values)
+        if n > max_n:
+            msg = ("Palette can return a maximum of {} values. "
+                   "{} were requested from it.")
+            warn(msg.format(max_n, n))
+        return self._values
 
 
 @document

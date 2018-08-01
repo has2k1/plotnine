@@ -25,6 +25,7 @@ class geom_bar(geom_rect):
     plotnine.geoms.geom_histogram
     """
     REQUIRED_AES = {'x', 'y'}
+    NON_MISSING_AES = {'xmin', 'xmax', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
                       'na_rm': False, 'width': None}
 

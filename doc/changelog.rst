@@ -180,6 +180,9 @@ Enhancements
   Using a list allows you to bundle up objects. I can be convenient when
   creating some complicated plots. See the Periodic Table Example.
 
+- You can now use a ``dict`` (with manual scales) to map data values to
+  aesthetics (:issue:`169`).
+
 Bug Fixes
 *********
 

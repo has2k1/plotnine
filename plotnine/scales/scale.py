@@ -289,13 +289,19 @@ class scale_discrete(scale):
         pal = self.palette(n)
         if isinstance(pal, dict):
             # manual palette with specific assignments
-            pal_match = [pal[val] for val in x]
+            pal_match = []
+            for val in x:
+                try:
+                    pal_match.append(pal[val])
+                except KeyError:
+                    pal_match.append(self.na_value)
         else:
             pal = np.asarray(pal)
             pal_match = pal[match(x, limits)]
             bool_idx = pd.isnull(pal_match)
             if np.any(bool_idx):
                 pal_match[bool_idx] = self.na_value
+
         return pal_match
 
     def break_info(self, range=None):

@@ -39,6 +39,7 @@ class geom_dotplot(geom):
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}
+    NON_MISSING_AES = {'size', 'shape'}
     DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',
                       'na_rm': False, 'stackdir': 'up', 'stackratio': 1,
                       'dotsize': 1, 'stackgroups': False}

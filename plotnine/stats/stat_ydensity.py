@@ -80,6 +80,7 @@ class stat_ydensity(stat):
     e.g. :py:`'stat(width)'`.
     """
     REQUIRED_AES = {'x', 'y'}
+    NON_MISSING_AES = {'weight'}
     DEFAULT_PARAMS = {'geom': 'violin', 'position': 'dodge',
                       'na_rm': False,
                       'adjust': 1, 'kernel': 'gaussian',

@@ -23,6 +23,7 @@ class geom_point(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 1.5, 'stroke': 0.5}
     REQUIRED_AES = {'x', 'y'}
+    NON_MISSING_AES = {'color', 'shape', 'size'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
 

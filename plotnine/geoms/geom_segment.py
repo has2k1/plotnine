@@ -35,6 +35,7 @@ class geom_segment(geom):
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}
+    NON_MISSING_AES = {'linetype', 'size', 'shape'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'lineend': 'butt', 'arrow': None}
 
