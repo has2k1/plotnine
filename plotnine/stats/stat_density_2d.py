@@ -156,9 +156,14 @@ def contour_lines(X, Y, Z, levels):
             start_pid = pid + 1
 
     # Collapse the info and make it fit for dataframe columns
-    x, y = np.vstack(segments).T
-    piece = np.hstack(piece_ids)
-    level = np.hstack(level_values)
+    if segments:
+        x, y = np.vstack(segments).T
+        piece = np.hstack(piece_ids)
+        level = np.hstack(level_values)
+    else:
+        x, y = [], []
+        piece = []
+        level = []
 
     data = pd.DataFrame({
         'x': x,
