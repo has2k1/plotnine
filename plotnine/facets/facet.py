@@ -495,9 +495,10 @@ class facet(object):
             y *= vslide
             box_y *= vslide
 
-        dimensions = types.SimpleNamespace(x=x, y=y, box_x=box_x, box_y=box_y,
-                           box_width=box_width,
-                           box_height=box_height)
+        dimensions = types.SimpleNamespace(
+            x=x, y=y, box_x=box_x, box_y=box_y,
+            box_width=box_width,
+            box_height=box_height)
         return dimensions
 
     def draw_strip_text(self, text_lines, location, pid):
