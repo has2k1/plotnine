@@ -1,7 +1,7 @@
 from __future__ import division
 
 import numpy as np
-from matplotlib.cbook import Bunch
+import types
 
 from ..exceptions import PlotnineError
 from ..utils import match, suppress
@@ -125,7 +125,7 @@ class Layout(object):
 
         Returns
         -------
-        scales : Bunch
+        scales : types.SimpleNamespace
           Class attributes *x* for the x scale and *y*
           for the y scale of the panel
 
@@ -144,7 +144,7 @@ class Layout(object):
             idx = self.layout.loc[bool_idx, 'SCALE_Y'].values[0]
             ysc = self.panel_scales_y[idx-1]
 
-        return Bunch(x=xsc, y=ysc)
+        return types.SimpleNamespace(x=xsc, y=ysc)
 
     def reset_position_scales(self):
         """
