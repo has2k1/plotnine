@@ -6,7 +6,7 @@ import keyword
 
 import numpy as np
 import pandas as pd
-from matplotlib.cbook import Bunch
+import types
 
 from ..utils import suppress, cross_join, match
 from ..exceptions import PlotnineError
@@ -148,7 +148,7 @@ class facet(object):
         self.params = {}
 
     def init_scales(self, layout, x_scale=None, y_scale=None):
-        scales = Bunch()
+        scales = types.SimpleNamespace()()
 
         if x_scale is not None:
             n = layout['SCALE_X'].max()
@@ -438,7 +438,7 @@ class facet(object):
 
         Returns
         -------
-        out : Bunch
+        out : types.SimpleNamespace
             A structure with all the coordinates required
             to draw the strip text and the background box.
         """
@@ -495,7 +495,7 @@ class facet(object):
             y *= vslide
             box_y *= vslide
 
-        dimensions = Bunch(x=x, y=y, box_x=box_x, box_y=box_y,
+        dimensions = types.SimpleNamespace(x=x, y=y, box_x=box_x, box_y=box_y,
                            box_width=box_width,
                            box_height=box_height)
         return dimensions
