@@ -1,4 +1,3 @@
-import six
 from copy import copy, deepcopy
 
 import pandas as pd
@@ -301,7 +300,7 @@ class layer(object):
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
         for ae, col in aesthetics.items():
-            if isinstance(col, six.string_types):
+            if isinstance(col, str):
                 if col in data:
                     evaled[ae] = data[col]
                 else:

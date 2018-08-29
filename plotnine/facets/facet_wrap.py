@@ -3,7 +3,6 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-import six
 
 from ..exceptions import PlotnineError
 from ..utils import suppress, match, join_keys
@@ -264,7 +263,7 @@ def parse_wrap_facets(facets):
     if isinstance(facets, (list, tuple)):
         return facets
 
-    if not isinstance(facets, six.string_types):
+    if not isinstance(facets, str):
         raise PlotnineError(error_msg)
 
     if '~' in facets:

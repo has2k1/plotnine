@@ -4,7 +4,6 @@ import pandas as pd
 import pandas.api.types as pdtypes
 import numpy as np
 from patsy.eval import EvalEnvironment
-import six
 
 from .ggplot import ggplot
 from .aes import aes, all_aesthetics, scaled_aesthetics
@@ -81,7 +80,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     I_env = EvalEnvironment([{'I': I}])
 
-    for ae in six.viewkeys(kwargs) & all_aesthetics:
+    for ae in kwargs.keys() & all_aesthetics:
         value = kwargs[ae]
         if is_mapping(value):
             aesthetics[ae] = value
@@ -117,7 +116,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             env = environment.with_outer_namespace(
                 {'factor': pd.Categorical})
 
-            if isinstance(aesthetics['x'], six.string_types):
+            if isinstance(aesthetics['x'], str):
                 try:
                     x = env.eval(aesthetics['x'], inner_namespace=data)
                 except Exception:
@@ -175,19 +174,19 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
         stat_name = 'stat_{}'.format(geom_klass.DEFAULT_PARAMS['stat'])
         stat_klass = Registry[stat_name]
         # find params
-        recognized = (six.viewkeys(kwargs) &
-                      (six.viewkeys(geom_klass.DEFAULT_PARAMS) |
+        recognized = (kwargs.keys() &
+                      (geom_klass.DEFAULT_PARAMS.keys() |
                        geom_klass.aesthetics() |
-                       six.viewkeys(stat_klass.DEFAULT_PARAMS) |
+                       stat_klass.DEFAULT_PARAMS.keys() |
                        stat_klass.aesthetics()))
-        recognized = recognized - six.viewkeys(aesthetics)
+        recognized = recognized - aesthetics.keys()
         params = {ae: kwargs[ae] for ae in recognized}
         p += geom_klass(**params)
 
     # pd.Series objects have name attributes. In a dataframe, the
     # series have the name of the column.
     labels = {}
-    for ae in scaled_aesthetics & six.viewkeys(kwargs):
+    for ae in scaled_aesthetics & kwargs.keys():
         with suppress(AttributeError):
             labels[ae] = kwargs[ae].name
 

@@ -8,13 +8,11 @@ import inspect
 from weakref import WeakValueDictionary
 from warnings import warn
 
-import six
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 import matplotlib.cbook as cbook
 import matplotlib.colors as mcolors
-from six import add_metaclass
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
@@ -42,7 +40,7 @@ def is_string(obj):
     """
     Return True if *obj* is a string
     """
-    if isinstance(obj, six.string_types):
+    if isinstance(obj, str):
         return True
     return False
 
@@ -558,7 +556,7 @@ def to_rgba(colors, alpha):
         if isinstance(c, tuple):
             if len(c) == 4:
                 return True
-        elif isinstance(c, six.string_types):
+        elif isinstance(c, str):
             if c[0] == '#' and len(c) == 9:
                 return True
         return False
@@ -793,8 +791,7 @@ class RegistryMeta(type):
         return meta._registry.items()
 
 
-@add_metaclass(RegistryMeta)
-class Registry(type):
+class Registry(type, metaclass=RegistryMeta):
     """
     Creates class that automatically registers all subclasses
 

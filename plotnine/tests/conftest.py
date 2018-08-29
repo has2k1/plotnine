@@ -9,7 +9,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 from matplotlib import cbook
-import six
 
 from plotnine import ggplot, theme
 
@@ -136,7 +135,7 @@ ggplot.draw_test = draw_test
 
 def pytest_assertrepr_compare(op, left, right):
     if (isinstance(left, ggplot) and
-            isinstance(right, (six.string_types, tuple)) and
+            isinstance(right, (str, tuple)) and
             op == "=="):
 
         msg = ("images not close: {actual:s} vs. {expected:s} "

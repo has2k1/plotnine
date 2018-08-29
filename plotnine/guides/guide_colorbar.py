@@ -1,7 +1,6 @@
 import hashlib
 from warnings import warn
 
-import six
 import numpy as np
 import pandas as pd
 import matplotlib.collections as mcoll
@@ -89,7 +88,7 @@ class guide_colorbar(guide):
             'color': scale.map(bar),
             'value': bar})
 
-        labels = ' '.join(six.text_type(x) for x in self.key['label'])
+        labels = ' '.join(str(x) for x in self.key['label'])
         info = '\n'.join([self.title, labels,
                           ' '.join(self.bar['color'].tolist()),
                           self.__class__.__name__])

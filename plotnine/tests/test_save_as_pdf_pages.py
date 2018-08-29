@@ -2,7 +2,6 @@ import os
 
 import matplotlib.pyplot as plt
 import pytest
-import six
 
 from plotnine import ggplot, aes, geom_text, ggtitle, theme
 from plotnine.data import mtcars
@@ -49,8 +48,6 @@ class TestArguments(object):
         fn = plots[0]._save_filename('pdf')
         assert_exist_and_clean(fn, "default filename")
 
-    @pytest.mark.skipif(six.PY2,
-                        reason="pesky string complications in py2")
     def test_save_method(self):
         fn = next(filename_gen)
         with pytest.warns(UserWarning) as record:

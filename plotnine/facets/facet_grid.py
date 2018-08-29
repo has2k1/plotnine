@@ -1,5 +1,4 @@
 import pandas as pd
-import six
 
 from ..utils import ninteraction, add_margins, cross_join
 from ..utils import match, join_keys
@@ -275,14 +274,14 @@ def parse_grid_facets(facets):
 
         rows, cols = facets
 
-        if isinstance(rows, six.string_types):
+        if isinstance(rows, str):
             rows = [] if rows == '.' else [rows]
-        if isinstance(cols, six.string_types):
+        if isinstance(cols, str):
             cols = [] if cols == '.' else [cols]
 
         return rows, cols
 
-    if not isinstance(facets, six.string_types):
+    if not isinstance(facets, str):
         raise PlotnineError(error_msg_f)
 
     # Example of allowed formulae

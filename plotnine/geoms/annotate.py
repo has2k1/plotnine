@@ -1,5 +1,3 @@
-import six
-
 import pandas as pd
 
 from ..aes import aes
@@ -60,7 +58,7 @@ class annotate(object):
 
         # Check if the aesthetics are of compatible lengths
         lengths, info_tokens = [], []
-        for ae, val in six.iteritems(aesthetics):
+        for ae, val in aesthetics.items():
             if is_scalar_or_string(val):
                 continue
             lengths.append(len(val))

@@ -1,7 +1,5 @@
-import six
 import pytest
 import pandas as pd
-
 
 from plotnine.layer import Layers, layer
 from plotnine import ggplot, aes, geom_point
@@ -57,7 +55,5 @@ class TestLayers(object):
         p2 = p + self.lyrs[::2]
         assert _get_colors(p2) == colors[::2]
 
-        # Note: this will be broken for python 2 users
-        if not six.PY2:
-            p3 = p + (self.lyrs[:1] + self.lyrs[2:])
-            assert _get_colors(p3) == colors[::2]
+        p3 = p + (self.lyrs[:1] + self.lyrs[2:])
+        assert _get_colors(p3) == colors[::2]

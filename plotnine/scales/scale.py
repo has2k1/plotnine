@@ -2,10 +2,6 @@ from copy import deepcopy, copy
 from collections import OrderedDict
 from warnings import warn
 
-import six
-from six import add_metaclass
-from six.moves import zip
-
 import numpy as np
 import pandas as pd
 import matplotlib.cbook as cbook
@@ -22,8 +18,7 @@ from ..utils import match, suppress, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
 
 
-@add_metaclass(Registry)
-class scale(object):
+class scale(object, metaclass=Registry):
     """
     Base class for all scales
 
@@ -110,7 +105,7 @@ class scale(object):
 
     @aesthetics.setter
     def aesthetics(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             value = [value]
         self._aesthetics = rename_aesthetics(value)
 
@@ -480,20 +475,10 @@ class scale_continuous(scale):
         the original dataspace.
         """
         limits = self.trans.transform(value)
-        if six.PY2:
-            # np.sort is not strict enough in python 2.7
-            if any(x is None for x in limits):
-                self._limits = limits
-            else:
-                try:
-                    self._limits = np.sort(limits)
-                except TypeError:
-                    self._limits = limits
-        else:
-            try:
-                self._limits = np.sort(limits)
-            except TypeError:
-                self._limits = limits
+        try:
+            self._limits = np.sort(limits)
+        except TypeError:
+            self._limits = limits
 
     def train(self, x):
         """
@@ -729,12 +714,12 @@ class scale_datetime(scale_continuous):
         # specifying the format strings
         with suppress(KeyError):
             breaks = kwargs['breaks']
-            if isinstance(breaks, six.string_types):
+            if isinstance(breaks, str):
                 kwargs['breaks'] = date_breaks(breaks)
 
         with suppress(KeyError):
             minor_breaks = kwargs['minor_breaks']
-            if isinstance(minor_breaks, six.string_types):
+            if isinstance(minor_breaks, str):
                 kwargs['minor_breaks'] = date_breaks(minor_breaks)
 
         # Using the more specific parameters take precedence

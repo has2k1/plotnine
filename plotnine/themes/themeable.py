@@ -10,16 +10,13 @@ that covers text also has to cover axis.title.
 """
 from copy import deepcopy
 
-from six import add_metaclass
-
 from ..utils import suppress, RegistryHierarchyMeta, to_rgba
 from ..exceptions import PlotnineError
 from .elements import (element_line, element_rect,
                        element_text, element_blank)
 
 
-@add_metaclass(RegistryHierarchyMeta)
-class themeable(object):
+class themeable(object, metaclass=RegistryHierarchyMeta):
     """
     themeable is an abstract class of things that can be themed.
 

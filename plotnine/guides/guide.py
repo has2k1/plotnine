@@ -1,12 +1,8 @@
-import six
-from six import add_metaclass
-
 from ..utils import waiver, Registry
 from ..exceptions import PlotnineError
 
 
-@add_metaclass(Registry)
-class guide(object):
+class guide(object, metaclass=Registry):
     """
     Base class for all guides
 
@@ -217,10 +213,10 @@ class guide(object):
         """
         l = layer
         legend_ae = set(self.key.columns) - {'label'}
-        all_ae = (six.viewkeys(l.mapping) |
+        all_ae = (l.mapping.keys() |
                   (plot.mapping if l.inherit_aes else set()) |
-                  six.viewkeys(l.stat.DEFAULT_AES))
-        geom_ae = l.geom.REQUIRED_AES | six.viewkeys(l.geom.DEFAULT_AES)
+                  l.stat.DEFAULT_AES.keys())
+        geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.keys()
         matched = all_ae & geom_ae & legend_ae
         matched = list(matched - set(l.geom.aes_params))
         return matched

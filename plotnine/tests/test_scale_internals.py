@@ -4,7 +4,6 @@ import numpy as np
 import numpy.testing as npt
 import pandas as pd
 import pytest
-import six
 
 from plotnine import ggplot, aes, geom_point, expand_limits, theme
 from plotnine.scales import scale_color
@@ -149,10 +148,10 @@ def test_linetype_palettes():
     s = scale_linetype_discrete()
     items = s.palette(N)
     assert(len(items) == N)
-    assert(all([isinstance(x, six.string_types) for x in items]))
+    assert(all([isinstance(x, str) for x in items]))
 
     items = s.palette(N+5)
-    assert(all([isinstance(x, six.string_types) for x in items[:N]]))
+    assert(all([isinstance(x, str) for x in items[:N]]))
 
     with pytest.raises(PlotnineError):
         s = scale_linetype_continuous()
@@ -163,10 +162,10 @@ def test_shape_palettes():
     s = scale_shape_discrete()
     items = s.palette(N)
     assert(len(items) == N)
-    assert(all([isinstance(x, six.string_types) for x in items]))
+    assert(all([isinstance(x, str) for x in items]))
 
     items = s.palette(N+5)
-    assert(all([isinstance(x, six.string_types) for x in items[:N]]))
+    assert(all([isinstance(x, str) for x in items[:N]]))
 
     with pytest.raises(PlotnineError):
         scale_shape_continuous()

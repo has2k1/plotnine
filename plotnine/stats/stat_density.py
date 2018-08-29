@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import six
 
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -113,11 +112,11 @@ class stat_density(stat):
         with suppress(KeyError):
             params['kernel'] = lookup[params['kernel'].lower()]
 
-        if params['kernel'] not in six.viewvalues(lookup):
+        if params['kernel'] not in lookup.values():
             msg = ("kernel should be one of {}. "
                    "You may use the abbreviations {}")
-            raise PlotnineError(msg.format(six.viewkeys(lookup),
-                                           six.viewvalues(lookup)))
+            raise PlotnineError(msg.format(lookup.keys(),
+                                           lookup.values()))
 
         return params
 

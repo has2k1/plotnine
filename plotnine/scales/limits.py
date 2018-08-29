@@ -2,7 +2,6 @@ from copy import deepcopy
 import sys
 
 import pandas as pd
-import six
 
 from ..aes import all_aesthetics
 from ..geoms import geom_blank
@@ -56,7 +55,7 @@ class _lim(object):
         for layer in gg.layers:
             with suppress(KeyError):
                 value = layer.mapping[ae]
-                if isinstance(value, six.string_types):
+                if isinstance(value, str):
                         ae_values.append(value)
 
         for value in ae_values:
@@ -185,7 +184,7 @@ def expand_limits(**kwargs):
     """
     def as_list(key):
         with suppress(KeyError):
-            if isinstance(kwargs[key], (int, float, six.string_types)):
+            if isinstance(kwargs[key], (int, float, str)):
                 kwargs[key] = [kwargs[key]]
 
     if isinstance(kwargs, dict):

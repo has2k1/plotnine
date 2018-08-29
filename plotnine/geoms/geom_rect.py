@@ -1,5 +1,4 @@
 from matplotlib.collections import PolyCollection
-from six.moves import zip
 import numpy as np
 
 from ..utils import to_rgba, SIZE_FACTOR

@@ -2,7 +2,6 @@ import warnings
 
 import numpy as np
 import pandas as pd
-import six
 import scipy.stats as stats
 import statsmodels.api as sm
 
@@ -27,7 +26,7 @@ def predictdf(data, xseq, **params):
 
     method = params['method']
 
-    if isinstance(method, six.string_types):
+    if isinstance(method, str):
         try:
             method = methods[method]
         except KeyError:

@@ -3,7 +3,6 @@ import types
 
 import pandas as pd
 import numpy as np
-from six.moves import range
 
 from ..utils import is_scalar_or_string, suppress
 from ..doctools import document

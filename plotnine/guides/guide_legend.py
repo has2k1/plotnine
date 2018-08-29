@@ -4,8 +4,6 @@ from itertools import islice
 from collections import OrderedDict
 from warnings import warn
 
-import six
-from six.moves import zip, range
 import numpy as np
 import pandas as pd
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
@@ -100,7 +98,7 @@ class guide_legend(guide):
         self.key = key
 
         # create a hash of the important information in the guide
-        labels = ' '.join(six.text_type(x) for x in self.key['label'])
+        labels = ' '.join(str(x) for x in self.key['label'])
         info = '\n'.join([self.title, labels, str(self.direction),
                           self.__class__.__name__])
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()

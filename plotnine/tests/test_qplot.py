@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import pytest
-import six
 
 from plotnine import qplot, theme
 
@@ -23,7 +21,6 @@ def test_string_arrays():
     assert p == 'string-arrays'
 
 
-@pytest.mark.skipif(six.PY2, reason="No range")
 def test_range():
     p = qplot(x=range(5), y=range(5))
 

@@ -33,7 +33,6 @@ except ImportError:
         return decorator
 
 import numpy as np
-import six
 
 
 # Parameter arguments that are listed first in the geom and
@@ -179,7 +178,7 @@ def dict_to_table(header, contents):
     for name, value in contents.items():
         # code highlighting
         if value != '':
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 value = "'{}'".format(value)
             value = ':py:`{}`'.format(value)
         rows.append((name, value))
@@ -206,7 +205,7 @@ def make_signature(name, params, common_params, common_param_values):
     seen = set()
 
     def tokens_append(key, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             value = "'{}'".format(value)
         tokens.append('{}={}'.format(key, value))
 

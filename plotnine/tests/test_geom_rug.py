@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import six
 
 from plotnine import ggplot, aes, geom_rug, theme
 
@@ -26,8 +25,4 @@ def test_aesthetics():
          geom_rug(aes('x+8*n', 'y+8*n', size='z'),
                   sides='tblr'))
 
-    if six.PY2:
-        # Small displacement in y-axis text
-        assert p + _theme == ('aesthetics', {'tol': 4})
-    else:
-        assert p + _theme == 'aesthetics'
+    assert p + _theme == 'aesthetics'

@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import six
 
 from ..utils import suppress
 from ..doctools import document
@@ -107,14 +106,14 @@ class stat_ydensity(stat):
         with suppress(KeyError):
             params['kernel'] = lookup[params['kernel'].lower()]
 
-        if params['kernel'] not in six.viewvalues(lookup):
+        if params['kernel'] not in lookup.values():
             msg = ("kernel should be one of {}. "
                    "You may use the abbreviations {}")
-            raise PlotnineError(msg.format(six.viewkeys(lookup),
-                                           six.viewvalues()))
+            raise PlotnineError(msg.format(lookup.keys(),
+                                           lookup.values()))
 
-        missing_params = (six.viewkeys(stat_density.DEFAULT_PARAMS) -
-                          six.viewkeys(params))
+        missing_params = (stat_density.DEFAULT_PARAMS.keys() -
+                          params.keys())
         for key in missing_params:
             params[key] = stat_density.DEFAULT_PARAMS[key]
 

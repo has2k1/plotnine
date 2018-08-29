@@ -1,8 +1,5 @@
 from copy import deepcopy
 
-import six
-from six import add_metaclass
-
 from ..stats.stat import stat
 from ..aes import rename_aesthetics, is_valid_aesthetic
 from ..layer import layer
@@ -12,8 +9,7 @@ from ..utils import copy_keys, is_string, Registry
 from ..exceptions import PlotnineError
 
 
-@add_metaclass(Registry)
-class geom(object):
+class geom(object, metaclass=Registry):
     """Base class of all Geoms"""
     __base__ = True
     DEFAULT_AES = dict()     #: Default aesthetics for the geom
@@ -94,7 +90,7 @@ class geom(object):
 
         geoms should not override this method.
         """
-        main = six.viewkeys(cls.DEFAULT_AES) | cls.REQUIRED_AES
+        main = cls.DEFAULT_AES.keys() | cls.REQUIRED_AES
         other = {'group'}
         # Need to recognize both spellings
         if 'color' in main:
@@ -172,8 +168,8 @@ class geom(object):
         out : dataframe
             Data used for drawing the geom.
         """
-        missing_aes = (six.viewkeys(self.DEFAULT_AES) -
-                       six.viewkeys(self.aes_params) -
+        missing_aes = (self.DEFAULT_AES.keys() -
+                       self.aes_params.keys() -
                        set(data.columns))
 
         # Not in data and not set, use default
@@ -358,12 +354,11 @@ class geom(object):
         """
         Verify arguments passed to the geom
         """
-        keys = six.viewkeys
-        unknown = (keys(kwargs) -
+        unknown = (kwargs.keys() -
                    self.aesthetics() -                # geom aesthetics
-                   keys(self.DEFAULT_PARAMS) -        # geom parameters
+                   self.DEFAULT_PARAMS.keys() -        # geom parameters
                    self._stat.aesthetics() -          # stat aesthetics
-                   keys(self._stat.DEFAULT_PARAMS) -  # stat parameters
+                   self._stat.DEFAULT_PARAMS.keys() -  # stat parameters
                    {'data', 'mapping',                # layer parameters
                     'show_legend', 'inherit_aes'})    # layer parameters
         if unknown:

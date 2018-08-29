@@ -1,7 +1,6 @@
 from copy import copy
 from warnings import warn
 
-from six import add_metaclass
 import numpy as np
 
 from ..utils import check_required_aesthetics, groupby_apply
@@ -9,8 +8,7 @@ from ..utils import is_string, Registry
 from ..exceptions import PlotnineError
 
 
-@add_metaclass(Registry)
-class position(object):
+class position(object, metaclass=Registry):
     """Base class for all positions"""
     __base__ = True
 

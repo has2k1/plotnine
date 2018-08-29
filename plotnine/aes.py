@@ -1,8 +1,6 @@
 import re
 from copy import deepcopy
 
-import six
-
 from .utils import suppress
 
 __all__ = ['aes']
@@ -208,7 +206,7 @@ def is_calculated_aes(ae):
     >>> is_calculated_aes('100*stat(density)')
     True
     """
-    if not isinstance(ae, six.string_types):
+    if not isinstance(ae, str):
         return False
 
     for pattern in (STAT_RE, DOTS_RE):
@@ -404,7 +402,7 @@ def is_valid_aesthetic(value, ae):
         return False
 
     elif ae == 'shape':
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return True
 
         # tuple of the form (numsides, style, angle)
@@ -418,7 +416,7 @@ def is_valid_aesthetic(value, ae):
         return False
 
     elif ae in {'color', 'fill'}:
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return True
         with suppress(TypeError):
             if (isinstance(value, (tuple, list)) and

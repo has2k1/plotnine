@@ -1,4 +1,3 @@
-import six
 import pandas as pd
 import numpy as np
 import pytest
@@ -15,14 +14,11 @@ def test_stat_bin():
     # About the default bins
     gg = ggplot(aes(x='x'), df) + stat_bin()
 
-    if not six.PY2:
-        # Test fails on PY2 when all the tests are run,
-        # but not when only this test module is run
-        with pytest.warns(None) as record:
-            gg.draw_test()
+    with pytest.warns(None) as record:
+        gg.draw_test()
 
-        res = ('bins' in str(item.message).lower() for item in record)
-        assert any(res)
+    res = ('bins' in str(item.message).lower() for item in record)
+    assert any(res)
 
     # About the ignoring the y aesthetic
     gg = ggplot(aes(x='x', y='y'), df) + stat_bin()

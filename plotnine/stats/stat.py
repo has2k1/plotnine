@@ -1,8 +1,6 @@
 from copy import deepcopy
 
-import six
 import pandas as pd
-from six import add_metaclass
 
 from ..aes import get_calculated_aes
 from ..utils import data_mapping_as_kwargs, remove_missing
@@ -11,8 +9,7 @@ from ..utils import is_string, Registry, check_required_aesthetics
 from ..exceptions import PlotnineError
 
 
-@add_metaclass(Registry)
-class stat(object):
+class stat(object, metaclass=Registry):
     """Base class of all stats"""
     __base__ = True
 
@@ -46,7 +43,7 @@ class stat(object):
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
         self.aes_params = {ae: kwargs[ae]
                            for ae in (self.aesthetics() &
-                                      six.viewkeys(kwargs))}
+                                      kwargs.keys())}
 
     @staticmethod
     def from_geom(geom):
@@ -90,9 +87,9 @@ class stat(object):
                 'Unknown stat of type {}'.format(type(name)))
 
         valid_kwargs = (
-            (klass.aesthetics() |
-             six.viewkeys(klass.DEFAULT_PARAMS)) &
-            six.viewkeys(kwargs))
+             (klass.aesthetics() |
+              klass.DEFAULT_PARAMS.keys()) &
+             kwargs.keys())
 
         params = {k: kwargs[k] for k in valid_kwargs}
         return klass(geom=geom, **params)
@@ -147,14 +144,14 @@ class stat(object):
             Data used for drawing the geom.
         """
         missing = (self.aesthetics() -
-                   six.viewkeys(self.aes_params) -
+                   self.aes_params.keys() -
                    set(data.columns))
 
         for ae in missing-self.REQUIRED_AES:
             if self.DEFAULT_AES[ae] is not None:
                 data[ae] = self.DEFAULT_AES[ae]
 
-        missing = (six.viewkeys(self.aes_params) -
+        missing = (self.aes_params.keys() -
                    set(data.columns))
 
         for ae in self.aes_params:
