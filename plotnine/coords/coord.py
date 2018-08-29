@@ -1,9 +1,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import types
 from copy import deepcopy, copy
 
 import numpy as np
-from matplotlib.cbook import Bunch
 
 from ..utils import is_waive
 from ..exceptions import PlotnineError
@@ -140,8 +140,8 @@ class coord(object):
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return Bunch(x=panel_params['x_range'],
-                     y=panel_params['y_range'])
+        return types.SimpleNamespace(x=panel_params['x_range'],
+                                     y=panel_params['y_range'])
 
     def distance(self, x, y, panel_params):
         msg = "The coordinate should implement this method."

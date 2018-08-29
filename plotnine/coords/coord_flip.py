@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
-
-from matplotlib.cbook import Bunch
+import types
 
 from .coord_cartesian import coord_cartesian
 
@@ -53,8 +52,8 @@ class coord_flip(coord_cartesian):
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return Bunch(x=panel_params['y_range'],
-                     y=panel_params['x_range'])
+        return types.SimpleNamespace(x=panel_params['y_range'],
+                                     y=panel_params['x_range'])
 
 
 def flip_labels(obj):

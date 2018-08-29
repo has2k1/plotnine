@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import hashlib
+import types
 from itertools import islice
 from collections import OrderedDict
 from warnings import warn
@@ -9,7 +10,6 @@ import six
 from six.moves import zip, range
 import numpy as np
 import pandas as pd
-from matplotlib.cbook import Bunch
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
 from ..scales.scale import scale_continuous
@@ -176,8 +176,8 @@ class guide_legend(guide):
                 data, l.geom.params['na_rm'],
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
                 '{} legend'.format(l.geom.__class__.__name__))
-            self.glayers.append(Bunch(geom=geom, data=data, layer=l))
-
+            self.glayers.append(
+                types.SimpleNamespace(geom=geom, data=data, layer=l))
         if not self.glayers:
             return None
         return self

@@ -4,6 +4,7 @@ import warnings
 import inspect
 import shutil
 import locale
+import types
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -159,7 +160,7 @@ def make_test_image_filenames(name, test_file):
 
     Returns
     -------
-    out : Bunch
+    out : types.SimpleNamespace
         Object with 3 attributes to store the generated filenames
 
             - result
@@ -189,7 +190,7 @@ def make_test_image_filenames(name, test_file):
     base, ext = os.path.splitext(name)
     expected_name = '{}-{}{}'.format(base, 'expected', ext)
 
-    filenames = cbook.Bunch(
+    filenames = types.SimpleNamespace(
         baseline=os.path.join(baseline_dir, name),
         result=os.path.join(result_dir, name),
         expected=os.path.join(result_dir, expected_name))

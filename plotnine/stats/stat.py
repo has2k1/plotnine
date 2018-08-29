@@ -284,7 +284,7 @@ class stat(object):
         ----------
         data : dataframe
             data for the computing
-        scales : Bunch
+        scales : types.SimpleNamespace
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
             to find out the physical size of a scale. e.g::
@@ -332,7 +332,7 @@ class stat(object):
         ----------
         data : dataframe
             Data for a group
-        scales : Bunch
+        scales : types.SimpleNamespace
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
             to find out the physical size of a scale. e.g::

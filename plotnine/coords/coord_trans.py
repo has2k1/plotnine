@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
+import types
 from warnings import warn
 
-from matplotlib.cbook import Bunch
 from mizani.bounds import expand_range_distinct, squish_infinite
 from mizani.transforms import gettrans
 
@@ -32,8 +32,8 @@ class coord_trans(coord):
 
     def __init__(self, x='identity', y='identity',
                  xlim=None, ylim=None):
-        self.trans = Bunch(x=gettrans(x), y=gettrans(y))
-        self.limits = Bunch(xlim=xlim, ylim=ylim)
+        self.trans = types.SimpleNamespace(x=gettrans(x), y=gettrans(y))
+        self.limits = types.SimpleNamespace(xlim=xlim, ylim=ylim)
 
     def transform(self, data, panel_params, munch=False):
         if not self.is_linear and munch:

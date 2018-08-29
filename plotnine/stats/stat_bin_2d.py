@@ -1,11 +1,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import itertools
+import types
 
 import pandas as pd
 import numpy as np
 from six.moves import range
-from matplotlib.cbook import Bunch
 
 from ..utils import is_scalar_or_string, suppress
 from ..doctools import document
@@ -138,13 +138,13 @@ stat_bin2d = stat_bin_2d
 
 def dual_param(value):
     if is_scalar_or_string(value):
-        return Bunch(x=value, y=value)
+        return types.SimpleNamespace(x=value, y=value)
 
     with suppress(AttributeError):
         value.x, value.y
         return value
 
     if len(value) == 2:
-        return Bunch(x=value[0], y=value[1])
+        return types.SimpleNamespace(x=value[0], y=value[1])
     else:
-        return Bunch(x=value, y=value)
+        return types.SimpleNamespace(x=value, y=value)
