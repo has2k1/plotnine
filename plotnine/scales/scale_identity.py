@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 from ..doctools import document
 from ..utils import identity, alias
 from .scale import scale_discrete, scale_continuous

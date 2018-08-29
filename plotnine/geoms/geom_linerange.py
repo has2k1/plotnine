@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 from ..doctools import document
 from .geom import geom
 from .geom_segment import geom_segment

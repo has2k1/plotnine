@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..positions import position_jitter

@@ -1,5 +1,3 @@
-from __future__ import division
-
 from ..options import get_option
 from ..utils import alias
 from .elements import (element_line, element_rect,

@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 from matplotlib.collections import PolyCollection
 from six.moves import zip
 import numpy as np

@@ -1,5 +1,3 @@
-from __future__ import division
-
 from plotnine.scales import scale_x_discrete, scale_x_continuous
 from plotnine.stats.binning import (breaks_from_bins,
                                     breaks_from_binwidth,

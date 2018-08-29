@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 from plotnine import ggplot, aes, geom_point
 from plotnine import facet_grid, facet_wrap
 from plotnine import labeller, as_labeller

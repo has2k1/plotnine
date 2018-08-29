@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import numpy as np
 from mizani.bounds import rescale_max
 from mizani.palettes import abs_area, area_pal, rescale_pal

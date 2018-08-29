@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from .guide_colorbar import guide_colorbar, guide_colourbar
 from .guide_legend import guide_legend
 from .guides import guides

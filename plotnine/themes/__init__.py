@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from .theme import theme
 from .theme_538 import theme_538
 from .theme_bw import theme_bw

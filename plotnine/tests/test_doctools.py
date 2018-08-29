@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 from plotnine.scales.scale import scale
 from plotnine.doctools import document
 

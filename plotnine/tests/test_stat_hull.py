@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 from plotnine import ggplot, aes, geom_point, stat_hull, theme
 from plotnine.data import mtcars
 

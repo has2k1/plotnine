@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from .stat_count import stat_count
 from .stat_bin import stat_bin
 from .stat_bin_2d import stat_bin_2d, stat_bin2d

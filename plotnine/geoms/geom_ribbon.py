@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 from ..coords import coord_flip
 from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
 from ..doctools import document

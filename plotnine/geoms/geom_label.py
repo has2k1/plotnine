@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 from matplotlib.patches import Rectangle
 
 from ..doctools import document

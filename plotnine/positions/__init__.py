@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from .position_dodge import position_dodge
 from .position_fill import position_fill
 from .position_identity import position_identity
