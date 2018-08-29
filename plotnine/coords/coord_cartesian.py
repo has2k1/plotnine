@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from matplotlib.cbook import Bunch
+import types
 from mizani.bounds import expand_range_distinct
 
 from .coord import coord, dist_euclidean
@@ -28,7 +28,7 @@ class coord_cartesian(coord):
     is_linear = True
 
     def __init__(self, xlim=None, ylim=None, expand=True):
-        self.limits = Bunch(xlim=xlim, ylim=ylim)
+        self.limits = types.SimpleNamespace(xlim=xlim, ylim=ylim)
         self.expand = expand
 
     def setup_panel_params(self, scale_x, scale_y):
