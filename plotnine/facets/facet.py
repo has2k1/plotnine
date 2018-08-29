@@ -148,7 +148,7 @@ class facet(object):
         self.params = {}
 
     def init_scales(self, layout, x_scale=None, y_scale=None):
-        scales = types.SimpleNamespace()()
+        scales = types.SimpleNamespace()
 
         if x_scale is not None:
             n = layout['SCALE_X'].max()
