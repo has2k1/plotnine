@@ -28,7 +28,7 @@ class coord_cartesian(coord):
     is_linear = True
 
     def __init__(self, xlim=None, ylim=None, expand=True):
-        self.limits = types.SimpleNamespace (xlim=xlim, ylim=ylim)
+        self.limits = types.SimpleNamespace(xlim=xlim, ylim=ylim)
         self.expand = expand
 
     def setup_panel_params(self, scale_x, scale_y):
