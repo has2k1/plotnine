@@ -1,10 +1,11 @@
 import itertools
 import types
+from contextlib import suppress
 
 import pandas as pd
 import numpy as np
 
-from ..utils import is_scalar_or_string, suppress
+from ..utils import is_scalar_or_string
 from ..doctools import document
 from .binning import fuzzybreaks
 from .stat import stat

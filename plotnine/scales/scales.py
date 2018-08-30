@@ -1,11 +1,12 @@
 import itertools
+from contextlib import suppress
 from warnings import warn
 
 import numpy as np
 
 from ..aes import aes_to_scale
 from ..exceptions import PlotnineError
-from ..utils import suppress, Registry, array_kind
+from ..utils import Registry, array_kind
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.

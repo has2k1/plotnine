@@ -1,10 +1,11 @@
+from contextlib import suppress
+
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import suppress
 from .stat import stat
 
 

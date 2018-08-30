@@ -1,12 +1,13 @@
 from copy import deepcopy
 from warnings import warn
+from contextlib import suppress
 
 import pandas as pd
 import numpy as np
 from matplotlib.offsetbox import (HPacker, VPacker)
 
 from .guide import guide as guide_class
-from ..utils import is_string, is_waive, Registry, suppress
+from ..utils import is_string, is_waive, Registry
 from ..exceptions import PlotnineError
 
 

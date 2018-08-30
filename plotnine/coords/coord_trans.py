@@ -90,9 +90,10 @@ class coord_trans(coord):
 
             return out
 
-        # When Python 2.7 end of life, change this to dict(**a, **b)
-        out = train(scale_x, self.limits.xlim, self.trans.x, 'x')
-        out.update(train(scale_y, self.limits.xlim, self.trans.y, 'y'))
+        out = dict(
+            **train(scale_x, self.limits.xlim, self.trans.x, 'x'),
+            **train(scale_y, self.limits.xlim, self.trans.y, 'y')
+        )
         return out
 
     def distance(self, x, y, panel_params):

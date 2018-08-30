@@ -1,7 +1,7 @@
 """
 Theme elements used to decorate the graph.
 """
-from ..utils import suppress
+from contextlib import suppress
 
 
 class element_line(object):

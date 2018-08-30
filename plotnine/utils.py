@@ -3,8 +3,8 @@ Little functions used all over the codebase
 """
 import collections
 import itertools
-import contextlib
 import inspect
+from contextlib import suppress
 from weakref import WeakValueDictionary
 from warnings import warn
 
@@ -724,24 +724,6 @@ class ColoredDrawingArea(DrawingArea):
         self.add_artist(self.patch)
 
 
-try:
-    from contextlib import suppress
-except ImportError:
-    # For python 2.7
-    @contextlib.contextmanager
-    def suppress(*exceptions):
-        """
-        Return a context manager that suppresses any of the
-        specified exceptions if they occur in the body of a
-        with statement and then resumes execution with the
-        first statement following the end of the with statement.
-        """
-        try:
-            yield
-        except exceptions:
-            pass
-
-
 def copy_keys(source, destination, keys=None):
     """
     Add keys in source to destination
@@ -887,20 +869,9 @@ def get_kwarg_names(func):
     """
     Return a list of valid kwargs to function func
     """
-    try:
-        # Python 3.5
-        sig = inspect.signature(func)
-    except AttributeError:
-        # Below Python 3.5
-        args, _, _, defaults = inspect.getargspec(func)
-        if defaults:
-            kwonlyargs = args[-len(defaults):]
-        else:
-            kwonlyargs = []
-    else:
-        kwonlyargs = [p.name for p in sig.parameters.values()
-                      if p.default is not p.empty]
-
+    sig = inspect.signature(func)
+    kwonlyargs = [p.name for p in sig.parameters.values()
+                  if p.default is not p.empty]
     return kwonlyargs
 
 

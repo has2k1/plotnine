@@ -60,9 +60,10 @@ class coord_cartesian(coord):
                 out[new_key] = out.pop(key)
             return out
 
-        # When Python 2.7 end of life, change this to dict(**a, **b)
-        out = train(scale_x, self.limits.xlim, 'x')
-        out.update(train(scale_y, self.limits.ylim, 'y'))
+        out = dict(
+            **train(scale_x, self.limits.xlim, 'x'),
+            **train(scale_y, self.limits.ylim, 'y')
+        )
         return out
 
     @staticmethod

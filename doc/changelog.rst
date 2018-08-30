@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.5.0
+------
+(not-yet-release)
+
+API Changes
+***********
+
+- Plotnine 0.5.0 only supports Python 3.5 and higher
+
+
 v0.4.0
 ------
 *2018-01-08*

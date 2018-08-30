@@ -1,6 +1,8 @@
+from contextlib import suppress
+
 from matplotlib.text import Text
 
-from ..utils import to_rgba, suppress
+from ..utils import to_rgba
 from ..doctools import document
 from ..positions import position_nudge
 from .geom import geom

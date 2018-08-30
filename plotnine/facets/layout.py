@@ -1,8 +1,9 @@
 import numpy as np
 import types
+from contextlib import suppress
 
 from ..exceptions import PlotnineError
-from ..utils import match, suppress
+from ..utils import match
 
 
 class Layout(object):

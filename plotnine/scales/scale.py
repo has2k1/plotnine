@@ -1,3 +1,4 @@
+from contextlib import suppress
 from copy import deepcopy, copy
 from collections import OrderedDict
 from warnings import warn
@@ -14,7 +15,7 @@ from mizani.transforms import gettrans
 from ..aes import is_position_aes, rename_aesthetics
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import match, suppress, waiver, is_waive, Registry
+from ..utils import match, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
 
 

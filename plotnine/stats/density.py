@@ -7,13 +7,13 @@ kernel densities with the wider scientific python ecosystem.
 Credit: Jake VanderPlas for the original kde_* functions
 https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
 """
+from contextlib import suppress
+
 import numpy as np
 import pandas.api.types as pdtypes
 from scipy.stats import gaussian_kde
 from statsmodels.nonparametric.kde import KDEUnivariate
 from statsmodels.nonparametric.kernel_density import KDEMultivariate
-
-from ..utils import suppress
 
 # Not core dependency
 with suppress(ImportError):

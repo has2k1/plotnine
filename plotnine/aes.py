@@ -1,7 +1,6 @@
 import re
 from copy import deepcopy
-
-from .utils import suppress
+from contextlib import suppress
 
 __all__ = ['aes']
 

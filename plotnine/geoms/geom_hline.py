@@ -1,6 +1,7 @@
 import pandas as pd
+from contextlib import suppress
 
-from ..utils import make_iterable, suppress
+from ..utils import make_iterable
 from ..doctools import document
 from ..aes import aes
 from .geom import geom

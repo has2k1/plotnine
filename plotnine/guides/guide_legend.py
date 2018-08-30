@@ -2,6 +2,7 @@ import hashlib
 import types
 from itertools import islice
 from collections import OrderedDict
+from contextlib import suppress
 from warnings import warn
 
 import numpy as np
@@ -9,7 +10,7 @@ import pandas as pd
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 
 from ..scales.scale import scale_continuous
-from ..utils import ColoredDrawingArea, suppress, SIZE_FACTOR
+from ..utils import ColoredDrawingArea, SIZE_FACTOR
 from ..utils import Registry, remove_missing
 from ..exceptions import PlotnineError
 from ..geoms import geom_text

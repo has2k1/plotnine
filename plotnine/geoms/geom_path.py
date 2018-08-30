@@ -1,5 +1,6 @@
 from collections import Counter
 from warnings import warn
+from contextlib import suppress
 
 import numpy as np
 import matplotlib.collections as mcoll
@@ -8,7 +9,7 @@ import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
 from ..doctools import document
-from ..utils import to_rgba, make_line_segments, suppress
+from ..utils import to_rgba, make_line_segments
 from ..utils import SIZE_FACTOR, match
 from .geom import geom
 

@@ -1,36 +1,7 @@
 import re
-from textwrap import dedent, wrap
-
-try:
-    from textwrap import indent
-except ImportError:
-    # Python 2.7
-    def indent(text, prefix, predicate=None):
-        """Adds 'prefix' to the beginning of selected lines in 'text'.
-        If 'predicate' is provided, 'prefix' will only be added to the lines
-        where 'predicate(line)' is True. If 'predicate' is not provided,
-        it will default to adding 'prefix' to all non-empty lines that do not
-        consist solely of whitespace characters.
-        """
-        if predicate is None:
-            def predicate(line):
-                return line.strip()
-
-        def prefixed_lines():
-            for line in text.splitlines(True):
-                yield (prefix + line if predicate(line) else line)
-        return ''.join(prefixed_lines())
-
-
+from textwrap import indent, dedent, wrap
 from collections import OrderedDict
-try:
-    from functools import lru_cache
-except ImportError:
-    # Fake cache for python 2.7 to 3.1
-    def lru_cache(*args, **kwargs):
-        def decorator(func):
-            return func
-        return decorator
+from functools import lru_cache
 
 import numpy as np
 

@@ -8,9 +8,10 @@ The scope of text covers all text in the plot, axis.title applies
 only to the axis.title. In matplotlib terms this means that a theme
 that covers text also has to cover axis.title.
 """
+from contextlib import suppress
 from copy import deepcopy
 
-from ..utils import suppress, RegistryHierarchyMeta, to_rgba
+from ..utils import RegistryHierarchyMeta, to_rgba
 from ..exceptions import PlotnineError
 from .elements import (element_line, element_rect,
                        element_text, element_blank)

@@ -1,7 +1,8 @@
+from contextlib import suppress
+
 import numpy as np
 import pandas as pd
 
-from ..utils import suppress
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat_density import stat_density, compute_density

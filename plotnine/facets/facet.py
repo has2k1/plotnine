@@ -1,12 +1,13 @@
 from copy import deepcopy, copy
 import itertools
 import keyword
+from contextlib import suppress
 
 import numpy as np
 import pandas as pd
 import types
 
-from ..utils import suppress, cross_join, match
+from ..utils import cross_join, match
 from ..exceptions import PlotnineError
 from ..scales.scales import Scales
 

@@ -1,6 +1,7 @@
+from contextlib import suppress
 from copy import copy
 
-from ..utils import jitter, resolution, suppress
+from ..utils import jitter, resolution
 from ..exceptions import PlotnineError
 from .position import position
 from .position_dodge import position_dodge

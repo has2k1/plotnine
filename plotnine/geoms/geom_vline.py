@@ -1,7 +1,9 @@
+from contextlib import suppress
+
 import pandas as pd
 import matplotlib.lines as mlines
 
-from ..utils import make_iterable, suppress, SIZE_FACTOR
+from ..utils import make_iterable, SIZE_FACTOR
 from ..doctools import document
 from ..aes import aes
 from .geom import geom

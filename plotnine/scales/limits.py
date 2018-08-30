@@ -1,3 +1,4 @@
+from contextlib import suppress
 from copy import deepcopy
 import sys
 
@@ -7,7 +8,6 @@ from ..aes import all_aesthetics
 from ..geoms import geom_blank
 from ..scales.scales import make_scale
 from ..exceptions import PlotnineError
-from ..utils import suppress
 
 
 # By adding limits, we create a scale of the appropriate type

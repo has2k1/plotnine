@@ -1,8 +1,9 @@
+from contextlib import suppress
 from copy import copy
 import numpy as np
 
 from ..exceptions import PlotnineError
-from ..utils import match, suppress
+from ..utils import match
 from .position import position
 
 

@@ -41,7 +41,7 @@ Release
 =======
 
 * Make sure your `.pypirc` file is setup
-  `correctly <http://docs.python.org/2/distutils/packageindex.html>`_.
+  `correctly <http://docs.python.org/3/distutils/packageindex.html>`_.
   ::
 
     cat ~/.pypirc

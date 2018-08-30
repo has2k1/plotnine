@@ -1,3 +1,4 @@
+from contextlib import suppress
 from copy import copy, deepcopy
 
 import pandas as pd
@@ -6,7 +7,7 @@ import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
 from .exceptions import PlotnineError
-from .utils import array_kind, ninteraction, suppress
+from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
 from .aes import aes, get_calculated_aes, stat, make_labels
 from .aes import strip_calculated_markers

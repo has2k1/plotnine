@@ -2,6 +2,7 @@
 import os
 import sys
 from copy import copy, deepcopy
+from contextlib import suppress
 from warnings import warn
 
 import pandas as pd
@@ -17,7 +18,7 @@ from .facets import facet_null
 from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme, theme_get
-from .utils import suppress, to_inches, from_inches
+from .utils import to_inches, from_inches
 from .exceptions import PlotnineError
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -656,7 +657,7 @@ class ggplot(object):
                       'format': format}
         fig_kwargs.update(kwargs)
 
-        figure = [None]  # Python 3 a nonlocal
+        figure = [None]  # nonlocal
 
         # filename, depends on the object
         if filename is None:
