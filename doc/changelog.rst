@@ -10,6 +10,11 @@ API Changes
 
 - Plotnine 0.5.0 only supports Python 3.5 and higher
 
+Bug Fixes
+*********
+
+- Fixed issue where with the `subplots_adjust` themeable could not be used to
+  set the `wspace` and `hspace` Matplotlib subplot parameters.
 
 v0.4.0
 ------

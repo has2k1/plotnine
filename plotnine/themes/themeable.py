@@ -1560,9 +1560,21 @@ class subplots_adjust(themeable):
         See :class:`matplotlib.figure.SubplotParams`
         for the keys that the dictionary *can* have.
     """
+    def apply_figure(self, figure):
+        params = self.properties['value']
+        figure.subplots_adjust(
+            wspace=params.get('wspace', None),
+            hspace=params.get('hspace', None),
+        )
+
     def setup_figure(self, figure):
-        kwargs = self.properties['value']
-        figure.subplots_adjust(**kwargs)
+        params = self.properties['value']
+        figure.subplots_adjust(
+            left=params.get('left', None),
+            right=params.get('right', None),
+            top=params.get('top', None),
+            bottom=params.get('bottom', None),
+        )
 
 
 # Deprecated
