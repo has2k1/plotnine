@@ -53,9 +53,18 @@ def get_required_packages():
                         'patsy >= 0.4.1',
                         'statsmodels >= 0.8.0',
                         'pandas >= 0.21.0',
-                        'geopandas >= 0.3.0',
+                        # 'geopandas >= 0.3.0',
                         'descartes >= 1.1.0'
                         ]
+    # FIXME: Remove and uncomment above when pyproj supports
+    # Python 3.7
+    # https://github.com/has2k1/plotnine/issues/178
+    # https://github.com/jswhit/pyproj/issues/136
+    import sys
+    if sys.version_info < (3, 7, 0):
+        install_requires.extend([
+            'geopandas >= 0.3.0',
+        ])
     return install_requires
 
 

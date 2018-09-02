@@ -40,6 +40,15 @@ class geom_map(geom):
     legend_geom = 'polygon'
 
     def __init__(self, *args, **kwargs):
+        import sys
+        if sys.version_info >= (3, 7, 0):
+            from ..exceptions import PlotnineError
+            raise PlotnineError(
+                "geom_map does not work on Python 3.7 "
+                "for more information see "
+                "https://github.com/has2k1/plotnine/issues/178 "
+                "https://github.com/jswhit/pyproj/issues/136 "
+            )
         geom.__init__(self, *args, **kwargs)
         # Almost all geodataframes loaded from shapefiles
         # have a geometry column.
