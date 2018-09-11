@@ -14,7 +14,10 @@ Bug Fixes
 *********
 
 - Fixed issue where with the `subplots_adjust` themeable could not be used to
-  set the `wspace` and `hspace` Matplotlib subplot parameters.
+  set the `wspace` and `hspace` Matplotlib subplot parameters. (:issue:`185`)
+
+- Fixed in :class:`~plotnine.stat.stat_bin` where setting custom limits for the
+  scale leads to an error. (:issue:`189`)
 
 v0.4.0
 ------
