@@ -15,6 +15,8 @@ from ..scales.scales import Scales
 with suppress(ImportError):
     import matplotlib.text as mtext
     import matplotlib.patches as mpatch
+    from matplotlib.ticker import locale, FixedFormatter
+
 
 KEYWORDS = set(keyword.kwlist)
 
@@ -253,6 +255,12 @@ class facet(object):
         # labels
         ax.set_xticklabels(ranges['x_labels'])
         ax.set_yticklabels(ranges['y_labels'])
+
+        # When you manually set the tick labels MPL changes the locator
+        # so that it no longer reports the x & y positions
+        # Fixes https://github.com/has2k1/plotnine/issues/187
+        ax.xaxis.set_major_formatter(MyFixedFormatter(ranges['x_labels']))
+        ax.yaxis.set_major_formatter(MyFixedFormatter(ranges['y_labels']))
 
         get_property = self.theme.themeables.property
         # Padding between ticks and text
@@ -687,3 +695,12 @@ def eval_facet_vars(data, vars, env):
         facet_vals[name] = res
 
     return facet_vals
+
+
+class MyFixedFormatter(FixedFormatter):
+    def format_data(self, value):
+        """
+        Return a formatted string representation of a number.
+        """
+        s = locale.format_string('%1.10e', (value,))
+        return self.fix_minus(s)

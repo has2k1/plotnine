@@ -19,6 +19,9 @@ Bug Fixes
 - Fixed in :class:`~plotnine.stat.stat_bin` where setting custom limits for the
   scale leads to an error. (:issue:`189`)
 
+- Fixed issue interactive plots where the x & y coordinates of the mouse do not
+  show. (:issue:`187`)
+
 v0.4.0
 ------
 *2018-01-08*
