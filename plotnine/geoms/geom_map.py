@@ -3,7 +3,15 @@ import numpy as np
 from matplotlib.collections import PatchCollection, LineCollection
 from descartes.patch import PolygonPatch
 
+try:
+    import geopandas  # noqa: F401
+except ImportError:
+    HAS_GEOPANDAS = False
+else:
+    HAS_GEOPANDAS = True
+
 from ..doctools import document
+from ..exceptions import PlotnineError
 from ..utils import to_rgba, SIZE_FACTOR
 from .geom import geom
 from .geom_point import geom_point
@@ -40,14 +48,10 @@ class geom_map(geom):
     legend_geom = 'polygon'
 
     def __init__(self, *args, **kwargs):
-        import sys
-        if sys.version_info >= (3, 7, 0):
-            from ..exceptions import PlotnineError
+        if not HAS_GEOPANDAS:
             raise PlotnineError(
-                "geom_map does not work on Python 3.7 "
-                "for more information see "
-                "https://github.com/has2k1/plotnine/issues/178 "
-                "https://github.com/jswhit/pyproj/issues/136 "
+                "geom_map requires geopandas. "
+                "Please install geopandas."
             )
         geom.__init__(self, *args, **kwargs)
         # Almost all geodataframes loaded from shapefiles

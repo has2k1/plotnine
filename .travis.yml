@@ -57,6 +57,7 @@ install:
       export MPLLOCALFREETYPE=1
       pip install matplotlib --no-binary matplotlib
       pip install scikit-misc
+      pip install geopandas
       pip install -e .
     fi
   - |

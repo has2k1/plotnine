@@ -9,6 +9,9 @@ API Changes
 ***********
 
 - Plotnine 0.5.0 only supports Python 3.5 and higher
+- geopandas has been removed as a requirement for installation. Users of
+  :class:`~plotnine.geoms.geom_map` will have to install it separately.
+  (:issue:`178`)
 
 Bug Fixes
 *********
