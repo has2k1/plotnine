@@ -25,6 +25,9 @@ Bug Fixes
 - Fixed issue interactive plots where the x & y coordinates of the mouse do not
   show. (:issue:`187`)
 
+- Fixed bug in :class:`~plotnine.geoms.geom_abline` where passing the mapping as
+  a keyword parameter lead to a wrong plot. (:issue:`196`)
+
 v0.4.0
 ------
 *2018-01-08*

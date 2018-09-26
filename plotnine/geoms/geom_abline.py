@@ -27,10 +27,10 @@ class geom_abline(geom):
     legend_geom = 'path'
 
     def __init__(self, *args, **kwargs):
-        for arg in args:
-            if isinstance(arg, aes):
-                break
-        else:
+        has_mapping = (args and (isinstance(args[0], aes)
+                                 or isinstance(args[1], aes))
+                       or 'mapping' in kwargs)
+        if not has_mapping:
             # Nothing is set, default to y=x
             if 'slope' not in kwargs:
                 kwargs['slope'] = 1
