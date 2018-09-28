@@ -31,9 +31,9 @@ class position_jitter(position):
 
     def setup_params(self, data):
         params = deepcopy(self.params)
-        if not params['width']:
+        if params['width'] is None:
             params['width'] = resolution(data['x']) * .4
-        if not params['height']:
+        if params['height'] is None:
             params['height'] = resolution(data['y']) * .4
         if not params['random_state']:
             params['random_state'] = np.random
