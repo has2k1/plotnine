@@ -71,6 +71,7 @@ install:
     fi
   # List all conda and pip packages
   - conda list
+  - pip list
   - export MATPLOTLIB_BACKEND=agg
 
 script:
