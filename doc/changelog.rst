@@ -32,6 +32,12 @@ Bug Fixes
   in the transformed coordinates. Know they are given the data coordinates just
   like the major ``breaks``.
 
+Enhancements
+************
+
+- For all geoms, with :class:`~plotnine.coords.coord_cartesian` ``float('inf')``
+  or ``np.inf`` are interpreted as the boundary of the plot panel.
+
 v0.4.0
 ------
 *2018-01-08*

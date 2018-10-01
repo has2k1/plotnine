@@ -1,7 +1,8 @@
 import types
-from mizani.bounds import expand_range_distinct
+from mizani.bounds import expand_range_distinct, squish_infinite
 
 from .coord import coord, dist_euclidean
+from ..positions.position import transform_position
 
 
 class coord_cartesian(coord):
@@ -27,6 +28,15 @@ class coord_cartesian(coord):
     def __init__(self, xlim=None, ylim=None, expand=True):
         self.limits = types.SimpleNamespace(xlim=xlim, ylim=ylim)
         self.expand = expand
+
+    def transform(self, data, panel_params, munch=False):
+        def squish_infinite_x(data):
+            return squish_infinite(data, range=panel_params['x_range'])
+
+        def squish_infinite_y(data):
+            return squish_infinite(data, range=panel_params['y_range'])
+
+        return transform_position(data, squish_infinite_x, squish_infinite_y)
 
     def setup_panel_params(self, scale_x, scale_y):
         """
