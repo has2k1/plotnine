@@ -28,6 +28,10 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.geoms.geom_abline` where passing the mapping as
   a keyword parameter lead to a wrong plot. (:issue:`196`)
 
+- Fixed issue where ``minor_breaks`` for tranformed scaled would have to be given
+  in the transformed coordinates. Know they are given the data coordinates just
+  like the major ``breaks``.
+
 v0.4.0
 ------
 *2018-01-08*

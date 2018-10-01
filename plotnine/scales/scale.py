@@ -645,7 +645,7 @@ class scale_continuous(scale):
             return [x for x in minor if x not in _major]
 
         if not is_waive(self.minor_breaks):
-            return self.minor_breaks
+            return self.trans.transform(self.minor_breaks)
 
         return self.trans.minor_breaks(major, limits)
 
