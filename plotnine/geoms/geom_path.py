@@ -155,7 +155,7 @@ class geom_path(geom):
         return da
 
 
-class arrow(object):
+class arrow:
     """
     Define arrow (actually an arrowhead)
 

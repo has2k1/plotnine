@@ -9,7 +9,7 @@ from ..utils import copy_keys, is_string, Registry
 from ..exceptions import PlotnineError
 
 
-class geom(object, metaclass=Registry):
+class geom(metaclass=Registry):
     """Base class of all Geoms"""
     __base__ = True
     DEFAULT_AES = dict()     #: Default aesthetics for the geom

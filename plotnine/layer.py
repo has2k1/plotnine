@@ -112,7 +112,7 @@ class Layers(list):
             l.finish_statistics()
 
 
-class layer(object):
+class layer:
     """
     Layer
 

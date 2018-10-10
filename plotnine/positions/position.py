@@ -8,7 +8,7 @@ from ..utils import is_string, Registry
 from ..exceptions import PlotnineError
 
 
-class position(object, metaclass=Registry):
+class position(metaclass=Registry):
     """Base class for all positions"""
     __base__ = True
 

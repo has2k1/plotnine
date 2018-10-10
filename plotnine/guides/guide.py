@@ -2,7 +2,7 @@ from ..utils import waiver, Registry
 from ..exceptions import PlotnineError
 
 
-class guide(object, metaclass=Registry):
+class guide(metaclass=Registry):
     """
     Base class for all guides
 

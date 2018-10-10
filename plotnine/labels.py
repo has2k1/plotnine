@@ -5,7 +5,7 @@ from .exceptions import PlotnineError
 __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
 
 
-class labs(object):
+class labs:
     """
     General class for all label adding classes
 

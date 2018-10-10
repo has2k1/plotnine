@@ -12,7 +12,7 @@ from ..exceptions import PlotnineError
 
 # By adding limits, we create a scale of the appropriate type
 
-class _lim(object):
+class _lim:
     aesthetic = None
 
     def __init__(self, *limits):
@@ -136,7 +136,7 @@ class strokelim(_lim):
     aesthetic = 'stroke'
 
 
-class lims(object):
+class lims:
     """
     Set aesthtic limits
 

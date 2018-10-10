@@ -20,7 +20,7 @@ class scale_expand(scale):
     """
 
 
-class mixin(object):
+class mixin:
     """
     Expand
 

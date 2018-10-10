@@ -15,7 +15,7 @@ df = pd.DataFrame({
 })
 
 
-class TestAesthetics(object):
+class TestAesthetics:
     p = (ggplot(df, aes('x')) +
          geom_boxplot(aes(y='y'), size=2) +
          geom_boxplot(df[:2*m], aes(y='y+25', fill='x'), size=2) +

@@ -6,7 +6,7 @@ from ..exceptions import PlotnineError
 from ..utils import match
 
 
-class Layout(object):
+class Layout:
     #: facet
     facet = None
 

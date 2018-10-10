@@ -9,7 +9,7 @@ from ..utils import is_string, Registry, check_required_aesthetics
 from ..exceptions import PlotnineError
 
 
-class stat(object, metaclass=Registry):
+class stat(metaclass=Registry):
     """Base class of all stats"""
     __base__ = True
 

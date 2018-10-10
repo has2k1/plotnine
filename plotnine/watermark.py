@@ -3,7 +3,7 @@ from copy import deepcopy
 import matplotlib.image as mimage
 
 
-class watermark(object):
+class watermark:
     """
     Add watermark to plot
 

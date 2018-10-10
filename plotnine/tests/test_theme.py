@@ -93,7 +93,7 @@ def test_add_element_blank():
     assert th3.apply.__name__ == 'apply'
 
 
-class TestThemes(object):
+class TestThemes:
     g = (ggplot(mtcars, aes(x='wt', y='mpg', color='factor(gear)'))
          + geom_point()
          + facet_grid('vs ~ am'))

@@ -5,7 +5,7 @@ from ..utils import is_scalar_or_string, Registry
 from ..exceptions import PlotnineError
 
 
-class annotate(object):
+class annotate:
     """
     Create an annotation layer
 

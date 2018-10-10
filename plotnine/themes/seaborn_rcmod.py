@@ -18,7 +18,7 @@ import functools
 # file we only need to call the set() function.
 
 
-class dummy(object):
+class dummy:
     pass
 
 

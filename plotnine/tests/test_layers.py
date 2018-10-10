@@ -15,7 +15,7 @@ def _get_colors(p):
     return [l.geom.aes_params['color'] for l in p.layers]
 
 
-class TestLayers(object):
+class TestLayers:
     # Give each geom in the layer a different color which we
     # can used to test the ordering.
     lyrs = Layers([

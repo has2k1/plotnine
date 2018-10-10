@@ -21,7 +21,7 @@ with suppress(ImportError):
 KEYWORDS = set(keyword.kwlist)
 
 
-class facet(object):
+class facet:
     """
     Base class for all facets
 

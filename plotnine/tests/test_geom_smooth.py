@@ -107,7 +107,7 @@ def test_continuous_x_fullrange():
     assert p == 'continuous_x_fullrange'
 
 
-class TestOther(object):
+class TestOther:
     p = ggplot(df_linear, aes('x')) + geom_point(aes(y='y_noisy'))
 
     def test_wls(self):

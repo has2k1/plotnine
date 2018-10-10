@@ -26,7 +26,7 @@ default_rcparams = {
 }
 
 
-class theme(object):
+class theme:
     """
     This is a base class for themes.
 

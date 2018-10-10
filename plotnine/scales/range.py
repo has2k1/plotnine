@@ -1,7 +1,7 @@
 from mizani.scale import scale_continuous, scale_discrete
 
 
-class Range(object):
+class Range:
     """
     Base class for all ranges
     """

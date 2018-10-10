@@ -8,7 +8,7 @@ from ..exceptions import PlotnineError
 from ..scales.scale import scale_continuous, scale_discrete
 
 
-class coord(object):
+class coord:
     """
     Base class for all coordinate systems
     """

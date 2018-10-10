@@ -19,7 +19,7 @@ from ..utils import match, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
 
 
-class scale(object, metaclass=Registry):
+class scale(metaclass=Registry):
     """
     Base class for all scales
 

@@ -41,7 +41,7 @@ def assert_exist_and_clean(filename, msg=None):
     os.remove(filename)
 
 
-class TestArguments(object):
+class TestArguments:
     def test_default_filename(self):
         plots = list(p())
         save_as_pdf_pages(plots)
@@ -85,7 +85,7 @@ class TestArguments(object):
         # assert False, "Check %s" % fn  # Uncomment to check
 
 
-class TestExceptions(object):
+class TestExceptions:
     def test_bad_object(self):
         # Iterable includes elements that are not ggplot objects
         plots = list(p()) + ['foo']

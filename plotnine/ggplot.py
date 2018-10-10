@@ -31,7 +31,7 @@ if sys.flags.interactive:
     plt.ion()
 
 
-class ggplot(object):
+class ggplot:
     """
     Create a new ggplot object
 

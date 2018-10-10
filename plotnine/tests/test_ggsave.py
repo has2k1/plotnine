@@ -33,7 +33,7 @@ def assert_exist_and_clean(filename, msg=None):
     os.remove(filename)
 
 
-class TestArguments(object):
+class TestArguments:
     def test_default_filename(self):
         p.save()
         fn = p._save_filename('pdf')
@@ -97,7 +97,7 @@ class TestArguments(object):
         assert_exist_and_clean(fn, "big height and width")
 
 
-class TestExceptions(object):
+class TestExceptions:
     def test_unknown_format(self):
         with pytest.raises(Exception):
             p.save(format='unknown')

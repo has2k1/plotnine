@@ -4,7 +4,7 @@ Theme elements used to decorate the graph.
 from contextlib import suppress
 
 
-class element_line(object):
+class element_line:
     """
     Theme element: Line
 
@@ -47,7 +47,7 @@ class element_line(object):
         self.properties = d
 
 
-class element_rect(object):
+class element_rect:
     """
     Theme element: Rectangle
 
@@ -88,7 +88,7 @@ class element_rect(object):
         self.properties = d
 
 
-class element_text(object):
+class element_text:
     """
     Theme element: Text
 
@@ -201,7 +201,7 @@ class element_text(object):
             return 'center'
 
 
-class element_blank(object):
+class element_blank:
     """
     Theme element: Blank
     """

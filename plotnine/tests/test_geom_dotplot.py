@@ -55,7 +55,7 @@ def test_stackdir_centerwhole():
     assert p == 'stackdir_centerwhole'
 
 
-class TestGrouping(object):
+class TestGrouping:
     df = pd.DataFrame({
         'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4],
         'g': [1, 2, 22, 3, 33, 333, 4, 44, 444, 4444]})

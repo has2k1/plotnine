@@ -17,7 +17,7 @@ from .elements import (element_line, element_rect,
                        element_text, element_blank)
 
 
-class themeable(object, metaclass=RegistryHierarchyMeta):
+class themeable(metaclass=RegistryHierarchyMeta):
     """
     themeable is an abstract class of things that can be themed.
 

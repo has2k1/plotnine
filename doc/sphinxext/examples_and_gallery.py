@@ -91,7 +91,7 @@ def has_gallery(builder_name):
     return builder_name in {'html', 'readthedocs'}
 
 
-class GalleryEntry(object):
+class GalleryEntry:
     def __init__(self, title, section_id, html_link, thumbnail, description):
         self.title = title
         self.description = description
@@ -117,7 +117,7 @@ class GalleryEntry(object):
             tooltip=tooltip)
 
 
-class GalleryEntryExtractor(object):
+class GalleryEntryExtractor:
     """
     Extract gallery entries from a documentaion page.
 

@@ -3,7 +3,7 @@ from ..utils import identity, alias
 from .scale import scale_discrete, scale_continuous
 
 
-class MapTrainMixin(object):
+class MapTrainMixin:
     """
     Override map and train methods
     """

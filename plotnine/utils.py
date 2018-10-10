@@ -74,7 +74,7 @@ def make_iterable_ntimes(val, n):
     return [val] * n
 
 
-class waiver(object):
+class waiver:
     def __repr__(self):
         return 'waiver()'
 
@@ -1088,7 +1088,7 @@ def from_inches(value, units):
         raise PlotnineError("Unknown units '{}'".format(units))
 
 
-class array_kind(object):
+class array_kind:
     @staticmethod
     def discrete(arr):
         """
