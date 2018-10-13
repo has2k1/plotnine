@@ -77,7 +77,7 @@ class scale_color_brewer(scale_discrete):
         Color of missing values. Default is ``'None'``
     """
     _aesthetics = ['color']
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, type='seq', palette=1, **kwargs):
         self.palette = brewer_pal(type, palette)
@@ -154,7 +154,7 @@ class scale_color_gradient(scale_continuous):
     """
     _aesthetics = ['color']
     guide = 'colorbar'
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, low='#132B43', high='#56B1F7', **kwargs):
         """
@@ -198,7 +198,7 @@ class scale_color_desaturate(scale_continuous):
     """
     _aesthetics = ['color']
     guide = 'colorbar'
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, color='red', prop=0, reverse=False,
                  **kwargs):
@@ -244,7 +244,7 @@ class scale_color_gradient2(scale_continuous):
     """
     _aesthetics = ['color']
     guide = 'colorbar'
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, low='#832424', mid='#FFFFFF',
                  high='#3A3A98', midpoint=0,
@@ -295,7 +295,7 @@ class scale_color_gradientn(scale_continuous):
     """
     _aesthetics = ['color']
     guide = 'colorbar'
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, colors, values=None, **kwargs):
         self.palette = gradient_n_pal(colors, values, 'gradientn')
@@ -340,7 +340,7 @@ class scale_color_distiller(scale_color_gradientn):
     """
     _aesthetics = ['color']
     guide = 'colorbar'
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, type='seq', palette=1, values=None, **kwargs):
         """
@@ -395,7 +395,7 @@ class scale_color_cmap(scale_continuous):
     """
     _aesthetics = ['color']
     guide = 'colorbar'
-    na_value = 'None'
+    na_value = '#7F7F7F'
 
     def __init__(self, name='viridis', lut=None, **kwargs):
         self.palette = cmap_pal(name, lut)

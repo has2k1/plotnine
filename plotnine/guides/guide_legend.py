@@ -79,7 +79,6 @@ class guide_legend(guide):
         key = pd.DataFrame({
             scale.aesthetics[0]: scale.map(breaks),
             'label': scale.get_labels(breaks)})
-
         # Drop out-of-range values for continuous scale
         # (should use scale$oob?)
 

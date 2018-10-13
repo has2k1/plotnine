@@ -435,3 +435,15 @@ def test_missing_manual_dict_aesthetic():
          + scale_manual.scale_color_manual(values)
          )
     assert p + _theme == 'missing_manual_dict_aesthetic'
+
+
+def test_missing_data_discrete_scale():
+    df = pd.DataFrame({
+        'a': [1, 2, 3],
+        'b': ['a', 'b', np.nan]
+    })
+
+    p = (ggplot(df, aes('a', 'a'))
+         + geom_point(aes(fill='b'), stroke=0, size=10)
+         )
+    assert p + _theme == 'missing_data_discrete_scale'

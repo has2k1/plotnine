@@ -36,8 +36,8 @@ class RangeDiscrete(Range):
     """
     Discrete Range
     """
-    def train(self, x, drop=False):
+    def train(self, x, drop=False, na_rm=False):
         """
         Train discrete range
         """
-        self.range = scale_discrete.train(x, self.range, drop)
+        self.range = scale_discrete.train(x, self.range, drop, na_rm=na_rm)

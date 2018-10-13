@@ -66,7 +66,7 @@ class scale(metaclass=Registry):
     __base__ = True
 
     _aesthetics = []     # aesthetics affected by this scale
-    na_value = np.NaN   # What to do with the NA values
+    na_value = np.nan   # What to do with the NA values
     name = None         # used as the axis label or legend title
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
@@ -244,9 +244,19 @@ class scale_discrete(scale):
     drop : bool
         Whether to drop unused categories from
         the scale
+    na_translate : bool
+        If ``True`` translate missing values and show them.
+        If ``False`` remove missing values. Default value is
+        ``True``
+    na_value : object
+        If ``na_translate=True``, what aesthetic value should be
+        assigned to the missing values. This parameter does not
+        apply to position scales where ``nan`` is always placed
+        on the right.
     """
     _range_class = RangeDiscrete
     drop = True        # drop unused factor levels from the scale
+    na_translate = True
 
     def train(self, x, drop=None):
         """
@@ -262,7 +272,8 @@ class scale_discrete(scale):
         if not len(x):
             return
 
-        self.range.train(x, drop)
+        na_rm = (not self.na_translate)
+        self.range.train(x, drop, na_rm=na_rm)
 
     def dimension(self, expand=(0, 0, 0, 0)):
         """
@@ -291,10 +302,26 @@ class scale_discrete(scale):
                     pal_match.append(self.na_value)
         else:
             pal = np.asarray(pal)
-            pal_match = pal[match(x, limits)]
-            bool_idx = pd.isnull(pal_match)
-            if np.any(bool_idx):
-                pal_match[bool_idx] = self.na_value
+            idx = np.asarray(match(x, limits))
+            try:
+                pal_match = pal[idx]
+            except IndexError:
+                # Deal with missing data
+                # - Insert NaN where there is no match
+                bool_idx_good = (0 <= idx) & (idx < len(pal))
+                bool_idx_bad = ~bool_idx_good
+                pal_match = pal[idx[bool_idx_good]]
+                pal_match = np.insert(
+                    np.array(pal_match, dtype=object),
+                    np.where(bool_idx_bad)[0],
+                    np.nan
+                )
+
+        if self.na_translate:
+            bool_idx = pd.isnull(x) | pd.isnull(pal_match)
+            if bool_idx.any():
+                pal_match = [x if i else self.na_value
+                             for x, i in zip(pal_match, ~bool_idx)]
 
         return pal_match
 
