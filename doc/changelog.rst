@@ -38,8 +38,12 @@ Enhancements
 - For all geoms, with :class:`~plotnine.coords.coord_cartesian` ``float('inf')``
   or ``np.inf`` are interpreted as the boundary of the plot panel.
 
-- Discrete scales now show missing data (``None`` and ``nan``). This behaviour is
-  controlled by the new ``na_translate`` option.
+- Discrete scales now show missing data (``None`` and ``nan``). This behaviour
+  is controlled by the new ``na_translate`` option.
+
+- The ``minor_breaks`` parameter for continuous scales can now be given as an
+  integer. An integer is taken to controll the number of minor breaks between
+  any set of major breaks.
 
 v0.4.0
 ------

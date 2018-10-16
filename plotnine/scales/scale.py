@@ -449,11 +449,15 @@ class scale_continuous(scale):
         Function to deal with out of bounds (limits)
         data points. Default is to turn them into
         ``np.nan``, which then get dropped.
-    minor_breaks : list or callable or None
-        Minor breaks points or a function that given the
-        limits returns a vector of minor breaks. If ``None``,
-        there are not included. Default is to automatically
-        calculate them.
+    minor_breaks : list-like or int or callable or None
+        If a list-like, it is the minor breaks points.
+        If an integer, it is the number of minor breaks between
+        any set of major breaks.
+        If a function, it should have the signature
+        ``func(limits)`` and return a list-like of consisting
+        of the minor break points.
+        If ``None``, no minor breaks are calculated.
+        The default is to automatically calculate them.
     rescaler : function, optional
         Function to rescale data points so that they can
         be handled by the palette. Default is to rescale
@@ -670,11 +674,14 @@ class scale_continuous(scale):
             _major = set(major)
             minor = self.trans.transform(breaks)
             return [x for x in minor if x not in _major]
-
-        if not is_waive(self.minor_breaks):
+        elif isinstance(self.minor_breaks, int):
+            res = self.trans.minor_breaks(
+                major, limits, n=self.minor_breaks)
+            return res
+        elif not is_waive(self.minor_breaks):
             return self.trans.transform(self.minor_breaks)
-
-        return self.trans.minor_breaks(major, limits)
+        else:
+            return self.trans.minor_breaks(major, limits)
 
     def get_labels(self, breaks=None):
         """

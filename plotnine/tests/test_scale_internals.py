@@ -323,6 +323,12 @@ def test_minor_breaks():
     assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
     assert not (_breaks & set(minor_breaks))
 
+    # Number of minor breaks
+    s = scale_xy.scale_x_continuous(limits=[0, 20], minor_breaks=3)
+    minor_breaks = s.get_minor_breaks(major=[0, 10, 20])
+    expected_minor_breaks = [2.5, 5, 7.5, 12.5, 15, 17.5]
+    assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
+
 
 def test_expand_limits():
     df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
