@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.5.1
+------
+(2018-10-17)
+
+Bug Fixes
+*********
+
+- Changed the dependency for mizani to ``v0.5.2``. This fixes an issue
+  where facetting may create plots with missing items. (:issue:`210`)
+
 v0.5.0
 ------
 (2018-10-16)
