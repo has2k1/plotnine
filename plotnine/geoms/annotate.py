@@ -3,6 +3,7 @@ import pandas as pd
 from ..aes import aes
 from ..utils import is_scalar_or_string, Registry
 from ..exceptions import PlotnineError
+from ..geoms import geom
 
 
 class annotate:
@@ -11,8 +12,8 @@ class annotate:
 
     Parameters
     ----------
-    geom : geom
-        Name of geom to use for annotation
+    geom_cls_or_name : geom
+        Name of geom (e.g. 'point') as string, or geom_* class to use for annotation
     x : float
         Position
     y : float
@@ -41,7 +42,7 @@ class annotate:
     All `geoms` are created with :code:`stat='identity'`.
     """
 
-    def __init__(self, geom, x=None, y=None,
+    def __init__(self, geom_cls_or_name, x=None, y=None,
                  xmin=None, xmax=None, xend=None,
                  ymin=None, ymax=None, yend=None,
                  **kwargs):
@@ -77,11 +78,16 @@ class annotate:
                 break
 
         data = pd.DataFrame(position)
-        geom = Registry['geom_{}'.format(geom)]
+        if isinstance(geom_cls_or_name, str):
+            geom_to_use = Registry['geom_{}'.format(geom_cls_or_name)]
+        elif isinstance(geom_cls_or_name, type) and issubclass(geom_cls_or_name, geom.geom):
+            geom_to_use = geom_cls_or_name
+        else:
+            raise PlotnineError("geom_cls_or_name must either be a geom.geom() descendant (e.g. plotnine.geom_point), or a string naming a geom (e.g. 'point', 'text', ...). Was {}".format(geom_cls_or_name))
         mappings = aes(**{ae: ae for ae in data.columns})
 
         # The positions are mapped, the rest are manual settings
-        self._annotation_geom = geom(mappings,
+        self._annotation_geom = geom_to_use(mappings,
                                      data=data,
                                      stat='identity',
                                      inherit_aes=False,
