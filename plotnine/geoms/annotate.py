@@ -78,12 +78,18 @@ class annotate:
                 break
 
         data = pd.DataFrame(position)
-        if isinstance(geom_cls_or_name, str):
-            geom_to_use = Registry['geom_{}'.format(geom_cls_or_name)]
-        elif isinstance(geom_cls_or_name, type) and issubclass(geom_cls_or_name, geom.geom):
-            geom_to_use = geom_cls_or_name
-        else:
-            raise PlotnineError("geom_cls_or_name must either be a geom.geom() descendant (e.g. plotnine.geom_point), or a string naming a geom (e.g. 'point', 'text', ...). Was {}".format(geom_cls_or_name))
+        try:
+            if isinstance(geom_cls_or_name, str):
+                geom_to_use = Registry['geom_{}'.format(geom_cls_or_name)]
+            elif isinstance(geom_cls_or_name, type) and issubclass(geom_cls_or_name, geom.geom):
+                geom_to_use = geom_cls_or_name
+            else:
+                raise PlotnineError() # error message comes below
+        except PlotnineError:
+            raise PlotnineError("geom_cls_or_name must either be a geom.geom() " +
+                             "descendant (e.g. plotnine.geom_point), or " +
+                             "a string naming a geom (e.g. 'point', 'text', " +
+                             "...). Was {}".format(repr(geom_cls_or_name)))
         mappings = aes(**{ae: ae for ae in data.columns})
 
         # The positions are mapped, the rest are manual settings
