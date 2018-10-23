@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, annotate
+from plotnine import ggplot, aes, geom_point, geom_rect, geom_segment, annotate
 from plotnine.exceptions import PlotnineError
 
 n = 4
@@ -15,36 +15,22 @@ def test_multiple_annotation_geoms():
          annotate('point', 0, 1, color='red', size=5) +
          annotate('text', 1, 2, label='Text', color='red',
                   size=15, angle=45) +
-         annotate('rect', xmin=1.8, xmax=2.2, ymin=2.8,
-                  ymax=3.2, size=1, color='red', alpha=0.3) +
-         annotate('segment', x=2.8, y=3.8, xend=3.2,
-                  yend=4.2, color='red', size=1))
-
-    assert p == 'multiple_annotation_geoms'
-
-def test_multiple_annotation_geoms_using_classes():
-    from plotnine import geom_point, geom_text, geom_rect, geom_segment
-    p = (ggplot(df, aes('x', 'y')) +
-         geom_point() +
-         annotate(geom_point, 0, 1, color='red', size=5) +
-         annotate(geom_text, 1, 2, label='Text', color='red',
-                  size=15, angle=45) +
-         annotate(geom_rect, xmin=1.8, xmax=2.2, ymin=2.8,
+        annotate(geom_rect, xmin=1.8, xmax=2.2, ymin=2.8,
                   ymax=3.2, size=1, color='red', alpha=0.3) +
          annotate(geom_segment, x=2.8, y=3.8, xend=3.2,
                   yend=4.2, color='red', size=1))
-
     assert p == 'multiple_annotation_geoms'
+
 
 def test_non_geom_raises():
     from plotnine import geom_point
     with pytest.raises(PlotnineError):
         annotate('doesnotexist', x=1)
     with pytest.raises(PlotnineError):
-        annotate(5, x=1)
+        annotate(5)
     class NotAGeom():
         pass
     with pytest.raises(PlotnineError):
-        annotate(NotAGeom, x=1)
+        annotate(NotAGeom)
     with pytest.raises(PlotnineError):
-        annotate(geom_point(), x=1)
+        annotate(geom_point())
