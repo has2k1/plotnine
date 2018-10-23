@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.5.2
+------
+(not-yet-released)
+
+Bug Fixes
+*********
+
+- Fixed bug where facetting would fail if done on a plot with annotation(s)
+  and one of the facetting columns was also a variable in the environment.
+
 v0.5.1
 ------
 (2018-10-17)
