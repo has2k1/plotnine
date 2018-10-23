@@ -1,6 +1,5 @@
 from copy import deepcopy, copy
 import itertools
-import keyword
 from contextlib import suppress
 
 import numpy as np
@@ -16,9 +15,6 @@ with suppress(ImportError):
     import matplotlib.text as mtext
     import matplotlib.patches as mpatch
     from matplotlib.ticker import locale, FixedFormatter
-
-
-KEYWORDS = set(keyword.kwlist)
 
 
 class facet:
@@ -682,12 +678,16 @@ def eval_facet_vars(data, vars, env):
     facet_vals = pd.DataFrame(index=data.index)
 
     for name in vars:
-        if name in KEYWORDS:
+        if name in data:
             # This is a limited solution. If a keyword is
             # part of an expression it will fail in the
             # else statement below
             res = data[name]
+        elif str.isidentifier(name):
+            # All other non-statements
+            continue
         else:
+            # Statements
             try:
                 res = env.eval(name, inner_namespace=data)
             except NameError:

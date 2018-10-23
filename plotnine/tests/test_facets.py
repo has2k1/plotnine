@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, facet_grid, facet_wrap
-from plotnine import geom_abline
+from plotnine import geom_abline, annotate
 from plotnine.data import mpg
 
 n = 10
@@ -13,6 +13,7 @@ df = pd.DataFrame({'x': range(n),
                    'var2': np.tile(['a', 'b'], n//2),
                    })
 df['class'] = df['var1']  # python keyword as column
+df['g'] = df['var1']      # variable as a column
 
 g = (ggplot(df, aes('x', 'y')) +
      geom_point(aes(color='factor(var1)'),
@@ -24,8 +25,10 @@ g = (ggplot(df, aes('x', 'y')) +
 def test_facet_wrap_one_var():
     p = g + facet_wrap('~var1')
     p2 = g + facet_wrap('~class')  # python keyword in formula
+    p3 = g + facet_wrap('~g')      # variable in formula
     assert p == 'facet_wrap_one_var'
     assert p2 == 'facet_wrap_one_var'
+    assert p3 == 'facet_wrap_one_var'
 
 
 # https://github.com/pandas-dev/pandas/issues/16276
@@ -121,3 +124,11 @@ def test_dir_v_ncol():
          + geom_point()
          )
     assert p == 'dir_v_ncol'
+
+
+def test_variable_and_annotate():
+    p = (g
+         + annotate('point', x=4.5, y=5.5, color='cyan', size=10)
+         + facet_wrap('~g')
+         )
+    assert p == 'variable_and_annotate'
