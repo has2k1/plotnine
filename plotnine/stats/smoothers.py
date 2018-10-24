@@ -129,7 +129,8 @@ def glm(data, xseq, **params):
         except (AttributeError, TypeError):
             warnings.warn(
                 "Cannot compute confidence intervals."
-                "Install latest/development version of statmodels.", PlotnineWarning)
+                "Install latest/development version of statmodels.",
+                PlotnineWarning)
 
     return data
 
@@ -171,7 +172,8 @@ def loess(data, xseq, **params):
         kwargs['surface'] = 'direct'
         warnings.warn(
             "Making prediction outside the data range, "
-            "setting loess control parameter `surface='direct'`.", PlotnineWarning)
+            "setting loess control parameter `surface='direct'`.",
+            PlotnineWarning)
 
     if 'span' not in kwargs:
         kwargs['span'] = params['span']
