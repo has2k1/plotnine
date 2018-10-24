@@ -5,7 +5,7 @@ import numpy as np
 
 from ..utils import check_required_aesthetics, groupby_apply
 from ..utils import is_string, Registry
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotNineWarning
 
 
 class position(metaclass=Registry):
@@ -189,7 +189,7 @@ class position(metaclass=Registry):
         if (len(np.unique(intervals)) > 1 and
                 any(np.diff(intervals - intervals.mean()) < -1e-6)):
             msg = "{} requires non-overlapping x intervals"
-            warn(msg.format(cls.__name__))
+            warn(msg.format(cls.__name__), PlotNineWarning)
 
         if 'ymax' in data:
             data = groupby_apply(data, 'xmin', cls.strategy, params)

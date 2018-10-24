@@ -5,7 +5,7 @@ from plotnine import ggplot, aes, geom_bar
 from plotnine.data import mtcars
 from plotnine.geoms.geom import geom
 from plotnine.stats.stat import stat
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotNineWarning
 
 
 def test_stat_basics():
@@ -76,7 +76,7 @@ def test_removes_infinite_values():
     df.loc[[0, 5], 'wt'] = [np.inf, -np.inf]
     p = ggplot(df, aes(x='wt')) + geom_bar()
 
-    with pytest.warns(UserWarning) as record:
+    with pytest.warns(PlotNineWarning) as record:
         p._build()
 
     def removed_2_row_with_infinites(record):

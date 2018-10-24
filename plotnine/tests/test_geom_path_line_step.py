@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from plotnine import (ggplot, aes, geom_path, geom_line,
-                      geom_step, arrow)
+                      geom_step, arrow, PlotNineWarning)
 
 
 # steps with diagonals at the ends
@@ -72,7 +72,7 @@ def test_missing_values():
     p = (ggplot(df_missing, aes(x='x'))
          + geom_line(aes(y='y1'), size=2))
 
-    with pytest.warns(UserWarning):
+    with pytest.warns(PlotNineWarning):
         assert p == 'missing_values'
 
 

@@ -7,6 +7,7 @@ from scipy import linalg
 
 from ..doctools import document
 from .stat import stat
+from ..exceptions import PlotNineWarning
 
 
 @document
@@ -48,7 +49,7 @@ class stat_ellipse(stat):
         dfd = len(data) - 1
 
         if dfd < 3:
-            warn("Too few points to calculate an ellipse")
+            warn("Too few points to calculate an ellipse", PlotNineWarning)
             return pd.DataFrame({'x': [], 'y': []})
 
         m = np.asarray(data[['x', 'y']])
@@ -209,7 +210,7 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
     else:
         if ((np.mean(w) - np.mean(wt) > tol) or
                 (np.abs(np.mean(w * Q)/p - 1) > tol)):
-            warn("Probable convergence failure.")
+            warn("Probable convergence failure.", PlotNineWarning)
 
     _a = np.sqrt(w) * X
     # cov = (_a.T @ _a) / np.sum(wt)

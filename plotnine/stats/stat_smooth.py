@@ -6,6 +6,7 @@ import pandas as pd
 from ..doctools import document
 from .smoothers import predictdf
 from .stat import stat
+from ..exceptions import PlotNineWarning
 
 
 @document
@@ -164,7 +165,7 @@ class stat_smooth(stat):
                     "No 'window' specified in the method_args. "
                     "Using window = {}. "
                     "The same window is used for all groups or "
-                    "facets".format(window))
+                    "facets".format(window), PlotNineWarning)
                 params['method_args']['window'] = window
 
         return params
