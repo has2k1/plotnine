@@ -6,7 +6,7 @@ from plotnine import (ggplot, aes, geom_text, geom_label,
 
 n = 5
 labels = ['ggplot', 'aesthetics', 'data', 'geoms',
-          '$\mathbf{statistics^2}$', 'scales', 'coordinates']
+          r'$\mathbf{statistics^2}$', 'scales', 'coordinates']
 df = pd.DataFrame({
         'x': [1] * n,
         'y': range(n),

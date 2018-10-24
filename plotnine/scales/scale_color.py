@@ -349,7 +349,8 @@ class scale_color_distiller(scale_color_gradientn):
         """
         if type.lower() in ('qual', 'qualitative'):
             warn("Using a discrete color palette in a continuous scale."
-                 "Consider using type = 'seq' or type = 'div' instead", PlotnineWarning)
+                 "Consider using type = 'seq' or type = 'div' instead",
+                 PlotnineWarning)
 
         # Grab 6 colors from brewer and create a gradient palette
         colors = brewer_pal(type, palette)(6)
