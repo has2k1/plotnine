@@ -12,7 +12,7 @@ from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea, SIZE_FACTOR
 from ..utils import Registry, remove_missing
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotNineWarning
 from ..geoms import geom_text
 from ..aes import rename_aesthetics
 from .guide import guide
@@ -120,7 +120,7 @@ class guide_legend(guide):
         self.key = pd.merge(self.key, other.key)
         duplicated = set(self.override_aes) & set(other.override_aes)
         if duplicated:
-            warn("Duplicated override_aes is ignored.")
+            warn("Duplicated override_aes is ignored.", PlotNineWarning)
         self.override_aes.update(other.override_aes)
         for ae in duplicated:
             del self.override_aes[ae]

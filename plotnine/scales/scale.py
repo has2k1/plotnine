@@ -17,7 +17,7 @@ from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import match, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
-
+from ..exceptions import PlotNineWarning
 
 class scale(metaclass=Registry):
     """
@@ -86,7 +86,7 @@ class scale(metaclass=Registry):
                 setattr(self, k, v)
             else:
                 msg = "{} could not recognise parameter `{}`"
-                warn(msg.format(self.__class__.__name__, k))
+                warn(msg.format(self.__class__.__name__, k), PlotNineWarning)
 
         self.range = self._range_class()
 

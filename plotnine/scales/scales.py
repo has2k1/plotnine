@@ -5,7 +5,7 @@ from warnings import warn
 import numpy as np
 
 from ..aes import aes_to_scale
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotNineWarning
 from ..utils import Registry, array_kind
 
 _TPL_DUPLICATE_SCALE = """\
@@ -25,7 +25,7 @@ class Scales(list):
         ae = sc.aesthetics[0]
         cover_ae = self.find(ae)
         if any(cover_ae):
-            warn(_TPL_DUPLICATE_SCALE.format(ae))
+            warn(_TPL_DUPLICATE_SCALE.format(ae), PlotNineWarning)
             idx = cover_ae.index(True)
             self.pop(idx)
         # super() does not work well with reloads
@@ -284,7 +284,7 @@ def scale_type(series):
     else:
         msg = ("Don't know how to automatically pick scale for "
                "object of type {}. Defaulting to 'continuous'")
-        warn(msg.format(series.dtype))
+        warn(msg.format(series.dtype), PlotNineWarning)
         stype = 'continuous'
     return stype
 

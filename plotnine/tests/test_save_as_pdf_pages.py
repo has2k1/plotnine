@@ -6,7 +6,7 @@ import pytest
 from plotnine import ggplot, aes, geom_text, ggtitle, theme
 from plotnine.data import mtcars
 from plotnine.ggplot import save_as_pdf_pages
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotNineWarning
 
 
 def p(N=3):

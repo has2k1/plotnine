@@ -8,6 +8,7 @@ from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
 from ..utils import alias
 from ..doctools import document
 from .scale import scale_discrete, scale_continuous, scale_datetime
+from ..exceptions import PlotNineWarning
 
 
 # Discrete color scales #
@@ -348,7 +349,7 @@ class scale_color_distiller(scale_color_gradientn):
         """
         if type.lower() in ('qual', 'qualitative'):
             warn("Using a discrete color palette in a continuous scale."
-                 "Consider using type = 'seq' or type = 'div' instead")
+                 "Consider using type = 'seq' or type = 'div' instead", PlotNineWarning)
 
         # Grab 6 colors from brewer and create a gradient palette
         colors = brewer_pal(type, palette)(6)
