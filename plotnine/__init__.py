@@ -12,6 +12,7 @@ from .facets import *               # noqa: F401,F403,E261
 from .themes import *               # noqa: F401,F403,E261
 from .positions import *            # noqa: F401,F403,E261
 from .guides import *               # noqa: F401,F403,E261
+from .exceptions import *           # noqa: F401,F403,E261
 
 from ._version import get_versions
 

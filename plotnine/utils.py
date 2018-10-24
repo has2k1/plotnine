@@ -19,7 +19,7 @@ from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
 
-from .exceptions import PlotnineError
+from .exceptions import PlotnineError, PlotNineWarning
 
 
 # Points and lines of equal size should give the
@@ -520,7 +520,7 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     df.reset_index(drop=True, inplace=True)
     if len(df) < n and not na_rm:
         msg = '{} : Removed {} rows containing {} values.'
-        warn(msg.format(name, n-len(df), txt), stacklevel=3)
+        warn(msg.format(name, n-len(df), txt), PlotNineWarning, stacklevel=3)
     return df
 
 

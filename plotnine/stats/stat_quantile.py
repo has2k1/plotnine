@@ -5,6 +5,7 @@ import statsmodels.formula.api as smf
 
 from ..doctools import document
 from .stat import stat
+from ..exceptions import PlotNineWarning
 
 
 # method_args are any of the keyword args (other than q) for
@@ -57,7 +58,7 @@ class stat_quantile(stat):
         params = self.params.copy()
         if params['formula'] is None:
             params['formula'] = 'y ~ x'
-            warn("Formula not specified, using '{}'")
+            warn("Formula not specified, using '{}'", PlotNineWarning)
         try:
             iter(params['quantiles'])
         except TypeError:

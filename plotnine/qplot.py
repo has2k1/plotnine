@@ -13,7 +13,7 @@ from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
 from .utils import Registry, is_string, array_kind
-from .exceptions import PlotnineError
+from .exceptions import PlotnineError, PlotNineWarning
 from .scales import scale_x_log10, scale_y_log10
 from .themes import theme
 
@@ -156,7 +156,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             return 'wrap'
 
         warn("Could not determine the type of faceting, "
-             "therefore no faceting.")
+             "therefore no faceting.", PlotNineWarning)
         return 'null'
 
     if facets:

@@ -19,7 +19,7 @@ from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme, theme_get
 from .utils import to_inches, from_inches
-from .exceptions import PlotnineError
+from .exceptions import PlotnineError, PlotNineWarning
 from .scales.scales import Scales
 from .coords import coord_cartesian
 from .guides.guides import guides
@@ -703,8 +703,8 @@ class ggplot:
         if verbose:
             warn("Saving {0} x {1} {2} image.".format(
                  from_inches(width, units),
-                 from_inches(height, units), units))
-            warn('Filename: {}'.format(filename))
+                 from_inches(height, units), units), PlotNineWarning)
+            warn('Filename: {}'.format(filename), PlotNineWarning)
 
         # Helper function so that we can clean up when it fails
         def _save():
@@ -823,7 +823,7 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
         filename = os.path.join(path, filename)
 
     if verbose:
-        warn('Filename: {}'.format(filename))
+        warn('Filename: {}'.format(filename), PlotNineWarning)
 
     with PdfPages(filename) as pdf:
         # Re-add the first element to the iterator, if it was removed

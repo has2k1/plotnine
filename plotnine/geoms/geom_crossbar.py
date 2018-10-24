@@ -11,6 +11,7 @@ from ..doctools import document
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
+from ..exceptions import PlotNineWarning
 
 
 @document
@@ -79,7 +80,7 @@ class geom_crossbar(geom):
         if has_notch:  # 10 points + 1 closing
             if (any(ynotchlower < ymin) or any(ynotchupper > ymax)):
                 warn("Notch went outside hinges."
-                     " Try setting notch=False.")
+                     " Try setting notch=False.", PlotNineWarning)
 
             notchindent = (1 - notchwidth) * (xmax-xmin)/2
 

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, geom_smooth
+from plotnine import ggplot, aes, geom_point, geom_smooth, PlotNineWarning
 
 
 random_state = np.random.RandomState(1234567890)
@@ -116,7 +116,7 @@ class TestOther:
 
     def test_rlm(self):
         p = self.p + geom_smooth(aes(y='y_noisy'), method='rlm')
-        with pytest.warns(UserWarning):
+        with pytest.warns(PlotNineWarning):
             p.draw_test()
 
     def test_glm(self):
@@ -129,7 +129,7 @@ class TestOther:
 
     def test_lowess(self):
         p = self.p + geom_smooth(aes(y='y_noisy'), method='lowess')
-        with pytest.warns(UserWarning):
+        with pytest.warns(PlotNineWarning):
             p.draw_test()
 
     def test_mavg(self):

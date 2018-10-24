@@ -5,7 +5,7 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..doctools import document
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotNineWarning
 from .binning import (breaks_from_bins, breaks_from_binwidth,
                       assign_bins, freedman_diaconis_bins)
 from .stat import stat
@@ -98,7 +98,7 @@ class stat_bindot(stat):
             params['bins'] = freedman_diaconis_bins(data['x'])
             msg = ("'stat_bin()' using 'bins = {}'. "
                    "Pick better value with 'binwidth'.")
-            warn(msg.format(params['bins']))
+            warn(msg.format(params['bins']), PlotNineWarning)
 
         return params
 

@@ -3,6 +3,7 @@ from warnings import warn
 from ..doctools import document
 from ..utils import alias
 from .scale import scale_discrete
+from ..exceptions import PlotNineWarning
 
 
 @document
@@ -23,7 +24,7 @@ class _scale_manual(scale_discrete):
         if n > max_n:
             msg = ("Palette can return a maximum of {} values. "
                    "{} were requested from it.")
-            warn(msg.format(max_n, n))
+            warn(msg.format(max_n, n), PlotNineWarning)
         return self._values
 
 

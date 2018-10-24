@@ -5,7 +5,7 @@ import pytest
 
 from plotnine import ggplot, aes, geom_text, ggsave
 from plotnine.data import mtcars
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotNineWarning
 
 p = (ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars)
      + geom_text())
@@ -41,7 +41,7 @@ class TestArguments:
 
     def test_save_method(self):
         fn = next(filename_gen)
-        with pytest.warns(UserWarning) as record:
+        with pytest.warns(PlotNineWarning) as record:
             p.save(fn)
 
         assert_exist_and_clean(fn, "save method")

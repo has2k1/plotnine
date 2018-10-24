@@ -15,6 +15,7 @@ from ..aes import rename_aesthetics
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea
 from .guide import guide
+from ..exceptions import PlotNineWarning
 
 
 class guide_colorbar(guide):
@@ -61,11 +62,11 @@ class guide_colorbar(guide):
     def train(self, scale):
         # Do nothing if scales are inappropriate
         if set(scale.aesthetics) & {'color', 'colour', 'fill'} == 0:
-            warn("colorbar guide needs color or fill scales.")
+            warn("colorbar guide needs color or fill scales.", PlotNineWarning)
             return None
 
         if not issubclass(scale.__class__, scale_continuous):
-            warn("colorbar guide needs continuous scales")
+            warn("colorbar guide needs continuous scales", PlotNineWarning)
             return None
 
         # value = breaks (numeric) is used for determining the

@@ -5,7 +5,7 @@ from contextlib import suppress
 import numpy as np
 import pandas as pd
 
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotNineWarning
 from ..utils import match, join_keys
 from .facet import facet, combine_vars, layout_null
 from .facet import add_missing_facets, eval_facet_vars
@@ -237,7 +237,7 @@ def check_dimensions(nrow, ncol):
     if nrow is not None:
         if nrow < 1:
             warn("'nrow' must be greater than 0. "
-                 "Your value has been ignored.")
+                 "Your value has been ignored.", PlotNineWarning)
             nrow = None
         else:
             nrow = int(nrow)
@@ -245,7 +245,7 @@ def check_dimensions(nrow, ncol):
     if ncol is not None:
         if ncol < 1:
             warn("'ncol' must be greater than 0. "
-                 "Your value has been ignored.")
+                 "Your value has been ignored.", PlotNineWarning)
             ncol = None
         else:
             ncol = int(ncol)

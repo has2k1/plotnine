@@ -8,6 +8,7 @@ import matplotlib.lines as mlines
 from ..utils import groupby_apply, to_rgba, resolution
 from ..doctools import document
 from .geom import geom
+from ..exceptions import PlotNineWarning
 
 
 @document
@@ -49,13 +50,13 @@ class geom_dotplot(geom):
         # Issue warnings when parameters don't make sense
         if gp['position'] == 'stack':
             warn("position='stack' doesn't work properly with "
-                 "geom_dotplot. Use stackgroups=True instead.")
+                 "geom_dotplot. Use stackgroups=True instead.", PlotNineWarning)
         if (gp['stackgroups'] and
                 sp['method'] == 'dotdensity' and
                 sp['binpositions'] == 'bygroup'):
             warn("geom_dotplot called with stackgroups=TRUE and "
                  "method='dotdensity'. You probably want to set "
-                 "binpositions='all'")
+                 "binpositions='all'", PlotNineWarning)
 
         if 'width' not in data:
             if sp['width']:
