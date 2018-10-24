@@ -35,7 +35,8 @@ class position_stack(position):
             var = 'y'
         else:
             warn("Stacking requires either ymin & ymax or y "
-                 "aesthetics. Maybe you want position = 'identity'?", PlotnineWarning)
+                 "aesthetics. Maybe you want position = 'identity'?",
+                 PlotnineWarning)
             var = None
 
         params = self.params.copy()
