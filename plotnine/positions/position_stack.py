@@ -5,7 +5,7 @@ import pandas as pd
 
 from ..utils import remove_missing
 from .position import position
-from ..exceptions import PlotNineWarning
+from ..exceptions import PlotnineWarning
 
 
 class position_stack(position):
@@ -29,13 +29,13 @@ class position_stack(position):
         if 'ymax' in data:
             if any((data['ymin'] != 0) & (data['ymax'] != 0)):
                 warn("Stacking not well defined when not "
-                     "anchored on the axis.", PlotNineWarning)
+                     "anchored on the axis.", PlotnineWarning)
             var = 'ymax'
         elif 'y' in data:
             var = 'y'
         else:
             warn("Stacking requires either ymin & ymax or y "
-                 "aesthetics. Maybe you want position = 'identity'?", PlotNineWarning)
+                 "aesthetics. Maybe you want position = 'identity'?", PlotnineWarning)
             var = None
 
         params = self.params.copy()
