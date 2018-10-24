@@ -14,6 +14,7 @@ from ..utils import SIZE_FACTOR, match
 from .geom import geom
 from ..exceptions import PlotNineWarning
 
+
 @document
 class geom_path(geom):
     """
