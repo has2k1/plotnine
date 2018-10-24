@@ -22,7 +22,7 @@ from plotnine.scales.scale_size import (scale_size_discrete,
                                         scale_size_radius)
 from plotnine.scales.scale_manual import _scale_manual
 from plotnine.scales.scales import make_scale
-from plotnine.exceptions import PlotnineError, PlotNineWarning
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 _theme = theme(subplots_adjust={'right': 0.85})
 
@@ -131,7 +131,7 @@ def test_continuous_color_palettes():
     s = sc.scale_color_distiller(type='div')
     _assert(s)
 
-    with pytest.warns(PlotNineWarning):
+    with pytest.warns(PlotnineWarning):
         s = sc.scale_color_distiller(type='qual')
     _assert(s)
 
@@ -215,7 +215,7 @@ def test_scale_manual():
         s = _scale(values)
         assert s.palette(2) == values
         assert s.palette(len(values)) == values
-        with pytest.warns(PlotNineWarning):
+        with pytest.warns(PlotnineWarning):
             s.palette(len(values)+1)
 
     values = {'A': 'red', 'B': 'violet', 'C': 'blue'}
@@ -390,7 +390,7 @@ def test_scale_without_a_mapping():
     p = (ggplot(df, aes('x', 'x'))
          + geom_point()
          + scale_color.scale_color_continuous())
-    with pytest.warns(PlotNineWarning):
+    with pytest.warns(PlotnineWarning):
         p.draw_test()
 
 
