@@ -12,7 +12,7 @@ from ..doctools import document
 from ..utils import to_rgba, make_line_segments
 from ..utils import SIZE_FACTOR, match
 from .geom import geom
-from ..exceptions import PlotNineWarning
+from ..exceptions import PlotnineWarning
 
 
 @document
@@ -72,7 +72,7 @@ class geom_path(geom):
 
         if (n2 != n1 and not self.params['na_rm']):
             msg = "geom_path: Removed {} rows containing missing values."
-            warn(msg.format(n1-n2), PlotNineWarning)
+            warn(msg.format(n1-n2), PlotnineWarning)
 
         return data
 
@@ -80,7 +80,7 @@ class geom_path(geom):
         if not any(data['group'].duplicated()):
             warn("geom_path: Each group consist of only one "
                  "observation. Do you need to adjust the "
-                 "group aesthetic?", PlotNineWarning)
+                 "group aesthetic?", PlotnineWarning)
 
         # dataframe mergesort is stable, we rely on that here
         data = data.sort_values('group', kind='mergesort')

@@ -6,7 +6,7 @@ from mizani.transforms import gettrans
 
 from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
-from ..exceptions import PlotNineWarning
+from ..exceptions import PlotnineWarning
 
 
 class coord_trans(coord):
@@ -43,7 +43,7 @@ class coord_trans(coord):
                                      data, panel_params['x_range'])
             if any(result.isnull()):
                 warn("Coordinate transform of x aesthetic "
-                     "created one or more NaN values.", PlotNineWarning)
+                     "created one or more NaN values.", PlotnineWarning)
             return result
 
         def trans_y(data):
@@ -51,7 +51,7 @@ class coord_trans(coord):
                                      data, panel_params['y_range'])
             if any(result.isnull()):
                 warn("Coordinate transform of y aesthetic "
-                     "created one or more NaN values.", PlotNineWarning)
+                     "created one or more NaN values.", PlotnineWarning)
             return result
 
         data = transform_position(data, trans_x, trans_y)

@@ -33,7 +33,7 @@ class PlotnineError(Exception):
         return repr(self.message)
 
 
-class PlotNineWarning(UserWarning):
+class PlotnineWarning(UserWarning):
     """
     Warnings for ggplot inconsistencies
     """
