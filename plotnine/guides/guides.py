@@ -8,7 +8,7 @@ from matplotlib.offsetbox import (HPacker, VPacker)
 
 from .guide import guide as guide_class
 from ..utils import is_string, is_waive, Registry
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 
 
 # Terminology
@@ -195,7 +195,7 @@ class guides(dict):
                     except KeyError:
                         warn("Cannot generate legend for the {!r} "
                              "aesthetic. Make sure you have mapped a "
-                             "variable to it".format(output))
+                             "variable to it".format(output), PlotnineWarning)
                         continue
 
             # each guide object trains scale within the object,

@@ -5,7 +5,7 @@ import pandas as pd
 import scipy.stats as stats
 import statsmodels.api as sm
 
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 
 smlowess = sm.nonparametric.lowess
 
@@ -80,7 +80,7 @@ def rlm(data, xseq, **params):
 
     if params['se']:
         warnings.warn("Confidence intervals are not yet implemented"
-                      "for RLM smoothing.")
+                      "for RLM smoothing.", PlotnineWarning)
 
     return data
 
@@ -129,7 +129,8 @@ def glm(data, xseq, **params):
         except (AttributeError, TypeError):
             warnings.warn(
                 "Cannot compute confidence intervals."
-                "Install latest/development version of statmodels.")
+                "Install latest/development version of statmodels.",
+                PlotnineWarning)
 
     return data
 
@@ -144,7 +145,7 @@ def lowess(data, xseq, **params):
 
     if params['se']:
         warnings.warn("Confidence intervals are not yet implemented"
-                      "for lowess smoothings.")
+                      "for lowess smoothings.", PlotnineWarning)
 
     return data
 
@@ -171,7 +172,8 @@ def loess(data, xseq, **params):
         kwargs['surface'] = 'direct'
         warnings.warn(
             "Making prediction outside the data range, "
-            "setting loess control parameter `surface='direct'`.")
+            "setting loess control parameter `surface='direct'`.",
+            PlotnineWarning)
 
     if 'span' not in kwargs:
         kwargs['span'] = params['span']
@@ -236,7 +238,7 @@ def gpr(data, xseq, **params):
     if not kwargs:
         warnings.warn(
             "See sklearn.gaussian_process.GaussianProcessRegressor "
-            "for parameters to pass in as 'method_args'")
+            "for parameters to pass in as 'method_args'", PlotnineWarning)
 
     regressor = gaussian_process.GaussianProcessRegressor(**kwargs)
     X = np.atleast_2d(data['x']).T
