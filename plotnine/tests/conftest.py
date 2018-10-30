@@ -8,7 +8,6 @@ import types
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
-from matplotlib import cbook
 
 from plotnine import ggplot, theme
 
@@ -183,7 +182,7 @@ def make_test_image_filenames(name, test_file):
     result_dir = os.path.abspath(os.path.join('result_images', subdir))
 
     if not os.path.exists(result_dir):
-        cbook.mkdirs(result_dir)
+        os.makedirs(result_dir, exist_ok=True)
 
     base, ext = os.path.splitext(name)
     expected_name = '{}-{}{}'.format(base, 'expected', ext)
