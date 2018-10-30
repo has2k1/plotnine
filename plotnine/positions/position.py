@@ -13,6 +13,7 @@ class position(metaclass=Registry):
     __base__ = True
 
     REQUIRED_AES = {}
+    ALLOWED_GEOMS = {}
     params = {}
 
     def setup_params(self, data):
@@ -127,11 +128,13 @@ class position(metaclass=Registry):
         """
         name = geom.params['position']
         if issubclass(type(name), position):
-            if name.ALLOWED_GEOMS and not geom.__class__.__name__ in name.ALLOWED_GEOMS:
-                raise PlotnineError("position (%s) and geom (%s) are incompatible." % (
-                    name.__class__.__name__,
-                    geom.__class__.__name__,
-                ))
+            if (name.ALLOWED_GEOMS and
+                    geom.__class__.__name__ not in name.ALLOWED_GEOMS):
+                raise PlotnineError(
+                    "position (%s) and geom (%s) are incompatible." % (
+                        name.__class__.__name__,
+                        geom.__class__.__name__,
+                    ))
             return name
 
         if isinstance(name, type) and issubclass(name, position):
@@ -212,7 +215,6 @@ class position(metaclass=Registry):
             raise PlotnineError('Neither y nor ymax defined')
 
         return data
-
 
 
 transform_position = position.transform_position
