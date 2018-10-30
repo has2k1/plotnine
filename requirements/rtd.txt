@@ -12,3 +12,4 @@ statsmodels
 pandas
 matplotlib
 mizani
+adjustText

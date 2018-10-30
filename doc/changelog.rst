@@ -12,6 +12,12 @@ API Changes
   Shapefiles should contain only one type of geometry and that is the geometry
   that is drawn.
 
+New Features
+************
+
+- :class:`~plotnine.geoms.geom_text` gained the ``adjust_text`` parameter,
+  and can now repel text.
+
 Bug Fixes
 *********
 

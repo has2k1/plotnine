@@ -58,6 +58,7 @@ install:
       pip install matplotlib --no-binary matplotlib
       pip install scikit-misc
       pip install geopandas
+      pip install adjustText
       pip install -e .
     fi
   - |
