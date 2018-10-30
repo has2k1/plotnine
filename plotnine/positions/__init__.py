@@ -5,9 +5,11 @@ from .position_jitter import position_jitter
 from .position_jitterdodge import position_jitterdodge
 from .position_nudge import position_nudge
 from .position_stack import position_stack
+from .position_adjust_text import position_adjust_text
 
 
 __all__ = ['position_dodge', 'position_fill',
            'position_identity', 'position_jitter',
            'position_jitterdodge', 'position_nudge',
-           'position_stack']
+           'position_stack', 'position_adjust_text'
+]
