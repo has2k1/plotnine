@@ -11,5 +11,4 @@ from .position_adjust_text import position_adjust_text
 __all__ = ['position_dodge', 'position_fill',
            'position_identity', 'position_jitter',
            'position_jitterdodge', 'position_nudge',
-           'position_stack', 'position_adjust_text'
-]
+           'position_stack', 'position_adjust_text']

@@ -1,5 +1,4 @@
 from .position import position
-from ..exceptions import PlotnineError
 
 
 class position_adjust_text(position):
@@ -11,19 +10,25 @@ class position_adjust_text(position):
     being labels.
 
     Uses https://github.com/Phlya/adjustText
-    Look there for adjust_text_params 
+    Look there for adjust_text_params
 
 
     Parameters
     ----------
-    adjust_text_params : dictionary of parammeters passed to adjust_text(text, **adjust_text_params)
-    
+    adjust_text_params : dic
+    parameters passed to adjust_text(text, **adjust_text_params)
+
     """
     REQUIRED_AES = {'x', 'y'}
     ALLOWED_GEOMS = {'geom_text', 'geom_label'}
 
     def __init__(self, adjust_text_params=None):
-        self.params = adjust_text_params or {'arrowprops':{'arrowstyle':'->', 'color':'red'}}
+        self.params = adjust_text_params or {
+            'arrowprops': {
+                'arrowstyle': '->',
+                'color': 'red'
+            }
+        }
 
     def postprocess_panel(self, ax):
         from adjustText import adjust_text
