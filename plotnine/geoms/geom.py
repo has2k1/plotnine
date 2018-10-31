@@ -219,7 +219,6 @@ class geom(metaclass=Registry):
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
             self.draw_panel(pdata, panel_params, coord, ax, **params)
-            self._position.postprocess_panel(ax)
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         """

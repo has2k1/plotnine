@@ -38,6 +38,11 @@ class geom_text(geom):
         Horizontal adjustment to apply to the text
     nudge_y : float (default: 0)
         Vertical adjustment to apply to the text
+    adjust_text: dict (default: None)
+        Parameters to :class:`adjustText.adjust_text` will repel
+        overlapping texts. This parameter takes priority of over
+        ``nudge_x`` and ``nudge_y``. 
+        See https://github.com/Phlya/adjustText/wiki .
     format_string : str (default: None)
         If not :py:`None`, then the text if formatted with this
         string using :meth:`str.format`
@@ -55,16 +60,20 @@ class geom_text(geom):
                       'family': None, 'fontweight': 'normal',
                       'fontstyle': 'normal', 'ha': 'center',
                       'va': 'center', 'nudge_x': 0, 'nudge_y': 0,
+                      'adjust_text': None,
                       'format_string': None}
 
     def __init__(self, *args, **kwargs):
         nudge_kwargs = {}
-        with suppress(KeyError):
-            nudge_kwargs['x'] = kwargs['nudge_x']
-        with suppress(KeyError):
-            nudge_kwargs['y'] = kwargs['nudge_y']
-        if nudge_kwargs:
-            kwargs['position'] = position_nudge(**nudge_kwargs)
+        adjust_text = kwargs.get('adjust_text', None)
+        if adjust_text is None:
+            with suppress(KeyError):
+                nudge_kwargs['x'] = kwargs['nudge_x']
+            with suppress(KeyError):
+                nudge_kwargs['y'] = kwargs['nudge_y']
+            if nudge_kwargs:
+                kwargs['position'] = position_nudge(**nudge_kwargs)
+
 
         # Accomodate for the old names
         if 'hjust' in kwargs:
@@ -88,6 +97,13 @@ class geom_text(geom):
             data['label'] = ['${}$'.format(l) for l in data['label']]
 
         return data
+
+    def draw_panel(self, data, panel_params, coord, ax, **params):
+        super().draw_panel(data, panel_params, coord, ax, **params)
+        if params['adjust_text'] is not None:
+            from adjustText import adjust_text
+            texts = [t for t in ax.texts]
+            adjust_text(texts, ax=ax, **params['adjust_text'])
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):

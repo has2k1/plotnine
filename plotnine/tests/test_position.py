@@ -7,7 +7,7 @@ import pytest
 from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar, geom_col,
                       geom_text, position_dodge, position_jitter,
                       position_jitterdodge, position_nudge, position_stack,
-                      position_adjust_text, theme)
+                      theme)
 from plotnine.positions.position import position
 from plotnine.exceptions import PlotnineError
 
@@ -93,24 +93,6 @@ def test_jitterdodge():
     assert p + _theme == 'jitterdodge'
 
 
-def test_adjust_text():
-    from plotnine.data import mtcars
-    p = (
-        ggplot(
-            mtcars.tail(2),  # two points -> fast test.
-            aes('mpg', 'disp', label='name')) + geom_point(
-                size=5, fill='black') + geom_text(
-                    position=position_adjust_text(
-                        adjust_text_params={
-                            'expand_points': (2, 2),
-                            'arrowprops': {
-                                'arrowstyle': '->',
-                                'color': 'red'
-                            }
-                        })))
-    assert p + _theme == 'adjust_text'
-
-
 def test_position_from_geom():
     geom = geom_point(position='jitter')
     assert isinstance(position.from_geom(geom), position_jitter)
@@ -124,5 +106,3 @@ def test_position_from_geom():
     geom = geom_point(position=position_jitter)
     assert isinstance(position.from_geom(geom), position_jitter)
 
-    with pytest.raises(PlotnineError):
-        geom = geom_point(position=position_adjust_text())
