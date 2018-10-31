@@ -13,7 +13,6 @@ class position(metaclass=Registry):
     __base__ = True
 
     REQUIRED_AES = {}
-    ALLOWED_GEOMS = {}
     params = {}
 
     def setup_params(self, data):
@@ -103,12 +102,6 @@ class position(metaclass=Registry):
 
         return data
 
-    @classmethod
-    def postprocess_panel(self, ax):
-        """Some positions are actually iterative post-processors
-        and need to be called after draw_panel"""
-        return None
-
     @staticmethod
     def from_geom(geom):
         """
@@ -128,13 +121,6 @@ class position(metaclass=Registry):
         """
         name = geom.params['position']
         if issubclass(type(name), position):
-            if (name.ALLOWED_GEOMS and
-                    geom.__class__.__name__ not in name.ALLOWED_GEOMS):
-                raise PlotnineError(
-                    "position (%s) and geom (%s) are incompatible." % (
-                        name.__class__.__name__,
-                        geom.__class__.__name__,
-                    ))
             return name
 
         if isinstance(name, type) and issubclass(name, position):
