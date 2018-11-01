@@ -6,6 +6,7 @@ mizani
 geopandas
 descartes
 scikit-misc
+adjustText
 
 # Documentation
 -r doc.txt

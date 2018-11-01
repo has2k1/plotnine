@@ -409,7 +409,9 @@ intersphinx_mapping = {
     'statsmodels': ('http://www.statsmodels.org/stable/', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'sklearn': ('http://scikit-learn.org/stable/', None),
-    'skmisc': ('https://has2k1.github.io/scikit-misc/', None)}
+    'skmisc': ('https://has2k1.github.io/scikit-misc/', None),
+    'adjustText': ('https://github.com/Phlya/adjustText', None)
+}
 
 
 # -- Extension configuration ----------------------------------------------
