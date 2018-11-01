@@ -50,6 +50,7 @@ def test_label_aesthetics():
 
     assert p == 'label_aesthetics'
 
+
 def test_adjust_text():
     from plotnine.data import mtcars
     p = (
@@ -66,6 +67,7 @@ def test_adjust_text():
                         }))
     assert p == 'adjust_text'
 
+
 def test_adjust_label():
     from plotnine.data import mtcars
     p = (
@@ -81,5 +83,3 @@ def test_adjust_label():
                             }
                         }))
     assert p == 'adjust_label'
-
-

@@ -41,7 +41,7 @@ class geom_text(geom):
     adjust_text: dict (default: None)
         Parameters to :class:`adjustText.adjust_text` will repel
         overlapping texts. This parameter takes priority of over
-        ``nudge_x`` and ``nudge_y``. 
+        ``nudge_x`` and ``nudge_y``.
         See https://github.com/Phlya/adjustText/wiki .
     format_string : str (default: None)
         If not :py:`None`, then the text if formatted with this
@@ -73,7 +73,6 @@ class geom_text(geom):
                 nudge_kwargs['y'] = kwargs['nudge_y']
             if nudge_kwargs:
                 kwargs['position'] = position_nudge(**nudge_kwargs)
-
 
         # Accomodate for the old names
         if 'hjust' in kwargs:
