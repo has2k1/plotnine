@@ -6,7 +6,7 @@ from plotnine import (ggplot, aes, geom_text, geom_label, geom_point,
 
 n = 5
 labels = ['ggplot', 'aesthetics', 'data', 'geoms',
-          '$\mathbf{statistics^2}$', 'scales', 'coordinates']
+          r'$\mathbf{statistics^2}$', 'scales', 'coordinates']
 df = pd.DataFrame({
         'x': [1] * n,
         'y': range(n),
@@ -50,6 +50,7 @@ def test_label_aesthetics():
 
     assert p == 'label_aesthetics'
 
+
 def test_adjust_text():
     from plotnine.data import mtcars
     p = (
@@ -66,6 +67,7 @@ def test_adjust_text():
                         }))
     assert p == 'adjust_text'
 
+
 def test_adjust_label():
     from plotnine.data import mtcars
     p = (
@@ -81,5 +83,3 @@ def test_adjust_label():
                             }
                         }))
     assert p == 'adjust_label'
-
-
