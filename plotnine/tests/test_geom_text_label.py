@@ -6,13 +6,14 @@ from plotnine import (ggplot, aes, geom_text, geom_label,
 
 n = 5
 labels = ['ggplot', 'aesthetics', 'data', 'geoms',
-          '$\mathbf{statistics^2}$', 'scales', 'coordinates']
+          r'$\mathbf{statistics^2}$', 'scales', 'coordinates']
 df = pd.DataFrame({
         'x': [1] * n,
         'y': range(n),
         'label': labels[:n],
         'z': range(n),
-        'angle': np.linspace(0, 90, n)
+        'angle': np.linspace(0, 90, n),
+
     })
 
 
@@ -36,7 +37,7 @@ def test_text_aesthetics():
 def test_label_aesthetics():
     p = (ggplot(df, aes(y='y', label='label')) +
          geom_label(aes('x', label='label', fill='z'),
-                    size=15, ha='left', show_legend=False) +
+                    size=15, ha='left', show_legend=False, boxcolor='red') +
          geom_label(aes('x+1', angle='angle'),
                     size=15, va='top', show_legend=False) +
          geom_label(aes('x+2', label='label', alpha='z'),
