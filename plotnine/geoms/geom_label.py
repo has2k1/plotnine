@@ -15,6 +15,7 @@ _params.update({
     #
     # Documentation at matplotlib.patches.BoxStyle
     'boxstyle': 'round',
+    'boxcolor': None,
     'label_padding': 0.25,
     'label_r': 0.25,
     'label_size': 0.7,
@@ -43,7 +44,9 @@ class geom_label(geom_text):
             'roundtooth'
             'sawtooth'
             'square'
-
+    boxcolor: None, str or rgba tuple (default: None)
+        Color of box around the text. If None, the color is
+        the same as the text.
     label_padding : float, optional (default: 0.25)
         Amount of padding
     label_r : float, optional (default: 0.25)

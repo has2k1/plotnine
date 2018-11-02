@@ -143,7 +143,7 @@ class geom_text(geom):
             kw = df.iloc[i].to_dict()
             if draw_label:
                 kw['bbox'] = bbox
-                kw['bbox']['edgecolor'] = kw['color']
+                kw['bbox']['edgecolor'] = params['boxcolor'] or kw['color']
                 kw['bbox']['facecolor'] = kw.pop('facecolor')
             ax.text(**kw)
 
