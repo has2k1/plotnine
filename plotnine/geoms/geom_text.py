@@ -134,7 +134,7 @@ class geom_text(geom):
                     params['boxstyle'],
                     params['label_padding'])
             bbox = {'linewidth': params['label_size'],
-                    'boxstyle': boxstyle}
+                    'boxstyle': boxstyle, 'edgecolor': params['boxcolor']}
         else:
             bbox = {}
 
@@ -143,7 +143,6 @@ class geom_text(geom):
             kw = df.iloc[i].to_dict()
             if draw_label:
                 kw['bbox'] = bbox
-                kw['bbox']['edgecolor'] = kw['color']
                 kw['bbox']['facecolor'] = kw.pop('facecolor')
             ax.text(**kw)
 
