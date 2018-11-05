@@ -410,7 +410,7 @@ intersphinx_mapping = {
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'sklearn': ('http://scikit-learn.org/stable/', None),
     'skmisc': ('https://has2k1.github.io/scikit-misc/', None),
-    'adjustText': ('https://github.com/Phlya/adjustText', None)
+    'adjustText': ('https://adjusttext.readthedocs.io/en/latest/', None)
 }
 
 
