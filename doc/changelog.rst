@@ -5,6 +5,13 @@ v0.5.2
 ------
 (not-yet-released)
 
+API Changes
+***********
+
+- The ``draw`` parameter of :class:`plotnine.geoms.geom_map` has been removed.
+  Shapefiles should contain only one type of geometry and that is the geometry
+  that is drawn.
+
 Bug Fixes
 *********
 
