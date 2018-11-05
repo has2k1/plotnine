@@ -845,7 +845,7 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
             except AttributeError as err:
                 msg = 'non-ggplot object of %s: %s' % (type(plot), plot)
                 raise TypeError(msg) from err
-            except Exception as err:
+            except Exception:
                 raise
             finally:
                 # Close the figure whether or not there was an exception, to
