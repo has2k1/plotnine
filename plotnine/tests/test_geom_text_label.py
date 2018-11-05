@@ -3,6 +3,7 @@ import numpy as np
 
 from plotnine import (ggplot, aes, geom_text, geom_label, geom_point,
                       scale_size_continuous, scale_y_continuous)
+from plotnine.data import mtcars
 
 n = 5
 labels = ['ggplot', 'aesthetics', 'data', 'geoms',
@@ -52,7 +53,6 @@ def test_label_aesthetics():
 
 
 def test_adjust_text():
-    from plotnine.data import mtcars
     p = (
         ggplot(
             mtcars.tail(2),  # two points -> fast test.
@@ -69,17 +69,15 @@ def test_adjust_text():
 
 
 def test_adjust_label():
-    from plotnine.data import mtcars
+    adjust_text = {
+        'expand_points': (2, 2),
+        'arrowprops': {
+            'arrowstyle': '->',
+            'color': 'red'
+        }
+    }
     p = (
-        ggplot(
-            mtcars.tail(2),  # two points -> fast test.
-            aes('mpg', 'disp', label='name')) + geom_point(
-                size=5, fill='black') + geom_label(
-                        adjust_text={
-                            'expand_points': (2, 2),
-                            'arrowprops': {
-                                'arrowstyle': '->',
-                                'color': 'red'
-                            }
-                        }))
+        ggplot(mtcars.tail(2), aes('mpg', 'disp', label='name'))
+        + geom_point(size=5, fill='black')
+        + geom_label(adjust_text=adjust_text))
     assert p == 'adjust_label'
