@@ -134,7 +134,9 @@ class geom_text(geom):
                     params['boxstyle'],
                     params['label_padding'])
             bbox = {'linewidth': params['label_size'],
-                    'boxstyle': boxstyle, 'edgecolor': params['boxcolor']}
+                    'boxstyle': boxstyle}
+            if params['boxcolor'] is not None:
+                bbox['edgecolor'] = params['boxcolor']
         else:
             bbox = {}
 
@@ -144,6 +146,8 @@ class geom_text(geom):
             if draw_label:
                 kw['bbox'] = bbox
                 kw['bbox']['facecolor'] = kw.pop('facecolor')
+                if params['boxcolor'] is None:
+                    kw['bbox']['edgecolor'] = kw['color']
             ax.text(**kw)
 
     @staticmethod
