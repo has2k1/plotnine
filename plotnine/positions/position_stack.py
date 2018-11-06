@@ -74,7 +74,7 @@ class position_stack(position):
         if len(pos):
             pos = cls.collide(pos, params=params)
 
-        data = pd.concat([neg, pos], axis=0, ignore_index=True)
+        data = pd.concat([neg, pos], axis=0, ignore_index=True, sort=True)
         return data
 
     @staticmethod

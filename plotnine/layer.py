@@ -1,8 +1,9 @@
 from contextlib import suppress
 from copy import copy, deepcopy
+import numbers
 
 import pandas as pd
-import matplotlib.cbook as cbook
+import numpy as np
 import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
@@ -514,5 +515,5 @@ def is_known_scalar(value):
         # versions of these types
         return pd.Series(value).dtype.kind in ('M', 'm')
 
-    return not cbook.iterable(value) and (cbook.is_numlike(value) or
-                                          _is_datetime_or_timedelta(value))
+    return not np.iterable(value) and (isinstance(value, numbers.Number) or
+                                       _is_datetime_or_timedelta(value))

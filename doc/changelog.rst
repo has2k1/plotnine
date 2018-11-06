@@ -5,6 +5,13 @@ v0.5.2
 ------
 (not-yet-released)
 
+API Changes
+***********
+
+- The ``draw`` parameter of :class:`plotnine.geoms.geom_map` has been removed.
+  Shapefiles should contain only one type of geometry and that is the geometry
+  that is drawn.
+
 Bug Fixes
 *********
 
@@ -14,6 +21,9 @@ Bug Fixes
 v0.5.1
 ------
 (2018-10-17)
+
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1464803.svg
+   :target: https://doi.org/10.5281/zenodo.1464803
 
 Bug Fixes
 *********

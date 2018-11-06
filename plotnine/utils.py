@@ -284,10 +284,10 @@ def ninteraction(df, drop=False):
         return len(np.unique(x))
     ndistinct = ids.apply(len_unique, axis=0).values
 
-    combs = np.matrix(
+    combs = np.array(
         np.hstack([1, np.cumprod(ndistinct[:-1])]))
-    mat = np.matrix(ids)
-    res = (mat - 1) * combs.T + 1
+    mat = np.array(ids)
+    res = (mat - 1) @ combs.T + 1
     res = np.array(res).flatten().tolist()
 
     if drop:

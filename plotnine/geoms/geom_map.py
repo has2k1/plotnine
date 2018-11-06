@@ -29,9 +29,6 @@ class geom_map(geom):
     Parameters
     ----------
     {common_parameters}
-    draw : str in ``['Polygon', 'Point', 'LineString']``
-        What geometry types to draw. Note that *Polygon*
-        includes MultiPolygon type.
 
     Notes
     -----
@@ -43,7 +40,7 @@ class geom_map(geom):
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5,
                    'stroke': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'draw': 'Polygon', 'na_rm': False}
+                      'na_rm': False}
     REQUIRED_AES = {'geometry'}
     legend_geom = 'polygon'
 
@@ -60,17 +57,15 @@ class geom_map(geom):
             self.mapping['geometry'] = 'geometry'
 
     def setup_data(self, data):
-        draw = self.params['draw']
-        _type = data.geometry.geom_type
-        if draw == 'Polygon':
-            data = data[(_type == 'Polygon') | (_type == 'MultiPolygon')]
-        elif draw == 'Point':
-            data = data[_type == 'Point']
-        elif draw == 'LineString':
-            data = data[_type == 'LineString']
-
         if not len(data):
             return data
+
+        # Remove any NULL geometries, and remember
+        # All the non-Null shapes in a shapefile are required to be
+        # of the same shape type.
+        bool_idx = np.array([g is not None for g in data['geometry']])
+        if not np.all(bool_idx):
+            data = data.loc[bool_idx]
 
         # Add polygon limits. Scale training uses them
         try:
@@ -97,6 +92,9 @@ class geom_map(geom):
         return data
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
+        if not len(data):
+            return data
+
         _loc = data.columns.get_loc
         cidx = data.index[data['color'].isnull()]
         fidx = data.index[data['fill'].isnull()]
@@ -104,7 +102,8 @@ class geom_map(geom):
         data.iloc[fidx, _loc('fill')] = 'none'
         data['fill'] = to_rgba(data['fill'], data['alpha'])
 
-        if params['draw'] == 'Polygon':
+        geom_type = data.geometry[0].geom_type
+        if geom_type in ('Polygon', 'MultiPolygon'):
             data['size'] *= SIZE_FACTOR
             patches = [PolygonPatch(g) for g in data['geometry']]
             coll = PatchCollection(
@@ -116,7 +115,7 @@ class geom_map(geom):
                 zorder=params['zorder'],
             )
             ax.add_collection(coll)
-        elif params['draw'] == 'Point':
+        elif geom_type == 'Point':
             # Extract point coordinates from shapely geom
             # and plot with geom_point
             arr = np.array([list(g.coords)[0] for g in data['geometry']])
@@ -127,7 +126,7 @@ class geom_map(geom):
                 gdata.is_copy = None
                 geom_point.draw_group(
                     gdata, panel_params, coord, ax, **params)
-        elif params['draw'] == 'LineString':
+        elif geom_type == 'LineString':
             data['size'] *= SIZE_FACTOR
             data['color'] = to_rgba(data['color'], data['alpha'])
             segments = [list(g.coords) for g in data['geometry']]

@@ -62,7 +62,8 @@ install:
     fi
   - |
     if [[ "$JOB" == "UNITTEST" ]]; then
-      conda install pytest-cov pyshp
+      conda install pytest-cov
+      conda install -c conda-forge "pyshp>=2.0.0" # temporary
       pip install coveralls
     elif [[ "$JOB" == "DOCS" ]]; then
       pip install -r requirements/doc.txt

@@ -7,56 +7,67 @@ from plotnine import ggplot, aes, geom_map, labs, theme
 _theme = theme(subplots_adjust={'right': 0.85})
 
 
-def _create_test_input_files(test_file):
-    w = shapefile.Writer()
-    w.field('name', 'C')
+def _point_file(test_file):
+    with shapefile.Writer(test_file, shapefile.POINT) as shp:
+        shp.field('name', 'C')
 
-    # Points
-    w.point(0, 0)
-    w.record('point1')
+        shp.point(0, 0)
+        shp.record('point1')
 
-    w.point(0, 1)
-    w.record('point2')
+        shp.point(0, 1)
+        shp.record('point2')
 
-    w.point(1, 1)
-    w.record('point3')
+        shp.point(1, 1)
+        shp.record('point3')
 
-    w.point(1, 0)
-    w.record('point4')
+        shp.point(1, 0)
+        shp.record('point4')
 
-    # Polygons
-    w.poly(parts=[
-        [[.25, -.25], [.25, .25], [.75, .25], [.75, -.25]],
-    ])
-    w.record('polygon1')
 
-    w.poly(parts=[
-        [[.25, .75], [.75, .75], [.5, 1.25]]
-    ])
-    w.record('polygon2')
+def _polygon_file(test_file):
+    with shapefile.Writer(test_file, shapefile.POLYGON) as shp:
+        shp.field('name', 'C')
 
-    # Lines
-    n = 5
-    x = np.repeat(np.linspace(0, 1, n), 2)
-    y = np.tile([0.375, 0.625], n)
-    w.line(parts=[
-        list(zip(x, y))
-    ])
-    w.record('line1')
+        shp.poly([
+            [[.25, -.25], [.25, .25], [.75, .25], [.75, -.25]],
+        ])
+        shp.record('polygon1')
 
-    w.save(test_file)
+        shp.poly([
+            [[.25, .75], [.75, .75], [.5, 1.25]]
+        ])
+        shp.record('polygon2')
+
+
+def _polyline_file(test_file):
+    with shapefile.Writer(test_file, shapefile.POLYLINE) as shp:
+        shp.field('name', 'C')
+
+        n = 5
+        x = np.repeat(np.linspace(0, 1, n), 2)
+        y = np.tile([0.375, 0.625], n)
+        shp.line([list(zip(x, y))])
+        shp.record('line1')
 
 
 def test_geometries(tmpdir):
-    test_file = '{}/test_file.shp'.format(tmpdir)
-    _create_test_input_files(test_file)
+    point_file = '{}/test_file_point.shp'.format(tmpdir)
+    polygon_file = '{}/test_file_polygon.shp'.format(tmpdir)
+    polyline_file = '{}/test_file_polyline.shp'.format(tmpdir)
 
-    df = GeoDataFrame.from_file(test_file)
-    p = (ggplot(df)
+    _point_file(point_file)
+    _polygon_file(polygon_file)
+    _polyline_file(polyline_file)
+
+    df_point = GeoDataFrame.from_file(point_file)
+    df_polygon = GeoDataFrame.from_file(polygon_file)
+    df_polyline = GeoDataFrame.from_file(polyline_file)
+
+    p = (ggplot()
          + aes(fill='geometry.bounds.miny')
-         + geom_map()
-         + geom_map(draw='Point', size=4)
-         + geom_map(draw='LineString', size=2)
+         + geom_map(df_polygon)
+         + geom_map(df_point, size=4)
+         + geom_map(df_polyline, size=2)
          + labs(fill='miny')
          )
 
