@@ -20,7 +20,6 @@ from .range import Range, RangeContinuous, RangeDiscrete
 from ..exceptions import PlotnineWarning
 
 
-
 class scale(metaclass=Registry):
     """
     Base class for all scales
