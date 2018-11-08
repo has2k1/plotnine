@@ -233,7 +233,7 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        scales : dict
+        panel_params : dict
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
@@ -265,7 +265,7 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        scales : dict
+        panel_params : dict
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
@@ -307,7 +307,7 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        scales : dict
+        panel_params : dict
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
@@ -315,6 +315,11 @@ class geom(metaclass=Registry):
 
                 'x_range'  # tuple
                 'y_range'  # tuple
+
+            In rare cases a geom may need access to the x or y scales.
+            Those are available at::
+
+                'scales'   # SimpleNamespace
 
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the

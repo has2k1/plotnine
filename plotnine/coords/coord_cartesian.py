@@ -71,6 +71,7 @@ class coord_cartesian(coord):
             return out
 
         out = dict(
+            scales=types.SimpleNamespace(x=scale_x, y=scale_y),
             **train(scale_x, self.limits.xlim, 'x'),
             **train(scale_y, self.limits.ylim, 'y')
         )

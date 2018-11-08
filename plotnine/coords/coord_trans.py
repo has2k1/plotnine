@@ -92,6 +92,7 @@ class coord_trans(coord):
             return out
 
         out = dict(
+            scales=types.SimpleNamespace(x=scale_x, y=scale_y),
             **train(scale_x, self.limits.xlim, self.trans.x, 'x'),
             **train(scale_y, self.limits.xlim, self.trans.y, 'y')
         )
