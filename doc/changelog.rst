@@ -24,6 +24,9 @@ Bug Fixes
 - Fixed bug where facetting would fail if done on a plot with annotation(s)
   and one of the facetting columns was also a variable in the environment.
 
+- Fixed bug where :class:`~plotnine.coords.coord_flp` would not flip
+  geoms created by :class:`~plotnine.geoms.geom_rug` (:issue:`216`).
+
 v0.5.1
 ------
 (2018-10-17)

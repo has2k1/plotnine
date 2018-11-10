@@ -3,6 +3,7 @@ import matplotlib.collections as mcoll
 
 from ..utils import to_rgba, make_line_segments, SIZE_FACTOR
 from ..doctools import document
+from ..coords import coord_flip
 from .geom import geom
 
 
@@ -30,6 +31,14 @@ class geom_rug(geom):
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
         data = coord.transform(data, panel_params)
+        sides = params['sides']
+
+        # coord_flip does not flip the side(s) on which the rugs
+        # are plotted. We do the fliping here
+        if isinstance(coord, coord_flip):
+            t = str.maketrans('tblr', 'rlbt')
+            sides = sides.translate(t)
+
         data['size'] *= SIZE_FACTOR
 
         has_x = 'x' in data.columns
@@ -41,7 +50,6 @@ class geom_rug(geom):
             return
 
         rugs = []
-        sides = params['sides']
         xmin, xmax = panel_params['x_range']
         ymin, ymax = panel_params['y_range']
         xheight = (xmax-xmin)*0.03
