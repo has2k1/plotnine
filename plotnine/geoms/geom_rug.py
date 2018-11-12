@@ -21,11 +21,14 @@ class geom_rug(geom):
         Sides onto which to draw the marks. Any combination
         chosen from the characters ``btlr``, for *bottom*, *top*,
         *left* or *right* side marks.
+    length: float
+        length of marks in fractions of
+        horizontal/vertical panel size (default 0.03)
     """
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'sides': 'bl'}
+                      'na_rm': False, 'sides': 'bl', 'length': 0.03}
     legend_geom = 'path'
 
     @staticmethod
@@ -52,8 +55,8 @@ class geom_rug(geom):
         rugs = []
         xmin, xmax = panel_params['x_range']
         ymin, ymax = panel_params['y_range']
-        xheight = (xmax-xmin)*0.03
-        yheight = (ymax-ymin)*0.03
+        xheight = (xmax-xmin) * params['length']
+        yheight = (ymax-ymin) * params['length']
 
         if has_x:
             if 'b' in sides:

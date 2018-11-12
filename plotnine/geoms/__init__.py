@@ -47,6 +47,7 @@ from .geom_vline import geom_vline
 # other
 from .geom_path import arrow
 from .annotate import annotate
+from .annotation_logticks import annotation_logticks
 
 
 __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
@@ -64,4 +65,4 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
            'geom_smooth', 'geom_spoke', 'geom_step', 'geom_text',
            'geom_tile', 'geom_violin', 'geom_vline',
            # other
-           'arrow', 'annotate']
+           'arrow', 'annotate', 'annotation_logticks']

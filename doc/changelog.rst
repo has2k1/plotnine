@@ -17,6 +17,7 @@ New Features
 
 - :class:`~plotnine.geoms.geom_text` gained the ``adjust_text`` parameter,
   and can now repel text.
+- :class:`~plotnine.annotate.annotation_logticks` was added.
 
 Bug Fixes
 *********
