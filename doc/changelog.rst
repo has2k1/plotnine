@@ -27,6 +27,12 @@ Bug Fixes
 - Fixed bug where :class:`~plotnine.coords.coord_flp` would not flip
   geoms created by :class:`~plotnine.geoms.geom_rug` (:issue:`216`).
 
+Enhancements
+************
+
+- Legends are now plotted in a predictable order which dedends on how the plot
+  is constructed.
+
 v0.5.1
 ------
 (2018-10-17)

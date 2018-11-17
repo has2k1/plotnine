@@ -229,7 +229,8 @@ class Scales(list):
                 aws.update(s)
 
         # aesthetics that do not have scales present
-        new_aesthetics = set(aesthetics.keys()) - aws
+        # We preserve the order of the aesthetics
+        new_aesthetics = [x for x in aesthetics.keys() if x not in aws]
         if not new_aesthetics:
             return
 

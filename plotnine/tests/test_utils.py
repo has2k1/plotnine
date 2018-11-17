@@ -175,7 +175,7 @@ def test_defaults():
     d2 = {'a': 11, 'd': 4}
     d3 = {'a': 1, 'b': 2, 'c': 3, 'd': 4}
 
-    defaults(d1, d2)
+    d1 = defaults(d1, d2)
     assert d1 == d3
 
 

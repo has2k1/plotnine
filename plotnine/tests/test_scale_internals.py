@@ -453,3 +453,86 @@ def test_missing_data_discrete_scale():
          + geom_point(aes(fill='b'), stroke=0, size=10)
          )
     assert p + _theme == 'missing_data_discrete_scale'
+
+
+df = pd.DataFrame({
+    'x': range(4),
+    'y': range(4),
+    'w': list('wxyz'),
+    'z': list('abcd')
+})
+
+# Order of legend
+# The precedence is driven by
+# 1. The order in which the scales are added
+# 2. Order of aesthetics in the local (geom) aes calls
+# 2. Order of aesthetics in the global (ggplot)  aes calls
+
+
+def test_legend_ordering_global_aethetics_1():
+    # 1. color
+    # 2. shape
+    p = (ggplot(df)
+         + aes('x', 'y', color='w', shape='z')
+         + geom_point(size=5)
+         )
+
+    assert p + _theme == 'legend_ordering_global_aesthetics_1'
+
+
+def test_legend_ordering_global_aesthetics_2():
+    # 1. shape
+    # 2. color
+    p = (ggplot(df)
+         + aes('x', 'y', shape='z', color='w')
+         + geom_point(size=5)
+         )
+
+    assert p + _theme == 'legend_ordering_global_aesthetics_2'
+
+
+def test_legend_ordering_local_aethetics_1():
+    # 1. color
+    # 2. shape
+    p = (ggplot(df)
+         + aes('x', 'y')
+         + geom_point(aes(color='w', shape='z'), size=5)
+         )
+
+    assert p + _theme == 'legend_ordering_local_aesthetics_1'
+
+
+def test_legend_ordering_local_aethetics_2():
+    # 1. shape
+    # 2. color
+    p = (ggplot(df)
+         + aes('x', 'y')
+         + geom_point(aes(shape='z', color='w'), size=5)
+         )
+
+    assert p + _theme == 'legend_ordering_local_aesthetics_2'
+
+
+def test_legend_ordering_mixed_scope_aesthetics():
+    # The local(geom) aesthetics come first.
+    # 1. color
+    # 2. shape
+    p = (ggplot(df)
+         + aes('x', 'y', shape='z')
+         + geom_point(aes(color='w'), size=5)
+         )
+
+    assert p + _theme == 'legend_ordering_mixed_scope_aesthetics'
+
+
+def test_legend_ordering_added_scales():
+    # The first added scale comes first
+    # 1. color
+    # 2. shape
+    p = (ggplot(df)
+         + aes('x', 'y')
+         + geom_point(aes(shape='z', color='w'), size=5)
+         + scale_color.scale_color_discrete()
+         )
+
+    assert p + _theme == 'legend_ordering_added_scales'
