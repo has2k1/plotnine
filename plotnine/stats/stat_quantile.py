@@ -4,8 +4,8 @@ import pandas as pd
 import statsmodels.formula.api as smf
 
 from ..doctools import document
-from .stat import stat
 from ..exceptions import PlotnineWarning
+from .stat import stat
 
 
 # method_args are any of the keyword args (other than q) for

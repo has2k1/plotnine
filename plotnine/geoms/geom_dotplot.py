@@ -5,10 +5,10 @@ import matplotlib.collections as mcoll
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 
+from ..exceptions import PlotnineWarning
 from ..utils import groupby_apply, to_rgba, resolution
 from ..doctools import document
 from .geom import geom
-from ..exceptions import PlotnineWarning
 
 
 @document

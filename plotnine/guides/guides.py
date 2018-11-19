@@ -6,9 +6,9 @@ import pandas as pd
 import numpy as np
 from matplotlib.offsetbox import (HPacker, VPacker)
 
-from .guide import guide as guide_class
 from ..utils import is_string, is_waive, Registry
 from ..exceptions import PlotnineError, PlotnineWarning
+from .guide import guide as guide_class
 
 
 # Terminology

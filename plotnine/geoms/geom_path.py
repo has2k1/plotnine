@@ -8,11 +8,11 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 
+from ..exceptions import PlotnineWarning
 from ..doctools import document
 from ..utils import to_rgba, make_line_segments
 from ..utils import SIZE_FACTOR, match
 from .geom import geom
-from ..exceptions import PlotnineWarning
 
 
 @document

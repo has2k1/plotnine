@@ -3,9 +3,9 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from ..exceptions import PlotnineWarning
 from ..utils import remove_missing
 from .position import position
-from ..exceptions import PlotnineWarning
 
 
 class position_stack(position):

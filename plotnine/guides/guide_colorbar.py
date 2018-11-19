@@ -12,10 +12,10 @@ from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
 
 from ..aes import rename_aesthetics
+from ..exceptions import PlotnineWarning
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea
 from .guide import guide
-from ..exceptions import PlotnineWarning
 
 
 class guide_colorbar(guide):

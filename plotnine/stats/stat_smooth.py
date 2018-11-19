@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 
 from ..doctools import document
+from ..exceptions import PlotnineWarning
 from .smoothers import predictdf
 from .stat import stat
-from ..exceptions import PlotnineWarning
 
 
 @document

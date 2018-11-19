@@ -6,8 +6,8 @@ import scipy.stats as stats
 from scipy import linalg
 
 from ..doctools import document
-from .stat import stat
 from ..exceptions import PlotnineWarning
+from .stat import stat
 
 
 @document

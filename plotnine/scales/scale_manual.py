@@ -1,9 +1,9 @@
 from warnings import warn
 
 from ..doctools import document
+from ..exceptions import PlotnineWarning
 from ..utils import alias
 from .scale import scale_discrete
-from ..exceptions import PlotnineWarning
 
 
 @document

@@ -5,13 +5,13 @@ import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
+from ..exceptions import PlotnineWarning
 from ..utils import copy_missing_columns, to_rgba
 from ..utils import resolution, SIZE_FACTOR
 from ..doctools import document
 from .geom import geom
 from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
-from ..exceptions import PlotnineWarning
 
 
 @document

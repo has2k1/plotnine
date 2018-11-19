@@ -14,10 +14,9 @@ from mizani.transforms import gettrans
 
 from ..aes import is_position_aes, rename_aesthetics
 from ..doctools import document
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import match, waiver, is_waive, Registry
 from .range import Range, RangeContinuous, RangeDiscrete
-from ..exceptions import PlotnineWarning
 
 
 class scale(metaclass=Registry):

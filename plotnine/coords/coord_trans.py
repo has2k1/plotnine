@@ -4,9 +4,9 @@ from warnings import warn
 from mizani.bounds import expand_range_distinct, squish_infinite
 from mizani.transforms import gettrans
 
+from ..exceptions import PlotnineWarning
 from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
-from ..exceptions import PlotnineWarning
 
 
 class coord_trans(coord):

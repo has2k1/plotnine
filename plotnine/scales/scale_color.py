@@ -7,8 +7,8 @@ from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
 
 from ..utils import alias
 from ..doctools import document
-from .scale import scale_discrete, scale_continuous, scale_datetime
 from ..exceptions import PlotnineWarning
+from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
 # Discrete color scales #
