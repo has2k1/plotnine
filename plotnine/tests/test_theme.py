@@ -5,7 +5,7 @@ from plotnine import (theme, theme_538, theme_bw, theme_classic,
                       theme_dark, theme_gray, theme_light,
                       theme_linedraw, theme_matplotlib, theme_minimal,
                       theme_seaborn, theme_void, theme_xkcd)
-from plotnine import element_line, element_blank
+from plotnine import element_line, element_text, element_blank
 from plotnine.data import mtcars
 
 _theme = theme(subplots_adjust={'right': 0.80})
@@ -154,7 +154,12 @@ class TestThemes:
         assert p + _theme == 'theme_void'
 
     def test_theme_xkcd(self):
-        p = self.g + labs(title='Theme Xkcd') + theme_xkcd()
+        p = (self.g
+             + labs(title='Theme Xkcd')
+             + theme_xkcd()
+             # High likely hood of Comic Sans being available
+             + theme(text=element_text(family=['Comic Sans MS']))
+             )
 
         if os.environ.get('TRAVIS'):
             # Travis does not have the fonts, we still check
