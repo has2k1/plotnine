@@ -5,9 +5,9 @@ from matplotlib.text import Text
 try:
     from adjustText import adjust_text
 except ImportError:
-    HAS_ADJSUST_TEXT = False
+    HAS_ADJUST_TEXT = False
 else:
-    HAS_ADJSUST_TEXT = True
+    HAS_ADJUST_TEXT = True
 
 from ..utils import to_rgba
 from ..doctools import document
@@ -81,7 +81,7 @@ class geom_text(geom):
                 nudge_kwargs['y'] = kwargs['nudge_y']
             if nudge_kwargs:
                 kwargs['position'] = position_nudge(**nudge_kwargs)
-        elif not HAS_ADJSUST_TEXT:
+        elif not HAS_ADJUST_TEXT:
             raise PlotnineError(
                 "To use adjust_text you must install the adjustText "
                 "package."
@@ -112,9 +112,6 @@ class geom_text(geom):
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         super().draw_panel(data, panel_params, coord, ax, **params)
-        if params['adjust_text'] is not None:
-            texts = [t for t in ax.texts]
-            adjust_text(texts, ax=ax, **params['adjust_text'])
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
@@ -173,6 +170,9 @@ class geom_text(geom):
                 kw['bbox']['edgecolor'] = params['boxcolor'] or kw['color']
                 kw['bbox']['facecolor'] = kw.pop('facecolor')
             ax.text(**kw)
+
+        if params['adjust_text']:
+            adjust_text(list(ax.texts), ax=ax, **params['adjust_text'])
 
     @staticmethod
     def draw_legend(data, da, lyr):
