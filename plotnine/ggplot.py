@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-from copy import copy, deepcopy
+from copy import deepcopy
 from contextlib import suppress
 from warnings import warn
 
@@ -668,7 +668,7 @@ class ggplot:
             filename = os.path.join(path, filename)
 
         # Preserve the users object
-        self = copy(self)
+        self = deepcopy(self)
 
         # theme
         self.theme = self.theme or theme_get()

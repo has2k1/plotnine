@@ -3,7 +3,9 @@ import os
 import matplotlib.pyplot as plt
 import pytest
 
-from plotnine import ggplot, aes, geom_text, ggsave
+import pandas as pd
+from plotnine import (ggplot, aes, geom_text, geom_point, facet_wrap,
+                      ggsave, theme_xkcd)
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
@@ -35,7 +37,7 @@ def assert_exist_and_clean(filename, msg=None):
 
 class TestArguments:
     def test_default_filename(self):
-        p.save()
+        p.save(verbose=False)
         fn = p._save_filename('pdf')
         assert_exist_and_clean(fn, "default filename")
 
@@ -70,21 +72,21 @@ class TestArguments:
 
     def test_filename_plot_path(self):
         fn = next(filename_gen)
-        p.save(fn, path='.')
+        p.save(fn, path='.', verbose=False)
         assert_exist_and_clean(fn, "fn, plot and path")
 
     def test_format_png(self):
-        p.save(format='png')
+        p.save(format='png', verbose=False)
         fn = p._save_filename('png')
         assert_exist_and_clean(fn, "format png")
 
     def test_dpi(self):
         fn = next(filename_gen)
-        p.save(fn, dpi=100)
+        p.save(fn, dpi=100, verbose=False)
         assert_exist_and_clean(fn, "dpi = 100")
 
     def test_ggsave(self):
-        ggsave(p)
+        ggsave(p, verbose=False)
         fn = p._save_filename('pdf')
         assert_exist_and_clean(fn, "default filename")
 
@@ -93,14 +95,36 @@ class TestArguments:
         # supplying the ggplot object will work without
         # printing it first! 26 is the current limit, just go
         # over it to not use too much memory
-        p.save(fn, width=26, height=26, limitsize=False)
+        p.save(fn, width=26, height=26, limitsize=False, verbose=False)
         assert_exist_and_clean(fn, "big height and width")
+
+    def test_dpi_theme_xkcd(self):
+        fn1 = next(filename_gen)
+        fn2 = next(filename_gen)
+
+        df = pd.DataFrame({
+            'x': range(4),
+            'y': range(4),
+            'b': list('aabb')
+        })
+
+        p = (
+            ggplot(df)
+            + geom_point(aes('x', 'y'))
+            + facet_wrap('b')
+            + theme_xkcd()
+        )
+        p.save(fn1, verbose=False)
+        assert_exist_and_clean(fn1, "Saving with theme_xkcd and dpi (1)")
+
+        p.save(fn2, dpi=72, verbose=False)
+        assert_exist_and_clean(fn2, "Saving with theme_xkcd and dpi (2)")
 
 
 class TestExceptions:
     def test_unknown_format(self):
         with pytest.raises(Exception):
-            p.save(format='unknown')
+            p.save(format='unknown', verbose=False)
 
     def test_width_only(self):
         with pytest.raises(PlotnineError):
@@ -128,6 +152,6 @@ class TestExceptions:
 def test_ggsave_closes_plot():
     assert plt.get_fignums() == [], "There are unsaved test plots"
     fn = next(filename_gen)
-    p.save(fn)
+    p.save(fn, verbose=False)
     assert_exist_and_clean(fn, "exist")
     assert plt.get_fignums() == [], "ggplot.save did not close the plot"

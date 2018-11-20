@@ -27,6 +27,9 @@ Bug Fixes
 - Fixed bug where :class:`~plotnine.coords.coord_flp` would not flip
   geoms created by :class:`~plotnine.geoms.geom_rug` (:issue:`216`).
 
+- Fixed bug where plots with :class:`~plotnine.themes.theme_xkcd` cannot be
+  saved twice (:issue:`199`)
+
 Enhancements
 ************
 
