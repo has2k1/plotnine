@@ -19,6 +19,9 @@ class geom_violin(geom):
     Parameters
     ----------
     {common_parameters}
+    draw_quantiles: float or [float]
+       draw horizontal lines at the given quantiles (0..1)
+       of the density estimate.
     """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}
@@ -27,6 +30,17 @@ class geom_violin(geom):
                       'draw_quantiles': None, 'scale': 'area',
                       'trim': True, 'width': None, 'na_rm': False}
     legend_geom = 'polygon'
+
+    def __init__(self, *args, **kwargs):
+        if 'draw_quantiles' in kwargs:
+            kwargs['draw_quantiles'] = pd.Series(kwargs['draw_quantiles'],
+                                                 dtype=float)
+            if not kwargs['draw_quantiles'].between(0, 1,
+                                                    inclusive=False).all():
+                raise ValueError(
+                    "draw_quantiles must be a float or"
+                    " an iterable of floats (>0.0; < 1.0)")
+        super().__init__(*args, **kwargs)
 
     def setup_data(self, data):
         if 'width' not in data:
@@ -76,7 +90,7 @@ class geom_violin(geom):
             geom_polygon.draw_group(polygon_df, panel_params,
                                     coord, ax, **params)
 
-            if quantiles:
+            if quantiles is not None:
                 # Get dataframe with quantile segments and that
                 # with aesthetics then put them together
                 # Each quantile segment is defined by 2 points and
