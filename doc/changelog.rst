@@ -40,6 +40,9 @@ Enhancements
 - Legends are now plotted in a predictable order which dedends on how the plot
   is constructed.
 
+-  The spokes drawn by :class:`~plotnine.geoms.geom_spoke` can now have a fixed
+   angle.
+
 v0.5.1
 ------
 (2018-10-17)

@@ -23,3 +23,9 @@ def test_aesthetics():
          geom_spoke(aes('x+8', size='z')))
 
     assert p + _theme == 'aesthetics'
+
+
+def test_unmapped_angle():
+    p = (ggplot(df, aes(y='y', angle='angle', radius='radius')) +
+         geom_spoke(aes('x', 'y'), angle=0, radius=1))
+    assert p + _theme == 'test_unmapped_angle'
