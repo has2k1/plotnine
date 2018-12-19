@@ -27,7 +27,11 @@ class geom_spoke(geom_segment):
             radius = data['radius']
         except KeyError:
             radius = self.aes_params['radius']
+        try:
+            angle = data['angle']
+        except KeyError:
+            angle = self.aes_params['angle']
 
-        data['xend'] = data['x'] + np.cos(data['angle']) * radius
-        data['yend'] = data['y'] + np.sin(data['angle']) * radius
+        data['xend'] = data['x'] + np.cos(angle) * radius
+        data['yend'] = data['y'] + np.sin(angle) * radius
         return data
