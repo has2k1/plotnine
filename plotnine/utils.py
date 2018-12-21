@@ -1134,3 +1134,30 @@ class array_kind:
     @staticmethod
     def timedelta(arr):
         return arr.dtype.kind == 'm'
+
+
+def log(x, base=None):
+    """
+    Calculate the log
+
+    Parameters
+    ----------
+    x : float or array_like
+        Input values
+    base : int or float (Default: None)
+        Base of the log. If `None`, the natural logarithm
+        is computed (`base=np.e`).
+
+    Returns
+    -------
+    out : float or ndarray
+        Calculated result
+    """
+    if base == 10:
+        return np.log10(x)
+    elif base == 2:
+        return np.log2(x)
+    elif base is None or base == np.e:
+        return np.log(x)
+    else:
+        return np.log(x)/np.log(base)
