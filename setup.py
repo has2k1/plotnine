@@ -28,8 +28,7 @@ __classifiers__ = [
     'Operating System :: Microsoft :: Windows',
     'Operating System :: Unix',
     'Operating System :: MacOS',
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 3'
+    'Programming Language :: Python :: 3 :: Only'
 ]
 
 
@@ -46,7 +45,7 @@ def get_required_packages():
 
     Plus any version tests and warnings
     """
-    install_requires = ['mizani >= 0.5.2',
+    install_requires = ['mizani >= 0.5.3',
                         'matplotlib >= 3.0.0',
                         'numpy',
                         'scipy >= 1.0.0',
