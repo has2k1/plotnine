@@ -25,11 +25,14 @@ Bug Fixes
 - Fixed bug where facetting would fail if done on a plot with annotation(s)
   and one of the facetting columns was also a variable in the environment.
 
-- Fixed bug where :class:`~plotnine.coords.coord_flp` would not flip
+- Fixed bug where :class:`~plotnine.coords.coord_flip` would not flip
   geoms created by :class:`~plotnine.geoms.geom_rug` (:issue:`216`).
 
 - Fixed bug where plots with :class:`~plotnine.themes.theme_xkcd` cannot be
   saved twice (:issue:`199`)
+
+- Fixed bug that made it impossible to map to columns with the same name as
+  a calculated columns of the stat. (:issue:`234`)
 
 Enhancements
 ************

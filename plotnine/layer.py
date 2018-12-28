@@ -400,7 +400,10 @@ class layer:
         if self.stat.retransform:
             stat_data = plot.scales.transform_df(stat_data)
 
-        self.data = pd.concat([data, stat_data], axis=1)
+        # When there are duplicate columns, we use the computed
+        # ones in stat_data
+        columns = data.columns.difference(stat_data.columns)
+        self.data = pd.concat([data[columns], stat_data], axis=1)
 
         # Add any new scales, if needed
         plot.scales.add_defaults(self.data, new)
