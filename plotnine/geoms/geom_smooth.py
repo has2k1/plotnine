@@ -61,7 +61,12 @@ class geom_smooth(geom):
         -------
         out : DrawingArea
         """
-        if lyr.stat.params['se']:
+        try:
+            has_se = lyr.stat.params['se']
+        except KeyError:
+            has_se = False
+
+        if has_se:
             r = lyr.geom.params['legend_fill_ratio']
             bg = Rectangle((0, (1-r)*da.height/2),
                            width=da.width,

@@ -34,6 +34,10 @@ Bug Fixes
 - Fixed bug that made it impossible to map to columns with the same name as
   a calculated columns of the stat. (:issue:`234`)
 
+- Fixed bug in :class:`~plotnine.geoms.geom_smooth` that made it difficult
+  to use it with stats other than :class:`~plotnine.stats.stat_smooth`.
+  (:issue:`242`)
+
 Enhancements
 ************
 
