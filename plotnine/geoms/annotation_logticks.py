@@ -205,6 +205,3 @@ class annotation_logticks(annotate):
                                                linetype=linetype,
                                                lengths=lengths,
                                                base=base)
-
-    def __radd__(self, gg, inplace=False):
-        return self._annotation_geom.__radd__(gg, inplace=inplace)
