@@ -38,6 +38,10 @@ Bug Fixes
   to use it with stats other than :class:`~plotnine.stats.stat_smooth`.
   (:issue:`242`)
 
+- Fixed bug in :class:`~plotnine.postions.position_dodge` where by bar plot
+  could get thinner when facetting and useing ``preserve = 'single'``.
+  (:issue:`224`)
+
 Enhancements
 ************
 

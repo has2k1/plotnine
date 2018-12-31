@@ -1,9 +1,11 @@
 from contextlib import suppress
 from copy import copy
+
 import numpy as np
+import pandas as pd
 
 from ..exceptions import PlotnineError
-from ..utils import match
+from ..utils import match, groupby_apply
 from .position import position
 
 
@@ -39,8 +41,14 @@ class position_dodge(position):
         if params['preserve'] == 'total':
             params['n'] = None
         else:
-            params['n'] = data['xmin'].value_counts().max()
+            # Count at the xmin values per panel and find the highest
+            # overall count
+            def max_xmin_values(gdf):
+                n = gdf['xmin'].value_counts().max()
+                return pd.DataFrame({'n': [n]})
 
+            res = groupby_apply(data, 'PANEL', max_xmin_values)
+            params['n'] = res['n'].max()
         return params
 
     @classmethod
