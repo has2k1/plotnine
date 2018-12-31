@@ -143,12 +143,7 @@ class position(metaclass=Registry):
         return data
 
     @classmethod
-    def collide(cls, data, params):
-        """
-        Calculate boundaries of geometry object
-
-        Uses Strategy
-        """
+    def _collide_setup(cls, data, params):
         xminmax = ['xmin', 'xmax']
         width = params.get('width', None)
 
@@ -166,7 +161,21 @@ class position(metaclass=Registry):
             # Width determined from data, must be floating point constant
             widths = (data['xmax'] - data['xmin']).drop_duplicates()
             widths = widths[~np.isnan(widths)]
-            params['width'] = widths.iloc[0]
+            width = widths.iloc[0]
+
+        return data, width
+
+    @classmethod
+    def collide(cls, data, params):
+        """
+        Calculate boundaries of geometry object
+
+        Uses Strategy
+        """
+        xminmax = ['xmin', 'xmax']
+        data, width = cls._collide_setup(data, params)
+        if params.get('width', None) is None:
+            params['width'] = width
 
         # Reorder by x position then on group, relying on stable sort to
         # preserve existing ordering. The default stacking order reverses
@@ -201,6 +210,33 @@ class position(metaclass=Registry):
             raise PlotnineError('Neither y nor ymax defined')
 
         return data
+
+    @classmethod
+    def collide2(cls, data, params):
+        """
+        Calculate boundaries of geometry object
+
+        Uses Strategy
+        """
+        data, width = cls._collide_setup(data, params)
+        if params.get('width', None) is None:
+            params['width'] = width
+
+        # Reorder by x position then on group, relying on stable sort to
+        # preserve existing ordering. The default stacking order reverses
+        # the group in order to match the legend order.
+        if params and 'reverse' in params and params['reverse']:
+            data['-group'] = -data['group']
+            idx = data.sort_values(
+                ['x', '-group'], kind='mergesort').index
+            del data['-group']
+        else:
+            idx = data.sort_values(
+                ['x', 'group'], kind='mergesort').index
+
+        data = data.loc[idx, :]
+        data.reset_index(inplace=True, drop=True)
+        return cls.strategy(data, params)
 
 
 transform_position = position.transform_position

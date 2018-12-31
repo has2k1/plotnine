@@ -10,6 +10,7 @@ from plotnine.data import mtcars
 from plotnine.utils import _margins, add_margins, ninteraction
 from plotnine.utils import join_keys, match, uniquecols, defaults
 from plotnine.utils import remove_missing, groupby_with_null
+from plotnine.utils import pivot_apply
 
 
 def test__margins():
@@ -207,3 +208,18 @@ def test_groupby_with_null():
     assert(len(list(groupby_with_null(df, 'x'))) == 6)
     assert(len(list(groupby_with_null(df, 'y'))) == 3)
     assert(len(list(groupby_with_null(df, 'z'))) == 3)
+
+
+def test_pivot_apply():
+    df = pd.DataFrame({
+        'id': list('abcabc'),
+        'x': [1, 2, 3, 11, 22, 33],
+        'y': [1, 2, 3, 11, 22, 33],
+    })
+
+    res1 = pivot_apply(df, 'x', 'id', np.min)
+    res2 = pivot_apply(df, 'y', 'id', np.max)
+
+    assert res1.index.tolist() == list('abc')
+    assert res1.index.name == 'id'
+    assert (res1 + res2 == [12, 24, 36]).all()

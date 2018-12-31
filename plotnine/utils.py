@@ -633,6 +633,41 @@ def groupby_apply(df, cols, func, *args, **kwargs):
     return pd.concat(lst, axis=axis, ignore_index=True)
 
 
+def pivot_apply(df, column, index, func, *args, **kwargs):
+    """
+    Apply a function to each group of a column
+
+    The function is kind of equivalent to R's *tapply*.
+
+    Parameters
+    ----------
+    df : dataframe
+        Dataframe to be pivoted
+    column : str
+        Column to apply function to.
+    index : str
+        Column that will be grouped on (and whose unique values
+        will make up the index of the returned dataframe)
+    func : function
+        Function to apply to each column group. It *should* return
+        a single value.
+    *args : tuple
+        Arguments to ``func``
+    **kwargs : dict
+        Keyword arguments to ``func``
+
+    Returns
+    -------
+    out : dataframe
+        Dataframe with index ``index`` and column ``column`` of
+        computed/aggregate values .
+    """
+    def _func(x):
+        return func(x, *args, **kwargs)
+
+    return df.pivot_table(column, index, aggfunc=_func)[column]
+
+
 def groupby_with_null(data, *args, **kwargs):
     """
     Groupby on columns with NaN/None/Null values

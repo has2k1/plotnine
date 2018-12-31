@@ -5,18 +5,26 @@ import pandas as pd
 import pytest
 
 from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
-                      geom_col, geom_text, position_dodge,
+                      geom_col, geom_boxplot, geom_text,
+                      position_dodge, position_dodge2,
                       position_jitter, position_jitterdodge,
                       position_nudge, position_stack, theme)
 from plotnine.positions.position import position
 from plotnine.exceptions import PlotnineError
 
 n = 6
+m = 10
 random_state = np.random.RandomState(1234567890)
 df1 = pd.DataFrame({'x': [1, 2, 1, 2],
                     'y': [1, 1, 2, 2]})
 df2 = pd.DataFrame({'x': np.repeat(range(n+1), range(n+1)),
                     'z': np.repeat(range(n//2), range(3, n*2, 4))})
+df3 = pd.DataFrame({
+    'x': random_state.choice(['A', 'B'], n*m),
+    'y': random_state.randint(0, 20, n*m),
+    'c': random_state.choice([False, False, True, False], n*m)
+})
+random_state.seed(1234567890)
 _theme = theme(subplots_adjust={'right': 0.85})
 
 
@@ -81,6 +89,22 @@ def test_dodge_preserve_single():
     p = (ggplot(df1, aes('x', fill='y')) +
          geom_bar(position=position_dodge(preserve='single')))
     assert p + _theme == 'dodge_preserve_single'
+
+
+def test_dodge2():
+    p = (ggplot(df3, aes('x', 'y', color='c')) +
+         geom_boxplot(position='dodge2', size=2))
+    assert p + _theme == 'dodge2'
+
+
+def test_dodge2_varwidth():
+    p = (ggplot(df3, aes('x', 'y', color='c')) +
+         geom_boxplot(
+             position=position_dodge2(preserve='single'),
+             varwidth=True,
+             size=2)
+         )
+    assert p + _theme == 'dodge2_varwidth'
 
 
 def test_jitterdodge():

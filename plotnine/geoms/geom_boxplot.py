@@ -1,9 +1,14 @@
+from warnings import warn
+
 import numpy as np
 import pandas as pd
 import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
 from ..doctools import document
+from ..exceptions import PlotnineWarning
+from ..positions import position_dodge2
+from ..positions.position import position
 from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
 from ..utils import resolution, SIZE_FACTOR
 from .geom_point import geom_point
@@ -48,13 +53,29 @@ class geom_boxplot(geom):
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5,
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge',
+    DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge2',
                       'na_rm': False,
                       'outlier_alpha': 1, 'outlier_color': None,
                       'outlier_shape': 'o', 'outlier_size': 1.5,
                       'outlier_stroke': 0.5, 'notch': False,
                       'varwidth': False, 'notchwidth': 0.5,
                       'fatten': 2}
+
+    def __init__(self, *args, **kwargs):
+        _position = kwargs.get('position', self.DEFAULT_PARAMS['position'])
+        varwidth = kwargs.get('varwidth', self.DEFAULT_PARAMS['varwidth'])
+
+        # varwidth = True is not compatible with preserve='total'
+        if varwidth:
+            if isinstance(_position, str):
+                kwargs['position'] = position_dodge2(preserve='single')
+            elif isinstance(_position, position):
+                if _position.params['preserve'] == 'total':
+                    warn("Cannot preserve total widths when varwidth=True",
+                         PlotnineWarning)
+                    _position.params['preserve'] = 'single'
+
+        super().__init__(*args, **kwargs)
 
     def setup_data(self, data):
         if 'width' not in data:

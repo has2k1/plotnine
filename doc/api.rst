@@ -388,6 +388,7 @@ are adjusted. That is what the ``position_*`` class do. Each
    :template: main.rst
 
    position_dodge
+   position_dodge2
    position_fill
    position_identity
    position_jitter
