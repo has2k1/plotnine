@@ -3,6 +3,7 @@ from copy import deepcopy
 import pandas as pd
 
 from ..aes import get_calculated_aes
+from ..layer import layer
 from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import groupby_apply, copy_keys, uniquecols
 from ..utils import is_string, Registry, check_required_aesthetics
@@ -357,6 +358,19 @@ class stat(metaclass=Registry):
         out : ggplot
             ggplot object with added layer
         """
+        gg = gg if inplace else deepcopy(gg)
+        gg += self.to_layer()  # Add layer
+        return gg
+
+    def to_layer(self):
+        """
+        Make a layer that represents this stat
+
+        Returns
+        -------
+        out : layer
+            Layer
+        """
+        # Create, geom from stat, then layer from geom
         from ..geoms.geom import geom
-        _geom = geom.from_stat(self)
-        return _geom.__radd__(gg, inplace=inplace)
+        return layer.from_geom(geom.from_stat(self))

@@ -57,3 +57,24 @@ class TestLayers:
 
         p3 = p + (self.lyrs[:1] + self.lyrs[2:])
         assert _get_colors(p3) == colors[::2]
+
+
+def test_inserting_layers():
+    class as_first_layer:
+        def __init__(self, obj):
+            self.obj = obj
+
+        def __radd__(self, gg):
+            gg.layers.insert(0, self.obj.to_layer())
+            return gg
+
+        def __rsub__(self, gg):
+            return self.__radd__(gg)
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point(size=4)
+         + as_first_layer(geom_point(color='cyan', size=8))
+         - as_first_layer(geom_point(color='red', size=12))
+         )
+
+    assert p == 'inserting_layers'

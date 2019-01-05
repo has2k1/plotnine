@@ -351,10 +351,19 @@ class geom(metaclass=Registry):
             ggplot object with added layer.
         """
         gg = gg if inplace else deepcopy(gg)
-
-        # create and add layer
-        gg += layer.from_geom(self)
+        gg += self.to_layer()  # Add layer
         return gg
+
+    def to_layer(self):
+        """
+        Make a layer that represents this geom
+
+        Returns
+        -------
+        out : layer
+            Layer
+        """
+        return layer.from_geom(self)
 
     def _verify_arguments(self, kwargs):
         """

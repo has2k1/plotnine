@@ -10,8 +10,9 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, get_calculated_aes, stat, make_labels
+from .aes import aes, get_calculated_aes, stat
 from .aes import strip_calculated_markers, NO_GROUP
+
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -112,6 +113,10 @@ class Layers(list):
         for l in self:
             l.finish_statistics()
 
+    def update_labels(self, plot):
+        for l in self:
+            plot._update_labels(l)
+
 
 class layer:
     """
@@ -200,12 +205,6 @@ class layer:
         except AttributeError:
             msg = "Cannot add layer to object of type {!r}".format
             raise PlotnineError(msg(type(gg)))
-
-        # Add any new labels
-        mapping = make_labels(self.mapping)
-        default = make_labels(self.stat.DEFAULT_AES)
-        new_labels = defaults(mapping, default)
-        gg.labels = defaults(gg.labels, new_labels)
         return gg
 
     def __deepcopy__(self, memo):

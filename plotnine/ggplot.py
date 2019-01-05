@@ -18,7 +18,7 @@ from .facets import facet_null
 from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme, theme_get
-from .utils import to_inches, from_inches, order_as_mapping_data
+from .utils import to_inches, from_inches, defaults, order_as_mapping_data
 from .exceptions import PlotnineError, PlotnineWarning
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -271,6 +271,9 @@ class ggplot:
         layers = self.layers
         scales = self.scales
         layout = self.layout
+
+        # Update the label information for the plot
+        layers.update_labels(self)
 
         # Give each layer a copy of the data that it will need
         layers.generate_data(self.data)
@@ -619,6 +622,21 @@ class ggplot:
         """
         hash_token = abs(self.__hash__())
         return 'plotnine-save-{}.{}'.format(hash_token, ext)
+
+    def _update_labels(self, layer):
+        """
+        Update label data for the ggplot
+
+        Parameters
+        ----------
+        layer : layer
+            New layer that has just been added to the ggplot
+            object.
+        """
+        mapping = make_labels(layer.mapping)
+        default = make_labels(layer.stat.DEFAULT_AES)
+        new_labels = defaults(mapping, default)
+        self.labels = defaults(self.labels, new_labels)
 
     def save(self, filename=None, format=None, path=None,
              width=None, height=None, units='in',

@@ -110,6 +110,9 @@ Enhancements
 - The mid-point color of :class:`~plotnine.scales.scale_color_distiller` now
   matches that of the trainned data.
 
+- The way in which layers are created has been refactored to give packages that
+  that extend plotnine more flexibility in manipulating the layers.
+
 v0.5.1
 ------
 (2018-10-17)

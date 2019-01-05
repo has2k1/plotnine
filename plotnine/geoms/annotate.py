@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import pandas as pd
 
 from ..aes import aes
@@ -99,4 +101,17 @@ class annotate:
                                      **kwargs)
 
     def __radd__(self, gg, inplace=False):
-        return self._annotation_geom.__radd__(gg, inplace=inplace)
+        gg = gg if inplace else deepcopy(gg)
+        gg += self.to_layer()  # Add layer
+        return gg
+
+    def to_layer(self):
+        """
+        Make a layer that represents this annotation
+
+        Returns
+        -------
+        out : layer
+            Layer
+        """
+        return self._annotation_geom.to_layer()
