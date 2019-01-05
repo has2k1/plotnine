@@ -17,9 +17,9 @@ class element_line:
     colour : str | tuple
         Alias of color
     linetype : str | tuple
-        Line style. See
-        :meth:`matplotlib.lines.Line2D.set_linestyle`
-        for specification.
+        Line style. If a string, it should be one of *solid*, *dashed*,
+        *dashdot* or *dotted*. You can create interesting dashed patterns
+        useing tuples, see :meth:`matplotlib.lines.Line2D.set_linestyle`.
     size : float
         Line thickness
     kwargs : dict
