@@ -17,6 +17,8 @@ scaled_aesthetics = {
 }
 
 
+NO_GROUP = -1
+
 # Calculated aesthetics searchers
 STAT_RE = re.compile(r'\bstat\(')
 DOTS_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
@@ -424,3 +426,22 @@ def is_valid_aesthetic(value, ae):
     # for special cases to be discovered and then coded
     # for appropriately.
     return False
+
+
+def has_groups(data):
+    """
+    Check if data is grouped
+
+    Parameters
+    ----------
+    data : dataframe
+        Data
+
+    Returns
+    -------
+    out : bool
+        If True, the data has groups.
+    """
+    # If any row in the group column is equal to NO_GROUP, then
+    # the data all of them are and the data has no groups
+    return data.loc[0, 'group'] != NO_GROUP

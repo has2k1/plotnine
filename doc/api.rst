@@ -80,6 +80,7 @@ distinct visual aspects of the representation are controlled by the
    geom_ribbon
    geom_rug
    geom_segment
+   geom_sina
    geom_smooth
    geom_spoke
    geom_step
@@ -152,6 +153,7 @@ with a ``geom`` that can represent all or some of the computations.
    stat_qq
    stat_qq_line
    stat_quantile
+   stat_sina
    stat_smooth
    stat_sum
    stat_summary

@@ -11,7 +11,7 @@ from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
 from .aes import aes, get_calculated_aes, stat, make_labels
-from .aes import strip_calculated_markers
+from .aes import strip_calculated_markers, NO_GROUP
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -469,9 +469,6 @@ class layer:
         """
         # params = self.stat.setup_params(self.data)
         self.stat.finish_layer(self.data, self.stat.params)
-
-
-NO_GROUP = -1
 
 
 def add_group(data):

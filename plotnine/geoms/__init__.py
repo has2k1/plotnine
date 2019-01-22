@@ -36,6 +36,7 @@ from .geom_rect import geom_rect
 from .geom_ribbon import geom_ribbon
 from .geom_rug import geom_rug
 from .geom_segment import geom_segment
+from .geom_sina import geom_sina
 from .geom_smooth import geom_smooth
 from .geom_spoke import geom_spoke
 from .geom_step import geom_step
@@ -61,7 +62,7 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
            'geom_pointrange', 'geom_pointrange',
            'geom_quantile', 'geom_qq', 'geom_qq_line',
            'geom_polygon', 'geom_rect',
-           'geom_ribbon', 'geom_rug', 'geom_segment',
+           'geom_ribbon', 'geom_rug', 'geom_segment', 'geom_sina',
            'geom_smooth', 'geom_spoke', 'geom_step', 'geom_text',
            'geom_tile', 'geom_violin', 'geom_vline',
            # other
