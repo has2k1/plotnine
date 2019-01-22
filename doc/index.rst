@@ -19,6 +19,7 @@ simple plots remain simple.
 Example
 -------
 .. code:: python
+
     from plotnine import ggplot, geom_point, aes, stat_smooth
     from plotnine.data import mtcars
     
