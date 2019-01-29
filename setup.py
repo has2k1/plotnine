@@ -50,7 +50,7 @@ def get_required_packages():
                         'numpy',
                         'scipy >= 1.0.0',
                         'patsy >= 0.4.1',
-                        'statsmodels >= 0.8.0',
+                        'statsmodels >= 0.9.0',
                         'pandas >= 0.23.4',
                         # 'geopandas >= 0.3.0',
                         'descartes >= 1.1.0'
