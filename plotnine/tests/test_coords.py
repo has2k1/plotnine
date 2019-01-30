@@ -26,3 +26,12 @@ def test_coord_fixed():
 def test_coord_trans():
     double_trans = trans_new('double', np.square, np.sqrt)
     assert p + coord_trans(y=double_trans) == 'coord_trans'
+
+
+def test_coord_trans_reverse():
+    # coord trans can reverse continous and discrete data
+    p = (ggplot(df, aes('factor(x)'))
+         + geom_bar(aes(fill='factor(z)'), show_legend=False)
+         + coord_trans(x='reverse', y='reverse')
+         )
+    assert p == 'coord_trans_reverse'

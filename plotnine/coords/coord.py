@@ -180,8 +180,8 @@ def munch_data(data, dist):
 
     # How many endpoints for each old segment,
     # not counting the last one
+    dist[np.isnan(dist)] = 1
     extra = np.maximum(np.floor(dist/segment_length), 1)
-    extra[np.isnan(extra)] = 1
     extra = extra.astype(int, copy=False)
 
     # Generate extra pieces for x and y values

@@ -1,6 +1,7 @@
 import types
 from warnings import warn
 
+import numpy as np
 from mizani.bounds import expand_range_distinct, squish_infinite
 from mizani.transforms import gettrans
 
@@ -75,7 +76,7 @@ class coord_trans(coord):
             out = scale.break_info(rangee)
 
             # trans'd range
-            out['range'] = trans.transform(out['range'])
+            out['range'] = np.sort(trans.transform(out['range']))
 
             if limits is None:
                 expand = self.expand_default(scale)

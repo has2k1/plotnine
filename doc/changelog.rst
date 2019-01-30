@@ -42,6 +42,10 @@ Bug Fixes
   could get thinner when facetting and useing ``preserve = 'single'``.
   (:issue:`224`)
 
+- Fixed bug in :class:`~plotnine.coord.coord_trans` where if the transformation
+  reversed the original limits, the order in which the data was laid out remained
+  unchanged. (:issue:`253`)
+
 Enhancements
 ************
 
