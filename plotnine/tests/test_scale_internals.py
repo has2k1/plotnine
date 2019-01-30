@@ -5,7 +5,8 @@ import numpy.testing as npt
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, expand_limits, theme
+from plotnine import (
+    ggplot, aes, geom_point, geom_tile, expand_limits, theme, facet_wrap)
 from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -536,3 +537,69 @@ def test_legend_ordering_added_scales():
          )
 
     assert p + _theme == 'legend_ordering_added_scales'
+
+
+def test_reversed_transformed_continuous_y_scale():
+    df = pd.DataFrame({
+        'p': [0.001, 0.0001, 0.1, 0.2, 0.3, 0.4, 0.5, 1],
+        'c': ['pink', 'yellow', 'red', 'blue', 'lightblue',
+              'purple', 'green', 'black'],
+        'x': ['x'] * 8
+    })
+    p = (ggplot(df)
+         + geom_point(aes('x', 'p', color='c'))
+         + scale_identity.scale_color_identity()
+         + scale_xy.scale_y_reverse(trans='log10', reverse=True))
+    assert p + _theme == 'reversed_transformed_continuous_y_scale'
+
+
+def test_reversed_transformed_continuous_x_scale():
+    df = pd.DataFrame({
+        'p': [0.001, 0.0001, 0.1, 0.2, 0.3, 0.4, 0.5, 1],
+        'c': ['pink', 'yellow', 'red', 'blue', 'lightblue',
+              'purple', 'green', 'black'],
+        'x': ['x'] * 8
+    })
+    p = (ggplot(df)
+         + geom_point(aes('p', 'p', color='c'))
+         + scale_identity.scale_color_identity()
+         + scale_xy.scale_x_reverse(trans='log10', reverse=True))
+    assert p + _theme == 'reversed_transformed_continuous_x_scale'
+
+
+def test_reversed_transformed_continuous_scales_facet():
+    from plotnine.data import diamonds
+    p = (ggplot(diamonds.head(100))
+         + geom_point(aes('carat', 'price'))
+         + scale_xy.scale_y_continuous(reverse=True)
+         + scale_xy.scale_x_continuous(trans='log10', reverse=True)
+         + facet_wrap('color'))
+    assert p + _theme == 'reversed_transformed_continuous_scales_facet'
+
+
+def test_reversed_discrete_scale():
+    from plotnine.data import diamonds
+    df = (diamonds
+          .groupby(['cut', 'color'])[['price']]
+          .agg('mean').reset_index())
+    p = (ggplot(df)
+         + geom_tile(aes('cut', 'color', fill='price'))
+         + scale_xy.scale_x_discrete(reverse=True)
+         + scale_xy.scale_y_discrete(reverse=True)
+         + geom_point(aes('x', 'y'), data=pd.DataFrame({'x': [1], 'y': [2]})))
+    assert p + _theme == 'reversed_discrete_scale'
+
+
+def test_reversed_discrete_scale_facet():
+    from plotnine.data import diamonds
+    df = (diamonds[diamonds.clarity.isin(['I1', 'IF', 'S1'])]
+          .groupby(['cut', 'color', 'clarity'])[['price']]
+          .agg('mean').reset_index())
+    df = df[~pd.isnull(df['price'])]
+    p = (ggplot(df)
+         + geom_tile(aes('color', 'cut', fill='price'))
+         + scale_xy.scale_x_discrete(reverse=True)
+         + scale_xy.scale_y_discrete(reverse=True)
+         + geom_point(aes('x', 'y'), data=pd.DataFrame({'x': [1], 'y': [2]}))
+         + facet_wrap('clarity'))
+    assert p + _theme == 'reversed_discrete_scale_facet'

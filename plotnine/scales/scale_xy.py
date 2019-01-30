@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
+from mizani.transforms import trans_new
 
 from ..doctools import document
 from ..utils import identity, match, alias, array_kind
@@ -24,6 +25,10 @@ class scale_position_discrete(scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
+
+    reverse : bool
+        Reverse the order on the axis.
+        Default: False
     """
     # All positions have no guide
     guide = None
@@ -34,6 +39,8 @@ class scale_position_discrete(scale_discrete):
 
     # Keeps two ranges, range and range_c
     range_c = RangeContinuous
+
+    reverse = False
 
     def __init__(self, *args, **kwargs):
         self.range_c = self.range_c()
@@ -70,7 +77,12 @@ class scale_position_discrete(scale_discrete):
             limits = self.limits
         if array_kind.discrete(series):
             seq = np.arange(1, len(limits)+1)
+            if self.reverse:
+                seq = seq[::-1]
             return seq[match(series, limits)]
+        else:
+            if self.reverse:
+                return len(limits) + 1 - series
         return series
 
     @property
@@ -118,6 +130,33 @@ class scale_position_discrete(scale_discrete):
             return a.min(), a.max()
 
 
+def reverse_transform(trans):
+    """Take a transform and make it go from high to low
+    instead of low to high
+    """
+    def inverse_breaks(limits):
+        return trans.breaks(tuple(sorted(limits)))
+
+    def inverse_minor_breaks(major, limits):
+        return trans.minor_breaks(major, tuple(sorted(limits)))
+
+    if trans.__class__.__name__ != 'type':
+        name = '-' + trans.__class__.__name__
+    else:
+        name = '-' + trans.__name__
+    if name.endswith('_trans'):
+        name = name[:-len('_trans')]
+    return trans_new(
+        name,
+        lambda x: -1 * trans.transform(x),
+        lambda x: trans.inverse(np.array(x) * -1),
+        breaks=inverse_breaks,
+        minor_breaks=inverse_minor_breaks,
+        _format=trans.format,
+        domain=trans.domain,
+    )
+
+
 @document
 class scale_position_continuous(scale_continuous):
     """
@@ -126,6 +165,10 @@ class scale_position_continuous(scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
+    reverse : bool
+        Inverse the transformed scale (e.g. from low->high to high->low)
+        The default is False
+
     """
     # All positions have no guide
     guide = None
@@ -133,6 +176,12 @@ class scale_position_continuous(scale_continuous):
     # After transformations all position values map
     # to themselves
     palette = staticmethod(identity)
+    reverse = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs.get('reverse', False):
+            self.trans = reverse_transform(self.trans)
 
     def map(self, series, limits=None):
         # Position aesthetics don't map, because the coordinate
@@ -296,25 +345,23 @@ class scale_y_log10(scale_y_continuous):
     _trans = 'log10'
 
 
-@document
-class scale_x_reverse(scale_x_continuous):
+def scale_x_reverse(*args, **kwargs):
     """
     Continuous x position reverse transformed scale
 
-    Parameters
-    ----------
-    {superclass_parameters}
+    Wrapper around :class:`scale_x_continuous` (reverse=True)
+
     """
-    _trans = 'reverse'
+    kwargs['reverse'] = not kwargs.get('reverse', False)
+    return scale_x_continuous(*args, **kwargs)
 
 
-@document
-class scale_y_reverse(scale_y_continuous):
+def scale_y_reverse(*args, **kwargs):
     """
     Continuous y position reverse transformed scale
 
-    Parameters
-    ----------
-    {superclass_parameters}
+    Wrapper around :class:`scale_y_continuous` (reverse=True)
+
     """
-    _trans = 'reverse'
+    kwargs['reverse'] = not kwargs.get('reverse', False)
+    return scale_y_continuous(*args, **kwargs)

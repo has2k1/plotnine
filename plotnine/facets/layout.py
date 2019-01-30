@@ -95,6 +95,13 @@ class Layout:
         function all x, xmax, xmin, ... columns in data
         will be mapped onto log10 scale (log10 transformed).
         The real mapping is handled by the scale.map
+
+        Note that this is being called twice by ggplot.draw
+        and we have to take care not to map xy-values twice
+        in case the mapping actually transforms the data
+        (e.g. a reverse=True scale_xy_discrete).
+        Also note that the geoms calculate their setup_data
+        on the mapped data, so we do not need to map that again.
         """
         _layout = self.layout
 
@@ -104,12 +111,20 @@ class Layout:
             if self.panel_scales_x:
                 x_vars = list(set(self.panel_scales_x[0].aesthetics) &
                               set(data.columns))
+                if hasattr(layer, '_already_mapped_x'):
+                    continue
+                layer._already_mapped_x = True
+
                 SCALE_X = _layout['SCALE_X'].iloc[match_id].tolist()
                 self.panel_scales_x.map(data, x_vars, SCALE_X)
 
             if self.panel_scales_y:
                 y_vars = list(set(self.panel_scales_y[0].aesthetics) &
                               set(data.columns))
+                if hasattr(layer, '_already_mapped_y'):
+                    continue
+                layer._already_mapped_y = True
+
                 SCALE_Y = _layout['SCALE_Y'].iloc[match_id].tolist()
                 self.panel_scales_y.map(data, y_vars, SCALE_Y)
 

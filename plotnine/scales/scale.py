@@ -443,8 +443,10 @@ class scale_continuous(scale):
     ----------
     {superclass_parameters}
     trans : str | function
-        Name of a trans function or a trans function.
-        See :mod:`mizani.transforms` for possible options.
+        Name of a trans function or
+        a mizani.transforms.trans_new() compatible object
+        See :mod:`mizani.transforms` for possible options
+        and :class:`scale_x_continuous` for an example.
     oob : function
         Function to deal with out of bounds (limits)
         data points. Default is to turn them into

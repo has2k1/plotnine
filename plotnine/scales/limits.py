@@ -56,7 +56,7 @@ class _lim:
             with suppress(KeyError):
                 value = layer.mapping[ae]
                 if isinstance(value, str):
-                        ae_values.append(value)
+                    ae_values.append(value)
 
         for value in ae_values:
             if ('factor(' in value or
