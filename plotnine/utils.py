@@ -737,7 +737,7 @@ def make_line_segments(x, y, ispath=True):
         x = interleave(x[:-1], x[1:])
         y = interleave(y[:-1], y[1:])
     elif len(x) % 2:
-            raise PlotnineError("Expects an even number of points")
+        raise PlotnineError("Expects an even number of points")
 
     n = len(x) // 2
     segments = np.reshape(list(zip(x, y)), [n, 2, 2])
