@@ -88,16 +88,22 @@ class TestArguments:
 class TestExceptions:
     def test_bad_object(self):
         # Iterable includes elements that are not ggplot objects
+        fn = next(filename_gen)
         plots = list(p()) + ['foo']
         with pytest.raises(TypeError):
-            save_as_pdf_pages(plots)
+            save_as_pdf_pages(plots, fn)
+
+        assert_exist_and_clean(fn, "bad ggplot object")
 
     def test_plot_exception(self):
         # Force an error in drawing
+        fn = next(filename_gen)
         plots = list(p())
         plots[0] += aes(color='unknown')
         with pytest.raises(PlotnineError):
-            save_as_pdf_pages(plots)
+            save_as_pdf_pages(plots, fn)
+
+        assert_exist_and_clean(fn, "Plot exception")
 
 
 # This should be the last function in the file since it can catch
