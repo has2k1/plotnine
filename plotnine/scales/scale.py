@@ -718,8 +718,26 @@ class scale_continuous(scale):
         return labels
 
 
+class scale_continuous_fixed_transformation(scale_continuous):
+    """Base class/mixin for scales that have one fixed transformation,
+    which may not be overwritten by the user
+    e.g. scale_x_log10
+    """
+
+    def __init__(self, *args, **kwargs):
+        if 'trans' in kwargs and kwargs['trans'] != self._trans:
+            name = self.__class__.__name__
+            xy = 'x' if '_x_' in name else 'y'
+            raise ValueError(("%s is fixed to transformation %s "
+                              "- use scale_%s_continuous instead") %
+                             (name,
+                              self._trans,
+                              xy))
+        super().__init__(*args, **kwargs)
+
+
 @document
-class scale_datetime(scale_continuous):
+class scale_datetime(scale_continuous_fixed_transformation):
     """
     Base class for all date/datetime scales
 
@@ -770,4 +788,4 @@ class scale_datetime(scale_continuous):
             minor_breaks_fmt = kwargs.pop('date_minor_breaks')
             kwargs['minor_breaks'] = date_breaks(minor_breaks_fmt)
 
-        scale_continuous.__init__(self, **kwargs)
+        super().__init__(**kwargs)

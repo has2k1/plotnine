@@ -536,3 +536,34 @@ def test_legend_ordering_added_scales():
          )
 
     assert p + _theme == 'legend_ordering_added_scales'
+
+
+def test_trans_scales_raise_on_passing_trans():
+    # superfluous, but ok
+    scale_xy.scale_x_log10(trans='log10')
+    scale_xy.scale_x_reverse(trans='reverse')
+    scale_xy.scale_x_datetime(trans='datetime')
+    scale_xy.scale_x_timedelta(trans='pd_timedelta')
+
+    with pytest.raises(ValueError):
+        scale_xy.scale_x_log10(trans='identity')
+    with pytest.raises(ValueError):
+        scale_xy.scale_x_reverse(trans='identity')
+    with pytest.raises(ValueError):
+        scale_xy.scale_x_datetime(trans='identity')
+    with pytest.raises(ValueError):
+        scale_xy.scale_x_timedelta(trans='identity')
+
+    scale_xy.scale_y_log10(trans='log10')
+    scale_xy.scale_y_reverse(trans='reverse')
+    scale_xy.scale_y_datetime(trans='datetime')
+    scale_xy.scale_y_timedelta(trans='pd_timedelta')
+
+    with pytest.raises(ValueError):
+        scale_xy.scale_y_log10(trans='identity')
+    with pytest.raises(ValueError):
+        scale_xy.scale_y_reverse(trans='identity')
+    with pytest.raises(ValueError):
+        scale_xy.scale_y_datetime(trans='identity')
+    with pytest.raises(ValueError):
+        scale_xy.scale_y_timedelta(trans='identity')

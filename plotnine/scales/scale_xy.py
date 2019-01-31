@@ -6,7 +6,8 @@ from ..doctools import document
 from ..utils import identity, match, alias, array_kind
 from ..exceptions import PlotnineError
 from .range import RangeContinuous
-from .scale import scale_discrete, scale_continuous, scale_datetime
+from .scale import (scale_discrete, scale_continuous, scale_datetime,
+                    scale_continuous_fixed_transformation)
 
 
 # positions scales have a couple of differences (quirks) that
@@ -225,7 +226,9 @@ alias('scale_y_date', scale_y_datetime)
 
 
 @document
-class scale_x_timedelta(scale_x_continuous):
+class scale_x_timedelta(
+        scale_continuous_fixed_transformation,
+        scale_x_continuous):
     """
     Continuous x position for timedelta data points
 
@@ -237,7 +240,9 @@ class scale_x_timedelta(scale_x_continuous):
 
 
 @document
-class scale_y_timedelta(scale_y_continuous):
+class scale_y_timedelta(
+        scale_continuous_fixed_transformation,
+        scale_y_continuous):
     """
     Continuous y position for timedelta data points
 
@@ -249,7 +254,9 @@ class scale_y_timedelta(scale_y_continuous):
 
 
 @document
-class scale_x_sqrt(scale_x_continuous):
+class scale_x_sqrt(
+        scale_continuous_fixed_transformation,
+        scale_x_continuous):
     """
     Continuous x position sqrt transformed scale
 
@@ -261,7 +268,9 @@ class scale_x_sqrt(scale_x_continuous):
 
 
 @document
-class scale_y_sqrt(scale_y_continuous):
+class scale_y_sqrt(
+        scale_continuous_fixed_transformation,
+        scale_y_continuous):
     """
     Continuous y position sqrt transformed scale
 
@@ -273,7 +282,9 @@ class scale_y_sqrt(scale_y_continuous):
 
 
 @document
-class scale_x_log10(scale_x_continuous):
+class scale_x_log10(
+        scale_continuous_fixed_transformation,
+        scale_x_continuous):
     """
     Continuous x position log10 transformed scale
 
@@ -285,7 +296,9 @@ class scale_x_log10(scale_x_continuous):
 
 
 @document
-class scale_y_log10(scale_y_continuous):
+class scale_y_log10(
+        scale_continuous_fixed_transformation,
+        scale_y_continuous):
     """
     Continuous y position log10 transformed scale
 
@@ -297,7 +310,9 @@ class scale_y_log10(scale_y_continuous):
 
 
 @document
-class scale_x_reverse(scale_x_continuous):
+class scale_x_reverse(
+        scale_continuous_fixed_transformation,
+        scale_x_continuous):
     """
     Continuous x position reverse transformed scale
 
@@ -309,7 +324,9 @@ class scale_x_reverse(scale_x_continuous):
 
 
 @document
-class scale_y_reverse(scale_y_continuous):
+class scale_y_reverse(
+        scale_continuous_fixed_transformation,
+        scale_y_continuous):
     """
     Continuous y position reverse transformed scale
 
