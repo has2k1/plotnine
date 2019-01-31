@@ -359,7 +359,8 @@ class geom(metaclass=Registry):
         """
         Verify arguments passed to the geom
         """
-        unknown = (kwargs.keys() -
+        geom_stat_args = kwargs.keys() | self._stat._kwargs.keys()
+        unknown = (geom_stat_args -
                    self.aesthetics() -                # geom aesthetics
                    self.DEFAULT_PARAMS.keys() -        # geom parameters
                    self._stat.aesthetics() -          # stat aesthetics

@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+import pytest
 
-from plotnine import ggplot, aes, stat_summary
+from plotnine import ggplot, aes, stat_summary, geom_point
+from plotnine.exceptions import PlotnineError
 
 
 random_state = np.random.RandomState(1234567890)
@@ -66,3 +68,10 @@ def test_summary_functions():
                         size=2))
 
     assert p == 'summary_functions'
+
+
+def test_stat_summary_raises_on_invalid_paremeters():
+    with pytest.raises(PlotnineError):
+        geom_point(stat_summary(funy=np.mean))
+    with pytest.raises(PlotnineError):
+        geom_point(stat_summary(does_not_exist=1))
