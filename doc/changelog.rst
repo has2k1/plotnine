@@ -57,6 +57,9 @@ Bug Fixes
   and :class:`~plotnine.scales.ylim` where ``datetime`` and ``timedelta`` limits
   resulted in an error.
 
+- Fixed bug where :class:`~plotnine.geoms.geom_rect` could not be used with
+  :class:`~plotnine.coord.coord_trans`. (:issue:`256`)
+
 Enhancements
 ************
 

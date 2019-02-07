@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 from plotnine import ggplot, aes, geom_point, geom_rect, geom_tile, labs, theme
+from plotnine import coord_trans
 
 n = 4
 
@@ -95,3 +96,45 @@ def test_infinite_rects():
          )
 
     assert p == 'infinite-rects'
+
+
+def test_coord_trans():
+    df = pd.DataFrame({
+        'x': range(10),
+        'y': range(10)
+    })
+    rdf = pd.DataFrame({
+        'xmin': [3],
+        'xmax': 7,
+        'ymin': -np.inf,
+        'ymax': np.inf,
+    })
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point()
+         + geom_rect(
+             data=rdf,
+             mapping=aes(xmin='xmin', xmax='xmax', ymin='ymin', ymax='ymax'),
+             alpha=0.2,
+             inherit_aes=False)
+         + coord_trans()
+         )
+
+    assert p == 'coord-trans'
+
+
+def test_coord_trans_groups():
+    df = pd.DataFrame({
+        'xmin': [0, 2, 4],
+        'xmax': [1, 3, 5],
+        'ymin': [0, 2, 4],
+        'ymax': [1, 3, 5],
+        'c': list('abc')
+    })
+
+    p = (ggplot(df)
+         + geom_rect(
+             aes(xmin='xmin', xmax='xmax', ymin='ymin', ymax='ymax', fill='c'))
+         + coord_trans()
+         )
+    assert p == 'coord-trans-groups'
