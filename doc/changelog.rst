@@ -46,6 +46,9 @@ Bug Fixes
   reversed the original limits, the order in which the data was laid out remained
   unchanged. (:issue:`253`)
 
+- Fixed bug in :class:`~plotnine.stats.stat_count` where ``float`` weights were
+  rounded and lead to a wrong plot. (:issue:`260`)
+
 Enhancements
 ************
 
