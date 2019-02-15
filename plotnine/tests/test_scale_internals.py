@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, expand_limits, theme
+from plotnine import lims, element_text
 from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -555,3 +556,20 @@ def test_changing_scale_transform():
     s = scale_xy.scale_x_reverse()
     with pytest.warns(PlotnineWarning):
         s.trans = 'log10'
+
+
+def test_datetime_scale_limits():
+    n = 6
+
+    df = pd.DataFrame({
+        'x': [datetime(x, 1, 1) for x in range(2000, 2000+n)],
+        'y': range(n)
+    })
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point()
+         + lims(x=[datetime(2000, 1, 1), datetime(2007, 1, 1)])
+         + theme(axis_text_x=element_text(angle=45))
+         )
+
+    assert p == 'datetime_scale_limits'

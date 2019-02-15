@@ -8,6 +8,7 @@ from ..aes import all_aesthetics
 from ..geoms import geom_blank
 from ..scales.scales import make_scale
 from ..exceptions import PlotnineError
+from ..utils import array_kind
 
 
 # By adding limits, we create a scale of the appropriate type
@@ -22,12 +23,25 @@ class _lim:
         elif len(limits) == 1:
             limits = limits[0]
 
+        series = pd.Series(limits)
+
+        # Type of transform
         if not any(x is None for x in limits) and limits[0] > limits[1]:
             self.trans = 'reverse'
-        else:
+        elif array_kind.continuous(series):
             self.trans = 'identity'
+        elif array_kind.discrete(series):
+            self.trans = None
+        elif array_kind.datetime(series):
+            self.trans = 'datetime'
+        elif array_kind.timedelta(series):
+            self.trans = 'timedelta'
+        else:
+            msg = 'Unknown type {} of limits'.format(type(limits[0]))
+            raise TypeError(msg)
 
         self.limits = limits
+        self.limits_series = series
 
     def get_scale(self, gg):
         """
@@ -44,7 +58,7 @@ class _lim:
         # an error. If later case proves common enough then we
         # could inspect the data and be clever based on that too!!
         ae = self.aesthetic
-        series = pd.Series(self.limits)
+        series = self.limits_series
         ae_values = []
 
         # Look through all the mappings for this aesthetic,
@@ -61,7 +75,7 @@ class _lim:
         for value in ae_values:
             if ('factor(' in value or
                     'Categorical(' in value):
-                series = pd.Categorical(series)
+                series = pd.Categorical(self.limits_series)
                 break
         return make_scale(self.aesthetic,
                           series,

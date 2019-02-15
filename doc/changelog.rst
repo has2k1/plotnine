@@ -52,6 +52,10 @@ Bug Fixes
 - Fixed bug where one could not use the British spelling ``colour`` to rename
   a color scale. (:issue:`264`)
 
+- Fixed bug in :class:`~plotnine.scales.lims`, :class:`~plotnine.scales.xlim`,
+  and :class:`~plotnine.scales.ylim` where ``datetime`` and ``timedelta`` limits
+  resulted in an error.
+
 Enhancements
 ************
 
