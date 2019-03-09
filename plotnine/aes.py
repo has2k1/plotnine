@@ -153,17 +153,14 @@ def rename_aesthetics(obj):
     obj : dict or list
         Object that contains aesthetics names
     """
-    lookup = {
-        'colour': 'color',
-        'outlier_colour': 'outlier_color',
-    }
-
     if isinstance(obj, dict):
-        for eng, us in lookup.items():
-            with suppress(KeyError):
-                obj[us] = obj.pop(eng)
+        for name in obj:
+            new_name = name.replace('colour', 'color')
+            if name != new_name:
+                obj[new_name] = obj.pop(name)
     else:
-        obj = [lookup[x] if x in lookup else x for x in obj]
+        obj = [name.replace('colour', 'color') for name in obj]
+
     return obj
 
 

@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+from .aes import rename_aesthetics
 from .exceptions import PlotnineError
 
 __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
@@ -23,9 +24,9 @@ class labs:
             raise PlotnineError(
                 "'labs' accepts either a dictionary as "
                 "an argument or keyword arguments")
-            self.labels = args
+            self.labels = rename_aesthetics(args)
         else:
-            self.labels = kwargs
+            self.labels = rename_aesthetics(kwargs)
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)

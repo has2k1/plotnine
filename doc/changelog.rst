@@ -49,6 +49,9 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.stats.stat_count` where ``float`` weights were
   rounded and lead to a wrong plot. (:issue:`260`)
 
+- Fixed bug where one could not use the British spelling ``colour`` to rename
+  a color scale. (:issue:`264`)
+
 Enhancements
 ************
 
