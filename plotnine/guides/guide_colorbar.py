@@ -59,10 +59,13 @@ class guide_colorbar(guide):
     # parameter
     available_aes = {'colour', 'color', 'fill'}
 
-    def train(self, scale):
+    def train(self, scale, aesthetic=None):
+        if aesthetic is None:
+            aesthetic = scale.aesthetics[0]
+
         # Do nothing if scales are inappropriate
-        if set(scale.aesthetics) & {'color', 'colour', 'fill'} == 0:
-            warn("colorbar guide needs color or fill scales.", PlotnineWarning)
+        if set(scale.aesthetics) & self.available_aes == 0:
+            warn("colorbar guide needs appropriate scales.", PlotnineWarning)
             return None
 
         if not issubclass(scale.__class__, scale_continuous):
@@ -80,7 +83,7 @@ class guide_colorbar(guide):
             return None
 
         self.key = pd.DataFrame({
-            scale.aesthetics[0]: scale.map(breaks),
+            aesthetic: scale.map(breaks),
             'label': scale.get_labels(breaks),
             'value': breaks})
 

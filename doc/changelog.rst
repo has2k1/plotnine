@@ -58,8 +58,11 @@ Enhancements
 - Legends are now plotted in a predictable order which dedends on how the plot
   is constructed.
 
--  The spokes drawn by :class:`~plotnine.geoms.geom_spoke` can now have a fixed
-   angle.
+- The spokes drawn by :class:`~plotnine.geoms.geom_spoke` can now have a fixed
+  angle.
+
+- Aesthetics that share a scale (e.g. color and fill can have the same scale) get
+  different guides if mapped to different columns.
 
 v0.5.1
 ------

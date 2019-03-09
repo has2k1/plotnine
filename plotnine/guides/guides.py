@@ -162,49 +162,51 @@ class guides(dict):
         gdefs = []
 
         for scale in plot.scales:
-            # The guide for aesthetic 'xxx' is stored
-            # in plot.guides['xxx']. The priority for
-            # the guides depends on how they are created
-            # 1. ... + guides(xxx=guide_blah())
-            # 2. ... + scale_xxx(guide=guide_blah())
-            # 3. default(either guide_legend or guide_colorbar
-            #            depending on the scale type)
-            output = scale.aesthetics[0]
-            guide = self.get(output, scale.guide)
+            for output in scale.aesthetics:
+                # The guide for aesthetic 'xxx' is stored
+                # in plot.guides['xxx']. The priority for
+                # the guides depends on how they are created
+                # 1. ... + guides(xxx=guide_blah())
+                # 2. ... + scale_xxx(guide=guide_blah())
+                # 3. default(either guide_legend or guide_colorbar
+                #            depending on the scale type)
+                # output = scale.aesthetics[0]
+                guide = self.get(output, scale.guide)
 
-            if guide is None or guide is False:
-                continue
+                if guide is None or guide is False:
+                    continue
 
-            # check the validity of guide.
-            # if guide is character, then find the guide object
-            guide = self.validate(guide)
-            # check the consistency of the guide and scale.
-            if (guide.available_aes != 'any' and
-                    scale.aesthetics[0] not in guide.available_aes):
-                raise PlotnineError(
-                    "{} cannot be used for {}".format(
-                        guide.__class__.__name__, scale.aesthetics))
+                # check the validity of guide.
+                # if guide is character, then find the guide object
+                guide = self.validate(guide)
+                # check the consistency of the guide and scale.
+                if (guide.available_aes != 'any' and
+                        scale.aesthetics[0] not in guide.available_aes):
+                    raise PlotnineError(
+                        "{} cannot be used for {}".format(
+                            guide.__class__.__name__, scale.aesthetics))
 
-            # title
-            if is_waive(guide.title):
-                if scale.name:
-                    guide.title = scale.name
-                else:
-                    try:
-                        guide.title = str(plot.labels[output])
-                    except KeyError:
-                        warn("Cannot generate legend for the {!r} "
-                             "aesthetic. Make sure you have mapped a "
-                             "variable to it".format(output), PlotnineWarning)
-                        continue
+                # title
+                if is_waive(guide.title):
+                    if scale.name:
+                        guide.title = scale.name
+                    else:
+                        try:
+                            guide.title = str(plot.labels[output])
+                        except KeyError:
+                            warn("Cannot generate legend for the {!r} "
+                                 "aesthetic. Make sure you have mapped a "
+                                 "variable to it".format(output),
+                                 PlotnineWarning)
+                            continue
 
-            # each guide object trains scale within the object,
-            # so Guides (i.e., the container of guides)
-            # need not to know about them
-            guide = guide.train(scale)
+                # each guide object trains scale within the object,
+                # so Guides (i.e., the container of guides)
+                # need not to know about them
+                guide = guide.train(scale, output)
 
-            if guide is not None:
-                gdefs.append(guide)
+                if guide is not None:
+                    gdefs.append(guide)
 
         return gdefs
 
