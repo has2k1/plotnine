@@ -64,6 +64,10 @@ Enhancements
 - Aesthetics that share a scale (e.g. color and fill can have the same scale) get
   different guides if mapped to different columns.
 
+- When the transform of a specialised (one that is not and identity scale) continuous
+  scale is altered, the user is warned about a possible error in what they expect.
+  (:issue:`254`, :issue:`255`)
+
 v0.5.1
 ------
 (2018-10-17)

@@ -484,13 +484,41 @@ class scale_continuous(scale):
 
         scale.__init__(self, **kwargs)
 
+    def _check_trans(self, t):
+        """
+        Check if transform t is valid
+
+        When scales specialise on a specific transform (other than
+        the identity transform), the user should know when they
+        try to change the transform.
+
+        Parameters
+        ----------
+        t : mizani.transforms.trans
+            Transform object
+        """
+        orig_trans_name = self.__class__._trans
+        new_trans_name = t.__class__.__name__.rstrip('_trans')
+        if orig_trans_name != 'identity':
+            if new_trans_name != orig_trans_name:
+                warn(
+                    "You have changed the transform of a specialised scale. "
+                    "The result may not be what you expect.\n"
+                    "Original transform: {}\n"
+                    "New transform: {}"
+                    .format(orig_trans_name, new_trans_name),
+                    PlotnineWarning
+                )
+
     @property
     def trans(self):
         return self._trans
 
     @trans.setter
     def trans(self, value):
-        self._trans = gettrans(value)
+        t = gettrans(value)
+        self._check_trans(t)
+        self._trans = t
         self._trans.aesthetic = self.aesthetics[0]
 
     @scale.limits.setter

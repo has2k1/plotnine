@@ -536,3 +536,22 @@ def test_legend_ordering_added_scales():
          )
 
     assert p + _theme == 'legend_ordering_added_scales'
+
+
+def test_changing_scale_transform():
+    # No warning
+    with pytest.warns(None):
+        scale_xy.scale_x_continuous(trans='reverse')
+        scale_xy.scale_x_reverse(trans='reverse')
+        scale_xy.scale_x_log10(trans='log10')
+
+    # Warnings
+    with pytest.warns(PlotnineWarning):
+        scale_xy.scale_x_reverse(trans='log10')
+
+    with pytest.warns(PlotnineWarning):
+        scale_xy.scale_x_datetime(trans='identity')
+
+    s = scale_xy.scale_x_reverse()
+    with pytest.warns(PlotnineWarning):
+        s.trans = 'log10'
