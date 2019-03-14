@@ -1,11 +1,12 @@
+from itertools import islice, cycle
+
 import pandas as pd
 import numpy as np
 
-from ..coords import coord_flip
-from ..scales.scale import scale_discrete
 from .geom import geom
 from .geom_rect import geom_rect
 from .annotate import annotate
+from ..coords import coord_flip
 
 
 class annotation_stripes(annotate):
@@ -14,96 +15,110 @@ class annotation_stripes(annotate):
 
     Useful as a background for geom_jitter.
 
-    {usage}
-    plot += annotation_stripes(fill=['red', 'blue'], alpha=0.3)
-
     Parameters
     ----------
-    fills - list of colors to alternate through.
-    Default: ["#AAAAAA", "#CCCCCC"]
-
-    direction: 'vertical' or 'horizontal'
-    orientation of the stripes
-
-    {common_parameters}
+    fill : list-like
+        List of colors for the strips. The default  is
+        `("#AAAAAA", "#CCCCCC")`
+    fill_range: bool
+        If True, the more stripes are created to cover the
+        edges of the range. This may be desired for discrete
+        scales.
+    direction : 'vertical' or 'horizontal'
+        Orientation of the stripes
+    extend : tuple
+        Range of the stripes. The default is (0, 1), top to bottom.
+        The values should be in the range [0, 1].
+    **kwargs : dict
+        Other aesthetic parameters for the rectangular stripes.
+        They include; *alpha*, *color*, *linetype*, and *size*.
     """
 
-    def __init__(self, **kwargs):
-        if 'direction' in kwargs:
-            allowed = ('vertical', 'horizontal')
-            if ((not isinstance(kwargs['direction'], str))
-                    or (kwargs['direction'] not in allowed)):
-                raise ValueError("direction must be one of %s" % (allowed, ))
-        self._annotation_geom = _geom_annotation_stripes(
-            **kwargs)
+    def __init__(self, fill=('#AAAAAA', '#CCCCCC'), fill_range=False,
+                 direction='vertical', extend=(0, 1), **kwargs):
+        allowed = ('vertical', 'horizontal')
+        if direction not in allowed:
+            raise ValueError(
+                "direction must be one of {}".format(allowed))
+        self._annotation_geom = _geom_stripes(
+            fill=fill, fill_range=fill_range, extend=extend,
+            direction=direction, **kwargs)
 
 
-class _geom_annotation_stripes(geom):
+class _geom_stripes(geom):
 
     DEFAULT_AES = {}
     REQUIRED_AES = set()
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "color": None,
-        "fills": ["#AAAAAA", "#CCCCCC"],
-        "linetype": "solid",
-        "size": 0,
-        "alpha": 0.5,
-        'direction': 'vertical',
-        'extend': (0, 1),
-    }
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
+                      'na_rm': False, 'color': None,
+                      'fill': ('#AAAAAA', '#CCCCCC'),
+                      'linetype': 'solid', 'size': 1, 'alpha': 0.5,
+                      'direction': 'vertical', 'extend': (0, 1),
+                      'fill_range': False}
     legend_geom = "polygon"
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
-        is_coord_flip = isinstance(coord, coord_flip)
-        direction = params.get('direction', 'vertical')
-        if direction == 'vertical':
-            scale = getattr(panel_params["scales"], "x")
-            if is_coord_flip:
-                prefix, other_prefix = "y_", "x_"
-            else:
-                prefix, other_prefix = "x_", "y_"
-        else:
-            scale = getattr(panel_params["scales"], "y")
-            if is_coord_flip:
-                prefix, other_prefix = "x_", "y_"
-            else:
-                prefix, other_prefix = "y_", "x_"
+        extend = params['extend']
+        fill_range = params['fill_range']
+        direction = params['direction']
 
-        is_scale_discrete = isinstance(scale, scale_discrete)
-        fills = list(params["fills"])
-        count = len(panel_params[prefix + "labels"])
-        if is_scale_discrete:
-            step_size = 1
-            left = np.arange(0, count, 1) + 0.5
+        # Range
+        if direction == 'vertical':
+            axis, other_axis = 'x', 'y'
         else:
-            step_size = (
-                panel_params[prefix + "major"][-1] -
-                panel_params[prefix + "major"][0]
-            ) / (count - 1)
-            left = panel_params[prefix + "major"] - step_size / 2
-        right = left + step_size
-        left[0] = panel_params[prefix + "range"][0]
-        right[-1] = panel_params[prefix + "range"][1]
-        data = pd.DataFrame(
-            {
-                "xmin": left,
-                "xmax": right,
-                "ymin": panel_params[other_prefix + "range"][0],
-                "ymax": panel_params[other_prefix + "range"][1],
-                "fill": (fills * len(left))[: len(left)],
-                "size": params["size"],
-                "linetype": params["linetype"],
-                "alpha": params["alpha"],
-                "color": "#000000",
-            }
-        )
-        if (direction == 'horizontal'):
-            data = data.rename(
-                columns={"xmin": "ymin", "xmax": "ymax",
-                         "ymin": "xmin", "ymax": "xmax"}
+            axis, other_axis = 'y', 'x'
+
+        if isinstance(coord, coord_flip):
+            axis, other_axis = other_axis, axis
+
+        breaks = panel_params['{}_major'.format(axis)]
+        range = panel_params['{}_range'.format(axis)]
+        other_range = panel_params['{}_range'.format(other_axis)]
+
+        # Breaks along the width
+        n_stripes = len(breaks)
+        diff = np.diff(breaks)
+        step = diff[0]
+        equal_spaces = np.all(diff == step)
+        if not equal_spaces:
+            raise ValueError(
+                "The major breaks are not equally spaced. "
+                "We cannot create stripes."
             )
+
+        deltas = np.array([step/2] * n_stripes)
+        xmin = breaks - deltas
+        xmax = breaks + deltas
+        if fill_range:
+            if range[0] < breaks[0]:
+                n_stripes += 1
+                xmax = np.insert(xmax, 0, xmin[0])
+                xmin = np.insert(xmin, 0, range[0])
+            if range[1] > breaks[1]:
+                n_stripes += 1
+                xmin = np.append(xmin, xmax[-1])
+                xmax = np.append(xmax, range[1])
+
+        # Height
+        full_height = other_range[1] - other_range[0]
+        ymin = other_range[0] + full_height * extend[0]
+        ymax = other_range[0] + full_height * extend[1]
+        fill = list(islice(cycle(params['fill']), n_stripes))
+
+        if direction != 'vertical':
+            xmin, xmax, ymin, ymax = ymin, ymax, xmin, xmax
+
+        data = pd.DataFrame({
+            'xmin': xmin,
+            'xmax': xmax,
+            'ymin': ymin,
+            'ymax': ymax,
+            'fill': fill,
+            'alpha': params['alpha'],
+            'color': params['color'],
+            'linetype': params['linetype'],
+            'size': params['size']
+        })
+
         return geom_rect.draw_group(data, panel_params, coord, ax, **params)

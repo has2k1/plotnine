@@ -25,6 +25,7 @@ New Features
 - Added scales for ordinal (ordered categorical) columns.
 - :class:`~plotnine.geoms.geom_step` gained the option ``mid`` for the
   direction parameter. The steps are taken mid-way between adjacent x values.
+- Added :class:`~plotnine.annotate.annotation_stripes`.
 
 Bug Fixes
 *********
