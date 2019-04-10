@@ -72,6 +72,10 @@ Enhancements
   scale is altered, the user is warned about a possible error in what they expect.
   (:issue:`254`, :issue:`255`)
 
+- The ``method_args`` parameter in :class:`~plotnine.stats.stat_smooth` can now
+  differentiate between arguments for initialising and those for fitting the
+  smoothing model.
+
 v0.5.1
 ------
 (2018-10-17)

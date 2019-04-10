@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import pytest
+import statsmodels.api as sm
+
 
 from plotnine import ggplot, aes, geom_point, geom_smooth
 from plotnine.exceptions import PlotnineWarning
@@ -163,3 +165,23 @@ def test_legend_fill_ratio():
          )
 
     assert p == 'legend_fill_ratio'
+
+
+def test_init_and_fit_kwargs():
+    df = pd.DataFrame({
+        'x': np.arange(11),
+        'y': [0, 0, 0, 0.05, 0.25, 0.5, 0.75, 0.95, 1, 1, 1]
+    })
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point()
+         + geom_smooth(
+             method='glm',
+             method_args={
+                 'family': sm.families.Binomial(),  # init parameter
+                 'method': 'minimize'               # fit parameter
+             },
+             se=False)
+         )
+
+    assert p == 'init_and_fit_kwargs'

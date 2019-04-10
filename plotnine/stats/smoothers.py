@@ -1,4 +1,5 @@
 import warnings
+from contextlib import suppress
 
 import numpy as np
 import pandas as pd
@@ -6,6 +7,7 @@ import scipy.stats as stats
 import statsmodels.api as sm
 
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..utils import get_valid_kwargs
 
 smlowess = sm.nonparametric.lowess
 
@@ -48,12 +50,16 @@ def lm(data, xseq, **params):
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
 
-    try:
-        model = sm.WLS(data['y'], X, weights=data['weight'])
-    except KeyError:
-        model = sm.OLS(data['y'], X)
+    if 'weight' in data:
+        init_kwargs, fit_kwargs = separate_method_kwargs(
+            params['method_args'], sm.WLS, sm.WLS.fit)
+        model = sm.WLS(data['y'], X, weights=data['weight'], **init_kwargs)
+    else:
+        init_kwargs, fit_kwargs = separate_method_kwargs(
+            params['method_args'], sm.OLS, sm.OLS.fit)
+        model = sm.OLS(data['y'], X, **init_kwargs)
 
-    results = model.fit(**params['method_args'])
+    results = model.fit(**fit_kwargs)
     data = pd.DataFrame({'x': xseq})
     data['y'] = results.predict(Xseq)
 
@@ -74,7 +80,12 @@ def rlm(data, xseq, **params):
     """
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
-    results = sm.RLM(data['y'], X).fit(**params['method_args'])
+
+    init_kwargs, fit_kwargs = separate_method_kwargs(
+        params['method_args'], sm.RLM, sm.RLM.fit)
+    model = sm.RLM(data['y'], X, **init_kwargs)
+    results = model.fit(**fit_kwargs)
+
     data = pd.DataFrame({'x': xseq})
     data['y'] = results.predict(Xseq)
 
@@ -91,7 +102,12 @@ def gls(data, xseq, **params):
     """
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
-    results = sm.GLS(data['y'], X).fit(**params['method_args'])
+
+    init_kwargs, fit_kwargs = separate_method_kwargs(
+        params['method_args'], sm.OLS, sm.OLS.fit)
+    model = sm.GLS(data['y'], X, **init_kwargs)
+    results = model.fit(**fit_kwargs)
+
     data = pd.DataFrame({'x': xseq})
     data['y'] = results.predict(Xseq)
 
@@ -112,7 +128,12 @@ def glm(data, xseq, **params):
     """
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
-    results = sm.GLM(data['y'], X).fit(**params['method_args'])
+
+    init_kwargs, fit_kwargs = separate_method_kwargs(
+        params['method_args'], sm.GLM, sm.GLM.fit)
+    model = sm.GLM(data['y'], X, **init_kwargs)
+    results = model.fit(**fit_kwargs)
+
     data = pd.DataFrame({'x': xseq})
     data['y'] = results.predict(Xseq)
 
@@ -136,9 +157,18 @@ def glm(data, xseq, **params):
 
 
 def lowess(data, xseq, **params):
+    for k in ('is_sorted', 'return_sorted'):
+        with suppress(KeyError):
+            del params['method_args'][k]
+            warnings.warn(
+                "Smoothing method argument: {}, "
+                "has been ignored.".format(k)
+            )
+
     result = smlowess(data['y'], data['x'],
                       frac=params['span'],
-                      is_sorted=True)
+                      is_sorted=True,
+                      **params['method_args'])
     data = pd.DataFrame({
         'x': result[:, 0],
         'y': result[:, 1]})
@@ -349,3 +379,19 @@ def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
     interval_u = predicted + tppf * predstd
     interval_l = predicted - tppf * predstd
     return predstd, interval_l, interval_u
+
+
+def separate_method_kwargs(method_args, init_method, fit_method):
+    # inspect the methods
+    init_kwargs = get_valid_kwargs(init_method, method_args)
+    fit_kwargs = get_valid_kwargs(fit_method, method_args)
+
+    # Warn about unknown kwargs
+    known_kwargs = set(init_kwargs) | set(fit_kwargs)
+    unknown_kwargs = set(method_args) - known_kwargs
+    if unknown_kwargs:
+        raise PlotnineError(
+            "The following method arguments could not be recognised: "
+            "{}".format(list(unknown_kwargs))
+        )
+    return init_kwargs, fit_kwargs
