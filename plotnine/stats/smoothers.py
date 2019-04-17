@@ -138,20 +138,10 @@ def glm(data, xseq, **params):
     data['y'] = results.predict(Xseq)
 
     if params['se']:
-        # TODO: Depends on statsmodel > 0.7
-        # https://github.com/statsmodels/statsmodels/pull/2151
-        # https://github.com/statsmodels/statsmodels/pull/3406
-        # Remove the try/except when a compatible version is released
-        try:
-            prediction = results.get_prediction(Xseq)
-            ci = prediction.conf_int(1 - params['level'])
-            data['ymin'] = ci[:, 0]
-            data['ymax'] = ci[:, 1]
-        except (AttributeError, TypeError):
-            warnings.warn(
-                "Cannot compute confidence intervals."
-                "Install latest/development version of statmodels.",
-                PlotnineWarning)
+        prediction = results.get_prediction(Xseq)
+        ci = prediction.conf_int(1 - params['level'])
+        data['ymin'] = ci[:, 0]
+        data['ymax'] = ci[:, 1]
 
     return data
 
