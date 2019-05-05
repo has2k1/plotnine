@@ -554,7 +554,7 @@ def to_rgba(colors, alpha):
     list-likes and the alpha dimension will be respected.
     """
     def is_iterable(var):
-        return cbook.iterable(var) and not is_string(var)
+        return np.iterable(var) and not is_string(var)
 
     def has_alpha(c):
         if isinstance(c, tuple):
