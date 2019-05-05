@@ -33,7 +33,7 @@ def is_scalar_or_string(val):
     """
     Return whether the given object is a scalar or string like.
     """
-    return is_string(val) or not cbook.iterable(val)
+    return is_string(val) or not np.iterable(val)
 
 
 def is_string(obj):
@@ -51,7 +51,7 @@ def make_iterable(val):
 
     Strings are not recognized as iterables
     """
-    if cbook.iterable(val) and not is_string(val):
+    if np.iterable(val) and not is_string(val):
         return val
     return [val]
 
@@ -66,7 +66,7 @@ def make_iterable_ntimes(val, n):
     Raises an exception if *val* is an iterable but has length
     not equal to n
     """
-    if cbook.iterable(val) and not is_string(val):
+    if np.iterable(val) and not is_string(val):
         if len(val) != n:
             raise PlotnineError(
                 '`val` is an iterable of length not equal to n.')
