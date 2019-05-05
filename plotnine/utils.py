@@ -11,7 +11,6 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-import matplotlib.cbook as cbook
 import matplotlib.colors as mcolors
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
