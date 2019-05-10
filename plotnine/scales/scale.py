@@ -198,7 +198,7 @@ class scale(metaclass=Registry):
             limits = []
             if len(self._limits) == len(self.range.range):
                 for l, r in zip(self._limits, self.range.range):
-                    value = r if pd.isnull(l) else l
+                    value = self.trans.transform(r) if pd.isnull(l) else l
                     limits.append(value)
             else:
                 limits = self._limits
@@ -534,7 +534,8 @@ class scale_continuous(scale):
         labeling of the plot axis and the guides are in
         the original dataspace.
         """
-        limits = self.trans.transform(value)
+        limits = tuple([
+            self.trans.transform(x) if x is not None else None for x in value])
         try:
             self._limits = np.sort(limits)
         except TypeError:

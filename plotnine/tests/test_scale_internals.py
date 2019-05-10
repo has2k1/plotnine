@@ -291,6 +291,27 @@ def test_setting_limits():
     assert s.limits == tuple('abcdefg')
 
 
+def test_setting_limits_transformed():
+    sc = scale_xy
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    s = sc.scale_y_continuous(trans='log10')
+    s.train(lst)
+    assert s.limits == (1, 10)
+
+    s = sc.scale_y_continuous(trans='log10', limits=[2, 7])
+    s.train(lst)
+    assert s.limits == (np.log10(2), np.log10(7))
+
+    s = sc.scale_y_continuous(trans='log10', limits=[2, None])
+    s.train(lst)
+    assert s.limits == (np.log10(2), np.log10(10))
+
+    s = sc.scale_y_continuous(trans='log10', limits=[None, 7])
+    s.train(lst)
+    assert s.limits == (np.log10(1), np.log10(7))
+
+
 def test_minor_breaks():
     n = 10
     x = np.arange(n)
