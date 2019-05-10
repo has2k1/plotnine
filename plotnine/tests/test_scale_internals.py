@@ -560,6 +560,20 @@ def test_legend_ordering_added_scales():
     assert p + _theme == 'legend_ordering_added_scales'
 
 
+def test_breaks_and_labels_outside_of_limits():
+    df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
+    p = (ggplot(aes('x', 'y'), data=df)
+         + geom_point()
+         + scale_xy.scale_x_continuous(
+             limits=[7, 9.5],
+             breaks=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+             labels=['one', 'two', 'three', 'four', 'five', 'six', 'seven',
+                     'eight', 'nine', 'ten', 'eleven']
+         )
+         )
+    assert p == 'breaks_and_labels_outside_of_limits'
+
+
 def test_changing_scale_transform():
     # No warning
     with pytest.warns(None):

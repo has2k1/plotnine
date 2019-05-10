@@ -625,9 +625,9 @@ class scale_continuous(scale):
             major = major.compress(np.isfinite(major))
             minor = self.get_minor_breaks(major, range)
 
-        major = major.compress(
-            (range[0] <= major) & (major <= range[1]))
-        labels = self.get_labels(major)
+        mask = (range[0] <= major) & (major <= range[1])
+        major = major.compress(mask)
+        labels = self.get_labels(major, mask)
 
         return {'range': range,
                 'labels': labels,
@@ -712,9 +712,19 @@ class scale_continuous(scale):
         else:
             return self.trans.minor_breaks(major, limits)
 
-    def get_labels(self, breaks=None):
+    def get_labels(self, breaks=None, mask=None):
         """
         Generate labels for the axis or legend
+
+        Parameters:
+        -----------
+        breaks: None or array-like
+            None ->result of self.breaks
+        mask: np.array(...,dtype=bool)
+            Restrict returned labels to those with True
+            in mask (used to exclude labels outside of a scale's
+            domain even if the user defined them)
+
         """
         if breaks is None:
             breaks = self.get_breaks()
@@ -732,17 +742,14 @@ class scale_continuous(scale):
         elif callable(self.labels):
             labels = self.labels(breaks)
         else:
-            labels = self.labels
+            if mask is not None:
+                labels = np.array(self.labels)[mask]
+            else:
+                labels = self.labels
 
         if len(labels) != len(breaks):
-            if not is_waive(self.breaks) and not is_waive(self.labels):
-                raise PlotnineError(
-                    "Breaks and labels are different lengths. "
-                    "Make sure all the breaks you specify are with in "
-                    "the limits.")
-            else:
-                raise PlotnineError(
-                    "Breaks and labels are different lengths")
+            raise PlotnineError(
+                "Breaks and labels are different lengths")
 
         return labels
 
