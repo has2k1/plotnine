@@ -24,7 +24,7 @@ class facet_null(facet):
     def compute_layout(self, data):
         return layout_null()
 
-    def set_breaks_and_labels(self, ranges, layout_info, pidx):
+    def set_breaks_and_labels(self, ranges, layout_info, ax):
         """
         Add breaks and labels to the axes
 
@@ -34,11 +34,10 @@ class facet_null(facet):
             range information for the axes
         layout_info : dict-like
             facet layout information
-        pidx : int
-            Panel index
+        ax : Axes
+            Axes
         """
-        ax = self.axs[pidx]
-        facet.set_breaks_and_labels(self, ranges, layout_info, pidx)
+        facet.set_breaks_and_labels(self, ranges, layout_info, ax)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
 
@@ -71,5 +70,5 @@ class facet_null(facet):
 
         figure.set_figheight(H)
 
-    def draw_label(self, layout_info, pidx):
+    def draw_label(self, layout_info, ax):
         pass

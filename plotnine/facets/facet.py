@@ -277,9 +277,7 @@ class facet:
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
 
-    def set_breaks_and_labels(self, ranges, layout_info, pidx):
-        ax = self.axs[pidx]
-
+    def set_breaks_and_labels(self, ranges, layout_info, ax):
         # Add axes and labels on all sides
         self._set_limits_and_ranges(ax, ranges)
 
@@ -435,7 +433,7 @@ class facet:
         breadth = breadth + (m1 + m2) / dpi
         return breadth
 
-    def strip_dimensions(self, text_lines, location, pid):
+    def strip_dimensions(self, text_lines, location, ax):
         """
         Calculate the dimension
 
@@ -448,7 +446,6 @@ class facet:
         dpi = 72
         num_lines = len(text_lines)
         get_property = self.theme.themeables.property
-        ax = self.axs[pid]
         bbox = ax.get_window_extent().transformed(
             self.figure.dpi_scale_trans.inverted())
         ax_width, ax_height = bbox.width, bbox.height  # in inches
@@ -504,13 +501,12 @@ class facet:
             box_height=box_height)
         return dimensions
 
-    def draw_strip_text(self, text_lines, location, pid):
+    def draw_strip_text(self, text_lines, location, ax):
         """
         Create a background patch and put a label on it
         """
-        ax = self.axs[pid]
         themeable = self.figure._themeable
-        dim = self.strip_dimensions(text_lines, location, pid)
+        dim = self.strip_dimensions(text_lines, location, ax)
 
         if location == 'right':
             rotation = -90

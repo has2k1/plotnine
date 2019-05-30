@@ -402,10 +402,11 @@ class ggplot:
         #
         # pidx is the panel index (location left to right, top to bottom)
         for pidx, layout_info in self.layout.layout.iterrows():
+            ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
             self.facet.set_breaks_and_labels(
-                panel_params, layout_info, pidx)
-            self.facet.draw_label(layout_info, pidx)
+                panel_params, layout_info, ax)
+            self.facet.draw_label(layout_info, ax)
 
     def _draw_legend(self):
         """
