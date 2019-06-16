@@ -89,7 +89,7 @@ class scale(metaclass=Registry):
 
         self.range = self._range_class()
 
-        if cbook.iterable(self.breaks) and np.iterable(self.labels):
+        if np.iterable(self.breaks) and np.iterable(self.labels):
             if len(self.breaks) != len(self.labels):
                 raise PlotnineError(
                     "Breaks and labels have unequal lengths")
