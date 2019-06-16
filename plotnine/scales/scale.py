@@ -5,7 +5,6 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-import matplotlib.cbook as cbook
 from mizani.bounds import expand_range_distinct, zero_range
 from mizani.bounds import rescale, censor
 from mizani.breaks import date_breaks
@@ -90,7 +89,7 @@ class scale(metaclass=Registry):
 
         self.range = self._range_class()
 
-        if cbook.iterable(self.breaks) and cbook.iterable(self.labels):
+        if cbook.iterable(self.breaks) and np.iterable(self.labels):
             if len(self.breaks) != len(self.labels):
                 raise PlotnineError(
                     "Breaks and labels have unequal lengths")
