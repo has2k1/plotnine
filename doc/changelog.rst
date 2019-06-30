@@ -60,6 +60,9 @@ Bug Fixes
 - Fixed bug where :class:`~plotnine.geoms.geom_rect` could not be used with
   :class:`~plotnine.coord.coord_trans`. (:issue:`256`)
 
+- Fixed bug where using free scales with facetting and flipping the coordinate
+  axes could give unexpected results. (:issue:`286`)
+
 Enhancements
 ************
 
