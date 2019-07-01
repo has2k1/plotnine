@@ -24,7 +24,7 @@ class facet_null(facet):
     def compute_layout(self, data):
         return layout_null()
 
-    def set_breaks_and_labels(self, ranges, layout_info, ax):
+    def set_breaks_and_labels(self, ranges, ax):
         """
         Add breaks and labels to the axes
 
@@ -32,12 +32,10 @@ class facet_null(facet):
         ----------
         ranges : dict-like
             range information for the axes
-        layout_info : dict-like
-            facet layout information
         ax : Axes
             Axes
         """
-        facet.set_breaks_and_labels(self, ranges, layout_info, ax)
+        facet.set_breaks_and_labels(self, ranges, ax)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
 

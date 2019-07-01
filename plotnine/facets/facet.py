@@ -235,7 +235,7 @@ class facet:
 
         return self
 
-    def _set_limits_and_ranges(self, ax, ranges):
+    def set_limits_breaks_and_labels(self, ranges, ax):
         # limits
         ax.set_xlim(ranges['x_range'])
         ax.set_ylim(ranges['y_range'])
@@ -276,22 +276,6 @@ class facet:
 
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
-
-    def set_breaks_and_labels(self, ranges, layout_info, ax):
-        # Add axes and labels on all sides
-        self._set_limits_and_ranges(ax, ranges)
-
-        # Remove unnecessary axes
-        if not layout_info['AXIS_X']:
-            ax.xaxis.set_ticks_position('none')
-            ax.xaxis.set_ticklabels([])
-        if not layout_info['AXIS_Y']:
-            ax.yaxis.set_ticks_position('none')
-            ax.yaxis.set_ticklabels([])
-        if layout_info['AXIS_X']:
-            ax.xaxis.set_ticks_position('bottom')
-        if layout_info['AXIS_Y']:
-            ax.yaxis.set_ticks_position('left')
 
     def __deepcopy__(self, memo):
         """

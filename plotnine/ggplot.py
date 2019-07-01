@@ -206,13 +206,13 @@ class ggplot:
                 self._resize_panels()
                 # Drawing
                 self._draw_layers()
-                self._draw_facet_labels()
                 self._draw_labels()
+                self._draw_breaks_and_labels()
                 self._draw_legend()
                 self._draw_title()
                 self._draw_watermarks()
                 # Artist object theming
-                self._apply_theme()
+                self._apply_theme()  # !!
         except Exception as err:
             if self.figure is not None:
                 plt.close(self.figure)
@@ -252,7 +252,7 @@ class ggplot:
                 self.theme.apply_rcparams()
                 self._setup_parameters()
                 self._draw_layers()
-                self._draw_facet_labels()
+                self._draw_breaks_and_labels()
                 self._draw_legend()
                 self._apply_theme()
         except Exception as err:
@@ -392,21 +392,33 @@ class ggplot:
         # Draw the geoms
         self.layers.draw(self.layout, self.coordinates)
 
-    def _draw_facet_labels(self):
+    def _draw_breaks_and_labels(self):
         """
-        Draw facet labels a.k.a strip texts
+        Draw breaks and labels
         """
         # Decorate the axes
         #   - xaxis & yaxis breaks, labels, limits, ...
-        #   - facet labels
+        #   - facet labels a.k.a strip text
         #
         # pidx is the panel index (location left to right, top to bottom)
         for pidx, layout_info in self.layout.layout.iterrows():
             ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
-            self.facet.set_breaks_and_labels(
-                panel_params, layout_info, ax)
             self.facet.draw_label(layout_info, ax)
+            self.facet.set_limits_breaks_and_labels(panel_params, ax)
+
+            # Remove unnecessary ticks and labels
+            if not layout_info['AXIS_X']:
+                ax.xaxis.set_tick_params(
+                    which='both', bottom=False, labelbottom=False)
+            if not layout_info['AXIS_Y']:
+                ax.yaxis.set_tick_params(
+                    which='both', left=False, labelleft=False)
+
+            if layout_info['AXIS_X']:
+                ax.xaxis.set_tick_params(which='both', bottom=True)
+            if layout_info['AXIS_Y']:
+                ax.yaxis.set_tick_params(which='both', left=True)
 
     def _draw_legend(self):
         """

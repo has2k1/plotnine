@@ -46,7 +46,8 @@ class theme_gray(theme):
             axis_ticks=element_line(color='#333333'),
             axis_ticks_length=0,
             axis_ticks_length_major=half_line/2,
-            axis_ticks_length_minor=0,
+            axis_ticks_length_minor=half_line/4,
+            axis_ticks_minor=element_blank(),
             axis_ticks_direction='out',
             axis_ticks_pad=2,
             axis_title_x=element_text(

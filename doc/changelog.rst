@@ -63,6 +63,8 @@ Bug Fixes
 - Fixed bug where using free scales with facetting and flipping the coordinate
   axes could give unexpected results. (:issue:`286`)
 
+- Fixed unwanted tick along the axis for versions of Matplotlib >= 3.1.0.
+
 Enhancements
 ************
 
