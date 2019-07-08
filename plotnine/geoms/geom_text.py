@@ -89,10 +89,10 @@ class geom_text(geom):
 
         # Accomodate for the old names
         if 'hjust' in kwargs:
-            kwargs['ha'] = kwargs['hjust']
+            kwargs['ha'] = kwargs.pop('hjust')
 
         if 'vjust' in kwargs:
-            kwargs['va'] = kwargs['vjust']
+            kwargs['va'] = kwargs.pop('vjust')
 
         geom.__init__(self, *args, **kwargs)
 

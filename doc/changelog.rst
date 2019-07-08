@@ -65,6 +65,9 @@ Bug Fixes
 
 - Fixed unwanted tick along the axis for versions of Matplotlib >= 3.1.0.
 
+- Fixed :class:`~plotnine.geoms.geom_text` not to error when using ``hjust``
+  and ``vjust``. (:issue:`287`)
+
 Enhancements
 ************
 
