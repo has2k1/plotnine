@@ -83,8 +83,23 @@ class scale_linetype_manual(_scale_manual):
 
     Parameters
     ----------
-    values : array_like
+    values : list-like
         Linetypes that make up the palette.
+        Possible values of the list are:
+
+            1. Strings like
+
+            ::
+
+                'solid'                # solid line
+                'dashed'               # dashed line
+                'dashdot'              # dash-dotted line
+                'dotted'               # dotted line
+                'None' or ' ' or ''    # draw nothing
+
+            2. Tuples of the form (offset, (on, off, on, off, ....))
+               e.g. (0, (1, 1)), (1, (2, 2)), (2, (5, 3, 1, 3))
+
     {superclass_parameters}
 
     See Also
