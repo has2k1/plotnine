@@ -32,6 +32,11 @@ similar to ggplot2, where we lack in coverage the
 Example
 -------
 
+.. code:: python
+
+    from plotnine import *
+    from plotnine.data import mtcars
+
 Building a complex plot piece by piece.
 
 1. Scatter plot
