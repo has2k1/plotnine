@@ -1,3 +1,19 @@
+/* Items in the tables are centered by default. Which is ugly
+   Left alignment looks better
+   Tables on the left too
+*/
+table.align-default {
+   text-align: left;
+   margin: 1em 0 1em 0;
+}
+
+img.align-default,
+.figure.align-default {
+   text-align: left;
+   margin: 0.5em;
+   padding: 0.5em;
+}
+
 /* Adjust the tables */
 
 table.table,
@@ -17,15 +33,6 @@ table.longtable {
 table.table td,
 table.table th {
    border-left: 1px solid #DDD;
-}
-
-table.field-list {
-   border: none;
-}
-
-table.field-list td,
-table.field-list th{
-   border-left: none;
 }
 
 tr.row-even td {
@@ -91,27 +98,50 @@ table.dataframe tbody tr:nth-child(odd) {
    background: #F0F6F6;
 }
 
+/* Better formatting for numpydoc parameter field lists */
 
-/* Aesthetics table */
-
-table.field-list dd table>tbody>tr>td,
-table.field-list dd table>tbody>tr>th,
-table.field-list dd table>tfoot>tr>td,
-table.field-list dd table>tfoot>tr>th,
-table.field-list dd table>thead>tr>td,
-table.field-list dd table>thead>tr>th {
-    padding: 0.5em;
+dl.class>dd>dl.field-list,
+dl.method>dd>dl.field-list,
+dl.function>dd>dl.field-list {
+   display: grid;
+   grid-template-columns: max-content auto;
+   border-left: 5px solid #eee;
 }
 
-/* Computed aesthetics */
+dl.class>dd>dl.field-list>dt,
+dl.method>dd>dl.field-list>dt,
+dl.function>dd>dl.field-list>dt {
+   grid-column-start: 1;
+   padding: 0.25em;
+   background-color: rgb(238, 238, 238);
+   height: 1.75em
+}
 
-.content table.field-list dd>p.rubric {
-    margin: 1.5em 0 1em;
+dl.class>dd>dl.field-list>dd,
+dl.method>dd>dl.field-list>dd,
+dl.function>dd>dl.field-list>dd {
+   margin-inline-start: 0;
+   grid-column-start: 2;
+   padding: 0.25em 0.25em 0 0.25em;
+   margin-bottom: 0;
+}
+
+dl.class>dd>dl.field-list>dd>dl,
+dl.method>dd>dl.field-list>dd>dl,
+dl.function>dd>dl.field-list>dd>dl {
+   margin-left: 1em;
+   margin-bottom: 1em;
+}
+
+dl.class>dd>dl.field-list>dd div,
+dl.method>dd>dl.field-list>dd div,
+dl.function>dd>dl.field-list>dd div{
+   margin-top: 0.5em;
 }
 
 /* sidebar */
 div#sidebar > ul.nav > li > ul.nav > li > ul.nav {
-   margin-bottom: .5em;
+   margin-bottom: 0.5em;
 }
 
 div#sidebar > ul.nav > li > a {
@@ -120,4 +150,23 @@ div#sidebar > ul.nav > li > a {
 
 div#sidebar > ul.nav > li > ul.nav > li > a {
    font-size: 1.0em;
+}
+
+/* Computed aesthetics */
+
+.content dl.field-list dd>p.rubric {
+    margin: 1.5em 0 1em;
+}
+
+dl.field-list table {
+   font-size: 0.95em;
+}
+
+dl.field-list table>tbody>tr>td,
+dl.field-list table>tbody>tr>th,
+dl.field-list table>tfoot>tr>td,
+dl.field-list table>tfoot>tr>th,
+dl.field-list table>thead>tr>td,
+dl.field-list table>thead>tr>th {
+   padding: 0.5em;
 }
