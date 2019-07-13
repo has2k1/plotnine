@@ -1,7 +1,7 @@
 git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
-git+https://github.com/has2k1/numpydoc@xref-param-type#egg=xref_param_type
+numpydoc
 prompt-toolkit>=2.0.0
 jupyter
-sphinx>=1.6.1
+sphinx>=2.1.2
 nbsphinx
 pillow

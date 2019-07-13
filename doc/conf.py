@@ -457,6 +457,8 @@ numpydoc_xref_aliases = {
     'element_text': 'plotnine.themes.element_text',
 }
 
+numpydoc_xref_ignore = {'type', 'optional', 'default'}
+
 
 def link_to_tutorials():
     # Linking to the directory does not work well with
