@@ -40,7 +40,7 @@ class stat_qq(stat):
 
     See Also
     --------
-    scipy.stats.mstats.plotting_positions - Uses ``alpha_beta``
+    scipy.stats.mstats.plotting_positions : Uses ``alpha_beta``
         to calculate the quantiles.
     """
 

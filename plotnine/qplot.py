@@ -57,7 +57,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     Returns
     -------
-    p: ggplot
+    p : ggplot
         ggplot object
     """
     # Extract all recognizable aesthetic mappings from the parameters

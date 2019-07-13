@@ -130,7 +130,10 @@ class themeable(metaclass=RegistryHierarchyMeta):
         """
         Merge properties of other into self
 
-        Raises ValueError if any them are a blank
+        Raises
+        ------
+        ValueError
+            If any of the properties are blank
         """
         if self.is_blank() or other.is_blank():
             raise ValueError('Cannot merge if there is a blank.')

@@ -65,7 +65,8 @@ class geom(metaclass=Registry):
 
         Raises
         ------
-        :class:`PlotnineError` if unable to create a `geom`.
+        PlotnineError
+            If unable to create a `geom`.
         """
         name = stat.params['geom']
         if issubclass(type(name), geom):

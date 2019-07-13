@@ -117,7 +117,10 @@ class position(metaclass=Registry):
         out : position
             A position object
 
-        Raises :class:`PlotnineError` if unable to create a `position`.
+        Raises
+        ------
+        PlotnineError
+            If unable to create a `position`.
         """
         name = geom.params['position']
         if issubclass(type(name), position):

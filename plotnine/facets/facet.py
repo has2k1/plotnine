@@ -44,7 +44,7 @@ class facet:
         will automatically be dropped. If ``False``, all
         factor levels will be shown, regardless of whether
         or not they appear in the data. Default is ``True``.
-    dir : str in ``['h', 'v']
+    dir : str in ``['h', 'v']``
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
     """

@@ -40,7 +40,7 @@ class guide(metaclass=Registry):
     label_separation : float
         Separation between the label text and the colorbar.
         Value is in pixels.
-    direction : str in ``['horizontal', 'vertical']
+    direction : str in ``['horizontal', 'vertical']``
         Direction of the guide.
     default_unit : str
         Unit for ``keywidth`` and ``keyheight``
