@@ -13,7 +13,7 @@ bootstrap=$(basename $(ls -d theme/static/bootstrap-*/))
 
 # Compile theme
 cd $toplevel/../sphinx-bootstrap-theme-customizer/
-build "$@"
+./build "$@"
 
 # Copy theme for sphinx to use
 rm -rf $toplevel/doc/theme
@@ -23,6 +23,7 @@ cp -rf theme $toplevel/doc
 # regenerating the html)
 
 cd $toplevel
+mkdir -p doc/_build/html/_static/$bootstrap/css
 cp $toplevel/doc/{theme/static,_build/html/_static}/$bootstrap/css/bootstrap.min.css
 
 echo "${color5}success${reset}"
