@@ -79,11 +79,10 @@ def ggplot_equals(gg, right):
     # savefig ignores the figure face & edge colors
     facecolor = fig.get_facecolor()
     edgecolor = fig.get_edgecolor()
-    if edgecolor:
+    if facecolor:
         savefig_kwargs['facecolor'] = facecolor
     if edgecolor:
         savefig_kwargs['edgecolor'] = edgecolor
-        savefig_kwargs['frameon'] = True
 
     # Save the figure before testing whether the original image
     # actually exists. This makes creating new tests much easier,

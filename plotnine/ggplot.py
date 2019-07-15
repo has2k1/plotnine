@@ -726,11 +726,10 @@ class ggplot:
             # savefig ignores the figure face & edge colors
             facecolor = fig.get_facecolor()
             edgecolor = fig.get_edgecolor()
-            if edgecolor:
+            if facecolor:
                 fig_kwargs['facecolor'] = facecolor
             if edgecolor:
                 fig_kwargs['edgecolor'] = edgecolor
-                fig_kwargs['frameon'] = True
 
             fig.savefig(filename, **fig_kwargs)
 
@@ -847,11 +846,10 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
                 # as in ggplot.save()
                 facecolor = fig.get_facecolor()
                 edgecolor = fig.get_edgecolor()
-                if edgecolor:
+                if facecolor:
                     fig_kwargs['facecolor'] = facecolor
                 if edgecolor:
                     fig_kwargs['edgecolor'] = edgecolor
-                    fig_kwargs['frameon'] = True
 
                 # Save as a page in the PDF file
                 pdf.savefig(figure[0], **fig_kwargs)
