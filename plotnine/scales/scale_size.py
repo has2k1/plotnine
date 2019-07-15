@@ -1,14 +1,17 @@
+from warnings import warn
+
 import numpy as np
 from mizani.bounds import rescale_max
 from mizani.palettes import abs_area, area_pal, rescale_pal
 
 from ..doctools import document
+from ..exceptions import PlotnineWarning
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
 @document
-class scale_size_discrete(scale_discrete):
+class scale_size_ordinal(scale_discrete):
     """
     Discrete area size scale
 
@@ -28,6 +31,25 @@ class scale_size_discrete(scale_discrete):
 
         self.palette = palette
         scale_discrete.__init__(self, **kwargs)
+
+
+@document
+class scale_size_discrete(scale_size_ordinal):
+    """
+    Discrete area size scale
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+    _aesthetics = ['size']
+
+    def __init__(self, **kwargs):
+        warn(
+            "Using alpha for a discrete variable is not advised.",
+            PlotnineWarning
+        )
+        super().__init__(**kwargs)
 
 
 @document

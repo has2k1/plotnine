@@ -276,6 +276,8 @@ class Scales(list):
 def scale_type(series):
     if array_kind.continuous(series):
         stype = 'continuous'
+    elif array_kind.ordinal(series):
+        stype = 'ordinal'
     elif array_kind.discrete(series):
         stype = 'discrete'
     elif array_kind.datetime(series):
@@ -300,7 +302,7 @@ def make_scale(ae, series, *args, **kwargs):
     stype = scale_type(series)
 
     # filter parameters by scale type
-    if stype == 'discrete':
+    if stype in ('discrete', 'ordinal'):
         with suppress(KeyError):
             del kwargs['trans']
 

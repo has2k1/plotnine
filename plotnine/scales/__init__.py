@@ -1,12 +1,14 @@
 # alpha
 from .scale_alpha import scale_alpha
 from .scale_alpha import scale_alpha_continuous
+from .scale_alpha import scale_alpha_ordinal
 from .scale_alpha import scale_alpha_discrete
 from .scale_alpha import scale_alpha_datetime
 # color
 from .scale_color import scale_color_brewer, scale_colour_brewer
 from .scale_color import scale_color_cmap, scale_colour_cmap
 from .scale_color import scale_color_cmap_d, scale_colour_cmap_d
+from .scale_color import scale_color_ordinal, scale_colour_ordinal
 from .scale_color import scale_color_continuous, scale_colour_continuous
 from .scale_color import scale_color_desaturate, scale_colour_desaturate
 from .scale_color import scale_color_discrete, scale_colour_discrete
@@ -22,6 +24,7 @@ from .scale_color import scale_color_datetime, scale_colour_datetime
 from .scale_color import scale_fill_brewer
 from .scale_color import scale_fill_cmap
 from .scale_color import scale_fill_cmap_d
+from .scale_color import scale_fill_ordinal
 from .scale_color import scale_fill_continuous
 from .scale_color import scale_fill_desaturate
 from .scale_color import scale_fill_discrete
@@ -58,6 +61,7 @@ from .scale_shape import scale_shape_discrete
 from .scale_size import scale_size
 from .scale_size import scale_size_area
 from .scale_size import scale_size_continuous
+from .scale_size import scale_size_ordinal
 from .scale_size import scale_size_discrete
 from .scale_size import scale_size_radius
 from .scale_size import scale_size_datetime
@@ -84,6 +88,7 @@ __all__ = [
            'scale_color_brewer', 'scale_colour_brewer',
            'scale_color_cmap', 'scale_colour_cmap',
            'scale_color_cmap_d', 'scale_colour_cmap_d',
+           'scale_color_ordinal', 'scale_colour_ordinal',
            'scale_color_continuous', 'scale_colour_continuous',
            'scale_color_discrete', 'scale_colour_discrete',
            'scale_color_distiller', 'scale_colour_distiller',
@@ -98,6 +103,7 @@ __all__ = [
            # fill
            'scale_fill_brewer', 'scale_fill_cmap',
            'scale_fill_cmap_d',
+           'scale_fill_ordinal',
            'scale_fill_continuous',
            'scale_fill_desaturate', 'scale_fill_discrete',
            'scale_fill_distiller', 'scale_fill_gradient',
@@ -106,6 +112,7 @@ __all__ = [
            'scale_fill_hue', 'scale_fill_datetime',
            # alpha
            'scale_alpha', 'scale_alpha_discrete',
+           'scale_alpha_ordinal',
            'scale_alpha_continuous', 'scale_alpha_datetime',
            # linetype
            'scale_linetype', 'scale_linetype_discrete',
@@ -116,6 +123,7 @@ __all__ = [
            # size
            'scale_size', 'scale_size_area',
            'scale_size_discrete', 'scale_size_continuous',
+           'scale_size_ordinal',
            'scale_size_radius', 'scale_size_datetime',
            # stroke
            'scale_stroke', 'scale_stroke_continuous',

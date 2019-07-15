@@ -1,7 +1,9 @@
+from warnings import warn
+
 from mizani.palettes import manual_pal
 
 from ..doctools import document
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
@@ -60,6 +62,25 @@ class scale_shape(scale_discrete):
         else:
             self.palette = manual_pal(shapes)
         scale_discrete.__init__(self, **kwargs)
+
+
+@document
+class scale_shape_ordinal(scale_shape):
+    """
+    Scale for shapes
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+    _aesthetics = ['shape']
+
+    def __init__(self, **kwargs):
+        warn(
+            "Using shapes for an ordinal variable is not advised.",
+            PlotnineWarning
+        )
+        super().__init__(**kwargs)
 
 
 class scale_shape_continuous(scale_continuous):

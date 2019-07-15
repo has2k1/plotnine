@@ -1169,6 +1169,25 @@ class array_kind:
     def timedelta(arr):
         return arr.dtype.kind == 'm'
 
+    @staticmethod
+    def ordinal(arr):
+        """
+        Return True if array is an ordered categorical
+
+        Parameters
+        ----------
+        arr : numpy.array
+            Must have a dtype
+
+        Returns
+        -------
+        out : bool
+            Whether array `arr` is an ordered categorical
+        """
+        if pdtypes.is_categorical(arr):
+            return arr.cat.ordered
+        return False
+
 
 def log(x, base=None):
     """

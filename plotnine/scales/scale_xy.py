@@ -171,6 +171,11 @@ class scale_y_discrete(scale_position_discrete):
     _aesthetics = ['y', 'ymin', 'ymax', 'yend']
 
 
+# Not part of the user API
+alias('scale_x_ordinal', scale_x_discrete)
+alias('scale_y_ordinal', scale_y_discrete)
+
+
 @document
 class scale_x_continuous(scale_position_continuous):
     """

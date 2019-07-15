@@ -1,8 +1,11 @@
+from warnings import warn
+
 import numpy as np
 from mizani.palettes import rescale_pal
 
 from ..doctools import document
 from ..utils import alias
+from ..exceptions import PlotnineWarning
 from .scale import scale_discrete, scale_continuous, scale_datetime
 
 
@@ -29,9 +32,9 @@ alias('scale_alpha_continuous', scale_alpha)
 
 
 @document
-class scale_alpha_discrete(scale_discrete):
+class scale_alpha_ordinal(scale_discrete):
     """
-    Discrete Alpha Scale
+    Ordinal Alpha Scale
 
     Parameters
     ----------
@@ -48,6 +51,25 @@ class scale_alpha_discrete(scale_discrete):
 
         self.palette = palette
         scale_discrete.__init__(self, **kwargs)
+
+
+@document
+class scale_alpha_discrete(scale_alpha_ordinal):
+    """
+    Discrete Alpha Scale
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+    _aesthetics = ['alpha']
+
+    def __init__(self, **kwargs):
+        warn(
+            "Using alpha for a discrete variable is not advised.",
+            PlotnineWarning
+        )
+        super().__init__(**kwargs)
 
 
 @document

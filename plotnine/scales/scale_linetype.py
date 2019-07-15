@@ -1,7 +1,9 @@
+from warnings import warn
+
 from mizani.palettes import manual_pal
 
 from ..doctools import document
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import alias
 from .scale import scale_discrete, scale_continuous
 
@@ -27,6 +29,25 @@ class scale_linetype(scale_discrete):
     """
     _aesthetics = ['linetype']
     palette = staticmethod(manual_pal(linetypes))
+
+
+@document
+class scale_linetype_ordinal(scale_linetype):
+    """
+    Scale for line patterns
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+    _aesthetics = ['linetype']
+
+    def __init__(self, **kwargs):
+        warn(
+            "Using linetype for an ordinal variable is not advised.",
+            PlotnineWarning
+        )
+        super().__init__(**kwargs)
 
 
 class scale_linetype_continuous(scale_continuous):

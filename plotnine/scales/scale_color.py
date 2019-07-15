@@ -487,8 +487,10 @@ class scale_fill_datetime(scale_datetime, scale_fill_cmap):
 # Default scales
 alias('scale_color_discrete', scale_color_hue)
 alias('scale_color_continuous', scale_color_cmap)
+alias('scale_color_ordinal', scale_color_cmap_d)
 alias('scale_fill_discrete', scale_fill_hue)
 alias('scale_fill_continuous', scale_fill_cmap)
+alias('scale_fill_ordinal', scale_fill_cmap_d)
 
 # American to British spelling
 alias('scale_colour_hue', scale_color_hue)
@@ -507,3 +509,4 @@ alias('scale_colour_distiller', scale_color_distiller)
 alias('scale_colour_cmap', scale_color_cmap)
 alias('scale_colour_cmap_d', scale_color_cmap_d)
 alias('scale_colour_datetime', scale_color_datetime)
+alias('scale_colour_ordinal', scale_color_cmap_d)

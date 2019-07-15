@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, expand_limits, theme
-from plotnine import lims, element_text
+from plotnine import geom_col, lims, element_text
 from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -608,3 +608,18 @@ def test_datetime_scale_limits():
          )
 
     assert p == 'datetime_scale_limits'
+
+
+def test_ordinal_scale():
+    df = pd.DataFrame({
+        'x': pd.Categorical(list('abcd'), ordered=True),
+        'y': [1, 2, 3, 4]
+    })
+
+    p = (ggplot(df)
+         + aes('x', 'y', color='-y', fill='x')
+         + geom_col(size=4)
+         + _theme
+         )
+
+    assert p + _theme == 'ordinal_scale'

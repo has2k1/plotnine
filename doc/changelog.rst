@@ -12,6 +12,9 @@ API Changes
   Shapefiles should contain only one type of geometry and that is the geometry
   that is drawn.
 
+- Ordinal (Ordered categorical) columns are now mapped to ordinal scales. This
+  creates different plots.
+
 New Features
 ************
 
@@ -19,6 +22,7 @@ New Features
   and can now repel text.
 - Added :class:`~plotnine.annotate.annotation_logticks`.
 - Added :class:`~plotnine.geoms.geom_sina`
+- Added scales for ordinal (ordered categorical) columns.
 
 Bug Fixes
 *********
