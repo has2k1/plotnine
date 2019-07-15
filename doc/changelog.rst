@@ -92,6 +92,9 @@ Enhancements
   differentiate between arguments for initialising and those for fitting the
   smoothing model.
 
+- :class:`~plotnine.postions.position_nudge` can now deal with more geoms e.g.
+  :class:`~plotnine.geoms.geom_boxplot`.
+
 v0.5.1
 ------
 (2018-10-17)

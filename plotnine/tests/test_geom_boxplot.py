@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 from plotnine import ggplot, aes, geom_boxplot, coord_flip, theme
+from plotnine import position_nudge
 
 n = 4
 m = 10
@@ -47,3 +48,10 @@ def test_params():
          theme(subplots_adjust={'right': 0.85})
          )
     assert p == 'params'
+
+
+def test_position_nudge():
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_boxplot(position=position_nudge(x=-0.1), size=2)
+         )
+    assert p == 'position_nudge'
