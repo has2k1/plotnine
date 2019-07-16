@@ -95,6 +95,9 @@ Enhancements
 - :class:`~plotnine.postions.position_nudge` can now deal with more geoms e.g.
   :class:`~plotnine.geoms.geom_boxplot`.
 
+- The ``limits`` parameter of :class:`~plotnine.scales.scale_x_discrete` and
+    :class:`~plotnine.scales.scale_y_discrete` can now be a function.
+
 v0.5.1
 ------
 (2018-10-17)

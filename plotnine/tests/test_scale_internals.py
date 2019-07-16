@@ -291,6 +291,20 @@ def test_setting_limits():
     assert s.limits == tuple('abcdefg')
 
 
+def test_discrete_xy_scale_limits():
+    lst = list('abcd')
+    x = pd.Series(pd.Categorical(lst, ordered=True))
+    sc = scale_xy
+
+    s = sc.scale_x_discrete()
+    s.train(x)
+    assert s.limits == lst
+
+    s = sc.scale_x_discrete(limits=reversed)
+    s.train(x)
+    assert s.limits == lst[::-1]
+
+
 def test_setting_limits_transformed():
     sc = scale_xy
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
