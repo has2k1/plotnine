@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from plotnine import (ggplot, aes, geom_path, geom_line,
-                      geom_step, arrow)
+                      geom_point, geom_step, arrow)
 from plotnine.exceptions import PlotnineWarning
 
 
@@ -46,6 +46,16 @@ def test_step():
                    direction='vh', size=4))
 
     assert p == 'step'
+
+
+def test_step_mid():
+    df = pd.DataFrame({'x': range(9), 'y': range(9)})
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point(size=4)
+         + geom_step(direction='mid', size=2)
+         )
+
+    assert p == 'step_mid'
 
 
 def test_line():

@@ -23,6 +23,8 @@ New Features
 - Added :class:`~plotnine.annotate.annotation_logticks`.
 - Added :class:`~plotnine.geoms.geom_sina`
 - Added scales for ordinal (ordered categorical) columns.
+- :class:`~plotnine.geoms.geom_step` gained the option ``mid`` for the
+  direction parameter. The steps are taken mid-way between adjacent x values.
 
 Bug Fixes
 *********
@@ -97,6 +99,8 @@ Enhancements
 
 - The ``limits`` parameter of :class:`~plotnine.scales.scale_x_discrete` and
     :class:`~plotnine.scales.scale_y_discrete` can now be a function.
+
+- The ``width`` of the boxplot can now be set irrespective of the stat.
 
 v0.5.1
 ------
