@@ -45,7 +45,7 @@ class geom_hline(geom):
         """
         Plot all groups
         """
-        ranges = coord.range(panel_params)
+        ranges = coord.backtransform_range(panel_params)
         data['y'] = data['yintercept']
         data['yend'] = data['yintercept']
         data['x'] = ranges.x[0]

@@ -45,7 +45,7 @@ class geom_vline(geom):
         """
         Plot all groups
         """
-        ranges = coord.range(panel_params)
+        ranges = coord.backtransform_range(panel_params)
         data['x'] = data['xintercept']
         data['xend'] = data['xintercept']
         data['y'] = ranges.y[0]

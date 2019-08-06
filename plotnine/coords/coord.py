@@ -141,12 +141,22 @@ class coord:
         return types.SimpleNamespace(x=panel_params['x_range'],
                                      y=panel_params['y_range'])
 
+    def backtransform_range(self, panel_params):
+        """
+        Get the panel range provided in panel_params and backtransforms it
+        to data coordinates
+
+        Coordinate systems that do any transformations should override
+        this method. e.g. coord_trans has to override this method.
+        """
+        return self.range(panel_params)
+
     def distance(self, x, y, panel_params):
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
 
     def munch(self, data, panel_params):
-        ranges = self.range(panel_params)
+        ranges = self.backtransform_range(panel_params)
 
         data.loc[data['x'] == -np.inf, 'x'] = ranges.x[0]
         data.loc[data['x'] == np.inf, 'x'] = ranges.x[1]

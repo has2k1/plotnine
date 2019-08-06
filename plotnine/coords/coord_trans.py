@@ -58,6 +58,11 @@ class coord_trans(coord):
         data = transform_position(data, trans_x, trans_y)
         return transform_position(data, squish_infinite, squish_infinite)
 
+    def backtransform_range(self, panel_params):
+        x = self.trans.x.inverse(panel_params['x_range'])
+        y = self.trans.y.inverse(panel_params['y_range'])
+        return types.SimpleNamespace(x=x, y=y)
+
     def setup_panel_params(self, scale_x, scale_y):
         """
         Compute the range and break information for the panel

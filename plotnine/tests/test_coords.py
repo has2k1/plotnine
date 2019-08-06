@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from mizani.transforms import trans_new
 
-from plotnine import (ggplot, aes, geom_bar, coord_flip,
-                      coord_fixed, coord_trans)
+from plotnine import (ggplot, aes, geom_bar, geom_line, coord_flip,
+                      coord_fixed, coord_trans, xlim)
 
 n = 10  # Some even number greater than 2
 
@@ -35,3 +35,13 @@ def test_coord_trans_reverse():
          + coord_trans(x='reverse', y='reverse')
          )
     assert p == 'coord_trans_reverse'
+
+
+def test_coord_trans_backtransforms():
+    df = pd.DataFrame({'x': [-np.inf, np.inf], 'y': [1, 2]})
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_line(size=2)
+         + xlim(1, 2)
+         + coord_trans(x='log10')
+         )
+    assert p == 'coord_trans_backtransform'

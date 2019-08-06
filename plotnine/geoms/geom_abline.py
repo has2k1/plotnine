@@ -65,7 +65,7 @@ class geom_abline(geom):
         """
         Plot all groups
         """
-        ranges = coord.range(panel_params)
+        ranges = coord.backtransform_range(panel_params)
         data['x'] = ranges.x[0]
         data['xend'] = ranges.x[1]
         data['y'] = ranges.x[0] * data['slope'] + data['intercept']

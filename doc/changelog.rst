@@ -74,6 +74,10 @@ Bug Fixes
 - Fixed :class:`~plotnine.geoms.geom_text` not to error when using ``hjust``
   and ``vjust``. (:issue:`287`)
 
+- Fixed bug where :class:`~plotnine.geoms.geom_abline`
+  :class:`~plotnine.geoms.geom_hline` and :class:`~plotnine.geoms.geom_vline`
+  could give wrong results when used with :class:`~plotnine.coord.coord_trans`.
+
 Enhancements
 ************
 
