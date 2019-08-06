@@ -27,6 +27,10 @@ class geom_boxplot(geom):
     Parameters
     ----------
     {common_parameters}
+    width : float, optional (default None)
+        Box width. If :py:`None`, the width is set to
+        `90%` of the resolution of the data. Note that if the stat
+        has a width parameter, that takes precedence over this one.
     outlier_alpha : float, optional (default: 1)
         Transparency of the outlier points.
     outlier_color : str or tuple, optional (default: None)
@@ -54,7 +58,7 @@ class geom_boxplot(geom):
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge2',
-                      'na_rm': False,
+                      'na_rm': False, 'width': None,
                       'outlier_alpha': 1, 'outlier_color': None,
                       'outlier_shape': 'o', 'outlier_size': 1.5,
                       'outlier_stroke': 0.5, 'notch': False,
@@ -79,8 +83,9 @@ class geom_boxplot(geom):
 
     def setup_data(self, data):
         if 'width' not in data:
-            if 'width' in self.params and self.params['width']:
-                data['width'] = self.params['width']
+            width = self.params.get('width', None)
+            if width is not None:
+                data['width'] = width
             else:
                 data['width'] = resolution(data['x'], False) * 0.9
 
