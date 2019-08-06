@@ -18,7 +18,7 @@ from .facets import facet_null
 from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme, theme_get
-from .utils import to_inches, from_inches
+from .utils import to_inches, from_inches, order_as_mapping_data
 from .exceptions import PlotnineError, PlotnineWarning
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -52,17 +52,9 @@ class ggplot:
 
     def __init__(self, mapping=None, data=None, environment=None):
         # Allow some sloppiness
-        if (isinstance(mapping, pd.DataFrame) and
-                (data is None or isinstance(data, aes))):
-            mapping, data = data, mapping
+        mapping, data = order_as_mapping_data(mapping, data)
         if mapping is None:
             mapping = aes()
-
-        if (data is not None and
-                not isinstance(data, pd.DataFrame)):
-            raise PlotnineError(
-                'data must be a dataframe or None if each '
-                'layer will have separate data.')
 
         # Recognize plydata groups
         if hasattr(data, 'group_indices') and 'group' not in mapping:

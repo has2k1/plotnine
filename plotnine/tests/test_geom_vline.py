@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_vline, geom_point, theme
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 df = pd.DataFrame({
         'xintercept': [1, 2],
@@ -37,3 +37,8 @@ def test_aes_inheritance():
              geom_point() +
              geom_vline(size=2))
         p.draw_test()
+
+
+def test_aes_overwrite():
+    with pytest.warns(PlotnineWarning):
+        geom_vline(aes(color='x'), xintercept=2)

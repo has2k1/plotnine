@@ -1,9 +1,10 @@
-from contextlib import suppress
+from warnings import warn
 
 import pandas as pd
 import matplotlib.lines as mlines
 
-from ..utils import make_iterable, SIZE_FACTOR
+from ..utils import make_iterable, SIZE_FACTOR, order_as_mapping_data
+from ..exceptions import PlotnineWarning
 from ..doctools import document
 from ..aes import aes
 from .geom import geom
@@ -27,15 +28,18 @@ class geom_vline(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'inherit_aes': False}
 
-    def __init__(self, *args, **kwargs):
-        with suppress(KeyError):
-            xintercept = make_iterable(kwargs.pop('xintercept'))
-            data = pd.DataFrame({'xintercept': xintercept})
-            kwargs['mapping'] = aes(xintercept='xintercept')
-            kwargs['data'] = data
+    def __init__(self, mapping=None, data=None, **kwargs):
+        mapping, data = order_as_mapping_data(mapping, data)
+        xintercept = kwargs.pop('xintercept', None)
+        if xintercept is not None:
+            if mapping:
+                warn("The 'xintercept' parameter has overridden "
+                     "the aes() mapping.", PlotnineWarning)
+            data = pd.DataFrame({'xintercept': make_iterable(xintercept)})
+            mapping = aes(xintercept='xintercept')
             kwargs['show_legend'] = False
 
-        geom.__init__(self, *args, **kwargs)
+        geom.__init__(self, mapping, data, **kwargs)
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         """

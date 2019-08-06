@@ -34,7 +34,7 @@ def test_geom_basics():
     assert g.mapping['color'] == 'col2'
 
     # Multiple mappings
-    with pytest.raises(PlotnineError):
+    with pytest.raises(TypeError):
         g = geom_abc(aes(color='col1'), aes(color='co1'))
 
     # setting, not mapping

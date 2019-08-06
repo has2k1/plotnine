@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_hline, geom_point, theme
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 df = pd.DataFrame({
         'yintercept': [1, 2],
@@ -37,3 +37,8 @@ def test_aes_inheritance():
              geom_point() +
              geom_hline(size=2))
         p.draw_test()
+
+
+def test_aes_overwrite():
+    with pytest.warns(PlotnineWarning):
+        geom_hline(aes(color='y'), yintercept=2)

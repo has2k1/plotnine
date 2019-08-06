@@ -32,9 +32,9 @@ class geom(metaclass=Registry):
     # their default values.
     _aesthetics_doc = '{aesthetics_table}'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         kwargs = rename_aesthetics(kwargs)
-        kwargs = data_mapping_as_kwargs(args, kwargs)
+        kwargs = data_mapping_as_kwargs((mapping, data), kwargs)
         self._kwargs = kwargs  # Will be used to create stat & layer
 
         # separate aesthetics and parameters

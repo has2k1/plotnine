@@ -37,8 +37,8 @@ class stat(metaclass=Registry):
     # their default values.
     _aesthetics_doc = '{aesthetics_table}'
 
-    def __init__(self, *args, **kwargs):
-        kwargs = data_mapping_as_kwargs(args, kwargs)
+    def __init__(self, mapping=None, data=None, **kwargs):
+        kwargs = data_mapping_as_kwargs((mapping, data), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
         self.aes_params = {ae: kwargs[ae]

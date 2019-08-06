@@ -1,6 +1,8 @@
+import pytest
 import pandas as pd
 
 from plotnine import ggplot, aes, geom_abline, geom_point, theme
+from plotnine.exceptions import PlotnineWarning
 
 df = pd.DataFrame({
         'slope': [1, 1],
@@ -44,3 +46,8 @@ def test_aes_inheritance():
          geom_abline(size=2))
 
     assert p == 'aes_inheritance'
+
+
+def test_aes_overwrite():
+    with pytest.warns(PlotnineWarning):
+        geom_abline(aes(intercept='y'), intercept=2)

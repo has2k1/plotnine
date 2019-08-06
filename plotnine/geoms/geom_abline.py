@@ -1,9 +1,11 @@
-import pandas as pd
-from contextlib import suppress
+from warnings import warn
 
-from ..utils import make_iterable
-from ..doctools import document
+import pandas as pd
+
 from ..aes import aes
+from ..exceptions import PlotnineWarning
+from ..utils import make_iterable, order_as_mapping_data
+from ..doctools import document
 from .geom import geom
 from .geom_segment import geom_segment
 
@@ -26,26 +28,38 @@ class geom_abline(geom):
     REQUIRED_AES = {'slope', 'intercept'}
     legend_geom = 'path'
 
-    def __init__(self, *args, **kwargs):
-        has_mapping = (args and (isinstance(args[0], aes)
-                                 or isinstance(args[1], aes))
-                       or 'mapping' in kwargs)
-        if not has_mapping:
-            # Nothing is set, default to y=x
-            if 'slope' not in kwargs:
-                kwargs['slope'] = 1
-            if 'intercept' not in kwargs:
-                kwargs['intercept'] = 0
+    def __init__(self, mapping=None, data=None, **kwargs):
+        mapping, data = order_as_mapping_data(mapping, data)
+        slope = kwargs.pop('slope', None)
+        intercept = kwargs.pop('intercept', None)
 
-        with suppress(KeyError):
-            intercept = make_iterable(kwargs.pop('intercept'))
-            data = pd.DataFrame({'intercept': intercept,
-                                 'slope': kwargs.pop('slope')})
-            kwargs['mapping'] = aes(intercept='intercept', slope='slope')
-            kwargs['data'] = data
+        # If nothing is set, it defaults to y=x
+        if mapping is None and slope is None and intercept is None:
+            slope = 1
+            intercept = 0
+
+        if slope is not None or intercept is not None:
+            if mapping:
+                warn("The 'intercept' and 'slope' when specified override "
+                     "the aes() mapping.", PlotnineWarning)
+            if data is not None:
+                warn("The 'intercept' and 'slope' when specified override "
+                     "the data", PlotnineWarning)
+
+            if slope is None:
+                slope = 1
+            if intercept is None:
+                intercept = 0
+
+            data = pd.DataFrame({
+                'intercept': make_iterable(intercept),
+                'slope': slope
+            })
+
+            mapping = aes(intercept=intercept, slope=slope)
             kwargs['show_legend'] = False
 
-        geom.__init__(self, *args, **kwargs)
+        geom.__init__(self, mapping, data, **kwargs)
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         """

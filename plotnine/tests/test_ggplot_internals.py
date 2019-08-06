@@ -73,7 +73,7 @@ def test_ggplot_parameters():
     assert p.data is None
     assert p.mapping == aes()
 
-    with pytest.raises(PlotnineError):
+    with pytest.raises(TypeError):
         ggplot([1, 2, 3], aes('x'))
 
 

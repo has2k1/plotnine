@@ -44,13 +44,13 @@ class geom_map(geom):
     REQUIRED_AES = {'geometry'}
     legend_geom = 'polygon'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         if not HAS_GEOPANDAS:
             raise PlotnineError(
                 "geom_map requires geopandas. "
                 "Please install geopandas."
             )
-        geom.__init__(self, *args, **kwargs)
+        geom.__init__(self, mapping, data, **kwargs)
         # Almost all geodataframes loaded from shapefiles
         # have a geometry column.
         if 'geometry' not in self.mapping:

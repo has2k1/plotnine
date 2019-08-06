@@ -71,7 +71,7 @@ class geom_text(geom):
                       'adjust_text': None,
                       'format_string': None}
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         nudge_kwargs = {}
         adjust_text = kwargs.get('adjust_text', None)
         if adjust_text is None:
@@ -94,7 +94,7 @@ class geom_text(geom):
         if 'vjust' in kwargs:
             kwargs['va'] = kwargs.pop('vjust')
 
-        geom.__init__(self, *args, **kwargs)
+        geom.__init__(self, mapping, data, **kwargs)
 
     def setup_data(self, data):
         parse = self.params['parse']

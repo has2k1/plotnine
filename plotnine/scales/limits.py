@@ -4,7 +4,7 @@ import sys
 
 import pandas as pd
 
-from ..aes import all_aesthetics
+from ..aes import aes, all_aesthetics
 from ..geoms import geom_blank
 from ..scales.scales import make_scale
 from ..exceptions import PlotnineError
@@ -208,7 +208,7 @@ def expand_limits(**kwargs):
     else:
         data = kwargs
 
-    mapping = {}
+    mapping = aes()
     for ae in set(kwargs) & all_aesthetics:
         mapping[ae] = ae
 

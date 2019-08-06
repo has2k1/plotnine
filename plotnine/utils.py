@@ -18,6 +18,7 @@ from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
 
+from .aes import aes
 from .exceptions import PlotnineError, PlotnineWarning
 
 
@@ -973,35 +974,34 @@ def data_mapping_as_kwargs(args, kwargs):
     out : dict
         kwargs that includes 'data' and 'mapping' keys.
     """
-    # No need to be strict about the aesthetic superclass
-    aes = dict
-    mapping, data = aes(), None
-    aes_err = ("Found more than one aes argument. "
-               "Expecting zero or one")
-    data_err = "More than one dataframe argument."
+    mapping, data = order_as_mapping_data(*args)
 
     # check args #
-    for arg in args:
-        if isinstance(arg, aes) and mapping:
-            raise PlotnineError(aes_err)
-        if isinstance(arg, pd.DataFrame) and data:
-            raise PlotnineError(data_err)
+    if mapping is not None and not isinstance(mapping, aes):
+        raise PlotnineError(
+            "Unknown mapping of type {}".format(type(mapping))
+        )
 
-        if isinstance(arg, aes):
-            mapping = arg
-        elif isinstance(arg, pd.DataFrame):
-            data = arg
-        else:
-            msg = "Unknown argument of type '{0}'."
-            raise PlotnineError(msg.format(type(arg)))
+    if data is not None and not isinstance(data, pd.DataFrame):
+        raise PlotnineError(
+            "Unknown data of type {}".format(type(mapping))
+        )
 
     # check kwargs #
-    # kwargs mapping has precedence over that in args
-    if 'mapping' not in kwargs:
+    if mapping is not None:
+        if 'mapping' in kwargs:
+            raise PlotnineError("More than one mapping argument.")
+        else:
+            kwargs['mapping'] = mapping
+    else:
+        if 'mapping' not in kwargs:
+            mapping = aes()
+
+    if kwargs.get('mapping', None) is None:
         kwargs['mapping'] = mapping
 
     if data is not None and 'data' in kwargs:
-        raise PlotnineError(data_err)
+        raise PlotnineError("More than one data argument.")
     elif 'data' not in kwargs:
         kwargs['data'] = data
 
@@ -1010,6 +1010,64 @@ def data_mapping_as_kwargs(args, kwargs):
         msg = "Aesthetics {} specified two times."
         raise PlotnineError(msg.format(duplicates))
     return kwargs
+
+
+def order_as_mapping_data(*args):
+    """
+    Reorder args to ensure (mapping, data) order
+
+    This function allow the user to pass mapping and data
+    to ggplot and geom in any order.
+
+    Parameter
+    ---------
+    *args : tuple
+        In-line arguments as passed to ggplot, a geom or a stat.
+
+    Returns
+    -------
+    mapping : aes
+    data : pd.DataFrame
+    *rest : tuple
+    """
+    n = len(args)
+    if n == 0:
+        return None, None
+    elif n == 1:
+        single_arg = args[0]
+        if isinstance(single_arg, pd.DataFrame):
+            return None, single_arg
+        elif isinstance(single_arg, aes):
+            return single_arg, None
+        else:
+            raise TypeError(
+                "Unknown argument type {!r}, expected mapping "
+                "or dataframe.".format(single_arg)
+            )
+    elif n > 2:
+        raise PlotnineError(
+            "Expected at most 2 positional arguments, "
+            "but I got {}.".format(n)
+        )
+
+    mapping, data = args
+    if isinstance(mapping, pd.DataFrame):
+        if data is None or isinstance(data, aes):
+            mapping, data = data, mapping
+
+    if mapping and not isinstance(mapping, aes):
+        raise TypeError(
+            "Unknown argument type {!r}, expected mapping/aes."
+            .format(type(mapping))
+        )
+
+    if not isinstance(data, pd.DataFrame) and data is not None:
+        raise TypeError(
+            "Unknown argument type {!r}, expected dataframe."
+            .format(type(data))
+        )
+
+    return mapping, data
 
 
 def interleave(*arrays):
