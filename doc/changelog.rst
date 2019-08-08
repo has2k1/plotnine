@@ -106,6 +106,9 @@ Enhancements
 
 - The ``width`` of the boxplot can now be set irrespective of the stat.
 
+- The mid-point color of :class:`~plotnine.scales.scale_color_distiller` now
+  matches that of the trainned data.
+
 v0.5.1
 ------
 (2018-10-17)

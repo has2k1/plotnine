@@ -321,7 +321,9 @@ class scale_color_distiller(scale_color_gradientn):
     Sequential and diverging continuous color scales
 
     This is a convinience scale around :class:`.scale_color_gradientn`
-    with colors from `colorbrewer.org <http://colorbrewer2.org/>`_
+    with colors from `colorbrewer.org <http://colorbrewer2.org/>`_.
+    It smoothly interpolates 7 colors from a brewer palette to create
+    a continuous palette.
 
     Parameters
     ----------
@@ -352,8 +354,10 @@ class scale_color_distiller(scale_color_gradientn):
                  "Consider using type = 'seq' or type = 'div' instead",
                  PlotnineWarning)
 
-        # Grab 6 colors from brewer and create a gradient palette
-        colors = brewer_pal(type, palette)(6)
+        # Grab 7 colors from brewer and create a gradient palette
+        # An odd number matches the midpoint of the palette to that
+        # of the data
+        colors = brewer_pal(type, palette)(7)
         scale_color_gradientn.__init__(self, colors, values, **kwargs)
 
 
