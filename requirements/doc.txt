@@ -1,5 +1,5 @@
 git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
-numpydoc
+numpydoc>=0.9.1
 prompt-toolkit>=2.0.0
 jupyter
 sphinx>=2.1.2
