@@ -79,6 +79,9 @@ Bug Fixes
   :class:`~plotnine.geoms.geom_hline` and :class:`~plotnine.geoms.geom_vline`
   could give wrong results when used with :class:`~plotnine.coord.coord_trans`.
 
+- Fixed bug where layers with only infinite values would lead to an exception
+  if they were the first layer encountered when choosing a scale.
+
 Enhancements
 ************
 

@@ -3,6 +3,7 @@ from contextlib import suppress
 from warnings import warn
 
 import numpy as np
+import pandas.api.types as pdtypes
 
 from ..aes import aes_to_scale
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -299,6 +300,9 @@ def make_scale(ae, series, *args, **kwargs):
     The scale is for the aesthetic ae, and args & kwargs
     are passed on to the scale creating class
     """
+    if pdtypes.is_float_dtype(series) and np.isinf(series).all():
+        raise PlotnineError("Cannot create scale for infinite data")
+
     stype = scale_type(series)
 
     # filter parameters by scale type

@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, expand_limits, theme
-from plotnine import geom_col, lims, element_text
+from plotnine import geom_col, lims, element_text, annotate
 from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -634,3 +634,14 @@ def test_ordinal_scale():
          )
 
     assert p + _theme == 'ordinal_scale'
+
+
+def test_layer_with_only_infs():
+    df = pd.DataFrame({'x': ['a', 'b']})
+    p = (ggplot(df, aes('x', 'x'))
+         + annotate('rect', xmin=-np.inf, xmax=np.inf, ymin=-np.inf,
+                    ymax=np.inf, fill='black', alpha=.25)
+         + geom_point(color='red', size=3)
+         )
+    p = p.build_test()
+    assert isinstance(p.scales.get_scales('x'), scale_x_discrete)
