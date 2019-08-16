@@ -4,6 +4,7 @@ import inspect
 import shutil
 import locale
 import types
+from copy import deepcopy
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -107,7 +108,7 @@ ggplot.__eq__ = ggplot_equals
 
 def draw_test(self):
     """
-    Compare ggplot object to image determined by `right`
+    Try drawing the ggplot object
 
     Parameters
     ----------
@@ -129,6 +130,26 @@ def draw_test(self):
 
 
 ggplot.draw_test = draw_test
+
+
+def build_test(self):
+    """
+    Try building the ggplot object
+
+    Parameters
+    ----------
+    self : ggplot
+        ggplot object
+
+    This function is meant to monkey patch ggplot.build_test
+    so that tests build.
+    """
+    self = deepcopy(self)
+    self._build()
+    return self
+
+
+ggplot.build_test = build_test
 
 
 def pytest_assertrepr_compare(op, left, right):

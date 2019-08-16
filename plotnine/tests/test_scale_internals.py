@@ -11,6 +11,10 @@ from plotnine.scales import scale_color
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
 from plotnine.scales import scale_xy
+from plotnine.scales.scale_xy import (scale_x_continuous,
+                                      scale_y_continuous,
+                                      scale_x_discrete,
+                                      scale_y_discrete)
 from plotnine.scales.scale_alpha import (scale_alpha_discrete,
                                          scale_alpha_continuous)
 from plotnine.scales.scale_linetype import (scale_linetype_discrete,
@@ -235,54 +239,50 @@ def test_alpha_palette():
 
 
 def test_xy_palette():
-    sc = scale_xy
-
-    s = sc.scale_x_discrete()
+    s = scale_x_discrete()
     value = s.palette(3)
     assert(value == 3)
 
-    s = sc.scale_y_discrete()
+    s = scale_y_discrete()
     value = s.palette(11.5)
     assert(value == 11.5)
 
-    s = sc.scale_x_continuous()
+    s = scale_x_continuous()
     value = s.palette(3.63)
     assert(value == 3.63)
 
-    s = sc.scale_y_continuous()
+    s = scale_y_continuous()
     value = s.palette(11.52)
     assert(value == 11.52)
 
 
 def test_xy_limits():
-    sc = scale_xy
     lst = [1, 2, 3]
     arr = np.array(lst)
     series = pd.Series(lst)
-    s1 = sc.scale_x_discrete(limits=lst)
-    s2 = sc.scale_x_discrete(limits=arr)
-    s3 = sc.scale_x_discrete(limits=series)
+    s1 = scale_x_discrete(limits=lst)
+    s2 = scale_x_discrete(limits=arr)
+    s3 = scale_x_discrete(limits=series)
     assert all(s2.limits == s1.limits)
     assert all(s3.limits == s1.limits)
 
 
 def test_setting_limits():
-    sc = scale_xy
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-    s = sc.scale_x_continuous()
+    s = scale_x_continuous()
     s.train(lst)
     assert s.limits == (1, 10)
 
-    s = sc.scale_x_continuous(limits=(3, 7))
+    s = scale_x_continuous(limits=(3, 7))
     s.train(lst)
     assert s.limits == (3, 7)
 
-    s = sc.scale_x_continuous(limits=(3, None))
+    s = scale_x_continuous(limits=(3, None))
     s.train(lst)
     assert s.limits == (3, 10)
 
-    s = sc.scale_x_continuous(limits=(None, 7))
+    s = scale_x_continuous(limits=(None, 7))
     s.train(lst)
     assert s.limits == (1, 7)
 
@@ -294,34 +294,32 @@ def test_setting_limits():
 def test_discrete_xy_scale_limits():
     lst = list('abcd')
     x = pd.Series(pd.Categorical(lst, ordered=True))
-    sc = scale_xy
 
-    s = sc.scale_x_discrete()
+    s = scale_x_discrete()
     s.train(x)
     assert s.limits == lst
 
-    s = sc.scale_x_discrete(limits=reversed)
+    s = scale_x_discrete(limits=reversed)
     s.train(x)
     assert s.limits == lst[::-1]
 
 
 def test_setting_limits_transformed():
-    sc = scale_xy
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-    s = sc.scale_y_continuous(trans='log10')
+    s = scale_y_continuous(trans='log10')
     s.train(lst)
     assert s.limits == (1, 10)
 
-    s = sc.scale_y_continuous(trans='log10', limits=[2, 7])
+    s = scale_y_continuous(trans='log10', limits=[2, 7])
     s.train(lst)
     assert s.limits == (np.log10(2), np.log10(7))
 
-    s = sc.scale_y_continuous(trans='log10', limits=[2, None])
+    s = scale_y_continuous(trans='log10', limits=[2, None])
     s.train(lst)
     assert s.limits == (np.log10(2), np.log10(10))
 
-    s = sc.scale_y_continuous(trans='log10', limits=[None, 7])
+    s = scale_y_continuous(trans='log10', limits=[None, 7])
     s.train(lst)
     assert s.limits == (np.log10(1), np.log10(7))
 
@@ -331,7 +329,7 @@ def test_minor_breaks():
     x = np.arange(n)
 
     # Default
-    s = scale_xy.scale_x_continuous()
+    s = scale_x_continuous()
     s.train(x)
     breaks = s.get_breaks()
     minor_breaks = s.get_minor_breaks(breaks)
@@ -340,7 +338,7 @@ def test_minor_breaks():
 
     # List
     expected_minor_breaks = [2, 4, 6, 8]
-    s = scale_xy.scale_x_continuous(minor_breaks=expected_minor_breaks)
+    s = scale_x_continuous(minor_breaks=expected_minor_breaks)
     s.train(x)
     breaks = s.get_breaks()
     minor_breaks = s.get_minor_breaks(breaks)
@@ -350,7 +348,7 @@ def test_minor_breaks():
     def func(limits):
         return np.linspace(limits[0], limits[1], n)
 
-    s = scale_xy.scale_x_continuous(minor_breaks=func)
+    s = scale_x_continuous(minor_breaks=func)
     s.train(x)
     breaks = s.get_breaks()
     minor_breaks = s.get_minor_breaks(breaks)
@@ -360,7 +358,7 @@ def test_minor_breaks():
     assert not (_breaks & set(minor_breaks))
 
     # Number of minor breaks
-    s = scale_xy.scale_x_continuous(limits=[0, 20], minor_breaks=3)
+    s = scale_x_continuous(limits=[0, 20], minor_breaks=3)
     minor_breaks = s.get_minor_breaks(major=[0, 10, 20])
     expected_minor_breaks = [2.5, 5, 7.5, 12.5, 15, 17.5]
     assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
@@ -407,13 +405,12 @@ def test_make_scale_and_datetimes():
 
 
 def test_scale_continous_breaks():
-    sc = scale_xy
     x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     breaks = [2, 4, 6, 8, 10]
 
     # Array breaks should not trip up the conditional checks
-    s1 = sc.scale_x_continuous(breaks=breaks, limits=(1, 10))
-    s2 = sc.scale_x_continuous(breaks=np.array(breaks), limits=(1, 10))
+    s1 = scale_x_continuous(breaks=breaks, limits=(1, 10))
+    s2 = scale_x_continuous(breaks=np.array(breaks), limits=(1, 10))
     s1.train(x)
     s2.train(x)
     assert list(s1.get_breaks()) == list(s2.get_breaks())
@@ -578,7 +575,7 @@ def test_breaks_and_labels_outside_of_limits():
     df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
     p = (ggplot(aes('x', 'y'), data=df)
          + geom_point()
-         + scale_xy.scale_x_continuous(
+         + scale_x_continuous(
              limits=[7, 9.5],
              breaks=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
              labels=['one', 'two', 'three', 'four', 'five', 'six', 'seven',
@@ -591,7 +588,7 @@ def test_breaks_and_labels_outside_of_limits():
 def test_changing_scale_transform():
     # No warning
     with pytest.warns(None):
-        scale_xy.scale_x_continuous(trans='reverse')
+        scale_x_continuous(trans='reverse')
         scale_xy.scale_x_reverse(trans='reverse')
         scale_xy.scale_x_log10(trans='log10')
 
