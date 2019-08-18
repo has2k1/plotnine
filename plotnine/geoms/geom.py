@@ -234,14 +234,14 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : dict
+        panel_params : types.SimpleNamespace
             The scale information as may be required by the
             axes. At this point, that information is about
-            ranges, ticks and labels. Keys of interest to
-            the geom are::
+            ranges, ticks and labels. Attributes are of interest
+            to the geom are::
 
-                'x_range'  # tuple
-                'y_range'  # tuple
+                'panel_params.x.range'  # tuple
+                'panel_params.y.range'  # tuple
 
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the

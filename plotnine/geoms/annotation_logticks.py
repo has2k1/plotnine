@@ -22,7 +22,7 @@ class _geom_logticks(geom_rug):
     legend_geom = 'path'
 
     @staticmethod
-    def _check_log_scale(base, sides, scales, coord):
+    def _check_log_scale(base, sides, panel_params, coord):
         """
         Check the log transforms
 
@@ -37,8 +37,8 @@ class _geom_logticks(geom_rug):
             chosen from the characters ``btlr``, for *bottom*, *top*,
             *left* or *right* side marks. If ``coord_flip()`` is used,
             these are the sides *after* the flip.
-        scales : SimpleNamespace
-            ``x`` and ``y`` scales.
+        panel_params : SimpleNamespace
+            ``x`` and ``y`` view scale values.
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the geom.
 
@@ -52,41 +52,43 @@ class _geom_logticks(geom_rug):
                     hasattr(trans, 'base'))
 
         base_x, base_y = base, base
-        x_is_log = is_log(scales.x.trans)
-        y_is_log = is_log(scales.y.trans)
+        x_scale = panel_params.x.scale
+        y_scale = panel_params.y.scale
+        x_is_log = is_log(x_scale.trans)
+        y_is_log = is_log(y_scale.trans)
         if isinstance(coord, coord_flip):
             x_is_log, y_is_log = y_is_log, x_is_log
 
         if 't' in sides or 'b' in sides:
             if base_x is None:
-                base_x = scales.x.trans.base
+                base_x = x_scale.trans.base
 
             if not x_is_log:
                 warnings.warn(
                     "annotation_logticks for x-axis which does not have "
                     "a log scale. The logticks may not make sense.",
                     PlotnineWarning)
-            elif x_is_log and base_x != scales.x.trans.base:
+            elif x_is_log and base_x != x_scale.trans.base:
                 warnings.warn(
                     "The x-axis is log transformed in base {} ,"
                     "but the annotation_logticks are computed in base {}"
-                    "".format(base_x, scales.x.trans.base),
+                    "".format(base_x, x_scale.trans.base),
                     PlotnineWarning)
 
         if 'l' in sides or 'r' in sides:
             if base_y is None:
-                base_y = scales.y.trans.base
+                base_y = y_scale.trans.base
 
             if not y_is_log:
                 warnings.warn(
                     "annotation_logticks for y-axis which does not have "
                     "a log scale. The logticks may not make sense.",
                     PlotnineWarning)
-            elif y_is_log and base_y != scales.x.trans.base:
+            elif y_is_log and base_y != y_scale.trans.base:
                 warnings.warn(
                     "The y-axis is log transformed in base {} ,"
                     "but the annotation_logticks are computed in base {}"
-                    "".format(base_y, scales.x.trans.base),
+                    "".format(base_y, y_scale.trans.base),
                     PlotnineWarning)
         return base_x, base_y
 
@@ -143,17 +145,17 @@ class _geom_logticks(geom_rug):
             'linetype': params['linetype']
         }
         base_x, base_y = self._check_log_scale(
-            params['base'], sides, panel_params['scales'], coord)
+            params['base'], sides, panel_params, coord)
 
         if 'b' in sides or 't' in sides:
-            tick_positions = self._calc_ticks(panel_params['x_range'], base_x)
+            tick_positions = self._calc_ticks(panel_params.x.range, base_x)
             for (positions, length) in zip(tick_positions, lengths):
                 data = pd.DataFrame(dict(x=positions, **_aesthetics))
                 super().draw_group(data, panel_params, coord, ax,
                                    length=length, **params)
 
         if 'l' in sides or 'r' in sides:
-            tick_positions = self._calc_ticks(panel_params['y_range'], base_y)
+            tick_positions = self._calc_ticks(panel_params.y.range, base_y)
             for (positions, length) in zip(tick_positions, lengths):
                 data = pd.DataFrame(dict(y=positions, **_aesthetics))
                 super().draw_group(data, panel_params, coord, ax,

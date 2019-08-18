@@ -235,28 +235,28 @@ class facet:
 
         return self
 
-    def set_limits_breaks_and_labels(self, ranges, ax):
+    def set_limits_breaks_and_labels(self, panel_params, ax):
         # limits
-        ax.set_xlim(ranges['x_range'])
-        ax.set_ylim(ranges['y_range'])
+        ax.set_xlim(panel_params.x.range)
+        ax.set_ylim(panel_params.y.range)
 
         # breaks
-        ax.set_xticks(ranges['x_major'])
-        ax.set_yticks(ranges['y_major'])
+        ax.set_xticks(panel_params.x.breaks)
+        ax.set_yticks(panel_params.y.breaks)
 
         # minor breaks
-        ax.set_xticks(ranges['x_minor'], minor=True)
-        ax.set_yticks(ranges['y_minor'], minor=True)
+        ax.set_xticks(panel_params.x.minor_breaks, minor=True)
+        ax.set_yticks(panel_params.y.minor_breaks, minor=True)
 
         # labels
-        ax.set_xticklabels(ranges['x_labels'])
-        ax.set_yticklabels(ranges['y_labels'])
+        ax.set_xticklabels(panel_params.x.labels)
+        ax.set_yticklabels(panel_params.y.labels)
 
         # When you manually set the tick labels MPL changes the locator
         # so that it no longer reports the x & y positions
         # Fixes https://github.com/has2k1/plotnine/issues/187
-        ax.xaxis.set_major_formatter(MyFixedFormatter(ranges['x_labels']))
-        ax.yaxis.set_major_formatter(MyFixedFormatter(ranges['y_labels']))
+        ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
+        ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
         get_property = self.theme.themeables.property
         # Padding between ticks and text

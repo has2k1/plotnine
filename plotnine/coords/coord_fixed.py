@@ -40,8 +40,8 @@ class coord_fixed(coord_cartesian):
         self.ratio = ratio
 
     def aspect(self, panel_params):
-        x = panel_params['x_range']
-        y = panel_params['y_range']
+        x = panel_params.x.range
+        y = panel_params.y.range
         return (y[1]-y[0]) / (x[1]-x[0]) * self.ratio
 
 

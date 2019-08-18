@@ -72,9 +72,9 @@ class _geom_stripes(geom):
         if isinstance(coord, coord_flip):
             axis, other_axis = other_axis, axis
 
-        breaks = panel_params['{}_major'.format(axis)]
-        range = panel_params['{}_range'.format(axis)]
-        other_range = panel_params['{}_range'.format(other_axis)]
+        breaks = getattr(panel_params, axis).breaks
+        range = getattr(panel_params, axis).range
+        other_range = getattr(panel_params, other_axis).range
 
         # Breaks along the width
         n_stripes = len(breaks)

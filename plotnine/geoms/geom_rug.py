@@ -53,8 +53,8 @@ class geom_rug(geom):
             return
 
         rugs = []
-        xmin, xmax = panel_params['x_range']
-        ymin, ymax = panel_params['y_range']
+        xmin, xmax = panel_params.x.range
+        ymin, ymax = panel_params.y.range
         xheight = (xmax-xmin) * params['length']
         yheight = (ymax-ymin) * params['length']
 

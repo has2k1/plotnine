@@ -116,6 +116,9 @@ Enhancements
 - The way in which layers are created has been refactored to give packages that
   that extend plotnine more flexibility in manipulating the layers.
 
+- You can now specify one sided limits for coordinates. e.g.
+  `coord_cartesian(limits=(None, 10))`.
+
 v0.5.1
 ------
 (2018-10-17)

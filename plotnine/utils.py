@@ -4,6 +4,7 @@ Little functions used all over the codebase
 import collections
 import itertools
 import inspect
+import warnings
 from contextlib import suppress
 from weakref import WeakValueDictionary
 from warnings import warn
@@ -1272,3 +1273,29 @@ def log(x, base=None):
         return np.log(x)
     else:
         return np.log(x)/np.log(base)
+
+
+class ignore_warnings:
+    """
+    Ignore Warnings Context Manager
+
+    Wrap around warnings.catch_warnings to make ignoring
+    warnings easier.
+
+    Parameters
+    ----------
+    *categories : tuple
+        Warning categories to ignore e.g UserWarning,
+        FutureWarning, RuntimeWarning, ...
+    """
+    def __init__(self, *categories):
+        self.categories = categories
+        self._cm = warnings.catch_warnings()
+
+    def __enter__(self):
+        self._cm.__enter__()
+        for c in self.categories:
+            warnings.filterwarnings('ignore', category=c)
+
+    def __exit__(self, type, value, traceback):
+        return self._cm.__exit__()

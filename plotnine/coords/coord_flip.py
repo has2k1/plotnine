@@ -1,4 +1,4 @@
-import types
+from types import SimpleNamespace as NS
 
 from .coord_cartesian import coord_cartesian
 
@@ -51,8 +51,8 @@ class coord_flip(coord_cartesian):
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return types.SimpleNamespace(x=panel_params['y_range'],
-                                     y=panel_params['x_range'])
+        return NS(x=panel_params.y.range,
+                  y=panel_params.x.range)
 
 
 def flip_labels(obj):
@@ -61,7 +61,7 @@ def flip_labels(obj):
 
     Parameters
     ----------
-    obj : dict_like
+    obj : dict_like | types.SimpleNamespace
         Object with labels to rename
     """
     def sub(a, b):
@@ -73,7 +73,11 @@ def flip_labels(obj):
                 new_label = b+label[1:]
                 obj[new_label] = obj.pop(label)
 
-    sub('x', 'z')
-    sub('y', 'x')
-    sub('z', 'y')
+    if hasattr(obj, 'keys'):  # dict or dataframe
+        sub('x', 'z')
+        sub('y', 'x')
+        sub('z', 'y')
+    elif hasattr(obj, 'x') and hasattr(obj, 'y'):
+        obj.x, obj.y = obj.y, obj.x
+
     return obj

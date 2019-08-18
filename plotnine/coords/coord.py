@@ -1,11 +1,7 @@
-import types
+from types import SimpleNamespace as NS
 from copy import deepcopy, copy
 
 import numpy as np
-
-from ..utils import is_waive
-from ..exceptions import PlotnineError
-from ..scales.scale import scale_continuous, scale_discrete
 
 
 class coord:
@@ -110,23 +106,6 @@ class coord:
         """
         return data
 
-    def expand_default(self, scale, discrete=(0, 0.6, 0, 0.6),
-                       continuous=(0.05, 0, 0.05, 0)):
-        """
-        Expand a single scale
-        """
-        if is_waive(scale.expand):
-            if isinstance(scale, scale_discrete):
-                return discrete
-            elif isinstance(scale, scale_continuous):
-                return continuous
-            else:
-                name = scale.__class__.__name__
-                msg = "Failed to expand scale '{}'".format(name)
-                raise PlotnineError(msg)
-        else:
-            return scale.expand
-
     def setup_panel_params(self, scale_x, scale_y):
         """
         Compute the range and break information for the panel
@@ -138,8 +117,8 @@ class coord:
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return types.SimpleNamespace(x=panel_params['x_range'],
-                                     y=panel_params['y_range'])
+        return NS(x=panel_params.x.range,
+                  y=panel_params.y.range)
 
     def backtransform_range(self, panel_params):
         """

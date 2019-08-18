@@ -1,8 +1,8 @@
-import types
+from types import SimpleNamespace as NS
 from warnings import warn
 
 import numpy as np
-from mizani.bounds import expand_range_distinct, squish_infinite
+from mizani.bounds import squish_infinite
 from mizani.transforms import gettrans
 
 from ..exceptions import PlotnineWarning
@@ -28,12 +28,17 @@ class coord_trans(coord):
     ylim : None | (float, float)
         Limits for y axis. If None, then they are
         automatically computed.
+    expand : bool
+        If `True`, expand the coordinate axes by
+        some factor. If `False`, use the limits
+        from the data.
     """
 
     def __init__(self, x='identity', y='identity',
-                 xlim=None, ylim=None):
-        self.trans = types.SimpleNamespace(x=gettrans(x), y=gettrans(y))
-        self.limits = types.SimpleNamespace(xlim=xlim, ylim=ylim)
+                 xlim=None, ylim=None, expand=True):
+        self.trans = NS(x=gettrans(x), y=gettrans(y))
+        self.limits = NS(x=xlim, y=ylim)
+        self.expand = expand
 
     def transform(self, data, panel_params, munch=False):
         if not self.is_linear and munch:
@@ -41,7 +46,7 @@ class coord_trans(coord):
 
         def trans_x(data):
             result = transform_value(self.trans.x,
-                                     data, panel_params['x_range'])
+                                     data, panel_params.x.range)
             if any(result.isnull()):
                 warn("Coordinate transform of x aesthetic "
                      "created one or more NaN values.", PlotnineWarning)
@@ -49,7 +54,7 @@ class coord_trans(coord):
 
         def trans_y(data):
             result = transform_value(self.trans.y,
-                                     data, panel_params['y_range'])
+                                     data, panel_params.y.range)
             if any(result.isnull()):
                 warn("Coordinate transform of y aesthetic "
                      "created one or more NaN values.", PlotnineWarning)
@@ -59,54 +64,35 @@ class coord_trans(coord):
         return transform_position(data, squish_infinite, squish_infinite)
 
     def backtransform_range(self, panel_params):
-        x = self.trans.x.inverse(panel_params['x_range'])
-        y = self.trans.y.inverse(panel_params['y_range'])
-        return types.SimpleNamespace(x=x, y=y)
+        x = self.trans.x.inverse(panel_params.x.range)
+        y = self.trans.y.inverse(panel_params.y.range)
+        return NS(x=x, y=y)
 
     def setup_panel_params(self, scale_x, scale_y):
         """
         Compute the range and break information for the panel
 
         """
-        def train(scale, limits, trans, name):
-            """
-            Train a single coordinate axis
-            """
-            if limits is None:
-                rangee = scale.dimension()
-            else:
-                rangee = scale.transform(limits)
+        def get_view_limits(scale, coord_limits, trans):
+            if coord_limits:
+                coord_limits = trans.transform(coord_limits)
 
-            # data space
-            out = scale.break_info(rangee)
+            expansion = scale.default_expansion(expand=self.expand)
+            ranges = scale.expand_limits(
+                scale.limits, expansion, coord_limits, trans)
+            vs = scale.view(limits=coord_limits, range=ranges.range)
+            vs.range = np.sort(ranges.range_coord)
+            vs.breaks = transform_value(trans, vs.breaks, vs.range)
+            vs.minor_breaks = transform_value(trans, vs.minor_breaks, vs.range)
+            return vs
 
-            # trans'd range
-            out['range'] = np.sort(trans.transform(out['range']))
-
-            if limits is None:
-                expand = self.expand_default(scale)
-                out['range'] = expand_range_distinct(out['range'], expand)
-
-            # major and minor breaks in plot space
-            out['major'] = transform_value(trans, out['major'], out['range'])
-            out['minor'] = transform_value(trans, out['minor'], out['range'])
-
-            for key in list(out.keys()):
-                new_key = '{}_{}'.format(name, key)
-                out[new_key] = out.pop(key)
-
-            return out
-
-        out = dict(
-            scales=types.SimpleNamespace(x=scale_x, y=scale_y),
-            **train(scale_x, self.limits.xlim, self.trans.x, 'x'),
-            **train(scale_y, self.limits.xlim, self.trans.y, 'y')
-        )
+        out = NS(x=get_view_limits(scale_x, self.limits.x, self.trans.x),
+                 y=get_view_limits(scale_y, self.limits.y, self.trans.y))
         return out
 
     def distance(self, x, y, panel_params):
-        max_dist = dist_euclidean(panel_params['x_range'],
-                                  panel_params['y_range'])[0]
+        max_dist = dist_euclidean(panel_params.x.range,
+                                  panel_params.y.range)[0]
         return dist_euclidean(self.trans.x.transform(x),
                               self.trans.y.transform(y)) / max_dist
 

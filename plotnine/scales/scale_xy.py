@@ -103,11 +103,14 @@ class scale_position_discrete(scale_discrete):
             value = list(value)
         self._limits = value
 
-    def dimension(self, expand=(0, 0, 0, 0)):
+    def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
         The phyical size of the scale, if a position scale
         Unlike limits, this always returns a numeric vector of length 2
         """
+        if limits is None:
+            limits = self.limits
+
         c_range = self.range_c.range
         d_range = self.limits
 

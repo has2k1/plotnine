@@ -3,6 +3,7 @@ import os
 import sys
 from copy import deepcopy
 from contextlib import suppress
+from types import SimpleNamespace as NS
 from warnings import warn
 
 import pandas as pd
@@ -513,11 +514,10 @@ class ggplot:
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
-        labels = self.coordinates.labels({
-            'x': self.layout.xlabel(self.labels),
-            'y': self.layout.ylabel(self.labels)
-        })
-
+        labels = self.coordinates.labels(NS(
+            x=self.layout.xlabel(self.labels),
+            y=self.layout.ylabel(self.labels)
+        ))
         # The first axes object is on left, and the last axes object
         # is at the bottom. We change the transform so that the relevant
         # coordinate is in figure coordinates. This way we take
@@ -528,9 +528,9 @@ class ggplot:
         # last_ax = self.axs[-1]
 
         xlabel = self.facet.last_ax.set_xlabel(
-            labels['x'], labelpad=pad_x)
+            labels.x, labelpad=pad_x)
         ylabel = self.facet.first_ax.set_ylabel(
-            labels['y'], labelpad=pad_y)
+            labels.y, labelpad=pad_y)
 
         xlabel.set_transform(mtransforms.blended_transform_factory(
             figure.transFigure, mtransforms.IdentityTransform()))
