@@ -74,8 +74,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'plotnine'
-copyright = u'2017, Hassan Kibirige'
+project = 'plotnine'
+copyright = '2019, Hassan Kibirige'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -93,7 +93,7 @@ except ImportError:
 if on_rtd:
     import re
     version = version.rstrip('.dirty')
-    version = re.sub('\+0\..+', '', version)
+    version = re.sub(r'\+0\..+', '', version)
     version
 
 # The full version, including alpha/beta/rc tags.
@@ -257,19 +257,19 @@ latex_elements = {
     'pointsize': '12pt',
 
     # Additional stuff for the LaTeX preamble.
-    'preamble': r'''
+    'preamble': r"""
         \usepackage{charter}
         \usepackage[defaultsans]{lato}
         \usepackage{inconsolata}
-    ''',
+    """,
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'plotnine.tex', u'plotnine Documentation',
-   u'Hassan Kibirige', 'manual'),
+  ('index', 'plotnine.tex', 'plotnine Documentation',
+   'Hassan Kibirige', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -298,7 +298,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'plotnine', u'plotnine Documentation',
+    ('index', 'plotnine', 'plotnine Documentation',
      ['Hassan Kibirige'], 1)
 ]
 
@@ -333,13 +333,13 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'plotnine'
-epub_author = u'Hassan Kibirige'
-epub_publisher = u'Hassan Kibirige'
-epub_copyright = u'2016, Hassan Kibirige'
+epub_title = 'plotnine'
+epub_author = 'Hassan Kibirige'
+epub_publisher = 'Hassan Kibirige'
+epub_copyright = '2016, Hassan Kibirige'
 
 # The basename for the epub file. It defaults to the project name.
-# epub_basename = u'plotnine'
+# epub_basename = 'plotnine'
 
 # The HTML theme for the epub output. Since the default themes are not
 # optimized for small screen space, using the same theme for HTML and epub
