@@ -47,21 +47,27 @@ class _geom_logticks(geom_rug):
         out : tuple
             The bases (base_x, base_y) to use when generating the ticks.
         """
-        def is_log(trans):
+        def is_log(scale):
+            if not hasattr(scale, 'trans'):
+                return False
+            trans = scale.trans
             return (trans.__class__.__name__.startswith('log') and
                     hasattr(trans, 'base'))
 
         base_x, base_y = base, base
         x_scale = panel_params.x.scale
         y_scale = panel_params.y.scale
-        x_is_log = is_log(x_scale.trans)
-        y_is_log = is_log(y_scale.trans)
+        x_is_log = is_log(x_scale)
+        y_is_log = is_log(y_scale)
         if isinstance(coord, coord_flip):
             x_is_log, y_is_log = y_is_log, x_is_log
 
         if 't' in sides or 'b' in sides:
             if base_x is None:
-                base_x = x_scale.trans.base
+                if x_is_log:
+                    base_x = x_scale.trans.base
+                else:  # no log, no defined base. See warning below.
+                    base_x = 10
 
             if not x_is_log:
                 warnings.warn(
@@ -77,7 +83,10 @@ class _geom_logticks(geom_rug):
 
         if 'l' in sides or 'r' in sides:
             if base_y is None:
-                base_y = y_scale.trans.base
+                if y_is_log:
+                    base_y = y_scale.trans.base
+                else:  # no log, no defined base. See warning below.
+                    base_y = 10
 
             if not y_is_log:
                 warnings.warn(

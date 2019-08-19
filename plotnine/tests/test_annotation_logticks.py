@@ -95,3 +95,23 @@ def test_wrong_bases():
 
     with pytest.warns(PlotnineWarning):
         p.draw_test()
+
+    # x axis is discrete
+    df2 = df.assign(discrete=pd.Categorical([str(a) for a in df['x']]))
+    p = (ggplot(df2, aes('discrete', 'x'))
+         + annotation_logticks(sides='b', size=.75, base=None)
+         + geom_point()
+         )
+
+    with pytest.warns(PlotnineWarning):
+        p.draw_test()
+
+    # y axis is discrete
+    df2 = df.assign(discrete=pd.Categorical([str(a) for a in df['x']]))
+    p = (ggplot(df2, aes('x', 'discrete'))
+         + annotation_logticks(sides='l', size=.75, base=None)
+         + geom_point()
+         )
+
+    with pytest.warns(PlotnineWarning):
+        p.draw_test()
