@@ -97,8 +97,8 @@ Related to geoms
    :template: main.rst
 
    annotate
-   annotate_logticks
-   annotate_stripes
+   annotation_logticks
+   annotation_stripes
    arrow
 
 
