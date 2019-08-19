@@ -15,6 +15,10 @@ API Changes
 - Ordinal (Ordered categorical) columns are now mapped to ordinal scales. This
   creates different plots.
 
+- The default mapping for the computed aesthetic *size* of
+  :class:`~plotnine.stat.stat_sum` has changed to ``'stat(n)'``. This also
+  changes the default plot for :class:`~plotnine.geom.geom_count`.
+
 New Features
 ************
 
