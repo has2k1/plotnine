@@ -7,7 +7,7 @@ import pytest
 
 from plotnine import ggplot, aes, geom_point, expand_limits, theme
 from plotnine import geom_col, lims, element_text, annotate
-from plotnine.scales import scale_color
+from plotnine.scales import scale_color, scale_color_manual
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
 from plotnine.scales import scale_xy
@@ -645,3 +645,16 @@ def test_layer_with_only_infs():
          )
     p = p.build_test()
     assert isinstance(p.scales.get_scales('x'), scale_x_discrete)
+
+
+def test_discrete_scale_exceeding_maximum_number_of_values():
+    df = pd.DataFrame({
+        # not that it's the second c that triggered a bug in scale_discrete.map
+        'x': pd.Categorical(['c', 'a', 'c', 'b', 'c']),
+        'y': [0, 1, 2, 2, 3]})
+    p = (ggplot(df, aes('x', 'y', color='x', shape='x'))
+         + geom_point()
+         + scale_color_manual(['red', 'blue'])
+         )
+    with pytest.warns(PlotnineWarning):
+        p.draw()
