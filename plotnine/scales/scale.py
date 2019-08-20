@@ -432,14 +432,9 @@ class scale_discrete(scale):
             except IndexError:
                 # Deal with missing data
                 # - Insert NaN where there is no match
-                bool_idx_good = (0 <= idx) & (idx < len(pal))
-                bool_idx_bad = ~bool_idx_good
-                pal_match = pal[idx[bool_idx_good]]
-                pal_match = np.insert(
-                    np.array(pal_match, dtype=object),
-                    np.where(bool_idx_bad)[0],
-                    np.nan
-                )
+                pal = np.hstack((pal.astype(object), np.nan))
+                idx = np.clip(idx, 0, len(pal)-1)
+                pal_match = pal[idx]
 
         if self.na_translate:
             bool_idx = pd.isnull(x) | pd.isnull(pal_match)
