@@ -48,9 +48,9 @@ class theme:
         will only modify the x-axis text.
 
     kwargs: dict
-        kwargs are themeables. The themeables are elements that
-        are subclasses of `themeable`. Many themeables are defined
-        using theme elements i.e
+        kwargs are :ref:`themeables <themeables>`. The themeables are
+        elements that are subclasses of `themeable`. Many themeables
+        are defined using theme elements i.e
 
             - :class:`element_line`
             - :class:`element_rect`
@@ -68,21 +68,116 @@ class theme:
     should not be modified after that.
     """
 
-    def __init__(self, complete=False, **kwargs):
+    def __init__(self, complete=False,
+                 # Generate themeables keyword parameters with
+                 #
+                 #     from plotnine.themes.themeable import themeable
+                 #     for name in themeable.registry():
+                 #         print(f'{name}=None,')
+                 axis_title_x=None,
+                 axis_title_y=None,
+                 axis_title=None,
+                 legend_title=None,
+                 legend_text_legend=None,
+                 legend_text_colorbar=None,
+                 legend_text=None,
+                 plot_title=None,
+                 strip_text_x=None,
+                 strip_text_y=None,
+                 strip_text=None,
+                 title=None,
+                 axis_text_x=None,
+                 axis_text_y=None,
+                 axis_text=None,
+                 text=None,
+                 axis_line_x=None,
+                 axis_line_y=None,
+                 axis_line=None,
+                 axis_ticks_minor_x=None,
+                 axis_ticks_minor_y=None,
+                 axis_ticks_major_x=None,
+                 axis_ticks_major_y=None,
+                 axis_ticks_major=None,
+                 axis_ticks_minor=None,
+                 axis_ticks=None,
+                 panel_grid_major_x=None,
+                 panel_grid_major_y=None,
+                 panel_grid_minor_x=None,
+                 panel_grid_minor_y=None,
+                 panel_grid_major=None,
+                 panel_grid_minor=None,
+                 panel_grid=None,
+                 line=None,
+                 legend_key=None,
+                 legend_background=None,
+                 legend_box_background=None,
+                 panel_background=None,
+                 panel_border=None,
+                 plot_background=None,
+                 strip_background_x=None,
+                 strip_background_y=None,
+                 strip_background=None,
+                 rect=None,
+                 axis_ticks_length_major=None,
+                 axis_ticks_length_minor=None,
+                 axis_ticks_length=None,
+                 axis_ticks_pad_major=None,
+                 axis_ticks_pad_minor=None,
+                 axis_ticks_pad=None,
+                 axis_ticks_direction_x=None,
+                 axis_ticks_direction_y=None,
+                 axis_ticks_direction=None,
+                 panel_spacing_x=None,
+                 panel_spacing_y=None,
+                 panel_spacing=None,
+                 plot_margin=None,
+                 panel_ontop=None,
+                 aspect_ratio=None,
+                 dpi=None,
+                 figure_size=None,
+                 subplots_adjust=None,
+                 facet_spacing=None,
+                 legend_box=None,
+                 legend_box_margin=None,
+                 legend_box_just=None,
+                 legend_direction=None,
+                 legend_key_width=None,
+                 legend_key_height=None,
+                 legend_key_size=None,
+                 legend_margin=None,
+                 legend_box_spacing=None,
+                 legend_spacing=None,
+                 legend_position=None,
+                 legend_title_align=None,
+                 legend_entry_spacing_x=None,
+                 legend_entry_spacing_y=None,
+                 legend_entry_spacing=None,
+                 strip_margin_x=None,
+                 strip_margin_y=None,
+                 strip_margin=None,
+                 **kwargs):
         self.themeables = Themeables()
         self.complete = complete
+        # This is set when the figure is created,
+        # it is useful at legend drawing time and
+        # when applying the theme.
+        self.figure = None
 
         if complete:
             self._rcParams = deepcopy(default_rcparams)
         else:
             self._rcParams = {}
 
-        # This is set when the figure is created,
-        # it is useful at legend drawing time and
-        # when applying the theme.
-        self.figure = None
-
+        # Themeables
+        official_themeables = themeable.registry()
+        it = ((name, element) for name, element in locals().items()
+              if element is not None and name in official_themeables)
         new = themeable.from_class_name
+
+        for name, element in it:
+            self.themeables[name] = new(name, element)
+
+        # Unofficial themeables (for extensions)
         for name, element in kwargs.items():
             self.themeables[name] = new(name, element)
 

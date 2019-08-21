@@ -123,6 +123,9 @@ Enhancements
 - You can now specify one sided limits for coordinates. e.g.
   `coord_cartesian(limits=(None, 10))`.
 
+- All the themeables have been lifted into the definition of
+  :class:`~plotnine.themes.theme` so they can be suggested autocomplete.
+
 v0.5.1
 ------
 (2018-10-17)

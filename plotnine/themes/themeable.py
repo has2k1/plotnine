@@ -120,6 +120,10 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
         return klass(theme_element)
 
+    @classmethod
+    def registry(cls):
+        return themeable._registry
+
     def is_blank(self):
         """
         Return True if theme_element is made of element_blank

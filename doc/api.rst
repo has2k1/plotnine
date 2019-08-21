@@ -427,6 +427,7 @@ Themes control the visual appearance of the non-data elements the plot.
    theme_void
    theme_xkcd
 
+.. _themeables:
 
 Themeables
 ----------
