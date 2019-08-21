@@ -1,9 +1,9 @@
 Changelog
 =========
 
-v0.5.2
+v0.6.0
 ------
-(not-yet-released)
+(2019-08-21)
 
 API Changes
 ***********
