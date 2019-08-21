@@ -11,7 +11,9 @@ simple plots remain simple.
 To find out about all building blocks that you can use to create a
 plot, check out the documentation_. Since plotnine has an API
 similar to ggplot2, where we lack in coverage the
-`ggplot2 documentation`_ may be of some help.
+ggplot2 documentation may be of some help.
+
+.. _documentation: https://plotnine.readthedocs.io/en/stable/
 """
 import os
 from setuptools import find_packages, setup
