@@ -5,6 +5,9 @@ v0.6.0
 ------
 (2019-08-21)
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg
+   :target: https://doi.org/10.5281/zenodo.3373970
+
 API Changes
 ***********
 
