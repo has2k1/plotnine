@@ -20,10 +20,11 @@ class annotation_stripes(annotate):
     fill : list-like
         List of colors for the strips. The default  is
         `("#AAAAAA", "#CCCCCC")`
-    fill_range: bool
-        If True, the more stripes are created to cover the
+    fill_range: bool or 'blend'
+        If truthy, additional stripes are created to cover the
         edges of the range. This may be desired for discrete
-        scales.
+        scales. True means they alternate colors with the regular stripes.
+        'blend' means they adopt the color of the first/last stripe.
     direction : 'vertical' or 'horizontal'
         Orientation of the stripes
     extend : tuple
@@ -108,6 +109,10 @@ class _geom_stripes(geom):
         ymin = other_range[0] + full_height * extend[0]
         ymax = other_range[0] + full_height * extend[1]
         fill = list(islice(cycle(params['fill']), n_stripes))
+        if fill_range == 'blend':
+            # there are at least two stripes at this point
+            fill[0] = fill[1]
+            fill[-1] = fill[-2]
 
         if direction != 'vertical':
             xmin, xmax, ymin, ymax = ymin, ymax, xmin, xmax
