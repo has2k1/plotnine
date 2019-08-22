@@ -8,12 +8,10 @@ def _hasattrs(obj, attrs):
 
 
 # Continuous univariate
-continuous = {k for k in dir(stats)
-              if _hasattrs(getattr(stats, k), ('pdf', 'cdf'))}
+continuous = {k for k in dir(stats) if _hasattrs(getattr(stats, k), ('pdf', 'cdf'))}
 
 # Discreate univariate
-discrete = {k for k in dir(stats)
-            if hasattr(getattr(stats, k), 'pmf')}
+discrete = {k for k in dir(stats) if hasattr(getattr(stats, k), 'pmf')}
 
 univariate = continuous | discrete
 
@@ -22,8 +20,7 @@ def get(name):
     try:
         return getattr(stats, name)
     except AttributeError:
-        raise PlotnineError(
-            "Unknown distribution '{}'".format(name))
+        raise PlotnineError("Unknown distribution '{}'".format(name))
 
 
 def get_continuous_distribution(name):

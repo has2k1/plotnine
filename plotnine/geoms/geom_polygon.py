@@ -22,10 +22,15 @@ class geom_polygon(geom):
     -----
     All paths in the same ``group`` aesthetic value make up a polygon.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 0.5}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_AES = {
+        'alpha': 1,
+        'color': None,
+        'fill': '#333333',
+        'linetype': 'solid',
+        'size': 0.5,
+    }
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'na_rm': False}
     REQUIRED_AES = {'x', 'y'}
 
     def handle_na(self, data):
@@ -70,7 +75,8 @@ class geom_polygon(geom):
             linestyles=linestyle,
             linewidths=linewidth,
             transOffset=ax.transData,
-            zorder=params['zorder'])
+            zorder=params['zorder'],
+        )
 
         ax.add_collection(col)
 
@@ -92,8 +98,7 @@ class geom_polygon(geom):
         data['size'] *= SIZE_FACTOR
         # We take into account that the linewidth
         # bestrides the boundary of the rectangle
-        linewidth = np.min([data['size'],
-                            da.width/4, da.height/4])
+        linewidth = np.min([data['size'], da.width / 4, da.height / 4])
         if data['color'] is None:
             linewidth = 0
 
@@ -101,13 +106,15 @@ class geom_polygon(geom):
         if facecolor is None:
             facecolor = 'none'
 
-        rect = Rectangle((0+linewidth/2, 0+linewidth/2),
-                         width=da.width-linewidth,
-                         height=da.height-linewidth,
-                         linewidth=linewidth,
-                         linestyle=data['linetype'],
-                         facecolor=facecolor,
-                         edgecolor=data['color'],
-                         capstyle='projecting')
+        rect = Rectangle(
+            (0 + linewidth / 2, 0 + linewidth / 2),
+            width=da.width - linewidth,
+            height=da.height - linewidth,
+            linewidth=linewidth,
+            linestyle=data['linetype'],
+            facecolor=facecolor,
+            edgecolor=data['color'],
+            capstyle='projecting',
+        )
         da.add_artist(rect)
         return da

@@ -15,6 +15,7 @@ class _scale_manual(scale_discrete):
     ----------
     {superclass_parameters}
     """
+
     def __init__(self, values, **kwargs):
         self._values = values
         scale_discrete.__init__(self, **kwargs)
@@ -22,8 +23,10 @@ class _scale_manual(scale_discrete):
     def palette(self, n):
         max_n = len(self._values)
         if n > max_n:
-            msg = ("Palette can return a maximum of {} values. "
-                   "{} were requested from it.")
+            msg = (
+                "Palette can return a maximum of {} values. "
+                "{} were requested from it."
+            )
             warn(msg.format(max_n, n), PlotnineWarning)
         return self._values
 
@@ -39,6 +42,7 @@ class scale_color_manual(_scale_manual):
         Colors that make up the palette.
     {superclass_parameters}
     """
+
     _aesthetics = ['color']
 
 
@@ -53,6 +57,7 @@ class scale_fill_manual(_scale_manual):
         Colors that make up the palette.
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -73,6 +78,7 @@ class scale_shape_manual(_scale_manual):
     --------
     :mod:`matplotlib.markers`
     """
+
     _aesthetics = ['shape']
 
 
@@ -106,6 +112,7 @@ class scale_linetype_manual(_scale_manual):
     --------
     :mod:`matplotlib.markers`
     """
+
     _aesthetics = ['linetype']
 
 
@@ -121,6 +128,7 @@ class scale_alpha_manual(_scale_manual):
         the palette.
     {superclass_parameters}
     """
+
     _aesthetics = ['alpha']
 
 
@@ -135,6 +143,7 @@ class scale_size_manual(_scale_manual):
         Sizes that make up the palette.
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
 
 

@@ -7,7 +7,7 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
+from matplotlib.offsetbox import TextArea, HPacker, VPacker
 
 from ..scales.scale import scale_continuous
 from ..utils import ColoredDrawingArea, SIZE_FACTOR
@@ -39,6 +39,7 @@ class guide_legend(guide):
     kwargs : dict
         Parameters passed on to :class:`.guide`
     """
+
     # general
     nrow = None
     ncol = None
@@ -79,9 +80,9 @@ class guide_legend(guide):
         with suppress(AttributeError):
             breaks = list(breaks.keys())
 
-        key = pd.DataFrame({
-            aesthetic: scale.map(breaks),
-            'label': scale.get_labels(breaks)})
+        key = pd.DataFrame(
+            {aesthetic: scale.map(breaks), 'label': scale.get_labels(breaks)}
+        )
         # Drop out-of-range values for continuous scale
         # (should use scale$oob?)
 
@@ -91,8 +92,7 @@ class guide_legend(guide):
         if isinstance(scale, scale_continuous):
             limits = scale.limits
             b = np.asarray(breaks)
-            noob = np.logical_and(limits[0] <= b,
-                                  b <= limits[1])
+            noob = np.logical_and(limits[0] <= b, b <= limits[1])
             key = key[noob]
 
         if len(key) == 0:
@@ -102,8 +102,9 @@ class guide_legend(guide):
 
         # create a hash of the important information in the guide
         labels = ' '.join(str(x) for x in self.key['label'])
-        info = '\n'.join([self.title, labels, str(self.direction),
-                          self.__class__.__name__])
+        info = '\n'.join(
+            [self.title, labels, str(self.direction), self.__class__.__name__]
+        )
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
         return self
 
@@ -137,6 +138,7 @@ class guide_legend(guide):
         to draw the guide together with the data and the parameters that
         will be used in the call to geom.
         """
+
         def get_legend_geom(layer):
             if hasattr(layer.geom, 'draw_legend'):
                 geom = layer.geom.__class__
@@ -152,8 +154,7 @@ class guide_legend(guide):
             exclude = set()
             if isinstance(l.show_legend, dict):
                 l.show_legend = rename_aesthetics(l.show_legend)
-                exclude = {ae for ae, val in l.show_legend.items()
-                           if not val}
+                exclude = {ae for ae, val in l.show_legend.items() if not val}
             elif l.show_legend not in (None, True):
                 continue
 
@@ -172,11 +173,12 @@ class guide_legend(guide):
 
             geom = get_legend_geom(l)
             data = remove_missing(
-                data, l.geom.params['na_rm'],
+                data,
+                l.geom.params['na_rm'],
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
-                '{} legend'.format(l.geom.__class__.__name__))
-            self.glayers.append(
-                types.SimpleNamespace(geom=geom, data=data, layer=l))
+                '{} legend'.format(l.geom.__class__.__name__),
+            )
+            self.glayers.append(types.SimpleNamespace(geom=geom, data=data, layer=l))
         if not self.glayers:
             return None
         return self
@@ -190,17 +192,17 @@ class guide_legend(guide):
         if self.nrow is not None and self.ncol is not None:
             if guide.nrow * guide.ncol < nbreak:
                 raise PlotnineError(
-                    "nrow x ncol need to be larger",
-                    "than the number of breaks")
+                    "nrow x ncol need to be larger", "than the number of breaks"
+                )
 
         if self.nrow is None and self.ncol is None:
             if self.direction == 'horizontal':
-                self.nrow = int(np.ceil(nbreak/5))
+                self.nrow = int(np.ceil(nbreak / 5))
             else:
-                self.ncol = int(np.ceil(nbreak/20))
+                self.ncol = int(np.ceil(nbreak / 20))
 
-        self.nrow = self.nrow or int(np.ceil(nbreak/self.ncol))
-        self.ncol = self.ncol or int(np.ceil(nbreak/self.nrow))
+        self.nrow = self.nrow or int(np.ceil(nbreak / self.ncol))
+        self.ncol = self.ncol or int(np.ceil(nbreak / self.nrow))
 
         # key width and key height for each legend entry
         #
@@ -230,8 +232,7 @@ class guide_legend(guide):
                         if 'size' in gl.data:
                             _size = gl.data['size'].iloc[i] * SIZE_FACTOR
                             if 'stroke' in gl.data:
-                                _size += (2 * gl.data['stroke'].iloc[i] *
-                                          SIZE_FACTOR)
+                                _size += 2 * gl.data['stroke'].iloc[i] * SIZE_FACTOR
 
                         # special case, color does not apply to
                         # border/linewidth
@@ -245,7 +246,7 @@ class guide_legend(guide):
                             # When the edge is not visible, we should
                             # not expand the size of the keys
                             if gl.data['color'].iloc[i] is not None:
-                                size[i] = np.max([_size+pad, size[i]])
+                                size[i] = np.max([_size + pad, size[i]])
                         except KeyError:
                             break
 
@@ -253,22 +254,20 @@ class guide_legend(guide):
 
         # keysize
         if self.keywidth is None:
-            width = determine_side_length(
-                self._default('legend_key_width', 18))
+            width = determine_side_length(self._default('legend_key_width', 18))
             if self.direction == 'vertical':
                 width[:] = width.max()
             self._keywidth = width
         else:
-            self._keywidth = [self.keywidth]*nbreak
+            self._keywidth = [self.keywidth] * nbreak
 
         if self.keyheight is None:
-            height = determine_side_length(
-                self._default('legend_key_height', 18))
+            height = determine_side_length(self._default('legend_key_height', 18))
             if self.direction == 'horizontal':
                 height[:] = height.max()
             self._keyheight = height
         else:
-            self._keyheight = [self.keyheight]*nbreak
+            self._keyheight = [self.keyheight] * nbreak
 
     def draw(self):
         """
@@ -309,9 +308,9 @@ class guide_legend(guide):
         # Drawings
         drawings = []
         for i in range(nbreak):
-            da = ColoredDrawingArea(self._keywidth[i],
-                                    self._keyheight[i],
-                                    0, 0, color='white')
+            da = ColoredDrawingArea(
+                self._keywidth[i], self._keyheight[i], 0, 0, color='white'
+            )
             # overlay geoms
             for gl in self.glayers:
                 with suppress(IndexError):
@@ -325,14 +324,14 @@ class guide_legend(guide):
             'right': (HPacker, reverse),
             'left': (HPacker, obverse),
             'bottom': (VPacker, reverse),
-            'top': (VPacker, obverse)}
+            'top': (VPacker, obverse),
+        }
         packer, slc = lookup[self.label_position]
         entries = []
         for d, l in zip(drawings, labels):
-            e = packer(children=[l, d][slc],
-                       sep=self._label_margin,
-                       align='center',
-                       pad=0)
+            e = packer(
+                children=[l, d][slc], sep=self._label_margin, align='center', pad=0
+            )
             entries.append(e)
 
         # Put the entries together in rows or columns
@@ -351,7 +350,7 @@ class guide_legend(guide):
             entries = entries[::-1]
         chunks = []
         for i in range(len(entries)):
-            start = i*chunk_size
+            start = i * chunk_size
             stop = start + chunk_size
             s = islice(entries, start, stop)
             chunks.append(list(s))
@@ -360,22 +359,22 @@ class guide_legend(guide):
 
         chunk_boxes = []
         for chunk in chunks:
-            d1 = packers[0](children=chunk,
-                            align='left',
-                            sep=sep1, pad=0,)
+            d1 = packers[0](children=chunk, align='left', sep=sep1, pad=0)
             chunk_boxes.append(d1)
 
         # Put all the entries (row & columns) together
-        entries_box = packers[1](children=chunk_boxes,
-                                 align='baseline',
-                                 sep=sep2, pad=0)
+        entries_box = packers[1](
+            children=chunk_boxes, align='baseline', sep=sep2, pad=0
+        )
 
         # Put the title and entries together
         packer, slc = lookup[self.title_position]
         children = [title_box, entries_box][slc]
-        box = packer(children=children,
-                     sep=self._title_margin,
-                     align=self._title_align,
-                     pad=self._legend_margin)
+        box = packer(
+            children=children,
+            sep=self._title_margin,
+            align=self._title_align,
+            pad=self._legend_margin,
+        )
 
         return box

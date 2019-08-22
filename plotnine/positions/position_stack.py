@@ -15,11 +15,11 @@ class position_stack(position):
     The objects to stack are those that have
     an overlapping x range.
     """
+
     fill = False
 
     def __init__(self, vjust=1, reverse=False):
-        self.params = {'vjust': vjust,
-                       'reverse': reverse}
+        self.params = {'vjust': vjust, 'reverse': reverse}
 
     def setup_params(self, data):
         """
@@ -28,15 +28,19 @@ class position_stack(position):
         # Variable for which to do the stacking
         if 'ymax' in data:
             if any((data['ymin'] != 0) & (data['ymax'] != 0)):
-                warn("Stacking not well defined when not "
-                     "anchored on the axis.", PlotnineWarning)
+                warn(
+                    "Stacking not well defined when not " "anchored on the axis.",
+                    PlotnineWarning,
+                )
             var = 'ymax'
         elif 'y' in data:
             var = 'y'
         else:
-            warn("Stacking requires either ymin & ymax or y "
-                 "aesthetics. Maybe you want position = 'identity'?",
-                 PlotnineWarning)
+            warn(
+                "Stacking requires either ymin & ymax or y "
+                "aesthetics. Maybe you want position = 'identity'?",
+                PlotnineWarning,
+            )
             var = None
 
         params = self.params.copy()
@@ -55,9 +59,8 @@ class position_stack(position):
             data.loc[bool_idx, 'ymax'] = data.loc[bool_idx, 'ymin']
 
         data = remove_missing(
-            data,
-            vars=('x', 'xmin', 'xmax', 'y'),
-            name='position_stack')
+            data, vars=('x', 'xmin', 'xmax', 'y'), name='position_stack'
+        )
 
         return data
 
@@ -100,5 +103,5 @@ class position_stack(position):
         # less intuitive than (ymin + vjust(ymax-ymin)), but
         # this way avoids subtracting numbers of potentially
         # similar precision
-        data['y'] = ((1-vjust)*data['ymin'] + vjust*data['ymax'])
+        data['y'] = (1 - vjust) * data['ymin'] + vjust * data['ymax']
         return data

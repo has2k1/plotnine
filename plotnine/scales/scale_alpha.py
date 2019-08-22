@@ -21,6 +21,7 @@ class scale_alpha(scale_continuous):
         Should be between 0 and 1. Default is ``(0.1, 1)``
     {superclass_parameters}
     """
+
     _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
@@ -43,6 +44,7 @@ class scale_alpha_ordinal(scale_discrete):
         Should be between 0 and 1. Default is ``(0.1, 1)``
     {superclass_parameters}
     """
+
     _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
@@ -62,13 +64,11 @@ class scale_alpha_discrete(scale_alpha_ordinal):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['alpha']
 
     def __init__(self, **kwargs):
-        warn(
-            "Using alpha for a discrete variable is not advised.",
-            PlotnineWarning
-        )
+        warn("Using alpha for a discrete variable is not advised.", PlotnineWarning)
         super().__init__(**kwargs)
 
 
@@ -84,6 +84,7 @@ class scale_alpha_datetime(scale_datetime):
         Should be between 0 and 1. Default is ``(0.1, 1)``
     {superclass_parameters}
     """
+
     _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):

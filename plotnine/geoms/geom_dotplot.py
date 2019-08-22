@@ -36,12 +36,19 @@ class geom_dotplot(geom):
     --------
     plotnine.stats.stat_bindot
     """
+
     DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'size', 'shape'}
-    DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',
-                      'na_rm': False, 'stackdir': 'up', 'stackratio': 1,
-                      'dotsize': 1, 'stackgroups': False}
+    DEFAULT_PARAMS = {
+        'stat': 'bindot',
+        'position': 'identity',
+        'na_rm': False,
+        'stackdir': 'up',
+        'stackratio': 1,
+        'dotsize': 1,
+        'stackgroups': False,
+    }
 
     def setup_data(self, data):
         gp = self.params
@@ -49,15 +56,22 @@ class geom_dotplot(geom):
 
         # Issue warnings when parameters don't make sense
         if gp['position'] == 'stack':
-            warn("position='stack' doesn't work properly with "
-                 "geom_dotplot. Use stackgroups=True instead.",
-                 PlotnineWarning)
-        if (gp['stackgroups'] and
-                sp['method'] == 'dotdensity' and
-                sp['binpositions'] == 'bygroup'):
-            warn("geom_dotplot called with stackgroups=TRUE and "
-                 "method='dotdensity'. You probably want to set "
-                 "binpositions='all'", PlotnineWarning)
+            warn(
+                "position='stack' doesn't work properly with "
+                "geom_dotplot. Use stackgroups=True instead.",
+                PlotnineWarning,
+            )
+        if (
+            gp['stackgroups']
+            and sp['method'] == 'dotdensity'
+            and sp['binpositions'] == 'bygroup'
+        ):
+            warn(
+                "geom_dotplot called with stackgroups=TRUE and "
+                "method='dotdensity'. You probably want to set "
+                "binpositions='all'",
+                PlotnineWarning,
+            )
 
         if 'width' not in data:
             if sp['width']:
@@ -67,30 +81,37 @@ class geom_dotplot(geom):
 
         # Set up the stacking function and range
         if gp['stackdir'] in (None, 'up'):
+
             def stackdots(a):
-                return a - .5
+                return a - 0.5
+
             stackaxismin = 0
             stackaxismax = 1
         elif gp['stackdir'] == 'down':
+
             def stackdots(a):
-                return -a + .5
+                return -a + 0.5
+
             stackaxismin = -1
             stackaxismax = 0
         elif gp['stackdir'] == 'center':
+
             def stackdots(a):
-                return a - 1 - np.max(a-1)/2
-            stackaxismin = -.5
-            stackaxismax = .5
+                return a - 1 - np.max(a - 1) / 2
+
+            stackaxismin = -0.5
+            stackaxismax = 0.5
         elif gp['stackdir'] == 'centerwhole':
+
             def stackdots(a):
-                return a - 1 - np.floor(np.max(a-1)/2)
-            stackaxismin = -.5
-            stackaxismax = .5
+                return a - 1 - np.floor(np.max(a - 1) / 2)
+
+            stackaxismin = -0.5
+            stackaxismax = 0.5
 
         # Fill the bins: at a given x (or y),
         # if count=3, make 3 entries at that x
-        idx = [i for i, c in enumerate(data['count'])
-               for j in range(int(c))]
+        idx = [i for i, c in enumerate(data['count']) for j in range(int(c))]
         data = data.iloc[idx]
         data.reset_index(inplace=True, drop=True)
         # Next part will set the position of each dot within each stack
@@ -103,7 +124,7 @@ class geom_dotplot(geom):
         # Within each x, or x+group, set countidx=1,2,3,
         # and set stackpos according to stack function
         def func(df):
-            df['countidx'] = range(1, len(df)+1)
+            df['countidx'] = range(1, len(df) + 1)
             df['stackpos'] = stackdots(df['countidx'])
             return df
 
@@ -118,8 +139,8 @@ class geom_dotplot(geom):
             # because y position isn't real.
             # After position code is rewritten, each dot should have
             # its own bounding box.
-            data['xmin'] = data['x'] - data['binwidth']/2
-            data['xmax'] = data['x'] + data['binwidth']/2
+            data['xmin'] = data['x'] - data['binwidth'] / 2
+            data['xmax'] = data['x'] + data['binwidth'] / 2
             data['ymin'] = stackaxismin
             data['ymax'] = stackaxismax
             data['y'] = 0
@@ -133,9 +154,10 @@ class geom_dotplot(geom):
             # After position code is rewritten, each dot should have
             # its own bounding box.
             def func(df):
-                df['ymin'] = df['y'].min() - data['binwidth'][0]/2
-                df['ymax'] = df['y'].max() + data['binwidth'][0]/2
+                df['ymin'] = df['y'].min() - data['binwidth'][0] / 2
+                df['ymax'] = df['y'].max() + data['binwidth'][0] / 2
                 return df
+
             data = groupby_apply(data, 'group', func)
             data['xmin'] = data['x'] + data['width'] * stackaxismin
             data['xmax'] = data['x'] + data['width'] * stackaxismax
@@ -151,30 +173,26 @@ class geom_dotplot(geom):
 
         # For perfect circles the width/height of the circle(ellipse)
         # should factor in the dimensions of axes
-        bbox = ax.get_window_extent().transformed(
-            ax.figure.dpi_scale_trans.inverted())
+        bbox = ax.get_window_extent().transformed(ax.figure.dpi_scale_trans.inverted())
         ax_width, ax_height = bbox.width, bbox.height
 
-        factor = ((ax_width/ax_height) *
-                  np.ptp(ranges.y)/np.ptp(ranges.x))
+        factor = (ax_width / ax_height) * np.ptp(ranges.y) / np.ptp(ranges.x)
         size = data.loc[0, 'binwidth'] * params['dotsize']
         offsets = data['stackpos'] * params['stackratio']
 
         if params['binaxis'] == 'x':
-            width, height = size, size*factor
-            xpos, ypos = data['x'], data['y'] + height*offsets
+            width, height = size, size * factor
+            xpos, ypos = data['x'], data['y'] + height * offsets
         elif params['binaxis'] == 'y':
-            width, height = size/factor, size
-            xpos, ypos = data['x'] + width*offsets, data['y']
+            width, height = size / factor, size
+            xpos, ypos = data['x'] + width * offsets, data['y']
 
         circles = []
         for xy in zip(xpos, ypos):
             patch = mpatches.Ellipse(xy, width=width, height=height)
             circles.append(patch)
 
-        coll = mcoll.PatchCollection(circles,
-                                     edgecolors=color,
-                                     facecolors=fill)
+        coll = mcoll.PatchCollection(circles, edgecolors=color, facecolors=fill)
         ax.add_collection(coll)
 
     @staticmethod
@@ -192,12 +210,14 @@ class geom_dotplot(geom):
         -------
         out : DrawingArea
         """
-        key = mlines.Line2D([0.5*da.width],
-                            [0.5*da.height],
-                            alpha=data['alpha'],
-                            marker='o',
-                            markersize=da.width/2,
-                            markerfacecolor=data['fill'],
-                            markeredgecolor=data['color'])
+        key = mlines.Line2D(
+            [0.5 * da.width],
+            [0.5 * da.height],
+            alpha=data['alpha'],
+            marker='o',
+            markersize=da.width / 2,
+            markerfacecolor=data['fill'],
+            markeredgecolor=data['color'],
+        )
         da.add_artist(key)
         return da

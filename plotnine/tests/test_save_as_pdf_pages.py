@@ -11,11 +11,8 @@ from plotnine.exceptions import PlotnineError
 
 def p(N=3):
     """Return *N* distinct plot objects."""
-    template = (
-        ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) +
-        geom_text()
-        )
-    for i in range(1, N+1):
+    template = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
+    for i in range(1, N + 1):
         yield template + ggtitle('%d of %d' % (i, N))
 
 
@@ -55,8 +52,7 @@ class TestArguments:
 
         assert_exist_and_clean(fn, "save method")
 
-        res = ('filename' in str(item.message).lower()
-               for item in record)
+        res = ('filename' in str(item.message).lower() for item in record)
         assert any(res)
 
         # verbose
@@ -65,8 +61,7 @@ class TestArguments:
             save_as_pdf_pages(p(), fn, verbose=False)
         assert_exist_and_clean(fn, "save method")
 
-        res = ('filename' in str(item.message).lower()
-               for item in record)
+        res = ('filename' in str(item.message).lower() for item in record)
         assert not any(res)
 
     def test_filename_plot_path(self):
@@ -74,12 +69,13 @@ class TestArguments:
         save_as_pdf_pages(p(), fn, path='.')
         assert_exist_and_clean(fn, "fn, plot and path")
 
-    @pytest.mark.skip("Results of this test can only be confirmed by"
-                      "inspecting the generated PDF.")
+    @pytest.mark.skip(
+        "Results of this test can only be confirmed by" "inspecting the generated PDF."
+    )
     def test_height_width(self):
         plots = []
         for i, plot in enumerate(p()):
-            plots.append(plot + theme(figure_size=(8+i, 6+i)))
+            plots.append(plot + theme(figure_size=(8 + i, 6 + i)))
         fn = next(filename_gen)
         save_as_pdf_pages(plots, fn)
         # assert False, "Check %s" % fn  # Uncomment to check

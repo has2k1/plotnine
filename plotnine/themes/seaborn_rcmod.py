@@ -30,82 +30,74 @@ mpl_ge_2 = True
 
 
 _style_keys = [
-
     "axes.facecolor",
     "axes.edgecolor",
     "axes.grid",
     "axes.axisbelow",
     "axes.labelcolor",
-
     "figure.facecolor",
-
     "grid.color",
     "grid.linestyle",
-
     "text.color",
-
     "xtick.color",
     "ytick.color",
     "xtick.direction",
     "ytick.direction",
     "lines.solid_capstyle",
-
     "patch.edgecolor",
-
     "image.cmap",
     "font.family",
     "font.sans-serif",
-
-    ]
+]
 
 if mpl_ge_2:
 
-    _style_keys.extend([
-
-        "patch.force_edgecolor",
-
-        "xtick.bottom",
-        "xtick.top",
-        "ytick.left",
-        "ytick.right",
-
-        "axes.spines.left",
-        "axes.spines.bottom",
-        "axes.spines.right",
-        "axes.spines.top",
-
-    ])
+    _style_keys.extend(
+        [
+            "patch.force_edgecolor",
+            "xtick.bottom",
+            "xtick.top",
+            "ytick.left",
+            "ytick.right",
+            "axes.spines.left",
+            "axes.spines.bottom",
+            "axes.spines.right",
+            "axes.spines.top",
+        ]
+    )
 
 _context_keys = [
-
     "font.size",
     "axes.labelsize",
     "axes.titlesize",
     "xtick.labelsize",
     "ytick.labelsize",
     "legend.fontsize",
-
     "axes.linewidth",
     "grid.linewidth",
     "lines.linewidth",
     "lines.markersize",
     "patch.linewidth",
-
     "xtick.major.width",
     "ytick.major.width",
     "xtick.minor.width",
     "ytick.minor.width",
-
     "xtick.major.size",
     "ytick.major.size",
     "xtick.minor.size",
     "ytick.minor.size",
+]
 
-    ]
 
-
-def set(context="notebook", style="darkgrid", palette="deep",
-        font="sans-serif", font_scale=1, color_codes=False, rc=None):
+def set(
+    context="notebook",
+    style="darkgrid",
+    palette="deep",
+    font="sans-serif",
+    font_scale=1,
+    color_codes=False,
+    rc=None,
+):
     """Set aesthetic parameters in one step.
     Each set of parameters can be set directly or temporarily, see the
     referenced functions below for more information.
@@ -191,100 +183,82 @@ def axes_style(style=None, rc=None):
 
         # Common parameters
         style_dict = {
-
             "figure.facecolor": "white",
             "axes.labelcolor": dark_gray,
-
             "xtick.direction": "out",
             "ytick.direction": "out",
             "xtick.color": dark_gray,
             "ytick.color": dark_gray,
-
             "axes.axisbelow": True,
             "grid.linestyle": "-",
-
-
             "text.color": dark_gray,
             "font.family": ["sans-serif"],
-            "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans",
-                                "Bitstream Vera Sans", "sans-serif"],
-
-
+            "font.sans-serif": [
+                "Arial",
+                "DejaVu Sans",
+                "Liberation Sans",
+                "Bitstream Vera Sans",
+                "sans-serif",
+            ],
             "lines.solid_capstyle": "round",
             "patch.edgecolor": "w",
             "patch.force_edgecolor": True,
-
             "image.cmap": "Greys",
-
             "xtick.top": False,
             "ytick.right": False,
-
-            }
+        }
 
         # Set grid on or off
         if "grid" in style:
-            style_dict.update({
-                "axes.grid": True,
-                })
+            style_dict.update({"axes.grid": True})
         else:
-            style_dict.update({
-                "axes.grid": False,
-                })
+            style_dict.update({"axes.grid": False})
 
         # Set the color of the background, spines, and grids
         if style.startswith("dark"):
-            style_dict.update({
-
-                "axes.facecolor": "#EAEAF2",
-                "axes.edgecolor": "white",
-                "grid.color": "white",
-
-                "axes.spines.left": True,
-                "axes.spines.bottom": True,
-                "axes.spines.right": True,
-                "axes.spines.top": True,
-
-                })
+            style_dict.update(
+                {
+                    "axes.facecolor": "#EAEAF2",
+                    "axes.edgecolor": "white",
+                    "grid.color": "white",
+                    "axes.spines.left": True,
+                    "axes.spines.bottom": True,
+                    "axes.spines.right": True,
+                    "axes.spines.top": True,
+                }
+            )
 
         elif style == "whitegrid":
-            style_dict.update({
-
-                "axes.facecolor": "white",
-                "axes.edgecolor": light_gray,
-                "grid.color": light_gray,
-
-                "axes.spines.left": True,
-                "axes.spines.bottom": True,
-                "axes.spines.right": True,
-                "axes.spines.top": True,
-
-                })
+            style_dict.update(
+                {
+                    "axes.facecolor": "white",
+                    "axes.edgecolor": light_gray,
+                    "grid.color": light_gray,
+                    "axes.spines.left": True,
+                    "axes.spines.bottom": True,
+                    "axes.spines.right": True,
+                    "axes.spines.top": True,
+                }
+            )
 
         elif style in ["white", "ticks"]:
-            style_dict.update({
-
-                "axes.facecolor": "white",
-                "axes.edgecolor": dark_gray,
-                "grid.color": light_gray,
-
-                "axes.spines.left": True,
-                "axes.spines.bottom": True,
-                "axes.spines.right": True,
-                "axes.spines.top": True,
-
-                })
+            style_dict.update(
+                {
+                    "axes.facecolor": "white",
+                    "axes.edgecolor": dark_gray,
+                    "grid.color": light_gray,
+                    "axes.spines.left": True,
+                    "axes.spines.bottom": True,
+                    "axes.spines.right": True,
+                    "axes.spines.top": True,
+                }
+            )
 
         # Show or hide the axes ticks
         if style == "ticks":
-            style_dict.update({
-                "xtick.bottom": True,
-                "ytick.left": True,
-                })
+            style_dict.update({"xtick.bottom": True, "ytick.left": True})
         else:
-            style_dict.update({
-                "xtick.bottom": False,
-                "ytick.left": False,
-                })
+            style_dict.update({"xtick.bottom": False, "ytick.left": False})
 
     # Remove entries that are not defined in the base list of valid keys
     # This lets us handle matplotlib <=/> 2.0
@@ -392,39 +366,40 @@ def plotting_context(context=None, font_scale=1, rc=None):
 
         # Set up dictionary of default parameters
         base_context = {
-
             "font.size": 12,
             "axes.labelsize": 12,
             "axes.titlesize": 12,
             "xtick.labelsize": 11,
             "ytick.labelsize": 11,
             "legend.fontsize": 11,
-
             "axes.linewidth": 1.25,
             "grid.linewidth": 1,
             "lines.linewidth": 1.5,
             "lines.markersize": 6,
             "patch.linewidth": 1,
-
             "xtick.major.width": 1.25,
             "ytick.major.width": 1.25,
             "xtick.minor.width": 1,
             "ytick.minor.width": 1,
-
             "xtick.major.size": 6,
             "ytick.major.size": 6,
             "xtick.minor.size": 4,
             "ytick.minor.size": 4,
-
-            }
+        }
 
         # Scale all the parameters by the same factor depending on the context
-        scaling = dict(paper=.8, notebook=1, talk=1.5, poster=2)[context]
+        scaling = dict(paper=0.8, notebook=1, talk=1.5, poster=2)[context]
         context_dict = {k: v * scaling for k, v in base_context.items()}
 
         # Now independently scale the fonts
-        font_keys = ["axes.labelsize", "axes.titlesize", "legend.fontsize",
-                     "xtick.labelsize", "ytick.labelsize", "font.size"]
+        font_keys = [
+            "axes.labelsize",
+            "axes.titlesize",
+            "legend.fontsize",
+            "xtick.labelsize",
+            "ytick.labelsize",
+            "font.size",
+        ]
         font_dict = {k: context_dict[k] * font_scale for k in font_keys}
         context_dict.update(font_dict)
 
@@ -494,16 +469,19 @@ class _RCAesthetics(dict):
         def wrapper(*args, **kwargs):
             with self:
                 return func(*args, **kwargs)
+
         return wrapper
 
 
 class _AxesStyle(_RCAesthetics):
     """Light wrapper on a dict to set style temporarily."""
+
     _keys = _style_keys
     _set = staticmethod(set_style)
 
 
 class _PlottingContext(_RCAesthetics):
     """Light wrapper on a dict to set context temporarily."""
+
     _keys = _context_keys
     _set = staticmethod(set_context)

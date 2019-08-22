@@ -18,9 +18,22 @@ from .scales import scale_x_log10, scale_y_log10
 from .themes import theme
 
 
-def qplot(x=None, y=None, data=None, facets=None, margins=False,
-          geom='auto', xlim=None, ylim=None, log='', main=None,
-          xlab=None, ylab=None, asp=None, **kwargs):
+def qplot(
+    x=None,
+    y=None,
+    data=None,
+    facets=None,
+    margins=False,
+    geom='auto',
+    xlim=None,
+    ylim=None,
+    log='',
+    main=None,
+    xlab=None,
+    ylab=None,
+    asp=None,
+    **kwargs
+):
     """
     Quick plot
 
@@ -114,8 +127,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             # If x is discrete we choose geom_bar &
             # geom_histogram otherwise. But we need to
             # evaluate the mapping to find out the dtype
-            env = environment.with_outer_namespace(
-                {'factor': pd.Categorical})
+            env = environment.with_outer_namespace({'factor': pd.Categorical})
 
             if isinstance(aesthetics['x'], str):
                 try:
@@ -140,8 +152,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
                 else:
                     # We could solve the issue in layer.compute_asthetics
                     # but it is not worth the extra complexity
-                    raise PlotnineError(
-                        "Cannot infer how long x should be.")
+                    raise PlotnineError("Cannot infer how long x should be.")
             replace_auto(geom, 'point')
 
     p = ggplot(aes(**aesthetics), data=data, environment=environment)
@@ -155,8 +166,10 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             parse_wrap_facets(facets)
             return 'wrap'
 
-        warn("Could not determine the type of faceting, "
-             "therefore no faceting.", PlotnineWarning)
+        warn(
+            "Could not determine the type of faceting, " "therefore no faceting.",
+            PlotnineWarning,
+        )
         return 'null'
 
     if facets:
@@ -175,11 +188,12 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
         stat_name = 'stat_{}'.format(geom_klass.DEFAULT_PARAMS['stat'])
         stat_klass = Registry[stat_name]
         # find params
-        recognized = (kwargs.keys() &
-                      (geom_klass.DEFAULT_PARAMS.keys() |
-                       geom_klass.aesthetics() |
-                       stat_klass.DEFAULT_PARAMS.keys() |
-                       stat_klass.aesthetics()))
+        recognized = kwargs.keys() & (
+            geom_klass.DEFAULT_PARAMS.keys()
+            | geom_klass.aesthetics()
+            | stat_klass.DEFAULT_PARAMS.keys()
+            | stat_klass.aesthetics()
+        )
         recognized = recognized - aesthetics.keys()
         params = {ae: kwargs[ae] for ae in recognized}
         p += geom_klass(**params)

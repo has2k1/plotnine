@@ -29,10 +29,7 @@ def test_stat_bin():
 def test_changing_xlim_in_stat_density():
     n = 100
     _xlim = (5, 10)
-    df = pd.DataFrame({'x': np.linspace(_xlim[0]-1, _xlim[1]+1, n)})
-    p = (ggplot(df, aes('x'))
-         + stat_density()
-         + xlim(*_xlim)
-         )
+    df = pd.DataFrame({'x': np.linspace(_xlim[0] - 1, _xlim[1] + 1, n)})
+    p = ggplot(df, aes('x')) + stat_density() + xlim(*_xlim)
     # No exceptions
     p._build()

@@ -28,14 +28,10 @@ def _polygon_file(test_file):
     with shapefile.Writer(test_file, shapefile.POLYGON) as shp:
         shp.field('name', 'C')
 
-        shp.poly([
-            [[.25, -.25], [.25, .25], [.75, .25], [.75, -.25]],
-        ])
+        shp.poly([[[0.25, -0.25], [0.25, 0.25], [0.75, 0.25], [0.75, -0.25]]])
         shp.record('polygon1')
 
-        shp.poly([
-            [[.25, .75], [.75, .75], [.5, 1.25]]
-        ])
+        shp.poly([[[0.25, 0.75], [0.75, 0.75], [0.5, 1.25]]])
         shp.record('polygon2')
 
 
@@ -63,12 +59,13 @@ def test_geometries(tmpdir):
     df_polygon = GeoDataFrame.from_file(polygon_file)
     df_polyline = GeoDataFrame.from_file(polyline_file)
 
-    p = (ggplot()
-         + aes(fill='geometry.bounds.miny')
-         + geom_map(df_polygon)
-         + geom_map(df_point, size=4)
-         + geom_map(df_polyline, size=2)
-         + labs(fill='miny')
-         )
+    p = (
+        ggplot()
+        + aes(fill='geometry.bounds.miny')
+        + geom_map(df_polygon)
+        + geom_map(df_point, size=4)
+        + geom_map(df_polyline, size=2)
+        + labs(fill='miny')
+    )
 
     assert p + _theme == 'geometries'

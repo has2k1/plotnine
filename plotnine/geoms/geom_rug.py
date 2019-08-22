@@ -25,10 +25,15 @@ class geom_rug(geom):
         length of marks in fractions of
         horizontal/vertical panel size (default 0.03)
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
-                   'linetype': 'solid'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'sides': 'bl', 'length': 0.03}
+
+    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5, 'linetype': 'solid'}
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'sides': 'bl',
+        'length': 0.03,
+    }
     legend_geom = 'path'
 
     @staticmethod
@@ -55,35 +60,37 @@ class geom_rug(geom):
         rugs = []
         xmin, xmax = panel_params.x.range
         ymin, ymax = panel_params.y.range
-        xheight = (xmax-xmin) * params['length']
-        yheight = (ymax-ymin) * params['length']
+        xheight = (xmax - xmin) * params['length']
+        yheight = (ymax - ymin) * params['length']
 
         if has_x:
             if 'b' in sides:
                 x = np.repeat(data['x'].values, 2)
-                y = np.tile([ymin, ymin+yheight], n)
+                y = np.tile([ymin, ymin + yheight], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if 't' in sides:
                 x = np.repeat(data['x'].values, 2)
-                y = np.tile([ymax-yheight, ymax], n)
+                y = np.tile([ymax - yheight, ymax], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         if has_y:
             if 'l' in sides:
-                x = np.tile([xmin, xmin+xheight], n)
+                x = np.tile([xmin, xmin + xheight], n)
                 y = np.repeat(data['y'].values, 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if 'r' in sides:
-                x = np.tile([xmax-xheight, xmax], n)
+                x = np.tile([xmax - xheight, xmax], n)
                 y = np.repeat(data['y'].values, 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         color = to_rgba(data['color'], data['alpha'])
-        coll = mcoll.LineCollection(rugs,
-                                    edgecolor=color,
-                                    linewidth=data['size'],
-                                    linestyle=data['linetype'],
-                                    zorder=params['zorder'])
+        coll = mcoll.LineCollection(
+            rugs,
+            edgecolor=color,
+            linewidth=data['size'],
+            linestyle=data['linetype'],
+            zorder=params['zorder'],
+        )
         ax.add_collection(coll)

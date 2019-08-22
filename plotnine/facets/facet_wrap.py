@@ -51,12 +51,27 @@ class facet_wrap(facet):
         horizontal and ``v`` for vertical.
     """
 
-    def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
-                 shrink=True, labeller='label_value',
-                 as_table=True, drop=True, dir='h'):
+    def __init__(
+        self,
+        facets=None,
+        nrow=None,
+        ncol=None,
+        scales='fixed',
+        shrink=True,
+        labeller='label_value',
+        as_table=True,
+        drop=True,
+        dir='h',
+    ):
         facet.__init__(
-            self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop, dir=dir)
+            self,
+            scales=scales,
+            shrink=shrink,
+            labeller=labeller,
+            as_table=as_table,
+            drop=drop,
+            dir=dir,
+        )
         self.vars = tuple(parse_wrap_facets(facets))
         self.nrow, self.ncol = check_dimensions(nrow, ncol)
         # facet_wrap gets its labelling at the top
@@ -66,11 +81,10 @@ class facet_wrap(facet):
         if not self.vars:
             return layout_null()
 
-        base = combine_vars(data, self.plot.environment,
-                            self.vars, drop=self.drop)
+        base = combine_vars(data, self.plot.environment, self.vars, drop=self.drop)
         n = len(base)
         dims = wrap_dims(n, self.nrow, self.ncol)
-        _id = np.arange(1, n+1)
+        _id = np.arange(1, n + 1)
 
         if self.dir == 'v':
             dims = dims[::-1]
@@ -82,15 +96,15 @@ class facet_wrap(facet):
 
         col = (_id - 1) % dims[1] + 1
 
-        layout = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
-                               'ROW': row.astype(int),
-                               'COL': col.astype(int)})
+        layout = pd.DataFrame(
+            {
+                'PANEL': pd.Categorical(range(1, n + 1)),
+                'ROW': row.astype(int),
+                'COL': col.astype(int),
+            }
+        )
         if self.dir == 'v':
-            layout.rename(
-                columns={'ROW': 'COL',
-                         'COL': 'ROW'},
-                inplace=True
-            )
+            layout.rename(columns={'ROW': 'COL', 'COL': 'ROW'}, inplace=True)
 
         layout = pd.concat([layout, base], axis=1)
         self.nrow = layout['ROW'].nunique()
@@ -98,8 +112,8 @@ class facet_wrap(facet):
         n = layout.shape[0]
 
         # Add scale identification
-        layout['SCALE_X'] = range(1, n+1) if self.free['x'] else 1
-        layout['SCALE_Y'] = range(1, n+1) if self.free['y'] else 1
+        layout['SCALE_X'] = range(1, n + 1) if self.free['x'] else 1
+        layout['SCALE_Y'] = range(1, n + 1) if self.free['y'] else 1
 
         # Figure out where axes should go.
         # The bottom-most row of each column and the left most
@@ -123,14 +137,12 @@ class facet_wrap(facet):
     def map(self, data, layout):
         if not len(data):
             data['PANEL'] = pd.Categorical(
-                [],
-                categories=layout['PANEL'].cat.categories,
-                ordered=True)
+                [], categories=layout['PANEL'].cat.categories, ordered=True
+            )
             return data
 
         facet_vals = eval_facet_vars(data, self.vars, self.plot.environment)
-        data, facet_vals = add_missing_facets(data, layout,
-                                              self.vars, facet_vals)
+        data, facet_vals = add_missing_facets(data, layout, self.vars, facet_vals)
 
         # assign each point to a panel
         keys = join_keys(facet_vals, layout, self.vars)
@@ -139,9 +151,8 @@ class facet_wrap(facet):
 
         # matching dtype
         data['PANEL'] = pd.Categorical(
-            data['PANEL'],
-            categories=layout['PANEL'].cat.categories,
-            ordered=True)
+            data['PANEL'], categories=layout['PANEL'].cat.categories, ordered=True
+        )
 
         data.reset_index(drop=True, inplace=True)
         return data
@@ -180,8 +191,7 @@ class facet_wrap(facet):
             # If the panels have different limits the coordinates
             # cannot compute a common aspect ratio
             if not self.free['x'] and not self.free['y']:
-                aspect_ratio = self.coordinates.aspect(
-                    self.layout.panel_params[0])
+                aspect_ratio = self.coordinates.aspect(self.layout.panel_params[0])
             else:
                 aspect_ratio = None
 
@@ -191,7 +201,7 @@ class facet_wrap(facet):
         # Account for the vertical sliding of the strip if any
         with suppress(KeyError):
             strip_margin_x = get_property('strip_margin_x')
-            top_strip_height *= (1 + strip_margin_x)
+            top_strip_height *= 1 + strip_margin_x
 
         # The goal is to have equal spacing along the vertical
         # and the horizontal. We use the wspace and compute
@@ -199,18 +209,19 @@ class facet_wrap(facet):
         # MPL had a better layout manager.
 
         # width of axes and height of axes
-        w = ((right-left)*W - spacing_x*(ncol-1)) / ncol
-        h = ((top-bottom)*H - (spacing_y+top_strip_height)*(nrow-1)) / nrow
+        w = ((right - left) * W - spacing_x * (ncol - 1)) / ncol
+        h = ((top - bottom) * H - (spacing_y + top_strip_height) * (nrow - 1)) / nrow
 
         # aspect ratio changes the size of the figure
         if aspect_ratio is not None:
-            h = w*aspect_ratio
-            H = (h*nrow + (spacing_y+top_strip_height)*(nrow-1)) / \
-                (top-bottom)
+            h = w * aspect_ratio
+            H = (h * nrow + (spacing_y + top_strip_height) * (nrow - 1)) / (
+                top - bottom
+            )
             figure.set_figheight(H)
 
         # spacing
-        wspace = spacing_x/w
+        wspace = spacing_x / w
         hspace = (spacing_y + top_strip_height) / h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
 
@@ -236,16 +247,20 @@ class facet_wrap(facet):
 def check_dimensions(nrow, ncol):
     if nrow is not None:
         if nrow < 1:
-            warn("'nrow' must be greater than 0. "
-                 "Your value has been ignored.", PlotnineWarning)
+            warn(
+                "'nrow' must be greater than 0. " "Your value has been ignored.",
+                PlotnineWarning,
+            )
             nrow = None
         else:
             nrow = int(nrow)
 
     if ncol is not None:
         if ncol < 1:
-            warn("'ncol' must be greater than 0. "
-                 "Your value has been ignored.", PlotnineWarning)
+            warn(
+                "'ncol' must be greater than 0. " "Your value has been ignored.",
+                PlotnineWarning,
+            )
             ncol = None
         else:
             ncol = int(ncol)
@@ -258,8 +273,7 @@ def parse_wrap_facets(facets):
     Return list of facetting variables
     """
     valid_forms = ['~ var1', '~ var1 + var2']
-    error_msg = ("Valid formula for 'facet_wrap' look like"
-                 " {}".format(valid_forms))
+    error_msg = "Valid formula for 'facet_wrap' look like" " {}".format(valid_forms)
 
     if isinstance(facets, (list, tuple)):
         return facets
@@ -288,14 +302,15 @@ def wrap_dims(n, nrow=None, ncol=None):
     if not nrow and not ncol:
         ncol, nrow = n2mfrow(n)
     elif not ncol:
-        ncol = int(np.ceil(n/nrow))
+        ncol = int(np.ceil(n / nrow))
     elif not nrow:
-        nrow = int(np.ceil(n/ncol))
+        nrow = int(np.ceil(n / ncol))
     if not nrow * ncol >= n:
         raise PlotnineError(
             "Allocated fewer panels than are required. "
             "Make sure the number of rows and columns can "
-            "hold all the plot panels.")
+            "hold all the plot panels."
+        )
     return (nrow, ncol)
 
 
@@ -314,5 +329,5 @@ def n2mfrow(nr_plots):
         nrow, ncol = (nr_plots + 2) // 3, 3
     else:
         nrow = int(np.ceil(np.sqrt(nr_plots)))
-        ncol = int(np.ceil(nr_plots/nrow))
+        ncol = int(np.ceil(nr_plots / nrow))
     return (nrow, ncol)

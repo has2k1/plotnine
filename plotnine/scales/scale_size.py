@@ -22,11 +22,12 @@ class scale_size_ordinal(scale_discrete):
         It must be of size 2.
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
 
     def __init__(self, range=(2, 6), **kwargs):
         def palette(n):
-            area = np.linspace(range[0]**2, range[1]**2, n)
+            area = np.linspace(range[0] ** 2, range[1] ** 2, n)
             return np.sqrt(area)
 
         self.palette = palette
@@ -42,13 +43,11 @@ class scale_size_discrete(scale_size_ordinal):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
 
     def __init__(self, **kwargs):
-        warn(
-            "Using alpha for a discrete variable is not advised.",
-            PlotnineWarning
-        )
+        warn("Using alpha for a discrete variable is not advised.", PlotnineWarning)
         super().__init__(**kwargs)
 
 
@@ -64,6 +63,7 @@ class scale_size_continuous(scale_continuous):
         It must be of size 2.
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
@@ -86,6 +86,7 @@ class scale_size_radius(scale_continuous):
         It must be of size 2.
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
@@ -104,6 +105,7 @@ class scale_size_area(scale_continuous):
         Maximum size of the plotting symbol.
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
     rescaler = staticmethod(rescale_max)
 
@@ -124,6 +126,7 @@ class scale_size_datetime(scale_datetime):
         It must be of size 2.
     {superclass_parameters}
     """
+
     _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):

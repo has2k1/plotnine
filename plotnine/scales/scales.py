@@ -17,7 +17,6 @@ which will replace the existing scale.
 
 
 class Scales(list):
-
     def append(self, sc):
         """
         Add scale 'sc' and remove any previous
@@ -83,16 +82,14 @@ class Scales(list):
         Return a list of the non-position scales that
         are present
         """
-        l = [s for s in self
-             if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
+        l = [s for s in self if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
         return Scales(l)
 
     def position_scales(self):
         """
         Return a list of the position scales that are present
         """
-        l = [s for s in self
-             if ('x' in s.aesthetics) or ('y' in s.aesthetics)]
+        l = [s for s in self if ('x' in s.aesthetics) or ('y' in s.aesthetics)]
         return Scales(l)
 
     def train(self, data, vars, idx):
@@ -118,7 +115,7 @@ class Scales(list):
         idx = np.asarray(idx)
         for col in vars:
             for i, sc in enumerate(self, start=1):
-                bool_idx = (i == idx)
+                bool_idx = i == idx
                 sc.train(data.loc[bool_idx, col])
 
     def map(self, data, vars, idx):
@@ -154,7 +151,7 @@ class Scales(list):
             if use_df:
                 discrete_cols.append(col)
             for i, sc in enumerate(self, start=1):
-                bool_idx = (i == idx)
+                bool_idx = i == idx
                 results = sc.map(data.loc[bool_idx, col])
                 if use_df:
                     df.loc[bool_idx, col] = results
@@ -286,8 +283,10 @@ def scale_type(series):
     elif array_kind.timedelta(series):
         stype = 'timedelta'
     else:
-        msg = ("Don't know how to automatically pick scale for "
-               "object of type {}. Defaulting to 'continuous'")
+        msg = (
+            "Don't know how to automatically pick scale for "
+            "object of type {}. Defaulting to 'continuous'"
+        )
         warn(msg.format(series.dtype), PlotnineWarning)
         stype = 'continuous'
     return stype

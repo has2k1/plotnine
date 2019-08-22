@@ -61,16 +61,31 @@ class facet_grid(facet):
         or not they appear in the data. Default is ``True``.
     """
 
-    def __init__(self, facets, margins=False, scales='fixed',
-                 space='fixed', shrink=True, labeller='label_value',
-                 as_table=True, drop=True):
+    def __init__(
+        self,
+        facets,
+        margins=False,
+        scales='fixed',
+        space='fixed',
+        shrink=True,
+        labeller='label_value',
+        as_table=True,
+        drop=True,
+    ):
         facet.__init__(
-            self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop)
+            self,
+            scales=scales,
+            shrink=shrink,
+            labeller=labeller,
+            as_table=as_table,
+            drop=drop,
+        )
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
-        self.space_free = {'x': space in ('free_x', 'free'),
-                           'y': space in ('free_y', 'free')}
+        self.space_free = {
+            'x': space in ('free_x', 'free'),
+            'y': space in ('free_y', 'free'),
+        }
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
 
@@ -78,14 +93,12 @@ class facet_grid(facet):
         if not self.rows and not self.cols:
             return layout_null()
 
-        base_rows = combine_vars(data, self.plot.environment,
-                                 self.rows, drop=self.drop)
+        base_rows = combine_vars(data, self.plot.environment, self.rows, drop=self.drop)
 
         if not self.as_table:
             # Reverse the order of the rows
             base_rows = base_rows[::-1]
-        base_cols = combine_vars(data, self.plot.environment,
-                                 self.cols, drop=self.drop)
+        base_cols = combine_vars(data, self.plot.environment, self.cols, drop=self.drop)
 
         base = cross_join(base_rows, base_cols)
 
@@ -95,7 +108,7 @@ class facet_grid(facet):
 
         n = len(base)
         panel = ninteraction(base, drop=True)
-        panel = pd.Categorical(panel, categories=range(1, n+1))
+        panel = pd.Categorical(panel, categories=range(1, n + 1))
 
         if self.rows:
             rows = ninteraction(base[self.rows], drop=True)
@@ -107,9 +120,7 @@ class facet_grid(facet):
         else:
             cols = 1
 
-        layout = pd.DataFrame({'PANEL': panel,
-                               'ROW': rows,
-                               'COL': cols})
+        layout = pd.DataFrame({'PANEL': panel, 'ROW': rows, 'COL': cols})
         layout = pd.concat([layout, base], axis=1)
         layout = layout.sort_values('PANEL')
         layout.reset_index(drop=True, inplace=True)
@@ -127,19 +138,16 @@ class facet_grid(facet):
     def map(self, data, layout):
         if not len(data):
             data['PANEL'] = pd.Categorical(
-                [],
-                categories=layout['PANEL'].cat.categories,
-                ordered=True)
+                [], categories=layout['PANEL'].cat.categories, ordered=True
+            )
             return data
 
         vars = [x for x in self.rows + self.cols]
-        margin_vars = [list(data.columns & self.rows),
-                       list(data.columns & self.cols)]
+        margin_vars = [list(data.columns & self.rows), list(data.columns & self.cols)]
         data = add_margins(data, margin_vars, self.margins)
 
         facet_vals = eval_facet_vars(data, vars, self.plot.environment)
-        data, facet_vals = add_missing_facets(data, layout,
-                                              vars, facet_vals)
+        data, facet_vals = add_missing_facets(data, layout, vars, facet_vals)
 
         # assign each point to a panel
         if len(facet_vals) == 0:
@@ -156,9 +164,8 @@ class facet_grid(facet):
         # same order as the panels. i.e the panels are the reference,
         # they "know" the right order
         data['PANEL'] = pd.Categorical(
-            data['PANEL'],
-            categories=layout['PANEL'].cat.categories,
-            ordered=True)
+            data['PANEL'], categories=layout['PANEL'].cat.categories, ordered=True
+        )
 
         data.reset_index(drop=True, inplace=True)
         return data
@@ -197,8 +204,7 @@ class facet_grid(facet):
             # If the panels have different limits the coordinates
             # cannot compute a common aspect ratio
             if not self.free['x'] and not self.free['y']:
-                aspect_ratio = self.coordinates.aspect(
-                    self.layout.panel_params[0])
+                aspect_ratio = self.coordinates.aspect(self.layout.panel_params[0])
             else:
                 aspect_ratio = None
 
@@ -208,18 +214,18 @@ class facet_grid(facet):
         # MPL had a better layout manager.
 
         # width of axes and height of axes
-        w = ((right-left)*W - spacing_x*(ncol-1)) / ncol
-        h = ((top-bottom)*H - spacing_y*(nrow-1)) / nrow
+        w = ((right - left) * W - spacing_x * (ncol - 1)) / ncol
+        h = ((top - bottom) * H - spacing_y * (nrow - 1)) / nrow
 
         # aspect ratio changes the size of the figure
         if aspect_ratio is not None:
-            h = w*aspect_ratio
-            H = (h*nrow + spacing_y*(nrow-1)) / (top-bottom)
+            h = w * aspect_ratio
+            H = (h * nrow + spacing_y * (nrow - 1)) / (top - bottom)
             figure.set_figheight(H)
 
         # spacing
-        wspace = spacing_x/w
-        hspace = spacing_y/h
+        wspace = spacing_x / w
+        hspace = spacing_y / h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
 
     def draw_label(self, layout_info, ax):
@@ -255,18 +261,25 @@ def parse_grid_facets(facets):
     """
     Return two lists of facetting variables, for the rows & columns
     """
-    valid_seqs = ["('var1', '.')", "('var1', 'var2')",
-                  "('.', 'var1')", "((var1, var2), (var3, var4))"]
-    error_msg_s = ("Valid sequences for specifying 'facets' look like"
-                   " {}".format(valid_seqs))
+    valid_seqs = [
+        "('var1', '.')",
+        "('var1', 'var2')",
+        "('.', 'var1')",
+        "((var1, var2), (var3, var4))",
+    ]
+    error_msg_s = "Valid sequences for specifying 'facets' look like" " {}".format(
+        valid_seqs
+    )
 
-    valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
-                   'var1 + var2 ~ var3 + var4',
-                   '. ~ func(var1) + func(var2)',
-                   '. ~ func(var1+var3) + func(var2)'
-                   ] + valid_seqs
-    error_msg_f = ("Valid formula for 'facet_grid' look like"
-                   " {}".format(valid_forms))
+    valid_forms = [
+        'var1 ~ .',
+        'var1 ~ var2',
+        '. ~ var1',
+        'var1 + var2 ~ var3 + var4',
+        '. ~ func(var1) + func(var2)',
+        '. ~ func(var1+var3) + func(var2)',
+    ] + valid_seqs
+    error_msg_f = "Valid formula for 'facet_grid' look like" " {}".format(valid_forms)
 
     if isinstance(facets, (tuple, list)):
         if len(facets) != 2:

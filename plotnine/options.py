@@ -12,7 +12,7 @@ aspect_ratio = None
 dpi = 100
 
 #: Default figure size inches
-figure_size = (640/dpi, 480/dpi)
+figure_size = (640 / dpi, 480 / dpi)
 
 
 def get_option(name):
@@ -28,6 +28,7 @@ def get_option(name):
 
     if name in {'get_option', 'set_option'} or name not in d:
         from ..exceptions import PlotnineError
+
         raise PlotnineError("Unknown option {}".format(name))
 
     return d[name]
@@ -53,6 +54,7 @@ def set_option(name, value):
 
     if name in {'get_option', 'set_option'} or name not in d:
         from ..exceptions import PlotnineError
+
         raise PlotnineError("Unknown option {}".format(name))
 
     old = d[name]

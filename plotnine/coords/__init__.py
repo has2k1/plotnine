@@ -4,5 +4,4 @@ from .coord_flip import coord_flip
 from .coord_trans import coord_trans
 
 
-__all__ = ['coord_cartesian', 'coord_fixed', 'coord_equal',
-           'coord_flip', 'coord_trans']
+__all__ = ['coord_cartesian', 'coord_fixed', 'coord_equal', 'coord_flip', 'coord_trans']

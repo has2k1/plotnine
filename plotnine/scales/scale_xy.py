@@ -30,6 +30,7 @@ class scale_position_discrete(scale_discrete):
         For scales that deal with categoricals, these may
         be a subset or superset of the categories.
     """
+
     # All positions have no guide
     guide = None
 
@@ -53,9 +54,11 @@ class scale_position_discrete(scale_discrete):
         if self.range is None:
             return True
 
-        return (self.range.range is None and
-                self._limits is None and
-                self.range_c.range is None)
+        return (
+            self.range.range is None
+            and self._limits is None
+            and self.range_c.range is None
+        )
 
     def train(self, series):
         # The discrete position scale is capable of doing
@@ -74,7 +77,7 @@ class scale_position_discrete(scale_discrete):
         if limits is None:
             limits = self.limits
         if array_kind.discrete(series):
-            seq = np.arange(1, len(limits)+1)
+            seq = np.arange(1, len(limits) + 1)
             return seq[match(series, limits)]
         return series
 
@@ -94,8 +97,7 @@ class scale_position_discrete(scale_discrete):
                 limits = list(limits)
             return limits
         else:
-            raise PlotnineError(
-                'Lost, do not know what the limits are.')
+            raise PlotnineError('Lost, do not know what the limits are.')
 
     @limits.setter
     def limits(self, value):
@@ -124,10 +126,7 @@ class scale_position_discrete(scale_discrete):
         else:  # both
             # e.g categorical bar plot have discrete items, but
             # are plot on a continuous x scale
-            a = np.hstack([
-                c_range,
-                expand_range_distinct((1, len(d_range)), expand)
-                ])
+            a = np.hstack([c_range, expand_range_distinct((1, len(d_range)), expand)])
             return a.min(), a.max()
 
 
@@ -140,6 +139,7 @@ class scale_position_continuous(scale_continuous):
     ----------
     {superclass_parameters}
     """
+
     # All positions have no guide
     guide = None
 
@@ -169,6 +169,7 @@ class scale_x_discrete(scale_position_discrete):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['x', 'xmin', 'xmax', 'xend']
 
 
@@ -181,6 +182,7 @@ class scale_y_discrete(scale_position_discrete):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['y', 'ymin', 'ymax', 'yend']
 
 
@@ -198,6 +200,7 @@ class scale_x_continuous(scale_position_continuous):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['x', 'xmin', 'xmax', 'xend', 'xintercept']
 
 
@@ -210,9 +213,19 @@ class scale_y_continuous(scale_position_continuous):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
-                   'ymin_final', 'ymax_final',
-                   'lower', 'middle', 'upper']
+
+    _aesthetics = [
+        'y',
+        'ymin',
+        'ymax',
+        'yend',
+        'yintercept',
+        'ymin_final',
+        'ymax_final',
+        'lower',
+        'middle',
+        'upper',
+    ]
 
 
 # Transformed scales
@@ -251,6 +264,7 @@ class scale_x_timedelta(scale_x_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'pd_timedelta'
 
 
@@ -263,6 +277,7 @@ class scale_y_timedelta(scale_y_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'pd_timedelta'
 
 
@@ -275,6 +290,7 @@ class scale_x_sqrt(scale_x_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'sqrt'
 
 
@@ -287,6 +303,7 @@ class scale_y_sqrt(scale_y_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'sqrt'
 
 
@@ -299,6 +316,7 @@ class scale_x_log10(scale_x_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'log10'
 
 
@@ -311,6 +329,7 @@ class scale_y_log10(scale_y_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'log10'
 
 
@@ -323,6 +342,7 @@ class scale_x_reverse(scale_x_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'reverse'
 
 
@@ -335,4 +355,5 @@ class scale_y_reverse(scale_y_continuous):
     ----------
     {superclass_parameters}
     """
+
     _trans = 'reverse'

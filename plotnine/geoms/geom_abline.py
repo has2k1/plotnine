@@ -21,10 +21,14 @@ class geom_abline(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'alpha': 1, 'size': 0.5}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'inherit_aes': False}
+
+    DEFAULT_AES = {'color': 'black', 'linetype': 'solid', 'alpha': 1, 'size': 0.5}
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'inherit_aes': False,
+    }
     REQUIRED_AES = {'slope', 'intercept'}
     legend_geom = 'path'
 
@@ -40,21 +44,23 @@ class geom_abline(geom):
 
         if slope is not None or intercept is not None:
             if mapping:
-                warn("The 'intercept' and 'slope' when specified override "
-                     "the aes() mapping.", PlotnineWarning)
+                warn(
+                    "The 'intercept' and 'slope' when specified override "
+                    "the aes() mapping.",
+                    PlotnineWarning,
+                )
             if data is not None:
-                warn("The 'intercept' and 'slope' when specified override "
-                     "the data", PlotnineWarning)
+                warn(
+                    "The 'intercept' and 'slope' when specified override " "the data",
+                    PlotnineWarning,
+                )
 
             if slope is None:
                 slope = 1
             if intercept is None:
                 intercept = 0
 
-            data = pd.DataFrame({
-                'intercept': make_iterable(intercept),
-                'slope': slope
-            })
+            data = pd.DataFrame({'intercept': make_iterable(intercept), 'slope': slope})
 
             mapping = aes(intercept=intercept, slope=slope)
             kwargs['show_legend'] = False
@@ -74,5 +80,4 @@ class geom_abline(geom):
 
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(gdata, panel_params,
-                                    coord, ax, **params)
+            geom_segment.draw_group(gdata, panel_params, coord, ax, **params)

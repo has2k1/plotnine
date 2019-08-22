@@ -16,11 +16,16 @@ class geom_ribbon(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 0.5}
+
+    DEFAULT_AES = {
+        'alpha': 1,
+        'color': None,
+        'fill': '#333333',
+        'linetype': 'solid',
+        'size': 0.5,
+    }
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'na_rm': False}
     legend_geom = 'polygon'
 
     def handle_na(self, data):
@@ -38,8 +43,7 @@ class geom_ribbon(geom):
 
         for _, udata in groupby_with_null(data, units):
             udata.reset_index(inplace=True, drop=True)
-            geom_ribbon.draw_unit(udata, panel_params, coord,
-                                  ax, **params)
+            geom_ribbon.draw_unit(udata, panel_params, coord, ax, **params)
 
     @staticmethod
     def draw_unit(data, panel_params, coord, ax, **params):
@@ -60,9 +64,13 @@ class geom_ribbon(geom):
             fill_between = ax.fill_between
             _x, _min, _max = data['x'], data['ymin'], data['ymax']
 
-        fill_between(_x, _min, _max,
-                     facecolor=fill,
-                     edgecolor=color,
-                     linewidth=data['size'].iloc[0],
-                     linestyle=data['linetype'].iloc[0],
-                     zorder=params['zorder'])
+        fill_between(
+            _x,
+            _min,
+            _max,
+            facecolor=fill,
+            edgecolor=color,
+            linewidth=data['size'].iloc[0],
+            linestyle=data['linetype'].iloc[0],
+            zorder=params['zorder'],
+        )

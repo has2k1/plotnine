@@ -4,12 +4,25 @@ import os
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 
-__all__ = ['diamonds', 'economics', 'economics_long',
-           'midwest', 'mpg', 'msleep', 'presidential',
-           'seals', 'txhousing', 'luv_colours',
-           'faithful', 'faithfuld',
-           # extras for backward compatibility!
-           'huron', 'meat', 'mtcars', 'pageviews']
+__all__ = [
+    'diamonds',
+    'economics',
+    'economics_long',
+    'midwest',
+    'mpg',
+    'msleep',
+    'presidential',
+    'seals',
+    'txhousing',
+    'luv_colours',
+    'faithful',
+    'faithfuld',
+    # extras for backward compatibility!
+    'huron',
+    'meat',
+    'mtcars',
+    'pageviews',
+]
 
 __all__ = [str(u) for u in __all__]
 _ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -20,10 +33,8 @@ pageviews = pd.read_csv(os.path.join(_ROOT, 'pageviews.csv'), parse_dates=[0])
 huron = pd.read_csv(os.path.join(_ROOT, 'huron.csv'))
 seals = pd.read_csv(os.path.join(_ROOT, 'seals.csv'))
 economics = pd.read_csv(os.path.join(_ROOT, 'economics.csv'), parse_dates=[0])
-economics_long = pd.read_csv(os.path.join(_ROOT, 'economics_long.csv'),
-                             parse_dates=[0])
-presidential = pd.read_csv(os.path.join(_ROOT, 'presidential.csv'),
-                           parse_dates=[1, 2])
+economics_long = pd.read_csv(os.path.join(_ROOT, 'economics_long.csv'), parse_dates=[0])
+presidential = pd.read_csv(os.path.join(_ROOT, 'presidential.csv'), parse_dates=[1, 2])
 txhousing = pd.read_csv(os.path.join(_ROOT, 'txhousing.csv'))
 luv_colours = pd.read_csv(os.path.join(_ROOT, 'luv_colours.csv'))
 faithfuld = pd.read_csv(os.path.join(_ROOT, 'faithfuld.csv'))
@@ -58,7 +69,8 @@ diamonds = pd.read_csv(os.path.join(_ROOT, 'diamonds.csv'))
 categories = {
     'cut': ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'],
     'clarity': ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'],
-    'color': ['D', 'E', 'F', 'G', 'H', 'I', 'J']}
+    'color': ['D', 'E', 'F', 'G', 'H', 'I', 'J'],
+}
 diamonds = _ordered_categories(diamonds, categories)
 
 midwest = pd.read_csv(os.path.join(_ROOT, 'midwest.csv'))

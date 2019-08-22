@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.collections as mcoll
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
-from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
+from matplotlib.offsetbox import TextArea, HPacker, VPacker
 from matplotlib.offsetbox import AuxTransformBox
 from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
@@ -45,9 +45,10 @@ class guide_colorbar(guide):
         Parameters passed on to :class:`.guide`
 
     """
+
     # bar
     barwidth = 23
-    barheight = 23*5
+    barheight = 23 * 5
     nbin = 20  # maximum number of bins
     raster = True
 
@@ -82,20 +83,26 @@ class guide_colorbar(guide):
         if not len(breaks):
             return None
 
-        self.key = pd.DataFrame({
-            aesthetic: scale.map(breaks),
-            'label': scale.get_labels(breaks),
-            'value': breaks})
+        self.key = pd.DataFrame(
+            {
+                aesthetic: scale.map(breaks),
+                'label': scale.get_labels(breaks),
+                'value': breaks,
+            }
+        )
 
         bar = np.linspace(limits[0], limits[1], self.nbin)
-        self.bar = pd.DataFrame({
-            'color': scale.map(bar),
-            'value': bar})
+        self.bar = pd.DataFrame({'color': scale.map(bar), 'value': bar})
 
         labels = ' '.join(str(x) for x in self.key['label'])
-        info = '\n'.join([self.title, labels,
-                          ' '.join(self.bar['color'].tolist()),
-                          self.__class__.__name__])
+        info = '\n'.join(
+            [
+                self.title,
+                labels,
+                ' '.join(self.bar['color'].tolist()),
+                self.__class__.__name__,
+            ]
+        )
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
         return self
 
@@ -115,8 +122,7 @@ class guide_colorbar(guide):
             exclude = set()
             if isinstance(l.show_legend, dict):
                 l.show_legend = rename_aesthetics(l.show_legend)
-                exclude = {ae for ae, val in l.show_legend.items()
-                           if not val}
+                exclude = {ae for ae, val in l.show_legend.items() if not val}
             elif l.show_legend not in (None, True):
                 continue
 
@@ -163,9 +169,9 @@ class guide_colorbar(guide):
         # in between interpolation points and the matching is
         # close though not exactly right.
         _from = self.bar['value'].min(), self.bar['value'].max()
-        tick_locations = rescale(self.key['value'],
-                                 (.5, nbars-.5),
-                                 _from) * length/nbars
+        tick_locations = (
+            rescale(self.key['value'], (0.5, nbars - 0.5), _from) * length / nbars
+        )
 
         if direction == 'horizontal':
             width, height = height, width
@@ -177,8 +183,7 @@ class guide_colorbar(guide):
             tick_locations = length - tick_locations[::-1]
 
         # title #
-        title_box = TextArea(self.title,
-                             textprops=dict(color='black'))
+        title_box = TextArea(self.title, textprops=dict(color='black'))
         themeable['legend_title'].append(title_box)
 
         # colorbar and ticks #
@@ -200,9 +205,9 @@ class guide_colorbar(guide):
 
         # labels #
         if self.label:
-            labels_da, legend_text = create_labels(da, labels,
-                                                   tick_locations,
-                                                   direction)
+            labels_da, legend_text = create_labels(
+                da, labels, tick_locations, direction
+            )
             themeable['legend_text_colorbar'].extend(legend_text)
         else:
             labels_da = ColoredDrawingArea(0, 0)
@@ -219,23 +224,22 @@ class guide_colorbar(guide):
             slc = obverse
         else:
             slc = reverse
-        main_box = packer(children=[da, labels_da][slc],
-                          sep=self._label_margin,
-                          align=align,
-                          pad=0)
+        main_box = packer(
+            children=[da, labels_da][slc], sep=self._label_margin, align=align, pad=0
+        )
 
         # title + colorbar(with labels) #
         lookup = {
             'right': (HPacker, reverse),
             'left': (HPacker, obverse),
             'bottom': (VPacker, reverse),
-            'top': (VPacker, obverse)}
+            'top': (VPacker, obverse),
+        }
         packer, slc = lookup[self.title_position]
         children = [title_box, main_box][slc]
-        box = packer(children=children,
-                     sep=self._title_margin,
-                     align=self._title_align,
-                     pad=0)
+        box = packer(
+            children=children, sep=self._title_margin, align=self._title_align, pad=0
+        )
         return box
 
 
@@ -256,39 +260,40 @@ def add_interpolated_colorbar(da, colors, direction):
 
     if direction == 'vertical':
         mesh_width = 1
-        mesh_height = nbreak-1
-        linewidth = da.height/mesh_height
+        mesh_height = nbreak - 1
+        linewidth = da.height / mesh_height
         # Construct rectangular meshgrid
         # The values(Z) at each vertex are just the
         # normalized (onto [0, 1]) vertical distance
         x = np.array([0, da.width])
         y = np.arange(0, nbreak) * linewidth
         X, Y = np.meshgrid(x, y)
-        Z = Y/y.max()
+        Z = Y / y.max()
     else:
-        mesh_width = nbreak-1
+        mesh_width = nbreak - 1
         mesh_height = 1
-        linewidth = da.width/mesh_width
+        linewidth = da.width / mesh_width
         x = np.arange(0, nbreak) * linewidth
         y = np.array([0, da.height])
         X, Y = np.meshgrid(x, y)
-        Z = X/x.max()
+        Z = X / x.max()
 
     # As a 2D coordinates array
-    coordinates = np.zeros(
-        ((mesh_width+1)*(mesh_height+1), 2),
-        dtype=float)
+    coordinates = np.zeros(((mesh_width + 1) * (mesh_height + 1), 2), dtype=float)
     coordinates[:, 0] = X.ravel()
     coordinates[:, 1] = Y.ravel()
 
     cmap = ListedColormap(colors)
-    coll = mcoll.QuadMesh(mesh_width, mesh_height,
-                          coordinates,
-                          antialiased=False,
-                          shading='gouraud',
-                          linewidth=0,
-                          cmap=cmap,
-                          array=Z.ravel())
+    coll = mcoll.QuadMesh(
+        mesh_width,
+        mesh_height,
+        coordinates,
+        antialiased=False,
+        shading='gouraud',
+        linewidth=0,
+        cmap=cmap,
+        array=Z.ravel(),
+    )
     da.add_artist(coll)
 
 
@@ -298,7 +303,7 @@ def add_segmented_colorbar(da, colors, direction):
     """
     nbreak = len(colors)
     if direction == 'vertical':
-        linewidth = da.height/nbreak
+        linewidth = da.height / nbreak
         verts = [None] * nbreak
         x1, x2 = 0, da.width
         for i, color in enumerate(colors):
@@ -306,7 +311,7 @@ def add_segmented_colorbar(da, colors, direction):
             y2 = y1 + linewidth
             verts[i] = ((x1, y1), (x1, y2), (x2, y2), (x2, y1))
     else:
-        linewidth = da.width/nbreak
+        linewidth = da.width / nbreak
         verts = [None] * nbreak
         y1, y2 = 0, da.height
         for i, color in enumerate(colors):
@@ -314,30 +319,26 @@ def add_segmented_colorbar(da, colors, direction):
             x2 = x1 + linewidth
             verts[i] = ((x1, y1), (x1, y2), (x2, y2), (x2, y1))
 
-    coll = mcoll.PolyCollection(verts,
-                                facecolors=colors,
-                                linewidth=0,
-                                antialiased=False)
+    coll = mcoll.PolyCollection(
+        verts, facecolors=colors, linewidth=0, antialiased=False
+    )
     da.add_artist(coll)
 
 
 def add_ticks(da, locations, direction):
-    segments = [None] * (len(locations)*2)
+    segments = [None] * (len(locations) * 2)
     if direction == 'vertical':
-        x1, x2, x3, x4 = np.array([0.0, 1/5, 4/5, 1.0]) * da.width
+        x1, x2, x3, x4 = np.array([0.0, 1 / 5, 4 / 5, 1.0]) * da.width
         for i, y in enumerate(locations):
-            segments[i*2:i*2+2] = [((x1, y), (x2, y)),
-                                   ((x3, y), (x4, y))]
+            segments[i * 2 : i * 2 + 2] = [((x1, y), (x2, y)), ((x3, y), (x4, y))]
     else:
-        y1, y2, y3, y4 = np.array([0.0, 1/5, 4/5, 1.0]) * da.height
+        y1, y2, y3, y4 = np.array([0.0, 1 / 5, 4 / 5, 1.0]) * da.height
         for i, x in enumerate(locations):
-            segments[i*2:i*2+2] = [((x, y1), (x, y2)),
-                                   ((x, y3), (x, y4))]
+            segments[i * 2 : i * 2 + 2] = [((x, y1), (x, y2)), ((x, y3), (x, y4))]
 
-    coll = mcoll.LineCollection(segments,
-                                color='#CCCCCC',
-                                linewidth=1,
-                                antialiased=False)
+    coll = mcoll.LineCollection(
+        segments, color='#CCCCCC', linewidth=1, antialiased=False
+    )
     da.add_artist(coll)
 
 
@@ -352,7 +353,7 @@ def create_labels(da, labels, locations, direction):
     fontsize = 9
     aux_transform = mtransforms.IdentityTransform()
     labels_box = MyAuxTransformBox(aux_transform)
-    xs, ys = [0]*len(labels), locations
+    xs, ys = [0] * len(labels), locations
     ha, va = 'left', 'center'
 
     x1, y1 = 0, 0
@@ -361,21 +362,16 @@ def create_labels(da, labels, locations, direction):
         xs, ys = ys, xs
         ha, va = 'center', 'top'
         x2, y2 = da.width, 0
-    txt1 = mtext.Text(x1, y1, '',
-                      horizontalalignment=ha,
-                      verticalalignment=va)
-    txt2 = mtext.Text(x2, y2, '',
-                      horizontalalignment=ha,
-                      verticalalignment=va)
+    txt1 = mtext.Text(x1, y1, '', horizontalalignment=ha, verticalalignment=va)
+    txt2 = mtext.Text(x2, y2, '', horizontalalignment=ha, verticalalignment=va)
     labels_box.add_artist(txt1)
     labels_box.add_artist(txt2)
 
     legend_text = []
     for i, (x, y, text) in enumerate(zip(xs, ys, labels)):
-        txt = mtext.Text(x, y, text,
-                         size=fontsize,
-                         horizontalalignment=ha,
-                         verticalalignment=va)
+        txt = mtext.Text(
+            x, y, text, size=fontsize, horizontalalignment=ha, verticalalignment=va
+        )
         labels_box.add_artist(txt)
         legend_text.append(txt)
     return labels_box, legend_text
@@ -396,16 +392,18 @@ class MyAuxTransformBox(AuxTransformBox):
         Return the :class:`~matplotlib.transforms.Transform` applied
         to the children
         """
-        return self.aux_transform + \
-            self.ref_offset_transform + \
-            self.dpi_transform + \
-            self.offset_transform
+        return (
+            self.aux_transform
+            + self.ref_offset_transform
+            + self.dpi_transform
+            + self.offset_transform
+        )
 
     def draw(self, renderer):
         """
         Draw the children
         """
-        dpi_cor = renderer.points_to_pixels(1.)
+        dpi_cor = renderer.points_to_pixels(1.0)
         self.dpi_transform.clear()
         self.dpi_transform.scale(dpi_cor, dpi_cor)
 

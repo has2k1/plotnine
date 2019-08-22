@@ -13,8 +13,7 @@ from plotnine.aes import get_calculated_aes, strip_calculated_markers
 from plotnine.aes import is_valid_aesthetic
 from plotnine.exceptions import PlotnineError
 
-df = pd.DataFrame({'x': np.arange(10),
-                   'y': np.arange(10)})
+df = pd.DataFrame({'x': np.arange(10), 'y': np.arange(10)})
 
 
 def test_labels():
@@ -176,8 +175,7 @@ def test_calculated_aes():
 
 
 def test_add_aes():
-    df = pd.DataFrame({'var1': [1, 2, 3, 4],
-                       'var2': 2})
+    df = pd.DataFrame({'var1': [1, 2, 3, 4], 'var2': 2})
     p = ggplot(df) + geom_point()
     p += aes('var1', 'var2')
 
@@ -187,8 +185,7 @@ def test_add_aes():
 
 
 def test_nonzero_indexed_data():
-    df = pd.DataFrame({98: {'blip': 0, 'blop': 1},
-                       99: {'blip': 1, 'blop': 3}}).T
+    df = pd.DataFrame({98: {'blip': 0, 'blop': 1}, 99: {'blip': 1, 'blop': 3}}).T
     p = ggplot(aes(x='blip', y='blop'), data=df) + geom_line()
     p.draw_test()
 
@@ -249,12 +246,7 @@ def test_rrshift_piping():
 
 
 def test_adding_list_ggplot():
-    lst = [
-        geom_point(),
-        geom_point(aes('x+1', 'y+1')),
-        xlab('x-label'),
-        coord_trans()
-    ]
+    lst = [geom_point(), geom_point(aes('x+1', 'y+1')), xlab('x-label'), coord_trans()]
     g = ggplot() + lst
     assert len(g.layers) == 2
     assert g.labels['x'] == 'x-label'

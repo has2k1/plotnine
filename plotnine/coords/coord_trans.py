@@ -34,8 +34,7 @@ class coord_trans(coord):
         from the data.
     """
 
-    def __init__(self, x='identity', y='identity',
-                 xlim=None, ylim=None, expand=True):
+    def __init__(self, x='identity', y='identity', xlim=None, ylim=None, expand=True):
         self.trans = NS(x=gettrans(x), y=gettrans(y))
         self.limits = NS(x=xlim, y=ylim)
         self.expand = expand
@@ -45,19 +44,23 @@ class coord_trans(coord):
             data = self.munch(data, panel_params)
 
         def trans_x(data):
-            result = transform_value(self.trans.x,
-                                     data, panel_params.x.range)
+            result = transform_value(self.trans.x, data, panel_params.x.range)
             if any(result.isnull()):
-                warn("Coordinate transform of x aesthetic "
-                     "created one or more NaN values.", PlotnineWarning)
+                warn(
+                    "Coordinate transform of x aesthetic "
+                    "created one or more NaN values.",
+                    PlotnineWarning,
+                )
             return result
 
         def trans_y(data):
-            result = transform_value(self.trans.y,
-                                     data, panel_params.y.range)
+            result = transform_value(self.trans.y, data, panel_params.y.range)
             if any(result.isnull()):
-                warn("Coordinate transform of y aesthetic "
-                     "created one or more NaN values.", PlotnineWarning)
+                warn(
+                    "Coordinate transform of y aesthetic "
+                    "created one or more NaN values.",
+                    PlotnineWarning,
+                )
             return result
 
         data = transform_position(data, trans_x, trans_y)
@@ -73,28 +76,31 @@ class coord_trans(coord):
         Compute the range and break information for the panel
 
         """
+
         def get_view_limits(scale, coord_limits, trans):
             if coord_limits:
                 coord_limits = trans.transform(coord_limits)
 
             expansion = scale.default_expansion(expand=self.expand)
-            ranges = scale.expand_limits(
-                scale.limits, expansion, coord_limits, trans)
+            ranges = scale.expand_limits(scale.limits, expansion, coord_limits, trans)
             vs = scale.view(limits=coord_limits, range=ranges.range)
             vs.range = np.sort(ranges.range_coord)
             vs.breaks = transform_value(trans, vs.breaks, vs.range)
             vs.minor_breaks = transform_value(trans, vs.minor_breaks, vs.range)
             return vs
 
-        out = NS(x=get_view_limits(scale_x, self.limits.x, self.trans.x),
-                 y=get_view_limits(scale_y, self.limits.y, self.trans.y))
+        out = NS(
+            x=get_view_limits(scale_x, self.limits.x, self.trans.x),
+            y=get_view_limits(scale_y, self.limits.y, self.trans.y),
+        )
         return out
 
     def distance(self, x, y, panel_params):
-        max_dist = dist_euclidean(panel_params.x.range,
-                                  panel_params.y.range)[0]
-        return dist_euclidean(self.trans.x.transform(x),
-                              self.trans.y.transform(y)) / max_dist
+        max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[0]
+        return (
+            dist_euclidean(self.trans.x.transform(x), self.trans.y.transform(y))
+            / max_dist
+        )
 
 
 def transform_value(trans, value, range):

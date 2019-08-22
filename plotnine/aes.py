@@ -5,15 +5,49 @@ from contextlib import suppress
 __all__ = ['aes']
 
 all_aesthetics = {
-    'alpha', 'angle', 'color', 'colour', 'fill', 'group', 'intercept',
-    'label', 'lineheight', 'linetype', 'lower', 'middle', 'radius',
-    'sample', 'shape', 'size', 'slope', 'stroke', 'upper', 'weight', 'x',
-    'xend', 'xintercept', 'xmax', 'xmin', 'y', 'yend', 'yintercept',
-    'ymax', 'ymin'}
+    'alpha',
+    'angle',
+    'color',
+    'colour',
+    'fill',
+    'group',
+    'intercept',
+    'label',
+    'lineheight',
+    'linetype',
+    'lower',
+    'middle',
+    'radius',
+    'sample',
+    'shape',
+    'size',
+    'slope',
+    'stroke',
+    'upper',
+    'weight',
+    'x',
+    'xend',
+    'xintercept',
+    'xmax',
+    'xmin',
+    'y',
+    'yend',
+    'yintercept',
+    'ymax',
+    'ymin',
+}
 
 scaled_aesthetics = {
-    'x', 'y', 'alpha', 'color', 'colour', 'fill',
-    'linetype', 'shape', 'size', 'stroke'
+    'x',
+    'y',
+    'alpha',
+    'color',
+    'colour',
+    'fill',
+    'linetype',
+    'shape',
+    'size',
+    'stroke',
 }
 
 
@@ -264,6 +298,7 @@ def strip_stat(value):
     >>> strip_stat(4)
     4
     """
+
     def strip_hanging_closing_parens(s):
         """
         Remove leftover  parens
@@ -383,18 +418,31 @@ def is_valid_aesthetic(value, ae):
     """
 
     if ae == 'linetype':
-        named = {'solid', 'dashed', 'dashdot', 'dotted',
-                 '_', '--', '-.', ':', 'None', ' ', ''}
+        named = {
+            'solid',
+            'dashed',
+            'dashdot',
+            'dotted',
+            '_',
+            '--',
+            '-.',
+            ':',
+            'None',
+            ' ',
+            '',
+        }
         if value in named:
             return True
 
         # tuple of the form (offset, (on, off, on, off, ...))
         # e.g (0, (1, 2))
-        conditions = [isinstance(value, tuple),
-                      isinstance(value[0], int),
-                      isinstance(value[1], tuple),
-                      len(value[1]) % 2 == 0,
-                      all(isinstance(x, int) for x in value[1])]
+        conditions = [
+            isinstance(value, tuple),
+            isinstance(value[0], int),
+            isinstance(value[1], tuple),
+            len(value[1]) % 2 == 0,
+            all(isinstance(x, int) for x in value[1]),
+        ]
         if all(conditions):
             return True
         return False
@@ -406,9 +454,11 @@ def is_valid_aesthetic(value, ae):
         # tuple of the form (numsides, style, angle)
         # where style is in the range [0, 3]
         # e.g (4, 1, 45)
-        conditions = [isinstance(value, tuple),
-                      all(isinstance(x, int) for x in value),
-                      0 <= value[1] < 3]
+        conditions = [
+            isinstance(value, tuple),
+            all(isinstance(x, int) for x in value),
+            0 <= value[1] < 3,
+        ]
         if all(conditions):
             return True
         return False
@@ -417,8 +467,7 @@ def is_valid_aesthetic(value, ae):
         if isinstance(value, str):
             return True
         with suppress(TypeError):
-            if (isinstance(value, (tuple, list)) and
-                    all(0 <= x <= 1 for x in value)):
+            if isinstance(value, (tuple, list)) and all(0 <= x <= 1 for x in value):
                 return True
         return False
 

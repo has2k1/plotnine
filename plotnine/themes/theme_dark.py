@@ -20,14 +20,16 @@ class theme_dark(theme_gray):
 
     def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
-        self.add_theme(theme(
-            axis_ticks=element_line(color='#666666', size=0.5),
-            legend_key=element_rect(
-                fill='#7F7F7F', color='#666666', size=0.5),
-            panel_background=element_rect(fill='#7F7F7F', color='None'),
-            panel_grid_major=element_line(color='#666666', size=0.5),
-            panel_grid_minor=element_line(color='#737373', size=0.25),
-            strip_background=element_rect(fill='#333333', color='None'),
-            strip_text_x=element_text(color='white'),
-            strip_text_y=element_text(color='white', angle=-90)
-        ), inplace=True)
+        self.add_theme(
+            theme(
+                axis_ticks=element_line(color='#666666', size=0.5),
+                legend_key=element_rect(fill='#7F7F7F', color='#666666', size=0.5),
+                panel_background=element_rect(fill='#7F7F7F', color='None'),
+                panel_grid_major=element_line(color='#666666', size=0.5),
+                panel_grid_minor=element_line(color='#737373', size=0.25),
+                strip_background=element_rect(fill='#333333', color='None'),
+                strip_text_x=element_text(color='white'),
+                strip_text_y=element_text(color='white', angle=-90),
+            ),
+            inplace=True,
+        )

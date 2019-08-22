@@ -31,8 +31,7 @@ class stat_sum(stat):
     """
 
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
-                      'na_rm': False}
+    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity', 'na_rm': False}
     DEFAULT_AES = {'size': 'stat(n)', 'weight': 1}
     CREATES = {'n', 'prop'}
 
@@ -52,7 +51,7 @@ class stat_sum(stat):
             """
             Calculate proportion values
             """
-            df['prop'] = df['n']/df['n'].sum()
+            df['prop'] = df['n'] / df['n'].sum()
             return df
 
         # group by all present aesthetics other than the weight,

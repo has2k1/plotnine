@@ -38,8 +38,7 @@ class PlotnineAnimation(ArtistAnimation):
        themeable to create space for it.
     """
 
-    def __init__(self, plots, interval=200, repeat_delay=None,
-                 repeat=True, blit=False):
+    def __init__(self, plots, interval=200, repeat_delay=None, repeat=True, blit=False):
         figure, artists = self._draw_plots(plots)
         ArtistAnimation.__init__(
             self,
@@ -48,7 +47,7 @@ class PlotnineAnimation(ArtistAnimation):
             interval=interval,
             repeat_delay=repeat_delay,
             repeat=repeat,
-            blit=blit
+            blit=blit,
         )
 
     def _draw_plots(self, plots):
@@ -73,7 +72,7 @@ class PlotnineAnimation(ArtistAnimation):
             'patches': [],
             'lines': [],
             'texts': [],
-            'artists': []
+            'artists': [],
         }
 
         scale_limits = dict()

@@ -57,10 +57,15 @@ class stat_qq(stat):
     """
     REQUIRED_AES = {'sample'}
     DEFAULT_AES = {'x': 'stat(theoretical)', 'y': 'stat(sample)'}
-    DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
-                      'na_rm': False,
-                      'distribution': 'norm', 'dparams': (),
-                      'quantiles': None, 'alpha_beta': (3/8, 3/8)}
+    DEFAULT_PARAMS = {
+        'geom': 'qq',
+        'position': 'identity',
+        'na_rm': False,
+        'distribution': 'norm',
+        'dparams': (),
+        'quantiles': None,
+        'alpha_beta': (3 / 8, 3 / 8),
+    }
 
     @classmethod
     def compute_group(cls, data, scales, **params):
@@ -73,10 +78,10 @@ class stat_qq(stat):
         elif len(quantiles) != len(sample):
             raise PlotnineError(
                 "The number of quantile values is not the same as "
-                "the number of sample values.")
+                "the number of sample values."
+            )
 
         quantiles = np.asarray(quantiles)
         cdist = get_continuous_distribution(params['distribution'])
         theoretical = cdist.ppf(quantiles, *params['dparams'])
-        return pd.DataFrame({'sample': sample,
-                             'theoretical': theoretical})
+        return pd.DataFrame({'sample': sample, 'theoretical': theoretical})

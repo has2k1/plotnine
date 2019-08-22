@@ -36,8 +36,10 @@ def predictdf(data, xseq, **params):
             raise PlotnineError(msg.format(list(methods.keys())))
 
     if not hasattr(method, '__call__'):
-        msg = ("'method' should either be a string or a function"
-               "with the signature `func(data, xseq, **params)`")
+        msg = (
+            "'method' should either be a string or a function"
+            "with the signature `func(data, xseq, **params)`"
+        )
         raise PlotnineError()
 
     return method(data, xseq, **params)
@@ -52,11 +54,13 @@ def lm(data, xseq, **params):
 
     if 'weight' in data:
         init_kwargs, fit_kwargs = separate_method_kwargs(
-            params['method_args'], sm.WLS, sm.WLS.fit)
+            params['method_args'], sm.WLS, sm.WLS.fit
+        )
         model = sm.WLS(data['y'], X, weights=data['weight'], **init_kwargs)
     else:
         init_kwargs, fit_kwargs = separate_method_kwargs(
-            params['method_args'], sm.OLS, sm.OLS.fit)
+            params['method_args'], sm.OLS, sm.OLS.fit
+        )
         model = sm.OLS(data['y'], X, **init_kwargs)
 
     results = model.fit(**fit_kwargs)
@@ -65,8 +69,7 @@ def lm(data, xseq, **params):
 
     if params['se']:
         alpha = 1 - params['level']
-        prstd, iv_l, iv_u = wls_prediction_std(
-            results, Xseq, alpha=alpha)
+        prstd, iv_l, iv_u = wls_prediction_std(results, Xseq, alpha=alpha)
         data['se'] = prstd
         data['ymin'] = iv_l
         data['ymax'] = iv_u
@@ -82,7 +85,8 @@ def rlm(data, xseq, **params):
     Xseq = sm.add_constant(xseq)
 
     init_kwargs, fit_kwargs = separate_method_kwargs(
-        params['method_args'], sm.RLM, sm.RLM.fit)
+        params['method_args'], sm.RLM, sm.RLM.fit
+    )
     model = sm.RLM(data['y'], X, **init_kwargs)
     results = model.fit(**fit_kwargs)
 
@@ -90,8 +94,10 @@ def rlm(data, xseq, **params):
     data['y'] = results.predict(Xseq)
 
     if params['se']:
-        warnings.warn("Confidence intervals are not yet implemented"
-                      "for RLM smoothing.", PlotnineWarning)
+        warnings.warn(
+            "Confidence intervals are not yet implemented" "for RLM smoothing.",
+            PlotnineWarning,
+        )
 
     return data
 
@@ -104,7 +110,8 @@ def gls(data, xseq, **params):
     Xseq = sm.add_constant(xseq)
 
     init_kwargs, fit_kwargs = separate_method_kwargs(
-        params['method_args'], sm.OLS, sm.OLS.fit)
+        params['method_args'], sm.OLS, sm.OLS.fit
+    )
     model = sm.GLS(data['y'], X, **init_kwargs)
     results = model.fit(**fit_kwargs)
 
@@ -113,8 +120,7 @@ def gls(data, xseq, **params):
 
     if params['se']:
         alpha = 1 - params['level']
-        prstd, iv_l, iv_u = wls_prediction_std(
-            results, Xseq, alpha=alpha)
+        prstd, iv_l, iv_u = wls_prediction_std(results, Xseq, alpha=alpha)
         data['se'] = prstd
         data['ymin'] = iv_l
         data['ymax'] = iv_u
@@ -130,7 +136,8 @@ def glm(data, xseq, **params):
     Xseq = sm.add_constant(xseq)
 
     init_kwargs, fit_kwargs = separate_method_kwargs(
-        params['method_args'], sm.GLM, sm.GLM.fit)
+        params['method_args'], sm.GLM, sm.GLM.fit
+    )
     model = sm.GLM(data['y'], X, **init_kwargs)
     results = model.fit(**fit_kwargs)
 
@@ -151,21 +158,23 @@ def lowess(data, xseq, **params):
         with suppress(KeyError):
             del params['method_args'][k]
             warnings.warn(
-                "Smoothing method argument: {}, "
-                "has been ignored.".format(k)
+                "Smoothing method argument: {}, " "has been ignored.".format(k)
             )
 
-    result = smlowess(data['y'], data['x'],
-                      frac=params['span'],
-                      is_sorted=True,
-                      **params['method_args'])
-    data = pd.DataFrame({
-        'x': result[:, 0],
-        'y': result[:, 1]})
+    result = smlowess(
+        data['y'],
+        data['x'],
+        frac=params['span'],
+        is_sorted=True,
+        **params['method_args']
+    )
+    data = pd.DataFrame({'x': result[:, 0], 'y': result[:, 1]})
 
     if params['se']:
-        warnings.warn("Confidence intervals are not yet implemented"
-                      "for lowess smoothings.", PlotnineWarning)
+        warnings.warn(
+            "Confidence intervals are not yet implemented" "for lowess smoothings.",
+            PlotnineWarning,
+        )
 
     return data
 
@@ -174,8 +183,7 @@ def loess(data, xseq, **params):
     try:
         from skmisc.loess import loess as loess_klass
     except ImportError:
-        raise PlotnineError(
-            "For loess smoothing, install 'scikit-misc'")
+        raise PlotnineError("For loess smoothing, install 'scikit-misc'")
 
     try:
         weights = data['weight']
@@ -184,8 +192,7 @@ def loess(data, xseq, **params):
 
     kwargs = params['method_args']
 
-    extrapolate = (min(xseq) < min(data['x']) or
-                   max(xseq) > max(data['x']))
+    extrapolate = min(xseq) < min(data['x']) or max(xseq) > max(data['x'])
     if 'surface' not in kwargs and extrapolate:
         # Creates a loess model that allows extrapolation
         # when making predictions
@@ -193,7 +200,8 @@ def loess(data, xseq, **params):
         warnings.warn(
             "Making prediction outside the data range, "
             "setting loess control parameter `surface='direct'`.",
-            PlotnineWarning)
+            PlotnineWarning,
+        )
 
     if 'span' not in kwargs:
         kwargs['span'] = params['span']
@@ -236,8 +244,7 @@ def mavg(data, xseq, **params):
 
     if params['se']:
         df = n - window  # Original - Used
-        data['ymin'], data['ymax'] = tdist_ci(
-            y, df, stderr, params['level'])
+        data['ymin'], data['ymax'] = tdist_ci(y, df, stderr, params['level'])
         data['se'] = stderr
 
     return data
@@ -251,14 +258,16 @@ def gpr(data, xseq, **params):
         from sklearn import gaussian_process
     except ImportError:
         raise PlotnineError(
-            "To use gaussian process smoothing, "
-            "You need to install scikit-learn.")
+            "To use gaussian process smoothing, " "You need to install scikit-learn."
+        )
 
     kwargs = params['method_args']
     if not kwargs:
         warnings.warn(
             "See sklearn.gaussian_process.GaussianProcessRegressor "
-            "for parameters to pass in as 'method_args'", PlotnineWarning)
+            "for parameters to pass in as 'method_args'",
+            PlotnineWarning,
+        )
 
     regressor = gaussian_process.GaussianProcessRegressor(**kwargs)
     X = np.atleast_2d(data['x']).T
@@ -271,8 +280,7 @@ def gpr(data, xseq, **params):
         y, stderr = regressor.predict(Xseq, return_std=True)
         data['y'] = y
         data['se'] = stderr
-        data['ymin'], data['ymax'] = tdist_ci(
-            y, n-1, stderr, params['level'])
+        data['ymin'], data['ymax'] = tdist_ci(y, n - 1, stderr, params['level'])
     else:
         data['y'] = regressor.predict(Xseq, return_std=True)
 
@@ -283,15 +291,14 @@ def tdist_ci(x, df, stderr, level):
     """
     Confidence Intervals using the t-distribution
     """
-    q = (1 + level)/2
+    q = (1 + level) / 2
     delta = stats.t.ppf(q, df) * stderr
     return x - delta, x + delta
 
 
 # Override wls_prediction_std from statsmodels to calculate the confidence
 # interval instead of only the prediction interval
-def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
-                       interval='confidence'):
+def wls_prediction_std(res, exog=None, weights=None, alpha=0.05, interval='confidence'):
     """
     calculate standard deviation and confidence interval
 
@@ -349,7 +356,7 @@ def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
             raise ValueError('wrong shape of exog')
         predicted = res.model.predict(res.params, exog)
         if weights is None:
-            weights = 1.
+            weights = 1.0
         else:
             weights = np.asarray(weights)
             if weights.size > 1 and len(weights) != exog.shape[0]:
@@ -358,14 +365,14 @@ def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
     # full covariance:
     # predvar = res3.mse_resid + np.diag(np.dot(X2,np.dot(covb,X2.T)))
     # predication variance only
-    predvar = res.mse_resid/weights
+    predvar = res.mse_resid / weights
     ip = (exog * np.dot(covb, exog.T).T).sum(1)
     if interval == 'confidence':
         predstd = np.sqrt(ip)
     elif interval == 'prediction':
         predstd = np.sqrt(ip + predvar)
 
-    tppf = stats.t.isf(alpha/2., res.df_resid)
+    tppf = stats.t.isf(alpha / 2.0, res.df_resid)
     interval_u = predicted + tppf * predstd
     interval_l = predicted - tppf * predstd
     return predstd, interval_l, interval_u

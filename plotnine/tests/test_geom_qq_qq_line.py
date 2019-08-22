@@ -14,9 +14,6 @@ def test_normal():
 
 
 def test_normal_with_line():
-    p = (ggplot(df_normal, aes(sample='x'))
-         + geom_qq()
-         + geom_qq_line()
-         )
+    p = ggplot(df_normal, aes(sample='x')) + geom_qq() + geom_qq_line()
     # Roughly a straight line of points through the origin
     assert p == 'normal_with_line'

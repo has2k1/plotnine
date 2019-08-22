@@ -8,6 +8,7 @@ class coord:
     """
     Base class for all coordinate systems
     """
+
     # If the coordinate system is linear
     is_linear = False
 
@@ -117,8 +118,7 @@ class coord:
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return NS(x=panel_params.x.range,
-                  y=panel_params.y.range)
+        return NS(x=panel_params.x.range, y=panel_params.y.range)
 
     def backtransform_range(self, panel_params):
         """
@@ -143,8 +143,7 @@ class coord:
         data.loc[data['y'] == np.inf, 'y'] = ranges.y[1]
 
         dist = self.distance(data['x'], data['y'], panel_params)
-        bool_idx = data['group'].iloc[1:].values != \
-            data['group'].iloc[:-1].values
+        bool_idx = data['group'].iloc[1:].values != data['group'].iloc[:-1].values
         dist[bool_idx] = np.nan
 
         # Munch
@@ -155,8 +154,7 @@ class coord:
 def dist_euclidean(x, y):
     x = np.asarray(x)
     y = np.asarray(y)
-    return np.sqrt((x[:-1] - x[1:])**2 +
-                   (y[:-1] - y[1:])**2)
+    return np.sqrt((x[:-1] - x[1:]) ** 2 + (y[:-1] - y[1:]) ** 2)
 
 
 def interp(start, end, n):
@@ -170,15 +168,13 @@ def munch_data(data, dist):
     # How many endpoints for each old segment,
     # not counting the last one
     dist[np.isnan(dist)] = 1
-    extra = np.maximum(np.floor(dist/segment_length), 1)
+    extra = np.maximum(np.floor(dist / segment_length), 1)
     extra = extra.astype(int, copy=False)
 
     # Generate extra pieces for x and y values
     # The final point must be manually inserted at the end
-    x = [interp(start, end, n)
-         for start, end, n in zip(x[:-1], x[1:], extra)]
-    y = [interp(start, end, n)
-         for start, end, n in zip(y[:-1], y[1:], extra)]
+    x = [interp(start, end, n) for start, end, n in zip(x[:-1], x[1:], extra)]
+    y = [interp(start, end, n) for start, end, n in zip(y[:-1], y[1:], extra)]
     x.append(data['x'].iloc[-1])
     y.append(data['y'].iloc[-1])
     x = np.hstack(x)
@@ -186,9 +182,7 @@ def munch_data(data, dist):
 
     # Replicate other aesthetics: defined by start point
     # but also must include final point
-    idx = np.hstack([
-        np.repeat(data.index[:-1], extra),
-        data.index[-1]])
+    idx = np.hstack([np.repeat(data.index[:-1], extra), data.index[-1]])
 
     munched = data.loc[idx, data.columns.difference(['x', 'y'])]
     munched['x'] = x

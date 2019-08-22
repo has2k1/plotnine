@@ -25,19 +25,16 @@ class coord_flip(coord_cartesian):
         some factor. If `False`, use the limits
         from the data.
     """
+
     def labels(self, label_lookup):
-        return flip_labels(coord_cartesian.labels(
-            self, label_lookup))
+        return flip_labels(coord_cartesian.labels(self, label_lookup))
 
     def transform(self, data, panel_params, munch=False):
         data = flip_labels(data)
-        return coord_cartesian.transform(self, data,
-                                         panel_params,
-                                         munch=munch)
+        return coord_cartesian.transform(self, data, panel_params, munch=munch)
 
     def setup_panel_params(self, scale_x, scale_y):
-        panel_params = coord_cartesian.setup_panel_params(
-            self, scale_x, scale_y)
+        panel_params = coord_cartesian.setup_panel_params(self, scale_x, scale_y)
         return flip_labels(panel_params)
 
     def setup_layout(self, layout):
@@ -51,8 +48,7 @@ class coord_flip(coord_cartesian):
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return NS(x=panel_params.y.range,
-                  y=panel_params.x.range)
+        return NS(x=panel_params.y.range, y=panel_params.x.range)
 
 
 def flip_labels(obj):
@@ -64,13 +60,14 @@ def flip_labels(obj):
     obj : dict_like | types.SimpleNamespace
         Object with labels to rename
     """
+
     def sub(a, b):
         """
         Substitute all keys that start with a to b
         """
         for label in list(obj.keys()):
             if label.startswith(a):
-                new_label = b+label[1:]
+                new_label = b + label[1:]
                 obj[new_label] = obj.pop(label)
 
     if hasattr(obj, 'keys'):  # dict or dataframe

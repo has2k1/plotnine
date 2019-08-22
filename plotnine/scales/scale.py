@@ -65,15 +65,16 @@ class scale(metaclass=Registry):
         scale. These are defined by each scale and the
         user should probably not change them. Have fun.
     """
+
     __base__ = True
 
-    _aesthetics = []     # aesthetics affected by this scale
-    na_value = np.nan   # What to do with the NA values
-    name = None         # used as the axis label or legend title
-    breaks = waiver()   # major breaks
-    labels = waiver()   # labels at the breaks
-    guide = 'legend'    # legend or any other guide
-    _limits = None      # (min, max) - set by user
+    _aesthetics = []  # aesthetics affected by this scale
+    na_value = np.nan  # What to do with the NA values
+    name = None  # used as the axis label or legend title
+    breaks = waiver()  # major breaks
+    labels = waiver()  # labels at the breaks
+    guide = 'legend'  # legend or any other guide
+    _limits = None  # (min, max) - set by user
 
     #: multiplicative and additive expansion constants
     expand = None
@@ -94,12 +95,13 @@ class scale(metaclass=Registry):
 
         if np.iterable(self.breaks) and np.iterable(self.labels):
             if len(self.breaks) != len(self.labels):
-                raise PlotnineError(
-                    "Breaks and labels have unequal lengths")
+                raise PlotnineError("Breaks and labels have unequal lengths")
 
-        if (self.breaks is None and
-                not is_position_aes(self.aesthetics) and
-                self.guide is not None):
+        if (
+            self.breaks is None
+            and not is_position_aes(self.aesthetics)
+            and self.guide is not None
+        ):
             self.guide = None
 
     @property
@@ -155,8 +157,7 @@ class scale(metaclass=Registry):
         """
         raise NotImplementedError('Not Implemented')
 
-    def expand_limits(self, limits, expand=None, coord_limits=None,
-                      trans=None):
+    def expand_limits(self, limits, expand=None, coord_limits=None, trans=None):
         """
         The phyical size of the scale.
         """
@@ -202,10 +203,7 @@ class scale(metaclass=Registry):
                 mult = self.expand[0], self.expand[2]
                 add = self.expand[1], self.expand[3]
             else:
-                raise ValueError(
-                    "The scale.expand must be a tuple of "
-                    "size 2 or 4. "
-                )
+                raise ValueError("The scale.expand must be a tuple of " "size 2 or 4. ")
 
         if isinstance(mult, (float, int)):
             mult = (mult, mult)
@@ -310,8 +308,9 @@ class scale_discrete(scale):
         apply to position scales where ``nan`` is always placed
         on the right.
     """
+
     _range_class = RangeDiscrete
-    drop = True        # drop unused factor levels from the scale
+    drop = True  # drop unused factor levels from the scale
     na_translate = True
 
     def train(self, x, drop=None):
@@ -328,7 +327,7 @@ class scale_discrete(scale):
         if not len(x):
             return
 
-        na_rm = (not self.na_translate)
+        na_rm = not self.na_translate
         self.range.train(x, drop, na_rm=na_rm)
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
@@ -340,13 +339,11 @@ class scale_discrete(scale):
             limits = self.limits
         return expand_range_distinct(self.limits, expand)
 
-    def expand_limits(self, limits, expand=None, coord_limits=None,
-                      trans=None):
+    def expand_limits(self, limits, expand=None, coord_limits=None, trans=None):
         """
         Calculate the final range in coordinate space
         """
-        expand_func = partial(scale_continuous.expand_limits, self,
-                              trans=trans)
+        expand_func = partial(scale_continuous.expand_limits, self, trans=trans)
         n_limits = len(limits)
         range_c = (0, 1)
         range_d = (1, n_limits)
@@ -359,7 +356,7 @@ class scale_discrete(scale):
             is_only_discrete = True
 
         if self.is_empty():
-            return expand_func(range_c, expand, coord_limits),
+            return (expand_func(range_c, expand, coord_limits),)
         elif is_only_continuous:
             return expand_func(range_c, expand, coord_limits)
         elif is_only_discrete:
@@ -396,7 +393,7 @@ class scale_discrete(scale):
             range=range,
             breaks=breaks,
             labels=labels,
-            minor_breaks=minor_breaks
+            minor_breaks=minor_breaks,
         )
         return vs
 
@@ -433,14 +430,15 @@ class scale_discrete(scale):
                 # Deal with missing data
                 # - Insert NaN where there is no match
                 pal = np.hstack((pal.astype(object), np.nan))
-                idx = np.clip(idx, 0, len(pal)-1)
+                idx = np.clip(idx, 0, len(pal) - 1)
                 pal_match = pal[idx]
 
         if self.na_translate:
             bool_idx = pd.isnull(x) | pd.isnull(pal_match)
             if bool_idx.any():
-                pal_match = [x if i else self.na_value
-                             for x, i in zip(pal_match, ~bool_idx)]
+                pal_match = [
+                    x if i else self.na_value for x, i in zip(pal_match, ~bool_idx)
+                ]
 
         return pal_match
 
@@ -570,11 +568,12 @@ class scale_continuous(scale):
     If using the class directly all arguments must be
     keyword arguments.
     """
+
     _range_class = RangeContinuous
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
-    oob = staticmethod(censor)     # what to do with out of bounds data points
+    oob = staticmethod(censor)  # what to do with out of bounds data points
     minor_breaks = waiver()
-    _trans = 'identity'            # transform class
+    _trans = 'identity'  # transform class
 
     def __init__(self, **kwargs):
         # Make sure we have a transform.
@@ -606,9 +605,8 @@ class scale_continuous(scale):
                     "You have changed the transform of a specialised scale. "
                     "The result may not be what you expect.\n"
                     "Original transform: {}\n"
-                    "New transform: {}"
-                    .format(orig_trans_name, new_trans_name),
-                    PlotnineWarning
+                    "New transform: {}".format(orig_trans_name, new_trans_name),
+                    PlotnineWarning,
                 )
 
     @property
@@ -635,8 +633,9 @@ class scale_continuous(scale):
         labeling of the plot axis and the guides are in
         the original dataspace.
         """
-        limits = tuple([
-            self.trans.transform(x) if x is not None else None for x in value])
+        limits = tuple(
+            [self.trans.transform(x) if x is not None else None for x in value]
+        )
         try:
             self._limits = np.sort(limits)
         except TypeError:
@@ -698,8 +697,7 @@ class scale_continuous(scale):
             limits = self.limits
         return expand_range_distinct(limits, expand)
 
-    def expand_limits(self, limits, expand=None, coord_limits=None,
-                      trans=None):
+    def expand_limits(self, limits, expand=None, coord_limits=None, trans=None):
         """
         Calculate the final range in coordinate space
         """
@@ -724,16 +722,16 @@ class scale_continuous(scale):
         # - Expand limits in coordinate space
         # - Remove any computed infinite values &
         #   fallback on unexpanded limits
-        limits = tuple(l if cl is None else cl
-                       for cl, l in zip(coord_limits, limits))
+        limits = tuple(l if cl is None else cl for cl, l in zip(coord_limits, limits))
         limits_coord_space = trans.transform(limits)
         range_coord = _expand_range_distinct(limits_coord_space, expand)
         with ignore_warnings(RuntimeWarning):
             # Consequences of the runtimewarning (NaNs and infs)
             # are dealt with below
             final_limits = trans.inverse(range_coord)
-        final_range = tuple([fl if np.isfinite(fl) else l
-                             for fl, l in zip(final_limits, limits)])
+        final_range = tuple(
+            [fl if np.isfinite(fl) else l for fl, l in zip(final_limits, limits)]
+        )
         ranges = NS(range=final_range, range_coord=range_coord)
         return ranges
 
@@ -762,8 +760,7 @@ class scale_continuous(scale):
             range=range,
             breaks=breaks,
             labels=labels,
-            minor_breaks=minor_breaks
-
+            minor_breaks=minor_breaks,
         )
         return vs
 
@@ -855,8 +852,7 @@ class scale_continuous(scale):
             minor = self.trans.transform(breaks)
             return [x for x in minor if x not in _major]
         elif isinstance(self.minor_breaks, int):
-            res = self.trans.minor_breaks(
-                major, limits, n=self.minor_breaks)
+            res = self.trans.minor_breaks(major, limits, n=self.minor_breaks)
             return res
         elif not is_waive(self.minor_breaks):
             return self.trans.transform(self.minor_breaks)
@@ -899,8 +895,7 @@ class scale_continuous(scale):
                 labels = self.labels
 
         if len(labels) != len(breaks):
-            raise PlotnineError(
-                "Breaks and labels are different lengths")
+            raise PlotnineError("Breaks and labels are different lengths")
 
         return labels
 
@@ -929,6 +924,7 @@ class scale_datetime(scale_continuous):
         ``minor_breaks``.
     {superclass_parameters}
     """
+
     _trans = 'datetime'
 
     def __init__(self, **kwargs):

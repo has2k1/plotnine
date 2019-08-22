@@ -38,8 +38,7 @@ class stat_ecdf(stat):
     """
 
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
-                      'na_rm': False, 'n': None}
+    DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity', 'na_rm': False, 'n': None}
     DEFAULT_AES = {'y': 'stat(y)'}
     CREATES = {'y'}
 
@@ -49,8 +48,7 @@ class stat_ecdf(stat):
         if params['n'] is None:
             x = np.unique(data['x'])
         else:
-            x = np.linspace(data['x'].min(), data['x'].max(),
-                            params['n'])
+            x = np.linspace(data['x'].min(), data['x'].max(), params['n'])
 
         y = ECDF(data['x'])(x)
         res = pd.DataFrame({'x': x, 'y': y})

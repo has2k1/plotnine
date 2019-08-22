@@ -5,6 +5,7 @@ class guide_axis(guide):
     """
     Axis
     """
+
     # parameter
     available_aes = {'x', 'y'}
 

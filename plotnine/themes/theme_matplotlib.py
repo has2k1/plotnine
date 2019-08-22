@@ -32,9 +32,9 @@ class theme_matplotlib(theme):
             figure_size=get_option('figure_size'),
             legend_key=element_rect(fill='None', colour='None'),
             panel_spacing=0.1,
-            strip_background=element_rect(
-                fill='#D9D9D9', color='#D9D9D9', size=1),
-            complete=True)
+            strip_background=element_rect(fill='#D9D9D9', color='#D9D9D9', size=1),
+            complete=True,
+        )
 
         if use_defaults:
             _copy = mpl.rcParams.copy()

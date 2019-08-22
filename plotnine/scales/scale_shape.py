@@ -35,10 +35,10 @@ unfilled_shapes = (
     ',',  # pixel
     '_',  # hline
     '|',  # vline
-    1,    # tickleft
-    2,    # tickright
-    3,    # tickup
-    4,    # tickdown
+    1,  # tickleft
+    2,  # tickright
+    3,  # tickup
+    4,  # tickdown
 )
 
 
@@ -54,6 +54,7 @@ class scale_shape(scale_discrete):
         that can be a filled.
     {superclass_parameters}
     """
+
     _aesthetics = ['shape']
 
     def __init__(self, unfilled=False, **kwargs):
@@ -73,20 +74,17 @@ class scale_shape_ordinal(scale_shape):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['shape']
 
     def __init__(self, **kwargs):
-        warn(
-            "Using shapes for an ordinal variable is not advised.",
-            PlotnineWarning
-        )
+        warn("Using shapes for an ordinal variable is not advised.", PlotnineWarning)
         super().__init__(**kwargs)
 
 
 class scale_shape_continuous(scale_continuous):
     def __init__(self):
-        raise PlotnineError(
-            "A continuous variable can not be mapped to shape")
+        raise PlotnineError("A continuous variable can not be mapped to shape")
 
 
 alias('scale_shape_discrete', scale_shape)

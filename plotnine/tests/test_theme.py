@@ -1,10 +1,21 @@
 import os
 
 from plotnine import ggplot, aes, geom_point, labs, facet_grid
-from plotnine import (theme, theme_538, theme_bw, theme_classic,
-                      theme_dark, theme_gray, theme_light,
-                      theme_linedraw, theme_matplotlib, theme_minimal,
-                      theme_seaborn, theme_void, theme_xkcd)
+from plotnine import (
+    theme,
+    theme_538,
+    theme_bw,
+    theme_classic,
+    theme_dark,
+    theme_gray,
+    theme_light,
+    theme_linedraw,
+    theme_matplotlib,
+    theme_minimal,
+    theme_seaborn,
+    theme_void,
+    theme_xkcd,
+)
 from plotnine import element_line, element_text, element_blank
 from plotnine.data import mtcars
 
@@ -56,30 +67,27 @@ blank = element_blank()
 def test_add_element_heirarchy():
     # parent themeable modifies child themeable
     theme1 = theme_gray() + theme(axis_line_x=l1)  # child
-    theme2 = theme1 + theme(axis_line=l2)          # parent
-    theme3 = theme1 + theme(axis_line_x=l3)        # child, for comparison
-    assert theme2.themeables['axis_line_x'] == \
-        theme3.themeables['axis_line_x']
+    theme2 = theme1 + theme(axis_line=l2)  # parent
+    theme3 = theme1 + theme(axis_line_x=l3)  # child, for comparison
+    assert theme2.themeables['axis_line_x'] == theme3.themeables['axis_line_x']
 
     theme1 = theme_gray() + theme(axis_line_x=l1)  # child
-    theme2 = theme1 + theme(line=l2)               # grand-parent
-    theme3 = theme1 + theme(axis_line_x=l3)        # child, for comparison
-    assert theme2.themeables['axis_line_x'] == \
-        theme3.themeables['axis_line_x']
+    theme2 = theme1 + theme(line=l2)  # grand-parent
+    theme3 = theme1 + theme(axis_line_x=l3)  # child, for comparison
+    assert theme2.themeables['axis_line_x'] == theme3.themeables['axis_line_x']
 
     # child themeable does not affect parent
-    theme1 = theme_gray() + theme(axis_line=l1)    # parent
-    theme2 = theme1 + theme(axis_line_x=l2)        # child
-    theme3 = theme1 + theme(axis_line=l3)          # parent, for comparison
-    assert theme3.themeables['axis_line'] != \
-        theme2.themeables['axis_line']
+    theme1 = theme_gray() + theme(axis_line=l1)  # parent
+    theme2 = theme1 + theme(axis_line_x=l2)  # child
+    theme3 = theme1 + theme(axis_line=l3)  # parent, for comparison
+    assert theme3.themeables['axis_line'] != theme2.themeables['axis_line']
 
 
 def test_add_element_blank():
     # Adding onto a blanked themeable
     theme1 = theme_gray() + theme(axis_line_x=l1)  # not blank
-    theme2 = theme1 + theme(axis_line_x=blank)     # blank
-    theme3 = theme2 + theme(axis_line_x=l3)        # not blank
+    theme2 = theme1 + theme(axis_line_x=blank)  # blank
+    theme3 = theme2 + theme(axis_line_x=l3)  # not blank
     theme4 = theme_gray() + theme(axis_line_x=l3)  # for comparison
     assert theme3 != theme1
     assert theme3 != theme2
@@ -94,9 +102,11 @@ def test_add_element_blank():
 
 
 class TestThemes:
-    g = (ggplot(mtcars, aes(x='wt', y='mpg', color='factor(gear)'))
-         + geom_point()
-         + facet_grid('vs ~ am'))
+    g = (
+        ggplot(mtcars, aes(x='wt', y='mpg', color='factor(gear)'))
+        + geom_point()
+        + facet_grid('vs ~ am')
+    )
 
     def test_theme_538(self):
         p = self.g + labs(title='Theme 538') + theme_538()
@@ -154,12 +164,13 @@ class TestThemes:
         assert p + _theme == 'theme_void'
 
     def test_theme_xkcd(self):
-        p = (self.g
-             + labs(title='Theme Xkcd')
-             + theme_xkcd()
-             # High likely hood of Comic Sans being available
-             + theme(text=element_text(family=['Comic Sans MS']))
-             )
+        p = (
+            self.g
+            + labs(title='Theme Xkcd')
+            + theme_xkcd()
+            # High likely hood of Comic Sans being available
+            + theme(text=element_text(family=['Comic Sans MS']))
+        )
 
         if os.environ.get('TRAVIS'):
             # Travis does not have the fonts, we still check

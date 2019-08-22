@@ -5,6 +5,7 @@ class Range:
     """
     Base class for all ranges
     """
+
     #: Holds the range information
     range = None
 
@@ -25,6 +26,7 @@ class RangeContinuous(Range):
     """
     Continuous Range
     """
+
     def train(self, x):
         """
         Train continuous range
@@ -36,6 +38,7 @@ class RangeDiscrete(Range):
     """
     Discrete Range
     """
+
     def train(self, x, drop=False, na_rm=False):
         """
         Train discrete range

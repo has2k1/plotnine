@@ -44,6 +44,7 @@ class Layers(list):
         Add layers to ggplot object
         """
         from .ggplot import ggplot
+
         if isinstance(other, ggplot):
             other = other if inplace else deepcopy(other)
             for obj in self:
@@ -154,8 +155,16 @@ class layer:
     always use a ``geom`` or ``stat``.
     """
 
-    def __init__(self, geom=None, stat=None, data=None, mapping=None,
-                 position=None, inherit_aes=True, show_legend=None):
+    def __init__(
+        self,
+        geom=None,
+        stat=None,
+        data=None,
+        mapping=None,
+        position=None,
+        inherit_aes=True,
+        show_legend=None,
+    ):
         self.geom = geom
         self.stat = stat
         self.data = data
@@ -182,11 +191,13 @@ class layer:
             Layer that represents the specific `geom`.
         """
         kwargs = geom._kwargs
-        lkwargs = {'geom': geom,
-                   'mapping': geom.mapping,
-                   'data': geom.data,
-                   'stat': geom._stat,
-                   'position': geom._position}
+        lkwargs = {
+            'geom': geom,
+            'mapping': geom.mapping,
+            'data': geom.data,
+            'stat': geom._stat,
+            'position': geom._position,
+        }
 
         for param in ('show_legend', 'inherit_aes'):
             if param in kwargs:
@@ -242,8 +253,7 @@ class layer:
         elif hasattr(self.data, '__call__'):
             self.data = self.data(plot_data)
             if not isinstance(self.data, pd.DataFrame):
-                raise PlotnineError(
-                    "Data function must return a dataframe")
+                raise PlotnineError("Data function must return a dataframe")
         else:
             self.data = self.data.copy()
 
@@ -271,9 +281,11 @@ class layer:
 
         # drop aesthetic parameters or the calculated aesthetics
         calculated = set(get_calculated_aes(aesthetics))
-        d = dict((ae, v) for ae, v in aesthetics.items()
-                 if (ae not in self.geom.aes_params) and
-                 (ae not in calculated))
+        d = dict(
+            (ae, v)
+            for ae, v in aesthetics.items()
+            if (ae not in self.geom.aes_params) and (ae not in calculated)
+        )
         self._active_mapping = aes(**d)
         return self._active_mapping
 
@@ -308,21 +320,23 @@ class layer:
                     try:
                         new_val = env.eval(col, inner_namespace=data)
                     except Exception as e:
-                        raise PlotnineError(
-                            _TPL_EVAL_FAIL.format(ae, col, str(e)))
+                        raise PlotnineError(_TPL_EVAL_FAIL.format(ae, col, str(e)))
 
                     try:
                         evaled[ae] = new_val
                     except Exception as e:
                         raise PlotnineError(
                             _TPL_BAD_EVAL_TYPE.format(
-                                ae, col, str(type(new_val)), str(e)))
+                                ae, col, str(type(new_val)), str(e)
+                            )
+                        )
             elif pdtypes.is_list_like(col):
                 n = len(col)
                 if len(data) and n != len(data) and n != 1:
                     raise PlotnineError(
-                        "Aesthetics must either be length one, " +
-                        "or the same length as the data")
+                        "Aesthetics must either be length one, "
+                        + "or the same length as the data"
+                    )
                 # An empty dataframe does not admit a scalar value
                 elif len(evaled) and n == 1:
                     col = col[0]
@@ -389,8 +403,7 @@ class layer:
             # be careful not to create duplicate columns
             # for cases like y='..y..'
             if new[ae] != ae:
-                stat_data[ae] = env.eval(
-                    new[ae], inner_namespace=data)
+                stat_data[ae] = env.eval(new[ae], inner_namespace=data)
 
         if not new:
             return
@@ -420,7 +433,8 @@ class layer:
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
             set(data.columns) | set(self.geom.aes_params),
-            self.geom.__class__.__name__)
+            self.geom.__class__.__name__,
+        )
 
         self.data = data
 
@@ -509,10 +523,12 @@ def is_known_scalar(value):
     """
     Return True if value is a type we expect in a dataframe
     """
+
     def _is_datetime_or_timedelta(value):
         # Using pandas.Series helps catch python, numpy and pandas
         # versions of these types
         return pd.Series(value).dtype.kind in ('M', 'm')
 
-    return not np.iterable(value) and (isinstance(value, numbers.Number) or
-                                       _is_datetime_or_timedelta(value))
+    return not np.iterable(value) and (
+        isinstance(value, numbers.Number) or _is_datetime_or_timedelta(value)
+    )

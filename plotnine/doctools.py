@@ -9,10 +9,21 @@ import numpy as np
 # Parameter arguments that are listed first in the geom and
 # stat class signatures
 
-common_geom_params = ['mapping', 'data', 'stat', 'position',
-                      'na_rm', 'inherit_aes', 'show_legend']
-common_geom_param_values = {'mapping': None, 'data': None,
-                            'inherit_aes': True, 'show_legend': None}
+common_geom_params = [
+    'mapping',
+    'data',
+    'stat',
+    'position',
+    'na_rm',
+    'inherit_aes',
+    'show_legend',
+]
+common_geom_param_values = {
+    'mapping': None,
+    'data': None,
+    'inherit_aes': True,
+    'show_legend': None,
+}
 
 common_stat_params = ['mapping', 'data', 'geom', 'position', 'na_rm']
 common_stat_param_values = common_geom_param_values
@@ -55,34 +66,28 @@ common_params_doc = {
 Aesthetic mappings created with :meth:`~plotnine.aes`. If specified and \
 :py:`inherit.aes=True`, it is combined with the default mapping for the plot. \
 You must supply mapping if there is no plot mapping.""",
-
     'data': """\
 The data to be displayed in this layer. If :py:`None`, the data from \
 from the :py:`ggplot()` call is used. If specified, it overrides the \
 data from the :py:`ggplot()` call.""",
-
     'stat': """\
 The statistical transformation to use on the data for this layer. \
 If it is a string, it must be the registered and known to Plotnine.""",
-
     'position': """\
 Position adjustment. If it is a string, it must be registered and \
 known to Plotnine.""",
-
     'na_rm': """\
 If :py:`False`, removes missing values with a warning. If :py:`True` \
 silently removes missing values.""",
-
     'inherit_aes': """\
 If :py:`False`, overrides the default aesthetics.""",
-
     'show_legend': """\
 Whether this layer should be included in the legends. :py:`None` the \
 default, includes any aesthetics that are mapped. If a :class:`bool`, \
 :py:`False` never includes and :py:`True` always includes. A \
 :class:`dict` can be used to *exclude* specific aesthetis of the layer \
 from showing in the legend. e.g :py:`show_legend={'color': False}`, \
-any other aesthetic are included by default."""
+any other aesthetic are included by default.""",
 }
 
 
@@ -118,9 +123,7 @@ na_rm : bool, optional (default: {default_na_rm})
     {na_rm}
 """
 
-DOCSTRING_SECTIONS = {
-    'parameters', 'see also', 'note', 'notes',
-    'example', 'examples'}
+DOCSTRING_SECTIONS = {'parameters', 'see also', 'note', 'notes', 'example', 'examples'}
 
 PARAM_PATTERN = re.compile(r'\s*([_A-Za-z]\w*)\s:\s')
 
@@ -137,6 +140,7 @@ def dict_to_table(header, contents):
         The key becomes column 1 of table and the
         value becomes column 2 of table.
     """
+
     def to_text(row):
         name, value = row
         m = max_col1_size + 1 - len(name)
@@ -154,9 +158,8 @@ def dict_to_table(header, contents):
             value = ':py:`{}`'.format(value)
         rows.append((name, value))
 
-    n = np.max([len(header[0])] +
-               [len(col1) for col1, _ in rows])
-    hborder = tuple('='*n for col in header)
+    n = np.max([len(header[0])] + [len(col1) for col1, _ in rows])
+    hborder = tuple('=' * n for col in header)
     rows = [hborder, thead, hborder] + rows + [hborder]
     max_col1_size = np.max([len(col1) for col1, _ in rows])
     table = '\n'.join([to_text(row) for row in rows])
@@ -190,7 +193,7 @@ def make_signature(name, params, common_params, common_param_values):
         tokens_append(key, value)
 
     # other params (these are the geom/stat specific parameters
-    for key in (set(params) - seen):
+    for key in set(params) - seen:
         tokens_append(key, params[key])
 
     # name, 1 opening bracket, 4 spaces in SIGNATURE_TPL
@@ -350,15 +353,15 @@ def document_geom(geom):
     docstring = dedent(geom.__doc__)
 
     # usage
-    signature = make_signature(geom.__name__,
-                               geom.DEFAULT_PARAMS,
-                               common_geom_params,
-                               common_geom_param_values)
+    signature = make_signature(
+        geom.__name__, geom.DEFAULT_PARAMS, common_geom_params, common_geom_param_values
+    )
     usage = GEOM_SIGNATURE_TPL.format(signature=signature)
 
     # aesthetics
-    contents = OrderedDict(('**{}**'.format(ae), '')
-                           for ae in sorted(geom.REQUIRED_AES))
+    contents = OrderedDict(
+        ('**{}**'.format(ae), '') for ae in sorted(geom.REQUIRED_AES)
+    )
     if geom.DEFAULT_AES:
         d = geom.DEFAULT_AES.copy()
         d['group'] = ''  # All geoms understand the group aesthetic
@@ -368,7 +371,7 @@ def document_geom(geom):
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
     tpl = dedent(geom._aesthetics_doc.lstrip('\n'))
     aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
-    aesthetics_doc = indent(aesthetics_doc, ' '*4)
+    aesthetics_doc = indent(aesthetics_doc, ' ' * 4)
 
     # common_parameters
     d = geom.DEFAULT_PARAMS
@@ -378,11 +381,11 @@ def document_geom(geom):
         default_na_rm=d['na_rm'],
         default_inherit_aes=d.get('inherit_aes', True),
         _aesthetics_doc=aesthetics_doc,
-        **common_params_doc)
+        **common_params_doc
+    )
 
     docstring = docstring.replace('{usage}', usage)
-    docstring = docstring.replace('{common_parameters}',
-                                  common_parameters)
+    docstring = docstring.replace('{common_parameters}', common_parameters)
     geom.__doc__ = docstring
     return geom
 
@@ -399,34 +402,34 @@ def document_stat(stat):
     docstring = dedent(stat.__doc__)
 
     # usage:
-    signature = make_signature(stat.__name__,
-                               stat.DEFAULT_PARAMS,
-                               common_stat_params,
-                               common_stat_param_values)
+    signature = make_signature(
+        stat.__name__, stat.DEFAULT_PARAMS, common_stat_params, common_stat_param_values
+    )
     usage = STAT_SIGNATURE_TPL.format(signature=signature)
 
     # aesthetics
-    contents = OrderedDict(('**{}**'.format(ae), '')
-                           for ae in sorted(stat.REQUIRED_AES))
+    contents = OrderedDict(
+        ('**{}**'.format(ae), '') for ae in sorted(stat.REQUIRED_AES)
+    )
     contents.update(sorted(stat.DEFAULT_AES.items()))
     table = dict_to_table(('Aesthetic', 'Default value'), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
     tpl = dedent(stat._aesthetics_doc.lstrip('\n'))
     aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
-    aesthetics_doc = indent(aesthetics_doc, ' '*4)
+    aesthetics_doc = indent(aesthetics_doc, ' ' * 4)
 
     # common_parameters
     d = stat.DEFAULT_PARAMS
     common_parameters = STAT_PARAMS_TPL.format(
-            default_geom=d['geom'],
-            default_position=d['position'],
-            default_na_rm=d['na_rm'],
-            _aesthetics_doc=aesthetics_doc,
-            **common_params_doc)
+        default_geom=d['geom'],
+        default_position=d['position'],
+        default_na_rm=d['na_rm'],
+        _aesthetics_doc=aesthetics_doc,
+        **common_params_doc
+    )
 
     docstring = docstring.replace('{usage}', usage)
-    docstring = docstring.replace('{common_parameters}',
-                                  common_parameters)
+    docstring = docstring.replace('{common_parameters}', common_parameters)
     stat.__doc__ = docstring
     return stat
 
@@ -483,16 +486,11 @@ def document_scale(cls):
 
     # Fill in the processed superclass parameters
     superclass_parameters = '\n'.join(params_list)
-    cls.__doc__ = cls.__doc__.format(
-        superclass_parameters=superclass_parameters)
+    cls.__doc__ = cls.__doc__.format(superclass_parameters=superclass_parameters)
     return cls
 
 
-DOC_FUNCTIONS = {
-    'geom': document_geom,
-    'stat': document_stat,
-    'scale': document_scale
-}
+DOC_FUNCTIONS = {'geom': document_geom, 'stat': document_stat, 'scale': document_scale}
 
 
 def document(cls):

@@ -6,8 +6,7 @@ from plotnine import ggplot, aes, geom_point
 from plotnine.exceptions import PlotnineError
 
 
-df = pd.DataFrame({'x': range(10),
-                   'y': range(10)})
+df = pd.DataFrame({'x': range(10), 'y': range(10)})
 colors = ['red', 'green', 'blue']
 
 
@@ -18,11 +17,13 @@ def _get_colors(p):
 class TestLayers:
     # Give each geom in the layer a different color which we
     # can used to test the ordering.
-    lyrs = Layers([
-        geom_point(color=colors[0]),
-        geom_point(color=colors[1]),
-        geom_point(color=colors[2])
-    ])
+    lyrs = Layers(
+        [
+            geom_point(color=colors[0]),
+            geom_point(color=colors[1]),
+            geom_point(color=colors[2]),
+        ]
+    )
 
     def test_addition(self):
         p = ggplot(df, aes('x', 'y'))
@@ -71,10 +72,11 @@ def test_inserting_layers():
         def __rsub__(self, gg):
             return self.__radd__(gg)
 
-    p = (ggplot(df, aes('x', 'y'))
-         + geom_point(size=4)
-         + as_first_layer(geom_point(color='cyan', size=8))
-         - as_first_layer(geom_point(color='red', size=12))
-         )
+    p = (
+        ggplot(df, aes('x', 'y'))
+        + geom_point(size=4)
+        + as_first_layer(geom_point(color='cyan', size=8))
+        - as_first_layer(geom_point(color='red', size=12))
+    )
 
     assert p == 'inserting_layers'

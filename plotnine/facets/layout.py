@@ -25,7 +25,7 @@ class Layout:
     #: Range & breaks information for each panel
     panel_params = None
 
-    axs = None        # MPL axes
+    axs = None  # MPL axes
 
     def setup(self, layers, plot):
         """
@@ -102,14 +102,16 @@ class Layout:
             data = layer.data
             match_id = match(data['PANEL'], _layout['PANEL'])
             if self.panel_scales_x:
-                x_vars = list(set(self.panel_scales_x[0].aesthetics) &
-                              set(data.columns))
+                x_vars = list(
+                    set(self.panel_scales_x[0].aesthetics) & set(data.columns)
+                )
                 SCALE_X = _layout['SCALE_X'].iloc[match_id].tolist()
                 self.panel_scales_x.map(data, x_vars, SCALE_X)
 
             if self.panel_scales_y:
-                y_vars = list(set(self.panel_scales_y[0].aesthetics) &
-                              set(data.columns))
+                y_vars = list(
+                    set(self.panel_scales_y[0].aesthetics) & set(data.columns)
+                )
                 SCALE_Y = _layout['SCALE_Y'].iloc[match_id].tolist()
                 self.panel_scales_y.map(data, y_vars, SCALE_Y)
 
@@ -131,17 +133,17 @@ class Layout:
         """
         # wrapping with np.asarray prevents an exception
         # on some datasets
-        bool_idx = (np.asarray(self.layout['PANEL']) == i)
+        bool_idx = np.asarray(self.layout['PANEL']) == i
         xsc = None
         ysc = None
 
         if self.panel_scales_x:
             idx = self.layout.loc[bool_idx, 'SCALE_X'].values[0]
-            xsc = self.panel_scales_x[idx-1]
+            xsc = self.panel_scales_x[idx - 1]
 
         if self.panel_scales_y:
             idx = self.layout.loc[bool_idx, 'SCALE_Y'].values[0]
-            ysc = self.panel_scales_y[idx-1]
+            ysc = self.panel_scales_y[idx - 1]
 
         return types.SimpleNamespace(x=xsc, y=ysc)
 
@@ -176,10 +178,10 @@ class Layout:
         self.panel_params = []
         cols = ['SCALE_X', 'SCALE_Y']
         for i, j in self.layout[cols].itertuples(index=False):
-            i, j = i-1, j-1
+            i, j = i - 1, j - 1
             params = coord.setup_panel_params(
-                self.panel_scales_x[i],
-                self.panel_scales_y[j])
+                self.panel_scales_x[i], self.panel_scales_y[j]
+            )
             self.panel_params.append(params)
 
     def finish_data(self, layers):
@@ -200,7 +202,8 @@ class Layout:
         if len(required) != len(common):
             raise PlotnineError(
                 "Facet layout has bad format. It must contain "
-                "the columns '{}'".format(required))
+                "the columns '{}'".format(required)
+            )
 
     def xlabel(self, labels):
         """

@@ -28,8 +28,13 @@ class geom_step(geom_path):
     plotnine.geoms.geom_path : For documentation of extra
         parameters.
     """
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'direction': 'hv'}
+
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'direction': 'hv',
+    }
     draw_panel = geom.draw_panel
 
     @staticmethod
@@ -51,15 +56,14 @@ class geom_step(geom_path):
             yidx = np.repeat(range(n), 2)[:-1]
             new_x, new_y = x[xidx], y[yidx]
         elif direction == 'mid':
-            xidx = np.repeat(range(n-1), 2)
+            xidx = np.repeat(range(n - 1), 2)
             yidx = np.repeat(range(n), 2)
             diff = x[1::] - x[:-1:]
-            mid_x = x[:-1:] + diff/2
+            mid_x = x[:-1:] + diff / 2
             new_x = np.hstack([x[0], mid_x[xidx], x[-1]])
             new_y = y[yidx]
         else:
-            raise PlotnineError(
-                "Invalid direction `{}`".format(direction))
+            raise PlotnineError("Invalid direction `{}`".format(direction))
 
         df = pd.DataFrame({'x': new_x, 'y': new_y})
         copy_missing_columns(df, data)

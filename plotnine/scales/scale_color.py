@@ -1,9 +1,15 @@
 from warnings import warn
 
 from mizani.bounds import rescale_mid
-from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
-                             gradient_n_pal, cmap_pal, cmap_d_pal,
-                             desaturate_pal)
+from mizani.palettes import (
+    hue_pal,
+    brewer_pal,
+    grey_pal,
+    gradient_n_pal,
+    cmap_pal,
+    cmap_d_pal,
+    desaturate_pal,
+)
 
 from ..utils import alias
 from ..doctools import document
@@ -38,10 +44,11 @@ class scale_color_hue(scale_discrete):
     na_value : str
         Color of missing values. Default is ``'#7F7F7F'``
     """
+
     _aesthetics = ['color']
     na_value = '#7F7F7F'
 
-    def __init__(self, h=.01, l=.6, s=.65, color_space='hls', **kwargs):
+    def __init__(self, h=0.01, l=0.6, s=0.65, color_space='hls', **kwargs):
         self.palette = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
@@ -55,6 +62,7 @@ class scale_fill_hue(scale_color_hue):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -77,6 +85,7 @@ class scale_color_brewer(scale_discrete):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
+
     _aesthetics = ['color']
     na_value = '#7F7F7F'
 
@@ -94,6 +103,7 @@ class scale_fill_brewer(scale_color_brewer):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -112,6 +122,7 @@ class scale_color_grey(scale_discrete):
         Default is 0.8
     {superclass_parameters}
     """
+
     _aesthetics = ['color']
 
     def __init__(self, start=0.2, end=0.8, **kwargs):
@@ -128,10 +139,12 @@ class scale_fill_grey(scale_color_grey):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
 # Continuous color scales #
+
 
 @document
 class scale_color_gradient(scale_continuous):
@@ -153,6 +166,7 @@ class scale_color_gradient(scale_continuous):
     :class:`.scale_color_gradient2`
     :class:`.scale_color_gradientn`
     """
+
     _aesthetics = ['color']
     guide = 'colorbar'
     na_value = '#7F7F7F'
@@ -161,8 +175,7 @@ class scale_color_gradient(scale_continuous):
         """
         Create colormap that will be used by the palette
         """
-        self.palette = gradient_n_pal([low, high],
-                                      name='gradient')
+        self.palette = gradient_n_pal([low, high], name='gradient')
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -175,6 +188,7 @@ class scale_fill_gradient(scale_color_gradient):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -197,12 +211,12 @@ class scale_color_desaturate(scale_continuous):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
+
     _aesthetics = ['color']
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, color='red', prop=0, reverse=False,
-                 **kwargs):
+    def __init__(self, color='red', prop=0, reverse=False, **kwargs):
         self.palette = desaturate_pal(color, prop, reverse)
         scale_continuous.__init__(self, **kwargs)
 
@@ -216,6 +230,7 @@ class scale_fill_desaturate(scale_color_desaturate):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -243,20 +258,20 @@ class scale_color_gradient2(scale_continuous):
     :class:`.scale_color_gradient`
     :class:`.scale_color_gradientn`
     """
+
     _aesthetics = ['color']
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, low='#832424', mid='#FFFFFF',
-                 high='#3A3A98', midpoint=0,
-                 **kwargs):
+    def __init__(
+        self, low='#832424', mid='#FFFFFF', high='#3A3A98', midpoint=0, **kwargs
+    ):
         # All rescale functions should have the same signature
         def _rescale_mid(*args, **kwargs):
-            return rescale_mid(*args,  mid=midpoint, **kwargs)
+            return rescale_mid(*args, mid=midpoint, **kwargs)
 
         kwargs['rescaler'] = _rescale_mid
-        self.palette = gradient_n_pal([low, mid, high],
-                                      name='gradient2')
+        self.palette = gradient_n_pal([low, mid, high], name='gradient2')
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -269,6 +284,7 @@ class scale_fill_gradient2(scale_color_gradient2):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -294,6 +310,7 @@ class scale_color_gradientn(scale_continuous):
     :class:`.scale_color_gradient`
     :class:`.scale_color_gradientn`
     """
+
     _aesthetics = ['color']
     guide = 'colorbar'
     na_value = '#7F7F7F'
@@ -312,6 +329,7 @@ class scale_fill_gradientn(scale_color_gradientn):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -341,6 +359,7 @@ class scale_color_distiller(scale_color_gradientn):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
+
     _aesthetics = ['color']
     guide = 'colorbar'
     na_value = '#7F7F7F'
@@ -350,9 +369,11 @@ class scale_color_distiller(scale_color_gradientn):
         Create colormap that will be used by the palette
         """
         if type.lower() in ('qual', 'qualitative'):
-            warn("Using a discrete color palette in a continuous scale."
-                 "Consider using type = 'seq' or type = 'div' instead",
-                 PlotnineWarning)
+            warn(
+                "Using a discrete color palette in a continuous scale."
+                "Consider using type = 'seq' or type = 'div' instead",
+                PlotnineWarning,
+            )
 
         # Grab 7 colors from brewer and create a gradient palette
         # An odd number matches the midpoint of the palette to that
@@ -370,6 +391,7 @@ class scale_fill_distiller(scale_color_distiller):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -399,6 +421,7 @@ class scale_color_cmap(scale_continuous):
     :mod:`matplotlib.cm`
     :mod:`matplotlib.colors`
     """
+
     _aesthetics = ['color']
     guide = 'colorbar'
     na_value = '#7F7F7F'
@@ -417,6 +440,7 @@ class scale_fill_cmap(scale_color_cmap):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -446,6 +470,7 @@ class scale_color_cmap_d(scale_discrete):
     :mod:`matplotlib.cm`
     :mod:`matplotlib.colors`
     """
+
     _aesthetics = ['color']
     na_value = '#7F7F7F'
 
@@ -463,6 +488,7 @@ class scale_fill_cmap_d(scale_color_cmap_d):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 

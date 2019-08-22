@@ -95,7 +95,8 @@ def label_context(label_info, multi_line=True, sep=': '):
 LABELLERS = {
     'label_value': label_value,
     'label_both': label_both,
-    'label_context': label_context}
+    'label_context': label_context,
+}
 
 
 def as_labeller(x, default=label_value, multi_line=True):
@@ -154,8 +155,7 @@ def as_labeller(x, default=label_value, multi_line=True):
     return _labeller
 
 
-def labeller(rows=None, cols=None, multi_line=True,
-             default=label_value, **kwargs):
+def labeller(rows=None, cols=None, multi_line=True, default=label_value, **kwargs):
     """
     Return a labeller function
 
