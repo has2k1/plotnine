@@ -23,17 +23,19 @@ class position_dodge(position):
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
     """
+
     REQUIRED_AES = {'x'}
 
     def __init__(self, width=None, preserve='total'):
         self.params = {'width': width, 'preserve': preserve}
 
     def setup_params(self, data):
-        if (('xmin' not in data) and
-                ('xmax' not in data) and
-                (self.params['width'] is None)):
-            msg = ("Width not defined. "
-                   "Set with `position_dodge(width = ?)`")
+        if (
+            ('xmin' not in data)
+            and ('xmax' not in data)
+            and (self.params['width'] is None)
+        ):
+            msg = "Width not defined. " "Set with `position_dodge(width = ?)`"
             raise PlotnineError(msg)
 
         params = copy(self.params)

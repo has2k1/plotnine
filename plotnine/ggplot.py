@@ -145,8 +145,7 @@ class ggplot:
             if self.data is None:
                 self.data = other
             else:
-                raise PlotnineError(
-                    "`>>` failed, ggplot object has data.")
+                raise PlotnineError("`>>` failed, ggplot object has data.")
         else:
             msg = "Unknown type of data -- {!r}"
             raise TypeError(msg.format(type(other)))
@@ -344,7 +343,7 @@ class ggplot:
             theme=self.theme,
             coordinates=self.coordinates,
             figure=self.figure,
-            axs=self.axs
+            axs=self.axs,
         )
 
         # layout
@@ -361,10 +360,7 @@ class ggplot:
             plt.close('all')
 
         figure = plt.figure()
-        axs = self.facet.make_axes(
-            figure,
-            self.layout.layout,
-            self.coordinates)
+        axs = self.facet.make_axes(figure, self.layout.layout, self.coordinates)
 
         # Dictionary to collect matplotlib objects that will
         # be targeted for theming by the themeables
@@ -405,11 +401,9 @@ class ggplot:
 
             # Remove unnecessary ticks and labels
             if not layout_info['AXIS_X']:
-                ax.xaxis.set_tick_params(
-                    which='both', bottom=False, labelbottom=False)
+                ax.xaxis.set_tick_params(which='both', bottom=False, labelbottom=False)
             if not layout_info['AXIS_Y']:
-                ax.yaxis.set_tick_params(
-                    which='both', left=False, labelleft=False)
+                ax.yaxis.set_tick_params(which='both', left=False, labelleft=False)
 
             if layout_info['AXIS_X']:
                 ax.xaxis.set_tick_params(which='both', bottom=True)
@@ -455,22 +449,22 @@ class ggplot:
         # layout manager.
         if position == 'right':
             loc = 6
-            pad = right_strip_width*(1+strip_margin_x) + spacing
-            x = right + pad/W
+            pad = right_strip_width * (1 + strip_margin_x) + spacing
+            x = right + pad / W
             y = 0.5
         elif position == 'left':
             loc = 7
-            x = left - spacing/W
+            x = left - spacing / W
             y = 0.5
         elif position == 'top':
             loc = 8
             x = 0.5
-            pad = top_strip_height*(1+strip_margin_y) + spacing
-            y = top + pad/H
+            pad = top_strip_height * (1 + strip_margin_y) + spacing
+            y = top + pad / H
         elif position == 'bottom':
             loc = 9
             x = 0.5
-            y = bottom - spacing/H
+            y = bottom - spacing / H
         else:
             loc = 10
             x, y = position
@@ -478,11 +472,12 @@ class ggplot:
         anchored_box = AnchoredOffsetbox(
             loc=loc,
             child=legend_box,
-            pad=0.,
+            pad=0.0,
             frameon=False,
             bbox_to_anchor=(x, y),
             bbox_transform=figure.transFigure,
-            borderpad=0.)
+            borderpad=0.0,
+        )
 
         anchored_box.set_zorder(90.1)
         self.figure._themeable['legend_background'] = anchored_box
@@ -514,10 +509,9 @@ class ggplot:
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
-        labels = self.coordinates.labels(NS(
-            x=self.layout.xlabel(self.labels),
-            y=self.layout.ylabel(self.labels)
-        ))
+        labels = self.coordinates.labels(
+            NS(x=self.layout.xlabel(self.labels), y=self.layout.ylabel(self.labels))
+        )
         # The first axes object is on left, and the last axes object
         # is at the bottom. We change the transform so that the relevant
         # coordinate is in figure coordinates. This way we take
@@ -527,15 +521,19 @@ class ggplot:
         # first_ax = self.axs[0]
         # last_ax = self.axs[-1]
 
-        xlabel = self.facet.last_ax.set_xlabel(
-            labels.x, labelpad=pad_x)
-        ylabel = self.facet.first_ax.set_ylabel(
-            labels.y, labelpad=pad_y)
+        xlabel = self.facet.last_ax.set_xlabel(labels.x, labelpad=pad_x)
+        ylabel = self.facet.first_ax.set_ylabel(labels.y, labelpad=pad_y)
 
-        xlabel.set_transform(mtransforms.blended_transform_factory(
-            figure.transFigure, mtransforms.IdentityTransform()))
-        ylabel.set_transform(mtransforms.blended_transform_factory(
-            mtransforms.IdentityTransform(), figure.transFigure))
+        xlabel.set_transform(
+            mtransforms.blended_transform_factory(
+                figure.transFigure, mtransforms.IdentityTransform()
+            )
+        )
+        ylabel.set_transform(
+            mtransforms.blended_transform_factory(
+                mtransforms.IdentityTransform(), figure.transFigure
+            )
+        )
 
         figure._themeable['axis_title_x'] = xlabel
         figure._themeable['axis_title_y'] = ylabel
@@ -589,10 +587,10 @@ class ggplot:
         title_size = line_size * linespacing * num_lines
         strip_height = self.facet.strip_size('top')
         # vertical adjustment
-        strip_height *= (1 + strip_margin_x)
+        strip_height *= 1 + strip_margin_x
 
         x = 0.5
-        y = top + (strip_height+title_size/2+pad)/H
+        y = top + (strip_height + title_size / 2 + pad) / H
 
         text = figure.text(x, y, title, ha='center', va='center')
         figure._themeable['plot_title'] = text
@@ -638,9 +636,19 @@ class ggplot:
         new_labels = defaults(mapping, default)
         self.labels = defaults(self.labels, new_labels)
 
-    def save(self, filename=None, format=None, path=None,
-             width=None, height=None, units='in',
-             dpi=None, limitsize=True, verbose=True, **kwargs):
+    def save(
+        self,
+        filename=None,
+        format=None,
+        path=None,
+        width=None,
+        height=None,
+        units='in',
+        dpi=None,
+        limitsize=True,
+        verbose=True,
+        **kwargs
+    ):
         """
         Save a ggplot object as an image file
 
@@ -676,8 +684,10 @@ class ggplot:
         kwargs : dict
             Additional arguments to pass to matplotlib `savefig()`.
         """
-        fig_kwargs = {'bbox_inches': 'tight',  # 'tight' is a good default
-                      'format': format}
+        fig_kwargs = {
+            'bbox_inches': 'tight',  # 'tight' is a good default
+            'format': format,
+        }
         fig_kwargs.update(kwargs)
 
         figure = [None]  # nonlocal
@@ -701,10 +711,10 @@ class ggplot:
             width = to_inches(width, units)
             height = to_inches(height, units)
             self += theme(figure_size=(width, height))
-        elif (width is None and height is not None or
-              width is not None and height is None):
-            raise PlotnineError(
-                "You must specify both width and height")
+        elif (
+            width is None and height is not None or width is not None and height is None
+        ):
+            raise PlotnineError("You must specify both width and height")
 
         width, height = self.theme.themeables.property('figure_size')
 
@@ -713,7 +723,8 @@ class ggplot:
                 "Dimensions (width={}, height={}) exceed 25 inches "
                 "(height and width are specified in inches/cm/mm, "
                 "not pixels). If you are sure you want these "
-                "dimensions, use 'limitsize=False'.".format(width, height))
+                "dimensions, use 'limitsize=False'.".format(width, height)
+            )
 
         if dpi is None:
             try:
@@ -724,9 +735,12 @@ class ggplot:
             self.theme = self.theme + theme(dpi=dpi)
 
         if verbose:
-            warn("Saving {0} x {1} {2} image.".format(
-                 from_inches(width, units),
-                 from_inches(height, units), units), PlotnineWarning)
+            warn(
+                "Saving {0} x {1} {2} image.".format(
+                    from_inches(width, units), from_inches(height, units), units
+                ),
+                PlotnineWarning,
+            )
             warn('Filename: {}'.format(filename), PlotnineWarning)
 
         # Helper function so that we can clean up when it fails

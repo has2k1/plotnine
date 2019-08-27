@@ -21,11 +21,15 @@ class geom_hline(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 0.5, 'alpha': 1}
+
+    DEFAULT_AES = {'color': 'black', 'linetype': 'solid', 'size': 0.5, 'alpha': 1}
     REQUIRED_AES = {'yintercept'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'inherit_aes': False}
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'inherit_aes': False,
+    }
     legend_geom = 'path'
 
     def __init__(self, mapping=None, data=None, **kwargs):
@@ -33,8 +37,10 @@ class geom_hline(geom):
         yintercept = kwargs.pop('yintercept', None)
         if yintercept is not None:
             if mapping:
-                warn("The 'yintercept' parameter has overridden "
-                     "the aes() mapping.", PlotnineWarning)
+                warn(
+                    "The 'yintercept' parameter has overridden " "the aes() mapping.",
+                    PlotnineWarning,
+                )
             data = pd.DataFrame({'yintercept': make_iterable(yintercept)})
             mapping = aes(yintercept='yintercept')
             kwargs['show_legend'] = False
@@ -54,5 +60,4 @@ class geom_hline(geom):
 
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(gdata, panel_params,
-                                    coord, ax, **params)
+            geom_segment.draw_group(gdata, panel_params, coord, ax, **params)

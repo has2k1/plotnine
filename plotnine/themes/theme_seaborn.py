@@ -25,14 +25,16 @@ class theme_seaborn(theme):
         size of the font elements.
     """
 
-    def __init__(self, style='darkgrid', context='notebook',
-                 font='sans-serif', font_scale=1):
-        theme.__init__(self,
-                       aspect_ratio=get_option('aspect_ratio'),
-                       dpi=get_option('dpi'),
-                       figure_size=get_option('figure_size'),
-                       panel_spacing=0.1,
-                       complete=True)
-        d = seaborn_set(context=context, style=style,
-                        font=font, font_scale=font_scale)
+    def __init__(
+        self, style='darkgrid', context='notebook', font='sans-serif', font_scale=1
+    ):
+        theme.__init__(
+            self,
+            aspect_ratio=get_option('aspect_ratio'),
+            dpi=get_option('dpi'),
+            figure_size=get_option('figure_size'),
+            panel_spacing=0.1,
+            complete=True,
+        )
+        d = seaborn_set(context=context, style=style, font=font, font_scale=font_scale)
         self._rcParams.update(d)

@@ -30,7 +30,7 @@ __classifiers__ = [
     'Operating System :: Microsoft :: Windows',
     'Operating System :: Unix',
     'Operating System :: MacOS',
-    'Programming Language :: Python :: 3 :: Only'
+    'Programming Language :: Python :: 3 :: Only',
 ]
 
 
@@ -47,16 +47,17 @@ def get_required_packages():
 
     Plus any version tests and warnings
     """
-    install_requires = ['mizani >= 0.6.0',
-                        'matplotlib >= 3.1.1',
-                        'numpy >= 1.16.0',
-                        'scipy >= 1.2.0',
-                        'patsy >= 0.4.1',
-                        'statsmodels >= 0.9.0',
-                        'pandas >= 0.25.0',
-                        # 'geopandas >= 0.3.0',
-                        'descartes >= 1.1.0'
-                        ]
+    install_requires = [
+        'mizani >= 0.6.0',
+        'matplotlib >= 3.1.1',
+        'numpy >= 1.16.0',
+        'scipy >= 1.2.0',
+        'patsy >= 0.4.1',
+        'statsmodels >= 0.9.0',
+        'pandas >= 0.25.0',
+        # 'geopandas >= 0.3.0',
+        'descartes >= 1.1.0',
+    ]
     return install_requires
 
 
@@ -66,9 +67,7 @@ def get_extra_packages():
 
     Plus any version tests and warnings
     """
-    extras_require = {
-        'all':  ['scikit-learn', 'scikit-misc']
-    }
+    extras_require = {'all': ['scikit-learn', 'scikit-misc']}
     return extras_require
 
 
@@ -89,7 +88,8 @@ def get_package_data():
     """
     baseline_images = [
         'tests/baseline_images/%s/*' % x
-        for x in os.listdir('plotnine/tests/baseline_images')]
+        for x in os.listdir('plotnine/tests/baseline_images')
+    ]
     csv_data = ['data/*.csv']
     package_data = {'plotnine': baseline_images + csv_data}
     return package_data
@@ -98,19 +98,21 @@ def get_package_data():
 if __name__ == '__main__':
     check_dependencies()
 
-    setup(name='plotnine',
-          maintainer=__author__,
-          maintainer_email=__email__,
-          description=__description__,
-          long_description=__doc__,
-          license=__license__,
-          version=versioneer.get_version(),
-          cmdclass=versioneer.get_cmdclass(),
-          url=__url__,
-          python_requires='>=3.6',
-          install_requires=get_required_packages(),
-          extras_require=get_extra_packages(),
-          packages=find_packages(),
-          package_data=get_package_data(),
-          classifiers=__classifiers__,
-          zip_safe=False)
+    setup(
+        name='plotnine',
+        maintainer=__author__,
+        maintainer_email=__email__,
+        description=__description__,
+        long_description=__doc__,
+        license=__license__,
+        version=versioneer.get_version(),
+        cmdclass=versioneer.get_cmdclass(),
+        url=__url__,
+        python_requires='>=3.6',
+        install_requires=get_required_packages(),
+        extras_require=get_extra_packages(),
+        packages=find_packages(),
+        package_data=get_package_data(),
+        classifiers=__classifiers__,
+        zip_safe=False,
+    )

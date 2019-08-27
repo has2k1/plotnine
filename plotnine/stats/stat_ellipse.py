@@ -34,10 +34,16 @@ class stat_ellipse(stat):
     segments : int, optional (default: 51)
         Number of segments to be used in drawing the ellipse.
     """
+
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
-                      'na_rm': False, 'type': 't', 'level': 0.95,
-                      'segments': 51}
+    DEFAULT_PARAMS = {
+        'geom': 'path',
+        'position': 'identity',
+        'na_rm': False,
+        'type': 't',
+        'level': 0.95,
+        'segments': 51,
+    }
 
     @classmethod
     def compute_group(cls, data, scales, **params):
@@ -76,7 +82,7 @@ class stat_ellipse(stat):
         else:
             radius = np.sqrt(dfn * stats.f.ppf(level, dfn, dfd))
 
-        space = np.linspace(0, 2*np.pi, segments)
+        space = np.linspace(0, 2 * np.pi, segments)
 
         # Catesian coordinates
         unit_circle = np.column_stack([np.cos(space), np.sin(space)])
@@ -85,8 +91,7 @@ class stat_ellipse(stat):
         return pd.DataFrame({'x': res[:, 0], 'y': res[:, 1]})
 
 
-def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
-             tol=0.01):
+def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25, tol=0.01):
     """
     Covariance Estimation for Multivariate t Distribution
 
@@ -146,6 +151,7 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
       Statistics with S-PLUS*. Third Edition. Springer.
 
     """
+
     def test_values(x):
         if pd.isnull(x).any() or np.isinf(x).any():
             raise ValueError("Missing or infinite values in 'x'")
@@ -164,8 +170,7 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
         wt0 = wt
 
         if len(wt) != n:
-            raise ValueError(
-                "length of 'wt' must equal number of observations.")
+            raise ValueError("length of 'wt' must equal number of observations.")
         if any(wt < 0):
             raise ValueError("Negative weights not allowed.")
         if not np.sum(wt):
@@ -180,7 +185,7 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
     wt = wt[:, np.newaxis]
 
     # loc
-    loc = np.sum(wt*x, axis=0) / wt.sum()
+    loc = np.sum(wt * x, axis=0) / wt.sum()
     try:
         _len = len(center)
     except TypeError:
@@ -192,24 +197,23 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
         loc = p
 
     use_loc = isinstance(center, bool) and center
-    w = wt * (1 + p/nu)
+    w = wt * (1 + p / nu)
 
     for iteration in range(maxit):
         w0 = w
         X = scale_simp(x, loc, n, p)
-        _, s, v = linalg.svd(np.sqrt(w/np.sum(w)) * X)
+        _, s, v = linalg.svd(np.sqrt(w / np.sum(w)) * X)
         # wX = X @ v.T @ np.diag(np.full(p, 1/s))
-        wX = np.dot(np.dot(X,  v.T), np.diag(np.full(p, 1/s)))
+        wX = np.dot(np.dot(X, v.T), np.diag(np.full(p, 1 / s)))
         # Q = np.squeeze((wX**2) @ np.ones(p))
-        Q = np.squeeze(np.dot(wX**2, np.ones(p)))
+        Q = np.squeeze(np.dot(wX ** 2, np.ones(p)))
         w = (wt * (nu + p)) / (nu + Q)[:, np.newaxis]
         if use_loc:
-            loc = np.sum(w*x, axis=0) / w.sum()
-        if all(np.abs(w-w0) < tol):
+            loc = np.sum(w * x, axis=0) / w.sum()
+        if all(np.abs(w - w0) < tol):
             break
     else:
-        if ((np.mean(w) - np.mean(wt) > tol) or
-                (np.abs(np.mean(w * Q)/p - 1) > tol)):
+        if (np.mean(w) - np.mean(wt) > tol) or (np.abs(np.mean(w * Q) / p - 1) > tol):
             warn("Probable convergence failure.", PlotnineWarning)
 
     _a = np.sqrt(w) * X
@@ -223,7 +227,7 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
 
     if cor:
         sd = np.sqrt(np.diag(cov))
-        cor = (cov/sd)/np.repeat([sd],  p, axis=0).T
+        cor = (cov / sd) / np.repeat([sd], p, axis=0).T
         ans['cor'] = cor
 
     ans['iter'] = iteration

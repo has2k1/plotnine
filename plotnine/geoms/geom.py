@@ -11,16 +11,17 @@ from ..exceptions import PlotnineError
 
 class geom(metaclass=Registry):
     """Base class of all Geoms"""
+
     __base__ = True
-    DEFAULT_AES = dict()     #: Default aesthetics for the geom
-    REQUIRED_AES = set()     #: Required aesthetics for the geom
+    DEFAULT_AES = dict()  #: Default aesthetics for the geom
+    REQUIRED_AES = set()  #: Required aesthetics for the geom
     NON_MISSING_AES = set()  #: Required aesthetics for the geom
     DEFAULT_PARAMS = dict()  #: Required parameters for the geom
 
-    data = None        #: geom/layer specific dataframe
-    mapping = None     #: mappings i.e. :py:`aes(x='col1', fill='col2')`
+    data = None  #: geom/layer specific dataframe
+    mapping = None  #: mappings i.e. :py:`aes(x='col1', fill='col2')`
     aes_params = None  # setting of aesthetic
-    params = None      # parameter settings
+    params = None  # parameter settings
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
@@ -44,7 +45,7 @@ class geom(metaclass=Registry):
         self.data = kwargs['data']
         self._stat = stat.from_geom(self)
         self._position = position.from_geom(self)
-        self._verify_arguments(kwargs)     # geom, stat, layer
+        self._verify_arguments(kwargs)  # geom, stat, layer
 
     @staticmethod
     def from_stat(stat):
@@ -79,8 +80,7 @@ class geom(metaclass=Registry):
                 name = 'geom_{}'.format(name)
             klass = Registry[name]
         else:
-            raise PlotnineError(
-                'Unknown geom of type {}'.format(type(name)))
+            raise PlotnineError('Unknown geom of type {}'.format(type(name)))
 
         return klass(stat=stat, **stat._kwargs)
 
@@ -169,9 +169,9 @@ class geom(metaclass=Registry):
         out : dataframe
             Data used for drawing the geom.
         """
-        missing_aes = (self.DEFAULT_AES.keys() -
-                       self.aes_params.keys() -
-                       set(data.columns))
+        missing_aes = (
+            self.DEFAULT_AES.keys() - self.aes_params.keys() - set(data.columns)
+        )
 
         # Not in data and not set, use default
         for ae in missing_aes:
@@ -185,10 +185,9 @@ class geom(metaclass=Registry):
                 # sniff out the special cases, like custom
                 # tupled linetypes, shapes and colors
                 if is_valid_aesthetic(value, ae):
-                    data[ae] = [value]*len(data)
+                    data[ae] = [value] * len(data)
                 else:
-                    msg = ("'{}' does not look like a "
-                           "valid value for `{}`")
+                    msg = "'{}' does not look like a " "valid value for `{}`"
                     raise PlotnineError(msg.format(value, ae))
 
         return data
@@ -370,16 +369,24 @@ class geom(metaclass=Registry):
         Verify arguments passed to the geom
         """
         geom_stat_args = kwargs.keys() | self._stat._kwargs.keys()
-        unknown = (geom_stat_args -
-                   self.aesthetics() -                # geom aesthetics
-                   self.DEFAULT_PARAMS.keys() -        # geom parameters
-                   self._stat.aesthetics() -          # stat aesthetics
-                   self._stat.DEFAULT_PARAMS.keys() -  # stat parameters
-                   {'data', 'mapping',                # layer parameters
-                    'show_legend', 'inherit_aes'})    # layer parameters
+        unknown = (
+            geom_stat_args
+            - self.aesthetics()
+            - self.DEFAULT_PARAMS.keys()  # geom aesthetics
+            - self._stat.aesthetics()  # geom parameters
+            - self._stat.DEFAULT_PARAMS.keys()  # stat aesthetics
+            - {  # stat parameters
+                'data',
+                'mapping',  # layer parameters
+                'show_legend',
+                'inherit_aes',
+            }
+        )  # layer parameters
         if unknown:
-            msg = ("Parameters {}, are not understood by "
-                   "either the geom, stat or layer.")
+            msg = (
+                "Parameters {}, are not understood by "
+                "either the geom, stat or layer."
+            )
             raise PlotnineError(msg.format(unknown))
 
     def handle_na(self, data):
@@ -406,7 +413,9 @@ class geom(metaclass=Registry):
         `na_rm` parameter is False. It only takes into account
         the columns of the required aesthetics.
         """
-        return remove_missing(data,
-                              self.params['na_rm'],
-                              list(self.REQUIRED_AES | self.NON_MISSING_AES),
-                              self.__class__.__name__)
+        return remove_missing(
+            data,
+            self.params['na_rm'],
+            list(self.REQUIRED_AES | self.NON_MISSING_AES),
+            self.__class__.__name__,
+        )

@@ -17,13 +17,15 @@ class labs:
     kwargs : dict
         Aesthetics to be renamed
     """
+
     labels = {}
 
     def __init__(self, *args, **kwargs):
         if args and not isinstance(args, dict):
             raise PlotnineError(
                 "'labs' accepts either a dictionary as "
-                "an argument or keyword arguments")
+                "an argument or keyword arguments"
+            )
             self.labels = rename_aesthetics(args)
         else:
             self.labels = rename_aesthetics(kwargs)
@@ -46,8 +48,7 @@ class xlab(labs):
 
     def __init__(self, xlab):
         if xlab is None:
-            raise PlotnineError(
-                "Arguments to xlab cannot be None")
+            raise PlotnineError("Arguments to xlab cannot be None")
         self.labels = {'x': xlab}
 
 
@@ -63,8 +64,7 @@ class ylab(labs):
 
     def __init__(self, ylab):
         if ylab is None:
-            raise PlotnineError(
-                "Arguments to ylab cannot be None")
+            raise PlotnineError("Arguments to ylab cannot be None")
         self.labels = {'y': ylab}
 
 
@@ -77,8 +77,8 @@ class ggtitle(labs):
     title : str
         Plot title
     """
+
     def __init__(self, title):
         if title is None:
-            raise PlotnineError(
-                "Arguments to ggtitle cannot be None")
+            raise PlotnineError("Arguments to ggtitle cannot be None")
         self.labels = {'title': title}

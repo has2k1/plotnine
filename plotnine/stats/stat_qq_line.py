@@ -50,18 +50,24 @@ class stat_qq_line(stat):
     """
 
     REQUIRED_AES = {'sample'}
-    DEFAULT_PARAMS = {'geom': 'qq_line', 'position': 'identity',
-                      'na_rm': False,
-                      'distribution': 'norm', 'dparams': (),
-                      'quantiles': None, 'alpha_beta': (3/8, 3/8),
-                      'line_p': (0.25, 0.75), 'fullrange': False}
+    DEFAULT_PARAMS = {
+        'geom': 'qq_line',
+        'position': 'identity',
+        'na_rm': False,
+        'distribution': 'norm',
+        'dparams': (),
+        'quantiles': None,
+        'alpha_beta': (3 / 8, 3 / 8),
+        'line_p': (0.25, 0.75),
+        'fullrange': False,
+    }
     CREATES = {'x', 'y'}
 
     def setup_params(self, data):
         if len(self.params['line_p']) != 2:
             raise PlotnineError(
-                "Cannot fit line quantiles. "
-                "'line_p' must be of length 2")
+                "Cannot fit line quantiles. " "'line_p' must be of length 2"
+            )
         return self.params
 
     @classmethod
@@ -78,8 +84,8 @@ class stat_qq_line(stat):
         cdist = get_continuous_distribution(params['distribution'])
         x_coords = cdist.ppf(line_p, *dparams)
         y_coords = mquantiles(sample, line_p)
-        slope = (np.diff(y_coords)/np.diff(x_coords))[0]
-        intercept = y_coords[0] - slope*x_coords[0]
+        slope = (np.diff(y_coords) / np.diff(x_coords))[0]
+        intercept = y_coords[0] - slope * x_coords[0]
 
         # Get x,y points that describe the line
         if params['fullrange'] and scales.x:

@@ -20,6 +20,7 @@ class geom_spoke(geom_segment):
     plotnine.geoms.geom_segment : For documentation of extra
         parameters.
     """
+
     REQUIRED_AES = {'x', 'y', 'angle', 'radius'}
 
     def setup_data(self, data):

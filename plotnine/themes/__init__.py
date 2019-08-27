@@ -12,15 +12,29 @@ from .theme_seaborn import theme_seaborn
 from .theme_void import theme_void
 from .theme_xkcd import theme_xkcd
 from .theme import theme_get, theme_set, theme_update
-from .elements import (element_line, element_rect,
-                       element_text, element_blank)
+from .elements import element_line, element_rect, element_text, element_blank
 
 
-__all__ = ['theme', 'theme_538', 'theme_bw', 'theme_classic',
-           'theme_dark', 'theme_gray', 'theme_grey',
-           'theme_light', 'theme_linedraw',
-           'theme_matplotlib', 'theme_minimal',
-           'theme_seaborn', 'theme_void', 'theme_xkcd',
-           'theme_get', 'theme_set', 'theme_update',
-           'element_line', 'element_rect',
-           'element_text', 'element_blank']
+__all__ = [
+    'theme',
+    'theme_538',
+    'theme_bw',
+    'theme_classic',
+    'theme_dark',
+    'theme_gray',
+    'theme_grey',
+    'theme_light',
+    'theme_linedraw',
+    'theme_matplotlib',
+    'theme_minimal',
+    'theme_seaborn',
+    'theme_void',
+    'theme_xkcd',
+    'theme_get',
+    'theme_set',
+    'theme_update',
+    'element_line',
+    'element_rect',
+    'element_text',
+    'element_blank',
+]

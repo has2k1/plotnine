@@ -39,8 +39,12 @@ class stat_count(stat):
     """
 
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
-                      'na_rm': False, 'width': None}
+    DEFAULT_PARAMS = {
+        'geom': 'histogram',
+        'position': 'stack',
+        'na_rm': False,
+        'width': None,
+    }
     DEFAULT_AES = {'y': 'stat(count)'}
     CREATES = {'count', 'prop'}
 
@@ -57,11 +61,14 @@ class stat_count(stat):
             width = resolution(x, False) * 0.9
         df = pd.DataFrame({'weight': weight, 'x': x})
         # weighted frequency count
-        count = df.pivot_table(
-            'weight', index=['x'], aggfunc=np.sum)['weight']
+        count = df.pivot_table('weight', index=['x'], aggfunc=np.sum)['weight']
         x = count.index
         count = count.values
-        return pd.DataFrame({'count': count,
-                             'prop': count / np.abs(count).sum(),
-                             'x': x,
-                             'width': width})
+        return pd.DataFrame(
+            {
+                'count': count,
+                'prop': count / np.abs(count).sum(),
+                'x': x,
+                'width': width,
+            }
+        )

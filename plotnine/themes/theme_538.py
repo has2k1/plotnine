@@ -1,5 +1,4 @@
-from .elements import (element_line, element_rect,
-                       element_text, element_blank)
+from .elements import element_line, element_rect, element_text, element_blank
 from .theme import theme
 from .theme_gray import theme_gray
 
@@ -16,6 +15,7 @@ class theme_538(theme_gray):
     base_family : str, optional
         Base font family.
     """
+
     def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
         bgcolor = '#F0F0F0'
@@ -28,9 +28,11 @@ class theme_538(theme_gray):
                 panel_background=element_rect(fill=bgcolor),
                 panel_border=element_blank(),
                 panel_grid_major=element_line(
-                    color='#D5D5D5', linetype='solid', size=1),
+                    color='#D5D5D5', linetype='solid', size=1
+                ),
                 panel_grid_minor=element_blank(),
-                plot_background=element_rect(
-                    fill=bgcolor, color=bgcolor, size=1),
-                strip_background=element_rect(size=0)),
-            inplace=True)
+                plot_background=element_rect(fill=bgcolor, color=bgcolor, size=1),
+                strip_background=element_rect(size=0),
+            ),
+            inplace=True,
+        )

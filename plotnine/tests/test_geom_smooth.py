@@ -13,99 +13,103 @@ n = 100
 
 # linear relationship
 x = np.linspace(0, 1, n)
-y = 4*x + 5
-y_noisy = y + .1*random_state.randn(n)
+y = 4 * x + 5
+y_noisy = y + 0.1 * random_state.randn(n)
 df_linear = pd.DataFrame({'x': x, 'y': y, 'y_noisy': y_noisy})
 
 
 # non-linear relationship
-x = np.linspace(-2*np.pi, 2*np.pi, n)
+x = np.linspace(-2 * np.pi, 2 * np.pi, n)
 y = np.sin(x)
-y_noisy = y + .1*random_state.randn(n)
+y_noisy = y + 0.1 * random_state.randn(n)
 df_non_linear = pd.DataFrame({'x': x, 'y': y, 'y_noisy': y_noisy})
 
 # discrete_x
-df_discrete_x = pd.DataFrame({
-    'x': range(10),
-    'y': [1, 2, 3, 4, 4, 5, 6, 7, 8, 9]})
+df_discrete_x = pd.DataFrame({'x': range(10), 'y': [1, 2, 3, 4, 4, 5, 6, 7, 8, 9]})
 
 # continuous_x
-df_continuous_x = pd.DataFrame({
-    'x': np.arange(1, 21) + .2,
-    'y': range(1, 21)})
+df_continuous_x = pd.DataFrame({'x': np.arange(1, 21) + 0.2, 'y': range(1, 21)})
 
 
 def test_linear_smooth():
-    p = (ggplot(df_linear, aes('x'))
-         + geom_point(aes(y='y_noisy'))
-         + geom_smooth(aes(y='y_noisy'), method='lm', span=.3,
-                       color='blue')
-         )
+    p = (
+        ggplot(df_linear, aes('x'))
+        + geom_point(aes(y='y_noisy'))
+        + geom_smooth(aes(y='y_noisy'), method='lm', span=0.3, color='blue')
+    )
 
     assert p == 'linear_smooth'
 
 
 def test_linear_smooth_no_ci():
-    p = (ggplot(df_linear, aes('x'))
-         + geom_point(aes(y='y_noisy'))
-         + geom_smooth(aes(y='y_noisy'), method='lm', span=.3,
-                       color='blue', se=False)
-         )
+    p = (
+        ggplot(df_linear, aes('x'))
+        + geom_point(aes(y='y_noisy'))
+        + geom_smooth(aes(y='y_noisy'), method='lm', span=0.3, color='blue', se=False)
+    )
 
     assert p == 'linear_smooth_no_ci'
 
 
 def test_non_linear_smooth():
-    p = (ggplot(df_linear, aes('x'))
-         + geom_point(aes(y='y_noisy'))
-         + geom_smooth(aes(y='y_noisy'), method='loess', span=.3,
-                       color='blue')
-         )
+    p = (
+        ggplot(df_linear, aes('x'))
+        + geom_point(aes(y='y_noisy'))
+        + geom_smooth(aes(y='y_noisy'), method='loess', span=0.3, color='blue')
+    )
 
     assert p == 'non_linear_smooth'
 
 
 def test_non_linear_smooth_no_ci():
-    p = (ggplot(df_linear, aes('x'))
-         + geom_point(aes(y='y_noisy'))
-         + geom_smooth(aes(y='y_noisy'), method='loess', span=.3,
-                       color='blue', se=False)
-         )
+    p = (
+        ggplot(df_linear, aes('x'))
+        + geom_point(aes(y='y_noisy'))
+        + geom_smooth(
+            aes(y='y_noisy'), method='loess', span=0.3, color='blue', se=False
+        )
+    )
 
     assert p == 'non_linear_smooth_no_ci'
 
 
 def test_discrete_x():
-    p = (ggplot(df_discrete_x, aes('x', 'y'))
-         + geom_point()
-         + geom_smooth(color='blue'))
+    p = ggplot(df_discrete_x, aes('x', 'y')) + geom_point() + geom_smooth(color='blue')
 
     assert p == 'discrete_x'
 
 
 def test_discrete_x_fullrange():
-    p = (ggplot(df_discrete_x, aes('x', 'y'))
-         + geom_point()
-         + geom_smooth(color='blue', fullrange=True))
+    p = (
+        ggplot(df_discrete_x, aes('x', 'y'))
+        + geom_point()
+        + geom_smooth(color='blue', fullrange=True)
+    )
 
     assert p == 'discrete_x_fullrange'
 
 
 def test_continuous_x():
     n = len(df_continuous_x)
-    p = (ggplot(df_continuous_x, aes('x', 'y'))
-         + geom_point()
-         + geom_smooth(df_continuous_x[3:n-3], method='loess',
-                       color='blue', fullrange=False))
+    p = (
+        ggplot(df_continuous_x, aes('x', 'y'))
+        + geom_point()
+        + geom_smooth(
+            df_continuous_x[3 : n - 3], method='loess', color='blue', fullrange=False
+        )
+    )
     assert p == 'continuous_x'
 
 
 def test_continuous_x_fullrange():
     n = len(df_continuous_x)
-    p = (ggplot(df_continuous_x, aes('x', 'y'))
-         + geom_point()
-         + geom_smooth(df_continuous_x[3:n-3], method='loess',
-                       color='blue', fullrange=True))
+    p = (
+        ggplot(df_continuous_x, aes('x', 'y'))
+        + geom_point()
+        + geom_smooth(
+            df_continuous_x[3 : n - 3], method='loess', color='blue', fullrange=True
+        )
+    )
 
     assert p == 'continuous_x_fullrange'
 
@@ -136,8 +140,9 @@ class TestOther:
             p.draw_test()
 
     def test_mavg(self):
-        p = self.p + geom_smooth(aes(y='y_noisy'), method='mavg',
-                                 method_args={'window': 10})
+        p = self.p + geom_smooth(
+            aes(y='y_noisy'), method='mavg', method_args={'window': 10}
+        )
         p.draw_test()
 
     def test_gpr(self):
@@ -151,37 +156,38 @@ class TestOther:
 
 
 def test_sorts_by_x():
-    df = pd.DataFrame({'x': [5, 0, 1, 2, 3, 4],
-                       'y': range(6)})
+    df = pd.DataFrame({'x': [5, 0, 1, 2, 3, 4], 'y': range(6)})
     p = ggplot(df, aes('x', 'y')) + geom_smooth(stat='identity')
 
     assert p == 'sorts_by_x'
 
 
 def test_legend_fill_ratio():
-    p = (ggplot(df_linear, aes('x', color='x<0.5'))
-         + geom_point(aes(y='y_noisy'))
-         + geom_smooth(aes(y='y_noisy'), method='lm', size=0.5, span=.3)
-         )
+    p = (
+        ggplot(df_linear, aes('x', color='x<0.5'))
+        + geom_point(aes(y='y_noisy'))
+        + geom_smooth(aes(y='y_noisy'), method='lm', size=0.5, span=0.3)
+    )
 
     assert p == 'legend_fill_ratio'
 
 
 def test_init_and_fit_kwargs():
-    df = pd.DataFrame({
-        'x': np.arange(11),
-        'y': [0, 0, 0, 0.05, 0.25, 0.5, 0.75, 0.95, 1, 1, 1]
-    })
+    df = pd.DataFrame(
+        {'x': np.arange(11), 'y': [0, 0, 0, 0.05, 0.25, 0.5, 0.75, 0.95, 1, 1, 1]}
+    )
 
-    p = (ggplot(df, aes('x', 'y'))
-         + geom_point()
-         + geom_smooth(
-             method='glm',
-             method_args={
-                 'family': sm.families.Binomial(),  # init parameter
-                 'method': 'minimize'               # fit parameter
-             },
-             se=False)
-         )
+    p = (
+        ggplot(df, aes('x', 'y'))
+        + geom_point()
+        + geom_smooth(
+            method='glm',
+            method_args={
+                'family': sm.families.Binomial(),  # init parameter
+                'method': 'minimize',  # fit parameter
+            },
+            se=False,
+        )
+    )
 
     assert p == 'init_and_fit_kwargs'

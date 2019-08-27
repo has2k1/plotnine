@@ -24,9 +24,15 @@ class theme_void(theme):
             line=element_blank(),
             rect=element_blank(),
             text=element_text(
-                family=base_family, style='normal', color='black',
-                size=base_size, linespacing=0.9, ha='center',
-                va='center', rotation=0),
+                family=base_family,
+                style='normal',
+                color='black',
+                size=base_size,
+                linespacing=0.9,
+                ha='center',
+                va='center',
+                rotation=0,
+            ),
             aspect_ratio=get_option('aspect_ratio'),
             dpi=get_option('dpi'),
             figure_size=get_option('figure_size'),
@@ -38,10 +44,9 @@ class theme_void(theme):
             axis_title_y=element_blank(),
             legend_entry_spacing_x=5,
             legend_entry_spacing_y=2,
-            legend_text=element_text(size=base_size*0.8, ha='left'),
+            legend_text=element_text(size=base_size * 0.8, ha='left'),
             legend_text_legend=element_text(va='baseline'),
             legend_title=element_text(ha='left'),
-            strip_text=element_text(
-                size=base_size*0.8, linespacing=1.8),
-
-            complete=True)
+            strip_text=element_text(size=base_size * 0.8, linespacing=1.8),
+            complete=True,
+        )

@@ -5,4 +5,5 @@ class position_fill(position_stack):
     """
     Normalise stacked objects to unit height
     """
+
     fill = True

@@ -10,6 +10,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 
 class position(metaclass=Registry):
     """Base class for all positions"""
+
     __base__ = True
 
     REQUIRED_AES = {}
@@ -26,9 +27,8 @@ class position(metaclass=Registry):
         Verify & return data
         """
         check_required_aesthetics(
-            self.REQUIRED_AES,
-            data.columns,
-            self.__class__.__name__)
+            self.REQUIRED_AES, data.columns, self.__class__.__name__
+        )
         return data
 
     @classmethod
@@ -40,6 +40,7 @@ class position(metaclass=Registry):
         `compute_panel` if the position computations are
         independent of the panel. i.e when not colliding
         """
+
         def fn(pdata):
             """
             Helper compute function
@@ -133,8 +134,7 @@ class position(metaclass=Registry):
                 name = 'position_{}'.format(name)
             klass = Registry[name]
         else:
-            raise PlotnineError(
-                'Unknown position of type {}'.format(type(name)))
+            raise PlotnineError('Unknown position of type {}'.format(type(name)))
 
         return klass()
 
@@ -184,12 +184,10 @@ class position(metaclass=Registry):
         # preserve existing ordering. The default stacking order reverses
         # the group in order to match the legend order.
         if params and 'reverse' in params and params['reverse']:
-            idx = data.sort_values(
-                ['xmin', 'group'], kind='mergesort').index
+            idx = data.sort_values(['xmin', 'group'], kind='mergesort').index
         else:
             data['-group'] = -data['group']
-            idx = data.sort_values(
-                ['xmin', '-group'], kind='mergesort').index
+            idx = data.sort_values(['xmin', '-group'], kind='mergesort').index
             del data['-group']
 
         data = data.loc[idx, :]
@@ -198,8 +196,9 @@ class position(metaclass=Registry):
         intervals = data[xminmax].drop_duplicates().values.flatten()
         intervals = intervals[~np.isnan(intervals)]
 
-        if (len(np.unique(intervals)) > 1 and
-                any(np.diff(intervals - intervals.mean()) < -1e-6)):
+        if len(np.unique(intervals)) > 1 and any(
+            np.diff(intervals - intervals.mean()) < -1e-6
+        ):
             msg = "{} requires non-overlapping x intervals"
             warn(msg.format(cls.__name__), PlotnineWarning)
 
@@ -230,12 +229,10 @@ class position(metaclass=Registry):
         # the group in order to match the legend order.
         if params and 'reverse' in params and params['reverse']:
             data['-group'] = -data['group']
-            idx = data.sort_values(
-                ['x', '-group'], kind='mergesort').index
+            idx = data.sort_values(['x', '-group'], kind='mergesort').index
             del data['-group']
         else:
-            idx = data.sort_values(
-                ['x', 'group'], kind='mergesort').index
+            idx = data.sort_values(['x', 'group'], kind='mergesort').index
 
         data = data.loc[idx, :]
         data.reset_index(inplace=True, drop=True)

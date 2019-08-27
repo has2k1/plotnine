@@ -5,20 +5,33 @@ from plotnine.data import mtcars
 
 
 def number_to_word(n):
-    lst = ['zero', 'one', 'two', 'three', 'four',
-           'five', 'six', 'seven', 'eight', 'nine']
+    lst = [
+        'zero',
+        'one',
+        'two',
+        'three',
+        'four',
+        'five',
+        'six',
+        'seven',
+        'eight',
+        'nine',
+    ]
     try:
         return lst[int(n)]
     except IndexError:
         return str(n)
 
 
-labeller_cols_both = labeller(rows='label_value', cols='label_both',
-                              multi_line=False)
+labeller_cols_both = labeller(rows='label_value', cols='label_both', multi_line=False)
 
-labeller_towords = labeller(rows='label_both', cols='label_both',
-                            multi_line=False, am=number_to_word,
-                            gear=number_to_word)
+labeller_towords = labeller(
+    rows='label_both',
+    cols='label_both',
+    multi_line=False,
+    am=number_to_word,
+    gear=number_to_word,
+)
 
 g = ggplot(mtcars, aes(x='wt', y='mpg')) + geom_point()
 

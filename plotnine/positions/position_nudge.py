@@ -15,6 +15,7 @@ class position_nudge(position):
     y : float
         Vertical nudge
     """
+
     def __init__(self, x=0, y=0):
         self.params = {'x': x, 'y': y}
 
@@ -23,10 +24,12 @@ class position_nudge(position):
         trans_x, trans_y = None, None
 
         if params['x']:
+
             def trans_x(x):
                 return x + params['x']
 
         if params['y']:
+
             def trans_y(y):
                 return y + params['y']
 

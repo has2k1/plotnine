@@ -125,7 +125,7 @@ KDE_FUNCS = {
     'statsmodels-m': kde_statsmodels_m,
     'scipy': kde_scipy,
     'scikit-learn': kde_sklearn,
-    'sklearn': kde_sklearn
+    'sklearn': kde_sklearn,
 }
 
 

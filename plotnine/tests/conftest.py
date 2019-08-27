@@ -13,22 +13,22 @@ from matplotlib.testing.compare import compare_images
 from plotnine import ggplot, theme
 
 
-TOLERANCE = 2           # Default tolerance for the tests
-DPI = 72                # Default DPI for the tests
+TOLERANCE = 2  # Default tolerance for the tests
+DPI = 72  # Default DPI for the tests
 
 # This partial theme modifies all themes that are used in
 # the test. It is limited to setting the size of the test
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
-test_theme = theme(figure_size=(640/DPI, 480/DPI))
+test_theme = theme(figure_size=(640 / DPI, 480 / DPI))
 
-if not os.path.exists(os.path.join(
-        os.path.dirname(__file__), 'baseline_images')):
+if not os.path.exists(os.path.join(os.path.dirname(__file__), 'baseline_images')):
     raise IOError(
         "The baseline image directory does not exist. "
         "This is most likely because the test data is not installed. "
         "You may need to install plotnine from source to get the "
-        "test data.")
+        "test data."
+    )
 
 
 def raise_no_baseline_image(filename):
@@ -97,8 +97,7 @@ def ggplot_equals(gg, right):
         #  short pytest error messages
         raise_no_baseline_image(filenames.baseline)
 
-    err = compare_images(filenames.expected, filenames.result,
-                         tol, in_decorator=True)
+    err = compare_images(filenames.expected, filenames.result, tol, in_decorator=True)
     gg._err = err  # For the pytest error message
     return False if err else True
 
@@ -153,12 +152,11 @@ ggplot.build_test = build_test
 
 
 def pytest_assertrepr_compare(op, left, right):
-    if (isinstance(left, ggplot) and
-            isinstance(right, (str, tuple)) and
-            op == "=="):
+    if isinstance(left, ggplot) and isinstance(right, (str, tuple)) and op == "==":
 
-        msg = ("images not close: {actual:s} vs. {expected:s} "
-               "(RMS {rms:.2f})".format(**left._err))
+        msg = "images not close: {actual:s} vs. {expected:s} " "(RMS {rms:.2f})".format(
+            **left._err
+        )
         return [msg]
 
 
@@ -210,7 +208,8 @@ def make_test_image_filenames(name, test_file):
     filenames = types.SimpleNamespace(
         baseline=os.path.join(baseline_dir, name),
         result=os.path.join(result_dir, name),
-        expected=os.path.join(result_dir, expected_name))
+        expected=os.path.join(result_dir, expected_name),
+    )
     return filenames
 
 
@@ -226,12 +225,15 @@ def _setup():
         except locale.Error:
             warnings.warn(
                 "Could not set locale to English/United States. "
-                "Some date-related tests may fail")
+                "Some date-related tests may fail"
+            )
 
     plt.switch_backend('Agg')  # use Agg backend for these test
     if mpl.get_backend().lower() != "agg":
-        msg = ("Using a wrong matplotlib backend ({0}), "
-               "which will not produce proper images")
+        msg = (
+            "Using a wrong matplotlib backend ({0}), "
+            "which will not produce proper images"
+        )
         raise Exception(msg.format(mpl.get_backend()))
 
     # These settings *must* be hardcoded for running the comparison
@@ -242,8 +244,10 @@ def _setup():
     mpl.rcParams['text.hinting_factor'] = 8
 
     # make sure we don't carry over bad plots from former tests
-    msg = ("no of open figs: {} -> find the last test with ' "
-           "python tests.py -v' and add a '@cleanup' decorator.")
+    msg = (
+        "no of open figs: {} -> find the last test with ' "
+        "python tests.py -v' and add a '@cleanup' decorator."
+    )
     assert len(plt.get_fignums()) == 0, msg.format(plt.get_fignums())
 
 

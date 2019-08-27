@@ -58,10 +58,16 @@ class stat_density_2d(stat):
     largely irrelevant.
     """
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'density_2d', 'position': 'identity',
-                      'na_rm': False, 'contour': True,
-                      'package': 'statsmodels',
-                      'kde_params': None, 'n': 64, 'levels': 5}
+    DEFAULT_PARAMS = {
+        'geom': 'density_2d',
+        'position': 'identity',
+        'na_rm': False,
+        'contour': True,
+        'package': 'statsmodels',
+        'kde_params': None,
+        'n': 64,
+        'levels': 5,
+    }
     CREATES = {'y'}
 
     def setup_params(self, data):
@@ -74,8 +80,7 @@ class stat_density_2d(stat):
             params['package'] = 'statsmodels-m'
             if 'var_type' not in kde_params:
                 kde_params['var_type'] = '{}{}'.format(
-                    get_var_type(data['x']),
-                    get_var_type(data['y'])
+                    get_var_type(data['x']), get_var_type(data['y'])
                 )
 
         return params
@@ -104,14 +109,16 @@ class stat_density_2d(stat):
             groups = str(group) + '-00' + data['piece'].astype(str)
             data['group'] = groups
         else:
-            data = pd.DataFrame({
-                'x': X.flatten(),
-                'y': Y.flatten(),
-                'density': density.flatten(),
-                'group': group,
-                'level': 1,
-                'piece': 1,
-            })
+            data = pd.DataFrame(
+                {
+                    'x': X.flatten(),
+                    'y': Y.flatten(),
+                    'density': density.flatten(),
+                    'group': group,
+                    'level': 1,
+                    'piece': 1,
+                }
+            )
 
         return data
 
@@ -127,7 +134,8 @@ def contour_lines(X, Y, Z, levels):
     corner_mask = False
     nchunk = 0
     contour_generator = _contour.QuadContourGenerator(
-        X, Y, Z, mask, corner_mask, nchunk)
+        X, Y, Z, mask, corner_mask, nchunk
+    )
 
     if isinstance(levels, int):
         levels = extended_breaks(n=levels)((zmin, zmax))
@@ -163,10 +171,5 @@ def contour_lines(X, Y, Z, levels):
         piece = []
         level = []
 
-    data = pd.DataFrame({
-        'x': x,
-        'y': y,
-        'level': level,
-        'piece': piece,
-    })
+    data = pd.DataFrame({'x': x, 'y': y, 'level': level, 'piece': piece})
     return data

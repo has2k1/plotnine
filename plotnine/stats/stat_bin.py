@@ -4,8 +4,12 @@ import numpy as np
 
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from .binning import (breaks_from_bins, breaks_from_binwidth,
-                      assign_bins, freedman_diaconis_bins)
+from .binning import (
+    breaks_from_bins,
+    breaks_from_binwidth,
+    assign_bins,
+    freedman_diaconis_bins,
+)
 from .stat import stat
 
 
@@ -64,11 +68,18 @@ class stat_bin(stat):
 
     """
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
-                      'na_rm': False, 'binwidth': None, 'bins': None,
-                      'breaks': None, 'center': None,
-                      'boundary': None, 'closed': 'right',
-                      'pad': False}
+    DEFAULT_PARAMS = {
+        'geom': 'histogram',
+        'position': 'stack',
+        'na_rm': False,
+        'binwidth': None,
+        'bins': None,
+        'breaks': None,
+        'center': None,
+        'boundary': None,
+        'closed': 'right',
+        'pad': False,
+    }
     DEFAULT_AES = {'y': 'stat(count)', 'weight': None}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
@@ -80,16 +91,18 @@ class stat_bin(stat):
             raise PlotnineError(msg)
 
         if params['closed'] not in ('right', 'left'):
-            raise PlotnineError(
-                "`closed` should either 'right' or 'left'")
+            raise PlotnineError("`closed` should either 'right' or 'left'")
 
-        if (params['breaks'] is None and
-                params['binwidth'] is None and
-                params['bins'] is None):
+        if (
+            params['breaks'] is None
+            and params['binwidth'] is None
+            and params['bins'] is None
+        ):
             params = params.copy()
             params['bins'] = freedman_diaconis_bins(data['x'])
-            msg = ("'stat_bin()' using 'bins = {}'. "
-                   "Pick better value with 'binwidth'.")
+            msg = (
+                "'stat_bin()' using 'bins = {}'. " "Pick better value with 'binwidth'."
+            )
             warn(msg.format(params['bins']), PlotnineWarning)
 
         return params
@@ -102,14 +115,20 @@ class stat_bin(stat):
                 breaks = scales.x.transform(breaks)
         elif params['binwidth'] is not None:
             breaks = breaks_from_binwidth(
-                scales.x.dimension(), params['binwidth'],
-                params['center'], params['boundary'])
+                scales.x.dimension(),
+                params['binwidth'],
+                params['center'],
+                params['boundary'],
+            )
         else:
             breaks = breaks_from_bins(
-                scales.x.dimension(), params['bins'],
-                params['center'], params['boundary'])
+                scales.x.dimension(),
+                params['bins'],
+                params['center'],
+                params['boundary'],
+            )
 
         new_data = assign_bins(
-            data['x'], breaks, data.get('weight'),
-            params['pad'], params['closed'])
+            data['x'], breaks, data.get('weight'), params['pad'], params['closed']
+        )
         return new_data

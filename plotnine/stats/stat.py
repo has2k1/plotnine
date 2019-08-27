@@ -12,6 +12,7 @@ from ..exceptions import PlotnineError
 
 class stat(metaclass=Registry):
     """Base class of all stats"""
+
     __base__ = True
 
     REQUIRED_AES = set()
@@ -42,9 +43,7 @@ class stat(metaclass=Registry):
         kwargs = data_mapping_as_kwargs((mapping, data), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
-        self.aes_params = {ae: kwargs[ae]
-                           for ae in (self.aesthetics() &
-                                      kwargs.keys())}
+        self.aes_params = {ae: kwargs[ae] for ae in (self.aesthetics() & kwargs.keys())}
 
     @staticmethod
     def from_geom(geom):
@@ -71,8 +70,7 @@ class stat(metaclass=Registry):
         kwargs = geom._kwargs
         # More stable when reloading modules than
         # using issubclass
-        if (not isinstance(name, type) and
-                hasattr(name, 'compute_layer')):
+        if not isinstance(name, type) and hasattr(name, 'compute_layer'):
             return name
 
         if isinstance(name, stat):
@@ -84,13 +82,11 @@ class stat(metaclass=Registry):
                 name = 'stat_{}'.format(name)
             klass = Registry[name]
         else:
-            raise PlotnineError(
-                'Unknown stat of type {}'.format(type(name)))
+            raise PlotnineError('Unknown stat of type {}'.format(type(name)))
 
         valid_kwargs = (
-             (klass.aesthetics() |
-              klass.DEFAULT_PARAMS.keys()) &
-             kwargs.keys())
+            klass.aesthetics() | klass.DEFAULT_PARAMS.keys()
+        ) & kwargs.keys()
 
         params = {k: kwargs[k] for k in valid_kwargs}
         return klass(geom=geom, **params)
@@ -144,16 +140,13 @@ class stat(metaclass=Registry):
         out : dataframe
             Data used for drawing the geom.
         """
-        missing = (self.aesthetics() -
-                   self.aes_params.keys() -
-                   set(data.columns))
+        missing = self.aesthetics() - self.aes_params.keys() - set(data.columns)
 
-        for ae in missing-self.REQUIRED_AES:
+        for ae in missing - self.REQUIRED_AES:
             if self.DEFAULT_AES[ae] is not None:
                 data[ae] = self.DEFAULT_AES[ae]
 
-        missing = (self.aes_params.keys() -
-                   set(data.columns))
+        missing = self.aes_params.keys() - set(data.columns)
 
         for ae in self.aes_params:
             data[ae] = self.aes_params[ae]
@@ -242,16 +235,16 @@ class stat(metaclass=Registry):
             Panel layout information
         """
         check_required_aesthetics(
-            cls.REQUIRED_AES,
-            list(data.columns) + list(params.keys()),
-            cls.__name__)
+            cls.REQUIRED_AES, list(data.columns) + list(params.keys()), cls.__name__
+        )
 
         data = remove_missing(
             data,
             na_rm=params.get('na_rm', False),
             vars=list(cls.REQUIRED_AES | cls.NON_MISSING_AES),
             name=cls.__name__,
-            finite=True)
+            finite=True,
+        )
 
         def fn(pdata):
             """
@@ -299,7 +292,7 @@ class stat(metaclass=Registry):
             new = cls.compute_group(old, scales, **params)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
-            u = unique.loc[[0]*len(new), missing].reset_index(drop=True)
+            u = unique.loc[[0] * len(new), missing].reset_index(drop=True)
             # concat can have problems with empty dataframes that
             # have an index
             if u.empty and len(u):
@@ -339,8 +332,7 @@ class stat(metaclass=Registry):
             Parameters
         """
         msg = "{} should implement this method."
-        raise NotImplementedError(
-            msg.format(cls.__name__))
+        raise NotImplementedError(msg.format(cls.__name__))
 
     def __radd__(self, gg, inplace=False):
         """
@@ -373,4 +365,5 @@ class stat(metaclass=Registry):
         """
         # Create, geom from stat, then layer from geom
         from ..geoms.geom import geom
+
         return layer.from_geom(geom.from_stat(self))

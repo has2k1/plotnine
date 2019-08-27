@@ -9,11 +9,21 @@ from .themeable import themeable, Themeables
 # can be overridden.
 default_rcparams = {
     'axes.axisbelow': 'True',
-    'font.sans-serif': ['DejaVu Sans', 'Helvetica', 'Avant Garde',
-                        'Computer Modern Sans serif', 'Arial'],
-    'font.serif': ['Times', 'Palatino',
-                   'New Century Schoolbook', 'Bookman',
-                   'Computer Modern Roman', 'Times New Roman'],
+    'font.sans-serif': [
+        'DejaVu Sans',
+        'Helvetica',
+        'Avant Garde',
+        'Computer Modern Sans serif',
+        'Arial',
+    ],
+    'font.serif': [
+        'Times',
+        'Palatino',
+        'New Century Schoolbook',
+        'Bookman',
+        'Computer Modern Roman',
+        'Times New Roman',
+    ],
     'lines.antialiased': 'True',
     'patch.antialiased': 'True',
     'timezone': 'UTC',
@@ -68,94 +78,97 @@ class theme:
     should not be modified after that.
     """
 
-    def __init__(self, complete=False,
-                 # Generate themeables keyword parameters with
-                 #
-                 #     from plotnine.themes.themeable import themeable
-                 #     for name in themeable.registry():
-                 #         print(f'{name}=None,')
-                 axis_title_x=None,
-                 axis_title_y=None,
-                 axis_title=None,
-                 legend_title=None,
-                 legend_text_legend=None,
-                 legend_text_colorbar=None,
-                 legend_text=None,
-                 plot_title=None,
-                 strip_text_x=None,
-                 strip_text_y=None,
-                 strip_text=None,
-                 title=None,
-                 axis_text_x=None,
-                 axis_text_y=None,
-                 axis_text=None,
-                 text=None,
-                 axis_line_x=None,
-                 axis_line_y=None,
-                 axis_line=None,
-                 axis_ticks_minor_x=None,
-                 axis_ticks_minor_y=None,
-                 axis_ticks_major_x=None,
-                 axis_ticks_major_y=None,
-                 axis_ticks_major=None,
-                 axis_ticks_minor=None,
-                 axis_ticks=None,
-                 panel_grid_major_x=None,
-                 panel_grid_major_y=None,
-                 panel_grid_minor_x=None,
-                 panel_grid_minor_y=None,
-                 panel_grid_major=None,
-                 panel_grid_minor=None,
-                 panel_grid=None,
-                 line=None,
-                 legend_key=None,
-                 legend_background=None,
-                 legend_box_background=None,
-                 panel_background=None,
-                 panel_border=None,
-                 plot_background=None,
-                 strip_background_x=None,
-                 strip_background_y=None,
-                 strip_background=None,
-                 rect=None,
-                 axis_ticks_length_major=None,
-                 axis_ticks_length_minor=None,
-                 axis_ticks_length=None,
-                 axis_ticks_pad_major=None,
-                 axis_ticks_pad_minor=None,
-                 axis_ticks_pad=None,
-                 axis_ticks_direction_x=None,
-                 axis_ticks_direction_y=None,
-                 axis_ticks_direction=None,
-                 panel_spacing_x=None,
-                 panel_spacing_y=None,
-                 panel_spacing=None,
-                 plot_margin=None,
-                 panel_ontop=None,
-                 aspect_ratio=None,
-                 dpi=None,
-                 figure_size=None,
-                 subplots_adjust=None,
-                 facet_spacing=None,
-                 legend_box=None,
-                 legend_box_margin=None,
-                 legend_box_just=None,
-                 legend_direction=None,
-                 legend_key_width=None,
-                 legend_key_height=None,
-                 legend_key_size=None,
-                 legend_margin=None,
-                 legend_box_spacing=None,
-                 legend_spacing=None,
-                 legend_position=None,
-                 legend_title_align=None,
-                 legend_entry_spacing_x=None,
-                 legend_entry_spacing_y=None,
-                 legend_entry_spacing=None,
-                 strip_margin_x=None,
-                 strip_margin_y=None,
-                 strip_margin=None,
-                 **kwargs):
+    def __init__(
+        self,
+        complete=False,
+        # Generate themeables keyword parameters with
+        #
+        #     from plotnine.themes.themeable import themeable
+        #     for name in themeable.registry():
+        #         print(f'{name}=None,')
+        axis_title_x=None,
+        axis_title_y=None,
+        axis_title=None,
+        legend_title=None,
+        legend_text_legend=None,
+        legend_text_colorbar=None,
+        legend_text=None,
+        plot_title=None,
+        strip_text_x=None,
+        strip_text_y=None,
+        strip_text=None,
+        title=None,
+        axis_text_x=None,
+        axis_text_y=None,
+        axis_text=None,
+        text=None,
+        axis_line_x=None,
+        axis_line_y=None,
+        axis_line=None,
+        axis_ticks_minor_x=None,
+        axis_ticks_minor_y=None,
+        axis_ticks_major_x=None,
+        axis_ticks_major_y=None,
+        axis_ticks_major=None,
+        axis_ticks_minor=None,
+        axis_ticks=None,
+        panel_grid_major_x=None,
+        panel_grid_major_y=None,
+        panel_grid_minor_x=None,
+        panel_grid_minor_y=None,
+        panel_grid_major=None,
+        panel_grid_minor=None,
+        panel_grid=None,
+        line=None,
+        legend_key=None,
+        legend_background=None,
+        legend_box_background=None,
+        panel_background=None,
+        panel_border=None,
+        plot_background=None,
+        strip_background_x=None,
+        strip_background_y=None,
+        strip_background=None,
+        rect=None,
+        axis_ticks_length_major=None,
+        axis_ticks_length_minor=None,
+        axis_ticks_length=None,
+        axis_ticks_pad_major=None,
+        axis_ticks_pad_minor=None,
+        axis_ticks_pad=None,
+        axis_ticks_direction_x=None,
+        axis_ticks_direction_y=None,
+        axis_ticks_direction=None,
+        panel_spacing_x=None,
+        panel_spacing_y=None,
+        panel_spacing=None,
+        plot_margin=None,
+        panel_ontop=None,
+        aspect_ratio=None,
+        dpi=None,
+        figure_size=None,
+        subplots_adjust=None,
+        facet_spacing=None,
+        legend_box=None,
+        legend_box_margin=None,
+        legend_box_just=None,
+        legend_direction=None,
+        legend_key_width=None,
+        legend_key_height=None,
+        legend_key_size=None,
+        legend_margin=None,
+        legend_box_spacing=None,
+        legend_spacing=None,
+        legend_position=None,
+        legend_title_align=None,
+        legend_entry_spacing_x=None,
+        legend_entry_spacing_y=None,
+        legend_entry_spacing=None,
+        strip_margin_x=None,
+        strip_margin_y=None,
+        strip_margin=None,
+        **kwargs
+    ):
         self.themeables = Themeables()
         self.complete = complete
         # This is set when the figure is created,
@@ -170,8 +183,11 @@ class theme:
 
         # Themeables
         official_themeables = themeable.registry()
-        it = ((name, element) for name, element in locals().items()
-              if element is not None and name in official_themeables)
+        it = (
+            (name, element)
+            for name, element in locals().items()
+            if element is not None and name in official_themeables
+        )
         new = themeable.from_class_name
 
         for name, element in it:
@@ -245,12 +261,12 @@ class theme:
         Set the rcParams
         """
         from matplotlib import rcParams
+
         for key, val in self.rcParams.items():
             try:
                 rcParams[key] = val
             except Exception as e:
-                msg = ("""Setting "mpl.rcParams['{}']={}" """
-                       "raised an Exception: {}")
+                msg = """Setting "mpl.rcParams['{}']={}" """ "raised an Exception: {}"
                 raise PlotnineError(msg.format(key, val, e))
 
     @property
@@ -306,8 +322,7 @@ class theme:
 
     def __add__(self, other):
         if not isinstance(other, theme):
-            msg = ("Adding theme failed. "
-                   "{} is not a theme").format(str(other))
+            msg = ("Adding theme failed. " "{} is not a theme").format(str(other))
             raise PlotnineError(msg)
         return self.add_theme(other)
 
@@ -378,6 +393,7 @@ def theme_get():
     the default.
     """
     from .theme_gray import theme_gray
+
     _theme = get_option('current_theme')
     if isinstance(_theme, type):
         _theme = _theme()
@@ -398,8 +414,7 @@ def theme_set(new):
     out : theme
         Previous theme
     """
-    if (not isinstance(new, theme) and
-            not issubclass(new, theme)):
+    if not isinstance(new, theme) and not issubclass(new, theme):
         raise PlotnineError("Expecting object to be a theme")
 
     out = get_option('current_theme')

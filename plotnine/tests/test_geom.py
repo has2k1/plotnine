@@ -5,9 +5,7 @@ from plotnine import ggplot, aes, stat_identity, geom_point
 from plotnine.geoms.geom import geom
 from plotnine.exceptions import PlotnineError
 
-df = pd.DataFrame({'col1': [1, 2, 3, 4],
-                   'col2': 2,
-                   'col3': list('abcd')})
+df = pd.DataFrame({'col1': [1, 2, 3, 4], 'col2': 2, 'col3': list('abcd')})
 
 
 def test_geom_basics():
@@ -45,8 +43,7 @@ def test_geom_basics():
 def test_geom_with_invalid_argument():
     class geom_abc(geom):
         DEFAULT_AES = {'color': None}
-        DEFAULT_PARAMS = {'stat': 'identity',
-                          'position': 'identity'}
+        DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity'}
 
     with pytest.raises(PlotnineError):
         geom_abc(do_the_impossible=True)

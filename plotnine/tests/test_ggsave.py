@@ -4,13 +4,11 @@ import matplotlib.pyplot as plt
 import pytest
 
 import pandas as pd
-from plotnine import (ggplot, aes, geom_text, geom_point, facet_wrap,
-                      ggsave, theme_xkcd)
+from plotnine import ggplot, aes, geom_text, geom_point, facet_wrap, ggsave, theme_xkcd
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
-p = (ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars)
-     + geom_text())
+p = ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) + geom_text()
 
 
 def sequential_filenames():
@@ -48,12 +46,10 @@ class TestArguments:
 
         assert_exist_and_clean(fn, "save method")
 
-        res = ('saving' in str(item.message).lower()
-               for item in record)
+        res = ('saving' in str(item.message).lower() for item in record)
         assert any(res)
 
-        res = ('filename' in str(item.message).lower()
-               for item in record)
+        res = ('filename' in str(item.message).lower() for item in record)
         assert any(res)
 
         # verbose
@@ -62,12 +58,10 @@ class TestArguments:
             p.save(fn, verbose=False)
         assert_exist_and_clean(fn, "save method")
 
-        res = ('saving' in str(item.message).lower()
-               for item in record)
+        res = ('saving' in str(item.message).lower() for item in record)
         assert not any(res)
 
-        res = ('filename' in str(item.message).lower()
-               for item in record)
+        res = ('filename' in str(item.message).lower() for item in record)
         assert not any(res)
 
     def test_filename_plot_path(self):
@@ -102,18 +96,9 @@ class TestArguments:
         fn1 = next(filename_gen)
         fn2 = next(filename_gen)
 
-        df = pd.DataFrame({
-            'x': range(4),
-            'y': range(4),
-            'b': list('aabb')
-        })
+        df = pd.DataFrame({'x': range(4), 'y': range(4), 'b': list('aabb')})
 
-        p = (
-            ggplot(df)
-            + geom_point(aes('x', 'y'))
-            + facet_wrap('b')
-            + theme_xkcd()
-        )
+        p = ggplot(df) + geom_point(aes('x', 'y')) + facet_wrap('b') + theme_xkcd()
         p.save(fn1, verbose=False)
         assert_exist_and_clean(fn1, "Saving with theme_xkcd and dpi (1)")
 

@@ -35,14 +35,13 @@ class coord_fixed(coord_cartesian):
     """
 
     def __init__(self, ratio=1, xlim=None, ylim=None, expand=True):
-        coord_cartesian.__init__(self, xlim=xlim, ylim=ylim,
-                                 expand=expand)
+        coord_cartesian.__init__(self, xlim=xlim, ylim=ylim, expand=expand)
         self.ratio = ratio
 
     def aspect(self, panel_params):
         x = panel_params.x.range
         y = panel_params.y.range
-        return (y[1]-y[0]) / (x[1]-x[0]) * self.ratio
+        return (y[1] - y[0]) / (x[1] - x[0]) * self.ratio
 
 
 coord_equal = coord_fixed

@@ -30,21 +30,19 @@ class position_dodge2(position):
         Elements are shrunk by this proportion to allow space
         between them (Default: 0.1)
     """
+
     REQUIRED_AES = {'x'}
 
     def __init__(self, width=None, preserve='total', padding=0.1):
-        self.params = {
-            'width': width,
-            'preserve': preserve,
-            'padding': padding
-        }
+        self.params = {'width': width, 'preserve': preserve, 'padding': padding}
 
     def setup_params(self, data):
-        if (('xmin' not in data) and
-                ('xmax' not in data) and
-                (self.params['width'] is None)):
-            msg = ("Width not defined. "
-                   "Set with `position_dodge2(width = ?)`")
+        if (
+            ('xmin' not in data)
+            and ('xmax' not in data)
+            and (self.params['width'] is None)
+        ):
+            msg = "Width not defined. " "Set with `position_dodge2(width = ?)`"
             raise PlotnineError(msg)
 
         params = copy(self.params)
@@ -101,23 +99,19 @@ class position_dodge2(position):
 
         # Find the total width of each group of elements
         def sum_new_width(gdf):
-            return pd.DataFrame({'size': [gdf['new_width'].sum()],
-                                 'newx': gdf['newx'].iloc[0]})
+            return pd.DataFrame(
+                {'size': [gdf['new_width'].sum()], 'newx': gdf['newx'].iloc[0]}
+            )
 
         group_sizes = groupby_apply(data, 'newx', sum_new_width)
 
         # Starting xmin for each group of elements
-        starts = group_sizes['newx'] - (group_sizes['size']/2)
+        starts = group_sizes['newx'] - (group_sizes['size'] / 2)
 
         # Set the elements in place
         for i, start in enumerate(starts, start=1):
             bool_idx = data['xid'] == i
-            divisions = np.cumsum(
-               np.hstack([
-                   start,
-                   data.loc[bool_idx, 'new_width']
-               ])
-            )
+            divisions = np.cumsum(np.hstack([start, data.loc[bool_idx, 'new_width']]))
             data.loc[bool_idx, 'xmin'] = divisions[:-1]
             data.loc[bool_idx, 'xmax'] = divisions[1:]
 
@@ -130,8 +124,7 @@ class position_dodge2(position):
             data['xmin'] = data['x'] - pad_width / 2
             data['xmax'] = data['x'] + pad_width / 2
 
-        data = data.drop(columns=['xid', 'newx', 'new_width'],
-                         errors='ignore')
+        data = data.drop(columns=['xid', 'newx', 'new_width'], errors='ignore')
         return data
 
 
@@ -141,7 +134,7 @@ def find_x_overlaps(df):
     overlaps[0] = 1
     counter = 1
     for i in range(1, n):
-        if df['xmin'].iloc[i] >= df['xmax'].iloc[i-1]:
+        if df['xmin'].iloc[i] >= df['xmax'].iloc[i - 1]:
             counter += 1
         overlaps[i] = counter
     return overlaps

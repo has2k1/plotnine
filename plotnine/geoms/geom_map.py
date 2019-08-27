@@ -36,19 +36,24 @@ class geom_map(geom):
     geopandas dataframe. The dataframe should have a ``geometry``
     column.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': '#111111', 'fill': '#333333',
-                   'linetype': 'solid', 'shape': 'o', 'size': 0.5,
-                   'stroke': 0.5}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_AES = {
+        'alpha': 1,
+        'color': '#111111',
+        'fill': '#333333',
+        'linetype': 'solid',
+        'shape': 'o',
+        'size': 0.5,
+        'stroke': 0.5,
+    }
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'na_rm': False}
     REQUIRED_AES = {'geometry'}
     legend_geom = 'polygon'
 
     def __init__(self, mapping=None, data=None, **kwargs):
         if not HAS_GEOPANDAS:
             raise PlotnineError(
-                "geom_map requires geopandas. "
-                "Please install geopandas."
+                "geom_map requires geopandas. " "Please install geopandas."
             )
         geom.__init__(self, mapping, data, **kwargs)
         # Almost all geodataframes loaded from shapefiles
@@ -77,16 +82,18 @@ class geom_map(geom):
             bounds = pd.DataFrame(
                 np.array([x.bounds for x in data['geometry']]),
                 columns=['xmin', 'ymin', 'xmax', 'ymax'],
-                index=data.index)
+                index=data.index,
+            )
         else:
             bounds.rename(
                 columns={
                     'minx': 'xmin',
                     'maxx': 'xmax',
                     'miny': 'ymin',
-                    'maxy': 'ymax'
+                    'maxy': 'ymax',
                 },
-                inplace=True)
+                inplace=True,
+            )
 
         data = pd.concat([data, bounds], axis=1, copy=False)
         return data
@@ -124,8 +131,7 @@ class geom_map(geom):
             for _, gdata in data.groupby('group'):
                 gdata.reset_index(inplace=True, drop=True)
                 gdata.is_copy = None
-                geom_point.draw_group(
-                    gdata, panel_params, coord, ax, **params)
+                geom_point.draw_group(gdata, panel_params, coord, ax, **params)
         elif geom_type == 'LineString':
             data['size'] *= SIZE_FACTOR
             data['color'] = to_rgba(data['color'], data['alpha'])
@@ -135,5 +141,6 @@ class geom_map(geom):
                 edgecolor=data['color'],
                 linewidth=data['size'],
                 linestyle=data['linetype'],
-                zorder=params['zorder'])
+                zorder=params['zorder'],
+            )
             ax.add_collection(coll)

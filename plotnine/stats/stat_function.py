@@ -41,10 +41,15 @@ class stat_function(stat):
         'y'  # Points evaluated at x
     """
 
-    DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
-                      'na_rm': False,
-                      'fun': None, 'n': 101, 'args': None,
-                      'xlim': None}
+    DEFAULT_PARAMS = {
+        'geom': 'path',
+        'position': 'identity',
+        'na_rm': False,
+        'fun': None,
+        'n': 101,
+        'args': None,
+        'xlim': None,
+    }
 
     DEFAULT_AES = {'y': 'stat(y)'}
     CREATES = {'y'}
@@ -59,25 +64,32 @@ class stat_function(stat):
         try:
             range_x = xlim or scales.x.dimension((0, 0))
         except AttributeError:
-            raise PlotnineError(
-                "Missing 'x' aesthetic and 'xlim' is {}".format(xlim))
+            raise PlotnineError("Missing 'x' aesthetic and 'xlim' is {}".format(xlim))
 
         if not hasattr(fun, '__call__'):
             raise PlotnineError(
-                "stat_function requires parameter 'fun' to be " +
-                "a function or any other callable object")
+                "stat_function requires parameter 'fun' to be "
+                + "a function or any other callable object"
+            )
 
         old_fun = fun
         if isinstance(args, (list, tuple)):
+
             def fun(x):
                 return old_fun(x, *args)
+
         elif isinstance(args, dict):
+
             def fun(x):
                 return old_fun(x, **args)
+
         elif args is not None:
+
             def fun(x):
                 return old_fun(x, args)
+
         else:
+
             def fun(x):
                 return old_fun(x)
 

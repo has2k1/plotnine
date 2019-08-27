@@ -48,6 +48,7 @@ class facet:
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
     """
+
     #: number of columns
     ncol = None
     #: number of rows
@@ -81,17 +82,26 @@ class facet:
     # ggplot object that the facet belongs to
     plot = None
 
-    def __init__(self, scales='fixed', shrink=True,
-                 labeller='label_value', as_table=True,
-                 drop=True, dir='h'):
+    def __init__(
+        self,
+        scales='fixed',
+        shrink=True,
+        labeller='label_value',
+        as_table=True,
+        drop=True,
+        dir='h',
+    ):
         from .labelling import as_labeller
+
         self.shrink = shrink
         self.labeller = as_labeller(labeller)
         self.as_table = as_table
         self.drop = drop
         self.dir = dir
-        self.free = {'x': scales in ('free_x', 'free'),
-                     'y': scales in ('free_y', 'free')}
+        self.free = {
+            'x': scales in ('free_x', 'free'),
+            'y': scales in ('free_y', 'free'),
+        }
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)
@@ -109,8 +119,9 @@ class facet:
             else:
                 raise AttributeError(
                     "{!r} object has no attribute {}".format(
-                        self.__class__.__name__,
-                        name))
+                        self.__class__.__name__, name
+                    )
+                )
 
     def setup_data(self, data):
         """
@@ -175,16 +186,14 @@ class facet:
             on which they will be plotted.
         """
         msg = "{} should implement this method."
-        raise NotImplementedError(
-            msg.format(self.__class.__name__))
+        raise NotImplementedError(msg.format(self.__class.__name__))
 
     def compute_layout(self, data):
         """
         Compute layout
         """
         msg = "{} should implement this method."
-        raise NotImplementedError(
-            msg.format(self.__class.__name__))
+        raise NotImplementedError(msg.format(self.__class.__name__))
 
     def finish_data(self, data, layout):
         """
@@ -220,15 +229,13 @@ class facet:
             data = layer.data
             match_id = match(data['PANEL'], _layout['PANEL'])
             if panel_scales_x:
-                x_vars = list(set(panel_scales_x[0].aesthetics) &
-                              set(data.columns))
+                x_vars = list(set(panel_scales_x[0].aesthetics) & set(data.columns))
                 # the scale index for each data point
                 SCALE_X = _layout['SCALE_X'].iloc[match_id].tolist()
                 panel_scales_x.train(data, x_vars, SCALE_X)
 
             if panel_scales_y:
-                y_vars = list(set(panel_scales_y[0].aesthetics) &
-                              set(data.columns))
+                y_vars = list(set(panel_scales_y[0].aesthetics) & set(data.columns))
                 # the scale index for each data point
                 SCALE_Y = _layout['SCALE_Y'].iloc[match_id].tolist()
                 panel_scales_y.train(data, y_vars, SCALE_Y)
@@ -361,8 +368,7 @@ class facet:
             side1, side2 = 't', 'b'
 
         try:
-            margin = self.theme.themeables.property(
-                strip_name, 'margin')
+            margin = self.theme.themeables.property(strip_name, 'margin')
         except KeyError:
             m1, m2 = 3, 3
         else:
@@ -413,7 +419,7 @@ class facet:
         # margins on either side of the strip text
         m1, m2 = self.inner_strip_margins(location)
         # Using figure.dpi value here does not workout well!
-        breadth = (linespacing*fontsize) * num_lines / dpi
+        breadth = (linespacing * fontsize) * num_lines / dpi
         breadth = breadth + (m1 + m2) / dpi
         return breadth
 
@@ -431,17 +437,18 @@ class facet:
         num_lines = len(text_lines)
         get_property = self.theme.themeables.property
         bbox = ax.get_window_extent().transformed(
-            self.figure.dpi_scale_trans.inverted())
+            self.figure.dpi_scale_trans.inverted()
+        )
         ax_width, ax_height = bbox.width, bbox.height  # in inches
         strip_size = self.strip_size(location, num_lines)
         m1, m2 = self.inner_strip_margins(location)
-        m1, m2 = m1/dpi, m2/dpi
+        m1, m2 = m1 / dpi, m2 / dpi
         margin = 0  # default
 
         if location == 'right':
             box_x = 1
             box_y = 0
-            box_width = strip_size/ax_width
+            box_width = strip_size / ax_width
             box_height = 1
             # y & height properties of the background slide and
             # shrink the strip vertically. The y margin slides
@@ -452,17 +459,17 @@ class facet:
                 box_height = get_property('strip_background_y', 'height')
             with suppress(KeyError):
                 margin = get_property('strip_margin_y')
-            x = 1 + (strip_size-m2+m1) / (2*ax_width)
-            y = (2*box_y+box_height)/2
+            x = 1 + (strip_size - m2 + m1) / (2 * ax_width)
+            y = (2 * box_y + box_height) / 2
             # margin adjustment
-            hslide = 1 + margin*strip_size/ax_width
+            hslide = 1 + margin * strip_size / ax_width
             x *= hslide
             box_x *= hslide
         else:
             box_x = 0
             box_y = 1
             box_width = 1
-            box_height = strip_size/ax_height
+            box_height = strip_size / ax_height
             # x & width properties of the background slide and
             # shrink the strip horizontally. The y margin slides
             # it vertically.
@@ -472,17 +479,21 @@ class facet:
                 box_width = get_property('strip_background_x', 'width')
             with suppress(KeyError):
                 margin = get_property('strip_margin_x')
-            x = (2*box_x+box_width)/2
-            y = 1 + (strip_size-m1+m2)/(2*ax_height)
+            x = (2 * box_x + box_width) / 2
+            y = 1 + (strip_size - m1 + m2) / (2 * ax_height)
             # margin adjustment
-            vslide = 1 + margin*strip_size/ax_height
+            vslide = 1 + margin * strip_size / ax_height
             y *= vslide
             box_y *= vslide
 
         dimensions = types.SimpleNamespace(
-            x=x, y=y, box_x=box_x, box_y=box_y,
+            x=x,
+            y=y,
+            box_x=box_x,
+            box_y=box_y,
             box_width=box_width,
-            box_height=box_height)
+            box_height=box_height,
+        )
         return dimensions
 
     def draw_strip_text(self, text_lines, location, ax):
@@ -499,29 +510,39 @@ class facet:
             rotation = 0
             label = '\n'.join(text_lines)
 
-        rect = mpatch.FancyBboxPatch((dim.box_x, dim.box_y),
-                                     width=dim.box_width,
-                                     height=dim.box_height,
-                                     facecolor='lightgrey',
-                                     edgecolor='None',
-                                     transform=ax.transAxes,
-                                     zorder=2.2,  # > ax line & boundary
-                                     boxstyle='square, pad=0',
-                                     clip_on=False)
+        rect = mpatch.FancyBboxPatch(
+            (dim.box_x, dim.box_y),
+            width=dim.box_width,
+            height=dim.box_height,
+            facecolor='lightgrey',
+            edgecolor='None',
+            transform=ax.transAxes,
+            zorder=2.2,  # > ax line & boundary
+            boxstyle='square, pad=0',
+            clip_on=False,
+        )
 
-        text = mtext.Text(dim.x, dim.y, label,
-                          rotation=rotation,
-                          verticalalignment='center',
-                          horizontalalignment='center',
-                          transform=ax.transAxes,
-                          zorder=3.3,  # > rect
-                          clip_on=False)
+        text = mtext.Text(
+            dim.x,
+            dim.y,
+            label,
+            rotation=rotation,
+            verticalalignment='center',
+            horizontalalignment='center',
+            transform=ax.transAxes,
+            zorder=3.3,  # > rect
+            clip_on=False,
+        )
 
         ax.add_artist(rect)
         ax.add_artist(text)
 
-        for key in ('strip_text_x', 'strip_text_y',
-                    'strip_background_x', 'strip_background_y'):
+        for key in (
+            'strip_text_x',
+            'strip_text_y',
+            'strip_background_x',
+            'strip_background_y',
+        ):
             if key not in themeable:
                 themeable[key] = []
 
@@ -545,18 +566,16 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         return pd.DataFrame()
 
     # For each layer, compute the facet values
-    values = [eval_facet_vars(df, vars, environment)
-              for df in data if df is not None]
+    values = [eval_facet_vars(df, vars, environment) for df in data if df is not None]
 
     # Form the base data frame which contains all combinations
     # of facetting variables that appear in the data
     has_all = [x.shape[1] == len(vars) for x in values]
     if not any(has_all):
         raise PlotnineError(
-            "At least one layer must contain all variables " +
-            "used for facetting")
-    base = pd.concat([x for i, x in enumerate(values) if has_all[i]],
-                     axis=0)
+            "At least one layer must contain all variables " + "used for facetting"
+        )
+    base = pd.concat([x for i, x in enumerate(values) if has_all[i]], axis=0)
     base = base.drop_duplicates()
 
     if not drop:
@@ -576,8 +595,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         base = base.append(cross_join(old, new), ignore_index=True)
 
     if len(base) == 0:
-        raise PlotnineError(
-            "Faceting variables must have at least one value")
+        raise PlotnineError("Faceting variables must have at least one value")
 
     base = base.reset_index(drop=True)
     return base
@@ -600,10 +618,18 @@ def unique_combs(df):
 
 
 def layout_null():
-    layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
-                           'SCALE_X': 1, 'SCALE_Y': 1,
-                           'AXIS_X': True, 'AXIS_Y': True},
-                          index=[0])
+    layout = pd.DataFrame(
+        {
+            'PANEL': 1,
+            'ROW': 1,
+            'COL': 1,
+            'SCALE_X': 1,
+            'SCALE_Y': 1,
+            'AXIS_X': True,
+            'AXIS_Y': True,
+        },
+        index=[0],
+    )
     return layout
 
 
@@ -625,8 +651,7 @@ def add_missing_facets(data, layout, vars, facet_vals):
         data = data.iloc[data_rep, :].reset_index(drop=True)
         facet_vals = facet_vals.iloc[data_rep, :].reset_index(drop=True)
         to_add = to_add.iloc[facet_rep, :].reset_index(drop=True)
-        facet_vals = pd.concat([facet_vals, to_add],
-                               axis=1, ignore_index=False)
+        facet_vals = pd.concat([facet_vals, to_add], axis=1, ignore_index=False)
 
     return data, facet_vals
 

@@ -60,16 +60,30 @@ class geom_text(geom):
     matplotlib.text.Text
 
     """
-    DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
-                   'size': 11, 'lineheight': 1.2}
+
+    DEFAULT_AES = {
+        'alpha': 1,
+        'angle': 0,
+        'color': 'black',
+        'size': 11,
+        'lineheight': 1.2,
+    }
     REQUIRED_AES = {'label', 'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'parse': False,
-                      'family': None, 'fontweight': 'normal',
-                      'fontstyle': 'normal', 'ha': 'center',
-                      'va': 'center', 'nudge_x': 0, 'nudge_y': 0,
-                      'adjust_text': None,
-                      'format_string': None}
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'parse': False,
+        'family': None,
+        'fontweight': 'normal',
+        'fontstyle': 'normal',
+        'ha': 'center',
+        'va': 'center',
+        'nudge_x': 0,
+        'nudge_y': 0,
+        'adjust_text': None,
+        'format_string': None,
+    }
 
     def __init__(self, mapping=None, data=None, **kwargs):
         nudge_kwargs = {}
@@ -83,8 +97,7 @@ class geom_text(geom):
                 kwargs['position'] = position_nudge(**nudge_kwargs)
         elif not HAS_ADJUST_TEXT:
             raise PlotnineError(
-                "To use adjust_text you must install the adjustText "
-                "package."
+                "To use adjust_text you must install the adjustText " "package."
             )
 
         # Accomodate for the old names
@@ -145,20 +158,17 @@ class geom_text(geom):
 
             if params['boxstyle'] in ('round', 'round4'):
                 boxstyle = '{},pad={},rounding_size={}'.format(
-                    params['boxstyle'],
-                    params['label_padding'],
-                    params['label_r'])
+                    params['boxstyle'], params['label_padding'], params['label_r']
+                )
             elif params['boxstyle'] in ('roundtooth', 'sawtooth'):
                 boxstyle = '{},pad={},tooth_size={}'.format(
-                    params['boxstyle'],
-                    params['label_padding'],
-                    params['tooth_size'])
+                    params['boxstyle'], params['label_padding'], params['tooth_size']
+                )
             else:
                 boxstyle = '{},pad={}'.format(
-                    params['boxstyle'],
-                    params['label_padding'])
-            bbox = {'linewidth': params['label_size'],
-                    'boxstyle': boxstyle}
+                    params['boxstyle'], params['label_padding']
+                )
+            bbox = {'linewidth': params['label_size'], 'boxstyle': boxstyle}
         else:
             bbox = {}
 
@@ -189,15 +199,17 @@ class geom_text(geom):
         -------
         out : DrawingArea
         """
-        key = Text(x=0.5*da.width,
-                   y=0.5*da.height,
-                   text='a',
-                   alpha=data['alpha'],
-                   size=data['size'],
-                   family=lyr.geom.params['family'],
-                   color=data['color'],
-                   rotation=data['angle'],
-                   horizontalalignment='center',
-                   verticalalignment='center')
+        key = Text(
+            x=0.5 * da.width,
+            y=0.5 * da.height,
+            text='a',
+            alpha=data['alpha'],
+            size=data['size'],
+            family=lyr.geom.params['family'],
+            color=data['color'],
+            rotation=data['angle'],
+            horizontalalignment='center',
+            verticalalignment='center',
+        )
         da.add_artist(key)
         return da

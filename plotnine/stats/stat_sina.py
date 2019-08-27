@@ -84,21 +84,31 @@ class stat_sina(stat):
 
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_AES = {'xend': 'stat(scaled)'}
-    DEFAULT_PARAMS = {'geom': 'sina', 'position': 'dodge',
-                      'na_rm': False, 'binwidth': None, 'bins': None,
-                      'method': 'density',
-                      'bw': 'normal_reference',
-                      'maxwidth': None, 'adjust': 1, 'bin_limit': 1,
-                      'random_state': None, 'scale': 'area'
-                      }
+    DEFAULT_PARAMS = {
+        'geom': 'sina',
+        'position': 'dodge',
+        'na_rm': False,
+        'binwidth': None,
+        'bins': None,
+        'method': 'density',
+        'bw': 'normal_reference',
+        'maxwidth': None,
+        'adjust': 1,
+        'bin_limit': 1,
+        'random_state': None,
+        'scale': 'area',
+    }
     CREATES = {'scaled'}
 
     def setup_data(self, data):
-        if (array_kind.continuous(data['x']) and
-                not has_groups(data) and
-                (data['x'] != data.loc['x', 0]).any()):
-            raise TypeError("Continuous x aesthetic -- did you forget "
-                            "aes(group=...)?")
+        if (
+            array_kind.continuous(data['x'])
+            and not has_groups(data)
+            and (data['x'] != data.loc['x', 0]).any()
+        ):
+            raise TypeError(
+                "Continuous x aesthetic -- did you forget " "aes(group=...)?"
+            )
         return data
 
     def setup_params(self, data):
@@ -131,13 +141,11 @@ class stat_sina(stat):
 
         if params['binwidth'] is not None:
             params['bins'] = breaks_from_binwidth(
-                np.array(scales.y.dimension()) + 1e-8,
-                params['binwidth']
+                np.array(scales.y.dimension()) + 1e-8, params['binwidth']
             )
         else:
             params['bins'] = breaks_from_bins(
-                np.array(scales.y.dimension()) + 1e-8,
-                params['bins']
+                np.array(scales.y.dimension()) + 1e-8, params['bins']
             )
 
         data = super(cls, stat_sina).compute_panel(data, scales, **params)
@@ -146,23 +154,22 @@ class stat_sina(stat):
             return data
 
         if params['scale'] == 'area':
-            data['sinawidth'] = data['density']/data['density'].max()
+            data['sinawidth'] = data['density'] / data['density'].max()
         elif params['scale'] == 'count':
-            data['sinawidth'] = (data['density'] /
-                                 data['density'].max() *
-                                 data['n']/data['n'].max())
+            data['sinawidth'] = (
+                data['density'] / data['density'].max() * data['n'] / data['n'].max()
+            )
         elif params['scale'] == 'width':
             data['sinawidth'] = data['scaled']
         else:
             msg = "Unknown scale value '{}'"
             raise PlotnineError(msg.format(params['scale']))
 
-        data['xmin'] = data['x'] - maxwidth/2
-        data['xmax'] = data['x'] + maxwidth/2
-        data['x_diff'] = (random_state.uniform(-1, 1, len(data)) *
-                          maxwidth *
-                          data['sinawidth']/2
-                          )
+        data['xmin'] = data['x'] - maxwidth / 2
+        data['xmax'] = data['x'] + maxwidth / 2
+        data['x_diff'] = (
+            random_state.uniform(-1, 1, len(data)) * maxwidth * data['sinawidth'] / 2
+        )
         data['width'] = maxwidth
 
         # jitter y values if the input is input is integer
@@ -188,20 +195,19 @@ class stat_sina(stat):
             # density kernel estimation
             range_y = data['y'].min(), data['y'].max()
             dens = compute_density(data['y'], weight, range_y, **params)
-            densf = interp1d(dens['x'], dens['density'],
-                             bounds_error=False, fill_value='extrapolate')
+            densf = interp1d(
+                dens['x'], dens['density'], bounds_error=False, fill_value='extrapolate'
+            )
             data['density'] = densf(data['y'])
-            data['scaled'] = data['density']/dens['density'].max()
+            data['scaled'] = data['density'] / dens['density'].max()
         else:
             # bin based estimation
-            bin_index = pd.cut(
-                data['y'], bins, include_lowest=True, labels=False)
-            data['density'] = (pd.Series(bin_index)
-                               .groupby(bin_index)
-                               .apply(len)[bin_index]
-                               .values)
+            bin_index = pd.cut(data['y'], bins, include_lowest=True, labels=False)
+            data['density'] = (
+                pd.Series(bin_index).groupby(bin_index).apply(len)[bin_index].values
+            )
             data.loc[data['density'] <= bin_limit, 'density'] = 0
-            data['scaled'] = data['density']/data['density'].max()
+            data['scaled'] = data['density'] / data['density'].max()
 
         # Compute width if x has multiple values
         if len(data['x'].unique()) > 1:

@@ -34,27 +34,43 @@ class annotation_stripes(annotate):
         They include; *alpha*, *color*, *linetype*, and *size*.
     """
 
-    def __init__(self, fill=('#AAAAAA', '#CCCCCC'), fill_range=False,
-                 direction='vertical', extend=(0, 1), **kwargs):
+    def __init__(
+        self,
+        fill=('#AAAAAA', '#CCCCCC'),
+        fill_range=False,
+        direction='vertical',
+        extend=(0, 1),
+        **kwargs
+    ):
         allowed = ('vertical', 'horizontal')
         if direction not in allowed:
-            raise ValueError(
-                "direction must be one of {}".format(allowed))
+            raise ValueError("direction must be one of {}".format(allowed))
         self._annotation_geom = _geom_stripes(
-            fill=fill, fill_range=fill_range, extend=extend,
-            direction=direction, **kwargs)
+            fill=fill,
+            fill_range=fill_range,
+            extend=extend,
+            direction=direction,
+            **kwargs
+        )
 
 
 class _geom_stripes(geom):
 
     DEFAULT_AES = {}
     REQUIRED_AES = set()
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'color': None,
-                      'fill': ('#AAAAAA', '#CCCCCC'),
-                      'linetype': 'solid', 'size': 1, 'alpha': 0.5,
-                      'direction': 'vertical', 'extend': (0, 1),
-                      'fill_range': False}
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'color': None,
+        'fill': ('#AAAAAA', '#CCCCCC'),
+        'linetype': 'solid',
+        'size': 1,
+        'alpha': 0.5,
+        'direction': 'vertical',
+        'extend': (0, 1),
+        'fill_range': False,
+    }
     legend_geom = "polygon"
 
     @staticmethod
@@ -83,11 +99,10 @@ class _geom_stripes(geom):
         equal_spaces = np.all(diff == step)
         if not equal_spaces:
             raise ValueError(
-                "The major breaks are not equally spaced. "
-                "We cannot create stripes."
+                "The major breaks are not equally spaced. " "We cannot create stripes."
             )
 
-        deltas = np.array([step/2] * n_stripes)
+        deltas = np.array([step / 2] * n_stripes)
         xmin = breaks - deltas
         xmax = breaks + deltas
         if fill_range:
@@ -109,16 +124,18 @@ class _geom_stripes(geom):
         if direction != 'vertical':
             xmin, xmax, ymin, ymax = ymin, ymax, xmin, xmax
 
-        data = pd.DataFrame({
-            'xmin': xmin,
-            'xmax': xmax,
-            'ymin': ymin,
-            'ymax': ymax,
-            'fill': fill,
-            'alpha': params['alpha'],
-            'color': params['color'],
-            'linetype': params['linetype'],
-            'size': params['size']
-        })
+        data = pd.DataFrame(
+            {
+                'xmin': xmin,
+                'xmax': xmax,
+                'ymin': ymin,
+                'ymax': ymax,
+                'fill': fill,
+                'alpha': params['alpha'],
+                'color': params['color'],
+                'linetype': params['linetype'],
+                'size': params['size'],
+            }
+        )
 
         return geom_rect.draw_group(data, panel_params, coord, ax, **params)

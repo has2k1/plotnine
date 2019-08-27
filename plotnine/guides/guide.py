@@ -56,6 +56,7 @@ class guide(metaclass=Registry):
     -----
     At the moment not all parameters have been fully implemented.
     """
+
     __base__ = True
 
     # title
@@ -111,8 +112,7 @@ class guide(metaclass=Registry):
         valid_locations = {'top', 'bottom', 'left', 'right'}
         horizontal_locations = {'left', 'right'}
         get_property = self.theme.themeables.property
-        margin_location_lookup = {'t': 'b', 'b': 't',
-                                  'l': 'r', 'r': 'l'}
+        margin_location_lookup = {'t': 'b', 'b': 't', 'l': 'r', 'r': 'l'}
 
         # label position
         self.label_position = self.label_position or 'right'
@@ -122,8 +122,7 @@ class guide(metaclass=Registry):
 
         # label margin
         # legend_text_legend or legend_text_colorbar
-        name = 'legend_text_{}'.format(
-            self.__class__.__name__.split('_')[-1])
+        name = 'legend_text_{}'.format(self.__class__.__name__.split('_')[-1])
         loc = margin_location_lookup[self.label_position[0]]
         try:
             margin = get_property(name, 'margin')
@@ -183,14 +182,12 @@ class guide(metaclass=Registry):
 
         # legend_entry_spacing
         try:
-            self._legend_entry_spacing_x = get_property(
-                'legend_entry_spacing_x')
+            self._legend_entry_spacing_x = get_property('legend_entry_spacing_x')
         except KeyError:
             self._legend_entry_spacing_x = 5
 
         try:
-            self._legend_entry_spacing_y = get_property(
-                'legend_entry_spacing_y')
+            self._legend_entry_spacing_y = get_property('legend_entry_spacing_y')
         except KeyError:
             self._legend_entry_spacing_y = 2
 
@@ -213,9 +210,11 @@ class guide(metaclass=Registry):
         """
         l = layer
         legend_ae = set(self.key.columns) - {'label'}
-        all_ae = (l.mapping.keys() |
-                  (plot.mapping if l.inherit_aes else set()) |
-                  l.stat.DEFAULT_AES.keys())
+        all_ae = (
+            l.mapping.keys()
+            | (plot.mapping if l.inherit_aes else set())
+            | l.stat.DEFAULT_AES.keys()
+        )
         geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.keys()
         matched = all_ae & geom_ae & legend_ae
         matched = list(matched - set(l.geom.aes_params))

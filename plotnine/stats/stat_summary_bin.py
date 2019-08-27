@@ -86,12 +86,21 @@ class stat_summary_bin(stat):
     """
 
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
-                      'na_rm': False,
-                      'bins': 30, 'breaks': None, 'binwidth': None,
-                      'boundary': None, 'fun_data': None, 'fun_y': None,
-                      'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': None, 'random_state': None}
+    DEFAULT_PARAMS = {
+        'geom': 'pointrange',
+        'position': 'identity',
+        'na_rm': False,
+        'bins': 30,
+        'breaks': None,
+        'binwidth': None,
+        'boundary': None,
+        'fun_data': None,
+        'fun_y': None,
+        'fun_ymin': None,
+        'fun_ymax': None,
+        'fun_args': None,
+        'random_state': None,
+    }
     CREATES = {'bin', 'width', 'ymin', 'ymax'}
 
     def setup_params(self, data):
@@ -121,13 +130,16 @@ class stat_summary_bin(stat):
         binwidth = params['binwidth']
         boundary = params['boundary']
 
-        func = make_summary_fun(params['fun_data'], params['fun_y'],
-                                params['fun_ymin'], params['fun_ymax'],
-                                params['fun_args'])
+        func = make_summary_fun(
+            params['fun_data'],
+            params['fun_y'],
+            params['fun_ymin'],
+            params['fun_ymax'],
+            params['fun_args'],
+        )
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
-        data['bin'] = pd.cut(data['x'], bins=breaks, labels=False,
-                             include_lowest=True)
+        data['bin'] = pd.cut(data['x'], bins=breaks, labels=False, include_lowest=True)
 
         def func_wrapper(data):
             """
@@ -146,6 +158,6 @@ class stat_summary_bin(stat):
         if isinstance(scales.x, scale_discrete):
             out['width'] = 0.9
         else:
-            out['width'] = np.diff(breaks)[bins-1]
+            out['width'] = np.diff(breaks)[bins - 1]
 
         return out

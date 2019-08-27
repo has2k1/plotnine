@@ -27,8 +27,9 @@ class element_line:
         :class:`matplotlib.lines.Line2D`.
     """
 
-    def __init__(self, color=None, size=None, linetype=None,
-                 lineend=None, colour=None, **kwargs):
+    def __init__(
+        self, color=None, size=None, linetype=None, lineend=None, colour=None, **kwargs
+    ):
         color = color if color else colour
         d = {'visible': True}
         if color:
@@ -70,8 +71,9 @@ class element_rect:
         :class:`matplotlib.patches.FancyBboxPatch`.
     """
 
-    def __init__(self, fill=None, color=None, size=None,
-                 linetype=None, colour=None, **kwargs):
+    def __init__(
+        self, fill=None, color=None, size=None, linetype=None, colour=None, **kwargs
+    ):
 
         color = color if color else colour
         d = {'visible': True}
@@ -133,10 +135,21 @@ class element_text:
     **Matplotlib** based API described above.
     """
 
-    def __init__(self, family=None, style=None, weight=None,
-                 color=None, size=None, ha=None, va=None,
-                 rotation=None, linespacing=None, backgroundcolor=None,
-                 margin=None, **kwargs):
+    def __init__(
+        self,
+        family=None,
+        style=None,
+        weight=None,
+        color=None,
+        size=None,
+        ha=None,
+        va=None,
+        rotation=None,
+        linespacing=None,
+        backgroundcolor=None,
+        margin=None,
+        **kwargs
+    ):
         d = {'visible': True}
 
         # ggplot2 translation
@@ -167,9 +180,19 @@ class element_text:
 
         # margin.update(kwargs.get('margin', {}))
         # Use the parameters that have been set
-        names = ('backgroundcolor', 'color', 'family', 'ha',
-                 'linespacing', 'rotation', 'size', 'style',
-                 'va', 'weight', 'margin')
+        names = (
+            'backgroundcolor',
+            'color',
+            'family',
+            'ha',
+            'linespacing',
+            'rotation',
+            'size',
+            'style',
+            'va',
+            'weight',
+            'margin',
+        )
         variables = locals()
         for name in names:
             if variables[name] is not None:
@@ -205,6 +228,7 @@ class element_blank:
     """
     Theme element: Blank
     """
+
     def __init__(self):
         self.properties = {}
 
@@ -229,12 +253,12 @@ class Margin(dict):
         value = self[key]
 
         functions = {
-            'pt-lines': lambda x: x/size,
-            'pt-in': lambda x: x/dpi,
-            'lines-pt': lambda x: x*size,
-            'lines-in': lambda x: x*size/dpi,
-            'in-pt': lambda x: x*dpi,
-            'in-lines': lambda x: x*dpi/size
+            'pt-lines': lambda x: x / size,
+            'pt-in': lambda x: x / dpi,
+            'lines-pt': lambda x: x * size,
+            'lines-in': lambda x: x * size / dpi,
+            'in-pt': lambda x: x * dpi,
+            'in-lines': lambda x: x * dpi / size,
         }
 
         if self['units'] != units:

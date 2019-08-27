@@ -8,18 +8,21 @@ _aes['fill'] = 'white'
 
 
 _params = geom_text.DEFAULT_PARAMS.copy()
-_params.update({
-    # boxstyle is one of
-    #   cirle, larrow, rarrow, round, round4,
-    #   roundtooth, sawtooth, square
-    #
-    # Documentation at matplotlib.patches.BoxStyle
-    'boxstyle': 'round',
-    'boxcolor': None,
-    'label_padding': 0.25,
-    'label_r': 0.25,
-    'label_size': 0.7,
-    'tooth_size': None})
+_params.update(
+    {
+        # boxstyle is one of
+        #   cirle, larrow, rarrow, round, round4,
+        #   roundtooth, sawtooth, square
+        #
+        # Documentation at matplotlib.patches.BoxStyle
+        'boxstyle': 'round',
+        'boxcolor': None,
+        'label_padding': 0.25,
+        'label_r': 0.25,
+        'label_size': 0.7,
+        'tooth_size': None,
+    }
+)
 
 
 @document
@@ -64,6 +67,7 @@ class geom_label(geom_text):
         parameters. :class:`matplotlib.patches.BoxStyle` for the
         parameters that affect the boxstyle.
     """
+
     DEFAULT_AES = _aes
     DEFAULT_PARAMS = _params
 
@@ -83,12 +87,14 @@ class geom_label(geom_text):
         out : DrawingArea
         """
         if data['fill']:
-            rect = Rectangle((0, 0),
-                             width=da.width,
-                             height=da.height,
-                             linewidth=0,
-                             alpha=data['alpha'],
-                             facecolor=data['fill'],
-                             capstyle='projecting')
+            rect = Rectangle(
+                (0, 0),
+                width=da.width,
+                height=da.height,
+                linewidth=0,
+                alpha=data['alpha'],
+                facecolor=data['fill'],
+                capstyle='projecting',
+            )
             da.add_artist(rect)
         return geom_text.draw_legend(data, da, lyr)

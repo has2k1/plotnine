@@ -49,9 +49,14 @@ class stat_quantile(stat):
     """
 
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'quantile', 'position': 'identity',
-                      'na_rm': False, 'quantiles': (0.25, 0.5, 0.75),
-                      'formula': 'y ~ x', 'method_args': {}}
+    DEFAULT_PARAMS = {
+        'geom': 'quantile',
+        'position': 'identity',
+        'na_rm': False,
+        'quantiles': (0.25, 0.5, 0.75),
+        'formula': 'y ~ x',
+        'method_args': {},
+    }
     CREATES = {'quantile', 'group'}
 
     def setup_params(self, data):
@@ -68,17 +73,19 @@ class stat_quantile(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        res = [quant_pred(q, data, **params)
-               for q in params['quantiles']]
+        res = [quant_pred(q, data, **params) for q in params['quantiles']]
         return pd.concat(res, axis=0, ignore_index=True)
 
 
 def quant_pred(q, data, **params):
     mod = smf.quantreg(params['formula'], data)
     reg_res = mod.fit(q=q, **params['method_args'])
-    out = pd.DataFrame({
-        'x': [data['x'].min(), data['x'].max()],
-        'quantile': q,
-        'group': '{}-{}'.format(data['group'].iloc[0], q)})
+    out = pd.DataFrame(
+        {
+            'x': [data['x'].min(), data['x'].max()],
+            'quantile': q,
+            'group': '{}-{}'.format(data['group'].iloc[0], q),
+        }
+    )
     out['y'] = reg_res.predict(out)
     return out

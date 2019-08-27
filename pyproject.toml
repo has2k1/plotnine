@@ -1,0 +1,17 @@
+[tool.black]
+skip-string-normalization = true
+
+exclude = '''
+
+(
+  /(
+      doc         # exclude a few common directories in the
+    | \.git          # root of the project
+    | licenses
+    | \.pytest*
+    | requirements
+    | tools
+  )/
+   | versioneer.py  # a file at the root
+)
+'''

@@ -5,6 +5,13 @@ from .labelling import label_value, label_both, label_context
 from .labelling import labeller, as_labeller
 
 
-__all__ = ['facet_grid', 'facet_null', 'facet_wrap',
-           'label_value', 'label_both', 'label_context',
-           'labeller', 'as_labeller']
+__all__ = [
+    'facet_grid',
+    'facet_null',
+    'facet_wrap',
+    'label_value',
+    'label_both',
+    'label_context',
+    'labeller',
+    'as_labeller',
+]

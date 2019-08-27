@@ -49,10 +49,15 @@ class stat_bin_2d(stat):
 
     """
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
-                      'na_rm': False,
-                      'bins': 30, 'breaks': None, 'binwidth': None,
-                      'drop': True}
+    DEFAULT_PARAMS = {
+        'geom': 'rect',
+        'position': 'identity',
+        'na_rm': False,
+        'bins': 30,
+        'breaks': None,
+        'binwidth': None,
+        'drop': True,
+    }
     DEFAULT_AES = {'fill': 'stat(count)', 'weight': None}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density'}
 
@@ -85,10 +90,10 @@ class stat_bin_2d(stat):
         y = np.append(data['y'], range_y)
 
         # create the cutting parameters
-        xbreaks = fuzzybreaks(scales.x, breaks=breaks.x,
-                              binwidth=binwidth.x, bins=bins.x)
-        ybreaks = fuzzybreaks(scales.y, breaks.y,
-                              binwidth=binwidth.y, bins=bins.y)
+        xbreaks = fuzzybreaks(
+            scales.x, breaks=breaks.x, binwidth=binwidth.x, bins=bins.x
+        )
+        ybreaks = fuzzybreaks(scales.y, breaks.y, binwidth=binwidth.y, bins=bins.y)
         xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)
         ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)
 
@@ -101,16 +106,14 @@ class stat_bin_2d(stat):
         ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
         xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
 
-        df = pd.DataFrame({'xbins': xbins,
-                           'ybins': ybins,
-                           'weight': weight})
-        table = df.pivot_table(
-            'weight', index=['xbins', 'ybins'], aggfunc=np.sum)['weight']
+        df = pd.DataFrame({'xbins': xbins, 'ybins': ybins, 'weight': weight})
+        table = df.pivot_table('weight', index=['xbins', 'ybins'], aggfunc=np.sum)[
+            'weight'
+        ]
 
         # create rectangles
         rects = []
-        keys = itertools.product(range(len(ybreaks)-1),
-                                 range(len(xbreaks)-1))
+        keys = itertools.product(range(len(ybreaks) - 1), range(len(xbreaks) - 1))
         for (j, i) in keys:
             try:
                 cval = table[(i, j)]
@@ -119,14 +122,12 @@ class stat_bin_2d(stat):
                     continue
                 cval = 0
             # xmin, xmax, ymin, ymax, count
-            row = [xbreaks[i], xbreaks[i+1],
-                   ybreaks[j], ybreaks[j+1],
-                   cval]
+            row = [xbreaks[i], xbreaks[i + 1], ybreaks[j], ybreaks[j + 1], cval]
             rects.append(row)
 
-        new_data = pd.DataFrame(rects, columns=['xmin', 'xmax',
-                                                'ymin', 'ymax',
-                                                'count'])
+        new_data = pd.DataFrame(
+            rects, columns=['xmin', 'xmax', 'ymin', 'ymax', 'count']
+        )
         new_data['density'] = new_data['count'] / new_data['count'].sum()
         return new_data
 

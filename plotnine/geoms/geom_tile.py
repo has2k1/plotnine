@@ -18,11 +18,16 @@ class geom_tile(geom_rect):
     --------
     plotnine.geoms.geom_rect
     """
-    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
-                   'linetype': 'solid', 'size': 0.1}
+
+    DEFAULT_AES = {
+        'alpha': 1,
+        'color': None,
+        'fill': '#333333',
+        'linetype': 'solid',
+        'size': 0.1,
+    }
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'na_rm': False}
 
     def setup_data(self, data):
         try:

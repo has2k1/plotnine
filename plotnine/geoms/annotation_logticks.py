@@ -14,11 +14,20 @@ class _geom_logticks(geom_rug):
     """
     Internal geom implementing drawing of annotation_logticks
     """
+
     DEFAULT_AES = {}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'sides': 'bl', 'alpha': 1,
-                      'color': 'black', 'size': 0.5, 'linetype': 'solid',
-                      'lengths': (0.036, 0.0225, 0.012), 'base': 10}
+    DEFAULT_PARAMS = {
+        'stat': 'identity',
+        'position': 'identity',
+        'na_rm': False,
+        'sides': 'bl',
+        'alpha': 1,
+        'color': 'black',
+        'size': 0.5,
+        'linetype': 'solid',
+        'lengths': (0.036, 0.0225, 0.012),
+        'base': 10,
+    }
     legend_geom = 'path'
 
     @staticmethod
@@ -47,12 +56,12 @@ class _geom_logticks(geom_rug):
         out : tuple
             The bases (base_x, base_y) to use when generating the ticks.
         """
+
         def is_log(scale):
             if not hasattr(scale, 'trans'):
                 return False
             trans = scale.trans
-            return (trans.__class__.__name__.startswith('log') and
-                    hasattr(trans, 'base'))
+            return trans.__class__.__name__.startswith('log') and hasattr(trans, 'base')
 
         base_x, base_y = base, base
         x_scale = panel_params.x.scale
@@ -73,13 +82,15 @@ class _geom_logticks(geom_rug):
                 warnings.warn(
                     "annotation_logticks for x-axis which does not have "
                     "a log scale. The logticks may not make sense.",
-                    PlotnineWarning)
+                    PlotnineWarning,
+                )
             elif x_is_log and base_x != x_scale.trans.base:
                 warnings.warn(
                     "The x-axis is log transformed in base {} ,"
                     "but the annotation_logticks are computed in base {}"
                     "".format(base_x, x_scale.trans.base),
-                    PlotnineWarning)
+                    PlotnineWarning,
+                )
 
         if 'l' in sides or 'r' in sides:
             if base_y is None:
@@ -92,13 +103,15 @@ class _geom_logticks(geom_rug):
                 warnings.warn(
                     "annotation_logticks for y-axis which does not have "
                     "a log scale. The logticks may not make sense.",
-                    PlotnineWarning)
+                    PlotnineWarning,
+                )
             elif y_is_log and base_y != y_scale.trans.base:
                 warnings.warn(
                     "The y-axis is log transformed in base {} ,"
                     "but the annotation_logticks are computed in base {}"
                     "".format(base_y, y_scale.trans.base),
-                    PlotnineWarning)
+                    PlotnineWarning,
+                )
         return base_x, base_y
 
     @staticmethod
@@ -116,8 +129,9 @@ class _geom_logticks(geom_rug):
         out: tuple
             (major, middle, minor) tick locations
         """
+
         def _minor(x, mid_idx):
-            return np.hstack([x[1:mid_idx], x[mid_idx+1:-1]])
+            return np.hstack([x[1:mid_idx], x[mid_idx + 1 : -1]])
 
         # * Calculate the low and high powers,
         # * Generate for all intervals in along the low-high power range
@@ -126,10 +140,12 @@ class _geom_logticks(geom_rug):
         #   them to log space.
         low = np.floor(value_range[0])
         high = np.ceil(value_range[1])
-        arr = base ** np.arange(low, float(high+1))
+        arr = base ** np.arange(low, float(high + 1))
         n_ticks = base - 1
-        breaks = [log(np.linspace(b1, b2, n_ticks+1), base)
-                  for (b1, b2) in list(zip(arr, arr[1:]))]
+        breaks = [
+            log(np.linspace(b1, b2, n_ticks + 1), base)
+            for (b1, b2) in list(zip(arr, arr[1:]))
+        ]
 
         # Partition the breaks in the 3 groups
         major = np.array([x[0] for x in breaks] + [breaks[-1][-1]])
@@ -151,24 +167,27 @@ class _geom_logticks(geom_rug):
             'size': params['size'],
             'color': params['color'],
             'alpha': params['alpha'],
-            'linetype': params['linetype']
+            'linetype': params['linetype'],
         }
         base_x, base_y = self._check_log_scale(
-            params['base'], sides, panel_params, coord)
+            params['base'], sides, panel_params, coord
+        )
 
         if 'b' in sides or 't' in sides:
             tick_positions = self._calc_ticks(panel_params.x.range, base_x)
             for (positions, length) in zip(tick_positions, lengths):
                 data = pd.DataFrame(dict(x=positions, **_aesthetics))
-                super().draw_group(data, panel_params, coord, ax,
-                                   length=length, **params)
+                super().draw_group(
+                    data, panel_params, coord, ax, length=length, **params
+                )
 
         if 'l' in sides or 'r' in sides:
             tick_positions = self._calc_ticks(panel_params.y.range, base_y)
             for (positions, length) in zip(tick_positions, lengths):
                 data = pd.DataFrame(dict(y=positions, **_aesthetics))
-                super().draw_group(data, panel_params, coord, ax,
-                                   length=length, **params)
+                super().draw_group(
+                    data, panel_params, coord, ax, length=length, **params
+                )
 
 
 class annotation_logticks(annotate):
@@ -202,17 +221,27 @@ class annotation_logticks(annotate):
         the scale will be used.
     """
 
-    def __init__(self, sides='bl', alpha=1, color='black', size=0.5,
-                 linetype='solid', lengths=(0.036, 0.0225, 0.012),
-                 base=None):
+    def __init__(
+        self,
+        sides='bl',
+        alpha=1,
+        color='black',
+        size=0.5,
+        linetype='solid',
+        lengths=(0.036, 0.0225, 0.012),
+        base=None,
+    ):
         if len(lengths) != 3:
             raise ValueError(
-                "length for annotation_logticks must be a tuple of 3 floats")
+                "length for annotation_logticks must be a tuple of 3 floats"
+            )
 
-        self._annotation_geom = _geom_logticks(sides=sides,
-                                               alpha=alpha,
-                                               color=color,
-                                               size=size,
-                                               linetype=linetype,
-                                               lengths=lengths,
-                                               base=base)
+        self._annotation_geom = _geom_logticks(
+            sides=sides,
+            alpha=alpha,
+            color=color,
+            size=size,
+            linetype=linetype,
+            lengths=lengths,
+            base=base,
+        )

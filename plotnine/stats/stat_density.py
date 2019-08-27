@@ -89,12 +89,19 @@ class stat_density(stat):
 
     """
     REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',
-                      'na_rm': False,
-                      'kernel': 'gaussian', 'adjust': 1,
-                      'trim': False, 'n': 1024, 'gridsize': None,
-                      'bw': 'normal_reference', 'cut': 3,
-                      'clip': (-np.inf, np.inf)}
+    DEFAULT_PARAMS = {
+        'geom': 'density',
+        'position': 'stack',
+        'na_rm': False,
+        'kernel': 'gaussian',
+        'adjust': 1,
+        'trim': False,
+        'n': 1024,
+        'gridsize': None,
+        'bw': 'normal_reference',
+        'cut': 3,
+        'clip': (-np.inf, np.inf),
+    }
     DEFAULT_AES = {'y': 'stat(density)'}
     CREATES = {'density', 'count', 'scaled', 'n'}
 
@@ -108,16 +115,15 @@ class stat_density(stat):
             'gaussian': 'gau',
             'triangular': 'tri',
             'triweight': 'triw',
-            'uniform': 'uni'}
+            'uniform': 'uni',
+        }
 
         with suppress(KeyError):
             params['kernel'] = lookup[params['kernel'].lower()]
 
         if params['kernel'] not in lookup.values():
-            msg = ("kernel should be one of {}. "
-                   "You may use the abbreviations {}")
-            raise PlotnineError(msg.format(lookup.keys(),
-                                           lookup.values()))
+            msg = "kernel should be one of {}. " "You may use the abbreviations {}"
+            raise PlotnineError(msg.format(lookup.keys(), lookup.values()))
 
         return params
 
@@ -146,12 +152,15 @@ def compute_density(x, weight, range, **params):
     # if less than 3 points, spread density evenly
     # over points
     if n < 3:
-        return pd.DataFrame({
-            'x': x,
-            'density': weight / np.sum(weight),
-            'scaled': weight / np.max(weight),
-            'count': 1,
-            'n': n})
+        return pd.DataFrame(
+            {
+                'x': x,
+                'density': weight / np.sum(weight),
+                'scaled': weight / np.max(weight),
+                'count': 1,
+                'n': n,
+            }
+        )
 
     # kde is computed efficiently using fft. But the fft does
     # not support weights and is only available with the
@@ -171,7 +180,8 @@ def compute_density(x, weight, range, **params):
         adjust=params['adjust'],
         cut=params['cut'],
         gridsize=params['gridsize'],
-        clip=params['clip'])
+        clip=params['clip'],
+    )
 
     x2 = np.linspace(range[0], range[1], params['n'])
 
@@ -195,8 +205,12 @@ def compute_density(x, weight, range, **params):
     not_nan = ~np.isnan(y)
     x2 = x2[not_nan]
     y = y[not_nan]
-    return pd.DataFrame({'x': x2,
-                         'density': y,
-                         'scaled': y / np.max(y) if len(y) else [],
-                         'count': y * n,
-                         'n': n})
+    return pd.DataFrame(
+        {
+            'x': x2,
+            'density': y,
+            'scaled': y / np.max(y) if len(y) else [],
+            'count': y * n,
+            'n': n,
+        }
+    )

@@ -14,18 +14,19 @@ class geom_linerange(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black',
-                   'linetype': 'solid', 'size': 0.5}
+
+    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity', 'na_rm': False}
     legend_geom = 'path'
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
-        data.eval("""
+        data.eval(
+            """
                      xend = x
                      y = ymin
                      yend = ymax""",
-                  inplace=True)
+            inplace=True,
+        )
         geom_segment.draw_group(data, panel_params, coord, ax, **params)

@@ -21,10 +21,15 @@ class geom_bar(geom_rect):
     --------
     plotnine.geoms.geom_histogram
     """
+
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'xmin', 'xmax', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
-                      'na_rm': False, 'width': None}
+    DEFAULT_PARAMS = {
+        'stat': 'count',
+        'position': 'stack',
+        'na_rm': False,
+        'width': None,
+    }
 
     def setup_data(self, data):
         if 'width' not in data:
@@ -33,7 +38,7 @@ class geom_bar(geom_rect):
             else:
                 data['width'] = resolution(data['x'], False) * 0.9
 
-        bool_idx = (data['y'] < 0)
+        bool_idx = data['y'] < 0
 
         data['ymin'] = 0
         data.loc[bool_idx, 'ymin'] = data.loc[bool_idx, 'y']

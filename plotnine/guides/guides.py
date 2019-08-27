@@ -4,7 +4,7 @@ from contextlib import suppress
 
 import pandas as pd
 import numpy as np
-from matplotlib.offsetbox import (HPacker, VPacker)
+from matplotlib.offsetbox import HPacker, VPacker
 
 from ..utils import is_string, is_waive, Registry
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -39,14 +39,11 @@ class guides(dict):
     """
 
     def __init__(self, **kwargs):
-        aes_names = {'alpha', 'color', 'fill',
-                     'linetype', 'shape', 'size',
-                     'stroke'}
+        aes_names = {'alpha', 'color', 'fill', 'linetype', 'shape', 'size', 'stroke'}
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
-        dict.__init__(self, ((ae, kwargs[ae]) for ae in kwargs
-                             if ae in aes_names))
+        dict.__init__(self, ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names))
 
         # Determined from the theme when the guides are
         # getting built
@@ -180,11 +177,15 @@ class guides(dict):
                 # if guide is character, then find the guide object
                 guide = self.validate(guide)
                 # check the consistency of the guide and scale.
-                if (guide.available_aes != 'any' and
-                        scale.aesthetics[0] not in guide.available_aes):
+                if (
+                    guide.available_aes != 'any'
+                    and scale.aesthetics[0] not in guide.available_aes
+                ):
                     raise PlotnineError(
                         "{} cannot be used for {}".format(
-                            guide.__class__.__name__, scale.aesthetics))
+                            guide.__class__.__name__, scale.aesthetics
+                        )
+                    )
 
                 # title
                 if is_waive(guide.title):
@@ -194,10 +195,12 @@ class guides(dict):
                         try:
                             guide.title = str(plot.labels[output])
                         except KeyError:
-                            warn("Cannot generate legend for the {!r} "
-                                 "aesthetic. Make sure you have mapped a "
-                                 "variable to it".format(output),
-                                 PlotnineWarning)
+                            warn(
+                                "Cannot generate legend for the {!r} "
+                                "aesthetic. Make sure you have mapped a "
+                                "variable to it".format(output),
+                                PlotnineWarning,
+                            )
                             continue
 
                 # each guide object trains scale within the object,
@@ -218,8 +221,7 @@ class guides(dict):
             guide = Registry['guide_{}'.format(guide)]()
 
         if not isinstance(guide, guide_class):
-            raise PlotnineError(
-                "Unknown guide: {}".format(guide))
+            raise PlotnineError("Unknown guide: {}".format(guide))
         return guide
 
     def merge(self, gdefs):
@@ -239,9 +241,7 @@ class guides(dict):
         # group guide definitions by hash, and
         # reduce each group to a single guide
         # using the guide.merge method
-        df = pd.DataFrame({
-            'gdef': gdefs,
-            'hash': [g.hash for g in gdefs]})
+        df = pd.DataFrame({'gdef': gdefs, 'hash': [g.hash for g in gdefs]})
         grouped = df.groupby('hash', sort=False)
         gdefs = []
         for name, group in grouped:
@@ -311,9 +311,7 @@ class guides(dict):
             if gdef.order == 0:
                 gdef.order = 100
             elif not 0 <= gdef.order <= 99:
-                raise PlotnineError(
-                    "'order' for a guide should be "
-                    "between 0 and 99")
+                raise PlotnineError("'order' for a guide should be " "between 0 and 99")
         orders = [gdef.order for gdef in gdefs]
         idx = np.argsort(orders)
         gboxes = [gboxes[i] for i in idx]
@@ -325,9 +323,10 @@ class guides(dict):
             packer = HPacker
         else:
             raise PlotnineError(
-                "'legend_box' should be either "
-                "'vertical' or 'horizontal'")
+                "'legend_box' should be either " "'vertical' or 'horizontal'"
+            )
 
-        box = packer(children=gboxes, align=self.box_align,
-                     pad=self.box_margin, sep=self.spacing)
+        box = packer(
+            children=gboxes, align=self.box_align, pad=self.box_margin, sep=self.spacing
+        )
         return box

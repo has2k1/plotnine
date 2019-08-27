@@ -50,8 +50,7 @@ class facet_null(facet):
         try:
             aspect_ratio = theme.themeables.property('aspect_ratio')
         except KeyError:
-            aspect_ratio = self.coordinates.aspect(
-                    self.layout.panel_params[0])
+            aspect_ratio = self.coordinates.aspect(self.layout.panel_params[0])
 
         if aspect_ratio is None:
             return
@@ -62,9 +61,9 @@ class facet_null(facet):
         bottom = figure.subplotpars.bottom
         W, H = figure.get_size_inches()
 
-        w = (right-left)*W
-        h = w*aspect_ratio
-        H = h / (top-bottom)
+        w = (right - left) * W
+        h = w * aspect_ratio
+        H = h / (top - bottom)
 
         figure.set_figheight(H)
 

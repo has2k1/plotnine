@@ -21,6 +21,7 @@ class scale_stroke_continuous(scale_continuous):
         Should be between 0 and 1. Default is ``(1, 6)``
     {superclass_parameters}
     """
+
     _aesthetics = ['stroke']
 
     def __init__(self, range=(1, 6), **kwargs):
@@ -40,6 +41,7 @@ class scale_stroke_ordinal(scale_discrete):
         Should be between 0 and 1. Default is ``(1, 6)``
     {superclass_parameters}
     """
+
     _aesthetics = ['stroke']
 
     def __init__(self, range=(1, 6), **kwargs):
@@ -59,13 +61,11 @@ class scale_stroke_discrete(scale_stroke_ordinal):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['stroke']
 
     def __init__(self, **kwargs):
-        warn(
-            "Using stroke for a ordinal variable is not advised.",
-            PlotnineWarning
-        )
+        warn("Using stroke for a ordinal variable is not advised.", PlotnineWarning)
         super().__init__(self, **kwargs)
 
 

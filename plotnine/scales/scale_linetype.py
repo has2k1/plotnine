@@ -27,6 +27,7 @@ class scale_linetype(scale_discrete):
     If you need more custom linetypes, use
     :class:`~plotnine.scales.scale_linetype_manual`
     """
+
     _aesthetics = ['linetype']
     palette = staticmethod(manual_pal(linetypes))
 
@@ -40,20 +41,17 @@ class scale_linetype_ordinal(scale_linetype):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['linetype']
 
     def __init__(self, **kwargs):
-        warn(
-            "Using linetype for an ordinal variable is not advised.",
-            PlotnineWarning
-        )
+        warn("Using linetype for an ordinal variable is not advised.", PlotnineWarning)
         super().__init__(**kwargs)
 
 
 class scale_linetype_continuous(scale_continuous):
     def __init__(self):
-        raise PlotnineError(
-            "A continuous variable can not be mapped to linetype")
+        raise PlotnineError("A continuous variable can not be mapped to linetype")
 
 
 alias('scale_linetype_discrete', scale_linetype)

@@ -57,11 +57,25 @@ class stat_boxplot(stat):
 
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'weight'}
-    DEFAULT_PARAMS = {'geom': 'boxplot', 'position': 'dodge',
-                      'na_rm': False, 'coef': 1.5, 'width': None}
-    CREATES = {'lower', 'upper', 'middle', 'ymin', 'ymax',
-               'outliers', 'notchupper', 'notchlower', 'width',
-               'relvarwidth'}
+    DEFAULT_PARAMS = {
+        'geom': 'boxplot',
+        'position': 'dodge',
+        'na_rm': False,
+        'coef': 1.5,
+        'width': None,
+    }
+    CREATES = {
+        'lower',
+        'upper',
+        'middle',
+        'ymin',
+        'ymax',
+        'outliers',
+        'notchupper',
+        'notchlower',
+        'width',
+        'relvarwidth',
+    }
 
     def setup_params(self, data):
         if self.params['width'] is None:
@@ -88,15 +102,17 @@ class stat_boxplot(stat):
         else:
             x = np.mean([data['x'].min(), data['x'].max()])
 
-        d = {'ymin': res['whislo'],
-             'lower': res['q1'],
-             'middle': [res['med']],
-             'upper': res['q3'],
-             'ymax': res['whishi'],
-             'outliers': [res['fliers']],
-             'notchupper': res['med']+1.58*res['iqr']/np.sqrt(n),
-             'notchlower': res['med']-1.58*res['iqr']/np.sqrt(n),
-             'x': x,
-             'width': width,
-             'relvarwidth': np.sqrt(n)}
+        d = {
+            'ymin': res['whislo'],
+            'lower': res['q1'],
+            'middle': [res['med']],
+            'upper': res['q3'],
+            'ymax': res['whishi'],
+            'outliers': [res['fliers']],
+            'notchupper': res['med'] + 1.58 * res['iqr'] / np.sqrt(n),
+            'notchlower': res['med'] - 1.58 * res['iqr'] / np.sqrt(n),
+            'x': x,
+            'width': width,
+            'relvarwidth': np.sqrt(n),
+        }
         return pd.DataFrame(d)

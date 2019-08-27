@@ -128,19 +128,25 @@ class stat_smooth(stat):
     """
 
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
-                      'na_rm': False,
-                      'method': 'auto', 'se': True, 'n': 80,
-                      'fullrange': False, 'level': 0.95,
-                      'span': 0.75, 'method_args': {}}
+    DEFAULT_PARAMS = {
+        'geom': 'smooth',
+        'position': 'identity',
+        'na_rm': False,
+        'method': 'auto',
+        'se': True,
+        'n': 80,
+        'fullrange': False,
+        'level': 0.95,
+        'span': 0.75,
+        'method_args': {},
+    }
     CREATES = {'se', 'ymin', 'ymax'}
 
     def setup_data(self, data):
         """
         Overide to modify data before compute_layer is called
         """
-        data = data[np.isfinite(data['x']) &
-                    np.isfinite(data['y'])]
+        data = data[np.isfinite(data['x']) & np.isfinite(data['y'])]
         return data
 
     def setup_params(self, data):
@@ -152,6 +158,7 @@ class stat_smooth(stat):
             if max_group < 1000:
                 try:
                     from skmisc.loess import loess  # noqa: F401
+
                     params['method'] = 'loess'
                 except ImportError:
                     params['method'] = 'lowess'
@@ -165,7 +172,9 @@ class stat_smooth(stat):
                     "No 'window' specified in the method_args. "
                     "Using window = {}. "
                     "The same window is used for all groups or "
-                    "facets".format(window), PlotnineWarning)
+                    "facets".format(window),
+                    PlotnineWarning,
+                )
                 params['method_args']['window'] = window
 
         return params

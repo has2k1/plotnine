@@ -53,17 +53,32 @@ class geom_boxplot(geom):
         A multiplicative factor used to increase the size of the
         middle bar across the box.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
-                   'linetype': 'solid', 'shape': 'o', 'size': 0.5,
-                   'weight': 1}
+
+    DEFAULT_AES = {
+        'alpha': 1,
+        'color': '#333333',
+        'fill': 'white',
+        'linetype': 'solid',
+        'shape': 'o',
+        'size': 0.5,
+        'weight': 1,
+    }
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'boxplot', 'position': 'dodge2',
-                      'na_rm': False, 'width': None,
-                      'outlier_alpha': 1, 'outlier_color': None,
-                      'outlier_shape': 'o', 'outlier_size': 1.5,
-                      'outlier_stroke': 0.5, 'notch': False,
-                      'varwidth': False, 'notchwidth': 0.5,
-                      'fatten': 2}
+    DEFAULT_PARAMS = {
+        'stat': 'boxplot',
+        'position': 'dodge2',
+        'na_rm': False,
+        'width': None,
+        'outlier_alpha': 1,
+        'outlier_color': None,
+        'outlier_shape': 'o',
+        'outlier_size': 1.5,
+        'outlier_stroke': 0.5,
+        'notch': False,
+        'varwidth': False,
+        'notchwidth': 0.5,
+        'fatten': 2,
+    }
 
     def __init__(self, mapping=None, data=None, **kwargs):
         _position = kwargs.get('position', self.DEFAULT_PARAMS['position'])
@@ -75,8 +90,10 @@ class geom_boxplot(geom):
                 kwargs['position'] = position_dodge2(preserve='single')
             elif isinstance(_position, position):
                 if _position.params['preserve'] == 'total':
-                    warn("Cannot preserve total widths when varwidth=True",
-                         PlotnineWarning)
+                    warn(
+                        "Cannot preserve total widths when varwidth=True",
+                        PlotnineWarning,
+                    )
                     _position.params['preserve'] = 'single'
 
         super().__init__(mapping, data, **kwargs)
@@ -93,28 +110,26 @@ class geom_boxplot(geom):
             data['outliers'] = [[] for i in range(len(data))]
 
         # min and max outlier values
-        omin = [np.min(lst) if len(lst) else +np.inf
-                for lst in data['outliers']]
-        omax = [np.max(lst) if len(lst) else -np.inf
-                for lst in data['outliers']]
+        omin = [np.min(lst) if len(lst) else +np.inf for lst in data['outliers']]
+        omax = [np.max(lst) if len(lst) else -np.inf for lst in data['outliers']]
 
-        data['ymin_final'] = np.min(np.column_stack(
-            [data['ymin'], omin]), axis=1)
-        data['ymax_final'] = np.max(np.column_stack(
-            [data['ymax'], omax]), axis=1)
+        data['ymin_final'] = np.min(np.column_stack([data['ymin'], omin]), axis=1)
+        data['ymax_final'] = np.max(np.column_stack([data['ymax'], omax]), axis=1)
 
         # if varwidth not requested or not available, don't use it
-        if ('varwidth' not in self.params or
-                not self.params['varwidth'] or
-                'relvarwidth' not in data):
-            data['xmin'] = data['x'] - data['width']/2
-            data['xmax'] = data['x'] + data['width']/2
+        if (
+            'varwidth' not in self.params
+            or not self.params['varwidth']
+            or 'relvarwidth' not in data
+        ):
+            data['xmin'] = data['x'] - data['width'] / 2
+            data['xmax'] = data['x'] + data['width'] / 2
         else:
             # make relvarwidth relative to the size of the
             # largest group
             data['relvarwidth'] /= data['relvarwidth'].max()
-            data['xmin'] = data['x'] - data['relvarwidth']*data['width']/2
-            data['xmax'] = data['x'] + data['relvarwidth']*data['width']/2
+            data['xmin'] = data['x'] - data['relvarwidth'] * data['width'] / 2
+            data['xmax'] = data['x'] + data['relvarwidth'] * data['width'] / 2
             del data['relvarwidth']
 
         del data['width']
@@ -127,25 +142,33 @@ class geom_boxplot(geom):
             """Flatten list-likes"""
             return np.hstack(args)
 
-        common_columns = ['color', 'size', 'linetype',
-                          'fill', 'group', 'alpha', 'shape']
+        common_columns = [
+            'color',
+            'size',
+            'linetype',
+            'fill',
+            'group',
+            'alpha',
+            'shape',
+        ]
         # whiskers
-        whiskers = pd.DataFrame({
-            'x': flat(data['x'], data['x']),
-            'y': flat(data['upper'], data['lower']),
-            'yend': flat(data['ymax'], data['ymin']),
-            'alpha': 1
-        })
+        whiskers = pd.DataFrame(
+            {
+                'x': flat(data['x'], data['x']),
+                'y': flat(data['upper'], data['lower']),
+                'yend': flat(data['ymax'], data['ymin']),
+                'alpha': 1,
+            }
+        )
         whiskers['xend'] = whiskers['x']
         copy_missing_columns(whiskers, data[common_columns])
 
         # box
         box_columns = ['xmin', 'xmax', 'lower', 'middle', 'upper']
         box = data[common_columns + box_columns].copy()
-        box.rename(columns={'lower': 'ymin',
-                            'middle': 'y',
-                            'upper': 'ymax'},
-                   inplace=True)
+        box.rename(
+            columns={'lower': 'ymin', 'middle': 'y', 'upper': 'ymax'}, inplace=True
+        )
 
         # notch
         if params['notch']:
@@ -155,30 +178,30 @@ class geom_boxplot(geom):
         # outliers
         num_outliers = len(data['outliers'].iloc[0])
         if num_outliers:
+
             def outlier_value(param):
                 oparam = 'outlier_{}'.format(param)
                 if params[oparam] is not None:
                     return params[oparam]
                 return data[param].iloc[0]
 
-            outliers = pd.DataFrame({
-                'y': data['outliers'].iloc[0],
-                'x': make_iterable_ntimes(data['x'][0],
-                                          num_outliers),
-                'fill': [None]*num_outliers})
+            outliers = pd.DataFrame(
+                {
+                    'y': data['outliers'].iloc[0],
+                    'x': make_iterable_ntimes(data['x'][0], num_outliers),
+                    'fill': [None] * num_outliers,
+                }
+            )
             outliers['alpha'] = outlier_value('alpha')
             outliers['color'] = outlier_value('color')
             outliers['shape'] = outlier_value('shape')
             outliers['size'] = outlier_value('size')
             outliers['stroke'] = outlier_value('stroke')
-            geom_point.draw_group(outliers, panel_params,
-                                  coord, ax, **params)
+            geom_point.draw_group(outliers, panel_params, coord, ax, **params)
 
         # plot
-        geom_segment.draw_group(whiskers, panel_params,
-                                coord, ax, **params)
-        geom_crossbar.draw_group(box, panel_params,
-                                 coord, ax, **params)
+        geom_segment.draw_group(whiskers, panel_params, coord, ax, **params)
+        geom_crossbar.draw_group(box, panel_params, coord, ax, **params)
 
     @staticmethod
     def draw_legend(data, da, lyr):
@@ -200,18 +223,18 @@ class geom_boxplot(geom):
         if facecolor is None:
             facecolor = 'none'
 
-        kwargs = dict(
-           linestyle=data['linetype'],
-           linewidth=data['size'])
+        kwargs = dict(linestyle=data['linetype'], linewidth=data['size'])
 
-        box = Rectangle((da.width*.125, da.height*.25),
-                        width=da.width*.75,
-                        height=da.height*.5,
-                        facecolor=facecolor,
-                        edgecolor=data['color'],
-                        capstyle='projecting',
-                        antialiased=False,
-                        **kwargs)
+        box = Rectangle(
+            (da.width * 0.125, da.height * 0.25),
+            width=da.width * 0.75,
+            height=da.height * 0.5,
+            facecolor=facecolor,
+            edgecolor=data['color'],
+            capstyle='projecting',
+            antialiased=False,
+            **kwargs
+        )
         da.add_artist(box)
 
         kwargs['solid_capstyle'] = 'butt'
@@ -219,19 +242,25 @@ class geom_boxplot(geom):
         kwargs['linewidth'] *= SIZE_FACTOR
 
         # middle strike through
-        strike = mlines.Line2D([da.width*.125, da.width*.875],
-                               [da.height*.5, da.height*.5],
-                               **kwargs)
+        strike = mlines.Line2D(
+            [da.width * 0.125, da.width * 0.875],
+            [da.height * 0.5, da.height * 0.5],
+            **kwargs
+        )
         da.add_artist(strike)
 
         # whiskers
-        top = mlines.Line2D([da.width*.5, da.width*.5],
-                            [da.height*.75, da.height*.9],
-                            **kwargs)
+        top = mlines.Line2D(
+            [da.width * 0.5, da.width * 0.5],
+            [da.height * 0.75, da.height * 0.9],
+            **kwargs
+        )
         da.add_artist(top)
 
-        bottom = mlines.Line2D([da.width*.5, da.width*.5],
-                               [da.height*.25, da.height*.1],
-                               **kwargs)
+        bottom = mlines.Line2D(
+            [da.width * 0.5, da.width * 0.5],
+            [da.height * 0.25, da.height * 0.1],
+            **kwargs
+        )
         da.add_artist(bottom)
         return da

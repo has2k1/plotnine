@@ -7,6 +7,7 @@ class MapTrainMixin:
     """
     Override map and train methods
     """
+
     def map(self, x):
         return x
 
@@ -30,6 +31,7 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     guide : None | 'legend'
         Whether to include a legend. Default is None.
     """
+
     _aesthetics = ['color']
     palette = staticmethod(identity)
     guide = None
@@ -44,6 +46,7 @@ class scale_fill_identity(scale_color_identity):
     ----------
     {superclass_parameters}
     """
+
     _aesthetics = ['fill']
 
 
@@ -58,6 +61,7 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     guide : None | 'legend'
         Whether to include a legend. Default is None.
     """
+
     _aesthetics = ['shape']
     palette = staticmethod(identity)
     guide = None
@@ -74,6 +78,7 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     guide : None | 'legend'
         Whether to include a legend. Default is None.
     """
+
     _aesthetics = ['linetype']
     palette = staticmethod(identity)
     guide = None
@@ -90,6 +95,7 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     guide : None | 'legend'
         Whether to include a legend. Default is None.
     """
+
     _aesthetics = ['alpha']
     palette = staticmethod(identity)
     guide = None
@@ -106,6 +112,7 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     guide : None | 'legend'
         Whether to include a legend. Default is None.
     """
+
     _aesthetics = ['size']
     palette = staticmethod(identity)
     guide = None

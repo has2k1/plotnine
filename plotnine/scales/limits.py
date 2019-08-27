@@ -13,6 +13,7 @@ from ..utils import array_kind
 
 # By adding limits, we create a scale of the appropriate type
 
+
 class _lim:
     aesthetic = None
 
@@ -73,14 +74,10 @@ class _lim:
                     ae_values.append(value)
 
         for value in ae_values:
-            if ('factor(' in value or
-                    'Categorical(' in value):
+            if 'factor(' in value or 'Categorical(' in value:
                 series = pd.Categorical(self.limits_series)
                 break
-        return make_scale(self.aesthetic,
-                          series,
-                          limits=self.limits,
-                          trans=self.trans)
+        return make_scale(self.aesthetic, series, limits=self.limits, trans=self.trans)
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)
@@ -100,6 +97,7 @@ class xlim(_lim):
         You can also pass two values e.g
         ``xlim(40, 100)``
     """
+
     aesthetic = 'x'
 
 
@@ -119,6 +117,7 @@ class ylim(_lim):
     If the 2nd value of ``limits`` is less than
     the first, a reversed scale will be created.
     """
+
     aesthetic = 'y'
 
 
@@ -196,6 +195,7 @@ def expand_limits(**kwargs):
         The keys should be aesthetic names
         e.g. *x*, *y*, *colour*, ...
     """
+
     def as_list(key):
         with suppress(KeyError):
             if isinstance(kwargs[key], (int, float, str)):

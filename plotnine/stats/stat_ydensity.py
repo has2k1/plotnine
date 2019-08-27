@@ -78,11 +78,16 @@ class stat_ydensity(stat):
     """
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'weight'}
-    DEFAULT_PARAMS = {'geom': 'violin', 'position': 'dodge',
-                      'na_rm': False,
-                      'adjust': 1, 'kernel': 'gaussian',
-                      'n': 1024, 'trim': True,
-                      'scale': 'area'}
+    DEFAULT_PARAMS = {
+        'geom': 'violin',
+        'position': 'dodge',
+        'na_rm': False,
+        'adjust': 1,
+        'kernel': 'gaussian',
+        'n': 1024,
+        'trim': True,
+        'scale': 'area',
+    }
     DEFAULT_AES = {'weight': None}
     CREATES = {'width'}
 
@@ -102,19 +107,17 @@ class stat_ydensity(stat):
             'gaussian': 'gau',
             'triangular': 'tri',
             'triweight': 'triw',
-            'uniform': 'uni'}
+            'uniform': 'uni',
+        }
 
         with suppress(KeyError):
             params['kernel'] = lookup[params['kernel'].lower()]
 
         if params['kernel'] not in lookup.values():
-            msg = ("kernel should be one of {}. "
-                   "You may use the abbreviations {}")
-            raise PlotnineError(msg.format(lookup.keys(),
-                                           lookup.values()))
+            msg = "kernel should be one of {}. " "You may use the abbreviations {}"
+            raise PlotnineError(msg.format(lookup.keys(), lookup.values()))
 
-        missing_params = (stat_density.DEFAULT_PARAMS.keys() -
-                          params.keys())
+        missing_params = stat_density.DEFAULT_PARAMS.keys() - params.keys()
         for key in missing_params:
             params[key] = stat_density.DEFAULT_PARAMS[key]
 
@@ -128,11 +131,11 @@ class stat_ydensity(stat):
             return data
 
         if params['scale'] == 'area':
-            data['violinwidth'] = data['density']/data['density'].max()
+            data['violinwidth'] = data['density'] / data['density'].max()
         elif params['scale'] == 'count':
-            data['violinwidth'] = (data['density'] /
-                                   data['density'].max() *
-                                   data['n']/data['n'].max())
+            data['violinwidth'] = (
+                data['density'] / data['density'].max() * data['n'] / data['n'].max()
+            )
         elif params['scale'] == 'width':
             data['violinwidth'] = data['scaled']
         else:

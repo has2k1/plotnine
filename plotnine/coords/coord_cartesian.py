@@ -43,19 +43,22 @@ class coord_cartesian(coord):
         """
         Compute the range and break information for the panel
         """
+
         def get_view_limits(scale, coord_limits):
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
-                scale.limits, expansion, coord_limits, identity_trans)
+                scale.limits, expansion, coord_limits, identity_trans
+            )
             vs = scale.view(limits=coord_limits, range=ranges.range)
             return vs
 
-        out = NS(x=get_view_limits(scale_x, self.limits.x),
-                 y=get_view_limits(scale_y, self.limits.y))
+        out = NS(
+            x=get_view_limits(scale_x, self.limits.x),
+            y=get_view_limits(scale_y, self.limits.y),
+        )
         return out
 
     @staticmethod
     def distance(x, y, panel_params):
-        max_dist = dist_euclidean(panel_params.x.range,
-                                  panel_params.y.range)[0]
+        max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[0]
         return dist_euclidean(x, y) / max_dist

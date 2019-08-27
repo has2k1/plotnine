@@ -21,9 +21,9 @@ class geom_area(geom_ribbon):
     --------
     plotnine.geoms.geom_ribbon
     """
+
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',
-                      'na_rm': False}
+    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack', 'na_rm': False}
 
     def setup_data(self, data):
         data['ymin'] = 0
