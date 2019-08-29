@@ -36,7 +36,7 @@ class geom_boxplot(geom):
     outlier_color : str or tuple, optional (default: None)
         Color of the outlier points.
     outlier_shape : str, optional (default: o)
-        Shape of the outlier points.
+        Shape of the outlier points. An empty string hides the outliers.
     outlier_size : float, optional (default: 1.5)
         Size of the outlier points.
     outlier_stroke : float, optional (default: 0.5)
