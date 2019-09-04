@@ -10,7 +10,7 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, get_calculated_aes, stat
+from .aes import aes, get_calculated_aes, stat, AES_INNER_NAMESPACE
 from .aes import strip_calculated_markers, NO_GROUP
 
 
@@ -293,7 +293,7 @@ class layer:
             aesthetics['group'] = self.geom.aes_params['group']
 
         env = EvalEnvironment.capture(eval_env=plot.environment)
-        env = env.with_outer_namespace({'factor': pd.Categorical})
+        env = env.with_outer_namespace(AES_INNER_NAMESPACE)
 
         # Using `type` preserves the subclass of pd.DataFrame
         evaled = type(data)(index=data.index)

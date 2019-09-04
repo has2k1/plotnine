@@ -2,6 +2,9 @@ import re
 from copy import deepcopy
 from contextlib import suppress
 
+import numpy as np
+import pandas as pd
+
 __all__ = ['aes']
 
 all_aesthetics = {
@@ -103,6 +106,24 @@ class aes(dict):
         # 'gam ma' is a column in the dataframe, but not
         # valid python variable name
         ggplot(df, aes(x='df.index', y='np.sin(gam ma)'))
+
+    ``aes`` has 2 internal methods you can use to transform variables being
+    mapped.
+
+        1. ``factor`` - This function turns the variable into a factor.
+            It is just an alias to ``pd.Caterogical``::
+
+                ggplot(mtcars, aes(x='factor(cyl)')) + geom_bar()
+
+        2. ``reorder`` - This function changes the order of first variable
+            based on values of the second variable::
+
+                df = pd.DataFrame({
+                    'x': ['b', 'd', 'c', 'a'],
+                    'y': [1, 2, 3, 4]
+                })
+
+                ggplot(df, aes('reorder(x, y)', 'y')) + geom_col()
 
     .. rubric:: The group aesthetic
 
@@ -445,3 +466,41 @@ def has_groups(data):
     # If any row in the group column is equal to NO_GROUP, then
     # the data all of them are and the data has no groups
     return data.loc[0, 'group'] != NO_GROUP
+
+
+def reorder(x, y, order=None):
+    """
+    Reorder x based on y values
+
+    Parameters
+    ----------
+    x : array-like
+        Values to be arrange
+    y : array-like
+        Values to decide the order
+    order : bool
+        Whether the result should be explicitly ordered.
+
+    Returns
+    -------
+    out : Categorical
+        x values whose order has been
+        changed.
+    """
+    from .utils import array_kind
+    ordered = order
+    if ordered is None:
+        ordered = array_kind.ordinal(x)
+    idx = np.argsort(y)
+    x = np.asarray(x)
+    categories = pd.unique(x[idx])
+    return pd.Categorical(x, categories=categories, ordered=ordered)
+
+
+# These are function that can be called by the user inside the aes()
+# mapping. This is meant to make the variable transformations as easy
+# as they are in ggplot2
+AES_INNER_NAMESPACE = {
+    'factor': pd.Categorical,
+    'reorder': reorder
+}

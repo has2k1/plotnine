@@ -5,6 +5,13 @@ v0.6.1
 ------
 (not-yet-released)
 
+New Features
+************
+
+- :class:`~plotnine.aes.aes` got an internal function ``reorder`` which
+  makes it easy to change the ordering of a discrete variable according
+  to some other variable/column.
+
 
 v0.6.0
 ------
