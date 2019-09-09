@@ -38,6 +38,9 @@ class stat(metaclass=Registry):
     # their default values.
     _aesthetics_doc = '{aesthetics_table}'
 
+    # The namespace in which the ggplot object is invoked
+    environment = None
+
     def __init__(self, mapping=None, data=None, **kwargs):
         kwargs = data_mapping_as_kwargs((mapping, data), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
@@ -107,9 +110,12 @@ class stat(metaclass=Registry):
         old = self.__dict__
         new = result.__dict__
 
+        # don't make a _kwargs and environment
+        shallow = {'_kwargs', 'environment'}
         for key, item in old.items():
-            if key == '_kwargs':
+            if key in shallow:
                 new[key] = old[key]
+                memo[id(new[key])] = new[key]
             else:
                 new[key] = deepcopy(old[key], memo)
 
@@ -358,6 +364,7 @@ class stat(metaclass=Registry):
             ggplot object with added layer
         """
         gg = gg if inplace else deepcopy(gg)
+        self.environment = gg.environment
         gg += self.to_layer()  # Add layer
         return gg
 
