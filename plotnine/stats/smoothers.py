@@ -284,7 +284,10 @@ def tdist_ci(x, df, stderr, level):
     Confidence Intervals using the t-distribution
     """
     q = (1 + level)/2
-    delta = stats.t.ppf(q, df) * stderr
+    if df is None:
+        delta = stats.norm.ppf(q) * stderr
+    else:
+        delta = stats.t.ppf(q, df) * stderr
     return x - delta, x + delta
 
 
