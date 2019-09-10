@@ -22,6 +22,9 @@ New Features
   makes it easy to change the ordering of a discrete variable according
   to some other variable/column.
 
+- :class:`~plotnine.stats.stat_smooth` can now use formulae for linear
+  models.
+
 
 Bug Fixes
 *********
