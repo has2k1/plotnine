@@ -13,6 +13,13 @@ New Features
   to some other variable/column.
 
 
+Bug Fixes
+*********
+
+- Fixed issue where a wrong warning could be issued about changing the
+  transform of a specialised scale. It mostly affected the *timedelta*
+  scale.
+
 v0.6.0
 ------
 (2019-08-21)

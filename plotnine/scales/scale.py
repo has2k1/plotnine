@@ -599,7 +599,9 @@ class scale_continuous(scale):
             Transform object
         """
         orig_trans_name = self.__class__._trans
-        new_trans_name = t.__class__.__name__.rstrip('_trans')
+        new_trans_name = t.__class__.__name__
+        if new_trans_name.endswith('_trans'):
+            new_trans_name = new_trans_name[:-6]
         if orig_trans_name != 'identity':
             if new_trans_name != orig_trans_name:
                 warn(
