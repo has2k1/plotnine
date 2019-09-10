@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from patsy import dmatrices
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import get_valid_kwargs
@@ -47,17 +49,25 @@ def lm(data, xseq, **params):
     """
     Fit OLS / WLS if data has weight
     """
+    if params['formula']:
+        return lm_formula(data, xseq, **params)
+
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
+    weights = data.get('weights', None)
 
-    if 'weight' in data:
-        init_kwargs, fit_kwargs = separate_method_kwargs(
-            params['method_args'], sm.WLS, sm.WLS.fit)
-        model = sm.WLS(data['y'], X, weights=data['weight'], **init_kwargs)
-    else:
+    if weights is None:
         init_kwargs, fit_kwargs = separate_method_kwargs(
             params['method_args'], sm.OLS, sm.OLS.fit)
         model = sm.OLS(data['y'], X, **init_kwargs)
+    else:
+        if np.any(weights < 0):
+            raise ValueError(
+                "All weights must be greater than zero."
+            )
+        init_kwargs, fit_kwargs = separate_method_kwargs(
+            params['method_args'], sm.WLS, sm.WLS.fit)
+        model = sm.WLS(data['y'], X, weights=data['weight'], **init_kwargs)
 
     results = model.fit(**fit_kwargs)
     data = pd.DataFrame({'x': xseq})
@@ -74,10 +84,60 @@ def lm(data, xseq, **params):
     return data
 
 
+def lm_formula(data, xseq, **params):
+    """
+    Fit OLS / WLS using a formula
+    """
+    formula = params['formula']
+    eval_env = params['enviroment']
+    weights = data.get('weight', None)
+
+    if weights is None:
+        init_kwargs, fit_kwargs = separate_method_kwargs(
+            params['method_args'], sm.OLS, sm.OLS.fit)
+        model = smf.ols(
+            formula,
+            data,
+            eval_env=eval_env,
+            **init_kwargs
+        )
+    else:
+        if np.any(weights < 0):
+            raise ValueError(
+                "All weights must be greater than zero."
+            )
+        init_kwargs, fit_kwargs = separate_method_kwargs(
+            params['method_args'], sm.OLS, sm.OLS.fit)
+        model = smf.wls(
+            formula,
+            data,
+            weights=weights,
+            eval_env=eval_env,
+            **init_kwargs
+        )
+
+    results = model.fit(**fit_kwargs)
+    data = pd.DataFrame({'x': xseq})
+    data['y'] = results.predict(data)
+
+    if params['se']:
+        _, predictors = dmatrices(formula, data, eval_env=eval_env)
+        alpha = 1 - params['level']
+        prstd, iv_l, iv_u = wls_prediction_std(
+            results, predictors, alpha=alpha)
+        data['se'] = prstd
+        data['ymin'] = iv_l
+        data['ymax'] = iv_u
+    return data
+
+
 def rlm(data, xseq, **params):
     """
     Fit RLM
     """
+    if params['formula']:
+        return rlm_formula(data, xseq, **params)
+
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
 
@@ -96,10 +156,38 @@ def rlm(data, xseq, **params):
     return data
 
 
+def rlm_formula(data, xseq, **params):
+    """
+    Fit RLM using a formula
+    """
+    eval_env = params['enviroment']
+    formula = params['formula']
+    init_kwargs, fit_kwargs = separate_method_kwargs(
+        params['method_args'], sm.RLM, sm.RLM.fit)
+    model = smf.rlm(
+        formula,
+        data,
+        eval_env=eval_env,
+        **init_kwargs
+    )
+    results = model.fit(**fit_kwargs)
+    data = pd.DataFrame({'x': xseq})
+    data['y'] = results.predict(data)
+
+    if params['se']:
+        warnings.warn("Confidence intervals are not yet implemented"
+                      "for RLM smoothing.", PlotnineWarning)
+
+    return data
+
+
 def gls(data, xseq, **params):
     """
     Fit GLS
     """
+    if params['formula']:
+        return gls_formula(data, xseq, **params)
+
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
 
@@ -122,10 +210,42 @@ def gls(data, xseq, **params):
     return data
 
 
+def gls_formula(data, xseq, **params):
+    """
+    Fit GLL using a formula
+    """
+    eval_env = params['enviroment']
+    formula = params['formula']
+    init_kwargs, fit_kwargs = separate_method_kwargs(
+        params['method_args'], sm.GLS, sm.GLS.fit)
+    model = smf.gls(
+        formula,
+        data,
+        eval_env=eval_env,
+        **init_kwargs
+    )
+    results = model.fit(**fit_kwargs)
+    data = pd.DataFrame({'x': xseq})
+    data['y'] = results.predict(data)
+
+    if params['se']:
+        _, predictors = dmatrices(formula, data, eval_env=eval_env)
+        alpha = 1 - params['level']
+        prstd, iv_l, iv_u = wls_prediction_std(
+            results, predictors, alpha=alpha)
+        data['se'] = prstd
+        data['ymin'] = iv_l
+        data['ymax'] = iv_u
+    return data
+
+
 def glm(data, xseq, **params):
     """
     Fit GLM
     """
+    if params['formula']:
+        return glm_formula(data, xseq, **params)
+
     X = sm.add_constant(data['x'])
     Xseq = sm.add_constant(xseq)
 
@@ -143,6 +263,29 @@ def glm(data, xseq, **params):
         data['ymin'] = ci[:, 0]
         data['ymax'] = ci[:, 1]
 
+    return data
+
+
+def glm_formula(data, xseq, **params):
+    eval_env = params['enviroment']
+    init_kwargs, fit_kwargs = separate_method_kwargs(
+        params['method_args'], sm.GLM, sm.GLM.fit)
+    model = smf.glm(
+        params['formula'],
+        data,
+        eval_env=eval_env,
+        **init_kwargs
+    )
+    results = model.fit(**fit_kwargs)
+    data = pd.DataFrame({'x': xseq})
+    data['y'] = results.predict(data)
+
+    if params['se']:
+        df = pd.DataFrame({'x': xseq})
+        prediction = results.get_prediction(df)
+        ci = prediction.conf_int(1 - params['level'])
+        data['ymin'] = ci[:, 0]
+        data['ymax'] = ci[:, 1]
     return data
 
 

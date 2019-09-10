@@ -76,6 +76,12 @@ class stat_smooth(stat):
                     data['ymax'] = high
 
                 return data
+    formula : formula_like
+        An object that can be used to construct a patsy design matrix.
+        This is usually a string. You can only use a formula if ``method``
+        is one of *lm*, *ols*, *wls*, *glm*, *rlm* or *gls*, and in the
+        :ref:`formula <patsy:formulas>` you may refer to the ``x`` and
+        ``y`` aesthetic variables.
     se : bool (default: True)
         If :py:`True` draw confidence interval around the smooth line.
     n : int (default: 80)
@@ -131,6 +137,7 @@ class stat_smooth(stat):
     DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
                       'na_rm': False,
                       'method': 'auto', 'se': True, 'n': 80,
+                      'formula': None,
                       'fullrange': False, 'level': 0.95,
                       'span': 0.75, 'method_args': {}}
     CREATES = {'se', 'ymin', 'ymax'}
@@ -167,6 +174,15 @@ class stat_smooth(stat):
                     "The same window is used for all groups or "
                     "facets".format(window), PlotnineWarning)
                 params['method_args']['window'] = window
+
+        if params['formula']:
+            allowed = {'lm', 'ols', 'wls', 'glm', 'rlm', 'gls'}
+            if params['method'] not in allowed:
+                raise ValueError(
+                    "You can only use a formula with `method` is "
+                    "one of {}".format(allowed)
+                )
+            params['enviroment'] = self.environment
 
         return params
 

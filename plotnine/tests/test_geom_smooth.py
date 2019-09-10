@@ -4,7 +4,7 @@ import pytest
 import statsmodels.api as sm
 
 
-from plotnine import ggplot, aes, geom_point, geom_smooth
+from plotnine import ggplot, aes, geom_point, geom_smooth, stat_smooth
 from plotnine.exceptions import PlotnineWarning
 
 
@@ -185,3 +185,69 @@ def test_init_and_fit_kwargs():
          )
 
     assert p == 'init_and_fit_kwargs'
+
+
+n = 100
+random_state = np.random.RandomState(123)
+mu = 0
+sigma = 0.065
+noise = random_state.randn(n)*sigma + mu
+df = pd.DataFrame({
+    'x': x,
+    'y': np.sin(x) + noise,
+})
+
+
+class TestFormula:
+
+    p = ggplot(df, aes('x', 'y')) + geom_point()
+
+    def test_lm(self):
+        p = (self.p
+             + stat_smooth(
+                 method='lm',
+                 formula='y ~ np.sin(x)',
+                 fill='red',
+                 se=True
+             ))
+        assert p == 'lm_formula'
+
+    def test_lm_weights(self):
+        p = (self.p
+             + aes(weight='x.abs()')
+             + stat_smooth(
+                 method='lm',
+                 formula='y ~ np.sin(x)',
+                 fill='red',
+                 se=True
+             ))
+        assert p == 'lm_formula_weights'
+
+    def test_glm(self):
+        p = (self.p
+             + stat_smooth(
+                 method='glm',
+                 formula='y ~ np.sin(x)',
+                 fill='red',
+                 se=True
+             ))
+        assert p == 'glm_formula'
+
+    def test_rlm(self):
+        p = (self.p
+             + stat_smooth(
+                 method='rlm',
+                 formula='y ~ np.sin(x)',
+                 fill='red',
+             ))
+        assert p == 'rlm_formula'
+
+    def test_gls(self):
+        p = (self.p
+             + stat_smooth(
+                 method='gls',
+                 formula='y ~ np.sin(x)',
+                 fill='red',
+                 se=True
+             ))
+        assert p == 'gls_formula'
