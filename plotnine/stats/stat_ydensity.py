@@ -1,7 +1,7 @@
 from contextlib import suppress
 
-import numpy as np
 import pandas as pd
+import numpy as np
 
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -143,12 +143,19 @@ class stat_ydensity(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        n = len(data)
-
-        if n < 3:
-            return pd.DataFrame()
-
         weight = data.get('weight')
+
+        yunique, ycounts = np.unique(data['y'], return_counts=True)
+        n = len(yunique) 
+        if len(yunique) < 3:
+            # if less than 3 points, spread density evenly
+            # over points
+            return pd.DataFrame({
+                'y': yunique,
+                'density': 0.01,
+                'scaled': 0.01,
+                'count': 1,
+                'n': n})
 
         if params['trim']:
             range_y = data['y'].min(), data['y'].max()

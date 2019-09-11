@@ -80,3 +80,28 @@ def test_no_trim():
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'), trim=False, size=2))
     assert p == 'no_trim'
+
+
+def test_singular_value():
+    # this used to crash
+    df = pd.DataFrame({
+        'x': ['A'],
+        'y': [0],
+    })
+    p = (ggplot(df, aes('x')) +
+         geom_violin(aes(y='y'), trim=False, size=2))
+    assert p == 'singular_value'
+
+
+def test_small_n():
+    # needs to verify that it works independent of the number of repetitions
+    # of the y value.
+    df = pd.DataFrame({
+        'x': ['A', 'B', 'B'] + ['C'] * 20 +
+             ['D', 'D', 'D', 'E', 'E'] + ['F'] * 20 + ['G', 'G', 'G'],
+        'y': [0, 100, 100] + [200] * 20 +
+             [0, 50, 50, 100, 150] + [150, 200] * 10 + [10, 20, 60],
+    })
+    p = (ggplot(df, aes('x')) +
+         geom_violin(aes(y='y')))
+    assert p == 'small_n'
