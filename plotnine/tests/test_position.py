@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
-                      geom_col, geom_boxplot, geom_text,
+                      geom_col, geom_boxplot, geom_text, geom_rect,
                       position_dodge, position_dodge2,
                       position_jitter, position_jitterdodge,
                       position_nudge, position_stack, theme)
@@ -132,3 +132,15 @@ def test_position_from_geom():
 
     geom = geom_point(position=position_jitter)
     assert isinstance(position.from_geom(geom), position_jitter)
+
+
+def test_dodge_empty_data():
+    empty_df = pd.DataFrame({'x': [], 'y': []})
+    p = (ggplot(df1, aes('x', 'y'))
+         + geom_point()
+         + geom_rect(
+             empty_df,
+             aes(xmin='x', xmax='x+1', ymin='y', ymax='y+1'),
+             position='dodge')
+         )
+    p.draw_test()

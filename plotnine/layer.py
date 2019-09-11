@@ -429,6 +429,9 @@ class layer:
         Compute the position of each geometric object
         in concert with the other objects in the panel
         """
+        if len(self.data) == 0:
+            return self.data
+
         params = self.position.setup_params(self.data)
         data = self.position.setup_data(self.data, params)
         data = self.position.compute_layer(data, params, layout)

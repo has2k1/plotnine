@@ -20,6 +20,10 @@ Bug Fixes
   transform of a specialised scale. It mostly affected the *timedelta*
   scale.
 
+- Fixed :class:`plotnine.geoms.geom_violin` and other geoms when used
+  with ``position='dodge'`` not to crash when if a layer has an empty
+  group of data.
+
 v0.6.0
 ------
 (2019-08-21)
