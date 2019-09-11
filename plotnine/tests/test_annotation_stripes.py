@@ -76,3 +76,12 @@ def test_annotation_stripes_fill_direction_extend():
          )
 
     assert p == 'annotation_stripes_fill_direction_extend'
+
+
+def test_annotation_stripes_single_stripe():
+    p = (ggplot(df.assign(x=10))
+         + annotation_stripes(fill=["#FF0000", "#00FF00"])
+         + geom_point(aes('factor(x)', 'y'))
+         )
+
+    assert p == 'annotation_stripes_single_stripe'

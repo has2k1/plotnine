@@ -78,14 +78,17 @@ class _geom_stripes(geom):
 
         # Breaks along the width
         n_stripes = len(breaks)
-        diff = np.diff(breaks)
-        step = diff[0]
-        equal_spaces = np.all(diff == step)
-        if not equal_spaces:
-            raise ValueError(
-                "The major breaks are not equally spaced. "
-                "We cannot create stripes."
-            )
+        if n_stripes > 1:
+            diff = np.diff(breaks)
+            step = diff[0]
+            equal_spaces = np.all(diff == step)
+            if not equal_spaces:
+                raise ValueError(
+                    "The major breaks are not equally spaced. "
+                    "We cannot create stripes."
+                )
+        else:
+            step = breaks[0]
 
         deltas = np.array([step/2] * n_stripes)
         xmin = breaks - deltas
