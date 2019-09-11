@@ -24,6 +24,12 @@ Bug Fixes
   with ``position='dodge'`` not to crash when if a layer has an empty
   group of data.
 
+Enhancements
+************
+
+- You can now set the bandwidth parameter ``bw`` of
+  :class:`~plotnine.stats.stat_ydensity`.
+
 v0.6.0
 ------
 (2019-08-21)

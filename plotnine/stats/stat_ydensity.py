@@ -46,6 +46,14 @@ class stat_ydensity(stat):
         Number of equally spaced points at which the density is to
         be estimated. For efficient computation, it should be a power
         of two.
+    bw : str or float, optional (default: 'normal_reference')
+        The bandwidth to use, If a float is given, it is the bandwidth.
+        The :py:`str` choices are::
+
+            'normal_reference'
+            'scott'
+            'silverman'
+
     scale : (default: area)
         How to scale the violins. The options are::
 
@@ -82,6 +90,7 @@ class stat_ydensity(stat):
                       'na_rm': False,
                       'adjust': 1, 'kernel': 'gaussian',
                       'n': 1024, 'trim': True,
+                      'bw': 'normal_reference',
                       'scale': 'area'}
     DEFAULT_AES = {'weight': None}
     CREATES = {'width'}
