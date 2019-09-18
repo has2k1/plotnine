@@ -205,7 +205,7 @@ class stat_sina(stat):
 
         # Compute width if x has multiple values
         if len(data['x'].unique()) > 1:
-            width = data['x'].ptp() * maxwidth
+            width = np.ptp(data['x']) * maxwidth
         else:
             width = maxwidth
 
