@@ -46,7 +46,7 @@ class stat_ydensity(stat):
         Number of equally spaced points at which the density is to
         be estimated. For efficient computation, it should be a power
         of two.
-    bw : str or float, optional (default: 'normal_reference')
+    bw : str or float, optional (default: 'nrd0')
         The bandwidth to use, If a float is given, it is the bandwidth.
         The :py:`str` choices are::
 
@@ -54,6 +54,8 @@ class stat_ydensity(stat):
             'scott'
             'silverman'
 
+        ``nrd0`` is a port of ``stats::bw.nrd0`` in R; it is eqiuvalent
+        to ``silverman`` when there is more than 1 value in a group.
     scale : (default: area)
         How to scale the violins. The options are::
 
@@ -90,7 +92,7 @@ class stat_ydensity(stat):
                       'na_rm': False,
                       'adjust': 1, 'kernel': 'gaussian',
                       'n': 1024, 'trim': True,
-                      'bw': 'normal_reference',
+                      'bw': 'nrd0',
                       'scale': 'area'}
     DEFAULT_AES = {'weight': None}
     CREATES = {'width'}
@@ -153,8 +155,7 @@ class stat_ydensity(stat):
     @classmethod
     def compute_group(cls, data, scales, **params):
         n = len(data)
-
-        if n < 3:
+        if n == 0:
             return pd.DataFrame()
 
         weight = data.get('weight')

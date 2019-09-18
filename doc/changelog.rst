@@ -5,6 +5,16 @@ v0.6.1
 ------
 (not-yet-released)
 
+API Changes
+***********
+
+- Changed the default method of caculating bandwidth for all stats that
+  use kernel density estimation. The affected stats are
+  :class:`~plotnine.stats.stat_density`,
+  :class:`~plotnine.stats.stat_ydensity`, and
+  :class:`~plotnine.stats.stat_sina`. These stats can now work with groups
+  that have a single unique value.
+
 New Features
 ************
 
@@ -26,6 +36,9 @@ Bug Fixes
 
 - Fixed bug in :class:`plotnine.geoms.geom_path` for some cases when groups
   had less than 2 points. (:issue:`319`)
+
+- Fixed all stats that compute kernel density estimates to work when all
+  the data points are the same. (:issue:`317`)
 
 Enhancements
 ************

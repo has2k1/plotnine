@@ -1,11 +1,13 @@
 from contextlib import suppress
+from warnings import warn
 
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from scipy.stats import iqr
 
 from ..doctools import document
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 from .stat import stat
 
 
@@ -50,14 +52,17 @@ class stat_density(stat):
         of two.
     gridsize : int, optional (default: None)
         If gridsize is :py:`None`, :py:`max(len(x), 50)` is used.
-    bw : str or float, optional (default: 'normal_reference')
+    bw : str or float, optional (default: 'nrd0')
         The bandwidth to use, If a float is given, it is the bandwidth.
         The :py:`str` choices are::
 
+            'nrd0'
             'normal_reference'
             'scott'
             'silverman'
 
+        ``nrd0`` is a port of ``stats::bw.nrd0`` in R; it is eqiuvalent
+        to ``silverman`` when there is more than 1 value in a group.
     cut : float, optional (default: 3)
         Defines the length of the grid past the lowest and highest
         values of ``x`` so that the kernel goes to zero. The end points
@@ -93,7 +98,7 @@ class stat_density(stat):
                       'na_rm': False,
                       'kernel': 'gaussian', 'adjust': 1,
                       'trim': False, 'n': 1024, 'gridsize': None,
-                      'bw': 'normal_reference', 'cut': 3,
+                      'bw': 'nrd0', 'cut': 3,
                       'clip': (-np.inf, np.inf)}
     DEFAULT_AES = {'y': 'stat(density)'}
     CREATES = {'density', 'count', 'scaled', 'n'}
@@ -137,21 +142,20 @@ def compute_density(x, weight, range, **params):
     x = np.asarray(x, dtype=np.float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]
-
+    bw = params['bw']
     n = len(x)
+
+    if n == 0 or (n == 1 and isinstance(bw, str)):
+        if n == 1:
+            warn("To compute the density of a group with only one "
+                 "value set the bandwidth manually. e.g `bw=0.1`",
+                 PlotnineWarning)
+        warn("Groups with fewer than 2 data points have been removed.",
+             PlotnineWarning)
+        return pd.DataFrame()
 
     if weight is None:
         weight = np.ones(n) / n
-
-    # if less than 3 points, spread density evenly
-    # over points
-    if n < 3:
-        return pd.DataFrame({
-            'x': x,
-            'density': weight / np.sum(weight),
-            'scaled': weight / np.max(weight),
-            'count': 1,
-            'n': n})
 
     # kde is computed efficiently using fft. But the fft does
     # not support weights and is only available with the
@@ -162,10 +166,12 @@ def compute_density(x, weight, range, **params):
     else:
         fft = False
 
+    if bw == 'nrd0':
+        bw = nrd0(x)
     kde = sm.nonparametric.KDEUnivariate(x)
     kde.fit(
         kernel=params['kernel'],
-        bw=params['bw'],
+        bw=bw,
         fft=fft,
         weights=weight,
         adjust=params['adjust'],
@@ -200,3 +206,34 @@ def compute_density(x, weight, range, **params):
                          'scaled': y / np.max(y) if len(y) else [],
                          'count': y * n,
                          'n': n})
+
+
+def nrd0(x):
+    """
+    Port of R stats::bw.nrd0
+
+    This is equivalent to statsmodels silverman when x has more than
+    1 unique value. It can never give a zero bandwidth.
+
+    Parameters
+    ----------
+    x : array_like
+        Values whose density is to be estimated
+
+    Returns
+    -------
+    out : float
+        Bandwidth of x
+    """
+    n = len(x)
+    if n < 1:
+        raise ValueError(
+            "Need at leat 2 data points to compute the nrd0 bandwidth."
+        )
+
+    std = np.std(x, ddof=1)
+    std_estimate = iqr(x)/1.349
+    low_std = np.min((std, std_estimate))
+    if low_std == 0:
+        low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1
+    return 0.9 * low_std * (n ** -0.2)

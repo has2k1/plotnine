@@ -38,14 +38,17 @@ class stat_sina(stat):
     adjust : float, optional (default: 1)
         Adjusts the bandwidth of the density kernel when
         ``method='density'`` (see density).
-    bw : str or float, optional (default: 'normal_reference')
+    bw : str or float, optional (default: 'nrd0')
         The bandwidth to use, If a float is given, it is the bandwidth.
         The :py:`str` choices are::
 
+            'nrd0'
             'normal_reference'
             'scott'
             'silverman'
 
+        ``nrd0`` is a port of ``stats::bw.nrd0`` in R; it is eqiuvalent
+        to ``silverman`` when there is more than 1 value in a group.
     bin_limit : int (default: 1)
         If the samples within the same y-axis bin are more
         than `bin_limit`, the samples's X coordinates will be adjusted.
@@ -87,7 +90,7 @@ class stat_sina(stat):
     DEFAULT_PARAMS = {'geom': 'sina', 'position': 'dodge',
                       'na_rm': False, 'binwidth': None, 'bins': None,
                       'method': 'density',
-                      'bw': 'normal_reference',
+                      'bw': 'nrd0',
                       'maxwidth': None, 'adjust': 1, 'bin_limit': 1,
                       'random_state': None, 'scale': 'area'
                       }

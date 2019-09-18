@@ -309,7 +309,6 @@ class stat(metaclass=Registry):
             stats.append(df)
 
         stats = pd.concat(stats, axis=0, ignore_index=True)
-
         # Note: If the data coming in has columns with non-unique
         # values with-in group(s), this implementation loses the
         # columns. Individual stats may want to do some preparation

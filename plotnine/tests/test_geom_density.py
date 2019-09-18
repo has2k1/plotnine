@@ -1,7 +1,9 @@
+import pytest
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_density, theme
+from plotnine import ggplot, aes, geom_density, theme, lims
+from plotnine.exceptions import PlotnineWarning
 
 n = 6  # Some even number greater than 2
 
@@ -24,5 +26,33 @@ def test_gaussian_trimmed():
 
 
 def test_triangular():
-    p3 = p + geom_density(kernel='triangular', alpha=.3)  # other
+    p3 = p + geom_density(
+        kernel='triangular',
+        bw='normal_reference',
+        alpha=.3)  # other
     assert p3 + _theme == 'triangular'
+
+
+def test_few_datapoints():
+    df = pd.DataFrame({
+        'x': [1, 2, 2, 3, 3, 3],
+        'z': list('abbccc')
+    })
+
+    # Bandwidth not set
+    p = (ggplot(df, aes('x', color='z'))
+         + geom_density()
+         + lims(x=(-3, 9))
+         )
+    with pytest.warns(PlotnineWarning) as record:
+        p.draw_test()
+
+    record = list(record)  # iterate more than 1 time
+    assert any('e.g `bw=0.1`' in str(r.message) for r in record)
+    assert any('Groups with fewer than 2' in str(r.message) for r in record)
+
+    p = (ggplot(df, aes('x', color='z'))
+         + geom_density(bw=.1)
+         + lims(x=(0, 4))
+         )
+    assert p == 'few_datapoints'
