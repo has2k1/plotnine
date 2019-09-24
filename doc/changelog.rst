@@ -24,6 +24,9 @@ Bug Fixes
   with ``position='dodge'`` not to crash when if a layer has an empty
   group of data.
 
+- Fixed bug in :class:`plotnine.geoms.geom_path` for some cases when groups
+  had less than 2 points. (:issue:`319`)
+
 Enhancements
 ************
 

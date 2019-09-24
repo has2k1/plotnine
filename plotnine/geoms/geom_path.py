@@ -82,10 +82,6 @@ class geom_path(geom):
                  "observation. Do you need to adjust the "
                  "group aesthetic?", PlotnineWarning)
 
-        # dataframe mergesort is stable, we rely on that here
-        data = data.sort_values('group', kind='mergesort')
-        data.reset_index(drop=True, inplace=True)
-
         # drop lines with less than two points
         c = Counter(data['group'])
         counts = np.array([c[v] for v in data['group']])
@@ -93,6 +89,10 @@ class geom_path(geom):
 
         if len(data) < 2:
             return
+
+        # dataframe mergesort is stable, we rely on that here
+        data = data.sort_values('group', kind='mergesort')
+        data.reset_index(drop=True, inplace=True)
 
         # When the parameters of the path are not constant
         # with in the group, then the lines that make the paths

@@ -92,3 +92,17 @@ def test_no_missing_values():
          + geom_line(aes(y='y2'), size=2))
 
     assert p == 'no_missing_values'
+
+
+def test_groups_less_that_two_points():
+    df = pd.DataFrame({
+        'A': [1, 2, 3, 4, 5],
+        'B': [0, 0, 1, 2, 2],
+        'C': [1, 2, 3, 4, 5],
+        'D': [1, 2, 3, 4, 5]
+    })
+
+    p = (ggplot(df)
+         + geom_line(aes(x='A', y='C', group='B', color='D'), size=2)
+         )
+    p.draw_test()
