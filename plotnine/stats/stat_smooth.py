@@ -178,6 +178,13 @@ class stat_smooth(stat):
         x_unique = data['x'].unique()
 
         if len(x_unique) < 2:
+            warnings.warn(
+                "Smoothing requires 2 or more points. Got {}. "
+                "Not enough points for smoothing. If this message "
+                "a surprise, make sure the column mapped to the x "
+                "aesthetic has the right dtype.".format(len(x_unique)),
+                PlotnineWarning
+            )
             # Not enough data to fit
             return pd.DataFrame()
 
