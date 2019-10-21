@@ -38,10 +38,6 @@ class geom_text(geom):
         Font weight.
     fontstyle : str (default: normal)
         Font style. One of *normal*, *italic* or *oblique*
-    ha : str (default: center)
-        Horizontal alignment. One of *left*, *center* or *right.*
-    va : str (default: center)
-        Vertical alignment. One of *top*, *center* or *bottom.*
     nudge_x : float (default: 0)
         Horizontal adjustment to apply to the text
     nudge_y : float (default: 0)
@@ -61,13 +57,13 @@ class geom_text(geom):
 
     """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
-                   'size': 11, 'lineheight': 1.2}
+                   'size': 11, 'lineheight': 1.2, 'ha': 'center',
+                   'va': 'center'}
     REQUIRED_AES = {'label', 'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'parse': False,
                       'family': None, 'fontweight': 'normal',
-                      'fontstyle': 'normal', 'ha': 'center',
-                      'va': 'center', 'nudge_x': 0, 'nudge_y': 0,
+                      'fontstyle': 'normal', 'nudge_x': 0, 'nudge_y': 0,
                       'adjust_text': None,
                       'format_string': None}
 
@@ -86,13 +82,6 @@ class geom_text(geom):
                 "To use adjust_text you must install the adjustText "
                 "package."
             )
-
-        # Accomodate for the old names
-        if 'hjust' in kwargs:
-            kwargs['ha'] = kwargs.pop('hjust')
-
-        if 'vjust' in kwargs:
-            kwargs['va'] = kwargs.pop('vjust')
 
         geom.__init__(self, mapping, data, **kwargs)
 
@@ -127,8 +116,8 @@ class geom_text(geom):
         df['rotation'] = data['angle']
         df['linespacing'] = data['lineheight']
         df['color'] = color
-        df['ha'] = params['ha']
-        df['va'] = params['va']
+        df['ha'] = data['ha']
+        df['va'] = data['va']
         df['family'] = params['family']
         df['fontweight'] = params['fontweight']
         df['fontstyle'] = params['fontstyle']
