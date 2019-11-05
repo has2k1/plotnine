@@ -88,7 +88,7 @@ class geom_map(geom):
                 },
                 inplace=True)
 
-        data = pd.concat([data, bounds], axis=1, copy=False)
+        data = pd.concat([data, bounds], axis=1)
         return data
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
