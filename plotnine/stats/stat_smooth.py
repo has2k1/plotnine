@@ -123,7 +123,7 @@ class stat_smooth(stat):
          'ymin'  # Lower confidence limit
          'ymax'  # Upper confidence limit
 
-    Calculated aesthetics are accessed using the `calc` function.
+    Calculated aesthetics are accessed using the `stat` function.
     e.g. :py:`'stat(se)'`.
     """
 

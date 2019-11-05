@@ -44,7 +44,7 @@ class stat_quantile(stat):
          'quantile'  # quantile
          'group'     # group identifier
 
-    Calculated aesthetics are accessed using the `calc` function.
+    Calculated aesthetics are accessed using the `stat` function.
     e.g. :py:`'stat(quantile)'`.
     """
 

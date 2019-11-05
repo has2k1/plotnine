@@ -51,7 +51,7 @@ class stat_boxplot(stat):
         'ymax'  # upper whisker, computed as; largest observation
                 # less than or equal to upper hinge + 1.5 * IQR
 
-    Calculated aesthetics are accessed using the `calc` function.
+    Calculated aesthetics are accessed using the `stat` function.
     e.g. :py:`'stat(width)'`.
     """
 

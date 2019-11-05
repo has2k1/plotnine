@@ -169,7 +169,7 @@ class stat_summary(stat):
         'ymin'  # ymin computed by the summary function
         'ymax'  # ymax computed by the summary function
 
-    Calculated aesthetics are accessed using the `calc` function.
+    Calculated aesthetics are accessed using the `stat` function.
     e.g. :py:`'stat(ymin)'`.
     """
 

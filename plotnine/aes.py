@@ -239,7 +239,7 @@ def stat(x):
     """
     Return calculated aesthetic
 
-    Aesthetics wrapped around the calc function evaluated
+    Aesthetics wrapped around the stat function evaluated
     *after* the statistics have been calculated. This gives
     the user a chance to use any aesthetic columns created
     by the statistic.
@@ -254,7 +254,7 @@ def stat(x):
 
 def strip_stat(value):
     """
-    Remove calc function that mark calculated aesthetics
+    Remove stat function that mark calculated aesthetics
 
     Parameters
     ----------
@@ -279,8 +279,8 @@ def strip_stat(value):
     >>> strip_stat('stat(func(density) + var1)')
     func(density) + var1
 
-    >>> strip_stat('calc + var1')
-    calc + var1
+    >>> strip_stat('stat + var1')
+    stat + var1
 
     >>> strip_stat(4)
     4
