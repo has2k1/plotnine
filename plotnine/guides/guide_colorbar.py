@@ -7,14 +7,13 @@ import matplotlib.collections as mcoll
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
 from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
-from matplotlib.offsetbox import AuxTransformBox
+from matplotlib.offsetbox import AuxTransformBox, DrawingArea
 from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
 
 from ..aes import rename_aesthetics
 from ..exceptions import PlotnineWarning
 from ..scales.scale import scale_continuous
-from ..utils import ColoredDrawingArea
 from .guide import guide
 
 
@@ -182,7 +181,7 @@ class guide_colorbar(guide):
         themeable['legend_title'].append(title_box)
 
         # colorbar and ticks #
-        da = ColoredDrawingArea(width, height, 0, 0)
+        da = DrawingArea(width, height, 0, 0)
         if self.raster:
             add_interpolated_colorbar(da, colors, direction)
         else:
@@ -205,7 +204,7 @@ class guide_colorbar(guide):
                                                    direction)
             themeable['legend_text_colorbar'].extend(legend_text)
         else:
-            labels_da = ColoredDrawingArea(0, 0)
+            labels_da = DrawingArea(0, 0)
 
         # colorbar + labels #
         if direction == 'vertical':
