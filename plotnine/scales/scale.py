@@ -756,6 +756,9 @@ class scale_continuous(scale):
         breaks = breaks.compress(mask)
         labels = self.get_labels(breaks, mask)
 
+        if minor_breaks is None:
+            minor_breaks = []
+
         vs = NS(
             scale=self,
             aesthetics=self.aesthetics,
