@@ -177,7 +177,7 @@ def rename_aesthetics(obj):
         Object that contains aesthetics names
     """
     if isinstance(obj, dict):
-        for name in obj:
+        for name in tuple(obj.keys()):
             new_name = name.replace('colour', 'color')
             if name != new_name:
                 obj[new_name] = obj.pop(name)
