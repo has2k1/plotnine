@@ -238,7 +238,15 @@ class layer:
         # of the ggplot.data. If the has data it is replaced
         # by copy so that we do not alter the users data
         if self.data is None:
-            self.data = plot_data.copy()
+            try:
+                self.data = plot_data.copy()
+            except AttributeError:
+                _geom_name = self.geom.__class__.__name__
+                _data_name = plot_data.__class__.__name__
+                raise PlotnineError(
+                    "{} layer expects a dataframe, but it got "
+                    "{} instead.".format(_geom_name, _data_name)
+                )
         elif hasattr(self.data, '__call__'):
             self.data = self.data(plot_data)
             if not isinstance(self.data, pd.DataFrame):

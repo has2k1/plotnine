@@ -78,3 +78,11 @@ def test_inserting_layers():
          )
 
     assert p == 'inserting_layers'
+
+
+def test_layer_with_nodata():
+    p = ggplot(aes('x', 'y')) + geom_point()
+    with pytest.raises(PlotnineError) as pe:
+        p.draw_test()
+
+    assert 'geom_point layer expects a dataframe' in pe.value.message
