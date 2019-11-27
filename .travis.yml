@@ -95,3 +95,9 @@ after_success:
     if [[ "$JOB" == "UNITTEST" ]]; then
       coveralls --rcfile=.coveragerc
     fi
+
+after_failure:
+  - |
+    if [[ "$JOB" == "DOCS" ]]; then
+      cat /tmp/sphinx-err-*.log
+    fi
