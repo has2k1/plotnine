@@ -259,3 +259,8 @@ def test_adding_list_ggplot():
     assert len(g.layers) == 2
     assert g.labels['x'] == 'x-label'
     assert isinstance(g.coordinates, coord_trans)
+
+
+def test_string_group():
+    p = ggplot(df, aes('x', 'y')) + geom_point(group='pi')
+    p.draw_test()

@@ -1,4 +1,3 @@
-from contextlib import suppress
 from copy import copy, deepcopy
 import numbers
 
@@ -296,15 +295,17 @@ class layer:
         data = self.data
         aesthetics = self.layer_mapping(plot.mapping)
 
-        # Override grouping if set in layer.
-        with suppress(KeyError):
-            aesthetics['group'] = self.geom.aes_params['group']
-
         env = EvalEnvironment.capture(eval_env=plot.environment)
         env = env.with_outer_namespace(AES_INNER_NAMESPACE)
 
         # Using `type` preserves the subclass of pd.DataFrame
         evaled = type(data)(index=data.index)
+
+        # Override grouping if set in layer.
+        if 'group' in self.geom.aes_params:
+            evaled['group'] = self.geom.aes_params['group']
+            if 'group' in aesthetics:
+                del aesthetics['group']
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot

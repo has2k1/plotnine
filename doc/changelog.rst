@@ -40,6 +40,9 @@ Bug Fixes
 - Fixed all stats that compute kernel density estimates to work when all
   the data points are the same. (:issue:`317`)
 
+- Fixed issue where setting the group to a string value i.e. ``group='string'``
+  outside ``aes()`` failed due to an error.
+
 Enhancements
 ************
 
