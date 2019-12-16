@@ -43,6 +43,9 @@ Bug Fixes
 - Fixed issue where setting the group to a string value i.e. ``group='string'``
   outside ``aes()`` failed due to an error.
 
+- Fixed issue where discrete position scales could not deal with fewer limits
+  than those present in the data. (:issue:`342`)
+
 Enhancements
 ************
 

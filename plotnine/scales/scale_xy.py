@@ -75,7 +75,16 @@ class scale_position_discrete(scale_discrete):
             limits = self.limits
         if array_kind.discrete(series):
             seq = np.arange(1, len(limits)+1)
-            return seq[match(series, limits)]
+            idx = np.asarray(match(series, limits, nomatch=len(series)))
+            try:
+                seq = seq[idx]
+            except IndexError:
+                # Deal with missing data
+                # - Insert NaN where there is no match
+                seq = np.hstack((seq.astype(object), np.nan))
+                idx = np.clip(idx, 0, len(seq)-1)
+                seq = seq[idx]
+            return seq
         return series
 
     @property

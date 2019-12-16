@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from plotnine import ggplot, aes, geom_point, expand_limits, theme
-from plotnine import geom_col, lims, element_text, annotate
+from plotnine import geom_col, geom_bar, lims, element_text, annotate
 from plotnine.scales import scale_color, scale_color_manual
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -302,6 +302,19 @@ def test_discrete_xy_scale_limits():
     s = scale_x_discrete(limits=reversed)
     s.train(x)
     assert s.limits == lst[::-1]
+
+
+def test_discrete_xy_scale_drop_limits():
+    df = pd.DataFrame({
+        'x': list('aaaabbbbccccddd'),
+        'c': list('112312231233123')
+    })
+
+    p = (ggplot(df)
+         + geom_bar(aes(x='x', fill='c'))
+         + scale_x_discrete(limits=list('abc'))
+         )
+    assert p == 'discrete_xy_scale_drop_limits'
 
 
 def test_setting_limits_transformed():
