@@ -49,6 +49,9 @@ Enhancements
 - You can now set the bandwidth parameter ``bw`` of
   :class:`~plotnine.stats.stat_ydensity`.
 
+- Parameters `ha` and `va` of :class:`~plotnine.geoms.geom_text` have been converted
+  to aesthetics. You can now map to them. (:issue:`325`)
+
 v0.6.0
 ------
 (2019-08-21)

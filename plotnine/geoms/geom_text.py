@@ -56,6 +56,18 @@ class geom_text(geom):
     matplotlib.text.Text
 
     """
+    _aesthetics_doc = """
+    {aesthetics_table}
+
+    .. rubric:: Aesthetics Descriptions
+
+    ha
+        Horizontal alignment. One of *left*, *center* or *right.*
+
+    va
+        Vertical alignment. One of *top*, *center* or *bottom.*
+
+    """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
                    'size': 11, 'lineheight': 1.2, 'ha': 'center',
                    'va': 'center'}
@@ -82,6 +94,13 @@ class geom_text(geom):
                 "To use adjust_text you must install the adjustText "
                 "package."
             )
+
+        # Accomodate the old names
+        if mapping and 'hjust' in mapping:
+            mapping['ha'] = mapping.pop('hjust')
+
+        if mapping and 'vjust' in mapping:
+            mapping['va'] = mapping.pop('vjust')
 
         geom.__init__(self, mapping, data, **kwargs)
 
