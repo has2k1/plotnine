@@ -1110,7 +1110,7 @@ def resolution(x, zero=True):
     x = np.asarray(x)
 
     # (unsigned) integers or an effective range of zero
-    _x = x[~np.isnan(x)]
+    _x = x[~pd.isna(x)]
     _x = (x.min(), x.max())
     if x.dtype.kind in ('i', 'u') or zero_range(_x):
         return 1
