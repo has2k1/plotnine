@@ -65,7 +65,7 @@ class geom_text(geom):
         Horizontal alignment. One of *left*, *center* or *right.*
 
     va
-        Vertical alignment. One of *top*, *center* or *bottom.*
+        Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
 
     """
     DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
