@@ -20,7 +20,6 @@ class theme_bw(theme_gray):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(
             theme(axis_text=element_text(size=0.8*base_size),
-                  axis_ticks=element_line(color='black'),
                   legend_key=element_rect(color='#CCCCCC'),
                   panel_background=element_rect(
                       fill='white'),

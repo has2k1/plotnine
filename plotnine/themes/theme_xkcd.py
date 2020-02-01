@@ -41,6 +41,7 @@ class theme_xkcd(theme_gray):
                 text=element_text(
                     family=['xkcd', 'Humor Sans', 'Comic Sans MS']),
                 axis_ticks=element_line(color='black', size=1.5),
+                axis_ticks_minor=element_blank(),
                 axis_ticks_direction='in',
                 axis_ticks_length_major=6,
                 legend_background=element_rect(

@@ -1,4 +1,4 @@
-from .elements import element_line, element_rect, element_text
+from .elements import element_line, element_rect, element_text, element_blank
 from .theme import theme
 from .theme_gray import theme_gray
 
@@ -22,6 +22,7 @@ class theme_dark(theme_gray):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(theme(
             axis_ticks=element_line(color='#666666', size=0.5),
+            axis_ticks_minor=element_blank(),
             legend_key=element_rect(
                 fill='#7F7F7F', color='#666666', size=0.5),
             panel_background=element_rect(fill='#7F7F7F', color='None'),
