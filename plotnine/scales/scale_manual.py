@@ -108,6 +108,12 @@ class scale_linetype_manual(_scale_manual):
     """
     _aesthetics = ['linetype']
 
+    def map(self, x, limits=None):
+        result = super().map(x, limits)
+        if len(result) and hasattr(result[0], '__hash__'):
+            result = [x if isinstance(x, str) else tuple(x) for x in result]
+        return result
+
 
 @document
 class scale_alpha_manual(_scale_manual):

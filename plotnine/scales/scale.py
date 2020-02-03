@@ -437,7 +437,11 @@ class scale_discrete(scale):
                 pal_match = pal[idx]
 
         if self.na_translate:
-            bool_idx = pd.isnull(x) | pd.isnull(pal_match)
+            bool_pal_match = pd.isnull(pal_match)
+            if len(bool_pal_match.shape) > 1:
+                # linetypes take tuples, these return 2d
+                bool_pal_match = bool_pal_match.any(axis=1)
+            bool_idx = pd.isnull(x) | bool_pal_match
             if bool_idx.any():
                 pal_match = [x if i else self.na_value
                              for x, i in zip(pal_match, ~bool_idx)]
