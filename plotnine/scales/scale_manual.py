@@ -110,6 +110,8 @@ class scale_linetype_manual(_scale_manual):
 
     def map(self, x, limits=None):
         result = super().map(x, limits)
+        # Ensure that custom linetypes are tuples, so that they can
+        # be properly inserted and extracted from the dataframe
         if len(result) and hasattr(result[0], '__hash__'):
             result = [x if isinstance(x, str) else tuple(x) for x in result]
         return result
