@@ -95,14 +95,11 @@ class geom_map(geom):
         if not len(data):
             return data
 
-        _loc = data.columns.get_loc
-        cidx = data.index[data['color'].isnull()]
-        fidx = data.index[data['fill'].isnull()]
-        data.iloc[cidx, _loc('color')] = 'none'
-        data.iloc[fidx, _loc('fill')] = 'none'
+        data.loc[data['color'].isnull(), 'color'] = 'none'
+        data.loc[data['fill'].isnull(), 'fill'] = 'none'
         data['fill'] = to_rgba(data['fill'], data['alpha'])
 
-        geom_type = data.geometry[0].geom_type
+        geom_type = data.geometry.iloc[0].geom_type
         if geom_type in ('Polygon', 'MultiPolygon'):
             data['size'] *= SIZE_FACTOR
             patches = [PolygonPatch(g) for g in data['geometry']]
