@@ -2,7 +2,7 @@ import numpy as np
 import shapefile
 from geopandas import GeoDataFrame
 
-from plotnine import ggplot, aes, geom_map, labs, theme
+from plotnine import ggplot, aes, geom_map, labs, theme, facet_wrap
 
 _theme = theme(subplots_adjust={'right': 0.85})
 
@@ -72,3 +72,19 @@ def test_geometries(tmpdir):
          )
 
     assert p + _theme == 'geometries'
+
+
+def test_facet_wrap(tmpdir):
+    polygon_file = '{}/test_file_polygon.shp'.format(tmpdir)
+    _polygon_file(polygon_file)
+
+    df_polygon = GeoDataFrame.from_file(polygon_file)
+    df_polygon['shape'] = ['rectangle', 'triangle']
+
+    p = (ggplot()
+         + aes(fill='geometry.bounds.miny')
+         + geom_map(df_polygon)
+         + facet_wrap('shape')
+         + labs(fill='miny')
+         )
+    assert p + _theme == 'facet_wrap'

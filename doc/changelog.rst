@@ -45,9 +45,11 @@ Bug Fixes
 
 - Fixed issue where discrete position scales could not deal with fewer limits
   than those present in the data. (:issue:`342`)
-  
+
 - Fixed issue with using custom tuple linetypes with
   :class:`plotnine.scales.scale_linetype_manual`. (:issue:`352`)
+
+- Fixed :class:`plotnine.geoms.geom_map` to work with facets. (:issue:`359`)
 
 Enhancements
 ************
