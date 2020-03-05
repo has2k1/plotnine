@@ -30,7 +30,8 @@ __classifiers__ = [
     'Operating System :: Microsoft :: Windows',
     'Operating System :: Unix',
     'Operating System :: MacOS',
-    'Programming Language :: Python :: 3 :: Only'
+    'Programming Language :: Python :: 3 :: Only',
+    'Framework :: Matplotlib'
 ]
 
 
