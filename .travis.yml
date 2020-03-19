@@ -1,19 +1,19 @@
-sudo: false
-
+os: linux
+dist: xenial
 language: python
 
-matrix:
+jobs:
   fast_finish: true
   include:
-    - python: 3.6
+    - python: 3.6  # Minimum
       env:
         - JOB: 'UNITTEST'
         - FULL_DEPS: true
-    - python: 3.7
+    - python: 3.8  # Maximum
       env:
         - JOB: 'UNITTEST'
         - FULL_DEPS: true
-    - python: 3.7
+    - python: 3.8
       env:
         - JOB: 'DOCS'
         - FULL_DEPS: true
@@ -21,7 +21,7 @@ matrix:
         apt:
           packages:
           - pandoc
-    - python: 3.7
+    - python: 3.8
       env:
         - JOB: 'LINT'
         - FULL_DEPS: false
