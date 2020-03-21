@@ -468,33 +468,63 @@ def has_groups(data):
     return data.loc[0, 'group'] != NO_GROUP
 
 
-def reorder(x, y, order=None):
+def reorder(x, y, fun=np.median, ascending=True):
     """
-    Reorder x based on y values
+    Reorder categorical by sorting along another variable
+
+    It is the order of the categories that changes. Values in x
+    are grouped by categories and summarised to determine the
+    new order.
+
+    Credit: Copied from plydata
 
     Parameters
     ----------
-    x : array-like
-        Values to be arrange
-    y : array-like
-        Values to decide the order
-    order : bool
-        Whether the result should be explicitly ordered.
+    x : list-like
+        Values that will make up the categorical.
+    y : list-like
+        Values by which ``c`` will be ordered.
+    fun : callable
+        Summarising function to ``x`` for each category in ``c``.
+        Default is the *median*.
+    ascending : bool
+        If ``True``, the ``c`` is ordered in ascending order of ``x``.
 
-    Returns
-    -------
-    out : Categorical
-        x values whose order has been
-        changed.
+    Examples
+    --------
+    >>> c = list('abbccc')
+    >>> x = [11, 2, 2, 3, 33, 3]
+    >>> cat_reorder(c, x)
+    [a, b, b, c, c, c]
+    Categories (3, object): [b, c, a]
+    >>> cat_reorder(c, x, fun=max)
+    [a, b, b, c, c, c]
+    Categories (3, object): [b, a, c]
+    >>> cat_reorder(c, x, fun=max, ascending=False)
+    [a, b, b, c, c, c]
+    Categories (3, object): [c, a, b]
+    >>> c_ordered = pd.Categorical(c, ordered=True)
+    >>> cat_reorder(c_ordered, x)
+    [a, b, b, c, c, c]
+    Categories (3, object): [b < c < a]
+    >>> cat_reorder(c + ['d'], x)
+    Traceback (most recent call last):
+        ...
+    ValueError: Lengths are not equal. len(c) is 7 and len(x) is 6.
     """
-    from .utils import array_kind
-    ordered = order
-    if ordered is None:
-        ordered = array_kind.ordinal(x)
-    idx = np.argsort(y)
-    x = np.asarray(x)
-    categories = pd.unique(x[idx])
-    return pd.Categorical(x, categories=categories, ordered=ordered)
+    if len(x) != len(y):
+        raise ValueError(
+            "Lengths are not equal. len(x) is {} and len(x) is {}.".format(
+                len(x), len(y)
+            )
+        )
+    summary = (pd.Series(y)
+               .groupby(x)
+               .apply(fun)
+               .sort_values(ascending=ascending)
+               )
+    cats = summary.index.to_list()
+    return pd.Categorical(x, categories=cats)
 
 
 # These are function that can be called by the user inside the aes()
