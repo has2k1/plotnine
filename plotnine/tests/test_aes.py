@@ -38,7 +38,7 @@ def test_labels_series():
 
 def test_labels_lists():
     p = (
-        ggplot(df, aes(x=[1,2,3], y=[1,2,3]))
+        ggplot(df, aes(x=[1, 2, 3], y=[1, 2, 3]))
         + geom_col()
     )
     assert p.labels == {'x': None, 'y': None}
