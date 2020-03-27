@@ -1,6 +1,7 @@
 import re
 from copy import deepcopy
 from contextlib import suppress
+from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
@@ -371,14 +372,24 @@ def is_position_aes(vars_):
         return aes_to_scale(vars_) in {'x', 'y'}
 
 
+def _make_label(ae, label):
+    if isinstance(label, pd.Series):
+        return label.name
+    # if label is a scalar
+    elif not isinstance(label, Iterable) or isinstance(label, str):
+        return strip_calculated_markers(str(label))
+    else:
+        return None
+
+
 def make_labels(mapping):
     """
     Convert aesthetic mapping into text labels
     """
-    labels = mapping.copy()
-    for ae in labels:
-        labels[ae] = strip_calculated_markers(labels[ae])
-    return labels
+    return {
+        ae: _make_label(ae, label)
+        for ae, label in mapping.items()
+    }
 
 
 def is_valid_aesthetic(value, ae):

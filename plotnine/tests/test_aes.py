@@ -26,3 +26,19 @@ def test_reorder_index():
         + geom_col()
     )
     assert p + _theme == 'reorder_index'
+
+
+def test_labels_series():
+    p = (
+        ggplot(df, aes(x=df.x, y=df.y))
+        + geom_col()
+    )
+    assert p.labels == {'x': 'x', 'y': 'y'}
+
+
+def test_labels_lists():
+    p = (
+        ggplot(df, aes(x=[1,2,3], y=[1,2,3]))
+        + geom_col()
+    )
+    assert p.labels == {'x': None, 'y': None}
