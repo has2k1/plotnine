@@ -80,8 +80,8 @@ class scale_color_brewer(scale_discrete):
     _aesthetics = ['color']
     na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, **kwargs):
-        self.palette = brewer_pal(type, palette)
+    def __init__(self, type='seq', palette=1, direction=1, **kwargs):
+        self.palette = brewer_pal(type, palette, direction=direction)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -345,7 +345,7 @@ class scale_color_distiller(scale_color_gradientn):
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, values=None, **kwargs):
+    def __init__(self, type='seq', palette=1, values=None, direction=-1, **kwargs):
         """
         Create colormap that will be used by the palette
         """
@@ -357,10 +357,7 @@ class scale_color_distiller(scale_color_gradientn):
         # Grab 7 colors from brewer and create a gradient palette
         # An odd number matches the midpoint of the palette to that
         # of the data
-        # See https://github.com/has2k1/plotnine/issues/377
-        # TODO: make direction parameter -1 by default: 
-        # https://github.com/tidyverse/ggplot2/blob/master/R/scale-brewer.r#L89
-        colors = reversed(brewer_pal(type, palette)(7))
+        colors = brewer_pal(type, palette, direction=direction)(7)
         scale_color_gradientn.__init__(self, colors, values, **kwargs)
 
 
