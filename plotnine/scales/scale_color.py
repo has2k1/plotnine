@@ -357,7 +357,10 @@ class scale_color_distiller(scale_color_gradientn):
         # Grab 7 colors from brewer and create a gradient palette
         # An odd number matches the midpoint of the palette to that
         # of the data
-        colors = brewer_pal(type, palette)(7)
+        # See https://github.com/has2k1/plotnine/issues/377
+        # TODO: make direction parameter -1 by default: 
+        # https://github.com/tidyverse/ggplot2/blob/master/R/scale-brewer.r#L89
+        colors = reversed(brewer_pal(type, palette)(7))
         scale_color_gradientn.__init__(self, colors, values, **kwargs)
 
 
