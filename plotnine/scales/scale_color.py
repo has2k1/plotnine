@@ -73,6 +73,11 @@ class scale_color_brewer(scale_discrete):
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
+    direction: int in ``[-1, 1]``
+         Sets the order of colors in the scale. If 1, 
+         the default, colors are as output by 
+         mizani.palettes.brewer_pal(). If -1, 
+         the order of colors is reversed.
     {superclass_parameters}
     na_value : str
         Color of missing values. Default is ``'None'``
@@ -337,6 +342,11 @@ class scale_color_distiller(scale_color_gradientn):
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
+    direction: int in ``[-1, 1]``
+        Sets the order of colors in the scale. If 1, 
+        the default, colors are as output by 
+        mizani.palettes.brewer_pal(). If -1, 
+        the order of colors is reversed.
     {superclass_parameters}
     na_value : str
         Color of missing values. Default is ``'None'``
