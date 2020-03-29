@@ -73,6 +73,11 @@ class scale_color_brewer(scale_discrete):
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
+    direction: int in ``[-1, 1]``
+         Sets the order of colors in the scale. If 1,
+         the default, colors are as output by
+         mizani.palettes.brewer_pal(). If -1,
+         the order of colors is reversed.
     {superclass_parameters}
     na_value : str
         Color of missing values. Default is ``'None'``
@@ -80,8 +85,8 @@ class scale_color_brewer(scale_discrete):
     _aesthetics = ['color']
     na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, **kwargs):
-        self.palette = brewer_pal(type, palette)
+    def __init__(self, type='seq', palette=1, direction=1, **kwargs):
+        self.palette = brewer_pal(type, palette, direction=direction)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -337,6 +342,10 @@ class scale_color_distiller(scale_color_gradientn):
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
+    direction: int in ``[-1, 1]``
+        Sets the order of colors in the scale. If 1
+        colors are as output by mizani.palettes.brewer_pal().
+        If -1, the default, the order of colors is reversed.
     {superclass_parameters}
     na_value : str
         Color of missing values. Default is ``'None'``
@@ -345,7 +354,8 @@ class scale_color_distiller(scale_color_gradientn):
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, values=None, **kwargs):
+    def __init__(self, type='seq', palette=1,
+                 values=None, direction=-1, **kwargs):
         """
         Create colormap that will be used by the palette
         """
@@ -357,7 +367,7 @@ class scale_color_distiller(scale_color_gradientn):
         # Grab 7 colors from brewer and create a gradient palette
         # An odd number matches the midpoint of the palette to that
         # of the data
-        colors = brewer_pal(type, palette)(7)
+        colors = brewer_pal(type, palette, direction=direction)(7)
         scale_color_gradientn.__init__(self, colors, values, **kwargs)
 
 
