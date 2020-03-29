@@ -74,9 +74,9 @@ class scale_color_brewer(scale_discrete):
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
     direction: int in ``[-1, 1]``
-         Sets the order of colors in the scale. If 1, 
-         the default, colors are as output by 
-         mizani.palettes.brewer_pal(). If -1, 
+         Sets the order of colors in the scale. If 1,
+         the default, colors are as output by
+         mizani.palettes.brewer_pal(). If -1,
          the order of colors is reversed.
     {superclass_parameters}
     na_value : str
@@ -344,7 +344,7 @@ class scale_color_distiller(scale_color_gradientn):
         `colors`. Default to evenly space the colors
     direction: int in ``[-1, 1]``
         Sets the order of colors in the scale. If 1
-        colors are as output by mizani.palettes.brewer_pal(). 
+        colors are as output by mizani.palettes.brewer_pal().
         If -1, the default, the order of colors is reversed.
     {superclass_parameters}
     na_value : str
@@ -354,7 +354,7 @@ class scale_color_distiller(scale_color_gradientn):
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, 
+    def __init__(self, type='seq', palette=1,
                  values=None, direction=-1, **kwargs):
         """
         Create colormap that will be used by the palette
