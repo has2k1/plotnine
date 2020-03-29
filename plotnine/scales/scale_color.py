@@ -345,7 +345,7 @@ class scale_color_distiller(scale_color_gradientn):
     direction: int in ``[-1, 1]``
         Sets the order of colors in the scale. If 1
         colors are as output by mizani.palettes.brewer_pal(). 
-        If -1, the order of colors is reversed.
+        If -1, the default, the order of colors is reversed.
     {superclass_parameters}
     na_value : str
         Color of missing values. Default is ``'None'``
