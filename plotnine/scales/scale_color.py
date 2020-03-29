@@ -345,7 +345,8 @@ class scale_color_distiller(scale_color_gradientn):
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, values=None, direction=-1, **kwargs):
+    def __init__(self, type='seq', palette=1, 
+                 values=None, direction=-1, **kwargs):
         """
         Create colormap that will be used by the palette
         """
