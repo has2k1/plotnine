@@ -80,7 +80,8 @@ class geom_text(geom):
                       'family': None, 'fontweight': 'normal',
                       'fontstyle': 'normal', 'nudge_x': 0, 'nudge_y': 0,
                       'adjust_text': None,
-                      'format_string': None}
+                      'format_string': None,
+                      'path_effects': None}
 
     def __init__(self, mapping=None, data=None, **kwargs):
         nudge_kwargs = {}
