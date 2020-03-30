@@ -51,6 +51,10 @@ Bug Fixes
 
 - Fixed :class:`plotnine.geoms.geom_map` to work with facets. (:issue:`359`)
 
+- Fixed :class:`plotnine.position.jitter_dodge` to work when ``color`` is
+  used as an aesthetic. (:issue:`372`)
+
+
 Enhancements
 ************
 
