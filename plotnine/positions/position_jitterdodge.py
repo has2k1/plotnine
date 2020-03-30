@@ -1,6 +1,7 @@
 from contextlib import suppress
 from copy import copy
 
+from ..aes import scaled_aesthetics
 from ..utils import jitter, resolution
 from ..exceptions import PlotnineError
 from .position import position
@@ -49,8 +50,7 @@ class position_jitterdodge(position):
 
         # Adjust the x transformation based on the number
         # of dodge variables
-        dvars = {'alpha', 'colour', 'fill', 'linetype',
-                 'shape', 'size', 'stroke'}
+        dvars = scaled_aesthetics - {'x', 'y'}
         dodge_columns = data.columns.intersection(dvars)
         if len(dodge_columns) == 0:
             raise PlotnineError(
