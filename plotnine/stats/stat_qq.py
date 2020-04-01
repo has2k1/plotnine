@@ -64,7 +64,7 @@ class stat_qq(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        sample = data['sample'].sort_values()
+        sample = data['sample'].sort_values().values
         alpha, beta = params['alpha_beta']
         quantiles = params['quantiles']
 
