@@ -52,9 +52,9 @@ def get_required_packages():
                         'matplotlib >= 3.1.1',
                         'numpy >= 1.16.0',
                         'scipy >= 1.2.0',
-                        'patsy >= 0.4.1',
-                        'statsmodels >= 0.9.0',
-                        'pandas >= 0.25.0',
+                        'patsy >= 0.5.1',
+                        'statsmodels >= 0.11.1',
+                        'pandas >= 1.0.3',
                         # 'geopandas >= 0.3.0',
                         'descartes >= 1.1.0'
                         ]
