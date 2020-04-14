@@ -15,6 +15,13 @@ API Changes
   :class:`~plotnine.stats.stat_sina`. These stats can now work with groups
   that have a single unique value.
 
+- Changed :class:`plotnine.scale.scale_colour_continuous` to refer to the same
+  scale as :class:`plotnine.scale.scale_color_continuous`.
+
+- Changed :class:`plotnine.scale.scale_color_cmap` so the parameter
+  `cmap_name` refers to the name of the color palette and `name` refers
+  to the name of the scale. (:issue:`371`)
+
 New Features
 ************
 
