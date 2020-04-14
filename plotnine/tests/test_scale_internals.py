@@ -141,6 +141,16 @@ def test_continuous_color_palettes():
     _assert(s)
 
 
+def test_color_aliases():
+    # American and British names should refer to the same scales
+    names = ((s, s.replace('color', 'colour'))
+             for s in dir(scale_color) if s.startswith('scale_color')
+             )
+
+    for a, b in names:
+        assert getattr(scale_color, a) is getattr(scale_color, b)
+
+
 def test_fill_scale_aesthetics():
     for name in scale_color.__dict__:
         if name.startswith('scale_fill'):
