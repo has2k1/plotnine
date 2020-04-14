@@ -391,7 +391,7 @@ class scale_color_cmap(scale_continuous):
 
     Parameters
     ----------
-    name : str
+    cmap_name : str
         A standard Matplotlib colormap name. The default is
         `viridis`. For the list of names checkout the output
         of ``matplotlib.cm.cmap_d.keys()`` or see the
@@ -413,8 +413,8 @@ class scale_color_cmap(scale_continuous):
     guide = 'colorbar'
     na_value = '#7F7F7F'
 
-    def __init__(self, name='viridis', lut=None, **kwargs):
-        self.palette = cmap_pal(name, lut)
+    def __init__(self, cmap_name='viridis', lut=None, **kwargs):
+        self.palette = cmap_pal(cmap_name, lut)
         super(scale_color_cmap, self).__init__(**kwargs)
 
 
