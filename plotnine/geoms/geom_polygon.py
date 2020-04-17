@@ -59,7 +59,8 @@ class geom_polygon(geom):
             verts[i] = tuple(zip(df['x'], df['y']))
             fill = to_rgba(df['fill'].iloc[0], df['alpha'].iloc[0])
             facecolor[i] = 'none' if fill is None else fill
-            edgecolor[i] = df['color'].iloc[0] or 'none'
+            color = to_rgba(df['color'].iloc[0], df['alpha'].iloc[0])
+            edgecolor[i] = 'none' if color is None else color
             linestyle[i] = df['linetype'].iloc[0]
             linewidth[i] = df['size'].iloc[0]
 
@@ -96,6 +97,9 @@ class geom_polygon(geom):
                             da.width/4, da.height/4])
         if data['color'] is None:
             linewidth = 0
+            edgecolor = None
+        else:
+            edgecolor = to_rgba(data['color'], data['alpha'])
 
         facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
@@ -107,7 +111,7 @@ class geom_polygon(geom):
                          linewidth=linewidth,
                          linestyle=data['linetype'],
                          facecolor=facecolor,
-                         edgecolor=data['color'],
+                         edgecolor=edgecolor,
                          capstyle='projecting')
         da.add_artist(rect)
         return da

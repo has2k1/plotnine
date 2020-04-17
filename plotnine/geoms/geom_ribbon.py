@@ -45,13 +45,13 @@ class geom_ribbon(geom):
     def draw_unit(data, panel_params, coord, ax, **params):
         data['size'] *= SIZE_FACTOR
         fill = to_rgba(data['fill'], data['alpha'])
-        color = data['color']
-
         if fill is None:
             fill = 'none'
 
-        if all(color.isnull()):
+        if all(data['color'].isnull()):
             color = 'none'
+        else:
+            color = to_rgba(data['color'], data['alpha'])
 
         if isinstance(coord, coord_flip):
             fill_between = ax.fill_betweenx

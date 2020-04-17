@@ -134,7 +134,7 @@ class geom_boxplot(geom):
             'x': flat(data['x'], data['x']),
             'y': flat(data['upper'], data['lower']),
             'yend': flat(data['ymax'], data['ymin']),
-            'alpha': 1
+            'alpha': flat(data['alpha'], data['alpha'])
         })
         whiskers['xend'] = whiskers['x']
         copy_missing_columns(whiskers, data[common_columns])
@@ -199,7 +199,9 @@ class geom_boxplot(geom):
         facecolor = to_rgba(data['fill'], data['alpha'])
         if facecolor is None:
             facecolor = 'none'
-
+        edgecolor = to_rgba(data['color'], data['alpha'])
+        if edgecolor is None:
+            edgecolor = 'none'
         kwargs = dict(
            linestyle=data['linetype'],
            linewidth=data['size'])
@@ -208,7 +210,7 @@ class geom_boxplot(geom):
                         width=da.width*.75,
                         height=da.height*.5,
                         facecolor=facecolor,
-                        edgecolor=data['color'],
+                        edgecolor=edgecolor,
                         capstyle='projecting',
                         antialiased=False,
                         **kwargs)
@@ -216,6 +218,7 @@ class geom_boxplot(geom):
 
         kwargs['solid_capstyle'] = 'butt'
         kwargs['color'] = data['color']
+        kwargs['alpha'] = data['alpha']
         kwargs['linewidth'] *= SIZE_FACTOR
 
         # middle strike through

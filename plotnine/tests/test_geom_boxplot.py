@@ -33,7 +33,7 @@ class TestAesthetics:
 
 def test_params():
     p = (ggplot(df, aes('x')) +
-         geom_boxplot(df[:m], aes(y='y'), size=2, notch=True) +
+         geom_boxplot(df[:m], aes(y='y'), size=2, notch=True, alpha=0.3) +
          geom_boxplot(df[m:2*m], aes(y='y'), size=2,
                       notch=True, notchwidth=0.8) +
          # outliers
