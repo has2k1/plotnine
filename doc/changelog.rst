@@ -64,7 +64,10 @@ Bug Fixes
 - Fixed :class:`plotnine.position.jitter_dodge` to work when ``color`` is
   used as an aesthetic. (:issue:`372`)
 
-- Fixed :class:`plotnine.geom.geom_qq` to work with facets (:issue:`379`)
+- Fixed :class:`plotnine.geoms.geom_qq` to work with facets (:issue:`379`)
+
+- Fixed skewed head in :class:`plotnine.geoms.arrow` when drawn on
+  facetted plot (:issue:`388`)
 
 Enhancements
 ************

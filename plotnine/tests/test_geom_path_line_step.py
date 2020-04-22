@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from plotnine import (ggplot, aes, geom_path, geom_line,
-                      geom_point, geom_step, arrow)
+                      geom_point, geom_step, arrow, facet_grid)
 from plotnine.exceptions import PlotnineWarning
 
 
@@ -32,11 +32,25 @@ def test_arrow():
     p = (ggplot(df, aes('x', 'y')) +
          geom_path(size=2, arrow=arrow(ends='both', type='closed')) +
          geom_path(aes(y='y+2'), color='red', size=2,
-                   arrow=arrow(angle=60, length=1, ends='first')) +
+                   arrow=arrow(angle=60, length=0.8, ends='first')) +
          geom_path(aes(y='y+4'), color='blue', size=2,
-                   arrow=arrow(length=1)))
+                   arrow=arrow(length=0.8)))
 
     assert p == 'arrow'
+
+
+def test_arrow_facets():
+    df = pd.DataFrame({
+        'x': [1, 3, 2, 4],
+        'y': [10, 9, 10, 9],
+        'z': ['a', 'a', 'b', 'b']
+    })
+
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_path(size=2, arrow=arrow(length=.25))
+         + facet_grid('~ z')
+         )
+    assert p == 'arrow_facets'
 
 
 def test_step():

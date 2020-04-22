@@ -177,7 +177,7 @@ class arrow:
         When it is closed, it is also filled
     """
 
-    def __init__(self, angle=30, length=0.25,
+    def __init__(self, angle=30, length=0.2,
                  ends='last', type='open'):
         self.angle = angle
         self.length = length
@@ -304,10 +304,9 @@ class arrow:
         # Slices into the vertices list
         slc = slice(0, 3)
 
-        # We need the plot dimensions so that we can
+        # We need the axes dimensions so that we can
         # compute scaling factors
-        fig = ax.get_figure()
-        width, height = fig.get_size_inches()
+        width, height = _axes_get_size_inches(ax)
         ranges = coord.range(panel_params)
         width_ = np.ptp(ranges.x)
         height_ = np.ptp(ranges.y)
@@ -411,3 +410,24 @@ def _get_joinstyle(data, params):
         d['dash_joinstyle'] = joinstyle
         d['dash_capstyle'] = capstyle
     return d
+
+
+def _axes_get_size_inches(ax):
+    """
+    Size of axes in inches
+
+    Parameters
+    ----------
+    ax : axes
+        Axes
+
+    Returns
+    -------
+    out : tuple[float, float]
+        (width, height) of ax in inches
+    """
+    fig = ax.get_figure()
+    bbox = ax.get_window_extent().transformed(
+        fig.dpi_scale_trans.inverted()
+    )
+    return bbox.width, bbox.height
