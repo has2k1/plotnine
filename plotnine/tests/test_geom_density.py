@@ -20,6 +20,11 @@ def test_gaussian():
     assert p1 + _theme == 'gaussian'
 
 
+def test_gaussian_weighted():
+    p1 = p + geom_density(aes(weight='x'), kernel='gaussian', alpha=.3)
+    assert p1 + _theme == 'gaussian_weighted'
+
+
 def test_gaussian_trimmed():
     p2 = p + geom_density(kernel='gaussian', alpha=.3, trim=True)
     assert p2 + _theme == 'gaussian-trimmed'

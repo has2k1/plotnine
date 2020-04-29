@@ -68,6 +68,9 @@ Bug Fixes
 
 - Fixed skewed head in :class:`plotnine.geoms.arrow` when drawn on
   facetted plot (:issue:`388`)
+  
+- Fixed issue with :class:`plotnine.stats.stat_density` where weights could
+  not be used with a gaussian model. (:issue:`392`)
 
 Enhancements
 ************

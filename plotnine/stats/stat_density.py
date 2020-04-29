@@ -156,13 +156,15 @@ def compute_density(x, weight, range, **params):
 
     if weight is None:
         weight = np.ones(n) / n
+    else:
+        weight = np.asarray(weight, dtype=float)
 
     # kde is computed efficiently using fft. But the fft does
     # not support weights and is only available with the
     # gaussian kernel. When weights are relevant we
     # turn off the fft.
-    if params['kernel'] == 'gau':
-        fft, weight = True, None
+    if params['kernel'] == 'gau' and weight is None:
+        fft = True
     else:
         fft = False
 
