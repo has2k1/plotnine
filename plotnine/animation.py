@@ -1,5 +1,6 @@
 from copy import copy
 
+import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.animation import ArtistAnimation
 
@@ -52,6 +53,10 @@ class PlotnineAnimation(ArtistAnimation):
         )
 
     def _draw_plots(self, plots):
+        with pd.option_context('mode.chained_assignment', None):
+            return self.__draw_plots(plots)
+
+    def __draw_plots(self, plots):
         """
         Plot and return the figure and artists
 
@@ -191,4 +196,6 @@ class PlotnineAnimation(ArtistAnimation):
         if figure is None:
             figure = plt.figure()
 
+        # Prevent Jupyter from plotting any static figure
+        plt.close(figure)
         return figure, artists
