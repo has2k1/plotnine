@@ -198,14 +198,19 @@ class GalleryEntryExtractor:
             section_title = section[0].astext()
 
             # If an emphasis follows the section, it is the description
-            if isinstance(section[1][0], nodes.emphasis):
-                description = section[1][0].astext()
+            try:
+                _node = section[1][0]
+            except IndexError:
+                _node = None
+
+            if isinstance(_node, nodes.emphasis):
+                description = _node.astext()
             else:
                 description = ''
 
             # Last image in the section is used to create the thumbnail
             try:
-                image_node = section.traverse(nodes.image)[-1]
+                image_node = list(section.traverse(nodes.image))[-1]
             except IndexError:
                 continue
             else:
