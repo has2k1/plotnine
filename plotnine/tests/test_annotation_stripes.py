@@ -20,7 +20,7 @@ df = pd.DataFrame({
 
 def test_annotation_stripes():
     p = (ggplot(df)
-         + annotation_stripes()
+         + annotation_stripes(fill_range='no')
          + geom_point(aes('factor(x)', 'y'))
          + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
          )
@@ -30,7 +30,7 @@ def test_annotation_stripes():
 
 def test_annotation_stripes_fill_range():
     p = (ggplot(df)
-         + annotation_stripes(fill_range=True)
+         + annotation_stripes()
          + geom_point(aes('factor(x)', 'y'))
          + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
          )
@@ -38,9 +38,19 @@ def test_annotation_stripes_fill_range():
     assert p == 'annotation_stripes_fill_range'
 
 
+def test_annotation_stripes_fill_range_cycle():
+    p = (ggplot(df)
+         + annotation_stripes(fill_range='cycle')
+         + geom_point(aes('factor(x)', 'y'))
+         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
+         )
+
+    assert p == 'annotation_stripes_fill_range_cycle'
+
+
 def test_annotation_stripes_coord_flip():
     p = (ggplot(df)
-         + annotation_stripes()
+         + annotation_stripes(fill_range='no')
          + geom_point(aes('factor(x)', 'y'))
          + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
          + coord_flip()
@@ -51,7 +61,7 @@ def test_annotation_stripes_coord_flip():
 
 def test_annotation_stripes_continuous_scale():
     p = (ggplot(df)
-         + annotation_stripes(fill_range=True)
+         + annotation_stripes()
          + geom_point(aes('x', 'y'))
          + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
          )
@@ -68,6 +78,7 @@ def test_annotation_stripes_fill_direction_extend():
     p = (ggplot(df)
          + annotation_stripes(
              fill=['red', 'blue', 'green'],
+             fill_range='no',
              direction='horizontal',
              extend=(.15, 0.85),
              alpha=0.25
