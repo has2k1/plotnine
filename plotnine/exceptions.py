@@ -21,6 +21,16 @@ warnings.filterwarnings(
     module='scipy')
 
 
+# Show the warnings on one line, leaving out any code makes the
+# message clear
+def warning_format(message, category, filename, lineno, file=None, line=None):
+    fmt = '{}:{}: {}: {}\n'.format
+    return fmt(filename, lineno, category.__name__, message)
+
+
+warnings.formatwarning = warning_format
+
+
 class PlotnineError(Exception):
     """
     Exception for ggplot errors
