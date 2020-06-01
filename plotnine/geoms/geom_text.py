@@ -50,10 +50,16 @@ class geom_text(geom):
     format_string : str (default: None)
         If not :py:`None`, then the text if formatted with this
         string using :meth:`str.format`
+    path_effects : list (default: None)
+        If not :py:`None`, then the text will use these effects.
+        See `path_effects
+        <https://matplotlib.org/tutorials/advanced/patheffects_guide.html>`_
+        documentation for more details.
 
     See Also
     --------
     matplotlib.text.Text
+    matplotlib.patheffects
 
     """
     _aesthetics_doc = """
@@ -77,7 +83,8 @@ class geom_text(geom):
                       'family': None, 'fontweight': 'normal',
                       'fontstyle': 'normal', 'nudge_x': 0, 'nudge_y': 0,
                       'adjust_text': None,
-                      'format_string': None}
+                      'format_string': None,
+                      'path_effects': None}
 
     def __init__(self, mapping=None, data=None, **kwargs):
         nudge_kwargs = {}
@@ -177,7 +184,9 @@ class geom_text(geom):
                 kw['bbox'] = bbox
                 kw['bbox']['edgecolor'] = params['boxcolor'] or kw['color']
                 kw['bbox']['facecolor'] = kw.pop('facecolor')
-            ax.text(**kw)
+            text_elem = ax.text(**kw)
+            if params['path_effects']:
+                text_elem.set_path_effects(params['path_effects'])
 
         if params['adjust_text']:
             adjust_text(list(ax.texts), ax=ax, **params['adjust_text'])
