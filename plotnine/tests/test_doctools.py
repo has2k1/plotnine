@@ -1,3 +1,6 @@
+from plotnine.geoms.geom import geom
+from plotnine.stats.stat import stat
+from plotnine import position_stack
 from plotnine.scales.scale import scale
 from plotnine.doctools import document
 
@@ -65,3 +68,53 @@ def test_document_scale():
     assert 'Base Specific Parameter Description' not in doc
     assert doc.count('specific_parameter : str') == 1
     assert doc.count('Derived Specific Parameter Description') == 1
+
+
+@document
+class geom_abc(geom):
+    """
+    Geom ABC
+
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+    """
+    DEFAULT_AES = {'color': None}
+    DEFAULT_PARAMS = {
+        'stat': 'bin',
+        'position': position_stack,
+        'na_rm': False
+    }
+
+
+def test_document_geom():
+    doc = geom_abc.__doc__
+    assert '~plotnine.stats.stat_bin' in doc
+    assert 'position_stack' in doc
+
+
+@document
+class stat_abc(stat):
+    """
+    Stat ABC
+
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+    """
+    DEFAULT_AES = {'weight': None}
+    DEFAULT_PARAMS = {
+        'geom': geom_abc,
+        'position': 'stack',
+        'na_rm': False
+    }
+
+
+def test_document_stat():
+    doc = stat_abc.__doc__
+    assert 'geom_abc' in doc
+    assert '~plotnine.positions.position_stack' in doc
