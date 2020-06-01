@@ -110,7 +110,7 @@ mapping : aes, optional
     {_aesthetics_doc}
 data : dataframe, optional
     {data}
-geom : str or stat, optional (default: {default_geom})
+geom : str or geom, optional (default: {default_geom})
     {stat}
 position : str or position, optional (default: {default_position})
     {position}
@@ -338,6 +338,37 @@ def parameters_dict_to_str(d):
     return '\n'.join(d.values())
 
 
+def qualified_name(s, prefix):
+    """
+    Return the qualified name of s
+
+    Only if s does not start with the prefix
+
+    Examples
+    --------
+    >>> qualified_name('bin', 'stat_')
+    '~plotnine.stats.stat_bin'
+    >>> qualified_name('point', 'geom_')
+    '~plotnine.geoms.geom_point'
+    >>> qualified_name('stack', 'position_')
+    '~plotnine.positions.position_'
+    """
+    lookup = {
+        'stat_': '~plotnine.stats.stat_',
+        'geom_': '~plotnine.geoms.geom_',
+        'position_': '~plotnine.positions.position_'
+    }
+    if isinstance(s, str):
+        if not s.startswith(prefix) and prefix in lookup:
+            pre = lookup[prefix]
+            s = f'{pre}{s}'
+    elif isinstance(s, type):
+        s = s.__name__
+    else:
+        s = s.__class__.__name__
+    return s
+
+
 def document_geom(geom):
     """
     Create a structured documentation for the geom
@@ -373,8 +404,8 @@ def document_geom(geom):
     # common_parameters
     d = geom.DEFAULT_PARAMS
     common_parameters = GEOM_PARAMS_TPL.format(
-        default_stat=d['stat'],
-        default_position=d['position'],
+        default_stat=qualified_name(d['stat'], 'stat_'),
+        default_position=qualified_name(d['position'], 'position_'),
         default_na_rm=d['na_rm'],
         default_inherit_aes=d.get('inherit_aes', True),
         _aesthetics_doc=aesthetics_doc,
@@ -418,8 +449,8 @@ def document_stat(stat):
     # common_parameters
     d = stat.DEFAULT_PARAMS
     common_parameters = STAT_PARAMS_TPL.format(
-            default_geom=d['geom'],
-            default_position=d['position'],
+            default_geom=qualified_name(d['geom'], 'geom_'),
+            default_position=qualified_name(d['position'], 'position_'),
             default_na_rm=d['na_rm'],
             _aesthetics_doc=aesthetics_doc,
             **common_params_doc)
