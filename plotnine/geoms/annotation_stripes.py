@@ -7,6 +7,7 @@ from .geom import geom
 from .geom_rect import geom_rect
 from .annotate import annotate
 from ..coords import coord_flip
+from ..scales.scale import scale_discrete
 
 
 class annotation_stripes(annotate):
@@ -20,11 +21,19 @@ class annotation_stripes(annotate):
     fill : list-like
         List of colors for the strips. The default  is
         `("#AAAAAA", "#CCCCCC")`
-    fill_range: bool or 'blend'
-        If truthy, additional stripes are created to cover the
-        edges of the range. This may be desired for discrete
-        scales. True means they alternate colors with the regular stripes.
-        'blend' means they adopt the color of the first/last stripe.
+    fill_range: 'cycle' | 'nocycle' | 'auto' | 'no'
+        How to fill stripes beyond the range of scale::
+
+            'cycle'      # keep cycling the colors of the
+                         # stripes after the range ends
+            'nocycle'    # stop cycling the colors of the
+                         # stripes after the range ends
+            'auto'       # 'cycle' for continuous scales and
+                         # 'nocycle' for discrete scales.
+            'no'         # Do not add stripes passed the range
+                         # passed the range of the scales
+
+        Default is 'auto'.
     direction : 'vertical' or 'horizontal'
         Orientation of the stripes
     extend : tuple
@@ -35,7 +44,7 @@ class annotation_stripes(annotate):
         They include; *alpha*, *color*, *linetype*, and *size*.
     """
 
-    def __init__(self, fill=('#AAAAAA', '#CCCCCC'), fill_range=False,
+    def __init__(self, fill=('#AAAAAA', '#CCCCCC'), fill_range='auto',
                  direction='vertical', extend=(0, 1), **kwargs):
         allowed = ('vertical', 'horizontal')
         if direction not in allowed:
@@ -55,7 +64,7 @@ class _geom_stripes(geom):
                       'fill': ('#AAAAAA', '#CCCCCC'),
                       'linetype': 'solid', 'size': 1, 'alpha': 0.5,
                       'direction': 'vertical', 'extend': (0, 1),
-                      'fill_range': False}
+                      'fill_range': 'auto'}
     legend_geom = "polygon"
 
     @staticmethod
@@ -73,9 +82,16 @@ class _geom_stripes(geom):
         if isinstance(coord, coord_flip):
             axis, other_axis = other_axis, axis
 
-        breaks = getattr(panel_params, axis).breaks
-        range = getattr(panel_params, axis).range
+        _axis = getattr(panel_params, axis)
+        breaks = _axis.breaks
+        range = _axis.range
         other_range = getattr(panel_params, other_axis).range
+
+        if fill_range == 'auto':
+            if isinstance(_axis.scale, scale_discrete):
+                fill_range = 'nocycle'
+            else:
+                fill_range = 'cycle'
 
         # Breaks along the width
         n_stripes = len(breaks)
@@ -92,9 +108,10 @@ class _geom_stripes(geom):
             step = breaks[0]
 
         deltas = np.array([step/2] * n_stripes)
+        many_stripes = len(breaks) > 1
         xmin = breaks - deltas
         xmax = breaks + deltas
-        if fill_range:
+        if fill_range in ('cycle', 'nocycle') and many_stripes:
             if range[0] < breaks[0]:
                 n_stripes += 1
                 xmax = np.insert(xmax, 0, xmin[0])
@@ -109,7 +126,7 @@ class _geom_stripes(geom):
         ymin = other_range[0] + full_height * extend[0]
         ymax = other_range[0] + full_height * extend[1]
         fill = list(islice(cycle(params['fill']), n_stripes))
-        if fill_range == 'blend':
+        if fill_range == 'nocycle' and many_stripes:
             # there are at least two stripes at this point
             fill[0] = fill[1]
             fill[-1] = fill[-2]
