@@ -1,13 +1,14 @@
 from copy import deepcopy, copy
 import itertools
 from contextlib import suppress
+from warnings import warn
 
 import numpy as np
 import pandas as pd
 import types
 
 from ..utils import cross_join, match
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, PlotnineWarning
 from ..scales.scales import Scales
 
 # For default matplotlib backend
@@ -531,6 +532,31 @@ class facet:
         else:
             themeable['strip_background_x'].append(rect)
             themeable['strip_text_x'].append(text)
+
+    def check_axis_text_space(self):
+        _adjust = self.theme.themeables.get('subplots_adjust')
+        if _adjust:
+            has_wspace = 'wspace' in _adjust.properties['value']
+            has_hspace = 'hspace' in _adjust.properties['value']
+        else:
+            has_wspace = False
+            has_hspace = False
+
+        warn_x = self.ncol > 1 and self.free['y'] and not has_wspace
+        warn_y = self.nrow > 1 and self.free['x'] and not has_hspace
+
+        if warn_x:
+            warn("If you need more space for the x-axis tick text use "
+                 "... + theme(subplots_adjust={'wspace': 0.25}). "
+                 "Choose an appropriate value for 'wspace'.",
+                 PlotnineWarning
+                 )
+        if warn_y:
+            warn("If you need more space for the y-axis tick text use "
+                 "... + theme(subplots_adjust={'hspace': 0.25}). "
+                 "Choose an appropriate value for 'hspace'",
+                 PlotnineWarning
+                 )
 
 
 def combine_vars(data, environment=None, vars=None, drop=True):

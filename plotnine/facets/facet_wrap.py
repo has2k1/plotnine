@@ -213,6 +213,7 @@ class facet_wrap(facet):
         wspace = spacing_x/w
         hspace = (spacing_y + top_strip_height) / h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
+        self.check_axis_text_space()
 
     def draw_label(self, layout_info, ax):
         """
