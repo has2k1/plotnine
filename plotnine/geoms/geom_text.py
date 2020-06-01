@@ -52,11 +52,14 @@ class geom_text(geom):
         string using :meth:`str.format`
     path_effects : list (default: None)
         If not :py:`None`, then the text will use these effects.
-        See the matplotlib documentation for more details
+        See `path_effects
+        <https://matplotlib.org/tutorials/advanced/patheffects_guide.html>`_
+        documentation for more details.
 
     See Also
     --------
     matplotlib.text.Text
+    matplotlib.patheffects
 
     """
     _aesthetics_doc = """
@@ -183,7 +186,7 @@ class geom_text(geom):
                 kw['bbox']['facecolor'] = kw.pop('facecolor')
             text_elem = ax.text(**kw)
             if params['path_effects']:
-              text_elem.set_path_effects(params['path_effects'])
+                text_elem.set_path_effects(params['path_effects'])
 
         if params['adjust_text']:
             adjust_text(list(ax.texts), ax=ax, **params['adjust_text'])
