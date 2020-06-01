@@ -21,6 +21,10 @@ matrix:
         apt:
           packages:
           - pandoc
+    - python: 3.7
+      env:
+        - JOB: 'LINT'
+        - FULL_DEPS: false
 
 cache: pip
 
@@ -60,9 +64,10 @@ install:
       conda install pytest-cov
       conda install -c conda-forge "pyshp>=2.0.0" # temporary
       pip install coveralls
-      pip install flake8
     elif [[ "$JOB" == "DOCS" ]]; then
       pip install -r requirements/doc.txt
+    elif [[ "$JOB" == "LINT" ]]; then
+      pip install flake8
     fi
   # List all conda and pip packages
   - conda list
@@ -79,6 +84,8 @@ script:
       # low pandoc version leads to a warning so
       # SPHINXOPTS=-W fails
       make html && popd
+    elif [[ "$JOB" == "LINT" ]]; then
+      make lint
     fi
 
 
