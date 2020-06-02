@@ -68,9 +68,14 @@ Bug Fixes
 
 - Fixed skewed head in :class:`plotnine.geoms.arrow` when drawn on
   facetted plot (:issue:`388`)
-  
+
 - Fixed issue with :class:`plotnine.stats.stat_density` where weights could
   not be used with a gaussian model. (:issue:`392`)
+
+- Fixed bug where :class:`~plotnine.guides.guide_colorbar` width and height
+  could not be controlled by
+  :class:`~plotnine.themes.theamables.legend_key_width` and
+  :class:`~plotnine.themes.theamables.legend_key_height`. (:issue:`360`)
 
 Enhancements
 ************

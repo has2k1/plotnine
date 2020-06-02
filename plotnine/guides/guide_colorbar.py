@@ -26,7 +26,8 @@ class guide_colorbar(guide):
     barwidth : float
         Width (in pixels) of the colorbar.
     barheight : float
-        Height (in pixels) of the colorbar.
+        Height (in pixels) of the colorbar. The height is multiplied by
+        a factor of 5.
     nbin : int
         Number of bins for drawing a colorbar. A larger value yields
         a smoother colorbar. Default is 20.
@@ -45,8 +46,8 @@ class guide_colorbar(guide):
 
     """
     # bar
-    barwidth = 23
-    barheight = 23*5
+    barwidth = None
+    barheight = None
     nbin = 20  # maximum number of bins
     raster = True
 
@@ -141,14 +142,19 @@ class guide_colorbar(guide):
         """
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
-        width = self.barwidth
-        height = self.barheight
         nbars = len(self.bar)
-        length = height
         direction = self.direction
         colors = self.bar['color'].tolist()
         labels = self.key['label'].tolist()
         themeable = self.theme.figure._themeable
+        _d = self._default
+
+        # 1.45 makes the default colourbar wider than the
+        # legend entry boxes.
+        width = (self.barwidth or _d('legend_key_width')) * 1.45
+        height = (self.barheight or _d('legend_key_height')) * 1.45
+        height *= 5
+        length = height
 
         # When there is more than one guide, we keep
         # record of all of them using lists
