@@ -450,7 +450,7 @@ def test_scale_without_a_mapping():
         p.draw_test()
 
 
-def scale_scale_discrete_mapping_nulls():
+def test_scale_discrete_mapping_nulls():
     a = np.array([1, 2, 3], dtype=object)
 
     sc = _scale_manual([1, 2, 3, 4, 5])
@@ -464,8 +464,18 @@ def scale_scale_discrete_mapping_nulls():
     res = sc.map([1, 2, 3])
     expected = np.array([1, np.nan, 3])
     assert res[0] == expected[0]
-    assert res[1] is expected[1]
+    assert all(np.isnan([res[1], expected[1]]))
     assert res[2] == expected[2]
+
+
+def test_scale_continuous_mapping_nulls():
+    # Handling of nans
+    sc = scale_color.scale_fill_gradient(
+        'yellow', 'blue', na_value='green'
+    )
+    sc.train([1, 10])
+    res = sc.map([1, 5, np.nan, 10])
+    assert res[2] == 'green'
 
 
 def test_multiple_aesthetics():
