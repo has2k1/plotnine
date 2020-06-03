@@ -791,7 +791,13 @@ class scale_continuous(scale):
         uniq = np.unique(x)
         pal = np.asarray(self.palette(uniq))
         scaled = pal[match(x, uniq)]
-        scaled[pd.isnull(scaled)] = self.na_value
+        if scaled.dtype.kind == 'U':
+            scaled = [
+                self.na_value if x == 'nan' else x
+                for x in scaled
+            ]
+        else:
+            scaled[pd.isnull(scaled)] = self.na_value
         return scaled
 
     def get_breaks(self, limits=None, strict=False):
