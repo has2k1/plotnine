@@ -88,7 +88,7 @@ class stat_density(stat):
         'density'   # density estimate
 
         'count'     # density * number of points,
-                      # useful for stacked density plots
+                    # useful for stacked density plots
 
         'scaled'    # density estimate, scaled to maximum of 1
 
