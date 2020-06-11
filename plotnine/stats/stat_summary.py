@@ -131,7 +131,7 @@ class stat_summary(stat):
         One of
         :py:`['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow']`
         or any function that takes a array and returns a dataframe
-        with three rows indexed as ``y``, ``ymin`` and ``ymax``.
+        with three columns named ``y``, ``ymin`` and ``ymax``.
         Defaults to :py:`'mean_cl_boot'`.
     fun_y : function, optional (default: None)
         Any function that takes a array-like and returns a value
