@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.7.1
+------
+(Not Yet Released)
+
+Bug Fixes
+*********
+
+- Fixed issue where a plot has no data and the geoms have no data,
+  but the mappings are valid. (:issue:`404`)
+
 v0.7.0
 ------
 (2020-06-05)

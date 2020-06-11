@@ -81,8 +81,13 @@ def test_inserting_layers():
 
 
 def test_layer_with_nodata():
+    # no data but good mappings
+    p = ggplot() + geom_point(aes([1, 2], [1, 2]))
+    p.build_test()
+
+    # no data, and unresolvable mappings
     p = ggplot(aes('x', 'y')) + geom_point()
     with pytest.raises(PlotnineError) as pe:
         p.draw_test()
 
-    assert 'geom_point layer expects a dataframe' in pe.value.message
+    assert "Could not evaluate the 'x' mapping:" in pe.value.message

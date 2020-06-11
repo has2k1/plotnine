@@ -233,6 +233,9 @@ class layer:
         plot_data : dataframe
             ggplot object data
         """
+        if plot_data is None:
+            plot_data = pd.DataFrame()
+
         # Each layer that does not have data gets a copy of
         # of the ggplot.data. If the has data it is replaced
         # by copy so that we do not alter the users data
