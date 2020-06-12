@@ -13,7 +13,7 @@ by explicitly mapping data to the visual objects that make up the
 plot.
 
 Plotting with a grammar is powerful, it makes custom (and otherwise
-complex) plots are easy to think about and then create, while the
+complex) plots easy to think about and then create, while the
 simple plots remain simple.
 
 Example
