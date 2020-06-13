@@ -31,14 +31,26 @@ class scale(metaclass=Registry):
         Major break points. Alternatively, a callable that
         takes a tuple of limits and returns a list of breaks.
         Default is to automatically calculate the breaks.
-    expand : array_like, optional
+    expand : tuple, optional
         Multiplicative and additive expansion constants
         that determine how the scale is expanded. If
-        specified must of of length 2 or 4. Specifically the
-        the values are of this order::
+        specified must be of length 2 or 4. Specifically the
+        values are in this order::
 
             (mul, add)
             (mul_low, add_low, mul_high, add_high)
+
+        For example,
+
+            - ``(0, 0)`` - Do not expand.
+            - ``(0, 1)`` - Expand lower and upper limits by 1 unit.
+            - ``(1, 0)`` - Expand lower and upper limits by 100%.
+            - ``(0, 0, 0, 0)`` - Do not expand, as ``(0, 0)``.
+            - ``(0, 0, 0, 1)`` - Expand upper limit by 1 unit.
+            - ``(0, 1, 0.1, 0)`` - Expand lower limit by 1 unit and
+              upper limit by 10%.
+            - ``(0, 0, 0.1, 2)`` - Expand upper limit by 10% plus
+              2 units.
 
         If not specified, suitable defaults are chosen.
     name : str, optional
