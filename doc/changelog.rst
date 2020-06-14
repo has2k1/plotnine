@@ -11,6 +11,11 @@ Bug Fixes
 - Fixed issue where a plot has no data and the geoms have no data,
   but the mappings are valid. (:issue:`404`)
 
+- Fixed ``preserve='single'`` in :class:`plotnine.positions.position_dodge`
+  and :class:`plotnine.positions.position_dodge2` to work for geoms that
+  only have ``x`` aesthetic and not ``xmin`` and ``xmax``
+  e.g :class:`plotnine.geoms.geom_text`.
+
 v0.7.0
 ------
 (2020-06-05)
