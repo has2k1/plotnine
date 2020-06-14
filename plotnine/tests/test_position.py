@@ -91,6 +91,22 @@ def test_dodge_preserve_single():
     assert p + _theme == 'dodge_preserve_single'
 
 
+def test_dodge_preserve_single_text():
+    df1 = pd.DataFrame({'x': ['a', 'b', 'b', 'b'],
+                        'y': ['a', 'a', 'b', 'b']})
+
+    d = position_dodge(preserve='single', width=0.9)
+    p = (ggplot(df1, aes('x', fill='y'))
+         + geom_bar(position=d)
+         + geom_text(
+             aes(y='stat(count)', label='stat(count)'),
+             stat='count',
+             position=d,
+             va='bottom')
+         )
+    assert p + _theme == 'dodge_preserve_single_text'
+
+
 def test_dodge2():
     p = (ggplot(df3, aes('x', 'y', color='c')) +
          geom_boxplot(position='dodge2', size=2))

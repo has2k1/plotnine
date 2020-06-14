@@ -155,7 +155,7 @@ class position(metaclass=Registry):
             # Width set manually
             if not all([col in data.columns for col in xminmax]):
                 data['xmin'] = data['x'] - width / 2
-                data['xmax'] = data['x'] - width / 2
+                data['xmax'] = data['x'] + width / 2
         else:
             if not all([col in data.columns for col in xminmax]):
                 data['xmin'] = data['x']

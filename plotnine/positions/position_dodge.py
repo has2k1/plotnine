@@ -28,6 +28,12 @@ class position_dodge(position):
     def __init__(self, width=None, preserve='total'):
         self.params = {'width': width, 'preserve': preserve}
 
+    def setup_data(self, data, params):
+        has_xmin_xmax = 'xmin' in data and 'xmax' in data
+        if 'x' not in data and has_xmin_xmax:
+            data['x'] = (data['xmin'] + data['xmax']) / 2
+        return super().setup_data(data, params)
+
     def setup_params(self, data):
         if (('xmin' not in data) and
                 ('xmax' not in data) and
@@ -44,7 +50,10 @@ class position_dodge(position):
             # Count at the xmin values per panel and find the highest
             # overall count
             def max_xmin_values(gdf):
-                n = gdf['xmin'].value_counts().max()
+                try:
+                    n = gdf['xmin'].value_counts().max()
+                except KeyError:
+                    n = gdf['x'].value_counts().max()
                 return pd.DataFrame({'n': [n]})
 
             res = groupby_apply(data, 'PANEL', max_xmin_values)

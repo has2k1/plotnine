@@ -5,10 +5,10 @@ import pandas as pd
 
 from ..exceptions import PlotnineError
 from ..utils import groupby_apply, pivot_apply
-from .position import position
+from .position_dodge import position_dodge
 
 
-class position_dodge2(position):
+class position_dodge2(position_dodge):
     """
     Dodge overlaps and place objects side-by-side
 
