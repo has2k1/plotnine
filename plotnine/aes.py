@@ -38,7 +38,7 @@ class aes(dict):
         x aesthetic mapping
     y : expression | array_like | scalar
         y aesthetic mapping
-    **kwargs : dict
+    **kwargs : str
         Other aesthetic mappings
 
     Notes
