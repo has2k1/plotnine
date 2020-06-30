@@ -16,6 +16,9 @@ Bug Fixes
   only have ``x`` aesthetic and not ``xmin`` and ``xmax``
   e.g :class:`plotnine.geoms.geom_text`.
 
+- Fix regression in ``v0.7.0`` where plots with a colorbar
+  would fail if using :class:`~plotnine.themse.theme_matplotlib`.
+
 v0.7.0
 ------
 (2020-06-05)
