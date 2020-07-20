@@ -249,7 +249,7 @@ class layer:
                     "{} layer expects a dataframe, but it got "
                     "{} instead.".format(_geom_name, _data_name)
                 )
-        elif hasattr(self.data, '__call__'):
+        elif callable(self.data):
             self.data = self.data(plot_data)
             if not isinstance(self.data, pd.DataFrame):
                 raise PlotnineError(
