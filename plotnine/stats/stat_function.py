@@ -62,7 +62,7 @@ class stat_function(stat):
             raise PlotnineError(
                 "Missing 'x' aesthetic and 'xlim' is {}".format(xlim))
 
-        if not hasattr(fun, '__call__'):
+        if not callable(fun):
             raise PlotnineError(
                 "stat_function requires parameter 'fun' to be " +
                 "a function or any other callable object")
