@@ -55,7 +55,7 @@ examples/.ipynb_checkpoints
 *.mo
 *.pot
 
-# Django stuff:
+# Django stuff
 *.log
 
 # Sphinx documentation
@@ -64,4 +64,8 @@ doc/generated/
 
 # PyBuilder
 target/
+
+# OS generated files
+.DS_Store
+.DS_Store?
 

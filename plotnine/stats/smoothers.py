@@ -37,7 +37,7 @@ def predictdf(data, xseq, **params):
             msg = "Method should be one of {}"
             raise PlotnineError(msg.format(list(methods.keys())))
 
-    if not hasattr(method, '__call__'):
+    if not callable(method):
         msg = ("'method' should either be a string or a function"
                "with the signature `func(data, xseq, **params)`")
         raise PlotnineError()
