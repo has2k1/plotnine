@@ -83,7 +83,7 @@ class stat_boxplot(stat):
         else:
             width = params['width']
 
-        if pdtypes.is_categorical(data['x']):
+        if pdtypes.is_categorical_dtype(data['x']):
             x = data['x'].iloc[0]
         else:
             x = np.mean([data['x'].min(), data['x'].max()])
