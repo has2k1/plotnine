@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.lines as mlines
 
-from ..utils import to_rgba, groupby_with_null, SIZE_FACTOR
+from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
 from .geom import geom
 
@@ -34,7 +34,7 @@ class geom_point(geom):
     def draw_group(data, panel_params, coord, ax, **params):
         data = coord.transform(data, panel_params)
         units = 'shape'
-        for _, udata in groupby_with_null(data, units):
+        for _, udata in data.groupby(units, dropna=False):
             udata.reset_index(inplace=True, drop=True)
             geom_point.draw_unit(udata, panel_params, coord,
                                  ax, **params)

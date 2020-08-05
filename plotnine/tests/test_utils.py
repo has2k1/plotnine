@@ -9,7 +9,7 @@ import pandas as pd
 from plotnine.data import mtcars
 from plotnine.utils import _margins, add_margins, ninteraction
 from plotnine.utils import join_keys, match, uniquecols, defaults
-from plotnine.utils import remove_missing, groupby_with_null
+from plotnine.utils import remove_missing
 from plotnine.utils import pivot_apply
 
 
@@ -198,16 +198,6 @@ def test_remove_missing():
         res = remove_missing(df, na_rm=True, finite=True)
         res.equals(df3)
         assert len(w) == 1
-
-
-def test_groupby_with_null():
-    df = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6],
-                       'y': ['a', 'a', None, None, 'b', 'b'],
-                       'z': [1, 1, np.NaN, np.NaN, 3, 3]})
-
-    assert(len(list(groupby_with_null(df, 'x'))) == 6)
-    assert(len(list(groupby_with_null(df, 'y'))) == 3)
-    assert(len(list(groupby_with_null(df, 'z'))) == 3)
 
 
 def test_pivot_apply():
