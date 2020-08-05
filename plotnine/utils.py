@@ -669,56 +669,6 @@ def pivot_apply(df, column, index, func, *args, **kwargs):
     return df.pivot_table(column, index, aggfunc=_func)[column]
 
 
-def groupby_with_null(data, *args, **kwargs):
-    """
-    Groupby on columns with NaN/None/Null values
-
-    Pandas currently does have proper support for
-    groupby on columns with null values. The nulls
-    are discarded and so not grouped on.
-    """
-    by = kwargs.get('by', args[0])
-    altered_columns = {}
-
-    if not isinstance(by, (list, tuple)):
-        by = [by]
-
-    # Convert NaNs & Nones in the grouping columns
-    # to sum unique string value. And, for those
-    # columns record which rows have been converted
-    # Note: this may affect the dtype of the column,
-    # so we record the dtype too. Both these changes
-    # are undone.
-    for col in by:
-        bool_idx = pd.isnull(data[col])
-        idx = bool_idx.index[bool_idx]
-        if idx.size:
-            altered_columns[col] = (idx, data[col].dtype)
-            data.loc[idx, col] = '-*-null-*-'
-
-    # Groupby on the columns, making sure to revert back
-    # to NaN/None and the correct dtype.
-    for group, df in data.groupby(*args, **kwargs):
-        for col, (orig_idx, orig_dtype) in altered_columns.items():
-            # Indices in the grouped df that need correction
-            sub_idx = orig_idx.intersection(df[col].index)
-            # NaN/None
-            if sub_idx.size:
-                df.loc[sub_idx, col] = None
-            # dtype
-            if df[col].dtype != orig_dtype:
-                df[col] = df[col].astype(orig_dtype)
-
-        yield group, df
-
-    # Undo the NaN / None conversion and any dtype
-    # changes on the original dataframe
-    for col, (orig_idx, orig_dtype) in altered_columns.items():
-        data.loc[orig_idx, col] = None
-        if data[col].dtype != orig_dtype:
-            data[col] = data[col].astype(orig_dtype)
-
-
 def make_line_segments(x, y, ispath=True):
     """
     Return an (n x 2 x 2) array of n line segments
