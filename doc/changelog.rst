@@ -3,7 +3,7 @@ Changelog
 
 v0.7.1
 ------
-(Not Yet Released)
+(2020-08-05)
 
 Bug Fixes
 *********
