@@ -1193,7 +1193,7 @@ class array_kind:
         out : bool
             Whether array `arr` is an ordered categorical
         """
-        if pdtypes.is_categorical(arr):
+        if pdtypes.is_categorical_dtype(arr):
             return arr.cat.ordered
         return False
 
