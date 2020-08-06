@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.7.2
+------
+(not-yet-released)
+
+Bug Fixes
+*********
+
+- Fixed issue where some plots with a colorbar would fail for specific
+  themes. (:issue:`424`)
+
 v0.7.1
 ------
 (2020-08-05)
