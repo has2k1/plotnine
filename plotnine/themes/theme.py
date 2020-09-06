@@ -240,19 +240,6 @@ class theme:
         for th in self.themeables.values():
             th.apply_figure(figure)
 
-    def apply_rcparams(self):
-        """
-        Set the rcParams
-        """
-        from matplotlib import rcParams
-        for key, val in self.rcParams.items():
-            try:
-                rcParams[key] = val
-            except Exception as e:
-                msg = ("""Setting "mpl.rcParams['{}']={}" """
-                       "raised an Exception: {}")
-                raise PlotnineError(msg.format(key, val, e))
-
     @property
     def rcParams(self):
         """

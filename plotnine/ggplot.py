@@ -191,9 +191,8 @@ class ggplot:
         self.theme = self.theme or theme_get()
 
         try:
-            with mpl.rc_context():
-                # setup & rcparams theming
-                self.theme.apply_rcparams()
+            with mpl.rc_context(self.theme.rcParams):
+                # setup
                 figure, axs = self._create_figure()
                 self._setup_parameters()
                 self._resize_panels()
@@ -241,8 +240,7 @@ class ggplot:
         self.axs = axs
 
         try:
-            with mpl.rc_context():
-                self.theme.apply_rcparams()
+            with mpl.rc_context(self.theme.rcParams):
                 self._setup_parameters()
                 self._draw_layers()
                 self._draw_breaks_and_labels()
