@@ -8,14 +8,14 @@ __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
 
 class labs:
     """
-    General class for all label adding classes
+    Add labels for aesthetics and/or title
 
     Parameters
     ----------
     args : dict
-        Aesthetics to be renamed
+        Aesthetics to be renamed.
     kwargs : dict
-        Aesthetics to be renamed
+        Aesthetics to be renamed.
     """
     labels = {}
 
