@@ -1,7 +1,6 @@
 import hashlib
 import types
 from itertools import islice
-from collections import OrderedDict
 from contextlib import suppress
 from warnings import warn
 
@@ -70,7 +69,7 @@ class guide_legend(guide):
             aesthetic = scale.aesthetics[0]
 
         breaks = scale.get_breaks()
-        if isinstance(breaks, OrderedDict):
+        if isinstance(breaks, dict):
             if all([np.isnan(x) for x in breaks.values()]):
                 return None
         elif not len(breaks) or all(np.isnan(breaks)):

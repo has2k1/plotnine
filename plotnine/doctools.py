@@ -1,6 +1,5 @@
 import re
 from textwrap import indent, dedent, wrap
-from collections import OrderedDict
 from functools import lru_cache
 
 import numpy as np
@@ -287,7 +286,7 @@ def parameters_str_to_dict(param_section):
 
     Returns
     -------
-    d : OrderedDict
+    d : dict
         Dictionary of the parameters in the order that they
         are described in the parameters section. The dict
         is of the form ``{param: all_parameter_text}``.
@@ -298,7 +297,7 @@ def parameters_str_to_dict(param_section):
     --------
     :func:`parameters_dict_to_str`
     """
-    d = OrderedDict()
+    d = {}
     previous_param = None
     param_desc = None
     for line in param_section.split('\n'):
@@ -388,8 +387,10 @@ def document_geom(geom):
     usage = GEOM_SIGNATURE_TPL.format(signature=signature)
 
     # aesthetics
-    contents = OrderedDict(('**{}**'.format(ae), '')
-                           for ae in sorted(geom.REQUIRED_AES))
+    contents = {
+        '**{}**'.format(ae): ''
+        for ae in sorted(geom.REQUIRED_AES)
+    }
     if geom.DEFAULT_AES:
         d = geom.DEFAULT_AES.copy()
         d['group'] = ''  # All geoms understand the group aesthetic
@@ -437,8 +438,10 @@ def document_stat(stat):
     usage = STAT_SIGNATURE_TPL.format(signature=signature)
 
     # aesthetics
-    contents = OrderedDict(('**{}**'.format(ae), '')
-                           for ae in sorted(stat.REQUIRED_AES))
+    contents = {
+        '**{}**'.format(ae): ''
+        for ae in sorted(stat.REQUIRED_AES)
+    }
     contents.update(sorted(stat.DEFAULT_AES.items()))
     table = dict_to_table(('Aesthetic', 'Default value'), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)

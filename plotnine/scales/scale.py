@@ -1,6 +1,5 @@
 from contextlib import suppress
 from copy import deepcopy, copy
-from collections import OrderedDict
 from functools import partial
 from types import SimpleNamespace as NS
 from warnings import warn
@@ -492,7 +491,7 @@ class scale_discrete(scale):
             in_domain = breaks
         pos = match(in_domain, breaks)
         tups = zip(in_domain, pos)
-        return OrderedDict(sorted(tups, key=lambda t: t[1]))
+        return dict(sorted(tups, key=lambda t: t[1]))
 
     def get_labels(self, breaks=None):
         """
