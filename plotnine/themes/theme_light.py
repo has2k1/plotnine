@@ -17,7 +17,7 @@ class theme_light(theme_gray):
         Base font family.
     """
 
-    def __init__(self, base_size=11, base_family='DejaVu Sans'):
+    def __init__(self, base_size=11, base_family=None):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(theme(
             axis_ticks=element_line(color='#B3B3B3', size=0.5),
