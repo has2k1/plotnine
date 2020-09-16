@@ -185,6 +185,8 @@ def compute_density(x, weight, range, **params):
 
     try:
         y = kde.evaluate(x2)
+        if np.isscalar(y) and np.isnan(y):
+            raise ValueError('kde.evaluate returned nan')
     except ValueError:
         y = []
         for _x in x2:
