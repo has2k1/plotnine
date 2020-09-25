@@ -123,10 +123,16 @@ class geom_map(geom):
                 gdata.is_copy = None
                 geom_point.draw_group(
                     gdata, panel_params, coord, ax, **params)
-        elif geom_type == 'LineString':
+        elif geom_type in ('LineString', 'MultiLineString'):
             data['size'] *= SIZE_FACTOR
             data['color'] = to_rgba(data['color'], data['alpha'])
-            segments = [list(g.coords) for g in data['geometry']]
+            segments = []
+            for g in data['geometry']:
+                if g.geom_type == 'LineString':
+                    segments.append(g.coords)
+                else:
+                    segments.extend(_g.coords for _g in g.geoms)
+
             coll = LineCollection(
                 segments,
                 edgecolor=data['color'],
@@ -134,3 +140,5 @@ class geom_map(geom):
                 linestyle=data['linetype'],
                 zorder=params['zorder'])
             ax.add_collection(coll)
+        else:
+            raise TypeError(f"Could not plot geometry of type '{geom_type}'")
