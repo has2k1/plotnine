@@ -11,6 +11,8 @@ Bug Fixes
 - Fixed issue where some plots with a colorbar would fail for specific
   themes. (:issue:`424`)
 
+- Fixed :class:`~plotnine.geoms.geom_map` to plot ``MultiLineString`` geom types.
+
 v0.7.1
 ------
 (2020-08-05)

@@ -50,24 +50,40 @@ def _polyline_file(test_file):
         shp.record('line1')
 
 
+def _polylinem_file(test_file):
+    with shapefile.Writer(test_file, shapefile.POLYLINEM) as shp:
+        shp.field('name', 'C')
+
+        n = 5
+        x = np.repeat(np.linspace(0, 1, n), 2)
+        y = np.tile([0.375, 0.625], n) + 1
+        line = list(zip(x, y))
+        shp.linem([line[:5], line[5:]])
+        shp.record('linem1')
+
+
 def test_geometries(tmpdir):
     point_file = '{}/test_file_point.shp'.format(tmpdir)
     polygon_file = '{}/test_file_polygon.shp'.format(tmpdir)
     polyline_file = '{}/test_file_polyline.shp'.format(tmpdir)
+    polylinem_file = '{}/test_file_polylinem.shp'.format(tmpdir)
 
     _point_file(point_file)
     _polygon_file(polygon_file)
     _polyline_file(polyline_file)
+    _polylinem_file(polylinem_file)
 
     df_point = GeoDataFrame.from_file(point_file)
     df_polygon = GeoDataFrame.from_file(polygon_file)
     df_polyline = GeoDataFrame.from_file(polyline_file)
+    df_polylinem = GeoDataFrame.from_file(polylinem_file)
 
     p = (ggplot()
          + aes(fill='geometry.bounds.miny')
          + geom_map(df_polygon)
          + geom_map(df_point, size=4)
          + geom_map(df_polyline, size=2)
+         + geom_map(df_polylinem, size=2)
          + labs(fill='miny')
          )
 
