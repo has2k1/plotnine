@@ -237,6 +237,18 @@ def test_scale_manual():
     sc = scale_manual.scale_color_manual(values)
     assert sc.palette(3) == values
 
+    # Breaks are matched with values
+    sc1 = scale_manual.scale_color_manual(
+        breaks=[True, False],
+        values=['blue', 'red']
+    )
+    sc2 = scale_manual.scale_color_manual(
+        breaks=[True, False],
+        values=['red', 'blue']
+    )
+    assert sc1.map([True, False, True, False]) == ['blue', 'red'] * 2
+    assert sc2.map([True, False, True, False]) == ['red', 'blue'] * 2
+
 
 def test_alpha_palette():
     s = scale_alpha_discrete()
