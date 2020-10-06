@@ -13,6 +13,11 @@ Bug Fixes
 
 - Fixed :class:`~plotnine.geoms.geom_map` to plot ``MultiLineString`` geom types.
 
+Enhancements
+************
+- Manual scales now match the values of the breaks if the breaks are given.
+  (:issue:`445`)
+
 v0.7.1
 ------
 (2020-08-05)
