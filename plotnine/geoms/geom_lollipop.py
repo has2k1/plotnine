@@ -1,11 +1,10 @@
 from ..doctools import document
-from .geom import geom
 from .geom_segment import geom_segment
 from .geom_point import geom_point
 
 
 @document
-class geom_lollipop(geom):
+class geom_lollipop(geom_segment):
     '''
     lollipop plot
 
@@ -14,6 +13,12 @@ class geom_lollipop(geom):
     Parameters
     ----------
     {common_parameters}
+    point_color: str, optional (default: `geom_point.DEFAULT_AES['color']`
+    color of the points
+    point_size: float, optional (default: `geom_point.DEFAULT_AES['size']`
+    size of the points
+    horizontal: bool, optional (default: False)
+    flag to plot the data horizontally
 
     See Also
     --------
