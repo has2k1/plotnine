@@ -9,3 +9,12 @@ def test_lollipop():
     p = ggplot(df, aes('x', 'y')) + geom_lollipop()
     assert p == 'lollipop'
 
+
+def test_horizontal_lollipop():
+    p = ggplot(df, aes('y', 'x')) + geom_lollipop(horizontal=True)
+    assert p == 'lollipop-horizontal'
+
+
+def test_lollipop_points():
+    p = ggplot(df, aes('y', 'x')) + geom_lollipop(point_color="steelblue", point_size=5)
+    assert p == 'lollipop-points'
