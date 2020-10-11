@@ -26,11 +26,11 @@ class geom_lollipop(geom_segment):
     '''
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'xend', 'yend'}
-    DEFAULT_PARAMS = {**geom_segment.DEFAULT_PARAMS, **geom_point.DEFAULT_PARAMS,
+    DEFAULT_PARAMS = {**geom_point.DEFAULT_PARAMS, **geom_segment.DEFAULT_PARAMS,
                       'point_color': geom_point.DEFAULT_AES['color'],
                       'point_size': geom_point.DEFAULT_AES['size'],
                       'horizontal': False}
-    DEFAULT_AES = {**geom_segment.DEFAULT_AES, **geom_point.DEFAULT_AES}
+    DEFAULT_AES = {**geom_point.DEFAULT_AES, **geom_segment.DEFAULT_AES}
 
     def setup_data(self, data):
         data['yend'] = 0
