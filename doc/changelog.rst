@@ -13,6 +13,9 @@ Bug Fixes
 
 - Fixed :class:`~plotnine.geoms.geom_map` to plot ``MultiLineString`` geom types.
 
+- Fixed :class:`~plotnine.geoms.geom_text` to allow any order of ``mapping`` and
+  ``data`` positional arguments.
+
 Enhancements
 ************
 - Manual scales now match the values of the breaks if the breaks are given.
