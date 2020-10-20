@@ -2,6 +2,7 @@ from warnings import warn
 
 import numpy as np
 
+from ..aes import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from .binning import (breaks_from_bins, breaks_from_binwidth,
@@ -70,7 +71,7 @@ class stat_bin(stat):
                       'breaks': None, 'center': None,
                       'boundary': None, 'closed': 'right',
                       'pad': False}
-    DEFAULT_AES = {'y': 'stat(count)', 'weight': None}
+    DEFAULT_AES = {'y': after_stat('count'), 'weight': None}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity', 'ngroup'}
 
     def setup_params(self, data):

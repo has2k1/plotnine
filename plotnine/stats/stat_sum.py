@@ -1,4 +1,4 @@
-from ..aes import all_aesthetics
+from ..aes import after_stat, all_aesthetics
 from ..utils import groupby_apply
 from ..doctools import document
 from .stat import stat
@@ -33,7 +33,7 @@ class stat_sum(stat):
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
                       'na_rm': False}
-    DEFAULT_AES = {'size': 'stat(n)', 'weight': 1}
+    DEFAULT_AES = {'size': after_stat('n'), 'weight': 1}
     CREATES = {'n', 'prop'}
 
     @classmethod

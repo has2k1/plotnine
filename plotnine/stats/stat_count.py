@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+from ..aes import after_stat
 from ..utils import resolution
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -41,7 +42,7 @@ class stat_count(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'histogram', 'position': 'stack',
                       'na_rm': False, 'width': None}
-    DEFAULT_AES = {'y': 'stat(count)'}
+    DEFAULT_AES = {'y': after_stat('count')}
     CREATES = {'count', 'prop'}
 
     @classmethod

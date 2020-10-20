@@ -83,8 +83,8 @@ class stat_ydensity(stat):
 
          'width'  # Maximum width of density, [0, 1] range.
 
-    Calculated aesthetics are accessed using the `stat` function.
-    e.g. :py:`'stat(width)'`.
+    Calculated aesthetics are accessed using the `after_stat` function.
+    e.g. :py:`after_stat('width')`.
     """
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'weight'}

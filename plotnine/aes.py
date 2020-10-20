@@ -6,7 +6,7 @@ from collections.abc import Iterable
 import numpy as np
 import pandas as pd
 
-__all__ = ['aes']
+__all__ = ['aes', 'after_stat', 'after_scale', 'stage']
 
 all_aesthetics = {
     'alpha', 'angle', 'color', 'colour', 'fill', 'group', 'intercept',
@@ -23,7 +23,7 @@ scaled_aesthetics = {
 
 NO_GROUP = -1
 
-# Calculated aesthetics searchers
+# Aesthetics modifying searchers, DEPRECATED
 STAT_RE = re.compile(r'\bstat\(')
 DOTS_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
 
@@ -84,8 +84,8 @@ class aes(dict):
             ggplot(df, aes(x='df.index', y='beta'))
 
             # If `count` is an aesthetic calculated by a stat
-            ggplot(df, aes(x='alpha', y='stat(count)'))
-            ggplot(df, aes(x='alpha', y='stat(count/np.max(count))'))
+            ggplot(df, aes(x='alpha', y=after_stat('count')))
+            ggplot(df, aes(x='alpha', y=after_stat('count/np.max(count)')))
 
       The strings in the expression can refer to;
 
@@ -134,12 +134,85 @@ class aes(dict):
     groups are sufficient. However, there may be cases were it is
     handy to map to it.
 
+    See Also
+    --------
+    :func:`after_stat` : For how to map aesthetics to variable calculated
+        by the stat
+    :func:`after_scale` : For how to alter aesthetics after the data has been
+        mapped by the scale.
+    :class:`stage` : For how to map to evaluate the mapping to aesthetics at
+        more than one stage of the plot building pipeline.
     """
 
     def __init__(self, *args, **kwargs):
         kwargs = rename_aesthetics(kwargs)
         kwargs.update(zip(('x', 'y'), args))
+        kwargs = self._convert_deprecated_expr(kwargs)
         self.update(kwargs)
+
+    def _convert_deprecated_expr(self, kwargs):
+        """
+        Convert calculated aesthetic expression mapping to use
+        the stage class.
+
+        e.g.
+        'stat(count)' to after_stat(count)
+        '..count..' to after_stat(count)
+        """
+        for name, value in kwargs.items():
+            if not isinstance(value, stage):
+                if is_calculated_aes(value):
+                    _after_stat = strip_calculated_markers(value)
+                    kwargs[name] = stage(after_stat=_after_stat)
+        return kwargs
+
+    @property
+    def starting(self):
+        """
+        Return the subset of aesthetics mapped from the layer data
+
+        The mapping is a dict of the form {name: expr}, i.e the
+        stage class has been peeled off.
+        """
+        d = {}
+        for name, value in self.items():
+            if not isinstance(value, stage):
+                d[name] = value
+            elif isinstance(value, stage) and value.start is not None:
+                d[name] = value.start
+
+        return d
+
+    @property
+    def calculated(self):
+        """
+        Return the subset of aesthetics that are mapped from the
+        calculated statistics
+
+        The mapping is a dict of the form {name: expr}, i.e the
+        stage class has been peeled off.
+        """
+        d = {}
+        for name, value in self.items():
+            if isinstance(value, stage) and value.after_stat is not None:
+                d[name] = value.after_stat
+
+        return d
+
+    @property
+    def scaled(self):
+        """
+        Return the subset of aesthetics mapped using layer aesthetics
+
+        The mapping is a dict of the form {name: expr}, i.e the
+        stage class has been peeled off.
+        """
+        d = {}
+        for name, value in self.items():
+            if isinstance(value, stage) and value.after_scale is not None:
+                d[name] = value.after_scale
+
+        return d
 
     def __deepcopy__(self, memo):
         """
@@ -161,6 +234,9 @@ class aes(dict):
         gg.mapping.update(self)
         gg.labels.update(make_labels(self))
         return gg
+
+    def copy(self):
+        return aes(**self)
 
 
 def rename_aesthetics(obj):
@@ -188,25 +264,15 @@ def rename_aesthetics(obj):
     return obj
 
 
-def get_calculated_aes(aesthetics):
-    """
-    Return a list of the aesthetics that are calculated
-    """
-    calculated_aesthetics = []
-    for name, value in aesthetics.items():
-        if is_calculated_aes(value):
-            calculated_aesthetics.append(name)
-    return calculated_aesthetics
-
-
 def is_calculated_aes(ae):
     """
-    Return a True if of the aesthetics that are calculated
+    Return a True if aesthetic mapping will happen after the calculating
+    the statistics.
 
     Parameters
     ----------
     ae : object
-        Aesthetic mapping
+        Single aesthetic mapping
 
     >>> is_calculated_aes('density')
     False
@@ -236,21 +302,76 @@ def is_calculated_aes(ae):
     return False
 
 
-def stat(x):
+def after_stat(x):
     """
-    Return calculated aesthetic
-
-    Aesthetics wrapped around the stat function evaluated
-    *after* the statistics have been calculated. This gives
-    the user a chance to use any aesthetic columns created
-    by the statistic.
+    Evaluate mapping after statistic has been calculated
 
     Paremeters
     ----------
-    x : object
+    x : str
         An expression
+
+    See Also
+    --------
+    :func:`after_scale` : For how to alter aesthetics after the data has been
+        mapped by the scale.
+    :class:`stage` : For how to map to aesthetics at more than one stage of
+        the plot building pipeline.
     """
-    return x
+    return stage(after_stat=x)
+
+
+def after_scale(x):
+    """
+    Evaluate mapping after variable has been mapped to the scale
+
+    This gives the user a chance to alter the value of a variable
+    in the final units of the scale e.g. the rgb hex color.
+
+    Paremeters
+    ----------
+    x : str
+        An expression
+
+    See Also
+    --------
+    :func:`after_stat` : For how to map aesthetics to variable calculated
+        by the stat
+    :class:`stage` : For how to map to aesthetics at more than one stage of
+        the plot building pipeline.
+    """
+    return stage(after_scale=x)
+
+
+class stage:
+    """
+    Stage allows you evaluating mapping at more than one stage
+
+    You can evaluate an expression of a variable in a dataframe, and
+    later evaluate an expression that modifies the values mapped to
+    the scale.
+
+    Parameters
+    ----------
+    start : expression | array_like | scalar
+        Aesthetic expression using primary variables from the layer
+        data.
+    after_stat : expression
+        Aesthetic expression using variables calculated by the stat.
+    after_scale : expression
+        Aesthetic expression using aesthetics of the layer.
+    """
+    def __init__(self, start=None, after_stat=None, after_scale=None):
+        self.start = start
+        self.after_stat = after_stat
+        self.after_scale = after_scale
+
+    def __repr__(self):
+        return (
+            f'stage(start={repr(self.start)}, '
+            f'after_stat={repr(self.after_stat)}, '
+            f'after_scale={repr(self.after_scale)})'
+        )
 
 
 def strip_stat(value):
@@ -376,15 +497,30 @@ def make_labels(mapping):
     """
     Convert aesthetic mapping into text labels
     """
-
-    def _make_label(ae, label):
-        if isinstance(label, pd.Series):
-            return label.name
-        # if label is a scalar
-        elif not isinstance(label, Iterable) or isinstance(label, str):
-            return strip_calculated_markers(str(label))
+    def _nice_label(value):
+        if isinstance(value, pd.Series):
+            return value.name
+        elif not isinstance(value, Iterable) or isinstance(value, str):
+            return str(value)
         else:
             return None
+
+    def _make_label(ae, value):
+        if not isinstance(value, stage):
+            return _nice_label(value)
+        elif value.start is None:
+            if value.after_stat is not None:
+                return value.after_stat
+            elif value.after_scale is not None:
+                return value.after_scale
+            else:
+                # return ''
+                raise ValueError("Unknown mapping")
+        else:
+            if value.after_stat is not None:
+                return value.after_stat
+            else:
+                return _nice_label(value)
 
     return {
         ae: _make_label(ae, label)

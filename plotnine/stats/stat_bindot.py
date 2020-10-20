@@ -3,6 +3,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from ..aes import after_stat
 from ..utils import groupby_apply
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -85,7 +86,7 @@ class stat_bindot(stat):
                       'method': 'dotdensity', 'binpositions': 'bygroup',
                       'drop': False, 'right': True, 'na_rm': False,
                       'breaks': None}
-    DEFAULT_AES = {'y': 'stat(count)'}
+    DEFAULT_AES = {'y': after_stat('count')}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
 
     def setup_params(self, data):

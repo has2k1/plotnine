@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from statsmodels.distributions.empirical_distribution import ECDF
 
+from ..aes import after_stat
 from ..doctools import document
 from .stat import stat
 
@@ -40,7 +41,7 @@ class stat_ecdf(stat):
     REQUIRED_AES = {'x'}
     DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
                       'na_rm': False, 'n': None}
-    DEFAULT_AES = {'y': 'stat(y)'}
+    DEFAULT_AES = {'y': after_stat('y')}
     CREATES = {'y'}
 
     @classmethod

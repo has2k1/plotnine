@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..aes import get_calculated_aes
+from ..aes import aes
 from ..layer import layer
 from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import groupby_apply, copy_keys, uniquecols
@@ -45,6 +45,7 @@ class stat(metaclass=Registry):
         kwargs = data_mapping_as_kwargs((mapping, data), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
+        self.DEFAULT_AES = aes(**self.DEFAULT_AES)
         self.aes_params = {ae: kwargs[ae]
                            for ae in (self.aesthetics() &
                                       kwargs.keys())}
@@ -129,7 +130,7 @@ class stat(metaclass=Registry):
         stats should not override this method.
         """
         aesthetics = cls.REQUIRED_AES.copy()
-        calculated = get_calculated_aes(cls.DEFAULT_AES)
+        calculated = aes(**cls.DEFAULT_AES).calculated
         for ae in set(cls.DEFAULT_AES) - set(calculated):
             aesthetics.add(ae)
         return aesthetics

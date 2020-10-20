@@ -6,6 +6,7 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy.stats import iqr
 
+from ..aes import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from .stat import stat
@@ -100,7 +101,7 @@ class stat_density(stat):
                       'trim': False, 'n': 1024, 'gridsize': None,
                       'bw': 'nrd0', 'cut': 3,
                       'clip': (-np.inf, np.inf)}
-    DEFAULT_AES = {'y': 'stat(density)'}
+    DEFAULT_AES = {'y': after_stat('density')}
     CREATES = {'density', 'count', 'scaled', 'n'}
 
     def setup_params(self, data):
