@@ -9,7 +9,7 @@ except ImportError:
 else:
     HAS_ADJUST_TEXT = True
 
-from ..utils import to_rgba
+from ..utils import to_rgba, order_as_mapping_data
 from ..doctools import document
 from ..positions import position_nudge
 from ..exceptions import PlotnineError
@@ -87,6 +87,7 @@ class geom_text(geom):
                       'path_effects': None}
 
     def __init__(self, mapping=None, data=None, **kwargs):
+        mapping, data = order_as_mapping_data(mapping, data)
         nudge_kwargs = {}
         adjust_text = kwargs.get('adjust_text', None)
         if adjust_text is None:
