@@ -5,6 +5,7 @@ from contextlib import suppress
 import pandas as pd
 import numpy as np
 
+from ..aes import after_stat
 from ..utils import is_scalar_or_string
 from ..doctools import document
 from .binning import fuzzybreaks
@@ -53,7 +54,7 @@ class stat_bin_2d(stat):
                       'na_rm': False,
                       'bins': 30, 'breaks': None, 'binwidth': None,
                       'drop': True}
-    DEFAULT_AES = {'fill': 'stat(count)', 'weight': None}
+    DEFAULT_AES = {'fill': after_stat('count'), 'weight': None}
     CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density'}
 
     def setup_params(self, data):

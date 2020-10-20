@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from ..aes import has_groups
+from ..aes import after_stat, has_groups
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import array_kind, jitter, resolution
@@ -81,12 +81,12 @@ class stat_sina(stat):
          'quantile'  # quantile
          'group'     # group identifier
 
-    Calculated aesthetics are accessed using the `stat` function.
-    e.g. :py:`'stat(quantile)'`.
+    Calculated aesthetics are accessed using the `after_stat` function.
+    e.g. :py:`after_stat('quantile')`.
     """
 
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_AES = {'xend': 'stat(scaled)'}
+    DEFAULT_AES = {'xend': after_stat('scaled')}
     DEFAULT_PARAMS = {'geom': 'sina', 'position': 'dodge',
                       'na_rm': False, 'binwidth': None, 'bins': None,
                       'method': 'density',

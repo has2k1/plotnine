@@ -3,6 +3,7 @@ from contextlib import suppress
 import numpy as np
 import pandas as pd
 
+from ..aes import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
@@ -46,7 +47,7 @@ class stat_function(stat):
                       'fun': None, 'n': 101, 'args': None,
                       'xlim': None}
 
-    DEFAULT_AES = {'y': 'stat(y)'}
+    DEFAULT_AES = {'y': after_stat('y')}
     CREATES = {'y'}
 
     @classmethod

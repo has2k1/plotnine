@@ -81,8 +81,8 @@ class stat_summary_bin(stat):
         'ymin'   # ymin computed by the summary function
         'ymax'   # ymax computed by the summary function
 
-    Calculated aesthetics are accessed using the `stat` function.
-    e.g. :py:`'stat(ymin)'`.
+    Calculated aesthetics are accessed using the `after_stat` function.
+    e.g. :py:`after_stat('ymin')`.
     """
 
     REQUIRED_AES = {'x', 'y'}

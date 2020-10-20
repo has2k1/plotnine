@@ -1,7 +1,8 @@
 import pandas as pd
 
 from plotnine import (ggplot, aes, geom_density_2d, stat_density_2d,
-                      geom_point, theme, lims, scale_size_radius)
+                      after_stat, geom_point, theme, lims,
+                      scale_size_radius)
 
 n = 20
 adj = n//4
@@ -15,14 +16,14 @@ p0 = (ggplot(df, aes('x', 'y'))
 
 
 def test_contours():
-    p = p0 + geom_density_2d(aes(color='stat(level)'))
+    p = p0 + geom_density_2d(aes(color=after_stat('level')))
     assert p == 'contours'
 
 
 def test_points():
     p = (p0
          + geom_point(
-             aes(fill='stat(density)', size='stat(density)'),
+             aes(fill=after_stat('density'), size=after_stat('density')),
              stat='density_2d',
              stroke=0, n=16, contour=False)
          + scale_size_radius(range=(0, 6)))
@@ -31,5 +32,5 @@ def test_points():
 
 
 def test_polygon():
-    p = p0 + stat_density_2d(aes(fill='stat(level)'), geom='polygon')
+    p = p0 + stat_density_2d(aes(fill=after_stat('level')), geom='polygon')
     assert p == 'polygon'

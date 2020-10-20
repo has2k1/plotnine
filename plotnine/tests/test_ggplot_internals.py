@@ -9,7 +9,7 @@ from plotnine import geom_line, geom_bar
 from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
-from plotnine.aes import get_calculated_aes, strip_calculated_markers
+from plotnine.aes import stage, after_stat
 from plotnine.aes import is_valid_aesthetic
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
@@ -118,6 +118,10 @@ def test_aes():
     expected = {'x': 'weight', 'y': 'hp', 'color': 'qsec'}
     assert result == expected
 
+    mapping = aes('weight', 'hp', color=stage('qsec'))
+    assert mapping['color'].start == 'qsec'
+    assert mapping.starting['color'] == 'qsec'
+
 
 def test_valid_aes_linetypes():
     assert is_valid_aesthetic('solid', 'linetype')
@@ -144,41 +148,48 @@ def test_valid_aes_colors():
 
 
 def test_calculated_aes():
-    _strip = strip_calculated_markers
+    # after_stat('ae')
+    mapping1 = aes('x', y=after_stat('density'))
+    mapping2 = aes('x', y=after_stat('density*2'))
+    mapping3 = aes('x', y=after_stat('density + count'))
+    mapping4 = aes('x', y=after_stat('func(density)'))
 
-    # stat(ae)
+    def _test():
+        assert list(mapping1.calculated.keys()) == ['y']
+        assert list(mapping2.calculated.keys()) == ['y']
+        assert list(mapping3.calculated.keys()) == ['y']
+        assert list(mapping4.calculated.keys()) == ['y']
+
+        assert mapping1['y'].after_stat == 'density'
+        assert mapping2['y'].after_stat == 'density*2'
+        assert mapping3['y'].after_stat == 'density + count'
+        assert mapping4['y'].after_stat == 'func(density)'
+
+        assert mapping1.calculated['y'] == 'density'
+        assert mapping2.calculated['y'] == 'density*2'
+        assert mapping3.calculated['y'] == 'density + count'
+        assert mapping4.calculated['y'] == 'func(density)'
+
+    _test()
+
+    # 'stat(ae)', DEPRECATED but still works
     mapping1 = aes('x', y='stat(density)')
     mapping2 = aes('x', y='stat(density*2)')
     mapping3 = aes('x', y='stat(density + count)')
-    mapping4 = aes('x', y='func(stat(density))')
+    mapping4 = aes('x', y='stat(func(density))')
+    _test()
 
-    assert get_calculated_aes(mapping1) == ['y']
-    assert get_calculated_aes(mapping2) == ['y']
-    assert get_calculated_aes(mapping3) == ['y']
-    assert get_calculated_aes(mapping4) == ['y']
-
-    assert _strip(mapping1['y']) == 'density'
-    assert _strip(mapping2['y']) == 'density*2'
-    assert _strip(mapping3['y']) == 'density + count'
-    assert _strip(mapping4['y']) == 'func(density)'
-
-    # ..ae..
+    # '..ae..', DEPRECATED but still works
     mapping1 = aes('x', y='..density..')
     mapping2 = aes('x', y='..density..*2')
     mapping3 = aes('x', y='..density.. + ..count..')
     mapping4 = aes('x', y='func(..density..)')
-
-    assert get_calculated_aes(mapping1) == ['y']
-    assert get_calculated_aes(mapping2) == ['y']
-    assert get_calculated_aes(mapping3) == ['y']
-    assert get_calculated_aes(mapping4) == ['y']
-
-    assert _strip(mapping1['y']) == 'density'
-    assert _strip(mapping2['y']) == 'density*2'
-    assert _strip(mapping3['y']) == 'density + count'
-    assert _strip(mapping4['y']) == 'func(density)'
+    _test()
 
     df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    p = ggplot(df) + geom_bar(aes(x='x', fill=after_stat('count + 2')))
+    p.draw_test()
+
     p = ggplot(df) + geom_bar(aes(x='x', fill='stat(count + 2)'))
     p.draw_test()
 

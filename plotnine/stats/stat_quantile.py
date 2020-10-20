@@ -44,8 +44,8 @@ class stat_quantile(stat):
          'quantile'  # quantile
          'group'     # group identifier
 
-    Calculated aesthetics are accessed using the `stat` function.
-    e.g. :py:`'stat(quantile)'`.
+    Calculated aesthetics are accessed using the `after_stat` function.
+    e.g. :py:`after_stat('quantile')`.
     """
 
     REQUIRED_AES = {'x', 'y'}

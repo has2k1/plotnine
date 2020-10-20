@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from plotnine import ggplot, aes, geom_bar, geom_col, geom_histogram
-from plotnine import theme, scale_x_sqrt, geom_text
+from plotnine import after_stat, theme, scale_x_sqrt, geom_text
 from plotnine.tests import layer_data
 
 
@@ -52,7 +52,7 @@ def test_stat_count_int():
     p = (ggplot(df)
          + aes(x='x', weight='weight', fill='x')
          + geom_bar()
-         + geom_text(aes(label='stat(count)'), stat='count')
+         + geom_text(aes(label=after_stat('count')), stat='count')
          )
 
     assert p + _theme == 'stat-count-int'
@@ -64,7 +64,7 @@ def test_stat_count_float():
     p = (ggplot(df)
          + aes(x='x', weight='weight', fill='x')
          + geom_bar()
-         + geom_text(aes(label='stat(count)'), stat='count')
+         + geom_text(aes(label=after_stat('count')), stat='count')
          )
 
     assert p + _theme == 'stat-count-float'

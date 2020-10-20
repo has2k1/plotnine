@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats.mstats import plotting_positions
 
+from ..aes import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .distributions import get_continuous_distribution
@@ -56,7 +57,7 @@ class stat_qq(stat):
 
     """
     REQUIRED_AES = {'sample'}
-    DEFAULT_AES = {'x': 'stat(theoretical)', 'y': 'stat(sample)'}
+    DEFAULT_AES = {'x': after_stat('theoretical'), 'y': after_stat('sample')}
     DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
                       'na_rm': False,
                       'distribution': 'norm', 'dparams': (),

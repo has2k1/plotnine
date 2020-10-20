@@ -17,11 +17,23 @@ Plot creation
 
    ggplot
    qplot
-   aes
    ~watermark.watermark
    ~layer.layer
    ~animation.PlotnineAnimation
    ~ggplot.save_as_pdf_pages
+
+Aesthetics are the visual properties of a plot. The following functions control
+how the data (and calculations based on the data) is mapped to the aesthetics.
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: members-example.rst
+
+   aes
+   after_stat
+   after_scale
+   stage
 
 geoms
 =====

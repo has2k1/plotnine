@@ -9,8 +9,8 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, get_calculated_aes, stat, AES_INNER_NAMESPACE
-from .aes import strip_calculated_markers, NO_GROUP
+from .aes import aes, AES_INNER_NAMESPACE
+from .aes import NO_GROUP
 
 
 _TPL_EVAL_FAIL = """\
@@ -280,7 +280,7 @@ class layer:
             aesthetics = self.mapping
 
         # drop aesthetic parameters or the calculated aesthetics
-        calculated = set(get_calculated_aes(aesthetics))
+        calculated = set(aesthetics.calculated)
         d = dict((ae, v) for ae, v in aesthetics.items()
                  if (ae not in self.geom.aes_params) and
                  (ae not in calculated))
@@ -312,7 +312,7 @@ class layer:
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
-        for ae, col in aesthetics.items():
+        for ae, col in aesthetics.starting.items():
             if isinstance(col, str):
                 if col in data:
                     evaled[ae] = data[col]
@@ -391,20 +391,16 @@ class layer:
         # and have been mapped to with dot dot notation
         # e.g aes(y='..count..'), y is the new aesthetic and
         # 'count' is the computed column in data
-        new = {}  # {'aesthetic_name': 'calculated_stat'}
         stat_data = type(data)()
-        stat_namespace = dict(stat=stat)
-        env = plot.environment.with_outer_namespace(stat_namespace)
-        for ae in get_calculated_aes(aesthetics):
-            new[ae] = strip_calculated_markers(aesthetics[ae])
+        env = plot.environment
+        for ae, expr in aesthetics.calculated.items():
             # In conjuction with the pd.concat at the end,
             # be careful not to create duplicate columns
-            # for cases like y='..y..'
-            if new[ae] != ae:
-                stat_data[ae] = env.eval(
-                    new[ae], inner_namespace=data)
+            # for cases like y='y'
+            if expr != ae:
+                stat_data[ae] = env.eval(expr, inner_namespace=data)
 
-        if not new:
+        if not stat_data.columns.any():
             return
 
         # (see stat_spoke for one exception)
@@ -417,6 +413,7 @@ class layer:
         self.data = pd.concat([data[columns], stat_data], axis=1)
 
         # Add any new scales, if needed
+        new = {ae: ae for ae in stat_data.columns}
         plot.scales.add_defaults(self.data, new)
 
     def setup_data(self):

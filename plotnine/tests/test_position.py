@@ -6,7 +6,7 @@ import pytest
 
 from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
                       geom_col, geom_boxplot, geom_text, geom_rect,
-                      position_dodge, position_dodge2,
+                      after_stat, position_dodge, position_dodge2,
                       position_jitter, position_jitterdodge,
                       position_nudge, position_stack, theme)
 from plotnine.positions.position import position
@@ -99,7 +99,7 @@ def test_dodge_preserve_single_text():
     p = (ggplot(df1, aes('x', fill='y'))
          + geom_bar(position=d)
          + geom_text(
-             aes(y='stat(count)', label='stat(count)'),
+             aes(y=after_stat('count'), label=after_stat('count')),
              stat='count',
              position=d,
              va='bottom')
