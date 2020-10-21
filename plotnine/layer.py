@@ -62,9 +62,10 @@ class Layers(list):
     def data(self):
         return [l.data for l in self]
 
-    def generate_data(self, plot_data):
+    def prepare(self, plot):
         for l in self:
-            l.generate_data(plot_data)
+            l.make_layer_data(plot.data)
+            l.make_layer_mapping(plot.mapping)
 
     def setup_data(self):
         for l in self:
@@ -224,7 +225,7 @@ class layer:
 
         return result
 
-    def generate_data(self, plot_data):
+    def make_layer_data(self, plot_data):
         """
         Generate data to be used by this layer
 
@@ -257,35 +258,17 @@ class layer:
         else:
             self.data = self.data.copy()
 
-    def layer_mapping(self, mapping):
+    def make_layer_mapping(self, plot_mapping):
         """
-        Return the mappings that are active in this layer
+        Create the aesthetic mappings to be used by this layer
 
         Parameters
         ----------
-        mapping : aes
-            mappings in the ggplot call
-
-        Notes
-        -----
-        Once computed the layer mappings are also stored
-        in self._active_mapping
+        plot_mapping : aes
+            ggplot object mapping
         """
-        # For certain geoms, it is useful to be able to
-        # ignore the default aesthetics and only use those
-        # set in the layer
         if self.inherit_aes:
-            aesthetics = defaults(self.mapping, mapping)
-        else:
-            aesthetics = self.mapping
-
-        # drop aesthetic parameters or the calculated aesthetics
-        calculated = set(aesthetics._calculated)
-        d = dict((ae, v) for ae, v in aesthetics.items()
-                 if (ae not in self.geom.aes_params) and
-                 (ae not in calculated))
-        self._active_mapping = aes(**d)
-        return self._active_mapping
+            self.mapping = defaults(self.mapping, plot_mapping)
 
     def compute_aesthetics(self, plot):
         """
@@ -296,7 +279,13 @@ class layer:
         expression evaluation are  made in here
         """
         data = self.data
-        aesthetics = self.layer_mapping(plot.mapping)
+
+        # drop aesthetic parameters or the calculated aesthetics
+        aesthetics = {
+            ae: v
+            for ae, v in self.mapping._starting.items()
+            if ae not in self.geom.aes_params
+        }
 
         env = EvalEnvironment.capture(eval_env=plot.environment)
         env = env.with_outer_namespace(AES_INNER_NAMESPACE)
@@ -312,7 +301,7 @@ class layer:
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
-        for ae, col in aesthetics._starting.items():
+        for ae, col in aesthetics.items():
             if isinstance(col, str):
                 if col in data:
                     evaled[ae] = data[col]
