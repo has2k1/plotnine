@@ -313,27 +313,11 @@ class layer:
         if not len(data):
             return type(data)()
 
-        # Assemble aesthetics from layer, plot and stat mappings
-        aesthetics = deepcopy(self.mapping)
-        if self.inherit_aes:
-            aesthetics = defaults(aesthetics, plot.mapping)
+        # Mixin default stat aesthetic mappings
+        aesthetics = defaults(self.mapping, self.stat.DEFAULT_AES)
+        stat_data = evaluate(aesthetics._calculated, data, plot.environment)
 
-        aesthetics = defaults(aesthetics, self.stat.DEFAULT_AES)
-
-        # The new aesthetics are those that the stat calculates
-        # and have been mapped to with dot dot notation
-        # e.g aes(y='..count..'), y is the new aesthetic and
-        # 'count' is the computed column in data
-        stat_data = type(data)()
-        env = plot.environment
-        for ae, expr in aesthetics._calculated.items():
-            # In conjuction with the pd.concat at the end,
-            # be careful not to create duplicate columns
-            # for cases like y='y'
-            if expr != ae:
-                stat_data[ae] = env.eval(expr, inner_namespace=data)
-
-        if not stat_data.columns.any():
+        if not len(stat_data):
             return
 
         # (see stat_spoke for one exception)
