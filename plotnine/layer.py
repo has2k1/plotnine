@@ -9,7 +9,7 @@ from patsy.eval import EvalEnvironment
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, AES_INNER_NAMESPACE
+from .aes import aes, stage, AES_INNER_NAMESPACE
 from .aes import NO_GROUP
 
 
@@ -270,6 +270,21 @@ class layer:
         if self.inherit_aes:
             self.mapping = defaults(self.mapping, plot_mapping)
 
+        # aesthetics set as parameters override the same
+        # aesthetics set as mappings, so we can ignore
+        # those in the mapping
+        for ae in self.geom.aes_params:
+            if ae in self.mapping:
+                del self.mapping[ae]
+
+        # Set group as a mapping if set as a parameter
+        if 'group' in self.geom.aes_params:
+            group = self.geom.aes_params['group']
+            # Double quote str so that it evaluates to itself
+            if isinstance(group, str):
+                group = f'"{group}"'
+            self.mapping['group'] = stage(start=group)
+
     def compute_aesthetics(self, plot):
         """
         Return a dataframe where the columns match the
@@ -279,25 +294,13 @@ class layer:
         expression evaluation are  made in here
         """
         data = self.data
-
-        # drop aesthetic parameters or the calculated aesthetics
-        aesthetics = {
-            ae: v
-            for ae, v in self.mapping._starting.items()
-            if ae not in self.geom.aes_params
-        }
+        aesthetics = self.mapping._starting
 
         env = EvalEnvironment.capture(eval_env=plot.environment)
         env = env.with_outer_namespace(AES_INNER_NAMESPACE)
 
         # Using `type` preserves the subclass of pd.DataFrame
         evaled = type(data)(index=data.index)
-
-        # Override grouping if set in layer.
-        if 'group' in self.geom.aes_params:
-            evaled['group'] = self.geom.aes_params['group']
-            if 'group' in aesthetics:
-                del aesthetics['group']
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
