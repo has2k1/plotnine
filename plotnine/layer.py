@@ -1,26 +1,12 @@
 from copy import copy, deepcopy
-import numbers
 
 import pandas as pd
-import numpy as np
-import pandas.api.types as pdtypes
-from patsy.eval import EvalEnvironment
 
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, stage, AES_INNER_NAMESPACE
+from .aes import aes, evaluate, stage
 from .aes import NO_GROUP
-
-
-_TPL_EVAL_FAIL = """\
-Could not evaluate the '{}' mapping: '{}' \
-(original error: {})"""
-
-_TPL_BAD_EVAL_TYPE = """\
-The '{}' mapping: '{}' produced a value of type '{}',\
-but only single items and lists/arrays can be used. \
-(original error: {})"""
 
 
 class Layers(list):
@@ -293,60 +279,15 @@ class layer:
         Transformations like 'factor(cyl)' and other
         expression evaluation are  made in here
         """
-        data = self.data
-        aesthetics = self.mapping._starting
-
-        env = EvalEnvironment.capture(eval_env=plot.environment)
-        env = env.with_outer_namespace(AES_INNER_NAMESPACE)
-
-        # Using `type` preserves the subclass of pd.DataFrame
-        evaled = type(data)(index=data.index)
-
-        # If a column name is not in the data, it is evaluated/transformed
-        # in the environment of the call to ggplot
-        for ae, col in aesthetics.items():
-            if isinstance(col, str):
-                if col in data:
-                    evaled[ae] = data[col]
-                else:
-                    try:
-                        new_val = env.eval(col, inner_namespace=data)
-                    except Exception as e:
-                        raise PlotnineError(
-                            _TPL_EVAL_FAIL.format(ae, col, str(e)))
-
-                    try:
-                        evaled[ae] = new_val
-                    except Exception as e:
-                        raise PlotnineError(
-                            _TPL_BAD_EVAL_TYPE.format(
-                                ae, col, str(type(new_val)), str(e)))
-            elif pdtypes.is_list_like(col):
-                n = len(col)
-                if len(data) and n != len(data) and n != 1:
-                    raise PlotnineError(
-                        "Aesthetics must either be length one, " +
-                        "or the same length as the data")
-                # An empty dataframe does not admit a scalar value
-                elif len(evaled) and n == 1:
-                    col = col[0]
-                evaled[ae] = col
-            elif is_known_scalar(col):
-                if not len(evaled):
-                    col = [col]
-                evaled[ae] = col
-            else:
-                msg = "Do not know how to deal with aesthetic '{}'"
-                raise PlotnineError(msg.format(ae))
-
-        evaled_aes = aes(**dict((col, col) for col in evaled))
+        evaled = evaluate(self.mapping._starting, self.data, plot.environment)
+        evaled_aes = aes(**{col: col for col in evaled})
         plot.scales.add_defaults(evaled, evaled_aes)
 
-        if len(data) == 0 and len(evaled) > 0:
+        if len(self.data) == 0 and len(evaled) > 0:
             # No data, and vectors suppled to aesthetics
             evaled['PANEL'] = 1
         else:
-            evaled['PANEL'] = data['PANEL']
+            evaled['PANEL'] = self.data['PANEL']
 
         self.data = add_group(evaled)
 
@@ -507,16 +448,3 @@ def discrete_columns(df, ignore):
                 continue
             lst.append(col)
     return lst
-
-
-def is_known_scalar(value):
-    """
-    Return True if value is a type we expect in a dataframe
-    """
-    def _is_datetime_or_timedelta(value):
-        # Using pandas.Series helps catch python, numpy and pandas
-        # versions of these types
-        return pd.Series(value).dtype.kind in ('M', 'm')
-
-    return not np.iterable(value) and (isinstance(value, numbers.Number) or
-                                       _is_datetime_or_timedelta(value))
