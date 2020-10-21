@@ -1,3 +1,4 @@
+import numbers
 import re
 from copy import deepcopy
 from contextlib import suppress
@@ -5,6 +6,9 @@ from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
+import pandas.api.types as pdtypes
+
+from .exceptions import PlotnineError
 
 __all__ = ['aes', 'after_stat', 'after_scale', 'stage']
 
@@ -681,3 +685,105 @@ AES_INNER_NAMESPACE = {
     'factor': pd.Categorical,
     'reorder': reorder
 }
+
+_TPL_EVAL_FAIL = """\
+Could not evaluate the '{}' mapping: '{}' \
+(original error: {})"""
+
+_TPL_BAD_EVAL_TYPE = """\
+The '{}' mapping: '{}' produced a value of type '{}',\
+but only single items and lists/arrays can be used. \
+(original error: {})"""
+
+
+def is_known_scalar(value):
+    """
+    Return True if value is a type we expect in a dataframe
+    """
+    def _is_datetime_or_timedelta(value):
+        # Using pandas.Series helps catch python, numpy and pandas
+        # versions of these types
+        return pd.Series(value).dtype.kind in ('M', 'm')
+
+    return not np.iterable(value) and (isinstance(value, numbers.Number) or
+                                       _is_datetime_or_timedelta(value))
+
+
+def evaluate(aesthetics, data, env):
+    """
+    Evaluate aesthetics
+
+    Parameters
+    ----------
+    aesthetics : dict-like
+        Aesthetics to evaluate. They must be of the form {name: expr}
+    data : pd.DataFrame
+        Dataframe whose columns are/may-be variables in the aesthetic
+        expressions i.e. it is a namespace with variables.
+    env : ~patsy.Eval.Environment
+        Environment in which the aesthetics are evaluated
+
+    Returns
+    -------
+    evaled : pd.DataFrame
+        Dataframe of the form {name: result}, where each column is the
+        result from evaluating an expression.
+
+    Examples
+    --------
+    >>> import patsy
+    >>> var1 = 2
+    >>> env = patsy.eval.EvalEnvironment.capture()
+    >>> df = pd.DataFrame({'x': range(1, 6)})
+    >>> aesthetics = {'y': 'x**var1'}
+    >>> evaluate(aesthetics, df, env)
+        y
+    0   1
+    1   4
+    2   9
+    3  16
+    4  25
+    """
+    env = env.with_outer_namespace(AES_INNER_NAMESPACE)
+
+    # Using `type` preserves the subclass of pd.DataFrame
+    evaled = type(data)(index=data.index)
+
+    # If a column name is not in the data, it is evaluated/transformed
+    # in the environment of the call to ggplot
+    for ae, col in aesthetics.items():
+        if isinstance(col, str):
+            if col in data:
+                evaled[ae] = data[col]
+            else:
+                try:
+                    new_val = env.eval(col, inner_namespace=data)
+                except Exception as e:
+                    raise PlotnineError(
+                        _TPL_EVAL_FAIL.format(ae, col, str(e)))
+
+                try:
+                    evaled[ae] = new_val
+                except Exception as e:
+                    raise PlotnineError(
+                        _TPL_BAD_EVAL_TYPE.format(
+                            ae, col, str(type(new_val)), str(e)))
+        elif pdtypes.is_list_like(col):
+            n = len(col)
+            if len(data) and n != len(data) and n != 1:
+                raise PlotnineError(
+                    "Aesthetics must either be length one, " +
+                    "or the same length as the data")
+            # An empty dataframe does not admit a scalar value
+            elif len(evaled) and n == 1:
+                col = col[0]
+            evaled[ae] = col
+        elif is_known_scalar(col):
+            if not len(evaled):
+                col = [col]
+            evaled[ae] = col
+        else:
+            msg = "Do not know how to deal with aesthetic '{}'"
+            raise PlotnineError(msg.format(ae))
+
+    return evaled
