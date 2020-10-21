@@ -130,7 +130,7 @@ class stat(metaclass=Registry):
         stats should not override this method.
         """
         aesthetics = cls.REQUIRED_AES.copy()
-        calculated = aes(**cls.DEFAULT_AES).calculated
+        calculated = aes(**cls.DEFAULT_AES)._calculated
         for ae in set(cls.DEFAULT_AES) - set(calculated):
             aesthetics.add(ae)
         return aesthetics

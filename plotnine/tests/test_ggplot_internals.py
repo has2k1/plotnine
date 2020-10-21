@@ -120,7 +120,7 @@ def test_aes():
 
     mapping = aes('weight', 'hp', color=stage('qsec'))
     assert mapping['color'].start == 'qsec'
-    assert mapping.starting['color'] == 'qsec'
+    assert mapping._starting['color'] == 'qsec'
 
 
 def test_valid_aes_linetypes():
@@ -155,20 +155,20 @@ def test_calculated_aes():
     mapping4 = aes('x', y=after_stat('func(density)'))
 
     def _test():
-        assert list(mapping1.calculated.keys()) == ['y']
-        assert list(mapping2.calculated.keys()) == ['y']
-        assert list(mapping3.calculated.keys()) == ['y']
-        assert list(mapping4.calculated.keys()) == ['y']
+        assert list(mapping1._calculated.keys()) == ['y']
+        assert list(mapping2._calculated.keys()) == ['y']
+        assert list(mapping3._calculated.keys()) == ['y']
+        assert list(mapping4._calculated.keys()) == ['y']
 
         assert mapping1['y'].after_stat == 'density'
         assert mapping2['y'].after_stat == 'density*2'
         assert mapping3['y'].after_stat == 'density + count'
         assert mapping4['y'].after_stat == 'func(density)'
 
-        assert mapping1.calculated['y'] == 'density'
-        assert mapping2.calculated['y'] == 'density*2'
-        assert mapping3.calculated['y'] == 'density + count'
-        assert mapping4.calculated['y'] == 'func(density)'
+        assert mapping1._calculated['y'] == 'density'
+        assert mapping2._calculated['y'] == 'density*2'
+        assert mapping3._calculated['y'] == 'density + count'
+        assert mapping4._calculated['y'] == 'func(density)'
 
     _test()
 
