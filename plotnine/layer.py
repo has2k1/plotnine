@@ -280,7 +280,7 @@ class layer:
             aesthetics = self.mapping
 
         # drop aesthetic parameters or the calculated aesthetics
-        calculated = set(aesthetics.calculated)
+        calculated = set(aesthetics._calculated)
         d = dict((ae, v) for ae, v in aesthetics.items()
                  if (ae not in self.geom.aes_params) and
                  (ae not in calculated))
@@ -312,7 +312,7 @@ class layer:
 
         # If a column name is not in the data, it is evaluated/transformed
         # in the environment of the call to ggplot
-        for ae, col in aesthetics.starting.items():
+        for ae, col in aesthetics._starting.items():
             if isinstance(col, str):
                 if col in data:
                     evaled[ae] = data[col]
@@ -393,7 +393,7 @@ class layer:
         # 'count' is the computed column in data
         stat_data = type(data)()
         env = plot.environment
-        for ae, expr in aesthetics.calculated.items():
+        for ae, expr in aesthetics._calculated.items():
             # In conjuction with the pd.concat at the end,
             # be careful not to create duplicate columns
             # for cases like y='y'

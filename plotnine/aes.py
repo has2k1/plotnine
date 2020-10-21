@@ -167,11 +167,11 @@ class aes(dict):
         return kwargs
 
     @property
-    def starting(self):
+    def _starting(self):
         """
         Return the subset of aesthetics mapped from the layer data
 
-        The mapping is a dict of the form {name: expr}, i.e the
+        The mapping is a dict of the form ``{name: expr}``, i.e the
         stage class has been peeled off.
         """
         d = {}
@@ -184,12 +184,12 @@ class aes(dict):
         return d
 
     @property
-    def calculated(self):
+    def _calculated(self):
         """
         Return the subset of aesthetics that are mapped from the
         calculated statistics
 
-        The mapping is a dict of the form {name: expr}, i.e the
+        The mapping is a dict of the form ``{name: expr}``, i.e the
         stage class has been peeled off.
         """
         d = {}
@@ -200,11 +200,11 @@ class aes(dict):
         return d
 
     @property
-    def scaled(self):
+    def _scaled(self):
         """
         Return the subset of aesthetics mapped using layer aesthetics
 
-        The mapping is a dict of the form {name: expr}, i.e the
+        The mapping is a dict of the form ``{name: expr}``, i.e the
         stage class has been peeled off.
         """
         d = {}
@@ -237,6 +237,78 @@ class aes(dict):
 
     def copy(self):
         return aes(**self)
+
+
+def after_stat(x):
+    """
+    Evaluate mapping after statistic has been calculated
+
+    Parameters
+    ----------
+    x : str
+        An expression
+
+    See Also
+    --------
+    :func:`after_scale` : For how to alter aesthetics after the data has been
+        mapped by the scale.
+    :class:`stage` : For how to map to aesthetics at more than one stage of
+        the plot building pipeline.
+    """
+    return stage(after_stat=x)
+
+
+def after_scale(x):
+    """
+    Evaluate mapping after variable has been mapped to the scale
+
+    This gives the user a chance to alter the value of a variable
+    in the final units of the scale e.g. the rgb hex color.
+
+    Parameters
+    ----------
+    x : str
+        An expression
+
+    See Also
+    --------
+    :func:`after_stat` : For how to map aesthetics to variable calculated
+        by the stat
+    :class:`stage` : For how to map to aesthetics at more than one stage of
+        the plot building pipeline.
+    """
+    return stage(after_scale=x)
+
+
+class stage:
+    """
+    Stage allows you evaluating mapping at more than one stage
+
+    You can evaluate an expression of a variable in a dataframe, and
+    later evaluate an expression that modifies the values mapped to
+    the scale.
+
+    Parameters
+    ----------
+    start : expression | array_like | scalar
+        Aesthetic expression using primary variables from the layer
+        data.
+    after_stat : expression
+        Aesthetic expression using variables calculated by the stat.
+    after_scale : expression
+        Aesthetic expression using aesthetics of the layer.
+    """
+    def __init__(self, start=None, after_stat=None, after_scale=None):
+        self.start = start
+        self.after_stat = after_stat
+        self.after_scale = after_scale
+
+    def __repr__(self):
+        return (
+            f'stage(start={repr(self.start)}, '
+            f'after_stat={repr(self.after_stat)}, '
+            f'after_scale={repr(self.after_scale)})'
+        )
 
 
 def rename_aesthetics(obj):
@@ -300,78 +372,6 @@ def is_calculated_aes(ae):
             return True
 
     return False
-
-
-def after_stat(x):
-    """
-    Evaluate mapping after statistic has been calculated
-
-    Paremeters
-    ----------
-    x : str
-        An expression
-
-    See Also
-    --------
-    :func:`after_scale` : For how to alter aesthetics after the data has been
-        mapped by the scale.
-    :class:`stage` : For how to map to aesthetics at more than one stage of
-        the plot building pipeline.
-    """
-    return stage(after_stat=x)
-
-
-def after_scale(x):
-    """
-    Evaluate mapping after variable has been mapped to the scale
-
-    This gives the user a chance to alter the value of a variable
-    in the final units of the scale e.g. the rgb hex color.
-
-    Paremeters
-    ----------
-    x : str
-        An expression
-
-    See Also
-    --------
-    :func:`after_stat` : For how to map aesthetics to variable calculated
-        by the stat
-    :class:`stage` : For how to map to aesthetics at more than one stage of
-        the plot building pipeline.
-    """
-    return stage(after_scale=x)
-
-
-class stage:
-    """
-    Stage allows you evaluating mapping at more than one stage
-
-    You can evaluate an expression of a variable in a dataframe, and
-    later evaluate an expression that modifies the values mapped to
-    the scale.
-
-    Parameters
-    ----------
-    start : expression | array_like | scalar
-        Aesthetic expression using primary variables from the layer
-        data.
-    after_stat : expression
-        Aesthetic expression using variables calculated by the stat.
-    after_scale : expression
-        Aesthetic expression using aesthetics of the layer.
-    """
-    def __init__(self, start=None, after_stat=None, after_scale=None):
-        self.start = start
-        self.after_stat = after_stat
-        self.after_scale = after_scale
-
-    def __repr__(self):
-        return (
-            f'stage(start={repr(self.start)}, '
-            f'after_stat={repr(self.after_stat)}, '
-            f'after_scale={repr(self.after_scale)})'
-        )
 
 
 def strip_stat(value):
