@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from ..stats.stat import stat
-from ..aes import rename_aesthetics, is_valid_aesthetic
+from ..aes import rename_aesthetics, is_valid_aesthetic, evaluate
 from ..layer import layer
 from ..positions.position import position
 from ..utils import data_mapping_as_kwargs, remove_missing
@@ -21,6 +21,10 @@ class geom(metaclass=Registry):
     mapping = None     #: mappings i.e. :py:`aes(x='col1', fill='col2')`
     aes_params = None  # setting of aesthetic
     params = None      # parameter settings
+
+    # Plot namespace, it gets its value when the plot is being
+    # built.
+    environment = None
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
@@ -112,9 +116,12 @@ class geom(metaclass=Registry):
         old = self.__dict__
         new = result.__dict__
 
+        # don't make a deepcopy of data, or environment
+        shallow = {'data', '_kwargs', 'environment'}
         for key, item in old.items():
-            if key in {'data', '_kwargs'}:
+            if key in shallow:
                 new[key] = old[key]
+                memo[id(new[key])] = new[key]
             else:
                 new[key] = deepcopy(old[key], memo)
 
@@ -153,7 +160,7 @@ class geom(metaclass=Registry):
         """
         return data
 
-    def use_defaults(self, data):
+    def use_defaults(self, data, aes_modifiers):
         """
         Combine data with defaults and set aesthetics from parameters
 
@@ -163,6 +170,8 @@ class geom(metaclass=Registry):
         ----------
         data : dataframe
             Data used for drawing the geom.
+        aes_modifiers : dict
+            Aesthetics
 
         Returns
         -------
@@ -176,6 +185,11 @@ class geom(metaclass=Registry):
         # Not in data and not set, use default
         for ae in missing_aes:
             data[ae] = self.DEFAULT_AES[ae]
+
+        # Evaluate/Modify the mapped aesthetics
+        evaled = evaluate(aes_modifiers, data, self.environment)
+        for ae in (evaled.columns & data.columns):
+            data[ae] = evaled[ae]
 
         # If set, use it
         for ae, value in self.aes_params.items():
