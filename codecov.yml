@@ -1,0 +1,22 @@
+codecov:
+  require_ci_to_pass: true
+  token: 58d59fa2-ed00-4601-8824-ae0b4ec64ca3
+
+comment:
+   behavior: default
+   branches:
+      - 'master'
+
+coverage:
+   round: 'down'
+   range: 90..100
+   status:
+      project:
+         default:
+            target: auto
+            threshold: 0.1%
+
+      # Lines adjusted in the PR
+      patch:
+         default:
+            target: 80%

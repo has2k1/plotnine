@@ -139,11 +139,11 @@ And if you can fix a bug, your contribution is welcome.
 .. |license| image:: https://img.shields.io/pypi/l/plotnine.svg
 .. _license: https://pypi.python.org/pypi/plotnine
 
-.. |buildstatus| image:: https://api.travis-ci.org/has2k1/plotnine.svg?branch=master
-.. _buildstatus: https://travis-ci.org/has2k1/plotnine
+.. |buildstatus| image:: https://github.com/has2k1/plotnine/workflows/build/badge.svg?branch=master
+.. _buildstatus: https://github.com/has2k1/plotnine/actions?query=branch%3Amaster+workflow%3A%22build%22
 
-.. |coverage| image:: https://coveralls.io/repos/github/has2k1/plotnine/badge.svg?branch=master
-.. _coverage: https://coveralls.io/github/has2k1/plotnine?branch=master
+.. |coverage| image:: https://codecov.io /github/has2k1/plotnine/coverage.svg?branch=master
+.. _coverage: https://codecov.io/github/has2k1/plotnine?branch=master
 
 .. |documentation| image:: https://readthedocs.org/projects/plotnine/badge/?version=latest
 .. _documentation: https://plotnine.readthedocs.io/en/latest/

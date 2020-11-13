@@ -34,6 +34,7 @@ clean-pyc:
 clean-test:
 	rm -fr .tox/
 	rm -f .coverage
+	rm -f coverage.xml
 	rm -fr htmlcov/
 	rm -fr result_images/*
 
@@ -41,6 +42,7 @@ lint:
 	flake8 plotnine
 
 test: clean-test
+	export MATPLOTLIB_BACKEND=agg
 	pytest
 
 visualize-tests:

@@ -1,0 +1,168 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  # Unittests
+  unittests:
+    runs-on: ubuntu-latest
+
+    # We want to run on external PRs, but not on our own internal PRs as they'll be run
+    # by the push to the branch.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    strategy:
+      matrix:
+        python-version: [3.6, 3.8]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      # Ref: https://github.com/marketplace/actions/setup-miniconda
+      - name: Cache conda
+        uses: actions/cache@v1
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml
+          # has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key:
+            ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('etc/example-environment.yml') }}
+
+      - name: Install Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          activate-environment: plotnine-ci-unittests
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          conda install scipy pandas statsmodels scikit-learn geopandas pytest-cov
+          export MPLLOCALFREETYPE=1
+          pip install matplotlib --no-binary matplotlib
+          pip install scikit-misc adjustText pyshp
+          pip install -e .
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
+          pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          coverage erase
+          make test
+          ls -la
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          name: "py${{ matrix.python-version }}"
+
+  # Linting
+  lint:
+    runs-on: ubuntu-latest
+
+    # We want to run on external PRs, but not on our own internal PRs as they'll be run
+    # by the push to the branch.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Ref: https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-python#caching-dependencies
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          # This path is specific to Ubuntu
+          path: ~/.cache/pip
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: pip install flake8
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: make lint
+
+  # Documentation
+  documentation:
+    runs-on: ubuntu-latest
+
+    # We want to run on external PRs, but not on our own internal PRs as they'll be run
+    # by the push to the branch.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Ref: https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-python#caching-dependencies
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          # This path is specific to Ubuntu
+          path: ~/.cache/pip
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          sudo apt-get install pandoc
+          conda install scipy pandas statsmodels scikit-learn geopandas matplotlib
+          pip install scikit-misc adjustText
+          pip install -r requirements/doc.txt
+          pip install -e .
+          python setup.py install
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: pip list
+
+      - name: Build Documentation
+        shell: bash -l {0}
+        run: |
+          pushd doc
+          # low pandoc version leads to a warning so
+          # SPHINXOPTS=-W fails
+          make html && popd
