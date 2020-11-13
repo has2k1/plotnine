@@ -38,7 +38,8 @@ class stat(metaclass=Registry):
     # their default values.
     _aesthetics_doc = '{aesthetics_table}'
 
-    # The namespace in which the ggplot object is invoked
+    # Plot namespace, it gets its value when the plot is being
+    # built.
     environment = None
 
     def __init__(self, mapping=None, data=None, **kwargs):
@@ -365,7 +366,6 @@ class stat(metaclass=Registry):
             ggplot object with added layer
         """
         gg = gg if inplace else deepcopy(gg)
-        self.environment = gg.environment
         gg += self.to_layer()  # Add layer
         return gg
 

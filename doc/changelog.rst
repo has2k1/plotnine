@@ -5,6 +5,20 @@ v0.7.2
 ------
 (not-yet-released)
 
+API Changes
+***********
+
+- How you map to calculated aesthetics has changed. Use the
+  :func:`~plotnine.aes.after_stat` function. The old methods ``'stat(name)'``
+  and ``'..name..'`` have been deprecated.
+
+New Features
+************
+
+- You can now map to aesthetics at three different stages. See
+  :class:`~plotnine.aes.aes`, :func:`~plotnine.aes.after_stat`,
+  :func:`~plotnine.aes.after_scale` and :class:`~plotnine.aes.stage`.
+
 Bug Fixes
 *********
 

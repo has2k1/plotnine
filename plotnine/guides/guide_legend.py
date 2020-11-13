@@ -163,7 +163,14 @@ class guide_legend(guide):
                 continue
 
             data = self.key[matched].copy()
-            data = l.use_defaults(data)
+
+            # Modify aesthetics
+            try:
+                data = l.use_defaults(data)
+            except PlotnineError:
+                warn("Failed to apply `after_scale` modifications "
+                     "to the legend.", PlotnineWarning)
+                data = l.use_defaults(data, aes_modifiers={})
 
             # override.aes in guide_legend manually changes the geom
             for ae in set(self.override_aes) & set(data.columns):

@@ -52,6 +52,7 @@ class Layers(list):
         for l in self:
             l.make_layer_data(plot.data)
             l.make_layer_mapping(plot.mapping)
+            l.make_layer_environments(plot.environment)
 
     def setup_data(self):
         for l in self:
@@ -79,9 +80,9 @@ class Layers(list):
         for l in self:
             l.compute_position(layout)
 
-    def use_defaults(self):
+    def use_defaults(self, data=None, aes_modifiers=None):
         for l in self:
-            l.use_defaults()
+            l.use_defaults(data, aes_modifiers)
 
     def transform(self, scales):
         for l in self:
@@ -271,6 +272,18 @@ class layer:
                 group = f'"{group}"'
             self.mapping['group'] = stage(start=group)
 
+    def make_layer_environments(self, plot_environment):
+        """
+        Create the aesthetic mappings to be used by this layer
+
+        Parameters
+        ----------
+        plot_environment : ~patsy.Eval.EvalEnvironment
+            Namespace in which to execute aesthetic expressions.
+        """
+        self.geom.environment = plot_environment
+        self.stat.environment = plot_environment
+
     def compute_aesthetics(self, plot):
         """
         Return a dataframe where the columns match the
@@ -383,13 +396,25 @@ class layer:
         # that is created by the plot build process
         self.geom.draw_layer(self.data, layout, coord, **params)
 
-    def use_defaults(self, data=None):
+    def use_defaults(self, data=None, aes_modifiers=None):
         """
         Prepare/modify data for plotting
+
+        Parameters
+        ----------
+        data : dataframe, optional
+            Data
+        aes_modifiers : dict
+            Expression to evaluate and replace aesthetics in
+            the data.
         """
         if data is None:
             data = self.data
-        return self.geom.use_defaults(data)
+
+        if aes_modifiers is None:
+            aes_modifiers = self.mapping._scaled
+
+        return self.geom.use_defaults(data, aes_modifiers)
 
     def finish_statistics(self):
         """
