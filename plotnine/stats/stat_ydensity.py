@@ -166,6 +166,10 @@ class stat_ydensity(stat):
             range_y = scales.y.dimension()
 
         dens = compute_density(data['y'], weight, range_y, **params)
+
+        if not len(dens):
+            return dens
+
         dens['y'] = dens['x']
         dens['x'] = np.mean([data['x'].min(), data['x'].max()])
 
