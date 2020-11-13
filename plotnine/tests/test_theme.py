@@ -161,9 +161,9 @@ class TestThemes:
              + theme(text=element_text(family=['Comic Sans MS']))
              )
 
-        if os.environ.get('TRAVIS'):
-            # Travis does not have the fonts, we still check
-            # to catch any other errors
+        if os.environ.get('CI') or os.environ.get('TRAVIS'):
+            # Github Actions and Travis do not have the fonts,
+            # we still check to catch any other errors
             assert p + _theme != 'theme_gray'
         else:
             assert p + _theme == 'theme_xkcd'
