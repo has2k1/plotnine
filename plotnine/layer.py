@@ -5,8 +5,8 @@ import pandas as pd
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .aes import aes, evaluate, stage
-from .aes import NO_GROUP
+from .mapping.aes import aes, NO_GROUP
+from .mapping.evaluation import stage, evaluate
 
 
 class Layers(list):

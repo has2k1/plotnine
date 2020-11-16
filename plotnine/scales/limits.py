@@ -4,7 +4,7 @@ import sys
 
 import pandas as pd
 
-from ..aes import aes, all_aesthetics
+from ..mapping.aes import aes, all_aesthetics
 from ..geoms import geom_blank
 from ..scales.scales import make_scale
 from ..exceptions import PlotnineError

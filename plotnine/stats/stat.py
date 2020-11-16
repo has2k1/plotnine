@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..aes import aes
+from ..mapping import aes
 from ..layer import layer
 from ..utils import data_mapping_as_kwargs, remove_missing
 from ..utils import groupby_apply, copy_keys, uniquecols

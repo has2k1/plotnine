@@ -3,7 +3,7 @@ from contextlib import suppress
 import numpy as np
 import pandas as pd
 
-from ..aes import after_stat
+from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat

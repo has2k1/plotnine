@@ -22,11 +22,13 @@ Plot creation
    ~animation.PlotnineAnimation
    ~ggplot.save_as_pdf_pages
 
-Aesthetics
-----------
+Mapping Aesthetics
+------------------
 
 Aesthetics are the visual properties of a plot. The following functions control
 how the data (and calculations based on the data) is mapped to the aesthetics.
+
+.. currentmodule:: plotnine.mapping
 
 .. autosummary::
    :toctree: generated/

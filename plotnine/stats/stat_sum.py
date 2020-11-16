@@ -1,4 +1,5 @@
-from ..aes import after_stat, all_aesthetics
+from ..mapping.aes import all_aesthetics
+from ..mapping.evaluation import after_stat
 from ..utils import groupby_apply
 from ..doctools import document
 from .stat import stat

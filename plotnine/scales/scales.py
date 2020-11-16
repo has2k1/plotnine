@@ -5,7 +5,7 @@ from warnings import warn
 import numpy as np
 import pandas.api.types as pdtypes
 
-from ..aes import aes_to_scale
+from ..mapping.aes import aes_to_scale
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import Registry, array_kind
 

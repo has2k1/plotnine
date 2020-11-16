@@ -13,7 +13,7 @@ from ..utils import ColoredDrawingArea, SIZE_FACTOR
 from ..utils import Registry, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
-from ..aes import rename_aesthetics
+from ..mapping.aes import rename_aesthetics
 from .guide import guide
 
 # See guides.py for terminology

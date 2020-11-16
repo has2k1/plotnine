@@ -6,7 +6,7 @@ import matplotlib.lines as mlines
 from ..utils import make_iterable, SIZE_FACTOR, order_as_mapping_data
 from ..exceptions import PlotnineWarning
 from ..doctools import document
-from ..aes import aes
+from ..mapping import aes
 from .geom import geom
 from .geom_segment import geom_segment
 

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats.mstats import plotting_positions
 
-from ..aes import after_stat
+from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .distributions import get_continuous_distribution

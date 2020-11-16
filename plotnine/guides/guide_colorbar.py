@@ -11,7 +11,7 @@ from matplotlib.offsetbox import AuxTransformBox, DrawingArea
 from matplotlib.colors import ListedColormap
 from mizani.bounds import rescale
 
-from ..aes import rename_aesthetics
+from ..mapping.aes import rename_aesthetics
 from ..exceptions import PlotnineWarning
 from ..scales.scale import scale_continuous
 from .guide import guide

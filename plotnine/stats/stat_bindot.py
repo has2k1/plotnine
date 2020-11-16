@@ -3,7 +3,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from ..aes import after_stat
+from ..mapping.evaluation import after_stat
 from ..utils import groupby_apply
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning

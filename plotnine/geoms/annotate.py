@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..aes import aes
+from ..mapping import aes
 from ..utils import is_scalar_or_string, Registry
 from ..exceptions import PlotnineError
 from ..geoms.geom import geom as geom_base_class
