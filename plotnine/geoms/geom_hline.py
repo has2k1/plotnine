@@ -5,7 +5,7 @@ import pandas as pd
 from ..utils import make_iterable, order_as_mapping_data
 from ..exceptions import PlotnineWarning
 from ..doctools import document
-from ..aes import aes
+from ..mapping import aes
 from .geom import geom
 from .geom_segment import geom_segment
 

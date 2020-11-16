@@ -2,7 +2,7 @@ from warnings import warn
 
 import numpy as np
 
-from ..aes import after_stat
+from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from .binning import (breaks_from_bins, breaks_from_binwidth,

@@ -15,7 +15,7 @@ from matplotlib.offsetbox import AnchoredOffsetbox
 from matplotlib.backends.backend_pdf import PdfPages
 from patsy.eval import EvalEnvironment
 
-from .aes import aes, make_labels
+from .mapping.aes import aes, make_labels
 from .layer import Layers
 from .facets import facet_null
 from .facets.layout import Layout

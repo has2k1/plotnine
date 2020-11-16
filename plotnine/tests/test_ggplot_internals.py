@@ -9,8 +9,8 @@ from plotnine import geom_line, geom_bar
 from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
-from plotnine.aes import stage, after_stat
-from plotnine.aes import is_valid_aesthetic
+from plotnine import stage, after_stat
+from plotnine.mapping.aes import is_valid_aesthetic
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 df = pd.DataFrame({'x': np.arange(10),

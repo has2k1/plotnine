@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from .aes import rename_aesthetics
+from .mapping.aes import rename_aesthetics
 from .exceptions import PlotnineError
 
 __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']

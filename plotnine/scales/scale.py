@@ -12,7 +12,7 @@ from mizani.breaks import date_breaks
 from mizani.formatters import date_format
 from mizani.transforms import gettrans
 
-from ..aes import is_position_aes, rename_aesthetics
+from ..mapping.aes import is_position_aes, rename_aesthetics
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import match, waiver, is_waive, Registry

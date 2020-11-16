@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from ..aes import after_stat, has_groups
+from ..mapping.aes import has_groups
+from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import array_kind, jitter, resolution

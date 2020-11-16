@@ -2,7 +2,7 @@ from warnings import warn
 
 import pandas as pd
 
-from ..aes import aes
+from ..mapping import aes
 from ..exceptions import PlotnineWarning
 from ..utils import make_iterable, order_as_mapping_data
 from ..doctools import document

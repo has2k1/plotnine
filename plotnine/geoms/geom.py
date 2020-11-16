@@ -1,7 +1,8 @@
 from copy import deepcopy
 
 from ..stats.stat import stat
-from ..aes import rename_aesthetics, is_valid_aesthetic, evaluate
+from ..mapping.aes import rename_aesthetics, is_valid_aesthetic
+from ..mapping.evaluation import evaluate
 from ..layer import layer
 from ..positions.position import position
 from ..utils import data_mapping_as_kwargs, remove_missing

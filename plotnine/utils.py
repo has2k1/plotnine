@@ -20,7 +20,7 @@ from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
 
-from .aes import aes
+from .mapping import aes
 from .exceptions import PlotnineError, PlotnineWarning
 
 
