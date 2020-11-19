@@ -42,6 +42,14 @@ class stage:
         self.after_scale = after_scale
 
     def __repr__(self):
+        # Shorter representation when the mapping happens at a
+        # single stage
+        if self.after_stat is None and self.after_scale is None:
+            return f'{repr(self.start)}'
+        if self.start is None and self.after_scale is None:
+            return f'after_stat({repr(self.after_stat)})'
+        if self.start is None and self.after_stat is None:
+            return f'after_scale({repr(self.after_scale)})'
         return (
             f'stage(start={repr(self.start)}, '
             f'after_stat={repr(self.after_stat)}, '
