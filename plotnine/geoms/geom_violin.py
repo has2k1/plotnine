@@ -19,15 +19,23 @@ class geom_violin(geom):
     Parameters
     ----------
     {common_parameters}
-    draw_quantiles: float or [float]
+    draw_quantiles : float or [float]
        draw horizontal lines at the given quantiles (0..1)
        of the density estimate.
+    flat : :py:`bool`, optional (default: :py:`False`)
+       If :py:`False`, draw a regular violin plot. If :py:`True`,
+       draw a 'flat-violin' or 'half-violin' plot.
+    flat_side : :py:`str`, optional (default: :py:`'left'`)
+        If :py:`flat` is set: defines the "flat" side of the violin,
+        i.e. the side that is cut off. May be either :py:`'right'`
+        or :py:`'left'`
     """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'ydensity', 'position': 'dodge',
-                      'draw_quantiles': None, 'scale': 'area',
+                      'draw_quantiles': None, 'flat': False,
+                      'flat_side': 'left', 'scale': 'area',
                       'trim': True, 'width': None, 'na_rm': False}
     legend_geom = 'polygon'
 
@@ -40,6 +48,12 @@ class geom_violin(geom):
                 raise ValueError(
                     "draw_quantiles must be a float or"
                     " an iterable of floats (>0.0; < 1.0)")
+
+        if 'flat_side' in kwargs:
+            if kwargs['flat_side'] != 'right' and kwargs['flat_side'] != 'left':
+                raise ValueError(
+                    "flat_side must be either 'left' or 'right'")
+
         super().__init__(*args, **kwargs)
 
     def setup_data(self, data):
@@ -69,6 +83,12 @@ class geom_violin(geom):
                            (df['x'] - df['xmin']))
             df['xmaxv'] = (df['x'] + df['violinwidth'] *
                            (df['xmax'] - df['x']))
+
+            if params['flat']:
+                if params['flat_side'] == 'left':
+                    df['xminv'] = df['x']
+                else:
+                    df['xmaxv'] = df['x']
 
             # Make sure it's sorted properly to draw the outline
             # i.e violin = kde + mirror kde,
