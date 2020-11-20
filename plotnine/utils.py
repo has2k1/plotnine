@@ -963,11 +963,15 @@ def data_mapping_as_kwargs(args, kwargs):
         raise PlotnineError(msg.format(duplicates))
     return kwargs
 
+
 def ungroup(data):
+    """Return an ungrouped DataFrame, or pass the original data back."""
+
     if isinstance(data, DataFrameGroupBy):
         return data.obj
 
     return data
+
 
 def order_as_mapping_data(*args):
     """
