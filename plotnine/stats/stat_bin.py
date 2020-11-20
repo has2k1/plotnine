@@ -61,6 +61,7 @@ class stat_bin(stat):
          'density'  # density of points in bin, scaled to integrate to 1
          'ncount'   # count, scaled to maximum of 1
          'ndensity' # density, scaled to maximum of 1
+         'ngroup'   # number of points in group
 
     """
     REQUIRED_AES = {'x'}
@@ -70,7 +71,7 @@ class stat_bin(stat):
                       'boundary': None, 'closed': 'right',
                       'pad': False}
     DEFAULT_AES = {'y': 'stat(count)', 'weight': None}
-    CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
+    CREATES = {'width', 'count', 'density', 'ncount', 'ndensity', 'ngroup'}
 
     def setup_params(self, data):
         params = self.params
