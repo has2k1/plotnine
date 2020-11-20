@@ -82,7 +82,7 @@ def test_ggplot_parameters_grouped():
 
     assert p.data is df
     assert p.mapping == aes('x')
-    
+
     p = ggplot(data=df, mapping=aes('x'))
     assert p.data is df
     assert p.mapping == aes('x')
