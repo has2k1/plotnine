@@ -19,7 +19,9 @@ from .facets import facet_null
 from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme, theme_get
-from .utils import to_inches, from_inches, defaults, order_as_mapping_data
+from .utils import (
+        to_inches, from_inches, defaults, order_as_mapping_data, ungroup
+        )
 from .exceptions import PlotnineError, PlotnineWarning
 from .scales.scales import Scales
 from .coords import coord_cartesian
@@ -141,6 +143,7 @@ class ggplot:
         """
         Overload the >> operator to receive a dataframe
         """
+        other = ungroup(other)
         if isinstance(other, pd.DataFrame):
             if self.data is None:
                 self.data = other

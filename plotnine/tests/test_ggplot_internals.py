@@ -77,6 +77,17 @@ def test_ggplot_parameters():
         ggplot([1, 2, 3], aes('x'))
 
 
+def test_ggplot_parameters_grouped():
+    p = ggplot(df.groupby('x'), aes('x'))
+
+    assert p.data is df
+    assert p.mapping == aes('x')
+
+    p = ggplot(data=df, mapping=aes('x'))
+    assert p.data is df
+    assert p.mapping == aes('x')
+
+
 def test_data_transforms():
     p = ggplot(aes(x='x', y='np.log(y)'), df)
     p = p + geom_point()
@@ -246,6 +257,11 @@ def test_rrshift_piping():
 
     with pytest.raises(TypeError):
         'not a dataframe' >> ggplot(aes('x', 'y')) + geom_point()
+
+
+def test_rrshift_piping_grouped():
+    p = df.groupby("x") >> ggplot(aes('x', 'y')) + geom_point()
+    assert p.data is df
 
 
 def test_adding_list_ggplot():

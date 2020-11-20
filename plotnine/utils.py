@@ -12,6 +12,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
+from pandas.core.groupby import DataFrameGroupBy
 import matplotlib.colors as mcolors
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
@@ -963,6 +964,15 @@ def data_mapping_as_kwargs(args, kwargs):
     return kwargs
 
 
+def ungroup(data):
+    """Return an ungrouped DataFrame, or pass the original data back."""
+
+    if isinstance(data, DataFrameGroupBy):
+        return data.obj
+
+    return data
+
+
 def order_as_mapping_data(*args):
     """
     Reorder args to ensure (mapping, data) order
@@ -985,7 +995,7 @@ def order_as_mapping_data(*args):
     if n == 0:
         return None, None
     elif n == 1:
-        single_arg = args[0]
+        single_arg = ungroup(args[0])
         if isinstance(single_arg, pd.DataFrame):
             return None, single_arg
         elif isinstance(single_arg, aes):
@@ -1001,7 +1011,7 @@ def order_as_mapping_data(*args):
             "but I got {}.".format(n)
         )
 
-    mapping, data = args
+    mapping, data = (ungroup(arg) for arg in args)
     if isinstance(mapping, pd.DataFrame):
         if data is None or isinstance(data, aes):
             mapping, data = data, mapping
