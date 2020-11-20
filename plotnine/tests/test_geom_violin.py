@@ -85,7 +85,7 @@ def test_no_trim():
 def test_flat():
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'), flat=True) +
-         geom_violin(aes(y='y+25'), flat=True, flat_side='right')
+         geom_violin(aes(y='y+25'), flat=True, flat_side='right'))
     assert p == 'flat'
 
 
