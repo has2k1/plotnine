@@ -1011,7 +1011,7 @@ def order_as_mapping_data(*args):
             "but I got {}.".format(n)
         )
 
-    mapping, data = map(ungroup, args)
+    mapping, data = (ungroup(arg) for arg in args)
     if isinstance(mapping, pd.DataFrame):
         if data is None or isinstance(data, aes):
             mapping, data = data, mapping
