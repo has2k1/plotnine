@@ -50,7 +50,7 @@ class geom_violin(geom):
                     " an iterable of floats (>0.0; < 1.0)")
 
         if 'flat_side' in kwargs:
-            if kwargs['flat_side'] != 'right' and kwargs['flat_side'] != 'left':
+            if not kwargs['flat_side'] in ['left', 'right']:
                 raise ValueError(
                     "flat_side must be either 'left' or 'right'")
 
