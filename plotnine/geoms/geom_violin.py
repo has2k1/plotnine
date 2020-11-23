@@ -46,9 +46,10 @@ class geom_violin(geom):
                     "draw_quantiles must be a float or"
                     " an iterable of floats (>0.0; < 1.0)")
 
-        if kwargs['style'] not in ['full', 'left', 'right']:
-            raise ValueError(
-                "style must be either 'full', 'left' or 'right'")
+        if 'style' in kwargs:
+            if kwargs['style'] not in ['full', 'left', 'right']:
+                raise ValueError(
+                    "style must be either 'full', 'left' or 'right'")
 
         super().__init__(*args, **kwargs)
 
