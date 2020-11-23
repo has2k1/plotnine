@@ -82,14 +82,14 @@ def test_no_trim():
     assert p == 'no_trim'
 
 
-def test_flat():
+def test_style():
     p = (ggplot(df, aes('x')) +
          geom_violin(aes(y='y'), style='right') +
          geom_violin(aes(y='y+25'), style='left'))
-    assert p == 'flat'
+    assert p == 'style'
 
 
-def test_flat_input_checks():
+def test_style_input_checks():
     with pytest.raises(ValueError):
         geom_violin(aes('x', 'y'), style=True)
     with pytest.raises(ValueError):
