@@ -896,12 +896,11 @@ class scale_continuous(scale):
         Parameters:
         -----------
         breaks: None or array-like
-            None ->result of self.breaks
-        mask: np.array(...,dtype=bool)
+            If None, use self.breaks.
+        mask: array[bool]
             Restrict returned labels to those with True
             in mask (used to exclude labels outside of a scale's
             domain even if the user defined them)
-
         """
         if breaks is None:
             breaks = self.get_breaks()
