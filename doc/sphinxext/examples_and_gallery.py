@@ -307,7 +307,7 @@ def add_entries_to_gallery(app, doctree, docname):
 
     # Find gallery node
     try:
-        node = doctree.traverse(gallery)[0]
+        node = list(doctree.traverse(gallery))[0]
     except TypeError:
         return
 

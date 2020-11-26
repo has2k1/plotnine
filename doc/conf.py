@@ -404,16 +404,15 @@ epub_exclude_files = ['search.html']
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'matplotlib': ('https://matplotlib.org/', None),
-    'numpy': ('https://docs.scipy.org/doc/numpy', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
     'statsmodels': ('https://www.statsmodels.org/stable/', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
-    'sklearn': ('http://scikit-learn.org/stable/', None),
-    'skmisc': ('https://has2k1.github.io/scikit-misc/', None),
+    'sklearn': ('https://scikit-learn.org/stable/', None),
+    'skmisc': ('https://has2k1.github.io/scikit-misc/stable/', None),
     'adjustText': ('https://adjusttext.readthedocs.io/en/latest/', None),
     'patsy': ('https://patsy.readthedocs.io/en/stable', None)
 }
-
 
 # -- Extension configuration ----------------------------------------------
 autodoc_member_order = 'bysource'
