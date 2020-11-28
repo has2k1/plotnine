@@ -51,6 +51,10 @@ from docutils.parsers.rst.directives.misc import Include
 from nbconvert.writers import FilesWriter
 from plotnine_examples.examples import EXPATH, EXFILES
 
+# String in code cell that creates an image that will be in the
+# gallery
+GALLERY_MARK = '# Gallery Plot'
+
 # Use build enviroment to get the paths
 CUR_PATH = os.path.dirname(os.path.abspath(__file__))
 DOC_PATH = os.path.abspath(CUR_PATH + '/..')
@@ -193,10 +197,34 @@ class GalleryEntryExtractor:
             for section in exnode[0].traverse(nodes.section, **kwargs):
                 yield section
 
-        for section in _get_sections(self.doctree):
-            section_id = section.attributes['ids'][0]
-            section_title = section[0].astext()
+        def makes_gallery_plot(node):
+            """
+            Return True if the node is of code that creates an image
+            meant for the gallery.
+            """
+            return (isinstance(node, nbsphinx.CodeAreaNode) and
+                    GALLERY_MARK in node.astext())
 
+        def get_section_gallery_image(section):
+            """
+            Return image (filename) that will appear in the gallery
+            """
+            # Check the section for every node with code, and if
+            # it is marked for the gallery then the next image is
+            # what we are looking for.
+            filename = ''
+            next_image = False
+            for node in section.traverse(nodes.Node):
+                if makes_gallery_plot(node):
+                    next_image = True
+                elif next_image and isinstance(node, nodes.image):
+                    next_image = False
+                    filename = node.attributes['uri']
+                    # We expect at most one image per section
+                    break
+            return filename
+
+        def get_section_description(section):
             # If an emphasis follows the section, it is the description
             try:
                 _node = section[1][0]
@@ -207,21 +235,21 @@ class GalleryEntryExtractor:
                 description = _node.astext()
             else:
                 description = ''
+            return description
 
-            # Last image in the section is used to create the thumbnail
-            try:
-                image_node = list(section.traverse(nodes.image))[-1]
-            except IndexError:
-                continue
-            else:
-                image_filename = image_node.attributes['uri']
+        for section in _get_sections(self.doctree):
+            image_filename = get_section_gallery_image(section)
+            if image_filename:
+                section_id = section.attributes['ids'][0]
+                section_title = section[0].astext()
+                description = get_section_description(section)
 
-            yield GalleryEntry(
-                title=section_title,
-                section_id=section_id,
-                html_link='{}#{}'.format(self.htmlfilename, section_id),
-                thumbnail=self.make_thumbnail(image_filename),
-                description=description)
+                yield GalleryEntry(
+                    title=section_title,
+                    section_id=section_id,
+                    html_link='{}#{}'.format(self.htmlfilename, section_id),
+                    thumbnail=self.make_thumbnail(image_filename),
+                    description=description)
 
 
 def get_rstfilename(nbfilename):
