@@ -84,11 +84,13 @@ class ggplot:
         Print/show the plot
         """
         # Do not draw if drawn already.
-        # This prevents a needless error when reusing figure & axes
-        # in the jupyter notebook.
+        # This prevents a needless error when reusing
+        # figure & axes in the jupyter notebook.
         if not self.figure:
             self.draw()
-        plt.show()
+
+        # with plot_context(self):
+            # plt.show()
         # Return and empty string so that print(p) is "pretty"
         return ''
 
@@ -185,47 +187,36 @@ class ggplot:
         This method does not modify the original ggplot object. You can
         get the modified ggplot object with :py:`return_ggplot=True`.
         """
-        # Pandas deprecated is_copy, and when we create new dataframes
-        # from slices we do not want complaints. We always uses the
-        # new frames knowing that they are separate from the original.
-        with pd.option_context('mode.chained_assignment', None):
-            return self._draw(return_ggplot)
-
-    def _draw(self, return_ggplot=False):
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme
         self = deepcopy(self)
-        self._build()
-
         # If no theme we use the default
         self.theme = self.theme or theme_get()
+        with plot_context(self):
+            self._build()
 
-        try:
-            with mpl.rc_context(self.theme.rcParams):
-                # setup
-                figure, axs = self._create_figure()
-                self._setup_parameters()
-                self._resize_panels()
-                # Drawing
-                self._draw_layers()
-                self._draw_labels()
-                self._draw_breaks_and_labels()
-                self._draw_legend()
-                self._draw_title()
-                self._draw_watermarks()
-                # Artist object theming
-                self._apply_theme()  # !!
-        except Exception as err:
-            if self.figure is not None:
-                plt.close(self.figure)
-            raise err
+            # setup
+            figure, axs = self._create_figure()
+            self._setup_parameters()
+            self._resize_panels()
 
-        if return_ggplot:
-            output = self.figure, self
-        else:
-            output = self.figure
+            # Drawing
+            self._draw_layers()
+            self._draw_labels()
+            self._draw_breaks_and_labels()
+            self._draw_legend()
+            self._draw_title()
+            self._draw_watermarks()
 
+            # Artist object theming
+            self._apply_theme()  # !!
+
+            if return_ggplot:
+                output = self.figure, self
+            else:
+                output = self.figure
+            plt.show()
         return output
 
     def _draw_using_figure(self, figure, axs):
@@ -244,23 +235,17 @@ class ggplot:
             Array of Axes onto which to draw the plots
         """
         self = deepcopy(self)
-        self._build()
-
         self.theme = self.theme or theme_get()
         self.figure = figure
         self.axs = axs
 
-        try:
-            with mpl.rc_context(self.theme.rcParams):
-                self._setup_parameters()
-                self._draw_layers()
-                self._draw_breaks_and_labels()
-                self._draw_legend()
-                self._apply_theme()
-        except Exception as err:
-            if self.figure is not None:
-                plt.close(self.figure)
-            raise err
+        with plot_context(self):
+            self._build()
+            self._setup_parameters()
+            self._draw_layers()
+            self._draw_breaks_and_labels()
+            self._draw_legend()
+            self._apply_theme()
 
         return self
 
@@ -881,3 +866,29 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
                 # Close the figure whether or not there was an exception, to
                 # conserve memory when plotting a large number of pages
                 figure[0] and plt.close(figure[0])
+
+
+class plot_context:
+    """
+    Context to setup the environment within with the plot is built
+    """
+    def __init__(self, plot):
+        self.plot = plot
+
+    def __enter__(self):
+        self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
+        # Pandas deprecated is_copy, and when we create new dataframes
+        # from slices we do not want complaints. We always uses the
+        # new frames knowing that they are separate from the original.
+        self.pd_option_context = pd.option_context(
+            'mode.chained_assignment', None
+        )
+        self.rc_context.__enter__()
+        self.pd_option_context.__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
+        self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
+        if self.plot.figure is not None:
+            plt.close(self.plot.figure)
