@@ -21,6 +21,10 @@ Enhancements
 - Manual scales now match the values of the breaks if the breaks are given.
   (:issue:`445`)
 
+- Using ``print`` to show a ggplot object will not show the hash
+  (``<ggplot: ...>``) anymore. There is now a difference between
+  ``repr(p)`` and ``str(p)``. (:issue:`453`)
+
 v0.7.1
 ------
 (2020-08-05)
