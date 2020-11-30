@@ -16,7 +16,7 @@ class theme_linedraw(theme_gray):
         Base font family.
     """
 
-    def __init__(self, base_size=11, base_family='DejaVu Sans'):
+    def __init__(self, base_size=11, base_family=None):
         theme_gray.__init__(self, base_size, base_family)
         self.add_theme(theme(
             axis_text=element_text(color='black', size=base_size*0.8),

@@ -17,7 +17,7 @@ class theme_classic(theme_bw):
         Base font family.
     """
 
-    def __init__(self, base_size=11, base_family='DejaVu Sans'):
+    def __init__(self, base_size=11, base_family=None):
         theme_bw.__init__(self, base_size, base_family)
         self.add_theme(
             theme(panel_border=element_blank(),

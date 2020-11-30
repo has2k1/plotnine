@@ -577,6 +577,7 @@ to set a default theme using :func:`~plotnine.themes.theme_set`.
    :template: main.rst
 
    aspect_ratio
+   base_family
    close_all_figures
    current_theme
    dpi
