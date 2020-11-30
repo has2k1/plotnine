@@ -16,6 +16,9 @@ Bug Fixes
 - Fixed :class:`~plotnine.geoms.geom_text` to allow any order of ``mapping`` and
   ``data`` positional arguments.
 
+- Fixed bug were the plotted image may have ignored theming that relied on
+  some Matplotlib rcParams. (:issue:`451`)
+
 Enhancements
 ************
 - Manual scales now match the values of the breaks if the breaks are given.
