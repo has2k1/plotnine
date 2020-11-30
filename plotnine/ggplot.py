@@ -3,14 +3,16 @@ import os
 import sys
 from copy import deepcopy
 from contextlib import suppress
+from itertools import chain
 from types import SimpleNamespace as NS
 from warnings import warn
 
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import AnchoredOffsetbox
 import matplotlib.transforms as mtransforms
+from matplotlib.offsetbox import AnchoredOffsetbox
+from matplotlib.backends.backend_pdf import PdfPages
 from patsy.eval import EvalEnvironment
 
 from .aes import aes, make_labels
@@ -71,7 +73,7 @@ class ggplot:
         self.layers = Layers()
         self.guides = guides()
         self.scales = Scales()
-        self.theme = None
+        self.theme = theme_get()
         self.coordinates = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = None
@@ -83,14 +85,8 @@ class ggplot:
         """
         Print/show the plot
         """
-        # Do not draw if drawn already.
-        # This prevents a needless error when reusing
-        # figure & axes in the jupyter notebook.
-        if not self.figure:
-            self.draw()
+        self.draw(show=True)
 
-        # with plot_context(self):
-            # plt.show()
         # Return and empty string so that print(p) is "pretty"
         return ''
 
@@ -165,7 +161,7 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, return_ggplot=False):
+    def draw(self, return_ggplot=False, show=False):
         """
         Render the complete plot
 
@@ -173,6 +169,8 @@ class ggplot:
         ----------
         return_ggplot : bool
             If ``True``, return ggplot object.
+        show : bool (default: False)
+            Whether to show the plot.
 
         Returns
         -------
@@ -187,13 +185,17 @@ class ggplot:
         This method does not modify the original ggplot object. You can
         get the modified ggplot object with :py:`return_ggplot=True`.
         """
+        # Do not draw if drawn already.
+        # This prevents a needless error when reusing
+        # figure & axes in the jupyter notebook.
+        if self.figure:
+            return (self.figure, self) if return_ggplot else self.figure
+
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme
         self = deepcopy(self)
-        # If no theme we use the default
-        self.theme = self.theme or theme_get()
-        with plot_context(self):
+        with plot_context(self, show=show):
             self._build()
 
             # setup
@@ -210,13 +212,12 @@ class ggplot:
             self._draw_watermarks()
 
             # Artist object theming
-            self._apply_theme()  # !!
+            self._apply_theme()
 
             if return_ggplot:
                 output = self.figure, self
             else:
                 output = self.figure
-            plt.show()
         return output
 
     def _draw_using_figure(self, figure, axs):
@@ -235,10 +236,8 @@ class ggplot:
             Array of Axes onto which to draw the plots
         """
         self = deepcopy(self)
-        self.theme = self.theme or theme_get()
         self.figure = figure
         self.axs = axs
-
         with plot_context(self):
             self._build()
             self._setup_parameters()
@@ -674,8 +673,6 @@ class ggplot:
                       'format': format}
         fig_kwargs.update(kwargs)
 
-        figure = [None]  # nonlocal
-
         # filename, depends on the object
         if filename is None:
             ext = format if format else 'pdf'
@@ -686,9 +683,6 @@ class ggplot:
 
         # Preserve the users object
         self = deepcopy(self)
-
-        # theme
-        self.theme = self.theme or theme_get()
 
         # The figure size should be known by the theme
         if width is not None and height is not None:
@@ -709,41 +703,18 @@ class ggplot:
                 "not pixels). If you are sure you want these "
                 "dimensions, use 'limitsize=False'.".format(width, height))
 
-        if dpi is None:
-            try:
-                self.theme.themeables.property('dpi')
-            except KeyError:
-                self.theme = self.theme + theme(dpi=100)
-        else:
-            self.theme = self.theme + theme(dpi=dpi)
-
         if verbose:
             warn("Saving {0} x {1} {2} image.".format(
                  from_inches(width, units),
                  from_inches(height, units), units), PlotnineWarning)
             warn('Filename: {}'.format(filename), PlotnineWarning)
 
-        # Helper function so that we can clean up when it fails
-        def _save():
-            fig = figure[0] = self.draw()
+        if dpi is not None:
+            self.theme = self.theme + theme(dpi=dpi)
 
-            # savefig ignores the figure face & edge colors
-            facecolor = fig.get_facecolor()
-            edgecolor = fig.get_edgecolor()
-            if facecolor:
-                fig_kwargs['facecolor'] = facecolor
-            if edgecolor:
-                fig_kwargs['edgecolor'] = edgecolor
-
+        fig = self.draw()
+        with plot_context(self):
             fig.savefig(filename, **fig_kwargs)
-
-        try:
-            _save()
-        except Exception as err:
-            figure[0] and plt.close(figure[0])
-            raise err
-        else:
-            figure[0] and plt.close(figure[0])
 
 
 def ggsave(plot, *arg, **kwargs):
@@ -813,26 +784,20 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
     >>> plot.save('filename.pdf', height=6, width=8)
     >>> save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
     """
-    from itertools import chain
-
-    from matplotlib.backends.backend_pdf import PdfPages
-
     # as in ggplot.save()
     fig_kwargs = {'bbox_inches': 'tight'}
     fig_kwargs.update(kwargs)
 
-    figure = [None]
-
-    # If plots is already an iterator, this is a no-op; otherwise convert a
-    # list, etc. to an iterator
+    # If plots is already an iterator, this is a no-op; otherwise
+    # convert a list, etc. to an iterator
     plots = iter(plots)
-    peek = []
 
     # filename, depends on the object
     if filename is None:
-        # Take the first element from the iterator, store it, and use it to
-        # generate a file name
+        # Take the first element from the iterator, store it, and
+        # use it to generate a file name
         peek = [next(plots)]
+        plots = chain(peek, plots)
         filename = peek[0]._save_filename('pdf')
 
     if path:
@@ -843,37 +808,27 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
 
     with PdfPages(filename) as pdf:
         # Re-add the first element to the iterator, if it was removed
-        for plot in chain(peek, plots):
-            try:
-                fig = figure[0] = plot.draw()
-
-                # as in ggplot.save()
-                facecolor = fig.get_facecolor()
-                edgecolor = fig.get_edgecolor()
-                if facecolor:
-                    fig_kwargs['facecolor'] = facecolor
-                if edgecolor:
-                    fig_kwargs['edgecolor'] = edgecolor
-
-                # Save as a page in the PDF file
-                pdf.savefig(figure[0], **fig_kwargs)
-            except AttributeError as err:
-                msg = 'non-ggplot object of %s: %s' % (type(plot), plot)
-                raise TypeError(msg) from err
-            except Exception:
-                raise
-            finally:
-                # Close the figure whether or not there was an exception, to
-                # conserve memory when plotting a large number of pages
-                figure[0] and plt.close(figure[0])
+        for plot in plots:
+            fig = plot.draw()
+            # Save as a page in the PDF file
+            pdf.savefig(fig, **fig_kwargs)
 
 
 class plot_context:
     """
     Context to setup the environment within with the plot is built
+
+    Parameters
+    ----------
+    plot : ggplot
+        ggplot object to be built within the context.
+    show : bool (default: False)
+        Whether to show (``plt.show()``) the plot before the context
+        exits.
     """
-    def __init__(self, plot):
+    def __init__(self, plot, show=False):
         self.plot = plot
+        self.show = show
 
     def __enter__(self):
         self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
@@ -888,7 +843,10 @@ class plot_context:
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
+        if self.show:
+            plt.show()
         if self.plot.figure is not None:
             plt.close(self.plot.figure)
+
+        self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
+        self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
