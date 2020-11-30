@@ -165,8 +165,10 @@ def test_linetype_palettes():
     assert(len(items) == N)
     assert(all([isinstance(x, str) for x in items]))
 
-    items = s.palette(N+5)
-    assert(all([isinstance(x, str) for x in items[:N]]))
+    with pytest.warns(UserWarning):
+        # More values than palette has
+        items = s.palette(N+5)
+        assert(all([isinstance(x, str) for x in items[:N]]))
 
     with pytest.raises(PlotnineError):
         s = scale_linetype_continuous()
@@ -179,17 +181,21 @@ def test_shape_palettes():
     assert(len(items) == N)
     assert(all([isinstance(x, str) for x in items]))
 
-    items = s.palette(N+5)
-    assert(all([isinstance(x, str) for x in items[:N]]))
+    with pytest.warns(UserWarning):
+        # More values than palette has
+        items = s.palette(N+5)
+        assert(all([isinstance(x, str) for x in items[:N]]))
 
     with pytest.raises(PlotnineError):
         scale_shape_continuous()
 
 
 def test_size_palette():
-    s = scale_size_discrete()
-    items = s.palette(9)
-    assert(len(items) == 9)
+    with pytest.warns(PlotnineWarning):
+        # Warns against a discrete size scale
+        s = scale_size_discrete()
+        items = s.palette(9)
+        assert(len(items) == 9)
 
     s = scale_size_continuous(range=(1, 6))
     frac = 0.5
@@ -251,9 +257,10 @@ def test_scale_manual():
 
 
 def test_alpha_palette():
-    s = scale_alpha_discrete()
-    items = s.palette(9)
-    assert(len(items) == 9)
+    with pytest.warns(PlotnineWarning):
+        s = scale_alpha_discrete()
+        items = s.palette(9)
+        assert(len(items) == 9)
 
     s = scale_alpha_continuous(range=(0.1, 1))
     value = s.palette(0.5)
@@ -336,7 +343,8 @@ def test_discrete_xy_scale_drop_limits():
          + geom_bar(aes(x='x', fill='c'))
          + scale_x_discrete(limits=list('abc'))
          )
-    assert p == 'discrete_xy_scale_drop_limits'
+    with pytest.warns(PlotnineWarning):
+        assert p == 'discrete_xy_scale_drop_limits'
 
 
 def test_setting_limits_transformed():
@@ -518,7 +526,8 @@ def test_missing_manual_dict_aesthetic():
          + geom_point(size=3)
          + scale_manual.scale_color_manual(values)
          )
-    assert p + _theme == 'missing_manual_dict_aesthetic'
+    with pytest.warns(PlotnineWarning):
+        assert p + _theme == 'missing_manual_dict_aesthetic'
 
 
 def test_missing_data_discrete_scale():
@@ -627,7 +636,8 @@ def test_breaks_and_labels_outside_of_limits():
                      'eight', 'nine', 'ten', 'eleven']
          )
          )
-    assert p == 'breaks_and_labels_outside_of_limits'
+    with pytest.warns(PlotnineWarning):
+        assert p == 'breaks_and_labels_outside_of_limits'
 
 
 def test_changing_scale_transform():

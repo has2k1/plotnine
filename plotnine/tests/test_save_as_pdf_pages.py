@@ -6,7 +6,7 @@ import pytest
 from plotnine import ggplot, aes, geom_text, ggtitle, theme
 from plotnine.data import mtcars
 from plotnine.ggplot import save_as_pdf_pages
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 
 def p(N=3):
@@ -44,7 +44,7 @@ def assert_exist_and_clean(filename, msg=None):
 class TestArguments:
     def test_default_filename(self):
         plots = list(p())
-        save_as_pdf_pages(plots)
+        save_as_pdf_pages(plots, verbose=False)
         fn = plots[0]._save_filename('pdf')
         assert_exist_and_clean(fn, "default filename")
 
@@ -71,7 +71,8 @@ class TestArguments:
 
     def test_filename_plot_path(self):
         fn = next(filename_gen)
-        save_as_pdf_pages(p(), fn, path='.')
+        with pytest.warns(PlotnineWarning):
+            save_as_pdf_pages(p(), fn, path='.')
         assert_exist_and_clean(fn, "fn, plot and path")
 
     @pytest.mark.skip("Results of this test can only be confirmed by"
@@ -81,7 +82,8 @@ class TestArguments:
         for i, plot in enumerate(p()):
             plots.append(plot + theme(figure_size=(8+i, 6+i)))
         fn = next(filename_gen)
-        save_as_pdf_pages(plots, fn)
+        with pytest.warns(PlotnineWarning):
+            save_as_pdf_pages(plots, fn)
         # assert False, "Check %s" % fn  # Uncomment to check
 
 
@@ -92,7 +94,7 @@ class TestExceptions:
         plots = list(p())
         plots[0] += aes(color='unknown')
         with pytest.raises(PlotnineError):
-            save_as_pdf_pages(plots, fn)
+            save_as_pdf_pages(plots, fn, verbose=False)
 
         assert_exist_and_clean(fn, "Plot exception")
 
@@ -102,6 +104,7 @@ class TestExceptions:
 def test_save_as_pdf_pages_closes_plots():
     assert plt.get_fignums() == [], "There are unsaved test plots"
     fn = next(filename_gen)
-    save_as_pdf_pages(p(), fn)
+    with pytest.warns(PlotnineWarning):
+        save_as_pdf_pages(p(), fn)
     assert_exist_and_clean(fn, "exist")
     assert plt.get_fignums() == [], "ggplot.save did not close the plot"

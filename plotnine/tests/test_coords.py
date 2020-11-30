@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 from mizani.transforms import trans_new
 
 from plotnine import (ggplot, aes, geom_bar, geom_line, coord_flip,
@@ -25,7 +26,10 @@ def test_coord_fixed():
 
 def test_coord_trans():
     double_trans = trans_new('double', np.square, np.sqrt)
-    assert p + coord_trans(y=double_trans) == 'coord_trans'
+    # Warns probably because of a bad value around the left
+    # edge of the domain.
+    with pytest.warns(RuntimeWarning):
+        assert p + coord_trans(y=double_trans) == 'coord_trans'
 
 
 def test_coord_trans_reverse():

@@ -104,8 +104,10 @@ def test_continuous_x_fullrange():
     n = len(df_continuous_x)
     p = (ggplot(df_continuous_x, aes('x', 'y'))
          + geom_point()
-         + geom_smooth(df_continuous_x[3:n-3], method='loess',
-                       color='blue', fullrange=True))
+         + geom_smooth(
+             df_continuous_x[3:n-3], method='loess', color='blue',
+             fullrange=True, method_args={'surface': 'direct'})
+         )
 
     assert p == 'continuous_x_fullrange'
 
@@ -147,7 +149,8 @@ class TestOther:
             return
 
         p = self.p + geom_smooth(aes(y='y_noisy'), method='gpr')
-        p.draw_test()
+        with pytest.warns(UserWarning):
+            p.draw_test()
 
 
 def test_sorts_by_x():
@@ -239,7 +242,9 @@ class TestFormula:
                  method='rlm',
                  formula='y ~ np.sin(x)',
                  fill='red',
+                 se=False
              ))
+
         assert p == 'rlm_formula'
 
     def test_gls(self):
