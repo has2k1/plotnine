@@ -17,7 +17,8 @@ class theme_void(theme):
         Base font family.
     """
 
-    def __init__(self, base_size=11, base_family='DejaVu Sans'):
+    def __init__(self, base_size=11, base_family=None):
+        base_family = base_family or get_option('base_family')
         # Use only inherited elements and make everything blank
         theme.__init__(
             self,

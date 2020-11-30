@@ -5,6 +5,10 @@ close_all_figures = False
 #: Theme used when none is added to the ggplot object
 current_theme = None
 
+#: The base font family for all text that is part of
+#: the theme
+base_family = 'Dejavu Sans'
+
 #: Default aspect ratio used by the themes
 aspect_ratio = None
 

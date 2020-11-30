@@ -28,6 +28,14 @@ Enhancements
   (``<ggplot: ...>``) anymore. There is now a difference between
   ``repr(p)`` and ``str(p)``. (:issue:`453`)
 
+- Added option to for the ``base_family`` of a theme, now you can set it
+  once with and have it be applied to all themes. (:issuse:`436`)
+
+  .. code-block:: python
+
+      from plotnine.options import set_option
+      set_option('base_family', 'Comic Sans MS')
+
 v0.7.1
 ------
 (2020-08-05)
