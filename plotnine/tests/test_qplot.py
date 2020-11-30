@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from plotnine import qplot, theme
+from plotnine.exceptions import PlotnineWarning
 
 _theme = theme(subplots_adjust={'right': 0.85})
 
@@ -29,7 +31,8 @@ def test_range():
 
 def test_onlyx():
     p = qplot(x='np.arange(5)')
-    assert p == 'onlyx'
+    with pytest.warns(PlotnineWarning):
+        assert p == 'onlyx'
 
 
 def test_onlyy():

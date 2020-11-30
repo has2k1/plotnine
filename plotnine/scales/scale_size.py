@@ -46,7 +46,7 @@ class scale_size_discrete(scale_size_ordinal):
 
     def __init__(self, **kwargs):
         warn(
-            "Using alpha for a discrete variable is not advised.",
+            "Using size for a discrete variable is not advised.",
             PlotnineWarning
         )
         super().__init__(**kwargs)

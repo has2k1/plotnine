@@ -11,7 +11,7 @@ from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
 from plotnine.aes import get_calculated_aes, strip_calculated_markers
 from plotnine.aes import is_valid_aesthetic
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 df = pd.DataFrame({'x': np.arange(10),
                    'y': np.arange(10)})
@@ -89,7 +89,7 @@ def test_ggplot_parameters_grouped():
 
 
 def test_data_transforms():
-    p = ggplot(aes(x='x', y='np.log(y)'), df)
+    p = ggplot(aes(x='x', y='np.log(y+1)'), df)
     p = p + geom_point()
     p.draw_test()
 
@@ -219,8 +219,10 @@ def test_inplace_add():
     p += scale_x_continuous()
     assert p is _p
 
-    p += xlim(0, 10)
-    assert p is _p
+    with pytest.warns(PlotnineWarning):
+        # Warning for; replacing existing scale added above
+        p += xlim(0, 10)
+        assert p is _p
 
     p += lims(y=(0, 10))
     assert p is _p

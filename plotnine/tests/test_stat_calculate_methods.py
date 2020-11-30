@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from plotnine import ggplot, aes, stat_bin, stat_density, xlim
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 
 def test_stat_bin():
@@ -35,4 +35,6 @@ def test_changing_xlim_in_stat_density():
          + xlim(*_xlim)
          )
     # No exceptions
-    p._build()
+    with pytest.warns(PlotnineWarning):
+        # warns about removed points.
+        p._build()

@@ -237,7 +237,7 @@ def _setup():
     # These settings *must* be hardcoded for running the comparison
     # tests
     mpl.rcdefaults()  # Start with all defaults
-    mpl.rcParams['text.hinting'] = True
+    mpl.rcParams['text.hinting'] = 'auto'
     mpl.rcParams['text.antialiased'] = True
     mpl.rcParams['text.hinting_factor'] = 8
 
