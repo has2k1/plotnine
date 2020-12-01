@@ -9,7 +9,7 @@ from plotnine import geom_line, geom_bar
 from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
 from plotnine import scale_x_continuous, coord_trans, annotate
 from plotnine import stat_identity, facet_null, theme, theme_gray
-from plotnine import stage, after_stat
+from plotnine import stage, after_stat, after_scale
 from plotnine.mapping.aes import is_valid_aesthetic
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
@@ -195,6 +195,20 @@ def test_calculated_aes():
 
     p = ggplot(df) + geom_bar(aes(x='x', fill='..count.. + 2'))
     p.draw_test()
+
+
+def test_after_scale_mapping():
+    df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    df2 = pd.DataFrame({
+        # Same as above, but add 2 of each unique element
+        'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4] + [1, 2, 3, 4] * 2
+    })
+
+    p = ggplot(df) + geom_bar(aes(x='x', ymax=after_scale('ymax + 2')))
+    p2 = ggplot(df2) + geom_bar(aes(x='x'))
+
+    assert p + lims(y=(0, 7)) == 'after_scale_mapping'
+    assert p2 + lims(y=(0, 7)) == 'after_scale_mapping'
 
 
 def test_add_aes():
