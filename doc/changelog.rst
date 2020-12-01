@@ -43,7 +43,7 @@ Enhancements
   ``repr(p)`` and ``str(p)``. (:issue:`453`)
 
 - Added option to for the ``base_family`` of a theme, now you can set it
-  once with and have it be applied to all themes. (:issuse:`436`)
+  once with and have it be applied to all themes. (:issue:`436`)
 
   .. code-block:: python
 
