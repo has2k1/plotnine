@@ -12,4 +12,5 @@ exclude_lines =
     pragma: no cover
     ^def test_
     if __name__ == .__main__.:
+    raise NotImplementedError('Not Implemented')
 precision = 1
