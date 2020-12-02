@@ -89,6 +89,13 @@ def test_style():
     assert p == 'style'
 
 
+def test_style_alternating():
+    p = (ggplot(df, aes('x')) +
+         geom_violin(aes(y='y'), style='right-left', fill='green') +
+         geom_violin(aes(y='y+25'), style='left-right', fill='yellow'))
+    assert p == 'style_alternating'
+
+
 def test_style_input_checks():
     with pytest.raises(ValueError):
         geom_violin(aes('x', 'y'), style=True)

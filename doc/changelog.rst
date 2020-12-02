@@ -19,6 +19,10 @@ New Features
   :class:`~plotnine.aes.aes`, :func:`~plotnine.aes.after_stat`,
   :func:`~plotnine.aes.after_scale` and :class:`~plotnine.aes.stage`.
 
+- :class:`~plotnine.geoms.geom_violin` gained the a new parameter ``style``
+  with which you can draw half violin (density curve on one side and flat
+  on the other).
+
 Bug Fixes
 *********
 
