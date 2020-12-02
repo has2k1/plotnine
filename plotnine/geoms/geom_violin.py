@@ -22,11 +22,17 @@ class geom_violin(geom):
     draw_quantiles : float or [float]
        draw horizontal lines at the given quantiles (0..1)
        of the density estimate.
-    style : :py:`str`, optional (default: :py:`full`)
-       The type of violin plot to draw. May be either :py:`full`, :py:`right`
-       or :py:`left`. If set to :py:`full`, draw a regular violin plot. If set
-       to :py:`left` or :py:`right`, draw a 'half-violin' or 'flat-violin'
-       plot, drawing only the corresponding half of the violin.
+    style : str, optional (default: 'full')
+       The type of violin plot to draw. The options are:
+
+       ::
+
+           'full'        # Regular (2 sided violins)
+           'left'        # Left-sided half violins
+           'right'       # Right-sided half violins
+           'left-right'  # Alternate (left first) half violins by the group
+           'right-left'  # Alternate (right first) half violins by the group
+
     """
     DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}
@@ -47,9 +53,11 @@ class geom_violin(geom):
                     " an iterable of floats (>0.0; < 1.0)")
 
         if 'style' in kwargs:
-            if kwargs['style'] not in ['full', 'left', 'right']:
+            allowed = ('full', 'left', 'right', 'left-right', 'right-left')
+            if kwargs['style'] not in allowed:
                 raise ValueError(
-                    "style must be either 'full', 'left' or 'right'")
+                    f"style must be either {allowed}"
+                )
 
         super().__init__(*args, **kwargs)
 
@@ -73,17 +81,22 @@ class geom_violin(geom):
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         quantiles = params['draw_quantiles']
+        style = params['style']
 
-        for _, df in data.groupby('group'):
+        for i, (_, df) in enumerate(data.groupby('group')):
             # Find the points for the line to go all the way around
             df['xminv'] = (df['x'] - df['violinwidth'] *
                            (df['x'] - df['xmin']))
             df['xmaxv'] = (df['x'] + df['violinwidth'] *
                            (df['xmax'] - df['x']))
-
-            if params['style'] == 'left':
+            even = i % 2 == 0
+            if (style == 'left'
+               or (style == 'left-right' and even)
+               or (style == 'right-left' and not even)):
                 df['xmaxv'] = df['x']
-            elif params['style'] == 'right':
+            elif (style == 'right'
+                  or (style == 'right-left' and even)
+                  or (style == 'left-right' and not even)):
                 df['xminv'] = df['x']
 
             # Make sure it's sorted properly to draw the outline

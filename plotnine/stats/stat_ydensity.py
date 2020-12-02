@@ -81,7 +81,8 @@ class stat_ydensity(stat):
 
     ::
 
-         'width'  # Maximum width of density, [0, 1] range.
+         'width'        # Maximum width of density, [0, 1] range.
+         'violinwidth'  # Shape of the violin
 
     Calculated aesthetics are accessed using the `after_stat` function.
     e.g. :py:`after_stat('width')`.
@@ -95,7 +96,7 @@ class stat_ydensity(stat):
                       'bw': 'nrd0',
                       'scale': 'area'}
     DEFAULT_AES = {'weight': None}
-    CREATES = {'width'}
+    CREATES = {'width', 'violinwidth'}
 
     def setup_params(self, data):
         params = self.params.copy()
