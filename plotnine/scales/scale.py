@@ -893,8 +893,8 @@ class scale_continuous(scale):
         """
         Generate labels for the axis or legend
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         breaks: None or array-like
             If None, use self.breaks.
         mask: array[bool]
