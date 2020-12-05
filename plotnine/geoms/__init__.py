@@ -32,6 +32,7 @@ from .geom_polygon import geom_polygon
 from .geom_qq import geom_qq
 from .geom_qq_line import geom_qq_line
 from .geom_quantile import geom_quantile
+from .geom_raster import geom_raster
 from .geom_rect import geom_rect
 from .geom_ribbon import geom_ribbon
 from .geom_rug import geom_rug
@@ -62,7 +63,7 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
            'geom_linerange', 'geom_map', 'geom_path', 'geom_point',
            'geom_pointrange', 'geom_pointrange',
            'geom_quantile', 'geom_qq', 'geom_qq_line',
-           'geom_polygon', 'geom_rect',
+           'geom_polygon', 'geom_raster', 'geom_rect',
            'geom_ribbon', 'geom_rug', 'geom_segment', 'geom_sina',
            'geom_smooth', 'geom_spoke', 'geom_step', 'geom_text',
            'geom_tile', 'geom_violin', 'geom_vline',
