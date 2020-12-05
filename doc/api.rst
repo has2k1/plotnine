@@ -93,6 +93,7 @@ distinct visual aspects of the representation are controlled by the
    geom_quantile
    geom_qq
    geom_qq_line
+   geom_raster
    geom_rect
    geom_ribbon
    geom_rug

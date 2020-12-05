@@ -1,7 +1,7 @@
 Changelog
 =========
 
-v0.7.2
+v0.8.0
 ------
 (not-yet-released)
 
@@ -22,6 +22,8 @@ New Features
 - :class:`~plotnine.geoms.geom_violin` gained the a new parameter ``style``
   with which you can draw half violin (density curve on one side and flat
   on the other).
+
+- Added :class:`~plotnine.geoms.geom_raster`.
 
 Bug Fixes
 *********
