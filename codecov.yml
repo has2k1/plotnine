@@ -14,9 +14,9 @@ coverage:
       project:
          default:
             target: auto
-            threshold: 0.1%
+            threshold: 0.5%
 
       # Lines adjusted in the PR
       patch:
          default:
-            target: 80%
+            target: 75%
