@@ -172,9 +172,12 @@ class geom_dotplot(geom):
             patch = mpatches.Ellipse(xy, width=width, height=height)
             circles.append(patch)
 
-        coll = mcoll.PatchCollection(circles,
-                                     edgecolors=color,
-                                     facecolors=fill)
+        coll = mcoll.PatchCollection(
+            circles,
+            edgecolors=color,
+            facecolors=fill,
+            rasterized=params['raster']
+        )
         ax.add_collection(coll)
 
     @staticmethod

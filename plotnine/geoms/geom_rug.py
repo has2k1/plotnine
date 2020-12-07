@@ -81,9 +81,12 @@ class geom_rug(geom):
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         color = to_rgba(data['color'], data['alpha'])
-        coll = mcoll.LineCollection(rugs,
-                                    edgecolor=color,
-                                    linewidth=data['size'],
-                                    linestyle=data['linetype'],
-                                    zorder=params['zorder'])
+        coll = mcoll.LineCollection(
+            rugs,
+            edgecolor=color,
+            linewidth=data['size'],
+            linestyle=data['linetype'],
+            zorder=params['zorder'],
+            rasterized=params['raster']
+        )
         ax.add_collection(coll)

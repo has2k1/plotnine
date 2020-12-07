@@ -386,12 +386,12 @@ class geom(metaclass=Registry):
         """
         geom_stat_args = kwargs.keys() | self._stat._kwargs.keys()
         unknown = (geom_stat_args -
-                   self.aesthetics() -                # geom aesthetics
+                   self.aesthetics() -                 # geom aesthetics
                    self.DEFAULT_PARAMS.keys() -        # geom parameters
-                   self._stat.aesthetics() -          # stat aesthetics
+                   self._stat.aesthetics() -           # stat aesthetics
                    self._stat.DEFAULT_PARAMS.keys() -  # stat parameters
-                   {'data', 'mapping',                # layer parameters
-                    'show_legend', 'inherit_aes'})    # layer parameters
+                   {'data', 'mapping', 'show_legend',  # layer parameters
+                    'inherit_aes', 'raster'})       # layer parameters
         if unknown:
             msg = ("Parameters {}, are not understood by "
                    "either the geom, stat or layer.")

@@ -149,6 +149,7 @@ class geom_text(geom):
         df['fontweight'] = params['fontweight']
         df['fontstyle'] = params['fontstyle']
         df['zorder'] = params['zorder']
+        df['rasterized'] = params['raster']
         df['clip_on'] = True
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox

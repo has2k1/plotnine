@@ -54,7 +54,8 @@ class geom_raster(geom):
     NON_MISSING_AES = {'fill', 'xmin', 'xmax', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'vjust': 0.5, 'hjust': 0.5,
-                      'interpolation': None, 'filterrad': 4.0}
+                      'interpolation': None, 'filterrad': 4.0,
+                      'raster': True}
     legend_geom = 'polygon'
 
     def __init__(self, *args, **kwargs):
@@ -151,7 +152,7 @@ class geom_raster(geom):
                 data['ymin'].min(),
                 data['ymax'].max()
             ),
-            rasterized=True,
+            rasterized=params['raster'],
             filterrad=params['filterrad'],
             zorder=params['zorder']
         )

@@ -110,6 +110,7 @@ class geom_map(geom):
                 linestyle=data['linetype'],
                 linewidth=data['size'],
                 zorder=params['zorder'],
+                rasterized=params['raster']
             )
             ax.add_collection(coll)
         elif geom_type == 'Point':
@@ -122,7 +123,12 @@ class geom_map(geom):
                 gdata.reset_index(inplace=True, drop=True)
                 gdata.is_copy = None
                 geom_point.draw_group(
-                    gdata, panel_params, coord, ax, **params)
+                    gdata,
+                    panel_params,
+                    coord,
+                    ax,
+                    **params
+                )
         elif geom_type in ('LineString', 'MultiLineString'):
             data['size'] *= SIZE_FACTOR
             data['color'] = to_rgba(data['color'], data['alpha'])
@@ -138,7 +144,9 @@ class geom_map(geom):
                 edgecolor=data['color'],
                 linewidth=data['size'],
                 linestyle=data['linetype'],
-                zorder=params['zorder'])
+                zorder=params['zorder'],
+                rasterized=params['raster']
+            )
             ax.add_collection(coll)
         else:
             raise TypeError(f"Could not plot geometry of type '{geom_type}'")

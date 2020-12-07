@@ -60,9 +60,14 @@ class geom_ribbon(geom):
             fill_between = ax.fill_between
             _x, _min, _max = data['x'], data['ymin'], data['ymax']
 
-        fill_between(_x, _min, _max,
-                     facecolor=fill,
-                     edgecolor=color,
-                     linewidth=data['size'].iloc[0],
-                     linestyle=data['linetype'].iloc[0],
-                     zorder=params['zorder'])
+        fill_between(
+            _x,
+            _min,
+            _max,
+            facecolor=fill,
+            edgecolor=color,
+            linewidth=data['size'].iloc[0],
+            linestyle=data['linetype'].iloc[0],
+            zorder=params['zorder'],
+            rasterized=params['raster']
+        )
