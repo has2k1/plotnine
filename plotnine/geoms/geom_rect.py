@@ -66,7 +66,9 @@ class geom_rect(geom):
             linestyles=data['linetype'],
             linewidths=data['size'],
             transOffset=ax.transData,
-            zorder=params['zorder'])
+            zorder=params['zorder'],
+            rasterized=params['raster']
+        )
         ax.add_collection(col)
 
 

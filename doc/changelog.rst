@@ -25,6 +25,10 @@ New Features
 
 - Added :class:`~plotnine.geoms.geom_raster`.
 
+- ``geoms`` gained new parameter ``raster`` for the
+  :class:`~plotnine.layer.Layer`. You can use it to rasterize any layer
+  when the resulting plot is of vector format e.g. ``pdf``.
+
 Bug Fixes
 *********
 

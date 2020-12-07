@@ -58,14 +58,17 @@ class geom_point(geom):
         else:
             fill = to_rgba(data['fill'], data['alpha'])
 
-        ax.scatter(x=data['x'],
-                   y=data['y'],
-                   s=size,
-                   facecolor=fill,
-                   edgecolor=color,
-                   linewidth=stroke,
-                   marker=data.loc[0, 'shape'],
-                   zorder=params['zorder'])
+        ax.scatter(
+            x=data['x'],
+            y=data['y'],
+            s=size,
+            facecolor=fill,
+            edgecolor=color,
+            linewidth=stroke,
+            marker=data.loc[0, 'shape'],
+            zorder=params['zorder'],
+            rasterized=params['raster']
+        )
 
     @staticmethod
     def draw_legend(data, da, lyr):

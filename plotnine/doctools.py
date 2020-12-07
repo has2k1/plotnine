@@ -8,10 +8,23 @@ import numpy as np
 # Parameter arguments that are listed first in the geom and
 # stat class signatures
 
-common_geom_params = ['mapping', 'data', 'stat', 'position',
-                      'na_rm', 'inherit_aes', 'show_legend']
-common_geom_param_values = {'mapping': None, 'data': None,
-                            'inherit_aes': True, 'show_legend': None}
+common_geom_params = [
+    'mapping',
+    'data',
+    'stat',
+    'position',
+    'na_rm',
+    'inherit_aes',
+    'show_legend',
+    'raster'
+]
+common_geom_param_values = {
+    'mapping': None,
+    'data': None,
+    'inherit_aes': True,
+    'show_legend': None,
+    'raster': False
+}
 
 common_stat_params = ['mapping', 'data', 'geom', 'position', 'na_rm']
 common_stat_param_values = common_geom_param_values
@@ -81,7 +94,11 @@ default, includes any aesthetics that are mapped. If a :class:`bool`, \
 :py:`False` never includes and :py:`True` always includes. A \
 :class:`dict` can be used to *exclude* specific aesthetis of the layer \
 from showing in the legend. e.g :py:`show_legend={'color': False}`, \
-any other aesthetic are included by default."""
+any other aesthetic are included by default.""",
+
+    'raster': """\
+If ``True``, draw onto this layer a raster (bitmap) object even if\
+the final image is in vector format."""
 }
 
 
@@ -101,6 +118,8 @@ inherit_aes : bool, optional (default: {default_inherit_aes})
     {inherit_aes}
 show_legend : bool or dict, optional (default: None)
     {show_legend}
+raster : bool, optional (default: {default_raster})
+    {raster}
 """
 
 STAT_PARAMS_TPL = """\
@@ -409,6 +428,7 @@ def document_geom(geom):
         default_position=qualified_name(d['position'], 'position_'),
         default_na_rm=d['na_rm'],
         default_inherit_aes=d.get('inherit_aes', True),
+        default_raster=d.get('raster', False),
         _aesthetics_doc=aesthetics_doc,
         **common_params_doc)
 

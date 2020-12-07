@@ -70,7 +70,9 @@ class geom_polygon(geom):
             linestyles=linestyle,
             linewidths=linewidth,
             transOffset=ax.transData,
-            zorder=params['zorder'])
+            zorder=params['zorder'],
+            rasterized=params['raster'],
+        )
 
         ax.add_collection(col)
 

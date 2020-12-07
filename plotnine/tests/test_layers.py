@@ -1,14 +1,23 @@
+import os
 import pytest
+import numpy as np
 import pandas as pd
 
 from plotnine.layer import Layers, layer
-from plotnine import ggplot, aes, geom_point
-from plotnine.exceptions import PlotnineError
+from plotnine import ggplot, aes, geom_point, geom_path
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 
 df = pd.DataFrame({'x': range(10),
                    'y': range(10)})
 colors = ['red', 'green', 'blue']
+
+n = 5000
+prg = np.random.RandomState(123)
+df_large = pd.DataFrame({
+    'x': prg.uniform(1, 1000, size=n),
+    'y': prg.uniform(1, 1000, size=n)
+})
 
 
 def _get_colors(p):
@@ -91,3 +100,36 @@ def test_layer_with_nodata():
         p.draw_test()
 
     assert "Could not evaluate the 'x' mapping:" in pe.value.message
+
+
+class TestRasterizing:
+    p = ggplot(df_large, aes('x', 'y'))
+
+    def _assert_raster_smaller(self, p_no_raster, p_raster):
+        # Plot and check that the file sizes are smaller when
+        # rastering. Then delete the files.
+        geom_name = p_raster.layers[0].geom.__class__.__name__
+        fn1 = f'{geom_name}-no-raster.pdf'
+        fn2 = f'{geom_name}-raster.pdf'
+        getsize = os.path.getsize
+
+        try:
+            with pytest.warns(PlotnineWarning):
+                p_no_raster.save(fn1)
+                p_raster.save(fn2)
+            assert getsize(fn1) > getsize(fn2)
+        finally:
+            if os.path.exists(fn1):
+                os.remove(fn1)
+            if os.path.exists(fn2):
+                os.remove(fn2)
+
+    def test_geom_point(self):
+        p1 = self.p + geom_point()
+        p2 = self.p + geom_point(raster=True)
+        self._assert_raster_smaller(p1, p2)
+
+    def test_geom_path(self):
+        p1 = self.p + geom_path()
+        p2 = self.p + geom_path(raster=True)
+        self._assert_raster_smaller(p1, p2)

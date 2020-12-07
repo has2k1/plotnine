@@ -134,6 +134,9 @@ class layer:
         Whether to make up and show a legend for the mappings
         of this layer. If ``None`` then an automatic/good choice
         is made. Default is ``None``.
+    raster : bool, optional (default: False)
+        If ``True``, draw onto this layer a raster (bitmap) object
+        even if the final image format is vector.
 
     Notes
     -----
@@ -142,7 +145,8 @@ class layer:
     """
 
     def __init__(self, geom=None, stat=None, data=None, mapping=None,
-                 position=None, inherit_aes=True, show_legend=None):
+                 position=None, inherit_aes=True, show_legend=None,
+                 raster=False):
         self.geom = geom
         self.stat = stat
         self.data = data
@@ -150,6 +154,7 @@ class layer:
         self.position = position
         self.inherit_aes = inherit_aes
         self.show_legend = show_legend
+        self.raster = raster
         self._active_mapping = {}
         self.zorder = 0
 
@@ -175,7 +180,8 @@ class layer:
                    'stat': geom._stat,
                    'position': geom._position}
 
-        for param in ('show_legend', 'inherit_aes'):
+        layer_params = ('inherit_aes', 'show_legend', 'raster')
+        for param in layer_params:
             if param in kwargs:
                 lkwargs[param] = kwargs[param]
             elif param in geom.DEFAULT_PARAMS:
@@ -391,6 +397,7 @@ class layer:
         params = copy(self.geom.params)
         params.update(self.stat.params)
         params['zorder'] = self.zorder
+        params['raster'] = self.raster
         self.data = self.geom.handle_na(self.data)
         # At this point each layer must have the data
         # that is created by the plot build process
