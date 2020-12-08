@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 from matplotlib.cbook import boxplot_stats
+from warnings import warn
 
+from ..exceptions import PlotnineWarning
 from ..utils import resolution
 from ..doctools import document
 from .stat import stat
@@ -71,7 +73,18 @@ class stat_boxplot(stat):
     @classmethod
     def compute_group(cls, data, scales, **params):
         labels = ['x', 'y']
-        X = np.array(data[labels])
+        try:
+            weight_type = data['weight'].dtype
+            if weight_type.kind != 'u':
+                warn(
+                    "Weight is not an unsigned integer type and "
+                    "will be coerced.",
+                    PlotnineWarning
+                    )
+            indices = data.index.repeat(data['weight'])
+            X = np.array(data[labels].loc[indices])
+        except KeyError:
+            X = np.array(data[labels])
         res = boxplot_stats(X, whis=params['coef'], labels=labels)[1]
         try:
             n = data['weight'].sum()

@@ -12,7 +12,12 @@ df = pd.DataFrame({
           [-2, 2, 3, 4, 5, 6, 7, 8, 9, 12] +
           [-7, -5, 3, 4, 5, 6, 7, 8, 12, 15] +
           [1, 2, 3, 4, 5, 8, 8, 8, 9, 10]
-          )
+          ),
+    'weight': ([6, 5, 2, 2, 1, 1, 1, 1, 1, 1] +
+               [5, 4, 2, 2, 1, 1, 1, 1, 1, 1] +
+               [4, 3, 2, 2, 1, 1, 1, 1, 1, 1] +
+               [3, 6, 2, 2, 1, 1, 1, 1, 1, 1]
+               ),
 })
 
 
@@ -21,7 +26,8 @@ class TestAesthetics:
          geom_boxplot(aes(y='y'), size=2) +
          geom_boxplot(df[:2*m], aes(y='y+25', fill='x'), size=2) +
          geom_boxplot(df[2*m:], aes(y='y+30', color='x'), size=2) +
-         geom_boxplot(df[2*m:], aes(y='y+55', linetype='x'), size=2)
+         geom_boxplot(df[2*m:], aes(y='y+55', linetype='x'), size=2) +
+         geom_boxplot(df[:2*m], aes(y='y+55', weight='weight'), size=2)
          )
 
     def test_aesthetics(self):
