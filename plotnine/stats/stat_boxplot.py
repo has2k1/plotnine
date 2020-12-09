@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-from matplotlib.cbook import boxplot_stats
 from warnings import warn
 
 from ..exceptions import PlotnineWarning
@@ -73,23 +72,13 @@ class stat_boxplot(stat):
     @classmethod
     def compute_group(cls, data, scales, **params):
         labels = ['x', 'y']
+
         try:
-            weight_type = data['weight'].dtype
-            if weight_type.kind != 'u':
-                warn(
-                    "Weight is not an unsigned integer type and "
-                    "will be coerced.",
-                    PlotnineWarning
-                    )
-            indices = data.index.repeat(data['weight'])
-            X = np.array(data[labels].loc[indices])
+            weights = np.array(data['weight'])
         except KeyError:
-            X = np.array(data[labels])
-        res = boxplot_stats(X, whis=params['coef'], labels=labels)[1]
-        try:
-            n = data['weight'].sum()
-        except KeyError:
-            n = len(data['y'])
+            weights = np.ones(len(data['y']))
+        y = np.array(data['y'])
+        res = weighted_boxplot_stats(y, weights=weights, whis=params['coef'])
 
         if len(np.unique(data['x'])) > 1:
             width = np.ptp(data['x']) * 0.9
@@ -107,9 +96,63 @@ class stat_boxplot(stat):
              'upper': res['q3'],
              'ymax': res['whishi'],
              'outliers': [res['fliers']],
-             'notchupper': res['med']+1.58*res['iqr']/np.sqrt(n),
-             'notchlower': res['med']-1.58*res['iqr']/np.sqrt(n),
+             'notchupper': res['cihi'],
+             'notchlower': res['cilo'],
              'x': x,
              'width': width,
-             'relvarwidth': np.sqrt(n)}
+             'relvarwidth': np.sqrt(np.sum(weights))}
         return pd.DataFrame(d)
+
+
+def weighted_percentile(X, weights, percentile):
+    # Calculate and interpolate weighted percentiles
+    # method derived from https://en.wikipedia.org/wiki/Percentile
+    # using numpy's standard C = 1
+    C = 1
+    idx_s = np.argsort(X)
+    X_s = X[idx_s]
+    w_n = weights[idx_s]
+    S_N = np.sum(weights)
+    S_n = np.cumsum(w_n)
+    p_n = (S_n - C * w_n) / (S_N + (1 - 2 * C) * w_n)
+    pcts = np.interp(np.array(percentile) / 100.0, p_n, X_s)
+    return pcts
+
+
+def weighted_boxplot_stats(x, weights, whis=1.5):
+    # Weighted boxplot stats is adapted from MPL's boxplot_stats
+    # with the use of a weighted interpolated percentile calculation
+    q1, med, q3 = weighted_percentile(x, weights, [25, 50, 75])
+    iqr = q3 - q1
+    mean = np.average(x, weights=weights)
+    n = np.sum(weights)
+    cilo = med - 1.58 * iqr / np.sqrt(n)
+    cihi = med + 1.58 * iqr / np.sqrt(n)
+
+    loval = q1 - whis * iqr
+    lox = x[x >= loval]
+    if len(lox) == 0 or np.min(lox) > q1:
+        whislo = q1
+    else:
+        whislo = np.min(lox)
+
+    hival = q3 + whis * iqr
+    hix = x[x <= hival]
+    if len(hix) == 0 or np.max(hix) < q3:
+        whishi = q3
+    else:
+        whishi = np.max(hix)
+
+    bpstats = {
+        'fliers': x[(x < whislo) | (x > whishi)],
+        'mean': mean,
+        'med': med,
+        'q1': q1,
+        'q3': q3,
+        'iqr': iqr,
+        'whislo': whislo,
+        'whishi': whishi,
+        'cilo': cilo,
+        'cihi': cihi,
+    }
+    return bpstats
