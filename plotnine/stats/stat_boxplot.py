@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-from warnings import warn
 
-from ..exceptions import PlotnineWarning
 from ..utils import resolution
 from ..doctools import document
 from .stat import stat
@@ -71,8 +69,6 @@ class stat_boxplot(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        labels = ['x', 'y']
-
         try:
             weights = np.array(data['weight'])
         except KeyError:
