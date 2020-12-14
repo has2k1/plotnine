@@ -61,3 +61,24 @@ def test_position_nudge():
          + geom_boxplot(position=position_nudge(x=-0.1), size=2)
          )
     assert p == 'position_nudge'
+
+
+def test_weight():
+    # The boxes of the two plots should differ slightly due to the
+    # method used to calculate weighted percentiles. There is no
+    # standard method for calculating weighted percentiles.
+    df = pd.DataFrame({
+        'x': list('a'*11 + 'b'*5),
+        'y': np.hstack([
+            [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 15],
+            [1, 2, 3, 4, 15]
+        ]),
+        'weight': np.hstack([
+            np.ones(11),
+            [1, 2, 3, 4, 1]
+        ])
+    })
+    p = (ggplot(df, aes(x='x', y='y', weight='weight'))
+         + geom_boxplot()
+         )
+    assert p == 'weight'
