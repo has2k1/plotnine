@@ -69,11 +69,9 @@ class stat_boxplot(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        try:
-            weights = np.array(data['weight'])
-        except KeyError:
-            weights = np.ones(len(data['y']))
-        y = np.array(data['y'])
+        y = data['y'].to_numpy()
+        weights = data.get('weight', None)
+        total_weight = len(y) if weights is None else np.sum(weights)
         res = weighted_boxplot_stats(y, weights=weights, whis=params['coef'])
 
         if len(np.unique(data['x'])) > 1:
@@ -86,45 +84,96 @@ class stat_boxplot(stat):
         else:
             x = np.mean([data['x'].min(), data['x'].max()])
 
-        d = {'ymin': res['whislo'],
-             'lower': res['q1'],
-             'middle': [res['med']],
-             'upper': res['q3'],
-             'ymax': res['whishi'],
-             'outliers': [res['fliers']],
-             'notchupper': res['cihi'],
-             'notchlower': res['cilo'],
-             'x': x,
-             'width': width,
-             'relvarwidth': np.sqrt(np.sum(weights))}
+        d = {
+            'ymin': res['whislo'],
+            'lower': res['q1'],
+            'middle': [res['med']],
+            'upper': res['q3'],
+            'ymax': res['whishi'],
+            'outliers': [res['fliers']],
+            'notchupper': res['cihi'],
+            'notchlower': res['cilo'],
+            'x': x,
+            'width': width,
+            'relvarwidth': np.sqrt(total_weight)
+        }
         return pd.DataFrame(d)
 
 
-def weighted_percentile(X, weights, percentile):
+def weighted_percentile(a, q, weights=None):
+    """
+    Compute the weighted q-th percentile of data
+
+    Parameters
+    ----------
+    a : array_like
+        Input that can be converted into an array.
+    q : array_like[float]
+        Percentile or sequence of percentiles to compute. Must be int
+        the range [0, 100]
+    weights : array_like
+        Weights associated with the input values.
+    """
     # Calculate and interpolate weighted percentiles
     # method derived from https://en.wikipedia.org/wiki/Percentile
     # using numpy's standard C = 1
+    if weights is None:
+        weights = np.ones(len(a))
+
+    weights = np.asarray(weights)
+    q = np.asarray(q)
+
     C = 1
-    idx_s = np.argsort(X)
-    X_s = X[idx_s]
+    idx_s = np.argsort(a)
+    a_s = a[idx_s]
     w_n = weights[idx_s]
     S_N = np.sum(weights)
     S_n = np.cumsum(w_n)
     p_n = (S_n - C * w_n) / (S_N + (1 - 2 * C) * w_n)
-    pcts = np.interp(np.array(percentile) / 100.0, p_n, X_s)
+    pcts = np.interp(q / 100.0, p_n, a_s)
     return pcts
 
 
-def weighted_boxplot_stats(x, weights, whis=1.5):
-    # Weighted boxplot stats is adapted from MPL's boxplot_stats
-    # with the use of a weighted interpolated percentile calculation
-    q1, med, q3 = weighted_percentile(x, weights, [25, 50, 75])
+def weighted_boxplot_stats(x, weights=None, whis=1.5):
+    """
+    Calculate weighted boxplot plot statistics
+
+    Parameters
+    ----------
+    x : array_like
+        Data
+    weights : array_like, optional
+        Weights associated with the data.
+    whis : float, optional (default: 1.5)
+        Position of the whiskers beyond the interquartile range.
+        The data beyond the whisker are considered outliers.
+
+        If a float, the lower whisker is at the lowest datum above
+        ``Q1 - whis*(Q3-Q1)``, and the upper whisker at the highest
+        datum below ``Q3 + whis*(Q3-Q1)``, where Q1 and Q3 are the
+        first and third quartiles.  The default value of
+        ``whis = 1.5`` corresponds to Tukey's original definition of
+        boxplots.
+
+    Notes
+    -----
+    This method adapted from Matplotlibs boxplot_stats. The key difference
+    is the use of a weighted percentile calculation and then using linear
+    interpolation to map weight percentiles back to data.
+    """
+    if weights is None:
+        q1, med, q3 = np.percentile(x, (25, 50, 75))
+        n = len(x)
+    else:
+        q1, med, q3 = weighted_percentile(x, (25, 50, 75), weights)
+        n = np.sum(weights)
+
     iqr = q3 - q1
     mean = np.average(x, weights=weights)
-    n = np.sum(weights)
     cilo = med - 1.58 * iqr / np.sqrt(n)
     cihi = med + 1.58 * iqr / np.sqrt(n)
 
+    # low extreme
     loval = q1 - whis * iqr
     lox = x[x >= loval]
     if len(lox) == 0 or np.min(lox) > q1:
@@ -132,6 +181,7 @@ def weighted_boxplot_stats(x, weights, whis=1.5):
     else:
         whislo = np.min(lox)
 
+    # high extreme
     hival = q3 + whis * iqr
     hix = x[x <= hival]
     if len(hix) == 0 or np.max(hix) < q3:

@@ -43,6 +43,9 @@ Bug Fixes
 - Fixed bug were the plotted image may have ignored theming that relied on
   some Matplotlib rcParams. (:issue:`451`)
 
+- Fixed the ``weight`` aesthetic in :class:`~plotnine.geoms.geom_boxplot`, previously
+  ignored it is now recognised. (:issue:`438`)
+
 Enhancements
 ************
 - Manual scales now match the values of the breaks if the breaks are given.

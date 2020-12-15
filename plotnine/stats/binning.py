@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
 from mizani.utils import round_any
 
 from ..scales.scale import scale_discrete
@@ -15,9 +14,7 @@ def iqr(a):
     """
     Calculate the IQR for an array of numbers.
     """
-    a = np.asarray(a)
-    q1 = stats.scoreatpercentile(a, 25)
-    q3 = stats.scoreatpercentile(a, 75)
+    q1, q3 = np.percentile(a, [25, 75])
     return q3 - q1
 
 

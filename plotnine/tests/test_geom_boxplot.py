@@ -26,8 +26,7 @@ class TestAesthetics:
          geom_boxplot(aes(y='y'), size=2) +
          geom_boxplot(df[:2*m], aes(y='y+25', fill='x'), size=2) +
          geom_boxplot(df[2*m:], aes(y='y+30', color='x'), size=2) +
-         geom_boxplot(df[2*m:], aes(y='y+55', linetype='x'), size=2) +
-         geom_boxplot(df[:2*m], aes(y='y+55', weight='weight'), size=2)
+         geom_boxplot(df[2*m:], aes(y='y+55', linetype='x'), size=2)
          )
 
     def test_aesthetics(self):
