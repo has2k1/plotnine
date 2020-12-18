@@ -5,9 +5,7 @@ from .geom_point import geom_point
 @document
 class geom_pointdensity(geom_point):
     """
-    2D density estimate
-
-    This is a 2d version of :class:`~plotnine.geoms.geom_density`.
+    Scatterplot with density estimation at each point
 
     {usage}
 
