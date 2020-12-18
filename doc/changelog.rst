@@ -46,6 +46,10 @@ Bug Fixes
 - Fixed the ``weight`` aesthetic in :class:`~plotnine.geoms.geom_boxplot`, previously
   ignored it is now recognised. (:issue:`438`)
 
+- Fixed :class:`~plotnine.geoms.annotation_logticks` and
+  :class:`~plotnine.geoms.annotation_stripes` to work without global data and
+  aesthetics. (:issue:`469`)
+
 Enhancements
 ************
 - Manual scales now match the values of the breaks if the breaks are given.

@@ -3,12 +3,13 @@ import pandas as pd
 import pytest
 
 from plotnine import (
-    ggplot,
     aes,
-    geom_point,
-    geom_vline,
     annotation_stripes,
     coord_flip,
+    facet_wrap,
+    geom_point,
+    geom_vline,
+    ggplot
 )
 
 n = 9
@@ -26,6 +27,24 @@ def test_annotation_stripes():
          )
 
     assert p == 'annotation_stripes'
+
+
+def test_annotation_stripes_faceting():
+    n = len(df)
+
+    df2 = pd.DataFrame({
+        'x': np.hstack([df['x'], df['x']]),
+        'y': np.hstack([df['y'], df['y']]),
+        'g': list('a'*n + 'b'*n)
+    })
+
+    p = (ggplot()
+         + annotation_stripes(fill_range='no')
+         + geom_point(df2, aes('factor(x)', 'y'))
+         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
+         + facet_wrap('g')
+         )
+    assert p == 'annotation_stripes_faceting'
 
 
 def test_annotation_stripes_fill_range():

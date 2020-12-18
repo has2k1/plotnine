@@ -5,7 +5,7 @@ from mizani.transforms import log_trans
 
 from plotnine import (ggplot, aes, geom_point, scale_x_log10,
                       scale_y_log10, annotation_logticks,
-                      scale_x_continuous,
+                      scale_x_continuous, facet_wrap,
                       coord_flip, element_line, theme)
 from plotnine.exceptions import PlotnineWarning
 
@@ -26,6 +26,26 @@ def test_annotation_logticks():
          )
 
     assert p == 'annotation_logticks'
+
+
+def test_annotation_logticks_faceting():
+    n = len(df)
+    df2 = pd.DataFrame({
+        'x': np.hstack([df['x'], df['x']]),
+        'g': list('a'*n + 'b'*n)
+    })
+    p = (ggplot(df2)
+         + annotation_logticks(sides='b', size=.75)
+         + geom_point(aes('x', 'x'))
+         + scale_x_log10()
+         + scale_y_log10()
+         + facet_wrap('g')
+         + theme(
+             panel_grid_minor=element_line(color='green'),
+             panel_grid_major=element_line(color='red'))
+         )
+
+    assert p == 'annotation_logticks_faceting'
 
 
 def test_annotation_logticks_coord_flip():
