@@ -21,6 +21,16 @@ class _geom_logticks(geom_rug):
                       'lengths': (0.036, 0.0225, 0.012), 'base': 10}
     legend_geom = 'path'
 
+    def draw_layer(self, data, layout, coord, **params):
+        """
+        Draw ticks on every panel
+        """
+        for pid in layout.layout['PANEL']:
+            ploc = pid - 1
+            panel_params = layout.panel_params[ploc]
+            ax = layout.axs[ploc]
+            self.draw_panel(data, panel_params, coord, ax, **params)
+
     @staticmethod
     def _check_log_scale(base, sides, panel_params, coord):
         """

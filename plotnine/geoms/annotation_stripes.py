@@ -67,6 +67,16 @@ class _geom_stripes(geom):
                       'fill_range': 'auto'}
     legend_geom = "polygon"
 
+    def draw_layer(self, data, layout, coord, **params):
+        """
+        Draw stripes on every panel
+        """
+        for pid in layout.layout['PANEL']:
+            ploc = pid - 1
+            panel_params = layout.panel_params[ploc]
+            ax = layout.axs[ploc]
+            self.draw_group(data, panel_params, coord, ax, **params)
+
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
         extend = params['extend']
