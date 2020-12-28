@@ -133,8 +133,8 @@ class facet_grid(facet):
             return data
 
         vars = [x for x in self.rows + self.cols]
-        margin_vars = [list(data.columns & self.rows),
-                       list(data.columns & self.cols)]
+        margin_vars = [list(data.columns.intersection(self.rows)),
+                       list(data.columns.intersection(self.cols))]
         data = add_margins(data, margin_vars, self.margins)
 
         facet_vals = eval_facet_vars(data, vars, self.plot.environment)

@@ -595,8 +595,11 @@ def combine_vars(data, environment=None, vars=None, drop=True):
     for i, value in enumerate(values):
         if has_all[i] or len(value.columns) == 0:
             continue
-        old = base.loc[:, base.columns - value.columns]
-        new = value.loc[:, base.columns & value.columns].drop_duplicates()
+        old = base.loc[:, base.columns.difference(value.columns)]
+        new = value.loc[
+            :,
+            base.columns.intersection(value.columns)
+        ].drop_duplicates()
         if not drop:
             new = unique_combs(new)
         base = base.append(cross_join(old, new), ignore_index=True)

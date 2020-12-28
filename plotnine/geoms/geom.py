@@ -189,7 +189,7 @@ class geom(metaclass=Registry):
 
         # Evaluate/Modify the mapped aesthetics
         evaled = evaluate(aes_modifiers, data, self.environment)
-        for ae in (evaled.columns & data.columns):
+        for ae in (evaled.columns.intersection(data.columns)):
             data[ae] = evaled[ae]
 
         # If set, use it
