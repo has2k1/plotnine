@@ -436,7 +436,8 @@ class scale_discrete(scale):
                 except KeyError:
                     pal_match.append(self.na_value)
         else:
-            pal = np.asarray(pal)
+            if not isinstance(pal, np.ndarray):
+                pal = np.asarray(pal, dtype=object)
             idx = np.asarray(match(x, limits))
             try:
                 pal_match = pal[idx]

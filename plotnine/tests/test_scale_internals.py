@@ -189,6 +189,14 @@ def test_shape_palettes():
     with pytest.raises(PlotnineError):
         scale_shape_continuous()
 
+    # Unfilled
+    N = 14
+    values = list(range(14))
+    s = scale_shape_discrete(unfilled=True)
+    items = s.map(values, limits=values)
+    assert len(items) == N
+    assert(not all([isinstance(x, str) for x in items]))
+
 
 def test_size_palette():
     with pytest.warns(PlotnineWarning):

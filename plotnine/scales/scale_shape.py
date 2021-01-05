@@ -35,10 +35,14 @@ unfilled_shapes = (
     ',',  # pixel
     '_',  # hline
     '|',  # vline
-    1,    # tickleft
-    2,    # tickright
-    3,    # tickup
-    4,    # tickdown
+    0,    # tickleft
+    1,    # tickright
+    2,    # tickup
+    3,    # tickdown
+    4,    # caretleft
+    5,    # caretright
+    6,    # caretup
+    7,    # caretdown
 )
 
 

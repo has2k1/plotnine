@@ -50,6 +50,9 @@ Bug Fixes
   :class:`~plotnine.geoms.annotation_stripes` to work without global data and
   aesthetics. (:issue:`469`)
 
+- Fix :class:`~plotnine.scales.scale_shape_discrete` when print many unfilled shapes
+  not to assign the same shapes to more than one group. (:issue:`473`)
+
 Enhancements
 ************
 - Manual scales now match the values of the breaks if the breaks are given.
