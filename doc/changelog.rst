@@ -70,6 +70,9 @@ Enhancements
       from plotnine.options import set_option
       set_option('base_family', 'Comic Sans MS')
 
+- You can now add ``None`` to a ggplot, doing so returns a copy of the
+  the ggplot object. (:issue:`474`)
+
 v0.7.1
 ------
 (2020-08-05)

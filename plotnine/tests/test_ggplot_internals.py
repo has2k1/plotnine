@@ -304,6 +304,17 @@ def test_adding_list_ggplot():
     assert isinstance(g.coordinates, coord_trans)
 
 
+def test_adding_None():
+    p = ggplot(df, aes('x', 'y')) + geom_point()
+    p2 = p + None
+    assert p2 is not p
+    assert isinstance(p2, ggplot)
+
+    # Inplace addition
+    p += None
+    assert isinstance(p, ggplot)
+
+
 def test_string_group():
     p = ggplot(df, aes('x', 'y')) + geom_point(group='pi')
     p.draw_test()

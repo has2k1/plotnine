@@ -126,6 +126,10 @@ class ggplot:
             return other.__radd__(self, inplace=True)
         except TypeError:
             return other.__radd__(self)
+        except AttributeError as err:
+            if other is None:
+                return self.__add__(other)
+            raise err
 
     def __add__(self, other):
         """
@@ -142,6 +146,8 @@ class ggplot:
             for item in other:
                 self += item
             return self
+        elif other is None:
+            return deepcopy(self)
         else:
             return other.__radd__(self)
 
