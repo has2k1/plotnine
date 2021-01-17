@@ -849,10 +849,13 @@ class plot_context:
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        if self.show:
-            plt.show()
-        if self.plot.figure is not None:
-            plt.close(self.plot.figure)
+        if exc_type is None:
+            if self.show:
+                plt.show()
+        else:
+            # There is an exception, close any figure
+            if self.plot.figure is not None:
+                plt.close(self.plot.figure)
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
         self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
