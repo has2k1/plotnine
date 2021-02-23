@@ -133,6 +133,20 @@ yet please file an issue.
 
 And if you can fix a bug, your contribution is welcome.
 
+Testing
+-------
+
+Plotnine has tests that generate images which are compared to baseline images known
+to be correct. To generate images that are consistent across all systems you have
+to install matplotlib from source. You can do that with ``pip`` using the command.
+
+.. code-block:: console
+
+    $ pip install matplotlib --no-binary matplotlib
+
+Otherwise there may be small differences in the text rendering that throw off the
+image comparisons.
+
 .. |release| image:: https://img.shields.io/pypi/v/plotnine.svg
 .. _release: https://pypi.python.org/pypi/plotnine
 
