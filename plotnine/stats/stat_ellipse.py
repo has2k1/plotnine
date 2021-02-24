@@ -58,13 +58,14 @@ class stat_ellipse(stat):
         if type_ == 't':
             res = cov_trob(m)
             cov = res['cov']
+            center = res['center']
         elif type_ == 'norm':
             cov = np.cov(m, rowvar=False)
+            center = np.mean(m, axis=0)
         elif type_ == 'euclid':
             cov = np.cov(m, rowvar=False)
             cov = np.diag(np.repeat(np.diag(cov).min(), 2))
-
-        center = np.mean(m, axis=0)
+            center = np.mean(m, axis=0)
 
         # numpy's cholesky function does not gaurantee upper/lower
         # triangular factorization.
