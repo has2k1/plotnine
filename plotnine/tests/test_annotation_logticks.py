@@ -63,6 +63,36 @@ def test_annotation_logticks_coord_flip():
     assert p == 'annotation_logticks_coord_flip'
 
 
+def test_annotation_logticks_coord_flip_discrete():
+    df2 = df.assign(discrete=pd.Categorical(['A' + str(a) for a in df['x']]))
+    p = (ggplot(df2, aes('discrete', 'x'))
+         + annotation_logticks(sides='l', size=.75)
+         + geom_point()
+         + scale_y_log10()
+         + coord_flip()
+         + theme(
+             panel_grid_minor=element_line(color='green'),
+             panel_grid_major=element_line(color='red'))
+         )
+
+    assert p == 'annotation_logticks_coord_flip_discrete'
+
+
+def test_annotation_logticks_coord_flip_discrete_bottom():
+    df2 = df.assign(discrete=pd.Categorical(['A' + str(a) for a in df['x']]))
+    p = (ggplot(df2, aes('x', 'discrete'))
+         + annotation_logticks(sides='b', size=.75)
+         + geom_point()
+         + scale_x_log10()
+         + coord_flip()
+         + theme(
+             panel_grid_minor=element_line(color='green'),
+             panel_grid_major=element_line(color='red'))
+         )
+
+    assert p == 'annotation_logticks_coord_flip_discrete_bottom'
+
+
 def test_annotation_logticks_base_8():
     base = 8
     df = pd.DataFrame({'x': base**np.arange(4)})
@@ -131,6 +161,28 @@ def test_wrong_bases():
     p = (ggplot(df2, aes('x', 'discrete'))
          + annotation_logticks(sides='l', size=.75, base=None)
          + geom_point()
+         )
+
+    with pytest.warns(PlotnineWarning):
+        p.draw_test()
+
+    # x axis is discrete + coord flip.
+    df2 = df.assign(discrete=pd.Categorical([str(a) for a in df['x']]))
+    p = (ggplot(df2, aes('discrete', 'x'))
+         + annotation_logticks(sides='b', size=.75, base=None)
+         + geom_point()
+         + coord_flip()
+         )
+
+    with pytest.warns(PlotnineWarning):
+        p.draw_test()
+
+    # y axis is discrete + coord_flip
+    df2 = df.assign(discrete=pd.Categorical([str(a) for a in df['x']]))
+    p = (ggplot(df2, aes('x', 'discrete'))
+         + annotation_logticks(sides='l', size=.75, base=None)
+         + geom_point()
+         + coord_flip()
          )
 
     with pytest.warns(PlotnineWarning):
