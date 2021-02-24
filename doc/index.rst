@@ -45,4 +45,4 @@ Documentation
    glossary
    external-resources
 
-.. _ggplot2: http://ggplot2.org
+.. _ggplot2: https://ggplot2.tidyverse.org
