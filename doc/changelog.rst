@@ -54,7 +54,10 @@ Bug Fixes
   not to assign the same shapes to more than one group. (:issue:`473`)
 
 - Fixed bug in :class:`~plotnine.stats.stat_ellipse` where the center of the ellipse
-  assuming a multivariate t-distribution was incorrectly calculated.
+  assuming a multivariate t-distribution was incorrectly calculated. (:issue:`493`)
+
+- Fixed calculation of ``ndensity`` in :class:`~plotnine.stats.stat_bin`.
+  (:issue:`494`)
 
 
 Enhancements
@@ -150,7 +153,7 @@ Bug Fixes
 - Fixed issue where discrete position scales could not deal with fewer limits
   than those present in the data. (:issue:`342`)
 
-- Fixed issue with using custom tuple linetypes with
+- Fixed issue with using custom tuple linetypes~ with
   :class:`plotnine.scales.scale_linetype_manual`. (:issue:`352`)
 
 - Fixed :class:`plotnine.geoms.geom_map` to work with facets. (:issue:`359`)
