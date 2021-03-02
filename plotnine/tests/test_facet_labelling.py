@@ -77,3 +77,16 @@ def test_aslabeller_dict_0tag():
     p = g + facet_wrap('~ gear + am', labeller=func)
 
     assert p == 'aslabeller_dict_0tag'
+
+
+def test_uneven_num_of_lines():
+    @as_labeller
+    def func(s):
+        if s == '3':
+            s = f'{s}\nline2\nline3\nline4'
+        return s
+
+    p = g + facet_wrap('~ gear + am', labeller=func)
+    # NOTE: The allocated space for the strip is still not yet
+    # enough for the text
+    assert p == 'uneven_num_of_lines'

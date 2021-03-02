@@ -67,6 +67,3 @@ class facet_null(facet):
         H = h / (top-bottom)
 
         figure.set_figheight(H)
-
-    def draw_label(self, layout_info, ax):
-        pass
