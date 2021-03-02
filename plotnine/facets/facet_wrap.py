@@ -9,6 +9,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import match, join_keys
 from .facet import facet, combine_vars, layout_null
 from .facet import add_missing_facets, eval_facet_vars
+from .strips import strip
 
 
 class facet_wrap(facet):
@@ -161,7 +162,7 @@ class facet_wrap(facet):
         right = figure.subplotpars.right
         top = figure.subplotpars.top
         bottom = figure.subplotpars.bottom
-        top_strip_height = self.strip_size('top')
+        top_strip_height = self.strips.breadth('top')
         W, H = figure.get_size_inches()
 
         try:
@@ -215,23 +216,9 @@ class facet_wrap(facet):
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
         self.check_axis_text_space()
 
-    def draw_label(self, layout_info, ax):
-        """
-        Draw facet label onto the axes.
-
-        This function will only draw labels if they are needed.
-
-        Parameters
-        ----------
-        layout_info : dict-like
-            facet information
-        ax : axes
-            Axes to label
-        """
-        label_info = layout_info[list(self.vars)]
-        label_info._meta = {'dimension': 'cols'}
-        label_info = self.labeller(label_info)
-        self.draw_strip_text(label_info, 'top', ax)
+    def make_ax_strips(self, layout_info, ax):
+        s = strip(self.vars, layout_info, self, ax, 'top')
+        return [s]
 
 
 def check_dimensions(nrow, ncol):

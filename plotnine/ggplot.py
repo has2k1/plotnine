@@ -207,6 +207,7 @@ class ggplot:
             # setup
             figure, axs = self._create_figure()
             self._setup_parameters()
+            self.facet.strips.generate()
             self._resize_panels()
 
             # Drawing
@@ -247,6 +248,7 @@ class ggplot:
         with plot_context(self):
             self._build()
             self._setup_parameters()
+            self.facet.strips.generate()
             self._draw_layers()
             self._draw_breaks_and_labels()
             self._draw_legend()
@@ -345,6 +347,7 @@ class ggplot:
             figure=self.figure,
             axs=self.axs
         )
+        self.facet.initialise_strips()
 
         # layout
         self.layout.axs = self.axs
@@ -391,15 +394,15 @@ class ggplot:
         """
         Draw breaks and labels
         """
-        # Decorate the axes
-        #   - xaxis & yaxis breaks, labels, limits, ...
-        #   - facet labels a.k.a strip text
+        # 1. Draw facet labels a.k.a strip text
+        # 2. Decorate the axes
+        #      - xaxis & yaxis breaks, labels, limits, ...
         #
         # pidx is the panel index (location left to right, top to bottom)
+        self.facet.strips.draw()
         for pidx, layout_info in self.layout.layout.iterrows():
             ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
-            self.facet.draw_label(layout_info, ax)
             self.facet.set_limits_breaks_and_labels(panel_params, ax)
 
             # Remove unnecessary ticks and labels
@@ -443,8 +446,8 @@ class ggplot:
         with suppress(KeyError):
             strip_margin_y = get_property('strip_margin_y')
 
-        right_strip_width = self.facet.strip_size('right')
-        top_strip_height = self.facet.strip_size('top')
+        right_strip_width = self.facet.strips.breadth('right')
+        top_strip_height = self.facet.strips.breadth('top')
 
         # Other than when the legend is on the right the rest of
         # the computed x, y locations are not gauranteed not to
@@ -579,16 +582,19 @@ class ggplot:
             pad = margin.get_as('b', 'in')
 
         try:
-            strip_margin_x = get_property('strip_margin_x')
+            strip_margin_y = get_property('strip_margin_y')
         except KeyError:
-            strip_margin_x = 0
+            strip_margin_y = 0
 
-        line_size = fontsize / 72.27
+        dpi = 72.27
+        line_size = fontsize / dpi
         num_lines = len(title.split('\n'))
         title_size = line_size * linespacing * num_lines
-        strip_height = self.facet.strip_size('top')
+        strip_height = self.facet.strips.breadth('top')
+        # strip_height = 5.820833333333334
+        # print(strip_height)
         # vertical adjustment
-        strip_height *= (1 + strip_margin_x)
+        strip_height *= (1 + strip_margin_y)
 
         x = 0.5
         y = top + (strip_height+title_size/2+pad)/H

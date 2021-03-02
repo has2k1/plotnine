@@ -5,6 +5,7 @@ from ..utils import match, join_keys
 from ..exceptions import PlotnineError
 from .facet import facet, layout_null, combine_vars, add_missing_facets
 from .facet import eval_facet_vars
+from .strips import strip
 
 
 class facet_grid(facet):
@@ -222,33 +223,17 @@ class facet_grid(facet):
         hspace = spacing_y/h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
 
-    def draw_label(self, layout_info, ax):
-        """
-        Draw facet label onto the axes.
-
-        This function will only draw labels if they are needed.
-
-        Parameters
-        ----------
-        layout_info : dict-like
-            Layout information. Row from the `layout` table.
-        ax : axes
-            Axes to label
-        """
+    def make_ax_strips(self, layout_info, ax):
+        lst = []
         toprow = layout_info['ROW'] == 1
         rightcol = layout_info['COL'] == self.ncol
-
         if toprow and len(self.cols):
-            label_info = layout_info[list(self.cols)]
-            label_info._meta = {'dimension': 'cols'}
-            label_info = self.labeller(label_info)
-            self.draw_strip_text(label_info, 'top', ax)
-
+            s = strip(self.cols, layout_info, self, ax, 'top')
+            lst.append(s)
         if rightcol and len(self.rows):
-            label_info = layout_info[list(self.rows)]
-            label_info._meta = {'dimension': 'rows'}
-            label_info = self.labeller(label_info)
-            self.draw_strip_text(label_info, 'right', ax)
+            s = strip(self.rows, layout_info, self, ax, 'right')
+            lst.append(s)
+        return lst
 
 
 def parse_grid_facets(facets):
