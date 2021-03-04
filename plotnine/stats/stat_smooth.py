@@ -76,6 +76,10 @@ class stat_smooth(stat):
                     data['ymax'] = high
 
                 return data
+
+        For *loess* smoothing you must install the `scikit-misc` package.
+        You can install it using with ``pip install scikit-misc`` or
+        ``pip install plotnine[all]``.
     formula : formula_like
         An object that can be used to construct a patsy design matrix.
         This is usually a string. You can only use a formula if ``method``
