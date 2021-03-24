@@ -3,7 +3,8 @@ Changelog
 
 v0.8.0
 ------
-(not-yet-released)
+(2021-03-24)
+
 
 API Changes
 ***********
