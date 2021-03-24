@@ -36,7 +36,7 @@ if on_rtd:
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = '3.0.0'
+needs_sphinx = '3.3.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -75,7 +75,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'plotnine'
-copyright = '2020, Hassan Kibirige'
+copyright = '2021, Hassan Kibirige'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -336,7 +336,7 @@ texinfo_documents = [
 epub_title = 'plotnine'
 epub_author = 'Hassan Kibirige'
 epub_publisher = 'Hassan Kibirige'
-epub_copyright = '2020, Hassan Kibirige'
+epub_copyright = '2021, Hassan Kibirige'
 
 # The basename for the epub file. It defaults to the project name.
 # epub_basename = 'plotnine'
