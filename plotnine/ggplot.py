@@ -276,8 +276,9 @@ class ggplot:
         # Update the label information for the plot
         layers.update_labels(self)
 
-        # Give each layer a copy of the data and the mappings
-        layers.prepare(self)
+        # Give each layer a copy of the data, the mappings and
+        # the execution environment
+        layers.setup(self)
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
