@@ -5,6 +5,9 @@ v0.8.0
 ------
 (2021-03-24)
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg
+   :target: https://doi.org/10.5281/zenodo.4636791
+
 
 API Changes
 ***********
@@ -87,6 +90,9 @@ v0.7.1
 ------
 (2020-08-05)
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3973626.svg
+   :target: https://doi.org/10.5281/zenodo.3973626
+
 Bug Fixes
 *********
 
@@ -104,6 +110,10 @@ Bug Fixes
 v0.7.0
 ------
 (2020-06-05)
+
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg
+   :target: https://doi.org/10.5281/zenodo.3878645
+
 
 API Changes
 ***********
