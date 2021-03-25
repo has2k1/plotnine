@@ -48,11 +48,9 @@ class Layers(list):
     def data(self):
         return [l.data for l in self]
 
-    def prepare(self, plot):
+    def setup(self, plot):
         for l in self:
-            l.make_layer_data(plot.data)
-            l.make_layer_mapping(plot.mapping)
-            l.make_layer_environments(plot.environment)
+            l.setup(plot)
 
     def setup_data(self):
         for l in self:
@@ -218,7 +216,17 @@ class layer:
 
         return result
 
-    def make_layer_data(self, plot_data):
+    def setup(self, plot):
+        """
+        Prepare layer for the plot building
+
+        Give the layer access to the data, mapping and environment
+        """
+        self._make_layer_data(plot.data)
+        self._make_layer_mapping(plot.mapping)
+        self._make_layer_environments(plot.environment)
+
+    def _make_layer_data(self, plot_data):
         """
         Generate data to be used by this layer
 
@@ -251,7 +259,7 @@ class layer:
         else:
             self.data = self.data.copy()
 
-    def make_layer_mapping(self, plot_mapping):
+    def _make_layer_mapping(self, plot_mapping):
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -278,7 +286,7 @@ class layer:
                 group = f'"{group}"'
             self.mapping['group'] = stage(start=group)
 
-    def make_layer_environments(self, plot_environment):
+    def _make_layer_environments(self, plot_environment):
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -428,7 +436,6 @@ class layer:
         """
         Prepare/modify data for plotting
         """
-        # params = self.stat.setup_params(self.data)
         self.stat.finish_layer(self.data, self.stat.params)
 
 
