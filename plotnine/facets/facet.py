@@ -15,7 +15,7 @@ from ..scales.scales import Scales
 # For default matplotlib backend
 with suppress(ImportError):
     from matplotlib.ticker import locale, FixedFormatter
-	from matplotlib.gridspec import GridSpec
+    from matplotlib.gridspec import GridSpec
 
 
 class facet:
@@ -91,8 +91,8 @@ class facet:
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
                  drop=True, dir='h',
-				 height_ratios = None, 
-				 width_ratios = None):
+                 height_ratios = None, 
+                 width_ratios = None):
         from .labelling import as_labeller
         self.shrink = shrink
         self.labeller = as_labeller(labeller)
