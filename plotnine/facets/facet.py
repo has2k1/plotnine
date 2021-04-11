@@ -15,6 +15,7 @@ from ..scales.scales import Scales
 # For default matplotlib backend
 with suppress(ImportError):
     from matplotlib.ticker import locale, FixedFormatter
+	from matplotlib.gridspec import GridSpec
 
 
 class facet:
@@ -47,6 +48,10 @@ class facet:
     dir : str in ``['h', 'v']``
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
+    height_ratios: for example [2, 1]
+        list of heights (relative ratio) for each vertical row in facet
+    width_ratios: for example [1, 1]
+        list of widths (relative ratio) for each horizontal column in facet
     """
     #: number of columns
     ncol = None
@@ -85,7 +90,9 @@ class facet:
 
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
-                 drop=True, dir='h'):
+                 drop=True, dir='h',
+				 height_ratios = None, 
+				 width_ratios = None):
         from .labelling import as_labeller
         self.shrink = shrink
         self.labeller = as_labeller(labeller)
@@ -94,6 +101,8 @@ class facet:
         self.dir = dir
         self.free = {'x': scales in ('free_x', 'free'),
                      'y': scales in ('free_y', 'free')}
+        self.height_ratios = height_ratios
+        self.width_ratios = width_ratios
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)
@@ -327,11 +336,18 @@ class facet:
         num_panels = len(layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
 
+        if self.height_ratios is None:
+            self.height_ratios = [1 for x in range(self.nrow)]
+        if self.width_ratios is None:
+            self.width_ratios = [1 for x in range(self.ncol)]
+
+        gs = GridSpec(self.nrow, self.ncol, height_ratios=self.height_ratios, width_ratios=self.width_ratios)
+
         # Create axes
         i = 1
         for row in range(self.nrow):
             for col in range(self.ncol):
-                axsarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
+                axsarr[row, col] = fig.add_subplot(gs[i - 1])
                 i += 1
 
         # Rearrange axes
