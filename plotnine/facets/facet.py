@@ -91,8 +91,8 @@ class facet:
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
                  drop=True, dir='h',
-                 height_ratios = None, 
-                 width_ratios = None):
+                 height_ratios=None, 
+                 width_ratios=None):
         from .labelling import as_labeller
         self.shrink = shrink
         self.labeller = as_labeller(labeller)
@@ -341,7 +341,10 @@ class facet:
         if self.width_ratios is None:
             self.width_ratios = [1 for x in range(self.ncol)]
 
-        gs = GridSpec(self.nrow, self.ncol, height_ratios=self.height_ratios, width_ratios=self.width_ratios)
+        gs = GridSpec(
+            self.nrow, self.ncol,
+            height_ratios=self.height_ratios,
+            width_ratios=self.width_ratios)
 
         # Create axes
         i = 1
