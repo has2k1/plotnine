@@ -4,7 +4,7 @@ import pytest
 
 from plotnine import ggplot, aes, geom_point, facet_grid, facet_wrap
 from plotnine import geom_abline, annotate
-from plotnine.data import mpg
+from plotnine.data import mpg, mtcars
 from plotnine.exceptions import PlotnineWarning
 
 n = 10
@@ -133,6 +133,14 @@ def test_facet_grid_drop_false():
          + facet_grid('drv ~ .', drop=False)
          )
     assert p == 'facet_grid_drop_false'
+
+
+def test_facet_grid_space_ratios():
+    p = (ggplot(mtcars, aes('wt', 'mpg'))
+         + geom_point()
+         + facet_grid('am ~ vs', space={'y': [1, 2], 'x': [1, 2]})
+         )
+    assert p == 'facet_grid_space_ratios'
 
 
 # Edge cases

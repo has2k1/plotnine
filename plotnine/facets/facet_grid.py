@@ -38,11 +38,27 @@ class facet_grid(facet):
         to vary according to the data along rows or columns.
         Default is ``'fixed'``, the same scales for all the
         panels.
-    space : str in ``['fixed', 'free', 'free_x', 'free_y']``
-        Whether the ``x`` or ``y`` sides of the panels
-        should have the size. It also depends to the
-        ``scales`` parameter. Default is ``'fixed'``.
-        This setting is not yet supported.
+    space : str | dict
+        Control the size of the  ``x`` or ``y`` sides of the panels.
+        The size also depends to the ``scales`` parameter.
+
+        If a string, it should be one of
+        ``['fixed', 'free', 'free_x', 'free_y']``. Currently, only the
+        ``'fixed'`` option is supported.
+
+        Alternatively if a ``dict``, it indicates the relative facet
+        size ratios such as::
+
+            ``{'x': [1, 2], 'y': [3, 1, 1]}``
+
+        This means that in the horizontal direction, the second panel
+        will be twice the length of the first. In the vertical direction
+        the top facet will be the 3 times longer then the second and
+        third facets.
+
+        Note that the number of dimensions in the list must equal the
+        number of facets that will be produced.
+
     shrink : bool
         Whether to shrink the scales to the output of the
         statistics instead of the raw data. Default is ``True``.
@@ -65,13 +81,18 @@ class facet_grid(facet):
     def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',
                  as_table=True, drop=True):
+
         facet.__init__(
             self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop)
+            as_table=as_table, drop=drop
+        )
+        self.space = space
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
-        self.space_free = {'x': space in ('free_x', 'free'),
-                           'y': space in ('free_y', 'free')}
+        self.space_free = {
+            'x': isinstance(space, str) and space in ('free_x', 'free'),
+            'y': isinstance(space, str) and space in ('free_y', 'free')
+        }
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
 

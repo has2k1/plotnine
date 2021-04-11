@@ -16,6 +16,7 @@ from ..scales.scales import Scales
 # For default matplotlib backend
 with suppress(ImportError):
     from matplotlib.ticker import locale, FixedFormatter
+    from matplotlib.gridspec import GridSpec
 
 
 class facet:
@@ -48,6 +49,10 @@ class facet:
     dir : str in ``['h', 'v']``
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
+    height_ratios: for example [2, 1]
+        list of heights (relative ratio) for each vertical row in facet
+    width_ratios: for example [1, 1]
+        list of widths (relative ratio) for each horizontal column in facet
     """
     #: number of columns
     ncol = None
@@ -83,6 +88,10 @@ class facet:
     plot = None
     # Facet strips
     strips = None
+    # Control the relative size of multiple facets
+    # Use a subclass to change the default.
+    # See: facet_grid for an example
+    space = 'fixed'
 
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
@@ -327,12 +336,48 @@ class facet:
         """
         num_panels = len(layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
+        space = self.space
+        default_space = {
+            'x': [1 for x in range(self.ncol)],
+            'y': [1 for x in range(self.nrow)],
+        }
+
+        if isinstance(space, str):
+            if space == 'fixed':
+                space = default_space
+            # TODO: Implement 'free', 'free_x' & 'free_y'
+            else:
+                space = default_space
+        elif isinstance(space, dict):
+            if 'x' not in space:
+                space['x'] = default_space['x']
+            if 'y' not in space:
+                space['y'] = default_space['y']
+
+        if len(space['x']) != self.ncol:
+            raise ValueError(
+                "The number of x-ratios for the facet space sizes "
+                "should match the number of columns."
+            )
+
+        if len(space['y']) != self.nrow:
+            raise ValueError(
+                "The number of y-ratios for the facet space sizes "
+                "should match the number of rows."
+            )
+
+        gs = GridSpec(
+            self.nrow,
+            self.ncol,
+            height_ratios=space['y'],
+            width_ratios=space['x']
+        )
 
         # Create axes
         i = 1
         for row in range(self.nrow):
             for col in range(self.ncol):
-                axsarr[row, col] = fig.add_subplot(self.nrow, self.ncol, i)
+                axsarr[row, col] = fig.add_subplot(gs[i - 1])
                 i += 1
 
         # Rearrange axes
