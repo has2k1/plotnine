@@ -68,11 +68,11 @@ class facet_grid(facet):
 
     def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',
-                 as_table=True, drop=True, 
+                 as_table=True, drop=True,
                  height_ratios=None, width_ratios=None):
         facet.__init__(
             self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop, 
+            as_table=as_table, drop=drop,
             height_ratios=height_ratios, width_ratios=width_ratios)
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins

@@ -91,7 +91,7 @@ class facet:
     def __init__(self, scales='fixed', shrink=True,
                  labeller='label_value', as_table=True,
                  drop=True, dir='h',
-                 height_ratios=None, 
+                 height_ratios=None,
                  width_ratios=None):
         from .labelling import as_labeller
         self.shrink = shrink
