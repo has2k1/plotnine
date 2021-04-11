@@ -56,6 +56,10 @@ New Features
   :class:`~plotnine.layer.Layer`. You can use it to rasterize any layer
   when the resulting plot is of vector format e.g. ``pdf``.
 
+- Using the ``space`` parameter, :class:`~plotnine.facets.facet_grid`
+  gained the ability to have rows and columns of panels of different
+  sizes.
+
 Bug Fixes
 *********
 
