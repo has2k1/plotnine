@@ -45,6 +45,13 @@ class stat_count(stat):
     DEFAULT_AES = {'y': after_stat('count')}
     CREATES = {'count', 'prop'}
 
+    def setup_params(self, data):
+        params = self.params.copy()
+        if params['width'] is None:
+            params['width'] = resolution(data['x'], False) * 0.9
+
+        return params
+
     @classmethod
     def compute_group(cls, data, scales, **params):
         x = data['x']
@@ -54,8 +61,6 @@ class stat_count(stat):
 
         weight = data.get('weight', np.ones(len(x), dtype=int))
         width = params['width']
-        if width is None:
-            width = resolution(x, False) * 0.9
         df = pd.DataFrame({'weight': weight, 'x': x})
         # weighted frequency count
         count = df.pivot_table(
