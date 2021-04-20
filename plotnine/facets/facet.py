@@ -1,11 +1,12 @@
-from copy import deepcopy, copy
 import itertools
+import types
+from copy import deepcopy, copy
 from contextlib import suppress
 from warnings import warn
 
 import numpy as np
 import pandas as pd
-import types
+import pandas.api.types as pdtypes
 
 from .strips import strips
 from ..utils import cross_join, match
@@ -458,8 +459,13 @@ def unique_combs(df):
     Return data frame with all possible combinations
     of the values in the columns
     """
+    def _unique(s):
+        if isinstance(s.dtype, pdtypes.CategoricalDtype):
+            return s.cat.categories
+        return s.unique()
+
     # List of unique values from every column
-    lst = (x.unique() for x in (df[c] for c in df))
+    lst = (_unique(x) for _, x in df.iteritems())
     rows = list(itertools.product(*lst))
     _df = pd.DataFrame(rows, columns=df.columns)
 
