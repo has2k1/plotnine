@@ -124,6 +124,17 @@ def test_facet_grid_scales_free_x():
     assert p == 'facet_grid_scales_free_x'
 
 
+def test_facet_grid_drop_false():
+    df = mpg.copy()
+    df['drv'] = pd.Categorical(df['drv'], ['4', 'f', 'r', 'Q'])
+
+    p = (ggplot(df, aes(x='displ', y='hwy'))
+         + geom_point()
+         + facet_grid('drv ~ .', drop=False)
+         )
+    assert p == 'facet_grid_drop_false'
+
+
 # Edge cases
 
 def test_non_mapped_facetting():

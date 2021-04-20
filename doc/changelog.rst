@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.8.1
+------
+(*not-yet-released*)
+
+Bug Fixes
+*********
+
+- Fixed bug in :class:`~plotnine.facets.facet_grid` and
+  :class:`~plotnine.facets.facet_wrap` where the ``drop`` parameter was
+  ignored. :issue:`510`
+
 v0.8.0
 ------
 (2021-03-24)
