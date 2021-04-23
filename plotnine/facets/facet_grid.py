@@ -39,10 +39,37 @@ class facet_grid(facet):
         Default is ``'fixed'``, the same scales for all the
         panels.
     space : str in ``['fixed', 'free', 'free_x', 'free_y']``
-        Whether the ``x`` or ``y`` sides of the panels
+        indicating whether the ``x`` or ``y`` sides of the panels
         should have the size. It also depends to the
-        ``scales`` parameter. Default is ``'fixed'``.
-        This setting is not yet supported.
+        ``scales`` parameter.
+
+        Alternatively a map indicating relative facet size ratios
+        such as::
+
+            ``{'x': [2,1], 'y': [1,1]}``.
+
+        may be indicated.  Currently only the relative
+        facet size designation is supported, otherwise defaults
+        to ``'fixed'``.
+
+        Relative size works as follows, assuming have n x m
+        facets, the relative size of each facet in the vertical
+        and/or horizontal direction can be indicated.  For
+        example if have three rows of facets in the vertical
+        direction and want to make the top facet 3x larger than
+        the bottom two, would indicate::
+
+            ``{'y': [3,1,1]}``
+
+        If also want to size the horizontal facets, say (2 facets)
+        where the 2nd facet is 2x as large as the 1st, in addition to
+        the vertical sizing above::
+
+            ``{'x': [1,2], 'y': [3,1,1]}``
+
+        Note that the number of dimensions in the list must equal the
+        number of facets that will be produced.
+
     shrink : bool
         Whether to shrink the scales to the output of the
         statistics instead of the raw data. Default is ``True``.
@@ -68,16 +95,19 @@ class facet_grid(facet):
 
     def __init__(self, facets, margins=False, scales='fixed',
                  space='fixed', shrink=True, labeller='label_value',
-                 as_table=True, drop=True,
-                 height_ratios=None, width_ratios=None):
+                 as_table=True, drop=True):
+
+        height_ratios = space["y"] if isinstance(space,dict) and "y" in space else None
+        width_ratios = space["x"] if isinstance(space,dict) and "x" in space else None
+
         facet.__init__(
             self, scales=scales, shrink=shrink, labeller=labeller,
             as_table=as_table, drop=drop,
             height_ratios=height_ratios, width_ratios=width_ratios)
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
-        self.space_free = {'x': space in ('free_x', 'free'),
-                           'y': space in ('free_y', 'free')}
+        self.space_free = {'x': isinstance(space,str) and space in ('free_x', 'free'),
+                           'y': isinstance(space,str) and space in ('free_y', 'free')}
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
 
