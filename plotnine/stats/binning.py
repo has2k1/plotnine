@@ -32,7 +32,7 @@ def freedman_diaconis_bins(a):
     else:
         bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)
 
-    return np.int(bins)
+    return int(bins)
 
 
 def breaks_from_binwidth(x_range, binwidth=None, center=None,
@@ -262,7 +262,7 @@ def fuzzybreaks(scale, breaks=None, boundary=None,
         boundary = round_any(srange[0], binwidth, np.floor)
 
     if recompute_bins:
-        bins = np.int(np.ceil((srange[1]-boundary)/binwidth))
+        bins = int(np.ceil((srange[1]-boundary)/binwidth))
 
     # To minimise precision errors, we do not pass the boundary and
     # binwidth into np.arange as params. The resulting breaks
