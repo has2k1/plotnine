@@ -144,6 +144,7 @@ def compute_density(x, weight, range, **params):
     not_nan = ~np.isnan(x)
     x = x[not_nan]
     bw = params['bw']
+    kernel = params['kernel']
     n = len(x)
 
     if n == 0 or (n == 1 and isinstance(bw, str)):
@@ -155,32 +156,35 @@ def compute_density(x, weight, range, **params):
              PlotnineWarning)
         return pd.DataFrame()
 
-    if weight is None:
-        weight = np.ones(n) / n
-    else:
-        weight = np.asarray(weight, dtype=float)
-
     # kde is computed efficiently using fft. But the fft does
     # not support weights and is only available with the
     # gaussian kernel. When weights are relevant we
     # turn off the fft.
-    if params['kernel'] == 'gau' and weight is None:
+    if weight is None:
+        if kernel != 'gau':
+            weight = np.ones(n) / n
+    else:
+        weight = np.asarray(weight, dtype=float)
+
+    if kernel == 'gau' and weight is None:
         fft = True
     else:
         fft = False
 
     if bw == 'nrd0':
         bw = nrd0(x)
+
     kde = sm.nonparametric.KDEUnivariate(x)
     kde.fit(
-        kernel=params['kernel'],
+        kernel=kernel,
         bw=bw,
         fft=fft,
         weights=weight,
         adjust=params['adjust'],
         cut=params['cut'],
         gridsize=params['gridsize'],
-        clip=params['clip'])
+        clip=params['clip']
+    )
 
     x2 = np.linspace(range[0], range[1], params['n'])
 
