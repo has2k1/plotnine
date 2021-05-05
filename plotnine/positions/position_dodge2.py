@@ -29,14 +29,25 @@ class position_dodge2(position_dodge):
         Padding between elements at the same position.
         Elements are shrunk by this proportion to allow space
         between them (Default: 0.1)
+    reverse : bool
+        Reverse the default ordering of the groups. This is
+        useful if you're rotating both the plot and legend.
+        (Default: False)
     """
     REQUIRED_AES = {'x'}
 
-    def __init__(self, width=None, preserve='total', padding=0.1):
+    def __init__(
+        self,
+        width=None,
+        preserve='total',
+        padding=0.1,
+        reverse=False
+    ):
         self.params = {
             'width': width,
             'preserve': preserve,
-            'padding': padding
+            'padding': padding,
+            'reverse': reverse
         }
 
     def setup_params(self, data):
