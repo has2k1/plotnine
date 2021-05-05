@@ -12,6 +12,12 @@ Bug Fixes
   :class:`~plotnine.facets.facet_wrap` where the ``drop`` parameter was
   ignored. :issue:`510`
 
+Enhancements
+************
+
+- :class:`~plotnine.stats.stat_density` now uses a fast computation path
+  for gaussian densities with no weights. This was probably a regression.
+
 v0.8.0
 ------
 (2021-03-24)
