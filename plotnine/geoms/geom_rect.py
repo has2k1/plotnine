@@ -53,11 +53,11 @@ class geom_rect(geom):
             verts[i] = [(l, b), (l, t), (r, t), (r, b)]
 
         fill = to_rgba(data['fill'], data['alpha'])
-        color = data['color']
 
         # prevent unnecessary borders
-        if all(color.isnull()):
+        if all(data['color'].isnull()):
             color = 'none'
+        color = to_rgba(data['color'], data['alpha'])
 
         col = PolyCollection(
             verts,
