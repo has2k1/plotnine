@@ -27,6 +27,7 @@ from .geom_linerange import geom_linerange
 from .geom_map import geom_map
 from .geom_path import geom_path
 from .geom_point import geom_point
+from .geom_pointdensity import geom_pointdensity
 from .geom_pointrange import geom_pointrange
 from .geom_polygon import geom_polygon
 from .geom_qq import geom_qq
@@ -61,7 +62,7 @@ __all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin2d',
            'geom_errorbarh', 'geom_freqpoly', 'geom_histogram',
            'geom_hline', 'geom_jitter', 'geom_label', 'geom_line',
            'geom_linerange', 'geom_map', 'geom_path', 'geom_point',
-           'geom_pointrange', 'geom_pointrange',
+           'geom_pointdensity', 'geom_pointrange',
            'geom_quantile', 'geom_qq', 'geom_qq_line',
            'geom_polygon', 'geom_raster', 'geom_rect',
            'geom_ribbon', 'geom_rug', 'geom_segment', 'geom_sina',
