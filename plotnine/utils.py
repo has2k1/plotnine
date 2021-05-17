@@ -1016,7 +1016,7 @@ def order_as_mapping_data(*args):
         if data is None or isinstance(data, aes):
             mapping, data = data, mapping
 
-    if mapping and not isinstance(mapping, aes):
+    if mapping is not None and not isinstance(mapping, aes):
         raise TypeError(
             "Unknown argument type {!r}, expected mapping/aes."
             .format(type(mapping))
