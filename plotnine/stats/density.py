@@ -120,12 +120,45 @@ def kde_sklearn(data, grid, **kwargs):
     return np.exp(log_pdf)
 
 
+def kde_count(data, grid, **kwargs):
+    """
+    Kernel Density Estimation via count within radius
+
+    Parameters
+    ----------
+    data : numpy.array
+        Data points used to compute a density estimator. It
+        has `n x p` dimensions, representing n points and p
+        variables.
+    grid : numpy.array
+        Data points at which the desity will be estimated. It
+        has `m x p` dimensions, representing m points and p
+        variables.
+
+    Returns
+    -------
+    out : numpy.array
+        Density estimate. Has `m x 1` dimensions
+    """
+    r = kwargs.get('radius', np.ptp(data) / 10)
+
+    # Get the number of data points within the radius r of each grid point
+    iter = (np.sum(np.linalg.norm(data - g, axis=1) < r) for g in grid)
+    count = np.fromiter(iter, float, count=data.shape[0])
+
+    # Get fraction of data within radius
+    density = count / data.shape[0]
+
+    return density
+
+
 KDE_FUNCS = {
     'statsmodels-u': kde_statsmodels_u,
     'statsmodels-m': kde_statsmodels_m,
     'scipy': kde_scipy,
     'scikit-learn': kde_sklearn,
-    'sklearn': kde_sklearn
+    'sklearn': kde_sklearn,
+    'count': kde_count
 }
 
 
