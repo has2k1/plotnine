@@ -10,6 +10,7 @@ from .stat_ellipse import stat_ellipse
 from .stat_function import stat_function
 from .stat_hull import stat_hull
 from .stat_identity import stat_identity
+from .stat_pointdensity import stat_pointdensity
 from .stat_qq import stat_qq
 from .stat_qq_line import stat_qq_line
 from .stat_quantile import stat_quantile
@@ -28,7 +29,7 @@ __all__ = ['stat_count', 'stat_bin',
            'stat_density', 'stat_ecdf',
            'stat_ellipse', 'stat_density_2d',
            'stat_function', 'stat_hull',
-           'stat_identity',
+           'stat_identity', 'stat_pointdensity',
            'stat_qq', 'stat_qq_line',
            'stat_quantile',
            'stat_sina',
