@@ -49,10 +49,6 @@ class facet:
     dir : str in ``['h', 'v']``
         Direction in which to layout the panels. ``h`` for
         horizontal and ``v`` for vertical.
-    height_ratios: for example [2, 1]
-        list of heights (relative ratio) for each vertical row in facet
-    width_ratios: for example [1, 1]
-        list of widths (relative ratio) for each horizontal column in facet
     """
     #: number of columns
     ncol = None
