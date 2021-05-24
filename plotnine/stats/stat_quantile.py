@@ -20,7 +20,7 @@ class stat_quantile(stat):
     Parameters
     ----------
     {common_parameters}
-    quatiles : tuple, optional (default: (0.25, 0.5, 0.75))
+    quantiles : tuple, optional (default: (0.25, 0.5, 0.75))
         Quantiles of y to compute
     formula : str, optional (default: 'y ~ x')
         Formula relating y variables to x variables
