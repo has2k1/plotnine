@@ -170,7 +170,8 @@ class theme:
 
         # Themeables
         official_themeables = themeable.registry()
-        it = ((name, element) for name, element in locals().items()
+        locals_args = dict(locals())
+        it = ((name, element) for name, element in locals_args.items()
               if element is not None and name in official_themeables)
         new = themeable.from_class_name
 
