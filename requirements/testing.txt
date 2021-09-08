@@ -1,0 +1,10 @@
+scipy
+pandas
+statsmodels
+scikit-learn
+geopandas
+pytest-cov
+matplotlib
+scikit-misc
+adjustText
+pyshp
