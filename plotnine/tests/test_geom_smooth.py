@@ -3,8 +3,8 @@ import pandas as pd
 import pytest
 import statsmodels.api as sm
 
-
 from plotnine import ggplot, aes, geom_point, geom_smooth, stat_smooth
+from plotnine import coord_trans
 from plotnine.exceptions import PlotnineWarning
 
 
@@ -33,6 +33,13 @@ df_discrete_x = pd.DataFrame({
 df_continuous_x = pd.DataFrame({
     'x': np.arange(1, 21) + .2,
     'y': range(1, 21)})
+
+# linear relationship, values greater than zero
+n = 10
+x = np.arange(1, 1+n)
+y = x + 11
+y_noisy = y + random_state.rand(n)
+df_linear_gtz = pd.DataFrame({'x': x, 'y': y, 'y_noisy': y_noisy})
 
 
 def test_linear_smooth():
@@ -110,6 +117,16 @@ def test_continuous_x_fullrange():
          )
 
     assert p == 'continuous_x_fullrange'
+
+
+def test_coord_trans_se_false():
+    # scatter plot with LM fit using log-log coordinates
+    p = (ggplot(df_linear_gtz, aes(x='x', y='y_noisy'))
+         + geom_point()
+         + coord_trans(x='log10', y='log10')
+         + geom_smooth(method='lm', se=False)
+         )
+    assert p == 'coord_trans_se_false'
 
 
 class TestOther:
@@ -195,6 +212,7 @@ random_state = np.random.RandomState(123)
 mu = 0
 sigma = 0.065
 noise = random_state.randn(n)*sigma + mu
+x = np.linspace(-2*np.pi, 2*np.pi, n)
 df = pd.DataFrame({
     'x': x,
     'y': np.sin(x) + noise,

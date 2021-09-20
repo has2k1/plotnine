@@ -18,6 +18,11 @@ Bug Fixes
   :class:`~plotnine.facets.facet_wrap` where the ``drop`` parameter was
   ignored. :issue:`510`
 
+- Fixed bug in :class:`~plotnine.geoms.geom_smooth` where using a
+  coordinate transformation without computing the standard error
+  led to a crash. :issue:`526`
+
+
 Enhancements
 ************
 

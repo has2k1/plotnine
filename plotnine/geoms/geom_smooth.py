@@ -29,14 +29,24 @@ class geom_smooth(geom):
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity',
                       'na_rm': False, 'legend_fill_ratio': 0.5}
 
+    def use_defaults(self, data, aes_modifiers):
+        has_ribbon = 'ymin' in data and 'ymax' in data
+        data = super().use_defaults(data, aes_modifiers)
+
+        # When there is no ribbon, the default values for 'ymin'
+        # and 'ymax' are None (not numeric). So we remove them
+        # prevent any computations that may use them without checking.
+        if not has_ribbon:
+            del data['ymin']
+            del data['ymax']
+        return data
+
     def setup_data(self, data):
         return data.sort_values(['PANEL', 'group', 'x'])
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
-        _loc = data.columns.get_loc
-        has_ribbon = (data.iloc[0, _loc('ymin')] is not None and
-                      data.iloc[0, _loc('ymax')] is not None)
+        has_ribbon = 'ymin' in data and 'ymax' in data
         if has_ribbon:
             data2 = data.copy()
             data2['color'] = None
