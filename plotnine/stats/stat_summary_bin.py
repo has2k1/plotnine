@@ -3,7 +3,7 @@ import pandas as pd
 
 from ..utils import groupby_apply
 from ..doctools import document
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineWarning
 from ..scales.scale import scale_discrete
 from .binning import fuzzybreaks
 from .stat_summary import make_summary_fun
@@ -38,16 +38,14 @@ class stat_summary_bin(stat):
         data. At most one of center and boundary may be specified.
     fun_data : str or function, optional
         One of
-        :py:`['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow']`
-        or any function that takes a array and returns a dataframe
-        with three rows indexed as ``y``, ``ymin`` and ``ymax``.
-        Defaults to :py:`'mean_cl_boot'`.
+        :py:`['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow',
+        'mean_se']` or any function that takes a array and returns a
+        dataframe with three rows indexed as ``y``, ``ymin`` and ``ymax``.
+        Defaults to :py:`'mean_se'`.
     fun_y : function, optional (default: None)
-        Any function that takes a array-like and returns a value
-        fun_ymin : function (default:None)
-        Any function that takes an array-like and returns a value
+        Any function that takes an array-like and returns a single value
     fun_ymax : function, optional (default: None)
-        Any function that takes an array-like and returns a value
+        Any function that takes an array-like and returns a single value
     fun_args : dict, optional (default: None)
         Arguments to any of the functions. Provided the names of the
         arguments of the different functions are in not conflict, the
@@ -97,7 +95,10 @@ class stat_summary_bin(stat):
     def setup_params(self, data):
         keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
         if not any(self.params[k] for k in keys):
-            raise PlotnineError('No summary function')
+            PlotnineWarning(
+                "No summary function, supplied, defaulting to mean_se()"
+            )
+            self.params['fun_data'] = 'mean_se'
 
         if self.params['fun_args'] is None:
             self.params['fun_args'] = {}
