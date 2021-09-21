@@ -64,7 +64,13 @@ def test_annotation_logticks_coord_flip():
 
 
 def test_annotation_logticks_coord_flip_discrete():
-    df2 = df.assign(discrete=pd.Categorical(['A' + str(a) for a in df['x']]))
+    df = pd.DataFrame({'x': 10.**(np.arange(4) - 1)})
+    df2 = df.assign(
+            discrete=pd.Categorical(['A' + str(int(a)) for a in df['x']]))
+    # the range on the 'A' range is 0..1,
+    # but 0.1..100 on the y
+    # to verify we are using the correct range for the log ticks
+    df2 = df2.drop(df2.index[1:3])
     p = (ggplot(df2, aes('discrete', 'x'))
          + annotation_logticks(sides='l', size=.75)
          + geom_point()
@@ -79,7 +85,13 @@ def test_annotation_logticks_coord_flip_discrete():
 
 
 def test_annotation_logticks_coord_flip_discrete_bottom():
-    df2 = df.assign(discrete=pd.Categorical(['A' + str(a) for a in df['x']]))
+    df = pd.DataFrame({'x': 10.**(np.arange(4) - 1)})
+    df2 = df.assign(
+            discrete=pd.Categorical(['A' + str(int(a)) for a in df['x']]))
+    # the range on the 'A' range is 0..1,
+    # but 0.1..100 on the y
+    # to verify we are using the correct range for the log ticks
+    df2 = df2.drop(df2.index[1:3])
     p = (ggplot(df2, aes('x', 'discrete'))
          + annotation_logticks(sides='b', size=.75)
          + geom_point()
