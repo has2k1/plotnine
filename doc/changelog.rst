@@ -22,6 +22,8 @@ Bug Fixes
   coordinate transformation without computing the standard error
   led to a crash. :issue:`526`
 
+- Fix legend for :class:`~plotnine.geoms.geom_map` so that the entries
+  have the same stroke and points on the map. :issue:`534`
 
 Enhancements
 ************
