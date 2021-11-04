@@ -15,6 +15,7 @@ from ..exceptions import PlotnineError
 from ..utils import to_rgba, SIZE_FACTOR
 from .geom import geom
 from .geom_point import geom_point
+from .geom_polygon import geom_polygon
 
 
 @document
@@ -150,3 +151,22 @@ class geom_map(geom):
             ax.add_collection(coll)
         else:
             raise TypeError(f"Could not plot geometry of type '{geom_type}'")
+
+    @staticmethod
+    def draw_legend(data, da, lyr):
+        """
+        Draw a rectangle in the box
+
+        Parameters
+        ----------
+        data : dataframe
+        da : DrawingArea
+        lyr : layer
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        data['size'] = data['stroke']
+        del data['stroke']
+        return geom_polygon.draw_legend(data, da, lyr)
