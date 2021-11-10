@@ -112,7 +112,7 @@ class aes(dict):
     mapped.
 
         1. ``factor`` - This function turns the variable into a factor.
-            It is just an alias to ``pd.Caterogical``::
+            It is just an alias to ``pd.Categorical``::
 
                 ggplot(mtcars, aes(x='factor(cyl)')) + geom_bar()
 
