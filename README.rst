@@ -81,7 +81,9 @@ Building a complex plot piece by piece.
 
    .. figure:: ./doc/images/readme-image-4.png
 
-5. Make it playful
+5. Adjust the themes
+
+5.1 Make it playful
 
    .. code:: python
 
@@ -92,6 +94,18 @@ Building a complex plot piece by piece.
         + theme_xkcd())
 
    .. figure:: ./doc/images/readme-image-5.png
+
+5.2 Or professional
+
+   .. code:: python
+
+       (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+        + geom_point()
+        + stat_smooth(method='lm')
+        + facet_wrap('~gear')
+        + theme_tufte())
+
+   .. figure:: ./doc/images/readme-image-5alt.png
 
 
 Installation
