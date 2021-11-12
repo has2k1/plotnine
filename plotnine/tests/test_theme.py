@@ -143,6 +143,11 @@ class TestThemes:
 
         assert p + _theme == 'theme_minimal'
 
+    def test_theme_tufte(self):
+        p = self.g + labs(title='Theme Tufte') + theme_tufte()
+
+        assert p + _theme == 'theme_tufte'
+
     def test_theme_seaborn(self):
         p = self.g + labs(title='Theme Seaborn') + theme_seaborn()
 
