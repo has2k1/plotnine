@@ -25,6 +25,9 @@ Bug Fixes
 - Fix legend for :class:`~plotnine.geoms.geom_map` so that the entries
   have the same stroke and points on the map. :issue:`534`
 
+- Fix :class:`~plotnine.geoms.geom_history` for some cases when it fails
+  to automatically determine the number of bins. :issue:`543`
+
 Enhancements
 ************
 

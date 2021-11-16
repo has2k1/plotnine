@@ -4,6 +4,7 @@ import pandas as pd
 from plotnine import ggplot, aes, geom_bar, geom_col, geom_histogram
 from plotnine import after_stat, theme, scale_x_sqrt, geom_text
 from plotnine.tests import layer_data
+from plotnine.stats.binning import freedman_diaconis_bins
 
 
 n = 10  # Some even number greater than 2
@@ -68,3 +69,12 @@ def test_stat_count_float():
          )
 
     assert p + _theme == 'stat-count-float'
+
+
+def test_freedman_diaconis_bins():
+    a1 = np.arange(1, 98, dtype=float)
+    a2 = np.arange(100, dtype=float)
+    a2[[0, 99]] = np.nan
+    iqr1 = freedman_diaconis_bins(a1)
+    iqr2 = freedman_diaconis_bins(a2)
+    assert iqr1 == iqr2

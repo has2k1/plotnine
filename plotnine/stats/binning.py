@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from scipy.stats import iqr
 from mizani.utils import round_any
 
 from ..scales.scale import scale_discrete
@@ -10,21 +11,13 @@ __all__ = ['freedman_diaconis_bins', 'breaks_from_bins',
            'fuzzybreaks']
 
 
-def iqr(a):
-    """
-    Calculate the IQR for an array of numbers.
-    """
-    q1, q3 = np.percentile(a, [25, 75])
-    return q3 - q1
-
-
 def freedman_diaconis_bins(a):
     """
     Calculate number of hist bins using Freedman-Diaconis rule.
     """
     # From http://stats.stackexchange.com/questions/798/
     a = np.asarray(a)
-    h = 2 * iqr(a) / (len(a) ** (1 / 3))
+    h = 2 * iqr(a, nan_policy='omit') / (len(a) ** (1 / 3))
 
     # fall back to sqrt(a) bins if iqr is 0
     if h == 0:
