@@ -93,6 +93,36 @@ def test_add_element_blank():
     assert th3.apply.__name__ == 'apply'
 
 
+def test_element_line_dashed_capstyle():
+    p = (
+        ggplot(mtcars, aes(x="wt", y="mpg"))
+        + theme(
+            panel_grid=element_line(
+                linetype="dashed",
+                lineend="butt",
+                size=1.0,
+            )
+        )
+    )
+    # no exception
+    p._build()
+
+
+def test_element_line_solid_capstyle():
+    p = (
+        ggplot(mtcars, aes(x="wt", y="mpg"))
+        + theme(
+            panel_grid=element_line(
+                linetype="solid",
+                lineend="butt",
+                size=1.0,
+            )
+        )
+    )
+    # no exception
+    p._build()
+
+
 class TestThemes:
     g = (ggplot(mtcars, aes(x='wt', y='mpg', color='factor(gear)'))
          + geom_point()

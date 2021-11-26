@@ -41,7 +41,7 @@ class element_line:
         if linetype in ('solid', '-') and lineend:
             d['solid_capstyle'] = lineend
         elif linetype and lineend:
-            d['dashed_capstyle'] = lineend
+            d['dash_capstyle'] = lineend
 
         d.update(**kwargs)
         self.properties = d
