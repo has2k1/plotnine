@@ -444,6 +444,7 @@ Themes control the visual appearance of the non-data elements the plot.
    theme_seaborn
    theme_void
    theme_xkcd
+   theme_tufte
 
 .. _themeables:
 
