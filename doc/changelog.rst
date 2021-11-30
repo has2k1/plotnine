@@ -11,6 +11,8 @@ New Features
 - :class:`~plotnine.positions.position_dodge2` gained the ability to reverse
   the order of the plotted groups. :issue:`515`
 
+- Added :class:`~plotnine.themes.theme_tufte`.
+
 Bug Fixes
 *********
 
