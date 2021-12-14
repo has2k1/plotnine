@@ -136,7 +136,6 @@ class facet_wrap(facet):
         # assign each point to a panel
         keys = join_keys(facet_vals, layout, self.vars)
         data['PANEL'] = match(keys['x'], keys['y'], start=1)
-        data = data.sort_values('PANEL', kind='mergesort')
 
         # matching dtype
         data['PANEL'] = pd.Categorical(

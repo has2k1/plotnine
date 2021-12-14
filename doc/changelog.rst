@@ -24,11 +24,15 @@ Bug Fixes
   coordinate transformation without computing the standard error
   led to a crash. :issue:`526`
 
-- Fix legend for :class:`~plotnine.geoms.geom_map` so that the entries
+- Fixed legend for :class:`~plotnine.geoms.geom_map` so that the entries
   have the same stroke and points on the map. :issue:`534`
 
-- Fix :class:`~plotnine.geoms.geom_history` for some cases when it fails
+- Fixed :class:`~plotnine.geoms.geom_history` for some cases when it fails
   to automatically determine the number of bins. :issue:`543`
+
+- Fixed :class:`~plotnine.facets.facet_grid` and
+  :class:`~plotnine.facets.facet_wrap` when mapping to lists/arrays/series
+  so that the rows mapped this way are not mixed up. :issue:`548`
 
 Enhancements
 ************
