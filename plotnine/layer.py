@@ -308,7 +308,8 @@ class layer:
         else:
             evaled['PANEL'] = self.data['PANEL']
 
-        self.data = add_group(evaled)
+        data = add_group(evaled)
+        self.data = data.sort_values('PANEL', kind='mergesort')
 
     def compute_statistic(self, layout):
         """
