@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_bin2d, theme, scale_x_log10
+from plotnine import ggplot, aes, geom_bin_2d, theme, scale_x_log10
 from plotnine.tests import layer_data
 
 n = 20  # Make even for best results
@@ -17,12 +17,12 @@ _theme = theme(subplots_adjust={'right': 0.85})
 
 
 def test_drop_true():
-    p = ggplot(df, aes('x', 'y')) + geom_bin2d(binwidth=2, drop=True)
+    p = ggplot(df, aes('x', 'y')) + geom_bin_2d(binwidth=2, drop=True)
     assert p + _theme == 'drop_true'
 
 
 def test_drop_false():
-    p = ggplot(df, aes('x', 'y')) + geom_bin2d(binwidth=2, drop=False)
+    p = ggplot(df, aes('x', 'y')) + geom_bin_2d(binwidth=2, drop=False)
     assert p + _theme == 'drop_false'
 
 
@@ -32,7 +32,7 @@ def test_scale_transformed_breaks():
         'y': range(4)
     })
     p = (ggplot(df, aes('x', 'y'))
-         + geom_bin2d(breaks=([5, 50, 500], [0.5, 1.5, 2.5]))
+         + geom_bin_2d(breaks=([5, 50, 500], [0.5, 1.5, 2.5]))
          )
     out1 = layer_data(p)
     out2 = layer_data(p + scale_x_log10())

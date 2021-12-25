@@ -78,7 +78,7 @@ distinct visual aspects of the representation are controlled by the
    geom_errorbar
    geom_errorbarh
    geom_freqpoly
-   geom_bin2d
+   geom_bin_2d
    geom_histogram
    geom_hline
    geom_jitter
