@@ -3,7 +3,7 @@ from .geom_rect import geom_rect
 
 
 @document
-class geom_bin2d(geom_rect):
+class geom_bin_2d(geom_rect):
     """
     Heatmap of 2d bin counts
 
@@ -21,3 +21,6 @@ class geom_bin2d(geom_rect):
     """
     DEFAULT_PARAMS = {'stat': 'bin_2d', 'position': 'identity',
                       'na_rm': False}
+
+
+geom_bin2d = geom_bin_2d
