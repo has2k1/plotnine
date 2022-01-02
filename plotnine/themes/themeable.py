@@ -547,6 +547,30 @@ class plot_title(themeable):
             text.set_visible(False)
 
 
+class caption(themeable):
+    """
+    Plot caption
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+    def apply_figure(self, figure):
+        super(caption, self).apply_figure(figure)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties['margin']
+        with suppress(KeyError):
+            text = figure._themeable['caption']
+            text.set(**properties)
+
+    def blank_figure(self, figure):
+        super(caption, self).blank_figure(figure)
+        with suppress(KeyError):
+            text = figure._themeable['caption']
+            text.set_visible(False)
+
+
 class strip_text_x(themeable):
     """
     Facet labels along the horizontal axis

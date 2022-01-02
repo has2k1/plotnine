@@ -215,6 +215,7 @@ class ggplot:
             self._draw_breaks_and_labels()
             self._draw_legend()
             self._draw_title()
+            self._draw_caption()
             self._draw_watermarks()
 
             # Artist object theming
@@ -601,6 +602,46 @@ class ggplot:
 
         text = figure.text(x, y, title, ha='center', va='center')
         figure._themeable['plot_title'] = text
+
+    def _draw_caption(self):
+        """
+        Draw caption onto the figure
+        """
+        # This is very laboured. Should be changed when MPL
+        # finally has a constraint based layout manager.
+        figure = self.figure
+        caption = self.labels.get('caption', '')
+        get_property = self.theme.themeables.property
+
+        # Pick suitable values in inches and convert them to
+        # transFigure dimension. This gives fixed spacing
+        # margins which work for oblong plots.
+        right = figure.subplotpars.right
+        W, H = figure.get_size_inches()
+
+        try:
+            margin = get_property('caption', 'margin')
+        except KeyError:
+            top_pad = 0.09
+            right_pad = 0
+        else:
+            right_pad = margin.get_as('r', 'in')
+            top_pad = margin.get_as('t', 'in')
+
+        try:
+            strip_margin_x = get_property('strip_margin_x')
+        except KeyError:
+            strip_margin_x = 0
+
+        strip_width = self.facet.strips.breadth('right')
+        strip_width *= (1 + strip_margin_x)
+
+        x = right - (right_pad+strip_width)/W
+        y = 0 - top_pad/H
+
+        text = figure.text(x, y, caption, ha='right', va='center')
+
+        figure._themeable['caption'] = text
 
     def _draw_watermarks(self):
         """

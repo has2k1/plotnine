@@ -31,10 +31,11 @@ def test_labels():
     assert gg.labels['y'] == 'ylab'
     assert gg.labels['title'] == 'title'
 
-    gg = gg + labs(x='xlab2', y='ylab2', title='title2')
+    gg = gg + labs(x='xlab2', y='ylab2', title='title2', caption='caption2')
     assert gg.labels['x'] == 'xlab2'
     assert gg.labels['y'] == 'ylab2'
     assert gg.labels['title'] == 'title2'
+    assert gg.labels['caption'] == 'caption2'
 
     with pytest.raises(PlotnineError):
         gg = gg + xlab(None)
