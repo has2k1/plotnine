@@ -118,6 +118,7 @@ class theme_gray(theme):
                                     margin={'b': half_line*1.2,
                                             'units': 'pt'}),
             plot_margin=None,
+            caption=element_text(size=base_size*0.9),
 
             complete=True)
 
