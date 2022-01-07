@@ -45,6 +45,10 @@ class stat_bin_2d(stat):
 
     ::
 
+        'xmin'    # x lower bound for the bin
+        'xmax'    # x upper bound for the bin
+        'ymin'    # y lower bound for the bin
+        'ymax'    # y upper bound for the bin
         'count'   # number of points in bin
         'density' # density of points in bin, scaled to integrate to 1
 
