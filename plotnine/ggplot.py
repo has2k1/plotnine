@@ -602,7 +602,7 @@ class ggplot:
         strip_height *= (1 + strip_margin_y)
 
         if ha == 'left':
-            x = 0.12
+            x = 0.125
         elif ha == 'right':
             x = 0.9
         else:
