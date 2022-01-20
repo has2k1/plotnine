@@ -53,9 +53,7 @@ class scale_position_discrete(scale_discrete):
         if self.range is None:
             return True
 
-        return (self.range.range is None and
-                self._limits is None and
-                self.range_c.range is None)
+        return (self.range.range is None is self._limits and self.range_c.range is None)
 
     def train(self, series):
         # The discrete position scale is capable of doing
