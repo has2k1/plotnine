@@ -46,7 +46,7 @@ class ggplot:
         Default aesthetics for the plot. These will be used
         by all layers unless specifically overridden.
     data :  dataframe
-        Default data for for plot. Every layer that does not
+        Default data for plot. Every layer that does not
         have data of its own will use this one.
     environment : dict, ~patsy.Eval.EvalEnvironment
         If a variable defined in the aesthetic mapping is not
