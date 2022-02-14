@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 sphinxext.examples_and_gallery
 
@@ -110,7 +109,7 @@ class GalleryEntry:
         """
         # No empty tooltips
         if self.description:
-            tooltip = 'tooltip="{}"'.format(self.description)
+            tooltip = f'tooltip="{self.description}"'
         else:
             tooltip = ''
 
@@ -143,7 +142,7 @@ class GalleryEntryExtractor:
 
     @property
     def htmlfilename(self):
-        return '{}.html'.format(self.docname)
+        return f'{self.docname}.html'
 
     def thumbfilename(self, imgfilename_rst):
         """
@@ -247,14 +246,14 @@ class GalleryEntryExtractor:
                 yield GalleryEntry(
                     title=section_title,
                     section_id=section_id,
-                    html_link='{}#{}'.format(self.htmlfilename, section_id),
+                    html_link=f'{self.htmlfilename}#{section_id}',
                     thumbnail=self.make_thumbnail(image_filename),
                     description=description)
 
 
 def get_rstfilename(nbfilename):
     objname = nbfilename.rstrip('.ipynb')
-    return '{}/{}_examples.txt'.format(RST_PATH, objname)
+    return f'{RST_PATH}/{objname}_examples.txt'
 
 
 def notebook_to_rst(nbfilename):
@@ -272,7 +271,7 @@ def notebook_to_rst(nbfilename):
     }
 
     # Read notebook
-    with open(nbfilepath, 'r') as f:
+    with open(nbfilepath) as f:
         nb = nbformat.read(f, as_version=4)
 
     # Export

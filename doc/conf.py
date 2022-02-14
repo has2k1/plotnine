@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # plotnine documentation build configuration file, created by
 # sphinx-quickstart on Wed Dec 23 22:32:29 2015.
@@ -25,7 +24,7 @@ sys.path.insert(0, CUR_PATH)
 sys.path.insert(0, PROJECT_PATH)
 
 if on_rtd:
-    import mock
+    from unittest import mock
     from pprint import pprint
     MOCK_MODULES = []
     for mod_name in MOCK_MODULES:

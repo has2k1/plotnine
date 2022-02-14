@@ -81,11 +81,11 @@ class geom(metaclass=Registry):
             klass = name
         elif is_string(name):
             if not name.startswith('geom_'):
-                name = 'geom_{}'.format(name)
+                name = f'geom_{name}'
             klass = Registry[name]
         else:
             raise PlotnineError(
-                'Unknown geom of type {}'.format(type(name)))
+                f'Unknown geom of type {type(name)}')
 
         return klass(stat=stat, **stat._kwargs)
 

@@ -18,7 +18,7 @@ def sequential_filenames():
     Generate filenames for the tests
     """
     for i in range(100):
-        yield 'filename-{}.png'.format(i)
+        yield f'filename-{i}.png'
 
 
 filename_gen = sequential_filenames()
@@ -26,7 +26,7 @@ filename_gen = sequential_filenames()
 
 def assert_file_exist(filename, msg=None):
     if not msg:
-        msg = "File {} does not exist".format(filename)
+        msg = f"File {filename} does not exist"
     assert os.path.exists(filename), msg
 
 

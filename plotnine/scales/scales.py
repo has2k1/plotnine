@@ -269,7 +269,7 @@ class Scales(list):
         aesthetics = set(aesthetics) - set(self.input())
 
         for ae in aesthetics:
-            scale_name = 'scale_{}_continuous'.format(ae)
+            scale_name = f'scale_{ae}_continuous'
             scale_f = Registry[scale_name]
             self.append(scale_f())
 
@@ -310,6 +310,6 @@ def make_scale(ae, series, *args, **kwargs):
         with suppress(KeyError):
             del kwargs['trans']
 
-    scale_name = 'scale_{}_{}'.format(ae, stype)
+    scale_name = f'scale_{ae}_{stype}'
     scale_klass = Registry[scale_name]
     return scale_klass(*args, **kwargs)

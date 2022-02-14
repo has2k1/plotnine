@@ -256,7 +256,7 @@ def parse_wrap_facets(facets):
 
     if '~' in facets:
         variables_pattern = r'(\w+(?:\s*\+\s*\w+)*|\.)'
-        pattern = r'\s*~\s*{0}\s*'.format(variables_pattern)
+        pattern = fr'\s*~\s*{variables_pattern}\s*'
         match = re.match(pattern, facets)
         if not match:
             raise PlotnineError(error_msg)

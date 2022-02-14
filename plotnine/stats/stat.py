@@ -86,11 +86,11 @@ class stat(metaclass=Registry):
             klass = name
         elif is_string(name):
             if not name.startswith('stat_'):
-                name = 'stat_{}'.format(name)
+                name = f'stat_{name}'
             klass = Registry[name]
         else:
             raise PlotnineError(
-                'Unknown stat of type {}'.format(type(name)))
+                f'Unknown stat of type {type(name)}')
 
         valid_kwargs = (
              (klass.aesthetics() |
