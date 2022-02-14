@@ -61,7 +61,7 @@ class stat_function(stat):
             range_x = xlim or scales.x.dimension((0, 0))
         except AttributeError:
             raise PlotnineError(
-                "Missing 'x' aesthetic and 'xlim' is {}".format(xlim))
+                f"Missing 'x' aesthetic and 'xlim' is {xlim}")
 
         if not callable(fun):
             raise PlotnineError(

@@ -24,7 +24,7 @@ test_theme = theme(figure_size=(640/DPI, 480/DPI))
 
 if not os.path.exists(os.path.join(
         os.path.dirname(__file__), 'baseline_images')):
-    raise IOError(
+    raise OSError(
         "The baseline image directory does not exist. "
         "This is most likely because the test data is not installed. "
         "You may need to install plotnine from source to get the "
@@ -32,7 +32,7 @@ if not os.path.exists(os.path.join(
 
 
 def raise_no_baseline_image(filename):
-    raise Exception("Baseline image {} is missing".format(filename))
+    raise Exception(f"Baseline image {filename} is missing")
 
 
 def ggplot_equals(gg, right):
@@ -219,10 +219,10 @@ def _setup():
     # The baseline images are created in this locale, so we should use
     # it during all of the tests.
     try:
-        locale.setlocale(locale.LC_ALL, str('en_US.UTF-8'))
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     except locale.Error:
         try:
-            locale.setlocale(locale.LC_ALL, str('English_United States.1252'))
+            locale.setlocale(locale.LC_ALL, 'English_United States.1252')
         except locale.Error:
             warnings.warn(
                 "Could not set locale to English/United States. "

@@ -23,7 +23,7 @@ def get(name):
         return getattr(stats, name)
     except AttributeError:
         raise PlotnineError(
-            "Unknown distribution '{}'".format(name))
+            f"Unknown distribution '{name}'")
 
 
 def get_continuous_distribution(name):

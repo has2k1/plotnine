@@ -63,10 +63,10 @@ def _polylinem_file(test_file):
 
 
 def test_geometries(tmpdir):
-    point_file = '{}/test_file_point.shp'.format(tmpdir)
-    polygon_file = '{}/test_file_polygon.shp'.format(tmpdir)
-    polyline_file = '{}/test_file_polyline.shp'.format(tmpdir)
-    polylinem_file = '{}/test_file_polylinem.shp'.format(tmpdir)
+    point_file = f'{tmpdir}/test_file_point.shp'
+    polygon_file = f'{tmpdir}/test_file_polygon.shp'
+    polyline_file = f'{tmpdir}/test_file_polyline.shp'
+    polylinem_file = f'{tmpdir}/test_file_polylinem.shp'
 
     _point_file(point_file)
     _polygon_file(polygon_file)
@@ -91,7 +91,7 @@ def test_geometries(tmpdir):
 
 
 def test_facet_wrap(tmpdir):
-    polygon_file = '{}/test_file_polygon.shp'.format(tmpdir)
+    polygon_file = f'{tmpdir}/test_file_polygon.shp'
     _polygon_file(polygon_file)
 
     df_polygon = GeoDataFrame.from_file(polygon_file)
