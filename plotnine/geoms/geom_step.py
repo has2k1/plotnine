@@ -59,7 +59,7 @@ class geom_step(geom_path):
             new_y = y[yidx]
         else:
             raise PlotnineError(
-                "Invalid direction `{}`".format(direction))
+                f"Invalid direction `{direction}`")
 
         df = pd.DataFrame({'x': new_x, 'y': new_y})
         copy_missing_columns(df, data)

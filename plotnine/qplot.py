@@ -170,7 +170,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     # Add geoms
     for g in geom:
-        geom_name = 'geom_{}'.format(g)
+        geom_name = f'geom_{g}'
         geom_klass = Registry[geom_name]
         stat_name = 'stat_{}'.format(geom_klass.DEFAULT_PARAMS['stat'])
         stat_klass = Registry[stat_name]

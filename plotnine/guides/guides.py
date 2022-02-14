@@ -215,11 +215,11 @@ class guides(dict):
         Validate guide object
         """
         if is_string(guide):
-            guide = Registry['guide_{}'.format(guide)]()
+            guide = Registry[f'guide_{guide}']()
 
         if not isinstance(guide, guide_class):
             raise PlotnineError(
-                "Unknown guide: {}".format(guide))
+                f"Unknown guide: {guide}")
         return guide
 
     def merge(self, gdefs):

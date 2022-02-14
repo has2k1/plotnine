@@ -168,8 +168,8 @@ def dict_to_table(header, contents):
         # code highlighting
         if value != '':
             if isinstance(value, str):
-                value = "'{}'".format(value)
-            value = ':py:`{}`'.format(value)
+                value = f"'{value}'"
+            value = f':py:`{value}`'
         rows.append((name, value))
 
     n = np.max([len(header[0])] +
@@ -195,8 +195,8 @@ def make_signature(name, params, common_params, common_param_values):
 
     def tokens_append(key, value):
         if isinstance(value, str):
-            value = "'{}'".format(value)
-        tokens.append('{}={}'.format(key, value))
+            value = f"'{value}'"
+        tokens.append(f'{key}={value}')
 
     # preferred params come first
     for key in common_params:
@@ -407,7 +407,7 @@ def document_geom(geom):
 
     # aesthetics
     contents = {
-        '**{}**'.format(ae): ''
+        f'**{ae}**': ''
         for ae in sorted(geom.REQUIRED_AES)
     }
     if geom.DEFAULT_AES:
@@ -459,7 +459,7 @@ def document_stat(stat):
 
     # aesthetics
     contents = {
-        '**{}**'.format(ae): ''
+        f'**{ae}**': ''
         for ae in sorted(stat.REQUIRED_AES)
     }
     contents.update(sorted(stat.DEFAULT_AES.items()))

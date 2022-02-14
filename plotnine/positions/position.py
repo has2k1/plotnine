@@ -130,11 +130,11 @@ class position(metaclass=Registry):
             klass = name
         elif is_string(name):
             if not name.startswith('position_'):
-                name = 'position_{}'.format(name)
+                name = f'position_{name}'
             klass = Registry[name]
         else:
             raise PlotnineError(
-                'Unknown position of type {}'.format(type(name)))
+                f'Unknown position of type {type(name)}')
 
         return klass()
 

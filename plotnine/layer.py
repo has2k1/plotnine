@@ -19,10 +19,10 @@ class Layers(list):
     """
 
     def __iadd__(self, other):
-        return Layers(super(Layers, self).__iadd__(other))
+        return Layers(super().__iadd__(other))
 
     def __add__(self, other):
-        return Layers(super(Layers, self).__add__(other))
+        return Layers(super().__add__(other))
 
     def __radd__(self, other, inplace=False):
         """
@@ -39,7 +39,7 @@ class Layers(list):
         return other
 
     def __getitem__(self, key):
-        result = super(Layers, self).__getitem__(key)
+        result = super().__getitem__(key)
         if not isinstance(key, int):
             result = Layers(result)
         return result

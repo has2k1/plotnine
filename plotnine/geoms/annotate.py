@@ -68,9 +68,9 @@ class annotate:
             info_tokens.append((ae, len(val)))
 
         if len(set(lengths)) > 1:
-            details = ', '.join(['{} ({})'.format(n, l)
+            details = ', '.join([f'{n} ({l})'
                                  for n, l in info_tokens])
-            msg = 'Unequal parameter lengths: {}'.format(details)
+            msg = f'Unequal parameter lengths: {details}'
             raise PlotnineError(msg)
 
         # Stop pandas from complaining about all scalars
@@ -81,7 +81,7 @@ class annotate:
 
         data = pd.DataFrame(position)
         if isinstance(geom, str):
-            geom = Registry['geom_{}'.format(geom)]
+            geom = Registry[f'geom_{geom}']
         elif not (isinstance(geom, type) and
                   issubclass(geom, geom_base_class)):
             raise PlotnineError(

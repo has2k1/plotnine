@@ -49,7 +49,7 @@ class annotation_stripes(annotate):
         allowed = ('vertical', 'horizontal')
         if direction not in allowed:
             raise ValueError(
-                "direction must be one of {}".format(allowed))
+                f"direction must be one of {allowed}")
         self._annotation_geom = _geom_stripes(
             fill=fill, fill_range=fill_range, extend=extend,
             direction=direction, **kwargs)

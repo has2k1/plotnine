@@ -140,7 +140,7 @@ class guide_legend(guide):
             if hasattr(layer.geom, 'draw_legend'):
                 geom = layer.geom.__class__
             else:
-                name = 'geom_{}'.format(layer.geom.legend_geom)
+                name = f'geom_{layer.geom.legend_geom}'
                 geom = Registry[name]
             return geom
 
@@ -180,7 +180,7 @@ class guide_legend(guide):
             data = remove_missing(
                 data, l.geom.params['na_rm'],
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
-                '{} legend'.format(l.geom.__class__.__name__))
+                f'{l.geom.__class__.__name__} legend')
             self.glayers.append(
                 types.SimpleNamespace(geom=geom, data=data, layer=l))
         if not self.glayers:

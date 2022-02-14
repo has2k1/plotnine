@@ -111,7 +111,7 @@ def run(show_browser=True):
                 # A real failure in the image generation, resulting in
                 # different images.
                 status = '<br />(failed)'
-                failed = '<a href="{0}">diff</a>'.format(test['f'])
+                failed = '<a href="{}">diff</a>'.format(test['f'])
                 current = linked_image_template.format(actual_image)
                 failed_rows.append(row_template.format(name, '', current,
                                                        expected_image, failed))
@@ -152,7 +152,7 @@ def run(show_browser=True):
             show_message = True
 
     if show_message:
-        print("Open {} in a browser for a visual comparison.".format(index))
+        print(f"Open {index} in a browser for a visual comparison.")
 
 
 if __name__ == '__main__':

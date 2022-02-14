@@ -122,7 +122,7 @@ class geom_text(geom):
 
         # Parse latex
         if parse:
-            data['label'] = ['${}$'.format(l) for l in data['label']]
+            data['label'] = [f'${l}$' for l in data['label']]
 
         return data
 

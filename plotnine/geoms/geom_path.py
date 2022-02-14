@@ -259,8 +259,8 @@ class arrow:
             if first:
                 x1, x2 = data['x'].iloc[0:2]
                 y1, y2 = data['y'].iloc[0:2]
-                x1, y1, x2, y2 = [np.array([i])
-                                  for i in (x1, y1, x2, y2)]
+                x1, y1, x2, y2 = (np.array([i])
+                                  for i in (x1, y1, x2, y2))
                 paths = self.get_paths(x1, y1, x2, y2,
                                        panel_params, coord, ax)
                 patch = mpatches.PathPatch(paths[0], **d)
@@ -270,8 +270,8 @@ class arrow:
                 x1, x2 = data['x'].iloc[-2:]
                 y1, y2 = data['y'].iloc[-2:]
                 x1, y1, x2, y2 = x2, y2, x1, y1
-                x1, y1, x2, y2 = [np.array([i])
-                                  for i in (x1, y1, x2, y2)]
+                x1, y1, x2, y2 = (np.array([i])
+                                  for i in (x1, y1, x2, y2))
                 paths = self.get_paths(x1, y1, x2, y2,
                                        panel_params, coord, ax)
                 patch = mpatches.PathPatch(paths[0], **d)

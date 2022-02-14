@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 from copy import deepcopy
@@ -626,7 +625,7 @@ class ggplot:
             Extension e.g. png, pdf, ...
         """
         hash_token = abs(self.__hash__())
-        return 'plotnine-save-{}.{}'.format(hash_token, ext)
+        return f'plotnine-save-{hash_token}.{ext}'
 
     def _update_labels(self, layer):
         """
@@ -716,10 +715,10 @@ class ggplot:
                 "dimensions, use 'limitsize=False'.".format(width, height))
 
         if verbose:
-            warn("Saving {0} x {1} {2} image.".format(
+            warn("Saving {} x {} {} image.".format(
                  from_inches(width, units),
                  from_inches(height, units), units), PlotnineWarning)
-            warn('Filename: {}'.format(filename), PlotnineWarning)
+            warn(f'Filename: {filename}', PlotnineWarning)
 
         if dpi is not None:
             self.theme = self.theme + theme(dpi=dpi)
@@ -817,7 +816,7 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
         filename = os.path.join(path, filename)
 
     if verbose:
-        warn('Filename: {}'.format(filename), PlotnineWarning)
+        warn(f'Filename: {filename}', PlotnineWarning)
 
     with PdfPages(filename) as pdf:
         # Re-add the first element to the iterator, if it was removed

@@ -16,7 +16,7 @@ class MapTrainMixin:
         if self.guide is None:
             return
 
-        return super(MapTrainMixin, self).train(x)
+        return super().train(x)
 
 
 @document

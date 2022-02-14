@@ -703,7 +703,7 @@ class ColoredDrawingArea(DrawingArea):
     def __init__(self, width, height, xdescent=0.0, ydescent=0.0,
                  clip=True, color='none'):
 
-        super(ColoredDrawingArea, self).__init__(
+        super().__init__(
             width, height, xdescent, ydescent, clip=clip)
 
         self.patch = Rectangle((0, 0), width=width,
@@ -788,7 +788,7 @@ class Registry(type, metaclass=RegistryMeta):
     _registry = WeakValueDictionary()
 
     def __new__(meta, name, bases, clsdict):
-        cls = super(Registry, meta).__new__(meta, name, bases, clsdict)
+        cls = super().__new__(meta, name, bases, clsdict)
         if not clsdict.pop('__base__', False):
             meta._registry[name] = cls
             if 'alias' in clsdict:
@@ -931,12 +931,12 @@ def data_mapping_as_kwargs(args, kwargs):
     # check args #
     if mapping is not None and not isinstance(mapping, aes):
         raise PlotnineError(
-            "Unknown mapping of type {}".format(type(mapping))
+            f"Unknown mapping of type {type(mapping)}"
         )
 
     if data is not None and not isinstance(data, pd.DataFrame):
         raise PlotnineError(
-            "Unknown data of type {}".format(type(mapping))
+            f"Unknown data of type {type(mapping)}"
         )
 
     # check kwargs #
@@ -1121,7 +1121,7 @@ def to_inches(value, units):
     try:
         return lookup[units](value)
     except KeyError:
-        raise PlotnineError("Unknown units '{}'".format(units))
+        raise PlotnineError(f"Unknown units '{units}'")
 
 
 def from_inches(value, units):
@@ -1142,7 +1142,7 @@ def from_inches(value, units):
     try:
         return lookup[units](value)
     except KeyError:
-        raise PlotnineError("Unknown units '{}'".format(units))
+        raise PlotnineError(f"Unknown units '{units}'")
 
 
 class array_kind:

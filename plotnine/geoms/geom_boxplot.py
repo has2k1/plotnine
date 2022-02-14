@@ -156,7 +156,7 @@ class geom_boxplot(geom):
         num_outliers = len(data['outliers'].iloc[0])
         if num_outliers:
             def outlier_value(param):
-                oparam = 'outlier_{}'.format(param)
+                oparam = f'outlier_{param}'
                 if params[oparam] is not None:
                     return params[oparam]
                 return data[param].iloc[0]

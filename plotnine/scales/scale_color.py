@@ -415,7 +415,7 @@ class scale_color_cmap(scale_continuous):
 
     def __init__(self, cmap_name='viridis', lut=None, **kwargs):
         self.palette = cmap_pal(cmap_name, lut)
-        super(scale_color_cmap, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 @document
@@ -461,7 +461,7 @@ class scale_color_cmap_d(scale_discrete):
 
     def __init__(self, name='viridis', lut=None, **kwargs):
         self.palette = cmap_d_pal(name, lut)
-        super(scale_color_cmap_d, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 @document

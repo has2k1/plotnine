@@ -66,7 +66,7 @@ def test_labeller_towords():
 
 
 def test_aslabeller_func_hashtag():
-    func = as_labeller(lambda s: '#{}'.format(s))
+    func = as_labeller(lambda s: f'#{s}')
     p = g + facet_wrap('~ gear + am', labeller=func)
 
     assert p == 'aslabeller_func_hashtagit'

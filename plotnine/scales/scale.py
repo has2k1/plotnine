@@ -653,8 +653,8 @@ class scale_continuous(scale):
         labeling of the plot axis and the guides are in
         the original dataspace.
         """
-        limits = tuple([
-            self.trans.transform(x) if x is not None else None for x in value])
+        limits = tuple(
+            self.trans.transform(x) if x is not None else None for x in value)
         try:
             self._limits = np.sort(limits)
         except TypeError:
@@ -750,8 +750,8 @@ class scale_continuous(scale):
             # Consequences of the runtimewarning (NaNs and infs)
             # are dealt with below
             final_limits = trans.inverse(range_coord)
-        final_range = tuple([fl if np.isfinite(fl) else l
-                             for fl, l in zip(final_limits, limits)])
+        final_range = tuple(fl if np.isfinite(fl) else l
+                            for fl, l in zip(final_limits, limits))
         ranges = NS(range=final_range, range_coord=range_coord)
         return ranges
 

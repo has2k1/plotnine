@@ -32,7 +32,7 @@ def get_option(name):
 
     if name in {'get_option', 'set_option'} or name not in d:
         from ..exceptions import PlotnineError
-        raise PlotnineError("Unknown option {}".format(name))
+        raise PlotnineError(f"Unknown option {name}")
 
     return d[name]
 
@@ -57,7 +57,7 @@ def set_option(name, value):
 
     if name in {'get_option', 'set_option'} or name not in d:
         from ..exceptions import PlotnineError
-        raise PlotnineError("Unknown option {}".format(name))
+        raise PlotnineError(f"Unknown option {name}")
 
     old = d[name]
     d[name] = value
