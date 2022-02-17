@@ -41,8 +41,8 @@ class ggplot:
 
     Parameters
     ----------
-    aesthetics : aes
-        Default aesthetics for the plot. These will be used
+    mapping : aes
+        Default aesthetics mapping for the plot. These will be used
         by all layers unless specifically overridden.
     data :  dataframe
         Default data for plot. Every layer that does not
