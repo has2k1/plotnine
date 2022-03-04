@@ -136,7 +136,10 @@ class geom_map(geom):
             segments = []
             for g in data['geometry']:
                 if g.geom_type == 'LineString':
-                    segments.append(g.coords)
+                    if g.has_z:
+                        segments.append([(x, y) for x, y, _ in g.coords])
+                    else:
+                        segments.append(g.coords)
                 else:
                     segments.extend(_g.coords for _g in g.geoms)
 
