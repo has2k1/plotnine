@@ -485,7 +485,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         ].drop_duplicates()
         if not drop:
             new = unique_combs(new)
-        base = base.append(cross_join(old, new), ignore_index=True)
+        base = pd.concat(base, cross_join(old, new), ignore_index=True)
 
     if len(base) == 0:
         raise PlotnineError(

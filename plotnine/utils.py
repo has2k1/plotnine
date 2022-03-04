@@ -368,7 +368,7 @@ def join_keys(x, y, by=None):
     if isinstance(by, tuple):
         by = list(by)
 
-    joint = x[by].append(y[by], ignore_index=True)
+    joint = pd.concat([x[by], y[by]], ignore_index=True)
     keys = ninteraction(joint, drop=True)
     keys = np.asarray(keys)
     nx, ny = len(x), len(y)
