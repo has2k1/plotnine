@@ -49,12 +49,12 @@ def get_required_packages():
     Plus any version tests and warnings
     """
     install_requires = ['mizani >= 0.7.3',
-                        'matplotlib >= 3.1.1',
+                        'matplotlib >= 3.5.0',
                         'numpy >= 1.19.0',
                         'scipy >= 1.5.0',
                         'patsy >= 0.5.1',
-                        'statsmodels >= 0.12.1',
-                        'pandas >= 1.1.0',
+                        'statsmodels >= 0.13.2',
+                        'pandas >= 1.4.1',
                         # 'geopandas >= 0.3.0',
                         'descartes >= 1.1.0'
                         ]
