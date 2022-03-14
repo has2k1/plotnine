@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Packages
         shell: bash -l {0}
@@ -37,7 +37,7 @@ jobs:
           make test
           ls -la
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: result-images
@@ -63,10 +63,10 @@ jobs:
         python-version: [3.8]
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -108,10 +108,10 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
