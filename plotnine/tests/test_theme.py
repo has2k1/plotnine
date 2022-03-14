@@ -175,7 +175,7 @@ class TestThemes:
         assert p + _theme == 'theme_minimal'
 
     def test_theme_tufte(self):
-        p = self.g + labs(title='Theme Tufte') + theme_tufte()
+        p = self.g + labs(title='Theme Tufte') + theme_tufte(ticks=False)
 
         assert p + _theme == 'theme_tufte'
 
