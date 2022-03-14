@@ -9,11 +9,10 @@
 #}
 {%- extends "layout.html" %}
 {% set title = _('Search') %}
-{% set script_files = script_files + ['_static/searchtools.js'] %}
 {% block extrahead %}
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("{{ pathto('searchindex.js', 1) }}"); });
-  </script>
+  <script type="text/javascript" src="{{ pathto('_static/searchtools.js', 1) }}"></script>
+  <script type="text/javascript" src="{{ pathto('_static/language_data.js', 1) }}"></script>
+  <script type="text/javascript" src="{{ pathto('searchindex.js', 1) }}"></script>
   {# this is used when loading the search index using $.ajax fails,
      such as on Chrome for documents on localhost #}
   <script type="text/javascript" id="searchindexloader"></script>
@@ -42,7 +41,7 @@
     </div>
     <input type="submit" class="btn btn-default" value="{{ _('search') }}" />
     <span id="search-progress" style="padding-left: 10px"></span>
-  </form>  
+  </form>
   {% else %}
   <form class="form-search">
     <input type="text" class="input-medium search-query" name="q" value="" />
@@ -50,7 +49,7 @@
     <span id="search-progress" style="padding-left: 10px"></span>
   </form>
   {% endif %}
-  
+
   {% if search_performed %}
     <h2>{{ _('Search Results') }}</h2>
     {% if not search_results %}
