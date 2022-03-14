@@ -34,6 +34,10 @@ Bug Fixes
   :class:`~plotnine.facets.facet_wrap` when mapping to lists/arrays/series
   so that the rows mapped this way are not mixed up. :issue:`548`
 
+- Fixed :class:`~plotnine.stats.stat_bin_2d` not to error for
+  matplotlib >= 3.5.0 so that it does not throw a Numpy error.
+  :issue:`567`
+
 Enhancements
 ************
 
