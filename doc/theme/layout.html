@@ -1,20 +1,12 @@
 {% extends "basic/layout.html" %}
 
 {% if theme_bootstrap_version == "3" %}
-  {% set bootstrap_version, navbar_version = "3.3.7", "" %}
+  {% set bootstrap_version, navbar_version = "3.4.1", "" %}
   {% set bs_span_prefix = "col-md-" %}
 {% else %}
   {% set bootstrap_version, navbar_version = "2.3.2", "-2" %}
   {% set bs_span_prefix = "span" %}
 {% endif %}
-
-{% set script_files = script_files + [
-    '_static/js/jquery-1.11.0.min.js',
-    '_static/js/jquery-fix.js',
-    '_static/bootstrap-' + bootstrap_version + '/js/bootstrap.min.js',
-    '_static/bootstrap-sphinx.js'
-  ]
-%}
 
 {%- set render_sidebar = (not embedded) and (not theme_nosidebar|tobool) and sidebars %}
 
@@ -60,6 +52,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="{{ pathto('_static/js/jquery-1.12.4.min.js', 1) }}"></script>
+<script type="text/javascript" src="{{ pathto('_static/js/jquery-fix.js', 1) }}"></script>
+<script type="text/javascript" src="{{ pathto('_static', 1) + '/bootstrap-' + bootstrap_version + '/js/bootstrap.min.js' }}"></script>
+<script type="text/javascript" src="{{ pathto('_static/bootstrap-sphinx.js', 1) }}"></script>
 {% endblock %}
 
 {# Silence the sidebar's, relbar's #}
@@ -73,7 +69,7 @@
 <div class="container">
   <div class="row">
     {%- block sidebar1 %}{{ bsidebar() }}{% endblock %}
-    <div class="{{ bs_span_prefix }}{{ bs_content_width }} content">
+    <div class="body {{ bs_span_prefix }}{{ bs_content_width }} content" role="main">
       {% block body %}{% endblock %}
     </div>
     {% block sidebar2 %} {# possible location for sidebar #} {% endblock %}

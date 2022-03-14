@@ -12,7 +12,7 @@
 @import url("./basic.css");
 
 {% if theme_bootstrap_version == "3" %}
-  {% set bootstrap_version, bootstrap_additional_css = "3.3.7", "theme" %}
+  {% set bootstrap_version, bootstrap_additional_css = "3.4.1", "theme" %}
 {% else %}
   {% set bootstrap_version, bootstrap_additional_css = "2.3.2", "responsive" %}
 {% endif %}
