@@ -35,7 +35,6 @@ jobs:
         run: |
           coverage erase
           make test
-          ls -la
 
       - uses: actions/upload-artifact@v3
         if: failure()
