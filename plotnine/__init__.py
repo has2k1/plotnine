@@ -13,10 +13,9 @@ from .themes import *               # noqa: F401,F403,E261
 from .positions import *            # noqa: F401,F403,E261
 from .guides import *               # noqa: F401,F403,E261
 
-from ._version import get_versions
-
-__version__ = get_versions()['version']
-del get_versions
+from . import _version
+__version__ = _version.get_versions()['version']
+del _version
 
 
 def _get_all_imports():
