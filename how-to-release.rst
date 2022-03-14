@@ -22,12 +22,12 @@ Testing
 Tagging
 =======
 
-Check out the master branch, edit the changelog and add the tag
+Check out the main branch, edit the changelog and add the tag
 release date, tag with the version number & push the tags
 
   ::
 
-    git checkout master
+    git checkout main
     vim doc/changelog.rst
     git add doc/changelog.rst
     git commit -m 'Prepare changelog for release'

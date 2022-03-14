@@ -13,7 +13,7 @@ Documentation        |documentation|_
 
 .. raw:: html
 
-      <img src="https://github.com/has2k1/plotnine/blob/master/doc/images/logo-180.png" align="right"'>
+      <img src="https://github.com/has2k1/plotnine/blob/main/doc/images/logo-180.png" align="right"'>
 
 plotnine is an implementation of a *grammar of graphics* in Python,
 it is based on ggplot2_. The grammar allows users to compose plots
@@ -167,11 +167,11 @@ image comparisons.
 .. |license| image:: https://img.shields.io/pypi/l/plotnine.svg
 .. _license: https://pypi.python.org/pypi/plotnine
 
-.. |buildstatus| image:: https://github.com/has2k1/plotnine/workflows/build/badge.svg?branch=master
-.. _buildstatus: https://github.com/has2k1/plotnine/actions?query=branch%3Amaster+workflow%3A%22build%22
+.. |buildstatus| image:: https://github.com/has2k1/plotnine/workflows/build/badge.svg?branch=main
+.. _buildstatus: https://github.com/has2k1/plotnine/actions?query=branch%3Amain+workflow%3A%22build%22
 
-.. |coverage| image:: https://codecov.io /github/has2k1/plotnine/coverage.svg?branch=master
-.. _coverage: https://codecov.io/github/has2k1/plotnine?branch=master
+.. |coverage| image:: https://codecov.io /github/has2k1/plotnine/coverage.svg?branch=main
+.. _coverage: https://codecov.io/github/has2k1/plotnine?branch=main
 
 .. |documentation| image:: https://readthedocs.org/projects/plotnine/badge/?version=latest
 .. _documentation: https://plotnine.readthedocs.io/en/latest/
