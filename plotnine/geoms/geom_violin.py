@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from ..utils import groupby_apply, interleave, resolution
+from ..utils import groupby_apply, interleave, resolution, make_iterable
 from ..doctools import document
 from .geom_polygon import geom_polygon
 from .geom_path import geom_path
@@ -44,13 +44,12 @@ class geom_violin(geom):
 
     def __init__(self, *args, **kwargs):
         if 'draw_quantiles' in kwargs:
-            kwargs['draw_quantiles'] = pd.Series(kwargs['draw_quantiles'],
-                                                 dtype=float)
-            if not kwargs['draw_quantiles'].between(0, 1,
-                                                    inclusive=False).all():
+            kwargs['draw_quantiles'] = make_iterable(kwargs['draw_quantiles'])
+            if not all(0 < q < 1 for q in kwargs['draw_quantiles']):
                 raise ValueError(
-                    "draw_quantiles must be a float or"
-                    " an iterable of floats (>0.0; < 1.0)")
+                    "draw_quantiles must be a float or "
+                    "an iterable of floats (>0.0; < 1.0)"
+                )
 
         if 'style' in kwargs:
             allowed = ('full', 'left', 'right', 'left-right', 'right-left')
