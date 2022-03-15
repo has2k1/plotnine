@@ -62,7 +62,7 @@ def test_quantiles_width_dodge():
 def test_quantiles_input_checks():
     with pytest.raises(ValueError):
         geom_violin(aes('x', 'y'), draw_quantiles=True)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         geom_violin(aes('x', 'y'), draw_quantiles=["A", 0.25])
     with pytest.raises(ValueError):
         geom_violin(aes('x', 'y'), draw_quantiles=[0.25, 1.25])
@@ -71,9 +71,9 @@ def test_quantiles_input_checks():
     with pytest.raises(ValueError):
         geom_violin(aes('x', 'y'), draw_quantiles=[1.])
     g = geom_violin(aes('x', 'y'), draw_quantiles=np.array([0.25, 0.25]))
-    assert isinstance(g.params['draw_quantiles'], pd.Series)
+    assert isinstance(g.params['draw_quantiles'], np.ndarray)
     g = geom_violin(aes('x', 'y'), draw_quantiles=0.5)
-    assert isinstance(g.params['draw_quantiles'], pd.Series)
+    assert isinstance(g.params['draw_quantiles'], list)
 
 
 def test_no_trim():
