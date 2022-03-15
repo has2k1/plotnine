@@ -69,7 +69,6 @@ class geom_polygon(geom):
             edgecolors=edgecolor,
             linestyles=linestyle,
             linewidths=linewidth,
-            transOffset=ax.transData,
             zorder=params['zorder'],
             rasterized=params['raster'],
         )
