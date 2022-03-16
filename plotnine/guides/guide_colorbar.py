@@ -280,16 +280,10 @@ def add_interpolated_colorbar(da, colors, direction):
         X, Y = np.meshgrid(x, y)
         Z = X/x.max()
 
-    # As a 2D coordinates array
-    coordinates = np.zeros(
-        ((mesh_width+1)*(mesh_height+1), 2),
-        dtype=float)
-    coordinates[:, 0] = X.ravel()
-    coordinates[:, 1] = Y.ravel()
-
+    # As a 3D (mesh_width x mesh_height x 2) coordinates array
+    coordinates = np.stack([X, Y], axis=-1)
     cmap = ListedColormap(colors)
-    coll = mcoll.QuadMesh(mesh_width, mesh_height,
-                          coordinates,
+    coll = mcoll.QuadMesh(coordinates,
                           antialiased=False,
                           shading='gouraud',
                           linewidth=0,
