@@ -4,6 +4,7 @@ from shapely.geometry import (
     Point,
     Polygon,
     LineString,
+    MultiPolygon,
     MultiLineString
 )
 
@@ -51,6 +52,35 @@ def test_geometries():
          )
 
     assert p + _theme == 'geometries'
+
+
+def test_multipolygon():
+    # 2 MultiPolygon
+    # 1. 4 Solid Squares
+    # 2. 4 Squares with holes (to the upper-right of each of
+    #    the squares in 1)
+    length = 0.5
+    centers = np.array([[1, 1], [1, 2], [2, 2], [2, 1]])
+    corners = np.array([[-1, -1], [-1, 1], [1, 1], [1, -1]])
+    shift = corners * (length/2)
+    shift_holes = corners * (length/4)
+    mpolygons = [
+        MultiPolygon([(c + shift, None) for c in centers]),
+        MultiPolygon([
+            (c + length + shift, [c + length + shift_holes])
+            for c in centers
+        ])
+    ]
+    names = [f'mpolygon{i}' for i in range(len(mpolygons))]
+    df = GeoDataFrame({'name': names, 'geometry': mpolygons})
+    p = (ggplot()
+         + aes(fill='geometry.bounds.miny')
+         + geom_map(df)
+         + labs(fill='miny')
+         + theme(aspect_ratio=1)
+         )
+
+    assert p + _theme == 'multipolygon'
 
 
 def test_facet_wrap():
