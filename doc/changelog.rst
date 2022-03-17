@@ -49,6 +49,8 @@ Enhancements
 - :class:`~plotnine.stats.stat_density` now uses a fast computation path
   for gaussian densities with no weights. This was probably a regression.
 
+- :class:`~plotnine.geoms.geom_map` can now draw MultiPoints.
+
 v0.8.0
 ------
 (2021-03-24)
