@@ -131,6 +131,22 @@ class geom_map(geom):
                     ax,
                     **params
                 )
+        elif geom_type == 'MultiPoint':
+            # Where n is the length of the dataframe (no. of multipoints),
+            #       m is the number of all points in all multipoints
+            #
+            # - MultiPoint -> List of Points (tuples) (n -> m)
+            # - Explode the list, to create a dataframe were each point
+            #      is associated with the right aesthetics (n -> m)
+            # - Create x & y columns from the points (m -> m)
+            data['points'] = [
+                [p.coords[0] for p in mp.geoms]
+                for mp in data['geometry']
+            ]
+            data = data.explode('points', ignore_index=True)
+            data['x'] = [p[0] for p in data['points']]
+            data['y'] = [p[1] for p in data['points']]
+            geom_point.draw_group(data, panel_params, coord, ax, **params)
         elif geom_type in ('LineString', 'MultiLineString'):
             data['size'] *= SIZE_FACTOR
             data['color'] = to_rgba(data['color'], data['alpha'])

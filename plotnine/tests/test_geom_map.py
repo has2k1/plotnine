@@ -4,6 +4,7 @@ from shapely.geometry import (
     Point,
     Polygon,
     LineString,
+    MultiPoint,
     MultiPolygon,
     MultiLineString
 )
@@ -81,6 +82,23 @@ def test_multipolygon():
          )
 
     assert p + _theme == 'multipolygon'
+
+
+def test_multipoint():
+    mpoints = [
+        MultiPoint([[0.0, 0.0], [1.0, 1.0]]),
+        MultiPoint([[0.0, 1.0], [1.0, 2.0]])
+    ]
+
+    mpoint_names = [f'mpoint{i}' for i in range(len(mpoints))]
+    df = GeoDataFrame({'names': mpoint_names, 'geometry': mpoints})
+
+    p = (ggplot()
+         + aes(fill='geometry.bounds.miny')
+         + geom_map(df, size=5, color='None')
+         + labs(fill='miny')
+         )
+    assert p + _theme == 'multipoint'
 
 
 def test_facet_wrap():
