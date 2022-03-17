@@ -7,4 +7,3 @@ pytest-cov
 matplotlib
 scikit-misc
 adjustText
-pyshp
