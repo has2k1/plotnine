@@ -38,6 +38,11 @@ Bug Fixes
   matplotlib >= 3.5.0 so that it does not throw a Numpy error.
   :issue:`567`
 
+- Fixed :class:`~plotnine.geoms.geom_map` to be able to draw Polygons
+  with holes in them.
+
+- Fixed :class:`~plotnine.geoms.geom_map` to be able to draw MultiPolygons.
+
 Enhancements
 ************
 

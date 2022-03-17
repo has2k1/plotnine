@@ -56,7 +56,6 @@ def get_required_packages():
                         'statsmodels >= 0.13.2',
                         'pandas >= 1.4.1',
                         # 'geopandas >= 0.3.0',
-                        'descartes >= 1.1.0'
                         ]
     return install_requires
 
