@@ -1,101 +1,70 @@
 import numpy as np
-import shapefile
 from geopandas import GeoDataFrame
+from shapely.geometry import (
+    Point,
+    Polygon,
+    LineString,
+    MultiLineString
+)
 
 from plotnine import ggplot, aes, geom_map, labs, theme, facet_wrap
 
 _theme = theme(subplots_adjust={'right': 0.85})
 
 
-def _point_file(test_file):
-    with shapefile.Writer(test_file, shapefile.POINT) as shp:
-        shp.field('name', 'C')
+def test_geometries():
+    # Points
+    points = [Point(0, 0), Point(0, 1), Point(1, 1), Point(1, 0)]
+    point_names = [f'point{i}' for i in range(len(points))]
+    df_point = GeoDataFrame({'names': point_names, 'geometry': points})
 
-        shp.point(0, 0)
-        shp.record('point1')
+    # LineString
+    n = 5
+    x = np.repeat(np.linspace(0, 1, n), 2)
+    y = np.tile([0.375, 0.625], n)
+    lines = [LineString(list(zip(x, y)))]
+    df_line = GeoDataFrame({'name': ['line1'], 'geometry': lines})
 
-        shp.point(0, 1)
-        shp.record('point2')
+    # MultiLineString
+    n = 5
+    x = np.repeat(np.linspace(0, 1, n), 2)
+    y = np.tile([0.375, 0.625], n) + 1
+    line = list(zip(x, y))
+    mlines = [MultiLineString([line[:5], line[5:]])]
+    df_multiline = GeoDataFrame({'name': 'multiline1', 'geometry': mlines})
 
-        shp.point(1, 1)
-        shp.record('point3')
-
-        shp.point(1, 0)
-        shp.record('point4')
-
-
-def _polygon_file(test_file):
-    with shapefile.Writer(test_file, shapefile.POLYGON) as shp:
-        shp.field('name', 'C')
-
-        shp.poly([
-            [[.25, -.25], [.25, .25], [.75, .25], [.75, -.25]],
-        ])
-        shp.record('polygon1')
-
-        shp.poly([
-            [[.25, .75], [.75, .75], [.5, 1.25]]
-        ])
-        shp.record('polygon2')
-
-
-def _polyline_file(test_file):
-    with shapefile.Writer(test_file, shapefile.POLYLINE) as shp:
-        shp.field('name', 'C')
-
-        n = 5
-        x = np.repeat(np.linspace(0, 1, n), 2)
-        y = np.tile([0.375, 0.625], n)
-        shp.line([list(zip(x, y))])
-        shp.record('line1')
-
-
-def _polylinem_file(test_file):
-    with shapefile.Writer(test_file, shapefile.POLYLINEM) as shp:
-        shp.field('name', 'C')
-
-        n = 5
-        x = np.repeat(np.linspace(0, 1, n), 2)
-        y = np.tile([0.375, 0.625], n) + 1
-        line = list(zip(x, y))
-        shp.linem([line[:5], line[5:]])
-        shp.record('linem1')
-
-
-def test_geometries(tmpdir):
-    point_file = f'{tmpdir}/test_file_point.shp'
-    polygon_file = f'{tmpdir}/test_file_polygon.shp'
-    polyline_file = f'{tmpdir}/test_file_polyline.shp'
-    polylinem_file = f'{tmpdir}/test_file_polylinem.shp'
-
-    _point_file(point_file)
-    _polygon_file(polygon_file)
-    _polyline_file(polyline_file)
-    _polylinem_file(polylinem_file)
-
-    df_point = GeoDataFrame.from_file(point_file)
-    df_polygon = GeoDataFrame.from_file(polygon_file)
-    df_polyline = GeoDataFrame.from_file(polyline_file)
-    df_polylinem = GeoDataFrame.from_file(polylinem_file)
+    #  Polygon
+    polygons = [
+        Polygon([(.25, -.25), (.25, .25), (.75, .25), (.75, -.25)]),
+        Polygon([(.25, .75), (.75, .75), (.5, 1.25)])
+    ]
+    names = [f'polygon{i}' for i in range(len(polygons))]
+    df_polygon = GeoDataFrame({'name': names, 'geometry': polygons})
 
     p = (ggplot()
          + aes(fill='geometry.bounds.miny')
          + geom_map(df_polygon)
          + geom_map(df_point, size=4)
-         + geom_map(df_polyline, size=2)
-         + geom_map(df_polylinem, size=2)
+         + geom_map(df_line, size=2)
+         + geom_map(df_multiline, size=2)
          + labs(fill='miny')
          )
 
     assert p + _theme == 'geometries'
 
 
-def test_facet_wrap(tmpdir):
-    polygon_file = f'{tmpdir}/test_file_polygon.shp'
-    _polygon_file(polygon_file)
-
-    df_polygon = GeoDataFrame.from_file(polygon_file)
-    df_polygon['shape'] = ['rectangle', 'triangle']
+def test_facet_wrap():
+    #  Polygon
+    polygons = [
+        Polygon([(.25, -.25), (.25, .25), (.75, .25), (.75, -.25)]),
+        Polygon([(.25, .75), (.75, .75), (.5, 1.25)])
+    ]
+    names = [f'polygon{i}' for i in range(len(polygons))]
+    df_polygon = GeoDataFrame({
+        'name': names,
+        'geometry': polygons,
+        'shape': ['rectangle', 'triangle']
+    })
 
     p = (ggplot()
          + aes(fill='geometry.bounds.miny')
