@@ -1,9 +1,9 @@
-scipy
-pandas
-statsmodels
-scikit-learn
-geopandas
-pytest-cov
-matplotlib
-scikit-misc
 adjustText
+geopandas
+matplotlib
+pandas
+pytest-cov
+scikit-learn
+scikit-misc
+scipy
+statsmodels
