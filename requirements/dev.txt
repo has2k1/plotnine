@@ -1,17 +1,5 @@
-scipy
-statsmodels
-pandas
-matplotlib
-mizani
-geopandas
-scikit-misc
-adjustText
-
-# Documentation
 -r doc.txt
-
-# Testing
-pytest-cov
+-r testing.txt
+notebook
+twine
 wheel
-pep8
-flake8
