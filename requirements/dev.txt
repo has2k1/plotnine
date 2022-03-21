@@ -1,5 +1,22 @@
--r doc.txt
--r testing.txt
 notebook
+
+# extra
+adjustText
+scikit-misc
+scikit-learn
+geopandas
+
+# doc
+git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
+jupyter
+nbsphinx
+numpydoc>=0.9.1
+sphinx>=3.0.0
+
+# testing
+flake8
+pytest-cov
+
+# release
 twine
 wheel

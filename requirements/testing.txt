@@ -1,9 +1,0 @@
-adjustText
-geopandas
-matplotlib
-pandas
-pytest-cov
-scikit-learn
-scikit-misc
-scipy
-statsmodels

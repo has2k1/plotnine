@@ -116,8 +116,8 @@ Official release
 .. code-block:: console
 
     # Using pip
-    $ pip install plotnine         # 1. should be sufficient for most
-    $ pip install 'plotnine[all]'  # 2. includes extra/optional packages
+    $ pip install plotnine           # 1. should be sufficient for most
+    $ pip install 'plotnine[extra]'  # 2. includes extra/optional packages
 
     # Or using conda
     $ conda install -c conda-forge plotnine
