@@ -22,8 +22,7 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
-          pip install -r requirements/testing.txt
-          pip install -e .
+          pip install ".[extra,testing]"
 
       - name: Environment Information
         shell: bash -l {0}
@@ -69,18 +68,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # Ref: https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-python#caching-dependencies
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          # This path is specific to Ubuntu
-          path: ~/.cache/pip
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
-
       - name: Install Packages
         shell: bash -l {0}
         run: pip install flake8
@@ -114,25 +101,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # Ref: https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-python#caching-dependencies
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          # This path is specific to Ubuntu
-          path: ~/.cache/pip
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
-
       - name: Install Packages
         shell: bash -l {0}
         run: |
           sudo apt-get install pandoc
-          pip install -r requirements/testing.txt
-          pip install -r requirements/doc.txt
-          pip install -e .
+          pip install ".[testing,doc]"
           python setup.py install
 
       - name: Environment Information
