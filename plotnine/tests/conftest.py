@@ -20,7 +20,7 @@ DPI = 72                # Default DPI for the tests
 # the test. It is limited to setting the size of the test
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
-test_theme = theme(figure_size=(640/DPI, 480/DPI))
+test_theme = theme(figure_size=(640/DPI, 480/DPI), dpi=DPI)
 
 if not os.path.exists(os.path.join(
         os.path.dirname(__file__), 'baseline_images')):
@@ -35,7 +35,7 @@ def raise_no_baseline_image(filename):
     raise Exception(f"Baseline image {filename} is missing")
 
 
-def ggplot_equals(gg, right):
+def ggplot_equals(gg, name):
     """
     Compare ggplot object to image determined by `right`
 
@@ -43,53 +43,23 @@ def ggplot_equals(gg, right):
     ----------
     gg : ggplot
         ggplot object
-    right : str | tuple
-        Identifier. If a tuple, then first element is the
-        identifier and the second element is a `dict`.
-        The `dict` can have two keys
-            - tol - tolerance for the image comparison, a float.
-            - savefig_kwargs - Parameter used by MPL to save
-                               the figure. This is a `dict`.
-
-    The right looks like any one of the following::
-
-       - 'identifier'
-       - ('identifier', {'tol': 17})
-       - ('identifier', {'tol': 17, 'savefig_kwargs': {'dpi': 80}})
+    name : str
+        Identifier for the test image
 
     This function is meant to monkey patch ggplot.__eq__
     so that tests can use the `assert` statement.
     """
     _setup()
-    if isinstance(right, (tuple, list)):
-        name, params = right
-        tol = params.get('tol', TOLERANCE)
-        _savefig_kwargs = params.get('savefig_kwargs', {})
-    else:
-        name, tol = right, TOLERANCE
-        _savefig_kwargs = {}
-
-    savefig_kwargs = {'dpi': DPI}
-    savefig_kwargs.update(_savefig_kwargs)
-
-    gg += test_theme
-    fig = gg.draw()
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
-
-    # savefig ignores the figure face & edge colors
-    facecolor = fig.get_facecolor()
-    edgecolor = fig.get_edgecolor()
-    if facecolor:
-        savefig_kwargs['facecolor'] = facecolor
-    if edgecolor:
-        savefig_kwargs['edgecolor'] = edgecolor
-
+    bbox_inches = 'tight' if 'caption' in gg.labels else None
     # Save the figure before testing whether the original image
     # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
-    fig.savefig(filenames.result, **savefig_kwargs)
+    gg += test_theme
+    gg.save(filenames.result, verbose=False, bbox_inches=bbox_inches)
     _teardown()
+
     if os.path.exists(filenames.baseline):
         shutil.copyfile(filenames.baseline, filenames.expected)
     else:
@@ -98,7 +68,7 @@ def ggplot_equals(gg, right):
         raise_no_baseline_image(filenames.baseline)
 
     err = compare_images(filenames.expected, filenames.result,
-                         tol, in_decorator=True)
+                         TOLERANCE, in_decorator=True)
     gg._err = err  # For the pytest error message
     return False if err else True
 
@@ -154,9 +124,8 @@ ggplot.build_test = build_test
 
 def pytest_assertrepr_compare(op, left, right):
     if (isinstance(left, ggplot) and
-            isinstance(right, (str, tuple)) and
+            isinstance(right, str) and
             op == "=="):
-
         msg = ("images not close: {actual:s} vs. {expected:s} "
                "(RMS {rms:.2f})".format(**left._err))
         return [msg]

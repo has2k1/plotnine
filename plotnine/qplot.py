@@ -7,7 +7,7 @@ import numpy as np
 from patsy.eval import EvalEnvironment
 
 from .ggplot import ggplot
-from .mapping.aes import aes, all_aesthetics, scaled_aesthetics
+from .mapping.aes import aes, ALL_AESTHETICS, SCALED_AESTHETICS
 from .labels import labs
 from .facets import facet_null, facet_grid, facet_wrap
 from .facets.facet_grid import parse_grid_facets
@@ -81,7 +81,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     I_env = EvalEnvironment([{'I': I}])
 
-    for ae in kwargs.keys() & all_aesthetics:
+    for ae in kwargs.keys() & ALL_AESTHETICS:
         value = kwargs[ae]
         if is_mapping(value):
             aesthetics[ae] = value
@@ -187,7 +187,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
     # pd.Series objects have name attributes. In a dataframe, the
     # series have the name of the column.
     labels = {}
-    for ae in scaled_aesthetics & kwargs.keys():
+    for ae in SCALED_AESTHETICS & kwargs.keys():
         with suppress(AttributeError):
             labels[ae] = kwargs[ae].name
 

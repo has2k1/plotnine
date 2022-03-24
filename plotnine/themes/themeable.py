@@ -547,7 +547,7 @@ class plot_title(themeable):
             text.set_visible(False)
 
 
-class caption(themeable):
+class plot_caption(themeable):
     """
     Plot caption
 
@@ -556,18 +556,18 @@ class caption(themeable):
     theme_element : element_text
     """
     def apply_figure(self, figure):
-        super(caption, self).apply_figure(figure)
+        super().apply_figure(figure)
         properties = self.properties.copy()
         with suppress(KeyError):
             del properties['margin']
         with suppress(KeyError):
-            text = figure._themeable['caption']
+            text = figure._themeable['plot_caption']
             text.set(**properties)
 
     def blank_figure(self, figure):
-        super(caption, self).blank_figure(figure)
+        super().blank_figure(figure)
         with suppress(KeyError):
-            text = figure._themeable['caption']
+            text = figure._themeable['plot_caption']
             text.set_visible(False)
 
 

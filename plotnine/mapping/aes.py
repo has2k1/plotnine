@@ -9,14 +9,14 @@ from .evaluation import after_stat, stage
 
 __all__ = ['aes']
 
-all_aesthetics = {
+ALL_AESTHETICS = {
     'alpha', 'angle', 'color', 'colour', 'fill', 'group', 'intercept',
     'label', 'lineheight', 'linetype', 'lower', 'middle', 'radius',
     'sample', 'shape', 'size', 'slope', 'stroke', 'upper', 'weight', 'x',
     'xend', 'xintercept', 'xmax', 'xmin', 'y', 'yend', 'yintercept',
     'ymax', 'ymin'}
 
-scaled_aesthetics = {
+SCALED_AESTHETICS = {
     'x', 'y', 'alpha', 'color', 'colour', 'fill',
     'linetype', 'shape', 'size', 'stroke'
 }

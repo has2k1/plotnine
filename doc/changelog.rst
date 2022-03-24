@@ -13,6 +13,14 @@ New Features
 
 - Added :class:`~plotnine.themes.theme_tufte`.
 
+- :class:`~plotnine.labels.labs` can now be used to create a ``caption``.
+  This caption can be styled using the ``plot_caption`` parameter to
+  :class:`~plotnine.themes.theme`.
+
+  .. code-block:: python
+
+      theme(plot_caption=element_text(size=13))
+
 Bug Fixes
 *********
 
