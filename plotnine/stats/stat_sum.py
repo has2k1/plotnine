@@ -1,4 +1,4 @@
-from ..mapping.aes import all_aesthetics
+from ..mapping.aes import ALL_AESTHETICS
 from ..mapping.evaluation import after_stat
 from ..utils import groupby_apply
 from ..doctools import document
@@ -59,7 +59,7 @@ class stat_sum(stat):
         # group by all present aesthetics other than the weight,
         # then sum them (i.e no. of uniques) to get the raw count
         # 'n', and the proportions 'prop' per group
-        group_by = (set(data.columns) & all_aesthetics) - {'weight'}
+        group_by = (set(data.columns) & ALL_AESTHETICS) - {'weight'}
         group_by = list(group_by)
         counts = groupby_apply(data, group_by, count)
         counts = groupby_apply(counts, 'group', ave)

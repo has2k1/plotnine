@@ -82,6 +82,7 @@ class theme:
                  legend_text_colorbar=None,
                  legend_text=None,
                  plot_title=None,
+                 plot_caption=None,
                  strip_text_x=None,
                  strip_text_y=None,
                  strip_text=None,

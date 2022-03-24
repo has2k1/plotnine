@@ -38,8 +38,7 @@ def test_onlyx():
 def test_onlyy():
     p = qplot(y=np.arange(5))
 
-    # Small displacement in x-label on travis
-    assert p == ('range', {'tol': 8})
+    assert p == 'onlyy'
 
 
 def test_sample():

@@ -1,9 +1,10 @@
 from copy import deepcopy
 
-from .mapping.aes import rename_aesthetics
+from .mapping.aes import rename_aesthetics, SCALED_AESTHETICS
 from .exceptions import PlotnineError
 
 __all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
+VALID_LABELS = SCALED_AESTHETICS | {'caption', 'title'}
 
 
 class labs:
@@ -12,21 +13,19 @@ class labs:
 
     Parameters
     ----------
-    args : dict
-        Aesthetics to be renamed.
     kwargs : dict
-        Aesthetics to be renamed.
+        Aesthetics (with scales) to be renamed. You can also
+        set the ``title`` and ``caption``.
     """
     labels = {}
 
-    def __init__(self, *args, **kwargs):
-        if args and not isinstance(args, dict):
+    def __init__(self, **kwargs):
+        unknown = kwargs.keys() - VALID_LABELS
+        if unknown:
             raise PlotnineError(
-                "'labs' accepts either a dictionary as "
-                "an argument or keyword arguments")
-            self.labels = rename_aesthetics(args)
-        else:
-            self.labels = rename_aesthetics(kwargs)
+                f"Cannot deal with these labels: {unknown}"
+            )
+        self.labels = rename_aesthetics(kwargs)
 
     def __radd__(self, gg, inplace=False):
         gg = gg if inplace else deepcopy(gg)

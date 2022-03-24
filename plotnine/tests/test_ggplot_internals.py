@@ -38,6 +38,9 @@ def test_labels():
     assert gg.labels['caption'] == 'caption2'
 
     with pytest.raises(PlotnineError):
+        gg = gg + labs(z='z-axis')
+
+    with pytest.raises(PlotnineError):
         gg = gg + xlab(None)
 
     with pytest.raises(PlotnineError):
@@ -45,9 +48,6 @@ def test_labels():
 
     with pytest.raises(PlotnineError):
         gg = gg + ggtitle(None)
-
-    with pytest.raises(PlotnineError):
-        gg = gg + labs('x', 'y')
 
 
 def test_ggplot_parameters():
