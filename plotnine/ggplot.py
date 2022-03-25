@@ -587,6 +587,11 @@ class ggplot:
         except KeyError:
             strip_margin_y = 0
 
+        try:
+            ha = get_property('plot_title', 'ha')
+        except KeyError:
+            ha = 'center'
+
         dpi = 72.27
         line_size = fontsize / dpi
         num_lines = len(title.split('\n'))
@@ -597,10 +602,17 @@ class ggplot:
         # vertical adjustment
         strip_height *= (1 + strip_margin_y)
 
-        x = 0.5
+        if ha == 'left':
+            x = 0.125
+        elif ha == 'right':
+            x = 0.9
+        else:
+            # ha='center' is default
+            x = 0.5
+
         y = top + (strip_height+title_size/2+pad)/H
 
-        text = figure.text(x, y, title, ha='center', va='center')
+        text = figure.text(x, y, title, ha=ha, va='center')
         figure._themeable['plot_title'] = text
 
     def _draw_caption(self):
