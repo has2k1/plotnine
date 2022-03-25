@@ -1,6 +1,6 @@
 from ..options import get_option
 from .theme import theme
-from .seaborn_rcmod import set as seaborn_set
+from .seaborn_rcmod import set_theme
 
 
 class theme_seaborn(theme):
@@ -33,6 +33,6 @@ class theme_seaborn(theme):
                        figure_size=get_option('figure_size'),
                        panel_spacing=0.1,
                        complete=True)
-        d = seaborn_set(context=context, style=style,
-                        font=font, font_scale=font_scale)
+        d = set_theme(context=context, style=style,
+                      font=font, font_scale=font_scale)
         self._rcParams.update(d)
