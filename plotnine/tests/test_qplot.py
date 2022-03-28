@@ -46,6 +46,16 @@ def test_sample():
     assert p == 'sample'
 
 
+def test_xlim():
+    p = qplot(x='np.arange(5)', y='np.arange(5)', xlim=(-10,10))
+    assert p == 'xlim'
+
+
+def test_ylim():
+    p = qplot(x='np.arange(5)', y='np.arange(5)', ylim=(-10,10))
+    assert p == 'ylim'
+
+
 def test_multiple_geoms():
     n = 3
     m = 10

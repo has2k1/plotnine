@@ -15,6 +15,8 @@ from .facets.facet_wrap import parse_wrap_facets
 from .utils import Registry, is_string, array_kind
 from .exceptions import PlotnineError, PlotnineWarning
 from .scales import scale_x_log10, scale_y_log10
+from .scales import xlim as scales_xlim
+from .scales import ylim as scales_ylim
 from .themes import theme
 
 
@@ -211,5 +213,11 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
     if asp:
         p += theme(aspect_ratio=asp)
+
+    if xlim:
+        p += scales_xlim(xlim)
+
+    if ylim:
+        p += scales_ylim(ylim)
 
     return p
