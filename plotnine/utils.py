@@ -926,7 +926,7 @@ def data_mapping_as_kwargs(args, kwargs):
     out : dict
         kwargs that includes 'data' and 'mapping' keys.
     """
-    mapping, data = order_as_mapping_data(*args)
+    data, mapping = order_as_data_mapping(*args)
 
     # check args #
     if mapping is not None and not isinstance(mapping, aes):
@@ -973,9 +973,9 @@ def ungroup(data):
     return data
 
 
-def order_as_mapping_data(*args):
+def order_as_data_mapping(*args):
     """
-    Reorder args to ensure (mapping, data) order
+    Reorder args to ensure (data, mapping) order
 
     This function allow the user to pass mapping and data
     to ggplot and geom in any order.
@@ -1011,12 +1011,11 @@ def order_as_mapping_data(*args):
             "but I got {}.".format(n)
         )
 
-    mapping, data = (ungroup(arg) for arg in args)
-    if isinstance(mapping, pd.DataFrame):
-        if data is None or isinstance(data, aes):
-            mapping, data = data, mapping
+    data, mapping = (ungroup(arg) for arg in args)
+    if isinstance(data, aes) or isinstance(mapping, pd.DataFrame):
+        data, mapping = mapping, data
 
-    if mapping is not None and not isinstance(mapping, aes):
+    if not isinstance(mapping, aes) and mapping is not None:
         raise TypeError(
             "Unknown argument type {!r}, expected mapping/aes."
             .format(type(mapping))
@@ -1028,7 +1027,7 @@ def order_as_mapping_data(*args):
             .format(type(data))
         )
 
-    return mapping, data
+    return data, mapping
 
 
 def interleave(*arrays):

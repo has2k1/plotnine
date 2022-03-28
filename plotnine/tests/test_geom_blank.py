@@ -3,6 +3,6 @@ from plotnine.data import mtcars
 
 
 def test_blank():
-    gg = ggplot(aes(x='wt', y='mpg'), data=mtcars)
+    gg = ggplot(mtcars, aes(x='wt', y='mpg'))
     gg = gg + geom_blank()
     assert gg == 'blank'

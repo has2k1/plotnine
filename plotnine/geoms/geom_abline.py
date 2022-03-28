@@ -4,7 +4,7 @@ import pandas as pd
 
 from ..mapping import aes
 from ..exceptions import PlotnineWarning
-from ..utils import make_iterable, order_as_mapping_data
+from ..utils import make_iterable, order_as_data_mapping
 from ..doctools import document
 from .geom import geom
 from .geom_segment import geom_segment
@@ -28,8 +28,8 @@ class geom_abline(geom):
     REQUIRED_AES = {'slope', 'intercept'}
     legend_geom = 'path'
 
-    def __init__(self, mapping=None, data=None, **kwargs):
-        mapping, data = order_as_mapping_data(mapping, data)
+    def __init__(self, data=None, mapping=None, **kwargs):
+        data, mapping = order_as_data_mapping(data, mapping)
         slope = kwargs.pop('slope', None)
         intercept = kwargs.pop('intercept', None)
 
@@ -59,7 +59,7 @@ class geom_abline(geom):
             mapping = aes(intercept=intercept, slope=slope)
             kwargs['show_legend'] = False
 
-        geom.__init__(self, mapping, data, **kwargs)
+        geom.__init__(self, data, mapping, **kwargs)
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         """

@@ -93,8 +93,8 @@ class annotate:
         mappings = aes(**{ae: ae for ae in data.columns})
 
         # The positions are mapped, the rest are manual settings
-        self._annotation_geom = geom(mappings,
-                                     data=data,
+        self._annotation_geom = geom(data,
+                                     mappings,
                                      stat='identity',
                                      inherit_aes=False,
                                      show_legend=False,

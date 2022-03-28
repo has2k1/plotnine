@@ -212,4 +212,4 @@ def expand_limits(**kwargs):
     for ae in set(kwargs) & ALL_AESTHETICS:
         mapping[ae] = ae
 
-    return geom_blank(mapping=mapping, data=data, inherit_aes=False)
+    return geom_blank(data=data, mapping=mapping, inherit_aes=False)

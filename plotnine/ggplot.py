@@ -21,7 +21,7 @@ from .facets.layout import Layout
 from .options import get_option
 from .themes.theme import theme, theme_get
 from .utils import (
-        to_inches, from_inches, defaults, order_as_mapping_data, ungroup
+        to_inches, from_inches, defaults, order_as_data_mapping, ungroup
         )
 from .exceptions import PlotnineError, PlotnineWarning
 from .scales.scales import Scales
@@ -41,12 +41,12 @@ class ggplot:
 
     Parameters
     ----------
-    mapping : aes
-        Default aesthetics mapping for the plot. These will be used
-        by all layers unless specifically overridden.
     data :  dataframe
         Default data for plot. Every layer that does not
         have data of its own will use this one.
+    mapping : aes
+        Default aesthetics mapping for the plot. These will be used
+        by all layers unless specifically overridden.
     environment : dict, ~patsy.Eval.EvalEnvironment
         If a variable defined in the aesthetic mapping is not
         found in the data, ggplot will look for it in this
@@ -54,9 +54,9 @@ class ggplot:
         in which `ggplot()` is called.
     """
 
-    def __init__(self, mapping=None, data=None, environment=None):
+    def __init__(self, data=None, mapping=None, environment=None):
         # Allow some sloppiness
-        mapping, data = order_as_mapping_data(mapping, data)
+        data, mapping = order_as_data_mapping(data, mapping)
         if mapping is None:
             mapping = aes()
 
@@ -597,9 +597,6 @@ class ggplot:
         num_lines = len(title.split('\n'))
         title_size = line_size * linespacing * num_lines
         strip_height = self.facet.strips.breadth('top')
-        # strip_height = 5.820833333333334
-        # print(strip_height)
-        # vertical adjustment
         strip_height *= (1 + strip_margin_y)
 
         if ha == 'left':

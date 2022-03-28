@@ -417,7 +417,7 @@ def test_minor_breaks():
 
 def test_expand_limits():
     df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
-    p = (ggplot(aes('x', 'y'), data=df)
+    p = (ggplot(df, aes('x', 'y'))
          + geom_point()
          + expand_limits(y=(0, None))
          )
@@ -635,7 +635,7 @@ def test_legend_ordering_added_scales():
 
 def test_breaks_and_labels_outside_of_limits():
     df = pd.DataFrame({'x': range(5, 11), 'y': range(5, 11)})
-    p = (ggplot(aes('x', 'y'), data=df)
+    p = (ggplot(df, aes('x', 'y'))
          + geom_point()
          + scale_x_continuous(
              limits=[7, 9.5],

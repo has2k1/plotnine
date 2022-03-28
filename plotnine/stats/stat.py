@@ -42,8 +42,8 @@ class stat(metaclass=Registry):
     # built.
     environment = None
 
-    def __init__(self, mapping=None, data=None, **kwargs):
-        kwargs = data_mapping_as_kwargs((mapping, data), kwargs)
+    def __init__(self, data=None, mapping=None, **kwargs):
+        kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
         self.DEFAULT_AES = aes(**self.DEFAULT_AES)
