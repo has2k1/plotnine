@@ -197,12 +197,7 @@ def _setup():
                 "Could not set locale to English/United States. "
                 "Some date-related tests may fail")
 
-    plt.switch_backend('Agg')  # use Agg backend for these test
-    if mpl.get_backend().lower() != "agg":
-        msg = ("Using a wrong matplotlib backend ({0}), "
-               "which will not produce proper images")
-        raise Exception(msg.format(mpl.get_backend()))
-
+    mpl.use('Agg')
     # These settings *must* be hardcoded for running the comparison
     # tests
     mpl.rcdefaults()  # Start with all defaults
