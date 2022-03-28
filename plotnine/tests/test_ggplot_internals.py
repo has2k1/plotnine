@@ -102,7 +102,7 @@ def test_data_transforms():
 
 
 def test_deepcopy():
-    p = ggplot(aes('x'), data=df) + geom_histogram()
+    p = ggplot(df, aes('x')) + geom_histogram()
     p2 = deepcopy(p)
     assert p is not p2
     # Not sure what we have to do for that...
@@ -226,7 +226,7 @@ def test_add_aes():
 def test_nonzero_indexed_data():
     df = pd.DataFrame({98: {'blip': 0, 'blop': 1},
                        99: {'blip': 1, 'blop': 3}}).T
-    p = ggplot(aes(x='blip', y='blop'), data=df) + geom_line()
+    p = ggplot(df, aes(x='blip', y='blop')) + geom_line()
     p.draw_test()
 
 

@@ -144,7 +144,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
                         "Cannot infer how long x should be.")
             replace_auto(geom, 'point')
 
-    p = ggplot(aes(**aesthetics), data=data, environment=environment)
+    p = ggplot(data, aes(**aesthetics), environment=environment)
 
     def get_facet_type(facets):
         with suppress(PlotnineError):

@@ -12,7 +12,7 @@ from plotnine.exceptions import PlotnineError, PlotnineWarning
 def p(N=3):
     """Return *N* distinct plot objects."""
     template = (
-        ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars) +
+        ggplot(mtcars, aes(x='wt', y='mpg', label='name')) +
         geom_text()
         )
     for i in range(1, N+1):

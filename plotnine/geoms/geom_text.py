@@ -9,7 +9,7 @@ except ImportError:
 else:
     HAS_ADJUST_TEXT = True
 
-from ..utils import to_rgba, order_as_mapping_data
+from ..utils import to_rgba, order_as_data_mapping
 from ..doctools import document
 from ..positions import position_nudge
 from ..exceptions import PlotnineError
@@ -86,8 +86,8 @@ class geom_text(geom):
                       'format_string': None,
                       'path_effects': None}
 
-    def __init__(self, mapping=None, data=None, **kwargs):
-        mapping, data = order_as_mapping_data(mapping, data)
+    def __init__(self, data=None, mapping=None, **kwargs):
+        data, mapping = order_as_data_mapping(data, mapping)
         nudge_kwargs = {}
         adjust_text = kwargs.get('adjust_text', None)
         if adjust_text is None:
@@ -110,7 +110,7 @@ class geom_text(geom):
         if mapping and 'vjust' in mapping:
             mapping['va'] = mapping.pop('vjust')
 
-        geom.__init__(self, mapping, data, **kwargs)
+        geom.__init__(self, data, mapping, **kwargs)
 
     def setup_data(self, data):
         parse = self.params['parse']

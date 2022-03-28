@@ -9,7 +9,7 @@ from plotnine import (ggplot, aes, geom_text, geom_point, facet_wrap,
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
-p = (ggplot(aes(x='wt', y='mpg', label='name'), data=mtcars)
+p = (ggplot(mtcars, aes(x='wt', y='mpg', label='name'))
      + geom_text())
 
 
