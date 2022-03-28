@@ -18,7 +18,7 @@ from .mapping.aes import aes, make_labels
 from .layer import Layers
 from .facets import facet_null
 from .facets.layout import Layout
-from .options import get_option
+from .options import get_option, SUBPLOTS_ADJUST
 from .themes.theme import theme, theme_get
 from .utils import (
         to_inches, from_inches, defaults, order_as_data_mapping, ungroup
@@ -600,9 +600,9 @@ class ggplot:
         strip_height *= (1 + strip_margin_y)
 
         if ha == 'left':
-            x = 0.125
+            x = SUBPLOTS_ADJUST['left']
         elif ha == 'right':
-            x = 0.9
+            x = SUBPLOTS_ADJUST['right']
         else:
             # ha='center' is default
             x = 0.5
