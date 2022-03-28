@@ -47,12 +47,12 @@ def test_sample():
 
 
 def test_xlim():
-    p = qplot(x='np.arange(5)', y='np.arange(5)', xlim=(-10,10))
+    p = qplot(x='np.arange(5)', y='np.arange(5)', xlim=(-10, 10))
     assert p == 'xlim'
 
 
 def test_ylim():
-    p = qplot(x='np.arange(5)', y='np.arange(5)', ylim=(-10,10))
+    p = qplot(x='np.arange(5)', y='np.arange(5)', ylim=(-10, 10))
     assert p == 'ylim'
 
 
