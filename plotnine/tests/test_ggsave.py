@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import matplotlib.pyplot as plt
 import pytest
@@ -58,17 +59,10 @@ class TestArguments:
 
         # verbose
         fn = next(filename_gen)
-        with pytest.warns(None) as record:
+        with warnings.catch_warnings(record=True) as record:
             p.save(fn, verbose=False)
-        assert_exist_and_clean(fn, "save method")
-
-        res = ('saving' in str(item.message).lower()
-               for item in record)
-        assert not any(res)
-
-        res = ('filename' in str(item.message).lower()
-               for item in record)
-        assert not any(res)
+            assert_exist_and_clean(fn, "save method")
+            assert not record, "Issued an unexpected warning"
 
     def test_filename_plot_path(self):
         fn = next(filename_gen)

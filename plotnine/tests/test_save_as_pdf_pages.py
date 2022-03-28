@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import matplotlib.pyplot as plt
 import pytest
@@ -61,9 +62,10 @@ class TestArguments:
 
         # verbose
         fn = next(filename_gen)
-        with pytest.warns(None) as record:
+        with warnings.catch_warnings(record=True) as record:
             save_as_pdf_pages(p(), fn, verbose=False)
-        assert_exist_and_clean(fn, "save method")
+            assert_exist_and_clean(fn, "save method")
+            assert not record, "Issued an unexpected warning"
 
         res = ('filename' in str(item.message).lower()
                for item in record)

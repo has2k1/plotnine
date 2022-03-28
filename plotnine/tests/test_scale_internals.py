@@ -1,3 +1,4 @@
+import warnings
 from datetime import datetime
 
 import numpy as np
@@ -650,10 +651,11 @@ def test_breaks_and_labels_outside_of_limits():
 
 def test_changing_scale_transform():
     # No warning
-    with pytest.warns(None):
+    with warnings.catch_warnings(record=True) as record:
         scale_x_continuous(trans='reverse')
         scale_xy.scale_x_reverse(trans='reverse')
         scale_xy.scale_x_log10(trans='log10')
+        assert not record, "Issued an unexpected warning"
 
     # Warnings
     with pytest.warns(PlotnineWarning):
