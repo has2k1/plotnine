@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
 
-from ..options import get_option, set_option
+from ..options import get_option, set_option, SUBPLOTS_ADJUST
 from ..exceptions import PlotnineError
 from .themeable import themeable, Themeables
 
@@ -19,10 +19,10 @@ default_rcparams = {
     'timezone': 'UTC',
     # Choosen to match MPL 2.0 defaults
     'savefig.dpi': 'figure',
-    'figure.subplot.left': 0.125,
-    'figure.subplot.right': 0.9,
-    'figure.subplot.top': 0.88,
-    'figure.subplot.bottom': 0.11,
+    'figure.subplot.left': SUBPLOTS_ADJUST['left'],
+    'figure.subplot.right': SUBPLOTS_ADJUST['right'],
+    'figure.subplot.top': SUBPLOTS_ADJUST['top'],
+    'figure.subplot.bottom': SUBPLOTS_ADJUST['bottom'],
 }
 
 
