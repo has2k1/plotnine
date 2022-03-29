@@ -462,20 +462,31 @@ numpydoc_xref_ignore = {'type', 'optional', 'default'}
 def link_to_tutorials():
     # Linking to the directory does not work well with
     # nbsphinx. We link to the files themselves
-    from glob import glob
+    from pathlib import Path, PurePath
     from plotnine_examples.tutorials import TUTPATH
 
-    dest_dir = os.path.join(CUR_PATH, 'tutorials')
+    tut_dir = Path(TUTPATH)
+    dest_dir = Path(CUR_PATH) / 'tutorials'
+
+    tut_image_dir = tut_dir / 'images'
+    dest_image_dir = dest_dir / 'images'
 
     # Unlink files from previous build
-    for old_file in glob(dest_dir + '/*.ipynb'):
+    for old_file in dest_dir.glob('*.ipynb'):
         os.unlink(old_file)
 
     # Link files for this build
-    for file in glob(TUTPATH + '/*.ipynb'):
-        basename = os.path.basename(file)
-        dest = os.path.join(dest_dir, basename)
+    for file in tut_dir.glob('*.ipynb'):
+        basename = PurePath(file).name
+        dest = dest_dir / basename
         os.symlink(file, dest)
+
+    if tut_image_dir.is_dir():
+        dest_image_dir.mkdir(exist_ok=True)
+        for file in tut_image_dir.glob('*.png'):
+            basename = PurePath(file).name
+            dest = dest_image_dir / basename
+            os.symlink(file, dest)
 
 
 def setup(app):
