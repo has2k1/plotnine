@@ -33,7 +33,7 @@ class theme:
     In general, only complete themes should subclass this class.
 
     Parameters
-    -----------
+    ----------
     complete : bool
         Themes that are complete will override any existing themes.
         themes that are not complete (ie. partial) will add to or
