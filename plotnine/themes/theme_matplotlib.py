@@ -13,7 +13,7 @@ class theme_matplotlib(theme):
     to customize) like a :class:`matplotlib.rc_context` manager.
 
     Parameters
-    -----------
+    ----------
     rc :  dict, optional
         rcParams which should be applied on top of
         mathplotlib default.
