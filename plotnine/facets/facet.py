@@ -529,7 +529,7 @@ def add_missing_facets(data, layout, vars, facet_vals):
     # the facet variables, add the missing facet variables
     # and create new data where the points(duplicates) are
     # present in all the facets
-    missing_facets = set(vars) - set(facet_vals)
+    missing_facets = list(set(vars) - set(facet_vals))
     if missing_facets:
         to_add = layout.loc[:, missing_facets].drop_duplicates()
         to_add.reset_index(drop=True, inplace=True)

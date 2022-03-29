@@ -1,25 +1,6 @@
 from textwrap import dedent
 import warnings
 
-# Statsmodels is slow to fix upstream future warnings
-# This module is imported before the stats module so
-# so any FutureWarnings with the imports are suppressed
-warnings.filterwarnings(
-    'ignore',
-    category=FutureWarning,
-    module='statsmodels')
-
-warnings.filterwarnings(
-    'ignore',
-    category=FutureWarning,
-    module='pandas')
-
-# These are rare
-warnings.filterwarnings(
-    'ignore',
-    category=FutureWarning,
-    module='scipy')
-
 
 # Show the warnings on one line, leaving out any code makes the
 # message clear
