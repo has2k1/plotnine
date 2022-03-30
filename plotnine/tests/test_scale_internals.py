@@ -722,4 +722,4 @@ def test_discrete_scale_exceeding_maximum_number_of_values():
          + scale_color_manual(['red', 'blue'])
          )
     with pytest.warns(PlotnineWarning):
-        p.draw()
+        p.draw_test()
