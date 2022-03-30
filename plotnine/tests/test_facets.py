@@ -32,8 +32,6 @@ def test_facet_wrap_one_var():
     assert p3 == 'facet_wrap_one_var'
 
 
-# https://github.com/pandas-dev/pandas/issues/16276
-@pytest.mark.xfail
 def test_facet_wrap_expression():
     p = g + facet_wrap('pd.cut(var1, (0, 2, 4), include_lowest=True)')
     assert p == 'facet_wrap_expression'
@@ -91,8 +89,6 @@ def test_facet_grid_one_by_one_var():
     assert p2 == 'facet_grid_one_by_one_var'
 
 
-# https://github.com/pandas-dev/pandas/issues/16276
-@pytest.mark.xfail
 def test_facet_grid_expression():
     p = g + facet_grid(
         ['var2', 'pd.cut(var1, (0, 2, 4), include_lowest=True)'])
