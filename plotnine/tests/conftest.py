@@ -49,7 +49,6 @@ def ggplot_equals(gg, name):
     This function is meant to monkey patch ggplot.__eq__
     so that tests can use the `assert` statement.
     """
-    _setup()
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
     bbox_inches = 'tight' if 'caption' in gg.labels else None
@@ -57,8 +56,8 @@ def ggplot_equals(gg, name):
     # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
     gg += test_theme
-    gg.save(filenames.result, verbose=False, bbox_inches=bbox_inches)
-    _teardown()
+    with _test_cleanup():
+        gg.save(filenames.result, verbose=False, bbox_inches=bbox_inches)
 
     if os.path.exists(filenames.baseline):
         shutil.copyfile(filenames.baseline, filenames.expected)
@@ -89,14 +88,8 @@ def draw_test(self):
     so that tests can draw and not care about cleaning up
     the MPL figure.
     """
-    try:
-        figure = self.draw()
-    except Exception as err:
-        plt.close('all')
-        raise err
-    else:
-        if figure:
-            plt.close(figure)
+    with _test_cleanup():
+        self.draw()
 
 
 ggplot.draw_test = draw_test
@@ -112,7 +105,8 @@ def build_test(self):
         ggplot object
 
     This function is meant to monkey patch ggplot.build_test
-    so that tests build.
+    so that tests can build a plot and inspect the side effects
+    on the plot object.
     """
     self = deepcopy(self)
     self._build()
@@ -183,35 +177,38 @@ def make_test_image_filenames(name, test_file):
     return filenames
 
 
-# This is called from the cleanup decorator
-def _setup():
-    # The baseline images are created in this locale, so we should use
-    # it during all of the tests.
-    try:
-        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-    except locale.Error:
+class _test_cleanup:
+    def __enter__(self):
+        # The baseline images are created in this locale, so we should use
+        # it during all of the tests.
         try:
-            locale.setlocale(locale.LC_ALL, 'English_United States.1252')
+            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         except locale.Error:
-            warnings.warn(
-                "Could not set locale to English/United States. "
-                "Some date-related tests may fail")
+            try:
+                locale.setlocale(locale.LC_ALL, 'English_United States.1252')
+            except locale.Error:
+                warnings.warn(
+                    "Could not set locale to English/United States. "
+                    "Some date-related tests may fail"
+                )
 
-    mpl.use('Agg')
-    # These settings *must* be hardcoded for running the comparison
-    # tests
-    mpl.rcdefaults()  # Start with all defaults
-    mpl.rcParams['text.hinting'] = 'auto'
-    mpl.rcParams['text.antialiased'] = True
-    mpl.rcParams['text.hinting_factor'] = 8
+        # make sure we don't carry over bad plots from former tests
+        plt.close('all')
+        n_figs = len(plt.get_fignums())
+        msg = (f"No. of open figs: {n_figs}. Make sure the "
+               "figures from the previous tests are cleaned up."
+               )
+        assert n_figs == 0, msg
 
-    # make sure we don't carry over bad plots from former tests
-    msg = ("no of open figs: {} -> find the last test with ' "
-           "python tests.py -v' and add a '@cleanup' decorator.")
-    assert len(plt.get_fignums()) == 0, msg.format(plt.get_fignums())
+        mpl.use('Agg')
+        # These settings *must* be hardcoded for running the comparison
+        # tests
+        mpl.rcdefaults()  # Start with all defaults
+        mpl.rcParams['text.hinting'] = 'auto'
+        mpl.rcParams['text.antialiased'] = True
+        mpl.rcParams['text.hinting_factor'] = 8
+        return self
 
-
-def _teardown():
-    plt.close('all')
-    # reset any warning filters set in tests
-    warnings.resetwarnings()
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        plt.close('all')
+        warnings.resetwarnings()
