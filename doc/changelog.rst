@@ -51,6 +51,10 @@ Bug Fixes
 
 - Fixed :class:`~plotnine.geoms.geom_map` to be able to draw MultiPolygons.
 
+- Fixed :class:`~plotnine.scales.scale_x_discrete` and
+  :class:`~plotnine.scales.scale_x_discrete` to work properly with ``None``
+  values. :issue:`523`
+
 Enhancements
 ************
 

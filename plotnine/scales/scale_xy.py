@@ -81,7 +81,7 @@ class scale_position_discrete(scale_discrete):
             except IndexError:
                 # Deal with missing data
                 # - Insert NaN where there is no match
-                seq = np.hstack((seq.astype(object), np.nan))
+                seq = np.hstack((seq.astype(float), np.nan))
                 idx = np.clip(idx, 0, len(seq)-1)
                 seq = seq[idx]
             return seq
