@@ -551,6 +551,20 @@ def test_missing_data_discrete_scale():
     assert p + _theme == 'missing_data_discrete_scale'
 
 
+def test_missing_data_discrete_position_scale():
+    df = pd.DataFrame({
+        'a': [1, 2, 3],
+        'b': ['a', 'b', None]
+    })
+
+    p = (ggplot(df, aes('a', 'b'))
+         + geom_point(aes(fill='b'), stroke=0, size=10)
+         )
+
+    with pytest.warns(PlotnineWarning):
+        assert p + _theme == 'missing_data_discrete_position_scale'
+
+
 df = pd.DataFrame({
     'x': range(4),
     'y': range(4),
