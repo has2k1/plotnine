@@ -1,10 +1,10 @@
 import sys
-from setuptools import find_packages, setup
+from setuptools import setup
 
-# This appears to be necessary so that versioneer works 
+# This appears to be necessary so that versioneer works
 # Ref: python-versioneer/python-versioneer/issues/193
 sys.path.insert(0, ".")  # noqa
-import versioneer
+import versioneer        # noqa
 
 
 setup(
