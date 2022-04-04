@@ -33,9 +33,11 @@ class _scale_manual(scale_discrete):
     def palette(self, n):
         max_n = len(self._values)
         if n > max_n:
-            msg = ("Palette can return a maximum of {} values. "
-                   "{} were requested from it.")
-            warn(msg.format(max_n, n), PlotnineWarning)
+            msg = (
+                f"The palette of {self.__class__.__name__} can return a "
+                f"maximum of {max_n} values. {n} were requested from it."
+            )
+            warn(msg, PlotnineWarning)
         return self._values
 
 
