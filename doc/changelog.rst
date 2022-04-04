@@ -63,6 +63,9 @@ Enhancements
 
 - :class:`~plotnine.geoms.geom_map` can now draw MultiPoints.
 
+- :class:`~plotnine.geoms.geom_text` with ``adjust_text`` can now be used
+  in more than one layer with good enough results.
+
 v0.8.0
 ------
 (2021-03-24)
