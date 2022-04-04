@@ -402,9 +402,9 @@ epub_exclude_files = ['search.html']
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
-    'matplotlib': ('https://matplotlib.org/', None),
+    'matplotlib': ('https://matplotlib.org/stable', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
-    'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy', None),
     'statsmodels': ('https://www.statsmodels.org/stable/', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'sklearn': ('https://scikit-learn.org/stable/', None),
@@ -465,28 +465,27 @@ def link_to_tutorials():
     from pathlib import Path, PurePath
     from plotnine_examples.tutorials import TUTPATH
 
-    tut_dir = Path(TUTPATH)
-    dest_dir = Path(CUR_PATH) / 'tutorials'
+    tut_ipynb_dir = Path(TUTPATH)
+    dest_ipynb_dir = Path(CUR_PATH) / 'tutorials'
 
-    tut_image_dir = tut_dir / 'images'
-    dest_image_dir = dest_dir / 'images'
+    tut_image_dir = tut_ipynb_dir / 'images'
+    dest_image_dir = dest_ipynb_dir / 'images'
 
-    # Unlink files from previous build
-    for old_file in dest_dir.glob('*.ipynb'):
-        os.unlink(old_file)
+    def _make_links(orig_dir, dest_dir, pattern):
+        dest_dir.mkdir(exist_ok=True)
 
-    # Link files for this build
-    for file in tut_dir.glob('*.ipynb'):
-        basename = PurePath(file).name
-        dest = dest_dir / basename
-        os.symlink(file, dest)
+        # Remove any old files
+        for old_file in dest_dir.glob(pattern):
+            old_file.unlink()
 
-    if tut_image_dir.is_dir():
-        dest_image_dir.mkdir(exist_ok=True)
-        for file in tut_image_dir.glob('*.png'):
+        # Link files for this build
+        for file in orig_dir.glob(pattern):
             basename = PurePath(file).name
-            dest = dest_image_dir / basename
-            os.symlink(file, dest)
+            dest = dest_dir / basename
+            dest.symlink_to(file)
+
+    _make_links(tut_ipynb_dir, dest_ipynb_dir, '*.ipynb')
+    _make_links(tut_image_dir, dest_image_dir, '*.png')
 
 
 def setup(app):
