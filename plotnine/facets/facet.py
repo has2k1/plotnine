@@ -268,17 +268,13 @@ class facet:
         ax.set_xlim(panel_params.x.range)
         ax.set_ylim(panel_params.y.range)
 
-        # breaks
-        ax.set_xticks(panel_params.x.breaks)
-        ax.set_yticks(panel_params.y.breaks)
+        # breaks, labels
+        ax.set_xticks(panel_params.x.breaks, panel_params.x.labels)
+        ax.set_yticks(panel_params.y.breaks, panel_params.y.labels)
 
         # minor breaks
         ax.set_xticks(panel_params.x.minor_breaks, minor=True)
         ax.set_yticks(panel_params.y.minor_breaks, minor=True)
-
-        # labels
-        ax.set_xticklabels(panel_params.x.labels)
-        ax.set_yticklabels(panel_params.y.labels)
 
         # When you manually set the tick labels MPL changes the locator
         # so that it no longer reports the x & y positions
