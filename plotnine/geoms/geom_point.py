@@ -3,6 +3,7 @@ import matplotlib.lines as mlines
 
 from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
+from ..scales.scale_shape import FILLED_SHAPES, UNFILLED_SHAPES
 from .geom import geom
 
 
@@ -49,14 +50,23 @@ class geom_point(geom):
         size = ((data['size']+data['stroke'])**2)*np.pi
         stroke = data['stroke'] * SIZE_FACTOR
         color = to_rgba(data['color'], data['alpha'])
+        shape = data.loc[0, 'shape']
 
         # It is common to forget that scatter points are
         # filled and slip-up by manually assigning to the
         # color instead of the fill. We forgive.
-        if all(c is None for c in data['fill']):
+        if shape in FILLED_SHAPES:
+            if all(c is None for c in data['fill']):
+                fill = color
+            else:
+                fill = to_rgba(data['fill'], data['alpha'])
+        elif shape in UNFILLED_SHAPES:
             fill = color
+            color = None
         else:
-            fill = to_rgba(data['fill'], data['alpha'])
+            raise ValueError(
+                f"geom_point got an unknown shape: {shape}"
+            )
 
         ax.scatter(
             x=data['x'],
@@ -65,7 +75,7 @@ class geom_point(geom):
             facecolor=fill,
             edgecolor=color,
             linewidth=stroke,
-            marker=data.loc[0, 'shape'],
+            marker=shape,
             zorder=params['zorder'],
             rasterized=params['raster']
         )
@@ -90,13 +100,16 @@ class geom_point(geom):
 
         size = (data['size']+data['stroke'])*SIZE_FACTOR
         stroke = data['stroke'] * SIZE_FACTOR
-        key = mlines.Line2D([0.5*da.width],
-                            [0.5*da.height],
-                            alpha=data['alpha'],
-                            marker=data['shape'],
-                            markersize=size,
-                            markerfacecolor=data['fill'],
-                            markeredgecolor=data['color'],
-                            markeredgewidth=stroke)
+
+        key = mlines.Line2D(
+            [0.5*da.width],
+            [0.5*da.height],
+            alpha=data['alpha'],
+            marker=data['shape'],
+            markersize=size,
+            markerfacecolor=data['fill'],
+            markeredgecolor=data['color'],
+            markeredgewidth=stroke
+        )
         da.add_artist(key)
         return da
