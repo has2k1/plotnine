@@ -457,25 +457,25 @@ class ggplot:
         # location. This should get fixed when MPL has a better
         # layout manager.
         if position == 'right':
-            loc = 6
+            loc = 'center left'
             pad = right_strip_width*(1+strip_margin_x) + spacing
             x = right + pad/W
             y = 0.5
         elif position == 'left':
-            loc = 7
+            loc = 'center right'
             x = left - spacing/W
             y = 0.5
         elif position == 'top':
-            loc = 8
+            loc = 'lower center'
             x = 0.5
             pad = top_strip_height*(1+strip_margin_y) + spacing
             y = top + pad/H
         elif position == 'bottom':
-            loc = 9
+            loc = 'upper center'
             x = 0.5
             y = bottom - spacing/H
         else:
-            loc = 10
+            loc = 'center'
             x, y = position
 
         anchored_box = AnchoredOffsetbox(
