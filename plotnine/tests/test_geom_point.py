@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_point, theme
+from plotnine import ggplot, aes, geom_point, theme, guides
 
 
 def test_aesthetics():
@@ -49,3 +49,39 @@ def test_no_fill():
                       color='yellow', fill='gray', size=5, stroke=1.5))
 
     assert p == 'no_fill'
+
+
+class TestColorFillonUnfilledShape:
+    df = pd.DataFrame({
+        'x': range(6),
+        'y': range(6),
+        'z': list('aabbcc')
+    })
+    p = (ggplot(df, aes('x', 'y'))
+         + geom_point(shape='3', size=10, stroke=3)
+         + guides(fill=False)
+         + theme(subplots_adjust={'right': 0.85})
+         )
+
+    # Color  Fill  Result
+    # No     No    Black
+    # No     Yes   Black
+    # Yes    No    Color
+    # Yes    Yes   Color
+
+    def test_no_mapping(self):
+        assert self.p == 'no_mapping'
+
+    def test_fill_only_mapping(self):
+        p = self.p + aes(fill='x')
+        # Same as above
+        assert p == 'no_mapping'
+
+    def test_color_only_mapping(self):
+        p = self.p + aes(color='z')
+        assert p == 'color_only_mapping'
+
+    def test_color_fill_mapping(self):
+        p = self.p + aes(color='z', fill='x')
+        # Same as above
+        assert p == 'color_only_mapping'

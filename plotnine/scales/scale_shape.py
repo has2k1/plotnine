@@ -45,6 +45,10 @@ unfilled_shapes = (
     7,    # caretdown
 )
 
+# For quick lookup
+FILLED_SHAPES = set(shapes)
+UNFILLED_SHAPES = set(unfilled_shapes)
+
 
 @document
 class scale_shape(scale_discrete):

@@ -55,6 +55,9 @@ Bug Fixes
   :class:`~plotnine.scales.scale_x_discrete` to work properly with ``None``
   values. :issue:`523`
 
+- Fixed :class:`~plotnine.geoms.geom_point` to respect not to use the ``fill``
+  mapping on unfilled shapes. :issue:`100`
+
 Enhancements
 ************
 
