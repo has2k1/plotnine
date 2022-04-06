@@ -39,10 +39,10 @@ class stat_boxplot(stat):
         'upper'  # upper hinge, 75% quantile
 
         'notchlower' #  lower edge of notch, computed as;
-                     # :py:`median - 1.58 * IQR / sqrt(n)`
+                     # median - 1.58 * IQR / sqrt(n)
 
         'notchupper' # upper edge of notch, computed as;
-                     # :py:`median + 1.58 * IQR / sqrt(n)`
+                     # median + 1.58 * IQR / sqrt(n)
 
         'ymin'  # lower whisker, computed as; smallest observation
                 # greater than or equal to lower hinge - 1.5 * IQR
