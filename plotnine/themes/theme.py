@@ -196,27 +196,18 @@ class theme:
         c2 = self.rcParams == other.rcParams
         return c1 and c2
 
-    def apply_axs(self, axs):
-        """
-        Apply this theme to all the axes
-
-        Parameters
-        ----------
-        axs : iterable
-            Sequence of axes to be themed
-        """
-        for ax in axs:
-            self.apply(ax)
-
-    def apply(self, ax):
+    def apply(self, figure, axs):
         """
         Apply this theme, then apply additional modifications in order.
 
-        Subclasses that override this method should make sure that
-        the base class method is called.
+        This method will be called once with the figure object and the
+        axes after plot has completed. Subclasses that override this
+        method should make sure that the base class method is called.
         """
         for th in self.themeables.values():
-            th.apply(ax)
+            th.apply_figure(figure)
+            for ax in axs:
+                th.apply(ax)
 
     def setup_figure(self, figure):
         """
@@ -229,18 +220,6 @@ class theme:
         """
         for th in self.themeables.values():
             th.setup_figure(figure)
-
-    def apply_figure(self, figure):
-        """
-        Makes any desired changes to the figure object
-
-        This method will be called once with a figure object
-        after plot has completed. Subclasses that override this
-        method should make sure that the base class method is
-        called.
-        """
-        for th in self.themeables.values():
-            th.apply_figure(figure)
 
     @property
     def rcParams(self):

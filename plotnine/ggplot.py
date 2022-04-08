@@ -219,7 +219,7 @@ class ggplot:
             self._draw_watermarks()
 
             # Artist object theming
-            self._apply_theme()
+            self.theme.apply(figure, axs)
 
             if return_ggplot:
                 output = self.figure, self
@@ -252,7 +252,7 @@ class ggplot:
             self._draw_layers()
             self._draw_breaks_and_labels()
             self._draw_legend()
-            self._apply_theme()
+            self.theme.apply(figure, axs)
 
         return self
 
