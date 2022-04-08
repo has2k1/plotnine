@@ -2,7 +2,7 @@ import matplotlib as mpl
 
 from ..options import get_option
 from .theme import theme
-from .elements import element_rect
+from .elements import element_rect, element_text
 
 
 class theme_matplotlib(theme):
@@ -30,11 +30,31 @@ class theme_matplotlib(theme):
             aspect_ratio=get_option('aspect_ratio'),
             dpi=get_option('dpi'),
             figure_size=get_option('figure_size'),
+            legend_box='auto',
+            legend_box_just='auto',
+            legend_box_margin=10,
+            legend_direction='auto',
+            legend_entry_spacing_x=5,
+            legend_entry_spacing_y=2,
             legend_key=element_rect(fill='None', colour='None'),
             legend_key_size=16,
+            legend_margin=10,
+            legend_position='right',
+            legend_spacing=10,
+            legend_text=element_text(
+                margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
+            ),
+            legend_title=element_text(ha='left', margin={'b': 8}),
+            legend_title_align='auto',
             panel_spacing=0.1,
             strip_background=element_rect(
-                fill='#D9D9D9', color='#D9D9D9', size=1),
+                fill='#D9D9D9',
+                color='#D9D9D9',
+                size=1
+            ),
+            strip_text=element_text(
+                margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
+            ),
             complete=True)
 
         if use_defaults:

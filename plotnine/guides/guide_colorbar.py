@@ -147,12 +147,12 @@ class guide_colorbar(guide):
         colors = self.bar['color'].tolist()
         labels = self.key['label'].tolist()
         themeable = self.theme.figure._themeable
-        _d = self._default
+        _property = self.theme.themeables.property
 
         # 1.45 makes the default colourbar wider than the
         # legend entry boxes.
-        width = (self.barwidth or _d('legend_key_width') or 16) * 1.45
-        height = (self.barheight or _d('legend_key_height') or 16) * 1.45
+        width = (self.barwidth or _property('legend_key_width')) * 1.45
+        height = (self.barheight or _property('legend_key_height')) * 1.45
 
         height *= 5
         length = height

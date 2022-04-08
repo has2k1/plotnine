@@ -19,30 +19,58 @@ class theme_void(theme):
 
     def __init__(self, base_size=11, base_family=None):
         base_family = base_family or get_option('base_family')
+        half_line = base_size/2
         # Use only inherited elements and make everything blank
         theme.__init__(
             self,
             line=element_blank(),
             rect=element_blank(),
             text=element_text(
-                family=base_family, style='normal', color='black',
-                size=base_size, linespacing=0.9, ha='center',
-                va='center', rotation=0),
+                family=base_family,
+                style='normal',
+                color='black',
+                size=base_size,
+                linespacing=0.9,
+                ha='center',
+                va='center',
+                rotation=0,
+                margin={}
+            ),
             aspect_ratio=get_option('aspect_ratio'),
             dpi=get_option('dpi'),
             figure_size=get_option('figure_size'),
             plot_margin=None,
+            plot_title=element_text(
+                margin={'b': half_line*1.2, 'units': 'pt'}
+            ),
             panel_spacing=0,
             axis_text_x=element_blank(),
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),
             axis_title_y=element_blank(),
+            legend_box='auto',
+            legend_box_just='auto',
+            legend_box_margin=10,
+            legend_direction='auto',
             legend_entry_spacing_x=5,
             legend_entry_spacing_y=2,
-            legend_text=element_text(size=base_size*0.8, ha='left'),
+            legend_key_height=18,
+            legend_key_width=18,
+            legend_margin=10,
+            legend_position='right',
+            legend_spacing=10,
+            legend_text=element_text(
+                size=base_size*0.8,
+                ha='left',
+                margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
+            ),
             legend_text_legend=element_text(va='baseline'),
-            legend_title=element_text(ha='left'),
+            legend_title=element_text(ha='left', margin={'b': 8}),
+            legend_title_align='auto',
             strip_text=element_text(
-                size=base_size*0.8, linespacing=1.8),
+                size=base_size*0.8,
+                linespacing=1.8,
+                margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
+            ),
 
             complete=True)
