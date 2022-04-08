@@ -839,6 +839,8 @@ class axis_ticks_minor_x(themeable):
         d = deepcopy(self.properties)
         with suppress(KeyError):
             d['markeredgewidth'] = d.pop('linewidth')
+        with suppress(KeyError):
+            d['markeredgecolor'] = d.pop('color')
 
         for tick in ax.xaxis.get_minor_ticks():
             tick.tick1line.set(**d)
@@ -862,6 +864,8 @@ class axis_ticks_minor_y(themeable):
         d = deepcopy(self.properties)
         with suppress(KeyError):
             d['markeredgewidth'] = d.pop('linewidth')
+        with suppress(KeyError):
+            d['markeredgecolor'] = d.pop('color')
 
         for tick in ax.yaxis.get_minor_ticks():
             tick.tick1line.set(**d)
@@ -886,6 +890,8 @@ class axis_ticks_major_x(themeable):
         del d['visible']
         with suppress(KeyError):
             d['markeredgewidth'] = d.pop('linewidth')
+        with suppress(KeyError):
+            d['markeredgecolor'] = d.pop('color')
 
         for tick in ax.xaxis.get_major_ticks():
             tick.tick1line.set(**d)
@@ -910,6 +916,8 @@ class axis_ticks_major_y(themeable):
         del d['visible']
         with suppress(KeyError):
             d['markeredgewidth'] = d.pop('linewidth')
+        with suppress(KeyError):
+            d['markeredgecolor'] = d.pop('color')
 
         for tick in ax.yaxis.get_major_ticks():
             tick.tick1line.set(**d)
