@@ -124,17 +124,9 @@ class strip:
             strip_name = 'strip_text_x'
             side1, side2 = 't', 'b'
 
-        try:
-            margin = self.theme.themeables.property(
-                strip_name,
-                'margin'
-            )
-        except KeyError:
-            m1, m2 = 3, 3
-        else:
-            m1 = margin.get_as(side1, 'pt')
-            m2 = margin.get_as(side2, 'pt')
-
+        margin = self.theme.themeables.property(strip_name, 'margin')
+        m1 = margin.get_as(side1, 'pt')
+        m2 = margin.get_as(side2, 'pt')
         return m1, m2
 
     @property

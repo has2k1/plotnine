@@ -90,29 +90,20 @@ class guide(metaclass=Registry):
         # Must be updated before the draw method is called
         self.theme = None
 
-    def _default(self, key, default=None):
-        """
-        Lookup value of *key* themeable
-
-        If *key* not in themeable or value is None,
-        return the *default* value.
-        """
-        try:
-            value = self.theme.themeables.property(key)
-        except KeyError:
-            value = None
-
-        return value if value is not None else default
-
     def _set_defaults(self):
         """
         Set configuration parameters for drawing guide
         """
         valid_locations = {'top', 'bottom', 'left', 'right'}
-        horizontal_locations = {'left', 'right'}
-        get_property = self.theme.themeables.property
-        margin_location_lookup = {'t': 'b', 'b': 't',
-                                  'l': 'r', 'r': 'l'}
+        _property = self.theme.themeables.property
+        margin_location_lookup = {
+            # Where to put the margin between the legend and
+            # the axes. Depends on the location of the legend
+            't': 'b',
+            'b': 't',
+            'l': 'r',
+            'r': 'l'
+        }
 
         # label position
         self.label_position = self.label_position or 'right'
@@ -122,19 +113,15 @@ class guide(metaclass=Registry):
 
         # label margin
         # legend_text_legend or legend_text_colorbar
-        name = 'legend_text_{}'.format(
-            self.__class__.__name__.split('_')[-1])
+        _legend_type = self.__class__.__name__.split('_')[-1]
+        name = 'legend_text_{}'.format(_legend_type)
         loc = margin_location_lookup[self.label_position[0]]
-        try:
-            margin = get_property(name, 'margin')
-        except KeyError:
-            self._label_margin = 3
-        else:
-            self._label_margin = margin.get_as(loc, 'pt')
+        margin = _property(name, 'margin')
+        self._label_margin = margin.get_as(loc, 'pt')
 
         # direction of guide
         if self.direction is None:
-            if self.label_position in horizontal_locations:
+            if self.label_position in ('right', 'left'):
                 self.direction = 'vertical'
             else:
                 self.direction = 'horizontal'
@@ -146,53 +133,38 @@ class guide(metaclass=Registry):
             elif self.direction == 'horizontal':
                 self.title_position = 'left'
         if self.title_position not in valid_locations:
-            msg = "title position '{}' is invalid"
+            msg = "legend title position '{}' is invalid"
             raise PlotnineError(msg.format(self.title_position))
 
         # title alignment
-        tmp = 'left' if self.direction == 'vertical' else 'center'
-        self._title_align = self._default('legend_title_align', tmp)
+        self._title_align = _property('legend_title_align')
+        if self._title_align == 'auto':
+            if self.direction == 'vertical':
+                self._title_align = 'left'
+            else:
+                self._title_align = 'center'
 
         # by default, direction of each guide depends on
         # the position all the guides
-        try:
-            position = get_property('legend_position')
-        except KeyError:
-            position = 'right'
-
-        if position in {'top', 'bottom'}:
-            tmp = 'horizontal'
-        else:  # left, right, (default)
-            tmp = 'vertical'
-        self.direction = self._default('legend_direction', tmp)
+        position = _property('legend_position')
+        self.direction = _property('legend_direction')
+        if self.direction == 'auto':
+            if position in ('right', 'left'):  # default
+                self.direction = 'vertical'
+            else:
+                self.direction = 'horizontal'
 
         # title margin
         loc = margin_location_lookup[self.title_position[0]]
-        try:
-            margin = get_property('legend_title', 'margin')
-        except KeyError:
-            self._title_margin = 8
-        else:
-            self._title_margin = margin.get_as(loc, 'pt')
+        margin = _property('legend_title', 'margin')
+        self._title_margin = margin.get_as(loc, 'pt')
 
         # legend_margin
-        try:
-            self._legend_margin = get_property('legend_margin')
-        except KeyError:
-            self._legend_margin = 10
+        self._legend_margin = _property('legend_margin')
 
         # legend_entry_spacing
-        try:
-            self._legend_entry_spacing_x = get_property(
-                'legend_entry_spacing_x')
-        except KeyError:
-            self._legend_entry_spacing_x = 5
-
-        try:
-            self._legend_entry_spacing_y = get_property(
-                'legend_entry_spacing_y')
-        except KeyError:
-            self._legend_entry_spacing_y = 2
+        self._legend_entry_spacing_x = _property('legend_entry_spacing_x')
+        self._legend_entry_spacing_y = _property('legend_entry_spacing_y')
 
     def legend_aesthetics(self, layer, plot):
         """
