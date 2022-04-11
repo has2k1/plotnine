@@ -45,13 +45,7 @@ class facet_null(facet):
         """
         # Only deal with the aspect ratio
         figure = self.figure
-        theme = self.theme
-
-        try:
-            aspect_ratio = theme.themeables.property('aspect_ratio')
-        except KeyError:
-            aspect_ratio = self.coordinates.aspect(
-                    self.layout.panel_params[0])
+        aspect_ratio = self._aspect_ratio()
 
         if aspect_ratio is None:
             return

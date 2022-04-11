@@ -155,7 +155,8 @@ class facet_wrap(facet):
         nrow = self.nrow
         figure = self.figure
         theme = self.theme
-        get_property = theme.themeables.property
+        aspect_ratio = self._aspect_ratio()
+        _property = theme.themeables.property
 
         left = figure.subplotpars.left
         right = figure.subplotpars.right
@@ -163,34 +164,15 @@ class facet_wrap(facet):
         bottom = figure.subplotpars.bottom
         top_strip_height = self.strips.breadth('top')
         W, H = figure.get_size_inches()
-
-        try:
-            spacing_x = get_property('panel_spacing_x')
-        except KeyError:
-            spacing_x = 0.1
-
-        try:
-            spacing_y = get_property('panel_spacing_y')
-        except KeyError:
-            spacing_y = 0.1
-
-        try:
-            aspect_ratio = get_property('aspect_ratio')
-        except KeyError:
-            # If the panels have different limits the coordinates
-            # cannot compute a common aspect ratio
-            if not self.free['x'] and not self.free['y']:
-                aspect_ratio = self.coordinates.aspect(
-                    self.layout.panel_params[0])
-            else:
-                aspect_ratio = None
+        spacing_x = _property('panel_spacing_x')
+        spacing_y = _property('panel_spacing_y')
 
         if theme.themeables.is_blank('strip_text_x'):
             top_strip_height = 0
 
         # Account for the vertical sliding of the strip if any
         with suppress(KeyError):
-            strip_margin_x = get_property('strip_margin_x')
+            strip_margin_x = _property('strip_margin_x')
             top_strip_height *= (1 + strip_margin_x)
 
         # The goal is to have equal spacing along the vertical

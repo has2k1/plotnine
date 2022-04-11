@@ -1,7 +1,6 @@
 import os
 import sys
 from copy import deepcopy
-from contextlib import suppress
 from itertools import chain
 from types import SimpleNamespace as NS
 from warnings import warn
@@ -434,18 +433,10 @@ class ggplot:
         bottom = figure.subplotpars.bottom
         W, H = figure.get_size_inches()
         position = self.guides.position
-        get_property = self.theme.themeables.property
-        # defaults
-        spacing = 0.1
-        strip_margin_x = 0
-        strip_margin_y = 0
-
-        with suppress(KeyError):
-            spacing = get_property('legend_box_spacing')
-        with suppress(KeyError):
-            strip_margin_x = get_property('strip_margin_x')
-        with suppress(KeyError):
-            strip_margin_y = get_property('strip_margin_y')
+        _property = self.theme.themeables.property
+        spacing = _property('legend_box_spacing')
+        strip_margin_x = _property('strip_margin_x')
+        strip_margin_y = _property('strip_margin_y')
 
         right_strip_width = self.facet.strips.breadth('right')
         top_strip_height = self.facet.strips.breadth('top')
@@ -485,7 +476,8 @@ class ggplot:
             frameon=False,
             bbox_to_anchor=(x, y),
             bbox_transform=figure.transFigure,
-            borderpad=0.)
+            borderpad=0.
+        )
 
         anchored_box.set_zorder(90.1)
         self.figure._themeable['legend_background'] = anchored_box
@@ -499,21 +491,10 @@ class ggplot:
         # This is very laboured. Should be changed when MPL
         # finally has a constraint based layout manager.
         figure = self.figure
-        get_property = self.theme.themeables.property
+        _property = self.theme.themeables.property
 
-        try:
-            margin = get_property('axis_title_x', 'margin')
-        except KeyError:
-            pad_x = 5
-        else:
-            pad_x = margin.get_as('t', 'pt')
-
-        try:
-            margin = get_property('axis_title_y', 'margin')
-        except KeyError:
-            pad_y = 5
-        else:
-            pad_y = margin.get_as('r', 'pt')
+        pad_x = _property('axis_title_x', 'margin').get_as('t', 'pt')
+        pad_y = _property('axis_title_y', 'margin').get_as('r', 'pt')
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -551,8 +532,7 @@ class ggplot:
         # finally has a constraint based layout manager.
         figure = self.figure
         title = self.labels.get('title', '')
-        rcParams = self.theme.rcParams
-        get_property = self.theme.themeables.property
+        _property = self.theme.themeables.property
 
         # Pick suitable values in inches and convert them to
         # transFigure dimension. This gives fixed spacing
@@ -565,32 +545,12 @@ class ggplot:
         # pad/H is inches in transFigure coordinates. A fixed
         # margin value in inches prevents oblong plots from
         # getting unpredictably large spaces.
-        try:
-            fontsize = get_property('plot_title', 'size')
-        except KeyError:
-            fontsize = float(rcParams.get('font.size', 12))
 
-        try:
-            linespacing = get_property('plot_title', 'linespacing')
-        except KeyError:
-            linespacing = 1.2
-
-        try:
-            margin = get_property('plot_title', 'margin')
-        except KeyError:
-            pad = 0.09
-        else:
-            pad = margin.get_as('b', 'in')
-
-        try:
-            strip_margin_y = get_property('strip_margin_y')
-        except KeyError:
-            strip_margin_y = 0
-
-        try:
-            ha = get_property('plot_title', 'ha')
-        except KeyError:
-            ha = 'center'
+        linespacing = _property('plot_title', 'linespacing')
+        fontsize = _property('plot_title', 'size')
+        pad = _property('plot_title', 'margin').get_as('b', 'in')
+        ha = _property('plot_title', 'ha')
+        strip_margin_y = _property('strip_margin_y')
 
         dpi = 72.27
         line_size = fontsize / dpi
@@ -620,7 +580,7 @@ class ggplot:
         # finally has a constraint based layout manager.
         figure = self.figure
         caption = self.labels.get('caption', '')
-        get_property = self.theme.themeables.property
+        _property = self.theme.themeables.property
 
         # Pick suitable values in inches and convert them to
         # transFigure dimension. This gives fixed spacing
@@ -628,11 +588,9 @@ class ggplot:
         right = figure.subplotpars.right
         W, H = figure.get_size_inches()
 
-        right_pad = 0
-        top_pad = 0
-        with suppress(KeyError):
-            margin = get_property('plot_caption', 'margin')
-            right_pad = margin.get_as('r', 'in')
+        margin = _property('plot_caption', 'margin')
+        right_pad = margin.get_as('r', 'in')
+        top_pad = margin.get_as('t', 'in')
 
         x = right - right_pad/W
         y = 0 - top_pad/H

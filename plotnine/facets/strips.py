@@ -141,7 +141,7 @@ class strip:
         """
         dpi = 72
         theme = self.theme
-        get_property = theme.themeables.property
+        _property = theme.themeables.property
 
         if self.location == 'right':
             strip_name = 'strip_text_y'
@@ -157,15 +157,8 @@ class strip:
         # transAxes dimensions. The line height and line
         # width are mapped to the same [0, 1] range
         # i.e (pts) * (inches / pts) * (1 / inches)
-        try:
-            fontsize = get_property(strip_name, 'size')
-        except KeyError:
-            fontsize = float(theme.rcParams.get('font.size', 10))
-
-        try:
-            linespacing = get_property(strip_name, 'linespacing')
-        except KeyError:
-            linespacing = 1
+        fontsize = _property(strip_name, 'size')
+        linespacing = _property(strip_name, 'linespacing')
 
         # margins on either side of the strip text
         m1, m2 = self.inner_margins
@@ -188,7 +181,7 @@ class strip:
         dpi = 72
         ax = self.ax
         location = self.location
-        get_property = self.theme.themeables.property
+        _property = self.theme.themeables.property
         bbox = ax.get_window_extent().transformed(
             self.figure.dpi_scale_trans.inverted()
         )
@@ -196,7 +189,6 @@ class strip:
         strip_size = self.breadth
         m1, m2 = self.inner_margins
         m1, m2 = m1/dpi, m2/dpi
-        margin = 0  # default
 
         if location == 'right':
             box_x = 1
@@ -207,11 +199,11 @@ class strip:
             # shrink the strip vertically. The x margin slides
             # it horizontally.
             with suppress(KeyError):
-                box_y = get_property('strip_background_y', 'y')
+                box_y = _property('strip_background_y', 'y')
             with suppress(KeyError):
-                box_height = get_property('strip_background_y', 'height')
-            with suppress(KeyError):
-                margin = get_property('strip_margin_x')
+                box_height = _property('strip_background_y', 'height')
+
+            margin = _property('strip_margin_x')
             x = 1 + (strip_size-m2+m1) / (2*ax_width)
             y = (2*box_y+box_height)/2
             # margin adjustment
@@ -229,11 +221,11 @@ class strip:
             # shrink the strip horizontally. The y margin slides
             # it vertically.
             with suppress(KeyError):
-                box_x = get_property('strip_background_x', 'x')
+                box_x = _property('strip_background_x', 'x')
             with suppress(KeyError):
-                box_width = get_property('strip_background_x', 'width')
-            with suppress(KeyError):
-                margin = get_property('strip_margin_y')
+                box_width = _property('strip_background_x', 'width')
+
+            margin = _property('strip_margin_y')
             x = (2*box_x+box_width)/2
             y = 1 + (strip_size-m1+m2)/(2*ax_height)
             # margin adjustment

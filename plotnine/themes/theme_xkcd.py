@@ -53,10 +53,7 @@ class theme_xkcd(theme_gray):
                 panel_border=element_rect(color='black', size=1.5),
                 panel_grid=element_blank(),
                 panel_background=element_rect(fill='white'),
-                strip_background=element_rect(
-                    color='black',
-                    fill='white'
-                ),
+                strip_background=element_rect(color='black', fill='white'),
                 strip_background_x=element_rect(width=2/3.),
                 strip_background_y=element_rect(height=2/3.),
                 strip_margin=-0.5,
