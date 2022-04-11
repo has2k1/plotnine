@@ -55,7 +55,8 @@ class theme_matplotlib(theme):
             strip_text=element_text(
                 margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
             ),
-            complete=True)
+            complete=True
+        )
 
         if use_defaults:
             _copy = mpl.rcParams.copy()

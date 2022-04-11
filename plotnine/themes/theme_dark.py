@@ -20,15 +20,18 @@ class theme_dark(theme_gray):
 
     def __init__(self, base_size=11, base_family=None):
         theme_gray.__init__(self, base_size, base_family)
-        self.add_theme(theme(
+        self += theme(
             axis_ticks=element_line(color='#666666', size=0.5),
             axis_ticks_minor=element_blank(),
             legend_key=element_rect(
-                fill='#7F7F7F', color='#666666', size=0.5),
+                fill='#7F7F7F',
+                color='#666666',
+                size=0.5
+            ),
             panel_background=element_rect(fill='#7F7F7F', color='None'),
             panel_grid_major=element_line(color='#666666', size=0.5),
             panel_grid_minor=element_line(color='#737373', size=0.25),
             strip_background=element_rect(fill='#333333', color='None'),
             strip_text_x=element_text(color='white'),
             strip_text_y=element_text(color='white', angle=-90)
-        ), inplace=True)
+        )

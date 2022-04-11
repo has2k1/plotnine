@@ -39,32 +39,41 @@ class theme_xkcd(theme_gray):
         self.add_theme(
             theme(
                 text=element_text(
-                    family=['xkcd', 'Humor Sans', 'Comic Sans MS']),
+                    family=['xkcd', 'Humor Sans', 'Comic Sans MS']
+                ),
                 axis_ticks=element_line(color='black', size=1.5),
                 axis_ticks_minor=element_blank(),
                 axis_ticks_direction='in',
                 axis_ticks_length_major=6,
                 legend_background=element_rect(
-                    color='black', fill='None'),
+                    color='black',
+                    fill='None'
+                ),
                 legend_key=element_rect(fill='None'),
                 panel_border=element_rect(color='black', size=1.5),
                 panel_grid=element_blank(),
                 panel_background=element_rect(fill='white'),
                 strip_background=element_rect(
-                    color='black', fill='white'),
+                    color='black',
+                    fill='white'
+                ),
                 strip_background_x=element_rect(width=2/3.),
                 strip_background_y=element_rect(height=2/3.),
                 strip_margin=-0.5,
             ),
-            inplace=True)
+            inplace=True
+        )
 
-        d = {'axes.unicode_minus': False,
-             'path.sketch':  (scale, length, randomness),
-             'path.effects':  [
-                 patheffects.withStroke(
-                     linewidth=stroke_size,
-                     foreground=stroke_color)]
-             }
+        d = {
+            'axes.unicode_minus': False,
+            'path.sketch': (scale, length, randomness),
+            'path.effects': [
+                patheffects.withStroke(
+                    linewidth=stroke_size,
+                    foreground=stroke_color
+                )
+            ]
+        }
         self._rcParams.update(d)
 
     def __deepcopy__(self, memo):

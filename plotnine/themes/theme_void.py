@@ -73,4 +73,5 @@ class theme_void(theme):
                 margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
             ),
 
-            complete=True)
+            complete=True
+        )
