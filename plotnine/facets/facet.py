@@ -282,21 +282,12 @@ class facet:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        get_property = self.theme.themeables.property
-        # Padding between ticks and text
-        try:
-            margin = get_property('axis_text_x', 'margin')
-        except KeyError:
-            pad_x = 2.4
-        else:
-            pad_x = margin.get_as('t', 'pt')
+        _property = self.theme.themeables.property
+        margin = _property('axis_text_x', 'margin')
+        pad_x = margin.get_as('t', 'pt')
 
-        try:
-            margin = get_property('axis_text_y', 'margin')
-        except KeyError:
-            pad_y = 2.4
-        else:
-            pad_y = margin.get_as('r', 'pt')
+        margin = _property('axis_text_y', 'margin')
+        pad_y = margin.get_as('r', 'pt')
 
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
@@ -404,6 +395,21 @@ class facet:
         self.figure = figure
         self.axs = axs
         return axs
+
+    def _aspect_ratio(self):
+        "Return the aspect_ratio"
+        aspect_ratio = self.theme.themeables.property('aspect_ratio')
+        if aspect_ratio == 'auto':
+            # If the panels have different limits the coordinates
+            # cannot compute a common aspect ratio
+            if not self.free['x'] and not self.free['y']:
+                aspect_ratio = self.coordinates.aspect(
+                    self.layout.panel_params[0]
+                )
+            else:
+                aspect_ratio = None
+
+        return aspect_ratio
 
     def spaceout_and_resize_panels(self):
         """

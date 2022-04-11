@@ -128,7 +128,9 @@ class theme_gray(theme):
             panel_spacing_y=0.07,
             panel_ontop=True,
 
-            strip_background=element_rect(fill='#D9D9D9', color='None'),
+            strip_background=element_rect(color='None', fill='#D9D9D9'),
+            strip_background_x=element_rect(width=1),
+            strip_background_y=element_rect(height=1),
             strip_margin=0,
             strip_margin_x=None,
             strip_margin_y=None,
@@ -155,7 +157,7 @@ class theme_gray(theme):
             plot_caption=element_text(
                 size=base_size*0.8,
                 margin={
-                    't': 7.2,
+                    't': 0,
                     'r': 0,
                     'units': 'pt'
                 }

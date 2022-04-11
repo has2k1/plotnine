@@ -10,7 +10,7 @@ current_theme = None
 base_family = 'Dejavu Sans'
 
 #: Default aspect ratio used by the themes
-aspect_ratio = None
+aspect_ratio = 'auto'
 
 #: Default DPI used by the themes
 dpi = 100
