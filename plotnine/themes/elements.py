@@ -4,7 +4,25 @@ Theme elements used to decorate the graph.
 from contextlib import suppress
 
 
-class element_line:
+class element_base:
+    """
+    Base class for all theme elements
+    """
+    properties = None  # dict of the properties
+
+    def __init__(self):
+        self.properties = {'visible': True}
+
+    def __repr__(self):
+        return f'element_text({self})'
+
+    def __str__(self):
+        d = self.properties.copy()
+        del d['visible']
+        return f'{d}'
+
+
+class element_line(element_base):
     """
     Theme element: Line
 
@@ -29,25 +47,24 @@ class element_line:
 
     def __init__(self, color=None, size=None, linetype=None,
                  lineend=None, colour=None, **kwargs):
+        super().__init__()
+        self.properties.update(**kwargs)
+
         color = color if color else colour
-        d = {'visible': True}
         if color:
-            d['color'] = color
+            self.properties['color'] = color
         if size:
-            d['linewidth'] = size
+            self.properties['linewidth'] = size
         if linetype:
-            d['linestyle'] = linetype
+            self.properties['linestyle'] = linetype
 
         if linetype in ('solid', '-') and lineend:
-            d['solid_capstyle'] = lineend
+            self.properties['solid_capstyle'] = lineend
         elif linetype and lineend:
-            d['dash_capstyle'] = lineend
-
-        d.update(**kwargs)
-        self.properties = d
+            self.properties['dash_capstyle'] = lineend
 
 
-class element_rect:
+class element_rect(element_base):
     """
     Theme element: Rectangle
 
@@ -72,23 +89,21 @@ class element_rect:
 
     def __init__(self, fill=None, color=None, size=None,
                  linetype=None, colour=None, **kwargs):
+        super().__init__()
+        self.properties.update(**kwargs)
 
         color = color if color else colour
-        d = {'visible': True}
         if fill:
-            d['facecolor'] = fill
+            self.properties['facecolor'] = fill
         if color:
-            d['edgecolor'] = color
+            self.properties['edgecolor'] = color
         if size:
-            d['linewidth'] = size
+            self.properties['linewidth'] = size
         if linetype:
-            d['linestyle'] = linetype
-
-        d.update(**kwargs)
-        self.properties = d
+            self.properties['linestyle'] = linetype
 
 
-class element_text:
+class element_text(element_base):
     """
     Theme element: Text
 
@@ -122,7 +137,7 @@ class element_text:
         one of ``['pt', 'lines', 'in']``. The *units* default
         to ``pt`` and the other keys to ``0``. Not all text
         themeables support margin parameters and other than the
-        ``units``, only some of the other keys will a.
+        ``units``, only some of the other keys may apply.
     kwargs : dict
         Parameters recognised by :class:`matplotlib.text.Text`
 
@@ -137,7 +152,6 @@ class element_text:
                  color=None, size=None, ha=None, va=None,
                  rotation=None, linespacing=None, backgroundcolor=None,
                  margin=None, **kwargs):
-        d = {'visible': True}
 
         # ggplot2 translation
         with suppress(KeyError):
@@ -162,10 +176,12 @@ class element_text:
         with suppress(KeyError):
             rotation = kwargs.pop('angle')
 
+        super().__init__()
+        self.properties.update(**kwargs)
+
         if margin is not None:
             margin = Margin(self, **margin)
 
-        # margin.update(kwargs.get('margin', {}))
         # Use the parameters that have been set
         names = ('backgroundcolor', 'color', 'family', 'ha',
                  'linespacing', 'rotation', 'size', 'style',
@@ -173,10 +189,7 @@ class element_text:
         variables = locals()
         for name in names:
             if variables[name] is not None:
-                d[name] = variables[name]
-
-        d.update(**kwargs)
-        self.properties = d
+                self.properties[name] = variables[name]
 
     def _translate_hjust(self, just):
         """
@@ -201,12 +214,12 @@ class element_text:
             return 'center'
 
 
-class element_blank:
+class element_blank(element_base):
     """
     Theme element: Blank
     """
     def __init__(self):
-        self.properties = {}
+        self.properties = {'visible': False}
 
 
 class Margin(dict):
