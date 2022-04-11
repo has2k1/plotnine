@@ -39,7 +39,8 @@ class theme_tufte(theme_bw):
 
     def __init__(self, base_size=11, base_family=None, ticks=True):
         theme_bw.__init__(self, base_size, base_family)
-        self.add_theme(theme(
+        d = {} if ticks else {'axis_ticks': element_blank()}
+        self += theme(
             legend_background=element_blank(),
             legend_key=element_blank(),
             panel_background=element_blank(),
@@ -47,10 +48,6 @@ class theme_tufte(theme_bw):
             strip_background=element_blank(),
             plot_background=element_blank(),
             axis_line=element_blank(),
-            panel_grid=element_blank()
-        ), inplace=True)
-
-        if not ticks:
-            self.add_theme(theme(
-                axis_ticks=element_blank()
-                ), inplace=True)
+            panel_grid=element_blank(),
+            **d
+        )

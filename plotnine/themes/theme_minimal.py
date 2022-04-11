@@ -18,13 +18,13 @@ class theme_minimal(theme_bw):
 
     def __init__(self, base_size=11, base_family=None):
         theme_bw.__init__(self, base_size, base_family)
-        self.add_theme(
-            theme(legend_background=element_blank(),
-                  legend_key=element_blank(),
-                  panel_background=element_blank(),
-                  panel_border=element_blank(),
-                  strip_background=element_blank(),
-                  plot_background=element_blank(),
-                  axis_ticks=element_blank(),
-                  axis_ticks_length=12),
-            inplace=True)
+        self += theme(
+            legend_background=element_blank(),
+            legend_key=element_blank(),
+            panel_background=element_blank(),
+            panel_border=element_blank(),
+            strip_background=element_blank(),
+            plot_background=element_blank(),
+            axis_ticks=element_blank(),
+            axis_ticks_length=12
+        )

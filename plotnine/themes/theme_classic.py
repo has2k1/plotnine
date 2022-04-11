@@ -19,16 +19,19 @@ class theme_classic(theme_bw):
 
     def __init__(self, base_size=11, base_family=None):
         theme_bw.__init__(self, base_size, base_family)
-        self.add_theme(
-            theme(panel_border=element_blank(),
-                  axis_line=element_line(color='black'),
-                  panel_grid_major=element_line(),
-                  panel_grid_major_x=element_blank(),
-                  panel_grid_major_y=element_blank(),
-                  panel_grid_minor=element_line(),
-                  panel_grid_minor_x=element_blank(),
-                  panel_grid_minor_y=element_blank(),
-                  strip_background=element_rect(
-                      colour='black', fill='None', size=1),
-                  legend_key=element_blank()),
-            inplace=True)
+        self += theme(
+            panel_border=element_blank(),
+            axis_line=element_line(color='black'),
+            panel_grid_major=element_line(),
+            panel_grid_major_x=element_blank(),
+            panel_grid_major_y=element_blank(),
+            panel_grid_minor=element_line(),
+            panel_grid_minor_x=element_blank(),
+            panel_grid_minor_y=element_blank(),
+            strip_background=element_rect(
+                colour='black',
+                fill='None',
+                size=1
+            ),
+            legend_key=element_blank()
+        )
