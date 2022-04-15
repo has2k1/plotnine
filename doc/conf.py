@@ -112,8 +112,6 @@ release = version
 # directories to ignore when looking for source files.
 exclude_patterns = [
     '_build',
-    # Deprecated
-    'generated/plotnine.themes.themeable.facet_spacing.rst'
 ]
 # The reST default role (used for this markup: `text`) to use for all
 # documents.

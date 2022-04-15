@@ -137,7 +137,6 @@ class theme:
                  dpi=None,
                  figure_size=None,
                  subplots_adjust=None,
-                 facet_spacing=None,
                  legend_box=None,
                  legend_box_margin=None,
                  legend_box_just=None,

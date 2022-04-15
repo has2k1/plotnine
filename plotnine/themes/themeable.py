@@ -1,5 +1,5 @@
 """
-Provide theamables, that is the elements can be themed.
+Provide theamables, the elements of plot can be style with theme()
 
 From the ggplot2 documentation the axis.title inherits from text.
 What this means is that axis.title and text have the same elements
@@ -19,7 +19,7 @@ from .elements import (element_line, element_rect,
 
 class themeable(metaclass=RegistryHierarchyMeta):
     """
-    themeable is an abstract class of things that can be themed.
+    Abstract class of things that can be themed.
 
     Every subclass of themeable is stored in a dict at
     :python:`themeable.register` with the name of the subclass as
@@ -225,8 +225,7 @@ class Themeables(dict):
     """
     Collection of themeables
 
-    The `key` to the value is the name of
-    the class.
+    The key is the name of the class.
     """
 
     def update(self, other):
@@ -264,11 +263,11 @@ class Themeables(dict):
 
     def values(self):
         """
-        Return a list themeables sorted in reverse based
+        Return a list of themeables sorted in reverse based
         on the their depth in the inheritance hierarchy.
 
-        The sorting is key applying and merging the themeables
-        so that they do not clash i.e :class:`axis_line`
+        The sorting is key when applying and merging the themeables
+        so that they do not conflict i.e :class:`axis_line`
         applied before :class:`axis_line_x`.
         """
         def key(th):
@@ -305,11 +304,8 @@ class Themeables(dict):
         hlist = themeable._hierarchy[name]
         scalar = key == 'value'
         for th in hlist:
-            try:
+            with suppress(KeyError):
                 value = self[th].properties[key]
-            except KeyError:
-                continue
-            else:
                 if not scalar or value is not None:
                     return value
 
@@ -320,10 +316,10 @@ class Themeables(dict):
         """
         Return True if the themeable *name* is blank
 
-        This if the *name* is not in the list of themeables
-        then the lookup falls back to inheritance hierarchy
-        is considered. If the none of the themeables in the
-        hierary are present, ``False`` will be returned.
+        If the *name* is not in the list of themeables then
+        the lookup falls back to inheritance hierarchy.
+        If none of the themeables are in the hierarchy are
+        present, ``False`` is returned.
 
         Parameters
         ----------
@@ -449,7 +445,7 @@ class legend_text_legend(themeable):
     Notes
     -----
     This themeable exists mainly to cater for differences
-    in how the text is aligned, compared to the colorbar.
+    in how the text is aligned compared to the colorbar.
     Unless you experience those alignment issues (i.e when
     using parameters **va** or **ha**), you should use
     :class:`legend_text`.
@@ -485,7 +481,7 @@ class legend_text_colorbar(themeable):
     Notes
     -----
     This themeable exists mainly to cater for differences
-    in how the text is aligned, compared to the entry based
+    in how the text is aligned compared to the entry based
     legend. Unless you experience those alignment issues
     (i.e when using parameters **va** or **ha**), you should
     use :class:`legend_text`.
@@ -1616,16 +1612,6 @@ class subplots_adjust(themeable):
             top=params.get('top', None),
             bottom=params.get('bottom', None),
         )
-
-
-# Deprecated
-class facet_spacing(subplots_adjust):
-    def __init__(self, *args, **kwargs):
-        from warnings import warn
-        warn("'facet_spacing' has been renamed to "
-             "'subplots_adjust' and it will be removed "
-             "in the future.", FutureWarning)
-        super().__init__(*args, **kwargs)
 
 
 class legend_box(themeable):
