@@ -9,12 +9,16 @@ from .evaluation import after_stat, stage
 
 __all__ = ['aes']
 
+X_AESTHETICS = {'x', 'xmin', 'xmax', 'xend', 'xintercept'}
+Y_AESTHETICS = {'y', 'ymin', 'ymax', 'yend', 'yintercept'}
+
 ALL_AESTHETICS = {
     'alpha', 'angle', 'color', 'colour', 'fill', 'group', 'intercept',
     'label', 'lineheight', 'linetype', 'lower', 'middle', 'radius',
-    'sample', 'shape', 'size', 'slope', 'stroke', 'upper', 'weight', 'x',
-    'xend', 'xintercept', 'xmax', 'xmin', 'y', 'yend', 'yintercept',
-    'ymax', 'ymin'}
+    'sample', 'shape', 'size', 'slope', 'stroke', 'upper', 'weight',
+    *X_AESTHETICS,
+    *Y_AESTHETICS
+}
 
 SCALED_AESTHETICS = {
     'x', 'y', 'alpha', 'color', 'colour', 'fill',

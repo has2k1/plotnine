@@ -35,11 +35,11 @@ class geom_bar(geom_rect):
 
         bool_idx = (data['y'] < 0)
 
-        data['ymin'] = 0
+        data['ymin'] = 0.0
         data.loc[bool_idx, 'ymin'] = data.loc[bool_idx, 'y']
 
         data['ymax'] = data['y']
-        data.loc[bool_idx, 'ymax'] = 0
+        data.loc[bool_idx, 'ymax'] = 0.0
 
         data['xmin'] = data['x'] - data['width'] / 2
         data['xmax'] = data['x'] + data['width'] / 2

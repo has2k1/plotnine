@@ -291,17 +291,17 @@ class ggplot:
         # Transform data using all scales
         layers.transform(scales)
 
+        # Make sure missing (but required) aesthetics are added
+        scales.add_missing(('x', 'y'))
+
         # Map and train positions so that statistics have access
         # to ranges and all positions are numeric
-        layout.train_position(layers, scales.x, scales.y)
+        layout.train_position(layers, scales)
         layout.map_position(layers)
 
         # Apply and map statistics
         layers.compute_statistic(layout)
         layers.map_statistic(self)
-
-        # Make sure missing (but required) aesthetics are added
-        scales.add_missing(('x', 'y'))
 
         # Prepare data in geoms
         # e.g. from y and width to ymin and ymax
@@ -314,7 +314,7 @@ class ggplot:
         # ensures that facets have control over the range of
         # a plot.
         layout.reset_position_scales()
-        layout.train_position(layers, scales.x, scales.y)
+        layout.train_position(layers, scales)
         layout.map_position(layers)
 
         # Train and map non-position scales

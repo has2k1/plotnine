@@ -18,8 +18,10 @@ class position_stack(position):
     fill = False
 
     def __init__(self, vjust=1, reverse=False):
-        self.params = {'vjust': vjust,
-                       'reverse': reverse}
+        self.params = {
+            'vjust': vjust,
+            'reverse': reverse
+        }
 
     def setup_params(self, data):
         """
@@ -66,6 +68,25 @@ class position_stack(position):
         if not params['var']:
             return data
 
+        # TODO: Make transforms in mizani aware of their
+        # linear status
+        def _is_non_linear_trans(trans):
+            tname = trans.__class__.__name__
+            linear_transforms = ('identity', 'reverse')
+            if tname.endswith('_trans'):
+                tname = tname[:-6]
+            return (trans.dataspace_is_numerical and
+                    tname not in linear_transforms
+                    )
+
+        # Positioning happens after scale transformation and stacking
+        # only works well for linear data. If the scale is non-linear,
+        # we undo the transformation, stack and redo the transformation
+        trans = scales.y.trans
+        non_linear_trans = _is_non_linear_trans(trans)
+        if non_linear_trans:
+            data = cls.transform_position(data, trans_y=trans.inverse)
+
         negative = data['ymax'] < 0
         neg = data.loc[negative]
         pos = data.loc[~negative]
@@ -77,6 +98,9 @@ class position_stack(position):
             pos = cls.collide(pos, params=params)
 
         data = pd.concat([neg, pos], axis=0, ignore_index=True, sort=True)
+
+        if non_linear_trans:
+            data = cls.transform_position(data, trans_y=trans.transform)
         return data
 
     @staticmethod

@@ -63,7 +63,7 @@ class Layout:
         for layer, ldata in zip(layers, data):
             layer.data = self.facet.map(ldata, self.layout)
 
-    def train_position(self, layers, x_scale, y_scale):
+    def train_position(self, layers, scales):
         """
         Create all the required x & y panel_scales y_scales
         and set the ranges for each scale according to the data.
@@ -77,12 +77,12 @@ class Layout:
         scale and a y scale.
         """
         layout = self.layout
-        if self.panel_scales_x is None and x_scale:
-            result = self.facet.init_scales(layout, x_scale, None)
+        if self.panel_scales_x is None and scales.x:
+            result = self.facet.init_scales(layout, scales.x, None)
             self.panel_scales_x = result.x
 
-        if self.panel_scales_y is None and y_scale:
-            result = self.facet.init_scales(layout, None, y_scale)
+        if self.panel_scales_y is None and scales.y:
+            result = self.facet.init_scales(layout, None, scales.y)
             self.panel_scales_y = result.y
 
         self.facet.train_position_scales(self, layers)

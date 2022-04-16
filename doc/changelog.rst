@@ -58,6 +58,9 @@ Bug Fixes
 - Fixed :class:`~plotnine.geoms.geom_point` to respect not to use the ``fill``
   mapping on unfilled shapes. :issue:`100`
 
+- Fixed :class:`~plotnine.positions.position_stack` to work with scales that
+  have non-linear transformations. e.g.
+  :class:`~plotnine.scales.scale_y_log10`. :issue:`580`
 Enhancements
 ************
 
