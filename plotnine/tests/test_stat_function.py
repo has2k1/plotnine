@@ -36,10 +36,9 @@ def test_args():
 
 
 def test_exceptions():
-    # no x limits
-    with pytest.raises(PlotnineError):
-        p = ggplot(df)
-        print(p + stat_function(fun=np.sin))
+    # no mapping, no limits
+    p = ggplot(df) + stat_function(fun=np.sin)
+    p.draw_test()
 
     # fun not callable
     with pytest.raises(PlotnineError):

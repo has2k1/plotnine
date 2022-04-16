@@ -8,7 +8,7 @@ from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
                       geom_col, geom_boxplot, geom_text, geom_rect,
                       after_stat, position_dodge, position_dodge2,
                       position_jitter, position_jitterdodge,
-                      position_nudge, position_stack, theme)
+                      position_nudge, position_stack, scale_y_log10, theme)
 from plotnine.positions.position import position
 from plotnine.exceptions import PlotnineError
 
@@ -69,6 +69,20 @@ def test_stack_negative():
          )
 
     assert p + _theme == 'stack-negative'
+
+
+def test_stack_non_linear_scale():
+    df = pd.DataFrame({
+        'x': 'x',
+        'value': [.1, 10, 100, 1000],
+        'cat': ['small', 'small', 'big', 'big']
+    })
+
+    p = (ggplot(df, aes('x', 'value', fill='cat'))
+         + geom_col()
+         + scale_y_log10()
+         )
+    assert p + _theme == 'stack-non-linear-scale'
 
 
 def test_fill():
