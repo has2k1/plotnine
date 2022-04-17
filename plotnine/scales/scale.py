@@ -259,18 +259,12 @@ class scale(metaclass=Registry):
         if self.is_empty():
             return (0, 1)
 
-        # Fall back to the range if the limits
-        # are not set or if any is None or NaN
-        if self._limits is not None and self.range.range is not None:
-            limits = []
-            if len(self._limits) == len(self.range.range):
-                for l, r in zip(self._limits, self.range.range):
-                    value = self.trans.transform(r) if pd.isnull(l) else l
-                    limits.append(value)
-            else:
-                limits = self._limits
-            return tuple(limits)
-        return self.range.range
+        if self._limits is None:
+            return tuple(self.range.range)
+        elif callable(self._limits):
+            return tuple(self._limits(self.range.range))
+        else:
+            return tuple(self._limits)
 
     @limits.setter
     def limits(self, value):
@@ -640,21 +634,54 @@ class scale_continuous(scale):
         self._trans = t
         self._trans.aesthetic = self.aesthetics[0]
 
-    @scale.limits.setter
+    @property
+    def limits(self):
+        if self.is_empty():
+            return (0, 1)
+
+        if self._limits is None:
+            return self.range.range
+        elif callable(self._limits):
+            # Function works in the dataspace, but the limits are
+            # stored in transformed space. The range of the scale is
+            # in transformed space (i.e. with in the domain of the scale)
+            _range = self.trans.inverse(self.range.range)
+            return tuple(self.trans.transform(self._limits(_range)))
+        elif self._limits is not None and self.range.range is not None:
+            # Fall back to the range if the limits
+            # are not set or if any is None or NaN
+            if len(self._limits) == len(self.range.range):
+                return tuple(
+                    self.trans.transform(r) if pd.isnull(l) else l
+                    for l, r in zip(self._limits, self.range.range)
+                )
+        return tuple(self._limits)
+
+    @limits.setter
     def limits(self, value):
         """
         Limits for the continuous scale
 
-        Notes
-        -----
-        The limits are given in original dataspace
-        but they are stored in transformed space since
-        all computations happen on transformed data. The
-        labeling of the plot axis and the guides are in
-        the original dataspace.
+        Parameters
+        ----------
+        value : array-like | callable
+            Limits in the dataspace.
         """
+        # Notes
+        # -----
+        # The limits are given in original dataspace
+        # but they are stored in transformed space since
+        # all computations happen on transformed data. The
+        # labeling of the plot axis and the guides are in
+        # the original dataspace.
+        if callable(value):
+            self._limits = value
+            return
+
         limits = tuple(
-            self.trans.transform(x) if x is not None else None for x in value)
+            self.trans.transform(x) if x is not None else None
+            for x in value
+        )
         try:
             self._limits = np.sort(limits)
         except TypeError:

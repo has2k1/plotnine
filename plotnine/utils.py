@@ -6,6 +6,7 @@ import itertools
 import inspect
 import warnings
 from contextlib import suppress
+from typing import Callable
 from weakref import WeakValueDictionary
 from warnings import warn
 
@@ -934,7 +935,7 @@ def data_mapping_as_kwargs(args, kwargs):
             f"Unknown mapping of type {type(mapping)}"
         )
 
-    if data is not None and not isinstance(data, pd.DataFrame):
+    if data is not None and not is_data_like(data):
         raise PlotnineError(
             f"Unknown data of type {type(mapping)}"
         )
@@ -988,7 +989,7 @@ def order_as_data_mapping(*args):
     Returns
     -------
     mapping : aes
-    data : pd.DataFrame
+    data : pd.DataFrame | callable
     *rest : tuple
     """
     n = len(args)
@@ -1012,7 +1013,7 @@ def order_as_data_mapping(*args):
         )
 
     data, mapping = (ungroup(arg) for arg in args)
-    if isinstance(data, aes) or isinstance(mapping, pd.DataFrame):
+    if isinstance(data, aes) or is_data_like(mapping):
         data, mapping = mapping, data
 
     if not isinstance(mapping, aes) and mapping is not None:
@@ -1021,13 +1022,31 @@ def order_as_data_mapping(*args):
             .format(type(mapping))
         )
 
-    if not isinstance(data, pd.DataFrame) and data is not None:
+    if not is_data_like(data) and data is not None:
         raise TypeError(
             "Unknown argument type {!r}, expected dataframe."
             .format(type(data))
         )
 
     return data, mapping
+
+
+def is_data_like(obj):
+    """
+    Return True if obj could be data
+
+    Parameters
+    ----------
+    obj : object
+        Object that could be data
+
+    Returns
+    -------
+    out : bool
+        Whether obj could represent data as expected by
+        ggplot(), geom() or stat().
+    """
+    return isinstance(obj, (pd.DataFrame, Callable))
 
 
 def interleave(*arrays):

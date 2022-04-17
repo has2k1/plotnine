@@ -61,6 +61,9 @@ Bug Fixes
 - Fixed :class:`~plotnine.positions.position_stack` to work with scales that
   have non-linear transformations. e.g.
   :class:`~plotnine.scales.scale_y_log10`. :issue:`580`
+
+- Fix scales to work with limits passed as a function function.
+
 Enhancements
 ************
 

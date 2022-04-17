@@ -376,6 +376,30 @@ def test_setting_limits_transformed():
     assert s.limits == (np.log10(1), np.log10(7))
 
 
+def test_scale_continuous_limits_as_function():
+    def reverse(x):
+        return list(reversed(x))
+
+    x = [1, 2, 3, 4]
+    sc1 = scale_x_continuous()
+    sc2 = scale_x_continuous(limits=reverse)
+    sc1.train(x)
+    sc2.train(x)
+    assert sc1.limits == sc2.limits[::-1]
+
+
+def test_scale_discrete_limits_as_function():
+    def reverse(x):
+        return list(reversed(x))
+
+    x = ['a', 'b', 'c', 'd']
+    sc1 = scale_color.scale_color_discrete()
+    sc2 = scale_color.scale_color_discrete(limits=reverse)
+    sc1.train(x)
+    sc2.train(x)
+    assert sc1.limits == sc2.limits[::-1]
+
+
 def test_minor_breaks():
     n = 10
     x = np.arange(n)
