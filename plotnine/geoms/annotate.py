@@ -88,7 +88,8 @@ class annotate:
                 "geom must either be a geom.geom() "
                 "descendant (e.g. plotnine.geom_point), or "
                 "a string naming a geom (e.g. 'point', 'text', "
-                "...). Was {}".format(repr(geom)))
+                f"...). Got {repr(geom)}"
+            )
 
         mappings = aes(**{ae: ae for ae in data.columns})
 

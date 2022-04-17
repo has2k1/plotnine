@@ -1003,13 +1003,13 @@ def order_as_data_mapping(*args):
             return single_arg, None
         else:
             raise TypeError(
-                "Unknown argument type {!r}, expected mapping "
-                "or dataframe.".format(single_arg)
+                f"Unknown argument type {single_arg!r}, expected "
+                "mapping or dataframe."
             )
     elif n > 2:
         raise PlotnineError(
             "Expected at most 2 positional arguments, "
-            "but I got {}.".format(n)
+            f"but I got {n}."
         )
 
     data, mapping = (ungroup(arg) for arg in args)
@@ -1018,8 +1018,8 @@ def order_as_data_mapping(*args):
 
     if not isinstance(mapping, aes) and mapping is not None:
         raise TypeError(
-            "Unknown argument type {!r}, expected mapping/aes."
-            .format(type(mapping))
+            f"Unknown argument type {type(mapping)!r}, "
+            "expected mapping/aes."
         )
 
     if not is_data_like(data) and data is not None:

@@ -144,9 +144,7 @@ def reorder(x, y, fun=np.median, ascending=True):
     """
     if len(x) != len(y):
         raise ValueError(
-            "Lengths are not equal. len(x) is {} and len(x) is {}.".format(
-                len(x), len(y)
-            )
+            f"Lengths are not equal. {len(x)=}, {len(x)=}"
         )
     summary = (pd.Series(y)
                .groupby(x)

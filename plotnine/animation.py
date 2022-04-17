@@ -159,14 +159,13 @@ class PlotnineAnimation(ArtistAnimation):
                 ae = sc.aesthetics[0]
                 if ae not in scale_limits:
                     raise PlotnineError(
-                        "The plot for frame {} does not have a scale "
-                        "for the {} aesthetic.".format(frame_no, ae)
+                        f"The plot for frame {frame_no} does not "
+                        f"have a scale for the {ae} aesthetic."
                     )
                 if sc.limits != scale_limits[ae]:
                     raise PlotnineError(
-                        "The {} scale of plot for frame {} has different "
-                        "limits from those of the first frame."
-                        "".format(ae, frame_no)
+                        f"The {ae} scale of plot for frame {frame_no} has "
+                        "different limits from those of the first frame."
                     )
 
         figure = None

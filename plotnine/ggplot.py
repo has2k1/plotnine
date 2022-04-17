@@ -706,15 +706,16 @@ class ggplot:
 
         if limitsize and (width > 25 or height > 25):
             raise PlotnineError(
-                "Dimensions (width={}, height={}) exceed 25 inches "
+                f"Dimensions ({width=}, {height=}) exceed 25 inches "
                 "(height and width are specified in inches/cm/mm, "
                 "not pixels). If you are sure you want these "
-                "dimensions, use 'limitsize=False'.".format(width, height))
+                "dimensions, use 'limitsize=False'."
+            )
 
         if verbose:
-            warn("Saving {} x {} {} image.".format(
-                 from_inches(width, units),
-                 from_inches(height, units), units), PlotnineWarning)
+            _w = from_inches(width, units),
+            _h = from_inches(height, units),
+            warn(f"Saving {_w} x {_h} {units} image.", PlotnineWarning)
             warn(f'Filename: {filename}', PlotnineWarning)
 
         if dpi is not None:

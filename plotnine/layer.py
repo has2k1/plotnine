@@ -248,14 +248,15 @@ class layer:
                 _geom_name = self.geom.__class__.__name__
                 _data_name = plot_data.__class__.__name__
                 raise PlotnineError(
-                    "{} layer expects a dataframe, but it got "
-                    "{} instead.".format(_geom_name, _data_name)
+                    f"{_geom_name} layer expects a dataframe, "
+                    f"but it got {_data_name} instead."
                 )
         elif callable(self.data):
             self.data = self.data(plot_data)
             if not isinstance(self.data, pd.DataFrame):
                 raise PlotnineError(
-                    "Data function must return a dataframe")
+                    "Data function must return a dataframe"
+                )
         else:
             self.data = self.data.copy()
 
@@ -374,7 +375,8 @@ class layer:
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
             set(data.columns) | set(self.geom.aes_params),
-            self.geom.__class__.__name__)
+            self.geom.__class__.__name__
+        )
 
         self.data = data
 

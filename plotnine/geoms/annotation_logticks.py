@@ -88,10 +88,11 @@ class _geom_logticks(geom_rug):
                     PlotnineWarning)
             elif x_is_log and base_x != x_scale.trans.base:
                 warnings.warn(
-                    "The x-axis is log transformed in base {} ,"
-                    "but the annotation_logticks are computed in base {}"
-                    "".format(base_x, x_scale.trans.base),
-                    PlotnineWarning)
+                    f"The x-axis is log transformed in base {base_x} ,"
+                    "but the annotation_logticks are computed in base "
+                    f"{x_scale.trans.base}",
+                    PlotnineWarning
+                )
 
         if 'l' in sides or 'r' in sides:
             if base_y is None:
@@ -107,10 +108,11 @@ class _geom_logticks(geom_rug):
                     PlotnineWarning)
             elif y_is_log and base_y != y_scale.trans.base:
                 warnings.warn(
-                    "The y-axis is log transformed in base {} ,"
-                    "but the annotation_logticks are computed in base {}"
-                    "".format(base_y, y_scale.trans.base),
-                    PlotnineWarning)
+                    f"The y-axis is log transformed in base {base_y} ,"
+                    "but the annotation_logticks are computed in base "
+                    f"{y_scale.trans.base}",
+                    PlotnineWarning
+                )
         return base_x, base_y
 
     @staticmethod

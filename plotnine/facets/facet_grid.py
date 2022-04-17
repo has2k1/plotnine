@@ -244,7 +244,7 @@ def parse_grid_facets(facets):
     valid_seqs = ["('var1', '.')", "('var1', 'var2')",
                   "('.', 'var1')", "((var1, var2), (var3, var4))"]
     error_msg_s = ("Valid sequences for specifying 'facets' look like"
-                   " {}".format(valid_seqs))
+                   f" {valid_seqs}")
 
     valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
                    'var1 + var2 ~ var3 + var4',
@@ -252,7 +252,7 @@ def parse_grid_facets(facets):
                    '. ~ func(var1+var3) + func(var2)'
                    ] + valid_seqs
     error_msg_f = ("Valid formula for 'facet_grid' look like"
-                   " {}".format(valid_forms))
+                   f" {valid_forms}")
 
     if isinstance(facets, (tuple, list)):
         if len(facets) != 2:
