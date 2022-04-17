@@ -50,6 +50,24 @@ class stat_function(stat):
     DEFAULT_AES = {'y': after_stat('y')}
     CREATES = {'y'}
 
+    def __init__(self, data=None, mapping=None, **kwargs):
+        if data is None:
+            def _data_func(df):
+                if df.empty:
+                    df = pd.DataFrame({'group': [1]})
+                return df
+            data = _data_func
+
+        super().__init__(data, mapping, **kwargs)
+
+    def setup_params(self, data):
+        if not callable(self.params['fun']):
+            raise PlotnineError(
+                "stat_function requires parameter 'fun' to be "
+                "a function or any other callable object"
+            )
+        return self.params
+
     @classmethod
     def compute_group(cls, data, scales, **params):
         fun = params['fun']
@@ -57,12 +75,6 @@ class stat_function(stat):
         args = params['args']
         xlim = params['xlim']
         range_x = xlim or scales.x.dimension((0, 0))
-
-        if not callable(fun):
-            raise PlotnineError(
-                "stat_function requires parameter 'fun' to be " +
-                "a function or any other callable object")
-
         old_fun = fun
         if isinstance(args, (list, tuple)):
             def fun(x):
