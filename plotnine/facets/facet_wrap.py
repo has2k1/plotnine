@@ -228,7 +228,7 @@ def parse_wrap_facets(facets):
     """
     valid_forms = ['~ var1', '~ var1 + var2']
     error_msg = ("Valid formula for 'facet_wrap' look like"
-                 " {}".format(valid_forms))
+                 f" {valid_forms}")
 
     if isinstance(facets, (list, tuple)):
         return facets

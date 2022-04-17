@@ -14,7 +14,6 @@ if not os.environ.get('CI') and os.environ.get('TRAVIS'):
         # Ignore the stderr msg as it is mostly noise
         # about coverage warnings
         stdout, _ = p.communicate()
-        msg = "flake8 found the following issues: \n\n{}".format(
-                 stdout.decode('utf-8')
-        )
+        s = stdout.decode('utf-8')
+        msg = f"flake8 found the following issues: \n\n{s}"
         assert p.returncode == 0, msg

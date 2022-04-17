@@ -172,8 +172,9 @@ class guides(dict):
                 if (guide.available_aes != 'any' and
                         scale.aesthetics[0] not in guide.available_aes):
                     raise PlotnineError(
-                        "{} cannot be used for {}".format(
-                            guide.__class__.__name__, scale.aesthetics))
+                        f"{guide.__class__.__name__} cannot be used for "
+                        f"{scale.aesthetics}"
+                    )
 
                 # title
                 if is_waive(guide.title):
@@ -183,10 +184,12 @@ class guides(dict):
                         try:
                             guide.title = str(plot.labels[output])
                         except KeyError:
-                            warn("Cannot generate legend for the {!r} "
-                                 "aesthetic. Make sure you have mapped a "
-                                 "variable to it".format(output),
-                                 PlotnineWarning)
+                            warn(
+                                f"Cannot generate legend for the {output!r} "
+                                "aesthetic. Make sure you have mapped a "
+                                "variable to it",
+                                PlotnineWarning
+                            )
                             continue
 
                 # each guide object trains scale within the object,

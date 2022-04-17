@@ -174,9 +174,11 @@ class stat_smooth(stat):
                 window = len(data) // 10
                 warnings.warn(
                     "No 'window' specified in the method_args. "
-                    "Using window = {}. "
+                    f"Using window = {window}. "
                     "The same window is used for all groups or "
-                    "facets".format(window), PlotnineWarning)
+                    "facets",
+                    PlotnineWarning
+                )
                 params['method_args']['window'] = window
 
         if params['formula']:
@@ -184,7 +186,7 @@ class stat_smooth(stat):
             if params['method'] not in allowed:
                 raise ValueError(
                     "You can only use a formula with `method` is "
-                    "one of {}".format(allowed)
+                    f"one of {allowed}"
                 )
             params['enviroment'] = self.environment
 
@@ -199,10 +201,10 @@ class stat_smooth(stat):
 
         if len(x_unique) < 2:
             warnings.warn(
-                "Smoothing requires 2 or more points. Got {}. "
-                "Not enough points for smoothing. If this message "
-                "a surprise, make sure the column mapped to the x "
-                "aesthetic has the right dtype.".format(len(x_unique)),
+                "Smoothing requires 2 or more points. Got "
+                f"{len(x_unique)}. Not enough points for smoothing. "
+                "If this message a surprise, make sure the column "
+                "mapped to the x aesthetic has the right dtype.",
                 PlotnineWarning
             )
             # Not enough data to fit

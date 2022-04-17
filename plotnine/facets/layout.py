@@ -200,7 +200,7 @@ class Layout:
         if len(required) != len(common):
             raise PlotnineError(
                 "Facet layout has bad format. It must contain "
-                "the columns '{}'".format(required))
+                f"the columns '{required}'")
 
     def xlabel(self, labels):
         """

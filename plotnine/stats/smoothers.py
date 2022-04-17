@@ -294,8 +294,7 @@ def lowess(data, xseq, **params):
         with suppress(KeyError):
             del params['method_args'][k]
             warnings.warn(
-                "Smoothing method argument: {}, "
-                "has been ignored.".format(k)
+                f"Smoothing method argument: {k}, has been ignored."
             )
 
     result = smlowess(data['y'], data['x'],
@@ -307,8 +306,11 @@ def lowess(data, xseq, **params):
         'y': result[:, 1]})
 
     if params['se']:
-        warnings.warn("Confidence intervals are not yet implemented"
-                      "for lowess smoothings.", PlotnineWarning)
+        warnings.warn(
+            "Confidence intervals are not yet implemented"
+            "for lowess smoothings.",
+            PlotnineWarning
+        )
 
     return data
 
@@ -528,6 +530,6 @@ def separate_method_kwargs(method_args, init_method, fit_method):
     if unknown_kwargs:
         raise PlotnineError(
             "The following method arguments could not be recognised: "
-            "{}".format(list(unknown_kwargs))
+            f"{list(unknown_kwargs)}"
         )
     return init_kwargs, fit_kwargs

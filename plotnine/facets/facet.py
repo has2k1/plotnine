@@ -116,9 +116,9 @@ class facet:
                 setattr(self, name, value)
             else:
                 raise AttributeError(
-                    "{!r} object has no attribute {}".format(
-                        self.__class__.__name__,
-                        name))
+                    f"{self.__class__.__name__} object has "
+                    f"no attribute {name}"
+                )
 
     def setup_data(self, data):
         """
