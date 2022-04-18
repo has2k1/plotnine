@@ -1,17 +1,29 @@
 Changelog
 =========
 
-v0.8.1
+v0.9.0
 ------
 (*not-yet-released*)
+
+API Changes
+***********
+
+- For the calls to ``ggplot``, ``geoms`` and ``stats``, the order of the
+  positional arguments is ``data`` then ``mapping``. In practice, you
+  can still provide one/two positional arguments in any order. However,
+  the are a few cases where old code will breaks due to duplicate parameters.
 
 New Features
 ************
 
-- :class:`~plotnine.positions.position_dodge2` gained the ability to reverse
-  the order of the plotted groups. :issue:`515`
+- Added :class:`~plotnine.geoms.geom_pointdensity`, a 2D density plot
+  that does not hide the distribution of the individual data points.
 
-- Added :class:`~plotnine.themes.theme_tufte`.
+- :class:`~plotnine.positions.position_dodge2` gained the ability to reverse
+  the order of the plotted groups. (:issue:`515`)
+
+- Added :class:`~plotnine.themes.theme_tufte`, a theme that reduces the
+  distractions around plot data.
 
 - :class:`~plotnine.labels.labs` can now be used to create a ``caption``.
   This caption can be styled using the ``plot_caption`` parameter to
@@ -21,30 +33,45 @@ New Features
 
       theme(plot_caption=element_text(size=13))
 
+- You can now align the ``plot_title`` horizontally to the left or right.
+
+  .. code-block:: python
+
+      theme(plot_title=element_text(ha='left'))
+
+  Before, the title was always centered.
+
+
 Bug Fixes
 *********
 
 - Fixed bug in :class:`~plotnine.facets.facet_grid` and
   :class:`~plotnine.facets.facet_wrap` where the ``drop`` parameter was
-  ignored. :issue:`510`
+  ignored. (:issue:`510`)
+
+- Fixed issue with :class:`~plotnine.geoms.annotation_logticks` where the
+  wrong range was used for the x|y axis. (:issue:`525`)
 
 - Fixed bug in :class:`~plotnine.geoms.geom_smooth` where using a
   coordinate transformation without computing the standard error
-  led to a crash. :issue:`526`
+  led to a crash. (:issue:`526`)
+
+- Fixed bug where you could not specific the cap/end of a dashed line
+  when styling a plot with :class:`~plotnine.themes.element_line`.
 
 - Fixed legend for :class:`~plotnine.geoms.geom_map` so that the entries
-  have the same stroke and points on the map. :issue:`534`
+  have the same stroke and points on the map. (:issue:`534`)
 
 - Fixed :class:`~plotnine.geoms.geom_history` for some cases when it fails
-  to automatically determine the number of bins. :issue:`543`
+  to automatically determine the number of bins. (:issue:`543`)
 
 - Fixed :class:`~plotnine.facets.facet_grid` and
   :class:`~plotnine.facets.facet_wrap` when mapping to lists/arrays/series
-  so that the rows mapped this way are not mixed up. :issue:`548`
+  so that the rows mapped this way are not mixed up. (:issue:`548`)
 
 - Fixed :class:`~plotnine.stats.stat_bin_2d` not to error for
   matplotlib >= 3.5.0 so that it does not throw a Numpy error.
-  :issue:`567`
+  (:issue:`567`)
 
 - Fixed :class:`~plotnine.geoms.geom_map` to be able to draw Polygons
   with holes in them.
@@ -53,19 +80,26 @@ Bug Fixes
 
 - Fixed :class:`~plotnine.scales.scale_x_discrete` and
   :class:`~plotnine.scales.scale_x_discrete` to work properly with ``None``
-  values. :issue:`523`
+  values. (:issue:`523`)
 
 - Fixed :class:`~plotnine.geoms.geom_point` to respect not to use the ``fill``
-  mapping on unfilled shapes. :issue:`100`
+  mapping on unfilled shapes. (:issue:`100`)
 
 - Fixed :class:`~plotnine.positions.position_stack` to work with scales that
   have non-linear transformations. e.g.
-  :class:`~plotnine.scales.scale_y_log10`. :issue:`580`
+  :class:`~plotnine.scales.scale_y_log10`. (:issue:`580`)
 
-- Fix scales to work with limits passed as a function function.
+- Fixed scales to work with limits passed as a function.
+
+- Fixed :class:`~plotnine.themes.themeables.axis_ticks` so you can change
+  the colour of the axis ticks. This was probably a regression due to changes
+  in Matplotlib.
 
 Enhancements
 ************
+
+- :class:`~plotnine.stats.stat_summary` now has a default summary
+  function. (:issue:`528`)
 
 - :class:`~plotnine.stats.stat_density` now uses a fast computation path
   for gaussian densities with no weights. This was probably a regression.
@@ -87,8 +121,8 @@ API Changes
 ***********
 
 - How you map to calculated aesthetics has changed. Use the
-  :func:`~plotnine.aes.after_stat` function. The old methods ``'stat(name)'``
-  and ``'..name..'`` have been deprecated.
+  :func:`~plotnine.mapping.evaluation.after_stat` function. The old
+  methods ``'stat(name)'`` and ``'..name..'`` have been deprecated.
 
 New Features
 ************
@@ -643,7 +677,7 @@ Enhancements
      g = ggplot(df, aes('x', 'y'))
      print(g + lst)
 
-  Using a list allows you to bundle up objects. I can be convenient when
+  Using a list allows you to bundle up objects. It can be convenient when
   creating some complicated plots. See the Periodic Table Example.
 
 - You can now use a ``dict`` (with manual scales) to map data values to
