@@ -623,6 +623,9 @@ def groupby_apply(df, cols, func, *args, **kwargs):
     as it calls fn twice on the first dataframe. If the nested code also
     does the same thing, it can be very expensive
     """
+    if df.empty:
+        return df.copy()
+
     try:
         axis = kwargs.pop('axis')
     except KeyError:
