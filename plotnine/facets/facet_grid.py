@@ -49,7 +49,7 @@ class facet_grid(facet):
         Alternatively if a ``dict``, it indicates the relative facet
         size ratios such as::
 
-            ``{'x': [1, 2], 'y': [3, 1, 1]}``
+            {'x': [1, 2], 'y': [3, 1, 1]}
 
         This means that in the horizontal direction, the second panel
         will be twice the length of the first. In the vertical direction
