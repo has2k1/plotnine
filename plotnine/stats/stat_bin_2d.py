@@ -45,12 +45,13 @@ class stat_bin_2d(stat):
 
     ::
 
-        'xmin'    # x lower bound for the bin
-        'xmax'    # x upper bound for the bin
-        'ymin'    # y lower bound for the bin
-        'ymax'    # y upper bound for the bin
-        'count'   # number of points in bin
-        'density' # density of points in bin, scaled to integrate to 1
+        'xmin'           # x lower bound for the bin
+        'xmax'           # x upper bound for the bin
+        'ymin'           # y lower bound for the bin
+        'ymax'           # y upper bound for the bin
+        'count'          # number of points in bin
+        'density'        # density of points in bin, scaled to integrate to 1
+        'log10(density)' # log10-transformed density of points in bin
 
     """
     REQUIRED_AES = {'x', 'y'}
@@ -59,7 +60,7 @@ class stat_bin_2d(stat):
                       'bins': 30, 'breaks': None, 'binwidth': None,
                       'drop': True}
     DEFAULT_AES = {'fill': after_stat('count'), 'weight': None}
-    CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density'}
+    CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density', 'log10(density)'}
 
     def setup_params(self, data):
         params = self.params.copy()
@@ -133,6 +134,7 @@ class stat_bin_2d(stat):
                                                 'ymin', 'ymax',
                                                 'count'])
         new_data['density'] = new_data['count'] / new_data['count'].sum()
+        new_data['log10(density)'] = np.log10(new_data['density'])
         return new_data
 
 
