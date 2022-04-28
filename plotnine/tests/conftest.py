@@ -1,10 +1,10 @@
-import os
 import warnings
 import inspect
 import shutil
 import locale
 import types
 from copy import deepcopy
+from pathlib import Path
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -21,14 +21,15 @@ DPI = 72                # Default DPI for the tests
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
 test_theme = theme(figure_size=(640/DPI, 480/DPI), dpi=DPI)
+baseline_images_dir = Path(__file__).parent / 'baseline_images'
 
-if not os.path.exists(os.path.join(
-        os.path.dirname(__file__), 'baseline_images')):
+if not baseline_images_dir.exists():
     raise OSError(
         "The baseline image directory does not exist. "
         "This is most likely because the test data is not installed. "
         "You may need to install plotnine from source to get the "
-        "test data.")
+        "test data."
+    )
 
 
 def raise_no_baseline_image(filename):
@@ -59,15 +60,19 @@ def ggplot_equals(gg, name):
     with _test_cleanup():
         gg.save(filenames.result, verbose=False, bbox_inches=bbox_inches)
 
-    if os.path.exists(filenames.baseline):
+    if filenames.baseline.exists():
         shutil.copyfile(filenames.baseline, filenames.expected)
     else:
         # Putting the exception in short function makes for
         #  short pytest error messages
         raise_no_baseline_image(filenames.baseline)
 
-    err = compare_images(filenames.expected, filenames.result,
-                         TOLERANCE, in_decorator=True)
+    err = compare_images(
+        filenames.expected,
+        filenames.result,
+        TOLERANCE,
+        in_decorator=True
+    )
     gg._err = err  # For the pytest error message
     return False if err else True
 
@@ -157,23 +162,19 @@ def make_test_image_filenames(name, test_file):
     if '.png' not in name:
         name = name + '.png'
 
-    basedir = os.path.abspath(os.path.dirname(test_file))
-    basename = os.path.basename(test_file)
-    subdir = os.path.splitext(basename)[0]
+    name = Path(name)
+    test_file = Path(test_file)
 
-    baseline_dir = os.path.join(basedir, 'baseline_images', subdir)
-    result_dir = os.path.abspath(os.path.join('result_images', subdir))
-
-    if not os.path.exists(result_dir):
-        os.makedirs(result_dir, exist_ok=True)
-
-    base, ext = os.path.splitext(name)
-    expected_name = '{}-{}{}'.format(base, 'expected', ext)
+    test_dir = test_file.parent
+    subdir = test_file.stem
+    result_dir = test_dir.parent.parent / 'result_images' / subdir
+    result_dir.mkdir(parents=True, exist_ok=True)
 
     filenames = types.SimpleNamespace(
-        baseline=os.path.join(baseline_dir, name),
-        result=os.path.join(result_dir, name),
-        expected=os.path.join(result_dir, expected_name))
+        baseline=test_dir / 'baseline_images' / subdir / name,
+        result=result_dir / name,
+        expected=result_dir / f'{name.stem}-expected{name.suffix}'
+    )
     return filenames
 
 

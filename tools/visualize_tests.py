@@ -7,7 +7,7 @@
 #
 
 import argparse
-import os
+from pathlib import Path
 from collections import defaultdict
 
 
@@ -61,12 +61,14 @@ failed_template = """<h2>Only Failed</h2><table>
 </table>
 """
 
-row_template = ('<tr>'
-                '<td>{0}{1}</td>'
-                '<td>{2}</td>'
-                '<td><a href="{3}"><img src="{3}"></a></td>'
-                '<td>{4}</td>'
-                '</tr>')
+row_template = """
+<tr>
+    <td>{0}{1}</td>
+    <td>{2}</td>
+    <td><a href="{3}"><img src="{3}"></a></td>
+    <td>{4}</td>
+</tr>
+"""
 
 linked_image_template = '<a href="{0}"><img src="{0}"></a>'
 
@@ -75,10 +77,13 @@ def run(show_browser=True):
     """
     Build a website for visual comparison
     """
-    image_dir = "result_images"
-    _subdirs = (name
-                for name in os.listdir(image_dir)
-                if os.path.isdir(os.path.join(image_dir, name)))
+    # The path is from the project root
+    image_dir = Path('result_images').resolve()
+    _subdirs = [
+        name
+        for name in image_dir.iterdir()
+        if name.is_dir()
+    ]
 
     failed_rows = []
     body_sections = []
@@ -87,59 +92,76 @@ def run(show_browser=True):
             # These are the images which test the image comparison functions.
             continue
 
+        # pictures = defaultdict(dict)
         pictures = defaultdict(dict)
-        for file in os.listdir(os.path.join(image_dir, subdir)):
-            if os.path.isdir(os.path.join(image_dir, subdir, file)):
+        for file in subdir.iterdir():
+            if file.is_dir():
                 continue
-            fn, fext = os.path.splitext(file)
+
+            fn = file.stem
+            fext = file.suffix
             if fext != '.png':
                 continue
+
             # Always use / for URLs.
             if '-failed-diff' in fn:
-                pictures[fn[:-12]]['f'] = '/'.join((subdir, file))
+                pictures[fn[:-12]]['failed'] = file
             elif '-expected' in fn:
-                pictures[fn[:-9]]['e'] = '/'.join((subdir, file))
+                pictures[fn[:-9]]['expected'] = file
             else:
-                pictures[fn]['c'] = '/'.join((subdir, file))
+                pictures[fn]['actual'] = file
 
         subdir_rows = []
         for name, test in sorted(pictures.items()):
-            expected_image = test.get('e', '')
-            actual_image = test.get('c', '')
+            expected_image = test.get('expected', '')
+            actual_image = test.get('actual', '')
 
-            if 'f' in test:
+            if 'failed' in test:
                 # A real failure in the image generation, resulting in
                 # different images.
                 status = '<br />(failed)'
-                failed = '<a href="{}">diff</a>'.format(test['f'])
+                failed = f"<a href='{test['f']}'>diff</a>"
                 current = linked_image_template.format(actual_image)
-                failed_rows.append(row_template.format(name, '', current,
-                                                       expected_image, failed))
-            elif 'c' not in test:
+                failed_rows.append(
+                    row_template.format(
+                        name, '', current, expected_image, failed
+                    )
+                )
+            elif 'actual' not in test:
                 # A failure in the test, resulting in no current image
                 status = '<br />(failed)'
                 failed = '--'
                 current = '(Failure in test, no image produced)'
-                failed_rows.append(row_template.format(name, '', current,
-                                                       expected_image, failed))
+                failed_rows.append(
+                    row_template.format(
+                        name, '', current, expected_image, failed
+                    )
+                )
             else:
                 status = '<br />(passed)'
                 failed = '--'
                 current = linked_image_template.format(actual_image)
 
-            subdir_rows.append(row_template.format(name, status, current,
-                                                   expected_image, failed))
+            subdir_rows.append(
+                row_template.format(
+                    name, status, current, expected_image, failed
+                )
+            )
 
         body_sections.append(
-            subdir_template.format(subdir=subdir, rows='\n'.join(subdir_rows)))
+            subdir_template.format(
+                subdir=subdir, rows='\n'.join(subdir_rows)
+            )
+        )
 
     if failed_rows:
         failed = failed_template.format(rows='\n'.join(failed_rows))
     else:
         failed = ''
+
     body = ''.join(body_sections)
     html = html_template.format(failed=failed, body=body)
-    index = os.path.join(image_dir, 'index.html')
+    index = image_dir / 'index.html'
     with open(index, 'w') as f:
         f.write(html)
 
@@ -148,16 +170,19 @@ def run(show_browser=True):
         try:
             import webbrowser
             webbrowser.open(index)
-        except:
+        except Exception:
             show_message = True
 
     if show_message:
-        print(f"Open {index} in a browser for a visual comparison.")
+        print(f"Open {index.resolve()} in a browser for a visual comparison.")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--no-browser', action='store_true',
-                        help="Don't show browser after creating index page.")
+    parser.add_argument(
+        '--no-browser',
+        action='store_true',
+        help="Don't show browser after creating index page."
+    )
     args = parser.parse_args()
     run(show_browser=not args.no_browser)

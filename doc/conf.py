@@ -14,14 +14,17 @@
 import sys
 import os
 
+from pathlib import Path
+
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
+
 # If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-CUR_PATH = os.path.dirname(os.path.abspath(__file__))
-PROJECT_PATH = os.path.abspath(CUR_PATH + '/../')
-sys.path.insert(0, CUR_PATH)
-sys.path.insert(0, PROJECT_PATH)
+# add these directories to sys.path here.
+CUR_PATH = Path(__file__).parent
+PROJECT_PATH = CUR_PATH.parent
+
+sys.path.insert(0, str(CUR_PATH))
+sys.path.insert(0, str(PROJECT_PATH))
 
 if on_rtd:
     from unittest import mock
@@ -40,7 +43,7 @@ needs_sphinx = '3.3.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, str(Path.cwd()))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
@@ -460,11 +463,10 @@ numpydoc_xref_ignore = {'type', 'optional', 'default'}
 def link_to_tutorials():
     # Linking to the directory does not work well with
     # nbsphinx. We link to the files themselves
-    from pathlib import Path, PurePath
     from plotnine_examples.tutorials import TUTPATH
 
     tut_ipynb_dir = Path(TUTPATH)
-    dest_ipynb_dir = Path(CUR_PATH) / 'tutorials'
+    dest_ipynb_dir = CUR_PATH / 'tutorials'
 
     tut_image_dir = tut_ipynb_dir / 'images'
     dest_image_dir = dest_ipynb_dir / 'images'
@@ -478,7 +480,7 @@ def link_to_tutorials():
 
         # Link files for this build
         for file in orig_dir.glob(pattern):
-            basename = PurePath(file).name
+            basename = Path(file).name
             dest = dest_dir / basename
             dest.symlink_to(file)
 
