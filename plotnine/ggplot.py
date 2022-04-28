@@ -1,7 +1,7 @@
-import os
 import sys
 from copy import deepcopy
 from itertools import chain
+from pathlib import Path
 from types import SimpleNamespace as NS
 from warnings import warn
 
@@ -622,7 +622,7 @@ class ggplot:
             Extension e.g. png, pdf, ...
         """
         hash_token = abs(self.__hash__())
-        return f'plotnine-save-{hash_token}.{ext}'
+        return Path(f'plotnine-save-{hash_token}.{ext}')
 
     def _update_labels(self, layer):
         """
@@ -647,7 +647,7 @@ class ggplot:
 
         Parameters
         ----------
-        filename : str, optional
+        filename : str | pathlib.Path, optional
             File name to write the plot to. If not specified, a name
             like “plotnine-save-<hash>.<format>” is used.
         format : str
@@ -687,7 +687,7 @@ class ggplot:
             filename = self._save_filename(ext)
 
         if path:
-            filename = os.path.join(path, filename)
+            filename = Path(path) / filename
 
         # Preserve the users object
         self = deepcopy(self)
@@ -811,7 +811,7 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
         filename = peek[0]._save_filename('pdf')
 
     if path:
-        filename = os.path.join(path, filename)
+        filename = Path(path) / filename
 
     if verbose:
         warn(f'Filename: {filename}', PlotnineWarning)

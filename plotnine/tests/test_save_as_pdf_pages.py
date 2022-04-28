@@ -1,5 +1,5 @@
-import os
 import warnings
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pytest
@@ -25,21 +25,17 @@ def sequential_filenames():
     Generate filenames for the tests
     """
     for i in range(100):
-        yield f'filename-{i}.pdf'
+        yield Path(f'filename-{i}.png')
 
 
 filename_gen = sequential_filenames()
 
 
-def assert_file_exist(filename, msg=None):
+def assert_exist_and_clean(filename, msg=None):
     if not msg:
         msg = f"File {filename} does not exist"
-    assert os.path.exists(filename), msg
-
-
-def assert_exist_and_clean(filename, msg=None):
-    assert_file_exist(filename, msg=None)
-    os.remove(filename)
+    assert filename.exists(), msg
+    filename.unlink()
 
 
 class TestArguments:

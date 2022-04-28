@@ -1,4 +1,5 @@
-import os
+from pathlib import Path
+
 import pytest
 import numpy as np
 import pandas as pd
@@ -109,20 +110,17 @@ class TestRasterizing:
         # Plot and check that the file sizes are smaller when
         # rastering. Then delete the files.
         geom_name = p_raster.layers[0].geom.__class__.__name__
-        fn1 = f'{geom_name}-no-raster.pdf'
-        fn2 = f'{geom_name}-raster.pdf'
-        getsize = os.path.getsize
+        fn1 = Path(f'{geom_name}-no-raster.pdf')
+        fn2 = Path(f'{geom_name}-raster.pdf')
 
         try:
             with pytest.warns(PlotnineWarning):
                 p_no_raster.save(fn1)
                 p_raster.save(fn2)
-            assert getsize(fn1) > getsize(fn2)
+            assert fn1.stat().st_size > fn2.stat().st_size
         finally:
-            if os.path.exists(fn1):
-                os.remove(fn1)
-            if os.path.exists(fn2):
-                os.remove(fn2)
+            fn1.unlink(missing_ok=True)
+            fn2.unlink(missing_ok=True)
 
     def test_geom_point(self):
         p1 = self.p + geom_point()

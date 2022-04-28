@@ -37,8 +37,9 @@ How it works
        </div>
 """
 
-import os
 import re
+
+from pathlib import Path
 
 import nbformat
 import sphinx
@@ -55,9 +56,10 @@ from plotnine_examples.examples import EXPATH, EXFILES
 GALLERY_MARK = '# Gallery Plot'
 
 # Use build enviroment to get the paths
-CUR_PATH = os.path.dirname(os.path.abspath(__file__))
-DOC_PATH = os.path.abspath(CUR_PATH + '/..')
-RST_PATH = DOC_PATH + '/generated'
+CUR_PATH = Path(__file__).parent
+DOC_PATH = CUR_PATH.parent
+RST_PATH = DOC_PATH / 'generated'
+
 IMG_RE = re.compile(r'^\s*\.\. image:: (\w+_examples\/(\w+\.png))')
 
 # Should be about the 11:8 ratio of the default figure size. When this
@@ -78,14 +80,6 @@ entry_html = """\
     </div>
 </div>
 """.format
-
-
-def only_filename(filepath):
-    return os.path.basename(filepath)
-
-
-def only_filename_no_ext(filepath):
-    return os.path.splitext(only_filename(filepath))[0]
 
 
 def has_gallery(builder_name):
@@ -117,7 +111,8 @@ class GalleryEntry:
             title=self.title,
             thumbnail=self.thumbnail,
             link=self.html_link,
-            tooltip=tooltip)
+            tooltip=tooltip
+        )
 
 
 class GalleryEntryExtractor:
@@ -144,31 +139,23 @@ class GalleryEntryExtractor:
     def htmlfilename(self):
         return f'{self.docname}.html'
 
-    def thumbfilename(self, imgfilename_rst):
-        """
-        Generate name (without path) for thumbnail
-        """
-        name = only_filename_no_ext(imgfilename_rst)
-        # filename = os.path.join('_images', name+'_thumb.png')
-        return name + '_thumb.png'
-
     def make_thumbnail(self, imgfilename_inrst):
         """
         Make thumbnail and return (html) path to image
 
         Parameters
         ----------
-        imgfilename_rst : rst
+        imgfilename_rst : str
             Image filename (relative path), as it appears in the
             ReST file (coverted).
         """
-        builddir = self.env.app.outdir
+        builddir = Path(self.env.app.outdir)
 
-        imgfilename_src = os.path.join(DOC_PATH, imgfilename_inrst)
+        imgfilename_src = DOC_PATH / imgfilename_inrst
 
-        thumbfilename = self.thumbfilename(imgfilename_inrst)
-        thumbfilename_inhtml = os.path.join('_images', thumbfilename)
-        thumbfilename_dest = os.path.join(builddir, '_images', thumbfilename)
+        thumbfilename = f'{imgfilename_src.stem}_thumb.png'
+        thumbfilename_inhtml = Path('_images') / thumbfilename
+        thumbfilename_dest = builddir / '_images' / thumbfilename
 
         im = Image.open(imgfilename_src)
         im.thumbnail(thumbnail_size)
@@ -248,23 +235,25 @@ class GalleryEntryExtractor:
                     section_id=section_id,
                     html_link=f'{self.htmlfilename}#{section_id}',
                     thumbnail=self.make_thumbnail(image_filename),
-                    description=description)
+                    description=description
+                )
 
 
 def get_rstfilename(nbfilename):
-    objname = nbfilename.rstrip('.ipynb')
-    return f'{RST_PATH}/{objname}_examples.txt'
+    return RST_PATH / f'{nbfilename.stem}_examples.txt'
 
 
 def notebook_to_rst(nbfilename):
-    nbfilepath = os.path.join(EXPATH, nbfilename)
+    nbfilepath = Path(EXPATH) / nbfilename
     rstfilename = get_rstfilename(nbfilename)
-    output_files_dir = only_filename_no_ext(rstfilename)
-    metadata_path = os.path.dirname(rstfilename)
-    unique_key = nbfilename.rstrip('.ipynb')
+    output_files_dir = rstfilename.stem
+    metadata_path = rstfilename.parent
+    unique_key = nbfilename.stem
 
     resources = {
-        'metadata': {'path': metadata_path},
+        'metadata': {
+            'path': metadata_path
+        },
         'output_files_dir': output_files_dir,
         # Prefix for the output image filenames
         'unique_key': unique_key
@@ -280,15 +269,15 @@ def notebook_to_rst(nbfilename):
 
     # Correct path for the resources
     for filename in list(resources['outputs'].keys()):
-        tmp = os.path.join(RST_PATH, filename)
+        tmp = str(RST_PATH / filename)
         resources['outputs'][tmp] = resources['outputs'].pop(filename)
 
     fw = FilesWriter()
-    fw.build_directory = RST_PATH
+    fw.build_directory = str(RST_PATH)
     # Prevent "not in doctree" complains
     resources['output_extension'] = ''
     body = 'Examples\n--------\n' + body
-    fw.write(body, resources, notebook_name=rstfilename)
+    fw.write(body, resources, notebook_name=str(rstfilename))
 
 
 def notebooks_to_rst(app):
@@ -296,7 +285,7 @@ def notebooks_to_rst(app):
     Convert notebooks to rst
     """
     for filename in EXFILES:
-        notebook_to_rst(filename)
+        notebook_to_rst(Path(filename))
 
 
 def extract_gallery_entries(app, doctree):
@@ -382,13 +371,13 @@ class IncludeExamples(Include):
     }
 
     def run(self):
-        nbfilename = self.arguments[0]
+        nbfilename = Path(self.arguments[0])
         rstfilename = get_rstfilename(nbfilename)
 
-        if not os.path.exists(rstfilename):
+        if not rstfilename.exists():
             return []
 
-        self.arguments[0] = rstfilename
+        self.arguments[0] = str(rstfilename)
         return Include.run(self)
 
 
@@ -401,13 +390,10 @@ def setup_env(app):
     """
     env = app.env
     GalleryEntryExtractor.env = env
-    out_imgdir = os.path.join(app.outdir, '_images')
+    out_imgdir = Path(app.outdir) / '_images'
 
-    if not os.path.isdir(RST_PATH):
-        os.makedirs(RST_PATH)
-
-    if not os.path.isdir(out_imgdir):
-        os.makedirs(out_imgdir)
+    RST_PATH.mkdir(parents=True, exist_ok=True)
+    out_imgdir.mkdir(parents=True, exist_ok=True)
 
     if not hasattr(env, 'gallery_entries'):
         # When rebuilding, the pickeled environment has the
@@ -435,7 +421,8 @@ def setup(app):
         latex=(visit_gallery_node, depart_gallery_node),
         text=(visit_gallery_node, depart_gallery_node),
         man=(visit_gallery_node, depart_gallery_node),
-        texinfo=(visit_gallery_node, depart_gallery_node))
+        texinfo=(visit_gallery_node, depart_gallery_node)
+    )
     app.add_directive('gallery', Gallery)
     app.add_directive('include_examples', IncludeExamples)
     app.connect('builder-inited', setup_env)
@@ -444,5 +431,7 @@ def setup(app):
     app.connect('doctree-read', extract_gallery_entries)
     app.connect('doctree-resolved', add_entries_to_gallery)
 
-    return {'version': sphinx.__display_version__,
-            'parallel_read_safe': True}
+    return {
+        'version': sphinx.__display_version__,
+        'parallel_read_safe': True
+    }
