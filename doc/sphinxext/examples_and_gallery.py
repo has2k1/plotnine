@@ -8,8 +8,8 @@ How to use the extension
 
 1. Create a galley.rst page with a `gallery` directive.
 2. Define the path to the notebooks and the notebook filenames
-   as `EXPATH` (str), `EXFILES` (set). Together they give
-   you the path each notebook file that will converted to ReST.
+   as `EXAMPLES_PATH`. These are the notebooks that will be
+   converted to ReST.
 3. In the Sphinx template used to generate documentation, use::
 
       .. include_example:: notebook.ipynb
@@ -49,7 +49,9 @@ from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.misc import Include
 from nbconvert.writers import FilesWriter
-from plotnine_examples.examples import EXPATH, EXFILES
+from importlib_resources import files as _files
+
+EXAMPLES_PATH = _files('plotnine_examples.examples')
 
 # String in code cell that creates an image that will be in the
 # gallery
@@ -244,7 +246,7 @@ def get_rstfilename(nbfilename):
 
 
 def notebook_to_rst(nbfilename):
-    nbfilepath = Path(EXPATH) / nbfilename
+    nbfilepath = EXAMPLES_PATH / nbfilename
     rstfilename = get_rstfilename(nbfilename)
     output_files_dir = rstfilename.stem
     metadata_path = rstfilename.parent
@@ -284,7 +286,7 @@ def notebooks_to_rst(app):
     """
     Convert notebooks to rst
     """
-    for filename in EXFILES:
+    for filename in EXAMPLES_PATH.glob('*.ipynb'):
         notebook_to_rst(Path(filename))
 
 

@@ -463,17 +463,18 @@ numpydoc_xref_ignore = {'type', 'optional', 'default'}
 def link_to_tutorials():
     # Linking to the directory does not work well with
     # nbsphinx. We link to the files themselves
-    from plotnine_examples.tutorials import TUTPATH
+    from importlib_resources import files as _files
 
-    tut_ipynb_dir = Path(TUTPATH)
-    dest_ipynb_dir = CUR_PATH / 'tutorials'
-
+    tut_ipynb_dir = _files('plotnine_examples.tutorials')
     tut_image_dir = tut_ipynb_dir / 'images'
+
+    dest_ipynb_dir = _files('plotnine') / '../doc/tutorials'
     dest_image_dir = dest_ipynb_dir / 'images'
 
-    def _make_links(orig_dir, dest_dir, pattern):
-        dest_dir.mkdir(exist_ok=True)
+    dest_ipynb_dir.mkdir(parents=True, exist_ok=True)
+    dest_image_dir.mkdir(parents=True, exist_ok=True)
 
+    def _make_links(orig_dir, dest_dir, pattern):
         # Remove any old files
         for old_file in dest_dir.glob(pattern):
             old_file.unlink()
