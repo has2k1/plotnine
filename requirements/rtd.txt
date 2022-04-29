@@ -4,6 +4,7 @@ jupyter
 nbsphinx
 numpydoc>=0.9.1
 sphinx>=3.0.0
+importlib_resources
 
 # For RTD virtual environment
 adjustText
