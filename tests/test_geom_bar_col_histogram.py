@@ -3,8 +3,9 @@ import pandas as pd
 
 from plotnine import ggplot, aes, geom_bar, geom_col, geom_histogram
 from plotnine import after_stat, theme, scale_x_sqrt, geom_text
-from plotnine.tests import layer_data
 from plotnine.stats.binning import freedman_diaconis_bins
+
+from .conftest import layer_data
 
 
 n = 10  # Some even number greater than 2
