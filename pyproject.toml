@@ -9,10 +9,10 @@ build-backend = "setuptools.build_meta"
 # pytest
 [tool.pytest.ini_options]
 testpaths = [
-    "plotnine/tests"
+    "tests"
 ]
 doctest_optionflags = "ALLOW_UNICODE ALLOW_BYTES NORMALIZE_WHITESPACE"
-addopts = "--pyargs --cov=plotnine --cov-report=xml"
+addopts = "--pyargs --cov=plotnine --cov-report=xml --import-mode=importlib"
 
 # Coverage.py
 [tool.coverage.run]
@@ -24,7 +24,7 @@ include = [
 omit = [
     "setup.py",
     "plotnine/_version.py",
-    "plotnine/tests/*",
+    "tests/*",
 ]
 
 disable_warnings = ["include-ignored"]

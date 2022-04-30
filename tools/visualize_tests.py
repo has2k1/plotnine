@@ -78,7 +78,7 @@ def run(show_browser=True):
     Build a website for visual comparison
     """
     # The path is from the project root
-    image_dir = Path('result_images').resolve()
+    image_dir = Path('tests/result_images').resolve()
     _subdirs = [
         name
         for name in image_dir.iterdir()

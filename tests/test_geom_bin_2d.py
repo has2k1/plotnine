@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 
 from plotnine import ggplot, aes, geom_bin_2d, theme, scale_x_log10
-from plotnine.tests import layer_data
+
+from .conftest import layer_data
 
 n = 20  # Make even for best results
 reps = np.hstack([np.arange(int(np.ceil(n/2))),

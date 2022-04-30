@@ -47,7 +47,7 @@ coverage.xml
 .pytest_cache
 
 # plotnine testing
-result_images/
+tests/result_images/
 notes.txt
 examples/.ipynb_checkpoints
 

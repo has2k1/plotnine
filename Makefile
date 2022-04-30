@@ -36,7 +36,7 @@ clean-test:
 	rm -f .coverage
 	rm -f coverage.xml
 	rm -fr htmlcov/
-	rm -fr result_images/*
+	rm -fr tests/result_images/*
 
 lint:
 	flake8 plotnine

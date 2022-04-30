@@ -21,7 +21,10 @@ DPI = 72                # Default DPI for the tests
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
 test_theme = theme(figure_size=(640/DPI, 480/DPI), dpi=DPI)
-baseline_images_dir = Path(__file__).parent / 'baseline_images'
+
+tests_dir = Path(__file__).parent
+baseline_images_dir = tests_dir / 'baseline_images'
+result_images_dir = tests_dir / 'result_images'
 
 if not baseline_images_dir.exists():
     raise OSError(
@@ -159,22 +162,15 @@ def make_test_image_filenames(name, test_file):
         will be stored in the same directory as the result image.
         Creating a copy make comparison easier.
     """
-    if '.png' not in name:
-        name = name + '.png'
-
-    name = Path(name)
-    test_file = Path(test_file)
-
-    test_dir = test_file.parent
-    subdir = test_file.stem
-    result_dir = test_dir.parent.parent / 'result_images' / subdir
-    result_dir.mkdir(parents=True, exist_ok=True)
-
+    name = Path(name).with_suffix('.png')
+    expected_name = f'{name.stem}-expected{name.suffix}'
+    subdir = Path(test_file).stem
     filenames = types.SimpleNamespace(
-        baseline=test_dir / 'baseline_images' / subdir / name,
-        result=result_dir / name,
-        expected=result_dir / f'{name.stem}-expected{name.suffix}'
+        baseline=baseline_images_dir / subdir / name,
+        result=result_images_dir / subdir / name,
+        expected=result_images_dir / subdir / expected_name,
     )
+    filenames.result.parent.mkdir(parents=True, exist_ok=True)
     return filenames
 
 
@@ -213,3 +209,24 @@ class _test_cleanup:
     def __exit__(self, exc_type, exc_value, exc_traceback):
         plt.close('all')
         warnings.resetwarnings()
+
+
+def layer_data(p, i=0):
+    """
+    Return layer information used to draw the plot
+
+    Parameters
+    ----------
+    p : ggplot
+        ggplot object
+    i : int
+        Layer number
+
+    Returns
+    -------
+    out : dataframe
+        Layer information
+    """
+    p = deepcopy(p)
+    p._build()
+    return p.layers.data[i]
