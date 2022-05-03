@@ -1,7 +1,8 @@
 # Reference https://github.com/pydata/xarray/blob/main/pyproject.toml
 [build-system]
 requires = [
-    "setuptools>=42",
+    "setuptools>=45",
+    "setuptools_scm[toml]>=6.2",
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
@@ -37,3 +38,7 @@ exclude_lines = [
     "raise NotImplementedError('Not Implemented')",
 ]
 precision = 1
+
+[tool.setuptools_scm]
+fallback_version = "999"
+version_scheme = 'post-release'

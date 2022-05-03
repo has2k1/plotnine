@@ -84,19 +84,23 @@ copyright = '2021, Hassan Kibirige'
 # built documents.
 #
 # The short X.Y version.
-
 try:
-    import plotnine
-    version = plotnine.__version__
-except ImportError:
-    version = 'unknown'
+    from importlib.metadata import version as _version
+finally:
+    version = _version('plotnine')
 
-# readthedocs modifies the repository which messes up the version.
+# 1. remove +dirty if readthedocs modifies the repo,
+# 2. remove the 0.0 version created by setuptools_scm when clone is too shallow
 if on_rtd:
     import re
-    version = version.rstrip('.dirty')
-    version = re.sub(r'\+0\..+', '', version)
-    version
+    p1 = re.compile(r'\+dirty$')
+    if p1.match(version):
+        version = p1.sub('', version)
+
+    p2 = re.compile(r'^0\.0\.post\d+\+g')
+    if p2.match(version):
+        commit = p2.sub('', version)
+        version = f'Commit: {commit}'
 
 # The full version, including alpha/beta/rc tags.
 release = version
