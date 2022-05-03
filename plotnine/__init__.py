@@ -13,9 +13,13 @@ from .themes import *               # noqa: F401,F403,E261
 from .positions import *            # noqa: F401,F403,E261
 from .guides import *               # noqa: F401,F403,E261
 
-from . import _version
-__version__ = _version.get_versions()['version']
-del _version
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version('plotnine')
+except PackageNotFoundError:
+    # package is not installed
+    pass
 
 
 def _get_all_imports():
