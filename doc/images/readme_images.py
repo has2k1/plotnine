@@ -1,5 +1,5 @@
 from plotnine import (ggplot, aes, geom_point, facet_wrap,
-                      stat_smooth, theme_xkcd, theme_tufte)
+                      stat_smooth, theme_xkcd)
 from plotnine.data import mtcars
 
 kwargs = dict(width=6, height=4)
@@ -19,6 +19,3 @@ p4.save('readme-image-4.png', **kwargs)
 
 p5 = p4 + theme_xkcd()
 p5.save('readme-image-5.png', **kwargs)
-
-p5alt = p4 + theme_tufte()
-p5.save('readme-image-5alt.png', **kwargs)

@@ -443,7 +443,6 @@ Themes control the visual appearance of the non-data elements the plot.
    theme_matplotlib
    theme_minimal
    theme_seaborn
-   theme_tufte
    theme_void
    theme_xkcd
 
