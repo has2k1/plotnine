@@ -6,8 +6,7 @@ from plotnine import ggplot, aes, geom_point, labs, facet_grid
 from plotnine import (theme, theme_538, theme_bw, theme_classic,
                       theme_dark, theme_gray, theme_light,
                       theme_linedraw, theme_matplotlib, theme_minimal,
-                      theme_seaborn, theme_void, theme_xkcd,
-                      theme_tufte)
+                      theme_seaborn, theme_void, theme_xkcd)
 from plotnine import element_line, element_text, element_blank
 from plotnine.data import mtcars
 
@@ -175,11 +174,6 @@ class TestThemes:
         p = self.g + labs(title='Theme Minimal') + theme_minimal()
 
         assert p + _theme == 'theme_minimal'
-
-    def test_theme_tufte(self):
-        p = self.g + labs(title='Theme Tufte') + theme_tufte(ticks=False)
-
-        assert p + _theme == 'theme_tufte'
 
     @pytest.mark.xfail(reason="fails on github actions")
     def test_theme_seaborn(self):
