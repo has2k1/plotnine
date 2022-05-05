@@ -92,6 +92,9 @@ Bug Fixes
   the colour of the axis ticks. This was probably a regression due to changes
   in Matplotlib.
 
+- Fixed :class:`~plotnine.themes.themeables.panel_ontop` so that if is set to
+  ``False``, then the data visualised below the grid-lines. (:issue:`585`)
+
 Enhancements
 ************
 
