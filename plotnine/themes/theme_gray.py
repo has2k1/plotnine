@@ -126,7 +126,6 @@ class theme_gray(theme):
             panel_spacing=0.07,
             panel_spacing_x=0.07,
             panel_spacing_y=0.07,
-            panel_ontop=True,
 
             strip_background=element_rect(color='None', fill='#D9D9D9'),
             strip_background_x=element_rect(width=1),

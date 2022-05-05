@@ -1521,7 +1521,7 @@ class panel_ontop(themeable):
     """
     def apply(self, ax):
         super().apply(ax)
-        ax.set_axisbelow(self.properties['value'])
+        ax.set_axisbelow(not self.properties['value'])
 
 
 class aspect_ratio(themeable):
