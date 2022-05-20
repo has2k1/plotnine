@@ -151,7 +151,7 @@ def rlm(data, xseq, **params):
 
     if params['se']:
         warnings.warn("Confidence intervals are not yet implemented"
-                      + " for RLM smoothing.", PlotnineWarning)
+                      " for RLM smoothing.", PlotnineWarning)
 
     return data
 
@@ -176,7 +176,7 @@ def rlm_formula(data, xseq, **params):
 
     if params['se']:
         warnings.warn("Confidence intervals are not yet implemented"
-                      + " for RLM smoothing.", PlotnineWarning)
+                      " for RLM smoothing.", PlotnineWarning)
 
     return data
 
@@ -337,7 +337,7 @@ def loess(data, xseq, **params):
         kwargs['surface'] = 'direct'
         warnings.warn(
             "Making prediction outside the data range, "
-            " setting loess control parameter `surface='direct'`.",
+            "setting loess control parameter `surface='direct'`.",
             PlotnineWarning)
 
     if 'span' not in kwargs:
