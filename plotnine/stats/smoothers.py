@@ -308,7 +308,7 @@ def lowess(data, xseq, **params):
     if params['se']:
         warnings.warn(
             "Confidence intervals are not yet implemented"
-            + " for lowess smoothings.",
+            " for lowess smoothings.",
             PlotnineWarning
         )
 
