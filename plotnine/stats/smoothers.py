@@ -151,7 +151,7 @@ def rlm(data, xseq, **params):
 
     if params['se']:
         warnings.warn("Confidence intervals are not yet implemented"
-                      "for RLM smoothing.", PlotnineWarning)
+                      " for RLM smoothing.", PlotnineWarning)
 
     return data
 
@@ -176,7 +176,7 @@ def rlm_formula(data, xseq, **params):
 
     if params['se']:
         warnings.warn("Confidence intervals are not yet implemented"
-                      "for RLM smoothing.", PlotnineWarning)
+                      " for RLM smoothing.", PlotnineWarning)
 
     return data
 
@@ -308,7 +308,7 @@ def lowess(data, xseq, **params):
     if params['se']:
         warnings.warn(
             "Confidence intervals are not yet implemented"
-            "for lowess smoothings.",
+            " for lowess smoothings.",
             PlotnineWarning
         )
 
