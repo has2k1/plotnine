@@ -22,7 +22,7 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
-          pip install ".[extra,testing]"
+          pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash -l {0}
@@ -105,7 +105,7 @@ jobs:
         shell: bash -l {0}
         run: |
           sudo apt-get install pandoc
-          pip install ".[testing,doc]"
+          pip install ".[test,doc]"
           python setup.py install
 
       - name: Environment Information
