@@ -713,8 +713,8 @@ class ggplot:
             )
 
         if verbose:
-            _w = from_inches(width, units),
-            _h = from_inches(height, units),
+            _w = from_inches(width, units)
+            _h = from_inches(height, units)
             warn(f"Saving {_w} x {_h} {units} image.", PlotnineWarning)
             warn(f'Filename: {filename}', PlotnineWarning)
 
