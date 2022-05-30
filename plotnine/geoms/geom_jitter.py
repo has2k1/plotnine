@@ -35,7 +35,7 @@ class geom_jitter(geom_point):
                       'na_rm': False, 'width': None, 'height': None,
                       'random_state': None}
 
-    def __init__(self, data=None, mapping=None, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         if {'width', 'height', 'random_state'} & set(kwargs):
             if 'position' in kwargs:
                 raise PlotnineError(
@@ -59,4 +59,4 @@ class geom_jitter(geom_point):
 
             kwargs['position'] = position_jitter(
                 width=width, height=height, random_state=random_state)
-        geom_point.__init__(self, data, mapping, **kwargs)
+        geom_point.__init__(self, mapping, data, **kwargs)

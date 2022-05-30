@@ -50,7 +50,7 @@ class stat_function(stat):
     DEFAULT_AES = {'y': after_stat('y')}
     CREATES = {'y'}
 
-    def __init__(self, data=None, mapping=None, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         if data is None:
             def _data_func(df):
                 if df.empty:
@@ -58,7 +58,7 @@ class stat_function(stat):
                 return df
             data = _data_func
 
-        super().__init__(data, mapping, **kwargs)
+        super().__init__(mapping, data, **kwargs)
 
     def setup_params(self, data):
         if not callable(self.params['fun']):

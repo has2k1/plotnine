@@ -28,7 +28,7 @@ class geom_hline(geom):
                       'na_rm': False, 'inherit_aes': False}
     legend_geom = 'path'
 
-    def __init__(self, data=None, mapping=None, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         data, mapping = order_as_data_mapping(data, mapping)
         yintercept = kwargs.pop('yintercept', None)
         if yintercept is not None:
@@ -39,7 +39,7 @@ class geom_hline(geom):
             mapping = aes(yintercept='yintercept')
             kwargs['show_legend'] = False
 
-        geom.__init__(self, data, mapping, **kwargs)
+        geom.__init__(self, mapping, data, **kwargs)
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         """
