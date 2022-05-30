@@ -9,8 +9,8 @@ import numpy as np
 # stat class signatures
 
 common_geom_params = [
-    'data',
     'mapping',
+    'data',
     'stat',
     'position',
     'na_rm',
@@ -19,14 +19,14 @@ common_geom_params = [
     'raster'
 ]
 common_geom_param_values = {
-    'data': None,
     'mapping': None,
+    'data': None,
     'inherit_aes': True,
     'show_legend': None,
     'raster': False
 }
 
-common_stat_params = ['data', 'mapping', 'geom', 'position', 'na_rm']
+common_stat_params = ['mapping', 'data', 'geom', 'position', 'na_rm']
 common_stat_param_values = common_geom_param_values
 
 # Templates for docstrings
@@ -56,22 +56,22 @@ STAT_SIGNATURE_TPL = """
 
     {signature}
 
-Only the ``data`` and ``mapping`` can be positional, the rest must
+Only the ``mapping`` and ``data`` can be positional, the rest must
 be keyword arguments. ``**kwargs`` can be aesthetics (or parameters)
 used by the ``geom``.
 """
 
 
 common_params_doc = {
-    'data': """\
-The data to be displayed in this layer. If :py:`None`, the data from \
-from the :py:`ggplot()` call is used. If specified, it overrides the \
-data from the :py:`ggplot()` call.""",
-
     'mapping': """\
 Aesthetic mappings created with :meth:`~plotnine.aes`. If specified and \
 :py:`inherit.aes=True`, it is combined with the default mapping for the plot. \
 You must supply mapping if there is no plot mapping.""",
+
+    'data': """\
+The data to be displayed in this layer. If :py:`None`, the data from \
+from the :py:`ggplot()` call is used. If specified, it overrides the \
+data from the :py:`ggplot()` call.""",
 
     'stat': """\
 The statistical transformation to use on the data for this layer. \
@@ -103,11 +103,11 @@ the final image is in vector format."""
 
 
 GEOM_PARAMS_TPL = """\
-data : dataframe, optional
-    {data}
 mapping : aes, optional
     {mapping}
     {_aesthetics_doc}
+data : dataframe, optional
+    {data}
 stat : str or stat, optional (default: {default_stat})
     {stat}
 position : str or position, optional (default: {default_position})
@@ -123,11 +123,11 @@ raster : bool, optional (default: {default_raster})
 """
 
 STAT_PARAMS_TPL = """\
-data : dataframe, optional
-    {data}
 mapping : aes, optional
     {mapping}
     {_aesthetics_doc}
+data : dataframe, optional
+    {data}
 geom : str or geom, optional (default: {default_geom})
     {stat}
 position : str or position, optional (default: {default_position})

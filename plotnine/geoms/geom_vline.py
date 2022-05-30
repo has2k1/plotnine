@@ -28,7 +28,7 @@ class geom_vline(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'inherit_aes': False}
 
-    def __init__(self, data=None, mapping=None, **kwargs):
+    def __init__(self, mapping=None, data=None, **kwargs):
         data, mapping = order_as_data_mapping(data, mapping)
         xintercept = kwargs.pop('xintercept', None)
         if xintercept is not None:
@@ -39,7 +39,7 @@ class geom_vline(geom):
             mapping = aes(xintercept='xintercept')
             kwargs['show_legend'] = False
 
-        geom.__init__(self, data, mapping, **kwargs)
+        geom.__init__(self, mapping, data, **kwargs)
 
     def draw_panel(self, data, panel_params, coord, ax, **params):
         """

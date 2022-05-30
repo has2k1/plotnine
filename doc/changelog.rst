@@ -8,10 +8,11 @@ v0.9.0
 API Changes
 ***********
 
-- For the calls to ``ggplot``, ``geoms`` and ``stats``, the order of the
-  positional arguments is ``data`` then ``mapping``. In practice, you
-  can still provide one/two positional arguments in any order. However,
-  the are a few cases where old code will breaks due to duplicate parameters.
+- For the calls to ``ggplot``, the order of the positional arguments is
+  ``(data, mapping)`` and for calls ``geoms`` and ``stats`` the order
+  is ``(mapping, data)``. In practice, you can still provide one/two
+  positional arguments in any order. However, the are a few cases
+  where old code will breaks due to duplicate parameters.
 
 New Features
 ************
