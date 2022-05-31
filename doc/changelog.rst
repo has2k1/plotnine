@@ -23,6 +23,9 @@ New Features
 - :class:`~plotnine.positions.position_dodge2` gained the ability to reverse
   the order of the plotted groups. (:issue:`515`)
 
+- Added :class:`~plotnine.themes.theme_tufte`, a theme that reduces the
+  distractions around plot data.
+
 - :class:`~plotnine.labels.labs` can now be used to create a ``caption``.
   This caption can be styled using the ``plot_caption`` parameter to
   :class:`~plotnine.themes.theme`.
