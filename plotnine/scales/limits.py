@@ -152,7 +152,7 @@ class strokelim(_lim):
 
 class lims:
     """
-    Set aesthtic limits
+    Set aesthetic limits
 
     Parameters
     ----------
