@@ -19,6 +19,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - name: Install Packages
         shell: bash -l {0}
         run: |
