@@ -28,8 +28,9 @@ class geom_ribbon(geom):
 
     @staticmethod
     def draw_group(data, panel_params, coord, ax, **params):
+        _x = 'y' if isinstance(coord, coord_flip) else 'x'
         data = coord.transform(data, panel_params, munch=True)
-        data = data.sort_values(by=['group', 'x'], kind='mergesort')
+        data = data.sort_values(by=['group', _x], kind='mergesort')
         units = ['alpha', 'color', 'fill', 'linetype', 'size']
 
         if len(data[units].drop_duplicates()) > 1:
