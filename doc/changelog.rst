@@ -99,6 +99,10 @@ Bug Fixes
 - Fixed :class:`~plotnine.themes.themeables.panel_ontop` so that if is set to
   ``False``, then the data visualised below the grid-lines. (:issue:`585`)
 
+- Fixed :class:`~plotnine.geoms.geom_ribbon`, :class:`~plotnine.geoms.geom_area`
+  and :class:`~plotnine.geoms.geom_density` to work with
+  :class:`~plotnine.coords.coord_flip`. (:issue:`596`)
+
 Enhancements
 ************
 
