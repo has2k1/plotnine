@@ -93,7 +93,7 @@ finally:
 # 2. remove the 0.0 version created by setuptools_scm when clone is too shallow
 if on_rtd:
     import re
-    p1 = re.compile(r'\+dirty$')
+    p1 = re.compile(r'\.d\d{8}$')
     if p1.match(version):
         version = p1.sub('', version)
 
