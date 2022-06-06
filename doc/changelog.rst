@@ -3,7 +3,8 @@ Changelog
 
 v0.9.0
 ------
-(*not-yet-released*)
+(2022-06-06)
+
 
 API Changes
 ***********
@@ -112,7 +113,8 @@ Enhancements
 - :class:`~plotnine.stats.stat_density` now uses a fast computation path
   for gaussian densities with no weights. This was probably a regression.
 
-- :class:`~plotnine.geoms.geom_map` can now draw MultiPoints.
+- :class:`~plotnine.geoms.geom_map` can now draw MultiPoints,
+  MultiLineStrings and MultiPolgons.
 
 - :class:`~plotnine.geoms.geom_text` with ``adjust_text`` can now be used
   in more than one layer with good enough results.
