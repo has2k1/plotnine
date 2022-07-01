@@ -1,0 +1,2 @@
+# This cannot be setup.cfg, pypi does not git packages
+git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
