@@ -110,6 +110,7 @@ jobs:
         run: |
           sudo apt-get install pandoc
           pip install ".[test,doc]"
+          pip install -r requirements/doc.txt
           python setup.py install
 
       - name: Environment Information
