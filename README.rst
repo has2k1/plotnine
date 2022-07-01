@@ -11,14 +11,13 @@ Coverage             |coverage|_
 Documentation        |documentation|_
 =================    =================
 
-.. raw:: html
-
-      <img src="https://github.com/has2k1/plotnine/blob/main/doc/images/logo-180.png" align="right"'>
-
 plotnine is an implementation of a *grammar of graphics* in Python,
 it is based on ggplot2_. The grammar allows users to compose plots
 by explicitly mapping data to the visual objects that make up the
 plot.
+
+.. image:: https://github.com/has2k1/plotnine/blob/main/doc/images/logo-180.png
+   :align: right
 
 Plotting with a grammar is powerful, it makes custom (and otherwise
 complex) plots easy to think about and then create, while the
