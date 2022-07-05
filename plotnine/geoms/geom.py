@@ -240,7 +240,7 @@ class geom(metaclass=Registry):
         """
         Plot all groups
 
-        For effeciency, geoms that do not need to partition
+        For efficiency, geoms that do not need to partition
         different groups before plotting should override this
         method and avoid the groupby.
 

@@ -15,7 +15,7 @@ class annotate:
     Parameters
     ----------
     geom : geom or str
-        geom to use for annoation, or name of geom (e.g. 'point').
+        geom to use for annotation, or name of geom (e.g. 'point').
     x : float
         Position
     y : float
