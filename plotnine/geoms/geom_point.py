@@ -31,14 +31,13 @@ class geom_point(geom):
         """
         self.draw_group(data, panel_params, coord, ax, **params)
 
-    @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    @classmethod
+    def draw_group(cls, data, panel_params, coord, ax, **params):
         data = coord.transform(data, panel_params)
         units = 'shape'
         for _, udata in data.groupby(units, dropna=False):
             udata.reset_index(inplace=True, drop=True)
-            geom_point.draw_unit(udata, panel_params, coord,
-                                 ax, **params)
+            cls.draw_unit(udata, panel_params, coord, ax, **params)
 
     @staticmethod
     def draw_unit(data, panel_params, coord, ax, **params):

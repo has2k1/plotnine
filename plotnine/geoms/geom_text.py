@@ -92,6 +92,23 @@ class geom_text(geom):
                       'adjust_text': None,
                       'format_string': None,
                       'path_effects': None}
+    COLUMN_MAP = {
+        'x': 'x',
+        'y': 'y',
+        'size': 'size',
+        'label': 's',
+        'angle': 'rotation',
+        'lineheight': 'linespacing',
+        'ha': 'ha',
+        'va': 'va',
+    }
+    PARAMS_MAP = {
+        'family': 'family',
+        'fontweight': 'fontweight',
+        'fontstyle': 'fontstyle',
+        'zorder': 'zorder',
+        'raster': 'rasterized'
+    }
 
     def __init__(self, mapping=None, data=None, **kwargs):
         data, mapping = order_as_data_mapping(data, mapping)
@@ -136,8 +153,8 @@ class geom_text(geom):
     def draw_panel(self, data, panel_params, coord, ax, **params):
         super().draw_panel(data, panel_params, coord, ax, **params)
 
-    @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    @classmethod
+    def draw_group(cls, data, panel_params, coord, ax, **params):
         data = coord.transform(data, panel_params)
 
         # Bind color and alpha
@@ -145,18 +162,10 @@ class geom_text(geom):
 
         # Create a dataframe for the plotting data required
         # by ax.text
-        df = data[['x', 'y', 'size']].copy()
-        df['s'] = data['label']
-        df['rotation'] = data['angle']
-        df['linespacing'] = data['lineheight']
+        df = data[list(cls.COLUMN_MAP)].rename(columns=cls.COLUMN_MAP)
         df['color'] = color
-        df['ha'] = data['ha']
-        df['va'] = data['va']
-        df['family'] = params['family']
-        df['fontweight'] = params['fontweight']
-        df['fontstyle'] = params['fontstyle']
-        df['zorder'] = params['zorder']
-        df['rasterized'] = params['raster']
+        for param_key, column_key in cls.PARAMS_MAP.items():
+            df[column_key] = params[param_key]
         df['clip_on'] = True
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox
