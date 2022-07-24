@@ -78,6 +78,7 @@ class ggplot:
         self.figure = None
         self.watermarks = []
         self.axs = None
+        self._layout_class = Layout
 
     def __str__(self):
         """
@@ -268,7 +269,7 @@ class ggplot:
         if not self.layers:
             self += geom_blank()
 
-        self.layout = Layout()
+        self.layout = self._layout_class()
         layers = self.layers
         scales = self.scales
         layout = self.layout
@@ -365,7 +366,7 @@ class ggplot:
         figure = plt.figure()
         axs = self.facet.make_axes(
             figure,
-            self.layout.layout,
+            self.layout,
             self.coordinates)
 
         # Dictionary to collect matplotlib objects that will

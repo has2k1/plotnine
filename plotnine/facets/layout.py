@@ -27,6 +27,8 @@ class Layout:
 
     axs = None        # MPL axes
 
+    projection = None     # MPL projection
+
     def setup(self, layers, plot):
         """
         Create a layout for the panels

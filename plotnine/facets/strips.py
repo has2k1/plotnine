@@ -5,6 +5,13 @@ with suppress(ImportError):
     import matplotlib.text as mtext
     import matplotlib.patches as mpatch
 
+try:
+    from mpl_toolkits.mplot3d import art3d
+    from mpl_toolkits.mplot3d.axes3d import Axes3D
+    MPLOT3D_AVAILABLE = True
+except ImportError:
+    MPLOT3D_AVAILABLE = False
+
 
 class strips(list):
     """
@@ -281,6 +288,9 @@ class strip:
             zorder=3.3,  # > rect
             clip_on=False
         )
+
+        if MPLOT3D_AVAILABLE and isinstance(ax, Axes3D):
+            art3d.patch_2d_to_3d(rect)
 
         ax.add_artist(rect)
         ax.add_artist(text)

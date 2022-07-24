@@ -317,7 +317,7 @@ class facet:
         """
         Create suplots and return axs
         """
-        num_panels = len(layout)
+        num_panels = len(layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
         space = self.space
         default_space = {
@@ -360,7 +360,10 @@ class facet:
         i = 1
         for row in range(self.nrow):
             for col in range(self.ncol):
-                axsarr[row, col] = fig.add_subplot(gs[i - 1])
+                axsarr[row, col] = fig.add_subplot(
+                    gs[i - 1],
+                    projection=layout.projection
+                )
                 i += 1
 
         # Rearrange axes
