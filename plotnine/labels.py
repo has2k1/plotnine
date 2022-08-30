@@ -3,8 +3,8 @@ from copy import deepcopy
 from .mapping.aes import rename_aesthetics, SCALED_AESTHETICS
 from .exceptions import PlotnineError
 
-__all__ = ['xlab', 'ylab', 'labs', 'ggtitle']
-VALID_LABELS = SCALED_AESTHETICS | {'caption', 'title'}
+__all__ = ['xlab', 'ylab', 'labs', 'ggtitle', 'ggsubtitle']
+VALID_LABELS = SCALED_AESTHETICS | {'caption', 'title', 'subtitle'}
 
 
 class labs:
@@ -81,3 +81,17 @@ class ggtitle(labs):
             raise PlotnineError(
                 "Arguments to ggtitle cannot be None")
         self.labels = {'title': title}
+        
+class ggsubtitle(labs):
+    """
+    Create plot subtitle
+    
+    Parameters
+    ----------
+    subtitle : str
+        Plot subtitle
+    """
+    def __init__(self, subtitle):
+        if subtitle is None:
+            self.labels = {'subtitle' : ''}
+        self.labels = {'subtitle' : subtitle}
