@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Next Release
+------------
+
+
+Bug Fixes
+*********
+
+- Fixed bug in :class:`~plotnine.stats.stat_bin_2d` where bins whose edges
+  are zero or negative would yield the wrong plot. (:issue:`604`)
+
+
 v0.9.0
 ------
 (2022-07-01)
