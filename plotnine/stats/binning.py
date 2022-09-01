@@ -267,16 +267,40 @@ def fuzzybreaks(scale, breaks=None, boundary=None,
 
 def _adjust_breaks(breaks, right):
     epsilon = np.finfo(float).eps
-    plus = 1+epsilon
-    minus = 1-epsilon
+    plus = 1 + epsilon
+    minus = 1 - epsilon
 
-    # fuzzy breaks to protect from floating point rounding errors
+    sign = np.sign(breaks)
+    pos_idx = np.where(sign == 1)[0]
+    neg_idx = np.where(sign == -1)[0]
+    zero_idx = np.where(sign == 0)[0]
+
+    fuzzy = breaks.copy()
     if right:
-        fuzz = np.hstack(
-            [minus, np.repeat(plus, len(breaks)-1)])
+        # [_](_](_](_]
+        lbreak = breaks[0]
+        fuzzy[pos_idx] *= plus
+        fuzzy[neg_idx] *= minus
+        fuzzy[zero_idx] = epsilon
+        # Left closing break
+        if lbreak == 0:
+            fuzzy[0] = -epsilon
+        elif lbreak < 0:
+            fuzzy[0] = lbreak * plus
+        else:
+            fuzzy[0] = lbreak * minus
     else:
-        fuzz = np.hstack(
-            [np.repeat(minus, len(breaks)-1), plus])
+        # [_)[_)[_)[_]
+        rbreak = breaks[-1]
+        fuzzy[pos_idx] *= minus
+        fuzzy[neg_idx] *= plus
+        fuzzy[zero_idx] = -epsilon
+        # Right closing break
+        if rbreak == 0:
+            fuzzy[-1] = epsilon
+        elif rbreak > 0:
+            fuzzy[-1] = rbreak * plus
+        else:
+            fuzzy[-1] = rbreak * minus
 
-    fuzzybreaks = breaks * fuzz
-    return fuzzybreaks
+    return fuzzy

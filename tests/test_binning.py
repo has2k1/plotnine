@@ -1,7 +1,11 @@
+import numpy as np
 from plotnine.scales import scale_x_discrete, scale_x_continuous
-from plotnine.stats.binning import (breaks_from_bins,
-                                    breaks_from_binwidth,
-                                    fuzzybreaks)
+from plotnine.stats.binning import (
+    breaks_from_bins,
+    breaks_from_binwidth,
+    fuzzybreaks,
+    _adjust_breaks
+)
 
 
 def test_breaks_from_bins():
@@ -73,3 +77,55 @@ def test_fuzzybreaks():
     breaks = fuzzybreaks(dscale)
     # The breaks create bins centered on the limits
     assert list((breaks[:-1]+breaks[1:])/2) == x
+
+
+def test_adjust_breaks_right():
+    def _test(a, b):
+        assert b[0] <= a[0]
+        assert all(a[1:] <= b[1:])
+
+    # All positive
+    a = np.linspace(1, 2, 11)
+    b = _adjust_breaks(a, right=True)
+    _test(a, b)
+
+    # zero on the Left
+    a = np.linspace(0, 1, 11)
+    b = _adjust_breaks(a, right=True)
+    _test(a, b)
+
+    # zero on the right
+    a = np.linspace(-1, 0, 11)
+    b = _adjust_breaks(a, right=True)
+    _test(a, b)
+
+    # All negative
+    a = np.linspace(-2, -1, 11)
+    b = _adjust_breaks(a, right=True)
+    _test(a, b)
+
+
+def test_adjust_breaks_right_False():
+    def _test(a, b):
+        assert a[-1] <= b[-1]
+        assert all(b[:-1] <= a[:-1])
+
+    # All positive
+    a = np.linspace(1, 2, 11)
+    b = _adjust_breaks(a, right=False)
+    _test(a, b)
+
+    # zero on the Left
+    a = np.linspace(0, 1, 11)
+    b = _adjust_breaks(a, right=False)
+    _test(a, b)
+
+    # zero on the right
+    a = np.linspace(-1, 0, 11)
+    b = _adjust_breaks(a, right=False)
+    _test(a, b)
+
+    # All negative
+    a = np.linspace(-2, -1, 11)
+    b = _adjust_breaks(a, right=False)
+    _test(a, b)
