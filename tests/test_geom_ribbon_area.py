@@ -6,6 +6,7 @@ from plotnine import (
     coord_flip,
     facet_wrap,
     geom_area,
+    geom_line,
     geom_ribbon,
     ggplot,
     scale_x_continuous,
@@ -88,3 +89,28 @@ def test_ribbon_coord_flip():
          )
 
     assert p + _theme == 'ribbon_coord_flip'
+
+
+def test_ribbon_where():
+    m = 3
+    n = 100
+    values = np.linspace(0, 2*m*np.pi, n)
+    df = pd.DataFrame({
+        'x': range(n),
+        'sin': np.sin(values)
+    })
+
+    p = (ggplot(df, aes('x', 'sin'))
+         + geom_ribbon(
+             aes(ymin=0, ymax='sin', where='sin>0'),
+             fill='blue',
+             alpha=0.2
+         )
+         + geom_ribbon(
+             aes(ymin=0, ymax='sin', where='sin<0'),
+             fill='red',
+             alpha=0.2
+         )
+         + geom_line()
+         )
+    assert p + _theme == 'ribbon_where'
