@@ -17,7 +17,17 @@ class geom_density(geom_area):
     --------
     plotnine.geoms.geom_ribbon
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'linetype': 'solid', 'size': 0.5, 'weight': 1}
-    DEFAULT_PARAMS = {'stat': 'density', 'position': 'identity',
-                      'na_rm': False}
+    DEFAULT_AES = dict(
+        geom_area.DEFAULT_AES, **{
+            'color': 'black',
+            'fill': None,
+            'weight': 1
+        }
+    )
+
+    DEFAULT_PARAMS = dict(
+        geom_area.DEFAULT_PARAMS, **{
+            'stat': 'density',
+            'position': 'identity'
+        }
+    )
