@@ -5,7 +5,7 @@ import pandas as pd
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .mapping.aes import aes, NO_GROUP
+from .mapping.aes import aes, NO_GROUP, SCALED_AESTHETICS
 from .mapping.evaluation import stage, evaluate
 
 
@@ -442,11 +442,18 @@ class layer:
 
 
 def add_group(data):
+    """
+    Add group to the dataframe
+
+    The group depends on the interaction of the discrete
+    aesthetic columns in the dataframe.
+    """
     if len(data) == 0:
         return data
 
     if 'group' not in data:
-        disc = discrete_columns(data, ignore=['label'])
+        ignore = data.columns.difference(SCALED_AESTHETICS)
+        disc = discrete_columns(data, ignore=ignore)
         if disc:
             data['group'] = ninteraction(data[disc], drop=True)
         else:
