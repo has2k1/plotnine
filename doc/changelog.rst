@@ -11,6 +11,11 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.stats.stat_bin_2d` where bins whose edges
   are zero or negative would yield the wrong plot. (:issue:`604`)
 
+New Features
+************
+
+- :class:`~plotnine.geoms.geom_ribbon` acquired new parameter `` where.
+
 API Changes
 ***********
 
