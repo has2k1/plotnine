@@ -147,6 +147,9 @@ class position_dodge2(position_dodge):
 
 
 def find_x_overlaps(df):
+    """
+    Find overlapping regions along the x axis
+    """
     n = len(df)
     overlaps = np.zeros(n, dtype=int)
     overlaps[0] = 1

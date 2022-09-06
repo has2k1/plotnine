@@ -88,8 +88,11 @@ class geom_point(geom):
         Parameters
         ----------
         data : dataframe
-        params : dict
+            Legend data
+        da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

@@ -117,6 +117,9 @@ class stat_density_2d(stat):
 
 
 def contour_lines(X, Y, Z, levels):
+    """
+    Calculate contour lines
+    """
     # Preparation of values and the creating of contours is
     # adapted from MPL with some adjustments.
     X = np.asarray(X, dtype=np.float64)

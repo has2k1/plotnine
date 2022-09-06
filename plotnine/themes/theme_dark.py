@@ -5,9 +5,10 @@ from .theme_gray import theme_gray
 
 class theme_dark(theme_gray):
     """
-    The dark cousin of :class:`theme_light`, with similar line
-    sizes but a dark background. Useful to make thin colored
-    lines pop out.
+    The dark cousin of :class:`theme_light`
+
+    It has  similar line sizes but a dark background. Useful to
+    make thin colored lines pop out.
 
     Parameters
     ----------

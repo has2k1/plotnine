@@ -125,6 +125,9 @@ class _geom_logticks(geom_rug):
         value_range: tuple
             Range for which to calculate ticks.
 
+        base : number
+            Base of logarithm
+
         Returns
         -------
         out: tuple

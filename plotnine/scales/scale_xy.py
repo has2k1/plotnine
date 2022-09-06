@@ -114,7 +114,8 @@ class scale_position_discrete(scale_discrete):
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
-        The phyical size of the scale, if a position scale
+        Get the phyical size of the scale
+
         Unlike limits, this always returns a numeric vector of length 2
         """
         if limits is None:

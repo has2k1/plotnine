@@ -74,6 +74,9 @@ class stat_quantile(stat):
 
 
 def quant_pred(q, data, **params):
+    """
+    Quantile precitions
+    """
     mod = smf.quantreg(params['formula'], data)
     reg_res = mod.fit(q=q, **params['method_args'])
     out = pd.DataFrame({

@@ -125,8 +125,7 @@ class scale(metaclass=Registry):
 
     def __radd__(self, gg, inplace=False):
         """
-        Add this scales to the list of scales for the
-        ggplot object
+        Add this scale to ggplot object
         """
         gg = gg if inplace else deepcopy(gg)
         gg.scales.append(copy(self))
@@ -162,14 +161,14 @@ class scale(metaclass=Registry):
 
     def dimension(self, expand=None, limits=None):
         """
-        The phyical size of the scale.
+        Get the phyical size of the scale.
         """
         raise NotImplementedError('Not Implemented')
 
     def expand_limits(self, limits, expand=None, coord_limits=None,
                       trans=None):
         """
-        The phyical size of the scale.
+        Exand the limits of the scale
         """
         raise NotImplementedError('Not Implemented')
 
@@ -199,9 +198,8 @@ class scale(metaclass=Registry):
 
     def default_expansion(self, mult=0, add=0, expand=True):
         """
-        Default expansion for this scale
+        Get default expansion for this scale
         """
-
         if not expand:
             return (0, 0, 0, 0)
 
@@ -319,14 +317,16 @@ class scale_discrete(scale):
     drop = True        # drop unused factor levels from the scale
     na_translate = True
 
-    def train(self, x, drop=None):
+    def train(self, x, drop=False):
         """
         Train scale
 
         Parameters
         ----------
-        x: pd.series| np.array
+        x: pd.series | np.array
             a column of data to train over
+        drop : bool
+            Whether to drop(not include) unused categories
 
         A discrete range is stored in a list
         """
@@ -338,7 +338,8 @@ class scale_discrete(scale):
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
-        The phyical size of the scale, if a position scale
+        Get the phyical size of the scale
+
         Unlike limits, this always returns a numeric vector of length 2
         """
         if limits is None:
@@ -407,14 +408,13 @@ class scale_discrete(scale):
 
     def default_expansion(self, mult=0, add=0.6, expand=True):
         """
-        Default expansion for discrete scale
+        Get the default expansion for a discrete scale
         """
         return super().default_expansion(mult, add, expand)
 
     def map(self, x, limits=None):
         """
-        Return an array-like of x mapped to values
-        from the scales palette
+        Map values in x to a palette
         """
         if limits is None:
             limits = self.limits
@@ -456,7 +456,7 @@ class scale_discrete(scale):
 
     def get_breaks(self, limits=None, strict=True):
         """
-        Returns a ordered dictionary of the form {break: position}
+        Return a ordered dictionary of the form {break: position}
 
         The form is suitable for use by the guides
 
@@ -736,7 +736,8 @@ class scale_continuous(scale):
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
-        The phyical size of the scale, if a position scale
+        Get the phyical size of the scale
+
         Unlike limits, this always returns a numeric vector of length 2
         """
         if limits is None:
@@ -817,7 +818,7 @@ class scale_continuous(scale):
 
     def default_expansion(self, mult=0.05, add=0, expand=True):
         """
-        Default expansion for continuous scale
+        Get the default expansion for continuous scale
         """
         return super().default_expansion(mult, add, expand)
 

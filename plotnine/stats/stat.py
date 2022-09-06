@@ -263,7 +263,7 @@ class stat(metaclass=Registry):
 
         def fn(pdata):
             """
-            Helper compute function
+            Compute function helper
             """
             # Given data belonging to a specific panel, grab
             # the corresponding scales and call the method
@@ -278,8 +278,9 @@ class stat(metaclass=Registry):
     @classmethod
     def compute_panel(cls, data, scales, **params):
         """
-        Calculate the stats of all the groups and
-        return the results in a single dataframe.
+        Calculate the statistics for all the groups
+
+        Return the results in a single dataframe.
 
         This is a default function that can be overriden
         by individual stats

@@ -17,6 +17,7 @@ class _scale_manual(scale_discrete):
     ----------
     {superclass_parameters}
     """
+
     def __init__(self, values, **kwargs):
         # Match the values of the scale with the breaks (if given)
         if 'breaks' in kwargs:

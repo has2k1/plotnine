@@ -18,6 +18,9 @@ import functools
 
 
 class dummy:
+    """
+    No Op
+    """
     pass
 
 
@@ -97,7 +100,9 @@ _context_keys = [
 
 def set_theme(context="notebook", style="darkgrid", palette="deep",
               font="sans-serif", font_scale=1, color_codes=False, rc=None):
-    """Set aesthetic parameters in one step.
+    """
+    Set aesthetic parameters in one step
+
     Each set of parameters can be set directly or temporarily, see the
     referenced functions below for more information.
 
@@ -130,14 +135,16 @@ def set_theme(context="notebook", style="darkgrid", palette="deep",
 
 def set(*args, **kwargs):
     """
-    Alias for :func:`set_theme`, which is the preferred interface.
+    Alias for :func:`set_theme`, which is the preferred interface
+
     This function may be removed in the future.
     """
     set_theme(*args, **kwargs)
 
 
 def axes_style(style=None, rc=None):
-    """Return a parameter dict for the aesthetic style of the plots.
+    """
+    Return a parameter dict for the aesthetic style of the plots
 
     This affects things like the color of the axes, whether a grid is
     enabled by default, and other aesthetic elements.
@@ -300,7 +307,8 @@ def axes_style(style=None, rc=None):
 
 
 def set_style(style=None, rc=None):
-    """Set the aesthetic style of the plots.
+    """
+    Set the aesthetic style of the plots
 
     This affects things like the color of the axes, whether a grid is
     enabled by default, and other aesthetic elements.
@@ -333,7 +341,8 @@ def set_style(style=None, rc=None):
 
 
 def plotting_context(context=None, font_scale=1, rc=None):
-    """Return a parameter dict to scale elements of the figure.
+    """
+    Return a parameter dict to scale elements of the figure
 
     This affects things like the size of the labels, lines, and other
     elements of the plot, but not the overall style. The base context
@@ -442,7 +451,8 @@ def plotting_context(context=None, font_scale=1, rc=None):
 
 
 def set_context(context=None, font_scale=1, rc=None):
-    """Set the plotting context parameters.
+    """
+    Set the plotting context parameters
 
     This affects things like the size of the labels, lines, and other
     elements of the plot, but not the overall style. The base context

@@ -156,10 +156,9 @@ class aes(dict):
 
     def _convert_deprecated_expr(self, kwargs):
         """
-        Convert calculated aesthetic expression mapping to use
-        the stage class.
+        Handle old-style calculated aesthetic expression mappings
 
-        e.g.
+        Just converts them to use `stage` e.g.
         'stat(count)' to after_stat(count)
         '..count..' to after_stat(count)
         """
@@ -190,8 +189,7 @@ class aes(dict):
     @property
     def _calculated(self):
         """
-        Return the subset of aesthetics that are mapped from the
-        calculated statistics
+        Return only the aesthetics mapped to calculated statistics
 
         The mapping is a dict of the form ``{name: expr}``, i.e the
         stage class has been peeled off.
@@ -206,7 +204,7 @@ class aes(dict):
     @property
     def _scaled(self):
         """
-        Return the subset of aesthetics mapped using layer aesthetics
+        Return only the aesthetics mapped to after scaling
 
         The mapping is a dict of the form ``{name: expr}``, i.e the
         stage class has been peeled off.
@@ -233,6 +231,9 @@ class aes(dict):
         return result
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add aesthetic mappings to ggplot
+        """
         gg = gg if inplace else deepcopy(gg)
         self = deepcopy(self)
         gg.mapping.update(self)
@@ -270,8 +271,10 @@ def rename_aesthetics(obj):
 
 def is_calculated_aes(ae):
     """
-    Return a True if aesthetic mapping will happen after the calculating
-    the statistics.
+    Return True if Aesthetic expression maps to calculated statistic
+
+    This function is now only used to identify the deprecated versions
+    e.g. "..var.." or "stat(var)".
 
     Parameters
     ----------
@@ -481,7 +484,6 @@ def is_valid_aesthetic(value, ae):
     There are no guarantees that he value is spot on
     valid.
     """
-
     if ae == 'linetype':
         named = {'solid', 'dashed', 'dashdot', 'dotted',
                  '_', '--', '-.', ':', 'None', ' ', ''}

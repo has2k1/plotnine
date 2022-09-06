@@ -148,8 +148,9 @@ class facet_wrap(facet):
 
     def spaceout_and_resize_panels(self):
         """
-        Adjust the spacing between the panels and resize them
-        to meet the aspect ratio
+        Adjust the spacing between the panels
+
+        Resize them to meet the aspect ratio
         """
         ncol = self.ncol
         nrow = self.nrow
@@ -203,6 +204,9 @@ class facet_wrap(facet):
 
 
 def check_dimensions(nrow, ncol):
+    """
+    Verify dimensions of the facet
+    """
     if nrow is not None:
         if nrow < 1:
             warn("'nrow' must be greater than 0. "
@@ -254,6 +258,9 @@ def parse_wrap_facets(facets):
 
 
 def wrap_dims(n, nrow=None, ncol=None):
+    """
+    Wrap dimensions
+    """
     if not nrow and not ncol:
         ncol, nrow = n2mfrow(n)
     elif not ncol:
@@ -270,8 +277,7 @@ def wrap_dims(n, nrow=None, ncol=None):
 
 def n2mfrow(nr_plots):
     """
-    Compute the rows and columns given the number
-    of plots.
+    Compute the rows and columns given the number of plots.
 
     This is a port of grDevices::n2mfrow from R
     """

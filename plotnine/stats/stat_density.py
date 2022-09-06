@@ -140,6 +140,9 @@ class stat_density(stat):
 
 
 def compute_density(x, weight, range, **params):
+    """
+    Compute density
+    """
     x = np.asarray(x, dtype=float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]

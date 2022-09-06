@@ -38,6 +38,11 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
         *geom(s)* to do the drawing. If ``auto``, defaults
         to 'point' if ``x`` and ``y`` are specified or
         'histogram' if only ``x`` is specified.
+    facets : str
+        Facets
+    margins : bool | list[str]
+        variable names to compute margins for. True will compute
+        all possible margins. Depends on the facetting.
     xlim : tuple
         x-axis limits
     ylim : tuple

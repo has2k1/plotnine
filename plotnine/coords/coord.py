@@ -12,6 +12,9 @@ class coord:
     is_linear = False
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add coordinates to ggplot object
+        """
         gg = gg if inplace else deepcopy(gg)
         gg.coordinates = copy(self)
         return gg
@@ -122,8 +125,7 @@ class coord:
 
     def backtransform_range(self, panel_params):
         """
-        Get the panel range provided in panel_params and backtransforms it
-        to data coordinates
+        Backtransform the panel range in panel_params to data coordinates
 
         Coordinate systems that do any transformations should override
         this method. e.g. coord_trans has to override this method.
@@ -153,6 +155,9 @@ class coord:
 
 
 def dist_euclidean(x, y):
+    """
+    Calculate euclidean distance
+    """
     x = np.asarray(x)
     y = np.asarray(y)
     return np.sqrt((x[:-1] - x[1:])**2 +
@@ -160,10 +165,16 @@ def dist_euclidean(x, y):
 
 
 def interp(start, end, n):
+    """
+    Interpolate
+    """
     return np.linspace(start, end, n, endpoint=False)
 
 
 def munch_data(data, dist):
+    """
+    Breakup path into small segments
+    """
     x, y = data['x'], data['y']
     segment_length = 0.01
 
@@ -175,10 +186,14 @@ def munch_data(data, dist):
 
     # Generate extra pieces for x and y values
     # The final point must be manually inserted at the end
-    x = [interp(start, end, n)
-         for start, end, n in zip(x[:-1], x[1:], extra)]
-    y = [interp(start, end, n)
-         for start, end, n in zip(y[:-1], y[1:], extra)]
+    x = [
+        interp(start, end, n)
+        for start, end, n in zip(x[:-1], x[1:], extra)
+    ]
+    y = [
+        interp(start, end, n)
+        for start, end, n in zip(y[:-1], y[1:], extra)
+    ]
     x.append(data['x'].iloc[-1])
     y.append(data['y'].iloc[-1])
     x = np.hstack(x)
@@ -188,7 +203,8 @@ def munch_data(data, dist):
     # but also must include final point
     idx = np.hstack([
         np.repeat(data.index[:-1], extra),
-        data.index[-1]])
+        data.index[-1]
+    ])
 
     munched = data.loc[idx, data.columns.difference(['x', 'y'])]
     munched['x'] = x

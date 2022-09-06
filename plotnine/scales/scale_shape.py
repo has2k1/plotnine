@@ -92,9 +92,16 @@ class scale_shape_ordinal(scale_shape):
 
 
 class scale_shape_continuous(scale_continuous):
+    """
+    Continuous scale for shapes
+
+    This is not a valid type of scale.
+    """
+
     def __init__(self):
         raise PlotnineError(
-            "A continuous variable can not be mapped to shape")
+            "A continuous variable can not be mapped to shape"
+        )
 
 
 alias('scale_shape_discrete', scale_shape)

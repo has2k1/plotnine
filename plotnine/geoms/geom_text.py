@@ -217,8 +217,11 @@ class geom_text(geom):
         Parameters
         ----------
         data : dataframe
+            Legend data
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

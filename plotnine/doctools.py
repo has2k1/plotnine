@@ -551,7 +551,9 @@ DOC_FUNCTIONS = {
 
 def document(cls):
     """
-    Decorator to document a class
+    Document a plotnine class
+
+    To be used as a decorator
     """
     if cls.__doc__ is None:
         return cls

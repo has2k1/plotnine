@@ -17,11 +17,18 @@ which will replace the existing scale.
 
 
 class Scales(list):
+    """
+    List of scales
+
+    This class has methods the simplify the handling of
+    the ggplot object scales
+    """
 
     def append(self, sc):
         """
-        Add scale 'sc' and remove any previous
-        scales that cover the same aesthetics
+        Add / Update scale
+
+        Removes any previous scales that cover the same aesthetics
         """
         ae = sc.aesthetics[0]
         cover_ae = self.find(ae)
@@ -34,23 +41,22 @@ class Scales(list):
 
     def find(self, aesthetic):
         """
-        Return a list of True|False for each scale if
-        it covers the aesthetic.
+        Find scales for given aesthetic
+
+        Returns a list[bool] each scale if it covers the aesthetic
         """
         return [aesthetic in s.aesthetics for s in self]
 
     def input(self):
         """
-        Return a list of all the aesthetics covered by
-        the scales.
+        Return a list of all the aesthetics covered by the scales
         """
         lst = [s.aesthetics for s in self]
         return list(itertools.chain(*lst))
 
     def get_scales(self, aesthetic):
         """
-        Return the scale for the aesthetic or None if there
-        isn't one.
+        Return the scale for the aesthetic or None if there isn't one
 
         These are the scales specified by the user e.g
             `ggplot() + scale_x_continuous()`
@@ -80,8 +86,7 @@ class Scales(list):
 
     def non_position_scales(self):
         """
-        Return a list of the non-position scales that
-        are present
+        Return a list of any non-position scales
         """
         l = [s for s in self
              if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
@@ -98,6 +103,7 @@ class Scales(list):
     def train(self, data, vars, idx):
         """
         Train the scales on the data.
+
         The scales should be for the same aesthetic
         e.g. x scales, y scales, color scales, ...
 
@@ -123,7 +129,8 @@ class Scales(list):
 
     def map(self, data, vars, idx):
         """
-        Map the data on the scales
+        Map the data onto the scales
+
         The scales should be for the same aesthetic
         e.g. x scales, y scales, color scales, ...
 
@@ -213,8 +220,7 @@ class Scales(list):
 
     def add_defaults(self, data, aesthetics):
         """
-        Add default scales for the aesthetics if none are
-        present
+        Add default scales for the aesthetics if there is none
 
         Scales are added only if the aesthetic is mapped to
         a column in the dataframe. This function may have to be
@@ -275,6 +281,9 @@ class Scales(list):
 
 
 def scale_type(series):
+    """
+    Get a suitable scale for the series
+    """
     if array_kind.continuous(series):
         stype = 'continuous'
     elif array_kind.ordinal(series):
