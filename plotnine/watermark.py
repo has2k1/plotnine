@@ -34,6 +34,9 @@ class watermark:
         self.kwargs = kwargs
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add watermark to ggplot object
+        """
         gg = gg if inplace else deepcopy(gg)
         gg.watermarks.append(self)
         return gg

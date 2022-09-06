@@ -98,6 +98,8 @@ class PlotnineAnimation(ArtistAnimation):
 
         def get_frame_artists(plot):
             """
+            Artists shown in a given frame
+
             Parameters
             ----------
             plot : ggplot

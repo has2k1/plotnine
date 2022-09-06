@@ -227,6 +227,8 @@ def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
         Weights
     binwidth : numeric
         Size of the bins
+    bins : int
+        Number of bins
     rangee : tuple
         Range of x
 

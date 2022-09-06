@@ -188,8 +188,11 @@ class geom_boxplot(geom):
         Parameters
         ----------
         data : dataframe
+            Data
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

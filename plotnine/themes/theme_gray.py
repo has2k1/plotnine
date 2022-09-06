@@ -19,6 +19,7 @@ class theme_gray(theme):
     base_family : str, optional
         Base font family.
     """
+
     def __init__(self, base_size=11, base_family=None):
         base_family = base_family or get_option('base_family')
         half_line = base_size/2

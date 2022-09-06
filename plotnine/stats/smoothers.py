@@ -15,6 +15,12 @@ smlowess = sm.nonparametric.lowess
 
 
 def predictdf(data, xseq, **params):
+    """
+    Make prediction on the data
+
+    This is a general function responsible for dispatching
+    to functions that do predictions for the specific models.
+    """
     methods = {
         'lm': lm,
         'ols': lm,
@@ -267,6 +273,9 @@ def glm(data, xseq, **params):
 
 
 def glm_formula(data, xseq, **params):
+    """
+    Fit with GLM formula
+    """
     eval_env = params['enviroment']
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params['method_args'], sm.GLM, sm.GLM.fit)
@@ -290,6 +299,9 @@ def glm_formula(data, xseq, **params):
 
 
 def lowess(data, xseq, **params):
+    """
+    Lowess fitting
+    """
     for k in ('is_sorted', 'return_sorted'):
         with suppress(KeyError):
             del params['method_args'][k]
@@ -316,6 +328,9 @@ def lowess(data, xseq, **params):
 
 
 def loess(data, xseq, **params):
+    """
+    Loess smoothing
+    """
     try:
         from skmisc.loess import loess as loess_klass
     except ImportError:
@@ -441,7 +456,7 @@ def tdist_ci(x, df, stderr, level):
 def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
                        interval='confidence'):
     """
-    calculate standard deviation and confidence interval
+    Calculate standard deviation and confidence interval
 
     Applies to WLS and OLS, not to general GLS,
     that is independently but not identically distributed observations
@@ -456,6 +471,8 @@ def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
         weights as defined for WLS (inverse of variance of observation)
     alpha : float (default: alpha = 0.05)
         confidence level for two-sided hypothesis
+    interval : str
+        Type of interval to compute. One of "confidence" or "prediction"
 
     Returns
     -------
@@ -520,6 +537,12 @@ def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
 
 
 def separate_method_kwargs(method_args, init_method, fit_method):
+    """
+    Categorise kwargs passed to the stat
+
+    Some args are of the init method others for the fit method
+    The separation is done by introspecting the init & fit methods
+    """
     # inspect the methods
     init_kwargs = get_valid_kwargs(init_method, method_args)
     fit_kwargs = get_valid_kwargs(fit_method, method_args)

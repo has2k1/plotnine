@@ -177,8 +177,11 @@ class geom_map(geom):
         Parameters
         ----------
         data : dataframe
+            Data
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

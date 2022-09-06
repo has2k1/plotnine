@@ -1,3 +1,6 @@
+"""
+Coordinates
+"""
 from .coord_cartesian import coord_cartesian
 from .coord_fixed import coord_fixed, coord_equal
 from .coord_flip import coord_flip

@@ -123,30 +123,51 @@ class ylim(_lim):
 
 
 class alphalim(_lim):
+    """
+    Alpha limits
+    """
     aesthetic = 'alpha'
 
 
 class colorlim(_lim):
+    """
+    Color limits
+    """
     aesthetic = 'color'
 
 
 class filllim(_lim):
+    """
+    Fill limits
+    """
     aesthetic = 'fill'
 
 
 class linetypelim(_lim):
+    """
+    Linetype limits
+    """
     aesthetic = 'linetype'
 
 
 class shapelim(_lim):
+    """
+    Shapee limits
+    """
     aesthetic = 'shape'
 
 
 class sizelim(_lim):
+    """
+    Size limits
+    """
     aesthetic = 'size'
 
 
 class strokelim(_lim):
+    """
+    Stroke limits
+    """
     aesthetic = 'stroke'
 
 
@@ -170,6 +191,9 @@ class lims:
         self._kwargs = kwargs
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add limits to ggplot object
+        """
         thismodule = sys.modules[__name__]
         for ae, value in self._kwargs.items():
             try:

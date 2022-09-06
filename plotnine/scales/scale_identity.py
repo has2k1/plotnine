@@ -7,6 +7,7 @@ class MapTrainMixin:
     """
     Override map and train methods
     """
+
     def map(self, x):
         return x
 

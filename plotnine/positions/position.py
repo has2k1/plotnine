@@ -43,7 +43,7 @@ class position(metaclass=Registry):
         """
         def fn(pdata):
             """
-            Helper compute function
+            Compute function helper
             """
             # Given data belonging to a specific panel, grab
             # the corresponding scales and call the method
@@ -81,7 +81,8 @@ class position(metaclass=Registry):
 
         Parameters
         ----------
-        data    : dataframe
+        data : dataframe
+            Data to transform
         trans_x : function
             Transforms x scale mappings
             Takes one argument, either a scalar or an array-type

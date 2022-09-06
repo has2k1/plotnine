@@ -40,7 +40,7 @@ class ggplot:
 
     Parameters
     ----------
-    data :  dataframe
+    data : dataframe
         Default data for plot. Every layer that does not
         have data of its own will use this one.
     mapping : aes
@@ -614,7 +614,7 @@ class ggplot:
 
     def _save_filename(self, ext):
         """
-        Default filename used by the save method
+        Make a filename for use by the save method
 
         Parameters
         ----------
@@ -840,11 +840,15 @@ class plot_context:
         Whether to show (``plt.show()``) the plot before the context
         exits.
     """
+
     def __init__(self, plot, show=False):
         self.plot = plot
         self.show = show
 
     def __enter__(self):
+        """
+        Enclose in matplolib & pandas environments
+        """
         self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
         # Pandas deprecated is_copy, and when we create new dataframes
         # from slices we do not want complaints. We always uses the
@@ -857,6 +861,9 @@ class plot_context:
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Exit matplotlib & pandas environments
+        """
         if exc_type is None:
             if self.show:
                 plt.show()

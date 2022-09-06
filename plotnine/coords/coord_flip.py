@@ -25,6 +25,7 @@ class coord_flip(coord_cartesian):
         some factor. If `False`, use the limits
         from the data.
     """
+
     def labels(self, label_lookup):
         return flip_labels(coord_cartesian.labels(
             self, label_lookup))

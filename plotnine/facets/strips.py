@@ -43,7 +43,8 @@ class strips(list):
     def generate(self):
         """
         Calculate the box information for all strips
-        And store it in self.strip_info
+
+        It is stored in self.strip_info
         """
         for pidx, layout_info in self.layout.iterrows():
             ax = self.axs[pidx]
@@ -93,6 +94,7 @@ class strip:
     is drawn. This is very finicky and fails once the facets become
     complicated.
     """
+
     def __init__(self, vars, layout_info, facet, ax, location):
         self.vars = vars
         self.ax = ax

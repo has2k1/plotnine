@@ -188,8 +188,11 @@ class geom_dotplot(geom):
         Parameters
         ----------
         data : dataframe
-        params : dict
+            Legend Data
+        da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

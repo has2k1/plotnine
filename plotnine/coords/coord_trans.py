@@ -98,4 +98,7 @@ class coord_trans(coord):
 
 
 def transform_value(trans, value, range):
+    """
+    Transform value
+    """
     return trans.transform(value)

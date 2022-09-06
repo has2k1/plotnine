@@ -15,6 +15,7 @@ class position_nudge(position):
     y : float
         Vertical nudge
     """
+
     def __init__(self, x=0, y=0):
         self.params = {'x': x, 'y': y}
 

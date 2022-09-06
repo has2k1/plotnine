@@ -102,6 +102,9 @@ class facet:
                      'y': scales in ('free_y', 'free')}
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add facet to ggplot object
+        """
         gg = gg if inplace else deepcopy(gg)
         gg.facet = copy(self)
         gg.facet.plot = gg
@@ -397,7 +400,9 @@ class facet:
         return axs
 
     def _aspect_ratio(self):
-        "Return the aspect_ratio"
+        """
+        Return the aspect_ratio
+        """
         aspect_ratio = self.theme.themeables.property('aspect_ratio')
         if aspect_ratio == 'auto':
             # If the panels have different limits the coordinates
@@ -413,8 +418,9 @@ class facet:
 
     def spaceout_and_resize_panels(self):
         """
-        Adjust the spacing between the panels and resize them
-        to meet the aspect ratio
+        Adjust the spacing between the panels
+
+        Resize them to meet the aspect ratio
         """
         pass
 
@@ -446,8 +452,8 @@ class facet:
 
 def combine_vars(data, environment=None, vars=None, drop=True):
     """
-    Base layout function that generates all combinations of data
-    needed for facetting
+    Generate all combinations of data needed for facetting
+
     The first data frame in the list should be the default data
     for the plot. Other data frames in the list are ones that are
     added to the layers.
@@ -456,16 +462,19 @@ def combine_vars(data, environment=None, vars=None, drop=True):
         return pd.DataFrame()
 
     # For each layer, compute the facet values
-    values = [eval_facet_vars(df, vars, environment)
-              for df in data if df is not None]
+    values = [
+        eval_facet_vars(df, vars, environment)
+        for df in data if df is not None
+    ]
 
     # Form the base data frame which contains all combinations
     # of facetting variables that appear in the data
     has_all = [x.shape[1] == len(vars) for x in values]
     if not any(has_all):
         raise PlotnineError(
-            "At least one layer must contain all variables " +
-            "used for facetting")
+            "At least one layer must contain all variables "
+            "used for facetting"
+        )
     base = pd.concat([x for i, x in enumerate(values) if has_all[i]],
                      axis=0)
     base = base.drop_duplicates()
@@ -491,7 +500,8 @@ def combine_vars(data, environment=None, vars=None, drop=True):
 
     if len(base) == 0:
         raise PlotnineError(
-            "Faceting variables must have at least one value")
+            "Faceting variables must have at least one value"
+        )
 
     base = base.reset_index(drop=True)
     return base
@@ -499,8 +509,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
 
 def unique_combs(df):
     """
-    Return data frame with all possible combinations
-    of the values in the columns
+    Generate all possible combinations of the values in the columns
     """
     def _unique(s):
         if isinstance(s.dtype, pdtypes.CategoricalDtype):
@@ -519,14 +528,21 @@ def unique_combs(df):
 
 
 def layout_null():
-    layout = pd.DataFrame({'PANEL': 1, 'ROW': 1, 'COL': 1,
-                           'SCALE_X': 1, 'SCALE_Y': 1,
-                           'AXIS_X': True, 'AXIS_Y': True},
-                          index=[0])
+    """
+    Layout Null
+    """
+    layout = pd.DataFrame({
+        'PANEL': 1, 'ROW': 1, 'COL': 1,
+        'SCALE_X': 1, 'SCALE_Y': 1,
+        'AXIS_X': True, 'AXIS_Y': True
+    }, index=[0])
     return layout
 
 
 def add_missing_facets(data, layout, vars, facet_vals):
+    """
+    Add missing facets
+    """
     # When in a dataframe some layer does not have all
     # the facet variables, add the missing facet variables
     # and create new data where the points(duplicates) are
@@ -597,6 +613,10 @@ def eval_facet_vars(data, vars, env):
 
 
 class MyFixedFormatter(FixedFormatter):
+    """
+    Override MPL fixedformatter for better formatting
+    """
+
     def format_data(self, value):
         """
         Return a formatted string representation of a number.

@@ -107,9 +107,9 @@ class guide_colorbar(guide):
 
     def create_geoms(self, plot):
         """
-        This guide is not geom based
+        Return self if colorbar will be drawn and None if not
 
-        Return self if colorbar will be drawn and None if not.
+        This guide is not geom based
         """
         for l in plot.layers:
             exclude = set()

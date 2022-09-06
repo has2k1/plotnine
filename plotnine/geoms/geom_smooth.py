@@ -64,8 +64,11 @@ class geom_smooth(geom):
         Parameters
         ----------
         data : dataframe
-        params : dict
+            Legend data
+        da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

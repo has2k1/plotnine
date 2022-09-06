@@ -5,8 +5,7 @@ from .theme_bw import theme_bw
 
 class theme_classic(theme_bw):
     """
-    A classic-looking theme, with x & y axis lines and
-    no gridlines.
+    A classic-looking theme, with x & y axis lines and no gridlines
 
     Parameters
     ----------

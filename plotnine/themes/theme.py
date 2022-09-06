@@ -28,7 +28,7 @@ default_rcparams = {
 
 class theme:
     """
-    This is a base class for themes.
+    Base class for themes
 
     In general, only complete themes should subclass this class.
 
@@ -210,7 +210,7 @@ class theme:
 
     def setup_figure(self, figure):
         """
-        Makes any desired changes to the figure object
+        Make any desired changes to the figure object
 
         This method will be called once with a figure object
         before any plotting has completed. Subclasses that
@@ -240,7 +240,6 @@ class theme:
         may cause an entity to come into existence before it can be themed.
 
         """
-
         try:
             rcParams = deepcopy(self._rcParams)
         except NotImplementedError:
@@ -255,7 +254,8 @@ class theme:
         return rcParams
 
     def add_theme(self, other, inplace=False):
-        """Add themes together.
+        """
+        Add themes together
 
         Subclasses should not override this method.
 
@@ -272,9 +272,11 @@ class theme:
         return theme_copy
 
     def __add__(self, other):
+        """
+        Add other theme to this theme
+        """
         if not isinstance(other, theme):
-            msg = ("Adding theme failed. "
-                   "{} is not a theme").format(str(other))
+            msg = f"Adding theme failed. {other} is not a theme"
             raise PlotnineError(msg)
         return self.add_theme(other)
 

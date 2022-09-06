@@ -28,6 +28,9 @@ class labs:
         self.labels = rename_aesthetics(kwargs)
 
     def __radd__(self, gg, inplace=False):
+        """
+        Add labels to ggplot object
+        """
         gg = gg if inplace else deepcopy(gg)
         gg.labels.update(self.labels)
         return gg
@@ -76,6 +79,7 @@ class ggtitle(labs):
     title : str
         Plot title
     """
+
     def __init__(self, title):
         if title is None:
             raise PlotnineError(

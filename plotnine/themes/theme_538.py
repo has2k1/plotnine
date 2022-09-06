@@ -16,6 +16,7 @@ class theme_538(theme_gray):
     base_family : str, optional
         Base font family.
     """
+
     def __init__(self, base_size=11, base_family='DejaVu Sans'):
         theme_gray.__init__(self, base_size, base_family)
         bgcolor = '#F0F0F0'

@@ -133,6 +133,9 @@ function_dict = {'mean_cl_boot': mean_cl_boot,
 
 
 def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
+    """
+    Make summary function
+    """
     if isinstance(fun_data, str):
         fun_data = function_dict[fun_data]
 

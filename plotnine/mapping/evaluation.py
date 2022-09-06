@@ -36,12 +36,16 @@ class stage:
     after_scale : expression
         Aesthetic expression using aesthetics of the layer.
     """
+
     def __init__(self, start=None, after_stat=None, after_scale=None):
         self.start = start
         self.after_stat = after_stat
         self.after_scale = after_scale
 
     def __repr__(self):
+        """
+        Repr for staged mapping
+        """
         # Shorter representation when the mapping happens at a
         # single stage
         if self.after_stat is None and self.after_scale is None:

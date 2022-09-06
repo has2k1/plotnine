@@ -140,6 +140,12 @@ stat_bin2d = stat_bin_2d
 
 
 def dual_param(value):
+    """
+    Return duplicate of parameter value
+
+    Used to apply same value to x & y axes if only one
+    value is given.
+    """
     if is_scalar_or_string(value):
         return types.SimpleNamespace(x=value, y=value)
 

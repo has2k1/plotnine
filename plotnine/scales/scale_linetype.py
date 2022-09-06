@@ -51,6 +51,10 @@ class scale_linetype_ordinal(scale_linetype):
 
 
 class scale_linetype_continuous(scale_continuous):
+    """
+    Linetype scale
+    """
+
     def __init__(self):
         raise PlotnineError(
             "A continuous variable can not be mapped to linetype")

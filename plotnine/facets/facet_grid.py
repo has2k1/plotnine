@@ -33,6 +33,9 @@ class facet_grid(facet):
 
             ['var4', ('var1+var3', 'var2')]
 
+    margins : bool | list[str]
+        variable names to compute margins for.
+        True will compute all possible margins.
     scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether ``x`` or ``y`` scales should be allowed (free)
         to vary according to the data along rows or columns.
@@ -185,8 +188,9 @@ class facet_grid(facet):
 
     def spaceout_and_resize_panels(self):
         """
-        Adjust the spacing between the panels and resize them
-        to meet the aspect ratio
+        Adjust the spacing between the panels
+
+        Resize them to the aspect ratio
         """
         ncol = self.ncol
         nrow = self.nrow

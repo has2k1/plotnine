@@ -1,3 +1,6 @@
+"""
+Scales
+"""
 # alpha
 from .scale_alpha import scale_alpha
 from .scale_alpha import scale_alpha_continuous

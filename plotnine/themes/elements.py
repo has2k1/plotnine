@@ -14,9 +14,15 @@ class element_base:
         self.properties = {'visible': True}
 
     def __repr__(self):
-        return f'element_text({self})'
+        """
+        Element representation
+        """
+        return f'{self.__class__.__name__}({self})'
 
     def __str__(self):
+        """
+        Element as string
+        """
         d = self.properties.copy()
         del d['visible']
         return f'{d}'
@@ -218,11 +224,16 @@ class element_blank(element_base):
     """
     Theme element: Blank
     """
+
     def __init__(self):
         self.properties = {'visible': False}
 
 
 class Margin(dict):
+    """
+    Margin
+    """
+
     def __init__(self, element, t=0, b=0, l=0, r=0, units='pt'):
         # Make do with some sloppiness
         if units in {'pts', 'points', 'px', 'pixels'}:

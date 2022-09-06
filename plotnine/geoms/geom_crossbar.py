@@ -113,8 +113,11 @@ class geom_crossbar(geom):
         Parameters
         ----------
         data : dataframe
+            Data
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------
