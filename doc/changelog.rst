@@ -16,6 +16,9 @@ New Features
 
 - :class:`~plotnine.geoms.geom_ribbon` acquired new parameter `` where.
 
+- Added support for objects with a ``to_pandas`` method to convert them to
+  a pandas dataframe. You can now pass in `polars <https://pola.rs>`_ dataframes.
+
 API Changes
 ***********
 

@@ -319,3 +319,13 @@ def test_adding_None():
 def test_string_group():
     p = ggplot(df, aes('x', 'y')) + geom_point(group='pi')
     p.draw_test()
+
+
+def test_to_pandas():
+    class SomeDataType:
+        def to_pandas(self):
+            return pd.DataFrame({'x': [1, 2, 3], 'y': [1, 2, 3]})
+
+    df = SomeDataType()
+    p = ggplot(df, aes('x', 'y')) + geom_point()
+    assert p == 'to_pandas'

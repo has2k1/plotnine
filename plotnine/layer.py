@@ -184,7 +184,6 @@ class layer:
                 lkwargs[param] = kwargs[param]
             elif param in geom.DEFAULT_PARAMS:
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
-
         return layer(**lkwargs)
 
     def __radd__(self, gg):
