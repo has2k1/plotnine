@@ -1031,6 +1031,9 @@ def order_as_data_mapping(*args):
             .format(type(data))
         )
 
+    if hasattr(data, 'to_pandas'):
+        data = data.to_pandas()
+
     return data, mapping
 
 
@@ -1049,7 +1052,8 @@ def is_data_like(obj):
         Whether obj could represent data as expected by
         ggplot(), geom() or stat().
     """
-    return isinstance(obj, (pd.DataFrame, Callable))
+    return (isinstance(obj, (pd.DataFrame, Callable)) or
+            hasattr(obj, 'to_pandas'))
 
 
 def interleave(*arrays):
