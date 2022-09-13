@@ -19,6 +19,11 @@ New Features
 - Added support for objects with a ``to_pandas`` method to convert them to
   a pandas dataframe. You can now pass in `polars <https://pola.rs>`_ dataframes.
 
+- :class:`~plotnine.geoms.geom_ribbon` acquired new parameter ``outline_type``
+  which controls how to stroke the boundaries of the shaded area. This parameter
+  is also available to :class:`~plotnine.geoms.geom_area` and
+  :class:`~plotnine.geoms.geom_density`. :issue:`605`
+
 API Changes
 ***********
 
@@ -26,6 +31,10 @@ API Changes
   mappings now only depend those aesthetics that have scales. This is more
   strict than has been, should affect very few cases of code that has been
   written and it should be less suprising to the users.
+
+- :class:`~plotnine.geoms.geom_area` and :class:`~plotnine.geoms.geom_density`
+  now default to showing only the upper outline/boundary of the area.
+  Use ``outline_type="full"`` for the old behaviour.
 
 v0.9.0
 ------

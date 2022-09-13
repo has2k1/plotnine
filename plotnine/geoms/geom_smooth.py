@@ -49,9 +49,11 @@ class geom_smooth(geom):
         has_ribbon = 'ymin' in data and 'ymax' in data
         if has_ribbon:
             data2 = data.copy()
-            data2['color'] = None
+            data2['color'] = 'none'
+            params2 = params.copy()
+            params2['outline_type'] = 'full'
             geom_ribbon.draw_group(data2, panel_params,
-                                   coord, ax, **params)
+                                   coord, ax, **params2)
 
         data['alpha'] = 1
         geom_line.draw_group(data, panel_params, coord, ax, **params)

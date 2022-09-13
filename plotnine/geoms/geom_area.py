@@ -22,8 +22,12 @@ class geom_area(geom_ribbon):
     plotnine.geoms.geom_ribbon
     """
     REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',
-                      'na_rm': False}
+    DEFAULT_PARAMS = dict(
+        geom_ribbon.DEFAULT_PARAMS, **{
+            'position': 'stack',
+            'outline_type': 'upper'
+        }
+    )
 
     def setup_data(self, data):
         data['ymin'] = 0
