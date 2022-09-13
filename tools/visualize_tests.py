@@ -120,7 +120,7 @@ def run(show_browser=True):
                 # A real failure in the image generation, resulting in
                 # different images.
                 status = '<br />(failed)'
-                failed = f"<a href='{test['f']}'>diff</a>"
+                failed = f"<a href='{test['failed']}'>diff</a>"
                 current = linked_image_template.format(actual_image)
                 failed_rows.append(
                     row_template.format(
