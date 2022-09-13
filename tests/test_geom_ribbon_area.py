@@ -3,6 +3,7 @@ import pandas as pd
 
 from plotnine import (
     aes,
+    after_stat,
     coord_flip,
     facet_wrap,
     geom_area,
@@ -114,3 +115,32 @@ def test_ribbon_where():
          + geom_line()
          )
     assert p + _theme == 'ribbon_where'
+
+
+class TestOutlineType:
+    x = np.arange(10)
+    d = 5
+    df = pd.DataFrame({
+        'x': x,
+        'y1': x,
+        'y2': x + 2*d,
+        'y3': x + 4*d,
+        'y4': x + 6*d
+    })
+
+    p = (ggplot(df, aes('x', ymax=after_stat('ymin + d')))
+         + geom_ribbon(aes(ymin='y1'), size=1, fill='bisque',
+                       color='orange', outline_type='upper')
+         + geom_ribbon(aes(ymin='y2'), size=1, fill='khaki',
+                       color='darkkhaki', outline_type='lower')
+         + geom_ribbon(aes(ymin='y3'), size=1, fill='plum',
+                       color='purple', outline_type='both')
+         + geom_ribbon(aes(ymin='y4'), size=1, fill='lightblue',
+                       color='cadetblue', outline_type='full')
+         )
+
+    def test_ribbon_outline_type(self):
+        assert self.p == 'ribbon_outline_type'
+
+    def test_ribbon_outline_type_coord_flip(self):
+        assert self.p + coord_flip() == 'ribbon_outline_type_coord_flip'

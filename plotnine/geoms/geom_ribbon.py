@@ -5,6 +5,7 @@ from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .geom import geom
+from .geom_path import geom_path
 
 
 @document
@@ -17,6 +18,12 @@ class geom_ribbon(geom):
     Parameters
     ----------
     {common_parameters}
+    outline_type : 'upper' | 'lower' | 'both' | 'full'
+        How to stroke to outline of the region / area.
+            * 'upper' - draw only upper bounding line'
+            * 'lower' - draw only lower bounding line'
+            * 'both' - draw both upper & lower bounding lines
+            * 'full' - draw closed polygon around the area.
     """
     _aesthetics_doc = """
     {aesthetics_table}
@@ -37,14 +44,23 @@ class geom_ribbon(geom):
             aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
             aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
     """
-    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
+    DEFAULT_AES = {'alpha': 1, 'color': 'none', 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5, 'where': True}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+                      'outline_type': 'both', 'na_rm': False}
     legend_geom = 'polygon'
 
     def handle_na(self, data):
+        return data
+
+    def setup_data(self, data):
+        # The outlines need x and y coordinates
+        if self.params['outline_type'] in ('upper', 'lower', 'both'):
+            if 'xmax' in data and 'x' not in data:
+                data['x'] = data['xmax']
+            if 'ymax' in data and 'y' not in data:
+                data['y'] = data['ymax']
         return data
 
     @staticmethod
@@ -65,7 +81,7 @@ class geom_ribbon(geom):
 
     @staticmethod
     def draw_unit(data, panel_params, coord, ax, **params):
-        data['size'] *= SIZE_FACTOR
+        size = data['size'].iloc[0] * SIZE_FACTOR
         fill = to_rgba(data['fill'], data['alpha'])
         color = data['color']
 
@@ -90,6 +106,10 @@ class geom_ribbon(geom):
                 where = data['where']
                 interpolate = True
 
+        if params['outline_type'] != 'full':
+            size = 0
+            color = 'none'
+
         fill_between(
             _x,
             _min,
@@ -98,8 +118,42 @@ class geom_ribbon(geom):
             interpolate=interpolate,
             facecolor=fill,
             edgecolor=color,
-            linewidth=data['size'].iloc[0],
+            linewidth=size,
             linestyle=data['linetype'].iloc[0],
             zorder=params['zorder'],
             rasterized=params['raster']
         )
+
+        # Alpha does not affect the outlines
+        data['alpha'] = 1
+        geom_ribbon._draw_outline(data, panel_params, coord, ax, **params)
+
+    @staticmethod
+    def _draw_outline(data, panel_params, coord, ax, **params):
+        outline_type = params['outline_type']
+
+        if outline_type == 'full':
+            return
+
+        x, y = 'xy'
+        if isinstance(coord, coord_flip):
+            x, y = 'yx'
+            data[x], data[y] = data[y], data[x]
+
+        if outline_type in ('lower', 'both'):
+            geom_path.draw_group(
+                data.eval(f'y = {y}min'),
+                panel_params,
+                coord,
+                ax,
+                **params
+            )
+
+        if outline_type in ('upper', 'both'):
+            geom_path.draw_group(
+                data,
+                panel_params,
+                coord,
+                ax,
+                **params
+            )
