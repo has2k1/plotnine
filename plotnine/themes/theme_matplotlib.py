@@ -83,9 +83,11 @@ class theme_matplotlib(theme):
 
         if use_defaults:
             _copy = mpl.rcParams.copy()
+
             deprecated_rcparams = (
-                set(mpl._deprecated_remain_as_none)
-                | set(mpl._all_deprecated)
+                # TODO: remove _all_deprecated < MPL 3.6.0
+                set(getattr(mpl, '_deprecated_remain_as_none', {}))
+                | set(getattr(mpl, '_all_deprecated', {}))
             )
             # no need to a get a deprecate warning just because
             # they are still included in rcParams...
