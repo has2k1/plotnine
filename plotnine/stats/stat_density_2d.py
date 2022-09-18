@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib._contour as _contour
 from mizani.breaks import extended_breaks
 
 from ..doctools import document
@@ -129,8 +128,9 @@ def contour_lines(X, Y, Z, levels):
     mask = None
     corner_mask = False
     nchunk = 0
-    contour_generator = _contour.QuadContourGenerator(
-        X, Y, Z, mask, corner_mask, nchunk)
+    contour_generator = get_contour_generator(
+        X, Y, Z, mask, corner_mask, nchunk
+    )
 
     if isinstance(levels, int):
         levels = extended_breaks(n=levels)((zmin, zmax))
@@ -173,3 +173,28 @@ def contour_lines(X, Y, Z, levels):
         'piece': piece,
     })
     return data
+
+
+def get_contour_generator(X, Y, Z, mask, corner_mask, nchunk):
+    """
+    Create contour generator
+    """
+    # TODO: When min supported MPL is 3.6.0, see explore the
+    # extra features implemented in contourpy
+    try:
+        # MPL 3.6.0
+        import contourpy
+        return contourpy.contour_generator(
+            X, Y, Z,
+            name='mpl2014',
+            corner_mask=False,
+            line_type=contourpy.LineType.SeparateCode,
+            fill_type=contourpy.FillType.OuterCode,
+            chunk_size=nchunk,
+        )
+    except ImportError:
+        # MPL < 3.6.0
+        import matplotlib._contour as _contour
+        return _contour.QuadContourGenerator(
+            X, Y, Z, mask, corner_mask, nchunk
+        )
