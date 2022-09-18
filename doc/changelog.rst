@@ -11,6 +11,9 @@ Bug Fixes
 - Fixed bug in :class:`~plotnine.stats.stat_bin_2d` where bins whose edges
   are zero or negative would yield the wrong plot. (:issue:`604`)
 
+- Fixed bug :class:`~plotnine.stats.stat_density_2d` which had been broken
+  by Matplotlib 1.6.0 (:issue:`619`)
+
 New Features
 ************
 
