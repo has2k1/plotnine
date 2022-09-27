@@ -42,7 +42,7 @@ class geom_abline(geom):
             if mapping:
                 warn("The 'intercept' and 'slope' when specified override "
                      "the aes() mapping.", PlotnineWarning)
-            if data is not None:
+            if data is not None and len(data):
                 warn("The 'intercept' and 'slope' when specified override "
                      "the data", PlotnineWarning)
 
