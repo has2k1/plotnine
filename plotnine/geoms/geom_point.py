@@ -3,7 +3,7 @@ import matplotlib.lines as mlines
 
 from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
-from ..scales.scale_shape import FILLED_SHAPES, UNFILLED_SHAPES
+from ..scales.scale_shape import FILLED_SHAPES
 from .geom import geom
 
 

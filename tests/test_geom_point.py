@@ -1,6 +1,17 @@
+import string
+
+import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_point, theme, guides
+from plotnine import (
+    ggplot,
+    aes,
+    geom_point,
+    coord_equal,
+    guides,
+    scale_shape_manual,
+    theme
+)
 
 
 def test_aesthetics():
@@ -85,3 +96,22 @@ class TestColorFillonUnfilledShape:
         p = self.p + aes(color='z', fill='x')
         # Same as above
         assert p == 'color_only_mapping'
+
+
+def test_custom_shapes():
+    n = 26
+    shapes = [rf'$\mathrm{{{x}}}$' for x in string.ascii_uppercase]
+    theta = np.linspace(0, 2*np.pi*(1 - 1/n), n)
+
+    df = pd.DataFrame({
+        'x': np.sin(theta),
+        'y': np.cos(theta),
+        'theta': theta,
+    })
+
+    p = (ggplot(df, aes('x', 'y', shape='factor(range(n))', color='theta'))
+         + geom_point(size=10, show_legend=False)
+         + scale_shape_manual(shapes)
+         + coord_equal()
+         )
+    assert p == 'custom_shapes'
