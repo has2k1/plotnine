@@ -20,6 +20,8 @@ ALL_AESTHETICS = {
     *Y_AESTHETICS
 }
 
+POSITION_AESTHETICS = X_AESTHETICS | Y_AESTHETICS
+
 SCALED_AESTHETICS = {
     'x', 'y', 'alpha', 'color', 'colour', 'fill',
     'linetype', 'shape', 'size', 'stroke'
