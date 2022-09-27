@@ -60,13 +60,10 @@ class geom_point(geom):
                 fill = color
             else:
                 fill = to_rgba(data['fill'], data['alpha'])
-        elif shape in UNFILLED_SHAPES:
+        else:
+            # Assume unfilled
             fill = color
             color = None
-        else:
-            raise ValueError(
-                f"geom_point got an unknown shape: {shape}"
-            )
 
         ax.scatter(
             x=data['x'],
