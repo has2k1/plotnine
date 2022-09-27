@@ -1,8 +1,17 @@
 import pandas as pd
 import numpy as np
-from plotnine import (ggplot, aes, annotate, geom_point, geom_line,
-                      geom_bar, scale_color_gradientn, scale_fill_gradientn,
-                      theme_void, theme)
+from plotnine import (
+    ggplot,
+    aes,
+    annotate,
+    geom_point,
+    geom_line,
+    geom_bar,
+    scale_color_gradientn,
+    scale_fill_gradientn,
+    theme_void,
+    theme
+)
 
 n = 99
 
@@ -20,7 +29,8 @@ gradient = (
     (0.98, 0.62, 0.71),
     (0.86, 0.20, 0.59),
     bcolor, bcolor,
-    bcolor_darker, bcolor_darker)
+    bcolor_darker, bcolor_darker
+)
 
 df1 = df[:n//3:9]
 df2 = df[n//3:2*n//3]

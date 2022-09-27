@@ -38,15 +38,19 @@ theme:
 logo:
 	cd images; \
 	python logo.py; \
-	convert -trim -density 100 -alpha remove -background '#FFFFFF' \
+	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
+	   -gravity center -scale 528x528 -extent 540x540 \
+	   -border 6 -bordercolor '#441A3F'\
+	   logo.pdf logo-540.png; \
+	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
 	   -gravity center -scale 176x176 -extent 180x180 \
 	   -border 2 -bordercolor '#441A3F'\
 	   logo.pdf logo-180.png; \
-	convert -trim -density 100 -alpha remove -background '#FFFFFF' \
+	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
 	   -gravity center -scale 32x32 \
 	   -border 2 -bordercolor '#441A3F'\
 	   logo-small.pdf logo-32.png; \
-	convert -trim -density 100 -alpha remove -background '#FFFFFF' \
+	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
 	   -gravity center -scale 32x32 \
 	   -border 2 -bordercolor '#441A3F'\
 	   logo-small.pdf favicon.ico;
