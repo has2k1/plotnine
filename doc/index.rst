@@ -1,8 +1,10 @@
 .. _index:
 
-.. figure:: ./images/logo-180.png
-    :alt: plotnine
-    :align: right
+.. figure:: ./images/logo-540.png
+   :alt: plotnine
+   :align: right
+   :scale: 33%
+   :class: no-scaled-link
 
 A Grammar of Graphics for Python
 ================================
@@ -29,6 +31,8 @@ Example
      + facet_wrap('~gear'))
 
 .. figure:: ./images/readme-image-4.png
+   :scale: 33%
+   :class: no-scaled-link
 
 Documentation
 -------------

@@ -46,6 +46,8 @@ Building a complex plot piece by piece.
         + geom_point())
 
    .. figure:: ./doc/images/readme-image-1.png
+      :scale: 33%
+      :class: no-scaled-link
 
 2. Scatter plot colored according some variable
 
@@ -55,6 +57,8 @@ Building a complex plot piece by piece.
         + geom_point())
 
    .. figure:: ./doc/images/readme-image-2.png
+      :scale: 33%
+      :class: no-scaled-link
 
 3. Scatter plot colored according some variable and
    smoothed with a linear model with confidence intervals.
@@ -66,6 +70,8 @@ Building a complex plot piece by piece.
         + stat_smooth(method='lm'))
 
    .. figure:: ./doc/images/readme-image-3.png
+      :scale: 33%
+      :class: no-scaled-link
 
 4. Scatter plot colored according some variable,
    smoothed with a linear model with confidence intervals and
@@ -79,6 +85,8 @@ Building a complex plot piece by piece.
         + facet_wrap('~gear'))
 
    .. figure:: ./doc/images/readme-image-4.png
+      :scale: 33%
+      :class: no-scaled-link
 
 5. Adjust the themes
 
@@ -93,6 +101,8 @@ Building a complex plot piece by piece.
         + theme_xkcd())
 
    .. figure:: ./doc/images/readme-image-5.png
+      :scale: 33%
+      :class: no-scaled-link
 
 5.2 Or professional
 
@@ -105,6 +115,8 @@ Building a complex plot piece by piece.
         + theme_tufte())
 
    .. figure:: ./doc/images/readme-image-5alt.png
+      :scale: 33%
+      :class: no-scaled-link
 
 
 Installation
