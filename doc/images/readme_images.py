@@ -29,4 +29,4 @@ p5 = p4 + theme_xkcd()
 p5.save('readme-image-5.png', **kwargs)
 
 p5alt = p4 + theme_tufte()
-p5.save('readme-image-5alt.png', **kwargs)
+p5alt.save('readme-image-5alt.png', **kwargs)
