@@ -144,9 +144,11 @@ class _geom_logticks(geom_rug):
         low = np.floor(value_range[0])
         high = np.ceil(value_range[1])
         arr = base ** np.arange(low, float(high+1))
-        n_ticks = base - 1
-        breaks = [log(np.linspace(b1, b2, n_ticks+1), base)
-                  for (b1, b2) in list(zip(arr, arr[1:]))]
+        n_ticks = int(np.round(base) - 1)
+        breaks = [
+            log(np.linspace(b1, b2, n_ticks+1), base)
+            for (b1, b2) in list(zip(arr, arr[1:]))
+        ]
 
         # Partition the breaks in the 3 groups
         major = np.array([x[0] for x in breaks] + [breaks[-1][-1]])
@@ -170,31 +172,38 @@ class _geom_logticks(geom_rug):
             'alpha': params['alpha'],
             'linetype': params['linetype']
         }
+
+        def _draw(geom, axis, tick_positions):
+            for (positions, length) in zip(tick_positions, lengths):
+                data = pd.DataFrame({axis: positions, **_aesthetics})
+                geom.draw_group(
+                    data,
+                    panel_params,
+                    coord,
+                    ax,
+                    length=length,
+                    **params
+                )
+
+        if isinstance(coord, coord_flip):
+            tick_range_x = panel_params.y.range
+            tick_range_y = panel_params.x.range
+        else:
+            tick_range_x = panel_params.x.range
+            tick_range_y = panel_params.y.range
+
         # these are already flipped iff coord_flip
         base_x, base_y = self._check_log_scale(
-            params['base'], sides, panel_params, coord)
+            params['base'], sides, panel_params, coord
+        )
 
         if 'b' in sides or 't' in sides:
-            if isinstance(coord, coord_flip):
-                tick_range = panel_params.y.range
-            else:
-                tick_range = panel_params.x.range
-            tick_positions = self._calc_ticks(tick_range, base_x)
-            for (positions, length) in zip(tick_positions, lengths):
-                data = pd.DataFrame(dict(x=positions, **_aesthetics))
-                super().draw_group(data, panel_params, coord, ax,
-                                   length=length, **params)
+            tick_positions = self._calc_ticks(tick_range_x, base_x)
+            _draw(super(), 'x', tick_positions)
 
         if 'l' in sides or 'r' in sides:
-            if isinstance(coord, coord_flip):
-                tick_range = panel_params.x.range
-            else:
-                tick_range = panel_params.y.range
-            tick_positions = self._calc_ticks(tick_range, base_y)
-            for (positions, length) in zip(tick_positions, lengths):
-                data = pd.DataFrame(dict(y=positions, **_aesthetics))
-                super().draw_group(data, panel_params, coord, ax,
-                                   length=length, **params)
+            tick_positions = self._calc_ticks(tick_range_y, base_y)
+            _draw(super(), 'y', tick_positions)
 
 
 class annotation_logticks(annotate):
