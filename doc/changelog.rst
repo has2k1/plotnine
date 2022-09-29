@@ -14,6 +14,9 @@ Bug Fixes
 - Fixed bug :class:`~plotnine.stats.stat_density_2d` which had been broken
   by Matplotlib 1.6.0 (:issue:`619`)
 
+- Fixed :class:`~plotnine.geoms.geom_text` when using ``adjust_text`` for
+  the arrows to have the same color as the text.
+
 New Features
 ************
 

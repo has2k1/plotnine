@@ -200,14 +200,25 @@ class geom_text(geom):
             if params['path_effects']:
                 text_elem.set_path_effects(params['path_effects'])
 
-        if params['adjust_text']:
+        _adjust = params['adjust_text']
+        if _adjust:
             if params['zorder'] == 1:
                 warn(
                     "For better results with adjust_text, it should "
                     "not be the first layer or the only layer.",
                     PlotnineWarning
                 )
-            adjust_text(texts, ax=ax, **params['adjust_text'])
+
+            arrowprops = _adjust.pop('arrowprops', {})
+            if 'color' not in arrowprops:
+                arrowprops['color'] = color[0]
+
+            adjust_text(
+                texts,
+                ax=ax,
+                arrowprops=arrowprops,
+                **_adjust
+            )
 
     @staticmethod
     def draw_legend(data, da, lyr):
