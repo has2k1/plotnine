@@ -1,8 +1,9 @@
 Changelog
 =========
 
-Next Release
-------------
+v0.10.0
+-------
+(2022-09-10)
 
 
 Bug Fixes
@@ -20,7 +21,8 @@ Bug Fixes
 New Features
 ************
 
-- :class:`~plotnine.geoms.geom_ribbon` acquired new parameter `` where.
+- :class:`~plotnine.geoms.geom_ribbon` acquired new parameter ``where``
+  which can be used shade withing given limits .
 
 - Added support for objects with a ``to_pandas`` method to convert them to
   a pandas dataframe. You can now pass in `polars <https://pola.rs>`_ dataframes.
