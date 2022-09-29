@@ -74,3 +74,15 @@ def test_adjust_label():
          + geom_label(adjust_text=adjust_text)
          )
     assert p == 'adjust_label'
+
+
+def test_adjust_text_default_color():
+    adjust_text2 = adjust_text.copy()
+    del adjust_text2['arrowprops']['color']
+
+    p = (ggplot(mtcars.tail(2), aes('mpg', 'disp', label='name'))
+         + aes(color='factor(cyl)')
+         + geom_point(size=5, fill='black')
+         + geom_text(adjust_text=adjust_text2)
+         )
+    assert p == 'adjust_text_default_color'
