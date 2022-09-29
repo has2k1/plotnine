@@ -13,7 +13,7 @@ BUILDDIR      = _build
 BOOTSWATCHTHEME = united
 brand-primary = \#9E2F68
 headings-font-weight = bold
-font-family-sans-serif = '"Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif'
+font-family-sans-serif = '"system-ui", "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'
 
 # Put it first so that "make" without argument is like "make help".
 help:
