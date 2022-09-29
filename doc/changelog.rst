@@ -1,10 +1,19 @@
 Changelog
 =========
 
-v0.10.0
+v0.10.1
 -------
 (2022-09-10)
 
+*This is a re-release of v0.10.0*.
+
+In the previous release the project description fileformat changed
+and not all references to it were corrected. PYPI read file that did
+not exist, got no description. This release is fixes error.
+
+v0.10.0
+-------
+(2022-09-10)
 
 Bug Fixes
 *********
