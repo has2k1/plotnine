@@ -77,7 +77,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'plotnine'
-copyright = '2021, Hassan Kibirige'
+copyright = '2022, Hassan Kibirige'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
