@@ -1,0 +1,175 @@
+name: Weekly tests
+
+on:
+  schedule:
+    # At 00:00 on Monday
+    - cron: "53 14 * * FRI"
+
+jobs:
+  # test plotnine latest, matplotlib latest
+  plotnine_latest_matplotlib_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install ".[extra,test]"
+          pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          pip install --upgrade git+https://github.com/has2k1/plotnine
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
+
+  # test plotnine latest, pandas latest
+  plotnine_latest_pandas_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install ".[extra,test]"
+          pip install --upgrade git+https://github.com/pandas-dev/pandas
+          pip install --upgrade git+https://github.com/has2k1/plotnine
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      # to do: think about catching deprecations earlier
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
+
+  # test plotnine pypi, matplotlib latest
+  plotnine_pypi_matplotlib_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 500
+
+      - run: git checkout "$(git tag | grep 'v' | sort -rV | head -1)"
+      
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          pip install --upgrade "plotnine[extra,test]"
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
+
+  # test plotnine pypi, pandas latest
+  plotnine_pypi_pandas_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 500
+      
+      - run: git checkout "$(git tag | grep 'v' | sort -rV | head -1)"
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install --upgrade git+https://github.com/pandas-dev/pandas
+          pip install --upgrade "plotnine[extra,test]"
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      # to do: think about catching deprecations earlier
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
