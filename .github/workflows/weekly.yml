@@ -3,7 +3,7 @@ name: Weekly tests
 on:
   schedule:
     # At 00:00 on Monday
-    - cron: "53 14 * * FRI"
+    - cron: "47 19 * * FRI"
 
 jobs:
   # test plotnine latest, matplotlib latest
