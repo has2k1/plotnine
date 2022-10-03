@@ -5,6 +5,9 @@ v0.10.1
 -------
 (2022-09-10)
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7124917.svg
+   :target: https://doi.org/10.5281/zenodo.7124917
+
 *This is a re-release of v0.10.0*.
 
 In the previous release the project description fileformat changed
@@ -14,6 +17,9 @@ not exist, got no description. This release is fixes error.
 v0.10.0
 -------
 (2022-09-10)
+
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7124912.svg
+   :target: https://doi.org/10.5281/zenodo.7124912
 
 Bug Fixes
 *********
@@ -57,6 +63,8 @@ v0.9.0
 ------
 (2022-07-01)
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg
+   :target: https://doi.org/10.5281/zenodo.7124918
 
 API Changes
 ***********
