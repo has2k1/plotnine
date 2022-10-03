@@ -85,17 +85,22 @@ class guide_colorbar(guide):
         self.key = pd.DataFrame({
             aesthetic: scale.map(breaks),
             'label': scale.get_labels(breaks),
-            'value': breaks})
+            'value': breaks
+        })
 
         bar = np.linspace(limits[0], limits[1], self.nbin)
         self.bar = pd.DataFrame({
             'color': scale.map(bar),
-            'value': bar})
+            'value': bar
+        })
 
         labels = ' '.join(str(x) for x in self.key['label'])
-        info = '\n'.join([self.title, labels,
-                          ' '.join(self.bar['color'].tolist()),
-                          self.__class__.__name__])
+        info = '\n'.join([
+            self.title,
+            labels,
+            ' '.join(self.bar['color'].tolist()),
+            self.__class__.__name__
+        ])
         self.hash = hashlib.md5(info.encode('utf-8')).hexdigest()
         return self
 
@@ -115,8 +120,11 @@ class guide_colorbar(guide):
             exclude = set()
             if isinstance(l.show_legend, dict):
                 l.show_legend = rename_aesthetics(l.show_legend)
-                exclude = {ae for ae, val in l.show_legend.items()
-                           if not val}
+                exclude = {
+                    ae
+                    for ae, val in l.show_legend.items()
+                    if not val
+                }
             elif l.show_legend not in (None, True):
                 continue
 
@@ -169,9 +177,11 @@ class guide_colorbar(guide):
         # in between interpolation points and the matching is
         # close though not exactly right.
         _from = self.bar['value'].min(), self.bar['value'].max()
-        tick_locations = rescale(self.key['value'],
-                                 (.5, nbars-.5),
-                                 _from) * length/nbars
+        tick_locations = rescale(
+            self.key['value'],
+            (.5, nbars-.5),
+            _from
+        ) * length/nbars
 
         if direction == 'horizontal':
             width, height = height, width
@@ -183,8 +193,7 @@ class guide_colorbar(guide):
             tick_locations = length - tick_locations[::-1]
 
         # title #
-        title_box = TextArea(self.title,
-                             textprops=dict(color='black'))
+        title_box = TextArea(self.title, textprops=dict(color='black'))
         themeable['legend_title'].append(title_box)
 
         # colorbar and ticks #
@@ -206,9 +215,12 @@ class guide_colorbar(guide):
 
         # labels #
         if self.label:
-            labels_da, legend_text = create_labels(da, labels,
-                                                   tick_locations,
-                                                   direction)
+            labels_da, legend_text = create_labels(
+                da,
+                labels,
+                tick_locations,
+                direction
+            )
             themeable['legend_text_colorbar'].extend(legend_text)
         else:
             labels_da = DrawingArea(0, 0)
@@ -225,23 +237,28 @@ class guide_colorbar(guide):
             slc = obverse
         else:
             slc = reverse
-        main_box = packer(children=[da, labels_da][slc],
-                          sep=self._label_margin,
-                          align=align,
-                          pad=0)
+        main_box = packer(
+            children=[da, labels_da][slc],
+            sep=self._label_margin,
+            align=align,
+            pad=0
+        )
 
         # title + colorbar(with labels) #
         lookup = {
             'right': (HPacker, reverse),
             'left': (HPacker, obverse),
             'bottom': (VPacker, reverse),
-            'top': (VPacker, obverse)}
+            'top': (VPacker, obverse)
+        }
         packer, slc = lookup[self.title_position]
         children = [title_box, main_box][slc]
-        box = packer(children=children,
-                     sep=self._title_margin,
-                     align=self._title_align,
-                     pad=0)
+        box = packer(
+            children=children,
+            sep=self._title_margin,
+            align=self._title_align,
+            pad=0
+        )
         return box
 
 
