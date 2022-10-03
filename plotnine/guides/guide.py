@@ -185,9 +185,11 @@ class guide(metaclass=Registry):
         """
         l = layer
         legend_ae = set(self.key.columns) - {'label'}
-        all_ae = (l.mapping.keys() |
-                  (plot.mapping if l.inherit_aes else set()) |
-                  l.stat.DEFAULT_AES.keys())
+        all_ae = (
+            l.mapping.keys() |
+            (plot.mapping if l.inherit_aes else set()) |
+            l.stat.DEFAULT_AES.keys()
+        )
         geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.keys()
         matched = all_ae & geom_ae & legend_ae
         matched = list(matched - set(l.geom.aes_params))

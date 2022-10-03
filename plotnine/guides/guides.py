@@ -44,8 +44,10 @@ class guides(dict):
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
-        dict.__init__(self, ((ae, kwargs[ae]) for ae in kwargs
-                             if ae in aes_names))
+        dict.__init__(
+            self,
+            ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names)
+        )
 
         # Determined from the theme when the guides are
         # getting built
@@ -233,7 +235,8 @@ class guides(dict):
         # using the guide.merge method
         df = pd.DataFrame({
             'gdef': gdefs,
-            'hash': [g.hash for g in gdefs]})
+            'hash': [g.hash for g in gdefs]
+        })
         grouped = df.groupby('hash', sort=False)
         gdefs = []
         for name, group in grouped:
@@ -320,6 +323,10 @@ class guides(dict):
                 "'legend_box' should be either "
                 "'vertical' or 'horizontal'")
 
-        box = packer(children=gboxes, align=self.box_align,
-                     pad=self.box_margin, sep=self.spacing)
+        box = packer(
+            children=gboxes,
+            align=self.box_align,
+            pad=self.box_margin,
+            sep=self.spacing
+        )
         return box
