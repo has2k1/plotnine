@@ -57,6 +57,7 @@ class scale_color_manual(_scale_manual):
     {superclass_parameters}
     """
     _aesthetics = ['color']
+    na_value = '#7F7F7F'
 
 
 @document
@@ -73,6 +74,7 @@ class scale_fill_manual(_scale_manual):
     {superclass_parameters}
     """
     _aesthetics = ['fill']
+    na_value = '#7F7F7F'
 
 
 @document
