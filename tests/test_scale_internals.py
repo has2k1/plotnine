@@ -559,8 +559,7 @@ def test_missing_manual_dict_aesthetic():
          + geom_point(size=3)
          + scale_manual.scale_color_manual(values)
          )
-    with pytest.warns(PlotnineWarning):
-        assert p + _theme == 'missing_manual_dict_aesthetic'
+    assert p + _theme == 'missing_manual_dict_aesthetic'
 
 
 def test_missing_data_discrete_scale():

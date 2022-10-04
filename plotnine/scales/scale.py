@@ -300,6 +300,12 @@ class scale_discrete(scale):
     Parameters
     ----------
     {superclass_parameters}
+    limits : array_like, optional
+        Limits of the scale. For scales that deal with
+        categoricals, these may be a subset or superset of
+        the categories. Data values that are not in the limits
+        will be treated as missing data and represented with
+        the ``na_value``.
     drop : bool
         Whether to drop unused categories from
         the scale
@@ -434,7 +440,7 @@ class scale_discrete(scale):
                 pal = np.asarray(pal, dtype=object)
             idx = np.asarray(match(x, limits))
             try:
-                pal_match = pal[idx]
+                pal_match = [pal[i] if i >= 0 else None for i in idx]
             except IndexError:
                 # Deal with missing data
                 # - Insert NaN where there is no match
