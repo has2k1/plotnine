@@ -26,7 +26,8 @@ class _scale_manual(scale_discrete):
                 if iter(breaks) is breaks:
                     breaks = list(breaks)
                     kwargs['breaks'] = breaks
-                values = {b: v for b, v in zip(breaks, values)}
+                if len(breaks) == len(values):
+                    values = {b: v for b, v in zip(breaks, values)}
 
         self._values = values
         scale_discrete.__init__(self, **kwargs)

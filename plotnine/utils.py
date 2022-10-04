@@ -578,6 +578,9 @@ def to_rgba(colors, alpha):
         If color c has an alpha channel, then alpha value
         a is ignored
         """
+        if c in ('None', 'none'):
+            return c
+
         _has_alpha = has_alpha(c)
         c = mcolors.to_hex(c, keep_alpha=_has_alpha)
 
