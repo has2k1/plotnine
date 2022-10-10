@@ -20,6 +20,9 @@ try:
 except PackageNotFoundError:
     # package is not installed
     pass
+finally:
+    del version
+    del PackageNotFoundError
 
 
 def _get_all_imports():
@@ -35,11 +38,12 @@ def _get_all_imports():
     This is because `from Module import Something`
     leads to `Module` itself coming into the namespace!!
     """
-    import types
-    lst = [name for name, obj in globals().items()
-           if not (name.startswith('_') or
-                   name == 'absolute_import' or
-                   isinstance(obj, types.ModuleType))]
+    from types import ModuleType
+    lst = [
+        name
+        for name, obj in globals().items()
+        if not (name.startswith('_') or isinstance(obj, ModuleType))
+    ]
     return lst
 
 
