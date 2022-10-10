@@ -329,3 +329,10 @@ def test_to_pandas():
     df = SomeDataType()
     p = ggplot(df, aes('x', 'y')) + geom_point()
     assert p == 'to_pandas'
+
+
+def test_plotnine_all_imports():
+    import plotnine as p9
+    for name in p9.__all__:
+        m = getattr(p9, name).__module__
+        assert m.startswith('plotnine'), f"{m} in plotnine.__all__!"
