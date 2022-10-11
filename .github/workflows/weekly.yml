@@ -1,9 +1,11 @@
 name: Weekly tests
 
 on:
+  push:
+    branches: ['weekly-tests']
   schedule:
     # At 00:00 on Monday
-    - cron: "47 19 * * FRI"
+    - cron: "23 20 * * FRI"
 
 jobs:
   # test plotnine latest, matplotlib latest
@@ -99,9 +101,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 500
-
-      - run: git checkout "$(git tag | grep 'v' | sort -rV | head -1)"
+          ref: $(git tag | grep 'v' | sort -rV | head -1)
       
       - uses: actions/setup-python@v2
         with:
