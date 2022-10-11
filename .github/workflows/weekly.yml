@@ -98,10 +98,19 @@ jobs:
         python-version: ["3.10"]
 
     steps:
+      - name: Get latest release with tag from GitHub API
+        id: latestrelease
+        run: |
+          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      
+      - name: Confirm Release Tag
+        run: |
+          echo ${{ steps.latestrelease.outputs.releasetag }}
+  
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          ref: $(git tag | grep 'v' | sort -rV | head -1)
+          ref: ${{ steps.latestrelease.outputs.releasetag }}
       
       - uses: actions/setup-python@v2
         with:
@@ -152,8 +161,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ steps.latestrelease.outputs.releasetag }}
-      
-      - run: git branch -r --contains "$(git tag | grep 'v' | sort -rV | head -1)"
 
       - uses: actions/setup-python@v2
         with:
