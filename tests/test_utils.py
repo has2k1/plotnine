@@ -128,6 +128,23 @@ def test_ninteraction():
     assert ninteraction(df) == [1]
 
 
+def test_ninteraction_datetime_series():
+    # When a pandas datetime is converted Numpy datetime, the two
+    # no longer compare as equal! This test ensures that case is
+    # not happening
+    lst = ['2020-01-01', '2020-01-02', '2020-01-03']
+    df1 = pd.DataFrame({
+        'x': list('abcaabbcc'),
+        'date_list': lst * 3,
+    })
+    df2 = pd.DataFrame({
+        'x': list('abcaabbcc'),
+        'date_list': pd.to_datetime(lst * 3),
+    })
+
+    assert ninteraction(df1) == ninteraction(df2)
+
+
 def test_join_keys():
     df1 = pd.DataFrame({'a': [0, 0, 1, 1, 2, 2],
                         'b': [0, 1, 2, 3, 1, 2],
