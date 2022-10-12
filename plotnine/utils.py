@@ -331,7 +331,7 @@ def _id_var(x, drop=False):
                 lst = list(x.cat.codes + 1)
     else:
         try:
-            levels = np.sort(np.unique(x))
+            levels = sorted(set(x))
         except TypeError:
             # x probably has NANs
             levels = multitype_sort(set(x))
