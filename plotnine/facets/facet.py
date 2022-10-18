@@ -27,8 +27,8 @@ class facet:
     ----------
     scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
         Whether ``x`` or ``y`` scales should be allowed (free)
-        to vary according to the data on each of the panel.
-        Default is ``'fixed'``.
+        to vary according to the data along the rows or the
+        columns. Default is ``'fixed'``.
     shrink : bool
         Whether to shrink the scales to the output of the
         statistics instead of the raw data. Default is ``True``.

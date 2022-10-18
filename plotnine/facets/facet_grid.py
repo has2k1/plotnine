@@ -36,11 +36,6 @@ class facet_grid(facet):
     margins : bool | list[str]
         variable names to compute margins for.
         True will compute all possible margins.
-    scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
-        Whether ``x`` or ``y`` scales should be allowed (free)
-        to vary according to the data along rows or columns.
-        Default is ``'fixed'``, the same scales for all the
-        panels.
     space : str | dict
         Control the size of the  ``x`` or ``y`` sides of the panels.
         The size also depends to the ``scales`` parameter.
