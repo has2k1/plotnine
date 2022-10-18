@@ -78,6 +78,6 @@ class stat_qq(stat):
 
         quantiles = np.asarray(quantiles)
         cdist = get_continuous_distribution(params['distribution'])
-        theoretical = cdist.ppf(quantiles, *params['dparams'])
+        theoretical = cdist.ppf(quantiles, **params['dparams'])
         return pd.DataFrame({'sample': sample,
                              'theoretical': theoretical})
