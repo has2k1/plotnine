@@ -27,9 +27,9 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
+          pip install --upgrade pip
           pip install ".[extra,test]"
           pip install --upgrade git+https://github.com/matplotlib/matplotlib
-          pip install --upgrade git+https://github.com/has2k1/plotnine
 
       - name: Environment Information
         shell: bash -l {0}
@@ -67,9 +67,9 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
+          pip install --upgrade pip
           pip install ".[extra,test]"
           pip install --upgrade git+https://github.com/pandas-dev/pandas
-          pip install --upgrade git+https://github.com/has2k1/plotnine
 
       - name: Environment Information
         shell: bash -l {0}
@@ -119,8 +119,9 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
+          pip install --upgrade pip
           pip install --upgrade git+https://github.com/matplotlib/matplotlib
-          pip install --upgrade -e "plotnine[extra,test]"
+          pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash -l {0}
@@ -169,8 +170,9 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
+          pip install --upgrade pip
           pip install --upgrade git+https://github.com/pandas-dev/pandas
-          pip install --upgrade "plotnine[extra,test]"
+          pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash -l {0}
