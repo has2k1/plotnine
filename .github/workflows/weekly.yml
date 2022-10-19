@@ -155,12 +155,12 @@ jobs:
       
       - name: Confirm Release Tag
         run: |
-          echo ${{ steps.latestrelease.outputs.releasetag }}
+          echo ${{ steps.latestrelease.outputs.latestrelease }}
   
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.latestrelease.outputs.releasetag }}
+          ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
       - uses: actions/setup-python@v2
         with:
