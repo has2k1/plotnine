@@ -1,0 +1,193 @@
+name: Weekly tests
+
+on:
+  push:
+    branches: ['weekly-tests']
+  schedule:
+    # At 00:00 on Monday
+    - cron: "23 20 * * FRI"
+
+jobs:
+  # test plotnine latest, matplotlib latest
+  plotnine_latest_matplotlib_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install --upgrade pip
+          pip install ".[extra,test]"
+          pip install --upgrade git+https://github.com/matplotlib/matplotlib
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
+
+  # test plotnine latest, pandas latest
+  plotnine_latest_pandas_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install --upgrade pip
+          pip install ".[extra,test]"
+          pip install --upgrade git+https://github.com/pandas-dev/pandas
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      # to do: think about catching deprecations earlier
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
+
+  # test plotnine pypi, matplotlib latest
+  plotnine_pypi_matplotlib_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Get latest release with tag from GitHub API
+        id: latestrelease
+        run: |
+          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      
+      - name: Confirm Release Tag
+        run: |
+          echo ${{ steps.latestrelease.outputs.latestrelease }}
+  
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.latestrelease.outputs.latestrelease }}
+      
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          pip install ".[extra,test]"
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
+
+  # test plotnine pypi, pandas latest
+  plotnine_pypi_pandas_latest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Get latest release with tag from GitHub API
+        id: latestrelease
+        run: |
+          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      
+      - name: Confirm Release Tag
+        run: |
+          echo ${{ steps.latestrelease.outputs.latestrelease }}
+  
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.latestrelease.outputs.latestrelease }}
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade git+https://github.com/pandas-dev/pandas
+          pip install ".[extra,test]"
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          pip list
+
+      # to do: think about catching deprecations earlier
+      - name: Run Tests
+        shell: bash -l {0}
+        run: |
+          make test
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: result-images
+          path: result_images/
+          if-no-files-found: ignore
