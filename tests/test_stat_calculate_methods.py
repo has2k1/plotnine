@@ -14,7 +14,7 @@ def test_stat_bin():
     # About the default bins
     gg = ggplot(aes(x="x"), df) + stat_bin()
 
-    with pytest.warns() as record:
+    with pytest.warns(PlotnineWarning) as record:
         gg.draw_test()
 
     res = ("bins" in str(item.message).lower() for item in record)
