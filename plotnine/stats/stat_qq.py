@@ -60,7 +60,7 @@ class stat_qq(stat):
     DEFAULT_AES = {'x': after_stat('theoretical'), 'y': after_stat('sample')}
     DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
                       'na_rm': False,
-                      'distribution': 'norm', 'dparams': (),
+                      'distribution': 'norm', 'dparams': {},
                       'quantiles': None, 'alpha_beta': (3/8, 3/8)}
 
     @classmethod
@@ -78,6 +78,6 @@ class stat_qq(stat):
 
         quantiles = np.asarray(quantiles)
         cdist = get_continuous_distribution(params['distribution'])
-        theoretical = cdist.ppf(quantiles, *params['dparams'])
+        theoretical = cdist.ppf(quantiles, **params['dparams'])
         return pd.DataFrame({'sample': sample,
                              'theoretical': theoretical})

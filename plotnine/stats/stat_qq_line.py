@@ -52,7 +52,7 @@ class stat_qq_line(stat):
     REQUIRED_AES = {'sample'}
     DEFAULT_PARAMS = {'geom': 'qq_line', 'position': 'identity',
                       'na_rm': False,
-                      'distribution': 'norm', 'dparams': (),
+                      'distribution': 'norm', 'dparams': {},
                       'quantiles': None, 'alpha_beta': (3/8, 3/8),
                       'line_p': (0.25, 0.75), 'fullrange': False}
     CREATES = {'x', 'y'}
@@ -76,7 +76,7 @@ class stat_qq_line(stat):
 
         # Compute slope & intercept of the line through the quantiles
         cdist = get_continuous_distribution(params['distribution'])
-        x_coords = cdist.ppf(line_p, *dparams)
+        x_coords = cdist.ppf(line_p, **dparams)
         y_coords = mquantiles(sample, line_p)
         slope = (np.diff(y_coords)/np.diff(x_coords))[0]
         intercept = y_coords[0] - slope*x_coords[0]
