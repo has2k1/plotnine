@@ -5,7 +5,7 @@ on:
     branches: ['weekly-tests']
   schedule:
     # At 00:00 on Monday
-    - cron: "23 20 * * FRI"
+    - cron: "40 06 * * WED"
 
 jobs:
   # test plotnine latest, matplotlib latest
@@ -102,16 +102,16 @@ jobs:
         id: latestrelease
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
-      
+
       - name: Confirm Release Tag
         run: |
           echo ${{ steps.latestrelease.outputs.latestrelease }}
-  
+
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
-      
+
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -153,11 +153,11 @@ jobs:
         id: latestrelease
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
-      
+
       - name: Confirm Release Tag
         run: |
           echo ${{ steps.latestrelease.outputs.latestrelease }}
-  
+
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
@@ -189,5 +189,5 @@ jobs:
         if: failure()
         with:
           name: result-images
-          path: result_images/
+          path: tests/result_images/
           if-no-files-found: ignore
