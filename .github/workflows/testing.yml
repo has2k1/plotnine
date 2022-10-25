@@ -43,7 +43,7 @@ jobs:
         if: failure()
         with:
           name: result-images
-          path: result_images/
+          path: tests/result_images/
           if-no-files-found: ignore
 
       - name: Upload coverage to Codecov
