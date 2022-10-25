@@ -64,7 +64,7 @@ class annotate:
         pos_aesthetics = {
             loc: variables[loc]
             for loc in POSITION_AESTHETICS
-            if variables[loc] is not None
+            if variables.get(loc, None) is not None
         }
         aesthetics = pos_aesthetics.copy()
         aesthetics.update(kwargs)

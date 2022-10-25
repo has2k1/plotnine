@@ -30,7 +30,7 @@ class Scales(list):
 
         Removes any previous scales that cover the same aesthetics
         """
-        ae = sc.aesthetics[0]
+        ae = sc.key_aesthetic
         cover_ae = self.find(ae)
         if any(cover_ae):
             warn(_TPL_DUPLICATE_SCALE.format(ae), PlotnineWarning)
@@ -47,7 +47,8 @@ class Scales(list):
         """
         return [aesthetic in s.aesthetics for s in self]
 
-    def input(self):
+    @property
+    def aesthetics_covered(self):
         """
         Return a list of all the aesthetics covered by the scales
         """
@@ -88,16 +89,22 @@ class Scales(list):
         """
         Return a list of any non-position scales
         """
-        l = [s for s in self
-             if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
+        l = [
+            s
+            for s in self
+            if ('x' not in s.aesthetics) and ('y' not in s.aesthetics)
+        ]
         return Scales(l)
 
     def position_scales(self):
         """
         Return a list of the position scales that are present
         """
-        l = [s for s in self
-             if ('x' in s.aesthetics) or ('y' in s.aesthetics)]
+        l = [
+            s
+            for s in self
+            if ('x' in s.aesthetics) or ('y' in s.aesthetics)
+        ]
         return Scales(l)
 
     def train(self, data, vars, idx):
@@ -272,7 +279,7 @@ class Scales(list):
             Aesthetic names. Typically, ('x', 'y').
         """
         # Keep only aesthetics that don't have scales
-        aesthetics = set(aesthetics) - set(self.input())
+        aesthetics = set(aesthetics) - set(self.aesthetics_covered)
 
         for ae in aesthetics:
             scale_name = f'scale_{ae}_continuous'

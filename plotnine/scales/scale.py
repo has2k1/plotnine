@@ -12,7 +12,11 @@ from mizani.breaks import date_breaks
 from mizani.formatters import date_format
 from mizani.transforms import gettrans
 
-from ..mapping.aes import is_position_aes, rename_aesthetics
+from ..mapping.aes import (
+    is_position_aes,
+    rename_aesthetics,
+    SCALED_AESTHETICS
+)
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import match, waiver, is_waive, Registry
@@ -251,6 +255,10 @@ class scale(metaclass=Registry):
         if self.range is None:
             return True
         return self.range.range is None and self._limits is None
+
+    @property
+    def key_aesthetic(self):
+        return list(SCALED_AESTHETICS & set(self._aesthetics))[0]
 
     @property
     def limits(self):
@@ -638,7 +646,7 @@ class scale_continuous(scale):
         t = gettrans(value)
         self._check_trans(t)
         self._trans = t
-        self._trans.aesthetic = self.aesthetics[0]
+        self._trans.aesthetic = self.key_aesthetic
 
     @property
     def limits(self):

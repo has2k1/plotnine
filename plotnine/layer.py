@@ -5,7 +5,12 @@ import pandas as pd
 from .exceptions import PlotnineError
 from .utils import array_kind, ninteraction
 from .utils import check_required_aesthetics, defaults
-from .mapping.aes import aes, NO_GROUP, SCALED_AESTHETICS
+from .mapping.aes import (
+    aes,
+    NO_GROUP,
+    SCALED_AESTHETICS,
+    POSITION_AESTHETICS
+)
 from .mapping.evaluation import stage, evaluate
 
 

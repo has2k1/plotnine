@@ -61,7 +61,7 @@ class guide_colorbar(guide):
 
     def train(self, scale, aesthetic=None):
         if aesthetic is None:
-            aesthetic = scale.aesthetics[0]
+            aesthetic = scale.key_aesthetic
 
         # Do nothing if scales are inappropriate
         if set(scale.aesthetics) & self.available_aes == 0:

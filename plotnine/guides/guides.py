@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from matplotlib.offsetbox import (HPacker, VPacker)
 
+from ..mapping.aes import SCALED_AESTHETICS
 from ..utils import is_string, is_waive, Registry
 from ..exceptions import PlotnineError, PlotnineWarning
 from .guide import guide as guide_class
@@ -38,16 +39,16 @@ class guides(dict):
     """
 
     def __init__(self, **kwargs):
-        aes_names = {'alpha', 'color', 'fill',
-                     'linetype', 'shape', 'size',
-                     'stroke'}
         if 'colour' in kwargs:
             kwargs['color'] = kwargs.pop('colour')
 
-        dict.__init__(
-            self,
-            ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names)
+        args_tup = (
+            (ae, kwargs[ae])
+            for ae in kwargs
+            if ae in SCALED_AESTHETICS
         )
+
+        dict.__init__(self, args_tup)
 
         # Determined from the theme when the guides are
         # getting built
@@ -161,7 +162,6 @@ class guides(dict):
                 # 2. ... + scale_xxx(guide=guide_blah())
                 # 3. default(either guide_legend or guide_colorbar
                 #            depending on the scale type)
-                # output = scale.aesthetics[0]
                 guide = self.get(output, scale.guide)
 
                 if guide is None or guide is False:
@@ -172,7 +172,7 @@ class guides(dict):
                 guide = self.validate(guide)
                 # check the consistency of the guide and scale.
                 if (guide.available_aes != 'any' and
-                        scale.aesthetics[0] not in guide.available_aes):
+                        scale.key_aesthetic not in guide.available_aes):
                     raise PlotnineError(
                         f"{guide.__class__.__name__} cannot be used for "
                         f"{scale.aesthetics}"

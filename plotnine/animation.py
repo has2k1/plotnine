@@ -131,7 +131,7 @@ class PlotnineAnimation(ArtistAnimation):
                 First ggplot object that has been drawn
             """
             for sc in plot.scales:
-                ae = sc.aesthetics[0]
+                ae = sc.key_aesthetic
                 scale_limits[ae] = sc.limits
 
         def check_scale_limits(plot, frame_no):
@@ -158,7 +158,7 @@ class PlotnineAnimation(ArtistAnimation):
                 )
 
             for sc in plot.scales:
-                ae = sc.aesthetics[0]
+                ae = sc.key_aesthetic
                 if ae not in scale_limits:
                     raise PlotnineError(
                         f"The plot for frame {frame_no} does not "

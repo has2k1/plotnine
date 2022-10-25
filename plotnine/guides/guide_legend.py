@@ -66,7 +66,7 @@ class guide_legend(guide):
         if it fails
         """
         if aesthetic is None:
-            aesthetic = scale.aesthetics[0]
+            aesthetic = scale.key_aesthetic
 
         breaks = scale.get_breaks()
         if isinstance(breaks, dict):
