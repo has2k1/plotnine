@@ -222,6 +222,23 @@ class aes(dict):
 
         return d
 
+    @property
+    def _calculated_has_scale(self):
+        """
+        Return only the aesthetics mapped to calculated statistics
+
+        The mapping is a dict of the form ``{name: expr}``, i.e the
+        stage class has been peeled off.
+        """
+        d = {
+            ae: value
+            for ae, value in self._calculated.items()
+            if ae in SCALED_AESTHETICS
+        }
+
+        return d
+
+
     def __deepcopy__(self, memo):
         """
         Deep copy without copying the environment

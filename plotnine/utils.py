@@ -1,6 +1,7 @@
 """
 Little functions used all over the codebase
 """
+import re
 import collections
 import itertools
 import inspect
@@ -31,6 +32,14 @@ from .exceptions import PlotnineError, PlotnineWarning
 # this factor gives us the match.
 SIZE_FACTOR = np.sqrt(np.pi)
 
+# Match variables (valid python identifiers) in a
+# string expression that are not function calls
+IDENTIFIER_RE = re.compile(
+    r'(?=\b)'        # Left is a boundary
+    r'(?<!\.)'       # but not a . (to exclude attribute names)
+    r'[a-zA-Z_]\w*'  # python identifier
+    r'(?!\w*\s?\()'  # right not an open bracket (to exclude function names)
+)
 
 def is_scalar_or_string(val):
     """
@@ -1287,3 +1296,22 @@ class ignore_warnings:
 
     def __exit__(self, type, value, traceback):
         return self._cm.__exit__()
+
+
+def get_unique_identifiers(expr):
+    """
+    Return the identifiers in an expression
+
+    Assumes expr is a valid python expression
+
+    Parameters
+    ----------
+    expr : str
+        Python expression
+
+    Returns
+    -------
+    out : set
+        Set of idenfiers
+    """
+    return set(IDENTIFIER_RE.findall(expr))

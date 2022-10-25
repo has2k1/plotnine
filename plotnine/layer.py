@@ -1,10 +1,16 @@
+import itertools
 from copy import copy, deepcopy
 
 import pandas as pd
 
 from .exceptions import PlotnineError
-from .utils import array_kind, ninteraction
-from .utils import check_required_aesthetics, defaults
+from .utils import (
+    array_kind,
+    check_required_aesthetics,
+    defaults,
+    ninteraction,
+    get_unique_identifiers,
+)
 from .mapping.aes import (
     aes,
     NO_GROUP,
@@ -348,6 +354,17 @@ class layer:
 
         # Mixin default stat aesthetic mappings
         aesthetics = defaults(self.mapping, self.stat.DEFAULT_AES)
+        ae_lst = [
+            ae
+            for ae, expr in aesthetics._calculated.items()
+            if get_unique_identifiers(expr)
+        ]
+        # need to match (ae, indentifier, column in data)
+        # then col in data will be inverse transformed by scale for ae
+        _data = plot.scales.inverse_transform_df(data[ae_lst])
+        for col in ae_lst:
+            data[col] = _data[col]
+
         stat_data = evaluate(aesthetics._calculated, data, plot.environment)
 
         if not len(stat_data):

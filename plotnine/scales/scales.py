@@ -225,6 +225,20 @@ class Scales(list):
             df = sc.transform_df(df)
         return df
 
+    def inverse_transform_df(self, df):
+        """
+        Inveres transform values in a dataframe.
+
+        Returns dataframe
+        """
+        if (len(df) == 0) or (len(self) == 0):
+            return df
+
+        # Each scale transforms the columns it understands
+        for sc in self:
+            df = sc.inverse_transform_df(df)
+        return df
+
     def add_defaults(self, data, aesthetics):
         """
         Add default scales for the aesthetics if there is none
