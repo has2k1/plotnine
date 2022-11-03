@@ -327,8 +327,18 @@ def test_to_pandas():
             return pd.DataFrame({'x': [1, 2, 3], 'y': [1, 2, 3]})
 
     df = SomeDataType()
-    p = ggplot(df, aes('x', 'y')) + geom_point()
-    assert p == 'to_pandas'
+    p1 = ggplot(df, aes('x', 'y')) + geom_point()
+    p2 = df >> ggplot(aes('x', 'y')) + geom_point()
+    assert p1 == 'to_pandas'
+    assert p2 == 'to_pandas'
+
+
+def test_callable_as_data():
+    def _fn():
+        return pd.DataFrame({'x': [1, 2], 'y': [1, 2]})
+
+    p = ggplot(_fn, aes('x', 'y')) + geom_point()
+    p.draw_test()
 
 
 def test_plotnine_all_imports():

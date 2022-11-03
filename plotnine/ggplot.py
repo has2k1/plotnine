@@ -19,14 +19,20 @@ from .facets import facet_null
 from .facets.layout import Layout
 from .options import get_option, SUBPLOTS_ADJUST
 from .themes.theme import theme, theme_get
-from .utils import (
-        to_inches, from_inches, defaults, order_as_data_mapping, ungroup
-        )
 from .exceptions import PlotnineError, PlotnineWarning
 from .scales.scales import Scales
 from .coords import coord_cartesian
 from .guides.guides import guides
 from .geoms import geom_blank
+from .utils import (
+    defaults,
+    from_inches,
+    is_data_like,
+    order_as_data_mapping,
+    to_inches,
+    to_pandas,
+    ungroup
+)
 
 
 # Show plots if in interactive mode
@@ -154,12 +160,13 @@ class ggplot:
         Overload the >> operator to receive a dataframe
         """
         other = ungroup(other)
-        if isinstance(other, pd.DataFrame):
+        if is_data_like(other):
             if self.data is None:
-                self.data = other
+                self.data = to_pandas(other)
             else:
                 raise PlotnineError(
-                    "`>>` failed, ggplot object has data.")
+                    "`>>` failed, ggplot object has data."
+                )
         else:
             msg = "Unknown type of data -- {!r}"
             raise TypeError(msg.format(type(other)))

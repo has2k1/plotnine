@@ -1034,9 +1034,7 @@ def order_as_data_mapping(*args):
             .format(type(data))
         )
 
-    if hasattr(data, 'to_pandas'):
-        data = data.to_pandas()
-
+    data = to_pandas(data)
     return data, mapping
 
 
@@ -1057,6 +1055,25 @@ def is_data_like(obj):
     """
     return (isinstance(obj, (pd.DataFrame, Callable)) or
             hasattr(obj, 'to_pandas'))
+
+
+def to_pandas(obj):
+    """
+    Return pandas dataframe
+
+    Parameters
+    ----------
+    obj : dataframe | callable
+        A dataframe like object
+    """
+    if obj is None or isinstance(obj, (pd.DataFrame, Callable)):
+        return obj
+    elif hasattr(obj, 'to_pandas'):
+        return obj.to_pandas()
+
+    raise TypeError(
+        f"Unrecognised type of dataframe object: {type(obj)}."
+    )
 
 
 def interleave(*arrays):
