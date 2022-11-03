@@ -236,6 +236,8 @@ class layer:
         """
         if plot_data is None:
             plot_data = pd.DataFrame()
+        elif callable(plot_data):
+            plot_data = plot_data()
 
         # Each layer that does not have data gets a copy of
         # of the ggplot.data. If the has data it is replaced
