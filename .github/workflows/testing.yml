@@ -84,6 +84,40 @@ jobs:
         shell: bash -l {0}
         run: make lint
 
+
+  # Typecheck
+  typecheck:
+    runs-on: ubuntu-latest
+
+    # We want to run on external PRs, but not on our own internal PRs as they'll be run
+    # by the push to the branch.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        shell: bash -l {0}
+        run: pip install mypy
+
+      - name: Environment Information
+        shell: bash -l {0}
+        run: pip list
+
+      - name: Run Tests
+        shell: bash -l {0}
+        run: make typecheck
+
+
   # Documentation
   documentation:
     runs-on: ubuntu-latest
