@@ -1,3 +1,5 @@
+from typing import Any
+
 #: Development flag, e.g. set to ``True`` to prevent
 #: the queuing up of figures when errors happen.
 close_all_figures = False
@@ -28,7 +30,7 @@ SUBPLOTS_ADJUST = {
 }
 
 
-def get_option(name):
+def get_option(name: str) -> Any:
     """
     Get package option
 
@@ -40,13 +42,13 @@ def get_option(name):
     d = globals()
 
     if name in {'get_option', 'set_option'} or name not in d:
-        from ..exceptions import PlotnineError
+        from .exceptions import PlotnineError
         raise PlotnineError(f"Unknown option {name}")
 
     return d[name]
 
 
-def set_option(name, value):
+def set_option(name: str, value: Any) -> Any:
     """
     Set package option
 
@@ -65,7 +67,7 @@ def set_option(name, value):
     d = globals()
 
     if name in {'get_option', 'set_option'} or name not in d:
-        from ..exceptions import PlotnineError
+        from .exceptions import PlotnineError
         raise PlotnineError(f"Unknown option {name}")
 
     old = d[name]
