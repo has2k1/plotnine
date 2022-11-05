@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 from collections.abc import Sequence
 from copy import deepcopy
@@ -8,6 +9,7 @@ from warnings import warn
 
 import pandas as pd
 import matplotlib as mpl
+import matplotlib.figure
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
 from matplotlib.offsetbox import AnchoredOffsetbox
@@ -24,7 +26,11 @@ from .exceptions import PlotnineError, PlotnineWarning
 from .scales.scales import Scales
 from .coords import coord_cartesian
 from .guides.guides import guides
-from .geoms import geom_blank
+
+# mypy believes there is a duplicate definition
+# of geom_blank even though it only appears once
+from .geoms import geom_blank   # type: ignore[no-redef]  # mypy bug
+
 from .utils import (
     defaults,
     from_inches,
@@ -34,6 +40,12 @@ from .utils import (
     ungroup
 )
 
+import typing
+from typing import Any, Iterable, Union
+
+if typing.TYPE_CHECKING:
+    import plotnine as p9
+    from .typing import DataLike, PlotAddable
 
 # Show plots if in interactive mode
 if sys.flags.interactive:
@@ -59,7 +71,12 @@ class ggplot:
         in which `ggplot()` is called.
     """
 
-    def __init__(self, data=None, mapping=None, environment=None):
+    def __init__(
+        self,
+        data: DataLike | None = None,
+        mapping: aes | None = None,
+        environment: dict[str, Any] | None = None
+    ) -> None:
         # Allow some sloppiness
         data, mapping = order_as_data_mapping(data, mapping)
         if mapping is None:
@@ -68,7 +85,7 @@ class ggplot:
         # Recognize plydata groups
         if hasattr(data, 'group_indices') and 'group' not in mapping:
             mapping = mapping.copy()
-            mapping['group'] = data.group_indices()
+            mapping['group'] = data.group_indices()  # type: ignore
 
         self.data = data
         self.mapping = mapping
@@ -81,14 +98,14 @@ class ggplot:
         self.coordinates = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = Layout()
-        self.figure = None
-        self.watermarks = []
+        self.figure: mpl.figure.Figure | None = None
+        self.watermarks: list[p9.watermark] = []
         self.axs = None
 
         # build artefacts
         self._build_objs = NS()
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Print/show the plot
         """
@@ -97,14 +114,14 @@ class ggplot:
         # Return and empty string so that print(p) is "pretty"
         return ''
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Print/show the plot
         """
         self.__str__()
         return '<ggplot: (%d)>' % self.__hash__()
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
         """
         Deep copy without copying the dataframe and environment
         """
@@ -125,7 +142,10 @@ class ggplot:
 
         return result
 
-    def __iadd__(self, other):
+    def __iadd__(
+        self,
+        other: PlotAddable | list[PlotAddable] | None
+    ) -> ggplot:
         """
         Add other to ggplot object
 
@@ -144,7 +164,7 @@ class ggplot:
         else:
             return other.__radd__(self)
 
-    def __add__(self, other):
+    def __add__(self, other: PlotAddable | list[PlotAddable] | None) -> ggplot:
         """
         Add to ggplot from a list
 
@@ -157,7 +177,7 @@ class ggplot:
         self = deepcopy(self)
         return self.__iadd__(other)
 
-    def __rrshift__(self, other):
+    def __rrshift__(self, other: DataLike) -> ggplot:
         """
         Overload the >> operator to receive a dataframe
         """
@@ -174,7 +194,7 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, show=False):
+    def draw(self, show: bool = False) -> mpl.figure.Figure:
         """
         Render the complete plot
 
@@ -204,7 +224,7 @@ class ggplot:
             # setup
             figure, axs = self._create_figure()
             self._setup_parameters()
-            self.facet.strips.generate()
+            self.facet.strips.generate()  # type: ignore[attr-defined]
             self._resize_panels()
 
             # Drawing
@@ -606,7 +626,7 @@ class ggplot:
         self.theme.apply_axs(self.axs)
         self.theme.apply_figure(self.figure)
 
-    def _save_filename(self, ext):
+    def _save_filename(self, ext: str) -> Path:
         """
         Make a filename for use by the save method
 
@@ -633,9 +653,19 @@ class ggplot:
         new_labels = defaults(mapping, default)
         self.labels = defaults(self.labels, new_labels)
 
-    def save(self, filename=None, format=None, path=None,
-             width=None, height=None, units='in',
-             dpi=None, limitsize=True, verbose=True, **kwargs):
+    def save(
+        self,
+        filename: Union[str, Path] | None = None,
+        format: str | None = None,
+        path: str | None = None,
+        width: float | None = None,
+        height: float | None = None,
+        units: str = 'in',
+        dpi: float | None = None,
+        limitsize: bool = True,
+        verbose: bool = True,
+        **kwargs: Any
+    ) -> None:
         """
         Save a ggplot object as an image file
 
@@ -719,7 +749,10 @@ class ggplot:
         fig.savefig(filename, **fig_kwargs)
 
 
-def ggsave(plot, *arg, **kwargs):
+# could be replaced with just
+# ggsave = ggplot.save
+# with better typing but without the deprecation message in the help.
+def ggsave(plot: ggplot, *arg: Any, **kwargs: Any) -> None:
     """
     Save a ggplot object as an image file
 
@@ -728,7 +761,13 @@ def ggsave(plot, *arg, **kwargs):
     return plot.save(*arg, **kwargs)
 
 
-def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
+def save_as_pdf_pages(
+    plots: Iterable[ggplot],
+    filename: str | None = None,
+    path: str | None = None,
+    verbose: bool = True,
+    **kwargs: Any
+) -> None:
     """
     Save multiple :class:`ggplot` objects to a PDF file, one per page.
 
@@ -795,6 +834,7 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
     plots = iter(plots)
 
     # filename, depends on the object
+    filename: str | Path | None = filename  # broaden allowed type for var
     if filename is None:
         # Take the first element from the iterator, store it, and
         # use it to generate a file name
@@ -829,11 +869,11 @@ class plot_context:
         exits.
     """
 
-    def __init__(self, plot, show=False):
+    def __init__(self, plot: ggplot, show: bool = False) -> None:
         self.plot = plot
         self.show = show
 
-    def __enter__(self):
+    def __enter__(self) -> plot_context:
         """
         Enclose in matplolib & pandas environments
         """

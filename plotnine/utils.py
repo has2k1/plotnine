@@ -1,19 +1,23 @@
 """
 Little functions used all over the codebase
 """
+from __future__ import annotations
 import collections
 import itertools
 import inspect
 import warnings
 from contextlib import suppress
-from typing import Callable
+from typing import Any, Callable
 from weakref import WeakValueDictionary
 from warnings import warn
 
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-from pandas.core.groupby import DataFrameGroupBy
+
+# missing in type stubs
+from pandas.core.groupby import DataFrameGroupBy  # type: ignore
+
 import matplotlib.colors as mcolors
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
@@ -24,6 +28,10 @@ from mizani.utils import multitype_sort
 from .mapping import aes
 from .exceptions import PlotnineError, PlotnineWarning
 
+import typing
+if typing.TYPE_CHECKING:
+    from .typing import DataLike
+    from typing_extensions import TypeGuard
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
@@ -39,13 +47,11 @@ def is_scalar_or_string(val):
     return is_string(val) or not np.iterable(val)
 
 
-def is_string(obj):
+def is_string(obj: Any) -> TypeGuard[str]:
     """
     Return True if *obj* is a string
     """
-    if isinstance(obj, str):
-        return True
-    return False
+    return isinstance(obj, str)
 
 
 def make_iterable(val):
@@ -85,7 +91,7 @@ class waiver:
         return self
 
 
-def is_waive(x):
+def is_waive(x: Any) -> TypeGuard[waiver]:
     """
     Return True if x object implies use
     default and False otherwise.
@@ -398,7 +404,7 @@ def uniquecols(df):
     return df
 
 
-def defaults(d1, d2):
+def defaults(d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
     """
     Update a copy of d1 with the contents of d2 that are not in d1.
 
@@ -792,7 +798,7 @@ class Registry(type, metaclass=RegistryMeta):
     When objects are deleted, they are automatically removed
     from the Registry.
     """
-    _registry = WeakValueDictionary()
+    _registry: WeakValueDictionary[Any, Any] = WeakValueDictionary()
 
     def __new__(meta, name, bases, clsdict):
         cls = super().__new__(meta, name, bases, clsdict)
@@ -969,7 +975,10 @@ def ungroup(data):
     return data
 
 
-def order_as_data_mapping(arg1, arg2):
+def order_as_data_mapping(
+    arg1: DataLike | aes | None,
+    arg2: DataLike | aes | None,
+) -> tuple[DataLike | None, aes | None]:
     """
     Reorder args to ensure (data, mapping) order
 
@@ -985,9 +994,8 @@ def order_as_data_mapping(arg1, arg2):
 
     Returns
     -------
-    mapping : aes
     data : pd.DataFrame | callable
-    *rest : tuple
+    mapping : aes
     """
     # Valid types for the values are:
     #   - None, None
@@ -996,22 +1004,37 @@ def order_as_data_mapping(arg1, arg2):
     #   - aes, None
     #   - None, aes
     #   - DataFrame, aes
-    args = arg1, arg2
-    for a, b in (args, args[::-1]):
-        if is_data_like(a) or a is None:
-            if isinstance(b, aes) or b is None:
-                return a, b
+    data: DataLike | None = None
+    mapping: aes | None = None
 
-    for arg in args:
-        good = arg is None or is_data_like(arg) or isinstance(arg, aes)
-        if not good:
+    for arg in [arg1, arg2]:
+        if isinstance(arg, aes):
+            if mapping is None:
+                mapping = arg
+            else:
+                raise TypeError(
+                    "Expected a single aesthetic mapping, found two"
+                )
+        elif is_data_like(arg):
+            if data is None:
+                data = arg
+            else:
+                raise TypeError(
+                    "Expected a single dataframe, found two"
+                )
+        elif arg is not None:
             raise TypeError(
                 f"Bad type of argument {arg!r}, expected a dataframe "
                 "or a mapping."
             )
 
+    return data, mapping
 
-def is_data_like(obj):
+
+# Returning a type guard here is not fully sound, because if `obj`
+# is a callable, we aren't checking that it has no required args
+# and we can't check the return value's type.
+def is_data_like(obj: Any) -> TypeGuard[DataLike]:
     """
     Return True if obj could be data
 
@@ -1026,8 +1049,11 @@ def is_data_like(obj):
         Whether obj could represent data as expected by
         ggplot(), geom() or stat().
     """
-    return (isinstance(obj, (pd.DataFrame, Callable)) or
-            hasattr(obj, 'to_pandas'))
+    return (
+        isinstance(obj, pd.DataFrame)
+        or callable(obj)
+        or hasattr(obj, 'to_pandas')
+    )
 
 
 def interleave(*arrays):
@@ -1102,7 +1128,7 @@ def cross_join(df1, df2):
     return pd.merge(df1, df2, on='key').loc[:, all_columns]
 
 
-def to_inches(value, units):
+def to_inches(value: float, units: str) -> float:
     """
     Convert value to inches
 
@@ -1114,16 +1140,18 @@ def to_inches(value, units):
         Units of value. Must be one of
         `['in', 'cm', 'mm']`.
     """
-    lookup = {'in': lambda x: x,
-              'cm': lambda x: x/2.54,
-              'mm': lambda x: x/(2.54*10)}
+    lookup: dict[str, Callable[[float], float]] = {
+        'in': lambda x: x,
+        'cm': lambda x: x/2.54,
+        'mm': lambda x: x/(2.54*10)
+    }
     try:
         return lookup[units](value)
     except KeyError:
         raise PlotnineError(f"Unknown units '{units}'")
 
 
-def from_inches(value, units):
+def from_inches(value: float, units: str) -> float:
     """
     Convert value in inches to given units
 
@@ -1135,9 +1163,11 @@ def from_inches(value, units):
         Units to convert value to. Must be one of
         `['in', 'cm', 'mm']`.
     """
-    lookup = {'in': lambda x: x,
-              'cm': lambda x: x*2.54,
-              'mm': lambda x: x*2.54*10}
+    lookup: dict[str, Callable[[float], float]] = {
+        'in': lambda x: x,
+        'cm': lambda x: x*2.54,
+        'mm': lambda x: x*2.54*10
+    }
     try:
         return lookup[units](value)
     except KeyError:

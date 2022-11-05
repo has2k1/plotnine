@@ -1,3 +1,4 @@
+from __future__ import annotations
 from copy import copy, deepcopy
 
 import pandas as pd
@@ -8,8 +9,17 @@ from .utils import check_required_aesthetics, defaults
 from .mapping.aes import aes, NO_GROUP, SCALED_AESTHETICS
 from .mapping.evaluation import stage, evaluate
 
+import typing
+from typing import List
+if typing.TYPE_CHECKING:
+    import plotnine as p9
+    from .geoms.geom import geom
+    from .positions.position import position
+    from .stats.stat import stat
+    from .typing import DataLike, LayerDataLike, DataFrameConvertible
 
-class Layers(list):
+
+class Layers(List["layer"]):
     """
     List of layers
 
@@ -47,7 +57,7 @@ class Layers(list):
     def data(self):
         return [l.data for l in self]
 
-    def setup(self, plot):
+    def setup(self, plot: p9.ggplot) -> None:
         for l in self:
             l.setup(plot)
 
@@ -141,9 +151,17 @@ class layer:
     always use a ``geom`` or ``stat``.
     """
 
-    def __init__(self, geom=None, stat=None, data=None, mapping=None,
-                 position=None, inherit_aes=True, show_legend=None,
-                 raster=False):
+    def __init__(
+        self,
+        geom: geom | None = None,
+        stat: stat | None = None,
+        data: LayerDataLike | None = None,
+        mapping: aes | None = None,
+        position: position | None = None,
+        inherit_aes: bool = True,
+        show_legend: bool | None = None,
+        raster: bool = False
+    ) -> None:
         self.geom = geom
         self.stat = stat
         self.data = data
@@ -214,7 +232,7 @@ class layer:
 
         return result
 
-    def setup(self, plot):
+    def setup(self, plot: p9.ggplot) -> None:
         """
         Prepare layer for the plot building
 
@@ -224,7 +242,7 @@ class layer:
         self._make_layer_mapping(plot.mapping)
         self._make_layer_environments(plot.environment)
 
-    def _make_layer_data(self, plot_data):
+    def _make_layer_data(self, plot_data: DataLike | None) -> None:
         """
         Generate data to be used by this layer
 
@@ -234,25 +252,29 @@ class layer:
             ggplot object data
         """
         if plot_data is None:
-            plot_data = pd.DataFrame()
+            data = pd.DataFrame()
         elif callable(plot_data):
-            plot_data = plot_data()
+            data = plot_data()
+        elif hasattr(plot_data, "to_pandas"):
+            data = typing.cast("DataFrameConvertible", plot_data).to_pandas()
+        else:
+            data = typing.cast("pd.DataFrame", plot_data)
 
         # Each layer that does not have data gets a copy of
         # of the ggplot.data. If it has data it is replaced
         # by copy so that we do not alter the users data
         if self.data is None:
             try:
-                self.data = copy(plot_data)
+                self.data = copy(data)
             except AttributeError:
                 _geom_name = self.geom.__class__.__name__
-                _data_name = plot_data.__class__.__name__
+                _data_name = data.__class__.__name__
                 raise PlotnineError(
                     f"{_geom_name} layer expects a dataframe, "
                     f"but it got {_data_name} instead."
                 )
         elif callable(self.data):
-            self.data = self.data(plot_data)
+            self.data = self.data(data)
             if not isinstance(self.data, pd.DataFrame):
                 raise PlotnineError(
                     "Data function must return a Pandas dataframe"
@@ -260,9 +282,11 @@ class layer:
         else:
             self.data = copy(self.data)
 
-        # Recognise polars dataframes
-        if hasattr(self.data, "to_pandas"):
-            self.data = self.data.to_pandas()
+            # Recognise polars dataframes
+            if hasattr(self.data, "to_pandas"):
+                self.data = (
+                    typing.cast("DataFrameConvertible", self.data).to_pandas()
+                )
 
     def _make_layer_mapping(self, plot_mapping):
         """
