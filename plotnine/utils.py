@@ -692,6 +692,9 @@ def make_line_segments(x, y, ispath=True):
         to the next until the last. If False, then each pair
         of successive(even-odd pair) points yields a line.
     """
+    # Series objects would otherwise require .iloc
+    x = x.to_numpy() if hasattr(x, 'to_numpy') else x
+    y = y.to_numpy() if hasattr(y, 'to_numpy') else y
     if ispath:
         x = interleave(x[:-1], x[1:])
         y = interleave(y[:-1], y[1:])
