@@ -24,7 +24,7 @@ class labs:
     """
     labels: dict[str, str] = {}
 
-    def __init__(self, **kwargs: dict[str, str]) -> None:
+    def __init__(self, **kwargs: str) -> None:
         unknown = kwargs.keys() - VALID_LABELS
         if unknown:
             raise PlotnineError(
