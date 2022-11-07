@@ -517,7 +517,7 @@ def unique_combs(df):
         return s.unique()
 
     # List of unique values from every column
-    lst = (_unique(x) for _, x in df.iteritems())
+    lst = (_unique(x) for _, x in df.items())
     rows = list(itertools.product(*lst))
     _df = pd.DataFrame(rows, columns=df.columns)
 
