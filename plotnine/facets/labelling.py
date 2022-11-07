@@ -197,7 +197,7 @@ def labeller(rows=None, cols=None, multi_line=True,
         label_info = label_info.astype(str)
 
         # Each facetting variable is labelled independently
-        for name, value in label_info.iteritems():
+        for name, value in label_info.items():
             func = as_labeller(kwargs.get(name), margin_labeller)
             new_info = func(label_info[[name]])
             label_info[name] = new_info[name]
