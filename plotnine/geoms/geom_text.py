@@ -58,7 +58,7 @@ class geom_text(geom):
         string using :meth:`str.format` e.g::
 
             # 2.348 -> "2.35%"
-            geom_text(format_string="{.2f}%")
+            geom_text(format_string="{:.2f}%")
 
     path_effects : list (default: None)
         If not :py:`None`, then the text will use these effects.
