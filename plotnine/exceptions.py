@@ -1,13 +1,18 @@
 from __future__ import annotations
 from textwrap import dedent
+from typing import Type, Optional, Union
 import warnings
 
 
 # Show the warnings on one line, leaving out any code makes the
 # message clear
-def warning_format(  # type: ignore
-    message, category, filename, lineno, line=None
-):
+def warning_format(
+    message: Union[Warning, str],
+    category: Type[Warning],
+    filename: str,
+    lineno: int,
+    line: Optional[str] = None,
+) -> str:
     """
     Format for plotnine warnings
     """
