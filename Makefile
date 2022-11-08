@@ -39,6 +39,9 @@ clean-test:
 lint:
 	flake8 plotnine
 
+typecheck:
+	mypy plotnine
+
 test: clean-test
 	export MATPLOTLIB_BACKEND=agg
 	pytest
