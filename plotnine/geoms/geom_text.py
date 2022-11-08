@@ -54,8 +54,12 @@ class geom_text(geom):
         For more see the documentation at
         https://github.com/Phlya/adjustText/wiki .
     format_string : str (default: None)
-        If not :py:`None`, then the text if formatted with this
-        string using :meth:`str.format`
+        If not :py:`None`, then the text is formatted with this
+        string using :meth:`str.format` e.g::
+
+            # 2.348 -> "2.35%"
+            geom_text(format_string="{.2f}%")
+
     path_effects : list (default: None)
         If not :py:`None`, then the text will use these effects.
         See `path_effects
