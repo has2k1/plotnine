@@ -305,6 +305,23 @@ def test_adding_list_ggplot():
     assert isinstance(g.coordinates, coord_trans)
 
 
+def test_iadding_list_ggplot():
+    lst = [
+        geom_point(),
+        geom_point(aes('x+1', 'y+1')),
+        xlab('x-label'),
+        coord_trans()
+    ]
+    g = ggplot()
+    id_before = id(g)
+    g += lst
+    id_after = id(g)
+    assert id_before == id_after
+    assert len(g.layers) == 2
+    assert g.labels['x'] == 'x-label'
+    assert isinstance(g.coordinates, coord_trans)
+
+
 def test_adding_None():
     p = ggplot(df, aes('x', 'y')) + geom_point()
     p2 = p + None
