@@ -170,7 +170,6 @@ class layer:
         self.inherit_aes = inherit_aes
         self.show_legend = show_legend
         self.raster = raster
-        self._active_mapping = {}
         self.zorder = 0
 
     @staticmethod
