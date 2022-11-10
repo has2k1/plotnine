@@ -5,6 +5,14 @@ v0.10.2
 -------
 (Not yet released)
 
+API Changes
+***********
+
+- :method:`~plotnine.ggplot.add` and :method:`~plotnine.ggplot.iadd` now
+  accept the same types of objects. In this change
+  :method:`~plotnine.ggplot.iadd` has gained the ability to accept a list
+  of objects.
+
 Bug Fixes
 *********
 

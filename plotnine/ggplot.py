@@ -1,4 +1,5 @@
 import sys
+from collections.abc import Sequence
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
@@ -125,27 +126,38 @@ class ggplot:
     def __iadd__(self, other):
         """
         Add other to ggplot object
+
+        Parameters
+        ----------
+        other : object or Sequence
+            Either an object that knows how to "radd"
+            itself to a ggplot, or a list of such objects.
         """
+        if isinstance(other, Sequence):
+            for item in other:
+                item.__radd__(self, inplace=True)
+            return self
+        elif other is None:
+            return self
+
         try:
             return other.__radd__(self, inplace=True)
         except TypeError:
             return other.__radd__(self)
         except AttributeError as err:
-            if other is None:
-                return self.__add__(other)
             raise err
 
     def __add__(self, other):
         """
-        Add to ggitems from a list
+        Add to ggplot from a list
 
         Parameters
         ----------
-        other : object or list
+        other : object or Sequence
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
-        if isinstance(other, list):
+        if isinstance(other, Sequence):
             self = deepcopy(self)
             for item in other:
                 self += item
