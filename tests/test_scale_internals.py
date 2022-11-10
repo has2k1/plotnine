@@ -6,8 +6,19 @@ import numpy.testing as npt
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, expand_limits, theme
-from plotnine import geom_col, geom_bar, lims, element_text, annotate
+from plotnine import (
+    aes,
+    annotate,
+    element_text,
+    expand_limits,
+    facet_wrap,
+    geom_bar,
+    geom_col,
+    geom_point,
+    ggplot,
+    lims,
+    theme,
+)
 from plotnine.scales import scale_color, scale_color_manual
 from plotnine.scales import scale_identity
 from plotnine.scales import scale_manual
@@ -760,3 +771,27 @@ def test_discrete_scale_exceeding_maximum_number_of_values():
          )
     with pytest.warns(PlotnineWarning):
         p.draw_test()
+
+
+def test_discrete_scale_for_empty_layer():
+    # Ref: https://github.com/has2k1/plotnine/issues/647
+    df1 = pd.DataFrame({
+        'x': list("abc"),
+        'y': [1, 2, 3],
+        'g': list("AAA")
+
+    })
+
+    df2 = pd.DataFrame({
+        'x': list("abc"),
+        'y': [4, 5, 6],
+        'g': list("AAB")
+    })
+
+    p = (ggplot(aes("x", "y"))
+         + geom_point(df1)
+         + geom_point(df2)
+         + facet_wrap("g", scales="free_x")
+         )
+
+    p.draw_test()
