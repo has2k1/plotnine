@@ -8,6 +8,9 @@ v0.10.2
 Bug Fixes
 *********
 
+- Fixed bug where a discrete position scale failed when mapping
+  an empty variable. (:issue:`647`)
+
 - Fixed bug where :class:`~plotnine.facets.facet_grid` with a datetime
   column run into an exception. (:issue:`629`)
 

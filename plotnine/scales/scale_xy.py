@@ -76,6 +76,8 @@ class scale_position_discrete(scale_discrete):
         if array_kind.discrete(series):
             seq = np.arange(1, len(limits)+1)
             idx = np.asarray(match(series, limits, nomatch=len(series)))
+            if not len(idx):
+                return np.array([])
             try:
                 seq = seq[idx]
             except IndexError:
