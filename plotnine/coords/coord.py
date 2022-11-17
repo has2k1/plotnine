@@ -1,5 +1,5 @@
 from types import SimpleNamespace as NS
-from copy import deepcopy, copy
+from copy import copy
 
 import numpy as np
 
@@ -11,11 +11,10 @@ class coord:
     # If the coordinate system is linear
     is_linear = False
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add coordinates to ggplot object
         """
-        gg = gg if inplace else deepcopy(gg)
         gg.coordinates = copy(self)
         return gg
 

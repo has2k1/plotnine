@@ -101,11 +101,10 @@ class facet:
         self.free = {'x': scales in ('free_x', 'free'),
                      'y': scales in ('free_y', 'free')}
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add facet to ggplot object
         """
-        gg = gg if inplace else deepcopy(gg)
         gg.facet = copy(self)
         gg.facet.plot = gg
         return gg

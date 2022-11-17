@@ -350,7 +350,7 @@ class stat(metaclass=Registry):
         raise NotImplementedError(
             msg.format(cls.__name__))
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add layer representing stat object on the right
 
@@ -358,15 +358,12 @@ class stat(metaclass=Registry):
         ----------
         gg : ggplot
             ggplot object
-        inplace : bool
-            If True, modify ``gg``.
 
         Returns
         -------
         out : ggplot
             ggplot object with added layer
         """
-        gg = gg if inplace else deepcopy(gg)
         gg += self.to_layer()  # Add layer
         return gg
 

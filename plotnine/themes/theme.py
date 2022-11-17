@@ -253,7 +253,7 @@ class theme:
             rcParams.update(th.rcParams)
         return rcParams
 
-    def add_theme(self, other, inplace=False):
+    def add_theme(self, other):
         """
         Add themes together
 
@@ -267,9 +267,8 @@ class theme:
         if other.complete:
             return other
 
-        theme_copy = self if inplace else deepcopy(self)
-        theme_copy.themeables.update(deepcopy(other.themeables))
-        return theme_copy
+        self.themeables.update(deepcopy(other.themeables))
+        return self
 
     def __add__(self, other):
         """
@@ -278,9 +277,10 @@ class theme:
         if not isinstance(other, theme):
             msg = f"Adding theme failed. {other} is not a theme"
             raise PlotnineError(msg)
+        self = deepcopy(self)
         return self.add_theme(other)
 
-    def __radd__(self, other, inplace=False):
+    def __radd__(self, other):
         """
         Add theme to ggplot object or to another theme
 
@@ -294,30 +294,30 @@ class theme:
 
         Subclasses should not override this method.
         """
-        # ggplot() + theme
+        # ggplot() + theme, get theme
         if hasattr(other, 'theme'):
-            gg = other if inplace else deepcopy(other)
             if self.complete:
-                gg.theme = self
+                other.theme = self
             else:
                 # If no theme has been added yet,
                 # we modify the default theme
-                gg.theme = gg.theme or theme_get()
-                gg.theme = gg.theme.add_theme(self, inplace=inplace)
-            return gg
+                other.theme = other.theme or theme_get()
+                other.theme = other.theme.add_theme(self)
+            return other
         # theme1 + theme2
         else:
             if self.complete:
+                # e.g. other + theme_gray()
                 return self
             else:
-                # other combined with self.
-                return other.add_theme(self, inplace=inplace)
+                # e.g. other + theme(...)
+                return other.add_theme(self)
 
     def __iadd__(self, other):
         """
         Add theme to theme
         """
-        return self.add_theme(other, inplace=True)
+        return self.add_theme(other)
 
     def __deepcopy__(self, memo):
         """
