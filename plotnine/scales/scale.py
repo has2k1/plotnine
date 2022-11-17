@@ -123,11 +123,10 @@ class scale(metaclass=Registry):
             value = [value]
         self._aesthetics = rename_aesthetics(value)
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add this scale to ggplot object
         """
-        gg = gg if inplace else deepcopy(gg)
         gg.scales.append(copy(self))
         return gg
 

@@ -232,11 +232,10 @@ class aes(dict):
 
         return result
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add aesthetic mappings to ggplot
         """
-        gg = gg if inplace else deepcopy(gg)
         self = deepcopy(self)
         gg.mapping.update(self)
         gg.labels.update(make_labels(self))

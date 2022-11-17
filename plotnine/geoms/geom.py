@@ -349,7 +349,7 @@ class geom(metaclass=Registry):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add layer representing geom object on the right
 
@@ -357,15 +357,12 @@ class geom(metaclass=Registry):
         ----------
         gg : ggplot
             ggplot object
-        inplace : bool
-            If True, modify ``gg``.
 
         Returns
         -------
         out : ggplot
             ggplot object with added layer.
         """
-        gg = gg if inplace else deepcopy(gg)
         gg += self.to_layer()  # Add layer
         return gg
 

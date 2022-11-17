@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import matplotlib.image as mimage
 
 
@@ -33,11 +31,10 @@ class watermark:
             kwargs['zorder'] = 99.9
         self.kwargs = kwargs
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add watermark to ggplot object
         """
-        gg = gg if inplace else deepcopy(gg)
         gg.watermarks.append(self)
         return gg
 

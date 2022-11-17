@@ -57,7 +57,7 @@ class guides(dict):
         self.box_margin = None
         self.spacing = None
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add guides to the plot
 
@@ -65,9 +65,6 @@ class guides(dict):
         ----------
         gg : ggplot
             ggplot object being created
-        inplace : bool
-            If **False**, the guides are added to
-            a copy of the the ggplot object.
 
         Returns
         -------
@@ -76,7 +73,6 @@ class guides(dict):
             is **False** this is a copy of the original
             ggplot object.
         """
-        gg = gg if inplace else deepcopy(gg)
         new_guides = {}
         for k in self:
             new_guides[k] = deepcopy(self[k])

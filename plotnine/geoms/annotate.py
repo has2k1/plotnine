@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import pandas as pd
 
 from ..mapping import aes
@@ -112,8 +110,7 @@ class annotate:
             **kwargs
         )
 
-    def __radd__(self, gg, inplace=False):
-        gg = gg if inplace else deepcopy(gg)
+    def __radd__(self, gg):
         gg += self.to_layer()  # Add layer
         return gg
 

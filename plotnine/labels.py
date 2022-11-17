@@ -1,5 +1,4 @@
 from __future__ import annotations
-from copy import deepcopy
 
 from .mapping.aes import rename_aesthetics, SCALED_AESTHETICS
 from .exceptions import PlotnineError
@@ -32,11 +31,10 @@ class labs:
             )
         self.labels = rename_aesthetics(kwargs)
 
-    def __radd__(self, gg: p9.ggplot, inplace: bool = False) -> p9.ggplot:
+    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
         """
         Add labels to ggplot object
         """
-        gg = gg if inplace else deepcopy(gg)
         gg.labels.update(self.labels)
         return gg
 

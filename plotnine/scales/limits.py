@@ -1,5 +1,4 @@
 from contextlib import suppress
-from copy import deepcopy
 import sys
 
 import pandas as pd
@@ -82,8 +81,7 @@ class _lim:
                           limits=self.limits,
                           trans=self.trans)
 
-    def __radd__(self, gg, inplace=False):
-        gg = gg if inplace else deepcopy(gg)
+    def __radd__(self, gg):
         scale = self.get_scale(gg)
         gg.scales.append(scale)
         return gg
@@ -190,7 +188,7 @@ class lims:
     def __init__(self, **kwargs):
         self._kwargs = kwargs
 
-    def __radd__(self, gg, inplace=False):
+    def __radd__(self, gg):
         """
         Add limits to ggplot object
         """
@@ -201,10 +199,7 @@ class lims:
             except AttributeError:
                 raise PlotnineError("Cannot change limits for '{}'")
 
-            if inplace:
-                gg += klass(value)
-            else:
-                gg = gg + klass(value)
+            gg += klass(value)
 
         return gg
 

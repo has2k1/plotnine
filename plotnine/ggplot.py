@@ -135,17 +135,12 @@ class ggplot:
         """
         if isinstance(other, Sequence):
             for item in other:
-                item.__radd__(self, inplace=True)
+                item.__radd__(self)
             return self
         elif other is None:
             return self
-
-        try:
-            return other.__radd__(self, inplace=True)
-        except TypeError:
+        else:
             return other.__radd__(self)
-        except AttributeError as err:
-            raise err
 
     def __add__(self, other):
         """
@@ -157,15 +152,8 @@ class ggplot:
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
-        if isinstance(other, Sequence):
-            self = deepcopy(self)
-            for item in other:
-                self += item
-            return self
-        elif other is None:
-            return deepcopy(self)
-        else:
-            return other.__radd__(self)
+        self = deepcopy(self)
+        return self.__iadd__(other)
 
     def __rrshift__(self, other):
         """

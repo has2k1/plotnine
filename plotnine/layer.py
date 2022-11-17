@@ -24,13 +24,12 @@ class Layers(list):
     def __add__(self, other):
         return Layers(super().__add__(other))
 
-    def __radd__(self, other, inplace=False):
+    def __radd__(self, other):
         """
         Add layers to ggplot object
         """
         from .ggplot import ggplot
         if isinstance(other, ggplot):
-            other = other if inplace else deepcopy(other)
             for obj in self:
                 other += obj
         else:
