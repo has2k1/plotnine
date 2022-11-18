@@ -81,10 +81,13 @@ class ggplot:
         self.theme = theme_get()
         self.coordinates = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
-        self.layout = None
+        self.layout = Layout()
         self.figure = None
         self.watermarks = []
         self.axs = None
+
+        # build artefacts
+        self._build_objs = NS()
 
     def __str__(self):
         """
@@ -113,7 +116,7 @@ class ggplot:
         new = result.__dict__
 
         # don't make a deepcopy of data, or environment
-        shallow = {'data', 'environment', 'figure'}
+        shallow = {'data', 'environment', 'figure', '_build_objs'}
         for key, item in old.items():
             if key in shallow:
                 new[key] = old[key]
@@ -172,14 +175,12 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, return_ggplot=False, show=False):
+    def draw(self, show=False):
         """
         Render the complete plot
 
         Parameters
         ----------
-        return_ggplot : bool
-            If ``True``, return ggplot object.
         show : bool (default: False)
             Whether to show the plot.
 
@@ -187,20 +188,12 @@ class ggplot:
         -------
         fig : ~matplotlib.figure.Figure
             Matplotlib figure
-        plot : ggplot (optional)
-            The ggplot object used for drawn, if ``return_ggplot`` is
-            ``True``.
-
-        Notes
-        -----
-        This method does not modify the original ggplot object. You can
-        get the modified ggplot object with :py:`return_ggplot=True`.
         """
         # Do not draw if drawn already.
         # This prevents a needless error when reusing
         # figure & axes in the jupyter notebook.
         if self.figure:
-            return (self.figure, self) if return_ggplot else self.figure
+            return self.figure
 
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
@@ -227,11 +220,7 @@ class ggplot:
             # Artist object theming
             self.theme.apply(figure, axs)
 
-            if return_ggplot:
-                output = self.figure, self
-            else:
-                output = self.figure
-        return output
+        return self.figure
 
     def _draw_using_figure(self, figure, axs):
         """
@@ -275,10 +264,9 @@ class ggplot:
         if not self.layers:
             self += geom_blank()
 
-        self.layout = Layout()
-        layers = self.layers
-        scales = self.scales
-        layout = self.layout
+        layers = self._build_objs.layers = self.layers
+        scales = self._build_objs.scales = self.scales
+        layout = self._build_objs.layout = self.layout
 
         # Update the label information for the plot
         layers.update_labels(self)

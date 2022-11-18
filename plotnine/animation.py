@@ -96,22 +96,22 @@ class PlotnineAnimation(ArtistAnimation):
             for artist_type in artist_offsets:
                 artist_offsets[artist_type] = [0] * n
 
-        def get_frame_artists(plot):
+        def get_frame_artists(axs):
             """
             Artists shown in a given frame
 
             Parameters
             ----------
-            plot : ggplot
-                Drawn ggplot object from which to extract
-                artists.
+            axs : list[mpl.axes.Axes]
+                Matplotlib axes that have had artists added
+                to them.
             """
             # The axes accumulate artists for all frames
             # For each frame we pickup the newly added artists
             # We use offsets to mark the end of the previous frame
             # e.g ax.collections[start:]
             frame_artists = []
-            for i, ax in enumerate(plot.axs):
+            for i, ax in enumerate(axs):
                 for name in artist_offsets:
                     start = artist_offsets[name][i]
                     new_artists = getattr(ax, name)[start:]
@@ -119,7 +119,7 @@ class PlotnineAnimation(ArtistAnimation):
                     artist_offsets[name][i] += len(new_artists)
             return frame_artists
 
-        def set_scale_limits(plot):
+        def set_scale_limits(scales):
             """
             Set limits of all the scales in the animation
 
@@ -127,14 +127,15 @@ class PlotnineAnimation(ArtistAnimation):
 
             Parameters
             ----------
-            plot : ggplot
-                First ggplot object that has been drawn
+            scales : list[scales]
+                List of scales the have been used in building a
+                ggplot object.
             """
-            for sc in plot.scales:
+            for sc in scales:
                 ae = sc.aesthetics[0]
                 scale_limits[ae] = sc.limits
 
-        def check_scale_limits(plot, frame_no):
+        def check_scale_limits(scales, frame_no):
             """
             Check limits of the scales of a plot in the animation
 
@@ -145,19 +146,20 @@ class PlotnineAnimation(ArtistAnimation):
 
             Parameters
             ----------
-            plot : ggplot
-                ggplot object that has been drawn
+            scales : list[scales]
+                List of scales the have been used in building a
+                ggplot object.
 
             frame_no : int
                 Frame number
             """
-            if len(scale_limits) != len(plot.scales):
+            if len(scale_limits) != len(scales):
                 raise PlotnineError(
                     "All plots must have the same number of scales "
                     "as the first plot of the animation."
                 )
 
-            for sc in plot.scales:
+            for sc in scales:
                 ae = sc.aesthetics[0]
                 if ae not in scale_limits:
                     raise PlotnineError(
@@ -173,6 +175,7 @@ class PlotnineAnimation(ArtistAnimation):
         figure = None
         axs = None
         artists = []
+        scales = None  # Will hold the scales of the first frame
 
         # The first ggplot creates the figure, axes and the initial
         # frame of the animation. The rest of the ggplots draw
@@ -180,19 +183,16 @@ class PlotnineAnimation(ArtistAnimation):
         # they create the subsequent frames.
         for frame_no, p in enumerate(plots):
             if figure is None:
-                figure, plot = p.draw(return_ggplot=True)
-                axs = plot.axs
+                figure = p.draw()
+                axs = figure.get_axes()
                 initialise_artist_offsets(len(axs))
-                set_scale_limits(plot)
+                scales = p._build_objs.scales
+                set_scale_limits(scales)
             else:
                 p = copy(p)
                 plot = p._draw_using_figure(figure, axs)
-                try:
-                    check_scale_limits(plot, frame_no)
-                except PlotnineError as err:
-                    plt.close(figure)
-                    raise err
-            artists.append(get_frame_artists(plot))
+                check_scale_limits(plot.scales, frame_no)
+            artists.append(get_frame_artists(axs))
 
         if figure is None:
             figure = plt.figure()
