@@ -239,11 +239,11 @@ class layer:
             plot_data = plot_data()
 
         # Each layer that does not have data gets a copy of
-        # of the ggplot.data. If the has data it is replaced
+        # of the ggplot.data. If it has data it is replaced
         # by copy so that we do not alter the users data
         if self.data is None:
             try:
-                self.data = plot_data.copy()
+                self.data = copy(plot_data)
             except AttributeError:
                 _geom_name = self.geom.__class__.__name__
                 _data_name = plot_data.__class__.__name__
@@ -255,10 +255,14 @@ class layer:
             self.data = self.data(plot_data)
             if not isinstance(self.data, pd.DataFrame):
                 raise PlotnineError(
-                    "Data function must return a dataframe"
+                    "Data function must return a Pandas dataframe"
                 )
         else:
-            self.data = self.data.copy()
+            self.data = copy(self.data)
+
+        # Recognise polars dataframes
+        if hasattr(self.data, "to_pandas"):
+            self.data = self.data.to_pandas()
 
     def _make_layer_mapping(self, plot_mapping):
         """
