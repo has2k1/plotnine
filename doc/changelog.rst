@@ -13,6 +13,9 @@ API Changes
   :method:`~plotnine.ggplot.iadd` has gained the ability to accept a list
   of objects.
 
+- :method:`~plotnine.ggplot.draw` no longer accepts the argument
+  ``return_ggplot`` and the return value is always a matplolib figure.
+
 Bug Fixes
 *********
 
