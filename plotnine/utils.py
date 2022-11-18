@@ -400,30 +400,27 @@ def uniquecols(df):
 
 def defaults(d1, d2):
     """
-    Update a copy of d1 with the contents of d2 that are
-    not in d1. d1 and d2 are dictionary like objects.
+    Update a copy of d1 with the contents of d2 that are not in d1.
 
     Parameters
     ----------
-    d1 : dict | dataframe
+    d1 : dict[str, Any]
         dict with the preferred values
-    d2 : dict | dataframe
+    d2 : dict[str, Any]
         dict with the default values
 
     Returns
     -------
-    out : dict | dataframe
-        Result of adding default values type of d1
+    out : dict
+        Result of adding default values of d1
     """
     d1 = d1.copy()
-    tolist = isinstance(d2, pd.DataFrame)
-    keys = (k for k in d2 if k not in d1)
-    for k in keys:
-        if tolist:
-            d1[k] = d2[k].tolist()
-        else:
-            d1[k] = d2[k]
-
+    d1.update(
+        (k, d2[k])
+        # Preserve order
+        for k in d2
+        if k not in d1
+     )
     return d1
 
 
