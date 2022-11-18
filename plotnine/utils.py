@@ -938,17 +938,6 @@ def data_mapping_as_kwargs(args, kwargs):
     """
     data, mapping = order_as_data_mapping(*args)
 
-    # check args #
-    if mapping is not None and not isinstance(mapping, aes):
-        raise PlotnineError(
-            f"Unknown mapping of type {type(mapping)}"
-        )
-
-    if data is not None and not is_data_like(data):
-        raise PlotnineError(
-            f"Unknown data of type {type(mapping)}"
-        )
-
     # check kwargs #
     if mapping is not None:
         if 'mapping' in kwargs:
@@ -983,7 +972,7 @@ def ungroup(data):
     return data
 
 
-def order_as_data_mapping(*args):
+def order_as_data_mapping(arg1, arg2):
     """
     Reorder args to ensure (data, mapping) order
 
@@ -992,8 +981,10 @@ def order_as_data_mapping(*args):
 
     Parameter
     ---------
-    *args : tuple
-        In-line arguments as passed to ggplot, a geom or a stat.
+    arg1 : pd.DataFrame | aes
+        Dataframe or aes Mapping
+    arg2 : pd.DataFrame | aes
+        Dataframe or aes Mapping
 
     Returns
     -------
@@ -1001,44 +992,26 @@ def order_as_data_mapping(*args):
     data : pd.DataFrame | callable
     *rest : tuple
     """
-    n = len(args)
-    if n == 0:
-        return None, None
-    elif n == 1:
-        single_arg = ungroup(args[0])
-        if isinstance(single_arg, pd.DataFrame):
-            return None, single_arg
-        elif isinstance(single_arg, aes):
-            return single_arg, None
-        else:
+    # Valid types for the values are:
+    #   - None, None
+    #   - Dataframe, None
+    #   - None, DataFrame
+    #   - aes, None
+    #   - None, aes
+    #   - DataFrame, aes
+    args = arg1, arg2
+    for a, b in (args, args[::-1]):
+        if is_data_like(a) or a is None:
+            if isinstance(b, aes) or b is None:
+                return to_pandas(a), b
+
+    for arg in args:
+        good = arg is None or is_data_like(arg) or isinstance(arg, aes)
+        if not good:
             raise TypeError(
-                f"Unknown argument type {single_arg!r}, expected "
-                "mapping or dataframe."
+                f"Bad type of argument {arg!r}, expected a dataframe "
+                "or a mapping."
             )
-    elif n > 2:
-        raise PlotnineError(
-            "Expected at most 2 positional arguments, "
-            f"but I got {n}."
-        )
-
-    data, mapping = (ungroup(arg) for arg in args)
-    if isinstance(data, aes) or is_data_like(mapping):
-        data, mapping = mapping, data
-
-    if not isinstance(mapping, aes) and mapping is not None:
-        raise TypeError(
-            f"Unknown argument type {type(mapping)!r}, "
-            "expected mapping/aes."
-        )
-
-    if not is_data_like(data) and data is not None:
-        raise TypeError(
-            "Unknown argument type {!r}, expected dataframe."
-            .format(type(data))
-        )
-
-    data = to_pandas(data)
-    return data, mapping
 
 
 def is_data_like(obj):
