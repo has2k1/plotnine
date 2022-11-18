@@ -15,8 +15,3 @@ coverage:
          default:
             target: auto
             threshold: 0.5%
-
-      # Lines adjusted in the PR
-      patch:
-         default:
-            target: 75%
