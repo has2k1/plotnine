@@ -31,7 +31,6 @@ from .utils import (
     is_data_like,
     order_as_data_mapping,
     to_inches,
-    to_pandas,
     ungroup
 )
 
@@ -165,7 +164,7 @@ class ggplot:
         other = ungroup(other)
         if is_data_like(other):
             if self.data is None:
-                self.data = to_pandas(other)
+                self.data = other
             else:
                 raise PlotnineError(
                     "`>>` failed, ggplot object has data."
