@@ -728,10 +728,8 @@ class ggplot:
         if dpi is not None:
             self.theme = self.theme + theme(dpi=dpi)
 
-        fig, p = self.draw(return_ggplot=True)
-        with plot_context(p):
-            fig.savefig(filename, **fig_kwargs)
-            plt.close(fig)
+        fig = self.draw(show=False)
+        fig.savefig(filename, **fig_kwargs)
 
 
 def ggsave(plot, *arg, **kwargs):
@@ -830,10 +828,6 @@ def save_as_pdf_pages(plots, filename=None, path=None, verbose=True, **kwargs):
             # Save as a page in the PDF file
             pdf.savefig(fig, **fig_kwargs)
 
-            # To conserve memory when plotting a large number of pages,
-            # close the figure whether or not there was an exception
-            plt.close(fig)
-
 
 class plot_context:
     """
@@ -874,6 +868,8 @@ class plot_context:
         if exc_type is None:
             if self.show:
                 plt.show()
+            else:
+                plt.close(self.plot.figure)
         else:
             # There is an exception, close any figure
             if self.plot.figure is not None:
