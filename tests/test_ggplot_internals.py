@@ -79,14 +79,8 @@ def test_ggplot_parameters():
 
 
 def test_ggplot_parameters_grouped():
-    p = ggplot(df.groupby('x'), aes('x'))
-
-    assert p.data is df
-    assert p.mapping == aes('x')
-
-    p = ggplot(data=df, mapping=aes('x'))
-    assert p.data is df
-    assert p.mapping == aes('x')
+    p = df.groupby('x') >> ggplot(aes('x'))
+    assert isinstance(p.data, pd.DataFrame)
 
 
 def test_data_transforms():
