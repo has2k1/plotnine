@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import typing
 
 if typing.TYPE_CHECKING:
     from typing import Callable, Protocol
-    from typing_extensions import TypeAlias
+
     import pandas as pd
+    from typing_extensions import TypeAlias
+
     import plotnine as p9
 
     class PlotAddable(Protocol):

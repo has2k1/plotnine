@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import sys
+import typing
 from collections.abc import Sequence
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
 from types import SimpleNamespace as NS
+from typing import Any, Iterable, Union
 from warnings import warn
 
 import pandas as pd
@@ -29,7 +32,7 @@ from .guides.guides import guides
 
 # mypy believes there is a duplicate definition
 # of geom_blank even though it only appears once
-from .geoms import geom_blank   # type: ignore[no-redef]  # mypy bug
+from .geoms import geom_blank  # type: ignore[no-redef]  # mypy bug
 
 from .utils import (
     defaults,
@@ -40,11 +43,9 @@ from .utils import (
     ungroup
 )
 
-import typing
-from typing import Any, Iterable, Union
-
 if typing.TYPE_CHECKING:
     import plotnine as p9
+
     from .typing import DataLike, PlotAddable
 
 # Show plots if in interactive mode

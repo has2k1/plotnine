@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+import typing
+
 import matplotlib.image as mimage
 
-import typing
 if typing.TYPE_CHECKING:
-    from typing import Any
-    import plotnine as p9
     import pathlib
+    from typing import Any
+
     import matplotlib.figure
+
+    import plotnine as p9
 
 
 class watermark:

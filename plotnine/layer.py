@@ -1,5 +1,8 @@
 from __future__ import annotations
+
+import typing
 from copy import copy, deepcopy
+from typing import List
 
 import pandas as pd
 
@@ -9,14 +12,13 @@ from .utils import check_required_aesthetics, defaults
 from .mapping.aes import aes, NO_GROUP, SCALED_AESTHETICS
 from .mapping.evaluation import stage, evaluate
 
-import typing
-from typing import List
 if typing.TYPE_CHECKING:
     import plotnine as p9
+
     from .geoms.geom import geom
     from .positions.position import position
     from .stats.stat import stat
-    from .typing import DataLike, LayerDataLike, DataFrameConvertible
+    from .typing import DataFrameConvertible, DataLike, LayerDataLike
 
 
 class Layers(List["layer"]):

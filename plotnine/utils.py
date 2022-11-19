@@ -2,9 +2,11 @@
 Little functions used all over the codebase
 """
 from __future__ import annotations
+
 import collections
 import itertools
 import inspect
+import typing
 import warnings
 from contextlib import suppress
 from typing import Any, Callable
@@ -14,24 +16,22 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-
-# missing in type stubs
-from pandas.core.groupby import DataFrameGroupBy  # type: ignore
-
 import matplotlib.colors as mcolors
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
+# missing in type stubs
+from pandas.core.groupby import DataFrameGroupBy  # type: ignore
 
 from .mapping import aes
 from .exceptions import PlotnineError, PlotnineWarning
 
-import typing
 if typing.TYPE_CHECKING:
-    from .typing import DataLike
     from typing_extensions import TypeGuard
+
+    from .typing import DataLike
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
