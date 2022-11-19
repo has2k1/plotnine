@@ -749,16 +749,7 @@ class ggplot:
         fig.savefig(filename, **fig_kwargs)
 
 
-# could be replaced with just
-# ggsave = ggplot.save
-# with better typing but without the deprecation message in the help.
-def ggsave(plot: ggplot, *arg: Any, **kwargs: Any) -> None:
-    """
-    Save a ggplot object as an image file
-
-    Use :meth:`ggplot.save` instead
-    """
-    return plot.save(*arg, **kwargs)
+ggsave = ggplot.save
 
 
 def save_as_pdf_pages(
