@@ -107,7 +107,9 @@ jobs:
 
       - name: Install Packages
         shell: bash -l {0}
-        run: pip install mypy
+        run: |
+          pip install "."
+          pip install -r requirements/typing.txt
 
       - name: Environment Information
         shell: bash -l {0}
