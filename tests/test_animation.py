@@ -1,7 +1,7 @@
-import pytest
 import matplotlib.pyplot as plt
+import pytest
 
-from plotnine import qplot, lims, labs, theme, theme_minimal
+from plotnine import labs, lims, qplot, theme, theme_minimal
 from plotnine.animation import PlotnineAnimation
 from plotnine.exceptions import PlotnineError
 

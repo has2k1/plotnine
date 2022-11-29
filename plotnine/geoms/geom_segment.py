@@ -1,10 +1,9 @@
+import matplotlib.collections as mcoll
 import numpy as np
 import pandas as pd
-import matplotlib.collections as mcoll
 
-from ..utils import to_rgba, make_line_segments, interleave
-from ..utils import SIZE_FACTOR
 from ..doctools import document
+from ..utils import SIZE_FACTOR, interleave, make_line_segments, to_rgba
 from .geom import geom
 
 

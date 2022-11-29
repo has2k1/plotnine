@@ -11,9 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
-
+import sys
 from pathlib import Path
 
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
@@ -27,8 +26,8 @@ sys.path.insert(0, str(CUR_PATH))
 sys.path.insert(0, str(PROJECT_PATH))
 
 if on_rtd:
-    from unittest import mock
     from pprint import pprint
+    from unittest import mock
     MOCK_MODULES = []
     for mod_name in MOCK_MODULES:
         sys.modules[mod_name] = mock.Mock()

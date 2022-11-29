@@ -1,8 +1,8 @@
-import pytest
 import numpy as np
 import pandas as pd
+import pytest
 
-from plotnine import ggplot, aes, geom_density, theme, lims
+from plotnine import aes, geom_density, ggplot, lims, theme
 from plotnine.exceptions import PlotnineWarning
 
 n = 6  # Some even number greater than 2

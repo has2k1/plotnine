@@ -2,8 +2,8 @@ import types
 from contextlib import suppress
 
 with suppress(ImportError):
-    import matplotlib.text as mtext
     import matplotlib.patches as mpatch
+    import matplotlib.text as mtext
 
 
 class strips(list):

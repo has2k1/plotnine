@@ -1,11 +1,11 @@
-import pytest
 import numpy as np
+import pytest
 
-from plotnine import ggplot, aes, geom_bar
+from plotnine import aes, geom_bar, ggplot
 from plotnine.data import mtcars
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.geoms.geom import geom
 from plotnine.stats.stat import stat
-from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 
 def test_stat_basics():

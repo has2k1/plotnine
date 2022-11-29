@@ -19,27 +19,40 @@ from plotnine import (
     lims,
     theme,
 )
-from plotnine.scales import scale_color, scale_color_manual
-from plotnine.scales import scale_identity
-from plotnine.scales import scale_manual
-from plotnine.scales import scale_xy
-from plotnine.scales.scale_xy import (scale_x_continuous,
-                                      scale_y_continuous,
-                                      scale_x_discrete,
-                                      scale_y_discrete)
-from plotnine.scales.scale_alpha import (scale_alpha_discrete,
-                                         scale_alpha_continuous)
-from plotnine.scales.scale_linetype import (scale_linetype_discrete,
-                                            scale_linetype_continuous)
-from plotnine.scales.scale_shape import (scale_shape_discrete,
-                                         scale_shape_continuous)
-from plotnine.scales.scale_size import (scale_size_discrete,
-                                        scale_size_continuous,
-                                        scale_size_area,
-                                        scale_size_radius)
-from plotnine.scales.scale_manual import _scale_manual
-from plotnine.scales.scales import make_scale
 from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.scales import (
+    scale_color,
+    scale_color_manual,
+    scale_identity,
+    scale_manual,
+    scale_xy,
+)
+from plotnine.scales.scale_alpha import (
+    scale_alpha_continuous,
+    scale_alpha_discrete,
+)
+from plotnine.scales.scale_linetype import (
+    scale_linetype_continuous,
+    scale_linetype_discrete,
+)
+from plotnine.scales.scale_manual import _scale_manual
+from plotnine.scales.scale_shape import (
+    scale_shape_continuous,
+    scale_shape_discrete,
+)
+from plotnine.scales.scale_size import (
+    scale_size_area,
+    scale_size_continuous,
+    scale_size_discrete,
+    scale_size_radius,
+)
+from plotnine.scales.scale_xy import (
+    scale_x_continuous,
+    scale_x_discrete,
+    scale_y_continuous,
+    scale_y_discrete,
+)
+from plotnine.scales.scales import make_scale
 
 _theme = theme(subplots_adjust={'right': 0.85})
 

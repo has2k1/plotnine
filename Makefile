@@ -36,8 +36,13 @@ clean-test:
 	rm -fr htmlcov/
 	rm -fr tests/result_images/*
 
-lint:
+flake8:
 	flake8 plotnine
+
+isort:
+	isort --check-only --quiet .
+
+lint: isort flake8
 
 typecheck:
 	mypy plotnine

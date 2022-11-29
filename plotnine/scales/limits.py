@@ -1,17 +1,16 @@
-from contextlib import suppress
 import sys
+from contextlib import suppress
 
 import pandas as pd
 
-from ..mapping.aes import aes, ALL_AESTHETICS
-from ..geoms import geom_blank
-from ..scales.scales import make_scale
 from ..exceptions import PlotnineError
+from ..geoms import geom_blank
+from ..mapping.aes import ALL_AESTHETICS, aes
+from ..scales.scales import make_scale
 from ..utils import array_kind
 
 
 # By adding limits, we create a scale of the appropriate type
-
 class _lim:
     aesthetic = None
 

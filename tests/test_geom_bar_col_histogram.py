@@ -1,12 +1,20 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_bar, geom_col, geom_histogram
-from plotnine import after_stat, theme, scale_x_sqrt, geom_text
+from plotnine import (
+    aes,
+    after_stat,
+    geom_bar,
+    geom_col,
+    geom_histogram,
+    geom_text,
+    ggplot,
+    scale_x_sqrt,
+    theme,
+)
 from plotnine.stats.binning import freedman_diaconis_bins
 
 from .conftest import layer_data
-
 
 n = 10  # Some even number greater than 2
 

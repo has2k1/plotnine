@@ -1,20 +1,25 @@
 from warnings import warn
 
+import matplotlib.lines as mlines
 import numpy as np
 import pandas as pd
-import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..positions import position_dodge2
 from ..positions.position import position
-from ..utils import make_iterable_ntimes, to_rgba, copy_missing_columns
-from ..utils import resolution, SIZE_FACTOR
+from ..utils import (
+    SIZE_FACTOR,
+    copy_missing_columns,
+    make_iterable_ntimes,
+    resolution,
+    to_rgba,
+)
+from .geom import geom
+from .geom_crossbar import geom_crossbar
 from .geom_point import geom_point
 from .geom_segment import geom_segment
-from .geom_crossbar import geom_crossbar
-from .geom import geom
 
 
 @document

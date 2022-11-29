@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from ..mapping.aes import has_groups
-from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
+from ..mapping.aes import has_groups
+from ..mapping.evaluation import after_stat
 from ..utils import array_kind, jitter, resolution
 from .binning import breaks_from_bins, breaks_from_binwidth
 from .stat import stat

@@ -1,9 +1,9 @@
-import numpy as np
 import matplotlib.collections as mcoll
+import numpy as np
 
-from ..utils import to_rgba, make_line_segments, SIZE_FACTOR
-from ..doctools import document
 from ..coords import coord_flip
+from ..doctools import document
+from ..utils import SIZE_FACTOR, make_line_segments, to_rgba
 from .geom import geom
 
 

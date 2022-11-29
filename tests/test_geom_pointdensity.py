@@ -1,8 +1,15 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import (ggplot, aes, geom_pointdensity, after_stat,
-                      geom_point, scale_size_radius, theme)
+from plotnine import (
+    aes,
+    after_stat,
+    geom_point,
+    geom_pointdensity,
+    ggplot,
+    scale_size_radius,
+    theme,
+)
 
 n = 16  # Some even number > 2
 

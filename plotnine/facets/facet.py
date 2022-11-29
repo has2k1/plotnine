@@ -1,22 +1,22 @@
 import itertools
 import types
-from copy import deepcopy, copy
 from contextlib import suppress
+from copy import copy, deepcopy
 from warnings import warn
 
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 
-from .strips import strips
-from ..utils import cross_join, match
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..scales.scales import Scales
+from ..utils import cross_join, match
+from .strips import strips
 
 # For default matplotlib backend
 with suppress(ImportError):
-    from matplotlib.ticker import locale, FixedFormatter
     from matplotlib.gridspec import GridSpec
+    from matplotlib.ticker import FixedFormatter, locale
 
 
 class facet:

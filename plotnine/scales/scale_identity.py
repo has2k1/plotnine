@@ -1,6 +1,6 @@
 from ..doctools import document
-from ..utils import identity, alias
-from .scale import scale_discrete, scale_continuous
+from ..utils import alias, identity
+from .scale import scale_continuous, scale_discrete
 
 
 class MapTrainMixin:

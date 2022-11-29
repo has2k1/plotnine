@@ -5,8 +5,8 @@ import pandas as pd
 
 from ..doctools import document
 from ..exceptions import PlotnineError
-from .stat_density import stat_density, compute_density
 from .stat import stat
+from .stat_density import compute_density, stat_density
 
 
 @document

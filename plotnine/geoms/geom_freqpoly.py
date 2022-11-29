@@ -1,7 +1,6 @@
 from ..doctools import document
 from .geom_path import geom_path
 
-
 _params = geom_path.DEFAULT_PARAMS.copy()
 _params['stat'] = 'bin'
 

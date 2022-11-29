@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from statsmodels.distributions.empirical_distribution import ECDF
 
-from ..mapping.evaluation import after_stat
 from ..doctools import document
+from ..mapping.evaluation import after_stat
 from .stat import stat
 
 

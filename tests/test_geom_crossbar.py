@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_crossbar, theme
+from plotnine import aes, geom_crossbar, ggplot, theme
 
 n = 4
 df = pd.DataFrame({

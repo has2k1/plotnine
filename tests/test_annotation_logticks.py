@@ -1,14 +1,22 @@
-import pytest
 import numpy as np
 import pandas as pd
-from mizani.transforms import log_trans, log_format
+import pytest
+from mizani.transforms import log_format, log_trans
 
-from plotnine import (ggplot, aes, geom_point, scale_x_log10,
-                      scale_y_log10, annotation_logticks,
-                      scale_x_continuous, facet_wrap,
-                      coord_flip, element_line, theme)
+from plotnine import (
+    aes,
+    annotation_logticks,
+    coord_flip,
+    element_line,
+    facet_wrap,
+    geom_point,
+    ggplot,
+    scale_x_continuous,
+    scale_x_log10,
+    scale_y_log10,
+    theme,
+)
 from plotnine.exceptions import PlotnineWarning
-
 
 df = pd.DataFrame({'x': 10**np.arange(4)})
 

@@ -1,12 +1,12 @@
 from warnings import warn
 
-import pandas as pd
 import matplotlib.lines as mlines
+import pandas as pd
 
-from ..utils import make_iterable, SIZE_FACTOR, order_as_data_mapping
-from ..exceptions import PlotnineWarning
 from ..doctools import document
+from ..exceptions import PlotnineWarning
 from ..mapping import aes
+from ..utils import SIZE_FACTOR, make_iterable, order_as_data_mapping
 from .geom import geom
 from .geom_segment import geom_segment
 

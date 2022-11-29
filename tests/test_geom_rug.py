@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_rug, theme, coord_flip
+from plotnine import aes, coord_flip, geom_rug, ggplot, theme
 
 n = 4
 seq = np.arange(1, n+1)

@@ -3,10 +3,15 @@ import pandas as pd
 import pytest
 import statsmodels.api as sm
 
-from plotnine import ggplot, aes, geom_point, geom_smooth, stat_smooth
-from plotnine import coord_trans
+from plotnine import (
+    aes,
+    coord_trans,
+    geom_point,
+    geom_smooth,
+    ggplot,
+    stat_smooth,
+)
 from plotnine.exceptions import PlotnineWarning
-
 
 random_state = np.random.RandomState(1234567890)
 n = 100

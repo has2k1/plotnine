@@ -1,18 +1,23 @@
 from warnings import warn
 
 from mizani.bounds import rescale_mid
-from mizani.palettes import (hue_pal, brewer_pal, grey_pal,
-                             gradient_n_pal, cmap_pal, cmap_d_pal,
-                             desaturate_pal)
+from mizani.palettes import (
+    brewer_pal,
+    cmap_d_pal,
+    cmap_pal,
+    desaturate_pal,
+    gradient_n_pal,
+    grey_pal,
+    hue_pal,
+)
 
-from ..utils import alias
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from .scale import scale_discrete, scale_continuous, scale_datetime
+from ..utils import alias
+from .scale import scale_continuous, scale_datetime, scale_discrete
 
 
 # Discrete color scales #
-
 # Note: plotnine operates in the hcl space
 @document
 class scale_color_hue(scale_discrete):

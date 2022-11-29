@@ -6,7 +6,7 @@ from mizani.palettes import rescale_pal
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
-from .scale import scale_discrete, scale_continuous
+from .scale import scale_continuous, scale_discrete
 
 
 @document

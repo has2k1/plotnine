@@ -1,7 +1,7 @@
-import pytest
 import pandas as pd
+import pytest
 
-from plotnine import ggplot, aes, geom_abline, geom_point, theme
+from plotnine import aes, geom_abline, geom_point, ggplot, theme
 from plotnine.exceptions import PlotnineWarning
 
 df = pd.DataFrame({

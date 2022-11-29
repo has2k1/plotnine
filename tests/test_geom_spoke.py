@@ -1,7 +1,7 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from plotnine import ggplot, aes, geom_spoke, theme
+from plotnine import aes, geom_spoke, ggplot, theme
 
 n = 4
 df = pd.DataFrame({

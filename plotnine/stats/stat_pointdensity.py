@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from ..mapping.evaluation import after_stat
 from ..doctools import document
+from ..mapping.evaluation import after_stat
+from .density import get_var_type, kde
 from .stat import stat
-from .density import kde, get_var_type
 
 
 @document

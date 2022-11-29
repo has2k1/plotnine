@@ -5,7 +5,7 @@ from mizani.palettes import manual_pal
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import alias
-from .scale import scale_discrete, scale_continuous
+from .scale import scale_continuous, scale_discrete
 
 # All these shapes are filled
 shapes = (

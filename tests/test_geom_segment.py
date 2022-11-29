@@ -1,7 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_segment, arrow, theme
-
+from plotnine import aes, arrow, geom_segment, ggplot, theme
 
 n = 4
 

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_qq, geom_qq_line
+from plotnine import aes, geom_qq, geom_qq_line, ggplot
 
 random_state = np.random.RandomState(1234567890)
 df_normal = pd.DataFrame({'x': random_state.normal(size=100)})

@@ -2,8 +2,7 @@ from copy import copy, deepcopy
 
 from matplotlib import patheffects
 
-from .elements import (element_line, element_rect, element_blank,
-                       element_text)
+from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme
 from .theme_gray import theme_gray
 

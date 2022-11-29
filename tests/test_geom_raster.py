@@ -1,10 +1,9 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_raster, theme
+from plotnine import aes, geom_raster, ggplot, theme
 from plotnine.exceptions import PlotnineWarning
-
 
 # To leave enough room for the legend
 _theme = theme(subplots_adjust={'right': 0.85})

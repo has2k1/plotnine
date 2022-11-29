@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_violin, geom_sina, coord_flip
+from plotnine import aes, coord_flip, geom_sina, geom_violin, ggplot
 
 n = 50
 random_state = np.random.RandomState(123)

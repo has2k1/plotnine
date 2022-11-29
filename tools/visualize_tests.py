@@ -7,9 +7,8 @@
 #
 
 import argparse
-from pathlib import Path
 from collections import defaultdict
-
+from pathlib import Path
 
 html_template = """<html><head><style media="screen" type="text/css">
 img{{

@@ -1,8 +1,14 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_boxplot, coord_flip, theme
-from plotnine import position_nudge
+from plotnine import (
+    aes,
+    coord_flip,
+    geom_boxplot,
+    ggplot,
+    position_nudge,
+    theme,
+)
 
 n = 4
 m = 10

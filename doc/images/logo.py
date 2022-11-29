@@ -1,16 +1,17 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 from plotnine import (
-    ggplot,
     aes,
     annotate,
-    geom_point,
-    geom_line,
     geom_bar,
+    geom_line,
+    geom_point,
+    ggplot,
     scale_color_gradientn,
     scale_fill_gradientn,
+    theme,
     theme_void,
-    theme
 )
 
 n = 99

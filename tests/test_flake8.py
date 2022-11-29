@@ -2,7 +2,6 @@ import os
 import subprocess
 from pathlib import Path
 
-
 if not os.environ.get('CI') and os.environ.get('TRAVIS'):
     def test_flake8():
         plotnine_dir = str(Path(__file__).parent.parent.absolute())

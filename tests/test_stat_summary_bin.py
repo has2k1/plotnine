@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, stat_summary_bin
-
+from plotnine import aes, ggplot, stat_summary_bin
 
 df = pd.DataFrame({
     'xd': list('aaaaabbbbcccccc'),

@@ -11,10 +11,9 @@ that covers text also has to cover axis.title.
 from contextlib import suppress
 from copy import deepcopy
 
-from ..utils import RegistryHierarchyMeta, to_rgba
 from ..exceptions import PlotnineError
-from .elements import (element_line, element_rect,
-                       element_text, element_blank)
+from ..utils import RegistryHierarchyMeta, to_rgba
+from .elements import element_blank, element_line, element_rect, element_text
 
 
 class themeable(metaclass=RegistryHierarchyMeta):

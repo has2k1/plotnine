@@ -2,8 +2,8 @@ import numpy as np
 from matplotlib.collections import PolyCollection
 from matplotlib.patches import Rectangle
 
-from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
+from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 

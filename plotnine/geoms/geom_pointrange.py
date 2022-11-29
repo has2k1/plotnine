@@ -1,8 +1,8 @@
 from ..doctools import document
 from .geom import geom
+from .geom_linerange import geom_linerange
 from .geom_path import geom_path
 from .geom_point import geom_point
-from .geom_linerange import geom_linerange
 
 
 @document

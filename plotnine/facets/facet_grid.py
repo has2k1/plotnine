@@ -1,10 +1,14 @@
 import pandas as pd
 
-from ..utils import ninteraction, add_margins, cross_join
-from ..utils import match, join_keys
 from ..exceptions import PlotnineError
-from .facet import facet, layout_null, combine_vars, add_missing_facets
-from .facet import eval_facet_vars
+from ..utils import add_margins, cross_join, join_keys, match, ninteraction
+from .facet import (
+    add_missing_facets,
+    combine_vars,
+    eval_facet_vars,
+    facet,
+    layout_null,
+)
 from .strips import strip
 
 

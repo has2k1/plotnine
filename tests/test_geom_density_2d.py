@@ -1,8 +1,16 @@
 import pandas as pd
 
-from plotnine import (ggplot, aes, geom_density_2d, stat_density_2d,
-                      after_stat, geom_point, theme, lims,
-                      scale_size_radius)
+from plotnine import (
+    aes,
+    after_stat,
+    geom_density_2d,
+    geom_point,
+    ggplot,
+    lims,
+    scale_size_radius,
+    stat_density_2d,
+    theme,
+)
 
 n = 20
 adj = n//4

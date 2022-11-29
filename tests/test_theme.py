@@ -2,13 +2,30 @@ import os
 
 import pytest
 
-from plotnine import ggplot, aes, geom_point, labs, facet_grid
-from plotnine import (theme, theme_538, theme_bw, theme_classic,
-                      theme_dark, theme_gray, theme_light,
-                      theme_linedraw, theme_matplotlib, theme_minimal,
-                      theme_seaborn, theme_void, theme_xkcd,
-                      theme_tufte)
-from plotnine import element_line, element_text, element_blank
+from plotnine import (
+    aes,
+    element_blank,
+    element_line,
+    element_text,
+    facet_grid,
+    geom_point,
+    ggplot,
+    labs,
+    theme,
+    theme_538,
+    theme_bw,
+    theme_classic,
+    theme_dark,
+    theme_gray,
+    theme_light,
+    theme_linedraw,
+    theme_matplotlib,
+    theme_minimal,
+    theme_seaborn,
+    theme_tufte,
+    theme_void,
+    theme_xkcd,
+)
 from plotnine.data import mtcars
 
 _theme = theme(subplots_adjust={'right': 0.80})

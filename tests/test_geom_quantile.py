@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_point, geom_quantile
+from plotnine import aes, geom_point, geom_quantile, ggplot
 
 n = 200  # Should not be too big, affects the test duration
 random_state = np.random.RandomState(1234567890)

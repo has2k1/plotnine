@@ -2,9 +2,8 @@ from matplotlib.patches import Rectangle
 
 from ..doctools import document
 from .geom import geom
+from .geom_line import geom_line, geom_path
 from .geom_ribbon import geom_ribbon
-from .geom_line import geom_line
-from .geom_line import geom_path
 
 
 @document

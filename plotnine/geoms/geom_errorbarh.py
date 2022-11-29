@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from ..utils import copy_missing_columns, resolution
 from ..doctools import document
+from ..utils import copy_missing_columns, resolution
 from .geom import geom
 from .geom_segment import geom_segment
 

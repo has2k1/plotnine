@@ -1,9 +1,9 @@
-from matplotlib.collections import PolyCollection
 import numpy as np
 import pandas as pd
+from matplotlib.collections import PolyCollection
 
-from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
+from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_polygon import geom_polygon
 

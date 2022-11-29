@@ -4,9 +4,9 @@ import numpy as np
 from mizani.palettes import rescale_pal
 
 from ..doctools import document
-from ..utils import alias
 from ..exceptions import PlotnineWarning
-from .scale import scale_discrete, scale_continuous, scale_datetime
+from ..utils import alias
+from .scale import scale_continuous, scale_datetime, scale_discrete
 
 
 @document

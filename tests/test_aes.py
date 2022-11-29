@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_col, theme
+from plotnine import aes, geom_col, ggplot, theme
 
 _theme = theme(subplots_adjust={'right': 0.80})
 

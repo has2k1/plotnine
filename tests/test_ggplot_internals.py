@@ -4,14 +4,33 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, geom_histogram
-from plotnine import geom_line, geom_bar
-from plotnine import xlab, ylab, labs, ggtitle, xlim, lims, guides
-from plotnine import scale_x_continuous, coord_trans, annotate
-from plotnine import stat_identity, facet_null, theme, theme_gray
-from plotnine import stage, after_stat, after_scale
-from plotnine.mapping.aes import is_valid_aesthetic
+from plotnine import (
+    aes,
+    after_scale,
+    after_stat,
+    annotate,
+    coord_trans,
+    facet_null,
+    geom_bar,
+    geom_histogram,
+    geom_line,
+    geom_point,
+    ggplot,
+    ggtitle,
+    guides,
+    labs,
+    lims,
+    scale_x_continuous,
+    stage,
+    stat_identity,
+    theme,
+    theme_gray,
+    xlab,
+    xlim,
+    ylab,
+)
 from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.mapping.aes import is_valid_aesthetic
 
 df = pd.DataFrame({'x': np.arange(10),
                    'y': np.arange(10)})

@@ -2,10 +2,17 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import (ggplot, aes, geom_path, geom_line,
-                      geom_point, geom_step, arrow, facet_grid)
+from plotnine import (
+    aes,
+    arrow,
+    facet_grid,
+    geom_line,
+    geom_path,
+    geom_point,
+    geom_step,
+    ggplot,
+)
 from plotnine.exceptions import PlotnineWarning
-
 
 # steps with diagonals at the ends
 df = pd.DataFrame({

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_errorbar, geom_errorbarh, theme
+from plotnine import aes, geom_errorbar, geom_errorbarh, ggplot, theme
 
 n = 4
 df = pd.DataFrame({

@@ -10,37 +10,36 @@ from types import SimpleNamespace as NS
 from typing import Any, Iterable, Union
 from warnings import warn
 
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
-from matplotlib.offsetbox import AnchoredOffsetbox
+import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
+from matplotlib.offsetbox import AnchoredOffsetbox
 from patsy.eval import EvalEnvironment
 
-from .mapping.aes import aes, make_labels
-from .layer import Layers
+from .coords import coord_cartesian
+from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_null
 from .facets.layout import Layout
-from .options import get_option, SUBPLOTS_ADJUST
-from .themes.theme import theme, theme_get
-from .exceptions import PlotnineError, PlotnineWarning
-from .scales.scales import Scales
-from .coords import coord_cartesian
-from .guides.guides import guides
 
 # mypy believes there is a duplicate definition
 # of geom_blank even though it only appears once
 from .geoms import geom_blank  # type: ignore[no-redef]  # mypy bug
-
+from .guides.guides import guides
+from .layer import Layers
+from .mapping.aes import aes, make_labels
+from .options import SUBPLOTS_ADJUST, get_option
+from .scales.scales import Scales
+from .themes.theme import theme, theme_get
 from .utils import (
     defaults,
     from_inches,
     is_data_like,
     order_as_data_mapping,
     to_inches,
-    ungroup
+    ungroup,
 )
 
 if typing.TYPE_CHECKING:

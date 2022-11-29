@@ -1,9 +1,8 @@
 from copy import copy, deepcopy
 
-from ..options import get_option, set_option, SUBPLOTS_ADJUST
 from ..exceptions import PlotnineError
-from .themeable import themeable, Themeables
-
+from ..options import SUBPLOTS_ADJUST, get_option, set_option
+from .themeable import Themeables, themeable
 
 # All complete themes are initiated with these rcparams. They
 # can be overridden.

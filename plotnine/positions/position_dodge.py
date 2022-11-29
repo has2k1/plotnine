@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from ..exceptions import PlotnineError
-from ..utils import match, groupby_apply
+from ..utils import groupby_apply, match
 from .position import position
 
 

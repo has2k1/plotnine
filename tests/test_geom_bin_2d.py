@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_bin_2d, theme, scale_x_log10
+from plotnine import aes, geom_bin_2d, ggplot, scale_x_log10, theme
 
 from .conftest import layer_data
 

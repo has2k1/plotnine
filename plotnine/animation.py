@@ -1,7 +1,7 @@
 from copy import copy
 
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 from matplotlib.animation import ArtistAnimation
 
 from .exceptions import PlotnineError

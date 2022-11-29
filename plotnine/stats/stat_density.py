@@ -6,9 +6,9 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy.stats import iqr
 
-from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..mapping.evaluation import after_stat
 from .stat import stat
 
 

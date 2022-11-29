@@ -1,5 +1,5 @@
-from ..utils import waiver, Registry
 from ..exceptions import PlotnineError
+from ..utils import Registry, waiver
 
 
 class guide(metaclass=Registry):

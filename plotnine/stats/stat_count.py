@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from ..mapping.evaluation import after_stat
-from ..utils import resolution
 from ..doctools import document
 from ..exceptions import PlotnineError
+from ..mapping.evaluation import after_stat
+from ..utils import resolution
 from .stat import stat
 
 

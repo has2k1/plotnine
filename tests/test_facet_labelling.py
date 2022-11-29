@@ -1,6 +1,12 @@
-from plotnine import ggplot, aes, geom_point
-from plotnine import facet_grid, facet_wrap
-from plotnine import labeller, as_labeller
+from plotnine import (
+    aes,
+    as_labeller,
+    facet_grid,
+    facet_wrap,
+    geom_point,
+    ggplot,
+    labeller,
+)
 from plotnine.data import mtcars
 
 

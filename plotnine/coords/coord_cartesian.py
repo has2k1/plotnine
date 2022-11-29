@@ -1,9 +1,10 @@
 from types import SimpleNamespace as NS
+
 from mizani.bounds import squish_infinite
 from mizani.transforms import identity_trans
 
-from .coord import coord, dist_euclidean
 from ..positions.position import transform_position
+from .coord import coord, dist_euclidean
 
 
 class coord_cartesian(coord):

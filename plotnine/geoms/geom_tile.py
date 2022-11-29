@@ -1,5 +1,5 @@
-from ..utils import resolution
 from ..doctools import document
+from ..utils import resolution
 from .geom_rect import geom_rect
 
 

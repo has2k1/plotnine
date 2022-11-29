@@ -1,15 +1,15 @@
 import numpy as np
 from geopandas import GeoDataFrame
 from shapely.geometry import (
-    Point,
-    Polygon,
     LineString,
+    MultiLineString,
     MultiPoint,
     MultiPolygon,
-    MultiLineString
+    Point,
+    Polygon,
 )
 
-from plotnine import ggplot, aes, geom_map, labs, theme, facet_wrap
+from plotnine import aes, facet_wrap, geom_map, ggplot, labs, theme
 
 _theme = theme(subplots_adjust={'right': 0.85})
 
