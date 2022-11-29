@@ -1,7 +1,8 @@
 from __future__ import annotations
-from textwrap import dedent
-from typing import Type, Optional, Union
+
 import warnings
+from textwrap import dedent
+from typing import Optional, Type, Union
 
 
 # Show the warnings on one line, leaving out any code makes the

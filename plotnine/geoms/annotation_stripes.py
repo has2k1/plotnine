@@ -1,13 +1,13 @@
-from itertools import islice, cycle
+from itertools import cycle, islice
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from .geom import geom
-from .geom_rect import geom_rect
-from .annotate import annotate
 from ..coords import coord_flip
 from ..scales.scale import scale_discrete
+from .annotate import annotate
+from .geom import geom
+from .geom_rect import geom_rect
 
 
 class annotation_stripes(annotate):

@@ -1,9 +1,9 @@
 from contextlib import suppress
 
 from ..coords import coord_flip
-from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
 from ..exceptions import PlotnineError
+from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_path import geom_path
 

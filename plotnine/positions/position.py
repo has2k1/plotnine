@@ -3,10 +3,14 @@ from warnings import warn
 
 import numpy as np
 
-from ..mapping.aes import X_AESTHETICS, Y_AESTHETICS
-from ..utils import check_required_aesthetics, groupby_apply
-from ..utils import is_string, Registry
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..mapping.aes import X_AESTHETICS, Y_AESTHETICS
+from ..utils import (
+    Registry,
+    check_required_aesthetics,
+    groupby_apply,
+    is_string,
+)
 
 
 class position(metaclass=Registry):

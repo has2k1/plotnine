@@ -1,7 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_dotplot, theme
-
+from plotnine import aes, geom_dotplot, ggplot, theme
 
 df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
 _theme = theme(subplots_adjust={'right': 0.85})

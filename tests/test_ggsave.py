@@ -2,11 +2,18 @@ import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 import pytest
 
-import pandas as pd
-from plotnine import (ggplot, aes, geom_text, geom_point, facet_wrap,
-                      ggsave, theme_xkcd)
+from plotnine import (
+    aes,
+    facet_wrap,
+    geom_point,
+    geom_text,
+    ggplot,
+    ggsave,
+    theme_xkcd,
+)
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 

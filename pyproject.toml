@@ -42,3 +42,7 @@ precision = 1
 [tool.setuptools_scm]
 fallback_version = "999"
 version_scheme = 'post-release'
+
+[tool.isort]
+profile = "black"
+line_length = 79

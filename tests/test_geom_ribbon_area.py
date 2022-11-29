@@ -11,9 +11,8 @@ from plotnine import (
     geom_ribbon,
     ggplot,
     scale_x_continuous,
-    theme
+    theme,
 )
-
 
 n = 4            # No. of ribbions in a vertical stack
 m = 100          # Points

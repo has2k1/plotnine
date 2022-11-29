@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from ..utils import groupby_apply, interleave, resolution, make_iterable
 from ..doctools import document
-from .geom_polygon import geom_polygon
-from .geom_path import geom_path
+from ..utils import groupby_apply, interleave, make_iterable, resolution
 from .geom import geom
+from .geom_path import geom_path
+from .geom_polygon import geom_polygon
 
 
 @document

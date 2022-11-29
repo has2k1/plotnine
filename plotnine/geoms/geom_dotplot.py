@@ -1,13 +1,13 @@
 from warnings import warn
 
-import numpy as np
 import matplotlib.collections as mcoll
-import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+import matplotlib.patches as mpatches
+import numpy as np
 
-from ..exceptions import PlotnineWarning
-from ..utils import groupby_apply, to_rgba, resolution
 from ..doctools import document
+from ..exceptions import PlotnineWarning
+from ..utils import groupby_apply, resolution, to_rgba
 from .geom import geom
 
 

@@ -1,9 +1,8 @@
 import re
-from textwrap import indent, dedent, wrap
 from functools import lru_cache
+from textwrap import dedent, indent, wrap
 
 import numpy as np
-
 
 # Parameter arguments that are listed first in the geom and
 # stat class signatures

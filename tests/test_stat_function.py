@@ -2,9 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from plotnine import aes, arrow, ggplot, stat_function
 from plotnine.exceptions import PlotnineError
-from plotnine import ggplot, aes, arrow, stat_function
-
 
 n = 10
 df = pd.DataFrame({'x': range(1, n+1)})

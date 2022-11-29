@@ -1,18 +1,23 @@
 import hashlib
 from warnings import warn
 
-import numpy as np
-import pandas as pd
 import matplotlib.collections as mcoll
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
-from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
-from matplotlib.offsetbox import AuxTransformBox, DrawingArea
+import numpy as np
+import pandas as pd
 from matplotlib.colors import ListedColormap
+from matplotlib.offsetbox import (
+    AuxTransformBox,
+    DrawingArea,
+    HPacker,
+    TextArea,
+    VPacker,
+)
 from mizani.bounds import rescale
 
-from ..mapping.aes import rename_aesthetics
 from ..exceptions import PlotnineWarning
+from ..mapping.aes import rename_aesthetics
 from ..scales.scale import scale_continuous
 from .guide import guide
 

@@ -7,7 +7,7 @@ from mizani.palettes import abs_area, area_pal, rescale_pal
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
-from .scale import scale_discrete, scale_continuous, scale_datetime
+from .scale import scale_continuous, scale_datetime, scale_discrete
 
 
 @document

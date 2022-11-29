@@ -2,12 +2,19 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..mapping import aes
-from ..layer import layer
-from ..utils import data_mapping_as_kwargs, remove_missing
-from ..utils import groupby_apply, copy_keys, uniquecols
-from ..utils import is_string, Registry, check_required_aesthetics
 from ..exceptions import PlotnineError
+from ..layer import layer
+from ..mapping import aes
+from ..utils import (
+    Registry,
+    check_required_aesthetics,
+    copy_keys,
+    data_mapping_as_kwargs,
+    groupby_apply,
+    is_string,
+    remove_missing,
+    uniquecols,
+)
 
 
 class stat(metaclass=Registry):

@@ -1,8 +1,8 @@
-from plotnine.geoms.geom import geom
-from plotnine.stats.stat import stat
 from plotnine import position_stack
-from plotnine.scales.scale import scale
 from plotnine.doctools import document
+from plotnine.geoms.geom import geom
+from plotnine.scales.scale import scale
+from plotnine.stats.stat import stat
 
 
 @document

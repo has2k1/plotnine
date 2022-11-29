@@ -1,8 +1,14 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_histogram, geom_freqpoly, geom_point
-from plotnine import theme
+from plotnine import (
+    aes,
+    geom_freqpoly,
+    geom_histogram,
+    geom_point,
+    ggplot,
+    theme,
+)
 
 n = 10  # Some even number greater than 2
 

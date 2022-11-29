@@ -1,7 +1,7 @@
 import re
-from copy import deepcopy
-from contextlib import suppress
 from collections.abc import Iterable
+from contextlib import suppress
+from copy import deepcopy
 
 import pandas as pd
 

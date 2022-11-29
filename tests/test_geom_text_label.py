@@ -1,8 +1,15 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from plotnine import (ggplot, aes, geom_text, geom_label, geom_point,
-                      scale_size_continuous, scale_y_continuous)
+from plotnine import (
+    aes,
+    geom_label,
+    geom_point,
+    geom_text,
+    ggplot,
+    scale_size_continuous,
+    scale_y_continuous,
+)
 from plotnine.data import mtcars
 
 n = 5

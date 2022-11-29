@@ -1,10 +1,10 @@
 import pandas as pd
 
-from ..mapping import aes
-from ..mapping.aes import POSITION_AESTHETICS
-from ..utils import is_scalar_or_string, Registry
 from ..exceptions import PlotnineError
 from ..geoms.geom import geom as geom_base_class
+from ..mapping import aes
+from ..mapping.aes import POSITION_AESTHETICS
+from ..utils import Registry, is_scalar_or_string
 
 
 class annotate:

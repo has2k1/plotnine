@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-from scipy.stats import iqr
 from mizani.utils import round_any
+from scipy.stats import iqr
 
-from ..scales.scale import scale_discrete
 from ..exceptions import PlotnineError
+from ..scales.scale import scale_discrete
 
 __all__ = ['freedman_diaconis_bins', 'breaks_from_bins',
            'breaks_from_binwidth', 'assign_bins',

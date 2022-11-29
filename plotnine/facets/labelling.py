@@ -1,5 +1,6 @@
-import pandas as pd
 from contextlib import suppress
+
+import pandas as pd
 
 from ..exceptions import PlotnineError
 

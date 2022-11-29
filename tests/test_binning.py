@@ -1,10 +1,11 @@
 import numpy as np
-from plotnine.scales import scale_x_discrete, scale_x_continuous
+
+from plotnine.scales import scale_x_continuous, scale_x_discrete
 from plotnine.stats.binning import (
+    _adjust_breaks,
     breaks_from_bins,
     breaks_from_binwidth,
     fuzzybreaks,
-    _adjust_breaks
 )
 
 

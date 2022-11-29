@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from .mapping.aes import rename_aesthetics, SCALED_AESTHETICS
-from .exceptions import PlotnineError
-
 import typing
+
+from .exceptions import PlotnineError
+from .mapping.aes import SCALED_AESTHETICS, rename_aesthetics
+
 if typing.TYPE_CHECKING:
     import plotnine as p9
 

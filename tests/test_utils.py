@@ -1,16 +1,23 @@
+import itertools
 import random
 import string
-import itertools
 import warnings
 
 import numpy as np
 import pandas as pd
 
 from plotnine.data import mtcars
-from plotnine.utils import _margins, add_margins, ninteraction
-from plotnine.utils import join_keys, match, uniquecols, defaults
-from plotnine.utils import remove_missing
-from plotnine.utils import pivot_apply
+from plotnine.utils import (
+    _margins,
+    add_margins,
+    defaults,
+    join_keys,
+    match,
+    ninteraction,
+    pivot_apply,
+    remove_missing,
+    uniquecols,
+)
 
 
 def test__margins():

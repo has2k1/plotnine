@@ -1,19 +1,18 @@
 import hashlib
 import types
-from itertools import islice
 from contextlib import suppress
+from itertools import islice
 from warnings import warn
 
 import numpy as np
 import pandas as pd
-from matplotlib.offsetbox import (TextArea, HPacker, VPacker)
+from matplotlib.offsetbox import HPacker, TextArea, VPacker
 
-from ..scales.scale import scale_continuous
-from ..utils import ColoredDrawingArea, SIZE_FACTOR
-from ..utils import Registry, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
+from ..scales.scale import scale_continuous
+from ..utils import SIZE_FACTOR, ColoredDrawingArea, Registry, remove_missing
 from .guide import guide
 
 # See guides.py for terminology

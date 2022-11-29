@@ -1,21 +1,21 @@
 from contextlib import suppress
 from warnings import warn
 
+import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-import numpy as np
 from patsy.eval import EvalEnvironment
 
-from .ggplot import ggplot
-from .mapping.aes import aes, ALL_AESTHETICS, SCALED_AESTHETICS
-from .labels import labs
-from .facets import facet_null, facet_grid, facet_wrap
+from .exceptions import PlotnineError, PlotnineWarning
+from .facets import facet_grid, facet_null, facet_wrap
 from .facets.facet_grid import parse_grid_facets
 from .facets.facet_wrap import parse_wrap_facets
-from .utils import Registry, is_string, array_kind
-from .exceptions import PlotnineError, PlotnineWarning
-from .scales import scale_x_log10, scale_y_log10, lims
+from .ggplot import ggplot
+from .labels import labs
+from .mapping.aes import ALL_AESTHETICS, SCALED_AESTHETICS, aes
+from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
+from .utils import Registry, array_kind, is_string
 
 
 def qplot(x=None, y=None, data=None, facets=None, margins=False,

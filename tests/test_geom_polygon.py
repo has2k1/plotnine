@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_polygon, theme
+from plotnine import aes, geom_polygon, ggplot, theme
 
 df = pd.DataFrame({
         'x': ([1, 2, 3, 2] +

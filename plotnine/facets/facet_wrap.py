@@ -1,14 +1,19 @@
 import re
-from warnings import warn
 from contextlib import suppress
+from warnings import warn
 
 import numpy as np
 import pandas as pd
 
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import match, join_keys
-from .facet import facet, combine_vars, layout_null
-from .facet import add_missing_facets, eval_facet_vars
+from ..utils import join_keys, match
+from .facet import (
+    add_missing_facets,
+    combine_vars,
+    eval_facet_vars,
+    facet,
+    layout_null,
+)
 from .strips import strip
 
 

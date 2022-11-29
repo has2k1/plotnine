@@ -1,8 +1,8 @@
-import warnings
 import inspect
-import shutil
 import locale
+import shutil
 import types
+import warnings
 from copy import deepcopy
 from pathlib import Path
 
@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
-
 
 TOLERANCE = 2           # Default tolerance for the tests
 DPI = 72                # Default DPI for the tests

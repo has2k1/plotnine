@@ -3,8 +3,16 @@ import pandas as pd
 import pytest
 from mizani.transforms import trans_new
 
-from plotnine import (ggplot, aes, geom_bar, geom_line, coord_flip,
-                      coord_fixed, coord_trans, xlim)
+from plotnine import (
+    aes,
+    coord_fixed,
+    coord_flip,
+    coord_trans,
+    geom_bar,
+    geom_line,
+    ggplot,
+    xlim,
+)
 
 n = 10  # Some even number greater than 2
 

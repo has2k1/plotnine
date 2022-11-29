@@ -4,13 +4,28 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import (ggplot, aes, geom_point, geom_jitter, geom_bar,
-                      geom_col, geom_boxplot, geom_text, geom_rect,
-                      after_stat, position_dodge, position_dodge2,
-                      position_jitter, position_jitterdodge,
-                      position_nudge, position_stack, scale_y_log10, theme)
-from plotnine.positions.position import position
+from plotnine import (
+    aes,
+    after_stat,
+    geom_bar,
+    geom_boxplot,
+    geom_col,
+    geom_jitter,
+    geom_point,
+    geom_rect,
+    geom_text,
+    ggplot,
+    position_dodge,
+    position_dodge2,
+    position_jitter,
+    position_jitterdodge,
+    position_nudge,
+    position_stack,
+    scale_y_log10,
+    theme,
+)
 from plotnine.exceptions import PlotnineError
+from plotnine.positions.position import position
 
 n = 6
 m = 10

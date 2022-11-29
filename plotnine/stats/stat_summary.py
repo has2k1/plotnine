@@ -1,10 +1,10 @@
 import numpy as np
-import scipy.stats
 import pandas as pd
+import scipy.stats
 
-from ..utils import uniquecols, get_valid_kwargs
 from ..doctools import document
 from ..exceptions import PlotnineError
+from ..utils import get_valid_kwargs, uniquecols
 from .stat import stat
 
 

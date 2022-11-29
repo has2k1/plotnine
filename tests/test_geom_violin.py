@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_violin, coord_flip, theme
+from plotnine import aes, coord_flip, geom_violin, ggplot, theme
 
 n = 4
 m = 10

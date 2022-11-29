@@ -1,7 +1,6 @@
 from ..options import get_option
 from ..utils import alias
-from .elements import (element_line, element_rect,
-                       element_text, element_blank)
+from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme
 
 

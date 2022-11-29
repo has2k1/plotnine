@@ -1,8 +1,8 @@
 import matplotlib as mpl
 
 from ..options import get_option
-from .theme import theme
 from .elements import element_rect, element_text
+from .theme import theme
 
 
 class theme_matplotlib(theme):

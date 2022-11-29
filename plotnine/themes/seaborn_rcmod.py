@@ -1,6 +1,7 @@
 """Functions that alter the matplotlib rc dictionary on the fly."""
-import matplotlib as _mpl
 import functools
+
+import matplotlib as _mpl
 
 # https://github.com/mwaskom/seaborn/blob/master/seaborn/rcmod.py
 # License: BSD-3-Clause License

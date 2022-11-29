@@ -1,8 +1,8 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, stat_bin, stat_density, xlim
+from plotnine import aes, ggplot, stat_bin, stat_density, xlim
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 

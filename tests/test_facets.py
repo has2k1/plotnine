@@ -2,8 +2,16 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, facet_grid, facet_wrap
-from plotnine import geom_abline, geom_path, annotate
+from plotnine import (
+    aes,
+    annotate,
+    facet_grid,
+    facet_wrap,
+    geom_abline,
+    geom_path,
+    geom_point,
+    ggplot,
+)
 from plotnine.data import mpg, mtcars
 from plotnine.exceptions import PlotnineWarning
 

@@ -2,11 +2,13 @@
 Plotting objects
 """
 
-# geoms
+from .annotate import annotate
+from .annotation_logticks import annotation_logticks
+from .annotation_stripes import annotation_stripes
 from .geom_abline import geom_abline
 from .geom_area import geom_area
 from .geom_bar import geom_bar
-from .geom_bin_2d import geom_bin_2d, geom_bin2d
+from .geom_bin_2d import geom_bin2d, geom_bin_2d
 from .geom_blank import geom_blank
 from .geom_boxplot import geom_boxplot
 from .geom_col import geom_col
@@ -25,7 +27,7 @@ from .geom_label import geom_label
 from .geom_line import geom_line
 from .geom_linerange import geom_linerange
 from .geom_map import geom_map
-from .geom_path import geom_path
+from .geom_path import arrow, geom_path
 from .geom_point import geom_point
 from .geom_pointdensity import geom_pointdensity
 from .geom_pointrange import geom_pointrange
@@ -47,27 +49,53 @@ from .geom_tile import geom_tile
 from .geom_violin import geom_violin
 from .geom_vline import geom_vline
 
-# other
-from .geom_path import arrow
-from .annotate import annotate
-from .annotation_logticks import annotation_logticks
-from .annotation_stripes import annotation_stripes
-
-
-__all__ = ['geom_abline', 'geom_area', 'geom_bar', 'geom_bin_2d',
-           'geom_bin2d', 'geom_blank',
-           'geom_boxplot', 'geom_col', 'geom_count', 'geom_crossbar',
-           'geom_density', 'geom_density_2d',
-           'geom_dotplot', 'geom_errorbar',
-           'geom_errorbarh', 'geom_freqpoly', 'geom_histogram',
-           'geom_hline', 'geom_jitter', 'geom_label', 'geom_line',
-           'geom_linerange', 'geom_map', 'geom_path', 'geom_point',
-           'geom_pointdensity', 'geom_pointrange',
-           'geom_quantile', 'geom_qq', 'geom_qq_line',
-           'geom_polygon', 'geom_raster', 'geom_rect',
-           'geom_ribbon', 'geom_rug', 'geom_segment', 'geom_sina',
-           'geom_smooth', 'geom_spoke', 'geom_step', 'geom_text',
-           'geom_tile', 'geom_violin', 'geom_vline',
-           # other
-           'arrow', 'annotate', 'annotation_logticks',
-           'annotation_stripes']
+__all__ = [
+    'annotate',
+    'annotation_logticks',
+    'annotation_stripes',
+    'geom_abline',
+    'geom_area',
+    'geom_bar',
+    'geom_bin_2d',
+    'geom_bin2d',
+    'geom_blank',
+    'geom_boxplot',
+    'geom_col',
+    'geom_count',
+    'geom_crossbar',
+    'geom_density',
+    'geom_density_2d',
+    'geom_dotplot',
+    'geom_errorbar',
+    'geom_errorbarh',
+    'geom_freqpoly',
+    'geom_histogram',
+    'geom_hline',
+    'geom_jitter',
+    'geom_label',
+    'geom_line',
+    'geom_linerange',
+    'geom_map',
+    'arrow',
+    'geom_path',
+    'geom_point',
+    'geom_pointdensity',
+    'geom_pointrange',
+    'geom_quantile',
+    'geom_qq',
+    'geom_qq_line',
+    'geom_polygon',
+    'geom_raster',
+    'geom_rect',
+    'geom_ribbon',
+    'geom_rug',
+    'geom_segment',
+    'geom_sina',
+    'geom_smooth',
+    'geom_spoke',
+    'geom_step',
+    'geom_text',
+    'geom_tile',
+    'geom_violin',
+    'geom_vline',
+]

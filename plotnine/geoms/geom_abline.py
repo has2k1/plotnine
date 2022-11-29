@@ -2,10 +2,10 @@ from warnings import warn
 
 import pandas as pd
 
-from ..mapping import aes
-from ..exceptions import PlotnineWarning
-from ..utils import make_iterable, order_as_data_mapping
 from ..doctools import document
+from ..exceptions import PlotnineWarning
+from ..mapping import aes
+from ..utils import make_iterable, order_as_data_mapping
 from .geom import geom
 from .geom_segment import geom_segment
 

@@ -1,7 +1,7 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from plotnine import ggplot, aes, geom_linerange, geom_pointrange, theme
+from plotnine import aes, geom_linerange, geom_pointrange, ggplot, theme
 
 n = 4
 df = pd.DataFrame({

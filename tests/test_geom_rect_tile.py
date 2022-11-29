@@ -1,8 +1,16 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from plotnine import ggplot, aes, geom_point, geom_rect, geom_tile, labs, theme
-from plotnine import coord_trans
+from plotnine import (
+    aes,
+    coord_trans,
+    geom_point,
+    geom_rect,
+    geom_tile,
+    ggplot,
+    labs,
+    theme,
+)
 
 n = 4
 

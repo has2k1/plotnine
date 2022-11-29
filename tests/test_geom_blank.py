@@ -1,4 +1,4 @@
-from plotnine import ggplot, aes, geom_blank
+from plotnine import aes, geom_blank, ggplot
 from plotnine.data import mtcars
 
 

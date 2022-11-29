@@ -3,9 +3,9 @@ from contextlib import suppress
 import numpy as np
 import pandas as pd
 
-from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError
+from ..mapping.evaluation import after_stat
 from .stat import stat
 
 

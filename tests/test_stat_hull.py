@@ -1,4 +1,4 @@
-from plotnine import ggplot, aes, geom_point, stat_hull, theme
+from plotnine import aes, geom_point, ggplot, stat_hull, theme
 from plotnine.data import mtcars
 
 _theme = theme(subplots_adjust={'right': 0.85})

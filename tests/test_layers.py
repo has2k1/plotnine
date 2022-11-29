@@ -1,13 +1,12 @@
 from pathlib import Path
 
-import pytest
 import numpy as np
 import pandas as pd
+import pytest
 
-from plotnine.layer import Layers, layer
-from plotnine import ggplot, aes, geom_point, geom_path
+from plotnine import aes, geom_path, geom_point, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
-
+from plotnine.layer import Layers, layer
 
 df = pd.DataFrame({'x': range(10),
                    'y': range(10)})

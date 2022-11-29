@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
+from ..doctools import document
 from ..exceptions import PlotnineError
 from ..utils import copy_missing_columns
-from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
 

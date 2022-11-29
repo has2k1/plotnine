@@ -1,17 +1,16 @@
 from collections import Counter
-from warnings import warn
 from contextlib import suppress
+from warnings import warn
 
-import numpy as np
 import matplotlib.collections as mcoll
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.path as mpath
+import numpy as np
 
-from ..exceptions import PlotnineWarning
 from ..doctools import document
-from ..utils import to_rgba, make_line_segments
-from ..utils import SIZE_FACTOR, match
+from ..exceptions import PlotnineWarning
+from ..utils import SIZE_FACTOR, make_line_segments, match, to_rgba
 from .geom import geom
 
 

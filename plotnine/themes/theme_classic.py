@@ -1,4 +1,4 @@
-from .elements import element_line, element_rect, element_blank
+from .elements import element_blank, element_line, element_rect
 from .theme import theme
 from .theme_bw import theme_bw
 

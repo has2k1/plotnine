@@ -1,11 +1,11 @@
 from plotnine import (
-    ggplot,
     aes,
-    geom_point,
     facet_wrap,
+    geom_point,
+    ggplot,
     stat_smooth,
+    theme_tufte,
     theme_xkcd,
-    theme_tufte
 )
 from plotnine.data import mtcars
 

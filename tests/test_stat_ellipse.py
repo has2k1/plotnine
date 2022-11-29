@@ -2,7 +2,7 @@ import numpy as np
 import numpy.testing as npt
 import pandas as pd
 
-from plotnine import ggplot, aes, geom_point, stat_ellipse
+from plotnine import aes, geom_point, ggplot, stat_ellipse
 from plotnine.stats.stat_ellipse import cov_trob
 
 df = pd.DataFrame({'x': [1, 2, 3, 4, 5],

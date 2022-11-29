@@ -7,10 +7,14 @@ from typing import List
 import pandas as pd
 
 from .exceptions import PlotnineError
-from .utils import array_kind, ninteraction
-from .utils import check_required_aesthetics, defaults
-from .mapping.aes import aes, NO_GROUP, SCALED_AESTHETICS
-from .mapping.evaluation import stage, evaluate
+from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes
+from .mapping.evaluation import evaluate, stage
+from .utils import (
+    array_kind,
+    check_required_aesthetics,
+    defaults,
+    ninteraction,
+)
 
 if typing.TYPE_CHECKING:
     import plotnine as p9

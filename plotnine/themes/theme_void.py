@@ -1,5 +1,5 @@
 from ..options import get_option
-from .elements import element_text, element_blank
+from .elements import element_blank, element_text
 from .theme import theme
 
 

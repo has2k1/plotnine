@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import pandas as pd
-from plotnine import ggplot, aes, geom_point, watermark
 
+from plotnine import aes, geom_point, ggplot, watermark
 
 wm_file = Path(__file__).parent / 'images/plotnine-watermark.png'
 

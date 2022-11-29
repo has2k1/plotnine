@@ -1,7 +1,6 @@
 import pandas as pd
 
-from plotnine import ggplot, aes, after_stat, stat_ecdf
-
+from plotnine import aes, after_stat, ggplot, stat_ecdf
 
 df = pd.DataFrame({'x': range(10)})
 p = ggplot(df, aes('x')) + stat_ecdf(size=2)

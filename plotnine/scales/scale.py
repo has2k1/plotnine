@@ -1,22 +1,20 @@
 from contextlib import suppress
-from copy import deepcopy, copy
+from copy import copy, deepcopy
 from functools import partial
 from types import SimpleNamespace as NS
 from warnings import warn
 
 import numpy as np
 import pandas as pd
-from mizani.bounds import expand_range_distinct, zero_range
-from mizani.bounds import rescale, censor
+from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
 from mizani.breaks import date_breaks
 from mizani.formatters import date_format
 from mizani.transforms import gettrans
 
-from ..mapping.aes import is_position_aes, rename_aesthetics
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import match, waiver, is_waive, Registry
-from ..utils import ignore_warnings
+from ..mapping.aes import is_position_aes, rename_aesthetics
+from ..utils import Registry, ignore_warnings, is_waive, match, waiver
 from .range import Range, RangeContinuous, RangeDiscrete
 
 

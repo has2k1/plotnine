@@ -1,6 +1,7 @@
-import numpy as np
 import types
 from contextlib import suppress
+
+import numpy as np
 
 from ..exceptions import PlotnineError
 from ..utils import match

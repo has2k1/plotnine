@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, stat_summary, geom_point
-
+from plotnine import aes, geom_point, ggplot, stat_summary
 
 random_state = np.random.RandomState(1234567890)
 

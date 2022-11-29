@@ -1,7 +1,7 @@
 from ..options import get_option
-from .theme import theme
 from .elements import element_text
 from .seaborn_rcmod import set_theme
+from .theme import theme
 
 
 class theme_seaborn(theme):

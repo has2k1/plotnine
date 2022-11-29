@@ -1,8 +1,8 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+from matplotlib.collections import LineCollection, PatchCollection
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
-from matplotlib.collections import PatchCollection, LineCollection
 
 try:
     import geopandas  # noqa: F401
@@ -13,7 +13,7 @@ else:
 
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import to_rgba, SIZE_FACTOR
+from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_point import geom_point
 from .geom_polygon import geom_polygon

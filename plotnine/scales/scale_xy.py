@@ -3,10 +3,10 @@ import pandas as pd
 from mizani.bounds import expand_range_distinct
 
 from ..doctools import document
-from ..utils import identity, match, alias, array_kind
 from ..exceptions import PlotnineError
+from ..utils import alias, array_kind, identity, match
 from .range import RangeContinuous
-from .scale import scale_discrete, scale_continuous, scale_datetime
+from .scale import scale_continuous, scale_datetime, scale_discrete
 
 
 # positions scales have a couple of differences (quirks) that

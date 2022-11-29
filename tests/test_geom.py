@@ -1,9 +1,9 @@
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, stat_identity, geom_point
-from plotnine.geoms.geom import geom
+from plotnine import aes, geom_point, ggplot, stat_identity
 from plotnine.exceptions import PlotnineError
+from plotnine.geoms.geom import geom
 
 df = pd.DataFrame({'col1': [1, 2, 3, 4],
                    'col2': 2,

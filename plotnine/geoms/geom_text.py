@@ -10,11 +10,10 @@ except ImportError:
 else:
     HAS_ADJUST_TEXT = True
 
-from ..exceptions import PlotnineWarning
-from ..utils import to_rgba, order_as_data_mapping
 from ..doctools import document
+from ..exceptions import PlotnineError, PlotnineWarning
 from ..positions import position_nudge
-from ..exceptions import PlotnineError
+from ..utils import order_as_data_mapping, to_rgba
 from .geom import geom
 
 

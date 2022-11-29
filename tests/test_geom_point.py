@@ -4,13 +4,13 @@ import numpy as np
 import pandas as pd
 
 from plotnine import (
-    ggplot,
     aes,
-    geom_point,
     coord_equal,
+    geom_point,
+    ggplot,
     guides,
     scale_shape_manual,
-    theme
+    theme,
 )
 
 

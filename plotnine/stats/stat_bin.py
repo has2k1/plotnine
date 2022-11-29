@@ -2,11 +2,15 @@ from warnings import warn
 
 import numpy as np
 
-from ..mapping.evaluation import after_stat
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from .binning import (breaks_from_bins, breaks_from_binwidth,
-                      assign_bins, freedman_diaconis_bins)
+from ..mapping.evaluation import after_stat
+from .binning import (
+    assign_bins,
+    breaks_from_bins,
+    breaks_from_binwidth,
+    freedman_diaconis_bins,
+)
 from .stat import stat
 
 

@@ -1,5 +1,6 @@
 import pandas as pd
-from plotnine import ggplot, geom_line, scale_linetype_manual, aes
+
+from plotnine import aes, geom_line, ggplot, scale_linetype_manual
 
 
 def test_scale_linetype_manual_tuples():

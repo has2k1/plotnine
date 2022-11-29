@@ -1,13 +1,18 @@
 from copy import deepcopy
 
-from ..stats.stat import stat
-from ..mapping.aes import rename_aesthetics, is_valid_aesthetic
-from ..mapping.evaluation import evaluate
-from ..layer import layer
-from ..positions.position import position
-from ..utils import data_mapping_as_kwargs, remove_missing
-from ..utils import copy_keys, is_string, Registry
 from ..exceptions import PlotnineError
+from ..layer import layer
+from ..mapping.aes import is_valid_aesthetic, rename_aesthetics
+from ..mapping.evaluation import evaluate
+from ..positions.position import position
+from ..stats.stat import stat
+from ..utils import (
+    Registry,
+    copy_keys,
+    data_mapping_as_kwargs,
+    is_string,
+    remove_missing,
+)
 
 
 class geom(metaclass=Registry):

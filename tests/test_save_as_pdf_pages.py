@@ -4,10 +4,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pytest
 
-from plotnine import ggplot, aes, geom_text, ggtitle, theme
+from plotnine import aes, geom_text, ggplot, ggtitle, theme
 from plotnine.data import mtcars
-from plotnine.ggplot import save_as_pdf_pages
 from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.ggplot import save_as_pdf_pages
 
 
 def p(N=3):

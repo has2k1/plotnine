@@ -38,18 +38,17 @@ How it works
 """
 
 import re
-
 from pathlib import Path
 
 import nbformat
-import sphinx
 import nbsphinx
-from PIL import Image
+import sphinx
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.misc import Include
-from nbconvert.writers import FilesWriter
 from importlib_resources import files as _files
+from nbconvert.writers import FilesWriter
+from PIL import Image
 
 EXAMPLES_PATH = _files('plotnine_examples.examples')
 

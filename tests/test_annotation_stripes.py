@@ -9,7 +9,7 @@ from plotnine import (
     facet_wrap,
     geom_point,
     geom_vline,
-    ggplot
+    ggplot,
 )
 
 n = 9

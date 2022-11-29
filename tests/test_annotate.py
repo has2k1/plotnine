@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from plotnine import ggplot, aes, geom_point, geom_rect, geom_segment, annotate
+from plotnine import aes, annotate, geom_point, geom_rect, geom_segment, ggplot
 from plotnine.exceptions import PlotnineError
 
 n = 4

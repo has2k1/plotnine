@@ -4,29 +4,30 @@ Little functions used all over the codebase
 from __future__ import annotations
 
 import collections
-import itertools
 import inspect
+import itertools
 import typing
 import warnings
 from contextlib import suppress
 from typing import Any, Callable
-from weakref import WeakValueDictionary
 from warnings import warn
+from weakref import WeakValueDictionary
 
+import matplotlib.colors as mcolors
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-import matplotlib.colors as mcolors
 from matplotlib.colors import colorConverter
 from matplotlib.offsetbox import DrawingArea
 from matplotlib.patches import Rectangle
 from mizani.bounds import zero_range
 from mizani.utils import multitype_sort
+
 # missing in type stubs
 from pandas.core.groupby import DataFrameGroupBy  # type: ignore
 
-from .mapping import aes
 from .exceptions import PlotnineError, PlotnineWarning
+from .mapping import aes
 
 if typing.TYPE_CHECKING:
     from typing_extensions import TypeGuard

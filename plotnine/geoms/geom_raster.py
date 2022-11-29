@@ -1,13 +1,13 @@
 from warnings import warn
 
-import numpy as np
 import matplotlib.image as mimage
+import numpy as np
 from matplotlib.colors import to_rgba_array
 
-from ..utils import resolution
 from ..coords import coord_cartesian
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..utils import resolution
 from .geom import geom
 
 

@@ -1,5 +1,5 @@
-from types import SimpleNamespace as NS
 from copy import copy
+from types import SimpleNamespace as NS
 
 import numpy as np
 

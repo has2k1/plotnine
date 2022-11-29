@@ -1,9 +1,9 @@
-import numpy as np
 import matplotlib.lines as mlines
+import numpy as np
 
-from ..utils import to_rgba, SIZE_FACTOR
 from ..doctools import document
 from ..scales.scale_shape import FILLED_SHAPES
+from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 

@@ -1,11 +1,11 @@
 """
 Statistics
 """
-from .stat_count import stat_count
 from .stat_bin import stat_bin
-from .stat_bin_2d import stat_bin_2d, stat_bin2d
+from .stat_bin_2d import stat_bin2d, stat_bin_2d
 from .stat_bindot import stat_bindot
 from .stat_boxplot import stat_boxplot
+from .stat_count import stat_count
 from .stat_density import stat_density
 from .stat_density_2d import stat_density_2d
 from .stat_ecdf import stat_ecdf
@@ -25,17 +25,29 @@ from .stat_summary_bin import stat_summary_bin
 from .stat_unique import stat_unique
 from .stat_ydensity import stat_ydensity
 
-
-__all__ = ['stat_count', 'stat_bin',
-           'stat_bin_2d', 'stat_bin2d',
-           'stat_bindot', 'stat_boxplot',
-           'stat_density', 'stat_ecdf',
-           'stat_ellipse', 'stat_density_2d',
-           'stat_function', 'stat_hull',
-           'stat_identity', 'stat_pointdensity',
-           'stat_qq', 'stat_qq_line',
-           'stat_quantile',
-           'stat_sina',
-           'stat_smooth', 'stat_sum',
-           'stat_summary', 'stat_summary_bin',
-           'stat_unique', 'stat_ydensity']
+__all__ = [
+    'stat_count',
+    'stat_bin',
+    'stat_bin_2d',
+    'stat_bin2d',
+    'stat_bindot',
+    'stat_boxplot',
+    'stat_density',
+    'stat_ecdf',
+    'stat_ellipse',
+    'stat_density_2d',
+    'stat_function',
+    'stat_hull',
+    'stat_identity',
+    'stat_pointdensity',
+    'stat_qq',
+    'stat_qq_line',
+    'stat_quantile',
+    'stat_sina',
+    'stat_smooth',
+    'stat_sum',
+    'stat_summary',
+    'stat_summary_bin',
+    'stat_unique',
+    'stat_ydensity'
+]

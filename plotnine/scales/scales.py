@@ -5,8 +5,8 @@ from warnings import warn
 import numpy as np
 import pandas.api.types as pdtypes
 
-from ..mapping.aes import aes_to_scale
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..mapping.aes import aes_to_scale
 from ..utils import Registry, array_kind
 
 _TPL_DUPLICATE_SCALE = """\

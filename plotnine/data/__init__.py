@@ -6,12 +6,24 @@ from pathlib import Path
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 
-__all__ = ['diamonds', 'economics', 'economics_long',
-           'midwest', 'mpg', 'msleep', 'presidential',
-           'seals', 'txhousing', 'luv_colours',
-           'faithful', 'faithfuld',
-           # extras for backward compatibility!
-           'huron', 'meat', 'mtcars', 'pageviews']
+__all__ = [
+    'diamonds',
+    'economics',
+    'economics_long',
+    'faithful',
+    'faithfuld',
+    'huron',
+    'luv_colours',
+    'meat',
+    'midwest',
+    'mpg',
+    'msleep',
+    'mtcars',
+    'pageviews'
+    'presidential',
+    'seals',
+    'txhousing',
+]
 
 data_dir = Path(__file__).parent
 
