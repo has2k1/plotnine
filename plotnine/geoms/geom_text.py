@@ -4,6 +4,8 @@ import typing
 from contextlib import suppress
 from warnings import warn
 
+import numpy as np
+
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..positions import position_nudge
@@ -146,11 +148,13 @@ class geom_text(geom):
 
         # format
         if fmt:
-            data["label"] = [fmt.format(l) for l in data["label"]]
+            data['label'] = [fmt.format(l) if not np.isnan(l) else np.nan
+                             for l in data['label']]
 
         # Parse latex
         if parse:
-            data["label"] = [f"${l}$" for l in data["label"]]
+            data['label'] = [f'${l}$' if not np.isnan(l) else np.nan
+                             for l in data['label']]
 
         return data
 
