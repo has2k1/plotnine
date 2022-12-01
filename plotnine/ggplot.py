@@ -495,8 +495,8 @@ class ggplot:
 
         anchored_box.set_zorder(90.1)
         self.figure._themeable['legend_background'] = anchored_box
-        ax = self.axs[0]
-        ax.add_artist(anchored_box)
+        self.figure.add_artist(anchored_box)
+
 
     def _draw_labels(self):
         """
