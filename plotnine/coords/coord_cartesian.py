@@ -1,4 +1,4 @@
-from types import SimpleNamespace as NS
+from types import SimpleNamespace
 
 from mizani.bounds import squish_infinite
 from mizani.transforms import identity_trans
@@ -28,7 +28,7 @@ class coord_cartesian(coord):
     is_linear = True
 
     def __init__(self, xlim=None, ylim=None, expand=True):
-        self.limits = NS(x=xlim, y=ylim)
+        self.limits = SimpleNamespace(x=xlim, y=ylim)
         self.expand = expand
 
     def transform(self, data, panel_params, munch=False):
@@ -40,7 +40,7 @@ class coord_cartesian(coord):
 
         return transform_position(data, squish_infinite_x, squish_infinite_y)
 
-    def setup_panel_params(self, scale_x, scale_y):
+    def setup_panel_params(self, scale_x, scale_y) -> SimpleNamespace:
         """
         Compute the range and break information for the panel
         """
@@ -51,8 +51,10 @@ class coord_cartesian(coord):
             vs = scale.view(limits=coord_limits, range=ranges.range)
             return vs
 
-        out = NS(x=get_view_limits(scale_x, self.limits.x),
-                 y=get_view_limits(scale_y, self.limits.y))
+        out = SimpleNamespace(
+            x=get_view_limits(scale_x, self.limits.x),
+            y=get_view_limits(scale_y, self.limits.y)
+        )
         return out
 
     @staticmethod

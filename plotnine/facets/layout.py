@@ -1,32 +1,43 @@
+from __future__ import annotations
+
 import types
+import typing
 from contextlib import suppress
 
+import matpolotlib as mpl
 import numpy as np
+import pandas as pd
 
 from ..exceptions import PlotnineError
 from ..utils import match
 
+if typing.TYPE_CHECKING:
+    import plotnine as p9
+
 
 class Layout:
+    """
+    Layout of entire plot
+    """
     #: facet
-    facet = None
+    facet: p9.facets.facet.facet
 
     #: coordinate system
-    coord = None
+    coord: p9.coords.coord.coord
 
     #: A dataframe with the layout information of the plot
-    layout = None
+    layout: pd.DataFrame
 
     #: List of x scales
-    panel_scales_x = None
+    panel_scales_x: p9.scales.scales.Scales
 
     #: List of y scales
-    panel_scales_y = None
+    panel_scales_y: p9.scales.scales.Scales
 
     #: Range & breaks information for each panel
-    panel_params = None
+    panel_params: list[types.SimpleNamespace]
 
-    axs = None        # MPL axes
+    axs: mpl.axes.Axes       # MPL axes
 
     def setup(self, layers, plot):
         """
@@ -66,8 +77,9 @@ class Layout:
 
     def train_position(self, layers, scales):
         """
-        Create all the required x & y panel_scales y_scales
-        and set the ranges for each scale according to the data.
+        Create all the required x & y panel_scales
+
+        And set the ranges for each scale according to the data
 
         Notes
         -----
@@ -180,7 +192,8 @@ class Layout:
             i, j = i-1, j-1
             params = coord.setup_panel_params(
                 self.panel_scales_x[i],
-                self.panel_scales_y[j])
+                self.panel_scales_y[j]
+            )
             self.panel_params.append(params)
 
     def finish_data(self, layers):

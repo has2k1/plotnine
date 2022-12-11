@@ -11,11 +11,25 @@ if typing.TYPE_CHECKING:
     import plotnine as p9
 
     class PlotAddable(Protocol):
+        """
+        Object that can be added to a ggplot object
+        """
+
         def __radd__(self, other: p9.ggplot) -> p9.ggplot:
+            """
+            Add to ggplot object
+            """
             ...
 
     class DataFrameConvertible(Protocol):
+        """
+        Object that can be converted to a DataFrame
+        """
+
         def to_pandas(self) -> pd.DataFrame:
+            """
+            Convert to pandas dataframe
+            """
             ...
 
     # Input data can be a DataFrame, a DataFrame factory or things that
