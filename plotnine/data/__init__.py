@@ -19,7 +19,7 @@ __all__ = [
     'mpg',
     'msleep',
     'mtcars',
-    'pageviews'
+    'pageviews',
     'presidential',
     'seals',
     'txhousing',

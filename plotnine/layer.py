@@ -179,7 +179,7 @@ class layer:
         self.zorder = 0
 
     @staticmethod
-    def from_geom(geom):
+    def from_geom(geom) -> layer:
         """
         Create a layer given a :class:`geom`
 
