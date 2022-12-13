@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from warnings import warn
 
 import pandas as pd
@@ -7,7 +10,18 @@ from ..exceptions import PlotnineWarning
 from ..mapping import aes
 from ..utils import make_iterable, order_as_data_mapping
 from .geom import geom
+from .geom_path import geom_path
 from .geom_segment import geom_segment
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+
+    import plotnine as p9
+
+    from ..typing import DataLike
 
 
 @document
@@ -26,9 +40,14 @@ class geom_hline(geom):
     REQUIRED_AES = {'yintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'inherit_aes': False}
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
-    def __init__(self, mapping=None, data=None, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: Any
+    ) -> None:
         data, mapping = order_as_data_mapping(data, mapping)
         yintercept = kwargs.pop('yintercept', None)
         if yintercept is not None:
@@ -41,7 +60,14 @@ class geom_hline(geom):
 
         geom.__init__(self, mapping, data, **kwargs)
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         """
         Plot all groups
         """

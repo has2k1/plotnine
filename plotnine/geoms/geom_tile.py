@@ -1,6 +1,13 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from ..utils import resolution
 from .geom_rect import geom_rect
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
 
 
 @document
@@ -24,7 +31,7 @@ class geom_tile(geom_rect):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         try:
             width = data.pop('width')
         except KeyError:

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from itertools import cycle, islice
 
 import numpy as np
@@ -7,7 +10,16 @@ from ..coords import coord_flip
 from ..scales.scale import scale_discrete
 from .annotate import annotate
 from .geom import geom
+from .geom_polygon import geom_polygon
 from .geom_rect import geom_rect
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any, Literal, Sequence
+
+    import matplotlib as mpl
+
+    import plotnine as p9
 
 
 class annotation_stripes(annotate):
@@ -44,15 +56,25 @@ class annotation_stripes(annotate):
         They include; *alpha*, *color*, *linetype*, and *size*.
     """
 
-    def __init__(self, fill=('#AAAAAA', '#CCCCCC'), fill_range='auto',
-                 direction='vertical', extend=(0, 1), **kwargs):
+    def __init__(
+        self,
+        fill: Sequence[str] = ('#AAAAAA', '#CCCCCC'),
+        fill_range: Literal["auto", "cycle", "no", "nocycle"] = 'auto',
+        direction: Literal["horizontal", "vertical"] = 'vertical',
+        extend: tuple[float, float] = (0, 1),
+        **kwargs: Any
+    ) -> None:
         allowed = ('vertical', 'horizontal')
         if direction not in allowed:
             raise ValueError(
                 f"direction must be one of {allowed}")
         self._annotation_geom = _geom_stripes(
-            fill=fill, fill_range=fill_range, extend=extend,
-            direction=direction, **kwargs)
+            fill=fill,
+            fill_range=fill_range,
+            extend=extend,
+            direction=direction,
+            **kwargs
+        )
 
 
 class _geom_stripes(geom):
@@ -65,9 +87,15 @@ class _geom_stripes(geom):
                       'linetype': 'solid', 'size': 1, 'alpha': 0.5,
                       'direction': 'vertical', 'extend': (0, 1),
                       'fill_range': 'auto'}
-    legend_geom = "polygon"
+    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
 
-    def draw_layer(self, data, layout, coord, **params):
+    def draw_layer(
+        self,
+        data: pd.DataFrame,
+        layout: p9.facets.layout.Layout,
+        coord: p9.coords.coord.coord,
+        **params: Any
+    ) -> None:
         """
         Draw stripes on every panel
         """
@@ -78,7 +106,13 @@ class _geom_stripes(geom):
             self.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         extend = params['extend']
         fill_range = params['fill_range']
         direction = params['direction']

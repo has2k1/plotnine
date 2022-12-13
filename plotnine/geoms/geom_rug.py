@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import matplotlib.collections as mcoll
 import numpy as np
 
@@ -5,6 +9,16 @@ from ..coords import coord_flip
 from ..doctools import document
 from ..utils import SIZE_FACTOR, make_line_segments, to_rgba
 from .geom import geom
+from .geom_path import geom_path
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+    import pandas as pd
+
+    import plotnine as p9
 
 
 @document
@@ -29,10 +43,16 @@ class geom_rug(geom):
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'sides': 'bl', 'length': 0.03}
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         data = coord.transform(data, panel_params)
         sides = params['sides']
 

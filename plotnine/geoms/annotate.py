@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+import typing
+from typing import Any
+
 import pandas as pd
 
 from ..exceptions import PlotnineError
@@ -5,6 +10,9 @@ from ..geoms.geom import geom as geom_base_class
 from ..mapping import aes
 from ..mapping.aes import POSITION_AESTHETICS
 from ..utils import Registry, is_scalar_or_string
+
+if typing.TYPE_CHECKING:
+    import plotnine as p9
 
 
 class annotate:
@@ -47,15 +55,23 @@ class annotate:
 
     All `geoms` are created with :code:`stat='identity'`.
     """
+    _annotation_geom: geom_base_class
 
     def __init__(
         self,
-        geom,
-        x=None, y=None,
-        xmin=None, xmax=None, xend=None, xintercept=None,
-        ymin=None, ymax=None, yend=None, yintercept=None,
-        **kwargs
-    ):
+        geom: str | type[geom_base_class],
+        x: float | None = None,
+        y: float | None = None,
+        xmin: float | None = None,
+        xmax: float | None = None,
+        xend: float | None = None,
+        xintercept: float | None = None,
+        ymin: float | None = None,
+        ymax: float | None = None,
+        yend: float | None = None,
+        yintercept: float | None = None,
+        **kwargs: Any
+    ) -> None:
         variables = locals()
 
         # position only, and combined aesthetics
@@ -88,11 +104,12 @@ class annotate:
 
         data = pd.DataFrame(pos_aesthetics)
         if isinstance(geom, str):
-            geom = Registry[f'geom_{geom}']
-        elif not (isinstance(geom, type) and
-                  issubclass(geom, geom_base_class)):
+            geom_klass: type[geom_base_class] = Registry[f'geom_{geom}']
+        elif isinstance(geom, type) and issubclass(geom, geom_base_class):
+            geom_klass = geom
+        else:
             raise PlotnineError(
-                "geom must either be a geom.geom() "
+                "geom must either be a plotnine.geom.geom() "
                 "descendant (e.g. plotnine.geom_point), or "
                 "a string naming a geom (e.g. 'point', 'text', "
                 f"...). Got {repr(geom)}"
@@ -101,7 +118,7 @@ class annotate:
         mappings = aes(**{ae: ae for ae in data.columns})
 
         # The positions are mapped, the rest are manual settings
-        self._annotation_geom = geom(
+        self._annotation_geom = geom_klass(
             data,
             mappings,
             stat='identity',
@@ -110,11 +127,14 @@ class annotate:
             **kwargs
         )
 
-    def __radd__(self, gg):
+    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+        """
+        Add to ggplot
+        """
         gg += self.to_layer()  # Add layer
         return gg
 
-    def to_layer(self):
+    def to_layer(self) -> p9.layer.layer:
         """
         Make a layer that represents this annotation
 

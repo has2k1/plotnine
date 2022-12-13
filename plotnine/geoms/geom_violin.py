@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
@@ -7,6 +11,17 @@ from ..utils import groupby_apply, interleave, make_iterable, resolution
 from .geom import geom
 from .geom_path import geom_path
 from .geom_polygon import geom_polygon
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any, Tuple
+
+    import matplotlib as mpl
+
+    import plotnine as p9
+
+    from ..mapping import aes
+    from ..typing import DataLike
 
 
 @document
@@ -40,9 +55,14 @@ class geom_violin(geom):
     DEFAULT_PARAMS = {'stat': 'ydensity', 'position': 'dodge',
                       'draw_quantiles': None, 'style': 'full', 'scale': 'area',
                       'trim': True, 'width': None, 'na_rm': False}
-    legend_geom = 'polygon'
+    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: Any
+    ) -> None:
         if 'draw_quantiles' in kwargs:
             kwargs['draw_quantiles'] = make_iterable(kwargs['draw_quantiles'])
             if not all(0 < q < 1 for q in kwargs['draw_quantiles']):
@@ -58,16 +78,16 @@ class geom_violin(geom):
                     f"style must be either {allowed}"
                 )
 
-        super().__init__(*args, **kwargs)
+        super().__init__(mapping, data, **kwargs)
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if 'width' not in data:
             if self.params['width']:
                 data['width'] = self.params['width']
             else:
                 data['width'] = resolution(data['x'], False) * 0.9
 
-        def func(df):
+        def func(df: pd.DataFrame) -> pd.DataFrame:
             df['ymin'] = df['y'].min()
             df['ymax'] = df['y'].max()
             df['xmin'] = df['x'] - df['width']/2
@@ -78,7 +98,14 @@ class geom_violin(geom):
         data = groupby_apply(data, 'group', func)
         return data
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         quantiles = params['draw_quantiles']
         style = params['style']
 
@@ -136,7 +163,10 @@ class geom_violin(geom):
                                      ax, **params)
 
 
-def make_quantile_df(data, draw_quantiles):
+def make_quantile_df(
+    data: pd.DataFrame,
+    draw_quantiles: Tuple[float]
+) -> pd.DataFrame:
     """
     Return a dataframe with info needed to draw quantile segments
     """
@@ -151,6 +181,7 @@ def make_quantile_df(data, draw_quantiles):
     data = pd.DataFrame({
         'x': interleave(violin_xminvs, violin_xmaxvs),
         'y': np.repeat(ys, 2),
-        'group': np.repeat(np.arange(1, len(ys)+1), 2)})
+        'group': np.repeat(np.arange(1, len(ys)+1), 2)
+    })
 
     return data

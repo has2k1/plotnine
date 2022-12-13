@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+from typing import Any, Sized
 from warnings import warn
 
 import pandas as pd
@@ -7,7 +11,17 @@ from ..exceptions import PlotnineWarning
 from ..mapping import aes
 from ..utils import make_iterable, order_as_data_mapping
 from .geom import geom
+from .geom_path import geom_path
 from .geom_segment import geom_segment
+
+if typing.TYPE_CHECKING:
+    import types
+
+    import matplotlib as mpl
+
+    import plotnine as p9
+
+    from ..typing import DataLike
 
 
 @document
@@ -26,9 +40,14 @@ class geom_abline(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'inherit_aes': False}
     REQUIRED_AES = {'slope', 'intercept'}
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
-    def __init__(self, mapping=None, data=None, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: Any
+    ) -> None:
         data, mapping = order_as_data_mapping(data, mapping)
         slope = kwargs.pop('slope', None)
         intercept = kwargs.pop('intercept', None)
@@ -42,7 +61,8 @@ class geom_abline(geom):
             if mapping:
                 warn("The 'intercept' and 'slope' when specified override "
                      "the aes() mapping.", PlotnineWarning)
-            if data is not None and len(data):
+
+            if isinstance(data, Sized) and len(data):
                 warn("The 'intercept' and 'slope' when specified override "
                      "the data", PlotnineWarning)
 
@@ -61,7 +81,14 @@ class geom_abline(geom):
 
         geom.__init__(self, mapping, data, **kwargs)
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         """
         Plot all groups
         """
@@ -74,5 +101,10 @@ class geom_abline(geom):
 
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(gdata, panel_params,
-                                    coord, ax, **params)
+            geom_segment.draw_group(
+                gdata,
+                panel_params,
+                coord,
+                ax,
+                **params
+            )

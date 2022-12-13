@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 import warnings
 
 import numpy as np
@@ -7,7 +10,17 @@ from ..coords import coord_flip
 from ..exceptions import PlotnineWarning
 from ..utils import log
 from .annotate import annotate
+from .geom_path import geom_path
 from .geom_rug import geom_rug
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any, Literal, Sequence
+
+    import matplotlib as mpl
+    import numpy.typing as npt
+
+    import plotnine as p9
 
 
 class _geom_logticks(geom_rug):
@@ -19,9 +32,15 @@ class _geom_logticks(geom_rug):
                       'na_rm': False, 'sides': 'bl', 'alpha': 1,
                       'color': 'black', 'size': 0.5, 'linetype': 'solid',
                       'lengths': (0.036, 0.0225, 0.012), 'base': 10}
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
-    def draw_layer(self, data, layout, coord, **params):
+    def draw_layer(
+        self,
+        data: pd.DataFrame,
+        layout: p9.facets.layout.Layout,
+        coord: p9.coords.coord.coord,
+        **params: Any
+    ) -> None:
         """
         Draw ticks on every panel
         """
@@ -32,7 +51,12 @@ class _geom_logticks(geom_rug):
             self.draw_panel(data, panel_params, coord, ax, **params)
 
     @staticmethod
-    def _check_log_scale(base, sides, panel_params, coord):
+    def _check_log_scale(
+        base: float | None,
+        sides: str,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+    ) -> tuple[float, float]:
         """
         Check the log transforms
 
@@ -57,7 +81,7 @@ class _geom_logticks(geom_rug):
         out : tuple
             The bases (base_x, base_y) to use when generating the ticks.
         """
-        def is_log(scale):
+        def is_log(scale: p9.scales.scale.scale) -> bool:
             if not hasattr(scale, 'trans'):
                 return False
             trans = scale.trans
@@ -113,10 +137,13 @@ class _geom_logticks(geom_rug):
                     f"{y_scale.trans.base}",
                     PlotnineWarning
                 )
-        return base_x, base_y
+        return base_x, base_y  # type: ignore
 
     @staticmethod
-    def _calc_ticks(value_range, base):
+    def _calc_ticks(
+        value_range: tuple[float, float],
+        base: float
+    ) -> tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Calculate tick marks within a range
 
@@ -133,7 +160,10 @@ class _geom_logticks(geom_rug):
         out: tuple
             (major, middle, minor) tick locations
         """
-        def _minor(x, mid_idx):
+        def _minor(
+            x: Sequence[Any],
+            mid_idx: int
+        ) -> npt.NDArray[Any]:
             return np.hstack([x[1:mid_idx], x[mid_idx+1:-1]])
 
         # * Calculate the low and high powers,
@@ -154,15 +184,22 @@ class _geom_logticks(geom_rug):
         major = np.array([x[0] for x in breaks] + [breaks[-1][-1]])
         if n_ticks % 2:
             mid_idx = n_ticks // 2
-            middle = [x[mid_idx] for x in breaks]
+            middle = np.array([x[mid_idx] for x in breaks])
             minor = np.hstack([_minor(x, mid_idx) for x in breaks])
         else:
-            middle = []
+            middle = np.array([])
             minor = np.hstack([x[1:-1] for x in breaks])
 
         return major, middle, minor
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         # Any passed data is ignored, the relevant data is created
         sides = params['sides']
         lengths = params['lengths']
@@ -173,9 +210,20 @@ class _geom_logticks(geom_rug):
             'linetype': params['linetype']
         }
 
-        def _draw(geom, axis, tick_positions):
-            for (positions, length) in zip(tick_positions, lengths):
-                data = pd.DataFrame({axis: positions, **_aesthetics})
+        def _draw(
+            geom: p9.geoms.geom.geom,
+            axis: Literal["x", "y"],
+            tick_positions: tuple[
+                npt.NDArray[Any],
+                npt.NDArray[Any],
+                npt.NDArray[Any]
+            ]
+        ) -> None:
+            for (position, length) in zip(tick_positions, lengths):
+                data = pd.DataFrame({
+                    axis: position,
+                    **_aesthetics  # type: ignore
+                })
                 geom.draw_group(
                     data,
                     panel_params,
@@ -199,11 +247,11 @@ class _geom_logticks(geom_rug):
 
         if 'b' in sides or 't' in sides:
             tick_positions = self._calc_ticks(tick_range_x, base_x)
-            _draw(super(), 'x', tick_positions)
+            _draw(self, 'x', tick_positions)
 
         if 'l' in sides or 'r' in sides:
             tick_positions = self._calc_ticks(tick_range_y, base_y)
-            _draw(super(), 'y', tick_positions)
+            _draw(self, 'y', tick_positions)
 
 
 class annotation_logticks(annotate):
@@ -237,12 +285,20 @@ class annotation_logticks(annotate):
         the scale will be used.
     """
 
-    def __init__(self, sides='bl', alpha=1, color='black', size=0.5,
-                 linetype='solid', lengths=(0.036, 0.0225, 0.012),
-                 base=None):
+    def __init__(
+        self,
+        sides: str = 'bl',
+        alpha: float = 1,
+        color: str | tuple[float, ...] = 'black',
+        size: float = 0.5,
+        linetype: str | tuple[float, ...] = 'solid',
+        lengths: tuple[float, float, float] = (0.036, 0.0225, 0.012),
+        base: float | None = None
+    ) -> None:
         if len(lengths) != 3:
             raise ValueError(
-                "length for annotation_logticks must be a tuple of 3 floats")
+                "length for annotation_logticks must be a tuple of 3 floats"
+            )
 
         self._annotation_geom = _geom_logticks(sides=sides,
                                                alpha=alpha,

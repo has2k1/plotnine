@@ -1,6 +1,20 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from .geom import geom
+from .geom_path import geom_path
 from .geom_segment import geom_segment
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+    import pandas as pd
+
+    import plotnine as p9
 
 
 @document
@@ -19,10 +33,16 @@ class geom_linerange(geom):
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         data.eval("""
                      xend = x
                      y = ymin

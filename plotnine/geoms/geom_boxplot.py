@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from warnings import warn
 
 import matplotlib.lines as mlines
@@ -20,6 +23,18 @@ from .geom import geom
 from .geom_crossbar import geom_crossbar
 from .geom_point import geom_point
 from .geom_segment import geom_segment
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any, Sequence
+
+    import matplotlib as mpl
+    import numpy.typing as npt
+
+    import plotnine as p9
+
+    from ..mapping import aes
+    from ..typing import DataLike
 
 
 @document
@@ -70,7 +85,12 @@ class geom_boxplot(geom):
                       'varwidth': False, 'notchwidth': 0.5,
                       'fatten': 2}
 
-    def __init__(self, mapping=None, data=None, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: Any
+    ) -> None:
         _position = kwargs.get('position', self.DEFAULT_PARAMS['position'])
         varwidth = kwargs.get('varwidth', self.DEFAULT_PARAMS['varwidth'])
 
@@ -86,7 +106,7 @@ class geom_boxplot(geom):
 
         super().__init__(mapping, data, **kwargs)
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if 'width' not in data:
             width = self.params.get('width', None)
             if width is not None:
@@ -127,8 +147,14 @@ class geom_boxplot(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
-        def flat(*args):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
+        def flat(*args: Sequence[list[float]]) -> npt.NDArray[Any]:
             """Flatten list-likes"""
             return np.hstack(args)
 
@@ -147,10 +173,14 @@ class geom_boxplot(geom):
         # box
         box_columns = ['xmin', 'xmax', 'lower', 'middle', 'upper']
         box = data[common_columns + box_columns].copy()
-        box.rename(columns={'lower': 'ymin',
-                            'middle': 'y',
-                            'upper': 'ymax'},
-                   inplace=True)
+        box.rename(
+            columns={
+                'lower': 'ymin',
+                'middle': 'y',
+                'upper': 'ymax'
+            },
+            inplace=True
+        )
 
         # notch
         if params['notch']:
@@ -160,7 +190,7 @@ class geom_boxplot(geom):
         # outliers
         num_outliers = len(data['outliers'].iloc[0])
         if num_outliers:
-            def outlier_value(param):
+            def outlier_value(param: str) -> Any:
                 oparam = f'outlier_{param}'
                 if params[oparam] is not None:
                     return params[oparam]
@@ -186,7 +216,11 @@ class geom_boxplot(geom):
                                  coord, ax, **params)
 
     @staticmethod
-    def draw_legend(data, da, lyr):
+    def draw_legend(
+        data: pd.DataFrame,
+        da: mpl.patches.DrawingArea,
+        lyr: p9.layer.layer
+    ) -> mpl.patches.DrawingArea:
         """
         Draw a rectangle in the box
 

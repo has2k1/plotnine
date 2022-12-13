@@ -4,7 +4,6 @@ import types
 import typing
 from contextlib import suppress
 
-import matpolotlib as mpl
 import numpy as np
 import pandas as pd
 
@@ -12,6 +11,8 @@ from ..exceptions import PlotnineError
 from ..utils import match
 
 if typing.TYPE_CHECKING:
+    import matpolotlib as mpl
+
     import plotnine as p9
 
 
@@ -90,11 +91,11 @@ class Layout:
         scale and a y scale.
         """
         layout = self.layout
-        if self.panel_scales_x is None and scales.x:
+        if not hasattr(self, "panel_scales_x") and scales.x:
             result = self.facet.init_scales(layout, scales.x, None)
             self.panel_scales_x = result.x
 
-        if self.panel_scales_y is None and scales.y:
+        if not hasattr(self, "panel_scales_y") and scales.y:
             result = self.facet.init_scales(layout, None, scales.y)
             self.panel_scales_y = result.y
 

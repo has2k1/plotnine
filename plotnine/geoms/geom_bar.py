@@ -1,6 +1,13 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from ..utils import resolution
 from .geom_rect import geom_rect
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
 
 
 @document
@@ -26,7 +33,7 @@ class geom_bar(geom_rect):
     DEFAULT_PARAMS = {'stat': 'count', 'position': 'stack',
                       'na_rm': False, 'width': None}
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if 'width' not in data:
             if self.params['width']:
                 data['width'] = self.params['width']

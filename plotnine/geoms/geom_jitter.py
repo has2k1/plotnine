@@ -1,7 +1,17 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..positions import position_jitter
 from .geom_point import geom_point
+
+if typing.TYPE_CHECKING:
+    from typing import Any
+
+    from ..mapping import aes
+    from ..typing import DataLike
 
 
 @document
@@ -35,7 +45,12 @@ class geom_jitter(geom_point):
                       'na_rm': False, 'width': None, 'height': None,
                       'random_state': None}
 
-    def __init__(self, mapping=None, data=None, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: Any
+    ) -> None:
         if {'width', 'height', 'random_state'} & set(kwargs):
             if 'position' in kwargs:
                 raise PlotnineError(

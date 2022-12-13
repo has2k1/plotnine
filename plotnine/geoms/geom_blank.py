@@ -1,5 +1,18 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from .geom import geom
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+    import pandas as pd
+
+    import plotnine as p9
 
 
 @document
@@ -16,8 +29,15 @@ class geom_blank(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         pass
 
-    def handle_na(self, data):
+    def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
         return data

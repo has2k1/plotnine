@@ -1,7 +1,14 @@
+from __future__ import annotations
+
+import typing
+
 import numpy as np
 
 from ..doctools import document
 from .geom_segment import geom_segment
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
 
 
 @document
@@ -22,7 +29,7 @@ class geom_spoke(geom_segment):
     """
     REQUIRED_AES = {'x', 'y', 'angle', 'radius'}
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         try:
             radius = data['radius']
         except KeyError:

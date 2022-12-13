@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+import types
+import typing
+
 import numpy as np
 import pandas as pd
 from matplotlib.collections import PolyCollection
@@ -6,6 +11,13 @@ from ..doctools import document
 from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_polygon import geom_polygon
+
+if typing.TYPE_CHECKING:
+    from typing import Any
+
+    import matplotlib as mpl
+
+    import plotnine as p9
 
 
 @document
@@ -25,9 +37,16 @@ class geom_rect(geom):
     REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
-    legend_geom = 'polygon'
+    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         """
         Plot all groups
         """
@@ -41,16 +60,23 @@ class geom_rect(geom):
             self.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
-        verts = [None] * len(data)
 
         limits = zip(data['xmin'], data['xmax'],
                      data['ymin'], data['ymax'])
 
-        for i, (l, r, b, t) in enumerate(limits):
-            verts[i] = [(l, b), (l, t), (r, t), (r, b)]
+        verts = [
+            [(l, b), (l, t), (r, t), (r, b)]
+            for (l, r, b, t) in limits
+        ]
 
         fill = to_rgba(data['fill'], data['alpha'])
         color = data['color']
@@ -71,7 +97,7 @@ class geom_rect(geom):
         ax.add_collection(col)
 
 
-def _rectangles_to_polygons(df):
+def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
     """
     Convert rect data to polygons
 

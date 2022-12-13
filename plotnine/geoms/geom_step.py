@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import numpy as np
 import pandas as pd
 
@@ -6,6 +10,14 @@ from ..exceptions import PlotnineError
 from ..utils import copy_missing_columns
 from .geom import geom
 from .geom_path import geom_path
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+
+    import plotnine as p9
 
 
 @document
@@ -33,7 +45,13 @@ class geom_step(geom_path):
     draw_panel = geom.draw_panel
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         direction = params['direction']
         n = len(data)
         data = data.sort_values('x', kind='mergesort')
