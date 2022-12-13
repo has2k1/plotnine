@@ -12,7 +12,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
 from ..scales.scale import scale_continuous
-from ..utils import SIZE_FACTOR, ColoredDrawingArea, Registry, remove_missing
+from ..utils import SIZE_FACTOR, ColoredDrawingArea, remove_missing
 from .guide import guide
 
 # See guides.py for terminology
@@ -142,14 +142,6 @@ class guide_legend(guide):
         to draw the guide together with the data and the parameters that
         will be used in the call to geom.
         """
-        def get_legend_geom(layer):
-            if hasattr(layer.geom, 'draw_legend'):
-                geom = layer.geom.__class__
-            else:
-                name = f'geom_{layer.geom.legend_geom}'
-                geom = Registry[name]
-            return geom
-
         # A layer either contributes to the guide, or it does not. The
         # guide entries may be ploted in the layers
         self.glayers = []
@@ -185,14 +177,17 @@ class guide_legend(guide):
             for ae in set(self.override_aes) & set(data.columns):
                 data[ae] = self.override_aes[ae]
 
-            geom = get_legend_geom(l)
             data = remove_missing(
                 data, l.geom.params['na_rm'],
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
                 f'{l.geom.__class__.__name__} legend'
             )
             self.glayers.append(
-                types.SimpleNamespace(geom=geom, data=data, layer=l)
+                types.SimpleNamespace(
+                    geom=l.geom,
+                    data=data,
+                    layer=l
+                )
             )
         if not self.glayers:
             return None
@@ -254,7 +249,7 @@ class guide_legend(guide):
 
                         # special case, color does not apply to
                         # border/linewidth
-                        if issubclass(gl.geom, geom_text):
+                        if isinstance(gl.geom, geom_text):
                             pad = 0
                             if _size < initial_size:
                                 continue

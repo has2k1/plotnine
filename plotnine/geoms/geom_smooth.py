@@ -1,9 +1,22 @@
+from __future__ import annotations
+
+import typing
+
 from matplotlib.patches import Rectangle
 
 from ..doctools import document
 from .geom import geom
 from .geom_line import geom_line, geom_path
 from .geom_ribbon import geom_ribbon
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+    import pandas as pd
+
+    import plotnine as p9
 
 
 @document
@@ -28,7 +41,11 @@ class geom_smooth(geom):
     DEFAULT_PARAMS = {'stat': 'smooth', 'position': 'identity',
                       'na_rm': False, 'legend_fill_ratio': 0.5}
 
-    def use_defaults(self, data, aes_modifiers):
+    def use_defaults(
+        self,
+        data: pd.DataFrame,
+        aes_modifiers: dict[str, Any]
+    ) -> pd.DataFrame:
         has_ribbon = 'ymin' in data and 'ymax' in data
         data = super().use_defaults(data, aes_modifiers)
 
@@ -40,11 +57,17 @@ class geom_smooth(geom):
             del data['ymax']
         return data
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         return data.sort_values(['PANEL', 'group', 'x'])
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         has_ribbon = 'ymin' in data and 'ymax' in data
         if has_ribbon:
             data2 = data.copy()
@@ -58,7 +81,11 @@ class geom_smooth(geom):
         geom_line.draw_group(data, panel_params, coord, ax, **params)
 
     @staticmethod
-    def draw_legend(data, da, lyr):
+    def draw_legend(
+        data: pd.DataFrame,
+        da: mpl.patches.DrawingArea,
+        lyr: p9.layer.layer
+    ) -> mpl.patches.DrawingArea:
         """
         Draw letter 'a' in the box
 
@@ -75,6 +102,9 @@ class geom_smooth(geom):
         -------
         out : DrawingArea
         """
+        assert lyr.stat is not None
+        assert lyr.geom is not None
+
         try:
             has_se = lyr.stat.params['se']
         except KeyError:
@@ -82,12 +112,14 @@ class geom_smooth(geom):
 
         if has_se:
             r = lyr.geom.params['legend_fill_ratio']
-            bg = Rectangle((0, (1-r)*da.height/2),
-                           width=da.width,
-                           height=r*da.height,
-                           alpha=data['alpha'],
-                           facecolor=data['fill'],
-                           linewidth=0)
+            bg = Rectangle(
+                (0, (1-r)*da.height/2),
+                width=da.width,
+                height=r*da.height,
+                alpha=data['alpha'],
+                facecolor=data['fill'],
+                linewidth=0
+            )
             da.add_artist(bg)
 
         data['alpha'] = 1

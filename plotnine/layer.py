@@ -194,11 +194,13 @@ class layer:
             Layer that represents the specific `geom`.
         """
         kwargs = geom._kwargs
-        lkwargs = {'geom': geom,
-                   'mapping': geom.mapping,
-                   'data': geom.data,
-                   'stat': geom._stat,
-                   'position': geom._position}
+        lkwargs = {
+            'geom': geom,
+            'mapping': geom.mapping,
+            'data': geom.data,
+            'stat': geom._stat,
+            'position': geom._position
+        }
 
         layer_params = ('inherit_aes', 'show_legend', 'raster')
         for param in layer_params:

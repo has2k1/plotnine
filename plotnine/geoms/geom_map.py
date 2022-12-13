@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import numpy as np
 import pandas as pd
 from matplotlib.collections import LineCollection, PatchCollection
@@ -17,6 +21,19 @@ from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_point import geom_point
 from .geom_polygon import geom_polygon
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+    import numpy.typing as npt
+    import shapely
+
+    import plotnine as p9
+
+    from ..mapping import aes
+    from ..typing import DataLike
 
 
 @document
@@ -44,9 +61,13 @@ class geom_map(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}
     REQUIRED_AES = {'geometry'}
-    legend_geom = 'polygon'
 
-    def __init__(self, mapping=None, data=None, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: Any
+    ) -> None:
         if not HAS_GEOPANDAS:
             raise PlotnineError(
                 "geom_map requires geopandas. "
@@ -55,10 +76,11 @@ class geom_map(geom):
         geom.__init__(self, mapping, data, **kwargs)
         # Almost all geodataframes loaded from shapefiles
         # have a geometry column.
+        assert self.mapping is not None
         if 'geometry' not in self.mapping:
             self.mapping['geometry'] = 'geometry'
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if not len(data):
             return data
 
@@ -79,7 +101,8 @@ class geom_map(geom):
             bounds = pd.DataFrame(
                 np.array([x.bounds for x in data['geometry']]),
                 columns=['xmin', 'ymin', 'xmax', 'ymax'],
-                index=data.index)
+                index=data.index
+            )
         else:
             bounds.rename(
                 columns={
@@ -93,9 +116,16 @@ class geom_map(geom):
         data = pd.concat([data, bounds], axis=1)
         return data
 
-    def draw_panel(self, data, panel_params, coord, ax, **params):
+    def draw_panel(
+        self,
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         if not len(data):
-            return data
+            return
 
         data.loc[data['color'].isnull(), 'color'] = 'none'
         data.loc[data['fill'].isnull(), 'fill'] = 'none'
@@ -170,7 +200,11 @@ class geom_map(geom):
             raise TypeError(f"Could not plot geometry of type '{geom_type}'")
 
     @staticmethod
-    def draw_legend(data, da, lyr):
+    def draw_legend(
+        data: pd.DataFrame,
+        da: mpl.patches.DrawingArea,
+        lyr: p9.layer.layer
+    ) -> mpl.patches.DrawingArea:
         """
         Draw a rectangle in the box
 
@@ -192,7 +226,9 @@ class geom_map(geom):
         return geom_polygon.draw_legend(data, da, lyr)
 
 
-def PolygonPatch(obj):
+def PolygonPatch(
+    obj: shapely.geometry.Polygon,
+) -> mpl.patches.PathPatch:
     """
     Return a Matplotlib patch from a Polygon/MultiPolygon Geometry
 
@@ -212,7 +248,9 @@ def PolygonPatch(obj):
     by Sean Gillies (BSD license, https://pypi.org/project/descartes)
     which is nolonger being maintained.
     """
-    def cw_coords(ring):
+    def cw_coords(
+        ring: shapely.geometry.polygon.LinearRing
+    ) -> npt.NDArray[Any]:
         """
         Return Clockwise array coordinates
 
@@ -230,7 +268,9 @@ def PolygonPatch(obj):
             return np.asarray(ring.coords)[:, :2][::-1]
         return np.asarray(ring.coords)[:, :2]
 
-    def ccw_coords(ring):
+    def ccw_coords(
+        ring: shapely.geometry.polygon.LinearRing
+    ) -> npt.NDArray[Any]:
         """
         Return Counter Clockwise array coordinates
 

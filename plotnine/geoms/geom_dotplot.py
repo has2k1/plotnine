@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from warnings import warn
 
 import matplotlib.collections as mcoll
@@ -9,6 +12,15 @@ from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import groupby_apply, resolution, to_rgba
 from .geom import geom
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+    import pandas as pd
+
+    import plotnine as p9
 
 
 @document
@@ -43,7 +55,7 @@ class geom_dotplot(geom):
                       'na_rm': False, 'stackdir': 'up', 'stackratio': 1,
                       'dotsize': 1, 'stackgroups': False}
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         gp = self.params
         sp = self._stat.params
 
@@ -67,23 +79,23 @@ class geom_dotplot(geom):
 
         # Set up the stacking function and range
         if gp['stackdir'] in (None, 'up'):
-            def stackdots(a):
+            def stackdots(a: float) -> float:
                 return a - .5
-            stackaxismin = 0
-            stackaxismax = 1
+            stackaxismin: float = 0
+            stackaxismax: float = 1
         elif gp['stackdir'] == 'down':
-            def stackdots(a):
+            def stackdots(a: float) -> float:
                 return -a + .5
             stackaxismin = -1
             stackaxismax = 0
         elif gp['stackdir'] == 'center':
-            def stackdots(a):
-                return a - 1 - np.max(a-1)/2
+            def stackdots(a: float) -> float:
+                return a - 1 - np.max(a-1)/2  # type: ignore
             stackaxismin = -.5
             stackaxismax = .5
         elif gp['stackdir'] == 'centerwhole':
-            def stackdots(a):
-                return a - 1 - np.floor(np.max(a-1)/2)
+            def stackdots(a: float) -> float:
+                return a - 1 - np.floor(np.max(a-1)/2)  # type: ignore
             stackaxismin = -.5
             stackaxismax = .5
 
@@ -102,7 +114,7 @@ class geom_dotplot(geom):
 
         # Within each x, or x+group, set countidx=1,2,3,
         # and set stackpos according to stack function
-        def func(df):
+        def func(df: pd.DataFrame) -> pd.DataFrame:
             df['countidx'] = range(1, len(df)+1)
             df['stackpos'] = stackdots(df['countidx'])
             return df
@@ -132,7 +144,7 @@ class geom_dotplot(geom):
             # can be dodged like other geoms.
             # After position code is rewritten, each dot should have
             # its own bounding box.
-            def func(df):
+            def func(df: pd.DataFrame) -> pd.DataFrame:
                 df['ymin'] = df['y'].min() - data['binwidth'][0]/2
                 df['ymax'] = df['y'].max() + data['binwidth'][0]/2
                 return df
@@ -143,7 +155,13 @@ class geom_dotplot(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         data = coord.transform(data, panel_params)
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])
@@ -181,7 +199,11 @@ class geom_dotplot(geom):
         ax.add_collection(coll)
 
     @staticmethod
-    def draw_legend(data, da, lyr):
+    def draw_legend(
+        data: pd.DataFrame,
+        da: mpl.patches.DrawingArea,
+        lyr: p9.layer.layer
+    ) -> mpl.patches.DrawingArea:
         """
         Draw a point in the box
 

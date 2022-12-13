@@ -1,10 +1,23 @@
+from __future__ import annotations
+
+import typing
+
 import numpy as np
 import pandas as pd
 
 from ..doctools import document
 from ..utils import copy_missing_columns, resolution
 from .geom import geom
+from .geom_path import geom_path
 from .geom_segment import geom_segment
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+
+    import plotnine as p9
 
 
 @document
@@ -26,9 +39,9 @@ class geom_errorbar(geom):
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'width': 0.5}
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if 'width' not in data:
             if self.params['width']:
                 data['width'] = self.params['width']
@@ -41,14 +54,21 @@ class geom_errorbar(geom):
         return data
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         f = np.hstack
         # create (two horizontal bars) + vertical bar
         df = pd.DataFrame({
             'x': f([data['xmin'], data['xmin'], data['x']]),
             'xend': f([data['xmax'], data['xmax'], data['x']]),
             'y': f([data['ymin'], data['ymax'], data['ymax']]),
-            'yend': f([data['ymin'], data['ymax'], data['ymin']])})
+            'yend': f([data['ymin'], data['ymax'], data['ymin']])
+        })
 
         copy_missing_columns(df, data)
         geom_segment.draw_group(df, panel_params, coord, ax, **params)

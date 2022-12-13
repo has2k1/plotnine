@@ -1,5 +1,12 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from .geom_ribbon import geom_ribbon
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
 
 
 @document
@@ -29,7 +36,7 @@ class geom_area(geom_ribbon):
         }
     )
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         data['ymin'] = 0
         data['ymax'] = data['y']
         return data

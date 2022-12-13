@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import matplotlib.collections as mcoll
 import numpy as np
 import pandas as pd
@@ -5,6 +9,15 @@ import pandas as pd
 from ..doctools import document
 from ..utils import SIZE_FACTOR, interleave, make_line_segments, to_rgba
 from .geom import geom
+from .geom_path import geom_path
+
+if typing.TYPE_CHECKING:
+    import types
+    from typing import Any
+
+    import matplotlib as mpl
+
+    import plotnine as p9
 
 
 @document
@@ -35,10 +48,16 @@ class geom_segment(geom):
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'lineend': 'butt', 'arrow': None}
 
-    legend_geom = 'path'
+    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
     @staticmethod
-    def draw_group(data, panel_params, coord, ax, **params):
+    def draw_group(
+        data: pd.DataFrame,
+        panel_params: types.SimpleNamespace,
+        coord: p9.coords.coord.coord,
+        ax: mpl.axes.Axes,
+        **params: Any
+    ) -> None:
         data = coord.transform(data, panel_params)
         data['size'] *= SIZE_FACTOR
         color = to_rgba(data['color'], data['alpha'])

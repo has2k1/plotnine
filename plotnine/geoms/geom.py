@@ -3,18 +3,15 @@ from __future__ import annotations
 import types
 import typing
 from copy import deepcopy
-from typing import Any
 
-import matplotlib as mpl
 import pandas as pd
 
 from ..exceptions import PlotnineError
 from ..layer import layer
-from ..mapping.aes import aes, is_valid_aesthetic, rename_aesthetics
+from ..mapping.aes import is_valid_aesthetic, rename_aesthetics
 from ..mapping.evaluation import evaluate
 from ..positions.position import position
 from ..stats.stat import stat
-from ..typing import DataLike
 from ..utils import (
     Registry,
     copy_keys,
@@ -24,7 +21,14 @@ from ..utils import (
 )
 
 if typing.TYPE_CHECKING:
+    from typing import Any
+
+    import matplotlib as mpl
+
     import plotnine as p9
+
+    from ..mapping.aes import aes
+    from ..typing import DataLike
 
 
 class geom(metaclass=Registry):
@@ -490,3 +494,28 @@ class geom(metaclass=Registry):
             list(self.REQUIRED_AES | self.NON_MISSING_AES),
             self.__class__.__name__
         )
+
+    @staticmethod
+    def draw_legend(
+        data: pd.DataFrame,
+        da: mpl.patches.DrawingArea,
+        lyr: p9.layer.layer
+    ) -> mpl.patches.DrawingArea:
+        """
+        Draw a rectangle in the box
+
+        Parameters
+        ----------
+        data : dataframe
+            Data
+        da : DrawingArea
+            Canvas
+        lyr : layer
+            Layer
+
+        Returns
+        -------
+        out : DrawingArea
+        """
+        msg = "The geom should implement this method."
+        raise NotImplementedError(msg)

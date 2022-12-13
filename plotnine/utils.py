@@ -799,7 +799,7 @@ class Registry(type, metaclass=RegistryMeta):
     When objects are deleted, they are automatically removed
     from the Registry.
     """
-    _registry: WeakValueDictionary[Any, Any] = WeakValueDictionary()
+    _registry: WeakValueDictionary[str, Any] = WeakValueDictionary()
 
     def __new__(meta, name, bases, clsdict):
         cls = super().__new__(meta, name, bases, clsdict)
