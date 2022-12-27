@@ -3,8 +3,10 @@ from __future__ import annotations
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Callable, Protocol
+    from typing import Callable, Literal, Protocol
 
+    import numpy as np
+    import numpy.typing as npt
     import pandas as pd
     from typing_extensions import TypeAlias
 
@@ -47,3 +49,8 @@ if typing.TYPE_CHECKING:
         "pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]"
     )
     LayerDataLike: TypeAlias = "LayerData | DataFrameConvertible"
+    ColorLike: TypeAlias = "str | Literal['None', 'none']"
+    ColorsLike: TypeAlias = (
+        "ColorLike | list[ColorLike] | pd.Series[ColorLike] | "
+        "npt.NDArray[np.str_]"
+    )

@@ -133,8 +133,9 @@ def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
 
     # Aesthetic columns and others
     other_cols = df.columns.difference(
-        ['x', 'y', 'xmin', 'xmax', 'ymin', 'ymax'])
-    d = {col: np.repeat(df[col].values, 4) for col in other_cols}
+        ['x', 'y', 'xmin', 'xmax', 'ymin', 'ymax']
+    )
+    d = {str(col): np.repeat(df[col].to_numpy(), 4) for col in other_cols}
     data = pd.DataFrame({
         'x': x,
         'y': y,

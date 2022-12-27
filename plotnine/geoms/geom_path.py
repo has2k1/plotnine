@@ -60,13 +60,15 @@ class geom_path(geom):
                       'arrow': None}
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
-        def keep(x: Sequence[float]) -> npt.NDArray[Any]:
+        def keep(x: Sequence[float]) -> npt.NDArray[np.bool_]:
             # first non-missing to last non-missing
             first = match([False], x, nomatch=1, start=0)[0]
             last = len(x) - match([False], x[::-1], nomatch=1, start=0)[0]
-            bool_idx = np.hstack([np.repeat(False, first),
-                                  np.repeat(True, last-first),
-                                  np.repeat(False, len(x)-last)])
+            bool_idx = np.hstack([
+                np.repeat(False, first),
+                np.repeat(True, last-first),
+                np.repeat(False, len(x)-last)
+            ])
             return bool_idx
 
         # Get indices where any row for the select aesthetics has
@@ -153,7 +155,7 @@ class geom_path(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -162,9 +164,12 @@ class geom_path(geom):
 
         Parameters
         ----------
-        data : dataframe
+        data : Series
+            Data Row
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------
@@ -173,14 +178,16 @@ class geom_path(geom):
         data['size'] *= SIZE_FACTOR
         x = [0, da.width]
         y = [0.5 * da.height] * 2
-        key = mlines.Line2D(x,
-                            y,
-                            alpha=data['alpha'],
-                            linestyle=data['linetype'],
-                            linewidth=data['size'],
-                            color=data['color'],
-                            solid_capstyle='butt',
-                            antialiased=False)
+        key = mlines.Line2D(
+            x,
+            y,
+            alpha=data['alpha'],
+            linestyle=data['linetype'],
+            linewidth=data['size'],
+            color=data['color'],
+            solid_capstyle='butt',
+            antialiased=False
+        )
         da.add_artist(key)
         return da
 
@@ -270,10 +277,11 @@ class arrow:
         if not constant:
             # Get segments/points (x1, y1) -> (x2, y2)
             # for which to calculate the arrow heads
-            idx1, idx2 = [], []
+            idx1: list[int] = []
+            idx2: list[int] = []
             for _, df in data.groupby('group'):
-                idx1.extend(df.index[:-1])
-                idx2.extend(df.index[1:])
+                idx1.extend(df.index[:-1].to_list())
+                idx2.extend(df.index[1:].to_list())
 
             d = dict(
                 zorder=params['zorder'],
@@ -284,10 +292,10 @@ class arrow:
                 linestyle=data.loc[idx1, 'linetype']
             )
 
-            x1 = data.loc[idx1, 'x'].values
-            y1 = data.loc[idx1, 'y'].values
-            x2 = data.loc[idx2, 'x'].values
-            y2 = data.loc[idx2, 'y'].values
+            x1 = data.loc[idx1, 'x'].to_numpy()
+            y1 = data.loc[idx1, 'y'].to_numpy()
+            x2 = data.loc[idx2, 'x'].to_numpy()
+            y2 = data.loc[idx2, 'y'].to_numpy()
 
             if first:
                 paths = self.get_paths(x1, y1, x2, y2,
@@ -315,8 +323,10 @@ class arrow:
             if first:
                 x1, x2 = data['x'].iloc[0:2]
                 y1, y2 = data['y'].iloc[0:2]
-                x1, y1, x2, y2 = (np.array([i])
-                                  for i in (x1, y1, x2, y2))
+                x1, y1, x2, y2 = (
+                    np.array([i])
+                    for i in (x1, y1, x2, y2)
+                )
                 paths = self.get_paths(x1, y1, x2, y2,
                                        panel_params, coord, ax)
                 patch = mpatches.PathPatch(paths[0], **d)
@@ -326,8 +336,10 @@ class arrow:
                 x1, x2 = data['x'].iloc[-2:]
                 y1, y2 = data['y'].iloc[-2:]
                 x1, y1, x2, y2 = x2, y2, x1, y1
-                x1, y1, x2, y2 = (np.array([i])
-                                  for i in (x1, y1, x2, y2))
+                x1, y1, x2, y2 = (
+                    np.array([i])
+                    for i in (x1, y1, x2, y2)
+                )
                 paths = self.get_paths(x1, y1, x2, y2,
                                        panel_params, coord, ax)
                 patch = mpatches.PathPatch(paths[0], **d)
@@ -352,6 +364,21 @@ class arrow:
             List of points that define the tails of the arrows.
             The arrow heads will be at x1, y1. If you need them
             at x2, y2 reverse the input.
+
+        panel_params : types.SimpleNamespace
+            The scale information as may be required by the
+            axes. At this point, that information is about
+            ranges, ticks and labels. Attributes are of interest
+            to the geom are::
+
+                'panel_params.x.range'  # tuple
+                'panel_params.y.range'  # tuple
+
+        coord : coord
+            Coordinate (e.g. coord_cartesian) system of the
+            geom.
+        ax : axes
+            Axes on which to plot.
 
         Returns
         -------
@@ -414,11 +441,11 @@ def _draw_segments(
     # into segments, all in a single list.
     # Along the way the other parameters are put in
     # sequences accordingly
-    indices = []  # for attributes of starting point of each segment
-    segments = []
+    indices: list[int] = []  # for attributes of starting point of each segment
+    segments: list[float] = []
     for _, df in data.groupby('group'):
         idx = df.index
-        indices.extend(idx[:-1])  # One line from two points
+        indices.extend(idx[:-1].to_list())  # One line from two points
         x = data['x'].iloc[idx]
         y = data['y'].iloc[idx]
         segments.append(make_line_segments(x, y, ispath=True))

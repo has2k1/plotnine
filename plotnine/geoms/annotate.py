@@ -115,12 +115,12 @@ class annotate:
                 f"...). Got {repr(geom)}"
             )
 
-        mappings = aes(**{ae: ae for ae in data.columns})
+        mappings = aes(**{str(ae): ae for ae in data.columns})
 
         # The positions are mapped, the rest are manual settings
         self._annotation_geom = geom_klass(
-            data,
             mappings,
+            data,
             stat='identity',
             inherit_aes=False,
             show_legend=False,

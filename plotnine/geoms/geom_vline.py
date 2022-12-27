@@ -84,7 +84,7 @@ class geom_vline(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -93,8 +93,8 @@ class geom_vline(geom):
 
         Parameters
         ----------
-        data : dataframe
-            Legend data
+        data : Series
+            Data Row
         da : DrawingArea
             Canvas
         lyr : layer

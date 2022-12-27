@@ -48,7 +48,7 @@ class geom(metaclass=Registry):
     DEFAULT_PARAMS: dict[str, Any] = dict()
 
     #: geom/layer specific dataframe
-    data: DataLike = None
+    data: DataLike
 
     #: mappings i.e. :py:`aes(x='col1', fill='col2')`
     mapping: aes | None = None
@@ -225,7 +225,7 @@ class geom(metaclass=Registry):
         missing_aes = (
             self.DEFAULT_AES.keys() -
             self.aes_params.keys() -
-            set(data.columns)
+            set(data.columns.to_list())
         )
 
         # Not in data and not set, use default
@@ -282,7 +282,7 @@ class geom(metaclass=Registry):
         for pid, pdata in data.groupby('PANEL'):
             if len(pdata) == 0:
                 continue
-            ploc = pid - 1
+            ploc = pdata['PANEL'].iat[0] - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
             self.draw_panel(pdata, panel_params, coord, ax, **params)
@@ -497,7 +497,7 @@ class geom(metaclass=Registry):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -506,8 +506,8 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
-            Data
+        data : Series
+            Data Row
         da : DrawingArea
             Canvas
         lyr : layer

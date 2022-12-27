@@ -17,7 +17,7 @@ from .geom_segment import geom_segment
 
 if typing.TYPE_CHECKING:
     import types
-    from typing import Any, Sequence
+    from typing import Any
 
     import matplotlib as mpl
     import numpy.typing as npt
@@ -77,10 +77,10 @@ class geom_crossbar(geom):
 
         # From violin
         notchwidth = typing.cast(float, params.get('notchwidth'))
-        ynotchupper = data.get('ynotchupper')
-        ynotchlower = data.get('ynotchlower')
+        # ynotchupper = data.get('ynotchupper')
+        # ynotchlower = data.get('ynotchlower')
 
-        def flat(*args: Sequence[list[float]]) -> npt.NDArray[Any]:
+        def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
             """Flatten list-likes"""
             return np.hstack(args)
 
@@ -93,11 +93,14 @@ class geom_crossbar(geom):
         middle['alpha'] = 1
         middle['size'] *= params['fatten']
 
-        has_notch = ynotchlower is not None and ynotchupper is not None
+        has_notch = 'ynotchupper' in data and 'ynotchlower' in data
         if has_notch:  # 10 points + 1 closing
+            ynotchupper = data['ynotchupper']
+            ynotchlower = data['ynotchlower']
+
             if (any(ynotchlower < ymin) or any(ynotchupper > ymax)):
-                warn("Notch went outside hinges."
-                     " Try setting notch=False.", PlotnineWarning)
+                warn("Notch went outside the hinges. "
+                     "Try setting notch=False.", PlotnineWarning)
 
             notchindent = (1 - notchwidth) * (xmax-xmin)/2
 
@@ -124,7 +127,7 @@ class geom_crossbar(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -133,8 +136,8 @@ class geom_crossbar(geom):
 
         Parameters
         ----------
-        data : dataframe
-            Data
+        data : Series
+            Data Row
         da : DrawingArea
             Canvas
         lyr : layer

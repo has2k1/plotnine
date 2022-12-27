@@ -79,22 +79,22 @@ class geom_dotplot(geom):
 
         # Set up the stacking function and range
         if gp['stackdir'] in (None, 'up'):
-            def stackdots(a: float) -> float:
+            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
                 return a - .5
             stackaxismin: float = 0
             stackaxismax: float = 1
         elif gp['stackdir'] == 'down':
-            def stackdots(a: float) -> float:
+            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
                 return -a + .5
             stackaxismin = -1
             stackaxismax = 0
         elif gp['stackdir'] == 'center':
-            def stackdots(a: float) -> float:
+            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
                 return a - 1 - np.max(a-1)/2  # type: ignore
             stackaxismin = -.5
             stackaxismax = .5
         elif gp['stackdir'] == 'centerwhole':
-            def stackdots(a: float) -> float:
+            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
                 return a - 1 - np.floor(np.max(a-1)/2)  # type: ignore
             stackaxismin = -.5
             stackaxismax = .5
@@ -200,7 +200,7 @@ class geom_dotplot(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -209,8 +209,8 @@ class geom_dotplot(geom):
 
         Parameters
         ----------
-        data : dataframe
-            Legend Data
+        data : Series
+            Data Row
         da : DrawingArea
             Canvas
         lyr : layer

@@ -26,7 +26,7 @@ from .geom_segment import geom_segment
 
 if typing.TYPE_CHECKING:
     import types
-    from typing import Any, Sequence
+    from typing import Any
 
     import matplotlib as mpl
     import numpy.typing as npt
@@ -154,7 +154,7 @@ class geom_boxplot(geom):
         ax: mpl.axes.Axes,
         **params: Any
     ) -> None:
-        def flat(*args: Sequence[list[float]]) -> npt.NDArray[Any]:
+        def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
             """Flatten list-likes"""
             return np.hstack(args)
 
@@ -217,7 +217,7 @@ class geom_boxplot(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -226,8 +226,8 @@ class geom_boxplot(geom):
 
         Parameters
         ----------
-        data : dataframe
-            Data
+        data : Series
+            Data Row
         da : DrawingArea
             Canvas
         lyr : layer

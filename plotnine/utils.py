@@ -496,7 +496,13 @@ def jitter(x, factor=1, amount=None, random_state=None):
     return x + random_state.uniform(-amount, amount, len(x))
 
 
-def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
+def remove_missing(
+    df: pd.DataFrame,
+    na_rm: bool = False,
+    vars: list[str] | None = None,
+    name: str = '',
+    finite: bool = False
+) -> pd.DataFrame:
     """
     Convenience function to remove missing values from a dataframe
 
@@ -515,9 +521,9 @@ def remove_missing(df, na_rm=False, vars=None, name='', finite=False):
     n = len(df)
 
     if vars is None:
-        vars = df.columns
+        vars = df.columns.to_list()
     else:
-        vars = df.columns.intersection(vars)
+        vars = df.columns.intersection(vars).to_list()
 
     if finite:
         lst = [np.inf, -np.inf]
