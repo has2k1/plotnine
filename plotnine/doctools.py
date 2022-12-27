@@ -1,8 +1,17 @@
+from __future__ import annotations
+
 import re
+import typing
 from functools import lru_cache
 from textwrap import dedent, indent, wrap
 
 import numpy as np
+
+if typing.TYPE_CHECKING:
+    from typing import Any
+
+    import plotnine as p9
+
 
 # Parameter arguments that are listed first in the geom and
 # stat class signatures
@@ -139,12 +148,19 @@ DOCSTRING_SECTIONS = {
     'parameters', 'see also', 'note', 'notes',
     'example', 'examples'}
 
-PARAM_PATTERN = re.compile(r'\s*([_A-Za-z]\w*)\s:\s')
+PARAM_PATTERN = re.compile(
+    r'\s*'
+    r'([_A-Za-z]\w*)'
+    r'\s:\s'
+)
 
 
-def dict_to_table(header, contents):
+def dict_to_table(
+    header: tuple[str, str],
+    contents: dict[str, str]
+) -> str:
     """
-    Convert dict to table
+    Convert dict to an (n x 2) table
 
     Parameters
     ----------
@@ -153,15 +169,28 @@ def dict_to_table(header, contents):
     contents : dict
         The key becomes column 1 of table and the
         value becomes column 2 of table.
+
+    Examples
+    --------
+    >>> d = {"alpha": 1, "color": "blue", "fill": None}
+    >>> print(dict_to_table(("Aesthetic", "Default Value"), d))
+    ========= =========
+    Aesthetic Default Value
+    ========= =========
+    alpha     :py:`1`
+    color     :py:`'blue'`
+    fill      :py:`None`
+    ========= =========
     """
-    def to_text(row):
+    def to_text(row: tuple[str, str]) -> str:
         name, value = row
         m = max_col1_size + 1 - len(name)
         spacing = ' ' * m
-
         return ''.join([name, spacing, value])
 
-    thead = tuple(str(col) for col in header)
+    def longest_value(row: tuple[str, str]) -> int:
+        return max(len(value) for value in row)
+
     rows = []
     for name, value in contents.items():
         # code highlighting
@@ -171,16 +200,20 @@ def dict_to_table(header, contents):
             value = f':py:`{value}`'
         rows.append((name, value))
 
-    n = np.max([len(header[0])] +
-               [len(col1) for col1, _ in rows])
-    hborder = tuple('='*n for col in header)
-    rows = [hborder, thead, hborder] + rows + [hborder]
+    n = max(longest_value(row) for row in [header] + rows)
+    hborder = '=' * n, '=' * n
+    rows = [hborder, header, hborder] + rows + [hborder]
     max_col1_size = np.max([len(col1) for col1, _ in rows])
     table = '\n'.join([to_text(row) for row in rows])
     return table
 
 
-def make_signature(name, params, common_params, common_param_values):
+def make_signature(
+    name: str,
+    params: dict[str, Any],
+    common_params: list[str],
+    common_param_values: dict[str, Any]
+) -> str:
     """
     Create a signature for a geom or stat
 
@@ -192,7 +225,7 @@ def make_signature(name, params, common_params, common_param_values):
     tokens = []
     seen = set()
 
-    def tokens_append(key, value):
+    def tokens_append(key: str, value: Any) -> None:
         if isinstance(value, str):
             value = f"'{value}'"
         tokens.append(f'{key}={value}')
@@ -211,17 +244,18 @@ def make_signature(name, params, common_params, common_param_values):
         tokens_append(key, params[key])
 
     # name, 1 opening bracket, 4 spaces in SIGNATURE_TPL
-    s1 = name + '('
-    s2 = ', '.join(tokens) + ', **kwargs)'
+    s_params = ', '.join(tokens)
+    s1 = f'{name}('
+    s2 = f'{s_params}, **kwargs)'
     line_width = 78 - len(s1)
     indent_spaces = ' ' * (len(s1) + 4)
-    newline_and_space = '\n' + indent_spaces
     s2_lines = wrap(s2, width=line_width)
-    return s1 + newline_and_space.join(s2_lines)
+    s2_indented = f'\n{indent_spaces}'.join(s2_lines)
+    return f"{s1}{s2_indented}"
 
 
 @lru_cache(maxsize=256)
-def docstring_section_lines(docstring, section_name):
+def docstring_section_lines(docstring: str, section_name: str) -> str:
     """
     Return a section of a numpydoc string
 
@@ -260,14 +294,14 @@ def docstring_section_lines(docstring, section_name):
     return '\n'.join(lines)
 
 
-def docstring_parameters_section(obj):
+def docstring_parameters_section(obj: Any) -> str:
     """
     Return the parameters section of a docstring
     """
     return docstring_section_lines(obj.__doc__, 'parameters')
 
 
-def param_spec(line):
+def param_spec(line: str) -> str | None:
     """
     Identify and return parameter
 
@@ -289,11 +323,10 @@ def param_spec(line):
     >>> param_spec("    A line in the parameter section.")
     """
     m = PARAM_PATTERN.match(line)
-    if m:
-        return m.group(1)
+    return m.group(1) if m else None
 
 
-def parameters_str_to_dict(param_section):
+def parameters_str_to_dict(param_section: str) -> dict[str, str]:
     """
     Convert a param section to a dict
 
@@ -316,8 +349,8 @@ def parameters_str_to_dict(param_section):
     :func:`parameters_dict_to_str`
     """
     d = {}
-    previous_param = None
-    param_desc = None
+    previous_param = ''
+    param_desc: list[str] = []
     for line in param_section.split('\n'):
         param = param_spec(line)
         if param:
@@ -334,7 +367,7 @@ def parameters_str_to_dict(param_section):
     return d
 
 
-def parameters_dict_to_str(d):
+def parameters_dict_to_str(d: dict[str, str]) -> str:
     """
     Convert a dict of param section to a string
 
@@ -355,7 +388,7 @@ def parameters_dict_to_str(d):
     return '\n'.join(d.values())
 
 
-def qualified_name(s, prefix):
+def qualified_name(s: str | type | object, prefix: str) -> str:
     """
     Return the qualified name of s
 
@@ -386,7 +419,9 @@ def qualified_name(s, prefix):
     return s
 
 
-def document_geom(geom):
+def document_geom(
+    geom: type[p9.geoms.geom.geom]
+) -> type[p9.geoms.geom.geom]:
     """
     Create a structured documentation for the geom
 
@@ -395,13 +430,15 @@ def document_geom(geom):
     """
     # Dedented so that it lineups (in sphinx) with the part
     # generated parts when put together
-    docstring = dedent(geom.__doc__)
+    docstring = dedent(geom.__doc__ or "")
 
     # usage
-    signature = make_signature(geom.__name__,
-                               geom.DEFAULT_PARAMS,
-                               common_geom_params,
-                               common_geom_param_values)
+    signature = make_signature(
+        geom.__name__,
+        geom.DEFAULT_PARAMS,
+        common_geom_params,
+        common_geom_param_values
+    )
     usage = GEOM_SIGNATURE_TPL.format(signature=signature)
 
     # aesthetics
@@ -438,7 +475,9 @@ def document_geom(geom):
     return geom
 
 
-def document_stat(stat):
+def document_stat(
+    stat: type[p9.stats.stat.stat]
+) -> type[p9.stats.stat.stat]:
     """
     Create a structured documentation for the stat
 
@@ -447,13 +486,15 @@ def document_stat(stat):
     """
     # Dedented so that it lineups (in sphinx) with the part
     # generated parts when put together
-    docstring = dedent(stat.__doc__)
+    docstring = dedent(stat.__doc__ or "")
 
     # usage:
-    signature = make_signature(stat.__name__,
-                               stat.DEFAULT_PARAMS,
-                               common_stat_params,
-                               common_stat_param_values)
+    signature = make_signature(
+        stat.__name__,
+        stat.DEFAULT_PARAMS,
+        common_stat_params,
+        common_stat_param_values
+    )
     usage = STAT_SIGNATURE_TPL.format(signature=signature)
 
     # aesthetics
@@ -484,7 +525,9 @@ def document_stat(stat):
     return stat
 
 
-def document_scale(cls):
+def document_scale(
+    cls: type[p9.scales.scale.scale]
+) -> type[p9.scales.scale.scale]:
     """
     Create a documentation for a scale
 
@@ -536,8 +579,10 @@ def document_scale(cls):
 
     # Fill in the processed superclass parameters
     superclass_parameters = '\n'.join(params_list)
-    cls.__doc__ = cls.__doc__.format(
-        superclass_parameters=superclass_parameters)
+    cls_doc = cls.__doc__ or ""  # for mypy
+    cls.__doc__ = cls_doc.format(
+        superclass_parameters=superclass_parameters
+    )
     return cls
 
 
@@ -548,7 +593,7 @@ DOC_FUNCTIONS = {
 }
 
 
-def document(cls):
+def document(cls: type) -> type:
     """
     Document a plotnine class
 
