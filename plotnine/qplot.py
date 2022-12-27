@@ -1,9 +1,11 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from warnings import warn
 
 import numpy as np
 import pandas as pd
-import pandas.api.types as pdtypes
 from patsy.eval import EvalEnvironment
 
 from .exceptions import PlotnineError, PlotnineWarning
@@ -17,10 +19,28 @@ from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
 from .utils import Registry, array_kind, is_string
 
+if typing.TYPE_CHECKING:
+    from typing import Any, Iterable, Literal
 
-def qplot(x=None, y=None, data=None, facets=None, margins=False,
-          geom='auto', xlim=None, ylim=None, log='', main=None,
-          xlab=None, ylab=None, asp=None, **kwargs):
+    from .typing import DataLike
+
+
+def qplot(
+    x: str | Iterable[Any] | range | None = None,
+    y: str | Iterable[Any] | range | None = None,
+    data: DataLike | None = None,
+    facets=None,
+    margins: bool | list[str] = False,
+    geom: str | list[str] | tuple[str] = 'auto',
+    xlim: tuple[float, float] | None = None,
+    ylim: tuple[float, float] | None = None,
+    log: Literal['x', 'y', 'xy'] | None = None,
+    main: str | None = None,
+    xlab: str | None = None,
+    ylab: str | None = None,
+    asp: float | None = None,
+    **kwargs: Any
+):
     """
     Quick plot
 
@@ -48,7 +68,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
     ylim : tuple
         y-axis limits
     log : str in ``{'x', 'y', 'xy'}``
-        Which variables to log transform.
+        Which (if any) variables to log transform.
     main : str
         Plot title
     xlab : str
@@ -138,7 +158,7 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
 
         else:
             if x is None:
-                if pdtypes.is_list_like(aesthetics['y']):
+                if isinstance(aesthetics['y'], typing.Sized):
                     aesthetics['x'] = range(len(aesthetics['y']))
                     xlab = 'range(len(y))'
                     ylab = 'y'
@@ -176,9 +196,9 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
     # Add geoms
     for g in geom:
         geom_name = f'geom_{g}'
-        geom_klass = Registry[geom_name]
+        geom_klass = Registry[geom_name]  # type: ignore
         stat_name = 'stat_{}'.format(geom_klass.DEFAULT_PARAMS['stat'])
-        stat_klass = Registry[stat_name]
+        stat_klass = Registry[stat_name]  # type: ignore
         # find params
         recognized = (kwargs.keys() &
                       (geom_klass.DEFAULT_PARAMS.keys() |
@@ -197,19 +217,20 @@ def qplot(x=None, y=None, data=None, facets=None, margins=False,
             labels[ae] = kwargs[ae].name
 
     with suppress(AttributeError):
-        labels['x'] = xlab if xlab is not None else x.name
+        labels['x'] = xlab if xlab is not None else x.name  # type: ignore
 
     with suppress(AttributeError):
-        labels['y'] = ylab if ylab is not None else y.name
+        labels['y'] = ylab if ylab is not None else y.name  # type: ignore
 
     if main is not None:
         labels['title'] = main
 
-    if 'x' in log:
-        p += scale_x_log10()
+    if log:
+        if 'x' in log:
+            p += scale_x_log10()
 
-    if 'y' in log:
-        p += scale_y_log10()
+        if 'y' in log:
+            p += scale_y_log10()
 
     if labels:
         p += labs(**labels)
