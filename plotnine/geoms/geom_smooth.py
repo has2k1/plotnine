@@ -82,7 +82,7 @@ class geom_smooth(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:

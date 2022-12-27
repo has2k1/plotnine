@@ -8,6 +8,8 @@ from ..doctools import document
 from .geom_text import geom_text
 
 if typing.TYPE_CHECKING:
+    from typing import Any
+
     import matplotlib as mpl
     import pandas as pd
 
@@ -79,7 +81,7 @@ class geom_label(geom_text):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -88,8 +90,8 @@ class geom_label(geom_text):
 
         Parameters
         ----------
-        data : dataframe
-            Legend data
+        data : Series
+            Data Row
         da : DrawingArea
             Canvas
         lyr : layer

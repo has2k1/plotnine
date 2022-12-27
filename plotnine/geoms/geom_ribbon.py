@@ -20,6 +20,8 @@ if typing.TYPE_CHECKING:
 
     import plotnine as p9
 
+    from ..typing import ColorsLike
+
 
 @document
 class geom_ribbon(geom):
@@ -108,13 +110,14 @@ class geom_ribbon(geom):
     ) -> None:
         size = data['size'].iloc[0] * SIZE_FACTOR
         fill = to_rgba(data['fill'], data['alpha'])
-        color = data['color']
+
+        if data['color'].isnull().all():
+            color: ColorsLike = 'none'
+        else:
+            color = data['color']
 
         if fill is None:
             fill = 'none'
-
-        if all(color.isnull()):
-            color = 'none'
 
         if isinstance(coord, coord_flip):
             fill_between = ax.fill_betweenx

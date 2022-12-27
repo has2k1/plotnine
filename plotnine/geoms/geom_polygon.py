@@ -102,7 +102,7 @@ class geom_polygon(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -111,9 +111,12 @@ class geom_polygon(geom):
 
         Parameters
         ----------
-        data : dataframe
+        data : Series
+            Data Row
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------
@@ -122,8 +125,8 @@ class geom_polygon(geom):
         data['size'] *= SIZE_FACTOR
         # We take into account that the linewidth
         # bestrides the boundary of the rectangle
-        linewidth = np.min([data['size'],
-                            da.width/4, da.height/4])
+        linewidth = np.min([data['size'], da.width/4, da.height/4])
+
         if data['color'] is None:
             linewidth = 0
 

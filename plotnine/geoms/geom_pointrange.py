@@ -55,7 +55,7 @@ class geom_pointrange(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.DataFrame,
+        data: pd.Series[Any],
         da: mpl.patches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
@@ -64,9 +64,12 @@ class geom_pointrange(geom):
 
         Parameters
         ----------
-        data : dataframe
+        data : Series
+            Data Row
         da : DrawingArea
+            Canvas
         lyr : layer
+            Layer
 
         Returns
         -------

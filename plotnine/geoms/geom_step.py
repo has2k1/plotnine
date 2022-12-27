@@ -55,8 +55,8 @@ class geom_step(geom_path):
         direction = params['direction']
         n = len(data)
         data = data.sort_values('x', kind='mergesort')
-        x = data['x'].values
-        y = data['y'].values
+        x = data['x'].to_numpy()
+        y = data['y'].to_numpy()
 
         if direction == 'vh':
             # create stepped path -- interleave x with
