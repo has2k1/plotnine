@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from copy import copy
 
 import matplotlib.pyplot as plt
@@ -5,6 +8,13 @@ import pandas as pd
 from matplotlib.animation import ArtistAnimation
 
 from .exceptions import PlotnineError
+
+if typing.TYPE_CHECKING:
+    from typing import Iterable
+
+    import matplotlib as mpl
+
+    import plotnine as p9
 
 
 class PlotnineAnimation(ArtistAnimation):
@@ -39,8 +49,14 @@ class PlotnineAnimation(ArtistAnimation):
        themeable to create space for it.
     """
 
-    def __init__(self, plots, interval=200, repeat_delay=None,
-                 repeat=True, blit=False):
+    def __init__(
+        self,
+        plots: Iterable[p9.ggplot],
+        interval: int = 200,
+        repeat_delay: int | None = None,
+        repeat: bool = True,
+        blit: bool = False
+    ) -> None:
         figure, artists = self._draw_plots(plots)
         ArtistAnimation.__init__(
             self,
@@ -52,11 +68,17 @@ class PlotnineAnimation(ArtistAnimation):
             blit=blit
         )
 
-    def _draw_plots(self, plots):
+    def _draw_plots(
+        self,
+        plots: Iterable[p9.ggplot]
+    ) -> tuple[mpl.Figure, list[mpl.axes.Axes]]:
         with pd.option_context('mode.chained_assignment', None):
             return self.__draw_plots(plots)
 
-    def __draw_plots(self, plots):
+    def __draw_plots(
+        self,
+        plots: Iterable[p9.ggplot]
+    ) -> tuple[mpl.Figure, list[mpl.axes.Axes]]:
         """
         Plot and return the figure and artists
 
@@ -73,7 +95,7 @@ class PlotnineAnimation(ArtistAnimation):
             List of :class:`Matplotlib.artist.artist`
         """
         # For keeping track of artists for each frame
-        artist_offsets = {
+        artist_offsets: dict[str, list[mpl.artist.artist]] = {
             'collections': [],
             'patches': [],
             'lines': [],
@@ -83,7 +105,7 @@ class PlotnineAnimation(ArtistAnimation):
 
         scale_limits = dict()
 
-        def initialise_artist_offsets(n):
+        def initialise_artist_offsets(n: int) -> None:
             """
             Initilise artists_offsets arrays to zero
 
@@ -96,7 +118,9 @@ class PlotnineAnimation(ArtistAnimation):
             for artist_type in artist_offsets:
                 artist_offsets[artist_type] = [0] * n
 
-        def get_frame_artists(axs):
+        def get_frame_artists(
+            axs: list[mpl.axes.Axes]
+        ) -> list[mpl.artist.artist]:
             """
             Artists shown in a given frame
 
@@ -119,7 +143,9 @@ class PlotnineAnimation(ArtistAnimation):
                     artist_offsets[name][i] += len(new_artists)
             return frame_artists
 
-        def set_scale_limits(scales):
+        def set_scale_limits(
+            scales: list[p9.scales.scale.scale]
+        ) -> None:
             """
             Set limits of all the scales in the animation
 
@@ -135,7 +161,10 @@ class PlotnineAnimation(ArtistAnimation):
                 ae = sc.aesthetics[0]
                 scale_limits[ae] = sc.limits
 
-        def check_scale_limits(scales, frame_no):
+        def check_scale_limits(
+            scales: list[p9.scales.scale.scale],
+            frame_no: int
+        ) -> None:
             """
             Check limits of the scales of a plot in the animation
 
@@ -172,8 +201,8 @@ class PlotnineAnimation(ArtistAnimation):
                         "different limits from those of the first frame."
                     )
 
-        figure = None
-        axs = None
+        figure: mpl.figure.Figure | None = None
+        axs = []
         artists = []
         scales = None  # Will hold the scales of the first frame
 
