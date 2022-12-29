@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import re
 from collections.abc import Iterable
 from contextlib import suppress
 from copy import deepcopy
+from typing import Any, Dict
 
 import pandas as pd
 
@@ -34,7 +37,7 @@ STAT_RE = re.compile(r'\bstat\(')
 DOTS_RE = re.compile(r'\.\.([a-zA-Z0-9_]+)\.\.')
 
 
-class aes(dict):
+class aes(Dict[str, Any]):
     """
     Create aesthetic mappings
 
@@ -244,6 +247,26 @@ class aes(dict):
     def copy(self):
         return aes(**self)
 
+    def inherit(self, other: dict[str, Any] | aes) -> aes:
+        """
+        Create a  mapping that inherits aesthetics in other
+
+        Parameters
+        ----------
+        other: aes | dict[str, Any]
+            Default aesthetics
+
+        Returns
+        -------
+        new : aes
+            Aesthetic mapping
+        """
+        new = self.copy()
+        for k in other:
+            if k not in self:
+                new[k] = other[k]
+        return new
+
 
 def rename_aesthetics(obj):
     """
@@ -429,11 +452,11 @@ def is_position_aes(vars_):
         return aes_to_scale(vars_) in {'x', 'y'}
 
 
-def make_labels(mapping):
+def make_labels(mapping: dict[str, Any] | aes) -> dict[str, str | None]:
     """
     Convert aesthetic mapping into text labels
     """
-    def _nice_label(value):
+    def _nice_label(value: Any) -> str:
         if isinstance(value, pd.Series):
             return value.name
         elif not isinstance(value, Iterable) or isinstance(value, str):
@@ -441,7 +464,7 @@ def make_labels(mapping):
         else:
             return None
 
-    def _make_label(ae, value):
+    def _make_label(ae: str, value: Any) -> str:
         if not isinstance(value, stage):
             return _nice_label(value)
         elif value.start is None:
@@ -459,7 +482,7 @@ def make_labels(mapping):
                 return _nice_label(value)
 
     return {
-        ae: _make_label(ae, label)
+        str(ae): _make_label(ae, label)
         for ae, label in mapping.items()
     }
 

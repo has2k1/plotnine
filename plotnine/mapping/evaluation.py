@@ -1,10 +1,21 @@
+from __future__ import annotations
+
 import numbers
+import typing
 
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 
 from ..exceptions import PlotnineError
+
+if typing.TYPE_CHECKING:
+    from typing import Any
+
+    from patsy.eval import EvalEnvironment
+
+    from . import aes
+
 
 __all__ = ['after_stat', 'after_scale', 'stage']
 
@@ -168,7 +179,11 @@ AES_INNER_NAMESPACE = {
 }
 
 
-def evaluate(aesthetics, data, env):
+def evaluate(
+    aesthetics: aes | dict[str, Any],
+    data: pd.DataFrame,
+    env: EvalEnvironment
+) -> pd.DataFrame:
     """
     Evaluate aesthetics
 

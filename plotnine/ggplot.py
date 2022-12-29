@@ -64,33 +64,27 @@ class ggplot:
     mapping : aes
         Default aesthetics mapping for the plot. These will be used
         by all layers unless specifically overridden.
-    environment : dict, ~patsy.Eval.EvalEnvironment
+    environment : ~patsy.Eval.EvalEnvironment
         If a variable defined in the aesthetic mapping is not
         found in the data, ggplot will look for it in this
         namespace. It defaults to using the environment/namespace.
         in which `ggplot()` is called.
     """
+    figure: mpl.figure.Figure
+    axs: list[mpl.axes.Axes]
 
     def __init__(
         self,
         data: DataLike | None = None,
         mapping: aes | None = None,
-        environment: dict[str, Any] | None = None
+        environment: EvalEnvironment | None = None
     ) -> None:
         # Allow some sloppiness
         data, mapping = order_as_data_mapping(data, mapping)
-        if mapping is None:
-            mapping = aes()
-
-        # Recognize plydata groups
-        if hasattr(data, 'group_indices') and 'group' not in mapping:
-            mapping = mapping.copy()
-            mapping['group'] = data.group_indices()  # type: ignore
-
         self.data = data
-        self.mapping = mapping
+        self.mapping = mapping if mapping is not None else aes()
         self.facet = facet_null()
-        self.labels = make_labels(mapping)
+        self.labels = make_labels(self.mapping)
         self.layers = Layers()
         self.guides = guides()
         self.scales = Scales()
@@ -98,9 +92,7 @@ class ggplot:
         self.coordinates = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = Layout()
-        self.figure: mpl.figure.Figure | None = None
         self.watermarks: list[p9.watermark] = []
-        self.axs = None
 
         # build artefacts
         self._build_objs = NS()
@@ -211,7 +203,7 @@ class ggplot:
         # Do not draw if drawn already.
         # This prevents a needless error when reusing
         # figure & axes in the jupyter notebook.
-        if self.figure:
+        if hasattr(self, "figure"):
             return self.figure
 
         # Prevent against any modifications to the users
@@ -380,12 +372,12 @@ class ggplot:
         axs = self.facet.make_axes(
             figure,
             self.layout.layout,
-            self.coordinates)
+            self.coordinates
+        )
 
         # Dictionary to collect matplotlib objects that will
         # be targeted for theming by the themeables
         figure._themeable = {}
-
         self.figure = figure
         self.axs = axs
         return figure, axs
@@ -890,7 +882,7 @@ class plot_context:
                 plt.close(self.plot.figure)
         else:
             # There is an exception, close any figure
-            if self.plot.figure is not None:
+            if hasattr(self.plot, 'figure'):
                 plt.close(self.plot.figure)
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)

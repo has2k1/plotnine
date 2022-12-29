@@ -2,120 +2,26 @@ from __future__ import annotations
 
 import typing
 from copy import copy, deepcopy
-from typing import List
+from typing import Iterable, List, overload
 
 import pandas as pd
 
 from .exceptions import PlotnineError
 from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes
 from .mapping.evaluation import evaluate, stage
-from .utils import (
-    array_kind,
-    check_required_aesthetics,
-    defaults,
-    ninteraction,
-)
+from .utils import array_kind, check_required_aesthetics, ninteraction
 
 if typing.TYPE_CHECKING:
+    from typing import Any, Optional, Sequence, SupportsIndex
+
+    from patsy.eval import EvalEnvironment
+
     import plotnine as p9
 
     from .geoms.geom import geom
     from .positions.position import position
     from .stats.stat import stat
     from .typing import DataFrameConvertible, DataLike, LayerDataLike
-
-
-class Layers(List["layer"]):
-    """
-    List of layers
-
-    During the plot building pipeline, many operations are
-    applied at all layers in the plot. This class makes those
-    tasks easier.
-    """
-
-    def __iadd__(self, other):
-        return Layers(super().__iadd__(other))
-
-    def __add__(self, other):
-        return Layers(super().__add__(other))
-
-    def __radd__(self, other):
-        """
-        Add layers to ggplot object
-        """
-        from .ggplot import ggplot
-        if isinstance(other, ggplot):
-            for obj in self:
-                other += obj
-        else:
-            msg = "Cannot add Layers to object of type {!r}".format
-            raise PlotnineError(msg(type(other)))
-        return other
-
-    def __getitem__(self, key):
-        result = super().__getitem__(key)
-        if not isinstance(key, int):
-            result = Layers(result)
-        return result
-
-    @property
-    def data(self):
-        return [l.data for l in self]
-
-    def setup(self, plot: p9.ggplot) -> None:
-        for l in self:
-            l.setup(plot)
-
-    def setup_data(self):
-        for l in self:
-            l.setup_data()
-
-    def draw(self, layout, coord):
-        # If zorder is 0, it is left to MPL
-        for i, l in enumerate(self, start=1):
-            l.zorder = i
-            l.draw(layout, coord)
-
-    def compute_aesthetics(self, plot):
-        for l in self:
-            l.compute_aesthetics(plot)
-
-    def compute_statistic(self, layout):
-        for l in self:
-            l.compute_statistic(layout)
-
-    def map_statistic(self, plot):
-        for l in self:
-            l.map_statistic(plot)
-
-    def compute_position(self, layout):
-        for l in self:
-            l.compute_position(layout)
-
-    def use_defaults(self, data=None, aes_modifiers=None):
-        for l in self:
-            l.use_defaults(data, aes_modifiers)
-
-    def transform(self, scales):
-        for l in self:
-            l.data = scales.transform_df(l.data)
-
-    def train(self, scales):
-        for l in self:
-            l.data = scales.train_df(l.data)
-
-    def map(self, scales):
-        for l in self:
-            l.data = scales.map_df(l.data)
-
-    def finish_statistics(self):
-        for l in self:
-            l.finish_statistics()
-
-    def update_labels(self, plot):
-        for l in self:
-            plot._update_labels(l)
 
 
 class layer:
@@ -133,11 +39,11 @@ class layer:
     stat : stat, optional
         stat used for the statistical transformation of
         data in this layer
+    mapping : aes, optional
+        Aesthetic mappings.
     data : dataframe, optional
         Data plotted in this layer. If ``None``, the data from
         the :class:`~plotnine.ggplot` object will be used.
-    mapping : aes, optional
-        Aesthetic mappings.
     position : position, optional
         Position object to adjust the geometries in this layer.
     inherit_aes : bool, optional
@@ -156,21 +62,24 @@ class layer:
     There is no benefit to manually creating a layer. You should
     always use a ``geom`` or ``stat``.
     """
+    # Data for this layer
+    data: pd.DataFrame
 
     def __init__(
         self,
-        geom: geom | None = None,
-        stat: stat | None = None,
-        data: LayerDataLike | None = None,
-        mapping: aes | None = None,
-        position: position | None = None,
+        geom: geom,
+        stat: stat,
+        *,
+        mapping: aes,
+        data: Optional[LayerDataLike],
+        position: position,
         inherit_aes: bool = True,
         show_legend: bool | None = None,
         raster: bool = False
     ) -> None:
         self.geom = geom
         self.stat = stat
-        self.data = data
+        self._data = data
         self.mapping = mapping
         self.position = position
         self.inherit_aes = inherit_aes
@@ -179,7 +88,7 @@ class layer:
         self.zorder = 0
 
     @staticmethod
-    def from_geom(geom) -> layer:
+    def from_geom(geom: geom) -> layer:
         """
         Create a layer given a :class:`geom`
 
@@ -210,7 +119,7 @@ class layer:
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
         return layer(**lkwargs)
 
-    def __radd__(self, gg):
+    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
         """
         Add layer to ggplot object
         """
@@ -221,7 +130,7 @@ class layer:
             raise PlotnineError(msg(type(gg)))
         return gg
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: dict[Any, Any]) -> layer:
         """
         Deep copy without copying the self.data dataframe
         """
@@ -270,7 +179,7 @@ class layer:
         # Each layer that does not have data gets a copy of
         # of the ggplot.data. If it has data it is replaced
         # by copy so that we do not alter the users data
-        if self.data is None:
+        if self._data is None:
             try:
                 self.data = copy(data)
             except AttributeError:
@@ -280,22 +189,24 @@ class layer:
                     f"{_geom_name} layer expects a dataframe, "
                     f"but it got {_data_name} instead."
                 )
-        elif callable(self.data):
-            self.data = self.data(data)
+        elif callable(self._data):
+            self.data = self._data(data)
             if not isinstance(self.data, pd.DataFrame):
                 raise PlotnineError(
                     "Data function must return a Pandas dataframe"
                 )
         else:
-            self.data = copy(self.data)
-
             # Recognise polars dataframes
-            if hasattr(self.data, "to_pandas"):
+            if hasattr(self._data, "to_pandas"):
                 self.data = (
-                    typing.cast("DataFrameConvertible", self.data).to_pandas()
+                    typing.cast("DataFrameConvertible", self._data).to_pandas()
                 )
+            elif isinstance(self._data, pd.DataFrame):
+                self.data = self._data.copy()
+            else:
+                raise TypeError(f"Data has a bad type: {type(self.data)}")
 
-    def _make_layer_mapping(self, plot_mapping):
+    def _make_layer_mapping(self, plot_mapping: aes) -> None:
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -305,7 +216,7 @@ class layer:
             ggplot object mapping
         """
         if self.inherit_aes:
-            self.mapping = defaults(self.mapping, plot_mapping)
+            self.mapping = self.mapping.inherit(plot_mapping)
 
         # aesthetics set as parameters override the same
         # aesthetics set as mappings, so we can ignore
@@ -322,7 +233,10 @@ class layer:
                 group = f'"{group}"'
             self.mapping['group'] = stage(start=group)
 
-    def _make_layer_environments(self, plot_environment):
+    def _make_layer_environments(
+        self,
+        plot_environment: EvalEnvironment
+    ) -> None:
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -334,16 +248,15 @@ class layer:
         self.geom.environment = plot_environment
         self.stat.environment = plot_environment
 
-    def compute_aesthetics(self, plot):
+    def compute_aesthetics(self, plot: p9.ggplot) -> None:
         """
-        Return a dataframe where the columns match the
-        aesthetic mappings.
+        Return a dataframe where the columns match the aesthetic mappings
 
         Transformations like 'factor(cyl)' and other
         expression evaluation are  made in here
         """
         evaled = evaluate(self.mapping._starting, self.data, plot.environment)
-        evaled_aes = aes(**{col: col for col in evaled})
+        evaled_aes = aes(**{str(col): col for col in evaled})
         plot.scales.add_defaults(evaled, evaled_aes)
 
         if len(self.data) == 0 and len(evaled) > 0:
@@ -355,13 +268,13 @@ class layer:
         data = add_group(evaled)
         self.data = data.sort_values('PANEL', kind='mergesort')
 
-    def compute_statistic(self, layout):
+    def compute_statistic(self, layout: p9.facets.layout.Layout) -> None:
         """
         Compute & return statistics for this layer
         """
         data = self.data
         if not len(data):
-            return type(data)()
+            return
 
         params = self.stat.setup_params(data)
         data = self.stat.use_defaults(data)
@@ -369,16 +282,16 @@ class layer:
         data = self.stat.compute_layer(data, params, layout)
         self.data = data
 
-    def map_statistic(self, plot):
+    def map_statistic(self, plot: p9.ggplot) -> None:
         """
         Mapping aesthetics to computed statistics
         """
         data = self.data
         if not len(data):
-            return type(data)()
+            return
 
         # Mixin default stat aesthetic mappings
-        aesthetics = defaults(self.mapping, self.stat.DEFAULT_AES)
+        aesthetics = self.mapping.inherit(self.stat.DEFAULT_AES)
         stat_data = evaluate(aesthetics._calculated, data, plot.environment)
 
         if not len(stat_data):
@@ -397,13 +310,13 @@ class layer:
         new = {ae: ae for ae in stat_data.columns}
         plot.scales.add_defaults(self.data, new)
 
-    def setup_data(self):
+    def setup_data(self) -> None:
         """
         Prepare/modify data for plotting
         """
         data = self.data
         if len(data) == 0:
-            return type(data)()
+            return
 
         data = self.geom.setup_data(data)
 
@@ -415,20 +328,26 @@ class layer:
 
         self.data = data
 
-    def compute_position(self, layout):
+    def compute_position(self, layout: p9.facets.layout.Layout) -> None:
         """
         Compute the position of each geometric object
-        in concert with the other objects in the panel
+
+        This is in concert with the other objects in the panel depending
+        on the position class of the geom
         """
         if len(self.data) == 0:
-            return self.data
+            return
 
         params = self.position.setup_params(self.data)
         data = self.position.setup_data(self.data, params)
         data = self.position.compute_layer(data, params, layout)
         self.data = data
 
-    def draw(self, layout, coord):
+    def draw(
+        self,
+        layout: p9.facets.layout.Layout,
+        coord: p9.coords.coord.coord
+    ) -> None:
         """
         Draw geom
 
@@ -449,7 +368,11 @@ class layer:
         # that is created by the plot build process
         self.geom.draw_layer(self.data, layout, coord, **params)
 
-    def use_defaults(self, data=None, aes_modifiers=None):
+    def use_defaults(
+        self,
+        data: pd.DataFrame | None = None,
+        aes_modifiers: dict[str, Any] | None = None
+    ) -> pd.DataFrame:
         """
         Prepare/modify data for plotting
 
@@ -469,14 +392,128 @@ class layer:
 
         return self.geom.use_defaults(data, aes_modifiers)
 
-    def finish_statistics(self):
+    def finish_statistics(self) -> None:
         """
         Prepare/modify data for plotting
         """
         self.stat.finish_layer(self.data, self.stat.params)
 
 
-def add_group(data):
+class Layers(List[layer]):
+    """
+    List of layers
+
+    During the plot building pipeline, many operations are
+    applied at all layers in the plot. This class makes those
+    tasks easier.
+    """
+    @overload
+    def __radd__(self, other: Iterable[layer]) -> Layers: ...
+
+    @overload
+    def __radd__(self, other: p9.ggplot) -> p9.ggplot: ...
+
+    def __radd__(
+        self,
+        other: Iterable[layer] | p9.ggplot
+    ) -> Layers | p9.ggplot:
+        """
+        Add layers to ggplot object
+        """
+        # Add layers to ggplot object
+        from .ggplot import ggplot
+        if isinstance(other, ggplot):
+            for obj in self:
+                other += obj
+        else:
+            raise PlotnineError(
+                f"Cannot add Layers to object of type {type(other)}"
+            )
+        return other
+
+    @overload
+    def __getitem__(self, key: SupportsIndex) -> layer: ...
+
+    @overload
+    def __getitem__(self, key: slice) -> Layers: ...
+
+    def __getitem__(
+        self,
+        key: SupportsIndex | slice
+    ) -> layer | Layers:
+        result = super().__getitem__(key)
+        if isinstance(result, Iterable):
+            result = Layers(result)
+        return result
+
+    @property
+    def data(self) -> list[pd.DataFrame]:
+        return [l.data for l in self]
+
+    def setup(self, plot: p9.ggplot) -> None:
+        for l in self:
+            l.setup(plot)
+
+    def setup_data(self) -> None:
+        for l in self:
+            l.setup_data()
+
+    def draw(
+        self,
+        layout: p9.facets.layout.Layout,
+        coord: p9.coords.coord.coord
+    ) -> None:
+        # If zorder is 0, it is left to MPL
+        for i, l in enumerate(self, start=1):
+            l.zorder = i
+            l.draw(layout, coord)
+
+    def compute_aesthetics(self, plot: p9.ggplot) -> None:
+        for l in self:
+            l.compute_aesthetics(plot)
+
+    def compute_statistic(self, layout: p9.facets.layout.Layout) -> None:
+        for l in self:
+            l.compute_statistic(layout)
+
+    def map_statistic(self, plot: p9.ggplot) -> None:
+        for l in self:
+            l.map_statistic(plot)
+
+    def compute_position(self, layout: p9.facets.layout.Layout) -> None:
+        for l in self:
+            l.compute_position(layout)
+
+    def use_defaults(
+        self,
+        data: pd.DataFrame | None = None,
+        aes_modifiers: dict[str, Any] | None = None
+    ) -> None:
+        for l in self:
+            l.use_defaults(data, aes_modifiers)
+
+    def transform(self, scales: p9.scales.scale.scale) -> None:
+        for l in self:
+            l.data = scales.transform_df(l.data)
+
+    def train(self, scales: p9.scales.scale.scale) -> None:
+        for l in self:
+            l.data = scales.train_df(l.data)
+
+    def map(self, scales: p9.scales.scale.scale) -> None:
+        for l in self:
+            l.data = scales.map_df(l.data)
+
+    def finish_statistics(self) -> None:
+        for l in self:
+            l.finish_statistics()
+
+    def update_labels(self, plot: p9.ggplot) -> None:
+        for l in self:
+            plot._update_labels(l)
+
+
+def add_group(data: pd.DataFrame) -> pd.DataFrame:
     """
     Add group to the dataframe
 
@@ -487,7 +524,7 @@ def add_group(data):
         return data
 
     if 'group' not in data:
-        ignore = data.columns.difference(SCALED_AESTHETICS)
+        ignore = data.columns.difference(list(SCALED_AESTHETICS))
         disc = discrete_columns(data, ignore=ignore)
         if disc:
             data['group'] = ninteraction(data[disc], drop=True)
@@ -499,11 +536,19 @@ def add_group(data):
     return data
 
 
-def discrete_columns(df, ignore):
+def discrete_columns(
+    df: pd.DataFrame,
+    ignore: Sequence[str] | pd.Index
+) -> list[str]:
     """
-    Return a list of the discrete columns in the
-    dataframe `df`. `ignore` is a list|set|tuple with the
-    names of the columns to skip.
+    Return a list of the discrete columns in the dataframe
+
+    Parameters
+    ----------
+    df : dataframe
+        Data
+    ignore : list[str]
+        A list|set|tuple with the names of the columns to skip.
     """
     lst = []
     for col in df:
@@ -514,5 +559,5 @@ def discrete_columns(df, ignore):
                 hash(df[col].iloc[0])
             except TypeError:
                 continue
-            lst.append(col)
+            lst.append(str(col))
     return lst

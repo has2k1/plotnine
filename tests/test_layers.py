@@ -58,6 +58,9 @@ class TestLayers:
     def test_slicing(self):
         p = ggplot(df, aes('x', 'y'))
 
+        _lyrs = self.lyrs[1:]
+        assert isinstance(_lyrs, Layers)
+
         p1 = p + self.lyrs[0] + self.lyrs[2]
         assert _get_colors(p1) == colors[::2]
 
