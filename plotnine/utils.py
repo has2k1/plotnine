@@ -422,12 +422,10 @@ def defaults(d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
         Result of adding default values of d1
     """
     d1 = d1.copy()
-    d1.update(
-        (k, d2[k])
-        # Preserve order
-        for k in d2
-        if k not in d1
-     )
+    # Preserve order
+    for k in d2:
+        if k not in d1:
+            d1[k] = d2[k]
     return d1
 
 

@@ -17,10 +17,12 @@ from .labels import labs
 from .mapping.aes import ALL_AESTHETICS, SCALED_AESTHETICS, aes
 from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
-from .utils import Registry, array_kind, is_string
+from .utils import Registry, array_kind
 
 if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal
+
+    import plotnine as p9
 
     from .typing import DataLike
 
@@ -29,7 +31,7 @@ def qplot(
     x: str | Iterable[Any] | range | None = None,
     y: str | Iterable[Any] | range | None = None,
     data: DataLike | None = None,
-    facets=None,
+    facets: str = '',
     margins: bool | list[str] = False,
     geom: str | list[str] | tuple[str] = 'auto',
     xlim: tuple[float, float] | None = None,
@@ -40,7 +42,7 @@ def qplot(
     ylab: str | None = None,
     asp: float | None = None,
     **kwargs: Any
-):
+) -> p9.ggplot:
     """
     Quick plot
 
@@ -93,7 +95,7 @@ def qplot(
     if y is not None:
         aesthetics['y'] = y
 
-    def is_mapping(value):
+    def is_mapping(value: Any) -> bool:
         """
         Return True if value is not enclosed in I() function
         """
@@ -101,7 +103,7 @@ def qplot(
             return not (value.startswith('I(') and value.endswith(')'))
         return True
 
-    def I(value):
+    def I(value: Any) -> Any:
         return value
 
     I_env = EvalEnvironment([{'I': I}])
@@ -114,7 +116,7 @@ def qplot(
             kwargs[ae] = I_env.eval(value)
 
     # List of geoms
-    if is_string(geom):
+    if isinstance(geom, str):
         geom = [geom]
     elif isinstance(geom, tuple):
         geom = list(geom)
@@ -123,7 +125,7 @@ def qplot(
         data = pd.DataFrame()
 
     # Work out plot data, and modify aesthetics, if necessary
-    def replace_auto(lst, str2):
+    def replace_auto(lst: list[str], str2: str) -> list[str]:
         """
         Replace all occurences of 'auto' in with str2
         """
@@ -171,7 +173,7 @@ def qplot(
 
     p = ggplot(data, aes(**aesthetics), environment=environment)
 
-    def get_facet_type(facets):
+    def get_facet_type(facets: str) -> Literal['grid', 'wrap', 'null']:
         with suppress(PlotnineError):
             parse_grid_facets(facets)
             return 'grid'

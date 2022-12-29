@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from copy import deepcopy
 
 import pandas as pd
@@ -15,6 +18,9 @@ from ..utils import (
     remove_missing,
     uniquecols,
 )
+
+if typing.TYPE_CHECKING:
+    from patsy.eval import EvalEnvironment
 
 
 class stat(metaclass=Registry):
@@ -47,7 +53,7 @@ class stat(metaclass=Registry):
 
     # Plot namespace, it gets its value when the plot is being
     # built.
-    environment = None
+    environment: EvalEnvironment | None = None
 
     def __init__(self, mapping=None, data=None, **kwargs):
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)

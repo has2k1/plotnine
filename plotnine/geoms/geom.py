@@ -24,6 +24,7 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import matplotlib as mpl
+    from patsy.eval import EvalEnvironment
 
     import plotnine as p9
 
@@ -58,7 +59,7 @@ class geom(metaclass=Registry):
 
     # Plot namespace, it gets its value when the plot is being
     # built.
-    environment: dict[str, Any] | None = None
+    environment: EvalEnvironment | None = None
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
