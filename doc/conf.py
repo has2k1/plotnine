@@ -77,6 +77,7 @@ master_doc = 'index'
 # General information about the project.
 project = 'plotnine'
 copyright = '2022, Hassan Kibirige'
+github_repo_url = f'https://github.com/has2k1/{project}'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -422,7 +423,8 @@ autodoc_member_order = 'bysource'
 autosummary_generate = True
 
 extlinks = {
-    'issue': ('https://github.com/has2k1/plotnine/issues/%s', 'GH')
+    'issue': (f'{github_repo_url}/issues/%s', '#%s'),
+    'pr': (f'{github_repo_url}/pul/%s', 'PR #%s')
 }
 
 
