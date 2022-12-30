@@ -8,12 +8,12 @@ v0.10.2
 API Changes
 ***********
 
-- :method:`~plotnine.ggplot.add` and :method:`~plotnine.ggplot.iadd` now
-  accept the same types of objects. In this change
-  :method:`~plotnine.ggplot.iadd` has gained the ability to accept a list
-  of objects.
+- :meth:`~plotnine.ggplot.__add__` and :meth:`~plotnine.ggplot.__iadd__`
+  now accept the same types of objects. In this change
+  :meth:`~plotnine.ggplot.__iadd__` has gained the ability to accept a
+  list of objects.
 
-- :method:`~plotnine.ggplot.draw` no longer accepts the argument
+- :meth:`~plotnine.ggplot.draw` no longer accepts the argument
   ``return_ggplot`` and the return value is always a matplolib figure.
 
 Bug Fixes
