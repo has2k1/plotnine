@@ -13,8 +13,7 @@ from .geom_path import geom_path
 from .geom_polygon import geom_polygon
 
 if typing.TYPE_CHECKING:
-    import types
-    from typing import Any, Tuple
+    from typing import Any, Sequence
 
     import matplotlib as mpl
 
@@ -101,7 +100,7 @@ class geom_violin(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -165,7 +164,7 @@ class geom_violin(geom):
 
 def make_quantile_df(
     data: pd.DataFrame,
-    draw_quantiles: Tuple[float]
+    draw_quantiles: Sequence[float]
 ) -> pd.DataFrame:
     """
     Return a dataframe with info needed to draw quantile segments

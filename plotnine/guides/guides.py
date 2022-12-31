@@ -178,16 +178,14 @@ class guides(dict):
                     if scale.name:
                         guide.title = scale.name
                     else:
-                        try:
-                            guide.title = str(plot.labels[output])
-                        except KeyError:
+                        guide.title = getattr(plot.labels, output)
+                        if guide.title is None:
                             warn(
                                 f"Cannot generate legend for the {output!r} "
                                 "aesthetic. Make sure you have mapped a "
                                 "variable to it",
                                 PlotnineWarning
                             )
-                            continue
 
                 # each guide object trains scale within the object,
                 # so Guides (i.e., the container of guides)

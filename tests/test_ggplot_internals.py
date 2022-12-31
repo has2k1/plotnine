@@ -46,15 +46,15 @@ def test_labels():
     gg = gg + ylab('ylab')
     gg = gg + ggtitle('title')
 
-    assert gg.labels['x'] == 'xlab'
-    assert gg.labels['y'] == 'ylab'
-    assert gg.labels['title'] == 'title'
+    assert gg.labels.x == 'xlab'
+    assert gg.labels.y == 'ylab'
+    assert gg.labels.title == 'title'
 
     gg = gg + labs(x='xlab2', y='ylab2', title='title2', caption='caption2')
-    assert gg.labels['x'] == 'xlab2'
-    assert gg.labels['y'] == 'ylab2'
-    assert gg.labels['title'] == 'title2'
-    assert gg.labels['caption'] == 'caption2'
+    assert gg.labels.x == 'xlab2'
+    assert gg.labels.y == 'ylab2'
+    assert gg.labels.title == 'title2'
+    assert gg.labels.caption == 'caption2'
 
     with pytest.raises(PlotnineError):
         gg = gg + labs(z='z-axis')
@@ -232,8 +232,8 @@ def test_add_aes():
     p += aes('var1', 'var2')
 
     assert p.mapping == aes('var1', 'var2')
-    assert p.labels['x'] == 'var1'
-    assert p.labels['y'] == 'var2'
+    assert p.labels.x == 'var1'
+    assert p.labels.y == 'var2'
 
 
 def test_nonzero_indexed_data():
@@ -314,7 +314,7 @@ def test_adding_list_ggplot():
     ]
     g = ggplot() + lst
     assert len(g.layers) == 2
-    assert g.labels['x'] == 'x-label'
+    assert g.labels.x == 'x-label'
     assert isinstance(g.coordinates, coord_trans)
 
 
@@ -331,7 +331,7 @@ def test_iadding_list_ggplot():
     id_after = id(g)
     assert id_before == id_after
     assert len(g.layers) == 2
-    assert g.labels['x'] == 'x-label'
+    assert g.labels.x == 'x-label'
     assert isinstance(g.coordinates, coord_trans)
 
 

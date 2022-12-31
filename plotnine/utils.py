@@ -405,30 +405,6 @@ def uniquecols(df):
     return df
 
 
-def defaults(d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
-    """
-    Update a copy of d1 with the contents of d2 that are not in d1.
-
-    Parameters
-    ----------
-    d1 : dict[str, Any]
-        dict with the preferred values
-    d2 : dict[str, Any]
-        dict with the default values
-
-    Returns
-    -------
-    out : dict
-        Result of adding default values of d1
-    """
-    d1 = d1.copy()
-    # Preserve order
-    for k in d2:
-        if k not in d1:
-            d1[k] = d2[k]
-    return d1
-
-
 def jitter(x, factor=1, amount=None, random_state=None):
     """
     Add a small amount of noise to values in an array_like

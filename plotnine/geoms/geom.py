@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import types
 import typing
 from copy import deepcopy
 
@@ -291,7 +290,7 @@ class geom(metaclass=Registry):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -308,7 +307,7 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : types.SimpleNamespace
+        panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
@@ -333,7 +332,7 @@ class geom(metaclass=Registry):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -346,7 +345,7 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : dict
+        panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
@@ -370,7 +369,7 @@ class geom(metaclass=Registry):
     @staticmethod
     def draw_unit(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -394,7 +393,7 @@ class geom(metaclass=Registry):
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : dict
+        panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to

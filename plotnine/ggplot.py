@@ -34,7 +34,6 @@ from .options import SUBPLOTS_ADJUST, get_option
 from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 from .utils import (
-    defaults,
     from_inches,
     is_data_like,
     order_as_data_mapping,
@@ -89,7 +88,7 @@ class ggplot:
         self.guides = guides()
         self.scales = Scales()
         self.theme = theme_get()
-        self.coordinates = coord_cartesian()
+        self.coordinates: p9.coords.coord.coord = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = Layout()
         self.watermarks: list[p9.watermark] = []
@@ -504,10 +503,9 @@ class ggplot:
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
-        labels = self.coordinates.labels(NS(
-            x=self.layout.xlabel(self.labels),
-            y=self.layout.ylabel(self.labels)
-        ))
+        labels = self.coordinates.labels(
+            self.layout.set_xy_labels(self.labels)
+        )
         # The first axes object is on left, and the last axes object
         # is at the bottom. We change the transform so that the relevant
         # coordinate is in figure coordinates. This way we take
@@ -642,8 +640,8 @@ class ggplot:
         """
         mapping = make_labels(layer.mapping)
         default = make_labels(layer.stat.DEFAULT_AES)
-        new_labels = defaults(mapping, default)
-        self.labels = defaults(self.labels, new_labels)
+        mapping.add_defaults(default)
+        self.labels.add_defaults(mapping)
 
     def save(
         self,

@@ -12,7 +12,6 @@ from .geom import geom
 from .geom_path import geom_path
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any
 
     import matplotlib as mpl
@@ -48,7 +47,7 @@ class geom_rug(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -80,24 +79,24 @@ class geom_rug(geom):
 
         if has_x:
             if 'b' in sides:
-                x = np.repeat(data['x'].values, 2)
+                x = np.repeat(data['x'].to_numpy(), 2)
                 y = np.tile([ymin, ymin+yheight], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if 't' in sides:
-                x = np.repeat(data['x'].values, 2)
+                x = np.repeat(data['x'].to_numpy(), 2)
                 y = np.tile([ymax-yheight, ymax], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         if has_y:
             if 'l' in sides:
                 x = np.tile([xmin, xmin+xheight], n)
-                y = np.repeat(data['y'].values, 2)
+                y = np.repeat(data['y'].to_numpy(), 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if 'r' in sides:
                 x = np.tile([xmax-xheight, xmax], n)
-                y = np.repeat(data['y'].values, 2)
+                y = np.repeat(data['y'].to_numpy(), 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         color = to_rgba(data['color'], data['alpha'])

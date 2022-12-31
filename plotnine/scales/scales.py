@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import itertools
 from contextlib import suppress
+from typing import List
 from warnings import warn
 
 import numpy as np
@@ -8,6 +11,7 @@ import pandas.api.types as pdtypes
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import aes_to_scale
 from ..utils import Registry, array_kind
+from .scale import scale
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -16,7 +20,7 @@ which will replace the existing scale.
 """
 
 
-class Scales(list):
+class Scales(List[scale]):
     """
     List of scales
 

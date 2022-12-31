@@ -12,7 +12,6 @@ from .geom import geom
 from .geom_path import geom_path
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any
 
     import matplotlib as mpl
@@ -47,7 +46,7 @@ class geom_step(geom_path):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any

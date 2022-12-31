@@ -17,7 +17,6 @@ from ..utils import SIZE_FACTOR, make_line_segments, match, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any, Literal, Sequence
 
     import matplotlib as mpl
@@ -93,7 +92,7 @@ class geom_path(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -134,7 +133,7 @@ class geom_path(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -228,7 +227,7 @@ class arrow:
     def draw(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         constant: bool = True,
@@ -242,7 +241,7 @@ class arrow:
         data : dataframe
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : types.SimpleNamespace
+        panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
@@ -351,7 +350,7 @@ class arrow:
         y1: npt.ArrayLike,
         x2: npt.ArrayLike,
         y2: npt.ArrayLike,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes
     ) -> list[mpl.path.Path]:
@@ -365,7 +364,7 @@ class arrow:
             The arrow heads will be at x1, y1. If you need them
             at x2, y2 reverse the input.
 
-        panel_params : types.SimpleNamespace
+        panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest

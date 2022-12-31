@@ -14,7 +14,6 @@ from ..utils import groupby_apply, resolution, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any
 
     import matplotlib as mpl
@@ -157,7 +156,7 @@ class geom_dotplot(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any

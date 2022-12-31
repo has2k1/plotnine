@@ -1,7 +1,19 @@
+from __future__ import annotations
+
+import typing
 from copy import copy
-from types import SimpleNamespace as NS
 
 import numpy as np
+
+from ..iapi import panel_ranges
+
+if typing.TYPE_CHECKING:
+    from typing import Any, Sequence
+
+    import numpy.typing as npt
+    import pandas as pd
+
+    import plotnine as p9
 
 
 class coord:
@@ -11,30 +23,34 @@ class coord:
     # If the coordinate system is linear
     is_linear = False
 
-    def __radd__(self, gg):
+    # Additional parameters created acc. to the data,
+    # if the coordinate system needs them
+    params: dict[str, Any]
+
+    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
         """
         Add coordinates to ggplot object
         """
         gg.coordinates = copy(self)
         return gg
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Allow the coordinate system to manipulate the layer data
 
         Parameters
         ----------
-        data : list of dataframes
-            Data for each layer
+        data : Dataframe
+            Layer data
 
         Returns
         -------
-        out : list of dataframes
-            Data for each layer
+        out : Dataframe
+            Modified layer data
         """
         return data
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         """
         Create additional parameters
 
@@ -49,7 +65,7 @@ class coord:
         """
         self.params = {}
 
-    def setup_layout(self, layout):
+    def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
         """
         Allow the coordinate system alter the layout dataframe
 
@@ -70,7 +86,10 @@ class coord:
         """
         return layout
 
-    def aspect(self, panel_params):
+    def aspect(
+        self,
+        panel_params: p9.iapi.panel_view
+    ) -> float | None:
         """
         Return desired aspect ratio for the plot
 
@@ -80,26 +99,31 @@ class coord:
         """
         return None
 
-    def labels(self, label_lookup):
+    def labels(
+        self,
+        cur_labels: p9.iapi.labels_view
+    ) -> p9.iapi.labels_view:
         """
         Modify labels
 
         Parameters
         ----------
-        label_lookup : dict_like
-            Dictionary is in which to lookup the current label
-            values. The keys are the axes e.g. 'x', 'y' and
-            the values are strings.
+        cur_labels : labels_view
+            Current labels. The coord can modify them as necessary.
 
         Returns
         -------
         out : dict
-            Modified labels. The dictionary is of the same form
-            as ``label_lookup``.
+            Modified labels. Same object as the input.
         """
-        return label_lookup
+        return cur_labels
 
-    def transform(self, data, panel_params, munch=False):
+    def transform(
+        self,
+        data: pd.DataFrame,
+        panel_params: p9.iapi.panel_view,
+        munch: bool = False
+    ) -> pd.DataFrame:
         """
         Transform data before it is plotted
 
@@ -108,21 +132,34 @@ class coord:
         """
         return data
 
-    def setup_panel_params(self, scale_x, scale_y):
+    def setup_panel_params(
+        self,
+        scale_x: p9.scales.scale.scale,
+        scale_y: p9.scales.scale.scale
+    ) -> p9.iapi.panel_view:
         """
         Compute the range and break information for the panel
         """
-        return dict()
+        msg = "The coordinate should implement this method."
+        raise NotImplementedError(msg)
 
-    def range(self, panel_params):
+    def range(
+        self,
+        panel_params: p9.iapi.panel_view
+    ) -> panel_ranges:
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return NS(x=panel_params.x.range,
-                  y=panel_params.y.range)
+        return panel_ranges(
+            x=panel_params.x.range,
+            y=panel_params.y.range
+        )
 
-    def backtransform_range(self, panel_params):
+    def backtransform_range(
+        self,
+        panel_params: p9.iapi.panel_view
+    ) -> panel_ranges:
         """
         Backtransform the panel range in panel_params to data coordinates
 
@@ -131,11 +168,20 @@ class coord:
         """
         return self.range(panel_params)
 
-    def distance(self, x, y, panel_params):
+    def distance(
+        self,
+        x: pd.Series[float],
+        y: pd.Series[float],
+        panel_params: p9.iapi.panel_view
+    ) -> npt.NDArray[Any]:
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
 
-    def munch(self, data, panel_params):
+    def munch(
+        self,
+        data: pd.DataFrame,
+        panel_params: p9.iapi.panel_view
+    ) -> pd.DataFrame:
         ranges = self.backtransform_range(panel_params)
 
         data.loc[data['x'] == -np.inf, 'x'] = ranges.x[0]
@@ -153,24 +199,32 @@ class coord:
         return munched
 
 
-def dist_euclidean(x, y):
+def dist_euclidean(
+    x: Sequence[float] | pd.Series[float],
+    y: Sequence[float] | pd.Series[float],
+) -> npt.NDArray[np.float64]:
     """
     Calculate euclidean distance
     """
-    x = np.asarray(x)
-    y = np.asarray(y)
-    return np.sqrt((x[:-1] - x[1:])**2 +
-                   (y[:-1] - y[1:])**2)
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+    return np.sqrt(
+        (x[:-1] - x[1:])**2 + (y[:-1] - y[1:])**2,
+        dtype=np.float64
+    )
 
 
-def interp(start, end, n):
+def interp(start: int, end: int, n: int) -> npt.NDArray[np.float64]:
     """
     Interpolate
     """
     return np.linspace(start, end, n, endpoint=False)
 
 
-def munch_data(data, dist):
+def munch_data(
+    data: pd.DataFrame,
+    dist: npt.NDArray[np.float64]
+) -> pd.DataFrame:
     """
     Breakup path into small segments
     """
@@ -202,10 +256,11 @@ def munch_data(data, dist):
     # but also must include final point
     idx = np.hstack([
         np.repeat(data.index[:-1], extra),
-        data.index[-1]
+        len(data) - 1
+        # data.index[-1] # TODO: Maybe not
     ])
 
-    munched = data.loc[idx, data.columns.difference(['x', 'y'])]
+    munched = data.loc[idx, list(data.columns.difference(['x', 'y']))]
     munched['x'] = x
     munched['y'] = y
     munched.reset_index(drop=True, inplace=True)

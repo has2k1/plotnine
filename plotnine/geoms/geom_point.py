@@ -11,7 +11,6 @@ from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any
 
     import matplotlib as mpl
@@ -41,7 +40,7 @@ class geom_point(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -54,7 +53,7 @@ class geom_point(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -69,7 +68,7 @@ class geom_point(geom):
     @staticmethod
     def draw_unit(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any

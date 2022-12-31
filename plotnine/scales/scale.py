@@ -1,7 +1,9 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from copy import copy, deepcopy
 from functools import partial
-from types import SimpleNamespace as NS
 from warnings import warn
 
 import numpy as np
@@ -13,9 +15,15 @@ from mizani.transforms import gettrans
 
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..iapi import range_view, scale_view
 from ..mapping.aes import is_position_aes, rename_aesthetics
 from ..utils import Registry, ignore_warnings, is_waive, match, waiver
 from .range import Range, RangeContinuous, RangeDiscrete
+
+if typing.TYPE_CHECKING:
+    from typing import Optional, Sequence
+
+    from mizani.transforms import trans
 
 
 class scale(metaclass=Registry):
@@ -78,7 +86,7 @@ class scale(metaclass=Registry):
 
     _aesthetics = []     # aesthetics affected by this scale
     na_value = np.nan   # What to do with the NA values
-    name = None         # used as the axis label or legend title
+    name: str | None = None  # used as the axis label or legend title
     breaks = waiver()   # major breaks
     labels = waiver()   # labels at the breaks
     guide = 'legend'    # legend or any other guide
@@ -88,8 +96,8 @@ class scale(metaclass=Registry):
     expand = None
 
     # range of aesthetic, instantiated by __init__ from the
-    range = None
-    _range_class = Range
+    range: Range
+    _range_class: type[Range] = Range
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -162,8 +170,16 @@ class scale(metaclass=Registry):
         """
         raise NotImplementedError('Not Implemented')
 
-    def expand_limits(self, limits, expand=None, coord_limits=None,
-                      trans=None):
+    def expand_limits(
+        self,
+        limits: Sequence[float],
+        expand: Optional[
+            tuple[float, float, float, float] |
+            tuple[float, float]
+        ] = None,
+        coord_limits: Optional[tuple[float, float]] = None,
+        trans: Optional[trans] = None
+    ) -> range_view:
         """
         Exand the limits of the scale
         """
@@ -187,7 +203,11 @@ class scale(metaclass=Registry):
         """
         raise NotImplementedError('Not Implemented')
 
-    def view(self, limits=None, range=None):
+    def view(
+        self,
+        limits: Optional[tuple[float, float]] = None,
+        range: Optional[tuple[float, float]] = None
+    ) -> scale_view:
         """
         Information about the trained scale
         """
@@ -244,10 +264,13 @@ class scale(metaclass=Registry):
         """
         self.range.reset()
 
-    def is_empty(self):
-        if self.range is None:
+    def is_empty(self) -> bool:
+        """
+        Whether the scale has size information
+        """
+        if not hasattr(self, 'range'):
             return True
-        return self.range.range is None and self._limits is None
+        return self.range.is_empty() and self._limits is None
 
     @property
     def limits(self):
@@ -349,20 +372,31 @@ class scale_discrete(scale):
             limits = self.limits
         return expand_range_distinct(self.limits, expand)
 
-    def expand_limits(self, limits, expand=None, coord_limits=None,
-                      trans=None):
+    def expand_limits(
+        self,
+        limits: Sequence[str],
+        expand: Optional[
+            tuple[float, float, float, float] |
+            tuple[float, float]
+        ] = None,
+        coord_limits: Optional[tuple[float, float]] = None,
+        trans: Optional[trans] = None
+    ) -> range_view:
         """
         Calculate the final range in coordinate space
         """
-        expand_func = partial(scale_continuous.expand_limits, self,
-                              trans=trans)
+        expand_func = partial(
+            scale_continuous.expand_limits,
+            self,
+            trans=trans
+        )
         n_limits = len(limits)
         range_c = (0, 1)
         range_d = (1, n_limits)
         is_only_continuous = n_limits == 0
 
         if hasattr(self.range, 'range_c'):
-            is_only_discrete = self.range.range_c.range is None
+            is_only_discrete = self.range.range_c.is_trained()
             range_c = self.range.range_c.range
         else:
             is_only_discrete = True
@@ -379,10 +413,14 @@ class scale_discrete(scale):
             ranges_c = expand_func(range_c, no_expand, coord_limits)
             limits = np.hstack(ranges_d.range, ranges_c.range)
             range = (np.min(limits), np.max(limits))
-            ranges = NS(range=range, range_coord=range)
+            ranges = range_view(range=range, range_coord=range)
             return ranges
 
-    def view(self, limits=None, range=None):
+    def view(
+        self,
+        limits: Optional[tuple[float, float]] = None,
+        range: Optional[tuple[float, float]] = None
+    ) -> scale_view:
         """
         Information about the trained scale
         """
@@ -397,7 +435,7 @@ class scale_discrete(scale):
         minor_breaks = []
         labels = self.get_labels(breaks_d)
 
-        vs = NS(
+        sv = scale_view(
             scale=self,
             aesthetics=self.aesthetics,
             name=self.name,
@@ -407,7 +445,7 @@ class scale_discrete(scale):
             labels=labels,
             minor_breaks=minor_breaks
         )
-        return vs
+        return sv
 
     def default_expansion(self, mult=0, add=0.6, expand=True):
         """
@@ -650,7 +688,7 @@ class scale_continuous(scale):
             # in transformed space (i.e. with in the domain of the scale)
             _range = self.trans.inverse(self.range.range)
             return tuple(self.trans.transform(self._limits(_range)))
-        elif self._limits is not None and self.range.range is not None:
+        elif self._limits is not None and not self.range.is_empty():
             # Fall back to the range if the limits
             # are not set or if any is None or NaN
             if len(self._limits) == len(self.range.range):
@@ -783,10 +821,14 @@ class scale_continuous(scale):
             final_limits = trans.inverse(range_coord)
         final_range = tuple(fl if np.isfinite(fl) else l
                             for fl, l in zip(final_limits, limits))
-        ranges = NS(range=final_range, range_coord=range_coord)
+        ranges = range_view(range=final_range, range_coord=range_coord)
         return ranges
 
-    def view(self, limits=None, range=None):
+    def view(
+        self,
+        limits: Optional[tuple[float, float]] = None,
+        range: Optional[tuple[float, float]] = None
+    ) -> scale_view:
         """
         Information about the trained scale
         """
@@ -806,7 +848,7 @@ class scale_continuous(scale):
         if minor_breaks is None:
             minor_breaks = []
 
-        vs = NS(
+        sv = scale_view(
             scale=self,
             aesthetics=self.aesthetics,
             name=self.name,
@@ -817,7 +859,7 @@ class scale_continuous(scale):
             minor_breaks=minor_breaks
 
         )
-        return vs
+        return sv
 
     def default_expansion(self, mult=0.05, add=0, expand=True):
         """

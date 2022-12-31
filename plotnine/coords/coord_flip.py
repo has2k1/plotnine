@@ -1,6 +1,17 @@
-from types import SimpleNamespace as NS
+from __future__ import annotations
 
+import typing
+from typing import overload
+
+from ..iapi import panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
+
+    import plotnine as p9
+
+    from ..iapi import labels_view
 
 
 class coord_flip(coord_cartesian):
@@ -26,37 +37,64 @@ class coord_flip(coord_cartesian):
         from the data.
     """
 
-    def labels(self, label_lookup):
-        return flip_labels(coord_cartesian.labels(
-            self, label_lookup))
+    def labels(
+        self,
+        cur_labels: p9.iapi.labels_view
+    ) -> p9.iapi.labels_view:
+        return flip_labels(super().labels(cur_labels))
 
-    def transform(self, data, panel_params, munch=False):
+    def transform(
+        self,
+        data: pd.DataFrame,
+        panel_params: p9.iapi.panel_view,
+        munch: bool = False
+    ) -> pd.DataFrame:
         data = flip_labels(data)
-        return coord_cartesian.transform(self, data,
-                                         panel_params,
-                                         munch=munch)
+        return super().transform(data, panel_params, munch=munch)
 
-    def setup_panel_params(self, scale_x, scale_y):
-        panel_params = coord_cartesian.setup_panel_params(
-            self, scale_x, scale_y)
+    def setup_panel_params(
+        self,
+        scale_x: p9.scales.scale.scale,
+        scale_y: p9.scales.scale.scale
+    ) -> p9.iapi.panel_view:
+        panel_params = super().setup_panel_params(scale_x, scale_y)
         return flip_labels(panel_params)
 
-    def setup_layout(self, layout):
+    def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
         # switch the scales
         x, y = 'SCALE_X', 'SCALE_Y'
         layout[x], layout[y] = layout[y].copy(), layout[x].copy()
         return layout
 
-    def range(self, panel_params):
+    def range(
+        self,
+        panel_params: p9.iapi.panel_view
+    ) -> panel_ranges:
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return NS(x=panel_params.y.range,
-                  y=panel_params.x.range)
+        return panel_ranges(
+            x=panel_params.y.range,
+            y=panel_params.x.range
+        )
 
 
-def flip_labels(obj):
+@overload
+def flip_labels(obj: pd.DataFrame) -> pd.DataFrame: ...
+
+
+@overload
+def flip_labels(obj: labels_view) -> labels_view: ...
+
+
+@overload
+def flip_labels(obj: panel_view) -> panel_view: ...
+
+
+def flip_labels(
+    obj: pd.DataFrame | labels_view | panel_view
+) -> pd.DataFrame | labels_view | panel_view:
     """
     Rename fields x to y and y to x
 
@@ -65,14 +103,14 @@ def flip_labels(obj):
     obj : dict_like | types.SimpleNamespace
         Object with labels to rename
     """
-    def sub(a, b):
+    def sub(a: str, b: str) -> None:
         """
         Substitute all keys that start with a to b
         """
-        for label in list(obj.keys()):
+        for label in list(obj.keys()):  # type: ignore
             if label.startswith(a):
                 new_label = b+label[1:]
-                obj[new_label] = obj.pop(label)
+                obj[new_label] = obj.pop(label)  # type: ignore
 
     if hasattr(obj, 'keys'):  # dict or dataframe
         sub('x', 'z')
