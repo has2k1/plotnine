@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from copy import copy
 from warnings import warn
 
@@ -11,6 +14,10 @@ from ..utils import (
     groupby_apply,
     is_string,
 )
+
+if typing.TYPE_CHECKING:
+    import mizani as mz
+    import pandas as pd
 
 
 class position(metaclass=Registry):
@@ -79,7 +86,11 @@ class position(metaclass=Registry):
         raise NotImplementedError(msg.format(cls.__name__))
 
     @staticmethod
-    def transform_position(data, trans_x=None, trans_y=None):
+    def transform_position(
+        data,
+        trans_x: mz.transforms.trans = None,
+        trans_y: mz.transforms.trans = None
+    ) -> pd.DataFrame:
         """
         Transform all the variables that map onto the x and y scales.
 

@@ -16,7 +16,6 @@ from .geom_polygon import geom_polygon
 from .geom_segment import geom_segment
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any
 
     import matplotlib as mpl
@@ -63,7 +62,7 @@ class geom_crossbar(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any

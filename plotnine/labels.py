@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing
 
 from .exceptions import PlotnineError
+from .iapi import labels_view
 from .mapping.aes import SCALED_AESTHETICS, rename_aesthetics
 
 if typing.TYPE_CHECKING:
@@ -22,7 +23,7 @@ class labs:
         Aesthetics (with scales) to be renamed. You can also
         set the ``title`` and ``caption``.
     """
-    labels: dict[str, str] = {}
+    labels: labels_view
 
     def __init__(self, **kwargs: str) -> None:
         unknown = kwargs.keys() - VALID_LABELS
@@ -30,7 +31,9 @@ class labs:
             raise PlotnineError(
                 f"Cannot deal with these labels: {unknown}"
             )
-        self.labels = rename_aesthetics(kwargs)
+        self.labels = labels_view(
+            **rename_aesthetics(kwargs)
+        )
 
     def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
         """
@@ -53,8 +56,9 @@ class xlab(labs):
     def __init__(self, xlab: str) -> None:
         if xlab is None:
             raise PlotnineError(
-                "Arguments to xlab cannot be None")
-        self.labels = {'x': xlab}
+                "Arguments to xlab cannot be None"
+            )
+        self.labels = labels_view(x=xlab)
 
 
 class ylab(labs):
@@ -70,8 +74,9 @@ class ylab(labs):
     def __init__(self, ylab: str) -> None:
         if ylab is None:
             raise PlotnineError(
-                "Arguments to ylab cannot be None")
-        self.labels = {'y': ylab}
+                "Arguments to ylab cannot be None"
+            )
+        self.labels = labels_view(y=ylab)
 
 
 class ggtitle(labs):
@@ -88,4 +93,4 @@ class ggtitle(labs):
         if title is None:
             raise PlotnineError(
                 "Arguments to ggtitle cannot be None")
-        self.labels = {'title': title}
+        self.labels = labels_view(title=title)

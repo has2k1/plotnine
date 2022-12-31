@@ -10,7 +10,6 @@ from plotnine.data import mtcars
 from plotnine.utils import (
     _margins,
     add_margins,
-    defaults,
     join_keys,
     match,
     ninteraction,
@@ -193,15 +192,6 @@ def test_uniquecols():
                         'other': ['same']})
     result = uniquecols(df)
     assert result.equals(df2)
-
-
-def test_defaults():
-    d1 = {'a': 1, 'b': 2, 'c': 3}
-    d2 = {'a': 11, 'd': 4}
-    d3 = {'a': 1, 'b': 2, 'c': 3, 'd': 4}
-
-    d1 = defaults(d1, d2)
-    assert d1 == d3
 
 
 def test_remove_missing():

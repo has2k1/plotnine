@@ -1,4 +1,13 @@
+from __future__ import annotations
+
+import typing
+
 from .coord_cartesian import coord_cartesian
+
+if typing.TYPE_CHECKING:
+    from typing import Optional
+
+    import plotnine as p9
 
 
 class coord_fixed(coord_cartesian):
@@ -33,13 +42,22 @@ class coord_fixed(coord_cartesian):
     :class:`plotnine.themes.themeable.figure_size` themeable) and the
     `height` is altered to achieve desired ratio.
     """
+    ratio: float
 
-    def __init__(self, ratio=1, xlim=None, ylim=None, expand=True):
-        coord_cartesian.__init__(self, xlim=xlim, ylim=ylim,
-                                 expand=expand)
+    def __init__(
+        self,
+        ratio: float = 1,
+        xlim: Optional[tuple[float, float]] = None,
+        ylim: Optional[tuple[float, float]] = None,
+        expand: bool = True
+    ) -> None:
+        super().__init__(xlim=xlim, ylim=ylim, expand=expand)
         self.ratio = ratio
 
-    def aspect(self, panel_params):
+    def aspect(
+        self,
+        panel_params: p9.iapi.panel_view
+    ) -> float | None:
         x = panel_params.x.range
         y = panel_params.y.range
         return (y[1]-y[0]) / (x[1]-x[0]) * self.ratio

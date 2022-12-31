@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import types
 import typing
 
 import numpy as np
@@ -42,7 +41,7 @@ class geom_rect(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -62,7 +61,7 @@ class geom_rect(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any
@@ -83,7 +82,7 @@ class geom_rect(geom):
 
         # prevent unnecessary borders
         if all(color.isnull()):
-            color = 'none'
+            color = 'none'  # type: ignore
 
         col = PolyCollection(
             verts,

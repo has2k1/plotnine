@@ -38,10 +38,10 @@ class scale_position_discrete(scale_discrete):
     palette = staticmethod(identity)
 
     # Keeps two ranges, range and range_c
-    range_c = RangeContinuous
+    range_c: RangeContinuous
 
     def __init__(self, *args, **kwargs):
-        self.range_c = self.range_c()
+        self.range_c = RangeContinuous()
         scale_discrete.__init__(self, *args, **kwargs)
 
     def reset(self):
@@ -49,13 +49,8 @@ class scale_position_discrete(scale_discrete):
         # no way to recover values
         self.range_c.reset()
 
-    def is_empty(self):
-        if self.range is None:
-            return True
-
-        return (self.range.range is None and
-                self._limits is None and
-                self.range_c.range is None)
+    def is_empty(self) -> bool:
+        return super().is_empty() and self.range_c.is_empty()
 
     def train(self, series):
         # The discrete position scale is capable of doing
@@ -106,7 +101,8 @@ class scale_position_discrete(scale_discrete):
             return limits
         else:
             raise PlotnineError(
-                'Lost, do not know what the limits are.')
+                "Lost, do not know what the limits are."
+            )
 
     @limits.setter
     def limits(self, value):
@@ -123,23 +119,24 @@ class scale_position_discrete(scale_discrete):
         if limits is None:
             limits = self.limits
 
-        c_range = self.range_c.range
-        d_range = self.limits
-
         if self.is_empty():
             return (0, 1)
-        elif self.range.range is None:  # only continuous
-            return expand_range_distinct(c_range, expand)
-        elif c_range is None:  # only discrete
+
+        if self.range.is_empty():  # only continuous
+            return expand_range_distinct(self.range_c.range, expand)
+        elif self.range_c.is_empty():  # only discrete
             # FIXME: I think this branch should not exist
-            return expand_range_distinct((1, len(d_range)), expand)
+            return expand_range_distinct((1, len(self.limits)), expand)
         else:  # both
             # e.g categorical bar plot have discrete items, but
             # are plot on a continuous x scale
             a = np.hstack([
-                c_range,
-                expand_range_distinct((1, len(d_range)), expand)
-                ])
+                self.range_c.range,
+                expand_range_distinct(
+                    (1, len(self.range.range)),
+                    expand
+                )
+            ])
             return a.min(), a.max()
 
 

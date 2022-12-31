@@ -14,7 +14,6 @@ from .geom_path import geom_path
 from .geom_rug import geom_rug
 
 if typing.TYPE_CHECKING:
-    import types
     from typing import Any, Literal, Sequence
 
     import matplotlib as mpl
@@ -54,7 +53,7 @@ class _geom_logticks(geom_rug):
     def _check_log_scale(
         base: float | None,
         sides: str,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
     ) -> tuple[float, float]:
         """
@@ -71,7 +70,7 @@ class _geom_logticks(geom_rug):
             chosen from the characters ``btlr``, for *bottom*, *top*,
             *left* or *right* side marks. If ``coord_flip()`` is used,
             these are the sides *before* the flip.
-        panel_params : SimpleNamespace
+        panel_params : panel_view
             ``x`` and ``y`` view scale values.
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the geom.
@@ -195,7 +194,7 @@ class _geom_logticks(geom_rug):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: types.SimpleNamespace,
+        panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
         ax: mpl.axes.Axes,
         **params: Any

@@ -4,10 +4,12 @@ import re
 from collections.abc import Iterable
 from contextlib import suppress
 from copy import deepcopy
+from dataclasses import fields
 from typing import Any, Dict
 
 import pandas as pd
 
+from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
 __all__ = ['aes']
@@ -452,7 +454,7 @@ def is_position_aes(vars_):
         return aes_to_scale(vars_) in {'x', 'y'}
 
 
-def make_labels(mapping: dict[str, Any] | aes) -> dict[str, str | None]:
+def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
     """
     Convert aesthetic mapping into text labels
     """
@@ -481,10 +483,12 @@ def make_labels(mapping: dict[str, Any] | aes) -> dict[str, str | None]:
             else:
                 return _nice_label(value)
 
-    return {
+    valid_names = {f.name for f in fields(labels_view)}
+    return labels_view(**{
         str(ae): _make_label(ae, label)
         for ae, label in mapping.items()
-    }
+        if ae in valid_names
+    })
 
 
 def is_valid_aesthetic(value, ae):
