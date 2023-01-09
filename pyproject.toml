@@ -46,3 +46,91 @@ version_scheme = 'post-release'
 [tool.isort]
 profile = "black"
 line_length = 79
+
+[tool.pylsp-mypy]
+enabled = true
+live_mode = true
+strict = false
+
+[tool.pyright]
+# Paths of directories or files that should be included. If no paths
+# are specified, pyright defaults to the directory that contains the
+# config file. Paths may contain wildcard characters ** (a directory or
+# multiple levels of directories), * (a sequence of zero or more
+# characters), or ? (a single character). If no include paths are
+# specified, the root path for the workspace is assumed.
+include = [
+   "plotnine/animation.py",
+   "plotnine/ggplot.py",
+   "plotnine/doctools.py",
+   "plotnine/labels.py",
+   "plotnine/options.py",
+   "plotnine/exceptions.py",
+   "plotnine/watermark.py",
+   "plotnine/ggplot.py",
+   "plotnine/utils.py",
+   "plotnine/typing.py",
+   "plotnine/layer.py",
+   "plotnine/qplot.py",
+   "plotnine/iapi.py",
+   "plotnine/geoms",
+   "plotnine/coords",
+]
+
+# Paths of directories or files whose diagnostic output (errors and
+# warnings) should be suppressed even if they are an included file or
+# within the transitive closure of an included file. Paths may contain
+# wildcard characters ** (a directory or multiple levels of
+# directories), * (a sequence of zero or more characters), or ? (a
+# single character).
+ignore = []
+
+# Set of identifiers that should be assumed to contain a constant
+# value wherever used within this program. For example, { "DEBUG": true
+# } indicates that pyright should assume that the identifier DEBUG will
+# always be equal to True. If this identifier is used within a
+# conditional expression (such as if not DEBUG:) pyright will use the
+# indicated value to determine whether the guarded block is reachable
+# or not. Member expressions that reference one of these constants
+# (e.g. my_module.DEBUG) are also supported.
+defineConstant = { DEBUG = true }
+
+reportMissingImports = false
+reportMissingTypeStubs = false
+#typeCheckingMode = "strict"
+useLibraryCodeForTypes = true
+
+# Specifies a list of execution environments (see below). Execution
+# environments are searched from start to finish by comparing the path
+# of a source file with the root path specified in the execution
+# environment.
+executionEnvironments = []
+
+stubPath = ""
+
+[tool.ruff]
+# Enable Pyflakes `E` and `F` codes by default.
+select = ["E", "F", "C"]
+ignore = [
+    "E501", "E741", "E743", "C901",
+    "D100", "D102", "D105", "D107", "D200", "D203", "D204", "D212",
+    "D400", "D413", "D415",
+
+    # TODO: Resolve these
+    "E713", "C408", "F601", "C416"
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [".git"]
+
+line-length = 79
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.8.
+target-version = "py38"

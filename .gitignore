@@ -23,6 +23,13 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+__pypackages__/
+node_modules/
+
+# Environments
+.direnv
+.venv
+venv
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -45,6 +52,8 @@ coverage.xml
 *,cover
 .hypothesis/
 .pytest_cache
+.ruff_cache
+.mypy_cache
 
 # plotnine testing
 tests/result_images/

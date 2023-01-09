@@ -1,6 +1,6 @@
 repos:
-- repo: https://github.com/PyCQA/isort
-  rev: 5.10.1
-  hooks:
-    - id: isort
-      name: isort (python)
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.239
+    hooks:
+      - id: ruff
+        args: [--select=I001, --fix]

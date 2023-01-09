@@ -3,8 +3,11 @@ from importlib.metadata import PackageNotFoundError, version
 from .coords import *  # noqa: F401,F403,E261
 from .facets import *  # noqa: F401,F403,E261
 from .geoms import *  # noqa: F401,F403,E261
-from .ggplot import save_as_pdf_pages  # noqa: F401
-from .ggplot import ggplot, ggsave  # noqa: F401
+from .ggplot import (  # noqa: F401
+    ggplot,
+    ggsave,
+    save_as_pdf_pages,  # noqa: F401
+)
 from .guides import *  # noqa: F401,F403,E261
 from .labels import *  # noqa: F401,F403,E261
 from .mapping import *  # noqa: F401,F403,E261

@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import re
+import typing
 from contextlib import suppress
 from warnings import warn
 
@@ -14,7 +17,13 @@ from .facet import (
     facet,
     layout_null,
 )
-from .strips import strip
+from .strips import Strips, strip
+
+if typing.TYPE_CHECKING:
+    from typing import Literal, Optional
+
+    from plotnine.iapi import layout_details
+    from plotnine.typing import Axes
 
 
 class facet_wrap(facet):
@@ -57,25 +66,49 @@ class facet_wrap(facet):
         horizontal and ``v`` for vertical.
     """
 
-    def __init__(self, facets=None, nrow=None, ncol=None, scales='fixed',
-                 shrink=True, labeller='label_value',
-                 as_table=True, drop=True, dir='h'):
-        facet.__init__(
-            self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop, dir=dir)
-        self.vars = tuple(parse_wrap_facets(facets))
-        self.nrow, self.ncol = check_dimensions(nrow, ncol)
+    def __init__(
+        self,
+        facets: str | list[str],
+        *,
+        nrow: Optional[int] = None,
+        ncol: Optional[int] = None,
+        scales: Literal['fixed', 'free', 'free_x', 'free_y'] = 'fixed',
+        shrink: bool = True,
+        labeller: Literal[
+            'label_value', 'label_both', 'label_context'
+        ] = 'label_value',
+        as_table: bool = True,
+        drop: bool = True,
+        dir: Literal['h', 'v'] = 'h'
+    ):
+        super().__init__(
+            scales=scales,
+            shrink=shrink,
+            labeller=labeller,
+            as_table=as_table,
+            drop=drop,
+            dir=dir
+        )
+        self.vars = parse_wrap_facets(facets)
+        self._nrow, self._ncol = check_dimensions(nrow, ncol)
         # facet_wrap gets its labelling at the top
         self.num_vars_x = len(self.vars)
 
-    def compute_layout(self, data):
+    def compute_layout(
+        self,
+        data: list[pd.DataFrame],
+    ) -> pd.DataFrame:
         if not self.vars:
             return layout_null()
 
-        base = combine_vars(data, self.plot.environment,
-                            self.vars, drop=self.drop)
+        base = combine_vars(
+            data,
+            self.plot.environment,
+            self.vars,
+            drop=self.drop
+        )
         n = len(base)
-        dims = wrap_dims(n, self.nrow, self.ncol)
+        dims = wrap_dims(n, self._nrow, self._ncol)
         _id = np.arange(1, n+1)
 
         if self.dir == 'v':
@@ -115,8 +148,8 @@ class facet_wrap(facet):
         layout['AXIS_X'] = False
         layout['AXIS_Y'] = False
         _loc = layout.columns.get_loc
-        layout.iloc[x_idx, _loc('AXIS_X')] = True
-        layout.iloc[y_idx, _loc('AXIS_Y')] = True
+        layout.iloc[x_idx, _loc('AXIS_X')] = True  # type: ignore
+        layout.iloc[y_idx, _loc('AXIS_Y')] = True  # type: ignore
 
         if self.free['x']:
             layout.loc[:, 'AXIS_X'] = True
@@ -126,7 +159,11 @@ class facet_wrap(facet):
 
         return layout
 
-    def map(self, data, layout):
+    def map(
+        self,
+        data: pd.DataFrame,
+        layout: pd.DataFrame
+    ) -> pd.DataFrame:
         if not len(data):
             data['PANEL'] = pd.Categorical(
                 [],
@@ -151,7 +188,7 @@ class facet_wrap(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def spaceout_and_resize_panels(self):
+    def spaceout_and_resize_panels(self) -> None:
         """
         Adjust the spacing between the panels
 
@@ -203,12 +240,19 @@ class facet_wrap(facet):
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
         self.check_axis_text_space()
 
-    def make_ax_strips(self, layout_info, ax):
+    def make_ax_strips(
+        self,
+        layout_info: layout_details,
+        ax: Axes
+    ) -> Strips:
         s = strip(self.vars, layout_info, self, ax, 'top')
-        return [s]
+        return Strips([s])
 
 
-def check_dimensions(nrow, ncol):
+def check_dimensions(
+    nrow: Optional[int],
+    ncol: Optional[int]
+) -> tuple[int | None, int | None]:
     """
     Verify dimensions of the facet
     """
@@ -231,7 +275,7 @@ def check_dimensions(nrow, ncol):
     return nrow, ncol
 
 
-def parse_wrap_facets(facets):
+def parse_wrap_facets(facets: str | list[str]) -> list[str]:
     """
     Return list of facetting variables
     """
@@ -262,37 +306,43 @@ def parse_wrap_facets(facets):
     return facets
 
 
-def wrap_dims(n, nrow=None, ncol=None):
+def wrap_dims(
+    n: int,
+    nrow: Optional[int] = None,
+    ncol: Optional[int] = None
+) -> tuple[int, int]:
     """
     Wrap dimensions
     """
-    if not nrow and not ncol:
-        ncol, nrow = n2mfrow(n)
-    elif not ncol:
+    if nrow is None:
+        if ncol is None:
+            return n_to_nrow_ncol(n)
+        else:
+            nrow = int(np.ceil(n/ncol))
+
+    if ncol is None:
         ncol = int(np.ceil(n/nrow))
-    elif not nrow:
-        nrow = int(np.ceil(n/ncol))
+
     if not nrow * ncol >= n:
         raise PlotnineError(
             "Allocated fewer panels than are required. "
             "Make sure the number of rows and columns can "
-            "hold all the plot panels.")
+            "hold all the plot panels."
+        )
     return (nrow, ncol)
 
 
-def n2mfrow(nr_plots):
+def n_to_nrow_ncol(n: int) -> tuple[int, int]:
     """
     Compute the rows and columns given the number of plots.
-
-    This is a port of grDevices::n2mfrow from R
     """
-    if nr_plots <= 3:
-        nrow, ncol = nr_plots, 1
-    elif nr_plots <= 6:
-        nrow, ncol = (nr_plots + 1) // 2, 2
-    elif nr_plots <= 12:
-        nrow, ncol = (nr_plots + 2) // 3, 3
+    if n <= 3:
+        nrow, ncol = 1, n
+    elif n <= 6:
+        nrow, ncol = 2, (n + 1) // 2
+    elif n <= 12:
+        nrow, ncol = 3, (n + 2) // 3
     else:
-        nrow = int(np.ceil(np.sqrt(nr_plots)))
-        ncol = int(np.ceil(nr_plots/nrow))
+        ncol = int(np.ceil(np.sqrt(n)))
+        nrow = int(np.ceil(n/ncol))
     return (nrow, ncol)

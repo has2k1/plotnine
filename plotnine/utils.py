@@ -30,9 +30,10 @@ from .exceptions import PlotnineError, PlotnineWarning
 from .mapping import aes
 
 if typing.TYPE_CHECKING:
+    import numpy.typing as npt
     from typing_extensions import TypeGuard
 
-    from .typing import DataLike
+    from plotnine.typing import DataLike
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
@@ -107,7 +108,13 @@ def identity(*args):
     return args if len(args) > 1 else args[0]
 
 
-def match(v1, v2, nomatch=-1, incomparables=None, start=0):
+def match(
+    v1,
+    v2,
+    nomatch=-1,
+    incomparables=None,
+    start=0
+) -> npt.NDArray[np.int64]:
     """
     Return a vector of the positions of (first)
     matches of its first argument in its second.
@@ -140,14 +147,18 @@ def match(v1, v2, nomatch=-1, incomparables=None, start=0):
 
     if incomparables:
         skip = set(incomparables) if incomparables else set()
-        lst = [lookup[x]+start
-               if x not in skip and x in lookup else nomatch
-               for x in v1]
+        lst = [
+            lookup[x]+start
+            if x not in skip and x in lookup else nomatch
+            for x in v1
+        ]
     else:
-        lst = [lookup[x]+start
-               if x in lookup else nomatch
-               for x in v1]
-    return lst
+        lst = [
+            lookup[x]+start
+            if x in lookup else nomatch
+            for x in v1
+        ]
+    return np.array(lst)
 
 
 def _margins(vars, margins=True):
@@ -201,7 +212,11 @@ def _margins(vars, margins=True):
     return pretty
 
 
-def add_margins(df, vars, margins=True):
+def add_margins(
+    df: pd.DataFrame,
+    vars: tuple[list[str], list[str]],
+    margins: bool | list[str] = True
+) -> pd.DataFrame:
     """
     Add margins to a data frame.
 
@@ -247,14 +262,15 @@ def add_margins(df, vars, margins=True):
             categories[v] = categories[v].insert(
                 len(categories[v]), '(all)')
 
-    for v in merged.columns.intersection(set(categories)):
+    for v in merged.columns.intersection(list(categories.keys())):
         merged[v] = merged[v].astype(
-           pdtypes.CategoricalDtype(categories[v]))
+           pdtypes.CategoricalDtype(categories[v])
+        )
 
     return merged
 
 
-def ninteraction(df, drop=False):
+def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
     """
     Compute a unique numeric id for each unique row in
     a data frame. The ids start at 1 -- in the spirit
@@ -287,7 +303,7 @@ def ninteraction(df, drop=False):
 
     # Calculate individual ids
     ids = df.apply(_id_var, axis=0)
-    ids = ids.reindex(columns=reversed(ids.columns))
+    ids = ids.reindex(columns=list(reversed(ids.columns)))
 
     # Calculate dimensions
     def len_unique(x):
@@ -295,7 +311,8 @@ def ninteraction(df, drop=False):
     ndistinct = ids.apply(len_unique, axis=0).values
 
     combs = np.array(
-        np.hstack([1, np.cumprod(ndistinct[:-1])]))
+        np.hstack([1, np.cumprod(ndistinct[:-1])])
+    )
     mat = np.array(ids)
     res = (mat - 1) @ combs.T + 1
     res = np.array(res).flatten().tolist()
@@ -303,10 +320,13 @@ def ninteraction(df, drop=False):
     if drop:
         return _id_var(res, drop)
     else:
-        return res
+        return list(res)
 
 
-def _id_var(x, drop=False):
+def _id_var(
+    x: pd.Series[Any],
+    drop: bool = False
+) -> list[int]:
     """
     Assign ids to items in x. If two items
     are the same, they get the same id.
@@ -343,7 +363,7 @@ def _id_var(x, drop=False):
             # x probably has NANs
             levels = multitype_sort(set(x))
 
-        lst = match(x, levels)
+        lst = match(x, levels)  # type: ignore
         lst = [item + 1 for item in lst]
 
     return lst
@@ -1088,7 +1108,7 @@ def resolution(x, zero=True):
     return np.min(np.diff(np.sort(x)))
 
 
-def cross_join(df1, df2):
+def cross_join(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
     """
     Return a dataframe that is a cross between dataframes
     df1 and df2
@@ -1103,7 +1123,7 @@ def cross_join(df1, df2):
 
     # Add as lists so that the new index keeps the items in
     # the order that they are added together
-    all_columns = pd.Index(list(df1.columns) + list(df2.columns))
+    all_columns = list(pd.Index(list(df1.columns) + list(df2.columns)))
     df1['key'] = 1
     df2['key'] = 1
     return pd.merge(df1, df2, on='key').loc[:, all_columns]

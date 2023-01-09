@@ -7,13 +7,19 @@ import numpy as np
 import pandas as pd
 
 from ..exceptions import PlotnineError
-from ..iapi import labels_view, pos_scales
+from ..iapi import labels_view, layout_details, pos_scales
 from ..utils import match
 
 if typing.TYPE_CHECKING:
-    import matplotlib as mpl
-
-    import plotnine as p9
+    from plotnine.iapi import panel_view
+    from plotnine.typing import (
+        Axes,
+        Coord,
+        Facet,
+        Ggplot,
+        Layers,
+        Scales,
+    )
 
 
 class Layout:
@@ -21,29 +27,29 @@ class Layout:
     Layout of entire plot
     """
     #: facet
-    facet: p9.facets.facet.facet
+    facet: Facet
 
     #: coordinate system
-    coord: p9.coords.coord.coord
+    coord: Coord
 
     #: A dataframe with the layout information of the plot
     layout: pd.DataFrame
 
     #: List of x scales
-    panel_scales_x: p9.scales.scales.Scales
+    panel_scales_x: Scales
 
     #: List of y scales
-    panel_scales_y: p9.scales.scales.Scales
+    panel_scales_y: Scales
 
     #: Range & breaks information for each panel
-    panel_params: list[p9.iapi.panel_view]
+    panel_params: list[panel_view]
 
-    axs: mpl.axes.Axes       # MPL axes
+    axs: list[Axes]       # MPL axes
 
     def setup(
         self,
-        layers: p9.layer.Layers,
-        plot: p9.ggplot
+        layers: Layers,
+        plot: Ggplot
     ) -> None:
         """
         Create a layout for the panels
@@ -82,8 +88,8 @@ class Layout:
 
     def train_position(
         self,
-        layers: p9.layer.Layers,
-        scales: p9.scales.scales.Scales
+        layers: Layers,
+        scales: Scales
     ) -> None:
         """
         Create all the required x & y panel_scales
@@ -111,7 +117,7 @@ class Layout:
 
     def map_position(
         self,
-        layers: p9.layer.Layers
+        layers: Layers
     ) -> None:
         """
         Map x & y (position) aesthetics onto the scales.
@@ -158,16 +164,12 @@ class Layout:
         # on some datasets
         bool_idx = (np.asarray(self.layout['PANEL']) == i)
 
-        if self.panel_scales_x:
-            idx = self.layout.loc[bool_idx, 'SCALE_X'].values[0]
-            xsc = self.panel_scales_x[idx-1]
+        idx = self.layout['SCALE_X'].loc[bool_idx].iloc[0]
+        xsc = self.panel_scales_x[idx-1]
 
-        if self.panel_scales_y:
-            idx = self.layout.loc[bool_idx, 'SCALE_Y'].values[0]
-            ysc = self.panel_scales_y[idx-1]
+        idx = self.layout['SCALE_Y'].loc[bool_idx].iloc[0]
+        ysc = self.panel_scales_y[idx-1]
 
-        assert xsc is not None, "TODO: BAD"
-        assert ysc is not None, "TODO: BAD"
         return pos_scales(x=xsc, y=ysc)
 
     def reset_position_scales(self) -> None:
@@ -185,7 +187,7 @@ class Layout:
 
     def setup_panel_params(
         self,
-        coord: p9.coords.coord.coord
+        coord: Coord
     ) -> None:
         """
         Calculate the x & y range & breaks information for each panel
@@ -213,7 +215,7 @@ class Layout:
 
     def finish_data(
         self,
-        layers: p9.layer.Layers
+        layers: Layers
     ) -> None:
         """
         Modify data before it is drawn out by the geom
@@ -295,3 +297,18 @@ class Layout:
         labels.x = self.xlabel(labels)
         labels.y = self.ylabel(labels)
         return labels
+
+    def get_details(self) -> list[layout_details]:
+        columns = [
+            'PANEL', 'ROW', 'COL', 'SCALE_X', 'SCALE_Y', 'AXIS_X', 'AXIS_Y'
+        ]
+        vcols = self.layout.columns.difference(columns)
+        lst = []
+        for pidx, row in self.layout.iterrows():
+            ld = layout_details(
+                panel_index=pidx,  # type: ignore
+                variables={name: row[name] for name in vcols},  # type: ignore
+                **{str.lower(k): row[k] for k in columns},
+            )
+            lst.append(ld)
+        return lst
