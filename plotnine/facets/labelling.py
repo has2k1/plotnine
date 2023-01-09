@@ -1,49 +1,60 @@
-from contextlib import suppress
+from __future__ import annotations
 
-import pandas as pd
+import typing
+from abc import ABCMeta, abstractmethod
 
 from ..exceptions import PlotnineError
+from ..iapi import strip_label_details
+
+if typing.TYPE_CHECKING:
+    from typing import Callable, Optional
+
+    from ..typing import (
+        CanBeStripLabellingFunc,
+        StripLabellingFunc,
+        StripLabellingFuncNames,
+    )
 
 
-def collapse_label_lines(label_info):
+def label_value(
+    label_info: strip_label_details,
+    multi_line: bool = True
+) -> strip_label_details:
     """
-    Concatenate all items in series into one item
-    """
-    return pd.Series([', '.join(label_info)])
-
-
-def label_value(label_info, multi_line=True):
-    """
-    Convert series values to str and maybe concatenate them
+    Keep value as the label
 
     Parameters
     ----------
-    label_info : series
-        Series whose values will be returned
+    label_info : strip_label_details
+        Label information whose values will be returned
     multi_line : bool
         Whether to place each variable on a separate line
 
     Returns
     -------
-    out : series
+    out : strip_label_details
         Label text strings
     """
-    label_info = label_info.astype(str)
+    label_info = label_info.copy()
+
     if not multi_line:
-        label_info = collapse_label_lines(label_info)
+        label_info = label_info.collapse()
 
     return label_info
 
 
-def label_both(label_info, multi_line=True, sep=': '):
+def label_both(
+    label_info: strip_label_details,
+    multi_line: bool = True,
+    sep: str = ': '
+) -> strip_label_details:
     """
-    Concatenate the index and the value of the series.
+    Concatenate the facet variable with the value
 
     Parameters
     ----------
-    label_info : series
-        Series whose values will be returned. It must have
-        an index made of variable names.
+    label_info : strip_label_details
+        Label information to be modified.
     multi_line : bool
         Whether to place each variable on a separate line
     sep :  str
@@ -51,20 +62,25 @@ def label_both(label_info, multi_line=True, sep=': '):
 
     Returns
     -------
-    out : series
-        Label text strings
+    out : strip_label_details
+        Label information
     """
-    label_info = label_info.astype(str)
-    for var in label_info.index:
-        label_info[var] = f'{var}{sep}{label_info[var]}'
+    label_info = label_info.copy()
+
+    for var, lvalue in label_info.variables.items():
+        label_info.variables[var] = f'{var}{sep}{lvalue}'
 
     if not multi_line:
-        label_info = collapse_label_lines(label_info)
+        label_info = label_info.collapse()
 
     return label_info
 
 
-def label_context(label_info, multi_line=True, sep=': '):
+def label_context(
+    label_info: strip_label_details,
+    multi_line: bool = True,
+    sep: str = ': '
+) -> strip_label_details:
     """
     Create an unabiguous label string
 
@@ -73,9 +89,8 @@ def label_context(label_info, multi_line=True, sep=': '):
 
     Parameters
     ----------
-    label_info : series
-        Series whose values will be returned. It must have
-        an index made of variable names
+    label_info : strip_label_details
+        Label information
     multi_line : bool
         Whether to place each variable on a separate line
     sep :  str
@@ -93,21 +108,26 @@ def label_context(label_info, multi_line=True, sep=': '):
         return label_both(label_info, multi_line, sep)
 
 
-LABELLERS = {
+LABELLERS: dict[StripLabellingFuncNames, StripLabellingFunc] = {
     'label_value': label_value,
     'label_both': label_both,
-    'label_context': label_context}
+    'label_context': label_context
+}
 
 
-def as_labeller(x, default=label_value, multi_line=True):
+def as_labeller(
+    x: Optional[CanBeStripLabellingFunc] = None,
+    default: CanBeStripLabellingFunc = label_value,
+    multi_line: bool = True
+) -> labeller:
     """
-    Coerse to labeller function
+    Coerse to labeller
 
     Parameters
     ----------
     x : function | dict
         Object to coerce
-    default : function | str
+    default : str | function
         Default labeller. If it is a string,
         it should be the name of one the labelling
         functions provided by plotnine.
@@ -116,49 +136,25 @@ def as_labeller(x, default=label_value, multi_line=True):
 
     Returns
     -------
-    out : function
+    out : labeller
         Labelling function
     """
     if x is None:
         x = default
 
-    # One of the labelling functions as string
-    with suppress(KeyError, TypeError):
-        x = LABELLERS[x]
+    if isinstance(x, labeller):
+        return x
 
-    # x is a labeller
-    with suppress(AttributeError):
-        if x.__name__ == '_labeller':
-            return x
-
-    def _labeller(label_info):
-        label_info = pd.Series(label_info).astype(str)
-
-        if callable(x) and x.__name__ in LABELLERS:
-            # labellers in this module
-            return x(label_info)
-        elif hasattr(x, '__contains__'):
-            # dictionary lookup
-            for var in label_info.index:
-                if label_info[var] in x:
-                    label_info[var] = x[label_info[var]]
-            return label_info
-        elif callable(x):
-            # generic function
-            for var in label_info.index:
-                label_info[var] = x(label_info[var])
-            return label_info
-        else:
-            msg = "Could not use '{0}' for labelling."
-            raise PlotnineError(msg.format(x))
-
-    return _labeller
+    x = _as_strip_labelling_func(x)
+    return labeller(rows=x, cols=x, multi_line=multi_line)
 
 
-def labeller(rows=None, cols=None, multi_line=True,
-             default=label_value, **kwargs):
+class labeller:
     """
-    Return a labeller function
+    Facet Strip Labelling
+
+    When called with strip_label_details knows how to
+    alter the strip labels along either dimension.
 
     Parameters
     ----------
@@ -176,36 +172,152 @@ def labeller(rows=None, cols=None, multi_line=True,
         {variable name : function | string} pairs for
         renaming variables. A function to rename the variable
         or a string name.
-
-    Returns
-    -------
-    out : function
-        Function to do the labelling
     """
-    # Sort out the labellers along each dimension
-    rows_labeller = as_labeller(rows, default, multi_line)
-    cols_labeller = as_labeller(cols, default, multi_line)
+    def __init__(
+        self,
+        rows: Optional[CanBeStripLabellingFunc] = None,
+        cols: Optional[CanBeStripLabellingFunc] = None,
+        multi_line: bool = True,
+        default: CanBeStripLabellingFunc = 'label_value',
+        **kwargs: Callable[[str], str]
+    ) -> None:
+        # Sort out the labellers along each dimension
+        self.rows_labeller = _as_strip_labelling_func(rows, default)
+        self.cols_labeller = _as_strip_labelling_func(cols, default)
+        self.multi_line = multi_line
+        self.variable_maps = kwargs
 
-    def _labeller(label_info):
-        # When there is no variable specific labeller,
-        # use that of the dimension
-        if label_info._meta['dimension'] == 'rows':
-            margin_labeller = rows_labeller
+    def __call__(
+        self,
+        label_info: strip_label_details
+    ) -> strip_label_details:
+        """
+        Called to do the labelling
+        """
+        variable_maps = {
+            k : v
+            for k, v in self.variable_maps.items()
+            if k in label_info.variables
+        }
+
+        # No variable specific labeller
+        if label_info.meta['dimension'] == 'rows':
+            result = self.rows_labeller(label_info)
         else:
-            margin_labeller = cols_labeller
+            result = self.cols_labeller(label_info)
 
-        # Labelling functions expect string values
-        label_info = label_info.astype(str)
+        # Make dict_labeler for the  variable specific labelers
+        # do the label and merge
+        if variable_maps:
+            d = {
+                value: variable_maps[var]
+                for var, value in label_info.variables.items()
+                if var in variable_maps
+            }
+            func = _as_strip_labelling_func(d)
+            result2 = func(label_info)
+            result.variables.update(result2.variables)
 
-        # Each facetting variable is labelled independently
-        for name, value in label_info.items():
-            func = as_labeller(kwargs.get(name), margin_labeller)
-            new_info = func(label_info[[name]])
-            label_info[name] = new_info[name]
+        if not self.multi_line:
+            result = result.collapse()
 
-        if not multi_line:
-            label_info = collapse_label_lines(label_info)
+        return result
 
+
+def _as_strip_labelling_func(
+    fobj: Optional[CanBeStripLabellingFunc],
+    default: CanBeStripLabellingFunc = 'label_value',
+) -> StripLabellingFunc:
+    """
+    Create a function that can operate on strip_label_details
+    """
+    if fobj is None:
+        fobj = default
+
+    if isinstance(fobj, str) and fobj in LABELLERS:
+        return LABELLERS[fobj]  # type: ignore[index]
+
+    if isinstance(fobj, _core_labeller):
+        return fobj
+    elif callable(fobj):
+        if fobj.__name__ in LABELLERS:
+            return fobj  # type: ignore[return-value]
+        else:
+            return _function_labeller(fobj)  # type: ignore[arg-type]
+    elif isinstance(fobj, dict):
+        return _dict_labeller(fobj)
+    else:
+        msg = f"Could not create a labelling function for with `{fobj}`."
+        raise PlotnineError(msg)
+
+
+class _core_labeller(metaclass=ABCMeta):
+    """
+    Per item
+    """
+    @abstractmethod
+    def __call__(
+        self,
+        label_info: strip_label_details
+    ) -> strip_label_details:
+        pass
+
+
+class _function_labeller(_core_labeller):
+    """
+    Use a function turn facet value into a label
+
+    Parameters
+    ----------
+    func : callable
+        Function to label an individual string
+    """
+    def __init__(self, func: Callable[[str], str]) -> None:
+        self.func = func
+
+    def __call__(
+        self,
+        label_info: strip_label_details
+    ) -> strip_label_details:
+        label_info = label_info.copy()
+        variables = label_info.variables
+        for facet_var, facet_value in variables.items():
+            variables[facet_var] = self.func(facet_value)
         return label_info
 
-    return _labeller
+
+class _dict_labeller(_core_labeller):
+    """
+    Use a dict to alter specific facet values
+
+    Parameters
+    ----------
+    lookup : dict
+        A dict of the one of the forms
+          - {facet_value: label_value}
+          - {facet_value: callable(<label_value>)}
+    """
+
+    def __init__(
+        self,
+        lookup: dict[str, str] | dict[str, Callable[[str], str]]
+    ) -> None:
+        self.lookup = lookup
+
+    def __call__(
+        self,
+        label_info: strip_label_details
+    ) -> strip_label_details:
+        label_info = label_info.copy()
+        variables = label_info.variables
+        # Replace facet_value with values from the lookup table
+        # If the value is function, call it  the result of calling function
+        for facet_var, facet_value in variables.items():
+            target = self.lookup.get(facet_value)
+            if target is None:
+                continue
+            elif callable(target):
+                variables[facet_var] = target(facet_value)
+            else:
+                variables[facet_var] = target
+        return label_info

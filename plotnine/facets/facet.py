@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import itertools
 import types
+import typing
 from contextlib import suppress
 from copy import copy, deepcopy
 from warnings import warn
@@ -11,13 +14,30 @@ import pandas.api.types as pdtypes
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..scales.scales import Scales
 from ..utils import cross_join, match
-from .strips import strips
+from .strips import Strips
 
 # For default matplotlib backend
 with suppress(ImportError):
     from matplotlib.gridspec import GridSpec
     from matplotlib.ticker import FixedFormatter, locale
 
+if typing.TYPE_CHECKING:
+    from typing import Any, Literal, Optional
+
+    import numpy.typing as npt
+    from patsy.eval import EvalEnvironment
+
+    from plotnine.iapi import layout_details, panel_view
+    from plotnine.typing import (
+        Axes,
+        Coord,
+        Figure,
+        Ggplot,
+        Layers,
+        Layout,
+        Scale,
+        Theme,
+    )
 
 class facet:
     """
@@ -51,27 +71,27 @@ class facet:
         horizontal and ``v`` for vertical.
     """
     #: number of columns
-    ncol = None
+    ncol: int
     #: number of rows
-    nrow = None
+    nrow: int
     as_table = True
     drop = True
     shrink = True
     #: Which axis scales are free
-    free = {'x': True, 'y': True}
+    free: dict[Literal['x', 'y'], bool]
     #: A dict of parameters created depending on the data
     #: (Intended for extensions)
-    params = None
+    params: dict[str, Any]
     # Theme object, automatically updated before drawing the plot
-    theme = None
+    theme: Theme
     # Figure object on which the facet panels are created
-    figure = None
+    figure: Figure
     # coord object, automatically updated before drawing the plot
-    coordinates = None
+    coordinates: Coord
     # layout object, automatically updated before drawing the plot
-    layout = None
+    layout: Layout
     # Axes
-    axs = None
+    axs: list[Axes]
     # The first and last axes according to how MPL creates them.
     # Used for labelling the x and y axes,
     first_ax = None
@@ -81,27 +101,40 @@ class facet:
     # Number of facet variables along the vertical axis
     num_vars_y = 0
     # ggplot object that the facet belongs to
-    plot = None
+    plot: Ggplot
     # Facet strips
-    strips = None
+    strips: Strips
     # Control the relative size of multiple facets
     # Use a subclass to change the default.
     # See: facet_grid for an example
-    space = 'fixed'
+    space: (
+        Literal['fixed', 'free', 'free_x', 'free_y'] |
+        dict[Literal['x', 'y'], list[int]]
+    ) = 'fixed'
 
-    def __init__(self, scales='fixed', shrink=True,
-                 labeller='label_value', as_table=True,
-                 drop=True, dir='h'):
+    def __init__(
+        self,
+        scales: Literal['fixed', 'free', 'free_x', 'free_y'] = 'fixed',
+        shrink: bool = True,
+        labeller: Literal[
+            'label_value', 'label_both', 'label_context'
+        ] = 'label_value',
+        as_table: bool = True,
+        drop: bool = True,
+        dir: Literal['h', 'v'] = 'h'
+    ) -> None:
         from .labelling import as_labeller
         self.shrink = shrink
         self.labeller = as_labeller(labeller)
         self.as_table = as_table
         self.drop = drop
         self.dir = dir
-        self.free = {'x': scales in ('free_x', 'free'),
-                     'y': scales in ('free_y', 'free')}
+        self.free = {
+            'x': scales in ('free_x', 'free'),
+            'y': scales in ('free_y', 'free')
+        }
 
-    def __radd__(self, gg):
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add facet to ggplot object
         """
@@ -109,20 +142,18 @@ class facet:
         gg.facet.plot = gg
         return gg
 
-    def set(self, **kwargs):
+    def set_properties(self, gg: Ggplot) -> None:
         """
-        Set properties
+        Copy required properties from ggplot object
         """
-        for name, value in kwargs.items():
-            if hasattr(self, name):
-                setattr(self, name, value)
-            else:
-                raise AttributeError(
-                    f"{self.__class__.__name__} object has "
-                    f"no attribute {name}"
-                )
+        self.axs = gg.axs
+        self.coordinates = gg.coordinates
+        self.figure = gg.figure
+        self.layout = gg.layout
+        self.theme = gg.theme
+        self.strips = Strips.from_facet(self)
 
-    def setup_data(self, data):
+    def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
         Allow the facet to manipulate the data
 
@@ -143,7 +174,7 @@ class facet:
         """
         return data
 
-    def setup_params(self, data):
+    def setup_params(self, data: list[pd.DataFrame]) -> None:
         """
         Create facet parameters
 
@@ -154,7 +185,12 @@ class facet:
         """
         self.params = {}
 
-    def init_scales(self, layout, x_scale=None, y_scale=None):
+    def init_scales(
+        self,
+        layout: pd.DataFrame,
+        x_scale: Optional[Scale] = None,
+        y_scale: Optional[Scale] = None
+    ) -> types.SimpleNamespace:
         scales = types.SimpleNamespace()
 
         if x_scale is not None:
@@ -167,7 +203,11 @@ class facet:
 
         return scales
 
-    def map(self, data, layout):
+    def map(
+        self,
+        data: pd.DataFrame,
+        layout: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         Assign a data points to panels
 
@@ -186,17 +226,31 @@ class facet:
         """
         msg = "{} should implement this method."
         raise NotImplementedError(
-            msg.format(self.__class.__name__))
+            msg.format(self.__class__.__name__)
+        )
 
-    def compute_layout(self, data):
+    def compute_layout(
+        self,
+        data: list[pd.DataFrame],
+    ) -> pd.DataFrame:
         """
         Compute layout
+
+        Parameters
+        ----------
+        data : Dataframes
+            Dataframe for a each layer
         """
         msg = "{} should implement this method."
         raise NotImplementedError(
-            msg.format(self.__class.__name__))
+            msg.format(self.__class__.__name__)
+        )
 
-    def finish_data(self, data, layout):
+    def finish_data(
+        self,
+        data: pd.DataFrame,
+        layout: Layout
+    ) -> pd.DataFrame:
         """
         Modify data before it is drawn out by the geom
 
@@ -206,7 +260,7 @@ class facet:
         Parameters
         ----------
         data : DataFrame
-            Layer data.
+            A single layer's data.
         layout : Layout
             Layout
 
@@ -217,10 +271,15 @@ class facet:
         """
         return data
 
-    def train_position_scales(self, layout, layers):
+    def train_position_scales(
+        self,
+        layout: Layout,
+        layers: Layers
+    ) -> facet:
         """
         Compute ranges for the x and y scales
         """
+        # pyright: reportUnknownParameterType=false
         _layout = layout.layout
         panel_scales_x = layout.panel_scales_x
         panel_scales_y = layout.panel_scales_y
@@ -245,7 +304,11 @@ class facet:
 
         return self
 
-    def make_ax_strips(self, layout_info, ax):
+    def make_ax_strips(
+        self,
+        layout_info: layout_details,
+        ax: Axes
+    ) -> Strips:
         """
         Create strips for the facet
 
@@ -257,18 +320,30 @@ class facet:
         ax : axes
             Axes to label
         """
-        return []
+        return Strips()
 
-    def initialise_strips(self):
+    def set_limits_breaks_and_labels(
+        self,
+        panel_params: panel_view,
+        ax: Axes
+    ) -> None:
         """
-        Initialise strips for the facet
-        """
-        self.strips = strips.initialise(self)
+        Add limits, breaks and labels to the axes
 
-    def set_limits_breaks_and_labels(self, panel_params, ax):
+        Parameters
+        ----------
+        ranges : dict-like
+            range information for the axes
+        ax : Axes
+            Axes
+        """
         # limits
         ax.set_xlim(panel_params.x.range)
         ax.set_ylim(panel_params.y.range)
+
+        if typing.TYPE_CHECKING:
+            assert callable(ax.set_xticks)
+            assert callable(ax.set_yticks)
 
         # breaks, labels
         ax.set_xticks(panel_params.x.breaks, panel_params.x.labels)
@@ -294,7 +369,7 @@ class facet:
         ax.tick_params(axis='x', which='major', pad=pad_x)
         ax.tick_params(axis='y', which='major', pad=pad_y)
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: dict[Any, Any]) -> facet:
         """
         Deep copy without copying the dataframe and environment
         """
@@ -315,14 +390,18 @@ class facet:
 
         return result
 
-    def _create_subplots(self, fig, layout):
+    def _create_subplots(
+        self,
+        fig: Figure,
+        layout: pd.DataFrame
+    ) -> list[Axes]:
         """
         Create suplots and return axs
         """
         num_panels = len(layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
         space = self.space
-        default_space = {
+        default_space: dict[Literal['x', 'y'], list[int]] = {
             'x': [1 for x in range(self.ncol)],
             'y': [1 for x in range(self.nrow)],
         }
@@ -368,13 +447,15 @@ class facet:
         # Rearrange axes
         # They are ordered to match the positions in the layout table
         if self.dir == 'h':
-            order = 'C'
+            order: Literal['C', 'F'] = 'C'
             if not self.as_table:
                 axsarr = axsarr[::-1]
         elif self.dir == 'v':
             order = 'F'
             if not self.as_table:
                 axsarr = np.array([row[::-1] for row in axsarr])
+        else:
+            raise ValueError(f"Bad value `dir='{self.dir}'` for direction")
 
         axs = axsarr.ravel(order)
 
@@ -382,9 +463,14 @@ class facet:
         for ax in axs[num_panels:]:
             fig.delaxes(ax)
         axs = axs[:num_panels]
-        return axs
+        return list(axs)
 
-    def make_axes(self, figure, layout, coordinates):
+    def make_axes(
+        self,
+        figure: Figure,
+        layout: pd.DataFrame,
+        coordinates: Coord
+    ) -> list[Axes]:
         """
         Create and return Matplotlib axes
         """
@@ -398,7 +484,7 @@ class facet:
         self.axs = axs
         return axs
 
-    def _aspect_ratio(self):
+    def _aspect_ratio(self) -> Optional[float]:
         """
         Return the aspect_ratio
         """
@@ -413,9 +499,9 @@ class facet:
             else:
                 aspect_ratio = None
 
-        return aspect_ratio
+        return aspect_ratio  # type: ignore
 
-    def spaceout_and_resize_panels(self):
+    def spaceout_and_resize_panels(self) -> None:
         """
         Adjust the spacing between the panels
 
@@ -423,7 +509,7 @@ class facet:
         """
         pass
 
-    def check_axis_text_space(self):
+    def check_axis_text_space(self) -> None:
         _adjust = self.theme.themeables.get('subplots_adjust')
         if _adjust:
             has_wspace = 'wspace' in _adjust.properties['value']
@@ -436,20 +522,27 @@ class facet:
         warn_y = self.nrow > 1 and self.free['x'] and not has_hspace
 
         if warn_x:
-            warn("If you need more space for the x-axis tick text use "
-                 "... + theme(subplots_adjust={'wspace': 0.25}). "
-                 "Choose an appropriate value for 'wspace'.",
-                 PlotnineWarning
-                 )
+            warn(
+                "If you need more space for the x-axis tick text use "
+                "... + theme(subplots_adjust={'wspace': 0.25}). "
+                "Choose an appropriate value for 'wspace'.",
+                PlotnineWarning
+            )
         if warn_y:
-            warn("If you need more space for the y-axis tick text use "
-                 "... + theme(subplots_adjust={'hspace': 0.25}). "
-                 "Choose an appropriate value for 'hspace'",
-                 PlotnineWarning
-                 )
+            warn(
+                "If you need more space for the y-axis tick text use "
+                "... + theme(subplots_adjust={'hspace': 0.25}). "
+                "Choose an appropriate value for 'hspace'",
+                PlotnineWarning
+            )
 
 
-def combine_vars(data, environment=None, vars=None, drop=True):
+def combine_vars(
+    data: list[pd.DataFrame],
+    environment: EvalEnvironment,
+    vars: list[str],
+    drop: bool = True
+) -> pd.DataFrame:
     """
     Generate all combinations of data needed for facetting
 
@@ -457,7 +550,7 @@ def combine_vars(data, environment=None, vars=None, drop=True):
     for the plot. Other data frames in the list are ones that are
     added to the layers.
     """
-    if not vars:
+    if len(vars) == 0:
         return pd.DataFrame()
 
     # For each layer, compute the facet values
@@ -474,28 +567,35 @@ def combine_vars(data, environment=None, vars=None, drop=True):
             "At least one layer must contain all variables "
             "used for facetting"
         )
-    base = pd.concat([x for i, x in enumerate(values) if has_all[i]],
-                     axis=0)
+    base = pd.concat(
+        [x for i, x in enumerate(values) if has_all[i]],
+        axis=0
+    )
     base = base.drop_duplicates()
 
     if not drop:
         base = unique_combs(base)
 
     # sorts according to order of factor levels
-    base = base.sort_values(list(base.columns))
+    base = base.sort_values(base.columns.tolist())
 
     # Systematically add on missing combinations
     for i, value in enumerate(values):
         if has_all[i] or len(value.columns) == 0:
             continue
-        old = base.loc[:, base.columns.difference(value.columns)]
+        old = base.loc[
+            :,
+            list(base.columns.difference(value.columns))
+        ]
         new = value.loc[
             :,
-            base.columns.intersection(value.columns)
+            list(base.columns.intersection(value.columns))
         ].drop_duplicates()
+
         if not drop:
             new = unique_combs(new)
-        base = pd.concat(base, cross_join(old, new), ignore_index=True)
+
+        base = pd.concat([base, cross_join(old, new)], ignore_index=True)
 
     if len(base) == 0:
         raise PlotnineError(
@@ -506,11 +606,11 @@ def combine_vars(data, environment=None, vars=None, drop=True):
     return base
 
 
-def unique_combs(df):
+def unique_combs(df: pd.DataFrame) -> pd.DataFrame:
     """
     Generate all possible combinations of the values in the columns
     """
-    def _unique(s):
+    def _unique(s: pd.Series[Any]) -> npt.NDArray[Any] | pd.Index:
         if isinstance(s.dtype, pdtypes.CategoricalDtype):
             return s.cat.categories
         return s.unique()
@@ -526,19 +626,28 @@ def unique_combs(df):
     return _df
 
 
-def layout_null():
+def layout_null() -> pd.DataFrame:
     """
     Layout Null
     """
     layout = pd.DataFrame({
-        'PANEL': 1, 'ROW': 1, 'COL': 1,
-        'SCALE_X': 1, 'SCALE_Y': 1,
-        'AXIS_X': True, 'AXIS_Y': True
-    }, index=[0])
+        'PANEL': [1],
+        'ROW': 1,
+        'COL': 1,
+        'SCALE_X': 1,
+        'SCALE_Y': 1,
+        'AXIS_X': True,
+        'AXIS_Y': True
+    })
     return layout
 
 
-def add_missing_facets(data, layout, vars, facet_vals):
+def add_missing_facets(
+    data: pd.DataFrame,
+    layout: pd.DataFrame,
+    vars: list[str],
+    facet_vals: pd.DataFrame
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Add missing facets
     """
@@ -546,7 +655,7 @@ def add_missing_facets(data, layout, vars, facet_vals):
     # the facet variables, add the missing facet variables
     # and create new data where the points(duplicates) are
     # present in all the facets
-    missing_facets = list(set(vars) - set(facet_vals))
+    missing_facets = list(set(vars) - set(facet_vals.columns.tolist()))
     if missing_facets:
         to_add = layout.loc[:, missing_facets].drop_duplicates()
         to_add.reset_index(drop=True, inplace=True)
@@ -565,7 +674,11 @@ def add_missing_facets(data, layout, vars, facet_vals):
     return data, facet_vals
 
 
-def eval_facet_vars(data, vars, env):
+def eval_facet_vars(
+    data: pd.DataFrame,
+    vars: list[str],
+    env: EvalEnvironment
+) -> pd.DataFrame:
     """
     Evaluate facet variables
 
@@ -585,7 +698,7 @@ def eval_facet_vars(data, vars, env):
         variables.
     """
     # To allow expressions in facet formula
-    def I(value):
+    def I(value: Any) -> Any:
         return value
 
     env = env.with_outer_namespace({'I': I})
@@ -611,14 +724,15 @@ def eval_facet_vars(data, vars, env):
     return facet_vals
 
 
+# pyright: reportUnboundVariable=false
 class MyFixedFormatter(FixedFormatter):
     """
     Override MPL fixedformatter for better formatting
     """
 
-    def format_data(self, value):
+    def format_data(self, value: float) -> str:
         """
         Return a formatted string representation of a number.
         """
         s = locale.format_string('%1.10e', (value,))
-        return self.fix_minus(s)
+        return self.fix_minus(s)  # type: ignore

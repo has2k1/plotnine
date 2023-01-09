@@ -14,6 +14,7 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import matplotlib as mpl
+    import matplotlib.patches
     import pandas as pd
 
     import plotnine as p9

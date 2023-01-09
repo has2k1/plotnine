@@ -71,14 +71,14 @@ class PlotnineAnimation(ArtistAnimation):
     def _draw_plots(
         self,
         plots: Iterable[p9.ggplot]
-    ) -> tuple[mpl.Figure, list[mpl.axes.Axes]]:
+    ) -> tuple[mpl.figure.Figure, list[mpl.artist.Artist]]:
         with pd.option_context('mode.chained_assignment', None):
             return self.__draw_plots(plots)
 
     def __draw_plots(
         self,
         plots: Iterable[p9.ggplot]
-    ) -> tuple[mpl.Figure, list[mpl.axes.Axes]]:
+    ) -> tuple[mpl.figure.Figure, list[mpl.artist.Artist]]:
         """
         Plot and return the figure and artists
 
@@ -92,10 +92,10 @@ class PlotnineAnimation(ArtistAnimation):
         figure : matplotlib.figure.Figure
             Matplotlib figure
         artists : list
-            List of :class:`Matplotlib.artist.artist`
+            List of :class:`Matplotlib.artist.Artist`
         """
         # For keeping track of artists for each frame
-        artist_offsets: dict[str, list[mpl.artist.artist]] = {
+        artist_offsets: dict[str, list[int]] = {
             'collections': [],
             'patches': [],
             'lines': [],
@@ -120,7 +120,7 @@ class PlotnineAnimation(ArtistAnimation):
 
         def get_frame_artists(
             axs: list[mpl.axes.Axes]
-        ) -> list[mpl.artist.artist]:
+        ) -> list[mpl.artist.Artist]:
             """
             Artists shown in a given frame
 
@@ -226,6 +226,7 @@ class PlotnineAnimation(ArtistAnimation):
         if figure is None:
             figure = plt.figure()
 
+        assert figure is not None
         # Prevent Jupyter from plotting any static figure
         plt.close(figure)
         return figure, artists

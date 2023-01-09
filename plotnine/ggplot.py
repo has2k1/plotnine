@@ -83,7 +83,7 @@ class ggplot:
         data, mapping = order_as_data_mapping(data, mapping)
         self.data = data
         self.mapping = mapping if mapping is not None else aes()
-        self.facet = facet_null()
+        self.facet: p9.facets.facet.facet = facet_null()
         self.labels = make_labels(self.mapping)
         self.layers = Layers()
         self.guides = guides()
@@ -346,15 +346,7 @@ class ggplot:
         Set facet properties
         """
         # facet
-        self.facet.set(
-            layout=self.layout,
-            theme=self.theme,
-            coordinates=self.coordinates,
-            figure=self.figure,
-            axs=self.axs
-        )
-        self.facet.initialise_strips()
-
+        self.facet.set_properties(self)
         # layout
         self.layout.axs = self.axs
         # theme
@@ -406,22 +398,23 @@ class ggplot:
         #
         # pidx is the panel index (location left to right, top to bottom)
         self.facet.strips.draw()
-        for pidx, layout_info in self.layout.layout.iterrows():
+        for layout_info in self.layout.get_details():
+            pidx = layout_info.panel_index
             ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
             self.facet.set_limits_breaks_and_labels(panel_params, ax)
 
             # Remove unnecessary ticks and labels
-            if not layout_info['AXIS_X']:
+            if not layout_info.axis_x:
                 ax.xaxis.set_tick_params(
                     which='both', bottom=False, labelbottom=False)
-            if not layout_info['AXIS_Y']:
+            if not layout_info.axis_y:
                 ax.yaxis.set_tick_params(
                     which='both', left=False, labelleft=False)
 
-            if layout_info['AXIS_X']:
+            if layout_info.axis_x:
                 ax.xaxis.set_tick_params(which='both', bottom=True)
-            if layout_info['AXIS_Y']:
+            if layout_info.axis_y:
                 ax.yaxis.set_tick_params(which='both', left=True)
 
     def _draw_legend(self):

@@ -1,4 +1,11 @@
+from __future__ import annotations
+
+import typing
+
 from .facet import facet, layout_null
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
 
 
 class facet_null(facet):
@@ -12,34 +19,26 @@ class facet_null(facet):
         statistics instead of the raw data. Default is ``True``.
     """
 
-    def __init__(self, shrink=True, figure=None):
+    def __init__(self, shrink: bool = True) -> None:
         facet.__init__(self, shrink=shrink)
         self.nrow = 1
         self.ncol = 1
 
-    def map(self, data, layout):
+    def map(
+        self,
+        data: pd.DataFrame,
+        layout: pd.DataFrame
+    ) -> pd.DataFrame:
         data['PANEL'] = 1
         return data
 
-    def compute_layout(self, data):
+    def compute_layout(
+        self,
+        data: list[pd.DataFrame],
+    ) -> pd.DataFrame:
         return layout_null()
 
-    def set_breaks_and_labels(self, ranges, ax):
-        """
-        Add breaks and labels to the axes
-
-        Parameters
-        ----------
-        ranges : dict-like
-            range information for the axes
-        ax : Axes
-            Axes
-        """
-        facet.set_breaks_and_labels(self, ranges, ax)
-        ax.xaxis.set_ticks_position('bottom')
-        ax.yaxis.set_ticks_position('left')
-
-    def spaceout_and_resize_panels(self):
+    def spaceout_and_resize_panels(self) -> None:
         """
         Adjust the space between the panels
         """

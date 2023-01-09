@@ -498,7 +498,7 @@ class geom(metaclass=Registry):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
+        da: mpl.padches.DrawingArea,
         lyr: p9.layer.layer
     ) -> mpl.patches.DrawingArea:
         """

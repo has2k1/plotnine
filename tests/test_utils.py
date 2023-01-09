@@ -178,9 +178,9 @@ def test_match():
     v3 = [0, 1, 2]
     c = [1]
 
-    assert match(v1, v2) == [0, 0, 1, 1, 2, 2]
-    assert match(v1, v2, incomparables=c) == [-1, -1, 1, 1, 2, 2]
-    assert match(v1, v3) == [1, 1, 2, 2, -1, -1]
+    assert list(match(v1, v2)) == [0, 0, 1, 1, 2, 2]
+    assert list(match(v1, v2, incomparables=c)) == [-1, -1, 1, 1, 2, 2]
+    assert list(match(v1, v3)) == [1, 1, 2, 2, -1, -1]
 
 
 def test_uniquecols():

@@ -34,23 +34,23 @@ class coord:
         gg.coordinates = copy(self)
         return gg
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
         Allow the coordinate system to manipulate the layer data
 
         Parameters
         ----------
-        data : Dataframe
-            Layer data
+        data : list[DataFrames]
+            Data for alls Layer
 
         Returns
         -------
-        out : Dataframe
+        out : list[DataFrame]
             Modified layer data
         """
         return data
 
-    def setup_params(self, data: pd.DataFrame) -> None:
+    def setup_params(self, data: list[pd.DataFrame]) -> None:
         """
         Create additional parameters
 

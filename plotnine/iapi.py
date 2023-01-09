@@ -2,19 +2,17 @@
 Internal API
 
 Specifications for containers that will hold different kinds
-of objects with data that is created when the plot is being
-built.
+of objects with data created when the plot is being built.
 """
 from __future__ import annotations
 
 import typing
+from copy import copy
 from dataclasses import dataclass, fields
-from typing import Any, Dict, Iterator, List, Optional, Sequence
-
-from matplotlib.figure import Figure
+from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
 
 if typing.TYPE_CHECKING:
-    import plotnine as p9
+    from plotnine.typing import Axes, Figure, Scale
 
 
 @dataclass
@@ -22,7 +20,7 @@ class scale_view:
     """
     Scale information after it has been trained
     """
-    scale: p9.scales.scale.scale
+    scale: Scale
     aesthetics: List[str]
     name: str
     # Trainned limits of the scale
@@ -136,8 +134,8 @@ class pos_scales:
     """
     Position Scales
     """
-    x: p9.scales.scale.scale
-    y: p9.scales.scale.scale
+    x: Scale
+    y: Scale
 
 
 @dataclass
@@ -147,3 +145,102 @@ class mpl_save_view:
     """
     figure: Figure
     kwargs: Dict[str, Any]
+
+
+@dataclass
+class layout_details:
+    """
+    Layout information
+    """
+    panel_index: int
+    panel: int
+    row: int
+    col: int
+    scale_x: int
+    scale_y: int
+    axis_x: bool
+    axis_y: bool
+    variables: dict[str, Any]
+
+
+@dataclass
+class strip_details:
+    """
+    Strip Details
+    """
+    x: float
+    y: float
+    box_x: float
+    box_y: float
+    box_width: float
+    box_height: float
+    breadth_inches: float
+    location: Literal['right', 'top']
+    label: str
+    ax: Axes
+    rotation: float
+
+
+@dataclass
+class strip_label_details:
+    """
+    Strip Label Details
+    """
+    # facet variable: label for the value
+    variables: dict[str, str]
+    meta: dict[str, Any]  # TODO: use a typeddict
+
+    @staticmethod
+    def make(
+        layout_info: layout_details,
+        vars: list[str],
+        location: Literal['right', 'top']
+    ) -> strip_label_details:
+        variables: dict[str, Any] = {
+            v: str(layout_info.variables[v])
+            for v in vars
+        }
+        meta: dict[str, Any] = {
+            'dimension': 'cols' if location == 'top' else 'rows'
+        }
+        return strip_label_details(variables, meta)
+
+    def __len__(self) -> int:
+        """
+        Number of variables
+        """
+        return len(self.variables)
+
+    def __copy__(self) -> strip_label_details:
+        """
+        Make a copy
+        """
+        return strip_label_details(
+            self.variables.copy(),
+            self.meta.copy()
+        )
+
+    def copy(self) -> strip_label_details:
+        """
+        Make a copy
+        """
+        return copy(self)
+
+    def text(self) -> str:
+        """
+        Strip text
+
+        Join the labels for all the variables along a
+        dimension
+        """
+        return '\n'.join(list(self.variables.values()))
+
+    def collapse(self) -> strip_label_details:
+        """
+        Concatenate all label values into one item
+        """
+        result = self.copy()
+        result.variables = {
+            'value': ', '.join(result.variables.values())
+        }
+        return result
