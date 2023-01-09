@@ -94,7 +94,7 @@ class geom_violin(geom):
             return df
 
         # This is a plyr::ddply
-        data = groupby_apply(data, 'group', func)
+        data = groupby_apply(data, ['group', 'PANEL'], func)
         return data
 
     def draw_panel(

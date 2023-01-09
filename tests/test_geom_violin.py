@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import aes, coord_flip, geom_violin, ggplot, theme
+from plotnine import aes, coord_flip, facet_grid, geom_violin, ggplot, theme
+from plotnine.data import mtcars
 
 n = 4
 m = 10
@@ -103,3 +104,12 @@ def test_style_input_checks():
         geom_violin(aes('x', 'y'), style=1)
     with pytest.raises(ValueError):
         geom_violin(aes('x', 'y'), style='up')
+
+
+def test_scales_free():
+    # GH655
+    p = (ggplot(mtcars, aes(x='factor(cyl)', y='mpg'))
+         + geom_violin()
+         + facet_grid('am ~ "column"', scales='free')
+         )
+    assert p == "scales_free"
