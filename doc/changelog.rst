@@ -25,6 +25,9 @@ Bug Fixes
 - Fixed bug where :class:`~plotnine.facets.facet_grid` with a datetime
   column run into an exception. (:issue:`629`)
 
+- Fixed bug where :class:`~plotnine.geoms.geom_violin` with facetting
+  and `"scales = free"` did not work. (:issue:`655`)
+
 v0.10.1
 -------
 (2022-09-10)
