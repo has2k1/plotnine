@@ -5,6 +5,13 @@ v0.10.2
 -------
 (Not yet released)
 
+Enhancements
+************
+
+- :class:`~plotnine.ggplot` object gained a new method
+  :meth:`~plotnine.ggplot.save_helper`. It gives you access to the
+  matplotlib figure that will be saved to file.
+
 API Changes
 ***********
 
