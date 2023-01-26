@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import typing
 from dataclasses import dataclass, fields
-from typing import Any, Iterator, List, Optional, Sequence
+from typing import Any, Dict, Iterator, List, Optional, Sequence
+
+from matplotlib.figure import Figure
 
 if typing.TYPE_CHECKING:
     import plotnine as p9
@@ -136,3 +138,12 @@ class pos_scales:
     """
     x: p9.scales.scale.scale
     y: p9.scales.scale.scale
+
+
+@dataclass
+class mpl_save_view:
+    """
+    Everything required to save a matplotlib figure
+    """
+    figure: Figure
+    kwargs: Dict[str, Any]

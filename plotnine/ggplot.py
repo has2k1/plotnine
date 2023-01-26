@@ -7,7 +7,7 @@ from copy import deepcopy
 from itertools import chain
 from pathlib import Path
 from types import SimpleNamespace as NS
-from typing import Any, Iterable, Union
+from typing import Any, Dict, Iterable, Optional, Union
 from warnings import warn
 
 import matplotlib as mpl
@@ -28,6 +28,7 @@ from .facets.layout import Layout
 # of geom_blank even though it only appears once
 from .geoms import geom_blank  # type: ignore[no-redef]  # mypy bug
 from .guides.guides import guides
+from .iapi import mpl_save_view
 from .layer import Layers
 from .mapping.aes import aes, make_labels
 from .options import SUBPLOTS_ADJUST, get_option
@@ -643,11 +644,84 @@ class ggplot:
         mapping.add_defaults(default)
         self.labels.add_defaults(mapping)
 
+    def save_helper(
+        self,
+        filename: Optional[Union[str, Path]] = None,
+        format: Optional[str] = None,
+        path: Optional[str] = None,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        units: str = 'in',
+        dpi: Optional[float] = None,
+        limitsize: bool = True,
+        verbose: bool = True,
+        **kwargs: Any
+    ) -> mpl_save_view:
+        """
+        Create MPL figure that will be saved
+
+        Notes
+        -----
+        This method has the same arguments as :meth:`ggplot.save`.
+        Use it to get access to the figure that will be saved.
+        """
+        fig_kwargs: Dict[str, Any] = {
+            'bbox_inches': 'tight',  # 'tight' is a good default
+            'format': format
+        }
+        fig_kwargs.update(kwargs)
+
+        # filename, depends on the object
+        if filename is None:
+            ext = format if format else 'pdf'
+            filename = self._save_filename(ext)
+
+        if path:
+            filename = Path(path) / filename
+
+        fig_kwargs["fname"] = filename
+
+        # Preserve the users object
+        self = deepcopy(self)
+
+        # The figure size should be known by the theme
+        if width is not None and height is not None:
+            width = to_inches(width, units)
+            height = to_inches(height, units)
+            self += theme(figure_size=(width, height))
+        elif (width is None and height is not None or
+              width is not None and height is None):
+            raise PlotnineError(
+                "You must specify both width and height"
+            )
+
+        width, height = self.theme.themeables.property('figure_size')
+
+        if limitsize and (width > 25 or height > 25):
+            raise PlotnineError(
+                f"Dimensions ({width=}, {height=}) exceed 25 inches "
+                "(height and width are specified in inches/cm/mm, "
+                "not pixels). If you are sure you want these "
+                "dimensions, use 'limitsize=False'."
+            )
+
+        if verbose:
+            _w = from_inches(width, units)
+            _h = from_inches(height, units)
+            warn(f"Saving {_w} x {_h} {units} image.", PlotnineWarning)
+            warn(f'Filename: {filename}', PlotnineWarning)
+
+        if dpi is not None:
+            self.theme = self.theme + theme(dpi=dpi)
+
+        figure = self.draw(show=False)
+        return mpl_save_view(figure, fig_kwargs)
+
     def save(
         self,
         filename: Union[str, Path] | None = None,
         format: str | None = None,
-        path: str | None = None,
+        path: str = "",
         width: float | None = None,
         height: float | None = None,
         units: str = 'in',
@@ -691,52 +765,19 @@ class ggplot:
         kwargs : dict
             Additional arguments to pass to matplotlib `savefig()`.
         """
-        fig_kwargs = {'bbox_inches': 'tight',  # 'tight' is a good default
-                      'format': format}
-        fig_kwargs.update(kwargs)
-
-        # filename, depends on the object
-        if filename is None:
-            ext = format if format else 'pdf'
-            filename = self._save_filename(ext)
-
-        if path:
-            filename = Path(path) / filename
-
-        # Preserve the users object
-        self = deepcopy(self)
-
-        # The figure size should be known by the theme
-        if width is not None and height is not None:
-            width = to_inches(width, units)
-            height = to_inches(height, units)
-            self += theme(figure_size=(width, height))
-        elif (width is None and height is not None or
-              width is not None and height is None):
-            raise PlotnineError(
-                "You must specify both width and height")
-
-        width, height = self.theme.themeables.property('figure_size')
-
-        if limitsize and (width > 25 or height > 25):
-            raise PlotnineError(
-                f"Dimensions ({width=}, {height=}) exceed 25 inches "
-                "(height and width are specified in inches/cm/mm, "
-                "not pixels). If you are sure you want these "
-                "dimensions, use 'limitsize=False'."
-            )
-
-        if verbose:
-            _w = from_inches(width, units)
-            _h = from_inches(height, units)
-            warn(f"Saving {_w} x {_h} {units} image.", PlotnineWarning)
-            warn(f'Filename: {filename}', PlotnineWarning)
-
-        if dpi is not None:
-            self.theme = self.theme + theme(dpi=dpi)
-
-        fig = self.draw(show=False)
-        fig.savefig(filename, **fig_kwargs)
+        sv = self.save_helper(
+            filename=filename,
+            format=format,
+            path=path,
+            width=width,
+            height=height,
+            units=units,
+            dpi=dpi,
+            limitsize=limitsize,
+            verbose=verbose,
+            **kwargs
+        )
+        sv.figure.savefig(**sv.kwargs)
 
 
 ggsave = ggplot.save
