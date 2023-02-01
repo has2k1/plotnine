@@ -2,11 +2,14 @@ import os
 import subprocess
 from pathlib import Path
 
-if not os.environ.get('CI') and os.environ.get('TRAVIS'):
-    def test_flake8():
+# Helps contributors catch linter errors
+# when they run make test.
+
+if not os.environ.get('CI'):
+    def test_ruff():
         plotnine_dir = str(Path(__file__).parent.parent.absolute())
         p = subprocess.Popen(
-            ['flake8', plotnine_dir],
+            ['ruff', plotnine_dir],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
@@ -14,5 +17,5 @@ if not os.environ.get('CI') and os.environ.get('TRAVIS'):
         # about coverage warnings
         stdout, _ = p.communicate()
         s = stdout.decode('utf-8')
-        msg = f"flake8 found the following issues: \n\n{s}"
+        msg = f"rufff found the following issues: \n\n{s}"
         assert p.returncode == 0, msg
