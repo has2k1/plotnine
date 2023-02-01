@@ -75,7 +75,7 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
-          pip install flake8 isort
+          pip install ruff
 
       - name: Environment Information
         shell: bash -l {0}
