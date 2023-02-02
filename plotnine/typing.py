@@ -8,6 +8,7 @@ if typing.TYPE_CHECKING:
     import numpy as np
     import numpy.typing as npt
     import pandas as pd
+    from matplotlib.artist import Artist  # noqa
     from matplotlib.axes import Axes  # noqa
     from matplotlib.figure import Figure  # noqa
     from mizani.transforms import trans
@@ -21,7 +22,7 @@ if typing.TYPE_CHECKING:
     from plotnine.ggplot import ggplot
     from plotnine.guides.guide import guide
     from plotnine.iapi import strip_label_details
-    from plotnine.layer import Layers  # noqa
+    from plotnine.layer import Layers, layer  # noqa
     from plotnine.mapping.aes import aes
     from plotnine.positions.position import position
     from plotnine.scales.scale import scale
@@ -99,12 +100,13 @@ if typing.TYPE_CHECKING:
     )
 
     # Plotnine Classes
+    Aes: TypeAlias = aes
     Coord: TypeAlias = coord
     Facet: TypeAlias = facet
     Geom: TypeAlias = geom
     Ggplot: TypeAlias = ggplot
-    Aes: TypeAlias = aes
     Guide: TypeAlias = guide
+    Layer: TypeAlias = layer
     Position: TypeAlias = position
     Scale: TypeAlias = scale
     Stat: TypeAlias = stat
@@ -114,20 +116,20 @@ if typing.TYPE_CHECKING:
     Trans: TypeAlias = trans
 
     # Tuples
+    TupleInt2: TypeAlias = tuple[int, int]
     TupleFloat2: TypeAlias = tuple[float, float]
     TupleFloat3: TypeAlias = tuple[float, float, float]
     TupleFloat4: TypeAlias = tuple[float, float, float, float]
-    TupleInt2: TypeAlias = tuple[int, int]
 
     # Arrays (strictly numpy)
+    BoolArray: TypeAlias = npt.NDArray[np.bool_]
     FloatArray: TypeAlias = npt.NDArray[np.float64]
     IntArray: TypeAlias = npt.NDArray[np.int64]
-    BoolArray: TypeAlias = npt.NDArray[np.bool_]
 
     # Series
-    FloatSeries: TypeAlias = pd.Series[float]
     IntSeries: TypeAlias = pd.Series[int]
+    FloatSeries: TypeAlias = pd.Series[float]
 
     # ArrayLikes
-    FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
     IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
+    FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
