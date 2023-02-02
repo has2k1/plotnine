@@ -3,15 +3,14 @@ from __future__ import annotations
 import typing
 from typing import overload
 
-from ..iapi import panel_ranges, panel_view
+import pandas as pd
+
+from ..iapi import labels_view, panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
 
-    import plotnine as p9
-
-    from ..iapi import labels_view
+    from plotnine.typing import Scale
 
 
 class coord_flip(coord_cartesian):
@@ -39,14 +38,14 @@ class coord_flip(coord_cartesian):
 
     def labels(
         self,
-        cur_labels: p9.iapi.labels_view
-    ) -> p9.iapi.labels_view:
+        cur_labels: labels_view
+    ) -> labels_view:
         return flip_labels(super().labels(cur_labels))
 
     def transform(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
+        panel_params: panel_view,
         munch: bool = False
     ) -> pd.DataFrame:
         data = flip_labels(data)
@@ -54,9 +53,9 @@ class coord_flip(coord_cartesian):
 
     def setup_panel_params(
         self,
-        scale_x: p9.scales.scale.scale,
-        scale_y: p9.scales.scale.scale
-    ) -> p9.iapi.panel_view:
+        scale_x: Scale,
+        scale_y: Scale
+    ) -> panel_view:
         panel_params = super().setup_panel_params(scale_x, scale_y)
         return flip_labels(panel_params)
 
@@ -68,7 +67,7 @@ class coord_flip(coord_cartesian):
 
     def range(
         self,
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> panel_ranges:
         """
         Return the range along the dimensions of the coordinate system
@@ -100,23 +99,29 @@ def flip_labels(
 
     Parameters
     ----------
-    obj : dict_like | types.SimpleNamespace
+    obj : dict_like | dataclass
         Object with labels to rename
     """
-    def sub(a: str, b: str) -> None:
+    def sub(a: str, b: str, df: pd.DataFrame) -> None:
         """
         Substitute all keys that start with a to b
         """
-        for label in list(obj.keys()):  # type: ignore
+        columns: list[str] = df.columns.tolist()
+        for label in columns:
             if label.startswith(a):
-                new_label = b+label[1:]
-                obj[new_label] = obj.pop(label)  # type: ignore
+                new_label = b + label[1:]
+                df[new_label] = df.pop(label)
 
-    if hasattr(obj, 'keys'):  # dict or dataframe
-        sub('x', 'z')
-        sub('y', 'x')
-        sub('z', 'y')
-    elif hasattr(obj, 'x') and hasattr(obj, 'y'):
+    # TODO: pyright cannot handle
+    # isinstance(obj, (labels_view, panel_view))
+    # keep checking with future versions.
+    if isinstance(obj, pd.DataFrame):
+        sub('x', 'z', obj)
+        sub('y', 'x', obj)
+        sub('z', 'y', obj)
+    elif isinstance(obj, labels_view):
+        obj.x, obj.y = obj.y, obj.x
+    elif isinstance(obj, panel_view):
         obj.x, obj.y = obj.y, obj.x
 
     return obj

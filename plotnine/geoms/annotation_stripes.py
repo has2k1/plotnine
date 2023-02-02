@@ -19,6 +19,7 @@ if typing.TYPE_CHECKING:
     import matplotlib as mpl
 
     import plotnine as p9
+    from plotnine.typing import TupleFloat2
 
 
 class annotation_stripes(annotate):
@@ -60,7 +61,7 @@ class annotation_stripes(annotate):
         fill: Sequence[str] = ('#AAAAAA', '#CCCCCC'),
         fill_range: Literal["auto", "cycle", "no", "nocycle"] = 'auto',
         direction: Literal["horizontal", "vertical"] = 'vertical',
-        extend: tuple[float, float] = (0, 1),
+        extend: TupleFloat2 = (0, 1),
         **kwargs: Any
     ) -> None:
         allowed = ('vertical', 'horizontal')

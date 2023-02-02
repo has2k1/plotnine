@@ -21,10 +21,11 @@ from ..utils import Registry, ignore_warnings, is_waive, match, waiver
 from .range import Range, RangeContinuous, RangeDiscrete
 
 if typing.TYPE_CHECKING:
-    from typing import Optional, Sequence
+    from typing import Optional, Sequence, Type
 
     from mizani.transforms import trans
 
+    from plotnine.typing import TupleFloat2, TupleFloat4
 
 class scale(metaclass=Registry):
     """
@@ -173,12 +174,9 @@ class scale(metaclass=Registry):
     def expand_limits(
         self,
         limits: Sequence[float],
-        expand: Optional[
-            tuple[float, float, float, float] |
-            tuple[float, float]
-        ] = None,
-        coord_limits: Optional[tuple[float, float]] = None,
-        trans: Optional[trans] = None
+        expand: Optional[TupleFloat2|TupleFloat4] = None,
+        coord_limits: Optional[TupleFloat2] = None,
+        trans: Optional[trans|Type[trans]] = None
     ) -> range_view:
         """
         Exand the limits of the scale
@@ -205,8 +203,8 @@ class scale(metaclass=Registry):
 
     def view(
         self,
-        limits: Optional[tuple[float, float]] = None,
-        range: Optional[tuple[float, float]] = None
+        limits: Optional[TupleFloat2] = None,
+        range: Optional[TupleFloat2] = None
     ) -> scale_view:
         """
         Information about the trained scale
@@ -376,10 +374,10 @@ class scale_discrete(scale):
         self,
         limits: Sequence[str],
         expand: Optional[
-            tuple[float, float, float, float] |
-            tuple[float, float]
+            TupleFloat4 |
+            TupleFloat2
         ] = None,
-        coord_limits: Optional[tuple[float, float]] = None,
+        coord_limits: Optional[TupleFloat2] = None,
         trans: Optional[trans] = None
     ) -> range_view:
         """
@@ -418,8 +416,8 @@ class scale_discrete(scale):
 
     def view(
         self,
-        limits: Optional[tuple[float, float]] = None,
-        range: Optional[tuple[float, float]] = None
+        limits: Optional[TupleFloat2] = None,
+        range: Optional[TupleFloat2] = None
     ) -> scale_view:
         """
         Information about the trained scale
@@ -826,8 +824,8 @@ class scale_continuous(scale):
 
     def view(
         self,
-        limits: Optional[tuple[float, float]] = None,
-        range: Optional[tuple[float, float]] = None
+        limits: Optional[TupleFloat2] = None,
+        range: Optional[TupleFloat2] = None
     ) -> scale_view:
         """
         Information about the trained scale

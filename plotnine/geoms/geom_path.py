@@ -24,6 +24,7 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     import plotnine as p9
+    from plotnine.typing import TupleFloat2
 
 
 @document
@@ -518,7 +519,7 @@ def _get_joinstyle(
     return d
 
 
-def _axes_get_size_inches(ax: mpl.axes.Axes) -> tuple[float, float]:
+def _axes_get_size_inches(ax: mpl.axes.Axes) -> TupleFloat2:
     """
     Size of axes in inches
 
