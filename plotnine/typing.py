@@ -60,17 +60,17 @@ if typing.TYPE_CHECKING:
     # specially handled, but pandas doesn't expose that data type in
     # their type stubs and instead treats it the same as a DataFrame
     # (df.groupby() returns a DataFrame in the stubs).
-    Data: TypeAlias = "pd.DataFrame | Callable[[], pd.DataFrame]"
-    DataLike: TypeAlias = "Data | DataFrameConvertible"
+    Data: TypeAlias = pd.DataFrame | Callable[[], pd.DataFrame]
+    DataLike: TypeAlias = Data | DataFrameConvertible
 
     LayerData: TypeAlias = (
-        "pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]"
+        pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]
     )
-    LayerDataLike: TypeAlias = "LayerData | DataFrameConvertible"
-    ColorLike: TypeAlias = "str | Literal['None', 'none']"
+    LayerDataLike: TypeAlias = LayerData | DataFrameConvertible
+    ColorLike: TypeAlias = str | Literal['None', 'none']
     ColorsLike: TypeAlias = (
-        "ColorLike | list[ColorLike] | pd.Series[ColorLike] | "
-        "npt.NDArray[np.str_]"
+        ColorLike | list[ColorLike] | pd.Series[ColorLike] |
+        npt.NDArray[np.str_]
     )
 
     # Facet strip
@@ -87,16 +87,16 @@ if typing.TYPE_CHECKING:
     ]
 
     StripLabellingDict: TypeAlias = (
-        "Dict[str, str] |"
-        "Dict[str, Callable[[str], str]]"
+        Dict[str, str] |
+        Dict[str, Callable[[str], str]]
     )
 
     # Can be coerced to a StripLabellingFunc
     CanBeStripLabellingFunc: TypeAlias = (
-        "StripLabellingFuncNames | "
-        "StripLabellingFunc |"
-        "Callable[[str], str] | "
-        "StripLabellingDict"
+        StripLabellingFuncNames |
+        StripLabellingFunc |
+        Callable[[str], str] |
+        StripLabellingDict
     )
 
     # Plotnine Classes
