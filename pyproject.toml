@@ -69,11 +69,11 @@ include = [
    "plotnine/doctools.py",
    "plotnine/exceptions.py",
    "plotnine/iapi.py",
+   "plotnine/typing.py",
 
    # "plotnine/ggplot.py",
    # "plotnine/labels.py",
    # "plotnine/utils.py",
-   # "plotnine/typing.py",
    # "plotnine/qplot.py",
    # "plotnine/geoms",
 ]
