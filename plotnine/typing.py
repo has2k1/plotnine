@@ -29,6 +29,7 @@ if typing.TYPE_CHECKING:
     from plotnine.scales.scales import Scales  # noqa
     from plotnine.stats.stat import stat
     from plotnine.themes.theme import theme
+    from plotnine.watermark import watermark
 
     class PlotAddable(Protocol):
         """
@@ -111,6 +112,7 @@ if typing.TYPE_CHECKING:
     Scale: TypeAlias = scale
     Stat: TypeAlias = stat
     Theme: TypeAlias = theme
+    Watermark: TypeAlias = watermark
 
     # Mizani
     Trans: TypeAlias = trans

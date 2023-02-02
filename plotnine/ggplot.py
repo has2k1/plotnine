@@ -23,10 +23,7 @@ from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_null
 from .facets.layout import Layout
-
-# mypy believes there is a duplicate definition
-# of geom_blank even though it only appears once
-from .geoms import geom_blank  # type: ignore[no-redef]  # mypy bug
+from .geoms.geom_blank import geom_blank
 from .guides.guides import guides
 from .iapi import mpl_save_view
 from .layer import Layers
@@ -43,13 +40,16 @@ from .utils import (
 )
 
 if typing.TYPE_CHECKING:
-    import plotnine as p9
     from plotnine.typing import (
         Axes,
+        Coord,
         DataLike,
+        Facet,
         Figure,
         Layer,
         PlotAddable,
+        Theme,
+        Watermark,
     )
 
 # Show plots if in interactive mode
@@ -77,6 +77,9 @@ class ggplot:
     """
     figure: Figure
     axs: list[Axes]
+    theme: Theme
+    facet: Facet
+    coordinates: Coord
 
     def __init__(
         self,
@@ -88,16 +91,16 @@ class ggplot:
         data, mapping = order_as_data_mapping(data, mapping)
         self.data = data
         self.mapping = mapping if mapping is not None else aes()
-        self.facet: p9.facets.facet.facet = facet_null()
+        self.facet = facet_null()
         self.labels = make_labels(self.mapping)
         self.layers = Layers()
         self.guides = guides()
         self.scales = Scales()
         self.theme = theme_get()
-        self.coordinates: p9.coords.coord.coord = coord_cartesian()
+        self.coordinates: Coord = coord_cartesian()
         self.environment = environment or EvalEnvironment.capture(1)
         self.layout = Layout()
-        self.watermarks: list[p9.watermark] = []
+        self.watermarks: list[Watermark] = []
 
         # build artefacts
         self._build_objs = NS()
@@ -161,7 +164,10 @@ class ggplot:
         else:
             return other.__radd__(self)
 
-    def __add__(self, other: PlotAddable | list[PlotAddable] | None) -> ggplot:
+    def __add__(
+        self,
+        other: PlotAddable | list[PlotAddable] | None
+    ) -> ggplot:
         """
         Add to ggplot from a list
 
@@ -238,7 +244,11 @@ class ggplot:
 
         return self.figure
 
-    def _draw_using_figure(self, figure: Figure, axs: list[Axes]):
+    def _draw_using_figure(
+        self,
+        figure: Figure,
+        axs: list[Axes]
+    ) -> ggplot:
         """
         Draw onto already created figure and axes
 
@@ -267,7 +277,7 @@ class ggplot:
 
         return self
 
-    def _build(self):
+    def _build(self) -> None:
         """
         Build ggplot for rendering.
 
@@ -346,7 +356,7 @@ class ggplot:
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
 
-    def _setup_parameters(self):
+    def _setup_parameters(self) -> None:
         """
         Set facet properties
         """
@@ -357,7 +367,7 @@ class ggplot:
         # theme
         self.theme.figure = self.figure
 
-    def _create_figure(self):
+    def _create_figure(self) -> tuple[Figure, list[Axes]]:
         """
         Create Matplotlib figure and axes
         """
@@ -365,7 +375,7 @@ class ggplot:
         if get_option('close_all_figures'):
             plt.close('all')
 
-        figure = plt.figure()
+        figure: Figure = plt.figure() # pyright: ignore
         axs = self.facet.make_axes(
             figure,
             self.layout.layout,
@@ -379,21 +389,21 @@ class ggplot:
         self.axs = axs
         return figure, axs
 
-    def _resize_panels(self):
+    def _resize_panels(self) -> None:
         """
         Resize panels
         """
         self.theme.setup_figure(self.figure)
         self.facet.spaceout_and_resize_panels()
 
-    def _draw_layers(self):
+    def _draw_layers(self) -> None:
         """
         Draw the main plot(s) onto the axes.
         """
         # Draw the geoms
         self.layers.draw(self.layout, self.coordinates)
 
-    def _draw_breaks_and_labels(self):
+    def _draw_breaks_and_labels(self) -> None:
         """
         Draw breaks and labels
         """
@@ -422,7 +432,7 @@ class ggplot:
             if layout_info.axis_y:
                 ax.yaxis.set_tick_params(which='both', left=True)
 
-    def _draw_legend(self):
+    def _draw_legend(self) -> None:
         """
         Draw legend onto the figure
         """
@@ -488,7 +498,7 @@ class ggplot:
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
-    def _draw_labels(self):
+    def _draw_labels(self) -> None:
         """
         Draw x and y labels onto the figure
         """
@@ -515,9 +525,13 @@ class ggplot:
         # last_ax = self.axs[-1]
 
         xlabel = self.facet.last_ax.set_xlabel(
-            labels.x, labelpad=pad_x)
+            labels.x,
+            labelpad=pad_x
+        )
         ylabel = self.facet.first_ax.set_ylabel(
-            labels.y, labelpad=pad_y)
+            labels.y,
+            labelpad=pad_y
+        )
 
         xlabel.set_transform(mtransforms.blended_transform_factory(
             figure.transFigure, mtransforms.IdentityTransform()))
@@ -527,7 +541,7 @@ class ggplot:
         figure._themeable['axis_title_x'] = xlabel
         figure._themeable['axis_title_y'] = ylabel
 
-    def _draw_title(self):
+    def _draw_title(self) -> None:
         """
         Draw title onto the figure
         """
@@ -575,7 +589,7 @@ class ggplot:
         text = figure.text(x, y, title, ha=ha, va='center')
         figure._themeable['plot_title'] = text
 
-    def _draw_caption(self):
+    def _draw_caption(self) -> None:
         """
         Draw caption onto the figure
         """
@@ -608,13 +622,6 @@ class ggplot:
         for wm in self.watermarks:
             wm.draw(self.figure)
 
-    def _apply_theme(self):
-        """
-        Apply theme attributes to Matplotlib objects
-        """
-        self.theme.apply_axs(self.axs)
-        self.theme.apply_figure(self.figure)
-
     def _save_filename(self, ext: str) -> Path:
         """
         Make a filename for use by the save method
@@ -627,7 +634,7 @@ class ggplot:
         hash_token = abs(self.__hash__())
         return Path(f'plotnine-save-{hash_token}.{ext}')
 
-    def _update_labels(self, layer: Layer):
+    def _update_labels(self, layer: Layer) -> None:
         """
         Update label data for the ggplot
 
@@ -643,7 +650,7 @@ class ggplot:
         self.labels.add_defaults(mapping)
 
     def save_helper(
-        self,
+        self: ggplot,
         filename: Optional[Union[str, Path]] = None,
         format: Optional[str] = None,
         path: Optional[str] = None,
@@ -686,7 +693,7 @@ class ggplot:
         if width is not None and height is not None:
             width = to_inches(width, units)
             height = to_inches(height, units)
-            self += theme(figure_size=(width, height))
+            self += theme(figure_size=(width, height))  # pyright: ignore
         elif (width is None and height is not None or
               width is not None and height is None):
             raise PlotnineError(
@@ -694,6 +701,8 @@ class ggplot:
             )
 
         width, height = self.theme.themeables.property('figure_size')
+        assert width is not None
+        assert height is not None
 
         if limitsize and (width > 25 or height > 25):
             raise PlotnineError(
@@ -783,7 +792,7 @@ ggsave = ggplot.save
 
 def save_as_pdf_pages(
     plots: Iterable[ggplot],
-    filename: str | None = None,
+    filename: Optional[str | Path] = None,
     path: str | None = None,
     verbose: bool = True,
     **kwargs: Any
@@ -854,7 +863,6 @@ def save_as_pdf_pages(
     plots = iter(plots)
 
     # filename, depends on the object
-    filename: str | Path | None = filename  # broaden allowed type for var
     if filename is None:
         # Take the first element from the iterator, store it, and
         # use it to generate a file name
