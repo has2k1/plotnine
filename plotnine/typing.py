@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Callable, Dict, Literal, Protocol
+    from typing import Callable, Dict, Literal, Protocol, Sequence
 
     import numpy as np
     import numpy.typing as npt
@@ -97,6 +97,7 @@ if typing.TYPE_CHECKING:
         "StripLabellingDict"
     )
 
+    # Plotnine Classes
     Coord: TypeAlias = coord
     Facet: TypeAlias = facet
     Geom: TypeAlias = geom
@@ -107,3 +108,22 @@ if typing.TYPE_CHECKING:
     Scale: TypeAlias = scale
     Stat: TypeAlias = stat
     Theme: TypeAlias = theme
+
+    # Tuples
+    TupleFloat2: TypeAlias = tuple[float, float]
+    TupleFloat3: TypeAlias = tuple[float, float, float]
+    TupleFloat4: TypeAlias = tuple[float, float, float, float]
+    TupleInt2: TypeAlias = tuple[int, int]
+
+    # Arrays (strictly numpy)
+    FloatArray: TypeAlias = npt.NDArray[np.float64]
+    IntArray: TypeAlias = npt.NDArray[np.int64]
+    BoolArray: TypeAlias = npt.NDArray[np.bool_]
+
+    # Series
+    FloatSeries: TypeAlias = pd.Series[float]
+    IntSeries: TypeAlias = pd.Series[int]
+
+    # ArrayLikes
+    FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
+    IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
