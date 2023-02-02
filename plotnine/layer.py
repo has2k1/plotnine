@@ -16,12 +16,19 @@ if typing.TYPE_CHECKING:
 
     from patsy.eval import EvalEnvironment
 
-    import plotnine as p9
-
-    from .geoms.geom import geom
-    from .positions.position import position
-    from .stats.stat import stat
-    from .typing import DataFrameConvertible, DataLike, LayerDataLike
+    from plotnine.typing import (
+        Coord,
+        DataFrameConvertible,
+        DataLike,
+        Geom,
+        Ggplot,
+        Layer,
+        LayerDataLike,
+        Layout,
+        Position,
+        Scale,
+        Stat,
+    )
 
 
 class layer:
@@ -67,12 +74,12 @@ class layer:
 
     def __init__(
         self,
-        geom: geom,
-        stat: stat,
+        geom: Geom,
+        stat: Stat,
         *,
         mapping: aes,
         data: Optional[LayerDataLike],
-        position: position,
+        position: Position,
         inherit_aes: bool = True,
         show_legend: bool | None = None,
         raster: bool = False
@@ -88,7 +95,7 @@ class layer:
         self.zorder = 0
 
     @staticmethod
-    def from_geom(geom: geom) -> layer:
+    def from_geom(geom: Geom) -> Layer:
         """
         Create a layer given a :class:`geom`
 
@@ -119,7 +126,7 @@ class layer:
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
         return layer(**lkwargs)
 
-    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add layer to ggplot object
         """
@@ -148,7 +155,7 @@ class layer:
 
         return result
 
-    def setup(self, plot: p9.ggplot) -> None:
+    def setup(self, plot: Ggplot) -> None:
         """
         Prepare layer for the plot building
 
@@ -248,7 +255,7 @@ class layer:
         self.geom.environment = plot_environment
         self.stat.environment = plot_environment
 
-    def compute_aesthetics(self, plot: p9.ggplot) -> None:
+    def compute_aesthetics(self, plot: Ggplot) -> None:
         """
         Return a dataframe where the columns match the aesthetic mappings
 
@@ -268,7 +275,7 @@ class layer:
         data = add_group(evaled)
         self.data = data.sort_values('PANEL', kind='mergesort')
 
-    def compute_statistic(self, layout: p9.facets.layout.Layout) -> None:
+    def compute_statistic(self, layout: Layout) -> None:
         """
         Compute & return statistics for this layer
         """
@@ -282,7 +289,7 @@ class layer:
         data = self.stat.compute_layer(data, params, layout)
         self.data = data
 
-    def map_statistic(self, plot: p9.ggplot) -> None:
+    def map_statistic(self, plot: Ggplot) -> None:
         """
         Mapping aesthetics to computed statistics
         """
@@ -328,7 +335,7 @@ class layer:
 
         self.data = data
 
-    def compute_position(self, layout: p9.facets.layout.Layout) -> None:
+    def compute_position(self, layout: Layout) -> None:
         """
         Compute the position of each geometric object
 
@@ -345,8 +352,8 @@ class layer:
 
     def draw(
         self,
-        layout: p9.facets.layout.Layout,
-        coord: p9.coords.coord.coord
+        layout: Layout,
+        coord: Coord
     ) -> None:
         """
         Draw geom
@@ -411,12 +418,12 @@ class Layers(List[layer]):
     def __radd__(self, other: Iterable[layer]) -> Layers: ...
 
     @overload
-    def __radd__(self, other: p9.ggplot) -> p9.ggplot: ...
+    def __radd__(self, other: Ggplot) -> Ggplot: ...
 
     def __radd__(
         self,
-        other: Iterable[layer] | p9.ggplot
-    ) -> Layers | p9.ggplot:
+        other: Iterable[layer] | Ggplot
+    ) -> Layers | Ggplot:
         """
         Add layers to ggplot object
         """
@@ -450,7 +457,7 @@ class Layers(List[layer]):
     def data(self) -> list[pd.DataFrame]:
         return [l.data for l in self]
 
-    def setup(self, plot: p9.ggplot) -> None:
+    def setup(self, plot: Ggplot) -> None:
         for l in self:
             l.setup(plot)
 
@@ -460,27 +467,27 @@ class Layers(List[layer]):
 
     def draw(
         self,
-        layout: p9.facets.layout.Layout,
-        coord: p9.coords.coord.coord
+        layout: Layout,
+        coord: Coord
     ) -> None:
         # If zorder is 0, it is left to MPL
         for i, l in enumerate(self, start=1):
             l.zorder = i
             l.draw(layout, coord)
 
-    def compute_aesthetics(self, plot: p9.ggplot) -> None:
+    def compute_aesthetics(self, plot: Ggplot) -> None:
         for l in self:
             l.compute_aesthetics(plot)
 
-    def compute_statistic(self, layout: p9.facets.layout.Layout) -> None:
+    def compute_statistic(self, layout: Layout) -> None:
         for l in self:
             l.compute_statistic(layout)
 
-    def map_statistic(self, plot: p9.ggplot) -> None:
+    def map_statistic(self, plot: Ggplot) -> None:
         for l in self:
             l.map_statistic(plot)
 
-    def compute_position(self, layout: p9.facets.layout.Layout) -> None:
+    def compute_position(self, layout: Layout) -> None:
         for l in self:
             l.compute_position(layout)
 
@@ -492,15 +499,15 @@ class Layers(List[layer]):
         for l in self:
             l.use_defaults(data, aes_modifiers)
 
-    def transform(self, scales: p9.scales.scale.scale) -> None:
+    def transform(self, scales: Scale) -> None:
         for l in self:
             l.data = scales.transform_df(l.data)
 
-    def train(self, scales: p9.scales.scale.scale) -> None:
+    def train(self, scales: Scale) -> None:
         for l in self:
-            l.data = scales.train_df(l.data)
+            scales.train_df(l.data)
 
-    def map(self, scales: p9.scales.scale.scale) -> None:
+    def map(self, scales: Scale) -> None:
         for l in self:
             l.data = scales.map_df(l.data)
 
@@ -508,7 +515,7 @@ class Layers(List[layer]):
         for l in self:
             l.finish_statistics()
 
-    def update_labels(self, plot: p9.ggplot) -> None:
+    def update_labels(self, plot: Ggplot) -> None:
         for l in self:
             plot._update_labels(l)
 

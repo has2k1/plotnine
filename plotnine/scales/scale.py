@@ -183,7 +183,7 @@ class scale(metaclass=Registry):
         """
         raise NotImplementedError('Not Implemented')
 
-    def transform_df(self, df):
+    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transform dataframe
         """
@@ -288,7 +288,7 @@ class scale(metaclass=Registry):
             value = list(value)
         self._limits = value
 
-    def train_df(self, df):
+    def train_df(self, df: pd.DataFrame) -> None:
         """
         Train scale from a dataframe
         """
@@ -296,7 +296,7 @@ class scale(metaclass=Registry):
         for ae in aesthetics:
             self.train(df[ae])
 
-    def map_df(self, df):
+    def map_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Map df
         """
@@ -569,7 +569,7 @@ class scale_discrete(scale):
             # corresponding labels are too
             return self.labels
 
-    def transform_df(self, df):
+    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transform dataframe
         """
@@ -741,7 +741,8 @@ class scale_continuous(scale):
 
         self.range.train(x)
 
-    def transform_df(self, df):
+    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
+
         """
         Transform dataframe
         """
