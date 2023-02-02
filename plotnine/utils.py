@@ -967,11 +967,11 @@ def data_mapping_as_kwargs(args, kwargs):
     return kwargs
 
 
-def ungroup(data):
+def ungroup(data: DataLike) -> DataLike:
     """Return an ungrouped DataFrame, or pass the original data back."""
 
     if isinstance(data, DataFrameGroupBy):
-        return data.obj
+        return data.obj  # type: ignore
 
     return data
 

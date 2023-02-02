@@ -26,7 +26,7 @@ if typing.TYPE_CHECKING:
         LayerDataLike,
         Layout,
         Position,
-        Scale,
+        Scales,
         Stat,
     )
 
@@ -499,15 +499,15 @@ class Layers(List[layer]):
         for l in self:
             l.use_defaults(data, aes_modifiers)
 
-    def transform(self, scales: Scale) -> None:
+    def transform(self, scales: Scales) -> None:
         for l in self:
             l.data = scales.transform_df(l.data)
 
-    def train(self, scales: Scale) -> None:
+    def train(self, scales: Scales) -> None:
         for l in self:
             scales.train_df(l.data)
 
-    def map(self, scales: Scale) -> None:
+    def map(self, scales: Scales) -> None:
         for l in self:
             l.data = scales.map_df(l.data)
 

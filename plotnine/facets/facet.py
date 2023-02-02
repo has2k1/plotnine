@@ -94,8 +94,8 @@ class facet:
     axs: list[Axes]
     # The first and last axes according to how MPL creates them.
     # Used for labelling the x and y axes,
-    first_ax = None
-    last_ax = None
+    first_ax: Axes
+    last_ax: Axes
     # Number of facet variables along the horizontal axis
     num_vars_x = 0
     # Number of facet variables along the vertical axis

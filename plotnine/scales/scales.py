@@ -7,7 +7,6 @@ from typing import List
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 import pandas.api.types as pdtypes
 
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -15,8 +14,8 @@ from ..mapping.aes import aes_to_scale
 from ..utils import Registry, array_kind
 from .scale import scale
 
-# if typing.TYPE_CHECKING:
-#     import pandas as pd
+if typing.TYPE_CHECKING:
+    import pandas as pd
 
 
 _TPL_DUPLICATE_SCALE = """\
@@ -81,20 +80,20 @@ class Scales(List[scale]):
             return None
 
     @property
-    def x(self):
+    def x(self) -> Scales:
         """
         Return x scale
         """
         return self.get_scales('x')
 
     @property
-    def y(self):
+    def y(self) -> Scales:
         """
         Return y scale
         """
         return self.get_scales('y')
 
-    def non_position_scales(self):
+    def non_position_scales(self) -> Scales:
         """
         Return a list of any non-position scales
         """
@@ -105,7 +104,7 @@ class Scales(List[scale]):
         ]
         return Scales(l)
 
-    def position_scales(self):
+    def position_scales(self) -> Scales:
         """
         Return a list of the position scales that are present
         """

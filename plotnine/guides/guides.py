@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from copy import deepcopy
 from warnings import warn
 
@@ -8,6 +11,11 @@ from matplotlib.offsetbox import HPacker, VPacker
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import Registry, is_string, is_waive
 from .guide import guide as guide_class
+
+if typing.TYPE_CHECKING:
+    from typing import Literal
+
+    from plotnine.typing import TupleFloat2
 
 # Terminology
 # -----------
@@ -35,6 +43,13 @@ class guides(dict):
         aesthetic - guide pairings. e.g
         ``color=guide_colorbar()``
     """
+    # Determined from the theme when the guides are
+    # getting built
+    position: Literal['left', 'right', 'top', 'bottom'] | TupleFloat2
+    box_direction: Literal['horizontal', 'vertical', 'auto']
+    box_align: Literal['left', 'right', 'top', 'bottom', 'center', 'auto']
+    box_margin: int
+    spacing: float
 
     def __init__(self, **kwargs):
         aes_names = {'alpha', 'color', 'fill',
@@ -48,13 +63,6 @@ class guides(dict):
             ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names)
         )
 
-        # Determined from the theme when the guides are
-        # getting built
-        self.position = None
-        self.box_direction = None
-        self.box_align = None
-        self.box_margin = None
-        self.spacing = None
 
     def __radd__(self, gg):
         """

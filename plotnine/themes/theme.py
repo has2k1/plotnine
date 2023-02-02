@@ -1,8 +1,14 @@
+from __future__ import annotations
+
+import typing
 from copy import copy, deepcopy
 
 from ..exceptions import PlotnineError
 from ..options import SUBPLOTS_ADJUST, get_option, set_option
 from .themeable import Themeables, themeable
+
+if typing.TYPE_CHECKING:
+    from plotnine.typing import Figure
 
 # All complete themes are initiated with these rcparams. They
 # can be overridden.
@@ -66,6 +72,11 @@ class theme:
     the ``__init__`` method of the new theme. The ``rcParams``
     should not be modified after that.
     """
+    # This is set when the figure is created,
+    # it is useful at legend drawing time and
+    # when applying the theme.
+    figure: Figure
+    complete: bool
 
     def __init__(self, complete=False,
                  # Generate themeables keyword parameters with
@@ -157,10 +168,6 @@ class theme:
                  **kwargs):
         self.themeables = Themeables()
         self.complete = complete
-        # This is set when the figure is created,
-        # it is useful at legend drawing time and
-        # when applying the theme.
-        self.figure = None
 
         if complete:
             self._rcParams = deepcopy(default_rcparams)
