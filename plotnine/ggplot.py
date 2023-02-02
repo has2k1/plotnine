@@ -44,8 +44,13 @@ from .utils import (
 
 if typing.TYPE_CHECKING:
     import plotnine as p9
-
-    from .typing import DataLike, PlotAddable
+    from plotnine.typing import (
+        Axes,
+        DataLike,
+        Figure,
+        Layer,
+        PlotAddable,
+    )
 
 # Show plots if in interactive mode
 if sys.flags.interactive:
@@ -70,8 +75,8 @@ class ggplot:
         namespace. It defaults to using the environment/namespace.
         in which `ggplot()` is called.
     """
-    figure: mpl.figure.Figure
-    axs: list[mpl.axes.Axes]
+    figure: Figure
+    axs: list[Axes]
 
     def __init__(
         self,
@@ -186,7 +191,7 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, show: bool = False) -> mpl.figure.Figure:
+    def draw(self, show: bool = False) -> Figure:
         """
         Render the complete plot
 
@@ -233,7 +238,7 @@ class ggplot:
 
         return self.figure
 
-    def _draw_using_figure(self, figure, axs):
+    def _draw_using_figure(self, figure: Figure, axs: list[Axes]):
         """
         Draw onto already created figure and axes
 
@@ -622,7 +627,7 @@ class ggplot:
         hash_token = abs(self.__hash__())
         return Path(f'plotnine-save-{hash_token}.{ext}')
 
-    def _update_labels(self, layer):
+    def _update_labels(self, layer: Layer):
         """
         Update label data for the ggplot
 
