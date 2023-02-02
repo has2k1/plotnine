@@ -30,7 +30,7 @@ class PlotnineError(Exception):
     """
 
     def __init__(self, *args: str) -> None:
-        args = [dedent(arg) for arg in args]
+        args = tuple(dedent(arg) for arg in args)
         self.message = " ".join(args)
 
     def __str__(self) -> str:
