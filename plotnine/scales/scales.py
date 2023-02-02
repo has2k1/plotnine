@@ -1,17 +1,23 @@
 from __future__ import annotations
 
 import itertools
+import typing
 from contextlib import suppress
 from typing import List
 from warnings import warn
 
 import numpy as np
+import pandas as pd
 import pandas.api.types as pdtypes
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import aes_to_scale
 from ..utils import Registry, array_kind
 from .scale import scale
+
+# if typing.TYPE_CHECKING:
+#     import pandas as pd
+
 
 _TPL_DUPLICATE_SCALE = """\
 Scale for '{0}' is already present.
@@ -92,16 +98,22 @@ class Scales(List[scale]):
         """
         Return a list of any non-position scales
         """
-        l = [s for s in self
-             if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)]
+        l = [
+            s
+            for s in self
+            if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)
+        ]
         return Scales(l)
 
     def position_scales(self):
         """
         Return a list of the position scales that are present
         """
-        l = [s for s in self
-             if ('x' in s.aesthetics) or ('y' in s.aesthetics)]
+        l = [
+            s
+            for s in self
+            if ('x' in s.aesthetics) or ('y' in s.aesthetics)
+        ]
         return Scales(l)
 
     def train(self, data, vars, idx):
@@ -182,19 +194,22 @@ class Scales(List[scale]):
         for sc in self:
             sc.reset()
 
-    def train_df(self, df, drop=False):
+    def train_df(
+        self,
+        df : pd.DataFrame,
+        drop : bool = False
+    ) -> None:
         """
         Train scales from a dataframe
         """
         if (len(df) == 0) or (len(self) == 0):
-            return df
+            return
 
         # Each scale trains the columns it understands
         for sc in self:
             sc.train_df(df)
-        return df
 
-    def map_df(self, df):
+    def map_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Map values from a dataframe.
 
@@ -208,7 +223,7 @@ class Scales(List[scale]):
             df = sc.map_df(df)
         return df
 
-    def transform_df(self, df):
+    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transform values in a dataframe.
 
