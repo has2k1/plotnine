@@ -60,21 +60,22 @@ strict = false
 # characters), or ? (a single character). If no include paths are
 # specified, the root path for the workspace is assumed.
 include = [
-   "plotnine/animation.py",
-   "plotnine/ggplot.py",
-   "plotnine/doctools.py",
-   "plotnine/labels.py",
-   "plotnine/options.py",
-   "plotnine/exceptions.py",
-   "plotnine/watermark.py",
-   "plotnine/ggplot.py",
-   "plotnine/utils.py",
-   "plotnine/typing.py",
-   "plotnine/layer.py",
-   "plotnine/qplot.py",
-   "plotnine/iapi.py",
-   "plotnine/geoms",
    "plotnine/coords",
+   "plotnine/facets",
+   "plotnine/animation.py",
+   "plotnine/layer.py",
+   "plotnine/watermark.py",
+   "plotnine/options.py",
+   "plotnine/doctools.py",
+   "plotnine/exceptions.py",
+   "plotnine/iapi.py",
+
+   # "plotnine/ggplot.py",
+   # "plotnine/labels.py",
+   # "plotnine/utils.py",
+   # "plotnine/typing.py",
+   # "plotnine/qplot.py",
+   # "plotnine/geoms",
 ]
 
 # Paths of directories or files whose diagnostic output (errors and
