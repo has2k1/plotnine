@@ -7,13 +7,15 @@ from mizani.scale import scale_continuous, scale_discrete
 if typing.TYPE_CHECKING:
     from typing import Any, Sequence
 
+    from plotnine.typing import TupleFloat2
+
 
 class Range:
     """
     Base class for all ranges
     """
     #: Holds the range information after training
-    range: tuple[float, float]
+    range: TupleFloat2
 
     def reset(self) -> None:
         """

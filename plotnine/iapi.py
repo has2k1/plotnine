@@ -12,7 +12,12 @@ from dataclasses import dataclass, fields
 from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
 
 if typing.TYPE_CHECKING:
-    from plotnine.typing import Axes, Figure, Scale
+    from plotnine.typing import (
+        Axes,
+        Figure,
+        Scale,
+        TupleFloat2,
+    )
 
 
 @dataclass
@@ -24,9 +29,9 @@ class scale_view:
     aesthetics: List[str]
     name: str
     # Trainned limits of the scale
-    limits: tuple[float, float]
+    limits: TupleFloat2
     # Physical size of scale, including expansions
-    range: tuple[float, float]
+    range: TupleFloat2
     breaks: Sequence[float] | dict[str, Any]
     minor_breaks: Sequence[float]
     labels: Sequence[str]
@@ -37,8 +42,8 @@ class range_view:
     """
     Range information after trainning
     """
-    range: tuple[float, float]
-    range_coord: tuple[float, float]
+    range: TupleFloat2
+    range_coord: TupleFloat2
 
 
 @dataclass
@@ -125,8 +130,8 @@ class panel_ranges:
     """
     Ranges for the panel
     """
-    x: tuple[float, float]
-    y: tuple[float, float]
+    x: TupleFloat2
+    y: TupleFloat2
 
 
 @dataclass

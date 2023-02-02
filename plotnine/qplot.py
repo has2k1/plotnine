@@ -23,8 +23,7 @@ if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal
 
     import plotnine as p9
-
-    from .typing import DataLike
+    from plotnine.typing import DataLike, TupleFloat2
 
 
 def qplot(
@@ -34,8 +33,8 @@ def qplot(
     facets: str = '',
     margins: bool | list[str] = False,
     geom: str | list[str] | tuple[str] = 'auto',
-    xlim: tuple[float, float] | None = None,
-    ylim: tuple[float, float] | None = None,
+    xlim: TupleFloat2 | None = None,
+    ylim: TupleFloat2 | None = None,
     log: Literal['x', 'y', 'xy'] | None = None,
     main: str | None = None,
     xlab: str | None = None,

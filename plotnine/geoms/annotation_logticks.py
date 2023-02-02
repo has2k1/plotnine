@@ -20,6 +20,7 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
 
     import plotnine as p9
+    from plotnine.typing import TupleFloat2
 
 
 class _geom_logticks(geom_rug):
@@ -55,7 +56,7 @@ class _geom_logticks(geom_rug):
         sides: str,
         panel_params: p9.iapi.panel_view,
         coord: p9.coords.coord.coord,
-    ) -> tuple[float, float]:
+    ) -> TupleFloat2:
         """
         Check the log transforms
 
@@ -140,7 +141,7 @@ class _geom_logticks(geom_rug):
 
     @staticmethod
     def _calc_ticks(
-        value_range: tuple[float, float],
+        value_range: TupleFloat2,
         base: float
     ) -> tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]]:
         """

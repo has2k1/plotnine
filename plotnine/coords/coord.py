@@ -8,12 +8,18 @@ import numpy as np
 from ..iapi import panel_ranges
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence
+    from typing import Any
 
     import numpy.typing as npt
     import pandas as pd
 
-    import plotnine as p9
+    from plotnine.iapi import labels_view, panel_view
+    from plotnine.typing import (
+        FloatArray,
+        FloatArrayLike,
+        Ggplot,
+        Scale,
+    )
 
 
 class coord:
@@ -27,7 +33,7 @@ class coord:
     # if the coordinate system needs them
     params: dict[str, Any]
 
-    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add coordinates to ggplot object
         """
@@ -88,7 +94,7 @@ class coord:
 
     def aspect(
         self,
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> float | None:
         """
         Return desired aspect ratio for the plot
@@ -101,8 +107,8 @@ class coord:
 
     def labels(
         self,
-        cur_labels: p9.iapi.labels_view
-    ) -> p9.iapi.labels_view:
+        cur_labels: labels_view
+    ) -> labels_view:
         """
         Modify labels
 
@@ -121,7 +127,7 @@ class coord:
     def transform(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
+        panel_params: panel_view,
         munch: bool = False
     ) -> pd.DataFrame:
         """
@@ -134,9 +140,9 @@ class coord:
 
     def setup_panel_params(
         self,
-        scale_x: p9.scales.scale.scale,
-        scale_y: p9.scales.scale.scale
-    ) -> p9.iapi.panel_view:
+        scale_x: Scale,
+        scale_y: Scale
+    ) -> panel_view:
         """
         Compute the range and break information for the panel
         """
@@ -145,7 +151,7 @@ class coord:
 
     def range(
         self,
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> panel_ranges:
         """
         Return the range along the dimensions of the coordinate system
@@ -158,7 +164,7 @@ class coord:
 
     def backtransform_range(
         self,
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> panel_ranges:
         """
         Backtransform the panel range in panel_params to data coordinates
@@ -172,7 +178,7 @@ class coord:
         self,
         x: pd.Series[float],
         y: pd.Series[float],
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> npt.NDArray[Any]:
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
@@ -180,7 +186,7 @@ class coord:
     def munch(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> pd.DataFrame:
         ranges = self.backtransform_range(panel_params)
 
@@ -199,10 +205,7 @@ class coord:
         return munched
 
 
-def dist_euclidean(
-    x: Sequence[float] | pd.Series[float],
-    y: Sequence[float] | pd.Series[float],
-) -> npt.NDArray[np.float64]:
+def dist_euclidean(x: FloatArrayLike, y: FloatArrayLike) -> FloatArray:
     """
     Calculate euclidean distance
     """
@@ -214,7 +217,7 @@ def dist_euclidean(
     )
 
 
-def interp(start: int, end: int, n: int) -> npt.NDArray[np.float64]:
+def interp(start: int, end: int, n: int) -> FloatArray:
     """
     Interpolate
     """
@@ -223,7 +226,7 @@ def interp(start: int, end: int, n: int) -> npt.NDArray[np.float64]:
 
 def munch_data(
     data: pd.DataFrame,
-    dist: npt.NDArray[np.float64]
+    dist: FloatArray
 ) -> pd.DataFrame:
     """
     Breakup path into small segments

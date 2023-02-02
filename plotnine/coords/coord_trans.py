@@ -5,7 +5,6 @@ from types import SimpleNamespace as NS
 from typing import overload
 from warnings import warn
 
-import numpy as np
 from mizani.bounds import squish_infinite
 from mizani.transforms import gettrans
 
@@ -17,11 +16,16 @@ from .coord import coord, dist_euclidean
 if typing.TYPE_CHECKING:
     from typing import Optional, Sequence
 
-    import mizani as mz
-    import numpy.typing as npt
     import pandas as pd
 
-    import plotnine as p9
+    from plotnine.iapi import scale_view
+    from plotnine.typing import (
+        FloatArray,
+        FloatSeries,
+        Scale,
+        Trans,
+        TupleFloat2,
+    )
 
 
 class coord_trans(coord):
@@ -48,15 +52,15 @@ class coord_trans(coord):
         from the data.
     """
 
-    trans_x: mz.transforms.trans
-    trans_y: mz.transforms.trans
+    trans_x: Trans
+    trans_y: Trans
 
     def __init__(
         self,
-        x: str | mz.transforms.trans = 'identity',
-        y: str | mz.transforms.trans = 'identity',
-        xlim: Optional[tuple[float, float]] = None,
-        ylim: Optional[tuple[float, float]] = None,
+        x: str | Trans = 'identity',
+        y: str | Trans = 'identity',
+        xlim: Optional[TupleFloat2] = None,
+        ylim: Optional[TupleFloat2] = None,
         expand: bool = True
     ) -> None:
         self.trans_x = gettrans(x)
@@ -73,10 +77,10 @@ class coord_trans(coord):
         if not self.is_linear and munch:
             data = self.munch(data, panel_params)
 
-        def trans_x(data: pd.DataFrame) -> pd.DataFrame:
+        def trans_x(col: FloatSeries) -> pd.DataFrame:
             result = transform_value(  # type: ignore
                 self.trans_x,
-                data,
+                col,
                 panel_params.x.range
             )
             if any(result.isnull()):
@@ -87,10 +91,10 @@ class coord_trans(coord):
                 )
             return result  # type: ignore
 
-        def trans_y(data: pd.DataFrame) -> pd.DataFrame:
-            result = transform_value(  # type: ignore
+        def trans_y(col: FloatSeries) -> FloatSeries:
+            result = transform_value(
                 self.trans_y,
-                data,
+                col,
                 panel_params.y.range
             )
             if any(result.isnull()):
@@ -99,14 +103,14 @@ class coord_trans(coord):
                     "created one or more NaN values.",
                     PlotnineWarning
                 )
-            return result  # type: ignore
+            return result
 
         data = transform_position(data, trans_x, trans_y)
         return transform_position(data, squish_infinite, squish_infinite)
 
     def backtransform_range(
         self,
-        panel_params: p9.iapi.panel_view
+        panel_params: panel_view
     ) -> panel_ranges:
         return panel_ranges(
             x=self.trans_x.inverse(panel_params.x.range),
@@ -115,17 +119,17 @@ class coord_trans(coord):
 
     def setup_panel_params(
         self,
-        scale_x: p9.scales.scale.scale,
-        scale_y: p9.scales.scale.scale
+        scale_x: Scale,
+        scale_y: Scale
     ) -> panel_view:
         """
         Compute the range and break information for the panel
         """
         def get_scale_view(
-            scale: p9.scales.scale.scale,
-            coord_limits: tuple[float, float],
-            trans: mz.transforms.trans
-        ) -> p9.iapi.scale_view:
+            scale: Scale,
+            coord_limits: TupleFloat2,
+            trans: Trans
+        ) -> scale_view:
             if coord_limits:
                 coord_limits = trans.transform(coord_limits)
 
@@ -151,7 +155,7 @@ class coord_trans(coord):
         x: pd.Series[float],
         y: pd.Series[float],
         panel_params: panel_view
-    ) -> npt.NDArray[np.float64]:
+    ) -> FloatArray:
         max_dist = dist_euclidean(
             panel_params.x.range,
             panel_params.y.range
@@ -163,26 +167,26 @@ class coord_trans(coord):
 
 @overload
 def transform_value(
-    trans: mz.transforms.trans,
+    trans: Trans,
     value: pd.Series[float],
-    range: tuple[float, float]
+    range: TupleFloat2
 ) -> pd.Series[float]:
     ...
 
 
 @overload
 def transform_value(
-    trans: mz.transforms.trans,
+    trans: Trans,
     value: Sequence[float],
-    range: tuple[float, float]
+    range: TupleFloat2
 ) -> Sequence[float]:
     ...
 
 
 def transform_value(
-    trans: mz.transforms.trans,
+    trans: Trans,
     value: pd.Series[float] | Sequence[float],
-    range: tuple[float, float]
+    range: TupleFloat2
 ) -> pd.Series[float] | Sequence[float]:
     """
     Transform value

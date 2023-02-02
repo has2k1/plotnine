@@ -10,6 +10,7 @@ if typing.TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes  # noqa
     from matplotlib.figure import Figure  # noqa
+    from mizani.transforms import trans
     from typing_extensions import TypeAlias
 
     from plotnine.coords.coord import coord
@@ -108,6 +109,9 @@ if typing.TYPE_CHECKING:
     Scale: TypeAlias = scale
     Stat: TypeAlias = stat
     Theme: TypeAlias = theme
+
+    # Mizani
+    Trans: TypeAlias = trans
 
     # Tuples
     TupleFloat2: TypeAlias = tuple[float, float]

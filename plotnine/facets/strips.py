@@ -19,6 +19,7 @@ if typing.TYPE_CHECKING:
         Facet,
         Layout,
         Theme,
+        TupleFloat2,
     )
 
 
@@ -69,7 +70,7 @@ class strip:
         self.info = self.details()
 
     @property
-    def inner_margins(self) -> tuple[float, float]:
+    def inner_margins(self) -> TupleFloat2:
         if self.location == 'right':
             strip_name = 'strip_text_y'
             side1, side2 = 'l', 'r'
