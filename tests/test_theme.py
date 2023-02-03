@@ -105,12 +105,12 @@ def test_add_element_blank():
     assert theme3 != theme2
     assert theme3 == theme4  # blanking cleans the slate
 
-    # When a themeable is blanked, the apply method
+    # When a themeable is blanked, the apply_ax method
     # is replaced with the blank method.
     th2 = theme2.themeables['axis_line_x']
     th3 = theme3.themeables['axis_line_x']
-    assert th2.apply.__name__ == 'blank'
-    assert th3.apply.__name__ == 'apply'
+    assert th2.apply_ax.__name__ == 'blank_ax'
+    assert th3.apply_ax.__name__ == 'apply_ax'
 
 
 def test_element_line_dashed_capstyle():

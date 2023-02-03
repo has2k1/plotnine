@@ -8,7 +8,9 @@ from ..options import SUBPLOTS_ADJUST, get_option, set_option
 from .themeable import Themeables, themeable
 
 if typing.TYPE_CHECKING:
-    from plotnine.typing import Figure
+    from typing import Any, Type
+
+    from plotnine.typing import Axes, Figure, Ggplot
 
 # All complete themes are initiated with these rcparams. They
 # can be overridden.
@@ -76,7 +78,14 @@ class theme:
     # it is useful at legend drawing time and
     # when applying the theme.
     figure: Figure
+    axs: list[Axes]
     complete: bool
+
+    # Dictionary to collect matplotlib objects that will
+    # be targeted for theming by the themeables
+    # It is initialised in the plot context and removed at
+    # the end of it.
+    _targets: dict[str, Any]
 
     def __init__(self, complete=False,
                  # Generate themeables keyword parameters with
@@ -165,7 +174,7 @@ class theme:
                  strip_margin_x=None,
                  strip_margin_y=None,
                  strip_margin=None,
-                 **kwargs):
+                 **kwargs) -> None:
         self.themeables = Themeables()
         self.complete = complete
 
@@ -188,7 +197,7 @@ class theme:
         for name, element in kwargs.items():
             self.themeables[name] = new(name, element)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         """
         Test if themes are equal
 
@@ -201,18 +210,16 @@ class theme:
         c2 = self.rcParams == other.rcParams
         return c1 and c2
 
-    def apply(self, figure, axs):
+    def apply(self):
         """
         Apply this theme, then apply additional modifications in order.
 
-        This method will be called once with the figure object and the
-        axes after plot has completed. Subclasses that override this
-        method should make sure that the base class method is called.
+        This method will be called once after plot has completed.
+        Subclasses that override this method should make sure that the
+        base class method is called.
         """
         for th in self.themeables.values():
-            th.apply_figure(figure)
-            for ax in axs:
-                th.apply(ax)
+            th.apply(self)
 
     def setup_figure(self, figure):
         """
@@ -259,7 +266,7 @@ class theme:
             rcParams.update(th.rcParams)
         return rcParams
 
-    def add_theme(self, other):
+    def add_theme(self, other: theme) -> theme:
         """
         Add themes together
 
@@ -276,7 +283,7 @@ class theme:
         self.themeables.update(deepcopy(other.themeables))
         return self
 
-    def __add__(self, other):
+    def __add__(self, other: theme) -> theme:
         """
         Add other theme to this theme
         """
@@ -286,7 +293,7 @@ class theme:
         self = deepcopy(self)
         return self.add_theme(other)
 
-    def __radd__(self, other):
+    def __radd__(self, other: theme | Ggplot) -> theme | Ggplot:
         """
         Add theme to ggplot object or to another theme
 
@@ -301,7 +308,8 @@ class theme:
         Subclasses should not override this method.
         """
         # ggplot() + theme, get theme
-        if hasattr(other, 'theme'):
+        # if hasattr(other, 'theme'):
+        if not isinstance(other, theme):
             if self.complete:
                 other.theme = self
             else:
@@ -319,13 +327,13 @@ class theme:
                 # e.g. other + theme(...)
                 return other.add_theme(self)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other: theme) -> theme:
         """
         Add theme to theme
         """
         return self.add_theme(other)
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: dict) -> theme:
         """
         Deep copy without copying the figure
         """
@@ -335,16 +343,18 @@ class theme:
         old = self.__dict__
         new = result.__dict__
 
+        shallow = {'figure', '_targets'}
         for key, item in old.items():
-            if key in {'figure'}:
+            if key in shallow:
                 new[key] = old[key]
+                memo[id(new[key])] = new[key]
             else:
                 new[key] = deepcopy(old[key], memo)
 
         return result
 
 
-def theme_get():
+def theme_get() -> theme:
     """
     Return the default theme
 
@@ -359,7 +369,7 @@ def theme_get():
     return _theme or theme_gray()
 
 
-def theme_set(new):
+def theme_set(new: theme | Type[theme]) -> theme:
     """
     Change the current(default) theme
 
@@ -377,12 +387,12 @@ def theme_set(new):
             not issubclass(new, theme)):
         raise PlotnineError("Expecting object to be a theme")
 
-    out = get_option('current_theme')
+    out: theme = get_option('current_theme')
     set_option('current_theme', new)
     return out
 
 
-def theme_update(**kwargs):
+def theme_update(**kwargs: themeable) -> None:
     """
     Modify elements of the current theme
 

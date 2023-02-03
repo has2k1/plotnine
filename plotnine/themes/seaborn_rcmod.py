@@ -1,4 +1,8 @@
+# type: ignore
+
 """Functions that alter the matplotlib rc dictionary on the fly."""
+
+
 import functools
 
 import matplotlib as _mpl
@@ -22,12 +26,11 @@ class dummy:
     """
     No Op
     """
-    pass
+    __version__ = _mpl.__version__
+    rcParams = {}
 
 
 mpl = dummy()
-mpl.__version__ = _mpl.__version__
-mpl.rcParams = {}
 
 
 _style_keys = [

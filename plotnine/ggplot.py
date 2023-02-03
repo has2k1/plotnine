@@ -240,7 +240,7 @@ class ggplot:
             self._draw_watermarks()
 
             # Artist object theming
-            self.theme.apply(figure, axs)
+            self.theme.apply()
 
         return self.figure
 
@@ -273,7 +273,7 @@ class ggplot:
             self._draw_layers()
             self._draw_breaks_and_labels()
             self._draw_legend()
-            self.theme.apply(figure, axs)
+            self.theme.apply()
 
         return self
 
@@ -366,6 +366,7 @@ class ggplot:
         self.layout.axs = self.axs
         # theme
         self.theme.figure = self.figure
+        self.theme.axs = self.axs
 
     def _create_figure(self) -> tuple[Figure, list[Axes]]:
         """
@@ -382,9 +383,6 @@ class ggplot:
             self.coordinates
         )
 
-        # Dictionary to collect matplotlib objects that will
-        # be targeted for theming by the themeables
-        figure._themeable = {}
         self.figure = figure
         self.axs = axs
         return figure, axs
@@ -494,7 +492,7 @@ class ggplot:
         )
 
         anchored_box.set_zorder(90.1)
-        self.figure._themeable['legend_background'] = anchored_box
+        self.theme._targets['legend_background'] = anchored_box
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
@@ -505,6 +503,7 @@ class ggplot:
         # This is very laboured. Should be changed when MPL
         # finally has a constraint based layout manager.
         figure = self.figure
+        theme = self.theme
         _property = self.theme.themeables.property
 
         pad_x = _property('axis_title_x', 'margin').get_as('t', 'pt')
@@ -534,12 +533,16 @@ class ggplot:
         )
 
         xlabel.set_transform(mtransforms.blended_transform_factory(
-            figure.transFigure, mtransforms.IdentityTransform()))
+            figure.transFigure,
+            mtransforms.IdentityTransform())
+        )
         ylabel.set_transform(mtransforms.blended_transform_factory(
-            mtransforms.IdentityTransform(), figure.transFigure))
+            mtransforms.IdentityTransform(),
+            figure.transFigure)
+        )
 
-        figure._themeable['axis_title_x'] = xlabel
-        figure._themeable['axis_title_y'] = ylabel
+        theme._targets['axis_title_x'] = xlabel
+        theme._targets['axis_title_y'] = ylabel
 
     def _draw_title(self) -> None:
         """
@@ -548,6 +551,7 @@ class ggplot:
         # This is very laboured. Should be changed when MPL
         # finally has a constraint based layout manager.
         figure = self.figure
+        theme = self.theme
         title = self.labels.get('title', '')
         _property = self.theme.themeables.property
 
@@ -587,7 +591,7 @@ class ggplot:
         y = top + (strip_height+title_size/2+pad)/H
 
         text = figure.text(x, y, title, ha=ha, va='center')
-        figure._themeable['plot_title'] = text
+        theme._targets['plot_title'] = text
 
     def _draw_caption(self) -> None:
         """
@@ -596,6 +600,7 @@ class ggplot:
         # This is very laboured. Should be changed when MPL
         # finally has a constraint based layout manager.
         figure = self.figure
+        theme = self.theme
         caption = self.labels.get('caption', '')
         _property = self.theme.themeables.property
 
@@ -613,7 +618,7 @@ class ggplot:
         y = 0 - top_pad/H
 
         text = figure.text(x, y, caption, ha='right', va='top')
-        figure._themeable['plot_caption'] = text
+        theme._targets['plot_caption'] = text
 
     def _draw_watermarks(self):
         """
@@ -905,6 +910,7 @@ class plot_context:
         """
         Enclose in matplolib & pandas environments
         """
+        self.plot.theme._targets = {}
         self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
         # Pandas deprecated is_copy, and when we create new dataframes
         # from slices we do not want complaints. We always uses the
@@ -932,3 +938,4 @@ class plot_context:
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
         self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
+        delattr(self.plot.theme, '_targets')

@@ -208,7 +208,7 @@ class strip:
         """
         Create a background patch and put a label on it
         """
-        themeable = self.figure._themeable  # type: ignore
+        _targets = self.theme._targets
         info = self.info
         ax = info.ax
 
@@ -241,15 +241,15 @@ class strip:
 
         for key in ('strip_text_x', 'strip_text_y',
                     'strip_background_x', 'strip_background_y'):
-            if key not in themeable:
-                themeable[key] = []
+            if key not in _targets:
+                _targets[key] = []
 
         if info.location == 'right':
-            themeable['strip_background_y'].append(rect)
-            themeable['strip_text_y'].append(text)
+            _targets['strip_background_y'].append(rect)
+            _targets['strip_text_y'].append(text)
         else:
-            themeable['strip_background_x'].append(rect)
-            themeable['strip_text_x'].append(text)
+            _targets['strip_background_x'].append(rect)
+            _targets['strip_text_x'].append(text)
 
 
 class Strips(List[strip]):
