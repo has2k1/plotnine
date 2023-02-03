@@ -114,6 +114,21 @@ if typing.TYPE_CHECKING:
     Theme: TypeAlias = theme
     Watermark: TypeAlias = watermark
 
+    # Plotnine Other
+
+    ScaledAestheticsName: TypeAlias = Literal[
+        'x',
+        'y',
+        'alpha',
+        'color',
+        'colour',
+        'fill',
+        'linetype',
+        'shape',
+        'size',
+        'stroke',
+    ]
+
     # Mizani
     Trans: TypeAlias = trans
 

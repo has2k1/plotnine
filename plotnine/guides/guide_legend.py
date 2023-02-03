@@ -294,19 +294,19 @@ class guide_legend(guide):
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
-        themeable = self.theme.figure._themeable
+        _targets = self.theme._targets
 
         # When there is more than one guide, we keep
         # record of all of them using lists
-        if 'legend_title' not in themeable:
-            themeable['legend_title'] = []
-        if 'legend_text_legend' not in themeable:
-            themeable['legend_key'] = []
-            themeable['legend_text_legend'] = []
+        if 'legend_title' not in _targets:
+            _targets['legend_title'] = []
+        if 'legend_text_legend' not in _targets:
+            _targets['legend_key'] = []
+            _targets['legend_text_legend'] = []
 
         # title
         title_box = TextArea(self.title, textprops=dict(color='black'))
-        themeable['legend_title'].append(title_box)
+        _targets['legend_title'].append(title_box)
 
         # labels
         labels = []
@@ -316,7 +316,7 @@ class guide_legend(guide):
             va = 'center' if self.label_position == 'top' else 'baseline'
             ta = TextArea(item, textprops=dict(color='black', va=va))
             labels.append(ta)
-            themeable['legend_text_legend'].extend(labels)
+            _targets['legend_text_legend'].extend(labels)
 
         # Drawings
         drawings = []
@@ -334,7 +334,7 @@ class guide_legend(guide):
                     data = gl.data.iloc[i]
                     da = gl.geom.draw_legend(data, da, gl.layer)
             drawings.append(da)
-        themeable['legend_key'].append(drawings)
+        _targets['legend_key'].append(drawings)
 
         # Match Drawings with labels to create the entries
         lookup = {

@@ -159,7 +159,7 @@ class guide_colorbar(guide):
         direction = self.direction
         colors = self.bar['color'].tolist()
         labels = self.key['label'].tolist()
-        themeable = self.theme.figure._themeable
+        _targets = self.theme._targets
         _property = self.theme.themeables.property
 
         # 1.45 makes the default colourbar wider than the
@@ -172,10 +172,10 @@ class guide_colorbar(guide):
 
         # When there is more than one guide, we keep
         # record of all of them using lists
-        if 'legend_title' not in themeable:
-            themeable['legend_title'] = []
-        if 'legend_text_colorbar' not in themeable:
-            themeable['legend_text_colorbar'] = []
+        if 'legend_title' not in _targets:
+            _targets['legend_title'] = []
+        if 'legend_text_colorbar' not in _targets:
+            _targets['legend_text_colorbar'] = []
 
         # .5 puts the ticks in the middle of the bars when
         # raster=False. So when raster=True the ticks are
@@ -199,7 +199,7 @@ class guide_colorbar(guide):
 
         # title #
         title_box = TextArea(self.title, textprops=dict(color='black'))
-        themeable['legend_title'].append(title_box)
+        _targets['legend_title'].append(title_box)
 
         # colorbar and ticks #
         da = DrawingArea(width, height, 0, 0)
@@ -226,7 +226,7 @@ class guide_colorbar(guide):
                 tick_locations,
                 direction
             )
-            themeable['legend_text_colorbar'].extend(legend_text)
+            _targets['legend_text_colorbar'].extend(legend_text)
         else:
             labels_da = DrawingArea(0, 0)
 

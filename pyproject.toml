@@ -57,6 +57,7 @@ line_length = 79
 include = [
    "plotnine/coords",
    "plotnine/facets",
+   "plotnine/themes",
    "plotnine/animation.py",
    "plotnine/layer.py",
    "plotnine/watermark.py",
@@ -66,8 +67,7 @@ include = [
    "plotnine/iapi.py",
    "plotnine/typing.py",
    "plotnine/ggplot.py",
-
-   # "plotnine/labels.py",
+   "plotnine/labels.py",
    # "plotnine/utils.py",
    # "plotnine/qplot.py",
    # "plotnine/geoms",
@@ -121,7 +121,11 @@ fixable = ["A", "B", "C", "D", "E", "F", "I"]
 unfixable = []
 
 # Exclude a variety of commonly ignored directories.
-exclude = [".git"]
+exclude = [
+    # ".git",
+    "**/__pycache__",
+    "node_modules"
+]
 
 line-length = 79
 

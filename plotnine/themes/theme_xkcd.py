@@ -33,8 +33,15 @@ class theme_xkcd(theme_gray):
         For no color, use ``'none'``.
     """
 
-    def __init__(self, base_size=12, scale=1, length=100, randomness=2,
-                 stroke_size=4, stroke_color='white'):
+    def __init__(
+        self,
+        base_size=12,
+        scale=1,
+        length=100,
+        randomness=2,
+        stroke_size=4,
+        stroke_color='white'
+    ):
         theme_gray.__init__(self, base_size)
         self += theme(
             text=element_text(

@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import fields
-from typing import Any, Dict
+from typing import Any, Dict, overload
 
 import pandas as pd
 
@@ -270,7 +270,18 @@ class aes(Dict[str, Any]):
         return new
 
 
-def rename_aesthetics(obj):
+
+@overload
+def rename_aesthetics( obj: list[str]) -> list[str]: ...
+
+
+@overload
+def rename_aesthetics( obj: dict[str, Any]) -> dict[str, Any]: ...
+
+
+def rename_aesthetics(
+    obj: list[str] | dict[str, Any]
+) -> list[str] | dict[str, Any]:
     """
     Rename aesthetics in obj
 
