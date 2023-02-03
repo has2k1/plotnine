@@ -45,7 +45,7 @@ ruff-isort:
 lint: ruff ruff-isort
 
 typecheck:
-	mypy plotnine
+	pyright
 
 test: clean-test
 	export MATPLOTLIB_BACKEND=agg

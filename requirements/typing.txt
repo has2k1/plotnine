@@ -1,2 +1,2 @@
-mypy
+pyright
 pandas-stubs
