@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 from copy import copy, deepcopy
+from typing import overload
 
 from ..exceptions import PlotnineError
 from ..options import SUBPLOTS_ADJUST, get_option, set_option
@@ -292,6 +293,12 @@ class theme:
             raise PlotnineError(msg)
         self = deepcopy(self)
         return self.add_theme(other)
+
+    @overload
+    def __radd__(self, other: theme) -> theme: ...
+
+    @overload
+    def __radd__(self, other: Ggplot) -> Ggplot: ...
 
     def __radd__(self, other: theme | Ggplot) -> theme | Ggplot:
         """
