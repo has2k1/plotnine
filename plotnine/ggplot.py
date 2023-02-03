@@ -11,7 +11,6 @@ from typing import Any, Dict, Iterable, Optional, Union
 from warnings import warn
 
 import matplotlib as mpl
-import matplotlib.figure
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
 import pandas as pd
