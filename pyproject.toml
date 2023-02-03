@@ -47,11 +47,6 @@ version_scheme = 'post-release'
 profile = "black"
 line_length = 79
 
-[tool.pylsp-mypy]
-enabled = true
-live_mode = true
-strict = false
-
 [tool.pyright]
 # Paths of directories or files that should be included. If no paths
 # are specified, pyright defaults to the directory that contains the

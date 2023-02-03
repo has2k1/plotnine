@@ -579,7 +579,7 @@ def document_scale(
 
     # Fill in the processed superclass parameters
     superclass_parameters = '\n'.join(params_list)
-    cls_doc = cls.__doc__ or ""  # for mypy
+    cls_doc = cls.__doc__ or ""  # for typechecker
     cls.__doc__ = cls_doc.format(
         superclass_parameters=superclass_parameters
     )
