@@ -8,19 +8,29 @@ import pandas as pd
 
 from ..coords import coord_flip
 from ..exceptions import PlotnineWarning
+from ..scales.scale import scale_continuous as ScaleContinuous
 from ..utils import log
 from .annotate import annotate
 from .geom_path import geom_path
 from .geom_rug import geom_rug
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from typing import Any, Literal, Optional, Sequence
 
-    import matplotlib as mpl
-    import numpy.typing as npt
+    from typing_extensions import TypeGuard
 
-    import plotnine as p9
-    from plotnine.typing import TupleFloat2
+    from plotnine.iapi import panel_view
+    from plotnine.typing import (
+        AnyArray,
+        Axes,
+        Coord,
+        Geom,
+        Layout,
+        Scale,
+        Trans,
+        TupleFloat2,
+        TupleFloat3,
+    )
 
 
 class _geom_logticks(geom_rug):
@@ -37,8 +47,8 @@ class _geom_logticks(geom_rug):
     def draw_layer(
         self,
         data: pd.DataFrame,
-        layout: p9.facets.layout.Layout,
-        coord: p9.coords.coord.coord,
+        layout: Layout,
+        coord: Coord,
         **params: Any
     ) -> None:
         """
@@ -52,10 +62,10 @@ class _geom_logticks(geom_rug):
 
     @staticmethod
     def _check_log_scale(
-        base: float | None,
+        base: Optional[float],
         sides: str,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
+        panel_params: panel_view,
+        coord: Coord,
     ) -> TupleFloat2:
         """
         Check the log transforms
@@ -81,69 +91,56 @@ class _geom_logticks(geom_rug):
         out : tuple
             The bases (base_x, base_y) to use when generating the ticks.
         """
-        def is_log(scale: p9.scales.scale.scale) -> bool:
-            if not hasattr(scale, 'trans'):
-                return False
-            trans = scale.trans
-            return (trans.__class__.__name__.startswith('log') and
-                    hasattr(trans, 'base'))
+        def is_log_trans(t: Trans) -> bool:
+            return (
+                hasattr(t, 'base') and
+                t.__class__.__name__.startswith('log')
+            )
 
-        base_x, base_y = base, base
+        def get_base(sc, ubase: Optional[float]) -> float:
+            ae = sc.aesthetics[0]
+
+            if (not isinstance(sc, ScaleContinuous) or
+                not is_log_trans(sc.trans)):
+                warnings.warn(
+                    f"annotation_logticks for {ae}-axis which does not have "
+                    "a log scale. The logticks may not make sense.",
+                    PlotnineWarning
+                )
+                return 10 if ubase is None else ubase
+
+            base = sc.trans.base  # pyright: ignore
+            if ubase is not None and base != ubase:
+                warnings.warn(
+                    f"The x-axis is log transformed in base={base} ,"
+                    "but the annotation_logticks are computed in base="
+                    f"{ubase}",
+                    PlotnineWarning
+                )
+                return ubase
+            return base
+
+        base_x, base_y = 10, 10
         x_scale = panel_params.x.scale
         y_scale = panel_params.y.scale
-        x_is_log = is_log(x_scale)
-        y_is_log = is_log(y_scale)
+
         if isinstance(coord, coord_flip):
-            x_is_log, y_is_log = y_is_log, x_is_log
             x_scale, y_scale = y_scale, x_scale
             base_x, base_y = base_y, base_x
 
         if 't' in sides or 'b' in sides:
-            if base_x is None:
-                if x_is_log and hasattr(x_scale, 'trans'):
-                    base_x = x_scale.trans.base
-                else:  # no log, no defined base. See warning below.
-                    base_x = 10
-
-            if not hasattr(x_scale, 'trans') or not x_is_log:
-                warnings.warn(
-                    "annotation_logticks for x-axis which does not have "
-                    "a log scale. The logticks may not make sense.",
-                    PlotnineWarning)
-            elif x_is_log and base_x != x_scale.trans.base:
-                warnings.warn(
-                    f"The x-axis is log transformed in base {base_x} ,"
-                    "but the annotation_logticks are computed in base "
-                    f"{x_scale.trans.base}",
-                    PlotnineWarning
-                )
+            base_x = get_base(x_scale, base)
 
         if 'l' in sides or 'r' in sides:
-            if base_y is None:
-                if y_is_log and hasattr(y_scale, 'trans'):
-                    base_y = y_scale.trans.base
-                else:  # no log, no defined base. See warning below.
-                    base_y = 10
+            base_y = get_base(y_scale, base)
 
-            if not hasattr(y_scale, 'trans') or not y_is_log:
-                warnings.warn(
-                    "annotation_logticks for y-axis which does not have "
-                    "a log scale. The logticks may not make sense.",
-                    PlotnineWarning)
-            elif y_is_log and base_y != y_scale.trans.base:
-                warnings.warn(
-                    f"The y-axis is log transformed in base {base_y} ,"
-                    "but the annotation_logticks are computed in base "
-                    f"{y_scale.trans.base}",
-                    PlotnineWarning
-                )
-        return base_x, base_y  # type: ignore
+        return base_x, base_y
 
     @staticmethod
     def _calc_ticks(
         value_range: TupleFloat2,
         base: float
-    ) -> tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]]:
+    ) -> tuple[AnyArray, AnyArray, AnyArray]:
         """
         Calculate tick marks within a range
 
@@ -160,10 +157,7 @@ class _geom_logticks(geom_rug):
         out: tuple
             (major, middle, minor) tick locations
         """
-        def _minor(
-            x: Sequence[Any],
-            mid_idx: int
-        ) -> npt.NDArray[Any]:
+        def _minor(x: Sequence[Any], mid_idx: int) -> AnyArray:
             return np.hstack([x[1:mid_idx], x[mid_idx+1:-1]])
 
         # * Calculate the low and high powers,
@@ -195,9 +189,9 @@ class _geom_logticks(geom_rug):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         # Any passed data is ignored, the relevant data is created
@@ -211,13 +205,9 @@ class _geom_logticks(geom_rug):
         }
 
         def _draw(
-            geom: p9.geoms.geom.geom,
+            geom: Geom,
             axis: Literal["x", "y"],
-            tick_positions: tuple[
-                npt.NDArray[Any],
-                npt.NDArray[Any],
-                npt.NDArray[Any]
-            ]
+            tick_positions: tuple[AnyArray, AnyArray, AnyArray]
         ) -> None:
             for (position, length) in zip(tick_positions, lengths):
                 data = pd.DataFrame({
@@ -292,7 +282,7 @@ class annotation_logticks(annotate):
         color: str | tuple[float, ...] = 'black',
         size: float = 0.5,
         linetype: str | tuple[float, ...] = 'solid',
-        lengths: tuple[float, float, float] = (0.036, 0.0225, 0.012),
+        lengths: TupleFloat3 = (0.036, 0.0225, 0.012),
         base: float | None = None
     ) -> None:
         if len(lengths) != 3:
@@ -300,10 +290,15 @@ class annotation_logticks(annotate):
                 "length for annotation_logticks must be a tuple of 3 floats"
             )
 
-        self._annotation_geom = _geom_logticks(sides=sides,
-                                               alpha=alpha,
-                                               color=color,
-                                               size=size,
-                                               linetype=linetype,
-                                               lengths=lengths,
-                                               base=base)
+        self._annotation_geom = _geom_logticks(
+            sides=sides,
+            alpha=alpha,
+            color=color,
+            size=size,
+            linetype=linetype,
+            lengths=lengths,
+            base=base
+        )
+
+def is_continuous_scale(sc: Scale) -> TypeGuard[ScaleContinuous]:
+    return isinstance(sc, ScaleContinuous)

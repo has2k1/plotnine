@@ -25,14 +25,11 @@ from .geom_polygon import geom_polygon
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     import numpy.typing as npt
-    import shapely
+    from shapely.geometry.polygon import LinearRing, Polygon
 
-    import plotnine as p9
-
-    from ..mapping import aes
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Aes, Axes, Coord, DataLike, DrawingArea, Layer
 
 
 @document
@@ -63,7 +60,7 @@ class geom_map(geom):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -118,9 +115,9 @@ class geom_map(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         if not len(data):
@@ -201,9 +198,9 @@ class geom_map(geom):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a rectangle in the box
 
@@ -226,8 +223,8 @@ class geom_map(geom):
 
 
 def PolygonPatch(
-    obj: shapely.geometry.Polygon,
-) -> mpl.patches.PathPatch:
+    obj: Polygon,
+) -> PathPatch:
     """
     Return a Matplotlib patch from a Polygon/MultiPolygon Geometry
 
@@ -248,7 +245,7 @@ def PolygonPatch(
     which is nolonger being maintained.
     """
     def cw_coords(
-        ring: shapely.geometry.polygon.LinearRing
+        ring: LinearRing
     ) -> npt.NDArray[Any]:
         """
         Return Clockwise array coordinates
@@ -268,7 +265,7 @@ def PolygonPatch(
         return np.asarray(ring.coords)[:, :2]
 
     def ccw_coords(
-        ring: shapely.geometry.polygon.LinearRing
+        ring: LinearRing
     ) -> npt.NDArray[Any]:
         """
         Return Counter Clockwise array coordinates

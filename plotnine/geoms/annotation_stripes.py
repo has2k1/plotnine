@@ -16,10 +16,8 @@ from .geom_rect import geom_rect
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Sequence
 
-    import matplotlib as mpl
-
-    import plotnine as p9
-    from plotnine.typing import TupleFloat2
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord, Layout, TupleFloat2
 
 
 class annotation_stripes(annotate):
@@ -92,10 +90,11 @@ class _geom_stripes(geom):
     def draw_layer(
         self,
         data: pd.DataFrame,
-        layout: p9.facets.layout.Layout,
-        coord: p9.coords.coord.coord,
+        layout: Layout,
+        coord: Coord,
         **params: Any
     ) -> None:
+
         """
         Draw stripes on every panel
         """
@@ -108,9 +107,9 @@ class _geom_stripes(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         extend = params['extend']

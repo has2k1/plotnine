@@ -13,11 +13,10 @@ from .geom import geom
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
-    import matplotlib.patches
     import pandas as pd
 
-    import plotnine as p9
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord, DrawingArea, Layer
 
 
 @document
@@ -41,9 +40,9 @@ class geom_point(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """
@@ -54,24 +53,29 @@ class geom_point(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         data = coord.transform(data, panel_params)
         units = 'shape'
         for _, udata in data.groupby(units, dropna=False):
             udata.reset_index(inplace=True, drop=True)
-            geom_point.draw_unit(udata, panel_params, coord,
-                                 ax, **params)
+            geom_point.draw_unit(
+                udata,
+                panel_params,
+                coord,
+                ax,
+                **params
+            )
 
     @staticmethod
     def draw_unit(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         # Our size is in 'points' while scatter wants
@@ -112,9 +116,9 @@ class geom_point(geom):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a point in the box
 

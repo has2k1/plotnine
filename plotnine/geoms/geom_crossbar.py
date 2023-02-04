@@ -18,10 +18,10 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     import numpy.typing as npt
 
-    import plotnine as p9
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord, DrawingArea, Layer
 
 
 @document
@@ -62,9 +62,9 @@ class geom_crossbar(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         y = data['y']
@@ -127,9 +127,9 @@ class geom_crossbar(geom):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a rectangle with a horizontal strike in the box
 

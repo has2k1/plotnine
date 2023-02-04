@@ -22,13 +22,19 @@ from ..utils import (
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     from patsy.eval import EvalEnvironment
 
-    import plotnine as p9
-
-    from ..mapping.aes import aes
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+        DrawingArea,
+        Ggplot,
+        Layer,
+        Layout,
+    )
 
 
 class geom(metaclass=Registry):
@@ -51,14 +57,14 @@ class geom(metaclass=Registry):
     data: DataLike
 
     #: mappings i.e. :py:`aes(x='col1', fill='col2')`
-    mapping: aes | None = None
+    mapping: Aes
 
     aes_params: dict[str, Any] = dict()  # setting of aesthetic
     params: dict[str, Any]  # parameter settings
 
     # Plot namespace, it gets its value when the plot is being
     # built.
-    environment: EvalEnvironment | None = None
+    environment: EvalEnvironment
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
@@ -72,7 +78,7 @@ class geom(metaclass=Registry):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -256,8 +262,8 @@ class geom(metaclass=Registry):
     def draw_layer(
         self,
         data: pd.DataFrame,
-        layout: p9.facets.layout.Layout,
-        coord: p9.coords.coord.coord,
+        layout: Layout,
+        coord: Coord,
         **params: Any
     ) -> None:
         """
@@ -290,9 +296,9 @@ class geom(metaclass=Registry):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """
@@ -332,9 +338,9 @@ class geom(metaclass=Registry):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """
@@ -369,9 +375,9 @@ class geom(metaclass=Registry):
     @staticmethod
     def draw_unit(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """
@@ -419,7 +425,7 @@ class geom(metaclass=Registry):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
-    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add layer representing geom object on the right
 
@@ -436,7 +442,7 @@ class geom(metaclass=Registry):
         gg += self.to_layer()  # Add layer
         return gg
 
-    def to_layer(self) -> p9.layer.layer:
+    def to_layer(self) -> Layer:
         """
         Make a layer that represents this geom
 
@@ -498,9 +504,9 @@ class geom(metaclass=Registry):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.padches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a rectangle in the box
 

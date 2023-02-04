@@ -23,9 +23,8 @@ from .range import Range, RangeContinuous, RangeDiscrete
 if typing.TYPE_CHECKING:
     from typing import Optional, Sequence, Type
 
-    from mizani.transforms import trans
+    from plotnine.typing import Trans, TupleFloat2, TupleFloat4
 
-    from plotnine.typing import TupleFloat2, TupleFloat4
 
 class scale(metaclass=Registry):
     """
@@ -176,7 +175,7 @@ class scale(metaclass=Registry):
         limits: Sequence[float],
         expand: Optional[TupleFloat2|TupleFloat4] = None,
         coord_limits: Optional[TupleFloat2] = None,
-        trans: Optional[trans|Type[trans]] = None
+        trans: Optional[Trans|Type[Trans]] = None
     ) -> range_view:
         """
         Exand the limits of the scale
@@ -378,7 +377,7 @@ class scale_discrete(scale):
             TupleFloat2
         ] = None,
         coord_limits: Optional[TupleFloat2] = None,
-        trans: Optional[trans] = None
+        trans: Optional[Trans] = None
     ) -> range_view:
         """
         Calculate the final range in coordinate space
@@ -623,7 +622,7 @@ class scale_continuous(scale):
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)     # what to do with out of bounds data points
     minor_breaks = waiver()
-    _trans = 'identity'            # transform class
+    _trans: Trans | str = 'identity'            # transform class
 
     def __init__(self, **kwargs):
         # Make sure we have a transform.
@@ -663,15 +662,15 @@ class scale_continuous(scale):
                 )
 
     @property
-    def trans(self):
-        return self._trans
+    def trans(self) -> Trans:
+        return self._trans  # pyright: ignore
 
     @trans.setter
-    def trans(self, value):
-        t = gettrans(value)
+    def trans(self, value: Trans | str | Type[Trans]) -> None:
+        t: Trans = gettrans(value)
         self._check_trans(t)
         self._trans = t
-        self._trans.aesthetic = self.aesthetics[0]
+        self._trans.aesthetic = self.aesthetics[0]  # pyright: ignore
 
     @property
     def limits(self):

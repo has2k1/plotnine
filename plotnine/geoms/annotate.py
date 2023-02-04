@@ -12,7 +12,7 @@ from ..mapping.aes import POSITION_AESTHETICS
 from ..utils import Registry, is_scalar_or_string
 
 if typing.TYPE_CHECKING:
-    import plotnine as p9
+    from plotnine.typing import Ggplot, Layer
 
 
 class annotate:
@@ -127,14 +127,14 @@ class annotate:
             **kwargs
         )
 
-    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add to ggplot
         """
         gg += self.to_layer()  # Add layer
         return gg
 
-    def to_layer(self) -> p9.layer.layer:
+    def to_layer(self) -> Layer:
         """
         Make a layer that represents this annotation
 

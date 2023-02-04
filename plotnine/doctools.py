@@ -8,9 +8,11 @@ from textwrap import dedent, indent, wrap
 import numpy as np
 
 if typing.TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Type, TypeVar
 
-    import plotnine as p9
+    from plotnine.typing import Geom, Scale, Stat
+
+    T = TypeVar('T')
 
 
 # Parameter arguments that are listed first in the geom and
@@ -419,9 +421,7 @@ def qualified_name(s: str | type | object, prefix: str) -> str:
     return s
 
 
-def document_geom(
-    geom: type[p9.geoms.geom.geom]
-) -> type[p9.geoms.geom.geom]:
+def document_geom(geom: type[Geom]) -> type[Geom]:
     """
     Create a structured documentation for the geom
 
@@ -475,9 +475,7 @@ def document_geom(
     return geom
 
 
-def document_stat(
-    stat: type[p9.stats.stat.stat]
-) -> type[p9.stats.stat.stat]:
+def document_stat(stat: type[Stat]) -> type[Stat]:
     """
     Create a structured documentation for the stat
 
@@ -525,9 +523,7 @@ def document_stat(
     return stat
 
 
-def document_scale(
-    cls: type[p9.scales.scale.scale]
-) -> type[p9.scales.scale.scale]:
+def document_scale(cls: type[Scale]) -> type[Scale]:
     """
     Create a documentation for a scale
 
@@ -593,7 +589,7 @@ DOC_FUNCTIONS = {
 }
 
 
-def document(cls: type) -> type:
+def document(cls: Type[T]) -> Type[T]:
     """
     Document a plotnine class
 

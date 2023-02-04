@@ -4,23 +4,28 @@ import typing
 from warnings import warn
 
 import matplotlib.lines as mlines
+import numpy as np
 import pandas as pd
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
-from ..utils import SIZE_FACTOR, make_iterable, order_as_data_mapping
+from ..utils import SIZE_FACTOR, order_as_data_mapping
 from .geom import geom
 from .geom_segment import geom_segment
 
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
-
-    import plotnine as p9
-
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+        DrawingArea,
+        Layer,
+    )
 
 
 @document
@@ -42,7 +47,7 @@ class geom_vline(geom):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -52,7 +57,7 @@ class geom_vline(geom):
             if mapping:
                 warn("The 'xintercept' parameter has overridden "
                      "the aes() mapping.", PlotnineWarning)
-            data = pd.DataFrame({'xintercept': make_iterable(xintercept)})
+            data = pd.DataFrame({'xintercept': np.repeat(xintercept, 1)})
             mapping = aes(xintercept='xintercept')
             kwargs['show_legend'] = False
 
@@ -61,9 +66,9 @@ class geom_vline(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """
@@ -78,15 +83,19 @@ class geom_vline(geom):
 
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(gdata, panel_params,
-                                    coord, ax, **params)
-
+            geom_segment.draw_group(
+                gdata,
+                panel_params,
+                coord,
+                ax,
+                **params
+            )
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a vertical line in the box
 

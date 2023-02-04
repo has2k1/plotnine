@@ -16,10 +16,10 @@ from .geom import geom
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     import pandas as pd
 
-    import plotnine as p9
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord, DrawingArea, Layer
 
 
 @document
@@ -97,6 +97,8 @@ class geom_dotplot(geom):
                 return a - 1 - np.floor(np.max(a-1)/2)  # type: ignore
             stackaxismin = -.5
             stackaxismax = .5
+        else:
+            raise ValueError(f"Invalid value stackdir={gp['stackdir']}")
 
         # Fill the bins: at a given x (or y),
         # if count=3, make 3 entries at that x
@@ -156,9 +158,9 @@ class geom_dotplot(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         data = coord.transform(data, panel_params)
@@ -169,7 +171,8 @@ class geom_dotplot(geom):
         # For perfect circles the width/height of the circle(ellipse)
         # should factor in the dimensions of axes
         bbox = ax.get_window_extent().transformed(
-            ax.figure.dpi_scale_trans.inverted())
+            ax.figure.dpi_scale_trans.inverted()  # pyright: ignore
+        )
         ax_width, ax_height = bbox.width, bbox.height
 
         factor = ((ax_width/ax_height) *
@@ -183,6 +186,10 @@ class geom_dotplot(geom):
         elif params['binaxis'] == 'y':
             width, height = size/factor, size
             xpos, ypos = data['x'] + width*offsets, data['y']
+        else:
+            raise ValueError(
+                f"Invalid valid value binaxis={params['binaxis']}"
+            )
 
         circles = []
         for xy in zip(xpos, ypos):
@@ -200,9 +207,9 @@ class geom_dotplot(geom):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a point in the box
 
@@ -219,12 +226,14 @@ class geom_dotplot(geom):
         -------
         out : DrawingArea
         """
-        key = mlines.Line2D([0.5*da.width],
-                            [0.5*da.height],
-                            alpha=data['alpha'],
-                            marker='o',
-                            markersize=da.width/2,
-                            markerfacecolor=data['fill'],
-                            markeredgecolor=data['color'])
+        key = mlines.Line2D(
+            [0.5*da.width],
+            [0.5*da.height],
+            alpha=data['alpha'],
+            marker='o',
+            markersize=da.width/2,
+            markerfacecolor=data['fill'],
+            markeredgecolor=data['color']
+        )
         da.add_artist(key)
         return da
