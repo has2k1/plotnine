@@ -70,8 +70,7 @@ include = [
    "plotnine/ggplot.py",
    "plotnine/labels.py",
    "plotnine/qplot.py",
-
-   # "plotnine/utils.py",
+   "plotnine/utils.py",
 ]
 
 # Paths of directories or files whose diagnostic output (errors and
@@ -92,8 +91,8 @@ ignore = []
 # (e.g. my_module.DEBUG) are also supported.
 defineConstant = { DEBUG = true }
 
-reportUnusedVariable = false
 # typeCheckingMode = "strict"
+reportUnusedVariable = false
 useLibraryCodeForTypes = true
 
 # Specifies a list of execution environments (see below). Execution
