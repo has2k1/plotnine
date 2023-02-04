@@ -469,15 +469,15 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
     """
     Convert aesthetic mapping into text labels
     """
-    def _nice_label(value: Any) -> str:
+    def _nice_label(value: Any) -> str | None:
         if isinstance(value, pd.Series):
-            return value.name
+            return value.name  # pyright: ignore
         elif not isinstance(value, Iterable) or isinstance(value, str):
             return str(value)
         else:
             return None
 
-    def _make_label(ae: str, value: Any) -> str:
+    def _make_label(ae: str, value: Any) -> str | None:
         if not isinstance(value, stage):
             return _nice_label(value)
         elif value.start is None:
