@@ -34,7 +34,7 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
     from typing_extensions import TypeGuard
 
-    from plotnine.typing import DataLike, FloatArray, FloatArrayLike
+    from plotnine.typing import DataLike, FloatArray, FloatArrayLike, IntArray
 
 
 # Points and lines of equal size should give the
@@ -134,7 +134,10 @@ def match(
     return np.array(lst)
 
 
-def _margins(vars, margins=True):
+def _margins(
+    vars: tuple[list[str], list[str]],
+    margins: bool | list[str] = True
+):
     """
     Figure out margining variables.
 
@@ -228,7 +231,7 @@ def add_margins(
     categories = {}
     for v in itertools.chain(*vars):
         col = df[v]
-        if not pdtypes.is_categorical_dtype(df[v].dtype):
+        if not pdtypes.is_categorical_dtype(df[v]):
             col = pd.Categorical(df[v])
         categories[v] = col.categories
         if '(all)' not in categories[v]:
@@ -281,7 +284,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
     # Calculate dimensions
     def len_unique(x):
         return len(np.unique(x))
-    ndistinct = ids.apply(len_unique, axis=0).values
+    ndistinct: IntArray = ids.apply(len_unique, axis=0).values  # pyright: ignore
 
     combs = np.array(
         np.hstack([1, np.cumprod(ndistinct[:-1])])
@@ -584,7 +587,13 @@ def to_rgba(colors, alpha):
             return to_rgba_hex(colors, alpha)
 
 
-def groupby_apply(df, cols, func, *args, **kwargs):
+def groupby_apply(
+    df: pd.DataFrame,
+    cols: str | list[str],
+    func: Callable[[pd.DataFrame], pd.DataFrame],
+    *args: tuple[Any],
+    **kwargs: Any
+) -> pd.DataFrame:
     """
     Groupby cols and call the function fn on each grouped dataframe.
 
@@ -691,18 +700,33 @@ class ColoredDrawingArea(DrawingArea):
     """
     A Drawing Area with a background color
     """
-    def __init__(self, width, height, xdescent=0.0, ydescent=0.0,
-                 clip=True, color='none'):
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        xdescent=0.0,
+        ydescent=0.0,
+        clip=True,
+        color='none'
+    ):
 
         super().__init__(
-            width, height, xdescent, ydescent, clip=clip)
+            width,
+            height,
+            xdescent,
+            ydescent,
+            clip=clip
+        )
 
-        self.patch = Rectangle((0, 0), width=width,
-                               height=height,
-                               facecolor=color,
-                               edgecolor='None',
-                               linewidth=0,
-                               antialiased=False)
+        self.patch = Rectangle(
+            (0, 0),
+            width=width,
+            height=height,
+            facecolor=color,
+            edgecolor='None',
+            linewidth=0,
+            antialiased=False
+        )
         self.add_artist(self.patch)
 
 
@@ -731,28 +755,32 @@ class RegistryMeta(type):
     """
     Make a metaclass scriptable
     """
-    def __getitem__(meta, key):
+    _registry: WeakValueDictionary[str, Any] = WeakValueDictionary()
+
+    # In here "self" refers to the meta class although it is never
+    # instantiated
+    def __getitem__(self, key):
         try:
-            return meta._registry[key]
+            return self._registry[key]
         except KeyError:
             msg = ("'{}' Not in Registry. Make sure the module in "
                    "which it is defined has been imported.")
             raise PlotnineError(msg.format(key))
 
-    def __setitem__(meta, key, value):
-        meta._registry[key] = value
+    def __setitem__(self, key, value):
+        self._registry[key] = value
 
-    def __iter__(meta):
-        return meta._registry.__iter__()
+    def __iter__(self):
+        return self._registry.__iter__()
 
-    def keys(meta):
-        return meta._registry.keys()
+    def keys(self):
+        return self._registry.keys()
 
-    def values(meta):
-        return meta._registry.values()
+    def values(self):
+        return self._registry.values()
 
-    def items(meta):
-        return meta._registry.items()
+    def items(self):
+        return self._registry.items()
 
 
 class Registry(type, metaclass=RegistryMeta):
@@ -776,15 +804,15 @@ class Registry(type, metaclass=RegistryMeta):
     When objects are deleted, they are automatically removed
     from the Registry.
     """
-    _registry: WeakValueDictionary[str, Any] = WeakValueDictionary()
 
-    def __new__(meta, name, bases, clsdict):
-        cls = super().__new__(meta, name, bases, clsdict)
-        if not clsdict.pop('__base__', False):
-            meta._registry[name] = cls
-            if 'alias' in clsdict:
-                meta._registry[cls.alias] = cls
-        return cls
+    # namespace is of the class that subclasses Registry (or a
+    # subclasses a subclass of Registry, ...) being created
+    # e.g. geom, geom_point, ...
+    def __new__(cls, name, bases, namespace):
+        sub_cls = super().__new__(cls, name, bases, namespace)
+        if not namespace.pop('__base__', False):
+            cls._registry[name] = sub_cls
+        return sub_cls
 
 
 class RegistryHierarchyMeta(type):
@@ -1255,6 +1283,8 @@ class ignore_warnings:
         Warning categories to ignore e.g UserWarning,
         FutureWarning, RuntimeWarning, ...
     """
+    _cm: warnings.catch_warnings
+
     def __init__(self, *categories):
         self.categories = categories
         self._cm = warnings.catch_warnings()
@@ -1265,4 +1295,4 @@ class ignore_warnings:
             warnings.filterwarnings('ignore', category=c)
 
     def __exit__(self, type, value, traceback):
-        return self._cm.__exit__()
+        return self._cm.__exit__(type, value, traceback)
