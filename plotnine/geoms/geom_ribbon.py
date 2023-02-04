@@ -14,12 +14,10 @@ from .geom_polygon import geom_polygon
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     import pandas as pd
 
-    import plotnine as p9
-
-    from ..typing import ColorsLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, ColorsLike, Coord
 
 
 @document
@@ -80,9 +78,9 @@ class geom_ribbon(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         _x = 'y' if isinstance(coord, coord_flip) else 'x'
@@ -102,9 +100,9 @@ class geom_ribbon(geom):
     @staticmethod
     def draw_unit(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         size = data['size'].iloc[0] * SIZE_FACTOR
@@ -140,7 +138,7 @@ class geom_ribbon(geom):
         fill_between(
             _x,
             _min,
-            _max,
+            _max,  # pyright: ignore[reportGeneralTypeIssues]
             where=where,
             interpolate=interpolate,
             facecolor=fill,
@@ -158,9 +156,9 @@ class geom_ribbon(geom):
     @staticmethod
     def _draw_outline(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         outline_type = params['outline_type']

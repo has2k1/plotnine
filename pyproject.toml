@@ -58,6 +58,7 @@ include = [
    "plotnine/coords",
    "plotnine/facets",
    "plotnine/themes",
+   "plotnine/geoms",
    "plotnine/animation.py",
    "plotnine/layer.py",
    "plotnine/watermark.py",
@@ -71,7 +72,6 @@ include = [
    "plotnine/qplot.py",
 
    # "plotnine/utils.py",
-   # "plotnine/geoms",
 ]
 
 # Paths of directories or files whose diagnostic output (errors and
@@ -92,9 +92,8 @@ ignore = []
 # (e.g. my_module.DEBUG) are also supported.
 defineConstant = { DEBUG = true }
 
-reportMissingImports = false
-reportMissingTypeStubs = false
-#typeCheckingMode = "strict"
+reportUnusedVariable = false
+# typeCheckingMode = "strict"
 useLibraryCodeForTypes = true
 
 # Specifies a list of execution environments (see below). Execution

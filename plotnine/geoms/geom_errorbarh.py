@@ -14,9 +14,8 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
-
-    import plotnine as p9
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord
 
 
 @document
@@ -38,7 +37,7 @@ class geom_errorbarh(geom):
     REQUIRED_AES = {'y', 'xmin', 'xmax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'height': 0.5}
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if 'height' not in data:
@@ -55,9 +54,9 @@ class geom_errorbarh(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         f = np.hstack

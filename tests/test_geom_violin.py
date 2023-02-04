@@ -74,7 +74,7 @@ def test_quantiles_input_checks():
     g = geom_violin(aes('x', 'y'), draw_quantiles=np.array([0.25, 0.25]))
     assert isinstance(g.params['draw_quantiles'], np.ndarray)
     g = geom_violin(aes('x', 'y'), draw_quantiles=0.5)
-    assert isinstance(g.params['draw_quantiles'], list)
+    assert isinstance(g.params['draw_quantiles'], np.ndarray)
 
 
 def test_no_trim():

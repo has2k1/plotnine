@@ -19,12 +19,12 @@ from .geom import geom
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Sequence
 
-    import matplotlib as mpl
     import numpy.typing as npt
     import pandas as pd
+    from matplotlib.path import Path
 
-    import plotnine as p9
-    from plotnine.typing import TupleFloat2
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord, DrawingArea, Layer, TupleFloat2
 
 
 @document
@@ -93,9 +93,9 @@ class geom_path(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         if not any(data['group'].duplicated()):
@@ -134,9 +134,9 @@ class geom_path(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         data = coord.transform(data, panel_params, munch=True)
@@ -156,9 +156,9 @@ class geom_path(geom):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a horizontal line in the box
 
@@ -228,9 +228,9 @@ class arrow:
     def draw(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         constant: bool = True,
         **params: Any
     ) -> None:
@@ -351,10 +351,10 @@ class arrow:
         y1: npt.ArrayLike,
         x2: npt.ArrayLike,
         y2: npt.ArrayLike,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes
-    ) -> list[mpl.path.Path]:
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes
+    ) -> list[Path]:
         """
         Compute paths that create the arrow heads
 
@@ -429,7 +429,7 @@ class arrow:
 
 def _draw_segments(
     data: pd.DataFrame,
-    ax: mpl.axes.Axes,
+    ax: Axes,
     **params: Any
 ) -> None:
     """
@@ -442,15 +442,15 @@ def _draw_segments(
     # Along the way the other parameters are put in
     # sequences accordingly
     indices: list[int] = []  # for attributes of starting point of each segment
-    segments: list[float] = []
+    _segments = []
     for _, df in data.groupby('group'):
         idx = df.index
         indices.extend(idx[:-1].to_list())  # One line from two points
         x = data['x'].iloc[idx]
         y = data['y'].iloc[idx]
-        segments.append(make_line_segments(x, y, ispath=True))
+        _segments.append(make_line_segments(x, y, ispath=True))
 
-    segments = np.vstack(segments)
+    segments = np.vstack(_segments)
 
     if color is None:
         edgecolor = color
@@ -473,7 +473,7 @@ def _draw_segments(
 
 def _draw_lines(
     data: pd.DataFrame,
-    ax: mpl.axes.Axes,
+    ax: Axes,
     **params: Any
 ) -> None:
     """
@@ -519,7 +519,7 @@ def _get_joinstyle(
     return d
 
 
-def _axes_get_size_inches(ax: mpl.axes.Axes) -> TupleFloat2:
+def _axes_get_size_inches(ax: Axes) -> TupleFloat2:
     """
     Size of axes in inches
 
@@ -535,6 +535,6 @@ def _axes_get_size_inches(ax: mpl.axes.Axes) -> TupleFloat2:
     """
     fig = ax.get_figure()
     bbox = ax.get_window_extent().transformed(
-        fig.dpi_scale_trans.inverted()
+        fig.dpi_scale_trans.inverted()  # pyright: ignore
     )
     return bbox.width, bbox.height

@@ -15,7 +15,6 @@ from ..positions.position import position
 from ..utils import (
     SIZE_FACTOR,
     copy_missing_columns,
-    make_iterable_ntimes,
     resolution,
     to_rgba,
 )
@@ -27,13 +26,17 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     import numpy.typing as npt
 
-    import plotnine as p9
-
-    from ..mapping import aes
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+        DrawingArea,
+        Layer,
+    )
 
 
 @document
@@ -86,7 +89,7 @@ class geom_boxplot(geom):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -148,9 +151,9 @@ class geom_boxplot(geom):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
@@ -197,8 +200,7 @@ class geom_boxplot(geom):
 
             outliers = pd.DataFrame({
                 'y': data['outliers'].iloc[0],
-                'x': make_iterable_ntimes(data['x'][0],
-                                          num_outliers),
+                'x': np.repeat(data['x'].iloc[0], num_outliers),
                 'fill': [None]*num_outliers})
             outliers['alpha'] = outlier_value('alpha')
             outliers['color'] = outlier_value('color')
@@ -217,9 +219,9 @@ class geom_boxplot(geom):
     @staticmethod
     def draw_legend(
         data: pd.Series[Any],
-        da: mpl.patches.DrawingArea,
-        lyr: p9.layer.layer
-    ) -> mpl.patches.DrawingArea:
+        da: DrawingArea,
+        lyr: Layer
+    ) -> DrawingArea:
         """
         Draw a rectangle in the box
 

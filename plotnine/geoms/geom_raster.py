@@ -17,13 +17,10 @@ from .geom_polygon import geom_polygon
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
     import pandas as pd
 
-    import plotnine as p9
-
-    from ..mapping import aes
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Aes, Axes, Coord, DataLike
 
 
 @document
@@ -75,7 +72,7 @@ class geom_raster(geom):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -132,9 +129,9 @@ class geom_raster(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """

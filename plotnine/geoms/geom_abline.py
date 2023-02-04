@@ -4,22 +4,20 @@ import typing
 from typing import Any, Sized
 from warnings import warn
 
+import numpy as np
 import pandas as pd
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
-from ..utils import make_iterable, order_as_data_mapping
+from ..utils import order_as_data_mapping
 from .geom import geom
 from .geom_path import geom_path
 from .geom_segment import geom_segment
 
 if typing.TYPE_CHECKING:
-    import matplotlib as mpl
-
-    import plotnine as p9
-
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Aes, Axes, Coord, DataLike
 
 
 @document
@@ -42,7 +40,7 @@ class geom_abline(geom):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -70,7 +68,7 @@ class geom_abline(geom):
                 intercept = 0
 
             data = pd.DataFrame({
-                'intercept': make_iterable(intercept),
+                'intercept': np.repeat(intercept, 1),
                 'slope': slope
             })
 
@@ -82,9 +80,9 @@ class geom_abline(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """

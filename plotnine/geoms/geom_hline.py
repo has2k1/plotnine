@@ -3,12 +3,13 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
+import numpy as np
 import pandas as pd
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
-from ..utils import make_iterable, order_as_data_mapping
+from ..utils import order_as_data_mapping
 from .geom import geom
 from .geom_path import geom_path
 from .geom_segment import geom_segment
@@ -16,11 +17,13 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
-
-    import plotnine as p9
-
-    from ..typing import DataLike
+    from plotnine.iapi import panel_view
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+    )
 
 
 @document
@@ -43,7 +46,7 @@ class geom_hline(geom):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -53,7 +56,7 @@ class geom_hline(geom):
             if mapping:
                 warn("The 'yintercept' parameter has overridden "
                      "the aes() mapping.", PlotnineWarning)
-            data = pd.DataFrame({'yintercept': make_iterable(yintercept)})
+            data = pd.DataFrame({'yintercept': np.repeat(yintercept, 1)})
             mapping = aes(yintercept='yintercept')
             kwargs['show_legend'] = False
 
@@ -62,9 +65,9 @@ class geom_hline(geom):
     def draw_panel(
         self,
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         """
@@ -79,5 +82,10 @@ class geom_hline(geom):
 
         for _, gdata in data.groupby('group'):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(gdata, panel_params,
-                                    coord, ax, **params)
+            geom_segment.draw_group(
+                gdata,
+                panel_params,
+                coord,
+                ax,
+                **params
+            )

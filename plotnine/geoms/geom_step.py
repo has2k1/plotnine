@@ -14,9 +14,8 @@ from .geom_path import geom_path
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import matplotlib as mpl
-
-    import plotnine as p9
+    from plotnine.iapi import panel_view
+    from plotnine.typing import Axes, Coord
 
 
 @document
@@ -46,9 +45,9 @@ class geom_step(geom_path):
     @staticmethod
     def draw_group(
         data: pd.DataFrame,
-        panel_params: p9.iapi.panel_view,
-        coord: p9.coords.coord.coord,
-        ax: mpl.axes.Axes,
+        panel_params: panel_view,
+        coord: Coord,
+        ax: Axes,
         **params: Any
     ) -> None:
         direction = params['direction']

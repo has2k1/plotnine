@@ -10,8 +10,7 @@ from .geom_point import geom_point
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from ..mapping import aes
-    from ..typing import DataLike
+    from plotnine.typing import Aes, DataLike
 
 
 @document
@@ -47,7 +46,7 @@ class geom_jitter(geom_point):
 
     def __init__(
         self,
-        mapping: aes | None = None,
+        mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
     ) -> None:
@@ -55,7 +54,8 @@ class geom_jitter(geom_point):
             if 'position' in kwargs:
                 raise PlotnineError(
                     "Specify either 'position' or "
-                    "'width'/'height'/'random_state'")
+                    "'width'/'height'/'random_state'"
+                )
 
             try:
                 width = kwargs.pop('width')
@@ -73,5 +73,8 @@ class geom_jitter(geom_point):
                 random_state = None
 
             kwargs['position'] = position_jitter(
-                width=width, height=height, random_state=random_state)
+                width=width,
+                height=height,
+                random_state=random_state
+            )
         geom_point.__init__(self, mapping, data, **kwargs)

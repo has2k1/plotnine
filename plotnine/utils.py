@@ -9,7 +9,6 @@ import itertools
 import typing
 import warnings
 from contextlib import suppress
-from typing import Any, Callable
 from warnings import warn
 from weakref import WeakValueDictionary
 
@@ -30,10 +29,13 @@ from .exceptions import PlotnineError, PlotnineWarning
 from .mapping import aes
 
 if typing.TYPE_CHECKING:
+    from typing import Any, Callable
+
     import numpy.typing as npt
     from typing_extensions import TypeGuard
 
-    from plotnine.typing import DataLike
+    from plotnine.typing import DataLike, FloatArray, FloatArrayLike
+
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
@@ -54,35 +56,6 @@ def is_string(obj: Any) -> TypeGuard[str]:
     Return True if *obj* is a string
     """
     return isinstance(obj, str)
-
-
-def make_iterable(val):
-    """
-    Return [*val*] if *val* is not iterable
-
-    Strings are not recognized as iterables
-    """
-    if np.iterable(val) and not is_string(val):
-        return val
-    return [val]
-
-
-def make_iterable_ntimes(val, n):
-    """
-    Return [*val*, *val*, ...] if *val* is not iterable.
-
-    If *val* is an iterable of length n, it is returned as is.
-    Strings are not recognized as iterables
-
-    Raises an exception if *val* is an iterable but has length
-    not equal to n
-    """
-    if np.iterable(val) and not is_string(val):
-        if len(val) != n:
-            raise PlotnineError(
-                '`val` is an iterable of length not equal to n.')
-        return val
-    return [val] * n
 
 
 class waiver:
@@ -681,7 +654,11 @@ def pivot_apply(df, column, index, func, *args, **kwargs):
     return df.pivot_table(column, index, aggfunc=_func)[column]
 
 
-def make_line_segments(x, y, ispath=True):
+def make_line_segments(
+    x: FloatArrayLike,
+    y: FloatArrayLike,
+    ispath=True
+) -> FloatArray:
     """
     Return an (n x 2 x 2) array of n line segments
 
@@ -697,8 +674,8 @@ def make_line_segments(x, y, ispath=True):
         of successive(even-odd pair) points yields a line.
     """
     # Series objects would otherwise require .iloc
-    x = x.to_numpy() if hasattr(x, 'to_numpy') else x
-    y = y.to_numpy() if hasattr(y, 'to_numpy') else y
+    x = np.asarray(x)
+    y = np.asarray(y)
     if ispath:
         x = interleave(x[:-1], x[1:])
         y = interleave(y[:-1], y[1:])

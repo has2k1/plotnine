@@ -3,7 +3,14 @@ from __future__ import annotations
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Callable, Dict, Literal, Protocol, Sequence
+    from typing import (
+        Any,
+        Callable,
+        Dict,
+        Literal,
+        Protocol,
+        Sequence,
+    )
 
     import numpy as np
     import numpy.typing as npt
@@ -11,6 +18,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.artist import Artist  # noqa
     from matplotlib.axes import Axes  # noqa
     from matplotlib.figure import Figure  # noqa
+    from matplotlib.offsetbox import DrawingArea  # noqa
     from mizani.transforms import trans
     from typing_extensions import TypeAlias
 
@@ -25,7 +33,7 @@ if typing.TYPE_CHECKING:
     from plotnine.layer import Layers, layer  # noqa
     from plotnine.mapping.aes import aes
     from plotnine.positions.position import position
-    from plotnine.scales.scale import scale
+    from plotnine.scales.scale import scale, scale_continuous, scale_discrete
     from plotnine.scales.scales import Scales  # noqa
     from plotnine.stats.stat import stat
     from plotnine.themes.theme import theme
@@ -110,6 +118,8 @@ if typing.TYPE_CHECKING:
     Layer: TypeAlias = layer
     Position: TypeAlias = position
     Scale: TypeAlias = scale
+    ScaleContinuous: TypeAlias = scale_continuous
+    ScaleDiscrete: TypeAlias = scale_discrete
     Stat: TypeAlias = stat
     Theme: TypeAlias = theme
     Watermark: TypeAlias = watermark
@@ -142,10 +152,12 @@ if typing.TYPE_CHECKING:
     BoolArray: TypeAlias = npt.NDArray[np.bool_]
     FloatArray: TypeAlias = npt.NDArray[np.float64]
     IntArray: TypeAlias = npt.NDArray[np.int64]
+    AnyArray: TypeAlias = npt.NDArray[Any]
 
     # Series
     IntSeries: TypeAlias = pd.Series[int]
     FloatSeries: TypeAlias = pd.Series[float]
+    AnySeries: TypeAlias = pd.Series[Any]
 
     # ArrayLikes
     IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
