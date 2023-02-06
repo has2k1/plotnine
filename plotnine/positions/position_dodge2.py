@@ -71,8 +71,11 @@ class position_dodge2(position_dodge):
             res = groupby_apply(data, 'PANEL', max_x_values)
             params['n'] = res['n'].max()
         else:
+            def _find_x_overlaps(gdf):
+                return pd.DataFrame({'n': find_x_overlaps(gdf)})
+
             # interval geoms
-            res = groupby_apply(data, 'PANEL', find_x_overlaps)
+            res = groupby_apply(data, 'PANEL', _find_x_overlaps)
             params['n'] = res['n'].max()
         return params
 

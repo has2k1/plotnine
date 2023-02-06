@@ -151,6 +151,17 @@ def test_dodge2_varwidth():
          )
     assert p + _theme == 'dodge2_varwidth'
 
+def test_dodge2_preserve_single_interval():
+    n = 3
+    df = pd.DataFrame({
+        'x': range(1, n+1),
+        'y': range(1, n+1)
+    })
+
+    p = (ggplot(df, aes(xmin='x-.45', xmax='x+.45', ymin=0, ymax='y'))
+        + geom_rect(position=position_dodge2(preserve="single"))
+    )
+    assert p + _theme == 'dodge2_preserve_single_interval'
 
 def test_jitterdodge():
     df = pd.DataFrame({
