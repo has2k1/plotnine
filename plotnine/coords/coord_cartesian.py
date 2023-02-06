@@ -16,7 +16,13 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import scale_view
-    from plotnine.typing import FloatArray, Scale, TupleFloat2
+    from plotnine.typing import (
+        FloatArray,
+        FloatArrayLike,
+        FloatSeries,
+        Scale,
+        TupleFloat2,
+    )
 
 
 class coord_cartesian(coord):
@@ -54,17 +60,11 @@ class coord_cartesian(coord):
         panel_params: panel_view,
         munch: bool = False
     ) -> pd.DataFrame:
-        def squish_infinite_x(data: pd.DataFrame) -> pd.DataFrame:
-            return squish_infinite(  # type: ignore
-                data,
-                range=panel_params.x.range
-            )
+        def squish_infinite_x(col):
+            return squish_infinite(col, range=panel_params.x.range)
 
-        def squish_infinite_y(data: pd.DataFrame) -> pd.DataFrame:
-            return squish_infinite(  # type: ignore
-                data,
-                range=panel_params.y.range
-            )
+        def squish_infinite_y(col):
+            return squish_infinite(col, range=panel_params.y.range)
 
         return transform_position(data, squish_infinite_x, squish_infinite_y)
 

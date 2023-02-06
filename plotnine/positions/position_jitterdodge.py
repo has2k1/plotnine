@@ -32,15 +32,22 @@ class position_jitterdodge(position):
         Seed or Random number generator to use. If ``None``, then
         numpy global generator :class:`numpy.random` is used.
     """
-    REQUIRED_AES = ['x', 'y']
+    REQUIRED_AES = {'x', 'y'}
     strategy = staticmethod(position_dodge.strategy)
 
-    def __init__(self, jitter_width=None, jitter_height=0,
-                 dodge_width=0.75, random_state=None):
-        self.params = {'jitter_width': jitter_width,
-                       'jitter_height': jitter_height,
-                       'dodge_width': dodge_width,
-                       'random_state': random_state}
+    def __init__(
+        self,
+        jitter_width=None,
+        jitter_height=0,
+        dodge_width=0.75,
+        random_state=None
+    ):
+        self.params = {
+            'jitter_width': jitter_width,
+            'jitter_height': jitter_height,
+            'dodge_width': dodge_width,
+            'random_state': random_state,
+        }
 
     def setup_params(self, data):
         params = copy(self.params)
@@ -50,8 +57,8 @@ class position_jitterdodge(position):
 
         # Adjust the x transformation based on the number
         # of dodge variables
-        dvars = SCALED_AESTHETICS - {'x', 'y'}
-        dodge_columns = data.columns.intersection(dvars)
+        dvars = SCALED_AESTHETICS - self.REQUIRED_AES
+        dodge_columns = data.columns.intersection(list(dvars))
         if len(dodge_columns) == 0:
             raise PlotnineError(
                 "'position_jitterdodge' requires at least one "
@@ -69,18 +76,24 @@ class position_jitterdodge(position):
 
     @classmethod
     def compute_panel(cls, data, scales, params):
-        trans_x = None
-        trans_y = None
+        trans_x = None  # pyright: ignore
+        trans_y = None  # pyright: ignore
 
         if params['jitter_width'] > 0:
             def trans_x(x):
-                return jitter(x, amount=params['jitter_width'],
-                              random_state=params['random_state'])
+                return jitter(
+                    x,
+                    amount=params['jitter_width'],
+                    random_state=params['random_state']
+                )
 
         if params['jitter_height'] > 0:
             def trans_y(y):
-                return jitter(y, amount=params['jitter_height'],
-                              random_state=params['random_state'])
+                return jitter(
+                    y,
+                    amount=params['jitter_height'],
+                    random_state=params['random_state']
+                )
 
         # dodge, then jitter
         data = cls.collide(data, params=params)

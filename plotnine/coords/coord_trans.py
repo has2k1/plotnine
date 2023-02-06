@@ -21,6 +21,7 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import scale_view
     from plotnine.typing import (
         FloatArray,
+        FloatArrayLike,
         FloatSeries,
         Scale,
         Trans,
@@ -77,8 +78,8 @@ class coord_trans(coord):
         if not self.is_linear and munch:
             data = self.munch(data, panel_params)
 
-        def trans_x(col: FloatSeries) -> pd.DataFrame:
-            result = transform_value(  # type: ignore
+        def trans_x(col: FloatSeries) -> FloatSeries:
+            result = transform_value(
                 self.trans_x,
                 col,
                 panel_params.x.range
@@ -89,7 +90,7 @@ class coord_trans(coord):
                     "created one or more NaN values.",
                     PlotnineWarning
                 )
-            return result  # type: ignore
+            return result
 
         def trans_y(col: FloatSeries) -> FloatSeries:
             result = transform_value(

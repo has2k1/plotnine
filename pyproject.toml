@@ -71,9 +71,9 @@ include = [
    "plotnine/labels.py",
    "plotnine/qplot.py",
    "plotnine/mapping",
+   "plotnine/positions",
    # "plotnine/data",
    # "plotnine/guides",
-   # "plotnine/positions",
    # "plotnine/stats",
 ]
 

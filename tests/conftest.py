@@ -34,11 +34,11 @@ if not baseline_images_dir.exists():
     )
 
 
-def raise_no_baseline_image(filename):
+def raise_no_baseline_image(filename: str):
     raise Exception(f"Baseline image {filename} is missing")
 
 
-def ggplot_equals(gg, name):
+def ggplot_equals(gg: ggplot, name: str) -> bool:
     """
     Compare ggplot object to image determined by `right`
 

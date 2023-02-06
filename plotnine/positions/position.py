@@ -16,35 +16,52 @@ from ..utils import (
 )
 
 if typing.TYPE_CHECKING:
-    import mizani as mz
+    from typing import Any, Optional
+
     import pandas as pd
+
+    from plotnine.iapi import pos_scales
+    from plotnine.typing import Geom, Layout, TransformCol
 
 
 class position(metaclass=Registry):
     """Base class for all positions"""
     __base__ = True
 
-    REQUIRED_AES = {}
-    params = {}
+    REQUIRED_AES: set[str] = set()
+    params: dict[str, Any]
 
-    def setup_params(self, data):
+    def __init__(self):
+        self.params = {}
+
+    def setup_params(self, data: pd.DataFrame) -> dict[str, Any]:
         """
         Verify, modify & return a copy of the params.
         """
         return copy(self.params)
 
-    def setup_data(self, data, params):
+    def setup_data(
+        self,
+        data: pd.DataFrame,
+        params: dict[str, Any]
+    ) -> pd.DataFrame:
         """
         Verify & return data
         """
         check_required_aesthetics(
             self.REQUIRED_AES,
             data.columns,
-            self.__class__.__name__)
+            self.__class__.__name__
+        )
         return data
 
     @classmethod
-    def compute_layer(cls, data, params, layout):
+    def compute_layer(
+        cls,
+        data: pd.DataFrame,
+        params: dict[str, Any],
+        layout: Layout
+    ):
         """
         Compute position for the layer in all panels
 
@@ -52,7 +69,7 @@ class position(metaclass=Registry):
         `compute_panel` if the position computations are
         independent of the panel. i.e when not colliding
         """
-        def fn(pdata):
+        def fn(pdata: pd.DataFrame) -> pd.DataFrame:
             """
             Compute function helper
             """
@@ -67,7 +84,12 @@ class position(metaclass=Registry):
         return groupby_apply(data, 'PANEL', fn)
 
     @classmethod
-    def compute_panel(cls, data, scales, params):
+    def compute_panel(
+        cls,
+        data: pd.DataFrame,
+        scales: pos_scales,
+        params: dict[str, Any]
+    ) -> pd.DataFrame:
         """
         Positions must override this function
 
@@ -88,8 +110,8 @@ class position(metaclass=Registry):
     @staticmethod
     def transform_position(
         data,
-        trans_x: mz.transforms.trans = None,
-        trans_y: mz.transforms.trans = None
+        trans_x: Optional[TransformCol] = None,
+        trans_y: Optional[TransformCol] = None
     ) -> pd.DataFrame:
         """
         Transform all the variables that map onto the x and y scales.
@@ -116,7 +138,7 @@ class position(metaclass=Registry):
         return data
 
     @staticmethod
-    def from_geom(geom):
+    def from_geom(geom: Geom) -> position:
         """
         Create and return a position object for the geom
 
@@ -152,7 +174,7 @@ class position(metaclass=Registry):
         return klass()
 
     @staticmethod
-    def strategy(data, params):
+    def strategy(data: pd.DataFrame, params: dict[str, Any]) -> pd.DataFrame:
         """
         Calculate boundaries of geometry object
         """

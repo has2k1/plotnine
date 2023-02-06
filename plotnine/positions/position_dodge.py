@@ -26,7 +26,10 @@ class position_dodge(position):
     REQUIRED_AES = {'x'}
 
     def __init__(self, width=None, preserve='total'):
-        self.params = {'width': width, 'preserve': preserve}
+        self.params = {
+            'width': width,
+            'preserve': preserve,
+        }
 
     def setup_data(self, data, params):
         has_xmin_xmax = 'xmin' in data and 'xmax' in data

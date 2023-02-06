@@ -29,7 +29,7 @@ from .exceptions import PlotnineError, PlotnineWarning
 from .mapping import aes
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Callable
+    from typing import Any, Callable, Sequence
 
     import numpy.typing as npt
     from typing_extensions import TypeGuard
@@ -74,7 +74,7 @@ def is_waive(x: Any) -> TypeGuard[waiver]:
     return isinstance(x, waiver)
 
 
-def identity(*args):
+def identity(*args: Any) -> Any:
     """
     Return whatever is passed in
     """
@@ -469,7 +469,7 @@ def jitter(x, factor=1, amount=None, random_state=None):
 def remove_missing(
     df: pd.DataFrame,
     na_rm: bool = False,
-    vars: list[str] | None = None,
+    vars: Sequence[str] | None = None,
     name: str = '',
     finite: bool = False
 ) -> pd.DataFrame:
@@ -590,7 +590,7 @@ def to_rgba(colors, alpha):
 def groupby_apply(
     df: pd.DataFrame,
     cols: str | list[str],
-    func: Callable[[pd.DataFrame], pd.DataFrame],
+    func: Callable[..., pd.DataFrame],
     *args: tuple[Any],
     **kwargs: Any
 ) -> pd.DataFrame:
