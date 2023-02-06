@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from copy import copy
 
 import numpy as np
@@ -6,6 +9,9 @@ import pandas as pd
 from ..exceptions import PlotnineError
 from ..utils import groupby_apply, pivot_apply
 from .position_dodge import position_dodge
+
+if typing.TYPE_CHECKING:
+    from plotnine.typing import IntArray
 
 
 class position_dodge2(position_dodge):
@@ -63,7 +69,6 @@ class position_dodge2(position_dodge):
         if params['preserve'] == 'total':
             params['n'] = None
         elif 'x' in data:
-            # point geom
             def max_x_values(gdf):
                 n = gdf['x'].value_counts().max()
                 return pd.DataFrame({'n': [n]})
@@ -115,8 +120,10 @@ class position_dodge2(position_dodge):
 
         # Find the total width of each group of elements
         def sum_new_width(gdf):
-            return pd.DataFrame({'size': [gdf['new_width'].sum()],
-                                 'newx': gdf['newx'].iloc[0]})
+            return pd.DataFrame({
+                'size': [gdf['new_width'].sum()],
+                'newx': gdf['newx'].iloc[0],
+            })
 
         group_sizes = groupby_apply(data, 'newx', sum_new_width)
 
@@ -149,7 +156,7 @@ class position_dodge2(position_dodge):
         return data
 
 
-def find_x_overlaps(df):
+def find_x_overlaps(df: pd.DataFrame) -> IntArray:
     """
     Find overlapping regions along the x axis
     """

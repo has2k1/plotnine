@@ -125,7 +125,6 @@ if typing.TYPE_CHECKING:
     Watermark: TypeAlias = watermark
 
     # Plotnine Other
-
     ScaledAestheticsName: TypeAlias = Literal[
         'x',
         'y',
@@ -162,3 +161,6 @@ if typing.TYPE_CHECKING:
     # ArrayLikes
     IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
     FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
+
+    # OtherTypes
+    TransformCol = Callable[[FloatSeries], FloatSeries | FloatArray]

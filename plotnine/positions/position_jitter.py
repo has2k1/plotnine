@@ -1,9 +1,15 @@
+from __future__ import annotations
+
+import typing
 from copy import deepcopy
 
 import numpy as np
 
 from ..utils import jitter, resolution
 from .position import position
+
+if typing.TYPE_CHECKING:
+    from plotnine.typing import FloatArray, FloatArrayLike
 
 
 class position_jitter(position):
@@ -41,17 +47,23 @@ class position_jitter(position):
 
     @classmethod
     def compute_layer(cls, data, params, layout):
-        trans_x = None
-        trans_y = None
+        trans_x = None  # pyright: ignore
+        trans_y = None  # pyright: ignore
 
         if params['width']:
-            def trans_x(x):
-                return jitter(x, amount=params['width'],
-                              random_state=params['random_state'])
+            def trans_x(x: FloatArrayLike) -> FloatArray:
+                return jitter(
+                    x,
+                    amount=params['width'],
+                    random_state=params['random_state']
+                )
 
         if params['height']:
             def trans_y(y):
-                return jitter(y, amount=params['height'],
-                              random_state=params['random_state'])
+                return jitter(
+                    y,
+                    amount=params['height'],
+                    random_state=params['random_state']
+                )
 
         return cls.transform_position(data, trans_x, trans_y)

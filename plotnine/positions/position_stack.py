@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from warnings import warn
 
 import numpy as np
@@ -6,6 +9,9 @@ import pandas as pd
 from ..exceptions import PlotnineWarning
 from ..utils import remove_missing
 from .position import position
+
+if typing.TYPE_CHECKING:
+    from plotnine.typing import Scale, Trans
 
 
 class position_stack(position):
@@ -59,7 +65,8 @@ class position_stack(position):
         data = remove_missing(
             data,
             vars=('x', 'xmin', 'xmax', 'y'),
-            name='position_stack')
+            name='position_stack'
+        )
 
         return data
 
@@ -70,7 +77,7 @@ class position_stack(position):
 
         # TODO: Make transforms in mizani aware of their
         # linear status
-        def _is_non_linear_trans(trans):
+        def _is_non_linear_trans(trans: Trans) -> bool:
             tname = trans.__class__.__name__
             linear_transforms = ('identity', 'reverse')
             if tname.endswith('_trans'):
@@ -79,13 +86,21 @@ class position_stack(position):
                     tname not in linear_transforms
                     )
 
+        def get_non_linear_trans(sc: Scale) -> Trans | None:
+            """
+            Return trans if the scale in non-linear
+            """
+            from ..scales.scale import scale_continuous
+            if isinstance(sc, scale_continuous):
+                if _is_non_linear_trans(sc.trans):
+                    return sc.trans
+
         # Positioning happens after scale transformation and stacking
         # only works well for linear data. If the scale is non-linear,
         # we undo the transformation, stack and redo the transformation
-        trans = scales.y.trans
-        non_linear_trans = _is_non_linear_trans(trans)
-        if non_linear_trans:
-            data = cls.transform_position(data, trans_y=trans.inverse)
+        nl_trans = get_non_linear_trans(scales.y)
+        if nl_trans:
+            data = cls.transform_position(data, trans_y=nl_trans.inverse)
 
         negative = data['ymax'] < 0
         neg = data.loc[negative]
@@ -99,8 +114,9 @@ class position_stack(position):
 
         data = pd.concat([neg, pos], axis=0, ignore_index=True, sort=True)
 
-        if non_linear_trans:
-            data = cls.transform_position(data, trans_y=trans.transform)
+        if nl_trans:
+            data = cls.transform_position(data, trans_y=nl_trans.transform)
+
         return data
 
     @staticmethod
