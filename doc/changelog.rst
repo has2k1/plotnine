@@ -35,6 +35,10 @@ Bug Fixes
 - Fixed bug where :class:`~plotnine.geoms.geom_violin` with facetting
   and `"scales = free"` did not work. (:issue:`655`)
 
+- Fixed bug in :class:`~plotnine.positions.position_dodge2` to work with
+  `preserve="single"` for :class:`~plotnine.geoms.geom_rect` and any other
+  geoms that accept a min-max range along the x-axis.
+
 v0.10.1
 -------
 (2022-09-10)
