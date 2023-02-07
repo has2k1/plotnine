@@ -37,12 +37,15 @@ clean-test:
 	rm -fr tests/result_images/*
 
 ruff:
-	ruff plotnine
+	ruff plotnine $(args)
 
 ruff-isort:
-	ruff --select I001 --quiet plotnine
+	ruff --select I001 --quiet plotnine $(args)
 
 lint: ruff ruff-isort
+
+lint-fix:
+	make lint args="--fix"
 
 typecheck:
 	pyright
