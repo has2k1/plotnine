@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import hashlib
+import typing
 from warnings import warn
 
 import matplotlib.collections as mcoll
@@ -20,6 +23,9 @@ from ..exceptions import PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from ..scales.scale import scale_continuous
 from .guide import guide
+
+if typing.TYPE_CHECKING:
+    pass
 
 
 class guide_colorbar(guide):
@@ -81,8 +87,7 @@ class guide_colorbar(guide):
         # position of ticks
         limits = scale.limits
         breaks = scale.get_breaks(strict=True)
-        breaks = np.asarray(breaks)
-        breaks = breaks[~np.isnan(breaks)]
+        breaks = [b for b in breaks if not np.isnan(b)]
 
         if not len(breaks):
             return None
@@ -321,45 +326,57 @@ def add_segmented_colorbar(da, colors, direction):
     nbreak = len(colors)
     if direction == 'vertical':
         linewidth = da.height/nbreak
-        verts = [None] * nbreak
+        verts = []
         x1, x2 = 0, da.width
-        for i, color in enumerate(colors):
+        for i in range(nbreak):
             y1 = i * linewidth
             y2 = y1 + linewidth
-            verts[i] = ((x1, y1), (x1, y2), (x2, y2), (x2, y1))
+            verts.append(
+                ((x1, y1), (x1, y2), (x2, y2), (x2, y1))
+            )
     else:
         linewidth = da.width/nbreak
-        verts = [None] * nbreak
+        verts = []
         y1, y2 = 0, da.height
-        for i, color in enumerate(colors):
+        for i in range(nbreak):
             x1 = i * linewidth
             x2 = x1 + linewidth
-            verts[i] = ((x1, y1), (x1, y2), (x2, y2), (x2, y1))
+            verts.append(
+                ((x1, y1), (x1, y2), (x2, y2), (x2, y1))
+            )
 
-    coll = mcoll.PolyCollection(verts,
-                                facecolors=colors,
-                                linewidth=0,
-                                antialiased=False)
+    coll = mcoll.PolyCollection(
+        verts,
+        facecolors=colors,
+        linewidth=0,
+        antialiased=False
+    )
     da.add_artist(coll)
 
 
 def add_ticks(da, locations, direction):
-    segments = [None] * (len(locations)*2)
+    segments = []
     if direction == 'vertical':
         x1, x2, x3, x4 = np.array([0.0, 1/5, 4/5, 1.0]) * da.width
-        for i, y in enumerate(locations):
-            segments[i*2:i*2+2] = [((x1, y), (x2, y)),
-                                   ((x3, y), (x4, y))]
+        for y in locations:
+            segments.extend([
+                ((x1, y), (x2, y)),
+                ((x3, y), (x4, y)),
+            ])
     else:
         y1, y2, y3, y4 = np.array([0.0, 1/5, 4/5, 1.0]) * da.height
-        for i, x in enumerate(locations):
-            segments[i*2:i*2+2] = [((x, y1), (x, y2)),
-                                   ((x, y3), (x, y4))]
+        for x in locations:
+            segments.extend([
+                ((x, y1), (x, y2)),
+                ((x, y3), (x, y4)),
+            ])
 
-    coll = mcoll.LineCollection(segments,
-                                color='#CCCCCC',
-                                linewidth=1,
-                                antialiased=False)
+    coll = mcoll.LineCollection(
+        segments,
+        color='#CCCCCC',
+        linewidth=1,
+        antialiased=False
+    )
     da.add_artist(coll)
 
 

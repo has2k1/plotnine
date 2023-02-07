@@ -9,7 +9,7 @@ import pandas as pd
 from matplotlib.offsetbox import HPacker, VPacker
 
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import Registry, is_string, is_waive
+from ..utils import Registry, is_string
 from .guide import guide as guide_class
 
 if typing.TYPE_CHECKING:
@@ -174,7 +174,7 @@ class guides(dict):
                 # if guide is character, then find the guide object
                 guide = self.validate(guide)
                 # check the consistency of the guide and scale.
-                if (guide.available_aes != 'any' and
+                if ('any' not in guide.available_aes and
                         scale.aesthetics[0] not in guide.available_aes):
                     raise PlotnineError(
                         f"{guide.__class__.__name__} cannot be used for "
@@ -182,7 +182,7 @@ class guides(dict):
                     )
 
                 # title
-                if is_waive(guide.title):
+                if not hasattr(guide, 'title'):
                     if scale.name:
                         guide.title = scale.name
                     else:
@@ -277,8 +277,7 @@ class guides(dict):
             A drawing of each legend
         """
         for g in gdefs:
-            g.theme = theme
-            g._set_defaults()
+            g._set_defaults(theme)
         return [g.draw() for g in gdefs]
 
     def assemble(self, gboxes, gdefs, theme):
@@ -322,7 +321,8 @@ class guides(dict):
         else:
             raise PlotnineError(
                 "'legend_box' should be either "
-                "'vertical' or 'horizontal'")
+                "'vertical' or 'horizontal'"
+            )
 
         box = packer(
             children=gboxes,

@@ -21,7 +21,7 @@ from ..utils import Registry, ignore_warnings, is_waive, match, waiver
 from .range import Range, RangeContinuous, RangeDiscrete
 
 if typing.TYPE_CHECKING:
-    from typing import Optional, Sequence, Type
+    from typing import Any, Optional, Sequence, Type
 
     from plotnine.typing import Trans, TupleFloat2, TupleFloat4
 
@@ -93,7 +93,7 @@ class scale(metaclass=Registry):
     _limits = None      # (min, max) - set by user
 
     #: multiplicative and additive expansion constants
-    expand = None
+    expand: Optional[TupleFloat2 | TupleFloat4] = None
 
     # range of aesthetic, instantiated by __init__ from the
     range: Range
@@ -110,9 +110,10 @@ class scale(metaclass=Registry):
         self.range = self._range_class()
 
         if np.iterable(self.breaks) and np.iterable(self.labels):
-            if len(self.breaks) != len(self.labels):
+            if len(self.breaks) != len(self.labels):  # pyright: ignore
                 raise PlotnineError(
-                    "Breaks and labels have unequal lengths")
+                    "Breaks and labels have unequal lengths"
+                )
 
         if (self.breaks is None and
                 not is_position_aes(self.aesthetics) and
@@ -218,17 +219,12 @@ class scale(metaclass=Registry):
             return (0, 0, 0, 0)
 
         if self.expand:
-            n = len(self.expand)
-            if n == 2:
+            if len(self.expand) == 2:
                 mult, add = self.expand
-            elif n == 4:
+            else:
+                # n == 4:
                 mult = self.expand[0], self.expand[2]
                 add = self.expand[1], self.expand[3]
-            else:
-                raise ValueError(
-                    "The scale.expand must be a tuple of "
-                    "size 2 or 4. "
-                )
 
         if isinstance(mult, (float, int)):
             mult = (mult, mult)
@@ -300,7 +296,7 @@ class scale(metaclass=Registry):
         Map df
         """
         if len(df) == 0:
-            return
+            return df
 
         aesthetics = set(self.aesthetics) & set(df.columns)
         for ae in aesthetics:
@@ -308,6 +304,25 @@ class scale(metaclass=Registry):
 
         return df
 
+    def get_labels(
+        self,
+        breaks: Optional[Sequence[float|str] | dict[str, float]] = None,
+        mask: Optional[bool] = None
+    ) -> Sequence[str]:
+        """
+        Get labels, calculating them if required
+        """
+        raise NotImplementedError()
+
+    def get_breaks(
+        self,
+        limits: Optional[Any] = None,
+        strict: bool = False
+    ) -> Sequence[float] | dict[str, float]:
+        """
+        Get Breaks
+        """
+        raise NotImplementedError()
 
 @document
 class scale_discrete(scale):
@@ -526,7 +541,7 @@ class scale_discrete(scale):
         tups = zip(in_domain, pos)
         return dict(sorted(tups, key=lambda t: t[1]))
 
-    def get_labels(self, breaks=None):
+    def get_labels(self, breaks: list[Any] = None) -> list[str]:
         """
         Generate labels for the legend/guide breaks
         """
@@ -547,10 +562,10 @@ class scale_discrete(scale):
             #   {'I': 2, 'G': 1, 'P': 3, 'V': 4, 'F': 0}
             # The keys are the labels
             # i.e ['F', 'G', 'I', 'P', 'V']
-            try:
-                return list(breaks.keys())
-            except AttributeError:
-                return breaks
+            if isinstance(breaks, dict):
+                return [str(b) for b in breaks.keys()]
+            else:
+                return [str(b) for b in breaks]
         elif callable(self.labels):
             return self.labels(breaks)
         # if a dict is used to rename some labels
@@ -883,7 +898,11 @@ class scale_continuous(scale):
             scaled[pd.isnull(scaled)] = self.na_value
         return scaled
 
-    def get_breaks(self, limits=None, strict=False):
+    def get_breaks(
+        self,
+        limits: Optional[Any] = None,
+        strict: bool = False
+    ) -> Sequence[float]:
         """
         Generate breaks for the axis or legend
 
@@ -997,7 +1016,8 @@ class scale_continuous(scale):
 
         if len(labels) != len(breaks):
             raise PlotnineError(
-                "Breaks and labels are different lengths")
+                "Breaks and labels are different lengths"
+            )
 
         return labels
 

@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import hashlib
 import types
+import typing
 from contextlib import suppress
 from itertools import islice
 from warnings import warn
@@ -14,6 +17,12 @@ from ..mapping.aes import rename_aesthetics
 from ..scales.scale import scale_continuous
 from ..utils import SIZE_FACTOR, ColoredDrawingArea, remove_missing
 from .guide import guide
+
+if typing.TYPE_CHECKING:
+    from typing import Optional
+
+    from plotnine.typing import TupleInt2
+
 
 # See guides.py for terminology
 
@@ -38,16 +47,18 @@ class guide_legend(guide):
         Parameters passed on to :class:`.guide`
     """
     # general
-    nrow = None
-    ncol = None
+    # nrow: Optional[int] = None
+    # ncol: Optional[int] = None
+    nrow: int
+    ncol: int
     byrow = False
 
     # key
-    keywidth = None
-    keyheight = None
+    keywidth: Optional[int] = None
+    keyheight: Optional[int]  = None
 
     # parameter
-    available_aes = 'any'
+    available_aes = {'any'}
 
     def train(self, scale, aesthetic=None):
         """
@@ -71,11 +82,15 @@ class guide_legend(guide):
         if isinstance(breaks, dict):
             if all([np.isnan(x) for x in breaks.values()]):
                 return None
+            breaks = list(breaks.keys())
         elif not len(breaks) or all(np.isnan(breaks)):
             return None
 
-        with suppress(AttributeError):
-            breaks = list(breaks.keys())
+        if isinstance(scale, scale_continuous):
+            limits = scale.limits
+            b = np.asarray(breaks)
+            not_oob = np.logical_and(limits[0] <= b, b <= limits[1])
+            breaks = [b for b, good in zip(breaks, not_oob) if good]
 
         key = pd.DataFrame({
             aesthetic: scale.map(breaks),
@@ -83,18 +98,6 @@ class guide_legend(guide):
         })
         # Drop out-of-range values for continuous scale
         # (should use scale$oob?)
-
-        # Currently, numpy does not deal with NA (Not available)
-        # When they are introduced, the block below should be
-        # adjusted likewise, see ggplot2, guide-lengend.r
-        if isinstance(scale, scale_continuous):
-            limits = scale.limits
-            b = np.asarray(breaks)
-            noob = np.logical_and(
-                limits[0] <= b,
-                b <= limits[1]
-            )
-            key = key[noob]
 
         if len(key) == 0:
             return None
@@ -193,28 +196,42 @@ class guide_legend(guide):
             return None
         return self
 
-    def _set_defaults(self):
-        guide._set_defaults(self)
-        _property = self.theme.themeables.property
-
+    def _calculate_rows_and_cols(self) -> TupleInt2:
+        nrow, ncol = -1, -1
         nbreak = len(self.key)
 
-        # rows and columns
-        if self.nrow is not None and self.ncol is not None:
-            if guide.nrow * guide.ncol < nbreak:
+        if hasattr(self, 'nrow'):
+            nrow = self.nrow
+
+        if hasattr(self, 'ncol'):
+            ncol = self.ncol
+
+        if nrow != -1 and ncol != -1:
+            if nrow * ncol < nbreak:
                 raise PlotnineError(
                     "nrow x ncol need to be larger "
                     "than the number of breaks"
                 )
+            return nrow, ncol
 
-        if self.nrow is None and self.ncol is None:
+        if nrow == -1 and ncol == -1:
             if self.direction == 'horizontal':
-                self.nrow = int(np.ceil(nbreak/5))
+                nrow = int(np.ceil(nbreak/5))
             else:
-                self.ncol = int(np.ceil(nbreak/20))
+                ncol = int(np.ceil(nbreak/20))
 
-        self.nrow = self.nrow or int(np.ceil(nbreak/self.ncol))
-        self.ncol = self.ncol or int(np.ceil(nbreak/self.nrow))
+        if nrow == -1:
+            nrow = int(np.ceil(nbreak/ncol))
+        elif ncol == -1:
+            ncol = int(np.ceil(nbreak/nrow))
+
+        return nrow, ncol
+
+    def _set_defaults(self, theme):
+        guide._set_defaults(self, theme)
+        _property = theme.themeables.property
+        self.nrow, self.ncol = self._calculate_rows_and_cols()
+        nbreak = len(self.key)
 
         # key width and key height for each legend entry
         #

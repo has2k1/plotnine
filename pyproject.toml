@@ -72,9 +72,10 @@ include = [
    "plotnine/qplot.py",
    "plotnine/mapping",
    "plotnine/positions",
+   "plotnine/guides",
    # "plotnine/data",
-   # "plotnine/guides",
    # "plotnine/stats",
+   # "plotnine/scales",
 ]
 
 # Paths of directories or files whose diagnostic output (errors and
