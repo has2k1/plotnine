@@ -1,5 +1,16 @@
+from __future__ import annotations
+
+import typing
+
 from ..exceptions import PlotnineError
-from ..utils import Registry, waiver
+from ..utils import Registry
+
+if typing.TYPE_CHECKING:
+    from typing import Any, Literal, Optional
+
+    import pandas as pd
+
+    from plotnine.typing import Scale, Theme
 
 
 class guide(metaclass=Registry):
@@ -58,26 +69,33 @@ class guide(metaclass=Registry):
     """
     __base__ = True
 
+    # Must be updated before the draw method is called
+    theme: Theme
+    key: pd.DataFrame
+
     # title
-    title = waiver()
-    title_position = None
+    title: str
+    title_position: Literal['top', 'bottom', 'left', 'right']
     title_theme = None
-    title_hjust = None
-    title_vjust = None
+    title_hjust: Optional[float] = None
+    title_vjust: Optional[float] = None
 
     # label
     label = True
-    label_position = None
+    label_position: Literal['top', 'bottom', 'left', 'right']
     label_theme = None
-    label_hjust = None
-    label_vjust = None
+    label_hjust: Optional[float] = None
+    label_vjust: Optional[float] = None
 
     # general
-    direction = None
+    direction: Optional[Literal['horizontal', 'vertical']] = None
     default_unit = 'line'
-    override_aes = {}
+    override_aes: dict[str, Any] = {}
     reverse = False
     order = 0
+
+    # Aesthetics covered by the guide
+    available_aes: set[str] = set()
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -87,15 +105,13 @@ class guide(metaclass=Registry):
                 tpl = "{} does not undestand attribute '{}'"
                 raise PlotnineError(tpl.format(self.__class__.__name__, k))
 
-        # Must be updated before the draw method is called
-        self.theme = None
-
-    def _set_defaults(self):
+    def _set_defaults(self, theme: Theme):
         """
         Set configuration parameters for drawing guide
         """
+        self.theme = theme
         valid_locations = {'top', 'bottom', 'left', 'right'}
-        _property = self.theme.themeables.property
+        _property = theme.themeables.property
         margin_location_lookup = {
             # Where to put the margin between the legend and
             # the axes. Depends on the location of the legend
@@ -106,7 +122,9 @@ class guide(metaclass=Registry):
         }
 
         # label position
-        self.label_position = self.label_position or 'right'
+        if not hasattr(self, 'label_position'):
+            self.label_position = 'right'
+
         if self.label_position not in valid_locations:
             msg = "label position '{}' is invalid"
             raise PlotnineError(msg.format(self.label_position))
@@ -127,10 +145,11 @@ class guide(metaclass=Registry):
                 self.direction = 'horizontal'
 
         # title position
-        if self.title_position is None:
+        if not hasattr(self, 'title_position'):
             if self.direction == 'vertical':
                 self.title_position = 'top'
             elif self.direction == 'horizontal':
+
                 self.title_position = 'left'
         if self.title_position not in valid_locations:
             msg = "legend title position '{}' is invalid"
@@ -194,3 +213,15 @@ class guide(metaclass=Registry):
         matched = all_ae & geom_ae & legend_ae
         matched = list(matched - set(l.geom.aes_params))
         return matched
+
+    def train(
+        self,
+        scale: Scale,
+        aesthetic: Optional[str]=None
+    ) -> guide | None:
+        """
+        Create the key for the guide
+
+        Returns guide if training is successful
+        """
+        pass
