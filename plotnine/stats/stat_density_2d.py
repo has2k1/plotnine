@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from contourpy import contour_generator
 from mizani.breaks import extended_breaks
 
 from ..doctools import document
@@ -97,7 +98,7 @@ class stat_density_2d(stat):
         density = kde(var_data, grid, package, **kde_params)
 
         if params['contour']:
-            Z = density.reshape(len(x), len(y))
+            Z = density.reshape(len(x), len(y))  # pyright: ignore
             data = contour_lines(X, Y, Z, params['levels'])
             # Each piece should have a distinct group
             groups = str(group) + '-00' + data['piece'].astype(str)
@@ -106,7 +107,7 @@ class stat_density_2d(stat):
             data = pd.DataFrame({
                 'x': X.flatten(),
                 'y': Y.flatten(),
-                'density': density.flatten(),
+                'density': density.flatten(),  # pyright: ignore
                 'group': group,
                 'level': 1,
                 'piece': 1,
@@ -125,11 +126,13 @@ def contour_lines(X, Y, Z, levels):
     Y = np.asarray(Y, dtype=np.float64)
     Z = np.asarray(Z, dtype=np.float64)
     zmin, zmax = Z.min(), Z.max()
-    mask = None
-    corner_mask = False
-    nchunk = 0
-    contour_generator = get_contour_generator(
-        X, Y, Z, mask, corner_mask, nchunk
+    cgen = contour_generator(
+        X,
+        Y,
+        Z,
+        name='mpl2014',
+        corner_mask=False,
+        chunk_size=0
     )
 
     if isinstance(levels, int):
@@ -148,7 +151,7 @@ def contour_lines(X, Y, Z, levels):
     level_values = []
     start_pid = 1
     for level in levels:
-        vertices, _ = contour_generator.create_contour(level)
+        vertices, _ = cgen.create_contour(level)
         for pid, piece in enumerate(vertices, start=start_pid):
             n = len(piece)
             segments.append(piece)
@@ -173,28 +176,3 @@ def contour_lines(X, Y, Z, levels):
         'piece': piece,
     })
     return data
-
-
-def get_contour_generator(X, Y, Z, mask, corner_mask, nchunk):
-    """
-    Create contour generator
-    """
-    # TODO: When min supported MPL is 3.6.0, see explore the
-    # extra features implemented in contourpy
-    try:
-        # MPL 3.6.0
-        import contourpy
-        return contourpy.contour_generator(
-            X, Y, Z,
-            name='mpl2014',
-            corner_mask=False,
-            line_type=contourpy.LineType.SeparateCode,
-            fill_type=contourpy.FillType.OuterCode,
-            chunk_size=nchunk,
-        )
-    except ImportError:
-        # MPL < 3.6.0
-        import matplotlib._contour as _contour
-        return _contour.QuadContourGenerator(
-            X, Y, Z, mask, corner_mask, nchunk
-        )

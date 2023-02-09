@@ -18,8 +18,6 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import scale_view
     from plotnine.typing import (
         FloatArray,
-        FloatArrayLike,
-        FloatSeries,
         Scale,
         TupleFloat2,
     )

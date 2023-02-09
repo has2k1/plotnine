@@ -364,10 +364,10 @@ def test_to_pandas():
 
 
 def test_callable_as_data():
-    def _fn():
-        return pd.DataFrame({'x': [1, 2], 'y': [1, 2]})
-
-    p = ggplot(_fn, aes('x', 'y')) + geom_point()
+    def _fn(df):
+        return df.rename(columns={'xx': 'x', 'yy': 'y'})
+    df = pd.DataFrame({'xx': [1, 2, 3], 'yy': [1, 2, 3]})
+    p = ggplot(df, aes('x', 'y')) + geom_point(_fn)
     p.draw_test()
 
 

@@ -141,7 +141,7 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
 
     if any([fun_y, fun_ymin, fun_ymax]):
 
-        def func(df):
+        def func(df) -> pd.DataFrame:
             d = {}
             if fun_y:
                 kwargs = get_valid_kwargs(fun_y, fun_args)
@@ -156,8 +156,12 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     elif fun_data:
         kwargs = get_valid_kwargs(fun_data, fun_args)
 
-        def func(df):
+        def func(df) -> pd.DataFrame:
             return fun_data(df['y'], **kwargs)
+    else:
+        raise ValueError(
+            f"Bad value for function fun_data={fun_data}"
+        )
 
     return func
 

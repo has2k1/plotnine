@@ -6,7 +6,7 @@ import pandas as pd
 import scipy.stats as stats
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-from patsy import dmatrices
+from patsy import dmatrices  # pyright: ignore
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import get_valid_kwargs
@@ -529,6 +529,8 @@ def wls_prediction_std(res, exog=None, weights=None, alpha=0.05,
         predstd = np.sqrt(ip)
     elif interval == 'prediction':
         predstd = np.sqrt(ip + predvar)
+    else:
+        raise ValueError(f"Unknown value for {interval=}")
 
     tppf = stats.t.isf(alpha/2., res.df_resid)
     interval_u = predicted + tppf * predstd

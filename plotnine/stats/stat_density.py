@@ -114,7 +114,8 @@ class stat_density(stat):
             'gaussian': 'gau',
             'triangular': 'tri',
             'triweight': 'triw',
-            'uniform': 'uni'}
+            'uniform': 'uni'
+        }
 
         with suppress(KeyError):
             params['kernel'] = lookup[params['kernel'].lower()]
@@ -199,10 +200,10 @@ def compute_density(x, weight, range, **params):
         y = []
         for _x in x2:
             result = kde.evaluate(_x)
-            try:
-                y.append(result[0])
-            except TypeError:
+            if isinstance(result, float):
                 y.append(result)
+            else:
+                y.append(result[0])
 
     y = np.asarray(y)
 
@@ -213,11 +214,13 @@ def compute_density(x, weight, range, **params):
     not_nan = ~np.isnan(y)
     x2 = x2[not_nan]
     y = y[not_nan]
-    return pd.DataFrame({'x': x2,
-                         'density': y,
-                         'scaled': y / np.max(y) if len(y) else [],
-                         'count': y * n,
-                         'n': n})
+    return pd.DataFrame({
+        'x': x2,
+        'density': y,
+        'scaled': y / np.max(y) if len(y) else [],
+        'count': y * n,
+        'n': n,
+    })
 
 
 def nrd0(x):
@@ -243,8 +246,8 @@ def nrd0(x):
             "Need at leat 2 data points to compute the nrd0 bandwidth."
         )
 
-    std = np.std(x, ddof=1)
-    std_estimate = iqr(x)/1.349
+    std: float = np.std(x, ddof=1)  # pyright: ignore
+    std_estimate: float = iqr(x)/1.349
     low_std = np.min((std, std_estimate))
     if low_std == 0:
         low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1

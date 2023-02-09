@@ -127,10 +127,14 @@ class stat_summary_bin(stat):
                                 params['fun_args'])
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
-        data['bin'] = pd.cut(data['x'], bins=breaks, labels=False,
-                             include_lowest=True)
+        data['bin'] = pd.cut(
+            data['x'],  # pyright: ignore
+            bins=breaks,  # pyright: ignore
+            labels=False,  # pyright: ignore
+            include_lowest=True
+        )
 
-        def func_wrapper(data):
+        def func_wrapper(data: pd.DataFrame) -> pd.DataFrame:
             """
             Add `bin` column to each summary result.
             """
@@ -141,7 +145,7 @@ class stat_summary_bin(stat):
         # This is a plyr::ddply
         out = groupby_apply(data, 'bin', func_wrapper)
         centers = (breaks[:-1] + breaks[1:]) * 0.5
-        bin_centers = centers[out['bin'].values]
+        bin_centers = centers[out['bin'].to_numpy()]
         out['x'] = bin_centers
         out['bin'] += 1
         if isinstance(scales.x, scale_discrete):

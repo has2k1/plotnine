@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from warnings import warn
 
 import numpy as np
@@ -111,31 +113,37 @@ class stat_bindot(stat):
     def compute_panel(cls, data, scales, **params):
         if (params['method'] == 'dotdensity' and
                 params['binpositions'] == 'all'):
-            if params['binaxis'] == 'x':
-                newdata = densitybin(x=data['x'],
-                                     weight=data.get('weight'),
-                                     binwidth=params['binwidth'],
-                                     bins=params['bins'])
+            binaxis = params['binaxis']
+            if binaxis == 'x':
+                newdata = densitybin(
+                    x=data['x'],
+                    weight=data.get('weight'),
+                    binwidth=params['binwidth'],
+                    bins=params['bins']
+                )
                 data = data.sort_values('x')
                 data.reset_index(inplace=True, drop=True)
                 newdata = newdata.sort_values('x')
                 newdata.reset_index(inplace=True, drop=True)
-            elif params['binaxis'] == 'y':
-                newdata = densitybin(x=data['y'],
-                                     weight=data.get('weight'),
-                                     binwidth=params['binwidth'],
-                                     bins=params['bins'])
+            elif binaxis == 'y':
+                newdata = densitybin(
+                    x=data['y'],
+                    weight=data.get('weight'),
+                    binwidth=params['binwidth'],
+                    bins=params['bins']
+                )
                 data = data.sort_values('y')
                 data.reset_index(inplace=True, drop=True)
                 newdata = newdata.sort_values('x')
                 newdata.reset_index(inplace=True, drop=True)
+            else:
+                raise ValueError(f"Unknown value {binaxis=}")
 
             data['bin'] = newdata['bin']
             data['binwidth'] = newdata['binwidth']
             data['weight'] = newdata['weight']
             data['bincenter'] = newdata['bincenter']
-        return super(cls, stat_bindot).compute_panel(data, scales,
-                                                     **params)
+        return super(cls, stat_bindot).compute_panel(data, scales, **params)
 
     @classmethod
     def compute_group(cls, data, scales, **params):
@@ -143,15 +151,17 @@ class stat_bindot(stat):
         # (for dots, weights must be whole)
         weight = data.get('weight')
         if weight is not None:
-            int_status = [(w*1.0).is_integer() for w in weight]
+            int_status = [(w*1.0).is_integer() for w in weight]  # pyright: ignore
             if not all(int_status):
                 raise PlotnineError(
-                    "Weights for stat_bindot must be nonnegative integers.")
+                    "Weights for stat_bindot must be nonnegative integers."
+                )
 
         if params['binaxis'] == 'x':
             rangee = scales.x.dimension((0, 0))
             values = data['x'].values
-        elif params['binaxis'] == 'y':
+            midline = 0  #  Make pyright happy
+        else:
             rangee = scales.y.dimension((0, 0))
             values = data['y'].values
             # The middle of each group, on the stack axis
@@ -160,45 +170,53 @@ class stat_bindot(stat):
         if params['method'] == 'histodot':
             if params['binwidth'] is not None:
                 breaks = breaks_from_binwidth(
-                    rangee, params['binwidth'], boundary=params['origin'])
+                    rangee,
+                    params['binwidth'],
+                    boundary=params['origin']
+                )
             else:
                 breaks = breaks_from_bins(
-                    rangee, params['bins'], boundary=params['origin'])
+                    rangee,
+                    params['bins'],
+                    boundary=params['origin']
+                )
 
             closed = 'right' if params['right'] else 'left'
             data = assign_bins(
                 values, breaks, data.get('weight'),
                 pad=False, closed=closed)
             # for consistency
-            data.rename(columns={'width': 'binwidth',
-                                 'x': 'bincenter'},
-                        inplace=True)
+            data.rename(
+                columns={'width': 'binwidth', 'x': 'bincenter'},
+                inplace=True
+            )
         elif params['method'] == 'dotdensity':
             # If bin centers are found by group instead of by all,
             # find the bin centers (If binpositions=="all", then
             # we'll already have bin centers.)
             if params['binpositions'] == 'bygroup':
-                data = densitybin(x=values,
-                                  weight=weight,
-                                  binwidth=params['binwidth'],
-                                  bins=params['bins'],
-                                  rangee=rangee)
+                data = densitybin(
+                    x=values,
+                    weight=weight,
+                    binwidth=params['binwidth'],
+                    bins=params['bins'],
+                    rangee=rangee
+                )
 
             # Collapse each bin and get a count
             def func(df):
                 return pd.DataFrame({
                     'binwidth': [df['binwidth'].iloc[0]],
                     'bincenter': [df['bincenter'].iloc[0]],
-                    'count': [int(df['weight'].sum())]})
+                    'count': [int(df['weight'].sum())],
+                })
 
             # plyr::ddply + plyr::summarize
             data = groupby_apply(data, 'bincenter', func)
 
             if data['count'].sum() != 0:
                 data.loc[np.isnan(data['count']), 'count'] = 0
-                data['ncount'] = data['count']/(data['count']
-                                                .abs()
-                                                .max())
+                data['ncount'] = data['count']/data['count'].abs().max()
                 if params['drop']:
                     data = data[data['count'] > 0]
                     data.reset_index(inplace=True, drop=True)
@@ -208,7 +226,7 @@ class stat_bindot(stat):
             # For x binning, the width of the geoms
             # is same as the width of the bin
             data['width'] = data['binwidth']
-        elif params['binaxis'] == 'y':
+        else:
             data['y'] = data.pop('bincenter')
             # For y binning, set the x midline.
             # This is needed for continuous x axis
@@ -260,26 +278,28 @@ def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
     weight = weight[order]
     x = x[order]
 
-    cbin = 0                # Current bin ID
-    binn = [None] * len(x)  # The bin ID for each observation
+    cbin = 0   # Current bin ID
+    bin_ids = []  # The bin ID for each observation
     # End position of current bin (scan left to right)
     binend = -np.inf
 
     # Scan list and put dots in bins
-    for i, value in enumerate(x):
+    for value in x:
         # If past end of bin, start a new bin at this point
         if value >= binend:
             binend = value + binwidth
             cbin = cbin + 1
-        binn[i] = cbin
+        bin_ids.append(cbin)
 
     def func(series):
         return (series.min()+series.max())/2
 
-    results = pd.DataFrame({'x': x,
-                            'bin': binn,
-                            'binwidth': binwidth,
-                            'weight': weight})
+    results = pd.DataFrame({
+        'x': x,
+        'bin': bin_ids,
+        'binwidth': binwidth,
+        'weight': weight,
+    })
     # This is a plyr::ddply
     results['bincenter'] = results.groupby('bin')['x'].transform(func)
     return results

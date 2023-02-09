@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import numpy as np
 import pandas as pd
 from mizani.utils import round_any
@@ -5,6 +9,12 @@ from scipy.stats import iqr
 
 from ..exceptions import PlotnineError
 from ..scales.scale import scale_discrete
+
+if typing.TYPE_CHECKING:
+    from typing import Optional
+
+    from plotnine.typing import FloatArray, TupleFloat2
+
 
 __all__ = ['freedman_diaconis_bins', 'breaks_from_bins',
            'breaks_from_binwidth', 'assign_bins',
@@ -28,8 +38,12 @@ def freedman_diaconis_bins(a):
     return int(bins)
 
 
-def breaks_from_binwidth(x_range, binwidth=None, center=None,
-                         boundary=None):
+def breaks_from_binwidth(
+    x_range: TupleFloat2,
+    binwidth: float,
+    center: Optional[float] = None,
+    boundary: Optional[float] = None
+):
     """
     Calculate breaks given binwidth
 
@@ -158,7 +172,7 @@ def assign_bins(x, breaks, weight=None, pad=False, closed='right'):
     if len(wftable) < len(bin_x):
         empty_bins = set(range(len(bin_x))) - set(bin_idx)
         for b in empty_bins:
-            wftable.loc[b] = 0
+            wftable.loc[b] = 0  # pyright: ignore
         wftable = wftable.sort_index()
     bin_count = wftable.tolist()
 
@@ -200,8 +214,14 @@ def result_dataframe(count, x, width, xmin=None, xmax=None):
     return out
 
 
-def fuzzybreaks(scale, breaks=None, boundary=None,
-                binwidth=None, bins=30, right=True):
+def fuzzybreaks(
+    scale,
+    breaks=None,
+    boundary=None,
+    binwidth=None,
+    bins=30,
+    right=True
+) -> FloatArray:
     """
     Compute fuzzy breaks
 
@@ -252,7 +272,7 @@ def fuzzybreaks(scale, breaks=None, boundary=None,
         binwidth = (srange[1]-srange[0]) / bins
 
     if boundary is None or np.isnan(boundary):
-        boundary = round_any(srange[0], binwidth, np.floor)
+        boundary = round_any(srange[0], binwidth, np.floor)  # pyright: ignore
 
     if recompute_bins:
         bins = int(np.ceil((srange[1]-boundary)/binwidth))
@@ -265,7 +285,7 @@ def fuzzybreaks(scale, breaks=None, boundary=None,
     return _adjust_breaks(breaks, right)
 
 
-def _adjust_breaks(breaks, right):
+def _adjust_breaks(breaks: FloatArray, right: bool) -> FloatArray:
     epsilon = np.finfo(float).eps
     plus = 1 + epsilon
     minus = 1 - epsilon

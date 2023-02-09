@@ -69,7 +69,7 @@ if typing.TYPE_CHECKING:
     # specially handled, but pandas doesn't expose that data type in
     # their type stubs and instead treats it the same as a DataFrame
     # (df.groupby() returns a DataFrame in the stubs).
-    Data: TypeAlias = pd.DataFrame | Callable[[], pd.DataFrame]
+    Data: TypeAlias = pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]
     DataLike: TypeAlias = Data | DataFrameConvertible
 
     LayerData: TypeAlias = (
