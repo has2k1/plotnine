@@ -1,6 +1,5 @@
 import itertools
 import types
-from contextlib import suppress
 
 import numpy as np
 import pandas as pd
@@ -90,12 +89,21 @@ class stat_bin_2d(stat):
         y = np.append(data['y'], range_y)
 
         # create the cutting parameters
-        xbreaks = fuzzybreaks(scales.x, breaks=breaks.x,
-                              binwidth=binwidth.x, bins=bins.x)
-        ybreaks = fuzzybreaks(scales.y, breaks.y,
-                              binwidth=binwidth.y, bins=bins.y)
-        xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)
-        ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)
+        xbreaks = fuzzybreaks(
+            scales.x,
+            breaks=breaks.x,
+            binwidth=binwidth.x,
+            bins=bins.x
+        )
+        ybreaks = fuzzybreaks(
+            scales.y,
+            breaks.y,
+            binwidth=binwidth.y,
+            bins=bins.y
+        )
+
+        xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)  # pyright: ignore
+        ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)  # pyright: ignore
 
         # Remove the spurious points
         xbins = xbins[:-2]
@@ -106,16 +114,23 @@ class stat_bin_2d(stat):
         ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
         xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
 
-        df = pd.DataFrame({'xbins': xbins,
-                           'ybins': ybins,
-                           'weight': weight})
+        df = pd.DataFrame({
+            'xbins': xbins,
+            'ybins': ybins,
+            'weight': weight,
+        })
         table = df.pivot_table(
-            'weight', index=['xbins', 'ybins'], aggfunc=np.sum)['weight']
+            'weight',
+            index=['xbins', 'ybins'],
+            aggfunc=np.sum
+        )['weight']
 
         # create rectangles
         rects = []
-        keys = itertools.product(range(len(ybreaks)-1),
-                                 range(len(xbreaks)-1))
+        keys = itertools.product(
+            range(len(ybreaks)-1),
+            range(len(xbreaks)-1)
+        )
         for (j, i) in keys:
             try:
                 cval = table[(i, j)]
@@ -124,14 +139,19 @@ class stat_bin_2d(stat):
                     continue
                 cval = 0
             # xmin, xmax, ymin, ymax, count
-            row = [xbreaks[i], xbreaks[i+1],
-                   ybreaks[j], ybreaks[j+1],
-                   cval]
+            row = [
+                xbreaks[i],
+                xbreaks[i+1],
+                ybreaks[j],
+                ybreaks[j+1],
+                cval,
+            ]
             rects.append(row)
 
-        new_data = pd.DataFrame(rects, columns=['xmin', 'xmax',
-                                                'ymin', 'ymax',
-                                                'count'])
+        new_data = pd.DataFrame(
+            rects,
+            columns=['xmin', 'xmax', 'ymin', 'ymax', 'count']
+        )
         new_data['density'] = new_data['count'] / new_data['count'].sum()
         return new_data
 
@@ -149,8 +169,7 @@ def dual_param(value):
     if is_scalar_or_string(value):
         return types.SimpleNamespace(x=value, y=value)
 
-    with suppress(AttributeError):
-        value.x, value.y
+    if hasattr(value, 'x') and hasattr(value, 'y'):
         return value
 
     if len(value) == 2:

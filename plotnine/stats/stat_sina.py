@@ -132,15 +132,21 @@ class stat_sina(stat):
     def compute_panel(cls, data, scales, **params):
         maxwidth = params['maxwidth']
         random_state = params['random_state']
+        fuzz = 1e-8
+        y_dim = scales.y.dimension()
+        y_dim_fuzzed = (
+            y_dim[0] - fuzz,
+            y_dim[1] + fuzz
+        )
 
         if params['binwidth'] is not None:
             params['bins'] = breaks_from_binwidth(
-                np.array(scales.y.dimension()) + 1e-8,
+                y_dim_fuzzed,
                 params['binwidth']
             )
         else:
             params['bins'] = breaks_from_bins(
-                np.array(scales.y.dimension()) + 1e-8,
+                y_dim_fuzzed,
                 params['bins']
             )
 
@@ -192,8 +198,12 @@ class stat_sina(stat):
             # density kernel estimation
             range_y = data['y'].min(), data['y'].max()
             dens = compute_density(data['y'], weight, range_y, **params)
-            densf = interp1d(dens['x'], dens['density'],
-                             bounds_error=False, fill_value='extrapolate')
+            densf = interp1d(
+                dens['x'],
+                dens['density'],
+                bounds_error=False,
+                fill_value='extrapolate'  # pyright: ignore
+            )
             data['density'] = densf(data['y'])
             data['scaled'] = data['density']/dens['density'].max()
         else:

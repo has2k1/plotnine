@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from warnings import warn
 
 import numpy as np
@@ -8,6 +11,12 @@ from scipy import linalg
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .stat import stat
+
+if typing.TYPE_CHECKING:
+    from typing import Any, Optional
+
+    from plotnine.typing import FloatArrayLike
+
 
 
 @document
@@ -66,6 +75,10 @@ class stat_ellipse(stat):
             cov = np.cov(m, rowvar=False)
             cov = np.diag(np.repeat(np.diag(cov).min(), 2))
             center = np.mean(m, axis=0)
+        else:
+            raise ValueError(
+                f"Unknown value for type={type_}"
+            )
 
         # numpy's cholesky function does not gaurantee upper/lower
         # triangular factorization.
@@ -86,8 +99,15 @@ class stat_ellipse(stat):
         return pd.DataFrame({'x': res[:, 0], 'y': res[:, 1]})
 
 
-def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
-             tol=0.01):
+def cov_trob(
+    x,
+    wt: Optional[FloatArrayLike] = None,
+    cor=False,
+    center: FloatArrayLike | bool = True,
+    nu=5,
+    maxit=25,
+    tol=0.01
+):
     """
     Covariance Estimation for Multivariate t Distribution
 
@@ -157,16 +177,19 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
     x = np.asarray(x)
     n, p = x.shape
     test_values(x)
+    ans: dict[str, Any] = {}
 
     # wt
-    miss_wt = wt is None
-    if not miss_wt:
+    if wt is None:
+        wt = np.ones(n)
+    else:
         wt = np.asarray(wt)
-        wt0 = wt
+        ans['wt0'] = wt
 
         if len(wt) != n:
             raise ValueError(
-                "length of 'wt' must equal number of observations.")
+                "length of 'wt' must equal number of observations."
+            )
         if any(wt < 0):
             raise ValueError("Negative weights not allowed.")
         if not np.sum(wt):
@@ -175,26 +198,23 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
         x = x[wt > 0, :]
         wt = wt[wt > 0]
         n, _ = x.shape
-    else:
-        wt = np.ones(n)
 
     wt = wt[:, np.newaxis]
 
     # loc
-    loc = np.sum(wt*x, axis=0) / wt.sum()
-    try:
-        _len = len(center)
-    except TypeError:
-        if isinstance(center, bool) and not center:
+    use_loc = False
+    if isinstance(center, bool):
+        if center:
+            loc = np.sum(wt*x, axis=0) / wt.sum()
+            use_loc = True
+        else:
             loc = np.zeros(p)
     else:
-        if _len != p:
-            raise ValueError("'center' is not the right length")
+        if len(center) != p:
+          raise ValueError("'center' is not the right length")
         loc = p
 
-    use_loc = isinstance(center, bool) and center
     w = wt * (1 + p/nu)
-
     for iteration in range(maxit):
         w0 = w
         X = scale_simp(x, loc, n, p)
@@ -208,24 +228,24 @@ def cov_trob(x, wt=None, cor=False, center=True, nu=5, maxit=25,
             loc = np.sum(w*x, axis=0) / w.sum()
         if all(np.abs(w-w0) < tol):
             break
-    else:
-        if ((np.mean(w) - np.mean(wt) > tol) or
-                (np.abs(np.mean(w * Q)/p - 1) > tol)):
-            warn("Probable convergence failure.", PlotnineWarning)
+    else:  # nobreak
+        _c1 = np.mean(w) - np.mean(wt) > tol
+        _c2 = np.abs(np.mean(w * Q)/p - 1) > tol  # pyright: ignore
+        if _c1 and _c2:
+            warn("Convergence probably failed.", PlotnineWarning)
 
-    _a = np.sqrt(w) * X
+    _a = np.sqrt(w) * X  # pyright: ignore[reportUnboundVariable]
     # cov = (_a.T @ _a) / np.sum(wt)
     cov = np.dot(_a.T, _a) / np.sum(wt)
 
-    if miss_wt:
-        ans = dict(cov=cov, center=loc, n_obs=n)
-    else:
-        ans = dict(cov=cov, center=loc, wt=wt0, n_obs=n)
-
     if cor:
         sd = np.sqrt(np.diag(cov))
-        cor = (cov/sd)/np.repeat([sd],  p, axis=0).T
-        ans['cor'] = cor
+        ans['cor'] = (cov/sd)/np.repeat([sd],  p, axis=0).T
 
-    ans['iter'] = iteration
+    ans.update(
+        cov=cov,
+        center=loc,
+        n_obs=n,
+        iter=iteration  # pyright: ignore[reportUnboundVariable]
+    )
     return ans

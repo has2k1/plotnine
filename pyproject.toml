@@ -73,8 +73,8 @@ include = [
    "plotnine/mapping",
    "plotnine/positions",
    "plotnine/guides",
+   "plotnine/stats",
    # "plotnine/data",
-   # "plotnine/stats",
    # "plotnine/scales",
 ]
 
@@ -109,6 +109,7 @@ executionEnvironments = []
 stubPath = ""
 
 [tool.ruff]
+# stubPath = ".type-stubs"
 # Enable Pyflakes `E` and `F` codes by default.
 select = ["E", "F", "C"]
 ignore = [

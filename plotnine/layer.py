@@ -176,8 +176,6 @@ class layer:
         """
         if plot_data is None:
             data = pd.DataFrame()
-        elif callable(plot_data):
-            data = plot_data()
         elif hasattr(plot_data, "to_pandas"):
             data = typing.cast("DataFrameConvertible", plot_data).to_pandas()
         else:

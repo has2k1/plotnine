@@ -70,8 +70,12 @@ class stat_boxplot(stat):
     @classmethod
     def compute_group(cls, data, scales, **params):
         y = data['y'].to_numpy()
-        weights = data.get('weight', None)
-        total_weight = len(y) if weights is None else np.sum(weights)
+        if 'weight' in data:
+            weights = data['weight']
+            total_weight = np.sum(weights)
+        else:
+            weights = None
+            total_weight = len(y)
         res = weighted_boxplot_stats(y, weights=weights, whis=params['coef'])
 
         if len(np.unique(data['x'])) > 1:

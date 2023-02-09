@@ -59,15 +59,20 @@ class stat_count(stat):
             msg = 'stat_count() must not be used with a y aesthetic'
             raise PlotnineError(msg)
 
-        weight = data.get('weight', np.ones(len(x), dtype=int))
+        weight = data.get('weight', np.ones(len(x), dtype=int))  # pyright: ignore
         width = params['width']
         df = pd.DataFrame({'weight': weight, 'x': x})
         # weighted frequency count
         count = df.pivot_table(
-            'weight', index=['x'], aggfunc=np.sum)['weight']
+            'weight',
+            index=['x'],
+            aggfunc=np.sum
+        )['weight']
         x = count.index
-        count = count.values
-        return pd.DataFrame({'count': count,
-                             'prop': count / np.abs(count).sum(),
-                             'x': x,
-                             'width': width})
+        count = count.to_numpy()
+        return pd.DataFrame({
+            'count': count,
+            'prop': count / np.abs(count).sum(),
+            'x': x,
+            'width': width,
+        })
