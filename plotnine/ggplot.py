@@ -659,7 +659,6 @@ class ggplot:
         Use it to get access to the figure that will be saved.
         """
         fig_kwargs: Dict[str, Any] = {
-            "bbox_inches": "tight",  # 'tight' is a good default
             "format": format,
         }
         fig_kwargs.update(kwargs)
@@ -774,6 +773,7 @@ class ggplot:
             verbose=verbose,
             **kwargs,
         )
+        sv.figure.tight_layout()
         sv.figure.savefig(**sv.kwargs)
 
 
