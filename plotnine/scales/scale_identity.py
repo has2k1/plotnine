@@ -1,12 +1,21 @@
+from __future__ import annotations
+
+import typing
+
 from ..doctools import document
 from ..utils import alias, identity
 from .scale import scale_continuous, scale_discrete
+
+if typing.TYPE_CHECKING:
+    from typing import Literal
+
 
 
 class MapTrainMixin:
     """
     Override map and train methods
     """
+    guide: Literal["legend"] | None = None
 
     def map(self, x):
         return x
@@ -17,7 +26,7 @@ class MapTrainMixin:
         if self.guide is None:
             return
 
-        return super().train(x)
+        return super().train(x)  # pyright: ignore
 
 
 @document
@@ -33,7 +42,6 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     """
     _aesthetics = ['color']
     palette = staticmethod(identity)
-    guide = None
 
 
 @document
@@ -61,7 +69,6 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     """
     _aesthetics = ['shape']
     palette = staticmethod(identity)
-    guide = None
 
 
 @document
@@ -77,7 +84,6 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     """
     _aesthetics = ['linetype']
     palette = staticmethod(identity)
-    guide = None
 
 
 @document
@@ -93,7 +99,6 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     """
     _aesthetics = ['alpha']
     palette = staticmethod(identity)
-    guide = None
 
 
 @document
@@ -109,7 +114,6 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     """
     _aesthetics = ['size']
     palette = staticmethod(identity)
-    guide = None
 
 
 # American to British spelling

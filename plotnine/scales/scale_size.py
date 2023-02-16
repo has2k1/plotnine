@@ -67,7 +67,8 @@ class scale_size_continuous(scale_continuous):
     _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
-        self.palette = area_pal(range)
+        # TODO: fix types in mizani
+        self.palette = area_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -89,7 +90,8 @@ class scale_size_radius(scale_continuous):
     _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
-        self.palette = rescale_pal(range)
+        # TODO: fix types in mizani
+        self.palette = rescale_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -108,7 +110,8 @@ class scale_size_area(scale_continuous):
     rescaler = staticmethod(rescale_max)
 
     def __init__(self, max_size=6, **kwargs):
-        self.palette = abs_area(max_size)
+        # TODO: fix types in mizani
+        self.palette = abs_area(max_size)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -127,5 +130,6 @@ class scale_size_datetime(scale_datetime):
     _aesthetics = ['size']
 
     def __init__(self, range=(1, 6), **kwargs):
-        self.palette = area_pal(range)
+        # TODO: fix types in mizani
+        self.palette = area_pal(range)  # pyright: ignore
         scale_datetime.__init__(self, **kwargs)

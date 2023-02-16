@@ -1,12 +1,15 @@
-from warnings import warn
+from __future__ import annotations
 
-import numpy as np
+import typing
+from warnings import warn
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
 from .scale import scale_discrete
 
+if typing.TYPE_CHECKING:
+    from plotnine.typing import ScaleBreaksRaw
 
 @document
 class _scale_manual(scale_discrete):
@@ -21,11 +24,9 @@ class _scale_manual(scale_discrete):
     def __init__(self, values, **kwargs):
         # Match the values of the scale with the breaks (if given)
         if 'breaks' in kwargs:
-            breaks = kwargs['breaks']
-            if np.iterable(breaks) and not isinstance(breaks, str):
-                if iter(breaks) is breaks:
-                    breaks = list(breaks)
-                    kwargs['breaks'] = breaks
+            from collections.abc import Sized
+            breaks: ScaleBreaksRaw = kwargs['breaks']
+            if isinstance(breaks, Sized):
                 if len(breaks) == len(values):
                     values = {b: v for b, v in zip(breaks, values)}
 

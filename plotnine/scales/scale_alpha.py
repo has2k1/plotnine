@@ -24,7 +24,8 @@ class scale_alpha(scale_continuous):
     _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
-        self.palette = rescale_pal(range)
+        # TODO: fix types in mizani
+        self.palette = rescale_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -87,5 +88,6 @@ class scale_alpha_datetime(scale_datetime):
     _aesthetics = ['alpha']
 
     def __init__(self, range=(0.1, 1), **kwargs):
-        self.palette = rescale_pal(range)
+        # TODO: fix types in mizani
+        self.palette = rescale_pal(range)  # pyright: ignore
         scale_datetime.__init__(self, **kwargs)

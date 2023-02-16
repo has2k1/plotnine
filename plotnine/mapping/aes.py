@@ -270,7 +270,6 @@ class aes(Dict[str, Any]):
         return new
 
 
-
 @overload
 def rename_aesthetics( obj: list[str]) -> list[str]: ...
 

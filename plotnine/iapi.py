@@ -14,8 +14,11 @@ from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
 if typing.TYPE_CHECKING:
     from plotnine.typing import (
         Axes,
+        CoordRange,
         Figure,
         Scale,
+        ScaleBreaks,
+        ScaleLimits,
         TupleFloat2,
     )
 
@@ -27,12 +30,12 @@ class scale_view:
     """
     scale: Scale
     aesthetics: List[str]
-    name: str
+    name: Optional[str]
     # Trainned limits of the scale
-    limits: TupleFloat2
+    limits: ScaleLimits
     # Physical size of scale, including expansions
-    range: TupleFloat2
-    breaks: Sequence[float] | dict[str, Any]
+    range: CoordRange
+    breaks: ScaleBreaks
     minor_breaks: Sequence[float]
     labels: Sequence[str]
 

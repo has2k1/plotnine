@@ -17,7 +17,7 @@ from .scale import scale
 if typing.TYPE_CHECKING:
     import pandas as pd
 
-    from plotnine.types import (
+    from plotnine.typing import (
         Scale,
         ScaledAestheticsName,
     )

@@ -1,13 +1,28 @@
+from __future__ import annotations
+
+import typing
+from itertools import chain
+
 import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
 
 from ..doctools import document
 from ..exceptions import PlotnineError
+from ..iapi import range_view
 from ..utils import alias, array_kind, identity, match
+from ._expand import expand_range
 from .range import RangeContinuous
 from .scale import scale_continuous, scale_datetime, scale_discrete
 
+if typing.TYPE_CHECKING:
+    from typing import Sequence
+
+    from plotnine.typing import (
+        Trans,
+        TupleFloat2,
+        TupleFloat4,
+    )
 
 # positions scales have a couple of differences (quirks) that
 # make necessary to override some of the scale_discrete and
@@ -69,6 +84,7 @@ class scale_position_discrete(scale_discrete):
         if limits is None:
             limits = self.limits
         if array_kind.discrete(series):
+            # TODO: Rewrite without using numpy
             seq = np.arange(1, len(limits)+1)
             idx = np.asarray(match(series, limits, nomatch=len(series)))
             if not len(idx):
@@ -139,6 +155,54 @@ class scale_position_discrete(scale_discrete):
             ])
             return a.min(), a.max()
 
+    def expand_limits(
+        self,
+        limits: Sequence[str],
+        expand: TupleFloat2 | TupleFloat4,
+        coord_limits: TupleFloat2,
+        trans: Trans
+    ) -> range_view:
+        # Turn discrete limits into a tuple of continuous limits
+        if self.is_empty():
+            climits = (0, 1)
+        else:
+            climits = (1, len(limits))
+            self.range_c.range
+
+        if coord_limits is not None:
+            # - Override None in coord_limits
+            # - Expand limits in coordinate space
+            # - Remove any computed infinite values &
+            c0, c1 = coord_limits
+            climits = (
+                climits[0] if c0 is None else c0,
+                climits[1] if c1 is None else c1
+            )
+
+        # Expand discrete range
+        rv_d = expand_range(climits, expand, trans)
+
+        if self.range_c.is_empty():
+            return rv_d
+
+        # Expand continuous range
+        no_expand = self.default_expansion(0, 0)
+        rv_c = expand_range(self.range_c.range, no_expand, trans)
+
+        # Merge the ranges
+        rv = range_view(
+            range=(
+                min(chain(rv_d.range, rv_c.range)),
+                max(chain(rv_d.range, rv_c.range)),
+            ),
+            range_coord=(
+                min(chain(rv_d.range_coord, rv_c.range_coord)),
+                max(chain(rv_d.range_coord, rv_c.range_coord)),
+            )
+        )
+        rv.range = min(rv.range), max(rv.range)
+        rv.range_coord = min(rv.range_coord), max(rv.range_coord)
+        return rv
 
 @document
 class scale_position_continuous(scale_continuous):
@@ -221,7 +285,7 @@ class scale_y_continuous(scale_position_continuous):
     """
     _aesthetics = ['y', 'ymin', 'ymax', 'yend', 'yintercept',
                    'ymin_final', 'ymax_final',
-                   'lower', 'middle', 'upper']
+                   'lower', 'middle', 'upper']  # pyright: ignore
 
 
 # Transformed scales

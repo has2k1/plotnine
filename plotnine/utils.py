@@ -58,22 +58,6 @@ def is_string(obj: Any) -> TypeGuard[str]:
     return isinstance(obj, str)
 
 
-class waiver:
-    def __repr__(self):
-        return 'waiver()'
-
-    def __deepcopy__(self, memo):
-        return self
-
-
-def is_waive(x: Any) -> TypeGuard[waiver]:
-    """
-    Return True if x object implies use
-    default and False otherwise.
-    """
-    return isinstance(x, waiver)
-
-
 def identity(*args: Any) -> Any:
     """
     Return whatever is passed in
@@ -493,7 +477,7 @@ def remove_missing(
     if vars is None:
         vars = df.columns.to_list()
     else:
-        vars = df.columns.intersection(vars).to_list()
+        vars = df.columns.intersection(list(vars)).to_list()
 
     if finite:
         lst = [np.inf, -np.inf]

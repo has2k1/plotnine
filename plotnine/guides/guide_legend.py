@@ -14,7 +14,6 @@ from matplotlib.offsetbox import HPacker, TextArea, VPacker
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
-from ..scales.scale import scale_continuous
 from ..utils import SIZE_FACTOR, ColoredDrawingArea, remove_missing
 from .guide import guide
 
@@ -78,26 +77,14 @@ class guide_legend(guide):
         if aesthetic is None:
             aesthetic = scale.aesthetics[0]
 
-        breaks = scale.get_breaks()
-        if isinstance(breaks, dict):
-            if all([np.isnan(x) for x in breaks.values()]):
-                return None
-            breaks = list(breaks.keys())
-        elif not len(breaks) or all(np.isnan(breaks)):
+        breaks = scale.get_bounded_breaks()
+        if not breaks:
             return None
-
-        if isinstance(scale, scale_continuous):
-            limits = scale.limits
-            b = np.asarray(breaks)
-            not_oob = np.logical_and(limits[0] <= b, b <= limits[1])
-            breaks = [b for b, good in zip(breaks, not_oob) if good]
 
         key = pd.DataFrame({
             aesthetic: scale.map(breaks),
             'label': scale.get_labels(breaks)
         })
-        # Drop out-of-range values for continuous scale
-        # (should use scale$oob?)
 
         if len(key) == 0:
             return None

@@ -24,7 +24,8 @@ class scale_stroke_continuous(scale_continuous):
     _aesthetics = ['stroke']
 
     def __init__(self, range=(1, 6), **kwargs):
-        self.palette = rescale_pal(range)
+        # TODO: fix types in mizani
+        self.palette = rescale_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
