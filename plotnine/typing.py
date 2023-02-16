@@ -10,6 +10,7 @@ if typing.TYPE_CHECKING:
         Literal,
         Protocol,
         Sequence,
+        TypeVar,
     )
 
     import numpy as np
@@ -61,6 +62,45 @@ if typing.TYPE_CHECKING:
             """
             ...
 
+    # Tuples
+    TupleInt2: TypeAlias = tuple[int, int]
+    TupleFloat2: TypeAlias = tuple[float, float]
+    TupleFloat3: TypeAlias = tuple[float, float, float]
+    TupleFloat4: TypeAlias = tuple[float, float, float, float]
+
+    # Arrays (strictly numpy)
+    AnyArray: TypeAlias = npt.NDArray[Any]
+    BoolArray: TypeAlias = npt.NDArray[np.bool_]
+    FloatArray: TypeAlias = npt.NDArray[np.float64]
+    IntArray: TypeAlias = npt.NDArray[np.int64]
+    StrArray: TypeAlias = npt.NDArray[np.str_]
+
+    # Series
+    AnySeries: TypeAlias = pd.Series[Any]
+    IntSeries: TypeAlias = pd.Series[int]
+    FloatSeries: TypeAlias = pd.Series[float]
+
+    # ArrayLikes
+    AnyArrayLike: TypeAlias = AnyArray | pd.Series[Any] | Sequence[Any]
+    IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
+    FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
+
+    # Type Variables
+    # A array variable we can pass to a transforming function and expect
+    # result to be of the same type
+    FloatArrayLikeTV = TypeVar(
+        "FloatArrayLikeTV",
+        # We cannot use FloatArrayLike type because pyright expect
+        # the result to be a FloatArrayLike
+        FloatArray,
+        FloatSeries,
+        Sequence[float],
+        TupleFloat2
+    )
+
+    # Column transformation function
+    TransformCol = Callable[[FloatSeries], FloatSeries | FloatArray]
+
     # Input data can be a DataFrame, a DataFrame factory or things that
     # are convertible to DataFrames.
     # `Data` is mostly used internally and `DataLike` is the input type
@@ -78,9 +118,11 @@ if typing.TYPE_CHECKING:
     LayerDataLike: TypeAlias = LayerData | DataFrameConvertible
     ColorLike: TypeAlias = str | Literal['None', 'none']
     ColorsLike: TypeAlias = (
-        ColorLike | list[ColorLike] | pd.Series[ColorLike] |
-        npt.NDArray[np.str_]
+        ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray
     )
+
+    # Mizani
+    Trans: TypeAlias = trans
 
     # Facet strip
     StripLabellingFuncNames: TypeAlias = Literal[
@@ -124,10 +166,20 @@ if typing.TYPE_CHECKING:
     Theme: TypeAlias = theme
     Watermark: TypeAlias = watermark
 
-    # Plotnine Other
+    ## Scales
+
+    # Name names of scaled aesthetics
     ScaledAestheticsName: TypeAlias = Literal[
         'x',
+        'xmin',
+        'xmax',
+        'xend',
+        'xintercept',
         'y',
+        'ymin',
+        'ymax',
+        'yend',
+        'yintercept',
         'alpha',
         'color',
         'colour',
@@ -138,29 +190,64 @@ if typing.TYPE_CHECKING:
         'stroke',
     ]
 
-    # Mizani
-    Trans: TypeAlias = trans
+    # limits
+    ScaleContinuousLimits: TypeAlias = TupleFloat2
+    ScaleDiscreteLimits: TypeAlias = Sequence[str]
+    ScaleLimits: TypeAlias = ScaleContinuousLimits | ScaleDiscreteLimits
 
-    # Tuples
-    TupleInt2: TypeAlias = tuple[int, int]
-    TupleFloat2: TypeAlias = tuple[float, float]
-    TupleFloat3: TypeAlias = tuple[float, float, float]
-    TupleFloat4: TypeAlias = tuple[float, float, float, float]
+    ScaleLimitsRaw: TypeAlias = (
+        None |
+        ScaleLimits |
+        Callable[[ScaleLimits], ScaleLimits]
+    )
+    ScaleContinuousLimitsRaw: TypeAlias = (
+        None |
+        ScaleContinuousLimits |
+        Callable[[ScaleContinuousLimits], ScaleContinuousLimits]
+    )
+    ScaleDiscreteLimitsRaw: TypeAlias = (
+        None |
+        ScaleDiscreteLimits |
+        Callable[[ScaleDiscreteLimits], ScaleDiscreteLimits]
+    )
 
-    # Arrays (strictly numpy)
-    BoolArray: TypeAlias = npt.NDArray[np.bool_]
-    FloatArray: TypeAlias = npt.NDArray[np.float64]
-    IntArray: TypeAlias = npt.NDArray[np.int64]
-    AnyArray: TypeAlias = npt.NDArray[Any]
+    # Breaks
+    ScaleContinuousBreaks: TypeAlias = Sequence[float]
+    ScaleDiscreteBreaks: TypeAlias = Sequence[str]
+    ScaleBreaks: TypeAlias = ScaleContinuousBreaks | ScaleDiscreteBreaks
 
-    # Series
-    IntSeries: TypeAlias = pd.Series[int]
-    FloatSeries: TypeAlias = pd.Series[float]
-    AnySeries: TypeAlias = pd.Series[Any]
+    ScaleBreaksRaw: TypeAlias = (
+        bool |
+        None |
+        ScaleBreaks |
+        Callable[[ScaleLimits], ScaleBreaks]
+    )
+    ScaleContinuousBreaksRaw: TypeAlias = (
+        bool |
+        None |
+        ScaleContinuousBreaks |
+        Callable[[ScaleContinuousLimits], ScaleContinuousBreaks]
+    )
+    ScaleDiscreteBreaksRaw: TypeAlias = (
+        bool |
+        None |
+        ScaleDiscreteBreaks |
+        Callable[[ScaleDiscreteLimits], ScaleDiscreteBreaks]
+    )
+    ScaleMinorBreaksRaw: TypeAlias = (
+        ScaleContinuousBreaksRaw |
+        int
+    )
 
-    # ArrayLikes
-    IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
-    FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
+    # Labels
+    ScaleLabelsRaw: TypeAlias = (
+        bool |
+        None |
+        Sequence[str] |
+        Callable[[ScaleBreaks], Sequence[str]] |
+        dict[str, str]
+    )
+    ScaleLabels: TypeAlias = Sequence[str]
 
-    # OtherTypes
-    TransformCol = Callable[[FloatSeries], FloatSeries | FloatArray]
+    ## Coords
+    CoordRange: TypeAlias = TupleFloat2

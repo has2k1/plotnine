@@ -1,6 +1,6 @@
 from importlib.metadata import PackageNotFoundError, version
 
-from .coords import *  # noqa: F401,F403,E261
+from .coords import *
 from .facets import *  # noqa: F401,F403,E261
 from .geoms import *  # noqa: F401,F403,E261
 from .ggplot import (  # noqa: F401

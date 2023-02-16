@@ -25,7 +25,7 @@ from ..scales.scale import scale_continuous
 from .guide import guide
 
 if typing.TYPE_CHECKING:
-    pass
+    from plotnine.typing import ScaleContinuous
 
 
 class guide_colorbar(guide):
@@ -70,7 +70,7 @@ class guide_colorbar(guide):
     # parameter
     available_aes = {'colour', 'color', 'fill'}
 
-    def train(self, scale, aesthetic=None):
+    def train(self, scale: ScaleContinuous, aesthetic=None):
         if aesthetic is None:
             aesthetic = scale.aesthetics[0]
 
@@ -79,15 +79,14 @@ class guide_colorbar(guide):
             warn("colorbar guide needs appropriate scales.", PlotnineWarning)
             return None
 
-        if not issubclass(scale.__class__, scale_continuous):
+        if not isinstance(scale, scale_continuous):
             warn("colorbar guide needs continuous scales", PlotnineWarning)
             return None
 
         # value = breaks (numeric) is used for determining the
         # position of ticks
         limits = scale.limits
-        breaks = scale.get_breaks(strict=True)
-        breaks = [b for b in breaks if not np.isnan(b)]
+        breaks = scale.get_bounded_breaks()
 
         if not len(breaks):
             return None

@@ -236,7 +236,7 @@ def test_size_palette():
     assert(value == (1+6)*frac)
 
     # Just test that they work
-    s = scale_size_area(range=(1, 6))
+    s = scale_size_area(max_size=6)
     s.palette(frac**2)
 
     s = scale_size_radius(range=(1, 6))
@@ -504,7 +504,7 @@ def test_make_scale_and_datetimes():
     assert correct_scale(make_scale('alpha', x), 'scale_alpha_datetime')
 
 
-def test_scale_continous_breaks():
+def test_scale_continuous_breaks():
     x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     breaks = [2, 4, 6, 8, 10]
 
@@ -514,6 +514,45 @@ def test_scale_continous_breaks():
     s1.train(x)
     s2.train(x)
     assert list(s1.get_breaks()) == list(s2.get_breaks())
+
+
+def test_no_scale_continuous_breaks():
+    x = list(range(2, 12))
+    sc1 = scale_x_continuous(breaks=False)
+    sc1.train(x)
+    assert not sc1.get_breaks()
+    assert not sc1.get_labels()
+
+    sc2 = scale_x_continuous(breaks=None)
+    sc2.train(x)
+    assert not sc2.get_breaks()
+    assert not sc2.get_labels()
+
+
+def test_scale_discrete_breaks():
+    x = pd.Series(list("abccdefe"))
+    breaks = list("ace")
+
+    sc1 = scale_x_discrete(breaks=breaks)
+    sc2 = scale_x_discrete(limits=breaks)
+    sc1.train(x)
+    sc2.train(x)
+    assert list(sc1.get_breaks()) == list(sc2.get_breaks())
+
+
+def test_no_scale_discrete_breaks():
+    x = pd.Series(list("abccdefe"))
+
+    # Array breaks should not trip up the conditional checks
+    sc1 = scale_x_discrete(breaks=False)
+    sc1.train(x)
+    assert not sc1.get_breaks()
+    assert not sc1.get_labels()
+
+    sc2 = scale_x_discrete(breaks=None)
+    sc2.train(x)
+    assert not sc2.get_breaks()
+    assert not sc2.get_labels()
 
 
 def test_scale_without_a_mapping():

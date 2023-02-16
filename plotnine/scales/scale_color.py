@@ -125,7 +125,8 @@ class scale_color_grey(scale_discrete):
     _aesthetics = ['color']
 
     def __init__(self, start=0.2, end=0.8, **kwargs):
-        self.palette = grey_pal(start, end)
+        # TODO: fix types in mizani
+        self.palette = grey_pal(start, end)  # pyright: ignore
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -171,8 +172,11 @@ class scale_color_gradient(scale_continuous):
         """
         Create colormap that will be used by the palette
         """
-        self.palette = gradient_n_pal([low, high],
-                                      name='gradient')
+        # TODO: fix types in mizani
+        self.palette = gradient_n_pal(
+            [low, high],
+            name='gradient'
+        )  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -213,7 +217,8 @@ class scale_color_desaturate(scale_continuous):
 
     def __init__(self, color='red', prop=0, reverse=False,
                  **kwargs):
-        self.palette = desaturate_pal(color, prop, reverse)
+        # TODO: fix types in mizani
+        self.palette = desaturate_pal(color, prop, reverse)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -265,8 +270,11 @@ class scale_color_gradient2(scale_continuous):
             return rescale_mid(*args,  mid=midpoint, **kwargs)
 
         kwargs['rescaler'] = _rescale_mid
-        self.palette = gradient_n_pal([low, mid, high],
-                                      name='gradient2')
+        # TODO: fix types in mizani
+        self.palette = gradient_n_pal(
+            [low, mid, high],
+            name='gradient2'
+        )  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -309,7 +317,12 @@ class scale_color_gradientn(scale_continuous):
     na_value = '#7F7F7F'
 
     def __init__(self, colors, values=None, **kwargs):
-        self.palette = gradient_n_pal(colors, values, 'gradientn')
+        # TODO: fix types in mizani
+        self.palette = gradient_n_pal(
+            colors,
+            values,
+            'gradientn'
+        )  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -419,7 +432,8 @@ class scale_color_cmap(scale_continuous):
     na_value = '#7F7F7F'
 
     def __init__(self, cmap_name='viridis', lut=None, **kwargs):
-        self.palette = cmap_pal(cmap_name, lut)
+        # TODO: fix types in mizani
+        self.palette = cmap_pal(cmap_name, lut)  # pyright: ignore
         super().__init__(**kwargs)
 
 

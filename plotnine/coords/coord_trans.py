@@ -138,9 +138,13 @@ class coord_trans(coord):
                 scale.limits, expansion, coord_limits, trans
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
-            sv.range = tuple(sorted(ranges.range_coord))  # type: ignore
-            assert not isinstance(sv.breaks, dict)
-            sv.breaks = transform_value(trans, sv.breaks, sv.range)
+            sv.range = tuple(sorted(ranges.range_coord))
+            sv.breaks = transform_value(
+                trans,
+                # TODO: fix typecheck
+                sv.breaks,  # pyright: ignore
+                sv.range
+            )
             sv.minor_breaks = transform_value(trans, sv.minor_breaks, sv.range)
             return sv
 
