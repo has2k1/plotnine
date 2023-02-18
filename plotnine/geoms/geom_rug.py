@@ -38,7 +38,7 @@ class geom_rug(geom):
         length of marks in fractions of
         horizontal/vertical panel size (default 0.03)
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'size': 0.5,
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'size': 0.5,
                    'linetype': 'solid'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'sides': 'bl', 'length': 0.03}

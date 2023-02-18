@@ -32,7 +32,7 @@ class geom_pointrange(geom):
         point along the line-range.
     """
 
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

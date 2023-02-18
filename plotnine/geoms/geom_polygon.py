@@ -34,7 +34,7 @@ class geom_polygon(geom):
     -----
     All paths in the same ``group`` aesthetic value make up a polygon.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': None, 'fill': '#333333',
+    DEFAULT_AES = {'alpha': None, 'color': None, 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False}

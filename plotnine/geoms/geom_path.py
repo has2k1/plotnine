@@ -49,7 +49,7 @@ class geom_path(geom):
     --------
     plotnine.geoms.arrow : for adding arrowhead(s) to paths.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}
 
     REQUIRED_AES = {'x', 'y'}

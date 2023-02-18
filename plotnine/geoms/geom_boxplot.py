@@ -72,7 +72,7 @@ class geom_boxplot(geom):
         A multiplicative factor used to increase the size of the
         middle bar across the box.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
+    DEFAULT_AES = {'alpha': None, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5,
                    'weight': 1}
     REQUIRED_AES = {'x', 'lower', 'upper', 'middle', 'ymin', 'ymax'}

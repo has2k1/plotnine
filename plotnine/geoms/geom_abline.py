@@ -34,7 +34,7 @@ class geom_abline(geom):
     {common_parameters}
     """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'alpha': 1, 'size': 0.5}
+                   'alpha': None, 'size': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'inherit_aes': False}
     REQUIRED_AES = {'slope', 'intercept'}

@@ -40,7 +40,7 @@ class geom_segment(geom):
     plotnine.geoms.geom_path.arrow : for adding arrowhead(s)
         to segments.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'linetype': 'solid',
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'linetype': 'solid',
                    'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'xend', 'yend'}
     NON_MISSING_AES = {'linetype', 'size', 'shape'}

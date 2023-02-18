@@ -48,7 +48,7 @@ class geom_violin(geom):
            'right-left'  # Alternate (right first) half violins by the group
 
     """
-    DEFAULT_AES = {'alpha': 1, 'color': '#333333', 'fill': 'white',
+    DEFAULT_AES = {'alpha': None, 'color': '#333333', 'fill': 'white',
                    'linetype': 'solid', 'size': 0.5, 'weight': 1}
     REQUIRED_AES = {'x', 'y'}
     DEFAULT_PARAMS = {'stat': 'ydensity', 'position': 'dodge',

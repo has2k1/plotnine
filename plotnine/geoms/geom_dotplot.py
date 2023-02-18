@@ -47,7 +47,7 @@ class geom_dotplot(geom):
     --------
     plotnine.stats.stat_bindot
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': 'black'}
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': 'black'}
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'size', 'shape'}
     DEFAULT_PARAMS = {'stat': 'bindot', 'position': 'identity',

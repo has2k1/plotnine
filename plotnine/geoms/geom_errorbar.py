@@ -33,7 +33,7 @@ class geom_errorbar(geom):
         Bar width. If :py:`None`, the width is set to
         `90%` of the resolution of the data.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black',
+    DEFAULT_AES = {'alpha': None, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

@@ -35,7 +35,7 @@ class geom_vline(geom):
     {common_parameters}
     """
     DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 0.5, 'alpha': 1}
+                   'size': 0.5, 'alpha': None}
     REQUIRED_AES = {'xintercept'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
                       'na_rm': False, 'inherit_aes': False}

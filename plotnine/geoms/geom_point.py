@@ -31,7 +31,7 @@ class geom_point(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': None,
                    'shape': 'o', 'size': 1.5, 'stroke': 0.5}
     REQUIRED_AES = {'x', 'y'}
     NON_MISSING_AES = {'color', 'shape', 'size'}

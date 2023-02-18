@@ -41,7 +41,7 @@ class geom_crossbar(geom):
         A multiplicative factor used to increase the size of the
         middle bar across the box.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
+    DEFAULT_AES = {'alpha': None, 'color': 'black', 'fill': None,
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

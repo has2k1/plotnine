@@ -54,7 +54,7 @@ class geom_map(geom):
     geopandas dataframe. The dataframe should have a ``geometry``
     column.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': '#111111', 'fill': '#333333',
+    DEFAULT_AES = {'alpha': None, 'color': '#111111', 'fill': '#333333',
                    'linetype': 'solid', 'shape': 'o', 'size': 0.5,
                    'stroke': 0.5}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

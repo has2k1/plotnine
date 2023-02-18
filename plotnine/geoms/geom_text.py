@@ -98,7 +98,7 @@ class geom_text(geom):
         Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
 
     """
-    DEFAULT_AES = {'alpha': 1, 'angle': 0, 'color': 'black',
+    DEFAULT_AES = {'alpha': None, 'angle': 0, 'color': 'black',
                    'size': 11, 'lineheight': 1.2, 'ha': 'center',
                    'va': 'center'}
     REQUIRED_AES = {'label', 'x', 'y'}

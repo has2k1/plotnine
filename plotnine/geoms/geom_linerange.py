@@ -27,7 +27,7 @@ class geom_linerange(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black',
+    DEFAULT_AES = {'alpha': None, 'color': 'black',
                    'linetype': 'solid', 'size': 0.5}
     REQUIRED_AES = {'x', 'ymin', 'ymax'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',

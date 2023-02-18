@@ -58,7 +58,7 @@ class geom_ribbon(geom):
             aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
             aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'none', 'fill': '#333333',
+    DEFAULT_AES = {'alpha': None, 'color': 'none', 'fill': '#333333',
                    'linetype': 'solid', 'size': 0.5, 'where': True}
     REQUIRED_AES = {'x', 'ymax', 'ymin'}
     DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
