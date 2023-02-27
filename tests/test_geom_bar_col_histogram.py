@@ -14,7 +14,7 @@ from plotnine import (
 )
 from plotnine.stats.binning import freedman_diaconis_bins
 
-from .conftest import layer_data
+from conftest import layer_data
 
 n = 10  # Some even number greater than 2
 
