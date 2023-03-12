@@ -622,7 +622,8 @@ def unique_combs(df: pd.DataFrame) -> pd.DataFrame:
 
     # preserve the column dtypes
     for col in df:
-        _df[col] = _df[col].astype(df[col].dtype, copy=False)
+        t = df[col].dtype
+        _df[col] = _df[col].astype(t, copy=False)  # pyright: ignore
     return _df
 
 
