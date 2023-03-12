@@ -109,7 +109,7 @@ jobs:
       - name: Install Packages
         shell: bash -l {0}
         run: |
-          pip install "."
+          pip install ".[extra]"
           pip install -r requirements/typing.txt
 
       - name: Environment Information
