@@ -13,6 +13,7 @@ from __future__ import annotations
 import typing
 from contextlib import suppress
 from copy import deepcopy
+from typing import Dict
 
 from ..exceptions import PlotnineError
 from ..utils import RegistryHierarchyMeta, to_rgba
@@ -246,7 +247,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         pass
 
 
-class Themeables(dict[str, themeable]):
+class Themeables(Dict[str, themeable]):
     """
     Collection of themeables
 
