@@ -55,28 +55,7 @@ line_length = 79
 # characters), or ? (a single character). If no include paths are
 # specified, the root path for the workspace is assumed.
 include = [
-    "plotnine/*"
-   # "plotnine/coords",
-   # "plotnine/facets",
-   # "plotnine/themes",
-   # "plotnine/geoms",
-   # "plotnine/animation.py",
-   # "plotnine/layer.py",
-   # "plotnine/watermark.py",
-   # "plotnine/options.py",
-   # "plotnine/doctools.py",
-   # "plotnine/exceptions.py",
-   # "plotnine/iapi.py",
-   # "plotnine/typing.py",
-   # "plotnine/ggplot.py",
-   # "plotnine/labels.py",
-   # "plotnine/qplot.py",
-   # "plotnine/mapping",
-   # "plotnine/positions",
-   # "plotnine/guides",
-   # "plotnine/stats",
-   # "plotnine/data",
-   # "plotnine/scales",
+    "plotnine/"
 ]
 
 # Paths of directories or files whose diagnostic output (errors and
