@@ -275,7 +275,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
     # Calculate dimensions
     def len_unique(x):
         return len(np.unique(x))
-    ndistinct: IntArray = ids.apply(len_unique, axis=0).values  # pyright: ignore
+    ndistinct: IntArray = ids.apply(len_unique, axis=0).to_numpy()
 
     combs = np.array(
         np.hstack([1, np.cumprod(ndistinct[:-1])])

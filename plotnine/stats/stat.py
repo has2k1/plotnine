@@ -357,7 +357,9 @@ class stat(metaclass=Registry):
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
             idx = [0] * len(new)
-            u = unique.loc[idx, missing].reset_index(drop=True)  # pyright: ignore
+            u = unique.loc[idx, missing].reset_index(  # pyright: ignore
+                drop=True
+            )
             # concat can have problems with empty dataframes that
             # have an index
             if u.empty and len(u):

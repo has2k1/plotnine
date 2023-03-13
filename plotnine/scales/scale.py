@@ -108,18 +108,31 @@ class scale(metaclass=Registry):
     """
     __base__ = True
 
-    _aesthetics: list[ScaledAestheticsName] = []     # aesthetics affected by this scale
-    na_value: Any = np.nan   # What to do with the NA values
-    name: str | None = None  # used as the axis label or legend title
-    breaks: ScaleBreaksRaw = True  # major breaks
-    labels: ScaleLabelsRaw = True  # labels at the breaks
-    guide: str | None = 'legend'    # legend or any other guide
-    _limits: ScaleLimitsRaw = None  # (min, max) - set by user
+    # aesthetics affected by this scale
+    _aesthetics: list[ScaledAestheticsName] = []
+
+    # What to do with the NA values
+    na_value: Any = np.nan
+
+    # used as the axis label or legend title
+    name: str | None = None
+
+    # major breaks
+    breaks: ScaleBreaksRaw = True
+
+    # labels at the breaks
+    labels: ScaleLabelsRaw = True
+
+    # legend or any other guide
+    guide: str | None = 'legend'
+
+    # (min, max) - set by user
+    _limits: ScaleLimitsRaw = None
 
     #: multiplicative and additive expansion constants
     expand: Optional[TupleFloat2 | TupleFloat4] = None
 
-    # range of aesthetic, instantiated by __init__ from the
+    # range of aesthetic, instantiated in __init__
     range: Range
     _range_class: type[Range] = Range
 
