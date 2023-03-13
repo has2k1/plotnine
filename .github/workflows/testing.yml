@@ -13,28 +13,28 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.8", "3.10"]
+        python-version: [3.8, 3.11]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install ".[extra,testing]"
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip list
 
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: |
           coverage erase
           make test
@@ -62,27 +62,27 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.11]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install ruff
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: pip list
 
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: make lint
 
 
@@ -96,28 +96,28 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: [3.11]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install ".[extra]"
           pip install -r requirements/typing.txt
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: pip list
 
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: make typecheck
 
 
@@ -131,32 +131,31 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.11]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           sudo apt-get install pandoc
           pip install ".[testing,doc]"
           pip install -r requirements/doc.txt
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: pip list
 
       - name: Build Documentation
-        shell: bash -l {0}
+        shell: bash
         run: |
           pushd doc
-          # low pandoc version leads to a warning so
-          # SPHINXOPTS=-W fails
+          SPHINXOPTS=-W
           make html && popd
