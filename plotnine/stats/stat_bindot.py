@@ -90,7 +90,7 @@ class stat_bindot(stat):
                       'bins': None, 'binwidth': None, 'origin': None,
                       'width': 0.9, 'binaxis': 'x',
                       'method': 'dotdensity', 'binpositions': 'bygroup',
-                      'drop': False, 'right': True, 'na_rm': False,
+                      'drop': False, 'right': True,
                       'breaks': None}
     DEFAULT_AES = {'y': after_stat('count')}
     CREATES = {'width', 'count', 'density', 'ncount', 'ndensity'}
