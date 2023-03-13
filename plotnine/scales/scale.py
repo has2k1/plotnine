@@ -565,7 +565,7 @@ class scale_discrete(scale):
             return []
 
         if self.breaks is True:
-            breaks = [l for l in limits]
+            breaks = list(limits)
         elif self.breaks in (False, None):
             breaks = []
         elif callable(self.breaks):
