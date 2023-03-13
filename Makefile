@@ -74,6 +74,8 @@ dist: clean
 	python -m build
 	ls -l dist
 
+build: dist
+
 install: clean
 	python install ".[extra]"
 

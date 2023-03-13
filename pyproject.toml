@@ -110,8 +110,6 @@ include = [
     "plotnine/*"
 ]
 omit = [
-    "setup.py",
-    "plotnine/_version.py",
     "tests/*",
 ]
 

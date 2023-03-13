@@ -2,21 +2,22 @@ notebook
 
 # extra
 adjustText
-scikit-misc
-scikit-learn
 geopandas
+scikit-learn
+scikit-misc
 
 # doc
 git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
 jupyter
 nbsphinx
 numpydoc>=0.9.1
-sphinx>=3.0.0
+sphinx>=6.1.0
 
 # testing
 ruff
 pytest-cov
 
 # release
+build
 twine
 wheel
