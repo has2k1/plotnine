@@ -283,14 +283,14 @@ class arrow:
                 idx1.extend(df.index[:-1].to_list())
                 idx2.extend(df.index[1:].to_list())
 
-            d = dict(
-                zorder=params['zorder'],
-                rasterized=params['raster'],
-                edgecolor=data.loc[idx1, 'color'],
-                facecolor=data.loc[idx1, 'facecolor'],
-                linewidth=data.loc[idx1, 'size'],
-                linestyle=data.loc[idx1, 'linetype']
-            )
+            d = {
+                "zorder": params['zorder'],
+                "rasterized": params['raster'],
+                "edgecolor": data.loc[idx1, 'color'],
+                "facecolor": data.loc[idx1, 'facecolor'],
+                "linewidth": data.loc[idx1, 'size'],
+                "linestyle": data.loc[idx1, 'linetype']
+            }
 
             x1 = data.loc[idx1, 'x'].to_numpy()
             y1 = data.loc[idx1, 'y'].to_numpy()
@@ -309,16 +309,16 @@ class arrow:
                 coll = mcoll.PathCollection(paths, **d)
                 ax.add_collection(coll)
         else:
-            d = dict(
-                zorder=params['zorder'],
-                rasterized=params['raster'],
-                edgecolor=data['color'].iloc[0],
-                facecolor=data['facecolor'].iloc[0],
-                linewidth=data['size'].iloc[0],
-                linestyle=data['linetype'].iloc[0],
-                joinstyle='round',
-                capstyle='butt'
-            )
+            d = {
+                "zorder": params['zorder'],
+                "rasterized": params['raster'],
+                "edgecolor": data['color'].iloc[0],
+                "facecolor": data['facecolor'].iloc[0],
+                "linewidth": data['size'].iloc[0],
+                "linestyle": data['linetype'].iloc[0],
+                "joinstyle": 'round',
+                "capstyle": 'butt'
+            }
 
             if first:
                 x1, x2 = data['x'].iloc[0:2]

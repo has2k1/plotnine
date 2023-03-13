@@ -243,9 +243,9 @@ class geom_boxplot(geom):
         if facecolor is None:
             facecolor = 'none'
 
-        kwargs = dict(
-           linestyle=data['linetype'],
-           linewidth=data['size'])
+        kwargs = {
+           "linestyle": data['linetype'],
+           "linewidth": data['size']}
 
         box = Rectangle((da.width*.125, da.height*.25),
                         width=da.width*.75,

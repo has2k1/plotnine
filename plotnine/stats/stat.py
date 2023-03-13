@@ -38,9 +38,9 @@ class stat(metaclass=Registry):
     __base__ = True
 
     REQUIRED_AES = set()
-    DEFAULT_AES = dict()
+    DEFAULT_AES = {}
     NON_MISSING_AES = set()
-    DEFAULT_PARAMS = dict()
+    DEFAULT_PARAMS = {}
 
     # Should the values produced by the statistic also
     # be transformed in the second pass when recently

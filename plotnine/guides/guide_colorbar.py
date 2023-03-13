@@ -202,7 +202,7 @@ class guide_colorbar(guide):
             tick_locations = length - tick_locations[::-1]
 
         # title #
-        title_box = TextArea(self.title, textprops=dict(color='black'))
+        title_box = TextArea(self.title, textprops={"color": 'black'})
         _targets['legend_title'].append(title_box)
 
         # colorbar and ticks #

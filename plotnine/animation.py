@@ -107,7 +107,7 @@ class PlotnineAnimation(ArtistAnimation):
             'artists': []
         }
 
-        scale_limits = dict()
+        scale_limits = {}
 
         def initialise_artist_offsets(n: int) -> None:
             """

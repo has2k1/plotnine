@@ -309,7 +309,7 @@ class guide_legend(guide):
             _targets['legend_text_legend'] = []
 
         # title
-        title_box = TextArea(self.title, textprops=dict(color='black'))
+        title_box = TextArea(self.title, textprops={"color": 'black'})
         _targets['legend_title'].append(title_box)
 
         # labels
@@ -318,7 +318,7 @@ class guide_legend(guide):
             if isinstance(item, float) and float.is_integer(item):
                 item = int(item)  # 1.0 to 1
             va = 'center' if self.label_position == 'top' else 'baseline'
-            ta = TextArea(item, textprops=dict(color='black', va=va))
+            ta = TextArea(item, textprops={"color": 'black', "va": va})
             labels.append(ta)
             _targets['legend_text_legend'].extend(labels)
 
