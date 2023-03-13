@@ -59,7 +59,10 @@ class stat_count(stat):
             msg = 'stat_count() must not be used with a y aesthetic'
             raise PlotnineError(msg)
 
-        weight = data.get('weight', np.ones(len(x), dtype=int))  # pyright: ignore
+        weight = data.get(
+            'weight',
+            [1] * len(x)  # pyright: ignore
+        )
         width = params['width']
         df = pd.DataFrame({'weight': weight, 'x': x})
         # weighted frequency count

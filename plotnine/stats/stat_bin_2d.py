@@ -102,8 +102,18 @@ class stat_bin_2d(stat):
             bins=bins.y
         )
 
-        xbins = pd.cut(x, bins=xbreaks, labels=False, right=True)  # pyright: ignore
-        ybins = pd.cut(y, bins=ybreaks, labels=False, right=True)  # pyright: ignore
+        xbins = pd.cut(
+            x,
+            bins=xbreaks,  # pyright: ignore
+            labels=False,  # pyright: ignore
+            right=True
+        )
+        ybins = pd.cut(
+            y,
+            bins=ybreaks,  # pyright: ignore
+            labels=False,  # pyright: ignore
+            right=True
+        )
 
         # Remove the spurious points
         xbins = xbins[:-2]

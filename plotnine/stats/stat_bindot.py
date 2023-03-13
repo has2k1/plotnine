@@ -149,9 +149,9 @@ class stat_bindot(stat):
     def compute_group(cls, data, scales, **params):
         # Check that weights are whole numbers
         # (for dots, weights must be whole)
-        weight = data.get('weight')
+        weight: pd.Series | None = data.get('weight')  # pyright: ignore
         if weight is not None:
-            int_status = [(w*1.0).is_integer() for w in weight]  # pyright: ignore
+            int_status = [(w*1.0).is_integer() for w in weight]
             if not all(int_status):
                 raise PlotnineError(
                     "Weights for stat_bindot must be nonnegative integers."

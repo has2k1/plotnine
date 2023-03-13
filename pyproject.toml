@@ -92,9 +92,9 @@ stubPath = ""
 # Enable Pyflakes `E` and `F` codes by default.
 select = ["E", "F", "C"]
 ignore = [
-    "E501", "E741", "E743", "C901",
-    "D100", "D102", "D105", "D107", "D200", "D203", "D204", "D212",
-    "D400", "D413", "D415",
+    "E741",  # Ambiguous l
+    "E743",  # Ambiguous I
+    "C901",  # Too complex
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -103,7 +103,7 @@ unfixable = []
 
 # Exclude a variety of commonly ignored directories.
 exclude = [
-    # ".git",
+    "plotnine/themes/seaborn_rcmod.py",
     "**/__pycache__",
     "node_modules"
 ]
