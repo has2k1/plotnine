@@ -97,7 +97,7 @@ ignore = [
     "D400", "D413", "D415",
 
     # TODO: Resolve these
-    "E713", "C408"
+    "E713"
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

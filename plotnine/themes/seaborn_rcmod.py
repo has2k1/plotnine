@@ -435,7 +435,7 @@ def plotting_context(context=None, font_scale=1, rc=None):
         base_context.update(texts_base_context)
 
         # Scale all the parameters by the same factor depending on the context
-        scaling = dict(paper=.8, notebook=1, talk=1.5, poster=2)[context]
+        scaling = {"paper": .8, "notebook": 1, "talk": 1.5, "poster": 2}[context]
         context_dict = {k: v * scaling for k, v in base_context.items()}
 
         # Now independently scale the fonts

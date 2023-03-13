@@ -50,7 +50,7 @@ class stat_pointdensity(stat):
     def setup_params(self, data):
         params = self.params.copy()
         if params['kde_params'] is None:
-            params['kde_params'] = dict()
+            params['kde_params'] = {}
 
         kde_params = params['kde_params']
         if params['package'] == 'statsmodels':

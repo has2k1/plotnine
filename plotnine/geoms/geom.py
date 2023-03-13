@@ -44,7 +44,7 @@ class geom(metaclass=Registry):
     __base__ = True
 
     #: Default aesthetics for the geom
-    DEFAULT_AES: dict[str, Any] = dict()
+    DEFAULT_AES: dict[str, Any] = {}
 
     #: Required aesthetics for the geom
     REQUIRED_AES: set[str] = set()
@@ -53,7 +53,7 @@ class geom(metaclass=Registry):
     NON_MISSING_AES: set[str] = set()
 
     #: Required parameters for the geom
-    DEFAULT_PARAMS: dict[str, Any] = dict()
+    DEFAULT_PARAMS: dict[str, Any] = {}
 
     #: geom/layer specific dataframe
     data: DataLike
@@ -61,7 +61,7 @@ class geom(metaclass=Registry):
     #: mappings i.e. :py:`aes(x='col1', fill='col2')`
     mapping: Aes
 
-    aes_params: dict[str, Any] = dict()  # setting of aesthetic
+    aes_params: dict[str, Any] = {}  # setting of aesthetic
     params: dict[str, Any]  # parameter settings
 
     # Plot namespace, it gets its value when the plot is being
