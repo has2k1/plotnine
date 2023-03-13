@@ -58,6 +58,13 @@ def is_string(obj: Any) -> TypeGuard[str]:
     return isinstance(obj, str)
 
 
+def is_list_like(obj: Any) -> bool:
+    """
+    Return True if *obj* is a list, tuple, series or array
+    """
+    return isinstance(obj, (list, tuple, pd.Series, np.ndarray))
+
+
 def identity(*args: Any) -> Any:
     """
     Return whatever is passed in

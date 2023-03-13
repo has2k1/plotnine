@@ -174,6 +174,19 @@ def test_variable_and_annotate():
     assert p == 'variable_and_annotate'
 
 
+def test_manual_mapping_with_lists():
+    p = (g
+        + annotate(
+            "abline",
+            intercept=[4, 10],
+            slope=[-1, -1],
+            color=["red", "blue"]
+        )
+        + facet_wrap("var1")
+    )
+    assert p == 'manual_mapping_with_lists'
+
+
 def test_array_mapping_and_evaluation():
     # GH548
     # When we map to array/series of values, the aes evaluation
