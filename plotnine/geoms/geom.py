@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 from copy import deepcopy
+from itertools import chain, repeat
 
 import pandas as pd
 
@@ -15,6 +16,7 @@ from ..utils import (
     Registry,
     copy_keys,
     data_mapping_as_kwargs,
+    is_list_like,
     is_string,
     remove_missing,
 )
@@ -243,7 +245,12 @@ class geom(metaclass=Registry):
         for ae in (evaled.columns.intersection(data.columns)):
             data[ae] = evaled[ae]
 
-        # If set, use it
+        if "PANEL" in data:
+            num_panels = len(data["PANEL"].unique())
+        else:
+            num_panels = 1
+
+        # Aesthetics set as parameters to the geom/stat
         for ae, value in self.aes_params.items():
             try:
                 data[ae] = value
@@ -252,6 +259,8 @@ class geom(metaclass=Registry):
                 # tupled linetypes, shapes and colors
                 if is_valid_aesthetic(value, ae):
                     data[ae] = [value]*len(data)
+                elif num_panels > 1 and is_list_like(value):
+                    data[ae] = list(chain(*repeat(value, num_panels)))
                 else:
                     msg = ("'{}' does not look like a "
                            "valid value for `{}`")
