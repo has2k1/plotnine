@@ -26,6 +26,7 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
+          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc2"
           pip install ".[extra,testing]"
 
       - name: Environment Information
@@ -97,6 +98,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.11]
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -109,6 +111,7 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
+          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc2"
           pip install ".[extra]"
           pip install -r requirements/typing.txt
 
