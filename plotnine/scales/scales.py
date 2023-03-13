@@ -108,7 +108,7 @@ class Scales(List[scale]):
         l = [
             s
             for s in self
-            if not ('x' in s.aesthetics) and not ('y' in s.aesthetics)
+            if "x" not in s.aesthetics and "y" not in s.aesthetics
         ]
         return Scales(l)
 
