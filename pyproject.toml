@@ -63,6 +63,7 @@ testing = [
 ]
 
 dev = [
+    "build",
     "twine",
     "wheel"
 ]

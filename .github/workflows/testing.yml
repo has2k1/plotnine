@@ -148,7 +148,6 @@ jobs:
           sudo apt-get install pandoc
           pip install ".[testing,doc]"
           pip install -r requirements/doc.txt
-          python setup.py install
 
       - name: Environment Information
         shell: bash -l {0}
