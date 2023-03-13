@@ -161,7 +161,7 @@ def _margins(
         # all variables to the right
         for i, u in enumerate(_vars):
             if margins is True or u in margins:
-                lst = [u] + [v for v in _vars[i+1:]]
+                lst = [u] + list(_vars[i+1:])
                 dim_margins.append(lst)
         return dim_margins
 
