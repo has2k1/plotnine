@@ -1,3 +1,79 @@
+########## Project ##########
+[project]
+name = "plotnine"
+description = "A Grammar of Graphics for Python"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Hassan Kibirige", email = "has2k1@gmail.com"},
+]
+dynamic = ["version"]
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: Matplotlib",
+    "Topic :: Scientific/Engineering :: Visualization"
+]
+dependencies = [
+    "matplotlib>=3.5.0",
+    "mizani>=0.8.1",
+    "numpy>=1.19.0",
+    "pandas>=1.3.5",
+    "patsy>=0.5.1",
+    "scipy>=1.5.0",
+    "statsmodels>=0.13.2",
+]
+requires-python = ">=3.8"
+
+[project.optional-dependencies]
+all = [
+    "plotnine[extra]",
+    "plotnine[doc]",
+    "plotnine[testing]",
+    "plotnine[dev]",
+]
+
+extra = [
+    "adjustText",
+    "geopandas",
+    "scikit-learn",
+    "scikit-misc"
+]
+
+doc = [
+    "jupyter",
+    "nbsphinx",
+    "numpydoc>=0.9.1",
+    "sphinx>=6.1.0",
+    # Use importlib.resources when min supported python >= 3.9.0
+    "importlib_resources",
+]
+
+testing = [
+    "ruff",
+    "pytest-cov"
+]
+
+dev = [
+    "twine",
+    "wheel"
+]
+
+[project.urls]
+homepage = "https://plotnine.readthedocs.io/en/stable"
+repository = "https://github.com/has2k1/plotnine"
+changelog = "https://plotnine.readthedocs.io/en/stable/changelog.html"
+ci = "https://github.com/has2k1/plotnine/actions"
+
+########## Build System ##########
 # Reference https://github.com/pydata/xarray/blob/main/pyproject.toml
 [build-system]
 requires = [
@@ -7,7 +83,16 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-# pytest
+########## Tool - setuptools ##########
+[tool.setuptools]
+packages = ["plotnine"]
+
+[tool.setuptools_scm]
+fallback_version = "999"
+version_scheme = 'post-release'
+
+
+########## Tool - pytest ##########
 [tool.pytest.ini_options]
 testpaths = [
     "tests"
@@ -15,6 +100,7 @@ testpaths = [
 doctest_optionflags = "ALLOW_UNICODE ALLOW_BYTES NORMALIZE_WHITESPACE"
 addopts = "--pyargs --cov=plotnine --cov-report=xml --import-mode=importlib"
 
+########## Tool - Coverage ##########
 # Coverage.py
 [tool.coverage.run]
 branch = true
@@ -30,6 +116,7 @@ omit = [
 
 disable_warnings = ["include-ignored"]
 
+########## Tool - Coverage ##########
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
@@ -39,14 +126,38 @@ exclude_lines = [
 ]
 precision = 1
 
-[tool.setuptools_scm]
-fallback_version = "999"
-version_scheme = 'post-release'
+########## Tool - Ruff ##########
+[tool.ruff]
+line-length = 79
+select = ["E", "F", "C"]
+ignore = [
+    "E741",  # Ambiguous l
+    "E743",  # Ambiguous I
+    "C901",  # Too complex
+]
 
-[tool.isort]
-profile = "black"
-line_length = 79
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+unfixable = []
 
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "plotnine/themes/seaborn_rcmod.py",
+    "**/__pycache__",
+    "node_modules"
+]
+
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.8.
+target-version = "py38"
+
+[tool.ruff.per-file-ignores]
+"plotnine/__init__.py" = ["F401", "F403"]
+
+########## Tool - Pyright ##########
 [tool.pyright]
 # Paths of directories or files that should be included. If no paths
 # are specified, pyright defaults to the directory that contains the
@@ -86,35 +197,3 @@ useLibraryCodeForTypes = true
 executionEnvironments = []
 
 stubPath = ""
-
-[tool.ruff]
-# stubPath = ".type-stubs"
-# Enable Pyflakes `E` and `F` codes by default.
-select = ["E", "F", "C"]
-ignore = [
-    "E741",  # Ambiguous l
-    "E743",  # Ambiguous I
-    "C901",  # Too complex
-]
-
-# Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "I"]
-unfixable = []
-
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    "plotnine/themes/seaborn_rcmod.py",
-    "**/__pycache__",
-    "node_modules"
-]
-
-line-length = 79
-
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-# Assume Python 3.8.
-target-version = "py38"
-
-[tool.ruff.per-file-ignores]
-"plotnine/__init__.py" = ["F401", "F403"]
