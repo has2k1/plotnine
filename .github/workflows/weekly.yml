@@ -14,30 +14,30 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: [3.11]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install --upgrade pip
-          pip install ".[extra,test]"
+          pip install ".[extra,testing]"
           pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip list
 
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: |
           make test
 
@@ -54,31 +54,31 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: [3.11]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install --upgrade pip
-          pip install ".[extra,test]"
+          pip install ".[extra,testing]"
           pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: |
           make test
 
@@ -100,10 +100,12 @@ jobs:
     steps:
       - name: Get latest release with tag from GitHub API
         id: latestrelease
+        shell: bash
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - name: Confirm Release Tag
+        shell: bash
         run: |
           echo ${{ steps.latestrelease.outputs.latestrelease }}
 
@@ -112,24 +114,24 @@ jobs:
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install --upgrade pip
           pip install --upgrade git+https://github.com/matplotlib/matplotlib
-          pip install ".[extra,test]"
+          pip install ".[extra,testing]"
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip list
 
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: |
           make test
 
@@ -151,10 +153,12 @@ jobs:
     steps:
       - name: Get latest release with tag from GitHub API
         id: latestrelease
+        shell: bash
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - name: Confirm Release Tag
+        shell: bash
         run: |
           echo ${{ steps.latestrelease.outputs.latestrelease }}
 
@@ -163,25 +167,25 @@ jobs:
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip install --upgrade pip
           pip install --upgrade git+https://github.com/pandas-dev/pandas
-          pip install ".[extra,test]"
+          pip install ".[extra,testing]"
 
       - name: Environment Information
-        shell: bash -l {0}
+        shell: bash
         run: |
           pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash
         run: |
           make test
 
