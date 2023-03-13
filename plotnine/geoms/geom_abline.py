@@ -72,7 +72,7 @@ class geom_abline(geom):
                 'slope': slope
             })
 
-            mapping = aes(intercept=intercept, slope=slope)
+            mapping = aes(intercept='intercept', slope='slope')
             kwargs['show_legend'] = False
 
         geom.__init__(self, mapping, data, **kwargs)
