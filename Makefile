@@ -71,11 +71,11 @@ release: clean
 	bash ./tools/release.sh
 
 dist: clean
-	python setup.py sdist bdist_wheel
+	python -m build
 	ls -l dist
 
 install: clean
-	python setup.py install
+	python install ".[extra]"
 
 develop: clean-pyc
-	python setup.py develop
+	python install -e ".[all]"
