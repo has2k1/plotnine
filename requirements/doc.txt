@@ -1,2 +1,2 @@
-# This cannot be setup.cfg, pypi does not git packages
+# This cannot be in pyproject.toml, pypi does not install git packages
 git+https://github.com/has2k1/plotnine-examples#egg=plotnine_examples
