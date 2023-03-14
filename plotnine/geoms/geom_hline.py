@@ -37,28 +37,40 @@ class geom_hline(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 0.5, 'alpha': 1}
-    REQUIRED_AES = {'yintercept'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'inherit_aes': False}
+
+    DEFAULT_AES = {
+        "color": "black",
+        "linetype": "solid",
+        "size": 0.5,
+        "alpha": 1,
+    }
+    REQUIRED_AES = {"yintercept"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+        "inherit_aes": False,
+    }
     draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
     def __init__(
         self,
         mapping: Aes | None = None,
         data: DataLike | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         data, mapping = order_as_data_mapping(data, mapping)
-        yintercept = kwargs.pop('yintercept', None)
+        yintercept = kwargs.pop("yintercept", None)
         if yintercept is not None:
             if mapping:
-                warn("The 'yintercept' parameter has overridden "
-                     "the aes() mapping.", PlotnineWarning)
-            data = pd.DataFrame({'yintercept': np.repeat(yintercept, 1)})
-            mapping = aes(yintercept='yintercept')
-            kwargs['show_legend'] = False
+                warn(
+                    "The 'yintercept' parameter has overridden "
+                    "the aes() mapping.",
+                    PlotnineWarning,
+                )
+            data = pd.DataFrame({"yintercept": np.repeat(yintercept, 1)})
+            mapping = aes(yintercept="yintercept")
+            kwargs["show_legend"] = False
 
         geom.__init__(self, mapping, data, **kwargs)
 
@@ -68,24 +80,18 @@ class geom_hline(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         """
         Plot all groups
         """
         ranges = coord.backtransform_range(panel_params)
-        data['y'] = data['yintercept']
-        data['yend'] = data['yintercept']
-        data['x'] = ranges.x[0]
-        data['xend'] = ranges.x[1]
+        data["y"] = data["yintercept"]
+        data["yend"] = data["yintercept"]
+        data["x"] = ranges.x[0]
+        data["xend"] = ranges.x[1]
         data = data.drop_duplicates()
 
-        for _, gdata in data.groupby('group'):
+        for _, gdata in data.groupby("group"):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(
-                gdata,
-                panel_params,
-                coord,
-                ax,
-                **params
-            )
+            geom_segment.draw_group(gdata, panel_params, coord, ax, **params)

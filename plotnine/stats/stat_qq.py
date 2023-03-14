@@ -56,28 +56,33 @@ class stat_qq(stat):
          'sample'       # sample quantiles
 
     """
-    REQUIRED_AES = {'sample'}
-    DEFAULT_AES = {'x': after_stat('theoretical'), 'y': after_stat('sample')}
-    DEFAULT_PARAMS = {'geom': 'qq', 'position': 'identity',
-                      'na_rm': False,
-                      'distribution': 'norm', 'dparams': {},
-                      'quantiles': None, 'alpha_beta': (3/8, 3/8)}
+    REQUIRED_AES = {"sample"}
+    DEFAULT_AES = {"x": after_stat("theoretical"), "y": after_stat("sample")}
+    DEFAULT_PARAMS = {
+        "geom": "qq",
+        "position": "identity",
+        "na_rm": False,
+        "distribution": "norm",
+        "dparams": {},
+        "quantiles": None,
+        "alpha_beta": (3 / 8, 3 / 8),
+    }
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        sample = data['sample'].sort_values().values
-        alpha, beta = params['alpha_beta']
-        quantiles = params['quantiles']
+        sample = data["sample"].sort_values().values
+        alpha, beta = params["alpha_beta"]
+        quantiles = params["quantiles"]
 
         if quantiles is None:
             quantiles = plotting_positions(sample, alpha, beta)
         elif len(quantiles) != len(sample):
             raise PlotnineError(
                 "The number of quantile values is not the same as "
-                "the number of sample values.")
+                "the number of sample values."
+            )
 
         quantiles = np.asarray(quantiles)
-        cdist = get_continuous_distribution(params['distribution'])
-        theoretical = cdist.ppf(quantiles, **params['dparams'])
-        return pd.DataFrame({'sample': sample,
-                             'theoretical': theoretical})
+        cdist = get_continuous_distribution(params["distribution"])
+        theoretical = cdist.ppf(quantiles, **params["dparams"])
+        return pd.DataFrame({"sample": sample, "theoretical": theoretical})

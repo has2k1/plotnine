@@ -21,7 +21,8 @@ class scale_stroke_continuous(scale_continuous):
         Should be between 0 and 1. Default is ``(1, 6)``
     {superclass_parameters}
     """
-    _aesthetics = ['stroke']
+
+    _aesthetics = ["stroke"]
 
     def __init__(self, range=(1, 6), **kwargs):
         # TODO: fix types in mizani
@@ -41,7 +42,8 @@ class scale_stroke_ordinal(scale_discrete):
         Should be between 0 and 1. Default is ``(1, 6)``
     {superclass_parameters}
     """
-    _aesthetics = ['stroke']
+
+    _aesthetics = ["stroke"]
 
     def __init__(self, range=(1, 6), **kwargs):
         def palette(n):
@@ -60,14 +62,15 @@ class scale_stroke_discrete(scale_stroke_ordinal):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['stroke']
+
+    _aesthetics = ["stroke"]
 
     def __init__(self, **kwargs):
         warn(
             "Using stroke for a ordinal variable is not advised.",
-            PlotnineWarning
+            PlotnineWarning,
         )
         super().__init__(self, **kwargs)
 
 
-alias('scale_stroke', scale_stroke_continuous)
+alias("scale_stroke", scale_stroke_continuous)

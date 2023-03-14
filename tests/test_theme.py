@@ -28,7 +28,7 @@ from plotnine import (
 )
 from plotnine.data import mtcars
 
-_theme = theme(subplots_adjust={'right': 0.80})
+_theme = theme(subplots_adjust={"right": 0.80})
 
 
 def test_add_complete_complete():
@@ -47,7 +47,7 @@ def test_add_complete_partial():
 
     # specific difference
     for name in theme2.themeables:
-        if name == 'axis_line_x':
+        if name == "axis_line_x":
             assert theme2.themeables[name] != theme1.themeables[name]
         else:
             assert theme2.themeables[name] == theme1.themeables[name]
@@ -62,44 +62,41 @@ def test_add_partial_complete():
 
 def test_add_empty_theme_element():
     # An empty theme element does not alter the theme
-    theme1 = theme_gray() + theme(axis_line_x=element_line(color='red'))
+    theme1 = theme_gray() + theme(axis_line_x=element_line(color="red"))
     theme2 = theme1 + theme(axis_line_x=element_line())
     assert theme1 == theme2
 
 
-l1 = element_line(color='red', size=1, linewidth=1, linetype='solid')
-l2 = element_line(color='blue', size=2, linewidth=2)
-l3 = element_line(color='blue', size=2, linewidth=2, linetype='solid')
+l1 = element_line(color="red", size=1, linewidth=1, linetype="solid")
+l2 = element_line(color="blue", size=2, linewidth=2)
+l3 = element_line(color="blue", size=2, linewidth=2, linetype="solid")
 blank = element_blank()
 
 
 def test_add_element_heirarchy():
     # parent themeable modifies child themeable
     theme1 = theme_gray() + theme(axis_line_x=l1)  # child
-    theme2 = theme1 + theme(axis_line=l2)          # parent
-    theme3 = theme1 + theme(axis_line_x=l3)        # child, for comparison
-    assert theme2.themeables['axis_line_x'] == \
-        theme3.themeables['axis_line_x']
+    theme2 = theme1 + theme(axis_line=l2)  # parent
+    theme3 = theme1 + theme(axis_line_x=l3)  # child, for comparison
+    assert theme2.themeables["axis_line_x"] == theme3.themeables["axis_line_x"]
 
     theme1 = theme_gray() + theme(axis_line_x=l1)  # child
-    theme2 = theme1 + theme(line=l2)               # grand-parent
-    theme3 = theme1 + theme(axis_line_x=l3)        # child, for comparison
-    assert theme2.themeables['axis_line_x'] == \
-        theme3.themeables['axis_line_x']
+    theme2 = theme1 + theme(line=l2)  # grand-parent
+    theme3 = theme1 + theme(axis_line_x=l3)  # child, for comparison
+    assert theme2.themeables["axis_line_x"] == theme3.themeables["axis_line_x"]
 
     # child themeable does not affect parent
-    theme1 = theme_gray() + theme(axis_line=l1)    # parent
-    theme2 = theme1 + theme(axis_line_x=l2)        # child
-    theme3 = theme1 + theme(axis_line=l3)          # parent, for comparison
-    assert theme3.themeables['axis_line'] != \
-        theme2.themeables['axis_line']
+    theme1 = theme_gray() + theme(axis_line=l1)  # parent
+    theme2 = theme1 + theme(axis_line_x=l2)  # child
+    theme3 = theme1 + theme(axis_line=l3)  # parent, for comparison
+    assert theme3.themeables["axis_line"] != theme2.themeables["axis_line"]
 
 
 def test_add_element_blank():
     # Adding onto a blanked themeable
     theme1 = theme_gray() + theme(axis_line_x=l1)  # not blank
-    theme2 = theme1 + theme(axis_line_x=blank)     # blank
-    theme3 = theme2 + theme(axis_line_x=l3)        # not blank
+    theme2 = theme1 + theme(axis_line_x=blank)  # blank
+    theme3 = theme2 + theme(axis_line_x=l3)  # not blank
     theme4 = theme_gray() + theme(axis_line_x=l3)  # for comparison
     assert theme3 != theme1
     assert theme3 != theme2
@@ -107,21 +104,18 @@ def test_add_element_blank():
 
     # When a themeable is blanked, the apply_ax method
     # is replaced with the blank method.
-    th2 = theme2.themeables['axis_line_x']
-    th3 = theme3.themeables['axis_line_x']
-    assert th2.apply_ax.__name__ == 'blank_ax'
-    assert th3.apply_ax.__name__ == 'apply_ax'
+    th2 = theme2.themeables["axis_line_x"]
+    th3 = theme3.themeables["axis_line_x"]
+    assert th2.apply_ax.__name__ == "blank_ax"
+    assert th3.apply_ax.__name__ == "apply_ax"
 
 
 def test_element_line_dashed_capstyle():
-    p = (
-        ggplot(mtcars, aes(x="wt", y="mpg"))
-        + theme(
-            panel_grid=element_line(
-                linetype="dashed",
-                lineend="butt",
-                size=1.0,
-            )
+    p = ggplot(mtcars, aes(x="wt", y="mpg")) + theme(
+        panel_grid=element_line(
+            linetype="dashed",
+            lineend="butt",
+            size=1.0,
         )
     )
     # no exception
@@ -129,14 +123,11 @@ def test_element_line_dashed_capstyle():
 
 
 def test_element_line_solid_capstyle():
-    p = (
-        ggplot(mtcars, aes(x="wt", y="mpg"))
-        + theme(
-            panel_grid=element_line(
-                linetype="solid",
-                lineend="butt",
-                size=1.0,
-            )
+    p = ggplot(mtcars, aes(x="wt", y="mpg")) + theme(
+        panel_grid=element_line(
+            linetype="solid",
+            lineend="butt",
+            size=1.0,
         )
     )
     # no exception
@@ -144,82 +135,85 @@ def test_element_line_solid_capstyle():
 
 
 class TestThemes:
-    g = (ggplot(mtcars, aes(x='wt', y='mpg', color='factor(gear)'))
-         + geom_point()
-         + facet_grid('vs ~ am'))
+    g = (
+        ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))
+        + geom_point()
+        + facet_grid("vs ~ am")
+    )
 
     def test_theme_538(self):
-        p = self.g + labs(title='Theme 538') + theme_538()
+        p = self.g + labs(title="Theme 538") + theme_538()
 
-        assert p + _theme == 'theme_538'
+        assert p + _theme == "theme_538"
 
     def test_theme_bw(self):
-        p = self.g + labs(title='Theme BW') + theme_bw()
+        p = self.g + labs(title="Theme BW") + theme_bw()
 
-        assert p + _theme == 'theme_bw'
+        assert p + _theme == "theme_bw"
 
     def test_theme_classic(self):
-        p = self.g + labs(title='Theme Classic') + theme_classic()
+        p = self.g + labs(title="Theme Classic") + theme_classic()
 
-        assert p + _theme == 'theme_classic'
+        assert p + _theme == "theme_classic"
 
     def test_theme_dark(self):
-        p = self.g + labs(title='Theme Dark') + theme_dark()
+        p = self.g + labs(title="Theme Dark") + theme_dark()
 
-        assert p + _theme == 'theme_dark'
+        assert p + _theme == "theme_dark"
 
     def test_theme_gray(self):
-        p = self.g + labs(title='Theme Gray') + theme_gray()
+        p = self.g + labs(title="Theme Gray") + theme_gray()
 
-        assert p + _theme == 'theme_gray'
+        assert p + _theme == "theme_gray"
 
     def test_theme_light(self):
-        p = self.g + labs(title='Theme Light') + theme_light()
+        p = self.g + labs(title="Theme Light") + theme_light()
 
-        assert p + _theme == 'theme_light'
+        assert p + _theme == "theme_light"
 
     def test_theme_linedraw(self):
-        p = self.g + labs(title='Theme Linedraw') + theme_linedraw()
+        p = self.g + labs(title="Theme Linedraw") + theme_linedraw()
 
-        assert p + _theme == 'theme_linedraw'
+        assert p + _theme == "theme_linedraw"
 
     def test_theme_matplotlib(self):
-        p = self.g + labs(title='Theme Matplotlib') + theme_matplotlib()
+        p = self.g + labs(title="Theme Matplotlib") + theme_matplotlib()
 
-        assert p + _theme == 'theme_matplotlib'
+        assert p + _theme == "theme_matplotlib"
 
     def test_theme_minimal(self):
-        p = self.g + labs(title='Theme Minimal') + theme_minimal()
+        p = self.g + labs(title="Theme Minimal") + theme_minimal()
 
-        assert p + _theme == 'theme_minimal'
+        assert p + _theme == "theme_minimal"
 
     def test_theme_tufte(self):
-        p = self.g + labs(title='Theme Tufte') + theme_tufte(ticks=False)
+        p = self.g + labs(title="Theme Tufte") + theme_tufte(ticks=False)
 
-        assert p + _theme == 'theme_tufte'
+        assert p + _theme == "theme_tufte"
 
     @pytest.mark.xfail(reason="fails on github actions")
     def test_theme_seaborn(self):
-        p = self.g + labs(title='Theme Seaborn') + theme_seaborn()
+        p = self.g + labs(title="Theme Seaborn") + theme_seaborn()
 
-        assert p + _theme == 'theme_seaborn'
+        assert p + _theme == "theme_seaborn"
 
     def test_theme_void(self):
-        p = self.g + labs(title='Theme Void') + theme_void()
+        p = self.g + labs(title="Theme Void") + theme_void()
 
-        assert p + _theme == 'theme_void'
+        assert p + _theme == "theme_void"
 
     def test_theme_xkcd(self):
-        p = (self.g
-             + labs(title='Theme Xkcd')
-             + theme_xkcd()
-             # High likely hood of Comic Sans being available
-             + theme(text=element_text(family=['Comic Sans MS']))
-             )
+        p = (
+            self.g
+            + labs(title="Theme Xkcd")
+            + theme_xkcd()
+            # High likely hood of Comic Sans being available
+            + theme(text=element_text(family=["Comic Sans MS"]))
+        )
 
-        if os.environ.get('CI') or os.environ.get('TRAVIS'):
+        if os.environ.get("CI") or os.environ.get("TRAVIS"):
             # Github Actions and Travis do not have the fonts,
             # we still check to catch any other errors
-            assert p + _theme != 'theme_gray'
+            assert p + _theme != "theme_gray"
         else:
-            assert p + _theme == 'theme_xkcd'
+            assert p + _theme == "theme_xkcd"

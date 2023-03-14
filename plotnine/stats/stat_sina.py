@@ -86,151 +86,162 @@ class stat_sina(stat):
     e.g. :py:`after_stat('quantile')`.
     """
 
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_AES = {'xend': after_stat('scaled')}
-    DEFAULT_PARAMS = {'geom': 'sina', 'position': 'dodge',
-                      'na_rm': False, 'binwidth': None, 'bins': None,
-                      'method': 'density',
-                      'bw': 'nrd0',
-                      'maxwidth': None, 'adjust': 1, 'bin_limit': 1,
-                      'random_state': None, 'scale': 'area'
-                      }
-    CREATES = {'scaled'}
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_AES = {"xend": after_stat("scaled")}
+    DEFAULT_PARAMS = {
+        "geom": "sina",
+        "position": "dodge",
+        "na_rm": False,
+        "binwidth": None,
+        "bins": None,
+        "method": "density",
+        "bw": "nrd0",
+        "maxwidth": None,
+        "adjust": 1,
+        "bin_limit": 1,
+        "random_state": None,
+        "scale": "area",
+    }
+    CREATES = {"scaled"}
 
     def setup_data(self, data):
-        if (array_kind.continuous(data['x']) and
-                not has_groups(data) and
-                (data['x'] != data.loc['x', 0]).any()):
-            raise TypeError("Continuous x aesthetic -- did you forget "
-                            "aes(group=...)?")
+        if (
+            array_kind.continuous(data["x"])
+            and not has_groups(data)
+            and (data["x"] != data.loc["x", 0]).any()
+        ):
+            raise TypeError(
+                "Continuous x aesthetic -- did you forget " "aes(group=...)?"
+            )
         return data
 
     def setup_params(self, data):
         params = self.params.copy()
-        random_state = params['random_state']
+        random_state = params["random_state"]
 
-        if params['maxwidth'] is None:
-            params['maxwidth'] = resolution(data['x'], False) * 0.9
+        if params["maxwidth"] is None:
+            params["maxwidth"] = resolution(data["x"], False) * 0.9
 
-        if params['binwidth'] is None and self.params['bins'] is None:
-            params['bins'] = 50
+        if params["binwidth"] is None and self.params["bins"] is None:
+            params["bins"] = 50
 
         if random_state is None:
-            params['random_state'] = np.random
+            params["random_state"] = np.random
         elif isinstance(random_state, int):
-            params['random_state'] = np.random.RandomState(random_state)
+            params["random_state"] = np.random.RandomState(random_state)
 
         # Required by compute_density
-        params['kernel'] = 'gau'  # It has to be a gaussian kernel
-        params['cut'] = 0
-        params['gridsize'] = None
-        params['clip'] = (-np.inf, np.inf)
-        params['n'] = 512
+        params["kernel"] = "gau"  # It has to be a gaussian kernel
+        params["cut"] = 0
+        params["gridsize"] = None
+        params["clip"] = (-np.inf, np.inf)
+        params["n"] = 512
         return params
 
     @classmethod
     def compute_panel(cls, data, scales, **params):
-        maxwidth = params['maxwidth']
-        random_state = params['random_state']
+        maxwidth = params["maxwidth"]
+        random_state = params["random_state"]
         fuzz = 1e-8
         y_dim = scales.y.dimension()
-        y_dim_fuzzed = (
-            y_dim[0] - fuzz,
-            y_dim[1] + fuzz
-        )
+        y_dim_fuzzed = (y_dim[0] - fuzz, y_dim[1] + fuzz)
 
-        if params['binwidth'] is not None:
-            params['bins'] = breaks_from_binwidth(
-                y_dim_fuzzed,
-                params['binwidth']
+        if params["binwidth"] is not None:
+            params["bins"] = breaks_from_binwidth(
+                y_dim_fuzzed, params["binwidth"]
             )
         else:
-            params['bins'] = breaks_from_bins(
-                y_dim_fuzzed,
-                params['bins']
-            )
+            params["bins"] = breaks_from_bins(y_dim_fuzzed, params["bins"])
 
         data = super(cls, stat_sina).compute_panel(data, scales, **params)
 
         if not len(data):
             return data
 
-        if params['scale'] == 'area':
-            data['sinawidth'] = data['density']/data['density'].max()
-        elif params['scale'] == 'count':
-            data['sinawidth'] = (data['density'] /
-                                 data['density'].max() *
-                                 data['n']/data['n'].max())
-        elif params['scale'] == 'width':
-            data['sinawidth'] = data['scaled']
+        if params["scale"] == "area":
+            data["sinawidth"] = data["density"] / data["density"].max()
+        elif params["scale"] == "count":
+            data["sinawidth"] = (
+                data["density"]
+                / data["density"].max()
+                * data["n"]
+                / data["n"].max()
+            )
+        elif params["scale"] == "width":
+            data["sinawidth"] = data["scaled"]
         else:
             msg = "Unknown scale value '{}'"
-            raise PlotnineError(msg.format(params['scale']))
+            raise PlotnineError(msg.format(params["scale"]))
 
-        data['xmin'] = data['x'] - maxwidth/2
-        data['xmax'] = data['x'] + maxwidth/2
-        data['x_diff'] = (random_state.uniform(-1, 1, len(data)) *
-                          maxwidth *
-                          data['sinawidth']/2
-                          )
-        data['width'] = maxwidth
+        data["xmin"] = data["x"] - maxwidth / 2
+        data["xmax"] = data["x"] + maxwidth / 2
+        data["x_diff"] = (
+            random_state.uniform(-1, 1, len(data))
+            * maxwidth
+            * data["sinawidth"]
+            / 2
+        )
+        data["width"] = maxwidth
 
         # jitter y values if the input is input is integer
-        if (data['y'] == np.floor(data['y'])).all():
-            data['y'] = jitter(data['y'], random_state=random_state)
+        if (data["y"] == np.floor(data["y"])).all():
+            data["y"] = jitter(data["y"], random_state=random_state)
 
         return data
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        maxwidth = params['maxwidth']
-        bins = params['bins']
-        bin_limit = params['bin_limit']
+        maxwidth = params["maxwidth"]
+        bins = params["bins"]
+        bin_limit = params["bin_limit"]
         weight = None
 
         if len(data) == 0:
             return pd.DataFrame()
 
         elif len(data) < 3:
-            data['density'] = 0
-            data['scaled'] = 1
-        elif params['method'] == 'density':
+            data["density"] = 0
+            data["scaled"] = 1
+        elif params["method"] == "density":
             # density kernel estimation
-            range_y = data['y'].min(), data['y'].max()
-            dens = compute_density(data['y'], weight, range_y, **params)
+            range_y = data["y"].min(), data["y"].max()
+            dens = compute_density(data["y"], weight, range_y, **params)
             densf = interp1d(
-                dens['x'],
-                dens['density'],
+                dens["x"],
+                dens["density"],
                 bounds_error=False,
-                fill_value='extrapolate'  # pyright: ignore
+                fill_value="extrapolate",  # pyright: ignore
             )
-            data['density'] = densf(data['y'])
-            data['scaled'] = data['density']/dens['density'].max()
+            data["density"] = densf(data["y"])
+            data["scaled"] = data["density"] / dens["density"].max()
         else:
             # bin based estimation
             bin_index = pd.cut(
-                data['y'], bins, include_lowest=True, labels=False)
-            data['density'] = (pd.Series(bin_index)
-                               .groupby(bin_index)
-                               .apply(len)[bin_index]
-                               .values)
-            data.loc[data['density'] <= bin_limit, 'density'] = 0
-            data['scaled'] = data['density']/data['density'].max()
+                data["y"], bins, include_lowest=True, labels=False
+            )
+            data["density"] = (
+                pd.Series(bin_index)
+                .groupby(bin_index)
+                .apply(len)[bin_index]
+                .values
+            )
+            data.loc[data["density"] <= bin_limit, "density"] = 0
+            data["scaled"] = data["density"] / data["density"].max()
 
         # Compute width if x has multiple values
-        if len(data['x'].unique()) > 1:
-            width = np.ptp(data['x']) * maxwidth
+        if len(data["x"].unique()) > 1:
+            width = np.ptp(data["x"]) * maxwidth
         else:
             width = maxwidth
 
-        data['width'] = width
-        data['n'] = len(data)
-        data['x'] = np.mean([data['x'].max(), data['x'].min()])
+        data["width"] = width
+        data["n"] = len(data)
+        data["x"] = np.mean([data["x"].max(), data["x"].min()])
 
         return data
 
     def finish_layer(self, data, params):
         # Rescale x in case positions have been adjusted
-        x_mod = (data['xmax'] - data['xmin']) / data['width']
-        data['x'] = data['x'] + data['x_diff'] * x_mod
+        x_mod = (data["xmax"] - data["xmin"]) / data["width"]
+        data["x"] = data["x"] + data["x_diff"] * x_mod
         return data

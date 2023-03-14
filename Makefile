@@ -36,11 +36,21 @@ clean-test:
 	rm -fr htmlcov/
 	rm -fr tests/result_images/*
 
+update:
+	pip install --upgrade -r requirements/dev.txt
+	pre-commit autoupdate
+
 ruff:
 	ruff plotnine $(args)
 
 ruff-isort:
 	ruff --select I001 --quiet plotnine $(args)
+
+black:
+	black . --check
+
+black-fix:
+	black .
 
 lint: ruff ruff-isort
 

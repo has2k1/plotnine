@@ -65,7 +65,8 @@ testing = [
 dev = [
     "build",
     "twine",
-    "wheel"
+    "wheel",
+    "black>=23.1.0"
 ]
 
 [project.urls]
@@ -125,36 +126,6 @@ exclude_lines = [
 ]
 precision = 1
 
-########## Tool - Ruff ##########
-[tool.ruff]
-line-length = 79
-select = ["E", "F", "C"]
-ignore = [
-    "E741",  # Ambiguous l
-    "E743",  # Ambiguous I
-    "C901",  # Too complex
-]
-
-# Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "I"]
-unfixable = []
-
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    "plotnine/themes/seaborn_rcmod.py",
-    "**/__pycache__",
-    "node_modules"
-]
-
-
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-# Assume Python 3.8.
-target-version = "py38"
-
-[tool.ruff.per-file-ignores]
-"plotnine/__init__.py" = ["F401", "F403"]
 
 ########## Tool - Pyright ##########
 [tool.pyright]
@@ -196,3 +167,41 @@ useLibraryCodeForTypes = true
 executionEnvironments = []
 
 stubPath = ""
+
+########## Tool - Ruff ##########
+[tool.ruff]
+line-length = 79
+select = ["E", "F", "C"]
+ignore = [
+    "E741",  # Ambiguous l
+    "E743",  # Ambiguous I
+    "C901",  # Too complex
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "plotnine/themes/seaborn_rcmod.py",
+    "**/__pycache__",
+    "node_modules"
+]
+
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.per-file-ignores]
+"plotnine/__init__.py" = ["F401", "F403"]
+
+
+########## Tool - Black ##########
+[tool.black]
+line-length = 79
+extend-exclude = '''
+(
+ seaborn_rcmod\.py
+)
+'''

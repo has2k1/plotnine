@@ -47,16 +47,13 @@ class coord_cartesian(coord):
         self,
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
-        expand: bool = True
+        expand: bool = True,
     ):
         self.limits = SimpleNamespace(x=xlim, y=ylim)
         self.expand = expand
 
     def transform(
-        self,
-        data: pd.DataFrame,
-        panel_params: panel_view,
-        munch: bool = False
+        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
     ) -> pd.DataFrame:
         def squish_infinite_x(col):
             return squish_infinite(col, range=panel_params.x.range)
@@ -66,17 +63,13 @@ class coord_cartesian(coord):
 
         return transform_position(data, squish_infinite_x, squish_infinite_y)
 
-    def setup_panel_params(
-        self,
-        scale_x: Scale,
-        scale_y: Scale
-    ) -> panel_view:
+    def setup_panel_params(self, scale_x: Scale, scale_y: Scale) -> panel_view:
         """
         Compute the range and break information for the panel
         """
+
         def get_scale_view(
-            scale: Scale,
-            coord_limits: TupleFloat2
+            scale: Scale, coord_limits: TupleFloat2
         ) -> scale_view:
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
@@ -87,7 +80,7 @@ class coord_cartesian(coord):
 
         out = panel_view(
             x=get_scale_view(scale_x, self.limits.x),
-            y=get_scale_view(scale_y, self.limits.y)
+            y=get_scale_view(scale_y, self.limits.y),
         )
         return out
 
@@ -95,10 +88,9 @@ class coord_cartesian(coord):
         self,
         x: pd.Series[float],
         y: pd.Series[float],
-        panel_params: panel_view
+        panel_params: panel_view,
     ) -> FloatArray:
-        max_dist = dist_euclidean(
-            panel_params.x.range,
-            panel_params.y.range
-        )[0]
+        max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[
+            0
+        ]
         return dist_euclidean(x, y) / max_dist  # type: ignore

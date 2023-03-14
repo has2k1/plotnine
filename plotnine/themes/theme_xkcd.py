@@ -40,40 +40,34 @@ class theme_xkcd(theme_gray):
         length=100,
         randomness=2,
         stroke_size=4,
-        stroke_color='white'
+        stroke_color="white",
     ):
         theme_gray.__init__(self, base_size)
         self += theme(
-            text=element_text(
-                family=['xkcd', 'Humor Sans', 'Comic Sans MS']
-            ),
-            axis_ticks=element_line(color='black', size=1.5),
+            text=element_text(family=["xkcd", "Humor Sans", "Comic Sans MS"]),
+            axis_ticks=element_line(color="black", size=1.5),
             axis_ticks_minor=element_blank(),
-            axis_ticks_direction='in',
+            axis_ticks_direction="in",
             axis_ticks_length_major=6,
-            legend_background=element_rect(
-                color='black',
-                fill='None'
-            ),
-            legend_key=element_rect(fill='None'),
-            panel_border=element_rect(color='black', size=1.5),
+            legend_background=element_rect(color="black", fill="None"),
+            legend_key=element_rect(fill="None"),
+            panel_border=element_rect(color="black", size=1.5),
             panel_grid=element_blank(),
-            panel_background=element_rect(fill='white'),
-            strip_background=element_rect(color='black', fill='white'),
-            strip_background_x=element_rect(width=2/3.),
-            strip_background_y=element_rect(height=2/3.),
+            panel_background=element_rect(fill="white"),
+            strip_background=element_rect(color="black", fill="white"),
+            strip_background_x=element_rect(width=2 / 3.0),
+            strip_background_y=element_rect(height=2 / 3.0),
             strip_margin=-0.5,
         )
 
         d = {
-            'axes.unicode_minus': False,
-            'path.sketch': (scale, length, randomness),
-            'path.effects': [
+            "axes.unicode_minus": False,
+            "path.sketch": (scale, length, randomness),
+            "path.effects": [
                 patheffects.withStroke(
-                    linewidth=stroke_size,
-                    foreground=stroke_color
+                    linewidth=stroke_size, foreground=stroke_color
                 )
-            ]
+            ],
         }
         self._rcParams.update(d)
 
@@ -88,7 +82,7 @@ class theme_xkcd(theme_gray):
         new = result.__dict__
 
         for key, item in old.items():
-            if key == '_rcParams':
+            if key == "_rcParams":
                 continue
             new[key] = deepcopy(old[key], memo)
 

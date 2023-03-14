@@ -95,7 +95,7 @@ if typing.TYPE_CHECKING:
         FloatArray,
         FloatSeries,
         Sequence[float],
-        TupleFloat2
+        TupleFloat2,
     )
 
     # Column transformation function
@@ -116,7 +116,7 @@ if typing.TYPE_CHECKING:
         pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]
     )
     LayerDataLike: TypeAlias = LayerData | DataFrameConvertible
-    ColorLike: TypeAlias = str | Literal['None', 'none']
+    ColorLike: TypeAlias = str | Literal["None", "none"]
     ColorsLike: TypeAlias = (
         ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray
     )
@@ -126,28 +126,24 @@ if typing.TYPE_CHECKING:
 
     # Facet strip
     StripLabellingFuncNames: TypeAlias = Literal[
-        'label_value',
-        'label_both',
-        'label_context'
+        "label_value", "label_both", "label_context"
     ]
 
     # Function that can facet strips
     StripLabellingFunc: TypeAlias = Callable[
-        [strip_label_details],
-        strip_label_details
+        [strip_label_details], strip_label_details
     ]
 
     StripLabellingDict: TypeAlias = (
-        Dict[str, str] |
-        Dict[str, Callable[[str], str]]
+        Dict[str, str] | Dict[str, Callable[[str], str]]
     )
 
     # Can be coerced to a StripLabellingFunc
     CanBeStripLabellingFunc: TypeAlias = (
-        StripLabellingFuncNames |
-        StripLabellingFunc |
-        Callable[[str], str] |
-        StripLabellingDict
+        StripLabellingFuncNames
+        | StripLabellingFunc
+        | Callable[[str], str]
+        | StripLabellingDict
     )
 
     # Plotnine Classes
@@ -170,24 +166,24 @@ if typing.TYPE_CHECKING:
 
     # Name names of scaled aesthetics
     ScaledAestheticsName: TypeAlias = Literal[
-        'x',
-        'xmin',
-        'xmax',
-        'xend',
-        'xintercept',
-        'y',
-        'ymin',
-        'ymax',
-        'yend',
-        'yintercept',
-        'alpha',
-        'color',
-        'colour',
-        'fill',
-        'linetype',
-        'shape',
-        'size',
-        'stroke',
+        "x",
+        "xmin",
+        "xmax",
+        "xend",
+        "xintercept",
+        "y",
+        "ymin",
+        "ymax",
+        "yend",
+        "yintercept",
+        "alpha",
+        "color",
+        "colour",
+        "fill",
+        "linetype",
+        "shape",
+        "size",
+        "stroke",
     ]
 
     # limits
@@ -196,19 +192,17 @@ if typing.TYPE_CHECKING:
     ScaleLimits: TypeAlias = ScaleContinuousLimits | ScaleDiscreteLimits
 
     ScaleLimitsRaw: TypeAlias = (
-        None |
-        ScaleLimits |
-        Callable[[ScaleLimits], ScaleLimits]
+        None | ScaleLimits | Callable[[ScaleLimits], ScaleLimits]
     )
     ScaleContinuousLimitsRaw: TypeAlias = (
-        None |
-        ScaleContinuousLimits |
-        Callable[[ScaleContinuousLimits], ScaleContinuousLimits]
+        None
+        | ScaleContinuousLimits
+        | Callable[[ScaleContinuousLimits], ScaleContinuousLimits]
     )
     ScaleDiscreteLimitsRaw: TypeAlias = (
-        None |
-        ScaleDiscreteLimits |
-        Callable[[ScaleDiscreteLimits], ScaleDiscreteLimits]
+        None
+        | ScaleDiscreteLimits
+        | Callable[[ScaleDiscreteLimits], ScaleDiscreteLimits]
     )
 
     # Breaks
@@ -217,35 +211,29 @@ if typing.TYPE_CHECKING:
     ScaleBreaks: TypeAlias = ScaleContinuousBreaks | ScaleDiscreteBreaks
 
     ScaleBreaksRaw: TypeAlias = (
-        bool |
-        None |
-        ScaleBreaks |
-        Callable[[ScaleLimits], ScaleBreaks]
+        bool | None | ScaleBreaks | Callable[[ScaleLimits], ScaleBreaks]
     )
     ScaleContinuousBreaksRaw: TypeAlias = (
-        bool |
-        None |
-        ScaleContinuousBreaks |
-        Callable[[ScaleContinuousLimits], ScaleContinuousBreaks]
+        bool
+        | None
+        | ScaleContinuousBreaks
+        | Callable[[ScaleContinuousLimits], ScaleContinuousBreaks]
     )
     ScaleDiscreteBreaksRaw: TypeAlias = (
-        bool |
-        None |
-        ScaleDiscreteBreaks |
-        Callable[[ScaleDiscreteLimits], ScaleDiscreteBreaks]
+        bool
+        | None
+        | ScaleDiscreteBreaks
+        | Callable[[ScaleDiscreteLimits], ScaleDiscreteBreaks]
     )
-    ScaleMinorBreaksRaw: TypeAlias = (
-        ScaleContinuousBreaksRaw |
-        int
-    )
+    ScaleMinorBreaksRaw: TypeAlias = ScaleContinuousBreaksRaw | int
 
     # Labels
     ScaleLabelsRaw: TypeAlias = (
-        bool |
-        None |
-        Sequence[str] |
-        Callable[[ScaleBreaks], Sequence[str]] |
-        dict[str, str]
+        bool
+        | None
+        | Sequence[str]
+        | Callable[[ScaleBreaks], Sequence[str]]
+        | dict[str, str]
     )
     ScaleLabels: TypeAlias = Sequence[str]
 

@@ -28,57 +28,46 @@ class theme_matplotlib(theme):
         theme.__init__(
             self,
             text=element_text(
-                size=mpl.rcParams['font.size'],
+                size=mpl.rcParams["font.size"],
                 linespacing=1,
             ),
-
-            aspect_ratio=get_option('aspect_ratio'),
-            dpi=get_option('dpi'),
-            figure_size=get_option('figure_size'),
-
-            axis_text=element_text(
-                margin={'t': 2.4, 'r': 2.4, 'units': 'pt'}
-            ),
-            axis_title=element_text(
-                margin={'t': 5, 'r': 5, 'units': 'pt'}
-            ),
-
-            legend_box='auto',
-            legend_box_just='auto',
+            aspect_ratio=get_option("aspect_ratio"),
+            dpi=get_option("dpi"),
+            figure_size=get_option("figure_size"),
+            axis_text=element_text(margin={"t": 2.4, "r": 2.4, "units": "pt"}),
+            axis_title=element_text(margin={"t": 5, "r": 5, "units": "pt"}),
+            legend_box="auto",
+            legend_box_just="auto",
             legend_box_margin=10,
             legend_box_spacing=0.1,
-            legend_direction='auto',
+            legend_direction="auto",
             legend_entry_spacing_x=5,
             legend_entry_spacing_y=2,
-            legend_key=element_rect(fill='None', colour='None'),
+            legend_key=element_rect(fill="None", colour="None"),
             legend_key_size=16,
             legend_margin=10,
-            legend_position='right',
+            legend_position="right",
             legend_spacing=10,
             legend_text=element_text(
-                margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
+                margin={"t": 3, "b": 3, "l": 3, "r": 3, "units": "pt"}
             ),
-            legend_title=element_text(ha='left', margin={'b': 8}),
-            legend_title_align='auto',
+            legend_title=element_text(ha="left", margin={"b": 8}),
+            legend_title_align="auto",
             panel_spacing=0.1,
             plot_caption=element_text(
-                margin={'t': 7.2, 'r': 0, 'units': 'pt'}
+                margin={"t": 7.2, "r": 0, "units": "pt"}
             ),
             plot_title=element_text(
-                ha='center',
-                linespacing=1.2,
-                margin={'b': 6.6, 'units': 'pt'}
+                ha="center", linespacing=1.2, margin={"b": 6.6, "units": "pt"}
             ),
             strip_background=element_rect(
-                fill='#D9D9D9',
-                color='#D9D9D9',
-                size=1
+                fill="#D9D9D9", color="#D9D9D9", size=1
             ),
             strip_margin=0,
             strip_text=element_text(
-                margin={'t': 3, 'b': 3, 'l': 3, 'r': 3, 'units': 'pt'}
+                margin={"t": 3, "b": 3, "l": 3, "r": 3, "units": "pt"}
             ),
-            complete=True
+            complete=True,
         )
 
         if use_defaults:
@@ -86,16 +75,16 @@ class theme_matplotlib(theme):
 
             deprecated_rcparams = (
                 # TODO: remove _all_deprecated < MPL 3.6.0
-                set(getattr(mpl, '_deprecated_remain_as_none', {}))
-                | set(getattr(mpl, '_all_deprecated', {}))
+                set(getattr(mpl, "_deprecated_remain_as_none", {}))
+                | set(getattr(mpl, "_all_deprecated", {}))
             )
             # no need to a get a deprecate warning just because
             # they are still included in rcParams...
             for key in deprecated_rcparams:
                 if key in _copy:
                     del _copy[key]
-            if 'tk.pythoninspect' in _copy:
-                del _copy['tk.pythoninspect']
+            if "tk.pythoninspect" in _copy:
+                del _copy["tk.pythoninspect"]
             self._rcParams.update(_copy)
 
         if fname:

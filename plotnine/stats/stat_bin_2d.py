@@ -52,31 +52,36 @@ class stat_bin_2d(stat):
         'density' # density of points in bin, scaled to integrate to 1
 
     """
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'rect', 'position': 'identity',
-                      'na_rm': False,
-                      'bins': 30, 'breaks': None, 'binwidth': None,
-                      'drop': True}
-    DEFAULT_AES = {'fill': after_stat('count'), 'weight': None}
-    CREATES = {'xmin', 'xmax', 'ymin', 'ymax', 'count', 'density'}
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_PARAMS = {
+        "geom": "rect",
+        "position": "identity",
+        "na_rm": False,
+        "bins": 30,
+        "breaks": None,
+        "binwidth": None,
+        "drop": True,
+    }
+    DEFAULT_AES = {"fill": after_stat("count"), "weight": None}
+    CREATES = {"xmin", "xmax", "ymin", "ymax", "count", "density"}
 
     def setup_params(self, data):
         params = self.params.copy()
-        params['bins'] = dual_param(params['bins'])
-        params['breaks'] = dual_param(params['breaks'])
-        params['binwidth'] = dual_param(params['binwidth'])
+        params["bins"] = dual_param(params["bins"])
+        params["breaks"] = dual_param(params["breaks"])
+        params["binwidth"] = dual_param(params["binwidth"])
         return params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        bins = params['bins']
-        breaks = params['breaks']
-        binwidth = params['binwidth']
-        drop = params['drop']
-        weight = data.get('weight')
+        bins = params["bins"]
+        breaks = params["breaks"]
+        binwidth = params["binwidth"]
+        drop = params["drop"]
+        weight = data.get("weight")
 
         if weight is None:
-            weight = np.ones(len(data['x']))
+            weight = np.ones(len(data["x"]))
 
         # The bins will be over the dimension(full size) of the
         # trained x and y scales
@@ -85,34 +90,28 @@ class stat_bin_2d(stat):
 
         # Trick pd.cut into creating cuts over the range of
         # the scale
-        x = np.append(data['x'], range_x)
-        y = np.append(data['y'], range_y)
+        x = np.append(data["x"], range_x)
+        y = np.append(data["y"], range_y)
 
         # create the cutting parameters
         xbreaks = fuzzybreaks(
-            scales.x,
-            breaks=breaks.x,
-            binwidth=binwidth.x,
-            bins=bins.x
+            scales.x, breaks=breaks.x, binwidth=binwidth.x, bins=bins.x
         )
         ybreaks = fuzzybreaks(
-            scales.y,
-            breaks.y,
-            binwidth=binwidth.y,
-            bins=bins.y
+            scales.y, breaks.y, binwidth=binwidth.y, bins=bins.y
         )
 
         xbins = pd.cut(
             x,
             bins=xbreaks,  # pyright: ignore
             labels=False,  # pyright: ignore
-            right=True
+            right=True,
         )
         ybins = pd.cut(
             y,
             bins=ybreaks,  # pyright: ignore
             labels=False,  # pyright: ignore
-            right=True
+            right=True,
         )
 
         # Remove the spurious points
@@ -124,24 +123,23 @@ class stat_bin_2d(stat):
         ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
         xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
 
-        df = pd.DataFrame({
-            'xbins': xbins,
-            'ybins': ybins,
-            'weight': weight,
-        })
+        df = pd.DataFrame(
+            {
+                "xbins": xbins,
+                "ybins": ybins,
+                "weight": weight,
+            }
+        )
         table = df.pivot_table(
-            'weight',
-            index=['xbins', 'ybins'],
-            aggfunc=np.sum
-        )['weight']
+            "weight", index=["xbins", "ybins"], aggfunc=np.sum
+        )["weight"]
 
         # create rectangles
         rects = []
         keys = itertools.product(
-            range(len(ybreaks)-1),
-            range(len(xbreaks)-1)
+            range(len(ybreaks) - 1), range(len(xbreaks) - 1)
         )
-        for (j, i) in keys:
+        for j, i in keys:
             try:
                 cval = table[(i, j)]
             except KeyError:
@@ -151,18 +149,17 @@ class stat_bin_2d(stat):
             # xmin, xmax, ymin, ymax, count
             row = [
                 xbreaks[i],
-                xbreaks[i+1],
+                xbreaks[i + 1],
                 ybreaks[j],
-                ybreaks[j+1],
+                ybreaks[j + 1],
                 cval,
             ]
             rects.append(row)
 
         new_data = pd.DataFrame(
-            rects,
-            columns=['xmin', 'xmax', 'ymin', 'ymax', 'count']
+            rects, columns=["xmin", "xmax", "ymin", "ymax", "count"]
         )
-        new_data['density'] = new_data['count'] / new_data['count'].sum()
+        new_data["density"] = new_data["count"] / new_data["count"].sum()
         return new_data
 
 
@@ -179,7 +176,7 @@ def dual_param(value):
     if is_scalar_or_string(value):
         return types.SimpleNamespace(x=value, y=value)
 
-    if hasattr(value, 'x') and hasattr(value, 'y'):
+    if hasattr(value, "x") and hasattr(value, "y"):
         return value
 
     if len(value) == 2:

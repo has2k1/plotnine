@@ -69,6 +69,7 @@ class layer:
     There is no benefit to manually creating a layer. You should
     always use a ``geom`` or ``stat``.
     """
+
     # Data for this layer
     data: pd.DataFrame
 
@@ -82,7 +83,7 @@ class layer:
         position: Position,
         inherit_aes: bool = True,
         show_legend: bool | None = None,
-        raster: bool = False
+        raster: bool = False,
     ):
         self.geom = geom
         self.stat = stat
@@ -111,14 +112,14 @@ class layer:
         """
         kwargs = geom._kwargs
         lkwargs = {
-            'geom': geom,
-            'mapping': geom.mapping,
-            'data': geom.data,
-            'stat': geom._stat,
-            'position': geom._position
+            "geom": geom,
+            "mapping": geom.mapping,
+            "data": geom.data,
+            "stat": geom._stat,
+            "position": geom._position,
         }
 
-        layer_params = ('inherit_aes', 'show_legend', 'raster')
+        layer_params = ("inherit_aes", "show_legend", "raster")
         for param in layer_params:
             if param in kwargs:
                 lkwargs[param] = kwargs[param]
@@ -148,7 +149,7 @@ class layer:
         new = result.__dict__
 
         for key, item in old.items():
-            if key == 'data':
+            if key == "data":
                 new[key] = old[key]
             else:
                 new[key] = deepcopy(old[key], memo)
@@ -203,9 +204,9 @@ class layer:
         else:
             # Recognise polars dataframes
             if hasattr(self._data, "to_pandas"):
-                self.data = (
-                    typing.cast("DataFrameConvertible", self._data).to_pandas()
-                )
+                self.data = typing.cast(
+                    "DataFrameConvertible", self._data
+                ).to_pandas()
             elif isinstance(self._data, pd.DataFrame):
                 self.data = self._data.copy()
             else:
@@ -231,17 +232,14 @@ class layer:
                 del self.mapping[ae]
 
         # Set group as a mapping if set as a parameter
-        if 'group' in self.geom.aes_params:
-            group = self.geom.aes_params['group']
+        if "group" in self.geom.aes_params:
+            group = self.geom.aes_params["group"]
             # Double quote str so that it evaluates to itself
             if isinstance(group, str):
                 group = f'"{group}"'
-            self.mapping['group'] = stage(start=group)
+            self.mapping["group"] = stage(start=group)
 
-    def _make_layer_environments(
-        self,
-        plot_environment: EvalEnvironment
-    ):
+    def _make_layer_environments(self, plot_environment: EvalEnvironment):
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -266,12 +264,12 @@ class layer:
 
         if len(self.data) == 0 and len(evaled) > 0:
             # No data, and vectors suppled to aesthetics
-            evaled['PANEL'] = 1
+            evaled["PANEL"] = 1
         else:
-            evaled['PANEL'] = self.data['PANEL']
+            evaled["PANEL"] = self.data["PANEL"]
 
         data = add_group(evaled)
-        self.data = data.sort_values('PANEL', kind='mergesort')
+        self.data = data.sort_values("PANEL", kind="mergesort")
 
     def compute_statistic(self, layout: Layout):
         """
@@ -328,7 +326,7 @@ class layer:
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
             set(data.columns) | set(self.geom.aes_params),
-            self.geom.__class__.__name__
+            self.geom.__class__.__name__,
         )
 
         self.data = data
@@ -348,11 +346,7 @@ class layer:
         data = self.position.compute_layer(data, params, layout)
         self.data = data
 
-    def draw(
-        self,
-        layout: Layout,
-        coord: Coord
-    ):
+    def draw(self, layout: Layout, coord: Coord):
         """
         Draw geom
 
@@ -366,8 +360,8 @@ class layer:
         """
         params = copy(self.geom.params)
         params.update(self.stat.params)
-        params['zorder'] = self.zorder
-        params['raster'] = self.raster
+        params["zorder"] = self.zorder
+        params["raster"] = self.raster
         self.data = self.geom.handle_na(self.data)
         # At this point each layer must have the data
         # that is created by the plot build process
@@ -376,7 +370,7 @@ class layer:
     def use_defaults(
         self,
         data: pd.DataFrame | None = None,
-        aes_modifiers: dict[str, Any] | None = None
+        aes_modifiers: dict[str, Any] | None = None,
     ) -> pd.DataFrame:
         """
         Prepare/modify data for plotting
@@ -412,21 +406,22 @@ class Layers(List[layer]):
     applied at all layers in the plot. This class makes those
     tasks easier.
     """
-    @overload
-    def __radd__(self, other: Iterable[layer]) -> Layers: ...
 
     @overload
-    def __radd__(self, other: Ggplot) -> Ggplot: ...
+    def __radd__(self, other: Iterable[layer]) -> Layers:
+        ...
 
-    def __radd__(
-        self,
-        other: Iterable[layer] | Ggplot
-    ) -> Layers | Ggplot:
+    @overload
+    def __radd__(self, other: Ggplot) -> Ggplot:
+        ...
+
+    def __radd__(self, other: Iterable[layer] | Ggplot) -> Layers | Ggplot:
         """
         Add layers to ggplot object
         """
         # Add layers to ggplot object
         from .ggplot import ggplot
+
         if isinstance(other, ggplot):
             for obj in self:
                 other += obj
@@ -437,15 +432,14 @@ class Layers(List[layer]):
         return other
 
     @overload
-    def __getitem__(self, key: SupportsIndex) -> layer: ...
+    def __getitem__(self, key: SupportsIndex) -> layer:
+        ...
 
     @overload
-    def __getitem__(self, key: slice) -> Layers: ...
+    def __getitem__(self, key: slice) -> Layers:
+        ...
 
-    def __getitem__(
-        self,
-        key: SupportsIndex | slice
-    ) -> layer | Layers:
+    def __getitem__(self, key: SupportsIndex | slice) -> layer | Layers:
         result = super().__getitem__(key)
         if isinstance(result, Iterable):
             result = Layers(result)
@@ -463,11 +457,7 @@ class Layers(List[layer]):
         for l in self:
             l.setup_data()
 
-    def draw(
-        self,
-        layout: Layout,
-        coord: Coord
-    ):
+    def draw(self, layout: Layout, coord: Coord):
         # If zorder is 0, it is left to MPL
         for i, l in enumerate(self, start=1):
             l.zorder = i
@@ -492,7 +482,7 @@ class Layers(List[layer]):
     def use_defaults(
         self,
         data: pd.DataFrame | None = None,
-        aes_modifiers: dict[str, Any] | None = None
+        aes_modifiers: dict[str, Any] | None = None,
     ):
         for l in self:
             l.use_defaults(data, aes_modifiers)
@@ -528,22 +518,21 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
     if len(data) == 0:
         return data
 
-    if 'group' not in data:
+    if "group" not in data:
         ignore = data.columns.difference(list(SCALED_AESTHETICS))
         disc = discrete_columns(data, ignore=ignore)
         if disc:
-            data['group'] = ninteraction(data[disc], drop=True)
+            data["group"] = ninteraction(data[disc], drop=True)
         else:
-            data['group'] = NO_GROUP
+            data["group"] = NO_GROUP
     else:
-        data['group'] = ninteraction(data[['group']], drop=True)
+        data["group"] = ninteraction(data[["group"]], drop=True)
 
     return data
 
 
 def discrete_columns(
-    df: pd.DataFrame,
-    ignore: Sequence[str] | pd.Index
+    df: pd.DataFrame, ignore: Sequence[str] | pd.Index
 ) -> list[str]:
     """
     Return a list of the discrete columns in the dataframe

@@ -18,24 +18,25 @@ class element_base:
     """
     Base class for all theme elements
     """
+
     properties: dict[str, Any]  # dict of the properties
 
     def __init__(self):
-        self.properties = {'visible': True}
+        self.properties = {"visible": True}
 
     def __repr__(self) -> str:
         """
         Element representation
         """
-        return f'{self.__class__.__name__}({self})'
+        return f"{self.__class__.__name__}({self})"
 
     def __str__(self) -> str:
         """
         Element as string
         """
         d = self.properties.copy()
-        del d['visible']
-        return f'{d}'
+        del d["visible"]
+        return f"{d}"
 
 
 class element_line(element_base):
@@ -67,25 +68,25 @@ class element_line(element_base):
         color: Optional[str | TupleFloat3 | TupleFloat4] = None,
         size: Optional[float] = None,
         linetype: Optional[str | Sequence[int]] = None,
-        lineend: Optional[Literal['butt', 'projecting', 'round']] = None,
+        lineend: Optional[Literal["butt", "projecting", "round"]] = None,
         colour: Optional[str | TupleFloat3 | TupleFloat4] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         super().__init__()
         self.properties.update(**kwargs)
 
         color = color if color else colour
         if color:
-            self.properties['color'] = color
+            self.properties["color"] = color
         if size:
-            self.properties['linewidth'] = size
+            self.properties["linewidth"] = size
         if linetype:
-            self.properties['linestyle'] = linetype
+            self.properties["linestyle"] = linetype
 
-        if linetype in ('solid', '-') and lineend:
-            self.properties['solid_capstyle'] = lineend
+        if linetype in ("solid", "-") and lineend:
+            self.properties["solid_capstyle"] = lineend
         elif linetype and lineend:
-            self.properties['dash_capstyle'] = lineend
+            self.properties["dash_capstyle"] = lineend
 
 
 class element_rect(element_base):
@@ -118,20 +119,20 @@ class element_rect(element_base):
         size: Optional[float] = None,
         linetype: Optional[str | Sequence[int]] = None,
         colour: Optional[str | TupleFloat3 | TupleFloat4] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         super().__init__()
         self.properties.update(**kwargs)
 
         color = color if color else colour
         if fill:
-            self.properties['facecolor'] = fill
+            self.properties["facecolor"] = fill
         if color:
-            self.properties['edgecolor'] = color
+            self.properties["edgecolor"] = color
         if size:
-            self.properties['linewidth'] = size
+            self.properties["linewidth"] = size
         if linetype:
-            self.properties['linestyle'] = linetype
+            self.properties["linestyle"] = linetype
 
 
 class element_text(element_base):
@@ -186,37 +187,36 @@ class element_text(element_base):
         weight: Optional[int | str] = None,
         color: Optional[str | TupleFloat3 | TupleFloat4] = None,
         size: Optional[float] = None,
-        ha: Optional[Literal['center', 'left', 'right']] = None,
-        va: Optional[Literal['center' , 'top', 'bottom', 'baseline']] = None,
+        ha: Optional[Literal["center", "left", "right"]] = None,
+        va: Optional[Literal["center", "top", "bottom", "baseline"]] = None,
         rotation: Optional[float] = None,
         linespacing: Optional[float] = None,
         backgroundcolor: Optional[str | TupleFloat3 | TupleFloat4] = None,
         margin: Optional[dict[str, Any]] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
-
         # ggplot2 translation
         with suppress(KeyError):
-            linespacing = kwargs.pop('lineheight')
+            linespacing = kwargs.pop("lineheight")
         with suppress(KeyError):
-            color = color or kwargs.pop('colour')
+            color = color or kwargs.pop("colour")
         with suppress(KeyError):
-            _face = kwargs.pop('face')
-            if _face == 'plain':
-                style = 'normal'
-            elif _face == 'italic':
-                style = 'italic'
-            elif _face == 'bold':
-                weight = 'bold'
-            elif _face == 'bold.italic':
-                style = 'italic'
-                weight = 'bold'
+            _face = kwargs.pop("face")
+            if _face == "plain":
+                style = "normal"
+            elif _face == "italic":
+                style = "italic"
+            elif _face == "bold":
+                weight = "bold"
+            elif _face == "bold.italic":
+                style = "italic"
+                weight = "bold"
         with suppress(KeyError):
-            ha = self._translate_hjust(kwargs.pop('hjust'))
+            ha = self._translate_hjust(kwargs.pop("hjust"))
         with suppress(KeyError):
-            va = self._translate_vjust(kwargs.pop('vjust'))
+            va = self._translate_vjust(kwargs.pop("vjust"))
         with suppress(KeyError):
-            rotation = kwargs.pop('angle')
+            rotation = kwargs.pop("angle")
 
         super().__init__()
         self.properties.update(**kwargs)
@@ -225,41 +225,49 @@ class element_text(element_base):
             margin = Margin(self, **margin)  # type: ignore
 
         # Use the parameters that have been set
-        names = ('backgroundcolor', 'color', 'family', 'ha',
-                 'linespacing', 'rotation', 'size', 'style',
-                 'va', 'weight', 'margin')
+        names = (
+            "backgroundcolor",
+            "color",
+            "family",
+            "ha",
+            "linespacing",
+            "rotation",
+            "size",
+            "style",
+            "va",
+            "weight",
+            "margin",
+        )
         variables = locals()
         for name in names:
             if variables[name] is not None:
                 self.properties[name] = variables[name]
 
     def _translate_hjust(
-        self,
-        just: float
-    ) -> Literal['left', 'right', 'center']:
+        self, just: float
+    ) -> Literal["left", "right", "center"]:
         """
         Translate ggplot2 justification from [0, 1] to left, right, center.
         """
         if just == 0:
-            return 'left'
+            return "left"
         elif just == 1:
-            return 'right'
+            return "right"
         else:
-            return 'center'
+            return "center"
 
     def _translate_vjust(
-        self,
-        just: float
-    ) -> Literal['top', 'bottom', 'center']:
+        self, just: float
+    ) -> Literal["top", "bottom", "center"]:
         """
         Translate ggplot2 justification from [0, 1] to top, bottom, center.
         """
         if just == 0:
-            return 'bottom'
+            return "bottom"
         elif just == 1:
-            return 'top'
+            return "top"
         else:
-            return 'center'
+            return "center"
 
 
 class element_blank(element_base):
@@ -268,7 +276,7 @@ class element_blank(element_base):
     """
 
     def __init__(self):
-        self.properties = {'visible': False}
+        self.properties = {"visible": False}
 
 
 @dataclass
@@ -278,16 +286,16 @@ class Margin:
     b: float = 0
     l: float = 0
     r: float = 0
-    units: Literal['pt', 'in', 'lines'] = 'pt'
+    units: Literal["pt", "in", "lines"] = "pt"
 
     def __post_init__(self):
-        if self.units in {'pts', 'points', 'px', 'pixels'}:
-            self.units = 'pt'
-        elif self.units in {'in', 'inch', 'inches'}:
-            self.units = 'in'
+        if self.units in {"pts", "points", "px", "pixels"}:
+            self.units = "pt"
+        elif self.units in {"in", "inch", "inches"}:
+            self.units = "in"
 
     def __eq__(self, other: Any) -> bool:
-        core = ('t', 'b', 'l', 'r', 'units')
+        core = ("t", "b", "l", "r", "units")
         if self is other:
             return True
 
@@ -298,36 +306,35 @@ class Margin:
             if getattr(self, attr) != getattr(other, attr):
                 return False
 
-        s_size = self.element.properties.get('size')
-        o_size = other.element.properties.get('size')
+        s_size = self.element.properties.get("size")
+        o_size = other.element.properties.get("size")
         return s_size == o_size
-
 
     def get_as(
         self,
-        loc: Literal['t', 'b', 'l', 'r'],
-        units: Literal['pt', 'in', 'lines'] = 'pt'
+        loc: Literal["t", "b", "l", "r"],
+        units: Literal["pt", "in", "lines"] = "pt",
     ) -> float:
         """
         Return key in given units
         """
         dpi = 72
-        size: float = self.element.properties.get('size', 0)
+        size: float = self.element.properties.get("size", 0)
         from_units = self.units
         to_units = units
 
         functions: dict[str, Callable[[float], float]] = {
-            'pt-lines': lambda x: x/size,
-            'pt-in': lambda x: x/dpi,
-            'lines-pt': lambda x: x*size,
-            'lines-in': lambda x: x*size/dpi,
-            'in-pt': lambda x: x*dpi,
-            'in-lines': lambda x: x*dpi/size
+            "pt-lines": lambda x: x / size,
+            "pt-in": lambda x: x / dpi,
+            "lines-pt": lambda x: x * size,
+            "lines-in": lambda x: x * size / dpi,
+            "in-pt": lambda x: x * dpi,
+            "in-lines": lambda x: x * dpi / size,
         }
 
         value: float = getattr(self, loc)
         if from_units != to_units:
-            conversion = '{}-{}'.format(self.units, units)
+            conversion = "{}-{}".format(self.units, units)
             try:
                 value = functions[conversion](value)
             except ZeroDivisionError:

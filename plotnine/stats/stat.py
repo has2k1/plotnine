@@ -35,6 +35,7 @@ if typing.TYPE_CHECKING:
 
 class stat(metaclass=Registry):
     """Base class of all stats"""
+
     __base__ = True
 
     REQUIRED_AES = set()
@@ -59,7 +60,7 @@ class stat(metaclass=Registry):
     # documentation for mapping parameter. Use {aesthetics_table}
     # placeholder to insert a table for all the aesthetics and
     # their default values.
-    _aesthetics_doc = '{aesthetics_table}'
+    _aesthetics_doc = "{aesthetics_table}"
 
     # Plot namespace, it gets its value when the plot is being
     # built.
@@ -69,15 +70,15 @@ class stat(metaclass=Registry):
         self,
         mapping: Aes | None = None,
         data: DataLike | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
         self.DEFAULT_AES = aes(**self.DEFAULT_AES)
-        self.aes_params = {ae: kwargs[ae]
-                           for ae in (self.aesthetics() &
-                                      kwargs.keys())}
+        self.aes_params = {
+            ae: kwargs[ae] for ae in (self.aesthetics() & kwargs.keys())
+        }
 
     @staticmethod
     def from_geom(geom: Geom) -> stat:
@@ -100,12 +101,11 @@ class stat(metaclass=Registry):
         ------
         :class:`PlotnineError` if unable to create a `stat`.
         """
-        name = geom.params['stat']
+        name = geom.params["stat"]
         kwargs = geom._kwargs
         # More stable when reloading modules than
         # using issubclass
-        if (not isinstance(name, type) and
-                hasattr(name, 'compute_layer')):
+        if not isinstance(name, type) and hasattr(name, "compute_layer"):
             return name
 
         if isinstance(name, stat):
@@ -113,17 +113,15 @@ class stat(metaclass=Registry):
         elif isinstance(name, type) and issubclass(name, stat):
             klass = name
         elif is_string(name):
-            if not name.startswith('stat_'):
-                name = f'stat_{name}'
+            if not name.startswith("stat_"):
+                name = f"stat_{name}"
             klass = Registry[name]
         else:
-            raise PlotnineError(
-                f'Unknown stat of type {type(name)}')
+            raise PlotnineError(f"Unknown stat of type {type(name)}")
 
         valid_kwargs = (
-             (klass.aesthetics() |
-              klass.DEFAULT_PARAMS.keys()) &
-             kwargs.keys())
+            klass.aesthetics() | klass.DEFAULT_PARAMS.keys()
+        ) & kwargs.keys()
 
         params = {k: kwargs[k] for k in valid_kwargs}
         return klass(geom=geom, **params)
@@ -141,7 +139,7 @@ class stat(metaclass=Registry):
         new = result.__dict__
 
         # don't make a _kwargs and environment
-        shallow = {'_kwargs', 'environment'}
+        shallow = {"_kwargs", "environment"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = old[key]
@@ -181,19 +179,14 @@ class stat(metaclass=Registry):
             Data used for drawing the geom.
         """
         missing = (
-            self.aesthetics()
-            - set(self.aes_params.keys())
-            - set(data.columns)
+            self.aesthetics() - set(self.aes_params.keys()) - set(data.columns)
         )  # pyright: ignore
 
-        for ae in missing-self.REQUIRED_AES:
+        for ae in missing - self.REQUIRED_AES:
             if self.DEFAULT_AES[ae] is not None:
                 data[ae] = self.DEFAULT_AES[ae]
 
-        missing = (
-            self.aes_params.keys()
-            - set(data.columns)
-        )
+        missing = self.aes_params.keys() - set(data.columns)
 
         for ae in self.aes_params:
             data[ae] = self.aes_params[ae]
@@ -233,9 +226,7 @@ class stat(metaclass=Registry):
         return data
 
     def finish_layer(
-        self,
-        data: pd.DataFrame,
-        params: dict[str, Any]
+        self, data: pd.DataFrame, params: dict[str, Any]
     ) -> pd.DataFrame:
         """
         Modify data after the aesthetics have been mapped
@@ -266,10 +257,7 @@ class stat(metaclass=Registry):
 
     @classmethod
     def compute_layer(
-        cls,
-        data: pd.DataFrame,
-        params: dict[str, Any],
-        layout: Layout
+        cls, data: pd.DataFrame, params: dict[str, Any], layout: Layout
     ) -> pd.DataFrame:
         """
         Calculate statistics for this layers
@@ -293,15 +281,15 @@ class stat(metaclass=Registry):
         check_required_aesthetics(
             cls.REQUIRED_AES,
             list(data.columns) + list(params.keys()),
-            cls.__name__
+            cls.__name__,
         )
 
         data = remove_missing(
             data,
-            na_rm=params.get('na_rm', False),
+            na_rm=params.get("na_rm", False),
             vars=list(cls.REQUIRED_AES | cls.NON_MISSING_AES),
             name=cls.__name__,
-            finite=True
+            finite=True,
         )
 
         def fn(pdata):
@@ -313,17 +301,14 @@ class stat(metaclass=Registry):
             # that does the real computation
             if len(pdata) == 0:
                 return pdata
-            pscales = layout.get_scales(pdata['PANEL'].iat[0])
+            pscales = layout.get_scales(pdata["PANEL"].iat[0])
             return cls.compute_panel(pdata, pscales, **params)
 
-        return groupby_apply(data, 'PANEL', fn)
+        return groupby_apply(data, "PANEL", fn)
 
     @classmethod
     def compute_panel(
-        cls,
-        data: pd.DataFrame,
-        scales: pos_scales,
-        **params: Any
+        cls, data: pd.DataFrame, scales: pos_scales, **params: Any
     ):
         """
         Calculate the statistics for all the groups
@@ -352,14 +337,14 @@ class stat(metaclass=Registry):
             return type(data)()
 
         stats = []
-        for _, old in data.groupby('group'):
+        for _, old in data.groupby("group"):
             new = cls.compute_group(old, scales, **params)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
             idx = [0] * len(new)
-            u = unique.loc[idx, missing].reset_index(  # pyright: ignore
+            u = unique.loc[idx, missing].reset_index(
                 drop=True
-            )
+            )  # pyright: ignore
             # concat can have problems with empty dataframes that
             # have an index
             if u.empty and len(u):
@@ -378,10 +363,7 @@ class stat(metaclass=Registry):
 
     @classmethod
     def compute_group(
-        cls,
-        data: pd.DataFrame,
-        scales: pos_scales,
-        **params: Any
+        cls, data: pd.DataFrame, scales: pos_scales, **params: Any
     ) -> pd.DataFrame:
         """
         Calculate statistics for the group
@@ -403,9 +385,7 @@ class stat(metaclass=Registry):
             Parameters
         """
         msg = "{} should implement this method."
-        raise NotImplementedError(
-            msg.format(cls.__name__)
-        )
+        raise NotImplementedError(msg.format(cls.__name__))
 
     def __radd__(self, gg):
         """
@@ -435,4 +415,5 @@ class stat(metaclass=Registry):
         """
         # Create, geom from stat, then layer from geom
         from ..geoms.geom import geom
+
         return layer.from_geom(geom.from_stat(self))

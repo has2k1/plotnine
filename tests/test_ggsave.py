@@ -17,8 +17,7 @@ from plotnine import (
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
-p = (ggplot(mtcars, aes(x='wt', y='mpg', label='name'))
-     + geom_text())
+p = ggplot(mtcars, aes(x="wt", y="mpg", label="name")) + geom_text()
 
 
 def sequential_filenames():
@@ -26,7 +25,7 @@ def sequential_filenames():
     Generate filenames for the tests
     """
     for i in range(100):
-        yield Path(f'filename-{i}.png')
+        yield Path(f"filename-{i}.png")
 
 
 filename_gen = sequential_filenames()
@@ -42,7 +41,7 @@ def assert_exist_and_clean(filename, msg=None):
 class TestArguments:
     def test_default_filename(self):
         p.save(verbose=False)
-        fn = p._save_filename('pdf')
+        fn = p._save_filename("pdf")
         assert_exist_and_clean(fn, "default filename")
 
     def test_save_method(self):
@@ -52,12 +51,10 @@ class TestArguments:
 
         assert_exist_and_clean(fn, "save method")
 
-        res = ('saving' in str(item.message).lower()
-               for item in record)
+        res = ("saving" in str(item.message).lower() for item in record)
         assert any(res)
 
-        res = ('filename' in str(item.message).lower()
-               for item in record)
+        res = ("filename" in str(item.message).lower() for item in record)
         assert any(res)
 
         # verbose
@@ -69,12 +66,12 @@ class TestArguments:
 
     def test_filename_plot_path(self):
         fn = next(filename_gen)
-        p.save(fn, path='.', verbose=False)
+        p.save(fn, path=".", verbose=False)
         assert_exist_and_clean(fn, "fn, plot and path")
 
     def test_format_png(self):
-        p.save(format='png', verbose=False)
-        fn = p._save_filename('png')
+        p.save(format="png", verbose=False)
+        fn = p._save_filename("png")
         assert_exist_and_clean(fn, "format png")
 
     def test_dpi(self):
@@ -84,7 +81,7 @@ class TestArguments:
 
     def test_ggsave(self):
         ggsave(p, verbose=False)
-        fn = p._save_filename('pdf')
+        fn = p._save_filename("pdf")
         assert_exist_and_clean(fn, "default filename")
 
     def test_save_big(self):
@@ -99,16 +96,12 @@ class TestArguments:
         fn1 = next(filename_gen)
         fn2 = next(filename_gen)
 
-        df = pd.DataFrame({
-            'x': range(4),
-            'y': range(4),
-            'b': list('aabb')
-        })
+        df = pd.DataFrame({"x": range(4), "y": range(4), "b": list("aabb")})
 
         p = (
             ggplot(df)
-            + geom_point(aes('x', 'y'))
-            + facet_wrap('b')
+            + geom_point(aes("x", "y"))
+            + facet_wrap("b")
             + theme_xkcd()
         )
         p.save(fn1, verbose=False)
@@ -121,7 +114,7 @@ class TestArguments:
 class TestExceptions:
     def test_unknown_format(self):
         with pytest.raises(Exception):
-            p.save(format='unknown', verbose=False)
+            p.save(format="unknown", verbose=False)
 
     def test_width_only(self):
         with pytest.raises(PlotnineError):
@@ -141,7 +134,7 @@ class TestExceptions:
 
     def test_bad_units(self):
         with pytest.raises(Exception):
-            p.save(width=1, heigth=1, units='xxx')
+            p.save(width=1, heigth=1, units="xxx")
 
 
 # This should be the last function in the file since it can catch

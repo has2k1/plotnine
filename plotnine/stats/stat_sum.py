@@ -31,36 +31,35 @@ class stat_sum(stat):
 
     """
 
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
-                      'na_rm': False}
-    DEFAULT_AES = {'size': after_stat('n'), 'weight': 1}
-    CREATES = {'n', 'prop'}
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_PARAMS = {"geom": "point", "position": "identity", "na_rm": False}
+    DEFAULT_AES = {"size": after_stat("n"), "weight": 1}
+    CREATES = {"n", "prop"}
 
     @classmethod
     def compute_panel(cls, data, scales, **params):
-        if 'weight' not in data:
-            data['weight'] = 1
+        if "weight" not in data:
+            data["weight"] = 1
 
         def count(df):
             """
             Do a weighted count
             """
-            df['n'] = df['weight'].sum()
+            df["n"] = df["weight"].sum()
             return df.iloc[0:1]
 
         def ave(df):
             """
             Calculate proportion values
             """
-            df['prop'] = df['n']/df['n'].sum()
+            df["prop"] = df["n"] / df["n"].sum()
             return df
 
         # group by all present aesthetics other than the weight,
         # then sum them (i.e no. of uniques) to get the raw count
         # 'n', and the proportions 'prop' per group
         s: set[str] = set(data.columns) & ALL_AESTHETICS  # pyright: ignore
-        by = list(s.difference(['weight']))
+        by = list(s.difference(["weight"]))
         counts = groupby_apply(data, by, count)
-        counts = groupby_apply(counts, 'group', ave)
+        counts = groupby_apply(counts, "group", ave)
         return counts

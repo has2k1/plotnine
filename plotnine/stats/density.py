@@ -140,7 +140,7 @@ def kde_count(data, grid, **kwargs):
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
-    r = kwargs.get('radius', np.ptp(data) / 10)
+    r = kwargs.get("radius", np.ptp(data) / 10)
 
     # Get the number of data points within the radius r of each grid point
     iter = (np.sum(np.linalg.norm(data - g, axis=1) < r) for g in grid)
@@ -153,12 +153,12 @@ def kde_count(data, grid, **kwargs):
 
 
 KDE_FUNCS = {
-    'statsmodels-u': kde_statsmodels_u,
-    'statsmodels-m': kde_statsmodels_m,
-    'scipy': kde_scipy,
-    'scikit-learn': kde_sklearn,
-    'sklearn': kde_sklearn,
-    'count': kde_count
+    "statsmodels-u": kde_statsmodels_u,
+    "statsmodels-m": kde_statsmodels_m,
+    "scipy": kde_scipy,
+    "scikit-learn": kde_sklearn,
+    "sklearn": kde_sklearn,
+    "count": kde_count,
 }
 
 
@@ -186,8 +186,8 @@ def kde(data, grid, package, **kwargs):
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
-    if package == 'statsmodels':
-        package = 'statsmodels-m'
+    if package == "statsmodels":
+        package = "statsmodels-m"
     func = KDE_FUNCS[package]
     return func(data, grid, **kwargs)
 
@@ -213,11 +213,11 @@ def get_var_type(col):
     """
     if pdtypes.is_numeric_dtype(col):
         # continuous
-        return 'c'
+        return "c"
     elif pdtypes.is_categorical_dtype(col):
         # ordered or unordered
-        return 'o' if col.cat.ordered else 'u'
+        return "o" if col.cat.ordered else "u"
     else:
         # unordered if unsure, e.g string columns that
         # are not categorical
-        return 'u'
+        return "u"

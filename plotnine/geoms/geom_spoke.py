@@ -27,18 +27,19 @@ class geom_spoke(geom_segment):
     plotnine.geoms.geom_segment : For documentation of extra
         parameters.
     """
-    REQUIRED_AES = {'x', 'y', 'angle', 'radius'}
+
+    REQUIRED_AES = {"x", "y", "angle", "radius"}
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         try:
-            radius = data['radius']
+            radius = data["radius"]
         except KeyError:
-            radius = self.aes_params['radius']
+            radius = self.aes_params["radius"]
         try:
-            angle = data['angle']
+            angle = data["angle"]
         except KeyError:
-            angle = self.aes_params['angle']
+            angle = self.aes_params["angle"]
 
-        data['xend'] = data['x'] + np.cos(angle) * radius
-        data['yend'] = data['y'] + np.sin(angle) * radius
+        data["xend"] = data["x"] + np.cos(angle) * radius
+        data["yend"] = data["y"] + np.sin(angle) * radius
         return data

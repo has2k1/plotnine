@@ -7,7 +7,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import alias
 from .scale import scale_continuous, scale_discrete
 
-linetypes = ['solid', 'dashed', 'dashdot', 'dotted']
+linetypes = ["solid", "dashed", "dashdot", "dotted"]
 
 
 @document
@@ -26,7 +26,8 @@ class scale_linetype(scale_discrete):
     If you need more custom linetypes, use
     :class:`~plotnine.scales.scale_linetype_manual`
     """
-    _aesthetics = ['linetype']
+
+    _aesthetics = ["linetype"]
     palette = staticmethod(manual_pal(linetypes))
 
 
@@ -39,12 +40,13 @@ class scale_linetype_ordinal(scale_linetype):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['linetype']
+
+    _aesthetics = ["linetype"]
 
     def __init__(self, **kwargs):
         warn(
             "Using linetype for an ordinal variable is not advised.",
-            PlotnineWarning
+            PlotnineWarning,
         )
         super().__init__(**kwargs)
 
@@ -56,7 +58,8 @@ class scale_linetype_continuous(scale_continuous):
 
     def __init__(self):
         raise PlotnineError(
-            "A continuous variable can not be mapped to linetype")
+            "A continuous variable can not be mapped to linetype"
+        )
 
 
-alias('scale_linetype_discrete', scale_linetype)
+alias("scale_linetype_discrete", scale_linetype)

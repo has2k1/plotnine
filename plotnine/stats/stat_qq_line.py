@@ -49,45 +49,51 @@ class stat_qq_line(stat):
         to calculate the quantiles.
     """
 
-    REQUIRED_AES = {'sample'}
-    DEFAULT_PARAMS = {'geom': 'qq_line', 'position': 'identity',
-                      'na_rm': False,
-                      'distribution': 'norm', 'dparams': {},
-                      'quantiles': None, 'alpha_beta': (3/8, 3/8),
-                      'line_p': (0.25, 0.75), 'fullrange': False}
-    CREATES = {'x', 'y'}
+    REQUIRED_AES = {"sample"}
+    DEFAULT_PARAMS = {
+        "geom": "qq_line",
+        "position": "identity",
+        "na_rm": False,
+        "distribution": "norm",
+        "dparams": {},
+        "quantiles": None,
+        "alpha_beta": (3 / 8, 3 / 8),
+        "line_p": (0.25, 0.75),
+        "fullrange": False,
+    }
+    CREATES = {"x", "y"}
 
     def setup_params(self, data):
-        if len(self.params['line_p']) != 2:
+        if len(self.params["line_p"]) != 2:
             raise PlotnineError(
-                "Cannot fit line quantiles. "
-                "'line_p' must be of length 2")
+                "Cannot fit line quantiles. " "'line_p' must be of length 2"
+            )
         return self.params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        line_p = params['line_p']
-        dparams = params['dparams']
+        line_p = params["line_p"]
+        dparams = params["dparams"]
 
         # Compute theoretical values
         df = stat_qq.compute_group(data, scales, **params)
-        sample = df['sample'].values
-        theoretical = df['theoretical'].to_numpy()
+        sample = df["sample"].values
+        theoretical = df["theoretical"].to_numpy()
 
         # Compute slope & intercept of the line through the quantiles
-        cdist = get_continuous_distribution(params['distribution'])
+        cdist = get_continuous_distribution(params["distribution"])
         x_coords = cdist.ppf(line_p, **dparams)
         y_coords = mquantiles(sample, line_p)
-        slope = (np.diff(y_coords)/np.diff(x_coords))[0]
-        intercept = y_coords[0] - slope*x_coords[0]
+        slope = (np.diff(y_coords) / np.diff(x_coords))[0]
+        intercept = y_coords[0] - slope * x_coords[0]
 
         # Get x,y points that describe the line
-        if params['fullrange'] and scales.x:
+        if params["fullrange"] and scales.x:
             x = scales.x.dimension()
         else:
             x = theoretical.min(), theoretical.max()
 
         x = np.asarray(x)
         y = slope * x + intercept
-        data = pd.DataFrame({'x': x, 'y': y})
+        data = pd.DataFrame({"x": x, "y": y})
         return data

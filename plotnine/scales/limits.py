@@ -16,7 +16,7 @@ class _lim:
 
     def __init__(self, *limits):
         if not limits:
-            msg = '{}lim(), is missing limits'
+            msg = "{}lim(), is missing limits"
             raise PlotnineError(msg.format(self.aesthetic))
         elif len(limits) == 1:
             limits = limits[0]
@@ -25,17 +25,17 @@ class _lim:
 
         # Type of transform
         if not any(x is None for x in limits) and limits[0] > limits[1]:
-            self.trans = 'reverse'
+            self.trans = "reverse"
         elif array_kind.continuous(series):
-            self.trans = 'identity'
+            self.trans = "identity"
         elif array_kind.discrete(series):
             self.trans = None
         elif array_kind.datetime(series):
-            self.trans = 'datetime'
+            self.trans = "datetime"
         elif array_kind.timedelta(series):
-            self.trans = 'timedelta'
+            self.trans = "timedelta"
         else:
-            msg = f'Unknown type {type(limits[0])} of limits'
+            msg = f"Unknown type {type(limits[0])} of limits"
             raise TypeError(msg)
 
         self.limits = limits
@@ -71,14 +71,12 @@ class _lim:
                     ae_values.append(value)
 
         for value in ae_values:
-            if ('factor(' in value or
-                    'Categorical(' in value):
+            if "factor(" in value or "Categorical(" in value:
                 series = pd.Categorical(self.limits_series)
                 break
-        return make_scale(self.aesthetic,
-                          series,
-                          limits=self.limits,
-                          trans=self.trans)
+        return make_scale(
+            self.aesthetic, series, limits=self.limits, trans=self.trans
+        )
 
     def __radd__(self, gg):
         scale = self.get_scale(gg)
@@ -97,7 +95,8 @@ class xlim(_lim):
         You can also pass two values e.g
         ``xlim(40, 100)``
     """
-    aesthetic = 'x'
+
+    aesthetic = "x"
 
 
 class ylim(_lim):
@@ -116,56 +115,64 @@ class ylim(_lim):
     If the 2nd value of ``limits`` is less than
     the first, a reversed scale will be created.
     """
-    aesthetic = 'y'
+
+    aesthetic = "y"
 
 
 class alphalim(_lim):
     """
     Alpha limits
     """
-    aesthetic = 'alpha'
+
+    aesthetic = "alpha"
 
 
 class colorlim(_lim):
     """
     Color limits
     """
-    aesthetic = 'color'
+
+    aesthetic = "color"
 
 
 class filllim(_lim):
     """
     Fill limits
     """
-    aesthetic = 'fill'
+
+    aesthetic = "fill"
 
 
 class linetypelim(_lim):
     """
     Linetype limits
     """
-    aesthetic = 'linetype'
+
+    aesthetic = "linetype"
 
 
 class shapelim(_lim):
     """
     Shapee limits
     """
-    aesthetic = 'shape'
+
+    aesthetic = "shape"
 
 
 class sizelim(_lim):
     """
     Size limits
     """
-    aesthetic = 'size'
+
+    aesthetic = "size"
 
 
 class strokelim(_lim):
     """
     Stroke limits
     """
-    aesthetic = 'stroke'
+
+    aesthetic = "stroke"
 
 
 class lims:
@@ -194,7 +201,7 @@ class lims:
         thismodule = sys.modules[__name__]
         for ae, value in self._kwargs.items():
             try:
-                klass = getattr(thismodule, f'{ae}lim')
+                klass = getattr(thismodule, f"{ae}lim")
             except AttributeError:
                 raise PlotnineError("Cannot change limits for '{}'")
 
@@ -214,14 +221,15 @@ def expand_limits(**kwargs):
         The keys should be aesthetic names
         e.g. *x*, *y*, *colour*, ...
     """
+
     def as_list(key):
         with suppress(KeyError):
             if isinstance(kwargs[key], (int, float, str)):
                 kwargs[key] = [kwargs[key]]
 
     if isinstance(kwargs, dict):
-        as_list('x')
-        as_list('y')
+        as_list("x")
+        as_list("y")
         data = pd.DataFrame(kwargs)
     else:
         data = kwargs

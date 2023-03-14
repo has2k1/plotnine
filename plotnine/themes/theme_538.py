@@ -16,26 +16,20 @@ class theme_538(theme_gray):
         Base font family.
     """
 
-    def __init__(self, base_size=11, base_family='DejaVu Sans'):
+    def __init__(self, base_size=11, base_family="DejaVu Sans"):
         theme_gray.__init__(self, base_size, base_family)
-        bgcolor = '#F0F0F0'
+        bgcolor = "#F0F0F0"
         self += theme(
             axis_ticks=element_blank(),
-            title=element_text(color='#3C3C3C'),
-            legend_background=element_rect(fill='None'),
-            legend_key=element_rect(fill='#E0E0E0'),
+            title=element_text(color="#3C3C3C"),
+            legend_background=element_rect(fill="None"),
+            legend_key=element_rect(fill="#E0E0E0"),
             panel_background=element_rect(fill=bgcolor),
             panel_border=element_blank(),
             panel_grid_major=element_line(
-                color='#D5D5D5',
-                linetype='solid',
-                size=1
+                color="#D5D5D5", linetype="solid", size=1
             ),
             panel_grid_minor=element_blank(),
-            plot_background=element_rect(
-                fill=bgcolor,
-                color=bgcolor,
-                size=1
-            ),
-            strip_background=element_rect(size=0)
+            plot_background=element_rect(fill=bgcolor, color=bgcolor, size=1),
+            strip_background=element_rect(size=0),
         )

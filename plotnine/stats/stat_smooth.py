@@ -137,67 +137,74 @@ class stat_smooth(stat):
     e.g. :py:`after_stat('se')`.
     """
 
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'smooth', 'position': 'identity',
-                      'na_rm': False,
-                      'method': 'auto', 'se': True, 'n': 80,
-                      'formula': None,
-                      'fullrange': False, 'level': 0.95,
-                      'span': 0.75, 'method_args': {}}
-    CREATES = {'se', 'ymin', 'ymax'}
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_PARAMS = {
+        "geom": "smooth",
+        "position": "identity",
+        "na_rm": False,
+        "method": "auto",
+        "se": True,
+        "n": 80,
+        "formula": None,
+        "fullrange": False,
+        "level": 0.95,
+        "span": 0.75,
+        "method_args": {},
+    }
+    CREATES = {"se", "ymin", "ymax"}
 
     def setup_data(self, data):
         """
         Overide to modify data before compute_layer is called
         """
-        data = data[np.isfinite(data['x']) &
-                    np.isfinite(data['y'])]
+        data = data[np.isfinite(data["x"]) & np.isfinite(data["y"])]
         return data
 
     def setup_params(self, data):
         params = self.params.copy()
         # Use loess/lowess for small datasets
         # and glm for large
-        if params['method'] == 'auto':
-            max_group = data['group'].value_counts().max()
+        if params["method"] == "auto":
+            max_group = data["group"].value_counts().max()
             if max_group < 1000:
                 try:
                     from skmisc.loess import loess  # noqa: F401
-                    params['method'] = 'loess'
-                except ImportError:
-                    params['method'] = 'lowess'
-            else:
-                params['method'] = 'glm'
 
-        if params['method'] == 'mavg':
-            if 'window' not in params['method_args']:
+                    params["method"] = "loess"
+                except ImportError:
+                    params["method"] = "lowess"
+            else:
+                params["method"] = "glm"
+
+        if params["method"] == "mavg":
+            if "window" not in params["method_args"]:
                 window = len(data) // 10
                 warnings.warn(
                     "No 'window' specified in the method_args. "
                     f"Using window = {window}. "
                     "The same window is used for all groups or "
                     "facets",
-                    PlotnineWarning
+                    PlotnineWarning,
                 )
-                params['method_args']['window'] = window
+                params["method_args"]["window"] = window
 
-        if params['formula']:
-            allowed = {'lm', 'ols', 'wls', 'glm', 'rlm', 'gls'}
-            if params['method'] not in allowed:
+        if params["formula"]:
+            allowed = {"lm", "ols", "wls", "glm", "rlm", "gls"}
+            if params["method"] not in allowed:
                 raise ValueError(
                     "You can only use a formula with `method` is "
                     f"one of {allowed}"
                 )
-            params['enviroment'] = self.environment
+            params["enviroment"] = self.environment
 
         return params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        data = data.sort_values('x')
-        n = params['n']
+        data = data.sort_values("x")
+        n = params["n"]
 
-        x_unique = data['x'].unique()
+        x_unique = data["x"].unique()
 
         if len(x_unique) < 2:
             warnings.warn(
@@ -205,21 +212,21 @@ class stat_smooth(stat):
                 f"{len(x_unique)}. Not enough points for smoothing. "
                 "If this message a surprise, make sure the column "
                 "mapped to the x aesthetic has the right dtype.",
-                PlotnineWarning
+                PlotnineWarning,
             )
             # Not enough data to fit
             return pd.DataFrame()
 
-        if data['x'].dtype.kind == 'i':
-            if params['fullrange']:
+        if data["x"].dtype.kind == "i":
+            if params["fullrange"]:
                 xseq = scales.x.dimension()
             else:
                 xseq = np.sort(x_unique)
         else:
-            if params['fullrange']:
+            if params["fullrange"]:
                 rangee = scales.x.dimension()
             else:
-                rangee = [data['x'].min(), data['x'].max()]
+                rangee = [data["x"].min(), data["x"].max()]
             xseq = np.linspace(rangee[0], rangee[1], n)
 
         return predictdf(data, xseq, **params)

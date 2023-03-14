@@ -25,8 +25,12 @@ class geom_blank(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+    }
 
     def draw_panel(
         self,
@@ -34,7 +38,7 @@ class geom_blank(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         pass
 

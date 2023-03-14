@@ -29,17 +29,17 @@ def qplot(
     x: str | Iterable[Any] | range | None = None,
     y: str | Iterable[Any] | range | None = None,
     data: DataLike | None = None,
-    facets: str = '',
+    facets: str = "",
     margins: bool | list[str] = False,
-    geom: str | list[str] | tuple[str] = 'auto',
+    geom: str | list[str] | tuple[str] = "auto",
     xlim: TupleFloat2 | None = None,
     ylim: TupleFloat2 | None = None,
-    log: Literal['x', 'y', 'xy'] | None = None,
+    log: Literal["x", "y", "xy"] | None = None,
     main: str | None = None,
     xlab: str | None = None,
     ylab: str | None = None,
     asp: float | None = None,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> Ggplot:
     """
     Quick plot
@@ -89,22 +89,22 @@ def qplot(
     # String values e.g  "I('red')", "I(4)" are not treated as mappings
 
     environment = EvalEnvironment.capture(1)
-    aesthetics = {} if x is None else {'x': x}
+    aesthetics = {} if x is None else {"x": x}
     if y is not None:
-        aesthetics['y'] = y
+        aesthetics["y"] = y
 
     def is_mapping(value: Any) -> bool:
         """
         Return True if value is not enclosed in I() function
         """
         with suppress(AttributeError):
-            return not (value.startswith('I(') and value.endswith(')'))
+            return not (value.startswith("I(") and value.endswith(")"))
         return True
 
     def I(value: Any) -> Any:
         return value
 
-    I_env = EvalEnvironment([{'I': I}])
+    I_env = EvalEnvironment([{"I": I}])
 
     for ae in kwargs.keys() & ALL_AESTHETICS:
         value = kwargs[ae]
@@ -128,83 +128,85 @@ def qplot(
         Replace all occurences of 'auto' in with str2
         """
         for i, value in enumerate(lst):
-            if value == 'auto':
+            if value == "auto":
                 lst[i] = str2
         return lst
 
-    if 'auto' in geom:
-        if 'sample' in aesthetics:
-            replace_auto(geom, 'qq')
+    if "auto" in geom:
+        if "sample" in aesthetics:
+            replace_auto(geom, "qq")
         elif y is None:
             # If x is discrete we choose geom_bar &
             # geom_histogram otherwise. But we need to
             # evaluate the mapping to find out the dtype
-            env = environment.with_outer_namespace(
-                {'factor': pd.Categorical})
+            env = environment.with_outer_namespace({"factor": pd.Categorical})
 
-            if isinstance(aesthetics['x'], str):
+            if isinstance(aesthetics["x"], str):
                 try:
-                    x = env.eval(aesthetics['x'], inner_namespace=data)
+                    x = env.eval(aesthetics["x"], inner_namespace=data)
                 except Exception:
                     msg = "Could not evaluate aesthetic 'x={}'"
-                    raise PlotnineError(msg.format(aesthetics['x']))
-            elif not hasattr(aesthetics['x'], 'dtype'):
-                x = np.asarray(aesthetics['x'])
+                    raise PlotnineError(msg.format(aesthetics["x"]))
+            elif not hasattr(aesthetics["x"], "dtype"):
+                x = np.asarray(aesthetics["x"])
 
             if array_kind.discrete(x):
-                replace_auto(geom, 'bar')
+                replace_auto(geom, "bar")
             else:
-                replace_auto(geom, 'histogram')
+                replace_auto(geom, "histogram")
 
         else:
             if x is None:
-                if isinstance(aesthetics['y'], typing.Sized):
-                    aesthetics['x'] = range(len(aesthetics['y']))
-                    xlab = 'range(len(y))'
-                    ylab = 'y'
+                if isinstance(aesthetics["y"], typing.Sized):
+                    aesthetics["x"] = range(len(aesthetics["y"]))
+                    xlab = "range(len(y))"
+                    ylab = "y"
                 else:
                     # We could solve the issue in layer.compute_asthetics
                     # but it is not worth the extra complexity
-                    raise PlotnineError(
-                        "Cannot infer how long x should be.")
-            replace_auto(geom, 'point')
+                    raise PlotnineError("Cannot infer how long x should be.")
+            replace_auto(geom, "point")
 
     p: Ggplot = ggplot(data, aes(**aesthetics), environment=environment)
 
-    def get_facet_type(facets: str) -> Literal['grid', 'wrap', 'null']:
+    def get_facet_type(facets: str) -> Literal["grid", "wrap", "null"]:
         with suppress(PlotnineError):
             parse_grid_facets(facets)
-            return 'grid'
+            return "grid"
 
         with suppress(PlotnineError):
             parse_wrap_facets(facets)
-            return 'wrap'
+            return "wrap"
 
-        warn("Could not determine the type of faceting, "
-             "therefore no faceting.", PlotnineWarning)
-        return 'null'
+        warn(
+            "Could not determine the type of faceting, "
+            "therefore no faceting.",
+            PlotnineWarning,
+        )
+        return "null"
 
     if facets:
         facet_type = get_facet_type(facets)
-        if facet_type == 'grid':
+        if facet_type == "grid":
             p += facet_grid(facets, margins=margins)
-        elif facet_type == 'wrap':
+        elif facet_type == "wrap":
             p += facet_wrap(facets)
         else:
             p += facet_null()
 
     # Add geoms
     for g in geom:
-        geom_name = f'geom_{g}'
+        geom_name = f"geom_{g}"
         geom_klass = Registry[geom_name]  # type: ignore
-        stat_name = 'stat_{}'.format(geom_klass.DEFAULT_PARAMS['stat'])
+        stat_name = "stat_{}".format(geom_klass.DEFAULT_PARAMS["stat"])
         stat_klass = Registry[stat_name]  # type: ignore
         # find params
-        recognized = (kwargs.keys() &
-                      (geom_klass.DEFAULT_PARAMS.keys() |
-                       geom_klass.aesthetics() |
-                       stat_klass.DEFAULT_PARAMS.keys() |
-                       stat_klass.aesthetics()))
+        recognized = kwargs.keys() & (
+            geom_klass.DEFAULT_PARAMS.keys()
+            | geom_klass.aesthetics()
+            | stat_klass.DEFAULT_PARAMS.keys()
+            | stat_klass.aesthetics()
+        )
         recognized = recognized - aesthetics.keys()
         params = {ae: kwargs[ae] for ae in recognized}
         p += geom_klass(**params)
@@ -217,19 +219,19 @@ def qplot(
             labels[ae] = kwargs[ae].name
 
     with suppress(AttributeError):
-        labels['x'] = xlab if xlab is not None else x.name  # type: ignore
+        labels["x"] = xlab if xlab is not None else x.name  # type: ignore
 
     with suppress(AttributeError):
-        labels['y'] = ylab if ylab is not None else y.name  # type: ignore
+        labels["y"] = ylab if ylab is not None else y.name  # type: ignore
 
     if main is not None:
-        labels['title'] = main
+        labels["title"] = main
 
     if log:
-        if 'x' in log:
+        if "x" in log:
             p += scale_x_log10()
 
-        if 'y' in log:
+        if "y" in log:
             p += scale_y_log10()
 
     if labels:

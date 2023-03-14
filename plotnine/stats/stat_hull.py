@@ -39,21 +39,27 @@ class stat_hull(stat):
         'area'  # Area of the convex hull
 
     """
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'path', 'position': 'identity',
-                      'na_rm': False, 'qhull_options': None}
-    CREATES = {'area'}
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_PARAMS = {
+        "geom": "path",
+        "position": "identity",
+        "na_rm": False,
+        "qhull_options": None,
+    }
+    CREATES = {"area"}
 
     @classmethod
     def compute_group(cls, data, scales, **params):
         hull = ConvexHull(
-            data[['x', 'y']],
-            qhull_options=params['qhull_options'])
+            data[["x", "y"]], qhull_options=params["qhull_options"]
+        )
         idx = np.hstack([hull.vertices, hull.vertices[0]])
 
-        new_data = pd.DataFrame({
-            'x': data['x'].iloc[idx].values,
-            'y': data['y'].iloc[idx].values,
-            'area': hull.area
-        })
+        new_data = pd.DataFrame(
+            {
+                "x": data["x"].iloc[idx].values,
+                "y": data["y"].iloc[idx].values,
+                "area": hull.area,
+            }
+        )
         return new_data

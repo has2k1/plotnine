@@ -9,40 +9,40 @@ from .scale import scale_continuous, scale_discrete
 
 # All these shapes are filled
 shapes = (
-    'o',  # circle
-    '^',  # triangle up
-    's',  # square
-    'D',  # Diamond
-    'v',  # triangle down
-    '*',  # star
-    'p',  # pentagon
-    '8',  # octagon
-    '<',  # triangle left
-    'h',  # hexagon1
-    '>',  # triangle right
-    'H',  # hexagon1
-    'd',  # thin diamond
+    "o",  # circle
+    "^",  # triangle up
+    "s",  # square
+    "D",  # Diamond
+    "v",  # triangle down
+    "*",  # star
+    "p",  # pentagon
+    "8",  # octagon
+    "<",  # triangle left
+    "h",  # hexagon1
+    ">",  # triangle right
+    "H",  # hexagon1
+    "d",  # thin diamond
 )
 
 unfilled_shapes = (
-    '+',  # plus
-    'x',  # x
-    '.',  # point
-    '1',  # tri_down
-    '2',  # tri_up
-    '3',  # tri_left
-    '4',  # tri_right
-    ',',  # pixel
-    '_',  # hline
-    '|',  # vline
-    0,    # tickleft
-    1,    # tickright
-    2,    # tickup
-    3,    # tickdown
-    4,    # caretleft
-    5,    # caretright
-    6,    # caretup
-    7,    # caretdown
+    "+",  # plus
+    "x",  # x
+    ".",  # point
+    "1",  # tri_down
+    "2",  # tri_up
+    "3",  # tri_left
+    "4",  # tri_right
+    ",",  # pixel
+    "_",  # hline
+    "|",  # vline
+    0,  # tickleft
+    1,  # tickright
+    2,  # tickup
+    3,  # tickdown
+    4,  # caretleft
+    5,  # caretright
+    6,  # caretup
+    7,  # caretdown
 )
 
 # For quick lookup
@@ -62,7 +62,8 @@ class scale_shape(scale_discrete):
         that can be a filled.
     {superclass_parameters}
     """
-    _aesthetics = ['shape']
+
+    _aesthetics = ["shape"]
 
     def __init__(self, unfilled=False, **kwargs):
         if unfilled:
@@ -81,12 +82,13 @@ class scale_shape_ordinal(scale_shape):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['shape']
+
+    _aesthetics = ["shape"]
 
     def __init__(self, **kwargs):
         warn(
             "Using shapes for an ordinal variable is not advised.",
-            PlotnineWarning
+            PlotnineWarning,
         )
         super().__init__(**kwargs)
 
@@ -99,9 +101,7 @@ class scale_shape_continuous(scale_continuous):
     """
 
     def __init__(self):
-        raise PlotnineError(
-            "A continuous variable can not be mapped to shape"
-        )
+        raise PlotnineError("A continuous variable can not be mapped to shape")
 
 
-alias('scale_shape_discrete', scale_shape)
+alias("scale_shape_discrete", scale_shape)

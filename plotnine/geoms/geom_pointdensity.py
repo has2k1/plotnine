@@ -13,5 +13,9 @@ class geom_pointdensity(geom_point):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'stat': 'pointdensity', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {
+        "stat": "pointdensity",
+        "position": "identity",
+        "na_rm": False,
+    }

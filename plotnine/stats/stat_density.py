@@ -94,50 +94,58 @@ class stat_density(stat):
         'scaled'    # density estimate, scaled to maximum of 1
 
     """
-    REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'density', 'position': 'stack',
-                      'na_rm': False,
-                      'kernel': 'gaussian', 'adjust': 1,
-                      'trim': False, 'n': 1024, 'gridsize': None,
-                      'bw': 'nrd0', 'cut': 3,
-                      'clip': (-np.inf, np.inf)}
-    DEFAULT_AES = {'y': after_stat('density')}
-    CREATES = {'density', 'count', 'scaled', 'n'}
+    REQUIRED_AES = {"x"}
+    DEFAULT_PARAMS = {
+        "geom": "density",
+        "position": "stack",
+        "na_rm": False,
+        "kernel": "gaussian",
+        "adjust": 1,
+        "trim": False,
+        "n": 1024,
+        "gridsize": None,
+        "bw": "nrd0",
+        "cut": 3,
+        "clip": (-np.inf, np.inf),
+    }
+    DEFAULT_AES = {"y": after_stat("density")}
+    CREATES = {"density", "count", "scaled", "n"}
 
     def setup_params(self, data):
         params = self.params.copy()
         lookup = {
-            'biweight': 'biw',
-            'cosine': 'cos',
-            'cosine2': 'cos2',
-            'epanechnikov': 'epa',
-            'gaussian': 'gau',
-            'triangular': 'tri',
-            'triweight': 'triw',
-            'uniform': 'uni'
+            "biweight": "biw",
+            "cosine": "cos",
+            "cosine2": "cos2",
+            "epanechnikov": "epa",
+            "gaussian": "gau",
+            "triangular": "tri",
+            "triweight": "triw",
+            "uniform": "uni",
         }
 
         with suppress(KeyError):
-            params['kernel'] = lookup[params['kernel'].lower()]
+            params["kernel"] = lookup[params["kernel"].lower()]
 
-        if params['kernel'] not in lookup.values():
-            msg = ("kernel should be one of {}. "
-                   "You may use the abbreviations {}")
-            raise PlotnineError(msg.format(lookup.keys(),
-                                           lookup.values()))
+        if params["kernel"] not in lookup.values():
+            msg = (
+                "kernel should be one of {}. "
+                "You may use the abbreviations {}"
+            )
+            raise PlotnineError(msg.format(lookup.keys(), lookup.values()))
 
         return params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        weight = data.get('weight')
+        weight = data.get("weight")
 
-        if params['trim']:
-            range_x = data['x'].min(), data['x'].max()
+        if params["trim"]:
+            range_x = data["x"].min(), data["x"].max()
         else:
             range_x = scales.x.dimension()
 
-        return compute_density(data['x'], weight, range_x, **params)
+        return compute_density(data["x"], weight, range_x, **params)
 
 
 def compute_density(x, weight, range, **params):
@@ -147,17 +155,21 @@ def compute_density(x, weight, range, **params):
     x = np.asarray(x, dtype=float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]
-    bw = params['bw']
-    kernel = params['kernel']
+    bw = params["bw"]
+    kernel = params["kernel"]
     n = len(x)
 
     if n == 0 or (n == 1 and isinstance(bw, str)):
         if n == 1:
-            warn("To compute the density of a group with only one "
-                 "value set the bandwidth manually. e.g `bw=0.1`",
-                 PlotnineWarning)
-        warn("Groups with fewer than 2 data points have been removed.",
-             PlotnineWarning)
+            warn(
+                "To compute the density of a group with only one "
+                "value set the bandwidth manually. e.g `bw=0.1`",
+                PlotnineWarning,
+            )
+        warn(
+            "Groups with fewer than 2 data points have been removed.",
+            PlotnineWarning,
+        )
         return pd.DataFrame()
 
     # kde is computed efficiently using fft. But the fft does
@@ -165,17 +177,17 @@ def compute_density(x, weight, range, **params):
     # gaussian kernel. When weights are relevant we
     # turn off the fft.
     if weight is None:
-        if kernel != 'gau':
+        if kernel != "gau":
             weight = np.ones(n) / n
     else:
         weight = np.asarray(weight, dtype=float)
 
-    if kernel == 'gau' and weight is None:
+    if kernel == "gau" and weight is None:
         fft = True
     else:
         fft = False
 
-    if bw == 'nrd0':
+    if bw == "nrd0":
         bw = nrd0(x)
 
     kde = sm.nonparametric.KDEUnivariate(x)
@@ -184,18 +196,18 @@ def compute_density(x, weight, range, **params):
         bw=bw,
         fft=fft,
         weights=weight,
-        adjust=params['adjust'],
-        cut=params['cut'],
-        gridsize=params['gridsize'],
-        clip=params['clip']
+        adjust=params["adjust"],
+        cut=params["cut"],
+        gridsize=params["gridsize"],
+        clip=params["clip"],
     )
 
-    x2 = np.linspace(range[0], range[1], params['n'])
+    x2 = np.linspace(range[0], range[1], params["n"])
 
     try:
         y = kde.evaluate(x2)
         if np.isscalar(y) and np.isnan(y):
-            raise ValueError('kde.evaluate returned nan')
+            raise ValueError("kde.evaluate returned nan")
     except ValueError:
         y = []
         for _x in x2:
@@ -214,13 +226,15 @@ def compute_density(x, weight, range, **params):
     not_nan = ~np.isnan(y)
     x2 = x2[not_nan]
     y = y[not_nan]
-    return pd.DataFrame({
-        'x': x2,
-        'density': y,
-        'scaled': y / np.max(y) if len(y) else [],
-        'count': y * n,
-        'n': n,
-    })
+    return pd.DataFrame(
+        {
+            "x": x2,
+            "density": y,
+            "scaled": y / np.max(y) if len(y) else [],
+            "count": y * n,
+            "n": n,
+        }
+    )
 
 
 def nrd0(x):
@@ -247,8 +261,8 @@ def nrd0(x):
         )
 
     std: float = np.std(x, ddof=1)  # pyright: ignore
-    std_estimate: float = iqr(x)/1.349
+    std_estimate: float = iqr(x) / 1.349
     low_std = np.min((std, std_estimate))
     if low_std == 0:
         low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1
-    return 0.9 * low_std * (n ** -0.2)
+    return 0.9 * low_std * (n**-0.2)

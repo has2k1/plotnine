@@ -21,76 +21,78 @@ class position_stack(position):
     The objects to stack are those that have
     an overlapping x range.
     """
+
     fill = False
 
     def __init__(self, vjust=1, reverse=False):
-        self.params = {
-            'vjust': vjust,
-            'reverse': reverse
-        }
+        self.params = {"vjust": vjust, "reverse": reverse}
 
     def setup_params(self, data):
         """
         Verify, modify & return a copy of the params.
         """
         # Variable for which to do the stacking
-        if 'ymax' in data:
-            if any((data['ymin'] != 0) & (data['ymax'] != 0)):
-                warn("Stacking not well defined when not "
-                     "anchored on the axis.", PlotnineWarning)
-            var = 'ymax'
-        elif 'y' in data:
-            var = 'y'
+        if "ymax" in data:
+            if any((data["ymin"] != 0) & (data["ymax"] != 0)):
+                warn(
+                    "Stacking not well defined when not "
+                    "anchored on the axis.",
+                    PlotnineWarning,
+                )
+            var = "ymax"
+        elif "y" in data:
+            var = "y"
         else:
-            warn("Stacking requires either ymin & ymax or y "
-                 "aesthetics. Maybe you want position = 'identity'?",
-                 PlotnineWarning)
+            warn(
+                "Stacking requires either ymin & ymax or y "
+                "aesthetics. Maybe you want position = 'identity'?",
+                PlotnineWarning,
+            )
             var = None
 
         params = self.params.copy()
-        params['var'] = var
-        params['fill'] = self.fill
+        params["var"] = var
+        params["fill"] = self.fill
         return params
 
     def setup_data(self, data, params):
-        if not params['var']:
+        if not params["var"]:
             return data
 
-        if params['var'] == 'y':
-            data['ymax'] = data['y']
-        elif params['var'] == 'ymax':
-            bool_idx = data['ymax'] == 0
-            data.loc[bool_idx, 'ymax'] = data.loc[bool_idx, 'ymin']
+        if params["var"] == "y":
+            data["ymax"] = data["y"]
+        elif params["var"] == "ymax":
+            bool_idx = data["ymax"] == 0
+            data.loc[bool_idx, "ymax"] = data.loc[bool_idx, "ymin"]
 
         data = remove_missing(
-            data,
-            vars=('x', 'xmin', 'xmax', 'y'),
-            name='position_stack'
+            data, vars=("x", "xmin", "xmax", "y"), name="position_stack"
         )
 
         return data
 
     @classmethod
     def compute_panel(cls, data, scales, params):
-        if not params['var']:
+        if not params["var"]:
             return data
 
         # TODO: Make transforms in mizani aware of their
         # linear status
         def _is_non_linear_trans(trans: Trans) -> bool:
             tname = trans.__class__.__name__
-            linear_transforms = ('identity', 'reverse')
-            if tname.endswith('_trans'):
+            linear_transforms = ("identity", "reverse")
+            if tname.endswith("_trans"):
                 tname = tname[:-6]
-            return (trans.dataspace_is_numerical and
-                    tname not in linear_transforms
-                    )
+            return (
+                trans.dataspace_is_numerical and tname not in linear_transforms
+            )
 
         def get_non_linear_trans(sc: Scale) -> Trans | None:
             """
             Return trans if the scale in non-linear
             """
             from ..scales.scale import scale_continuous
+
             if isinstance(sc, scale_continuous):
                 if _is_non_linear_trans(sc.trans):
                     return sc.trans
@@ -102,7 +104,7 @@ class position_stack(position):
         if nl_trans:
             data = cls.transform_position(data, trans_y=nl_trans.inverse)
 
-        negative = data['ymax'] < 0
+        negative = data["ymax"] < 0
         neg = data.loc[negative]
         pos = data.loc[~negative]
 
@@ -126,19 +128,19 @@ class position_stack(position):
 
         Assumes that each set has the same horizontal position
         """
-        vjust = params['vjust']
+        vjust = params["vjust"]
 
-        y = data['y'].copy()
+        y = data["y"].copy()
         y[np.isnan(y)] = 0
         heights = np.append(0, y.cumsum())
 
-        if params['fill']:
+        if params["fill"]:
             heights = heights / np.abs(heights[-1])
 
-        data['ymin'] = np.min([heights[:-1], heights[1:]], axis=0)
-        data['ymax'] = np.max([heights[:-1], heights[1:]], axis=0)
+        data["ymin"] = np.min([heights[:-1], heights[1:]], axis=0)
+        data["ymax"] = np.max([heights[:-1], heights[1:]], axis=0)
         # less intuitive than (ymin + vjust(ymax-ymin)), but
         # this way avoids subtracting numbers of potentially
         # similar precision
-        data['y'] = ((1-vjust)*data['ymin'] + vjust*data['ymax'])
+        data["y"] = (1 - vjust) * data["ymin"] + vjust * data["ymax"]
         return data

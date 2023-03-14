@@ -17,5 +17,5 @@ class geom_histogram(geom_bar):
     --------
     plotnine.geoms.geom_bar
     """
-    DEFAULT_PARAMS = {'stat': 'bin', 'position': 'stack',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {"stat": "bin", "position": "stack", "na_rm": False}

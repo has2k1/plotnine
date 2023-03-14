@@ -24,12 +24,8 @@ class facet_null(facet):
         self.nrow = 1
         self.ncol = 1
 
-    def map(
-        self,
-        data: pd.DataFrame,
-        layout: pd.DataFrame
-    ) -> pd.DataFrame:
-        data['PANEL'] = 1
+    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
+        data["PANEL"] = 1
         return data
 
     def compute_layout(
@@ -55,8 +51,8 @@ class facet_null(facet):
         bottom = figure.subplotpars.bottom
         W, H = figure.get_size_inches()
 
-        w = (right-left)*W
-        h = w*aspect_ratio
-        H = h / (top-bottom)
+        w = (right - left) * W
+        h = w * aspect_ratio
+        H = h / (top - bottom)
 
         figure.set_figheight(H)

@@ -41,22 +41,33 @@ class geom_crossbar(geom):
         A multiplicative factor used to increase the size of the
         middle bar across the box.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black', 'fill': None,
-                   'linetype': 'solid', 'size': 0.5}
-    REQUIRED_AES = {'x', 'y', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'width': 0.5, 'fatten': 2}
+
+    DEFAULT_AES = {
+        "alpha": 1,
+        "color": "black",
+        "fill": None,
+        "linetype": "solid",
+        "size": 0.5,
+    }
+    REQUIRED_AES = {"x", "y", "ymin", "ymax"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+        "width": 0.5,
+        "fatten": 2,
+    }
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        if 'width' not in data:
-            if self.params['width']:
-                data['width'] = self.params['width']
+        if "width" not in data:
+            if self.params["width"]:
+                data["width"] = self.params["width"]
             else:
-                data['width'] = resolution(data['x'], False) * 0.9
+                data["width"] = resolution(data["x"], False) * 0.9
 
-        data['xmin'] = data['x'] - data['width']/2
-        data['xmax'] = data['x'] + data['width']/2
-        del data['width']
+        data["xmin"] = data["x"] - data["width"] / 2
+        data["xmax"] = data["x"] + data["width"] / 2
+        del data["width"]
         return data
 
     @staticmethod
@@ -65,17 +76,17 @@ class geom_crossbar(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
-        y = data['y']
-        xmin = data['xmin']
-        xmax = data['xmax']
-        ymin = data['ymin']
-        ymax = data['ymax']
-        group = data['group']
+        y = data["y"]
+        xmin = data["xmin"]
+        xmax = data["xmax"]
+        ymin = data["ymin"]
+        ymax = data["ymax"]
+        group = data["group"]
 
         # From violin
-        notchwidth = typing.cast(float, params.get('notchwidth'))
+        notchwidth = typing.cast(float, params.get("notchwidth"))
         # ynotchupper = data.get('ynotchupper')
         # ynotchlower = data.get('ynotchlower')
 
@@ -83,42 +94,69 @@ class geom_crossbar(geom):
             """Flatten list-likes"""
             return np.hstack(args)
 
-        middle = pd.DataFrame({'x': xmin,
-                               'y': y,
-                               'xend': xmax,
-                               'yend': y,
-                               'group': group})
+        middle = pd.DataFrame(
+            {"x": xmin, "y": y, "xend": xmax, "yend": y, "group": group}
+        )
         copy_missing_columns(middle, data)
-        middle['alpha'] = 1
-        middle['size'] *= params['fatten']
+        middle["alpha"] = 1
+        middle["size"] *= params["fatten"]
 
-        has_notch = 'ynotchupper' in data and 'ynotchlower' in data
+        has_notch = "ynotchupper" in data and "ynotchlower" in data
         if has_notch:  # 10 points + 1 closing
-            ynotchupper = data['ynotchupper']
-            ynotchlower = data['ynotchlower']
+            ynotchupper = data["ynotchupper"]
+            ynotchlower = data["ynotchlower"]
 
-            if (any(ynotchlower < ymin) or any(ynotchupper > ymax)):
-                warn("Notch went outside the hinges. "
-                     "Try setting notch=False.", PlotnineWarning)
+            if any(ynotchlower < ymin) or any(ynotchupper > ymax):
+                warn(
+                    "Notch went outside the hinges. "
+                    "Try setting notch=False.",
+                    PlotnineWarning,
+                )
 
-            notchindent = (1 - notchwidth) * (xmax-xmin)/2
+            notchindent = (1 - notchwidth) * (xmax - xmin) / 2
 
-            middle['x'] += notchindent
-            middle['xend'] -= notchindent
-            box = pd.DataFrame({
-                'x': flat(xmin, xmin, xmin+notchindent, xmin, xmin,
-                          xmax, xmax, xmax-notchindent, xmax, xmax,
-                          xmin),
-                'y': flat(ymax, ynotchupper, y, ynotchlower, ymin,
-                          ymin, ynotchlower, y, ynotchupper, ymax,
-                          ymax),
-                'group': np.tile(np.arange(1, len(group)+1), 11)})
+            middle["x"] += notchindent
+            middle["xend"] -= notchindent
+            box = pd.DataFrame(
+                {
+                    "x": flat(
+                        xmin,
+                        xmin,
+                        xmin + notchindent,
+                        xmin,
+                        xmin,
+                        xmax,
+                        xmax,
+                        xmax - notchindent,
+                        xmax,
+                        xmax,
+                        xmin,
+                    ),
+                    "y": flat(
+                        ymax,
+                        ynotchupper,
+                        y,
+                        ynotchlower,
+                        ymin,
+                        ymin,
+                        ynotchlower,
+                        y,
+                        ynotchupper,
+                        ymax,
+                        ymax,
+                    ),
+                    "group": np.tile(np.arange(1, len(group) + 1), 11),
+                }
+            )
         else:
             # No notch, 4 points + 1 closing
-            box = pd.DataFrame({
-                'x': flat(xmin, xmin, xmax, xmax, xmin),
-                'y': flat(ymax, ymax, ymax, ymin, ymin),
-                'group': np.tile(np.arange(1, len(group)+1), 5)})
+            box = pd.DataFrame(
+                {
+                    "x": flat(xmin, xmin, xmax, xmax, xmin),
+                    "y": flat(ymax, ymax, ymax, ymin, ymin),
+                    "group": np.tile(np.arange(1, len(group) + 1), 5),
+                }
+            )
 
         copy_missing_columns(box, data)
         geom_polygon.draw_group(box, panel_params, coord, ax, **params)
@@ -126,9 +164,7 @@ class geom_crossbar(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any],
-        da: DrawingArea,
-        lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: Layer
     ) -> DrawingArea:
         """
         Draw a rectangle with a horizontal strike in the box
@@ -146,28 +182,32 @@ class geom_crossbar(geom):
         -------
         out : DrawingArea
         """
-        data['size'] *= SIZE_FACTOR
+        data["size"] *= SIZE_FACTOR
 
         # background
-        facecolor = to_rgba(data['fill'], data['alpha'])
+        facecolor = to_rgba(data["fill"], data["alpha"])
         if facecolor is None:
-            facecolor = 'none'
+            facecolor = "none"
 
-        bg = Rectangle((da.width*.125, da.height*.25),
-                       width=da.width*.75,
-                       height=da.height*.5,
-                       linewidth=data['size'],
-                       facecolor=facecolor,
-                       edgecolor=data['color'],
-                       linestyle=data['linetype'],
-                       capstyle='projecting',
-                       antialiased=False)
+        bg = Rectangle(
+            (da.width * 0.125, da.height * 0.25),
+            width=da.width * 0.75,
+            height=da.height * 0.5,
+            linewidth=data["size"],
+            facecolor=facecolor,
+            edgecolor=data["color"],
+            linestyle=data["linetype"],
+            capstyle="projecting",
+            antialiased=False,
+        )
         da.add_artist(bg)
 
-        strike = mlines.Line2D([da.width*.125, da.width*.875],
-                               [da.height*.5, da.height*.5],
-                               linestyle=data['linetype'],
-                               linewidth=data['size'],
-                               color=data['color'])
+        strike = mlines.Line2D(
+            [da.width * 0.125, da.width * 0.875],
+            [da.height * 0.5, da.height * 0.5],
+            linestyle=data["linetype"],
+            linewidth=data["size"],
+            color=data["color"],
+        )
         da.add_artist(strike)
         return da

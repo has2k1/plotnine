@@ -26,4 +26,4 @@ class geom_line(geom_path):
     """
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        return data.sort_values(['PANEL', 'group', 'x'])
+        return data.sort_values(["PANEL", "group", "x"])
