@@ -75,7 +75,7 @@ class geom_raster(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         # Silently accept:
         #    1. interpolate
         #    2. bool values for interpolation
@@ -133,7 +133,7 @@ class geom_raster(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
         """

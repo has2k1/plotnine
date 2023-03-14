@@ -62,7 +62,7 @@ class coord_trans(coord):
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
         expand: bool = True
-    ) -> None:
+    ):
         self.trans_x = gettrans(x)
         self.trans_y = gettrans(y)
         self.limits = NS(x=xlim, y=ylim)

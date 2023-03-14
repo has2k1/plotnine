@@ -70,7 +70,7 @@ class stat(metaclass=Registry):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
         self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))

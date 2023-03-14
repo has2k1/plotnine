@@ -85,7 +85,7 @@ class ggplot:
         data: DataLike | None = None,
         mapping: aes | None = None,
         environment: EvalEnvironment | None = None
-    ) -> None:
+    ):
         # Allow some sloppiness
         data, mapping = order_as_data_mapping(data, mapping)
         self.data = data
@@ -276,7 +276,7 @@ class ggplot:
 
         return self
 
-    def _build(self) -> None:
+    def _build(self):
         """
         Build ggplot for rendering.
 
@@ -354,8 +354,9 @@ class ggplot:
 
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
+        print(layers[0].data)
 
-    def _setup_parameters(self) -> None:
+    def _setup_parameters(self):
         """
         Set facet properties
         """
@@ -386,21 +387,21 @@ class ggplot:
         self.axs = axs
         return figure, axs
 
-    def _resize_panels(self) -> None:
+    def _resize_panels(self):
         """
         Resize panels
         """
         self.theme.setup_figure(self.figure)
         self.facet.spaceout_and_resize_panels()
 
-    def _draw_layers(self) -> None:
+    def _draw_layers(self):
         """
         Draw the main plot(s) onto the axes.
         """
         # Draw the geoms
         self.layers.draw(self.layout, self.coordinates)
 
-    def _draw_breaks_and_labels(self) -> None:
+    def _draw_breaks_and_labels(self):
         """
         Draw breaks and labels
         """
@@ -429,7 +430,7 @@ class ggplot:
             if layout_info.axis_y:
                 ax.yaxis.set_tick_params(which='both', left=True)
 
-    def _draw_legend(self) -> None:
+    def _draw_legend(self):
         """
         Draw legend onto the figure
         """
@@ -495,7 +496,7 @@ class ggplot:
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
-    def _draw_labels(self) -> None:
+    def _draw_labels(self):
         """
         Draw x and y labels onto the figure
         """
@@ -543,7 +544,7 @@ class ggplot:
         theme._targets['axis_title_x'] = xlabel
         theme._targets['axis_title_y'] = ylabel
 
-    def _draw_title(self) -> None:
+    def _draw_title(self):
         """
         Draw title onto the figure
         """
@@ -592,7 +593,7 @@ class ggplot:
         text = figure.text(x, y, title, ha=ha, va='center')
         theme._targets['plot_title'] = text
 
-    def _draw_caption(self) -> None:
+    def _draw_caption(self):
         """
         Draw caption onto the figure
         """
@@ -638,7 +639,7 @@ class ggplot:
         hash_token = abs(self.__hash__())
         return Path(f'plotnine-save-{hash_token}.{ext}')
 
-    def _update_labels(self, layer: Layer) -> None:
+    def _update_labels(self, layer: Layer):
         """
         Update label data for the ggplot
 
@@ -740,7 +741,7 @@ class ggplot:
         limitsize: bool = True,
         verbose: bool = True,
         **kwargs: Any
-    ) -> None:
+    ):
         """
         Save a ggplot object as an image file
 
@@ -800,7 +801,7 @@ def save_as_pdf_pages(
     path: str | None = None,
     verbose: bool = True,
     **kwargs: Any
-) -> None:
+):
     """
     Save multiple :class:`ggplot` objects to a PDF file, one per page.
 
@@ -901,7 +902,7 @@ class plot_context:
         exits.
     """
 
-    def __init__(self, plot: ggplot, show: bool = False) -> None:
+    def __init__(self, plot: ggplot, show: bool = False):
         self.plot = plot
         self.show = show
 

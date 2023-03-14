@@ -57,7 +57,7 @@ class geom_violin(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         if 'draw_quantiles' in kwargs:
             kwargs['draw_quantiles'] = np.repeat(kwargs['draw_quantiles'], 1)
             if not all(0 < q < 1 for q in kwargs['draw_quantiles']):
@@ -100,7 +100,7 @@ class geom_violin(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         quantiles = params['draw_quantiles']
         style = params['style']
 

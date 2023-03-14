@@ -45,7 +45,7 @@ class geom_pointrange(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         geom_linerange.draw_group(data.copy(), panel_params,
                                   coord, ax, **params)
         data['size'] = data['size'] * params['fatten']

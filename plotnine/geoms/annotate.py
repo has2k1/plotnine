@@ -71,7 +71,7 @@ class annotate:
         yend: float | None = None,
         yintercept: float | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         variables = locals()
 
         # position only, and combined aesthetics

@@ -49,7 +49,7 @@ class geom_hline(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         data, mapping = order_as_data_mapping(data, mapping)
         yintercept = kwargs.pop('yintercept', None)
         if yintercept is not None:
@@ -69,7 +69,7 @@ class geom_hline(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
         """

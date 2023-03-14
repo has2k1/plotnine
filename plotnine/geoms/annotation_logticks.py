@@ -50,7 +50,7 @@ class _geom_logticks(geom_rug):
         layout: Layout,
         coord: Coord,
         **params: Any
-    ) -> None:
+    ):
         """
         Draw ticks on every panel
         """
@@ -193,7 +193,7 @@ class _geom_logticks(geom_rug):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         # Any passed data is ignored, the relevant data is created
         sides = params['sides']
         lengths = params['lengths']
@@ -208,7 +208,7 @@ class _geom_logticks(geom_rug):
             geom: Geom,
             axis: Literal["x", "y"],
             tick_positions: tuple[AnyArray, AnyArray, AnyArray]
-        ) -> None:
+        ):
             for (position, length) in zip(tick_positions, lengths):
                 data = pd.DataFrame({
                     axis: position,
@@ -284,7 +284,7 @@ class annotation_logticks(annotate):
         linetype: str | tuple[float, ...] = 'solid',
         lengths: TupleFloat3 = (0.036, 0.0225, 0.012),
         base: float | None = None
-    ) -> None:
+    ):
         if len(lengths) != 3:
             raise ValueError(
                 "length for annotation_logticks must be a tuple of 3 floats"

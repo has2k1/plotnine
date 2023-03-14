@@ -92,7 +92,7 @@ class geom_boxplot(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         _position = kwargs.get('position', self.DEFAULT_PARAMS['position'])
         varwidth = kwargs.get('varwidth', self.DEFAULT_PARAMS['varwidth'])
 
@@ -155,7 +155,7 @@ class geom_boxplot(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
             """Flatten list-likes"""
             return np.hstack(args)

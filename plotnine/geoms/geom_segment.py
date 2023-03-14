@@ -58,7 +58,7 @@ class geom_segment(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params)
         data['size'] *= SIZE_FACTOR
         color = to_rgba(data['color'], data['alpha'])

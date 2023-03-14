@@ -175,7 +175,7 @@ class theme:
                  strip_margin_x=None,
                  strip_margin_y=None,
                  strip_margin=None,
-                 **kwargs) -> None:
+                 **kwargs):
         self.themeables = Themeables()
         self.complete = complete
 
@@ -399,7 +399,7 @@ def theme_set(new: theme | Type[theme]) -> theme:
     return out
 
 
-def theme_update(**kwargs: themeable) -> None:
+def theme_update(**kwargs: themeable):
     """
     Modify elements of the current theme
 

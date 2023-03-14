@@ -227,7 +227,7 @@ def make_signature(
     tokens = []
     seen = set()
 
-    def tokens_append(key: str, value: Any) -> None:
+    def tokens_append(key: str, value: Any):
         if isinstance(value, str):
             value = f"'{value}'"
         tokens.append(f'{key}={value}')

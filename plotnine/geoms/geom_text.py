@@ -112,7 +112,7 @@ class geom_text(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         data, mapping = order_as_data_mapping(data, mapping)
         nudge_kwargs = {}
         adjust_text = kwargs.get('adjust_text', None)
@@ -159,7 +159,7 @@ class geom_text(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         super().draw_panel(data, panel_params, coord, ax, **params)
 
     @staticmethod
@@ -169,7 +169,7 @@ class geom_text(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params)
 
         # Bind color and alpha

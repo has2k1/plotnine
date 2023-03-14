@@ -66,7 +66,7 @@ class geom_crossbar(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         y = data['y']
         xmin = data['xmin']
         xmax = data['xmax']

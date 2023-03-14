@@ -316,7 +316,7 @@ class scale(metaclass=Registry):
     def limits( self, value: ScaleLimitsRaw):
         raise NotImplementedError('Not Implemented')
 
-    def train_df(self, df: pd.DataFrame) -> None:
+    def train_df(self, df: pd.DataFrame):
         """
         Train scale from a dataframe
         """
@@ -735,7 +735,7 @@ class scale_continuous(scale):
         return self._trans  # pyright: ignore
 
     @trans.setter
-    def trans(self, value: Trans | str | Type[Trans]) -> None:
+    def trans(self, value: Trans | str | Type[Trans]):
         t: Trans = gettrans(value)
         self._check_trans(t)
         self._trans = t

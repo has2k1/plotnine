@@ -51,7 +51,7 @@ class geom_rug(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params)
         sides = params['sides']
 

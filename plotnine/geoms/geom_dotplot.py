@@ -162,7 +162,7 @@ class geom_dotplot(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params)
         fill = to_rgba(data['fill'], data['alpha'])
         color = to_rgba(data['color'], data['alpha'])

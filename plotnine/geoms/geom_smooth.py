@@ -66,7 +66,7 @@ class geom_smooth(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         has_ribbon = 'ymin' in data and 'ymax' in data
         if has_ribbon:
             data2 = data.copy()

@@ -83,7 +83,7 @@ class layer:
         inherit_aes: bool = True,
         show_legend: bool | None = None,
         raster: bool = False
-    ) -> None:
+    ):
         self.geom = geom
         self.stat = stat
         self._data = data
@@ -155,7 +155,7 @@ class layer:
 
         return result
 
-    def setup(self, plot: Ggplot) -> None:
+    def setup(self, plot: Ggplot):
         """
         Prepare layer for the plot building
 
@@ -165,7 +165,7 @@ class layer:
         self._make_layer_mapping(plot.mapping)
         self._make_layer_environments(plot.environment)
 
-    def _make_layer_data(self, plot_data: DataLike | None) -> None:
+    def _make_layer_data(self, plot_data: DataLike | None):
         """
         Generate data to be used by this layer
 
@@ -211,7 +211,7 @@ class layer:
             else:
                 raise TypeError(f"Data has a bad type: {type(self.data)}")
 
-    def _make_layer_mapping(self, plot_mapping: aes) -> None:
+    def _make_layer_mapping(self, plot_mapping: aes):
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -241,7 +241,7 @@ class layer:
     def _make_layer_environments(
         self,
         plot_environment: EvalEnvironment
-    ) -> None:
+    ):
         """
         Create the aesthetic mappings to be used by this layer
 
@@ -253,7 +253,7 @@ class layer:
         self.geom.environment = plot_environment
         self.stat.environment = plot_environment
 
-    def compute_aesthetics(self, plot: Ggplot) -> None:
+    def compute_aesthetics(self, plot: Ggplot):
         """
         Return a dataframe where the columns match the aesthetic mappings
 
@@ -273,7 +273,7 @@ class layer:
         data = add_group(evaled)
         self.data = data.sort_values('PANEL', kind='mergesort')
 
-    def compute_statistic(self, layout: Layout) -> None:
+    def compute_statistic(self, layout: Layout):
         """
         Compute & return statistics for this layer
         """
@@ -287,7 +287,7 @@ class layer:
         data = self.stat.compute_layer(data, params, layout)
         self.data = data
 
-    def map_statistic(self, plot: Ggplot) -> None:
+    def map_statistic(self, plot: Ggplot):
         """
         Mapping aesthetics to computed statistics
         """
@@ -315,7 +315,7 @@ class layer:
         new = {ae: ae for ae in stat_data.columns}
         plot.scales.add_defaults(self.data, new)
 
-    def setup_data(self) -> None:
+    def setup_data(self):
         """
         Prepare/modify data for plotting
         """
@@ -333,7 +333,7 @@ class layer:
 
         self.data = data
 
-    def compute_position(self, layout: Layout) -> None:
+    def compute_position(self, layout: Layout):
         """
         Compute the position of each geometric object
 
@@ -352,7 +352,7 @@ class layer:
         self,
         layout: Layout,
         coord: Coord
-    ) -> None:
+    ):
         """
         Draw geom
 
@@ -397,7 +397,7 @@ class layer:
 
         return self.geom.use_defaults(data, aes_modifiers)
 
-    def finish_statistics(self) -> None:
+    def finish_statistics(self):
         """
         Prepare/modify data for plotting
         """
@@ -455,11 +455,11 @@ class Layers(List[layer]):
     def data(self) -> list[pd.DataFrame]:
         return [l.data for l in self]
 
-    def setup(self, plot: Ggplot) -> None:
+    def setup(self, plot: Ggplot):
         for l in self:
             l.setup(plot)
 
-    def setup_data(self) -> None:
+    def setup_data(self):
         for l in self:
             l.setup_data()
 
@@ -467,25 +467,25 @@ class Layers(List[layer]):
         self,
         layout: Layout,
         coord: Coord
-    ) -> None:
+    ):
         # If zorder is 0, it is left to MPL
         for i, l in enumerate(self, start=1):
             l.zorder = i
             l.draw(layout, coord)
 
-    def compute_aesthetics(self, plot: Ggplot) -> None:
+    def compute_aesthetics(self, plot: Ggplot):
         for l in self:
             l.compute_aesthetics(plot)
 
-    def compute_statistic(self, layout: Layout) -> None:
+    def compute_statistic(self, layout: Layout):
         for l in self:
             l.compute_statistic(layout)
 
-    def map_statistic(self, plot: Ggplot) -> None:
+    def map_statistic(self, plot: Ggplot):
         for l in self:
             l.map_statistic(plot)
 
-    def compute_position(self, layout: Layout) -> None:
+    def compute_position(self, layout: Layout):
         for l in self:
             l.compute_position(layout)
 
@@ -493,27 +493,27 @@ class Layers(List[layer]):
         self,
         data: pd.DataFrame | None = None,
         aes_modifiers: dict[str, Any] | None = None
-    ) -> None:
+    ):
         for l in self:
             l.use_defaults(data, aes_modifiers)
 
-    def transform(self, scales: Scales) -> None:
+    def transform(self, scales: Scales):
         for l in self:
             l.data = scales.transform_df(l.data)
 
-    def train(self, scales: Scales) -> None:
+    def train(self, scales: Scales):
         for l in self:
             scales.train_df(l.data)
 
-    def map(self, scales: Scales) -> None:
+    def map(self, scales: Scales):
         for l in self:
             l.data = scales.map_df(l.data)
 
-    def finish_statistics(self) -> None:
+    def finish_statistics(self):
         for l in self:
             l.finish_statistics()
 
-    def update_labels(self, plot: Ggplot) -> None:
+    def update_labels(self, plot: Ggplot):
         for l in self:
             plot._update_labels(l)
 

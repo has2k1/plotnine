@@ -17,13 +17,13 @@ class Range:
     #: Holds the range information after training
     range: TupleFloat2
 
-    def reset(self) -> None:
+    def reset(self):
         """
         Reset range
         """
         del self.range
 
-    def train(self, x: Sequence[Any]) -> None:
+    def train(self, x: Sequence[Any]):
         """
         Train range
         """
@@ -42,7 +42,7 @@ class RangeContinuous(Range):
     """
     range: TupleFloat2
 
-    def train(self, x: Sequence[Any]) -> None:
+    def train(self, x: Sequence[Any]):
         """
         Train continuous range
         """
@@ -61,7 +61,7 @@ class RangeDiscrete(Range):
         x: Sequence[Any],
         drop: bool = False,
         na_rm: bool = False
-    ) -> None:
+    ):
         """
         Train discrete range
         """

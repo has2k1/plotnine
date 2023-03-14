@@ -61,7 +61,7 @@ class annotation_stripes(annotate):
         direction: Literal["horizontal", "vertical"] = 'vertical',
         extend: TupleFloat2 = (0, 1),
         **kwargs: Any
-    ) -> None:
+    ):
         allowed = ('vertical', 'horizontal')
         if direction not in allowed:
             raise ValueError(
@@ -93,7 +93,7 @@ class _geom_stripes(geom):
         layout: Layout,
         coord: Coord,
         **params: Any
-    ) -> None:
+    ):
 
         """
         Draw stripes on every panel
@@ -111,7 +111,7 @@ class _geom_stripes(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         extend = params['extend']
         fill_range = params['fill_range']
         direction = params['direction']

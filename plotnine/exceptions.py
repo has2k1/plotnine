@@ -29,7 +29,7 @@ class PlotnineError(Exception):
     Exception for ggplot errors
     """
 
-    def __init__(self, *args: str) -> None:
+    def __init__(self, *args: str):
         args = tuple(dedent(arg) for arg in args)
         self.message = " ".join(args)
 

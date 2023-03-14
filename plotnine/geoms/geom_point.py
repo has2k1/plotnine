@@ -44,7 +44,7 @@ class geom_point(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
         """
@@ -57,7 +57,7 @@ class geom_point(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params)
         units = 'shape'
         for _, udata in data.groupby(units, dropna=False):
@@ -77,7 +77,7 @@ class geom_point(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         # Our size is in 'points' while scatter wants
         # 'points^2'. The stroke is outside. And pi
         # gives a large enough scaling factor

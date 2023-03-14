@@ -107,7 +107,7 @@ class facet_grid(facet):
         ] = 'label_value',
         as_table: bool = True,
         drop: bool = True
-    ) -> None:
+    ):
 
         facet.__init__(
             self, scales=scales, shrink=shrink, labeller=labeller,
@@ -227,7 +227,7 @@ class facet_grid(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def spaceout_and_resize_panels(self) -> None:
+    def spaceout_and_resize_panels(self):
         """
         Adjust the spacing between the panels
 

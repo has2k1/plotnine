@@ -60,7 +60,7 @@ class PlotnineAnimation(ArtistAnimation):
         repeat_delay: int | None = None,
         repeat: bool = True,
         blit: bool = False
-    ) -> None:
+    ):
         figure, artists = self._draw_plots(plots)
         ArtistAnimation.__init__(
             self,
@@ -109,7 +109,7 @@ class PlotnineAnimation(ArtistAnimation):
 
         scale_limits = {}
 
-        def initialise_artist_offsets(n: int) -> None:
+        def initialise_artist_offsets(n: int):
             """
             Initilise artists_offsets arrays to zero
 
@@ -149,7 +149,7 @@ class PlotnineAnimation(ArtistAnimation):
 
         def set_scale_limits(
             scales: list[Scale]
-        ) -> None:
+        ):
             """
             Set limits of all the scales in the animation
 
@@ -168,7 +168,7 @@ class PlotnineAnimation(ArtistAnimation):
         def check_scale_limits(
             scales: list[Scale],
             frame_no: int
-        ) -> None:
+        ):
             """
             Check limits of the scales of a plot in the animation
 

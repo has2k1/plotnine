@@ -82,7 +82,7 @@ class geom_ribbon(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         _x = 'y' if isinstance(coord, coord_flip) else 'x'
         data = coord.transform(data, panel_params, munch=True)
         data = data.sort_values(by=['group', _x], kind='mergesort')
@@ -104,7 +104,7 @@ class geom_ribbon(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         size = data['size'].iloc[0] * SIZE_FACTOR
         fill = to_rgba(data['fill'], data['alpha'])
 
@@ -160,7 +160,7 @@ class geom_ribbon(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         outline_type = params['outline_type']
 
         if outline_type == 'full':
