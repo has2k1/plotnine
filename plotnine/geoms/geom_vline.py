@@ -39,27 +39,39 @@ class geom_vline(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'color': 'black', 'linetype': 'solid',
-                   'size': 0.5, 'alpha': 1}
-    REQUIRED_AES = {'xintercept'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'inherit_aes': False}
+
+    DEFAULT_AES = {
+        "color": "black",
+        "linetype": "solid",
+        "size": 0.5,
+        "alpha": 1,
+    }
+    REQUIRED_AES = {"xintercept"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+        "inherit_aes": False,
+    }
 
     def __init__(
         self,
         mapping: Aes | None = None,
         data: DataLike | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         data, mapping = order_as_data_mapping(data, mapping)
-        xintercept = kwargs.pop('xintercept', None)
+        xintercept = kwargs.pop("xintercept", None)
         if xintercept is not None:
             if mapping:
-                warn("The 'xintercept' parameter has overridden "
-                     "the aes() mapping.", PlotnineWarning)
-            data = pd.DataFrame({'xintercept': np.repeat(xintercept, 1)})
-            mapping = aes(xintercept='xintercept')
-            kwargs['show_legend'] = False
+                warn(
+                    "The 'xintercept' parameter has overridden "
+                    "the aes() mapping.",
+                    PlotnineWarning,
+                )
+            data = pd.DataFrame({"xintercept": np.repeat(xintercept, 1)})
+            mapping = aes(xintercept="xintercept")
+            kwargs["show_legend"] = False
 
         geom.__init__(self, mapping, data, **kwargs)
 
@@ -69,32 +81,25 @@ class geom_vline(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         """
         Plot all groups
         """
         ranges = coord.backtransform_range(panel_params)
-        data['x'] = data['xintercept']
-        data['xend'] = data['xintercept']
-        data['y'] = ranges.y[0]
-        data['yend'] = ranges.y[1]
+        data["x"] = data["xintercept"]
+        data["xend"] = data["xintercept"]
+        data["y"] = ranges.y[0]
+        data["yend"] = ranges.y[1]
         data = data.drop_duplicates()
 
-        for _, gdata in data.groupby('group'):
+        for _, gdata in data.groupby("group"):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(
-                gdata,
-                panel_params,
-                coord,
-                ax,
-                **params
-            )
+            geom_segment.draw_group(gdata, panel_params, coord, ax, **params)
+
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any],
-        da: DrawingArea,
-        lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: Layer
     ) -> DrawingArea:
         """
         Draw a vertical line in the box
@@ -114,16 +119,16 @@ class geom_vline(geom):
         """
         x = [0.5 * da.width] * 2
         y = [0, da.height]
-        data['size'] *= SIZE_FACTOR
+        data["size"] *= SIZE_FACTOR
         key = mlines.Line2D(
             x,
             y,
-            alpha=data['alpha'],
-            linestyle=data['linetype'],
-            linewidth=data['size'],
-            color=data['color'],
-            solid_capstyle='butt',
-            antialiased=False
+            alpha=data["alpha"],
+            linestyle=data["linetype"],
+            linewidth=data["size"],
+            color=data["color"],
+            solid_capstyle="butt",
+            antialiased=False,
         )
         da.add_artist(key)
         return da

@@ -13,8 +13,9 @@ nbsphinx
 numpydoc>=0.9.1
 sphinx>=6.1.0
 
-# testing
+# linting & testing
 ruff
+black>=23.1.0
 pytest-cov
 
 # release

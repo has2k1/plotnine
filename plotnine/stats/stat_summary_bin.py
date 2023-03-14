@@ -83,55 +83,68 @@ class stat_summary_bin(stat):
     e.g. :py:`after_stat('ymin')`.
     """
 
-    REQUIRED_AES = {'x', 'y'}
-    DEFAULT_PARAMS = {'geom': 'pointrange', 'position': 'identity',
-                      'na_rm': False,
-                      'bins': 30, 'breaks': None, 'binwidth': None,
-                      'boundary': None, 'fun_data': None, 'fun_y': None,
-                      'fun_ymin': None, 'fun_ymax': None,
-                      'fun_args': None, 'random_state': None}
-    CREATES = {'bin', 'width', 'ymin', 'ymax'}
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_PARAMS = {
+        "geom": "pointrange",
+        "position": "identity",
+        "na_rm": False,
+        "bins": 30,
+        "breaks": None,
+        "binwidth": None,
+        "boundary": None,
+        "fun_data": None,
+        "fun_y": None,
+        "fun_ymin": None,
+        "fun_ymax": None,
+        "fun_args": None,
+        "random_state": None,
+    }
+    CREATES = {"bin", "width", "ymin", "ymax"}
 
     def setup_params(self, data):
-        keys = ('fun_data', 'fun_y', 'fun_ymin', 'fun_ymax')
+        keys = ("fun_data", "fun_y", "fun_ymin", "fun_ymax")
         if not any(self.params[k] for k in keys):
             PlotnineWarning(
                 "No summary function, supplied, defaulting to mean_se()"
             )
-            self.params['fun_data'] = 'mean_se'
+            self.params["fun_data"] = "mean_se"
 
-        if self.params['fun_args'] is None:
-            self.params['fun_args'] = {}
+        if self.params["fun_args"] is None:
+            self.params["fun_args"] = {}
 
-        if 'random_state' not in self.params['fun_args']:
-            if self.params['random_state']:
-                random_state = self.params['random_state']
+        if "random_state" not in self.params["fun_args"]:
+            if self.params["random_state"]:
+                random_state = self.params["random_state"]
                 if random_state is None:
                     random_state = np.random
                 elif isinstance(random_state, int):
                     random_state = np.random.RandomState(random_state)
 
-                self.params['fun_args']['random_state'] = random_state
+                self.params["fun_args"]["random_state"] = random_state
 
         return self.params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        bins = params['bins']
-        breaks = params['breaks']
-        binwidth = params['binwidth']
-        boundary = params['boundary']
+        bins = params["bins"]
+        breaks = params["breaks"]
+        binwidth = params["binwidth"]
+        boundary = params["boundary"]
 
-        func = make_summary_fun(params['fun_data'], params['fun_y'],
-                                params['fun_ymin'], params['fun_ymax'],
-                                params['fun_args'])
+        func = make_summary_fun(
+            params["fun_data"],
+            params["fun_y"],
+            params["fun_ymin"],
+            params["fun_ymax"],
+            params["fun_args"],
+        )
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
-        data['bin'] = pd.cut(
-            data['x'],  # pyright: ignore
+        data["bin"] = pd.cut(
+            data["x"],  # pyright: ignore
             bins=breaks,  # pyright: ignore
             labels=False,  # pyright: ignore
-            include_lowest=True
+            include_lowest=True,
         )
 
         def func_wrapper(data: pd.DataFrame) -> pd.DataFrame:
@@ -139,18 +152,18 @@ class stat_summary_bin(stat):
             Add `bin` column to each summary result.
             """
             result = func(data)
-            result['bin'] = data['bin'].iloc[0]
+            result["bin"] = data["bin"].iloc[0]
             return result
 
         # This is a plyr::ddply
-        out = groupby_apply(data, 'bin', func_wrapper)
+        out = groupby_apply(data, "bin", func_wrapper)
         centers = (breaks[:-1] + breaks[1:]) * 0.5
-        bin_centers = centers[out['bin'].to_numpy()]
-        out['x'] = bin_centers
-        out['bin'] += 1
+        bin_centers = centers[out["bin"].to_numpy()]
+        out["x"] = bin_centers
+        out["bin"] += 1
         if isinstance(scales.x, scale_discrete):
-            out['width'] = 0.9
+            out["width"] = 0.9
         else:
-            out['width'] = np.diff(breaks)[bins-1]
+            out["width"] = np.diff(breaks)[bins - 1]
 
         return out

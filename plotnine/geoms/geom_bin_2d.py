@@ -18,8 +18,8 @@ class geom_bin_2d(geom_rect):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'stat': 'bin_2d', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {"stat": "bin_2d", "position": "identity", "na_rm": False}
 
 
 geom_bin2d = geom_bin_2d

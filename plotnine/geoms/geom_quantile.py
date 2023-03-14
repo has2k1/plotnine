@@ -19,8 +19,17 @@ class geom_quantile(geom_path):
         Line join style, one of *round*, *miter* or *bevel*.
         This option is applied for solid linetypes.
     """
-    DEFAULT_AES = {'alpha': 1, 'color': '#3366FF',
-                   'linetype': 'solid', 'size': 0.5}
-    DEFAULT_PARAMS = {'stat': 'quantile', 'position': 'identity',
-                      'na_rm': False, 'lineend': 'butt',
-                      'linejoin': 'round'}
+
+    DEFAULT_AES = {
+        "alpha": 1,
+        "color": "#3366FF",
+        "linetype": "solid",
+        "size": 0.5,
+    }
+    DEFAULT_PARAMS = {
+        "stat": "quantile",
+        "position": "identity",
+        "na_rm": False,
+        "lineend": "butt",
+        "linejoin": "round",
+    }

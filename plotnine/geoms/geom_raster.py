@@ -61,69 +61,76 @@ class geom_raster(geom):
     plotnine.geoms.geom_rect
     plotnine.geoms.geom_tile
     """
-    DEFAULT_AES = {'alpha': 1, 'fill': '#333333'}
-    REQUIRED_AES = {'x', 'y'}
-    NON_MISSING_AES = {'fill', 'xmin', 'xmax', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'vjust': 0.5, 'hjust': 0.5,
-                      'interpolation': None, 'filterrad': 4.0,
-                      'raster': True}
+
+    DEFAULT_AES = {"alpha": 1, "fill": "#333333"}
+    REQUIRED_AES = {"x", "y"}
+    NON_MISSING_AES = {"fill", "xmin", "xmax", "ymin", "ymax"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+        "vjust": 0.5,
+        "hjust": 0.5,
+        "interpolation": None,
+        "filterrad": 4.0,
+        "raster": True,
+    }
     draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
 
     def __init__(
         self,
         mapping: Aes | None = None,
         data: DataLike | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         # Silently accept:
         #    1. interpolate
         #    2. bool values for interpolation
-        if 'interpolate' in kwargs:
-            kwargs['interpolation'] = kwargs.pop('interpolate')
-        if isinstance(kwargs.get('interpolation', None), bool):
-            if kwargs['interpolation'] is True:
-                kwargs['interpolation'] = 'bilinear'
+        if "interpolate" in kwargs:
+            kwargs["interpolation"] = kwargs.pop("interpolate")
+        if isinstance(kwargs.get("interpolation", None), bool):
+            if kwargs["interpolation"] is True:
+                kwargs["interpolation"] = "bilinear"
             else:
-                kwargs['interpolation'] = None
+                kwargs["interpolation"] = None
 
         super().__init__(mapping, data, **kwargs)
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        hjust = self.params['hjust']
-        vjust = self.params['vjust']
+        hjust = self.params["hjust"]
+        vjust = self.params["vjust"]
         precision = np.sqrt(np.finfo(float).eps)
 
-        x_diff = np.diff(np.sort(data['x'].unique()))
+        x_diff = np.diff(np.sort(data["x"].unique()))
         if len(x_diff) == 0:
             w = 1
         elif np.any(np.abs(np.diff(x_diff)) > precision):
             warn(
                 "Raster pixels are placed at uneven horizontal intervals "
                 "and will be shifted. Consider using geom_tile() instead.",
-                PlotnineWarning
+                PlotnineWarning,
             )
             w = x_diff.min()
         else:
             w = x_diff[0]
 
-        y_diff = np.diff(np.sort(data['y'].unique()))
+        y_diff = np.diff(np.sort(data["y"].unique()))
         if len(y_diff) == 0:
             h = 1
         elif np.any(np.abs(np.diff(y_diff)) > precision):
             warn(
                 "Raster pixels are placed at uneven vertical intervals "
                 "and will be shifted. Consider using geom_tile() instead.",
-                PlotnineWarning
+                PlotnineWarning,
             )
             h = y_diff.min()
         else:
             h = y_diff[0]
 
-        data['xmin'] = data['x'] - w * (1 - hjust)
-        data['xmax'] = data['x'] + w * hjust
-        data['ymin'] = data['y'] - h * (1 - vjust)
-        data['ymax'] = data['y'] + h * vjust
+        data["xmin"] = data["x"] - w * (1 - hjust)
+        data["xmax"] = data["x"] + w * hjust
+        data["ymin"] = data["y"] - h * (1 - vjust)
+        data["ymax"] = data["y"] + h * vjust
         return data
 
     def draw_panel(
@@ -132,7 +139,7 @@ class geom_raster(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         """
         Plot all groups
@@ -143,10 +150,10 @@ class geom_raster(geom):
             )
 
         data = coord.transform(data, panel_params)
-        x = data['x'].to_numpy().astype(float)
-        y = data['y'].to_numpy().astype(float)
-        facecolor = to_rgba_array(data['fill'].to_numpy())
-        facecolor[:, 3] = data['alpha'].to_numpy()
+        x = data["x"].to_numpy().astype(float)
+        y = data["y"].to_numpy().astype(float)
+        facecolor = to_rgba_array(data["fill"].to_numpy())
+        facecolor[:, 3] = data["alpha"].to_numpy()
 
         # Convert vector of data to flat image,
         # figure out dimensions of raster on plot, and the colored
@@ -155,7 +162,7 @@ class geom_raster(geom):
         y_pos = ((y - y.min()) / resolution(y, False)).astype(int)
         nrow = y_pos.max() + 1
         ncol = x_pos.max() + 1
-        yidx, xidx = nrow-y_pos-1, x_pos
+        yidx, xidx = nrow - y_pos - 1, x_pos
 
         # Create and "color" the matrix.
         # Any gaps left whites (ones) colors pluse zero alpha values
@@ -168,16 +175,16 @@ class geom_raster(geom):
         im = mimage.AxesImage(
             ax,
             data=X,
-            interpolation=params['interpolation'],
-            origin='upper',
+            interpolation=params["interpolation"],
+            origin="upper",
             extent=(
-                data['xmin'].min(),
-                data['xmax'].max(),
-                data['ymin'].min(),
-                data['ymax'].max()
+                data["xmin"].min(),
+                data["xmax"].max(),
+                data["ymin"].min(),
+                data["ymax"].max(),
             ),
-            rasterized=params['raster'],
-            filterrad=params['filterrad'],
-            zorder=params['zorder']
+            rasterized=params["raster"],
+            filterrad=params["filterrad"],
+            zorder=params["zorder"],
         )
         ax.add_image(im)

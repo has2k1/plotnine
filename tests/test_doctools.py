@@ -55,19 +55,19 @@ class scale_expand_earth(mixin, scale_expand):
 
 def test_document_scale():
     doc = scale_expand_earth.__doc__
-    assert doc.count('base_param_1') == 1
-    assert doc.count('base_param_2') == 1
-    assert doc.count('base_param_3') == 1
-    assert doc.count('derived_param_1') == 1
-    assert doc.count('derived_param_2') == 1
-    assert doc.count('mixin_param_1') == 1
-    assert doc.count('mixin_param_2') == 1
+    assert doc.count("base_param_1") == 1
+    assert doc.count("base_param_2") == 1
+    assert doc.count("base_param_3") == 1
+    assert doc.count("derived_param_1") == 1
+    assert doc.count("derived_param_2") == 1
+    assert doc.count("mixin_param_1") == 1
+    assert doc.count("mixin_param_2") == 1
 
     # overridden parameter
-    assert 'specific_parameter : str, optional' not in doc
-    assert 'Base Specific Parameter Description' not in doc
-    assert doc.count('specific_parameter : str') == 1
-    assert doc.count('Derived Specific Parameter Description') == 1
+    assert "specific_parameter : str, optional" not in doc
+    assert "Base Specific Parameter Description" not in doc
+    assert doc.count("specific_parameter : str") == 1
+    assert doc.count("Derived Specific Parameter Description") == 1
 
 
 @document
@@ -81,18 +81,19 @@ class geom_abc(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'color': None}
+
+    DEFAULT_AES = {"color": None}
     DEFAULT_PARAMS = {
-        'stat': 'bin',
-        'position': position_stack,
-        'na_rm': False
+        "stat": "bin",
+        "position": position_stack,
+        "na_rm": False,
     }
 
 
 def test_document_geom():
     doc = geom_abc.__doc__
-    assert '~plotnine.stats.stat_bin' in doc
-    assert 'position_stack' in doc
+    assert "~plotnine.stats.stat_bin" in doc
+    assert "position_stack" in doc
 
 
 @document
@@ -106,15 +107,12 @@ class stat_abc(stat):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'weight': None}
-    DEFAULT_PARAMS = {
-        'geom': geom_abc,
-        'position': 'stack',
-        'na_rm': False
-    }
+
+    DEFAULT_AES = {"weight": None}
+    DEFAULT_PARAMS = {"geom": geom_abc, "position": "stack", "na_rm": False}
 
 
 def test_document_stat():
     doc = stat_abc.__doc__
-    assert 'geom_abc' in doc
-    assert '~plotnine.positions.position_stack' in doc
+    assert "geom_abc" in doc
+    assert "~plotnine.positions.position_stack" in doc

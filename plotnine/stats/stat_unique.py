@@ -13,8 +13,8 @@ class stat_unique(stat):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'geom': 'point', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {"geom": "point", "position": "identity", "na_rm": False}
 
     @classmethod
     def compute_panel(cls, data, scales, **params):

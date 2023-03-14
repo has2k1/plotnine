@@ -12,18 +12,18 @@ from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
 
-TOLERANCE = 2           # Default tolerance for the tests
-DPI = 72                # Default DPI for the tests
+TOLERANCE = 2  # Default tolerance for the tests
+DPI = 72  # Default DPI for the tests
 
 # This partial theme modifies all themes that are used in
 # the test. It is limited to setting the size of the test
 # images Should a test require a larger or smaller figure
 # size, the dpi or aspect_ratio should be modified.
-test_theme = theme(figure_size=(640/DPI, 480/DPI), dpi=DPI)
+test_theme = theme(figure_size=(640 / DPI, 480 / DPI), dpi=DPI)
 
 tests_dir = Path(__file__).parent
-baseline_images_dir = tests_dir / 'baseline_images'
-result_images_dir = tests_dir / 'result_images'
+baseline_images_dir = tests_dir / "baseline_images"
+result_images_dir = tests_dir / "result_images"
 
 if not baseline_images_dir.exists():
     raise OSError(
@@ -54,7 +54,7 @@ def ggplot_equals(gg: ggplot, name: str) -> bool:
     """
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
-    bbox_inches = 'tight' if 'caption' in gg.labels else None
+    bbox_inches = "tight" if "caption" in gg.labels else None
     # Save the figure before testing whether the original image
     # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
@@ -70,10 +70,7 @@ def ggplot_equals(gg: ggplot, name: str) -> bool:
         raise_no_baseline_image(filenames.baseline)
 
     err = compare_images(
-        filenames.expected,
-        filenames.result,
-        TOLERANCE,
-        in_decorator=True
+        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
     )
     gg._err = err  # For the pytest error message
     return False if err else True
@@ -124,11 +121,11 @@ ggplot.build_test = build_test
 
 
 def pytest_assertrepr_compare(op, left, right):
-    if (isinstance(left, ggplot) and
-            isinstance(right, str) and
-            op == "=="):
-        msg = ("images not close: {actual:s} vs. {expected:s} "
-               "(RMS {rms:.2f})".format(**left._err))
+    if isinstance(left, ggplot) and isinstance(right, str) and op == "==":
+        msg = (
+            "images not close: {actual:s} vs. {expected:s} "
+            "(RMS {rms:.2f})".format(**left._err)
+        )
         return [msg]
 
 
@@ -161,8 +158,8 @@ def make_test_image_filenames(name, test_file):
         will be stored in the same directory as the result image.
         Creating a copy make comparison easier.
     """
-    name = Path(name).with_suffix('.png')
-    expected_name = f'{name.stem}-expected{name.suffix}'
+    name = Path(name).with_suffix(".png")
+    expected_name = f"{name.stem}-expected{name.suffix}"
     subdir = Path(test_file).stem
     filenames = types.SimpleNamespace(
         baseline=baseline_images_dir / subdir / name,
@@ -178,10 +175,10 @@ class _test_cleanup:
         # The baseline images are created in this locale, so we should use
         # it during all of the tests.
         try:
-            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+            locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         except locale.Error:
             try:
-                locale.setlocale(locale.LC_ALL, 'English_United States.1252')
+                locale.setlocale(locale.LC_ALL, "English_United States.1252")
             except locale.Error:
                 warnings.warn(
                     "Could not set locale to English/United States. "
@@ -189,24 +186,25 @@ class _test_cleanup:
                 )
 
         # make sure we don't carry over bad plots from former tests
-        plt.close('all')
+        plt.close("all")
         n_figs = len(plt.get_fignums())
-        msg = (f"No. of open figs: {n_figs}. Make sure the "
-               "figures from the previous tests are cleaned up."
-               )
+        msg = (
+            f"No. of open figs: {n_figs}. Make sure the "
+            "figures from the previous tests are cleaned up."
+        )
         assert n_figs == 0, msg
 
-        mpl.use('Agg')
+        mpl.use("Agg")
         # These settings *must* be hardcoded for running the comparison
         # tests
         mpl.rcdefaults()  # Start with all defaults
-        mpl.rcParams['text.hinting'] = 'auto'
-        mpl.rcParams['text.antialiased'] = True
-        mpl.rcParams['text.hinting_factor'] = 8
+        mpl.rcParams["text.hinting"] = "auto"
+        mpl.rcParams["text.antialiased"] = True
+        mpl.rcParams["text.hinting_factor"] = 8
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        plt.close('all')
+        plt.close("all")
         warnings.resetwarnings()
 
 

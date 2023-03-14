@@ -38,21 +38,24 @@ class stat_ecdf(stat):
 
     """
 
-    REQUIRED_AES = {'x'}
-    DEFAULT_PARAMS = {'geom': 'step', 'position': 'identity',
-                      'na_rm': False, 'n': None}
-    DEFAULT_AES = {'y': after_stat('y')}
-    CREATES = {'y'}
+    REQUIRED_AES = {"x"}
+    DEFAULT_PARAMS = {
+        "geom": "step",
+        "position": "identity",
+        "na_rm": False,
+        "n": None,
+    }
+    DEFAULT_AES = {"y": after_stat("y")}
+    CREATES = {"y"}
 
     @classmethod
     def compute_group(cls, data, scales, **params):
         # If n is None, use raw values; otherwise interpolate
-        if params['n'] is None:
-            x = np.unique(data['x'])
+        if params["n"] is None:
+            x = np.unique(data["x"])
         else:
-            x = np.linspace(data['x'].min(), data['x'].max(),
-                            params['n'])
+            x = np.linspace(data["x"].min(), data["x"].max(), params["n"])
 
-        y = ECDF(data['x'])(x)
-        res = pd.DataFrame({'x': x, 'y': y})
+        y = ECDF(data["x"])(x)
+        res = pd.DataFrame({"x": x, "y": y})
         return res

@@ -14,6 +14,7 @@ class Range:
     """
     Base class for all ranges
     """
+
     #: Holds the range information after training
     range: TupleFloat2
 
@@ -40,6 +41,7 @@ class RangeContinuous(Range):
     """
     Continuous Range
     """
+
     range: TupleFloat2
 
     def train(self, x: Sequence[Any]):
@@ -54,21 +56,14 @@ class RangeDiscrete(Range):
     """
     Discrete Range
     """
+
     range: Sequence[Any]
 
-    def train(
-        self,
-        x: Sequence[Any],
-        drop: bool = False,
-        na_rm: bool = False
-    ):
+    def train(self, x: Sequence[Any], drop: bool = False, na_rm: bool = False):
         """
         Train discrete range
         """
         rng = None if self.is_empty() else self.range
-        self.range = scale_discrete.train(  # pyright: ignore
-            x,
-            rng,
-            drop,
-            na_rm=na_rm
-        )
+        self.range = scale_discrete.train(
+            x, rng, drop, na_rm=na_rm
+        )  # pyright: ignore

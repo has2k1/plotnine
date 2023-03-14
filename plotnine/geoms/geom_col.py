@@ -25,7 +25,12 @@ class geom_col(geom_bar):
     --------
     plotnine.geoms.geom_bar
     """
-    REQUIRED_AES = {'x', 'y'}
-    NON_MISSING_AES = {'xmin', 'xmax', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'stack',
-                      'na_rm': False, 'width': None}
+
+    REQUIRED_AES = {"x", "y"}
+    NON_MISSING_AES = {"xmin", "xmax", "ymin", "ymax"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "stack",
+        "na_rm": False,
+        "width": None,
+    }

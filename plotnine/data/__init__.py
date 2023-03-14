@@ -7,38 +7,38 @@ import pandas as pd
 from pandas.api.types import CategoricalDtype
 
 __all__ = [
-    'diamonds',
-    'economics',
-    'economics_long',
-    'faithful',
-    'faithfuld',
-    'huron',
-    'luv_colours',
-    'meat',
-    'midwest',
-    'mpg',
-    'msleep',
-    'mtcars',
-    'pageviews',
-    'presidential',
-    'seals',
-    'txhousing',
+    "diamonds",
+    "economics",
+    "economics_long",
+    "faithful",
+    "faithfuld",
+    "huron",
+    "luv_colours",
+    "meat",
+    "midwest",
+    "mpg",
+    "msleep",
+    "mtcars",
+    "pageviews",
+    "presidential",
+    "seals",
+    "txhousing",
 ]
 
 data_dir = Path(__file__).parent
 
-mtcars = pd.read_csv(data_dir / 'mtcars.csv')
-meat = pd.read_csv(data_dir / 'meat.csv', parse_dates=[0])
-pageviews = pd.read_csv(data_dir / 'pageviews.csv', parse_dates=[0])
-huron = pd.read_csv(data_dir / 'huron.csv')
-seals = pd.read_csv(data_dir / 'seals.csv')
-economics = pd.read_csv(data_dir / 'economics.csv', parse_dates=[0])
-economics_long = pd.read_csv(data_dir / 'economics_long.csv', parse_dates=[0])
-presidential = pd.read_csv(data_dir / 'presidential.csv', parse_dates=[1, 2])
-txhousing = pd.read_csv(data_dir / 'txhousing.csv')
-luv_colours = pd.read_csv(data_dir / 'luv_colours.csv')
-faithfuld = pd.read_csv(data_dir / 'faithfuld.csv')
-faithful = pd.read_csv(data_dir / 'faithful.csv')
+mtcars = pd.read_csv(data_dir / "mtcars.csv")
+meat = pd.read_csv(data_dir / "meat.csv", parse_dates=[0])
+pageviews = pd.read_csv(data_dir / "pageviews.csv", parse_dates=[0])
+huron = pd.read_csv(data_dir / "huron.csv")
+seals = pd.read_csv(data_dir / "seals.csv")
+economics = pd.read_csv(data_dir / "economics.csv", parse_dates=[0])
+economics_long = pd.read_csv(data_dir / "economics_long.csv", parse_dates=[0])
+presidential = pd.read_csv(data_dir / "presidential.csv", parse_dates=[1, 2])
+txhousing = pd.read_csv(data_dir / "txhousing.csv")
+luv_colours = pd.read_csv(data_dir / "luv_colours.csv")
+faithfuld = pd.read_csv(data_dir / "faithfuld.csv")
+faithful = pd.read_csv(data_dir / "faithful.csv")
 
 
 # add factors
@@ -67,23 +67,23 @@ def _unordered_categories(df, columns):
     return df
 
 
-diamonds = pd.read_csv(data_dir / 'diamonds.csv')
+diamonds = pd.read_csv(data_dir / "diamonds.csv")
 categories = {
-    'cut': ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'],
-    'clarity': ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'],
-    'color': ['D', 'E', 'F', 'G', 'H', 'I', 'J']
+    "cut": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+    "clarity": ["I1", "SI2", "SI1", "VS2", "VS1", "VVS2", "VVS1", "IF"],
+    "color": ["D", "E", "F", "G", "H", "I", "J"],
 }
 diamonds = _ordered_categories(diamonds, categories)
 
-midwest = pd.read_csv(data_dir / 'midwest.csv')
-midwest = _unordered_categories(midwest, ['category'])
+midwest = pd.read_csv(data_dir / "midwest.csv")
+midwest = _unordered_categories(midwest, ["category"])
 
-mpg = pd.read_csv(data_dir / 'mpg.csv')
-columns = ['manufacturer', 'model', 'trans', 'fl', 'drv', 'class']
+mpg = pd.read_csv(data_dir / "mpg.csv")
+columns = ["manufacturer", "model", "trans", "fl", "drv", "class"]
 mpg = _unordered_categories(mpg, columns)
 
-msleep = pd.read_csv(data_dir / 'msleep.csv')
-msleep = _unordered_categories(msleep, ['vore', 'conservation'])
+msleep = pd.read_csv(data_dir / "msleep.csv")
+msleep = _unordered_categories(msleep, ["vore", "conservation"])
 
 
 # Documentation

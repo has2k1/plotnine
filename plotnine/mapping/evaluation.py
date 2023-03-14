@@ -17,7 +17,7 @@ if typing.TYPE_CHECKING:
     from . import aes
 
 
-__all__ = ['after_stat', 'after_scale', 'stage']
+__all__ = ["after_stat", "after_scale", "stage"]
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -60,15 +60,15 @@ class stage:
         # Shorter representation when the mapping happens at a
         # single stage
         if self.after_stat is None and self.after_scale is None:
-            return f'{repr(self.start)}'
+            return f"{repr(self.start)}"
         if self.start is None and self.after_scale is None:
-            return f'after_stat({repr(self.after_stat)})'
+            return f"after_stat({repr(self.after_stat)})"
         if self.start is None and self.after_stat is None:
-            return f'after_scale({repr(self.after_scale)})'
+            return f"after_scale({repr(self.after_scale)})"
         return (
-            f'stage(start={repr(self.start)}, '
-            f'after_stat={repr(self.after_stat)}, '
-            f'after_scale={repr(self.after_scale)})'
+            f"stage(start={repr(self.start)}, "
+            f"after_stat={repr(self.after_stat)}, "
+            f"after_scale={repr(self.after_scale)})"
         )
 
 
@@ -158,14 +158,10 @@ def reorder(x, y, fun=np.median, ascending=True):
     ValueError: Lengths are not equal. len(c) is 7 and len(x) is 6.
     """
     if len(x) != len(y):
-        raise ValueError(
-            f"Lengths are not equal. {len(x)=}, {len(x)=}"
-        )
-    summary = (pd.Series(y)
-               .groupby(x)
-               .apply(fun)
-               .sort_values(ascending=ascending)
-               )
+        raise ValueError(f"Lengths are not equal. {len(x)=}, {len(x)=}")
+    summary = (
+        pd.Series(y).groupby(x).apply(fun).sort_values(ascending=ascending)
+    )
     cats = summary.index.to_list()
     return pd.Categorical(x, categories=cats)
 
@@ -173,16 +169,11 @@ def reorder(x, y, fun=np.median, ascending=True):
 # These are function that can be called by the user inside the aes()
 # mapping. This is meant to make the variable transformations as easy
 # as they are in ggplot2
-AES_INNER_NAMESPACE = {
-    'factor': pd.Categorical,
-    'reorder': reorder
-}
+AES_INNER_NAMESPACE = {"factor": pd.Categorical, "reorder": reorder}
 
 
 def evaluate(
-    aesthetics: aes | dict[str, Any],
-    data: pd.DataFrame,
-    env: EvalEnvironment
+    aesthetics: aes | dict[str, Any], data: pd.DataFrame, env: EvalEnvironment
 ) -> pd.DataFrame:
     """
     Evaluate aesthetics
@@ -233,21 +224,23 @@ def evaluate(
                 try:
                     new_val = env.eval(col, inner_namespace=data)
                 except Exception as e:
-                    raise PlotnineError(
-                        _TPL_EVAL_FAIL.format(ae, col, str(e)))
+                    raise PlotnineError(_TPL_EVAL_FAIL.format(ae, col, str(e)))
 
                 try:
                     evaled[ae] = new_val
                 except Exception as e:
                     raise PlotnineError(
                         _TPL_BAD_EVAL_TYPE.format(
-                            ae, col, str(type(new_val)), str(e)))
+                            ae, col, str(type(new_val)), str(e)
+                        )
+                    )
         elif pdtypes.is_list_like(col):
             n = len(col)
             if len(data) and n != len(data) and n != 1:
                 raise PlotnineError(
-                    "Aesthetics must either be length one, " +
-                    "or the same length as the data")
+                    "Aesthetics must either be length one, "
+                    + "or the same length as the data"
+                )
             # An empty dataframe does not admit a scalar value
             elif len(evaled) and n == 1:
                 col = col[0]
@@ -267,10 +260,12 @@ def is_known_scalar(value):
     """
     Return True if value is a type we expect in a dataframe
     """
+
     def _is_datetime_or_timedelta(value):
         # Using pandas.Series helps catch python, numpy and pandas
         # versions of these types
-        return pd.Series(value).dtype.kind in ('M', 'm')
+        return pd.Series(value).dtype.kind in ("M", "m")
 
-    return not np.iterable(value) and (isinstance(value, numbers.Number) or
-                                       _is_datetime_or_timedelta(value))
+    return not np.iterable(value) and (
+        isinstance(value, numbers.Number) or _is_datetime_or_timedelta(value)
+    )

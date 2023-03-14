@@ -40,41 +40,45 @@ class geom_jitter(geom_point):
     plotnine.positions.position_jitter
     plotnine.geoms.geom_point
     """
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'jitter',
-                      'na_rm': False, 'width': None, 'height': None,
-                      'random_state': None}
+
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "jitter",
+        "na_rm": False,
+        "width": None,
+        "height": None,
+        "random_state": None,
+    }
 
     def __init__(
         self,
         mapping: Aes | None = None,
         data: DataLike | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
-        if {'width', 'height', 'random_state'} & set(kwargs):
-            if 'position' in kwargs:
+        if {"width", "height", "random_state"} & set(kwargs):
+            if "position" in kwargs:
                 raise PlotnineError(
                     "Specify either 'position' or "
                     "'width'/'height'/'random_state'"
                 )
 
             try:
-                width = kwargs.pop('width')
+                width = kwargs.pop("width")
             except KeyError:
                 width = None
 
             try:
-                height = kwargs.pop('height')
+                height = kwargs.pop("height")
             except KeyError:
                 height = None
 
             try:
-                random_state = kwargs.pop('random_state')
+                random_state = kwargs.pop("random_state")
             except KeyError:
                 random_state = None
 
-            kwargs['position'] = position_jitter(
-                width=width,
-                height=height,
-                random_state=random_state
+            kwargs["position"] = position_jitter(
+                width=width, height=height, random_state=random_state
             )
         geom_point.__init__(self, mapping, data, **kwargs)

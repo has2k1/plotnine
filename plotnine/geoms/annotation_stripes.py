@@ -56,49 +56,49 @@ class annotation_stripes(annotate):
 
     def __init__(
         self,
-        fill: Sequence[str] = ('#AAAAAA', '#CCCCCC'),
-        fill_range: Literal["auto", "cycle", "no", "nocycle"] = 'auto',
-        direction: Literal["horizontal", "vertical"] = 'vertical',
+        fill: Sequence[str] = ("#AAAAAA", "#CCCCCC"),
+        fill_range: Literal["auto", "cycle", "no", "nocycle"] = "auto",
+        direction: Literal["horizontal", "vertical"] = "vertical",
         extend: TupleFloat2 = (0, 1),
-        **kwargs: Any
+        **kwargs: Any,
     ):
-        allowed = ('vertical', 'horizontal')
+        allowed = ("vertical", "horizontal")
         if direction not in allowed:
-            raise ValueError(
-                f"direction must be one of {allowed}")
+            raise ValueError(f"direction must be one of {allowed}")
         self._annotation_geom = _geom_stripes(
             fill=fill,
             fill_range=fill_range,
             extend=extend,
             direction=direction,
-            **kwargs
+            **kwargs,
         )
 
 
 class _geom_stripes(geom):
-
     DEFAULT_AES = {}
     REQUIRED_AES = set()
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False, 'color': None,
-                      'fill': ('#AAAAAA', '#CCCCCC'),
-                      'linetype': 'solid', 'size': 1, 'alpha': 0.5,
-                      'direction': 'vertical', 'extend': (0, 1),
-                      'fill_range': 'auto'}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+        "color": None,
+        "fill": ("#AAAAAA", "#CCCCCC"),
+        "linetype": "solid",
+        "size": 1,
+        "alpha": 0.5,
+        "direction": "vertical",
+        "extend": (0, 1),
+        "fill_range": "auto",
+    }
     draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
 
     def draw_layer(
-        self,
-        data: pd.DataFrame,
-        layout: Layout,
-        coord: Coord,
-        **params: Any
+        self, data: pd.DataFrame, layout: Layout, coord: Coord, **params: Any
     ):
-
         """
         Draw stripes on every panel
         """
-        for pid in layout.layout['PANEL']:
+        for pid in layout.layout["PANEL"]:
             ploc = pid - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
@@ -110,17 +110,17 @@ class _geom_stripes(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
-        extend = params['extend']
-        fill_range = params['fill_range']
-        direction = params['direction']
+        extend = params["extend"]
+        fill_range = params["fill_range"]
+        direction = params["direction"]
 
         # Range
-        if direction == 'vertical':
-            axis, other_axis = 'x', 'y'
+        if direction == "vertical":
+            axis, other_axis = "x", "y"
         else:
-            axis, other_axis = 'y', 'x'
+            axis, other_axis = "y", "x"
 
         if isinstance(coord, coord_flip):
             axis, other_axis = other_axis, axis
@@ -130,11 +130,11 @@ class _geom_stripes(geom):
         range = _axis.range
         other_range = getattr(panel_params, other_axis).range
 
-        if fill_range == 'auto':
+        if fill_range == "auto":
             if isinstance(_axis.scale, scale_discrete):
-                fill_range = 'nocycle'
+                fill_range = "nocycle"
             else:
-                fill_range = 'cycle'
+                fill_range = "cycle"
 
         # Breaks along the width
         n_stripes = len(breaks)
@@ -150,11 +150,11 @@ class _geom_stripes(geom):
         else:
             step = breaks[0]
 
-        deltas = np.array([step/2] * n_stripes)
+        deltas = np.array([step / 2] * n_stripes)
         many_stripes = len(breaks) > 1
         xmin = breaks - deltas
         xmax = breaks + deltas
-        if fill_range in ('cycle', 'nocycle') and many_stripes:
+        if fill_range in ("cycle", "nocycle") and many_stripes:
             if range[0] < breaks[0]:
                 n_stripes += 1
                 xmax = np.insert(xmax, 0, xmin[0])
@@ -168,25 +168,27 @@ class _geom_stripes(geom):
         full_height = other_range[1] - other_range[0]
         ymin = other_range[0] + full_height * extend[0]
         ymax = other_range[0] + full_height * extend[1]
-        fill = list(islice(cycle(params['fill']), n_stripes))
-        if fill_range == 'nocycle' and many_stripes:
+        fill = list(islice(cycle(params["fill"]), n_stripes))
+        if fill_range == "nocycle" and many_stripes:
             # there are at least two stripes at this point
             fill[0] = fill[1]
             fill[-1] = fill[-2]
 
-        if direction != 'vertical':
+        if direction != "vertical":
             xmin, xmax, ymin, ymax = ymin, ymax, xmin, xmax
 
-        data = pd.DataFrame({
-            'xmin': xmin,
-            'xmax': xmax,
-            'ymin': ymin,
-            'ymax': ymax,
-            'fill': fill,
-            'alpha': params['alpha'],
-            'color': params['color'],
-            'linetype': params['linetype'],
-            'size': params['size']
-        })
+        data = pd.DataFrame(
+            {
+                "xmin": xmin,
+                "xmax": xmax,
+                "ymin": ymin,
+                "ymax": ymax,
+                "fill": fill,
+                "alpha": params["alpha"],
+                "color": params["color"],
+                "linetype": params["linetype"],
+                "size": params["size"],
+            }
+        )
 
         return geom_rect.draw_group(data, panel_params, coord, ax, **params)

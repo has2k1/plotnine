@@ -13,5 +13,9 @@ class geom_qq_line(geom_path):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'stat': 'qq_line', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {
+        "stat": "qq_line",
+        "position": "identity",
+        "na_rm": False,
+    }

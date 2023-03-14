@@ -72,14 +72,14 @@ class facet_wrap(facet):
         *,
         nrow: Optional[int] = None,
         ncol: Optional[int] = None,
-        scales: Literal['fixed', 'free', 'free_x', 'free_y'] = 'fixed',
+        scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         shrink: bool = True,
         labeller: Literal[
-            'label_value', 'label_both', 'label_context'
-        ] = 'label_value',
+            "label_value", "label_both", "label_context"
+        ] = "label_value",
         as_table: bool = True,
         drop: bool = True,
-        dir: Literal['h', 'v'] = 'h'
+        dir: Literal["h", "v"] = "h",
     ):
         super().__init__(
             scales=scales,
@@ -87,7 +87,7 @@ class facet_wrap(facet):
             labeller=labeller,
             as_table=as_table,
             drop=drop,
-            dir=dir
+            dir=dir,
         )
         self.vars = parse_wrap_facets(facets)
         self._nrow, self._ncol = check_dimensions(nrow, ncol)
@@ -102,16 +102,13 @@ class facet_wrap(facet):
             return layout_null()
 
         base = combine_vars(
-            data,
-            self.plot.environment,
-            self.vars,
-            drop=self.drop
+            data, self.plot.environment, self.vars, drop=self.drop
         )
         n = len(base)
         dims = wrap_dims(n, self._nrow, self._ncol)
-        _id = np.arange(1, n+1)
+        _id = np.arange(1, n + 1)
 
-        if self.dir == 'v':
+        if self.dir == "v":
             dims = dims[::-1]
 
         if self.as_table:
@@ -121,69 +118,66 @@ class facet_wrap(facet):
 
         col = (_id - 1) % dims[1] + 1
 
-        layout = pd.DataFrame({'PANEL': pd.Categorical(range(1, n+1)),
-                               'ROW': row.astype(int),
-                               'COL': col.astype(int)})
-        if self.dir == 'v':
-            layout.rename(
-                columns={'ROW': 'COL',
-                         'COL': 'ROW'},
-                inplace=True
-            )
+        layout = pd.DataFrame(
+            {
+                "PANEL": pd.Categorical(range(1, n + 1)),
+                "ROW": row.astype(int),
+                "COL": col.astype(int),
+            }
+        )
+        if self.dir == "v":
+            layout.rename(columns={"ROW": "COL", "COL": "ROW"}, inplace=True)
 
         layout = pd.concat([layout, base], axis=1)
-        self.nrow = layout['ROW'].nunique()
-        self.ncol = layout['COL'].nunique()
+        self.nrow = layout["ROW"].nunique()
+        self.ncol = layout["COL"].nunique()
         n = layout.shape[0]
 
         # Add scale identification
-        layout['SCALE_X'] = range(1, n+1) if self.free['x'] else 1
-        layout['SCALE_Y'] = range(1, n+1) if self.free['y'] else 1
+        layout["SCALE_X"] = range(1, n + 1) if self.free["x"] else 1
+        layout["SCALE_Y"] = range(1, n + 1) if self.free["y"] else 1
 
         # Figure out where axes should go.
         # The bottom-most row of each column and the left most
         # column of each row
-        x_idx = [df['ROW'].idxmax() for _, df in layout.groupby('COL')]
-        y_idx = [df['COL'].idxmin() for _, df in layout.groupby('ROW')]
-        layout['AXIS_X'] = False
-        layout['AXIS_Y'] = False
+        x_idx = [df["ROW"].idxmax() for _, df in layout.groupby("COL")]
+        y_idx = [df["COL"].idxmin() for _, df in layout.groupby("ROW")]
+        layout["AXIS_X"] = False
+        layout["AXIS_Y"] = False
         _loc = layout.columns.get_loc
-        layout.iloc[x_idx, _loc('AXIS_X')] = True  # type: ignore
-        layout.iloc[y_idx, _loc('AXIS_Y')] = True  # type: ignore
+        layout.iloc[x_idx, _loc("AXIS_X")] = True  # type: ignore
+        layout.iloc[y_idx, _loc("AXIS_Y")] = True  # type: ignore
 
-        if self.free['x']:
-            layout.loc[:, 'AXIS_X'] = True
+        if self.free["x"]:
+            layout.loc[:, "AXIS_X"] = True
 
-        if self.free['y']:
-            layout.loc[:, 'AXIS_Y'] = True
+        if self.free["y"]:
+            layout.loc[:, "AXIS_Y"] = True
 
         return layout
 
-    def map(
-        self,
-        data: pd.DataFrame,
-        layout: pd.DataFrame
-    ) -> pd.DataFrame:
+    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
         if not len(data):
-            data['PANEL'] = pd.Categorical(
-                [],
-                categories=layout['PANEL'].cat.categories,
-                ordered=True)
+            data["PANEL"] = pd.Categorical(
+                [], categories=layout["PANEL"].cat.categories, ordered=True
+            )
             return data
 
         facet_vals = eval_facet_vars(data, self.vars, self.plot.environment)
-        data, facet_vals = add_missing_facets(data, layout,
-                                              self.vars, facet_vals)
+        data, facet_vals = add_missing_facets(
+            data, layout, self.vars, facet_vals
+        )
 
         # assign each point to a panel
         keys = join_keys(facet_vals, layout, self.vars)
-        data['PANEL'] = match(keys['x'], keys['y'], start=1)
+        data["PANEL"] = match(keys["x"], keys["y"], start=1)
 
         # matching dtype
-        data['PANEL'] = pd.Categorical(
-            data['PANEL'],
-            categories=layout['PANEL'].cat.categories,
-            ordered=True)
+        data["PANEL"] = pd.Categorical(
+            data["PANEL"],
+            categories=layout["PANEL"].cat.categories,
+            ordered=True,
+        )
 
         data.reset_index(drop=True, inplace=True)
         return data
@@ -205,18 +199,18 @@ class facet_wrap(facet):
         right = figure.subplotpars.right
         top = figure.subplotpars.top
         bottom = figure.subplotpars.bottom
-        top_strip_height = self.strips.breadth('top')
+        top_strip_height = self.strips.breadth("top")
         W, H = figure.get_size_inches()
-        spacing_x = _property('panel_spacing_x')
-        spacing_y = _property('panel_spacing_y')
+        spacing_x = _property("panel_spacing_x")
+        spacing_y = _property("panel_spacing_y")
 
-        if theme.themeables.is_blank('strip_text_x'):
+        if theme.themeables.is_blank("strip_text_x"):
             top_strip_height = 0
 
         # Account for the vertical sliding of the strip if any
         with suppress(KeyError):
-            strip_margin_x = _property('strip_margin_x')
-            top_strip_height *= (1 + strip_margin_x)
+            strip_margin_x = _property("strip_margin_x")
+            top_strip_height *= 1 + strip_margin_x
 
         # The goal is to have equal spacing along the vertical
         # and the horizontal. We use the wspace and compute
@@ -224,50 +218,54 @@ class facet_wrap(facet):
         # MPL had a better layout manager.
 
         # width of axes and height of axes
-        w = ((right-left)*W - spacing_x*(ncol-1)) / ncol
-        h = ((top-bottom)*H - (spacing_y+top_strip_height)*(nrow-1)) / nrow
+        w = ((right - left) * W - spacing_x * (ncol - 1)) / ncol
+        h = (
+            (top - bottom) * H - (spacing_y + top_strip_height) * (nrow - 1)
+        ) / nrow
 
         # aspect ratio changes the size of the figure
         if aspect_ratio is not None:
-            h = w*aspect_ratio
-            H = (h*nrow + (spacing_y+top_strip_height)*(nrow-1)) / \
-                (top-bottom)
+            h = w * aspect_ratio
+            H = (h * nrow + (spacing_y + top_strip_height) * (nrow - 1)) / (
+                top - bottom
+            )
             figure.set_figheight(H)
 
         # spacing
-        wspace = spacing_x/w
+        wspace = spacing_x / w
         hspace = (spacing_y + top_strip_height) / h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
         self.check_axis_text_space()
 
-    def make_ax_strips(
-        self,
-        layout_info: layout_details,
-        ax: Axes
-    ) -> Strips:
-        s = strip(self.vars, layout_info, self, ax, 'top')
+    def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
+        s = strip(self.vars, layout_info, self, ax, "top")
         return Strips([s])
 
 
 def check_dimensions(
-    nrow: Optional[int],
-    ncol: Optional[int]
+    nrow: Optional[int], ncol: Optional[int]
 ) -> tuple[int | None, int | None]:
     """
     Verify dimensions of the facet
     """
     if nrow is not None:
         if nrow < 1:
-            warn("'nrow' must be greater than 0. "
-                 "Your value has been ignored.", PlotnineWarning)
+            warn(
+                "'nrow' must be greater than 0. "
+                "Your value has been ignored.",
+                PlotnineWarning,
+            )
             nrow = None
         else:
             nrow = int(nrow)
 
     if ncol is not None:
         if ncol < 1:
-            warn("'ncol' must be greater than 0. "
-                 "Your value has been ignored.", PlotnineWarning)
+            warn(
+                "'ncol' must be greater than 0. "
+                "Your value has been ignored.",
+                PlotnineWarning,
+            )
             ncol = None
         else:
             ncol = int(ncol)
@@ -279,9 +277,8 @@ def parse_wrap_facets(facets: str | list[str]) -> list[str]:
     """
     Return list of facetting variables
     """
-    valid_forms = ['~ var1', '~ var1 + var2']
-    error_msg = ("Valid formula for 'facet_wrap' look like"
-                 f" {valid_forms}")
+    valid_forms = ["~ var1", "~ var1 + var2"]
+    error_msg = "Valid formula for 'facet_wrap' look like" f" {valid_forms}"
 
     if isinstance(facets, (list, tuple)):
         return facets
@@ -289,15 +286,15 @@ def parse_wrap_facets(facets: str | list[str]) -> list[str]:
     if not isinstance(facets, str):
         raise PlotnineError(error_msg)
 
-    if '~' in facets:
-        variables_pattern = r'(\w+(?:\s*\+\s*\w+)*|\.)'
-        pattern = fr'\s*~\s*{variables_pattern}\s*'
+    if "~" in facets:
+        variables_pattern = r"(\w+(?:\s*\+\s*\w+)*|\.)"
+        pattern = rf"\s*~\s*{variables_pattern}\s*"
         match = re.match(pattern, facets)
         if not match:
             raise PlotnineError(error_msg)
 
-        facets = [var.strip() for var in match.group(1).split('+')]
-    elif re.match(r'\w+', facets):
+        facets = [var.strip() for var in match.group(1).split("+")]
+    elif re.match(r"\w+", facets):
         # allow plain string as the variable name
         facets = [facets]
     else:
@@ -307,9 +304,7 @@ def parse_wrap_facets(facets: str | list[str]) -> list[str]:
 
 
 def wrap_dims(
-    n: int,
-    nrow: Optional[int] = None,
-    ncol: Optional[int] = None
+    n: int, nrow: Optional[int] = None, ncol: Optional[int] = None
 ) -> tuple[int, int]:
     """
     Wrap dimensions
@@ -318,10 +313,10 @@ def wrap_dims(
         if ncol is None:
             return n_to_nrow_ncol(n)
         else:
-            nrow = int(np.ceil(n/ncol))
+            nrow = int(np.ceil(n / ncol))
 
     if ncol is None:
-        ncol = int(np.ceil(n/nrow))
+        ncol = int(np.ceil(n / nrow))
 
     if not nrow * ncol >= n:
         raise PlotnineError(
@@ -344,5 +339,5 @@ def n_to_nrow_ncol(n: int) -> tuple[int, int]:
         nrow, ncol = 3, (n + 2) // 3
     else:
         ncol = int(np.ceil(np.sqrt(n)))
-        nrow = int(np.ceil(n/ncol))
+        nrow = int(np.ceil(n / ncol))
     return (nrow, ncol)

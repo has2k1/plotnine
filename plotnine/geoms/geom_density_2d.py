@@ -15,5 +15,9 @@ class geom_density_2d(geom_path):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'stat': 'density_2d', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {
+        "stat": "density_2d",
+        "position": "identity",
+        "na_rm": False,
+    }

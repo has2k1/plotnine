@@ -55,6 +55,7 @@ class annotate:
 
     All `geoms` are created with :code:`stat='identity'`.
     """
+
     _annotation_geom: geom_base_class
 
     def __init__(
@@ -70,7 +71,7 @@ class annotate:
         ymax: float | None = None,
         yend: float | None = None,
         yintercept: float | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         variables = locals()
 
@@ -92,8 +93,8 @@ class annotate:
             info_tokens.append((ae, len(val)))
 
         if len(set(lengths)) > 1:
-            details = ', '.join([f'{n} ({l})' for n, l in info_tokens])
-            msg = f'Unequal parameter lengths: {details}'
+            details = ", ".join([f"{n} ({l})" for n, l in info_tokens])
+            msg = f"Unequal parameter lengths: {details}"
             raise PlotnineError(msg)
 
         # Stop pandas from complaining about all scalars
@@ -104,7 +105,7 @@ class annotate:
 
         data = pd.DataFrame(pos_aesthetics)
         if isinstance(geom, str):
-            geom_klass: type[geom_base_class] = Registry[f'geom_{geom}']
+            geom_klass: type[geom_base_class] = Registry[f"geom_{geom}"]
         elif isinstance(geom, type) and issubclass(geom, geom_base_class):
             geom_klass = geom
         else:
@@ -121,10 +122,10 @@ class annotate:
         self._annotation_geom = geom_klass(
             mappings,
             data,
-            stat='identity',
+            stat="identity",
             inherit_aes=False,
             show_legend=False,
-            **kwargs
+            **kwargs,
         )
 
     def __radd__(self, gg: Ggplot) -> Ggplot:

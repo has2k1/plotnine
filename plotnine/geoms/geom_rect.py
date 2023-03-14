@@ -30,11 +30,19 @@ class geom_rect(geom):
     {common_parameters}
     """
 
-    DEFAULT_AES = {'color': None, 'fill': '#595959',
-                   'linetype': 'solid', 'size': 0.5, 'alpha': 1}
-    REQUIRED_AES = {'xmax', 'xmin', 'ymax', 'ymin'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+    DEFAULT_AES = {
+        "color": None,
+        "fill": "#595959",
+        "linetype": "solid",
+        "size": 0.5,
+        "alpha": 1,
+    }
+    REQUIRED_AES = {"xmax", "xmin", "ymax", "ymin"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+    }
     draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
 
     def draw_panel(
@@ -43,17 +51,18 @@ class geom_rect(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         """
         Plot all groups
         """
         if not coord.is_linear:
             data = _rectangles_to_polygons(data)
-            for _, gdata in data.groupby('group'):
+            for _, gdata in data.groupby("group"):
                 gdata.reset_index(inplace=True, drop=True)
                 geom_polygon.draw_group(
-                    gdata, panel_params, coord, ax, **params)
+                    gdata, panel_params, coord, ax, **params
+                )
         else:
             self.draw_group(data, panel_params, coord, ax, **params)
 
@@ -63,34 +72,30 @@ class geom_rect(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         data = coord.transform(data, panel_params, munch=True)
-        data['size'] *= SIZE_FACTOR
+        data["size"] *= SIZE_FACTOR
 
-        limits = zip(data['xmin'], data['xmax'],
-                     data['ymin'], data['ymax'])
+        limits = zip(data["xmin"], data["xmax"], data["ymin"], data["ymax"])
 
-        verts = [
-            [(l, b), (l, t), (r, t), (r, b)]
-            for (l, r, b, t) in limits
-        ]
+        verts = [[(l, b), (l, t), (r, t), (r, b)] for (l, r, b, t) in limits]
 
-        fill = to_rgba(data['fill'], data['alpha'])
-        color = data['color']
+        fill = to_rgba(data["fill"], data["alpha"])
+        color = data["color"]
 
         # prevent unnecessary borders
         if all(color.isnull()):
-            color = 'none'  # type: ignore
+            color = "none"  # type: ignore
 
         col = PolyCollection(
             verts,
             facecolors=fill,
             edgecolors=color,
-            linestyles=data['linetype'],
-            linewidths=data['size'],
-            zorder=params['zorder'],
-            rasterized=params['raster']
+            linestyles=data["linetype"],
+            linewidths=data["size"],
+            zorder=params["zorder"],
+            rasterized=params["raster"],
         )
         ax.add_collection(col)
 
@@ -122,21 +127,17 @@ def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
     # There are 2 x and 2 y values for each of xmin, xmax, ymin & ymax
     # The positions are as layed out in the indexing arrays
     # x and y values
-    x = np.empty(n*4)
-    y = np.empty(n*4)
-    x[xmin_idx] = df['xmin'].repeat(2)
-    x[xmax_idx] = df['xmax'].repeat(2)
-    y[ymin_idx] = df['ymin'].repeat(2)
-    y[ymax_idx] = df['ymax'].repeat(2)
+    x = np.empty(n * 4)
+    y = np.empty(n * 4)
+    x[xmin_idx] = df["xmin"].repeat(2)
+    x[xmax_idx] = df["xmax"].repeat(2)
+    y[ymin_idx] = df["ymin"].repeat(2)
+    y[ymax_idx] = df["ymax"].repeat(2)
 
     # Aesthetic columns and others
     other_cols = df.columns.difference(
-        ['x', 'y', 'xmin', 'xmax', 'ymin', 'ymax']
+        ["x", "y", "xmin", "xmax", "ymin", "ymax"]
     )
     d = {str(col): np.repeat(df[col].to_numpy(), 4) for col in other_cols}
-    data = pd.DataFrame({
-        'x': x,
-        'y': y,
-        **d
-    })
+    data = pd.DataFrame({"x": x, "y": y, **d})
     return data

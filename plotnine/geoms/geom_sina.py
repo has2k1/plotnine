@@ -30,5 +30,5 @@ class geom_sina(geom_point):
     Single Observations over Multiple Classes."
     J. Comp. Graph. Stat 27: 673–76.
     """
-    DEFAULT_PARAMS = {'stat': 'sina', 'position': 'dodge',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {"stat": "sina", "position": "dodge", "na_rm": False}

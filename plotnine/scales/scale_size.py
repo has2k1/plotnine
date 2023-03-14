@@ -22,11 +22,12 @@ class scale_size_ordinal(scale_discrete):
         It must be of size 2.
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
 
     def __init__(self, range=(2, 6), **kwargs):
         def palette(n):
-            area = np.linspace(range[0]**2, range[1]**2, n)
+            area = np.linspace(range[0] ** 2, range[1] ** 2, n)
             return np.sqrt(area)
 
         self.palette = palette
@@ -42,12 +43,13 @@ class scale_size_discrete(scale_size_ordinal):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
 
     def __init__(self, **kwargs):
         warn(
             "Using size for a discrete variable is not advised.",
-            PlotnineWarning
+            PlotnineWarning,
         )
         super().__init__(**kwargs)
 
@@ -64,7 +66,8 @@ class scale_size_continuous(scale_continuous):
         It must be of size 2.
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
 
     def __init__(self, range=(1, 6), **kwargs):
         # TODO: fix types in mizani
@@ -72,7 +75,7 @@ class scale_size_continuous(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
-alias('scale_size', scale_size_continuous)
+alias("scale_size", scale_size_continuous)
 
 
 @document
@@ -87,7 +90,8 @@ class scale_size_radius(scale_continuous):
         It must be of size 2.
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
 
     def __init__(self, range=(1, 6), **kwargs):
         # TODO: fix types in mizani
@@ -106,7 +110,8 @@ class scale_size_area(scale_continuous):
         Maximum size of the plotting symbol.
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
     rescaler = staticmethod(rescale_max)
 
     def __init__(self, max_size=6, **kwargs):
@@ -127,7 +132,8 @@ class scale_size_datetime(scale_datetime):
         It must be of size 2.
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
 
     def __init__(self, range=(1, 6), **kwargs):
         # TODO: fix types in mizani

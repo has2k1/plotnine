@@ -15,7 +15,7 @@ from .themes import *
 from .watermark import watermark
 
 try:
-    __version__ = version('plotnine')
+    __version__ = version("plotnine")
 except PackageNotFoundError:
     # package is not installed
     pass
@@ -38,10 +38,11 @@ def _get_all_imports():
     leads to `Module` itself coming into the namespace!!
     """
     from types import ModuleType
+
     lst = [
         name
         for name, obj in globals().items()
-        if not (name.startswith('_') or isinstance(obj, ModuleType))
+        if not (name.startswith("_") or isinstance(obj, ModuleType))
     ]
     return lst
 

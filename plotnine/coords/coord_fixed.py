@@ -43,6 +43,7 @@ class coord_fixed(coord_cartesian):
     :class:`plotnine.themes.themeable.figure_size` themeable) and the
     `height` is altered to achieve desired ratio.
     """
+
     ratio: float
 
     def __init__(
@@ -50,18 +51,15 @@ class coord_fixed(coord_cartesian):
         ratio: float = 1,
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
-        expand: bool = True
+        expand: bool = True,
     ):
         super().__init__(xlim=xlim, ylim=ylim, expand=expand)
         self.ratio = ratio
 
-    def aspect(
-        self,
-        panel_params: panel_view
-    ) -> float | None:
+    def aspect(self, panel_params: panel_view) -> float | None:
         x = panel_params.x.range
         y = panel_params.y.range
-        return (y[1]-y[0]) / (x[1]-x[0]) * self.ratio
+        return (y[1] - y[0]) / (x[1] - x[0]) * self.ratio
 
 
 coord_equal = coord_fixed

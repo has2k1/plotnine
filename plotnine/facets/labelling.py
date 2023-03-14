@@ -17,8 +17,7 @@ if typing.TYPE_CHECKING:
 
 
 def label_value(
-    label_info: strip_label_details,
-    multi_line: bool = True
+    label_info: strip_label_details, multi_line: bool = True
 ) -> strip_label_details:
     """
     Keep value as the label
@@ -44,9 +43,7 @@ def label_value(
 
 
 def label_both(
-    label_info: strip_label_details,
-    multi_line: bool = True,
-    sep: str = ': '
+    label_info: strip_label_details, multi_line: bool = True, sep: str = ": "
 ) -> strip_label_details:
     """
     Concatenate the facet variable with the value
@@ -68,7 +65,7 @@ def label_both(
     label_info = label_info.copy()
 
     for var, lvalue in label_info.variables.items():
-        label_info.variables[var] = f'{var}{sep}{lvalue}'
+        label_info.variables[var] = f"{var}{sep}{lvalue}"
 
     if not multi_line:
         label_info = label_info.collapse()
@@ -77,9 +74,7 @@ def label_both(
 
 
 def label_context(
-    label_info: strip_label_details,
-    multi_line: bool = True,
-    sep: str = ': '
+    label_info: strip_label_details, multi_line: bool = True, sep: str = ": "
 ) -> strip_label_details:
     """
     Create an unabiguous label string
@@ -109,16 +104,16 @@ def label_context(
 
 
 LABELLERS: dict[StripLabellingFuncNames, StripLabellingFunc] = {
-    'label_value': label_value,
-    'label_both': label_both,
-    'label_context': label_context
+    "label_value": label_value,
+    "label_both": label_both,
+    "label_context": label_context,
 }
 
 
 def as_labeller(
     x: Optional[CanBeStripLabellingFunc] = None,
     default: CanBeStripLabellingFunc = label_value,
-    multi_line: bool = True
+    multi_line: bool = True,
 ) -> labeller:
     """
     Coerse to labeller
@@ -173,13 +168,14 @@ class labeller:
         renaming variables. A function to rename the variable
         or a string name.
     """
+
     def __init__(
         self,
         rows: Optional[CanBeStripLabellingFunc] = None,
         cols: Optional[CanBeStripLabellingFunc] = None,
         multi_line: bool = True,
-        default: CanBeStripLabellingFunc = 'label_value',
-        **kwargs: Callable[[str], str]
+        default: CanBeStripLabellingFunc = "label_value",
+        **kwargs: Callable[[str], str],
     ):
         # Sort out the labellers along each dimension
         self.rows_labeller = _as_strip_labelling_func(rows, default)
@@ -187,21 +183,18 @@ class labeller:
         self.multi_line = multi_line
         self.variable_maps = kwargs
 
-    def __call__(
-        self,
-        label_info: strip_label_details
-    ) -> strip_label_details:
+    def __call__(self, label_info: strip_label_details) -> strip_label_details:
         """
         Called to do the labelling
         """
         variable_maps = {
-            k : v
+            k: v
             for k, v in self.variable_maps.items()
             if k in label_info.variables
         }
 
         # No variable specific labeller
-        if label_info.meta['dimension'] == 'rows':
+        if label_info.meta["dimension"] == "rows":
             result = self.rows_labeller(label_info)
         else:
             result = self.cols_labeller(label_info)
@@ -226,7 +219,7 @@ class labeller:
 
 def _as_strip_labelling_func(
     fobj: Optional[CanBeStripLabellingFunc],
-    default: CanBeStripLabellingFunc = 'label_value',
+    default: CanBeStripLabellingFunc = "label_value",
 ) -> StripLabellingFunc:
     """
     Create a function that can operate on strip_label_details
@@ -255,11 +248,9 @@ class _core_labeller(metaclass=ABCMeta):
     """
     Per item
     """
+
     @abstractmethod
-    def __call__(
-        self,
-        label_info: strip_label_details
-    ) -> strip_label_details:
+    def __call__(self, label_info: strip_label_details) -> strip_label_details:
         pass
 
 
@@ -272,13 +263,11 @@ class _function_labeller(_core_labeller):
     func : callable
         Function to label an individual string
     """
+
     def __init__(self, func: Callable[[str], str]):
         self.func = func
 
-    def __call__(
-        self,
-        label_info: strip_label_details
-    ) -> strip_label_details:
+    def __call__(self, label_info: strip_label_details) -> strip_label_details:
         label_info = label_info.copy()
         variables = label_info.variables
         for facet_var, facet_value in variables.items():
@@ -299,15 +288,11 @@ class _dict_labeller(_core_labeller):
     """
 
     def __init__(
-        self,
-        lookup: dict[str, str] | dict[str, Callable[[str], str]]
+        self, lookup: dict[str, str] | dict[str, Callable[[str], str]]
     ):
         self.lookup = lookup
 
-    def __call__(
-        self,
-        label_info: strip_label_details
-    ) -> strip_label_details:
+    def __call__(self, label_info: strip_label_details) -> strip_label_details:
         label_info = label_info.copy()
         variables = label_info.variables
         # Replace facet_value with values from the lookup table

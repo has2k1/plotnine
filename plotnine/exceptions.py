@@ -17,7 +17,7 @@ def warning_format(
     """
     Format for plotnine warnings
     """
-    fmt = '{}:{}: {}: {}\n'.format
+    fmt = "{}:{}: {}: {}\n".format
     return fmt(filename, lineno, category.__name__, message)
 
 
@@ -44,4 +44,5 @@ class PlotnineWarning(UserWarning):
     """
     Warnings for ggplot inconsistencies
     """
+
     pass

@@ -43,26 +43,31 @@ class guides(dict):
         aesthetic - guide pairings. e.g
         ``color=guide_colorbar()``
     """
+
     # Determined from the theme when the guides are
     # getting built
-    position: Literal['left', 'right', 'top', 'bottom'] | TupleFloat2
-    box_direction: Literal['horizontal', 'vertical', 'auto']
-    box_align: Literal['left', 'right', 'top', 'bottom', 'center', 'auto']
+    position: Literal["left", "right", "top", "bottom"] | TupleFloat2
+    box_direction: Literal["horizontal", "vertical", "auto"]
+    box_align: Literal["left", "right", "top", "bottom", "center", "auto"]
     box_margin: int
     spacing: float
 
     def __init__(self, **kwargs):
-        aes_names = {'alpha', 'color', 'fill',
-                     'linetype', 'shape', 'size',
-                     'stroke'}
-        if 'colour' in kwargs:
-            kwargs['color'] = kwargs.pop('colour')
+        aes_names = {
+            "alpha",
+            "color",
+            "fill",
+            "linetype",
+            "shape",
+            "size",
+            "stroke",
+        }
+        if "colour" in kwargs:
+            kwargs["color"] = kwargs.pop("colour")
 
         dict.__init__(
-            self,
-            ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names)
+            self, ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names)
         )
-
 
     def __radd__(self, gg):
         """
@@ -102,28 +107,28 @@ class guides(dict):
             If there are no guides, **None** is returned.
         """
         _property = plot.theme.themeables.property
-        self.box_direction = _property('legend_box')
-        self.position = _property('legend_position')
-        self.box_align = _property('legend_box_just')
-        self.box_margin = _property('legend_box_margin')
-        self.spacing = _property('legend_spacing')
+        self.box_direction = _property("legend_box")
+        self.position = _property("legend_position")
+        self.box_align = _property("legend_box_just")
+        self.box_margin = _property("legend_box_margin")
+        self.spacing = _property("legend_spacing")
 
-        if self.position == 'none':
+        if self.position == "none":
             return  # No Legend
 
         # Direction
-        if self.box_direction == 'auto':
-            if self.position in ('right', 'left'):
-                self.box_direction = 'vertical'
+        if self.box_direction == "auto":
+            if self.position in ("right", "left"):
+                self.box_direction = "vertical"
             else:
-                self.box_direction = 'horizontal'
+                self.box_direction = "horizontal"
 
         # Justification of legend boxes
-        if self.box_align == 'auto':
-            if self.position in ('right', 'left'):
-                self.box_align = 'left'
+        if self.box_align == "auto":
+            if self.position in ("right", "left"):
+                self.box_align = "left"
             else:
-                self.box_align = 'right'
+                self.box_align = "right"
 
         gdefs = self.train(plot)
         if not gdefs:
@@ -174,15 +179,17 @@ class guides(dict):
                 # if guide is character, then find the guide object
                 guide = self.validate(guide)
                 # check the consistency of the guide and scale.
-                if ('any' not in guide.available_aes and
-                        scale.aesthetics[0] not in guide.available_aes):
+                if (
+                    "any" not in guide.available_aes
+                    and scale.aesthetics[0] not in guide.available_aes
+                ):
                     raise PlotnineError(
                         f"{guide.__class__.__name__} cannot be used for "
                         f"{scale.aesthetics}"
                     )
 
                 # title
-                if not hasattr(guide, 'title'):
+                if not hasattr(guide, "title"):
                     if scale.name:
                         guide.title = scale.name
                     else:
@@ -192,7 +199,7 @@ class guides(dict):
                                 f"Cannot generate legend for the {output!r} "
                                 "aesthetic. Make sure you have mapped a "
                                 "variable to it",
-                                PlotnineWarning
+                                PlotnineWarning,
                             )
 
                 # each guide object trains scale within the object,
@@ -210,11 +217,10 @@ class guides(dict):
         Validate guide object
         """
         if is_string(guide):
-            guide = Registry[f'guide_{guide}']()
+            guide = Registry[f"guide_{guide}"]()
 
         if not isinstance(guide, guide_class):
-            raise PlotnineError(
-                f"Unknown guide: {guide}")
+            raise PlotnineError(f"Unknown guide: {guide}")
         return guide
 
     def merge(self, gdefs):
@@ -234,16 +240,13 @@ class guides(dict):
         # group guide definitions by hash, and
         # reduce each group to a single guide
         # using the guide.merge method
-        df = pd.DataFrame({
-            'gdef': gdefs,
-            'hash': [g.hash for g in gdefs]
-        })
-        grouped = df.groupby('hash', sort=False)
+        df = pd.DataFrame({"gdef": gdefs, "hash": [g.hash for g in gdefs]})
+        grouped = df.groupby("hash", sort=False)
         gdefs = []
         for name, group in grouped:
             # merge
-            gdef = group['gdef'].iloc[0]
-            for g in group['gdef'].iloc[1:]:
+            gdef = group["gdef"].iloc[0]
+            for g in group["gdef"].iloc[1:]:
                 gdef = gdef.merge(g)
             gdefs.append(gdef)
         return gdefs
@@ -307,27 +310,26 @@ class guides(dict):
                 gdef.order = 100
             elif not 0 <= gdef.order <= 99:
                 raise PlotnineError(
-                    "'order' for a guide should be "
-                    "between 0 and 99")
+                    "'order' for a guide should be " "between 0 and 99"
+                )
         orders = [gdef.order for gdef in gdefs]
         idx = np.argsort(orders)
         gboxes = [gboxes[i] for i in idx]
 
         # direction when more than legend
-        if self.box_direction == 'vertical':
+        if self.box_direction == "vertical":
             packer = VPacker
-        elif self.box_direction == 'horizontal':
+        elif self.box_direction == "horizontal":
             packer = HPacker
         else:
             raise PlotnineError(
-                "'legend_box' should be either "
-                "'vertical' or 'horizontal'"
+                "'legend_box' should be either " "'vertical' or 'horizontal'"
             )
 
         box = packer(
             children=gboxes,
             align=self.box_align,
             pad=self.box_margin,
-            sep=self.spacing
+            sep=self.spacing,
         )
         return box

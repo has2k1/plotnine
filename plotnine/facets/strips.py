@@ -35,7 +35,7 @@ class strip:
     complicated.
     """
 
-    location: Literal['right', 'top']
+    location: Literal["right", "top"]
 
     def __init__(
         self,
@@ -43,7 +43,7 @@ class strip:
         layout_info: layout_details,
         facet: Facet,
         ax: Axes,
-        location: Literal['right', 'top']
+        location: Literal["right", "top"],
     ):
         self.vars = vars
         self.ax = ax
@@ -57,30 +57,26 @@ class strip:
 
             for value in label_info.variables.values():
                 if isinstance(value, str):
-                    n = max(n, len(value.split('\n')))
+                    n = max(n, len(value.split("\n")))
             return n
 
-        label_info = strip_label_details.make(
-            layout_info,
-            vars,
-            location
-        )
+        label_info = strip_label_details.make(layout_info, vars, location)
         self.label_info = facet.labeller(label_info)
         self.num_lines = _calc_num_lines(self.label_info)
         self.info = self.details()
 
     @property
     def inner_margins(self) -> TupleFloat2:
-        if self.location == 'right':
-            strip_name = 'strip_text_y'
-            side1, side2 = 'l', 'r'
+        if self.location == "right":
+            strip_name = "strip_text_y"
+            side1, side2 = "l", "r"
         else:
-            strip_name = 'strip_text_x'
-            side1, side2 = 't', 'b'
+            strip_name = "strip_text_x"
+            side1, side2 = "t", "b"
 
-        margin = self.theme.themeables.property(strip_name, 'margin')
-        m1 = margin.get_as(side1, 'pt')
-        m2 = margin.get_as(side2, 'pt')
+        margin = self.theme.themeables.property(strip_name, "margin")
+        m1 = margin.get_as(side1, "pt")
+        m2 = margin.get_as(side2, "pt")
         return m1, m2
 
     @property
@@ -97,11 +93,11 @@ class strip:
         theme = self.theme
         _property = theme.themeables.property
 
-        if self.location == 'right':
-            strip_name = 'strip_text_y'
+        if self.location == "right":
+            strip_name = "strip_text_y"
             num_lines: int = self.num_lines or self.facet.num_vars_y
         else:
-            strip_name = 'strip_text_x'
+            strip_name = "strip_text_x"
             num_lines = self.num_lines or self.facet.num_vars_x
 
         if not num_lines:
@@ -111,13 +107,13 @@ class strip:
         # transAxes dimensions. The line height and line
         # width are mapped to the same [0, 1] range
         # i.e (pts) * (inches / pts) * (1 / inches)
-        fontsize: float = _property(strip_name, 'size')
-        linespacing: float = _property(strip_name, 'linespacing')
+        fontsize: float = _property(strip_name, "size")
+        linespacing: float = _property(strip_name, "linespacing")
 
         # margins on either side of the strip text
         m1, m2 = self.inner_margins
         # Using figure.dpi value here does not workout well!
-        breadth = (linespacing*fontsize) * num_lines / dpi
+        breadth = (linespacing * fontsize) * num_lines / dpi
         breadth = breadth + (m1 + m2) / dpi
         return breadth
 
@@ -142,48 +138,48 @@ class strip:
         ax_width, ax_height = bbox.width, bbox.height  # in inches
         strip_size = self.breadth
         m1, m2 = self.inner_margins
-        m1, m2 = m1/dpi, m2/dpi
+        m1, m2 = m1 / dpi, m2 / dpi
 
-        if location == 'right':
+        if location == "right":
             box_x = 1
             box_y = 0
-            box_width = strip_size/ax_width
+            box_width = strip_size / ax_width
             box_height = 1
             # y & height properties of the background slide and
             # shrink the strip vertically. The x margin slides
             # it horizontally.
             with suppress(KeyError):
-                box_y = _property('strip_background_y', 'y')
+                box_y = _property("strip_background_y", "y")
             with suppress(KeyError):
-                box_height = _property('strip_background_y', 'height')
+                box_height = _property("strip_background_y", "height")
 
-            margin = _property('strip_margin_x')
-            x = 1 + (strip_size-m2+m1) / (2*ax_width)
-            y = (2*box_y+box_height)/2
+            margin = _property("strip_margin_x")
+            x = 1 + (strip_size - m2 + m1) / (2 * ax_width)
+            y = (2 * box_y + box_height) / 2
             # margin adjustment
-            hslide = 1 + margin*strip_size/ax_width
+            hslide = 1 + margin * strip_size / ax_width
             x *= hslide
             box_x *= hslide
             rotation = -90
-            label = 'n'.join(self.label_info.text().split('\n')[::-1])
+            label = "n".join(self.label_info.text().split("\n")[::-1])
         else:  # top
             box_x = 0
             box_y = 1
             box_width = 1
-            box_height = strip_size/ax_height
+            box_height = strip_size / ax_height
             # x & width properties of the background slide and
             # shrink the strip horizontally. The y margin slides
             # it vertically.
             with suppress(KeyError):
-                box_x = _property('strip_background_x', 'x')
+                box_x = _property("strip_background_x", "x")
             with suppress(KeyError):
-                box_width = _property('strip_background_x', 'width')
+                box_width = _property("strip_background_x", "width")
 
-            margin = _property('strip_margin_y')
-            x = (2*box_x+box_width)/2
-            y = 1 + (strip_size-m1+m2)/(2*ax_height)
+            margin = _property("strip_margin_y")
+            x = (2 * box_x + box_width) / 2
+            y = 1 + (strip_size - m1 + m2) / (2 * ax_height)
             # margin adjustment
-            vslide = 1 + margin*strip_size/ax_height
+            vslide = 1 + margin * strip_size / ax_height
             y *= vslide
             box_y *= vslide
             rotation = 0
@@ -216,12 +212,12 @@ class strip:
             (info.box_x, info.box_y),
             width=info.box_width,
             height=info.box_height,
-            facecolor='lightgrey',
-            edgecolor='None',
+            facecolor="lightgrey",
+            edgecolor="None",
             transform=ax.transAxes,
             zorder=2.2,  # > ax line & boundary
-            boxstyle='square, pad=0',
-            clip_on=False
+            boxstyle="square, pad=0",
+            clip_on=False,
         )
 
         text = mtext.Text(
@@ -229,33 +225,38 @@ class strip:
             info.y,  # type: ignore[arg-type]
             info.label,
             rotation=info.rotation,
-            verticalalignment='center',
-            horizontalalignment='center',
+            verticalalignment="center",
+            horizontalalignment="center",
             transform=ax.transAxes,
             zorder=3.3,  # > rect
-            clip_on=False
+            clip_on=False,
         )
 
         ax.add_artist(rect)
         ax.add_artist(text)
 
-        for key in ('strip_text_x', 'strip_text_y',
-                    'strip_background_x', 'strip_background_y'):
+        for key in (
+            "strip_text_x",
+            "strip_text_y",
+            "strip_background_x",
+            "strip_background_y",
+        ):
             if key not in _targets:
                 _targets[key] = []
 
-        if info.location == 'right':
-            _targets['strip_background_y'].append(rect)
-            _targets['strip_text_y'].append(text)
+        if info.location == "right":
+            _targets["strip_background_y"].append(rect)
+            _targets["strip_text_y"].append(text)
         else:
-            _targets['strip_background_x'].append(rect)
-            _targets['strip_text_x'].append(text)
+            _targets["strip_background_x"].append(rect)
+            _targets["strip_text_x"].append(text)
 
 
 class Strips(List[strip]):
     """
     List of strips for a plot
     """
+
     facet: Facet
 
     @staticmethod
@@ -278,11 +279,11 @@ class Strips(List[strip]):
 
     @property
     def top_strips(self) -> Strips:
-        return Strips([s for s in self if s.location == 'top'])
+        return Strips([s for s in self if s.location == "top"])
 
     @property
     def right_strips(self) -> Strips:
-        return Strips([s for s in self if s.location == 'right'])
+        return Strips([s for s in self if s.location == "right"])
 
     def draw(self):
         for s in self:
@@ -323,11 +324,8 @@ class Strips(List[strip]):
             for s in self:
                 s.info.breadth_inches = breadth
 
-    def breadth(
-        self,
-        location: Literal["top", "right"] = "top"
-    ) -> float:
-        lst = self.top_strips if location == 'top' else self.right_strips
+    def breadth(self, location: Literal["top", "right"] = "top") -> float:
+        lst = self.top_strips if location == "top" else self.right_strips
         try:
             return lst[0].info.breadth_inches
         except IndexError:

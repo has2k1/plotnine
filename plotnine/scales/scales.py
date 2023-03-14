@@ -68,10 +68,7 @@ class Scales(List[scale]):
         lst = [s.aesthetics for s in self]
         return list(itertools.chain(*lst))
 
-    def get_scales(
-        self,
-        aesthetic: ScaledAestheticsName
-    ) -> Scale | None:
+    def get_scales(self, aesthetic: ScaledAestheticsName) -> Scale | None:
         """
         Return the scale for the aesthetic or None if there isn't one
 
@@ -92,14 +89,14 @@ class Scales(List[scale]):
         """
         Return x scale
         """
-        return self.get_scales('x')
+        return self.get_scales("x")
 
     @property
     def y(self) -> Scale | None:
         """
         Return y scale
         """
-        return self.get_scales('y')
+        return self.get_scales("y")
 
     def non_position_scales(self) -> Scales:
         """
@@ -116,11 +113,7 @@ class Scales(List[scale]):
         """
         Return a list of the position scales that are present
         """
-        l = [
-            s
-            for s in self
-            if ('x' in s.aesthetics) or ('y' in s.aesthetics)
-        ]
+        l = [s for s in self if ("x" in s.aesthetics) or ("y" in s.aesthetics)]
         return Scales(l)
 
     def train(self, data, vars, idx):
@@ -147,7 +140,7 @@ class Scales(List[scale]):
         idx = np.asarray(idx)
         for col in vars:
             for i, sc in enumerate(self, start=1):
-                bool_idx = (i == idx)
+                bool_idx = i == idx
                 sc.train(data.loc[bool_idx, col])
 
     def map(self, data, vars, idx):
@@ -184,7 +177,7 @@ class Scales(List[scale]):
             if use_df:
                 discrete_cols.append(col)
             for i, sc in enumerate(self, start=1):
-                bool_idx = (i == idx)
+                bool_idx = i == idx
                 results = sc.map(data.loc[bool_idx, col])
                 if use_df:
                     df.loc[bool_idx, col] = results
@@ -201,11 +194,7 @@ class Scales(List[scale]):
         for sc in self:
             sc.reset()
 
-    def train_df(
-        self,
-        df : pd.DataFrame,
-        drop : bool = False
-    ):
+    def train_df(self, df: pd.DataFrame, drop: bool = False):
         """
         Train scales from a dataframe
         """
@@ -301,7 +290,7 @@ class Scales(List[scale]):
         aesthetics = set(aesthetics) - set(self.input())
 
         for ae in aesthetics:
-            scale_name = f'scale_{ae}_continuous'
+            scale_name = f"scale_{ae}_continuous"
             scale_f = Registry[scale_name]
             self.append(scale_f())
 
@@ -311,20 +300,22 @@ def scale_type(series):
     Get a suitable scale for the series
     """
     if array_kind.continuous(series):
-        stype = 'continuous'
+        stype = "continuous"
     elif array_kind.ordinal(series):
-        stype = 'ordinal'
+        stype = "ordinal"
     elif array_kind.discrete(series):
-        stype = 'discrete'
+        stype = "discrete"
     elif array_kind.datetime(series):
-        stype = 'datetime'
+        stype = "datetime"
     elif array_kind.timedelta(series):
-        stype = 'timedelta'
+        stype = "timedelta"
     else:
-        msg = ("Don't know how to automatically pick scale for "
-               "object of type {}. Defaulting to 'continuous'")
+        msg = (
+            "Don't know how to automatically pick scale for "
+            "object of type {}. Defaulting to 'continuous'"
+        )
         warn(msg.format(series.dtype), PlotnineWarning)
-        stype = 'continuous'
+        stype = "continuous"
     return stype
 
 
@@ -341,10 +332,10 @@ def make_scale(ae, series, *args, **kwargs):
     stype = scale_type(series)
 
     # filter parameters by scale type
-    if stype in ('discrete', 'ordinal'):
+    if stype in ("discrete", "ordinal"):
         with suppress(KeyError):
-            del kwargs['trans']
+            del kwargs["trans"]
 
-    scale_name = f'scale_{ae}_{stype}'
+    scale_name = f"scale_{ae}_{stype}"
     scale_klass = Registry[scale_name]
     return scale_klass(*args, **kwargs)

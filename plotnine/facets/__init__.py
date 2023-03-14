@@ -13,12 +13,12 @@ from .labelling import (
 )
 
 __all__ = [
-    'facet_grid',
-    'facet_null',
-    'facet_wrap',
-    'label_value',
-    'label_both',
-    'label_context',
-    'labeller',
-    'as_labeller'
+    "facet_grid",
+    "facet_null",
+    "facet_wrap",
+    "label_value",
+    "label_both",
+    "label_context",
+    "labeller",
+    "as_labeller",
 ]

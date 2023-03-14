@@ -11,8 +11,8 @@ from plotnine import (
 )
 from plotnine.data import mtcars
 
-_theme = theme(subplots_adjust={'right': 0.80})
-_theme_captions = theme(subplots_adjust={'bottom': 0.30})
+_theme = theme(subplots_adjust={"right": 0.80})
+_theme_captions = theme(subplots_adjust={"bottom": 0.30})
 
 c1 = "This is a sample caption"
 c2 = """\
@@ -22,39 +22,32 @@ when an unknown printer took a galley of type and scrambled it to make
 a type specimen book."""
 
 
-df = pd.DataFrame({
-    'x': [1, 2],
-    'y': [3, 4],
-    'cat': ['a', 'b']
-})
+df = pd.DataFrame({"x": [1, 2], "y": [3, 4], "cat": ["a", "b"]})
 
 
 def test_labelling_with_colour():
-    p = (ggplot(df, aes('x', 'y', color='cat'))
-         + geom_point()
-         + labs(colour='Colour Title')
-         )
+    p = (
+        ggplot(df, aes("x", "y", color="cat"))
+        + geom_point()
+        + labs(colour="Colour Title")
+    )
 
-    assert p + _theme == 'labelling_with_colour'
+    assert p + _theme == "labelling_with_colour"
 
 
 def test_caption_simple():
-    p = (ggplot(mtcars, aes('wt', 'mpg'))
-         + geom_point()
-         + labs(caption=c1)
-         )
+    p = ggplot(mtcars, aes("wt", "mpg")) + geom_point() + labs(caption=c1)
 
-    assert p == 'caption_simple'
+    assert p == "caption_simple"
 
 
 def test_caption_complex():
-    p = (ggplot(mtcars, aes('wt', 'mpg'))
-         + geom_point()
-         + labs(caption=c2)
-         + facet_grid('am ~ vs')
-         + theme(
-             plot_caption=element_text(x=0.125, ha='left', size=12)
-         )
-         )
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + labs(caption=c2)
+        + facet_grid("am ~ vs")
+        + theme(plot_caption=element_text(x=0.125, ha="left", size=12))
+    )
 
-    assert p == 'caption_complex'
+    assert p == "caption_complex"

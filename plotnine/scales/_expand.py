@@ -18,6 +18,7 @@ if typing.TYPE_CHECKING:
         TupleFloat4,
     )
 
+
 def _expand_range_distinct(
     x: TupleFloat2,
     expand: TupleFloat2 | TupleFloat4,
@@ -34,7 +35,7 @@ def _expand_range_distinct(
 def expand_range(
     x: CoordRange,
     expand: TupleFloat2 | TupleFloat4,
-    trans: Trans | Type[Trans]
+    trans: Trans | Type[Trans],
 ) -> range_view:
     """
     Expand Coordinate Range in coordinate space
@@ -60,7 +61,7 @@ def expand_range(
     f0, f1 = final_x
     final_range = (
         f0 if np.isfinite(f0) else l0,
-        f1 if np.isfinite(f1) else l1
+        f1 if np.isfinite(f1) else l1,
     )
 
     ranges = range_view(range=final_range, range_coord=x_coord)

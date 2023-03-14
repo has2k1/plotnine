@@ -13,5 +13,5 @@ class geom_qq(geom_point):
     ----------
     {common_parameters}
     """
-    DEFAULT_PARAMS = {'stat': 'qq', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_PARAMS = {"stat": "qq", "position": "identity", "na_rm": False}

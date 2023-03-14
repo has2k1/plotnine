@@ -28,6 +28,7 @@ class scale_view:
     """
     Scale information after it has been trained
     """
+
     scale: Scale
     aesthetics: List[str]
     name: Optional[str]
@@ -45,6 +46,7 @@ class range_view:
     """
     Range information after trainning
     """
+
     range: TupleFloat2
     range_coord: TupleFloat2
 
@@ -54,6 +56,7 @@ class labels_view:
     """
     Scale labels (incl. caption & title) for the plot
     """
+
     x: Optional[str] = None
     y: Optional[str] = None
     alpha: Optional[str] = None
@@ -113,8 +116,7 @@ class labels_view:
         Representations without the None values
         """
         nv_pairs = ", ".join(
-            f"{name}={repr(value)}"
-            for name, value in self.iter_set_fields()
+            f"{name}={repr(value)}" for name, value in self.iter_set_fields()
         )
         return f"{self.__class__.__name__}({nv_pairs})"
 
@@ -124,6 +126,7 @@ class panel_view:
     """
     Information from the trained position scales in a panel
     """
+
     x: scale_view
     y: scale_view
 
@@ -133,6 +136,7 @@ class panel_ranges:
     """
     Ranges for the panel
     """
+
     x: TupleFloat2
     y: TupleFloat2
 
@@ -142,6 +146,7 @@ class pos_scales:
     """
     Position Scales
     """
+
     x: Scale
     y: Scale
 
@@ -151,6 +156,7 @@ class mpl_save_view:
     """
     Everything required to save a matplotlib figure
     """
+
     figure: Figure
     kwargs: Dict[str, Any]
 
@@ -160,6 +166,7 @@ class layout_details:
     """
     Layout information
     """
+
     panel_index: int
     panel: int
     row: int
@@ -176,6 +183,7 @@ class strip_details:
     """
     Strip Details
     """
+
     x: float
     y: float
     box_x: float
@@ -183,7 +191,7 @@ class strip_details:
     box_width: float
     box_height: float
     breadth_inches: float
-    location: Literal['right', 'top']
+    location: Literal["right", "top"]
     label: str
     ax: Axes
     rotation: float
@@ -194,6 +202,7 @@ class strip_label_details:
     """
     Strip Label Details
     """
+
     # facet variable: label for the value
     variables: dict[str, str]
     meta: dict[str, Any]  # TODO: use a typeddict
@@ -202,14 +211,13 @@ class strip_label_details:
     def make(
         layout_info: layout_details,
         vars: list[str],
-        location: Literal['right', 'top']
+        location: Literal["right", "top"],
     ) -> strip_label_details:
         variables: dict[str, Any] = {
-            v: str(layout_info.variables[v])
-            for v in vars
+            v: str(layout_info.variables[v]) for v in vars
         }
         meta: dict[str, Any] = {
-            'dimension': 'cols' if location == 'top' else 'rows'
+            "dimension": "cols" if location == "top" else "rows"
         }
         return strip_label_details(variables, meta)
 
@@ -223,10 +231,7 @@ class strip_label_details:
         """
         Make a copy
         """
-        return strip_label_details(
-            self.variables.copy(),
-            self.meta.copy()
-        )
+        return strip_label_details(self.variables.copy(), self.meta.copy())
 
     def copy(self) -> strip_label_details:
         """
@@ -241,14 +246,12 @@ class strip_label_details:
         Join the labels for all the variables along a
         dimension
         """
-        return '\n'.join(list(self.variables.values()))
+        return "\n".join(list(self.variables.values()))
 
     def collapse(self) -> strip_label_details:
         """
         Concatenate all label values into one item
         """
         result = self.copy()
-        result.variables = {
-            'value': ', '.join(result.variables.values())
-        }
+        result.variables = {"value": ", ".join(result.variables.values())}
         return result

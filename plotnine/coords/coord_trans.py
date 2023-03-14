@@ -57,11 +57,11 @@ class coord_trans(coord):
 
     def __init__(
         self,
-        x: str | Trans = 'identity',
-        y: str | Trans = 'identity',
+        x: str | Trans = "identity",
+        y: str | Trans = "identity",
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
-        expand: bool = True
+        expand: bool = True,
     ):
         self.trans_x = gettrans(x)
         self.trans_y = gettrans(y)
@@ -69,66 +69,47 @@ class coord_trans(coord):
         self.expand = expand
 
     def transform(
-        self,
-        data: pd.DataFrame,
-        panel_params: panel_view,
-        munch: bool = False
+        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
     ) -> pd.DataFrame:
         if not self.is_linear and munch:
             data = self.munch(data, panel_params)
 
         def trans_x(col: FloatSeries) -> FloatSeries:
-            result = transform_value(
-                self.trans_x,
-                col,
-                panel_params.x.range
-            )
+            result = transform_value(self.trans_x, col, panel_params.x.range)
             if any(result.isnull()):
                 warn(
                     "Coordinate transform of x aesthetic "
                     "created one or more NaN values.",
-                    PlotnineWarning
+                    PlotnineWarning,
                 )
             return result
 
         def trans_y(col: FloatSeries) -> FloatSeries:
-            result = transform_value(
-                self.trans_y,
-                col,
-                panel_params.y.range
-            )
+            result = transform_value(self.trans_y, col, panel_params.y.range)
             if any(result.isnull()):
                 warn(
                     "Coordinate transform of y aesthetic "
                     "created one or more NaN values.",
-                    PlotnineWarning
+                    PlotnineWarning,
                 )
             return result
 
         data = transform_position(data, trans_x, trans_y)
         return transform_position(data, squish_infinite, squish_infinite)
 
-    def backtransform_range(
-        self,
-        panel_params: panel_view
-    ) -> panel_ranges:
+    def backtransform_range(self, panel_params: panel_view) -> panel_ranges:
         return panel_ranges(
             x=self.trans_x.inverse(panel_params.x.range),
-            y=self.trans_y.inverse(panel_params.y.range)
+            y=self.trans_y.inverse(panel_params.y.range),
         )
 
-    def setup_panel_params(
-        self,
-        scale_x: Scale,
-        scale_y: Scale
-    ) -> panel_view:
+    def setup_panel_params(self, scale_x: Scale, scale_y: Scale) -> panel_view:
         """
         Compute the range and break information for the panel
         """
+
         def get_scale_view(
-            scale: Scale,
-            coord_limits: TupleFloat2,
-            trans: Trans
+            scale: Scale, coord_limits: TupleFloat2, trans: Trans
         ) -> scale_view:
             if coord_limits:
                 coord_limits = trans.transform(coord_limits)
@@ -143,14 +124,14 @@ class coord_trans(coord):
                 trans,
                 # TODO: fix typecheck
                 sv.breaks,  # pyright: ignore
-                sv.range
+                sv.range,
             )
             sv.minor_breaks = transform_value(trans, sv.minor_breaks, sv.range)
             return sv
 
         out = panel_view(
             x=get_scale_view(scale_x, self.limits.x, self.trans_x),
-            y=get_scale_view(scale_y, self.limits.y, self.trans_y)
+            y=get_scale_view(scale_y, self.limits.y, self.trans_y),
         )
         return out
 
@@ -158,12 +139,11 @@ class coord_trans(coord):
         self,
         x: pd.Series[float],
         y: pd.Series[float],
-        panel_params: panel_view
+        panel_params: panel_view,
     ) -> FloatArray:
-        max_dist = dist_euclidean(
-            panel_params.x.range,
-            panel_params.y.range
-        )[0]
+        max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[
+            0
+        ]
         xt = self.trans_x.transform(x)
         yt = self.trans_y.transform(y)
         return dist_euclidean(xt, yt) / max_dist  # type: ignore
@@ -171,26 +151,20 @@ class coord_trans(coord):
 
 @overload
 def transform_value(
-    trans: Trans,
-    value: pd.Series[float],
-    range: TupleFloat2
+    trans: Trans, value: pd.Series[float], range: TupleFloat2
 ) -> pd.Series[float]:
     ...
 
 
 @overload
 def transform_value(
-    trans: Trans,
-    value: Sequence[float],
-    range: TupleFloat2
+    trans: Trans, value: Sequence[float], range: TupleFloat2
 ) -> Sequence[float]:
     ...
 
 
 def transform_value(
-    trans: Trans,
-    value: pd.Series[float] | Sequence[float],
-    range: TupleFloat2
+    trans: Trans, value: pd.Series[float] | Sequence[float], range: TupleFloat2
 ) -> pd.Series[float] | Sequence[float]:
     """
     Transform value

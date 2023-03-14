@@ -43,10 +43,11 @@ class scale_color_hue(scale_discrete):
     na_value : str
         Color of missing values. Default is ``'#7F7F7F'``
     """
-    _aesthetics = ['color']
-    na_value = '#7F7F7F'
 
-    def __init__(self, h=.01, l=.6, s=.65, color_space='hls', **kwargs):
+    _aesthetics = ["color"]
+    na_value = "#7F7F7F"
+
+    def __init__(self, h=0.01, l=0.6, s=0.65, color_space="hls", **kwargs):
         self.palette = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
@@ -60,7 +61,8 @@ class scale_fill_hue(scale_color_hue):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -87,10 +89,11 @@ class scale_color_brewer(scale_discrete):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
-    _aesthetics = ['color']
-    na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1, direction=1, **kwargs):
+    _aesthetics = ["color"]
+    na_value = "#7F7F7F"
+
+    def __init__(self, type="seq", palette=1, direction=1, **kwargs):
         self.palette = brewer_pal(type, palette, direction=direction)
         scale_discrete.__init__(self, **kwargs)
 
@@ -104,7 +107,8 @@ class scale_fill_brewer(scale_color_brewer):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -122,7 +126,8 @@ class scale_color_grey(scale_discrete):
         Default is 0.8
     {superclass_parameters}
     """
-    _aesthetics = ['color']
+
+    _aesthetics = ["color"]
 
     def __init__(self, start=0.2, end=0.8, **kwargs):
         # TODO: fix types in mizani
@@ -139,10 +144,12 @@ class scale_fill_grey(scale_color_grey):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 # Continuous color scales #
+
 
 @document
 class scale_color_gradient(scale_continuous):
@@ -164,18 +171,18 @@ class scale_color_gradient(scale_continuous):
     :class:`.scale_color_gradient2`
     :class:`.scale_color_gradientn`
     """
-    _aesthetics = ['color']
-    guide = 'colorbar'
-    na_value = '#7F7F7F'
 
-    def __init__(self, low='#132B43', high='#56B1F7', **kwargs):
+    _aesthetics = ["color"]
+    guide = "colorbar"
+    na_value = "#7F7F7F"
+
+    def __init__(self, low="#132B43", high="#56B1F7", **kwargs):
         """
         Create colormap that will be used by the palette
         """
         # TODO: fix types in mizani
         self.palette = gradient_n_pal(
-            [low, high],
-            name='gradient'
+            [low, high], name="gradient"
         )  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
@@ -189,7 +196,8 @@ class scale_fill_gradient(scale_color_gradient):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -211,12 +219,12 @@ class scale_color_desaturate(scale_continuous):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
-    _aesthetics = ['color']
-    guide = 'colorbar'
-    na_value = '#7F7F7F'
 
-    def __init__(self, color='red', prop=0, reverse=False,
-                 **kwargs):
+    _aesthetics = ["color"]
+    guide = "colorbar"
+    na_value = "#7F7F7F"
+
+    def __init__(self, color="red", prop=0, reverse=False, **kwargs):
         # TODO: fix types in mizani
         self.palette = desaturate_pal(color, prop, reverse)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
@@ -231,7 +239,8 @@ class scale_fill_desaturate(scale_color_desaturate):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -258,22 +267,27 @@ class scale_color_gradient2(scale_continuous):
     :class:`.scale_color_gradient`
     :class:`.scale_color_gradientn`
     """
-    _aesthetics = ['color']
-    guide = 'colorbar'
-    na_value = '#7F7F7F'
 
-    def __init__(self, low='#832424', mid='#FFFFFF',
-                 high='#3A3A98', midpoint=0,
-                 **kwargs):
+    _aesthetics = ["color"]
+    guide = "colorbar"
+    na_value = "#7F7F7F"
+
+    def __init__(
+        self,
+        low="#832424",
+        mid="#FFFFFF",
+        high="#3A3A98",
+        midpoint=0,
+        **kwargs,
+    ):
         # All rescale functions should have the same signature
         def _rescale_mid(*args, **kwargs):
-            return rescale_mid(*args,  mid=midpoint, **kwargs)
+            return rescale_mid(*args, mid=midpoint, **kwargs)
 
-        kwargs['rescaler'] = _rescale_mid
+        kwargs["rescaler"] = _rescale_mid
         # TODO: fix types in mizani
         self.palette = gradient_n_pal(
-            [low, mid, high],
-            name='gradient2'
+            [low, mid, high], name="gradient2"
         )  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
@@ -287,7 +301,8 @@ class scale_fill_gradient2(scale_color_gradient2):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -312,16 +327,15 @@ class scale_color_gradientn(scale_continuous):
     :class:`.scale_color_gradient`
     :class:`.scale_color_gradientn`
     """
-    _aesthetics = ['color']
-    guide = 'colorbar'
-    na_value = '#7F7F7F'
+
+    _aesthetics = ["color"]
+    guide = "colorbar"
+    na_value = "#7F7F7F"
 
     def __init__(self, colors, values=None, **kwargs):
         # TODO: fix types in mizani
         self.palette = gradient_n_pal(
-            colors,
-            values,
-            'gradientn'
+            colors, values, "gradientn"
         )  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
@@ -335,7 +349,8 @@ class scale_fill_gradientn(scale_color_gradientn):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -368,19 +383,23 @@ class scale_color_distiller(scale_color_gradientn):
     na_value : str
         Color of missing values. Default is ``'None'``
     """
-    _aesthetics = ['color']
-    guide = 'colorbar'
-    na_value = '#7F7F7F'
 
-    def __init__(self, type='seq', palette=1,
-                 values=None, direction=-1, **kwargs):
+    _aesthetics = ["color"]
+    guide = "colorbar"
+    na_value = "#7F7F7F"
+
+    def __init__(
+        self, type="seq", palette=1, values=None, direction=-1, **kwargs
+    ):
         """
         Create colormap that will be used by the palette
         """
-        if type.lower() in ('qual', 'qualitative'):
-            warn("Using a discrete color palette in a continuous scale."
-                 "Consider using type = 'seq' or type = 'div' instead",
-                 PlotnineWarning)
+        if type.lower() in ("qual", "qualitative"):
+            warn(
+                "Using a discrete color palette in a continuous scale."
+                "Consider using type = 'seq' or type = 'div' instead",
+                PlotnineWarning,
+            )
 
         # Grab 7 colors from brewer and create a gradient palette
         # An odd number matches the midpoint of the palette to that
@@ -398,7 +417,8 @@ class scale_fill_distiller(scale_color_distiller):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 # matplotlib colormaps
@@ -427,11 +447,12 @@ class scale_color_cmap(scale_continuous):
     :mod:`matplotlib.cm`
     :mod:`matplotlib.colors`
     """
-    _aesthetics = ['color']
-    guide = 'colorbar'
-    na_value = '#7F7F7F'
 
-    def __init__(self, cmap_name='viridis', lut=None, **kwargs):
+    _aesthetics = ["color"]
+    guide = "colorbar"
+    na_value = "#7F7F7F"
+
+    def __init__(self, cmap_name="viridis", lut=None, **kwargs):
         # TODO: fix types in mizani
         self.palette = cmap_pal(cmap_name, lut)  # pyright: ignore
         super().__init__(**kwargs)
@@ -446,7 +467,8 @@ class scale_fill_cmap(scale_color_cmap):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -475,10 +497,11 @@ class scale_color_cmap_d(scale_discrete):
     :mod:`matplotlib.cm`
     :mod:`matplotlib.colors`
     """
-    _aesthetics = ['color']
-    na_value = '#7F7F7F'
 
-    def __init__(self, name='viridis', lut=None, **kwargs):
+    _aesthetics = ["color"]
+    na_value = "#7F7F7F"
+
+    def __init__(self, name="viridis", lut=None, **kwargs):
         self.palette = cmap_d_pal(name, lut)
         super().__init__(**kwargs)
 
@@ -492,7 +515,8 @@ class scale_fill_cmap_d(scale_color_cmap_d):
     ----------
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
+
+    _aesthetics = ["fill"]
 
 
 @document
@@ -518,28 +542,28 @@ class scale_fill_datetime(scale_datetime, scale_fill_cmap):
 
 
 # Default scales
-alias('scale_color_discrete', scale_color_hue)
-alias('scale_color_continuous', scale_color_cmap)
-alias('scale_color_ordinal', scale_color_cmap_d)
-alias('scale_fill_discrete', scale_fill_hue)
-alias('scale_fill_continuous', scale_fill_cmap)
-alias('scale_fill_ordinal', scale_fill_cmap_d)
+alias("scale_color_discrete", scale_color_hue)
+alias("scale_color_continuous", scale_color_cmap)
+alias("scale_color_ordinal", scale_color_cmap_d)
+alias("scale_fill_discrete", scale_fill_hue)
+alias("scale_fill_continuous", scale_fill_cmap)
+alias("scale_fill_ordinal", scale_fill_cmap_d)
 
 # American to British spelling
-alias('scale_colour_hue', scale_color_hue)
-alias('scale_color_gray', scale_color_grey)
-alias('scale_colour_grey', scale_color_grey)
-alias('scale_colour_gray', scale_color_grey)
-alias('scale_fill_gray', scale_fill_grey)
-alias('scale_colour_brewer', scale_color_brewer)
-alias('scale_colour_desaturate', scale_color_desaturate)
-alias('scale_colour_gradient', scale_color_gradient)
-alias('scale_colour_gradient2', scale_color_gradient2)
-alias('scale_colour_gradientn', scale_color_gradientn)
-alias('scale_colour_discrete', scale_color_hue)
-alias('scale_colour_continuous', scale_color_cmap)
-alias('scale_colour_distiller', scale_color_distiller)
-alias('scale_colour_cmap', scale_color_cmap)
-alias('scale_colour_cmap_d', scale_color_cmap_d)
-alias('scale_colour_datetime', scale_color_datetime)
-alias('scale_colour_ordinal', scale_color_cmap_d)
+alias("scale_colour_hue", scale_color_hue)
+alias("scale_color_gray", scale_color_grey)
+alias("scale_colour_grey", scale_color_grey)
+alias("scale_colour_gray", scale_color_grey)
+alias("scale_fill_gray", scale_fill_grey)
+alias("scale_colour_brewer", scale_color_brewer)
+alias("scale_colour_desaturate", scale_color_desaturate)
+alias("scale_colour_gradient", scale_color_gradient)
+alias("scale_colour_gradient2", scale_color_gradient2)
+alias("scale_colour_gradientn", scale_color_gradientn)
+alias("scale_colour_discrete", scale_color_hue)
+alias("scale_colour_continuous", scale_color_cmap)
+alias("scale_colour_distiller", scale_color_distiller)
+alias("scale_colour_cmap", scale_color_cmap)
+alias("scale_colour_cmap_d", scale_color_cmap_d)
+alias("scale_colour_datetime", scale_color_datetime)
+alias("scale_colour_ordinal", scale_color_cmap_d)

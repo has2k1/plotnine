@@ -42,12 +42,12 @@ class watermark:
         xo: int = 0,
         yo: int = 0,
         alpha: float | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         self.filename = filename
         kwargs.update(xo=xo, yo=yo, alpha=alpha)
-        if 'zorder' not in kwargs:
-            kwargs['zorder'] = 99.9
+        if "zorder" not in kwargs:
+            kwargs["zorder"] = 99.9
         self.kwargs = kwargs
 
     def __radd__(self, gg: p9.ggplot) -> p9.ggplot:

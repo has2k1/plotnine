@@ -15,7 +15,7 @@ import os
 import sys
 from pathlib import Path
 
-on_rtd = os.environ.get('READTHEDOCS') == 'True'
+on_rtd = os.environ.get("READTHEDOCS") == "True"
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
@@ -28,6 +28,7 @@ sys.path.insert(0, str(PROJECT_PATH))
 if on_rtd:
     from pprint import pprint
     from unittest import mock
+
     MOCK_MODULES = []
     for mod_name in MOCK_MODULES:
         sys.modules[mod_name] = mock.Mock()
@@ -37,47 +38,45 @@ if on_rtd:
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = '3.3.0'
+needs_sphinx = "3.3.0"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 sys.path.insert(0, str(Path.cwd()))
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.extlinks',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.autosummary',
-
-    'sphinxext.examples_and_gallery',
-    'sphinxext.inline_code_highlight',
-
-    'nbsphinx',
-    'numpydoc',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.autosummary",
+    "sphinxext.examples_and_gallery",
+    "sphinxext.inline_code_highlight",
+    "nbsphinx",
+    "numpydoc",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = 'plotnine'
-copyright = '2022, Hassan Kibirige'
-github_repo_url = f'https://github.com/has2k1/{project}'
+project = "plotnine"
+copyright = "2022, Hassan Kibirige"
+github_repo_url = f"https://github.com/has2k1/{project}"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -87,20 +86,21 @@ github_repo_url = f'https://github.com/has2k1/{project}'
 try:
     from importlib.metadata import version as _version
 finally:
-    version = _version('plotnine')
+    version = _version("plotnine")
 
 # 1. remove +dirty if readthedocs modifies the repo,
 # 2. remove the 0.0 version created by setuptools_scm when clone is too shallow
 if on_rtd:
     import re
-    p1 = re.compile(r'\.d\d{8}$')
-    if p1.match(version):
-        version = p1.sub('', version)
 
-    p2 = re.compile(r'^0\.0\.post\d+\+g')
+    p1 = re.compile(r"\.d\d{8}$")
+    if p1.match(version):
+        version = p1.sub("", version)
+
+    p2 = re.compile(r"^0\.0\.post\d+\+g")
     if p2.match(version):
-        commit = p2.sub('', version)
-        version = f'Commit: {commit}'
+        commit = p2.sub("", version)
+        version = f"Commit: {commit}"
 
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -118,7 +118,7 @@ release = version
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 exclude_patterns = [
-    '_build',
+    "_build",
 ]
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -136,7 +136,7 @@ exclude_patterns = [
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -149,27 +149,27 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'theme'
+html_theme = "theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 # https://github.com/ryan-roemer/sphinx-bootstrap-theme
 html_theme_options = {
-    'navbar_title': 'plotnine',
-    'globaltoc_depth': 2,
-    'globaltoc_includehidden': 'true',
-    'source_link_position': 'footer',
-    'navbar_sidebarrel': False,
-    'navbar_links': [
-        ('API', 'api'),
-        ('Gallery', 'gallery'),
-        ('Tutorials', 'tutorials')
+    "navbar_title": "plotnine",
+    "globaltoc_depth": 2,
+    "globaltoc_includehidden": "true",
+    "source_link_position": "footer",
+    "navbar_sidebarrel": False,
+    "navbar_links": [
+        ("API", "api"),
+        ("Gallery", "gallery"),
+        ("Tutorials", "tutorials"),
     ],
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ['.']
+html_theme_path = ["."]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -180,17 +180,17 @@ html_theme_path = ['.']
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = 'images/logo-32.png'
+html_logo = "images/logo-32.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = 'images/favicon.ico'
+html_favicon = "images/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -212,10 +212,9 @@ html_static_path = ['_static']
 #
 html_sidebars = {
     # Default to no sidebar
-    '**': [],
-
+    "**": [],
     # local table of contents for the API page
-    'api': ['localtoc.html']
+    "api": ["localtoc.html"],
 }
 
 # Additional templates that should be rendered to pages, maps page names to
@@ -249,19 +248,17 @@ html_sidebars = {
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'plotninedoc'
+htmlhelp_basename = "plotninedoc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    'papersize': 'a4paper',
-
+    "papersize": "a4paper",
     # The font size ('10pt', '11pt' or '12pt').
-    'pointsize': '12pt',
-
+    "pointsize": "12pt",
     # Additional stuff for the LaTeX preamble.
-    'preamble': r"""
+    "preamble": r"""
         \usepackage{charter}
         \usepackage[defaultsans]{lato}
         \usepackage{inconsolata}
@@ -272,8 +269,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'plotnine.tex', 'plotnine Documentation',
-   'Hassan Kibirige', 'manual'),
+    (
+        "index",
+        "plotnine.tex",
+        "plotnine Documentation",
+        "Hassan Kibirige",
+        "manual",
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -302,8 +304,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'plotnine', 'plotnine Documentation',
-     ['Hassan Kibirige'], 1)
+    ("index", "plotnine", "plotnine Documentation", ["Hassan Kibirige"], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -316,9 +317,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'plotnine', 'plotnine Documentation',
-   'Hassan Kibirige', 'plotnine', 'One line description of project.',
-   'Miscellaneous'),
+    (
+        "index",
+        "plotnine",
+        "plotnine Documentation",
+        "Hassan Kibirige",
+        "plotnine",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -337,10 +344,10 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = 'plotnine'
-epub_author = 'Hassan Kibirige'
-epub_publisher = 'Hassan Kibirige'
-epub_copyright = '2021, Hassan Kibirige'
+epub_title = "plotnine"
+epub_author = "Hassan Kibirige"
+epub_publisher = "Hassan Kibirige"
+epub_copyright = "2021, Hassan Kibirige"
 
 # The basename for the epub file. It defaults to the project name.
 # epub_basename = 'plotnine'
@@ -380,7 +387,7 @@ epub_copyright = '2021, Hassan Kibirige'
 # epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
+epub_exclude_files = ["search.html"]
 
 # The depth of the table of contents in toc.ncx.
 # epub_tocdepth = 3
@@ -406,25 +413,25 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
-    'matplotlib': ('https://matplotlib.org/stable', None),
-    'numpy': ('https://numpy.org/doc/stable/', None),
-    'scipy': ('https://docs.scipy.org/doc/scipy', None),
-    'statsmodels': ('https://www.statsmodels.org/stable/', None),
-    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
-    'sklearn': ('https://scikit-learn.org/stable/', None),
-    'skmisc': ('https://has2k1.github.io/scikit-misc/stable/', None),
-    'adjustText': ('https://adjusttext.readthedocs.io/en/latest/', None),
-    'patsy': ('https://patsy.readthedocs.io/en/stable', None)
+    "python": ("https://docs.python.org/3/", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy", None),
+    "statsmodels": ("https://www.statsmodels.org/stable/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
+    "sklearn": ("https://scikit-learn.org/stable/", None),
+    "skmisc": ("https://has2k1.github.io/scikit-misc/stable/", None),
+    "adjustText": ("https://adjusttext.readthedocs.io/en/latest/", None),
+    "patsy": ("https://patsy.readthedocs.io/en/stable", None),
 }
 
 # -- Extension configuration ----------------------------------------------
-autodoc_member_order = 'bysource'
+autodoc_member_order = "bysource"
 autosummary_generate = True
 
 extlinks = {
-    'issue': (f'{github_repo_url}/issues/%s', '#%s'),
-    'pr': (f'{github_repo_url}/pul/%s', 'PR #%s')
+    "issue": (f"{github_repo_url}/issues/%s", "#%s"),
+    "pr": (f"{github_repo_url}/pul/%s", "PR #%s"),
 }
 
 
@@ -434,35 +441,35 @@ numpydoc_class_members_toctree = False
 numpydoc_xref_param_type = True
 numpydoc_xref_aliases = {
     # python
-    'sequence': ':term:`python:sequence`',
-    'iterable': ':term:`python:iterable`',
-    'string': 'str',
-    'tuples': 'tuple',
-    'boolean': 'bool',
+    "sequence": ":term:`python:sequence`",
+    "iterable": ":term:`python:iterable`",
+    "string": "str",
+    "tuples": "tuple",
+    "boolean": "bool",
     # numpy
-    'array': 'numpy.ndarray',
-    'np.array': 'numpy.ndarray',
-    'ndarray': 'numpy.ndarray',
-    'array-like': ':term:`array-like<numpy:array_like>`',
-    'array_like': ':term:`numpy:array_like`',
+    "array": "numpy.ndarray",
+    "np.array": "numpy.ndarray",
+    "ndarray": "numpy.ndarray",
+    "array-like": ":term:`array-like<numpy:array_like>`",
+    "array_like": ":term:`numpy:array_like`",
     # pandas
-    'dataframe': 'pandas.DataFrame',
-    'DataFrame': 'pandas.DataFrame',
-    'Series': 'pandas.Series',
-    'series': 'pandas.Series',
+    "dataframe": "pandas.DataFrame",
+    "DataFrame": "pandas.DataFrame",
+    "Series": "pandas.Series",
+    "series": "pandas.Series",
     # plotnine
-    'geom': ':term:`geom`',
-    'stat': ':term:`stat`',
-    'position': ':term:`position`',
-    'expression': ':term:`expression`',
-    'aes': 'plotnine.aes',
-    'ggplot': 'plotnine.ggplot',
-    'element_line': 'plotnine.themes.element_line',
-    'element_rect': 'plotnine.themes.element_rect',
-    'element_text': 'plotnine.themes.element_text',
+    "geom": ":term:`geom`",
+    "stat": ":term:`stat`",
+    "position": ":term:`position`",
+    "expression": ":term:`expression`",
+    "aes": "plotnine.aes",
+    "ggplot": "plotnine.ggplot",
+    "element_line": "plotnine.themes.element_line",
+    "element_rect": "plotnine.themes.element_rect",
+    "element_text": "plotnine.themes.element_text",
 }
 
-numpydoc_xref_ignore = {'type', 'optional', 'default'}
+numpydoc_xref_ignore = {"type", "optional", "default"}
 
 
 def link_to_tutorials():
@@ -470,11 +477,11 @@ def link_to_tutorials():
     # nbsphinx. We link to the files themselves
     from importlib_resources import files as _files
 
-    tut_ipynb_dir = _files('plotnine_examples.tutorials')
-    tut_image_dir = tut_ipynb_dir / 'images'
+    tut_ipynb_dir = _files("plotnine_examples.tutorials")
+    tut_image_dir = tut_ipynb_dir / "images"
 
-    dest_ipynb_dir = _files('plotnine') / '../doc/tutorials'
-    dest_image_dir = dest_ipynb_dir / 'images'
+    dest_ipynb_dir = _files("plotnine") / "../doc/tutorials"
+    dest_image_dir = dest_ipynb_dir / "images"
 
     dest_ipynb_dir.mkdir(parents=True, exist_ok=True)
     dest_image_dir.mkdir(parents=True, exist_ok=True)
@@ -490,10 +497,10 @@ def link_to_tutorials():
             dest = dest_dir / basename
             dest.symlink_to(file)
 
-    _make_links(tut_ipynb_dir, dest_ipynb_dir, '*.ipynb')
-    _make_links(tut_image_dir, dest_image_dir, '*.png')
+    _make_links(tut_ipynb_dir, dest_ipynb_dir, "*.ipynb")
+    _make_links(tut_image_dir, dest_image_dir, "*.png")
 
 
 def setup(app):
     link_to_tutorials()
-    app.add_css_file('custom.css')
+    app.add_css_file("custom.css")

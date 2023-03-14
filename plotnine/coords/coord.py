@@ -26,6 +26,7 @@ class coord:
     """
     Base class for all coordinate systems
     """
+
     # If the coordinate system is linear
     is_linear = False
 
@@ -92,10 +93,7 @@ class coord:
         """
         return layout
 
-    def aspect(
-        self,
-        panel_params: panel_view
-    ) -> float | None:
+    def aspect(self, panel_params: panel_view) -> float | None:
         """
         Return desired aspect ratio for the plot
 
@@ -105,10 +103,7 @@ class coord:
         """
         return None
 
-    def labels(
-        self,
-        cur_labels: labels_view
-    ) -> labels_view:
+    def labels(self, cur_labels: labels_view) -> labels_view:
         """
         Modify labels
 
@@ -125,10 +120,7 @@ class coord:
         return cur_labels
 
     def transform(
-        self,
-        data: pd.DataFrame,
-        panel_params: panel_view,
-        munch: bool = False
+        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
     ) -> pd.DataFrame:
         """
         Transform data before it is plotted
@@ -138,34 +130,21 @@ class coord:
         """
         return data
 
-    def setup_panel_params(
-        self,
-        scale_x: Scale,
-        scale_y: Scale
-    ) -> panel_view:
+    def setup_panel_params(self, scale_x: Scale, scale_y: Scale) -> panel_view:
         """
         Compute the range and break information for the panel
         """
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
 
-    def range(
-        self,
-        panel_params: panel_view
-    ) -> panel_ranges:
+    def range(self, panel_params: panel_view) -> panel_ranges:
         """
         Return the range along the dimensions of the coordinate system
         """
         # Defaults to providing the 2D x-y ranges
-        return panel_ranges(
-            x=panel_params.x.range,
-            y=panel_params.y.range
-        )
+        return panel_ranges(x=panel_params.x.range, y=panel_params.y.range)
 
-    def backtransform_range(
-        self,
-        panel_params: panel_view
-    ) -> panel_ranges:
+    def backtransform_range(self, panel_params: panel_view) -> panel_ranges:
         """
         Backtransform the panel range in panel_params to data coordinates
 
@@ -178,26 +157,25 @@ class coord:
         self,
         x: pd.Series[float],
         y: pd.Series[float],
-        panel_params: panel_view
+        panel_params: panel_view,
     ) -> npt.NDArray[Any]:
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
 
     def munch(
-        self,
-        data: pd.DataFrame,
-        panel_params: panel_view
+        self, data: pd.DataFrame, panel_params: panel_view
     ) -> pd.DataFrame:
         ranges = self.backtransform_range(panel_params)
 
-        data.loc[data['x'] == -np.inf, 'x'] = ranges.x[0]
-        data.loc[data['x'] == np.inf, 'x'] = ranges.x[1]
-        data.loc[data['y'] == -np.inf, 'y'] = ranges.y[0]
-        data.loc[data['y'] == np.inf, 'y'] = ranges.y[1]
+        data.loc[data["x"] == -np.inf, "x"] = ranges.x[0]
+        data.loc[data["x"] == np.inf, "x"] = ranges.x[1]
+        data.loc[data["y"] == -np.inf, "y"] = ranges.y[0]
+        data.loc[data["y"] == np.inf, "y"] = ranges.y[1]
 
-        dist = self.distance(data['x'], data['y'], panel_params)
-        bool_idx = data['group'].iloc[1:].values != \
-            data['group'].iloc[:-1].values
+        dist = self.distance(data["x"], data["y"], panel_params)
+        bool_idx = (
+            data["group"].iloc[1:].values != data["group"].iloc[:-1].values
+        )
         dist[bool_idx] = np.nan
 
         # Munch
@@ -212,8 +190,7 @@ def dist_euclidean(x: FloatArrayLike, y: FloatArrayLike) -> FloatArray:
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
     return np.sqrt(
-        (x[:-1] - x[1:])**2 + (y[:-1] - y[1:])**2,
-        dtype=np.float64
+        (x[:-1] - x[1:]) ** 2 + (y[:-1] - y[1:]) ** 2, dtype=np.float64
     )
 
 
@@ -224,48 +201,41 @@ def interp(start: int, end: int, n: int) -> FloatArray:
     return np.linspace(start, end, n, endpoint=False)
 
 
-def munch_data(
-    data: pd.DataFrame,
-    dist: FloatArray
-) -> pd.DataFrame:
+def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     """
     Breakup path into small segments
     """
-    x, y = data['x'], data['y']
+    x, y = data["x"], data["y"]
     segment_length = 0.01
 
     # How many endpoints for each old segment,
     # not counting the last one
     dist[np.isnan(dist)] = 1
-    extra = np.maximum(np.floor(dist/segment_length), 1)
+    extra = np.maximum(np.floor(dist / segment_length), 1)
     extra = extra.astype(int, copy=False)
 
     # Generate extra pieces for x and y values
     # The final point must be manually inserted at the end
-    x = [
-        interp(start, end, n)
-        for start, end, n in zip(x[:-1], x[1:], extra)
-    ]
-    y = [
-        interp(start, end, n)
-        for start, end, n in zip(y[:-1], y[1:], extra)
-    ]
-    x.append(data['x'].iloc[-1])
-    y.append(data['y'].iloc[-1])
+    x = [interp(start, end, n) for start, end, n in zip(x[:-1], x[1:], extra)]
+    y = [interp(start, end, n) for start, end, n in zip(y[:-1], y[1:], extra)]
+    x.append(data["x"].iloc[-1])
+    y.append(data["y"].iloc[-1])
     x = np.hstack(x)
     y = np.hstack(y)
 
     # Replicate other aesthetics: defined by start point
     # but also must include final point
-    idx = np.hstack([
-        np.repeat(data.index[:-1], extra),
-        len(data) - 1
-        # data.index[-1] # TODO: Maybe not
-    ])
+    idx = np.hstack(
+        [
+            np.repeat(data.index[:-1], extra),
+            len(data) - 1
+            # data.index[-1] # TODO: Maybe not
+        ]
+    )
 
-    munched = data.loc[idx, list(data.columns.difference(['x', 'y']))]
-    munched['x'] = x
-    munched['y'] = y
+    munched = data.loc[idx, list(data.columns.difference(["x", "y"]))]
+    munched["x"] = x
+    munched["y"] = y
     munched.reset_index(drop=True, inplace=True)
 
     return munched

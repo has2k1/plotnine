@@ -26,6 +26,7 @@ if typing.TYPE_CHECKING:
 
 class position(metaclass=Registry):
     """Base class for all positions"""
+
     __base__ = True
 
     REQUIRED_AES: set[str] = set()
@@ -41,26 +42,19 @@ class position(metaclass=Registry):
         return copy(self.params)
 
     def setup_data(
-        self,
-        data: pd.DataFrame,
-        params: dict[str, Any]
+        self, data: pd.DataFrame, params: dict[str, Any]
     ) -> pd.DataFrame:
         """
         Verify & return data
         """
         check_required_aesthetics(
-            self.REQUIRED_AES,
-            data.columns,
-            self.__class__.__name__
+            self.REQUIRED_AES, data.columns, self.__class__.__name__
         )
         return data
 
     @classmethod
     def compute_layer(
-        cls,
-        data: pd.DataFrame,
-        params: dict[str, Any],
-        layout: Layout
+        cls, data: pd.DataFrame, params: dict[str, Any], layout: Layout
     ):
         """
         Compute position for the layer in all panels
@@ -69,6 +63,7 @@ class position(metaclass=Registry):
         `compute_panel` if the position computations are
         independent of the panel. i.e when not colliding
         """
+
         def fn(pdata: pd.DataFrame) -> pd.DataFrame:
             """
             Compute function helper
@@ -78,17 +73,14 @@ class position(metaclass=Registry):
             # that does the real computation
             if len(pdata) == 0:
                 return pdata
-            scales = layout.get_scales(pdata['PANEL'].iat[0])
+            scales = layout.get_scales(pdata["PANEL"].iat[0])
             return cls.compute_panel(pdata, scales, params)
 
-        return groupby_apply(data, 'PANEL', fn)
+        return groupby_apply(data, "PANEL", fn)
 
     @classmethod
     def compute_panel(
-        cls,
-        data: pd.DataFrame,
-        scales: pos_scales,
-        params: dict[str, Any]
+        cls, data: pd.DataFrame, scales: pos_scales, params: dict[str, Any]
     ) -> pd.DataFrame:
         """
         Positions must override this function
@@ -104,14 +96,14 @@ class position(metaclass=Registry):
         --------
         position_jitter.compute_panel
         """
-        msg = '{} needs to implement this method'
+        msg = "{} needs to implement this method"
         raise NotImplementedError(msg.format(cls.__name__))
 
     @staticmethod
     def transform_position(
         data,
         trans_x: Optional[TransformCol] = None,
-        trans_y: Optional[TransformCol] = None
+        trans_y: Optional[TransformCol] = None,
     ) -> pd.DataFrame:
         """
         Transform all the variables that map onto the x and y scales.
@@ -157,19 +149,18 @@ class position(metaclass=Registry):
         PlotnineError
             If unable to create a `position`.
         """
-        name = geom.params['position']
+        name = geom.params["position"]
         if issubclass(type(name), position):
             return name
 
         if isinstance(name, type) and issubclass(name, position):
             klass = name
         elif is_string(name):
-            if not name.startswith('position_'):
-                name = f'position_{name}'
+            if not name.startswith("position_"):
+                name = f"position_{name}"
             klass = Registry[name]
         else:
-            raise PlotnineError(
-                f'Unknown position of type {type(name)}')
+            raise PlotnineError(f"Unknown position of type {type(name)}")
 
         return klass()
 
@@ -182,22 +173,22 @@ class position(metaclass=Registry):
 
     @classmethod
     def _collide_setup(cls, data, params):
-        xminmax = ['xmin', 'xmax']
-        width = params.get('width', None)
+        xminmax = ["xmin", "xmax"]
+        width = params.get("width", None)
 
         # Determine width
         if width is not None:
             # Width set manually
             if not all([col in data.columns for col in xminmax]):
-                data['xmin'] = data['x'] - width / 2
-                data['xmax'] = data['x'] + width / 2
+                data["xmin"] = data["x"] - width / 2
+                data["xmax"] = data["x"] + width / 2
         else:
             if not all([col in data.columns for col in xminmax]):
-                data['xmin'] = data['x']
-                data['xmax'] = data['x']
+                data["xmin"] = data["x"]
+                data["xmax"] = data["x"]
 
             # Width determined from data, must be floating point constant
-            widths = (data['xmax'] - data['xmin']).drop_duplicates()
+            widths = (data["xmax"] - data["xmin"]).drop_duplicates()
             widths = widths[~np.isnan(widths)]
             width = widths.iloc[0]
 
@@ -210,22 +201,20 @@ class position(metaclass=Registry):
 
         Uses Strategy
         """
-        xminmax = ['xmin', 'xmax']
+        xminmax = ["xmin", "xmax"]
         data, width = cls._collide_setup(data, params)
-        if params.get('width', None) is None:
-            params['width'] = width
+        if params.get("width", None) is None:
+            params["width"] = width
 
         # Reorder by x position then on group, relying on stable sort to
         # preserve existing ordering. The default stacking order reverses
         # the group in order to match the legend order.
-        if params and 'reverse' in params and params['reverse']:
-            idx = data.sort_values(
-                ['xmin', 'group'], kind='mergesort').index
+        if params and "reverse" in params and params["reverse"]:
+            idx = data.sort_values(["xmin", "group"], kind="mergesort").index
         else:
-            data['-group'] = -data['group']
-            idx = data.sort_values(
-                ['xmin', '-group'], kind='mergesort').index
-            del data['-group']
+            data["-group"] = -data["group"]
+            idx = data.sort_values(["xmin", "-group"], kind="mergesort").index
+            del data["-group"]
 
         data = data.loc[idx, :]
 
@@ -233,19 +222,20 @@ class position(metaclass=Registry):
         intervals = data[xminmax].drop_duplicates().values.flatten()
         intervals = intervals[~np.isnan(intervals)]
 
-        if (len(np.unique(intervals)) > 1 and
-                any(np.diff(intervals - intervals.mean()) < -1e-6)):
+        if len(np.unique(intervals)) > 1 and any(
+            np.diff(intervals - intervals.mean()) < -1e-6
+        ):
             msg = "{} requires non-overlapping x intervals"
             warn(msg.format(cls.__name__), PlotnineWarning)
 
-        if 'ymax' in data:
-            data = groupby_apply(data, 'xmin', cls.strategy, params)
-        elif 'y' in data:
-            data['ymax'] = data['y']
-            data = groupby_apply(data, 'xmin', cls.strategy, params)
-            data['y'] = data['ymax']
+        if "ymax" in data:
+            data = groupby_apply(data, "xmin", cls.strategy, params)
+        elif "y" in data:
+            data["ymax"] = data["y"]
+            data = groupby_apply(data, "xmin", cls.strategy, params)
+            data["y"] = data["ymax"]
         else:
-            raise PlotnineError('Neither y nor ymax defined')
+            raise PlotnineError("Neither y nor ymax defined")
 
         return data
 
@@ -257,20 +247,18 @@ class position(metaclass=Registry):
         Uses Strategy
         """
         data, width = cls._collide_setup(data, params)
-        if params.get('width', None) is None:
-            params['width'] = width
+        if params.get("width", None) is None:
+            params["width"] = width
 
         # Reorder by x position then on group, relying on stable sort to
         # preserve existing ordering. The default stacking order reverses
         # the group in order to match the legend order.
-        if params and 'reverse' in params and params['reverse']:
-            data['-group'] = -data['group']
-            idx = data.sort_values(
-                ['x', '-group'], kind='mergesort').index
-            del data['-group']
+        if params and "reverse" in params and params["reverse"]:
+            data["-group"] = -data["group"]
+            idx = data.sort_values(["x", "-group"], kind="mergesort").index
+            del data["-group"]
         else:
-            idx = data.sort_values(
-                ['x', 'group'], kind='mergesort').index
+            idx = data.sort_values(["x", "group"], kind="mergesort").index
 
         data = data.loc[idx, :]
         data.reset_index(inplace=True, drop=True)

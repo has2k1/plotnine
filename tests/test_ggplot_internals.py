@@ -32,32 +32,31 @@ from plotnine import (
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.mapping.aes import is_valid_aesthetic
 
-df = pd.DataFrame({'x': np.arange(10),
-                   'y': np.arange(10)})
+df = pd.DataFrame({"x": np.arange(10), "y": np.arange(10)})
 
 
 def test_labels():
     """
     Test invalid arguments to chart components
     """
-    gg = ggplot(df, aes(x='x', y='y'))
+    gg = ggplot(df, aes(x="x", y="y"))
     gg = gg + geom_point()
-    gg = gg + xlab('xlab')
-    gg = gg + ylab('ylab')
-    gg = gg + ggtitle('title')
+    gg = gg + xlab("xlab")
+    gg = gg + ylab("ylab")
+    gg = gg + ggtitle("title")
 
-    assert gg.labels.x == 'xlab'
-    assert gg.labels.y == 'ylab'
-    assert gg.labels.title == 'title'
+    assert gg.labels.x == "xlab"
+    assert gg.labels.y == "ylab"
+    assert gg.labels.title == "title"
 
-    gg = gg + labs(x='xlab2', y='ylab2', title='title2', caption='caption2')
-    assert gg.labels.x == 'xlab2'
-    assert gg.labels.y == 'ylab2'
-    assert gg.labels.title == 'title2'
-    assert gg.labels.caption == 'caption2'
+    gg = gg + labs(x="xlab2", y="ylab2", title="title2", caption="caption2")
+    assert gg.labels.x == "xlab2"
+    assert gg.labels.y == "ylab2"
+    assert gg.labels.title == "title2"
+    assert gg.labels.caption == "caption2"
 
     with pytest.raises(PlotnineError):
-        gg = gg + labs(z='z-axis')
+        gg = gg + labs(z="z-axis")
 
     with pytest.raises(PlotnineError):
         gg = gg + xlab(None)
@@ -70,52 +69,52 @@ def test_labels():
 
 
 def test_ggplot_parameters():
-    p = ggplot(df, aes('x'))
+    p = ggplot(df, aes("x"))
 
     assert p.data is df
-    assert p.mapping == aes('x')
-    assert p.environment.namespace['np'] is np
-    assert p.environment.namespace['pd'] is pd
+    assert p.mapping == aes("x")
+    assert p.environment.namespace["np"] is np
+    assert p.environment.namespace["pd"] is pd
 
-    p = ggplot(data=df, mapping=aes('x'))
+    p = ggplot(data=df, mapping=aes("x"))
     assert p.data is df
-    assert p.mapping == aes('x')
+    assert p.mapping == aes("x")
 
     p = ggplot(data=df)
     assert p.data is df
     assert p.mapping == aes()
 
-    p = ggplot(mapping=aes('x'))
+    p = ggplot(mapping=aes("x"))
     assert p.data is None
-    assert p.mapping == aes('x')
+    assert p.mapping == aes("x")
 
     p = ggplot()
     assert p.data is None
     assert p.mapping == aes()
 
     with pytest.raises(TypeError):
-        ggplot([1, 2, 3], aes('x'))
+        ggplot([1, 2, 3], aes("x"))
 
 
 def test_ggplot_parameters_grouped():
-    p = df.groupby('x') >> ggplot(aes('x'))
+    p = df.groupby("x") >> ggplot(aes("x"))
     assert isinstance(p.data, pd.DataFrame)
 
 
 def test_data_transforms():
-    p = ggplot(aes(x='x', y='np.log(y+1)'), df)
+    p = ggplot(aes(x="x", y="np.log(y+1)"), df)
     p = p + geom_point()
     p.draw_test()
 
     with pytest.raises(Exception):
         # no numpy available
-        p = ggplot(aes(x='depth', y="ap.log(price)"), df)
+        p = ggplot(aes(x="depth", y="ap.log(price)"), df)
         p = p + geom_point()
         p.draw_test()
 
 
 def test_deepcopy():
-    p = ggplot(df, aes('x')) + geom_histogram()
+    p = ggplot(df, aes("x")) + geom_histogram()
     p2 = deepcopy(p)
     assert p is not p2
     # Not sure what we have to do for that...
@@ -128,125 +127,128 @@ def test_deepcopy():
 
 
 def test_aes():
-    result = aes('weight', 'hp', color='qsec')
-    expected = {'x': 'weight', 'y': 'hp', 'color': 'qsec'}
+    result = aes("weight", "hp", color="qsec")
+    expected = {"x": "weight", "y": "hp", "color": "qsec"}
     assert result == expected
 
-    mapping = aes('weight', 'hp', color=stage('qsec'))
-    assert mapping['color'].start == 'qsec'
-    assert mapping._starting['color'] == 'qsec'
+    mapping = aes("weight", "hp", color=stage("qsec"))
+    assert mapping["color"].start == "qsec"
+    assert mapping._starting["color"] == "qsec"
 
 
 def test_valid_aes_linetypes():
-    assert is_valid_aesthetic('solid', 'linetype')
-    assert is_valid_aesthetic('--', 'linetype')
-    assert not is_valid_aesthetic('tada', 'linetype')
-    assert is_valid_aesthetic((0, (3, 2)), 'linetype')
-    assert not is_valid_aesthetic((0, (3, 2.0)), 'linetype')
-    assert not is_valid_aesthetic((0, (3, 2, 1)), 'linetype')
+    assert is_valid_aesthetic("solid", "linetype")
+    assert is_valid_aesthetic("--", "linetype")
+    assert not is_valid_aesthetic("tada", "linetype")
+    assert is_valid_aesthetic((0, (3, 2)), "linetype")
+    assert not is_valid_aesthetic((0, (3, 2.0)), "linetype")
+    assert not is_valid_aesthetic((0, (3, 2, 1)), "linetype")
 
 
 def test_valid_aes_shapes():
-    assert is_valid_aesthetic('o', 'shape')
-    assert is_valid_aesthetic((4, 1, 45), 'shape')
-    assert not is_valid_aesthetic([4, 1, 45], 'shape')
+    assert is_valid_aesthetic("o", "shape")
+    assert is_valid_aesthetic((4, 1, 45), "shape")
+    assert not is_valid_aesthetic([4, 1, 45], "shape")
 
 
 def test_valid_aes_colors():
-    assert is_valid_aesthetic('red', 'color')
-    assert is_valid_aesthetic('#FF0000', 'color')
-    assert is_valid_aesthetic('#FF000080', 'color')
-    assert is_valid_aesthetic((1, 0, 0), 'color')
-    assert is_valid_aesthetic((1, 0, 0), 'color')
-    assert is_valid_aesthetic((1, 0, 0, 0.5), 'color')
+    assert is_valid_aesthetic("red", "color")
+    assert is_valid_aesthetic("#FF0000", "color")
+    assert is_valid_aesthetic("#FF000080", "color")
+    assert is_valid_aesthetic((1, 0, 0), "color")
+    assert is_valid_aesthetic((1, 0, 0), "color")
+    assert is_valid_aesthetic((1, 0, 0, 0.5), "color")
 
 
 def test_calculated_aes():
     # after_stat('ae')
-    mapping1 = aes('x', y=after_stat('density'))
-    mapping2 = aes('x', y=after_stat('density*2'))
-    mapping3 = aes('x', y=after_stat('density + count'))
-    mapping4 = aes('x', y=after_stat('func(density)'))
+    mapping1 = aes("x", y=after_stat("density"))
+    mapping2 = aes("x", y=after_stat("density*2"))
+    mapping3 = aes("x", y=after_stat("density + count"))
+    mapping4 = aes("x", y=after_stat("func(density)"))
 
     def _test():
-        assert list(mapping1._calculated.keys()) == ['y']
-        assert list(mapping2._calculated.keys()) == ['y']
-        assert list(mapping3._calculated.keys()) == ['y']
-        assert list(mapping4._calculated.keys()) == ['y']
+        assert list(mapping1._calculated.keys()) == ["y"]
+        assert list(mapping2._calculated.keys()) == ["y"]
+        assert list(mapping3._calculated.keys()) == ["y"]
+        assert list(mapping4._calculated.keys()) == ["y"]
 
-        assert mapping1['y'].after_stat == 'density'
-        assert mapping2['y'].after_stat == 'density*2'
-        assert mapping3['y'].after_stat == 'density + count'
-        assert mapping4['y'].after_stat == 'func(density)'
+        assert mapping1["y"].after_stat == "density"
+        assert mapping2["y"].after_stat == "density*2"
+        assert mapping3["y"].after_stat == "density + count"
+        assert mapping4["y"].after_stat == "func(density)"
 
-        assert mapping1._calculated['y'] == 'density'
-        assert mapping2._calculated['y'] == 'density*2'
-        assert mapping3._calculated['y'] == 'density + count'
-        assert mapping4._calculated['y'] == 'func(density)'
+        assert mapping1._calculated["y"] == "density"
+        assert mapping2._calculated["y"] == "density*2"
+        assert mapping3._calculated["y"] == "density + count"
+        assert mapping4._calculated["y"] == "func(density)"
 
     _test()
 
     # 'stat(ae)', DEPRECATED but still works
-    mapping1 = aes('x', y='stat(density)')
-    mapping2 = aes('x', y='stat(density*2)')
-    mapping3 = aes('x', y='stat(density + count)')
-    mapping4 = aes('x', y='stat(func(density))')
+    mapping1 = aes("x", y="stat(density)")
+    mapping2 = aes("x", y="stat(density*2)")
+    mapping3 = aes("x", y="stat(density + count)")
+    mapping4 = aes("x", y="stat(func(density))")
     _test()
 
     # '..ae..', DEPRECATED but still works
-    mapping1 = aes('x', y='..density..')
-    mapping2 = aes('x', y='..density..*2')
-    mapping3 = aes('x', y='..density.. + ..count..')
-    mapping4 = aes('x', y='func(..density..)')
+    mapping1 = aes("x", y="..density..")
+    mapping2 = aes("x", y="..density..*2")
+    mapping3 = aes("x", y="..density.. + ..count..")
+    mapping4 = aes("x", y="func(..density..)")
     _test()
 
-    df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-    p = ggplot(df) + geom_bar(aes(x='x', fill=after_stat('count + 2')))
+    df = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    p = ggplot(df) + geom_bar(aes(x="x", fill=after_stat("count + 2")))
     p.draw_test()
 
-    p = ggplot(df) + geom_bar(aes(x='x', fill='stat(count + 2)'))
+    p = ggplot(df) + geom_bar(aes(x="x", fill="stat(count + 2)"))
     p.draw_test()
 
-    p = ggplot(df) + geom_bar(aes(x='x', fill='..count.. + 2'))
+    p = ggplot(df) + geom_bar(aes(x="x", fill="..count.. + 2"))
     p.draw_test()
 
 
 def test_after_scale_mapping():
-    df = pd.DataFrame({'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-    df2 = pd.DataFrame({
-        # Same as above, but add 2 of each unique element
-        'x': [1, 2, 2, 3, 3, 3, 4, 4, 4, 4] + [1, 2, 3, 4] * 2
-    })
+    df = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    df2 = pd.DataFrame(
+        {
+            # Same as above, but add 2 of each unique element
+            "x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+            + [1, 2, 3, 4] * 2
+        }
+    )
 
-    p = ggplot(df) + geom_bar(aes(x='x', ymax=after_scale('ymax + 2')))
-    p2 = ggplot(df2) + geom_bar(aes(x='x'))
+    p = ggplot(df) + geom_bar(aes(x="x", ymax=after_scale("ymax + 2")))
+    p2 = ggplot(df2) + geom_bar(aes(x="x"))
 
-    assert p + lims(y=(0, 7)) == 'after_scale_mapping'
-    assert p2 + lims(y=(0, 7)) == 'after_scale_mapping'
+    assert p + lims(y=(0, 7)) == "after_scale_mapping"
+    assert p2 + lims(y=(0, 7)) == "after_scale_mapping"
 
 
 def test_add_aes():
-    df = pd.DataFrame({'var1': [1, 2, 3, 4],
-                       'var2': 2})
+    df = pd.DataFrame({"var1": [1, 2, 3, 4], "var2": 2})
     p = ggplot(df) + geom_point()
-    p += aes('var1', 'var2')
+    p += aes("var1", "var2")
 
-    assert p.mapping == aes('var1', 'var2')
-    assert p.labels.x == 'var1'
-    assert p.labels.y == 'var2'
+    assert p.mapping == aes("var1", "var2")
+    assert p.labels.x == "var1"
+    assert p.labels.y == "var2"
 
 
 def test_nonzero_indexed_data():
-    df = pd.DataFrame({98: {'blip': 0, 'blop': 1},
-                       99: {'blip': 1, 'blop': 3}}).T
-    p = ggplot(df, aes(x='blip', y='blop')) + geom_line()
+    df = pd.DataFrame(
+        {98: {"blip": 0, "blop": 1}, 99: {"blip": 1, "blop": 3}}
+    ).T
+    p = ggplot(df, aes(x="blip", y="blop")) + geom_line()
     p.draw_test()
 
 
 def test_inplace_add():
     p = _p = ggplot(df)
 
-    p += aes('x', 'y')
+    p += aes("x", "y")
     assert p is _p
 
     p += geom_point()
@@ -266,7 +268,7 @@ def test_inplace_add():
     p += lims(y=(0, 10))
     assert p is _p
 
-    p += labs(x='x')
+    p += labs(x="x")
     assert p is _p
 
     p += coord_trans()
@@ -275,7 +277,7 @@ def test_inplace_add():
     p += facet_null()
     assert p is _p
 
-    p += annotate('point', 5, 5, color='red', size=5)
+    p += annotate("point", 5, 5, color="red", size=5)
     assert p is _p
 
     p += guides()
@@ -290,40 +292,40 @@ def test_inplace_add():
 
 
 def test_rrshift_piping():
-    p = df >> ggplot(aes('x', 'y')) + geom_point()
+    p = df >> ggplot(aes("x", "y")) + geom_point()
     assert p.data is df
 
     with pytest.raises(PlotnineError):
-        df >> ggplot(df.copy(), aes('x', 'y')) + geom_point()
+        df >> ggplot(df.copy(), aes("x", "y")) + geom_point()
 
     with pytest.raises(TypeError):
-        'not a dataframe' >> ggplot(aes('x', 'y')) + geom_point()
+        "not a dataframe" >> ggplot(aes("x", "y")) + geom_point()
 
 
 def test_rrshift_piping_grouped():
-    p = df.groupby("x") >> ggplot(aes('x', 'y')) + geom_point()
+    p = df.groupby("x") >> ggplot(aes("x", "y")) + geom_point()
     assert p.data is df
 
 
 def test_adding_list_ggplot():
     lst = [
         geom_point(),
-        geom_point(aes('x+1', 'y+1')),
-        xlab('x-label'),
-        coord_trans()
+        geom_point(aes("x+1", "y+1")),
+        xlab("x-label"),
+        coord_trans(),
     ]
     g = ggplot() + lst
     assert len(g.layers) == 2
-    assert g.labels.x == 'x-label'
+    assert g.labels.x == "x-label"
     assert isinstance(g.coordinates, coord_trans)
 
 
 def test_iadding_list_ggplot():
     lst = [
         geom_point(),
-        geom_point(aes('x+1', 'y+1')),
-        xlab('x-label'),
-        coord_trans()
+        geom_point(aes("x+1", "y+1")),
+        xlab("x-label"),
+        coord_trans(),
     ]
     g = ggplot()
     id_before = id(g)
@@ -331,12 +333,12 @@ def test_iadding_list_ggplot():
     id_after = id(g)
     assert id_before == id_after
     assert len(g.layers) == 2
-    assert g.labels.x == 'x-label'
+    assert g.labels.x == "x-label"
     assert isinstance(g.coordinates, coord_trans)
 
 
 def test_adding_None():
-    p = ggplot(df, aes('x', 'y')) + geom_point()
+    p = ggplot(df, aes("x", "y")) + geom_point()
     p2 = p + None
     assert p2 is not p
     assert isinstance(p2, ggplot)
@@ -347,32 +349,34 @@ def test_adding_None():
 
 
 def test_string_group():
-    p = ggplot(df, aes('x', 'y')) + geom_point(group='pi')
+    p = ggplot(df, aes("x", "y")) + geom_point(group="pi")
     p.draw_test()
 
 
 def test_to_pandas():
     class SomeDataType:
         def to_pandas(self):
-            return pd.DataFrame({'x': [1, 2, 3], 'y': [1, 2, 3]})
+            return pd.DataFrame({"x": [1, 2, 3], "y": [1, 2, 3]})
 
     df = SomeDataType()
-    p1 = ggplot(df, aes('x', 'y')) + geom_point()
-    p2 = df >> ggplot(aes('x', 'y')) + geom_point()
-    assert p1 == 'to_pandas'
-    assert p2 == 'to_pandas'
+    p1 = ggplot(df, aes("x", "y")) + geom_point()
+    p2 = df >> ggplot(aes("x", "y")) + geom_point()
+    assert p1 == "to_pandas"
+    assert p2 == "to_pandas"
 
 
 def test_callable_as_data():
     def _fn(df):
-        return df.rename(columns={'xx': 'x', 'yy': 'y'})
-    df = pd.DataFrame({'xx': [1, 2, 3], 'yy': [1, 2, 3]})
-    p = ggplot(df, aes('x', 'y')) + geom_point(_fn)
+        return df.rename(columns={"xx": "x", "yy": "y"})
+
+    df = pd.DataFrame({"xx": [1, 2, 3], "yy": [1, 2, 3]})
+    p = ggplot(df, aes("x", "y")) + geom_point(_fn)
     p.draw_test()
 
 
 def test_plotnine_all_imports():
     import plotnine as p9
+
     for name in p9.__all__:
         m = getattr(p9, name).__module__
-        assert m.startswith('plotnine'), f"{m} in plotnine.__all__!"
+        assert m.startswith("plotnine"), f"{m} in plotnine.__all__!"

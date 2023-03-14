@@ -89,6 +89,7 @@ class facet_grid(facet):
         factor levels will be shown, regardless of whether
         or not they appear in the data. Default is ``True``.
     """
+
     rows: list[str]
     cols: list[str]
 
@@ -96,29 +97,32 @@ class facet_grid(facet):
         self,
         facets: str | tuple[str | list[str], str | list[str]],
         margins: bool | list[str] = False,
-        scales: Literal['fixed', 'free', 'free_x', 'free_y'] = 'fixed',
+        scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         space: (
-            Literal['fixed', 'free', 'free_x', 'free_y'] |
-            dict[Literal['x', 'y'], list[int]]
-        ) = 'fixed',
+            Literal["fixed", "free", "free_x", "free_y"]
+            | dict[Literal["x", "y"], list[int]]
+        ) = "fixed",
         shrink: bool = True,
         labeller: Literal[
-            'label_value', 'label_both', 'label_context'
-        ] = 'label_value',
+            "label_value", "label_both", "label_context"
+        ] = "label_value",
         as_table: bool = True,
-        drop: bool = True
+        drop: bool = True,
     ):
-
         facet.__init__(
-            self, scales=scales, shrink=shrink, labeller=labeller,
-            as_table=as_table, drop=drop
+            self,
+            scales=scales,
+            shrink=shrink,
+            labeller=labeller,
+            as_table=as_table,
+            drop=drop,
         )
         self.space = space
         self.rows, self.cols = parse_grid_facets(facets)
         self.margins = margins
         self.space_free = {
-            'x': isinstance(space, str) and space in ('free_x', 'free'),
-            'y': isinstance(space, str) and space in ('free_y', 'free')
+            "x": isinstance(space, str) and space in ("free_x", "free"),
+            "y": isinstance(space, str) and space in ("free_y", "free"),
         }
         self.num_vars_x = len(self.cols)
         self.num_vars_y = len(self.rows)
@@ -128,20 +132,14 @@ class facet_grid(facet):
             return layout_null()
 
         base_rows = combine_vars(
-            data,
-            self.plot.environment,
-            self.rows,
-            drop=self.drop
+            data, self.plot.environment, self.rows, drop=self.drop
         )
 
         if not self.as_table:
             # Reverse the order of the rows
             base_rows = base_rows[::-1]
         base_cols = combine_vars(
-            data,
-            self.plot.environment,
-            self.cols,
-            drop=self.drop
+            data, self.plot.environment, self.cols, drop=self.drop
         )
 
         base = cross_join(base_rows, base_cols)
@@ -152,7 +150,7 @@ class facet_grid(facet):
 
         n = len(base)
         panel = ninteraction(base, drop=True)
-        panel = pd.Categorical(panel, categories=range(1, n+1))
+        panel = pd.Categorical(panel, categories=range(1, n + 1))
 
         if self.rows:
             rows = ninteraction(base[self.rows], drop=True)
@@ -164,42 +162,38 @@ class facet_grid(facet):
         else:
             cols = [1] * len(panel)
 
-        layout = pd.DataFrame({
-            'PANEL': panel,
-            'ROW': rows,
-            'COL': cols,
-        })
+        layout = pd.DataFrame(
+            {
+                "PANEL": panel,
+                "ROW": rows,
+                "COL": cols,
+            }
+        )
         layout = pd.concat([layout, base], axis=1)
-        layout = layout.sort_values('PANEL')
+        layout = layout.sort_values("PANEL")
         layout.reset_index(drop=True, inplace=True)
 
         # Relax constraints, if necessary
-        layout['SCALE_X'] = layout['COL'] if self.free['x'] else 1
-        layout['SCALE_Y'] = layout['ROW'] if self.free['y'] else 1
-        layout['AXIS_X'] = layout['ROW'] == layout['ROW'].max()
-        layout['AXIS_Y'] = layout['COL'] == layout['COL'].min()
+        layout["SCALE_X"] = layout["COL"] if self.free["x"] else 1
+        layout["SCALE_Y"] = layout["ROW"] if self.free["y"] else 1
+        layout["AXIS_X"] = layout["ROW"] == layout["ROW"].max()
+        layout["AXIS_Y"] = layout["COL"] == layout["COL"].min()
 
-        self.nrow = layout['ROW'].max()
-        self.ncol = layout['COL'].max()
+        self.nrow = layout["ROW"].max()
+        self.ncol = layout["COL"].max()
         return layout
 
-    def map(
-        self,
-        data: pd.DataFrame,
-        layout: pd.DataFrame
-    ) -> pd.DataFrame:
+    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
         if not len(data):
-            data['PANEL'] = pd.Categorical(
-                [],
-                categories=layout['PANEL'].cat.categories,
-                ordered=True
+            data["PANEL"] = pd.Categorical(
+                [], categories=layout["PANEL"].cat.categories, ordered=True
             )
             return data
 
         vars = list(self.rows + self.cols)
         margin_vars: tuple[list[str], list[str]] = (
-            list(data.columns.intersection(self.rows)), # type: ignore
-            list(data.columns.intersection(self.cols))  # type: ignore
+            list(data.columns.intersection(self.rows)),  # type: ignore
+            list(data.columns.intersection(self.cols)),  # type: ignore
         )
         data = add_margins(data, margin_vars, self.margins)
 
@@ -209,19 +203,19 @@ class facet_grid(facet):
         # assign each point to a panel
         if len(facet_vals) == 0:
             # Special case of no facetting
-            data['PANEL'] = 1
+            data["PANEL"] = 1
         else:
             keys = join_keys(facet_vals, layout, vars)
-            data['PANEL'] = match(keys['x'], keys['y'], start=1)
+            data["PANEL"] = match(keys["x"], keys["y"], start=1)
 
         # matching dtype and
         # the categories(panel numbers) for the data should be in the
         # same order as the panels. i.e the panels are the reference,
         # they "know" the right order
-        data['PANEL'] = pd.Categorical(
-            data['PANEL'],
-            categories=layout['PANEL'].cat.categories,
-            ordered=True
+        data["PANEL"] = pd.Categorical(
+            data["PANEL"],
+            categories=layout["PANEL"].cat.categories,
+            ordered=True,
         )
 
         data.reset_index(drop=True, inplace=True)
@@ -246,8 +240,8 @@ class facet_grid(facet):
         bottom = figure.subplotpars.bottom
         wspace = figure.subplotpars.wspace
         W, H = figure.get_size_inches()
-        spacing_x = _property('panel_spacing_x')
-        spacing_y = _property('panel_spacing_y')
+        spacing_x = _property("panel_spacing_x")
+        spacing_y = _property("panel_spacing_y")
 
         # The goal is to have equal spacing along the vertical
         # and the horizontal. We use the wspace and compute
@@ -255,33 +249,29 @@ class facet_grid(facet):
         # MPL had a better layout manager.
 
         # width of axes and height of axes
-        w = ((right-left)*W - spacing_x*(ncol-1)) / ncol
-        h = ((top-bottom)*H - spacing_y*(nrow-1)) / nrow
+        w = ((right - left) * W - spacing_x * (ncol - 1)) / ncol
+        h = ((top - bottom) * H - spacing_y * (nrow - 1)) / nrow
 
         # aspect ratio changes the size of the figure
         if aspect_ratio is not None:
-            h = w*aspect_ratio
-            H = (h*nrow + spacing_y*(nrow-1)) / (top-bottom)
+            h = w * aspect_ratio
+            H = (h * nrow + spacing_y * (nrow - 1)) / (top - bottom)
             figure.set_figheight(H)
 
         # spacing
-        wspace = spacing_x/w
-        hspace = spacing_y/h
+        wspace = spacing_x / w
+        hspace = spacing_y / h
         figure.subplots_adjust(wspace=wspace, hspace=hspace)
 
-    def make_ax_strips(
-        self,
-        layout_info: layout_details,
-        ax: Axes
-    ) -> Strips:
+    def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         lst = []
         toprow = layout_info.row == 1
         rightcol = layout_info.col == self.ncol
         if toprow and len(self.cols):
-            s = strip(self.cols, layout_info, self, ax, 'top')
+            s = strip(self.cols, layout_info, self, ax, "top")
             lst.append(s)
         if rightcol and len(self.rows):
-            s = strip(self.rows, layout_info, self, ax, 'right')
+            s = strip(self.rows, layout_info, self, ax, "right")
             lst.append(s)
         return Strips(lst)
 
@@ -292,18 +282,25 @@ def parse_grid_facets(
     """
     Return two lists of facetting variables, for the rows & columns
     """
-    valid_seqs = ["('var1', '.')", "('var1', 'var2')",
-                  "('.', 'var1')", "((var1, var2), (var3, var4))"]
-    error_msg_s = ("Valid sequences for specifying 'facets' look like"
-                   f" {valid_seqs}")
+    valid_seqs = [
+        "('var1', '.')",
+        "('var1', 'var2')",
+        "('.', 'var1')",
+        "((var1, var2), (var3, var4))",
+    ]
+    error_msg_s = (
+        "Valid sequences for specifying 'facets' look like" f" {valid_seqs}"
+    )
 
-    valid_forms = ['var1 ~ .', 'var1 ~ var2', '. ~ var1',
-                   'var1 + var2 ~ var3 + var4',
-                   '. ~ func(var1) + func(var2)',
-                   '. ~ func(var1+var3) + func(var2)'
-                   ] + valid_seqs
-    error_msg_f = ("Valid formula for 'facet_grid' look like"
-                   f" {valid_forms}")
+    valid_forms = [
+        "var1 ~ .",
+        "var1 ~ var2",
+        ". ~ var1",
+        "var1 + var2 ~ var3 + var4",
+        ". ~ func(var1) + func(var2)",
+        ". ~ func(var1+var3) + func(var2)",
+    ] + valid_seqs
+    error_msg_f = "Valid formula for 'facet_grid' look like" f" {valid_forms}"
 
     if not isinstance(facets, str):
         if len(facets) != 2:
@@ -319,7 +316,7 @@ def parse_grid_facets(
     # '. ~ func(a) + func(b)'
     # 'func(c) ~ func(a+1) + func(b+2)'
     try:
-        lhs, rhs = facets.split('~')
+        lhs, rhs = facets.split("~")
     except ValueError:
         raise PlotnineError(error_msg_f)
     else:
@@ -342,8 +339,8 @@ def ensure_list_spec(term: list[str] | str) -> list[str]:
     '' -> []
     """
     if isinstance(term, str):
-        splitter = ' + ' if ' + ' in term else '+'
-        if term in ['.', '']:
+        splitter = " + " if " + " in term else "+"
+        if term in [".", ""]:
             return []
         return [var.strip() for var in term.split(splitter)]
     else:

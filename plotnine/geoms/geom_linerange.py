@@ -27,11 +27,19 @@ class geom_linerange(geom):
     ----------
     {common_parameters}
     """
-    DEFAULT_AES = {'alpha': 1, 'color': 'black',
-                   'linetype': 'solid', 'size': 0.5}
-    REQUIRED_AES = {'x', 'ymin', 'ymax'}
-    DEFAULT_PARAMS = {'stat': 'identity', 'position': 'identity',
-                      'na_rm': False}
+
+    DEFAULT_AES = {
+        "alpha": 1,
+        "color": "black",
+        "linetype": "solid",
+        "size": 0.5,
+    }
+    REQUIRED_AES = {"x", "ymin", "ymax"}
+    DEFAULT_PARAMS = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+    }
     draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
 
     @staticmethod
@@ -40,7 +48,7 @@ class geom_linerange(geom):
         panel_params: panel_view,
         coord: Coord,
         ax: Axes,
-        **params: Any
+        **params: Any,
     ):
         data.eval(
             """
@@ -48,6 +56,6 @@ class geom_linerange(geom):
             y = ymin
             yend = ymax
             """,
-            inplace=True
+            inplace=True,
         )
         geom_segment.draw_group(data, panel_params, coord, ax, **params)

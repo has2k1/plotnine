@@ -54,52 +54,66 @@ class stat_boxplot(stat):
     e.g. :py:`after_stat('width')`.
     """
 
-    REQUIRED_AES = {'x', 'y'}
-    NON_MISSING_AES = {'weight'}
-    DEFAULT_PARAMS = {'geom': 'boxplot', 'position': 'dodge',
-                      'na_rm': False, 'coef': 1.5, 'width': None}
-    CREATES = {'lower', 'upper', 'middle', 'ymin', 'ymax',
-               'outliers', 'notchupper', 'notchlower', 'width',
-               'relvarwidth'}
+    REQUIRED_AES = {"x", "y"}
+    NON_MISSING_AES = {"weight"}
+    DEFAULT_PARAMS = {
+        "geom": "boxplot",
+        "position": "dodge",
+        "na_rm": False,
+        "coef": 1.5,
+        "width": None,
+    }
+    CREATES = {
+        "lower",
+        "upper",
+        "middle",
+        "ymin",
+        "ymax",
+        "outliers",
+        "notchupper",
+        "notchlower",
+        "width",
+        "relvarwidth",
+    }
 
     def setup_params(self, data):
-        if self.params['width'] is None:
-            self.params['width'] = resolution(data['x'], False) * 0.75
+        if self.params["width"] is None:
+            self.params["width"] = resolution(data["x"], False) * 0.75
         return self.params
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        y = data['y'].to_numpy()
-        if 'weight' in data:
-            weights = data['weight']
+        y = data["y"].to_numpy()
+        if "weight" in data:
+            weights = data["weight"]
             total_weight = np.sum(weights)
         else:
             weights = None
             total_weight = len(y)
-        res = weighted_boxplot_stats(y, weights=weights, whis=params['coef'])
+        res = weighted_boxplot_stats(y, weights=weights, whis=params["coef"])
 
-        if len(np.unique(data['x'])) > 1:
-            width = np.ptp(data['x']) * 0.9
+        if len(np.unique(data["x"])) > 1:
+            width = np.ptp(data["x"]) * 0.9
         else:
-            width = params['width']
+            width = params["width"]
 
-        if pdtypes.is_categorical_dtype(data['x']):
-            x = data['x'].iloc[0]
+        if pdtypes.is_categorical_dtype(data["x"]):
+            x = data["x"].iloc[0]
         else:
-            x = np.mean([data['x'].min(), data['x'].max()])
+            x = np.mean([data["x"].min(), data["x"].max()])
 
         d = {
-            'ymin': res['whislo'],
-            'lower': res['q1'],
-            'middle': [res['med']],
-            'upper': res['q3'],
-            'ymax': res['whishi'],
-            'outliers': [res['fliers']],
-            'notchupper': res['cihi'],
-            'notchlower': res['cilo'],
-            'x': x,
-            'width': width,
-            'relvarwidth': np.sqrt(total_weight)
+            "ymin": res["whislo"],
+            "lower": res["q1"],
+            "middle": [res["med"]],
+            "upper": res["q3"],
+            "ymax": res["whishi"],
+            "outliers": [res["fliers"]],
+            "notchupper": res["cihi"],
+            "notchlower": res["cilo"],
+            "x": x,
+            "width": width,
+            "relvarwidth": np.sqrt(total_weight),
         }
         return pd.DataFrame(d)
 
@@ -194,15 +208,15 @@ def weighted_boxplot_stats(x, weights=None, whis=1.5):
         whishi = np.max(hix)
 
     bpstats = {
-        'fliers': x[(x < whislo) | (x > whishi)],
-        'mean': mean,
-        'med': med,
-        'q1': q1,
-        'q3': q3,
-        'iqr': iqr,
-        'whislo': whislo,
-        'whishi': whishi,
-        'cilo': cilo,
-        'cihi': cihi,
+        "fliers": x[(x < whislo) | (x > whishi)],
+        "mean": mean,
+        "med": med,
+        "q1": q1,
+        "q3": q3,
+        "iqr": iqr,
+        "whislo": whislo,
+        "whishi": whishi,
+        "cilo": cilo,
+        "cihi": cihi,
     }
     return bpstats

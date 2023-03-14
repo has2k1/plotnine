@@ -16,10 +16,13 @@ def test_scale_linetype_manual_tuples():
 
     p = ggplot(df)
     p += geom_line(aes(x="x", y="y", ymax="y+1", linetype="lt", group="lt"))
-    p += scale_linetype_manual(values=(
-        (2, (5, 3, 1, 3)),
-        (1, (10, 2)),
-        (1, (1, 2)),))
+    p += scale_linetype_manual(
+        values=(
+            (2, (5, 3, 1, 3)),
+            (1, (10, 2)),
+            (1, (1, 2)),
+        )
+    )
     assert p == "scale_linetype_manual_tuples"
 
 
@@ -36,5 +39,5 @@ def test_scale_linetype_strings_tuples():
 
     p = ggplot(df)
     p += geom_line(aes(x="x", y="y", ymax="y+1", linetype="lt", group="lt"))
-    p += scale_linetype_manual(values=['solid', 'dashed', 'dotted'])
+    p += scale_linetype_manual(values=["solid", "dashed", "dotted"])
     assert p == "scale_linetype_manual_strings"

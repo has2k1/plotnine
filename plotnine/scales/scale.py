@@ -106,6 +106,7 @@ class scale(metaclass=Registry):
         scale. These are defined by each scale and the
         user should probably not change them. Have fun.
     """
+
     __base__ = True
 
     # aesthetics affected by this scale
@@ -124,7 +125,7 @@ class scale(metaclass=Registry):
     labels: ScaleLabelsRaw = True
 
     # legend or any other guide
-    guide: str | None = 'legend'
+    guide: str | None = "legend"
 
     # (min, max) - set by user
     _limits: ScaleLimitsRaw = None
@@ -148,13 +149,13 @@ class scale(metaclass=Registry):
 
         if np.iterable(self.breaks) and np.iterable(self.labels):
             if len(self.breaks) != len(self.labels):  # pyright: ignore
-                raise PlotnineError(
-                    "Breaks and labels have unequal lengths"
-                )
+                raise PlotnineError("Breaks and labels have unequal lengths")
 
-        if (self.breaks is None and
-                not is_position_aes(self.aesthetics) and
-                self.guide is not None):
+        if (
+            self.breaks is None
+            and not is_position_aes(self.aesthetics)
+            and self.guide is not None
+        ):
             self.guide = None
 
     @property
@@ -180,7 +181,7 @@ class scale(metaclass=Registry):
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def map(self, x, limits=None):
         """
@@ -190,7 +191,7 @@ class scale(metaclass=Registry):
         make sure that sensible values are sent and
         return from the palette.
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def train(self, x):
         """
@@ -201,59 +202,59 @@ class scale(metaclass=Registry):
         x: pd.series | np.array
             a column of data to train over
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def dimension(self, expand=None, limits=None):
         """
         Get the phyical size of the scale.
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def expand_limits(
         self,
         limits: ScaleLimits,
         expand: TupleFloat2 | TupleFloat4,
         coord_limits: CoordRange | None,
-        trans: Trans | Type[Trans]
+        trans: Trans | Type[Trans],
     ) -> range_view:
         """
         Exand the limits of the scale
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transform dataframe
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def transform(self, x):
         """
         Transform array|series x
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def inverse(self, x):
         """
         Inverse transform array|series x
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def view(
         self,
         limits: Optional[ScaleLimits] = None,
-        range: Optional[CoordRange] = None
+        range: Optional[CoordRange] = None,
     ) -> scale_view:
         """
         Information about the trained scale
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def default_expansion(
         self,
         mult: float | TupleFloat2 = 0,
-        add: float | TupleFloat2 =0,
-        expand=True
+        add: float | TupleFloat2 = 0,
+        expand=True,
     ) -> TupleFloat4:
         """
         Get default expansion for this scale
@@ -304,17 +305,17 @@ class scale(metaclass=Registry):
         """
         Whether the scale has size information
         """
-        if not hasattr(self, 'range'):
+        if not hasattr(self, "range"):
             return True
         return self.range.is_empty() and self._limits is None
 
     @property
     def limits(self) -> ScaleLimits:
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     @limits.setter
-    def limits( self, value: ScaleLimitsRaw):
-        raise NotImplementedError('Not Implemented')
+    def limits(self, value: ScaleLimitsRaw):
+        raise NotImplementedError("Not Implemented")
 
     def train_df(self, df: pd.DataFrame):
         """
@@ -337,27 +338,20 @@ class scale(metaclass=Registry):
 
         return df
 
-    def get_labels(
-        self,
-        breaks: Optional[ScaleBreaks] = None
-    ) -> ScaleLabels:
+    def get_labels(self, breaks: Optional[ScaleBreaks] = None) -> ScaleLabels:
         """
         Get labels, calculating them if required
         """
         raise NotImplementedError()
 
-    def get_breaks(
-        self,
-        limits: Optional[ScaleLimits] = None
-    ) -> ScaleBreaks:
+    def get_breaks(self, limits: Optional[ScaleLimits] = None) -> ScaleBreaks:
         """
         Get Breaks
         """
         raise NotImplementedError()
 
     def get_bounded_breaks(
-        self,
-        limits: Optional[ScaleLimits] = None
+        self, limits: Optional[ScaleLimits] = None
     ) -> ScaleBreaks:
         """
         Return Breaks that are within the limits
@@ -392,6 +386,7 @@ class scale_discrete(scale):
         apply to position scales where ``nan`` is always placed
         on the right.
     """
+
     _range_class = RangeDiscrete
     _limits: Optional[ScaleDiscreteLimitsRaw]
     range: RangeDiscrete
@@ -412,10 +407,7 @@ class scale_discrete(scale):
             return tuple(self._limits)
 
     @limits.setter
-    def limits(
-        self,
-        value: ScaleDiscreteLimitsRaw
-    ):
+    def limits(self, value: ScaleDiscreteLimitsRaw):
         self._limits = value
 
     @staticmethod
@@ -423,7 +415,7 @@ class scale_discrete(scale):
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def train(self, x, drop=False):
         """
@@ -441,7 +433,7 @@ class scale_discrete(scale):
         if not len(x):
             return
 
-        na_rm = (not self.na_translate)
+        na_rm = not self.na_translate
         self.range.train(x, drop, na_rm=na_rm)
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
@@ -459,7 +451,7 @@ class scale_discrete(scale):
         limits: ScaleDiscreteLimits,
         expand: TupleFloat2 | TupleFloat4,
         coord_limits: TupleFloat2,
-        trans: Trans
+        trans: Trans,
     ) -> range_view:
         """
         Calculate the final range in coordinate space
@@ -474,14 +466,14 @@ class scale_discrete(scale):
             c0, c1 = coord_limits
             climits = (
                 climits[0] if c0 is None else c0,
-                climits[1] if c1 is None else c1
+                climits[1] if c1 is None else c1,
             )
         return expand_range(climits, expand, trans)
 
     def view(
         self,
         limits: Optional[ScaleDiscreteLimits] = None,
-        range: Optional[CoordRange] = None
+        range: Optional[CoordRange] = None,
     ) -> scale_view:
         """
         Information about the trained scale
@@ -505,7 +497,7 @@ class scale_discrete(scale):
             range=range,
             breaks=breaks,
             labels=labels,
-            minor_breaks=minor_breaks
+            minor_breaks=minor_breaks,
         )
         return sv
 
@@ -516,9 +508,7 @@ class scale_discrete(scale):
         return super().default_expansion(mult, add, expand)
 
     def map(
-        self,
-        x,
-        limits: Optional[ScaleDiscreteLimits] = None
+        self, x, limits: Optional[ScaleDiscreteLimits] = None
     ) -> list[Any]:
         """
         Map values in x to a palette
@@ -546,7 +536,7 @@ class scale_discrete(scale):
                 # Deal with missing data
                 # - Insert NaN where there is no match
                 pal = np.hstack((pal.astype(object), np.nan))
-                idx = np.clip(idx, 0, len(pal)-1)
+                idx = np.clip(idx, 0, len(pal) - 1)
                 pal_match = list(pal[idx])
 
         if self.na_translate:
@@ -556,14 +546,15 @@ class scale_discrete(scale):
                 bool_pal_match = bool_pal_match.any(axis=1)
             bool_idx = pd.isnull(x) | bool_pal_match
             if bool_idx.any():
-                pal_match = [x if i else self.na_value
-                             for x, i in zip(pal_match, ~bool_idx)]
+                pal_match = [
+                    x if i else self.na_value
+                    for x, i in zip(pal_match, ~bool_idx)
+                ]
 
         return pal_match
 
     def get_breaks(
-        self,
-        limits: Optional[ScaleDiscreteLimits] = None
+        self, limits: Optional[ScaleDiscreteLimits] = None
     ) -> ScaleDiscreteBreaks:
         """
         Return an ordered list of breaks
@@ -590,8 +581,7 @@ class scale_discrete(scale):
         return breaks
 
     def get_bounded_breaks(
-        self,
-        limits: Optional[ScaleDiscreteLimits] = None
+        self, limits: Optional[ScaleDiscreteLimits] = None
     ) -> ScaleDiscreteBreaks:
         """
         Return Breaks that are within limits
@@ -605,8 +595,7 @@ class scale_discrete(scale):
         return strict_breaks
 
     def get_labels(
-        self,
-        breaks: Optional[ScaleDiscreteBreaks] = None
+        self, breaks: Optional[ScaleDiscreteBreaks] = None
     ) -> ScaleLabels:
         """
         Generate labels for the legend/guide breaks
@@ -685,20 +674,21 @@ class scale_continuous(scale):
     If using the class directly all arguments must be
     keyword arguments.
     """
+
     _range_class = RangeContinuous
     _limits: Optional[ScaleContinuousLimitsRaw]
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
-    oob = staticmethod(censor)     # what to do with out of bounds data points
+    oob = staticmethod(censor)  # what to do with out of bounds data points
     breaks: ScaleContinuousBreaksRaw
     minor_breaks: ScaleMinorBreaksRaw = True
-    _trans: Trans | str = 'identity'            # transform class
+    _trans: Trans | str = "identity"  # transform class
 
     def __init__(self, **kwargs):
         # Make sure we have a transform.
-        self.trans = kwargs.pop('trans', self._trans)
+        self.trans = kwargs.pop("trans", self._trans)
 
         with suppress(KeyError):
-            self.limits = kwargs.pop('limits')
+            self.limits = kwargs.pop("limits")
 
         scale.__init__(self, **kwargs)
 
@@ -717,17 +707,18 @@ class scale_continuous(scale):
         """
         orig_trans_name = self.__class__._trans
         new_trans_name = t.__class__.__name__
-        if new_trans_name.endswith('_trans'):
+        if new_trans_name.endswith("_trans"):
             new_trans_name = new_trans_name[:-6]
-        if orig_trans_name != 'identity':
+        if orig_trans_name != "identity":
             if new_trans_name != orig_trans_name:
                 warn(
                     "You have changed the transform of a specialised scale. "
                     "The result may not be what you expect.\n"
                     "Original transform: {}\n"
-                    "New transform: {}"
-                    .format(orig_trans_name, new_trans_name),
-                    PlotnineWarning
+                    "New transform: {}".format(
+                        orig_trans_name, new_trans_name
+                    ),
+                    PlotnineWarning,
                 )
 
     @property
@@ -781,17 +772,14 @@ class scale_continuous(scale):
         # all computations happen on transformed data. The
         # labeling of the plot axis and the guides are in
         # the original dataspace.
-        if (isinstance(value, bool) or
-            value is None or
-            callable(value)
-        ):
+        if isinstance(value, bool) or value is None or callable(value):
             self._limits = value
             return
 
         a, b = value
         a, b = (
             self.trans.transform(a) if a is not None else a,
-            self.trans.transform(b) if b is not None else b
+            self.trans.transform(b) if b is not None else b,
         )
         with suppress(TypeError):
             if a > b:
@@ -860,7 +848,7 @@ class scale_continuous(scale):
         limits: ScaleContinuousLimits,
         expand: TupleFloat2 | TupleFloat4,
         coord_limits: CoordRange | None,
-        trans: Trans
+        trans: Trans,
     ) -> range_view:
         """
         Calculate the final range in coordinate space
@@ -872,15 +860,14 @@ class scale_continuous(scale):
             c0, c1 = coord_limits
             limits = (
                 limits[0] if c0 is None else c0,
-                limits[1] if c1 is None else c1
+                limits[1] if c1 is None else c1,
             )
         return expand_range(limits, expand, trans)
-
 
     def view(
         self,
         limits: Optional[CoordRange] = None,
-        range: Optional[CoordRange] = None
+        range: Optional[CoordRange] = None,
     ) -> scale_view:
         """
         Information about the trained scale
@@ -905,8 +892,7 @@ class scale_continuous(scale):
             range=range,
             breaks=breaks,
             labels=labels,
-            minor_breaks=minor_breaks
-
+            minor_breaks=minor_breaks,
         )
         return sv
 
@@ -921,12 +907,10 @@ class scale_continuous(scale):
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError('Not Implemented')
+        raise NotImplementedError("Not Implemented")
 
     def map(
-        self,
-        x: AnyArrayLike,
-        limits: Optional[ScaleContinuousLimits] = None
+        self, x: AnyArrayLike, limits: Optional[ScaleContinuousLimits] = None
     ) -> AnyArrayLike:
         if limits is None:
             limits = self.limits
@@ -936,18 +920,14 @@ class scale_continuous(scale):
         uniq = np.unique(x)
         pal = np.asarray(self.palette(uniq))
         scaled = pal[match(x, uniq)]
-        if scaled.dtype.kind == 'U':
-            scaled = [
-                self.na_value if x == 'nan' else x
-                for x in scaled
-            ]
+        if scaled.dtype.kind == "U":
+            scaled = [self.na_value if x == "nan" else x for x in scaled]
         else:
             scaled[pd.isnull(scaled)] = self.na_value
         return scaled
 
     def get_breaks(
-        self,
-        limits: Optional[ScaleContinuousLimits] = None
+        self, limits: Optional[ScaleContinuousLimits] = None
     ) -> ScaleContinuousBreaks:
         """
         Generate breaks for the axis or legend
@@ -995,8 +975,7 @@ class scale_continuous(scale):
         return breaks
 
     def get_bounded_breaks(
-        self,
-        limits: Optional[ScaleContinuousLimits] = None
+        self, limits: Optional[ScaleContinuousLimits] = None
     ) -> ScaleContinuousBreaks:
         """
         Return Breaks that are within limits
@@ -1004,17 +983,13 @@ class scale_continuous(scale):
         if limits is None:
             limits = self.limits
         breaks = self.get_breaks(limits)
-        strict_breaks = [
-            b
-            for b in breaks
-            if limits[0] <= b <= limits[1]
-        ]
+        strict_breaks = [b for b in breaks if limits[0] <= b <= limits[1]]
         return strict_breaks
 
     def get_minor_breaks(
         self,
         major: ScaleContinuousBreaks,
-        limits: Optional[ScaleContinuousLimits] = None
+        limits: Optional[ScaleContinuousLimits] = None,
     ) -> ScaleContinuousBreaks:
         """
         Return minor breaks
@@ -1025,15 +1000,12 @@ class scale_continuous(scale):
         if self.minor_breaks is True:
             # TODO: Remove ignore when mizani is static typed
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
-                major,
-                limits
+                major, limits
             )  # pyright: ignore
         elif isinstance(self.minor_breaks, int):
             # TODO: Remove ignore when mizani is static typed
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
-                major,
-                limits,
-                n=self.minor_breaks
+                major, limits, n=self.minor_breaks
             )  # pyright: ignore
         elif self.minor_breaks in (False, None) or not len(major):
             minor_breaks = []
@@ -1048,8 +1020,7 @@ class scale_continuous(scale):
         return minor_breaks
 
     def get_labels(
-        self,
-        breaks: Optional[ScaleContinuousBreaks] = None
+        self, breaks: Optional[ScaleContinuousBreaks] = None
     ) -> ScaleLabels:
         """
         Generate labels for the axis or legend
@@ -1072,18 +1043,19 @@ class scale_continuous(scale):
             labels = self.labels(breaks)
         elif isinstance(self.labels, dict):
             labels = [
-                str(self.labels[b]) if b in self.labels else b
-                for b in breaks
+                str(self.labels[b]) if b in self.labels else b for b in breaks
             ]
         else:
             # When user sets breaks and labels of equal size,
             # but the limits exclude some of the breaks.
             # We remove the corresponding labels
             from collections.abc import Sized
+
             labels = self.labels
-            if (len(labels) != len(breaks) and
-                isinstance(self.breaks, Sized) and
-                len(labels) == len(self.breaks)
+            if (
+                len(labels) != len(breaks)
+                and isinstance(self.breaks, Sized)
+                and len(labels) == len(self.breaks)
             ):
                 _wanted_breaks = set(breaks)
                 labels = [
@@ -1093,9 +1065,7 @@ class scale_continuous(scale):
                 ]
 
         if len(labels) != len(breaks):
-            raise PlotnineError(
-                "Breaks and labels are different lengths"
-            )
+            raise PlotnineError("Breaks and labels are different lengths")
 
         return labels
 
@@ -1124,32 +1094,33 @@ class scale_datetime(scale_continuous):
         ``minor_breaks``.
     {superclass_parameters}
     """
-    _trans = 'datetime'
+
+    _trans = "datetime"
 
     def __init__(self, **kwargs):
         # Permit the use of the general parameters for
         # specifying the format strings
         with suppress(KeyError):
-            breaks = kwargs['breaks']
+            breaks = kwargs["breaks"]
             if isinstance(breaks, str):
-                kwargs['breaks'] = date_breaks(breaks)
+                kwargs["breaks"] = date_breaks(breaks)
 
         with suppress(KeyError):
-            minor_breaks = kwargs['minor_breaks']
+            minor_breaks = kwargs["minor_breaks"]
             if isinstance(minor_breaks, str):
-                kwargs['minor_breaks'] = date_breaks(minor_breaks)
+                kwargs["minor_breaks"] = date_breaks(minor_breaks)
 
         # Using the more specific parameters take precedence
         with suppress(KeyError):
-            breaks_fmt = kwargs.pop('date_breaks')
-            kwargs['breaks'] = date_breaks(breaks_fmt)
+            breaks_fmt = kwargs.pop("date_breaks")
+            kwargs["breaks"] = date_breaks(breaks_fmt)
 
         with suppress(KeyError):
-            labels_fmt = kwargs.pop('date_labels')
-            kwargs['labels'] = date_format(labels_fmt)
+            labels_fmt = kwargs.pop("date_labels")
+            kwargs["labels"] = date_format(labels_fmt)
 
         with suppress(KeyError):
-            minor_breaks_fmt = kwargs.pop('date_minor_breaks')
-            kwargs['minor_breaks'] = date_breaks(minor_breaks_fmt)
+            minor_breaks_fmt = kwargs.pop("date_minor_breaks")
+            kwargs["minor_breaks"] = date_breaks(minor_breaks_fmt)
 
         scale_continuous.__init__(self, **kwargs)

@@ -74,6 +74,7 @@ class ggplot:
         namespace. It defaults to using the environment/namespace.
         in which `ggplot()` is called.
     """
+
     figure: Figure
     axs: list[Axes]
     theme: Theme
@@ -84,7 +85,7 @@ class ggplot:
         self,
         data: DataLike | None = None,
         mapping: aes | None = None,
-        environment: EvalEnvironment | None = None
+        environment: EvalEnvironment | None = None,
     ):
         # Allow some sloppiness
         data, mapping = order_as_data_mapping(data, mapping)
@@ -111,14 +112,14 @@ class ggplot:
         self.draw(show=True)
 
         # Return and empty string so that print(p) is "pretty"
-        return ''
+        return ""
 
     def __repr__(self) -> str:
         """
         Print/show the plot
         """
         self.__str__()
-        return '<ggplot: (%d)>' % self.__hash__()
+        return "<ggplot: (%d)>" % self.__hash__()
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
         """
@@ -131,7 +132,7 @@ class ggplot:
         new = result.__dict__
 
         # don't make a deepcopy of data, or environment
-        shallow = {'data', 'environment', 'figure', '_build_objs'}
+        shallow = {"data", "environment", "figure", "_build_objs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = old[key]
@@ -142,8 +143,7 @@ class ggplot:
         return result
 
     def __iadd__(
-        self,
-        other: PlotAddable | list[PlotAddable] | None
+        self, other: PlotAddable | list[PlotAddable] | None
     ) -> ggplot:
         """
         Add other to ggplot object
@@ -163,10 +163,7 @@ class ggplot:
         else:
             return other.__radd__(self)
 
-    def __add__(
-        self,
-        other: PlotAddable | list[PlotAddable] | None
-    ) -> ggplot:
+    def __add__(self, other: PlotAddable | list[PlotAddable] | None) -> ggplot:
         """
         Add to ggplot from a list
 
@@ -188,9 +185,7 @@ class ggplot:
             if self.data is None:
                 self.data = other
             else:
-                raise PlotnineError(
-                    "`>>` failed, ggplot object has data."
-                )
+                raise PlotnineError("`>>` failed, ggplot object has data.")
         else:
             msg = "Unknown type of data -- {!r}"
             raise TypeError(msg.format(type(other)))
@@ -243,11 +238,7 @@ class ggplot:
 
         return self.figure
 
-    def _draw_using_figure(
-        self,
-        figure: Figure,
-        axs: list[Axes]
-    ) -> ggplot:
+    def _draw_using_figure(self, figure: Figure, axs: list[Axes]) -> ggplot:
         """
         Draw onto already created figure and axes
 
@@ -312,7 +303,7 @@ class ggplot:
         layers.transform(scales)
 
         # Make sure missing (but required) aesthetics are added
-        scales.add_missing(('x', 'y'))
+        scales.add_missing(("x", "y"))
 
         # Map and train positions so that statistics have access
         # to ranges and all positions are numeric
@@ -373,14 +364,12 @@ class ggplot:
         Create Matplotlib figure and axes
         """
         # Good for development
-        if get_option('close_all_figures'):
-            plt.close('all')
+        if get_option("close_all_figures"):
+            plt.close("all")
 
-        figure: Figure = plt.figure() # pyright: ignore
+        figure: Figure = plt.figure()  # pyright: ignore
         axs = self.facet.make_axes(
-            figure,
-            self.layout.layout,
-            self.coordinates
+            figure, self.layout.layout, self.coordinates
         )
 
         self.figure = figure
@@ -420,15 +409,17 @@ class ggplot:
             # Remove unnecessary ticks and labels
             if not layout_info.axis_x:
                 ax.xaxis.set_tick_params(
-                    which='both', bottom=False, labelbottom=False)
+                    which="both", bottom=False, labelbottom=False
+                )
             if not layout_info.axis_y:
                 ax.yaxis.set_tick_params(
-                    which='both', left=False, labelleft=False)
+                    which="both", left=False, labelleft=False
+                )
 
             if layout_info.axis_x:
-                ax.xaxis.set_tick_params(which='both', bottom=True)
+                ax.xaxis.set_tick_params(which="both", bottom=True)
             if layout_info.axis_y:
-                ax.yaxis.set_tick_params(which='both', left=True)
+                ax.yaxis.set_tick_params(which="both", left=True)
 
     def _draw_legend(self):
         """
@@ -446,12 +437,12 @@ class ggplot:
         W, H = figure.get_size_inches()
         position = self.guides.position
         _property = self.theme.themeables.property
-        spacing = _property('legend_box_spacing')
-        strip_margin_x = _property('strip_margin_x')
-        strip_margin_y = _property('strip_margin_y')
+        spacing = _property("legend_box_spacing")
+        strip_margin_x = _property("strip_margin_x")
+        strip_margin_y = _property("strip_margin_y")
 
-        right_strip_width = self.facet.strips.breadth('right')
-        top_strip_height = self.facet.strips.breadth('top')
+        right_strip_width = self.facet.strips.breadth("right")
+        top_strip_height = self.facet.strips.breadth("top")
 
         # Other than when the legend is on the right the rest of
         # the computed x, y locations are not gauranteed not to
@@ -459,40 +450,40 @@ class ggplot:
         # use the legend_margin theme parameter to adjust the
         # location. This should get fixed when MPL has a better
         # layout manager.
-        if position == 'right':
-            loc = 'center left'
-            pad = right_strip_width*(1+strip_margin_x) + spacing
-            x = right + pad/W
+        if position == "right":
+            loc = "center left"
+            pad = right_strip_width * (1 + strip_margin_x) + spacing
+            x = right + pad / W
             y = 0.5
-        elif position == 'left':
-            loc = 'center right'
-            x = left - spacing/W
+        elif position == "left":
+            loc = "center right"
+            x = left - spacing / W
             y = 0.5
-        elif position == 'top':
-            loc = 'lower center'
+        elif position == "top":
+            loc = "lower center"
             x = 0.5
-            pad = top_strip_height*(1+strip_margin_y) + spacing
-            y = top + pad/H
-        elif position == 'bottom':
-            loc = 'upper center'
+            pad = top_strip_height * (1 + strip_margin_y) + spacing
+            y = top + pad / H
+        elif position == "bottom":
+            loc = "upper center"
             x = 0.5
-            y = bottom - spacing/H
+            y = bottom - spacing / H
         else:
-            loc = 'center'
+            loc = "center"
             x, y = position
 
         anchored_box = AnchoredOffsetbox(
             loc=loc,
             child=legend_box,
-            pad=0.,
+            pad=0.0,
             frameon=False,
             bbox_to_anchor=(x, y),
             bbox_transform=figure.transFigure,
-            borderpad=0.
+            borderpad=0.0,
         )
 
         anchored_box.set_zorder(90.1)
-        self.theme._targets['legend_background'] = anchored_box
+        self.theme._targets["legend_background"] = anchored_box
         ax = self.axs[0]
         ax.add_artist(anchored_box)
 
@@ -506,8 +497,8 @@ class ggplot:
         theme = self.theme
         _property = self.theme.themeables.property
 
-        pad_x = _property('axis_title_x', 'margin').get_as('t', 'pt')
-        pad_y = _property('axis_title_y', 'margin').get_as('r', 'pt')
+        pad_x = _property("axis_title_x", "margin").get_as("t", "pt")
+        pad_y = _property("axis_title_y", "margin").get_as("r", "pt")
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -523,26 +514,22 @@ class ggplot:
         # first_ax = self.axs[0]
         # last_ax = self.axs[-1]
 
-        xlabel = self.facet.last_ax.set_xlabel(
-            labels.x,
-            labelpad=pad_x
+        xlabel = self.facet.last_ax.set_xlabel(labels.x, labelpad=pad_x)
+        ylabel = self.facet.first_ax.set_ylabel(labels.y, labelpad=pad_y)
+
+        xlabel.set_transform(
+            mtransforms.blended_transform_factory(
+                figure.transFigure, mtransforms.IdentityTransform()
+            )
         )
-        ylabel = self.facet.first_ax.set_ylabel(
-            labels.y,
-            labelpad=pad_y
+        ylabel.set_transform(
+            mtransforms.blended_transform_factory(
+                mtransforms.IdentityTransform(), figure.transFigure
+            )
         )
 
-        xlabel.set_transform(mtransforms.blended_transform_factory(
-            figure.transFigure,
-            mtransforms.IdentityTransform())
-        )
-        ylabel.set_transform(mtransforms.blended_transform_factory(
-            mtransforms.IdentityTransform(),
-            figure.transFigure)
-        )
-
-        theme._targets['axis_title_x'] = xlabel
-        theme._targets['axis_title_y'] = ylabel
+        theme._targets["axis_title_x"] = xlabel
+        theme._targets["axis_title_y"] = ylabel
 
     def _draw_title(self):
         """
@@ -552,7 +539,7 @@ class ggplot:
         # finally has a constraint based layout manager.
         figure = self.figure
         theme = self.theme
-        title = self.labels.get('title', '')
+        title = self.labels.get("title", "")
         _property = self.theme.themeables.property
 
         # Pick suitable values in inches and convert them to
@@ -567,31 +554,31 @@ class ggplot:
         # margin value in inches prevents oblong plots from
         # getting unpredictably large spaces.
 
-        linespacing = _property('plot_title', 'linespacing')
-        fontsize = _property('plot_title', 'size')
-        pad = _property('plot_title', 'margin').get_as('b', 'in')
-        ha = _property('plot_title', 'ha')
-        strip_margin_y = _property('strip_margin_y')
+        linespacing = _property("plot_title", "linespacing")
+        fontsize = _property("plot_title", "size")
+        pad = _property("plot_title", "margin").get_as("b", "in")
+        ha = _property("plot_title", "ha")
+        strip_margin_y = _property("strip_margin_y")
 
         dpi = 72.27
         line_size = fontsize / dpi
-        num_lines = len(title.split('\n'))
+        num_lines = len(title.split("\n"))
         title_size = line_size * linespacing * num_lines
-        strip_height = self.facet.strips.breadth('top')
-        strip_height *= (1 + strip_margin_y)
+        strip_height = self.facet.strips.breadth("top")
+        strip_height *= 1 + strip_margin_y
 
-        if ha == 'left':
-            x = SUBPLOTS_ADJUST['left']
-        elif ha == 'right':
-            x = SUBPLOTS_ADJUST['right']
+        if ha == "left":
+            x = SUBPLOTS_ADJUST["left"]
+        elif ha == "right":
+            x = SUBPLOTS_ADJUST["right"]
         else:
             # ha='center' is default
             x = 0.5
 
-        y = top + (strip_height+title_size/2+pad)/H
+        y = top + (strip_height + title_size / 2 + pad) / H
 
-        text = figure.text(x, y, title, ha=ha, va='center')
-        theme._targets['plot_title'] = text
+        text = figure.text(x, y, title, ha=ha, va="center")
+        theme._targets["plot_title"] = text
 
     def _draw_caption(self):
         """
@@ -601,7 +588,7 @@ class ggplot:
         # finally has a constraint based layout manager.
         figure = self.figure
         theme = self.theme
-        caption = self.labels.get('caption', '')
+        caption = self.labels.get("caption", "")
         _property = self.theme.themeables.property
 
         # Pick suitable values in inches and convert them to
@@ -610,15 +597,15 @@ class ggplot:
         right = figure.subplotpars.right
         W, H = figure.get_size_inches()
 
-        margin = _property('plot_caption', 'margin')
-        right_pad = margin.get_as('r', 'in')
-        top_pad = margin.get_as('t', 'in')
+        margin = _property("plot_caption", "margin")
+        right_pad = margin.get_as("r", "in")
+        top_pad = margin.get_as("t", "in")
 
-        x = right - right_pad/W
-        y = 0 - top_pad/H
+        x = right - right_pad / W
+        y = 0 - top_pad / H
 
-        text = figure.text(x, y, caption, ha='right', va='top')
-        theme._targets['plot_caption'] = text
+        text = figure.text(x, y, caption, ha="right", va="top")
+        theme._targets["plot_caption"] = text
 
     def _draw_watermarks(self):
         """
@@ -637,7 +624,7 @@ class ggplot:
             Extension e.g. png, pdf, ...
         """
         hash_token = abs(self.__hash__())
-        return Path(f'plotnine-save-{hash_token}.{ext}')
+        return Path(f"plotnine-save-{hash_token}.{ext}")
 
     def _update_labels(self, layer: Layer):
         """
@@ -661,11 +648,11 @@ class ggplot:
         path: Optional[str] = None,
         width: Optional[float] = None,
         height: Optional[float] = None,
-        units: str = 'in',
+        units: str = "in",
         dpi: Optional[float] = None,
         limitsize: bool = True,
         verbose: bool = True,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> mpl_save_view:
         """
         Create MPL figure that will be saved
@@ -676,14 +663,14 @@ class ggplot:
         Use it to get access to the figure that will be saved.
         """
         fig_kwargs: Dict[str, Any] = {
-            'bbox_inches': 'tight',  # 'tight' is a good default
-            'format': format
+            "bbox_inches": "tight",  # 'tight' is a good default
+            "format": format,
         }
         fig_kwargs.update(kwargs)
 
         # filename, depends on the object
         if filename is None:
-            ext = format if format else 'pdf'
+            ext = format if format else "pdf"
             filename = self._save_filename(ext)
 
         if path:
@@ -699,13 +686,15 @@ class ggplot:
             width = to_inches(width, units)
             height = to_inches(height, units)
             self += theme(figure_size=(width, height))  # pyright: ignore
-        elif (width is None and height is not None or
-              width is not None and height is None):
-            raise PlotnineError(
-                "You must specify both width and height"
-            )
+        elif (
+            width is None
+            and height is not None
+            or width is not None
+            and height is None
+        ):
+            raise PlotnineError("You must specify both width and height")
 
-        width, height = self.theme.themeables.property('figure_size')
+        width, height = self.theme.themeables.property("figure_size")
         assert width is not None
         assert height is not None
 
@@ -721,7 +710,7 @@ class ggplot:
             _w = from_inches(width, units)
             _h = from_inches(height, units)
             warn(f"Saving {_w} x {_h} {units} image.", PlotnineWarning)
-            warn(f'Filename: {filename}', PlotnineWarning)
+            warn(f"Filename: {filename}", PlotnineWarning)
 
         if dpi is not None:
             self.theme = self.theme + theme(dpi=dpi)
@@ -736,11 +725,11 @@ class ggplot:
         path: str = "",
         width: float | None = None,
         height: float | None = None,
-        units: str = 'in',
+        units: str = "in",
         dpi: float | None = None,
         limitsize: bool = True,
         verbose: bool = True,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         """
         Save a ggplot object as an image file
@@ -787,7 +776,7 @@ class ggplot:
             dpi=dpi,
             limitsize=limitsize,
             verbose=verbose,
-            **kwargs
+            **kwargs,
         )
         sv.figure.savefig(**sv.kwargs)
 
@@ -800,7 +789,7 @@ def save_as_pdf_pages(
     filename: Optional[str | Path] = None,
     path: str | None = None,
     verbose: bool = True,
-    **kwargs: Any
+    **kwargs: Any,
 ):
     """
     Save multiple :class:`ggplot` objects to a PDF file, one per page.
@@ -860,7 +849,7 @@ def save_as_pdf_pages(
     >>> save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
     """
     # as in ggplot.save()
-    fig_kwargs = {'bbox_inches': 'tight'}
+    fig_kwargs = {"bbox_inches": "tight"}
     fig_kwargs.update(kwargs)
 
     # If plots is already an iterator, this is a no-op; otherwise
@@ -873,13 +862,13 @@ def save_as_pdf_pages(
         # use it to generate a file name
         peek = [next(plots)]
         plots = chain(peek, plots)
-        filename = peek[0]._save_filename('pdf')
+        filename = peek[0]._save_filename("pdf")
 
     if path:
         filename = Path(path) / filename
 
     if verbose:
-        warn(f'Filename: {filename}', PlotnineWarning)
+        warn(f"Filename: {filename}", PlotnineWarning)
 
     with PdfPages(filename) as pdf:
         # Re-add the first element to the iterator, if it was removed
@@ -916,7 +905,7 @@ class plot_context:
         # from slices we do not want complaints. We always uses the
         # new frames knowing that they are separate from the original.
         self.pd_option_context = pd.option_context(
-            'mode.chained_assignment', None
+            "mode.chained_assignment", None
         )
         self.rc_context.__enter__()
         self.pd_option_context.__enter__()
@@ -933,9 +922,9 @@ class plot_context:
                 plt.close(self.plot.figure)
         else:
             # There is an exception, close any figure
-            if hasattr(self.plot, 'figure'):
+            if hasattr(self.plot, "figure"):
                 plt.close(self.plot.figure)
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
         self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
-        delattr(self.plot.theme, '_targets')
+        delattr(self.plot.theme, "_targets")

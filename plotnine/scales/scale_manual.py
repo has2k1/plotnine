@@ -11,6 +11,7 @@ from .scale import scale_discrete
 if typing.TYPE_CHECKING:
     from plotnine.typing import ScaleBreaksRaw
 
+
 @document
 class _scale_manual(scale_discrete):
     """
@@ -23,9 +24,10 @@ class _scale_manual(scale_discrete):
 
     def __init__(self, values, **kwargs):
         # Match the values of the scale with the breaks (if given)
-        if 'breaks' in kwargs:
+        if "breaks" in kwargs:
             from collections.abc import Sized
-            breaks: ScaleBreaksRaw = kwargs['breaks']
+
+            breaks: ScaleBreaksRaw = kwargs["breaks"]
             if isinstance(breaks, Sized):
                 if len(breaks) == len(values):
                     values = {b: v for b, v in zip(breaks, values)}
@@ -58,8 +60,9 @@ class scale_color_manual(_scale_manual):
 
     {superclass_parameters}
     """
-    _aesthetics = ['color']
-    na_value = '#7F7F7F'
+
+    _aesthetics = ["color"]
+    na_value = "#7F7F7F"
 
 
 @document
@@ -75,8 +78,9 @@ class scale_fill_manual(_scale_manual):
         If it is a dict then it should map data values to colors.
     {superclass_parameters}
     """
-    _aesthetics = ['fill']
-    na_value = '#7F7F7F'
+
+    _aesthetics = ["fill"]
+    na_value = "#7F7F7F"
 
 
 @document
@@ -98,7 +102,8 @@ class scale_shape_manual(_scale_manual):
     --------
     :mod:`matplotlib.markers`
     """
-    _aesthetics = ['shape']
+
+    _aesthetics = ["shape"]
 
 
 @document
@@ -134,13 +139,14 @@ class scale_linetype_manual(_scale_manual):
     --------
     :mod:`matplotlib.markers`
     """
-    _aesthetics = ['linetype']
+
+    _aesthetics = ["linetype"]
 
     def map(self, x, limits=None):
         result = super().map(x, limits)
         # Ensure that custom linetypes are tuples, so that they can
         # be properly inserted and extracted from the dataframe
-        if len(result) and hasattr(result[0], '__hash__'):
+        if len(result) and hasattr(result[0], "__hash__"):
             result = [x if isinstance(x, str) else tuple(x) for x in result]
         return result
 
@@ -160,7 +166,8 @@ class scale_alpha_manual(_scale_manual):
         values.
     {superclass_parameters}
     """
-    _aesthetics = ['alpha']
+
+    _aesthetics = ["alpha"]
 
 
 @document
@@ -176,8 +183,9 @@ class scale_size_manual(_scale_manual):
         If it is a dict then it should map data values to sizes.
     {superclass_parameters}
     """
-    _aesthetics = ['size']
+
+    _aesthetics = ["size"]
 
 
 # American to British spelling
-alias('scale_colour_manual', scale_color_manual)
+alias("scale_colour_manual", scale_color_manual)
