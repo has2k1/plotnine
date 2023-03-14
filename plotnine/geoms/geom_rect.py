@@ -43,7 +43,7 @@ class geom_rect(geom):
         "position": "identity",
         "na_rm": False,
     }
-    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def draw_panel(
         self,
@@ -86,7 +86,7 @@ class geom_rect(geom):
 
         # prevent unnecessary borders
         if all(color.isnull()):
-            color = "none"  # type: ignore
+            color = "none"
 
         col = PolyCollection(
             verts,

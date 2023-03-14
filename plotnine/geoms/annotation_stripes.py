@@ -90,7 +90,7 @@ class _geom_stripes(geom):
         "extend": (0, 1),
         "fill_range": "auto",
     }
-    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def draw_layer(
         self, data: pd.DataFrame, layout: Layout, coord: Coord, **params: Any

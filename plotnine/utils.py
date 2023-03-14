@@ -313,7 +313,7 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
             # x probably has NANs
             levels = multitype_sort(set(x))
 
-        lst = match(x, levels)  # type: ignore
+        lst = match(x, levels)
         lst = [item + 1 for item in lst]
 
     return lst

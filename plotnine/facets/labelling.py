@@ -228,15 +228,15 @@ def _as_strip_labelling_func(
         fobj = default
 
     if isinstance(fobj, str) and fobj in LABELLERS:
-        return LABELLERS[fobj]  # type: ignore[index]
+        return LABELLERS[fobj]
 
     if isinstance(fobj, _core_labeller):
         return fobj
     elif callable(fobj):
         if fobj.__name__ in LABELLERS:
-            return fobj  # type: ignore[return-value]
+            return fobj  # type: ignore
         else:
-            return _function_labeller(fobj)  # type: ignore[arg-type]
+            return _function_labeller(fobj)  # type: ignore
     elif isinstance(fobj, dict):
         return _dict_labeller(fobj)
     else:

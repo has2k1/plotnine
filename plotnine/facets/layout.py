@@ -298,7 +298,7 @@ class Layout:
         for pidx, row in self.layout.iterrows():
             ld = layout_details(
                 panel_index=pidx,  # type: ignore
-                variables={name: row[name] for name in vcols},  # type: ignore
+                variables={name: row[name] for name in vcols},
                 **{str.lower(k): row[k] for k in columns},
             )
             lst.append(ld)

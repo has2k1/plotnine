@@ -52,7 +52,7 @@ class geom_rug(geom):
         "sides": "bl",
         "length": 0.03,
     }
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     @staticmethod
     def draw_group(

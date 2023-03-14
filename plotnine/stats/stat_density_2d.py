@@ -103,7 +103,7 @@ class stat_density_2d(stat):
         density = kde(var_data, grid, package, **kde_params)
 
         if params["contour"]:
-            Z = density.reshape(len(x), len(y))  # pyright: ignore
+            Z = density.reshape(len(x), len(y))
             data = contour_lines(X, Y, Z, params["levels"])
             # Each piece should have a distinct group
             groups = str(group) + "-00" + data["piece"].astype(str)
@@ -113,7 +113,7 @@ class stat_density_2d(stat):
                 {
                     "x": X.flatten(),
                     "y": Y.flatten(),
-                    "density": density.flatten(),  # pyright: ignore
+                    "density": density.flatten(),
                     "group": group,
                     "level": 1,
                     "piece": 1,

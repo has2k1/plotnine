@@ -197,9 +197,9 @@ def qplot(
     # Add geoms
     for g in geom:
         geom_name = f"geom_{g}"
-        geom_klass = Registry[geom_name]  # type: ignore
+        geom_klass = Registry[geom_name]
         stat_name = "stat_{}".format(geom_klass.DEFAULT_PARAMS["stat"])
-        stat_klass = Registry[stat_name]  # type: ignore
+        stat_klass = Registry[stat_name]
         # find params
         recognized = kwargs.keys() & (
             geom_klass.DEFAULT_PARAMS.keys()

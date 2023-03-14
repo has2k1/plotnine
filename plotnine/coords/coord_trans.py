@@ -146,7 +146,7 @@ class coord_trans(coord):
         ]
         xt = self.trans_x.transform(x)
         yt = self.trans_y.transform(y)
-        return dist_euclidean(xt, yt) / max_dist  # type: ignore
+        return dist_euclidean(xt, yt) / max_dist
 
 
 @overload
@@ -169,4 +169,4 @@ def transform_value(
     """
     Transform value
     """
-    return trans.transform(value)  # type: ignore
+    return trans.transform(value)

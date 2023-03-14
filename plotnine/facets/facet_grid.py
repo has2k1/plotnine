@@ -192,8 +192,8 @@ class facet_grid(facet):
 
         vars = list(self.rows + self.cols)
         margin_vars: tuple[list[str], list[str]] = (
-            list(data.columns.intersection(self.rows)),  # type: ignore
-            list(data.columns.intersection(self.cols)),  # type: ignore
+            list(data.columns.intersection(self.rows)),
+            list(data.columns.intersection(self.cols)),
         )
         data = add_margins(data, margin_vars, self.margins)
 

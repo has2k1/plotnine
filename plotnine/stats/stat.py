@@ -180,7 +180,7 @@ class stat(metaclass=Registry):
         """
         missing = (
             self.aesthetics() - set(self.aes_params.keys()) - set(data.columns)
-        )  # pyright: ignore
+        )
 
         for ae in missing - self.REQUIRED_AES:
             if self.DEFAULT_AES[ae] is not None:
@@ -342,9 +342,9 @@ class stat(metaclass=Registry):
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
             idx = [0] * len(new)
-            u = unique.loc[idx, missing].reset_index(
+            u = unique.loc[idx, missing].reset_index(  # pyright: ignore
                 drop=True
-            )  # pyright: ignore
+            )
             # concat can have problems with empty dataframes that
             # have an index
             if u.empty and len(u):

@@ -93,4 +93,4 @@ class coord_cartesian(coord):
         max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[
             0
         ]
-        return dist_euclidean(x, y) / max_dist  # type: ignore
+        return dist_euclidean(x, y) / max_dist

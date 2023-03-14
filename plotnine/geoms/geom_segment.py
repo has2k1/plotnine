@@ -59,7 +59,7 @@ class geom_segment(geom):
         "arrow": None,
     }
 
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     @staticmethod
     def draw_group(

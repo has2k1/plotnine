@@ -64,7 +64,7 @@ class geom_violin(geom):
         "width": None,
         "na_rm": False,
     }
-    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def __init__(
         self,

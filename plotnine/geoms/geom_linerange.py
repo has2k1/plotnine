@@ -40,7 +40,7 @@ class geom_linerange(geom):
         "position": "identity",
         "na_rm": False,
     }
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     @staticmethod
     def draw_group(

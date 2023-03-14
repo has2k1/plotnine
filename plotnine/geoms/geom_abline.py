@@ -45,7 +45,7 @@ class geom_abline(geom):
         "inherit_aes": False,
     }
     REQUIRED_AES = {"slope", "intercept"}
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     def __init__(
         self,

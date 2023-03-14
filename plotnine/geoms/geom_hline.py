@@ -51,7 +51,7 @@ class geom_hline(geom):
         "na_rm": False,
         "inherit_aes": False,
     }
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     def __init__(
         self,
