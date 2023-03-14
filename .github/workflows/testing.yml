@@ -26,7 +26,8 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc2"
+          pip install numpy
+          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
           pip install ".[extra,testing]"
 
       - name: Environment Information
@@ -111,7 +112,8 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc2"
+          pip install numpy
+          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
           pip install ".[extra]"
           pip install -r requirements/typing.txt
 
