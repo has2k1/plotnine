@@ -78,14 +78,21 @@ jobs:
         shell: bash
         run: |
           pip install ruff
+          pip install black
 
       - name: Environment Information
         shell: bash
         run: pip list
 
-      - name: Run Tests
+      - name: Lint with Ruff
         shell: bash
-        run: make lint
+        run: |
+          make lint
+
+      - name: Lint with Black
+        shell: bash
+        run: |
+          make black
 
 
   # Typecheck
