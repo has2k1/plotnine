@@ -44,7 +44,7 @@ class geom_rect(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
         """
@@ -64,7 +64,7 @@ class geom_rect(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
 

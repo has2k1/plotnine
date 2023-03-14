@@ -122,7 +122,7 @@ class facet:
         as_table: bool = True,
         drop: bool = True,
         dir: Literal['h', 'v'] = 'h'
-    ) -> None:
+    ):
         from .labelling import as_labeller
         self.shrink = shrink
         self.labeller = as_labeller(labeller)
@@ -142,7 +142,7 @@ class facet:
         gg.facet.plot = gg
         return gg
 
-    def set_properties(self, gg: Ggplot) -> None:
+    def set_properties(self, gg: Ggplot):
         """
         Copy required properties from ggplot object
         """
@@ -174,7 +174,7 @@ class facet:
         """
         return data
 
-    def setup_params(self, data: list[pd.DataFrame]) -> None:
+    def setup_params(self, data: list[pd.DataFrame]):
         """
         Create facet parameters
 
@@ -326,7 +326,7 @@ class facet:
         self,
         panel_params: panel_view,
         ax: Axes
-    ) -> None:
+    ):
         """
         Add limits, breaks and labels to the axes
 
@@ -338,6 +338,8 @@ class facet:
             Axes
         """
         # limits
+        print(panel_params.x.range)
+        print(panel_params.y.range)
         ax.set_xlim(panel_params.x.range)
         ax.set_ylim(panel_params.y.range)
 
@@ -501,7 +503,7 @@ class facet:
 
         return aspect_ratio  # type: ignore
 
-    def spaceout_and_resize_panels(self) -> None:
+    def spaceout_and_resize_panels(self):
         """
         Adjust the spacing between the panels
 
@@ -509,7 +511,7 @@ class facet:
         """
         pass
 
-    def check_axis_text_space(self) -> None:
+    def check_axis_text_space(self):
         _adjust = self.theme.themeables.get('subplots_adjust')
         if _adjust:
             has_wspace = 'wspace' in _adjust.properties['value']

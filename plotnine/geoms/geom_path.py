@@ -97,7 +97,7 @@ class geom_path(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         if not any(data['group'].duplicated()):
             warn("geom_path: Each group consist of only one "
                  "observation. Do you need to adjust the "
@@ -138,7 +138,7 @@ class geom_path(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data = coord.transform(data, panel_params, munch=True)
         data['size'] *= SIZE_FACTOR
         constant = params.pop('constant', data['group'].nunique() == 1)
@@ -219,7 +219,7 @@ class arrow:
         length: float = 0.2,
         ends: Literal['first', 'last', 'both'] = 'last',
         type: Literal['open', 'closed'] = 'open'
-    ) -> None:
+    ):
         self.angle = angle
         self.length = length
         self.ends = ends
@@ -233,7 +233,7 @@ class arrow:
         ax: Axes,
         constant: bool = True,
         **params: Any
-    ) -> None:
+    ):
         """
         Draw arrows at the end(s) of the lines
 
@@ -431,7 +431,7 @@ def _draw_segments(
     data: pd.DataFrame,
     ax: Axes,
     **params: Any
-) -> None:
+):
     """
     Draw independent line segments between all the
     points
@@ -475,7 +475,7 @@ def _draw_lines(
     data: pd.DataFrame,
     ax: Axes,
     **params: Any
-) -> None:
+):
     """
     Draw a path with the same characteristics from the
     first point to the last point

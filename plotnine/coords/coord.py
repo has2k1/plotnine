@@ -56,7 +56,7 @@ class coord:
         """
         return data
 
-    def setup_params(self, data: list[pd.DataFrame]) -> None:
+    def setup_params(self, data: list[pd.DataFrame]):
         """
         Create additional parameters
 

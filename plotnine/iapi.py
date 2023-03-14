@@ -67,14 +67,14 @@ class labels_view:
     title: Optional[str] = None
     caption: Optional[str] = None
 
-    def update(self, other: labels_view) -> None:
+    def update(self, other: labels_view):
         """
         Update the labels with those in other
         """
         for name, value in other.iter_set_fields():
             setattr(self, name, value)
 
-    def add_defaults(self, other: labels_view) -> None:
+    def add_defaults(self, other: labels_view):
         """
         Update labels that are missing with those in other
         """

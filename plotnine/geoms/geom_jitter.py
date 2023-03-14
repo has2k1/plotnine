@@ -49,7 +49,7 @@ class geom_jitter(geom_point):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         if {'width', 'height', 'random_state'} & set(kwargs):
             if 'position' in kwargs:
                 raise PlotnineError(

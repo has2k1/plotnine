@@ -50,7 +50,7 @@ class Layout:
         self,
         layers: Layers,
         plot: Ggplot
-    ) -> None:
+    ):
         """
         Create a layout for the panels
 
@@ -90,7 +90,7 @@ class Layout:
         self,
         layers: Layers,
         scales: Scales
-    ) -> None:
+    ):
         """
         Create all the required x & y panel_scales
 
@@ -118,7 +118,7 @@ class Layout:
     def map_position(
         self,
         layers: Layers
-    ) -> None:
+    ):
         """
         Map x & y (position) aesthetics onto the scales.
 
@@ -172,7 +172,7 @@ class Layout:
 
         return pos_scales(x=xsc, y=ysc)
 
-    def reset_position_scales(self) -> None:
+    def reset_position_scales(self):
         """
         Reset x and y scales
         """
@@ -188,7 +188,7 @@ class Layout:
     def setup_panel_params(
         self,
         coord: Coord
-    ) -> None:
+    ):
         """
         Calculate the x & y range & breaks information for each panel
 
@@ -216,7 +216,7 @@ class Layout:
     def finish_data(
         self,
         layers: Layers
-    ) -> None:
+    ):
         """
         Modify data before it is drawn out by the geom
 
@@ -228,7 +228,7 @@ class Layout:
         for layer in layers:
             layer.data = self.facet.finish_data(layer.data, self)
 
-    def check_layout(self) -> None:
+    def check_layout(self):
         required = {'PANEL', 'SCALE_X', 'SCALE_Y'}
         common = self.layout.columns.intersection(list(required))
         if len(required) != len(common):

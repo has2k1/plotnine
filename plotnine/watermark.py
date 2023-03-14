@@ -57,7 +57,7 @@ class watermark:
         gg.watermarks.append(self)
         return gg
 
-    def draw(self, figure: matplotlib.figure.Figure) -> None:
+    def draw(self, figure: matplotlib.figure.Figure):
         """
         Draw watermark
 

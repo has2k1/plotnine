@@ -188,7 +188,7 @@ class facet_wrap(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def spaceout_and_resize_panels(self) -> None:
+    def spaceout_and_resize_panels(self):
         """
         Adjust the spacing between the panels
 

@@ -51,7 +51,7 @@ class coord_fixed(coord_cartesian):
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
         expand: bool = True
-    ) -> None:
+    ):
         super().__init__(xlim=xlim, ylim=ylim, expand=expand)
         self.ratio = ratio
 

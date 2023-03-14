@@ -35,7 +35,7 @@ class geom_blank(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         pass
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:

@@ -63,7 +63,7 @@ class geom_map(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         if not HAS_GEOPANDAS:
             raise PlotnineError(
                 "geom_map requires geopandas. "
@@ -119,7 +119,7 @@ class geom_map(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         if not len(data):
             return
 

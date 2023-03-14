@@ -58,7 +58,7 @@ class geom_errorbarh(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         f = np.hstack
         # create (two vertical bars) + horizontal bar
         df = pd.DataFrame({

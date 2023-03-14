@@ -102,7 +102,7 @@ def flip_labels(
     obj : dict_like | dataclass
         Object with labels to rename
     """
-    def sub(a: str, b: str, df: pd.DataFrame) -> None:
+    def sub(a: str, b: str, df: pd.DataFrame):
         """
         Substitute all keys that start with a to b
         """

@@ -50,7 +50,7 @@ class geom_vline(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         data, mapping = order_as_data_mapping(data, mapping)
         xintercept = kwargs.pop('xintercept', None)
         if xintercept is not None:
@@ -70,7 +70,7 @@ class geom_vline(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
         """

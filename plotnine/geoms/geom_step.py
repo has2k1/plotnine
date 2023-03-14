@@ -49,7 +49,7 @@ class geom_step(geom_path):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         direction = params['direction']
         n = len(data)
         data = data.sort_values('x', kind='mergesort')

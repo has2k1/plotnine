@@ -41,7 +41,7 @@ class geom_linerange(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         data.eval(
             """
             xend = x

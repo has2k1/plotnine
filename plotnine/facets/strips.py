@@ -44,7 +44,7 @@ class strip:
         facet: Facet,
         ax: Axes,
         location: Literal['right', 'top']
-    ) -> None:
+    ):
         self.vars = vars
         self.ax = ax
         self.location = location
@@ -204,7 +204,7 @@ class strip:
         )
         return info
 
-    def draw(self) -> None:
+    def draw(self):
         """
         Create a background patch and put a label on it
         """
@@ -284,11 +284,11 @@ class Strips(List[strip]):
     def right_strips(self) -> Strips:
         return Strips([s for s in self if s.location == 'right'])
 
-    def draw(self) -> None:
+    def draw(self):
         for s in self:
             s.draw()
 
-    def generate(self) -> None:
+    def generate(self):
         """
         Calculate the box information for all strips
 

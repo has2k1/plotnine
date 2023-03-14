@@ -48,7 +48,7 @@ class coord_cartesian(coord):
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
         expand: bool = True
-    ) -> None:
+    ):
         self.limits = SimpleNamespace(x=xlim, y=ylim)
         self.expand = expand
 

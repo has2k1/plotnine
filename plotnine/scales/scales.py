@@ -205,7 +205,7 @@ class Scales(List[scale]):
         self,
         df : pd.DataFrame,
         drop : bool = False
-    ) -> None:
+    ):
         """
         Train scales from a dataframe
         """

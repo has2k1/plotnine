@@ -25,7 +25,7 @@ class labs:
     """
     labels: labels_view
 
-    def __init__(self, **kwargs: str) -> None:
+    def __init__(self, **kwargs: str):
         unknown = kwargs.keys() - VALID_LABELS
         if unknown:
             raise PlotnineError(
@@ -53,7 +53,7 @@ class xlab(labs):
         x-axis label
     """
 
-    def __init__(self, xlab: str) -> None:
+    def __init__(self, xlab: str):
         if xlab is None:
             raise PlotnineError(
                 "Arguments to xlab cannot be None"
@@ -71,7 +71,7 @@ class ylab(labs):
         y-axis label
     """
 
-    def __init__(self, ylab: str) -> None:
+    def __init__(self, ylab: str):
         if ylab is None:
             raise PlotnineError(
                 "Arguments to ylab cannot be None"
@@ -89,7 +89,7 @@ class ggtitle(labs):
         Plot title
     """
 
-    def __init__(self, title: str) -> None:
+    def __init__(self, title: str):
         if title is None:
             raise PlotnineError(
                 "Arguments to ggtitle cannot be None")

@@ -20,7 +20,7 @@ class element_base:
     """
     properties: dict[str, Any]  # dict of the properties
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.properties = {'visible': True}
 
     def __repr__(self) -> str:
@@ -267,7 +267,7 @@ class element_blank(element_base):
     Theme element: Blank
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.properties = {'visible': False}
 
 
@@ -280,7 +280,7 @@ class Margin:
     r: float = 0
     units: Literal['pt', 'in', 'lines'] = 'pt'
 
-    def __post_init__(self) -> None:
+    def __post_init__(self):
         if self.units in {'pts', 'points', 'px', 'pixels'}:
             self.units = 'pt'
         elif self.units in {'in', 'inch', 'inches'}:

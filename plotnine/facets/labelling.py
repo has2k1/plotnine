@@ -180,7 +180,7 @@ class labeller:
         multi_line: bool = True,
         default: CanBeStripLabellingFunc = 'label_value',
         **kwargs: Callable[[str], str]
-    ) -> None:
+    ):
         # Sort out the labellers along each dimension
         self.rows_labeller = _as_strip_labelling_func(rows, default)
         self.cols_labeller = _as_strip_labelling_func(cols, default)
@@ -272,7 +272,7 @@ class _function_labeller(_core_labeller):
     func : callable
         Function to label an individual string
     """
-    def __init__(self, func: Callable[[str], str]) -> None:
+    def __init__(self, func: Callable[[str], str]):
         self.func = func
 
     def __call__(
@@ -301,7 +301,7 @@ class _dict_labeller(_core_labeller):
     def __init__(
         self,
         lookup: dict[str, str] | dict[str, Callable[[str], str]]
-    ) -> None:
+    ):
         self.lookup = lookup
 
     def __call__(

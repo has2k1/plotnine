@@ -43,7 +43,7 @@ class geom_abline(geom):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         data, mapping = order_as_data_mapping(data, mapping)
         slope = kwargs.pop('slope', None)
         intercept = kwargs.pop('intercept', None)
@@ -84,7 +84,7 @@ class geom_abline(geom):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
         """

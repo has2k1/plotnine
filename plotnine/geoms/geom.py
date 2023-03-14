@@ -83,7 +83,7 @@ class geom(metaclass=Registry):
         mapping: Aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any
-    ) -> None:
+    ):
         kwargs = rename_aesthetics(kwargs)
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._kwargs = kwargs  # Will be used to create stat & layer
@@ -274,7 +274,7 @@ class geom(metaclass=Registry):
         layout: Layout,
         coord: Coord,
         **params: Any
-    ) -> None:
+    ):
         """
         Draw layer across all panels
 
@@ -309,7 +309,7 @@ class geom(metaclass=Registry):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot all groups
 
@@ -351,7 +351,7 @@ class geom(metaclass=Registry):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot data belonging to a group.
 
@@ -388,7 +388,7 @@ class geom(metaclass=Registry):
         coord: Coord,
         ax: Axes,
         **params: Any
-    ) -> None:
+    ):
         """
         Plot data belonging to a unit.
 
@@ -462,7 +462,7 @@ class geom(metaclass=Registry):
         """
         return layer.from_geom(self)
 
-    def _verify_arguments(self, kwargs: dict[str, Any]) -> None:
+    def _verify_arguments(self, kwargs: dict[str, Any]):
         """
         Verify arguments passed to the geom
         """

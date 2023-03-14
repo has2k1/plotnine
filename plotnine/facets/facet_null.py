@@ -19,7 +19,7 @@ class facet_null(facet):
         statistics instead of the raw data. Default is ``True``.
     """
 
-    def __init__(self, shrink: bool = True) -> None:
+    def __init__(self, shrink: bool = True):
         facet.__init__(self, shrink=shrink)
         self.nrow = 1
         self.ncol = 1
@@ -38,7 +38,7 @@ class facet_null(facet):
     ) -> pd.DataFrame:
         return layout_null()
 
-    def spaceout_and_resize_panels(self) -> None:
+    def spaceout_and_resize_panels(self):
         """
         Adjust the space between the panels
         """
