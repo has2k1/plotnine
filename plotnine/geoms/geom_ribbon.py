@@ -72,7 +72,7 @@ class geom_ribbon(geom):
         "outline_type": "both",
         "na_rm": False,
     }
-    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
         return data

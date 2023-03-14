@@ -58,7 +58,7 @@ class stat_sum(stat):
         # group by all present aesthetics other than the weight,
         # then sum them (i.e no. of uniques) to get the raw count
         # 'n', and the proportions 'prop' per group
-        s: set[str] = set(data.columns) & ALL_AESTHETICS  # pyright: ignore
+        s: set[str] = set(data.columns) & ALL_AESTHETICS
         by = list(s.difference(["weight"]))
         counts = groupby_apply(data, by, count)
         counts = groupby_apply(counts, "group", ave)

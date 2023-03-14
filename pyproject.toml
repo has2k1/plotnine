@@ -159,6 +159,7 @@ defineConstant = { DEBUG = true }
 
 # typeCheckingMode = "strict"
 useLibraryCodeForTypes = true
+reportUnnecessaryTypeIgnoreComment = true
 
 # Specifies a list of execution environments (see below). Execution
 # environments are searched from start to finish by comparing the path

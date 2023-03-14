@@ -51,7 +51,7 @@ class _geom_logticks(geom_rug):
         "lengths": (0.036, 0.0225, 0.012),
         "base": 10,
     }
-    draw_legend = staticmethod(geom_path.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_path.draw_legend)
 
     def draw_layer(
         self, data: pd.DataFrame, layout: Layout, coord: Coord, **params: Any
@@ -216,7 +216,7 @@ class _geom_logticks(geom_rug):
             tick_positions: tuple[AnyArray, AnyArray, AnyArray],
         ):
             for position, length in zip(tick_positions, lengths):
-                data = pd.DataFrame({axis: position, **_aesthetics})  # type: ignore
+                data = pd.DataFrame({axis: position, **_aesthetics})
                 geom.draw_group(
                     data, panel_params, coord, ax, length=length, **params
                 )

@@ -237,7 +237,7 @@ class geom_text(geom):
 
         # For labels add a bbox
         for i in range(len(data)):
-            kw: dict["str", Any] = df.iloc[i].to_dict()  # pyright: ignore
+            kw: dict["str", Any] = df.iloc[i].to_dict()
             if draw_label:
                 kw["bbox"] = bbox
                 kw["bbox"]["edgecolor"] = params["boxcolor"] or kw["color"]

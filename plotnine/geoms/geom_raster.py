@@ -75,7 +75,7 @@ class geom_raster(geom):
         "filterrad": 4.0,
         "raster": True,
     }
-    draw_legend = staticmethod(geom_polygon.draw_legend)  # type: ignore
+    draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def __init__(
         self,

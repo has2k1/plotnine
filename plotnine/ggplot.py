@@ -221,7 +221,7 @@ class ggplot:
             # setup
             figure, axs = self._create_figure()
             self._setup_parameters()
-            self.facet.strips.generate()  # type: ignore[attr-defined]
+            self.facet.strips.generate()
             self._resize_panels()
 
             # Drawing
@@ -685,7 +685,7 @@ class ggplot:
         if width is not None and height is not None:
             width = to_inches(width, units)
             height = to_inches(height, units)
-            self += theme(figure_size=(width, height))  # pyright: ignore
+            self += theme(figure_size=(width, height))
         elif (
             width is None
             and height is not None
