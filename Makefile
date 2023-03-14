@@ -77,7 +77,7 @@ dist: clean
 build: dist
 
 install: clean
-	python install ".[extra]"
+	pip install ".[extra]"
 
 develop: clean-pyc
-	python install -e ".[all]"
+	pip install -e ".[all]"
