@@ -319,8 +319,6 @@ class facet:
             Axes
         """
         # limits
-        print(panel_params.x.range)
-        print(panel_params.y.range)
         ax.set_xlim(panel_params.x.range)
         ax.set_ylim(panel_params.y.range)
 

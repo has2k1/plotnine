@@ -345,7 +345,6 @@ class ggplot:
 
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
-        print(layers[0].data)
 
     def _setup_parameters(self):
         """
