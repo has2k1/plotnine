@@ -86,13 +86,15 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 ########## Tool - setuptools ##########
-[tool.setuptools]
-packages = ["plotnine"]
+# If you only specify the top-level package (=plotnine) setuptools complains
+# about not listing the sub-packages. Since we want every sub-package in the
+# plotnine package, it is easier to use find directive.
+[tool.setuptools.packages.find]
+include = ["plotnine*"]
 
 [tool.setuptools_scm]
 fallback_version = "999"
 version_scheme = 'post-release'
-
 
 ########## Tool - pytest ##########
 [tool.pytest.ini_options]
