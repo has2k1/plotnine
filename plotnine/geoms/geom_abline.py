@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import typing
-from typing import Any, Sized
+from typing import Sized
 from warnings import warn
 
 import numpy as np
@@ -16,6 +16,8 @@ from .geom_path import geom_path
 from .geom_segment import geom_segment
 
 if typing.TYPE_CHECKING:
+    from typing import Any
+
     from plotnine.iapi import panel_view
     from plotnine.typing import Aes, Axes, Coord, DataLike
 

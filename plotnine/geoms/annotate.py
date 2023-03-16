@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import typing
-from typing import Any
 
 import pandas as pd
 
@@ -12,6 +11,8 @@ from ..mapping.aes import POSITION_AESTHETICS
 from ..utils import Registry, is_scalar_or_string
 
 if typing.TYPE_CHECKING:
+    from typing import Any
+
     from plotnine.typing import Ggplot, Layer
 
 
