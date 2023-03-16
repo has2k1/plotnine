@@ -6,10 +6,9 @@ from __future__ import annotations
 import typing
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import Any
 
 if typing.TYPE_CHECKING:
-    from typing import Callable, Literal, Optional, Sequence
+    from typing import Any, Callable, Literal, Optional, Sequence
 
     from plotnine.typing import TupleFloat3, TupleFloat4
 
