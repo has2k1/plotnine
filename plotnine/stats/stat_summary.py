@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import scipy.stats
 
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -76,10 +75,12 @@ def mean_cl_normal(series, confidence_interval=0.95):
     confidence_interval : float
         Confidence interval in the range (0, 1).
     """
+    import scipy.stats as stats
+
     a = np.asarray(series)
     m = np.mean(a)
-    se = scipy.stats.sem(a)
-    h = se * scipy.stats.t._ppf((1 + confidence_interval) / 2, len(a) - 1)
+    se = stats.sem(a)
+    h = se * stats.t._ppf((1 + confidence_interval) / 2, len(a) - 1)
     return pd.DataFrame({"y": [m], "ymin": m - h, "ymax": m + h})
 
 

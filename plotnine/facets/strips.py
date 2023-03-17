@@ -6,10 +6,6 @@ from typing import List
 
 from ..iapi import strip_details, strip_label_details
 
-with suppress(ImportError):
-    import matplotlib.patches as mpatch
-    import matplotlib.text as mtext
-
 if typing.TYPE_CHECKING:
     from typing import Literal
 
@@ -204,11 +200,14 @@ class strip:
         """
         Create a background patch and put a label on it
         """
+        from matplotlib.patches import FancyBboxPatch
+        from matplotlib.text import Text
+
         _targets = self.theme._targets
         info = self.info
         ax = info.ax
 
-        rect = mpatch.FancyBboxPatch(
+        rect = FancyBboxPatch(
             (info.box_x, info.box_y),
             width=info.box_width,
             height=info.box_height,
@@ -220,7 +219,7 @@ class strip:
             clip_on=False,
         )
 
-        text = mtext.Text(
+        text = Text(
             info.x,  # type: ignore[arg-type]
             info.y,  # type: ignore[arg-type]
             info.label,

@@ -6,7 +6,6 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-from matplotlib.offsetbox import HPacker, VPacker
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import Registry, is_string
@@ -302,6 +301,8 @@ class guides(dict):
         box : OffsetBox
             A box than can be placed onto a plot
         """
+        from matplotlib.offsetbox import HPacker, VPacker
+
         # place the guides according to the guide.order
         # 0 do not sort
         # 1-99 sort

@@ -3,9 +3,6 @@ from __future__ import annotations
 import typing
 from types import SimpleNamespace
 
-from mizani.bounds import squish_infinite
-from mizani.transforms import identity_trans
-
 from ..iapi import panel_view
 from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
@@ -55,6 +52,8 @@ class coord_cartesian(coord):
     def transform(
         self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
     ) -> pd.DataFrame:
+        from mizani.bounds import squish_infinite
+
         def squish_infinite_x(col):
             return squish_infinite(col, range=panel_params.x.range)
 
@@ -67,6 +66,7 @@ class coord_cartesian(coord):
         """
         Compute the range and break information for the panel
         """
+        from mizani.transforms import identity_trans
 
         def get_scale_view(
             scale: Scale, coord_limits: TupleFloat2

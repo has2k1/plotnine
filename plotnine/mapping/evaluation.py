@@ -12,7 +12,7 @@ from ..exceptions import PlotnineError
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from patsy.eval import EvalEnvironment
+    from plotnine.typing import EvalEnvironment
 
     from . import aes
 

@@ -16,26 +16,28 @@ if typing.TYPE_CHECKING:
     import numpy as np
     import numpy.typing as npt
     import pandas as pd
-    from matplotlib.artist import Artist  # noqa
-    from matplotlib.axes import Axes  # noqa
-    from matplotlib.figure import Figure  # noqa
-    from matplotlib.offsetbox import DrawingArea  # noqa
+    from matplotlib.artist import Artist
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+    from matplotlib.offsetbox import DrawingArea
+    from matplotlib.patches import PathPatch
     from mizani.transforms import trans
+    from patsy.eval import EvalEnvironment
     from typing_extensions import TypeAlias
 
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
-    from plotnine.facets.layout import Layout  # noqa
-    from plotnine.facets.strips import Strips  # noqa
+    from plotnine.facets.layout import Layout
+    from plotnine.facets.strips import Strips
     from plotnine.geoms.geom import geom
     from plotnine.ggplot import ggplot
     from plotnine.guides.guide import guide
     from plotnine.iapi import strip_label_details
-    from plotnine.layer import Layers, layer  # noqa
+    from plotnine.layer import Layers, layer
     from plotnine.mapping.aes import aes
     from plotnine.positions.position import position
     from plotnine.scales.scale import scale, scale_continuous, scale_discrete
-    from plotnine.scales.scales import Scales  # noqa
+    from plotnine.scales.scales import Scales
     from plotnine.stats.stat import stat
     from plotnine.themes.theme import theme
     from plotnine.watermark import watermark

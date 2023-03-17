@@ -1,13 +1,11 @@
 from warnings import warn
 
-from mizani.palettes import manual_pal
-
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import alias
 from .scale import scale_continuous, scale_discrete
 
-linetypes = ["solid", "dashed", "dashdot", "dotted"]
+LINETYPES = ["solid", "dashed", "dashdot", "dotted"]
 
 
 @document
@@ -28,7 +26,12 @@ class scale_linetype(scale_discrete):
     """
 
     _aesthetics = ["linetype"]
-    palette = staticmethod(manual_pal(linetypes))
+
+    def __init__(self, **kwargs):
+        from mizani.palettes import manual_pal
+
+        self.palette = manual_pal(LINETYPES)
+        super().__init__(**kwargs)
 
 
 @document

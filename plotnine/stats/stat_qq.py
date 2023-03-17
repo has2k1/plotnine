@@ -1,11 +1,9 @@
 import numpy as np
 import pandas as pd
-from scipy.stats.mstats import plotting_positions
 
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
-from .distributions import get_continuous_distribution
 from .stat import stat
 
 
@@ -70,6 +68,10 @@ class stat_qq(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        from scipy.stats.mstats import plotting_positions
+
+        from .distributions import get_continuous_distribution
+
         sample = data["sample"].sort_values().values
         alpha, beta = params["alpha_beta"]
         quantiles = params["quantiles"]

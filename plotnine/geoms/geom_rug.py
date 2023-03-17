@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import typing
 
-import matplotlib.collections as mcoll
 import numpy as np
 
 from ..coords import coord_flip
@@ -62,6 +61,8 @@ class geom_rug(geom):
         ax: Axes,
         **params: Any,
     ):
+        from matplotlib.collections import LineCollection
+
         data = coord.transform(data, panel_params)
         sides = params["sides"]
 
@@ -110,7 +111,7 @@ class geom_rug(geom):
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         color = to_rgba(data["color"], data["alpha"])
-        coll = mcoll.LineCollection(
+        coll = LineCollection(
             rugs,
             edgecolor=color,
             linewidth=data["size"],

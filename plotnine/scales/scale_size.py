@@ -2,7 +2,6 @@ from warnings import warn
 
 import numpy as np
 from mizani.bounds import rescale_max
-from mizani.palettes import abs_area, area_pal, rescale_pal
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
@@ -70,6 +69,8 @@ class scale_size_continuous(scale_continuous):
     _aesthetics = ["size"]
 
     def __init__(self, range=(1, 6), **kwargs):
+        from mizani.palettes import area_pal
+
         # TODO: fix types in mizani
         self.palette = area_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
@@ -94,6 +95,8 @@ class scale_size_radius(scale_continuous):
     _aesthetics = ["size"]
 
     def __init__(self, range=(1, 6), **kwargs):
+        from mizani.palettes import rescale_pal
+
         # TODO: fix types in mizani
         self.palette = rescale_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
@@ -115,6 +118,8 @@ class scale_size_area(scale_continuous):
     rescaler = staticmethod(rescale_max)
 
     def __init__(self, max_size=6, **kwargs):
+        from mizani.palettes import abs_area
+
         # TODO: fix types in mizani
         self.palette = abs_area(max_size)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
@@ -136,6 +141,8 @@ class scale_size_datetime(scale_datetime):
     _aesthetics = ["size"]
 
     def __init__(self, range=(1, 6), **kwargs):
+        from mizani.palettes import area_pal
+
         # TODO: fix types in mizani
         self.palette = area_pal(range)  # pyright: ignore
         scale_datetime.__init__(self, **kwargs)

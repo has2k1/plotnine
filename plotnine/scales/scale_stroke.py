@@ -1,7 +1,6 @@
 from warnings import warn
 
 import numpy as np
-from mizani.palettes import rescale_pal
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
@@ -25,6 +24,8 @@ class scale_stroke_continuous(scale_continuous):
     _aesthetics = ["stroke"]
 
     def __init__(self, range=(1, 6), **kwargs):
+        from mizani.palettes import rescale_pal
+
         # TODO: fix types in mizani
         self.palette = rescale_pal(range)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)

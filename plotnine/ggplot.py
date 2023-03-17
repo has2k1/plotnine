@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 import typing
 from collections.abc import Sequence
 from copy import deepcopy
@@ -10,13 +9,7 @@ from types import SimpleNamespace as NS
 from typing import Any, Dict, Iterable, Optional, Union
 from warnings import warn
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.transforms as mtransforms
 import pandas as pd
-from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.offsetbox import AnchoredOffsetbox
-from patsy.eval import EvalEnvironment
 
 from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
@@ -43,6 +36,7 @@ if typing.TYPE_CHECKING:
         Axes,
         Coord,
         DataLike,
+        EvalEnvironment,
         Facet,
         Figure,
         Layer,
@@ -50,10 +44,6 @@ if typing.TYPE_CHECKING:
         Theme,
         Watermark,
     )
-
-# Show plots if in interactive mode
-if sys.flags.interactive:
-    plt.ion()
 
 
 class ggplot:
@@ -87,6 +77,8 @@ class ggplot:
         mapping: aes | None = None,
         environment: EvalEnvironment | None = None,
     ):
+        from patsy.eval import EvalEnvironment
+
         # Allow some sloppiness
         data, mapping = order_as_data_mapping(data, mapping)
         self.data = data
@@ -362,6 +354,8 @@ class ggplot:
         """
         Create Matplotlib figure and axes
         """
+        import matplotlib.pyplot as plt
+
         # Good for development
         if get_option("close_all_figures"):
             plt.close("all")
@@ -424,6 +418,8 @@ class ggplot:
         """
         Draw legend onto the figure
         """
+        from matplotlib.offsetbox import AnchoredOffsetbox
+
         legend_box = self.guides.build(self)
         if not legend_box:
             return
@@ -490,6 +486,11 @@ class ggplot:
         """
         Draw x and y labels onto the figure
         """
+        from matplotlib.transforms import (
+            IdentityTransform,
+            blended_transform_factory,
+        )
+
         # This is very laboured. Should be changed when MPL
         # finally has a constraint based layout manager.
         figure = self.figure
@@ -517,14 +518,10 @@ class ggplot:
         ylabel = self.facet.first_ax.set_ylabel(labels.y, labelpad=pad_y)
 
         xlabel.set_transform(
-            mtransforms.blended_transform_factory(
-                figure.transFigure, mtransforms.IdentityTransform()
-            )
+            blended_transform_factory(figure.transFigure, IdentityTransform())
         )
         ylabel.set_transform(
-            mtransforms.blended_transform_factory(
-                mtransforms.IdentityTransform(), figure.transFigure
-            )
+            blended_transform_factory(IdentityTransform(), figure.transFigure)
         )
 
         theme._targets["axis_title_x"] = xlabel
@@ -847,6 +844,8 @@ def save_as_pdf_pages(
     >>> plot.save('filename.pdf', height=6, width=8)
     >>> save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
     """
+    from matplotlib.backends.backend_pdf import PdfPages
+
     # as in ggplot.save()
     fig_kwargs = {"bbox_inches": "tight"}
     fig_kwargs.update(kwargs)
@@ -898,6 +897,8 @@ class plot_context:
         """
         Enclose in matplolib & pandas environments
         """
+        import matplotlib as mpl
+
         self.plot.theme._targets = {}
         self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
         # Pandas deprecated is_copy, and when we create new dataframes
@@ -914,6 +915,8 @@ class plot_context:
         """
         Exit matplotlib & pandas environments
         """
+        import matplotlib.pyplot as plt
+
         if exc_type is None:
             if self.show:
                 plt.show()

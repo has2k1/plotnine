@@ -3,8 +3,6 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-import statsmodels.api as sm
-from scipy.stats import iqr
 
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -152,6 +150,8 @@ def compute_density(x, weight, range, **params):
     """
     Compute density
     """
+    import statsmodels.api as sm
+
     x = np.asarray(x, dtype=float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]
@@ -254,6 +254,8 @@ def nrd0(x):
     out : float
         Bandwidth of x
     """
+    from scipy.stats import iqr
+
     n = len(x)
     if n < 1:
         raise ValueError(

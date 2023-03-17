@@ -3,7 +3,6 @@ from __future__ import annotations
 import itertools
 import types
 import typing
-from contextlib import suppress
 from copy import copy, deepcopy
 from warnings import warn
 
@@ -16,21 +15,16 @@ from ..scales.scales import Scales
 from ..utils import cross_join, match
 from .strips import Strips
 
-# For default matplotlib backend
-with suppress(ImportError):
-    from matplotlib.gridspec import GridSpec
-    from matplotlib.ticker import FixedFormatter, locale
-
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional
 
     import numpy.typing as npt
-    from patsy.eval import EvalEnvironment
 
     from plotnine.iapi import layout_details, panel_view
     from plotnine.typing import (
         Axes,
         Coord,
+        EvalEnvironment,
         Figure,
         Ggplot,
         Layers,
@@ -318,6 +312,8 @@ class facet:
         ax : Axes
             Axes
         """
+        from .._mpl.ticker import MyFixedFormatter
+
         # limits
         ax.set_xlim(panel_params.x.range)
         ax.set_ylim(panel_params.y.range)
@@ -377,6 +373,8 @@ class facet:
         """
         Create suplots and return axs
         """
+        from matplotlib.gridspec import GridSpec
+
         num_panels = len(layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
         space = self.space
@@ -692,17 +690,3 @@ def eval_facet_vars(
         facet_vals[name] = res
 
     return facet_vals
-
-
-# pyright: reportUnboundVariable=false
-class MyFixedFormatter(FixedFormatter):
-    """
-    Override MPL fixedformatter for better formatting
-    """
-
-    def format_data(self, value: float) -> str:
-        """
-        Return a formatted string representation of a number.
-        """
-        s = locale.format_string("%1.10e", (value,))
-        return self.fix_minus(s)

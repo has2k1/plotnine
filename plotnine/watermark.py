@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import typing
 
-import matplotlib.image as mimage
-
 if typing.TYPE_CHECKING:
     import pathlib
     from typing import Any
@@ -66,5 +64,7 @@ class watermark:
         figure : Matplotlib.figure.Figure
             Matplolib figure on which to draw
         """
-        X = mimage.imread(self.filename)
+        from matplotlib.image import imread
+
+        X = imread(self.filename)
         figure.figimage(X, **self.kwargs)

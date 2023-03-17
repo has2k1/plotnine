@@ -8,9 +8,6 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
-from mizani.breaks import date_breaks
-from mizani.formatters import date_format
-from mizani.transforms import gettrans
 
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -727,6 +724,8 @@ class scale_continuous(scale):
 
     @trans.setter
     def trans(self, value: Trans | str | Type[Trans]):
+        from mizani.transforms import gettrans
+
         t: Trans = gettrans(value)
         self._check_trans(t)
         self._trans = t
@@ -1098,6 +1097,9 @@ class scale_datetime(scale_continuous):
     _trans = "datetime"
 
     def __init__(self, **kwargs):
+        from mizani.breaks import date_breaks
+        from mizani.formatters import date_format
+
         # Permit the use of the general parameters for
         # specifying the format strings
         with suppress(KeyError):

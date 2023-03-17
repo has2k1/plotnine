@@ -3,8 +3,6 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-from matplotlib.collections import PolyCollection
-from matplotlib.patches import Rectangle
 
 from ..doctools import document
 from ..utils import SIZE_FACTOR, to_rgba
@@ -73,6 +71,8 @@ class geom_polygon(geom):
         ax: Axes,
         **params: Any,
     ):
+        from matplotlib.collections import PolyCollection
+
         data = coord.transform(data, panel_params, munch=True)
         data["size"] *= SIZE_FACTOR
 
@@ -128,6 +128,8 @@ class geom_polygon(geom):
         -------
         out : DrawingArea
         """
+        from matplotlib.patches import Rectangle
+
         data["size"] *= SIZE_FACTOR
         # We take into account that the linewidth
         # bestrides the boundary of the rectangle

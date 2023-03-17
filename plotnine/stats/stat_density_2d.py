@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-from contourpy import contour_generator
-from mizani.breaks import extended_breaks
 
 from ..doctools import document
 from .density import get_var_type, kde
@@ -127,6 +125,8 @@ def contour_lines(X, Y, Z, levels):
     """
     Calculate contour lines
     """
+    from contourpy import contour_generator
+
     # Preparation of values and the creating of contours is
     # adapted from MPL with some adjustments.
     X = np.asarray(X, dtype=np.float64)
@@ -138,6 +138,8 @@ def contour_lines(X, Y, Z, levels):
     )
 
     if isinstance(levels, int):
+        from mizani.breaks import extended_breaks
+
         levels = extended_breaks(n=levels)((zmin, zmax))
 
     # The counter_generator gives us a list of vertices that

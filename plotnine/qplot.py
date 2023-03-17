@@ -6,7 +6,6 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-from patsy.eval import EvalEnvironment
 
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_grid, facet_null, facet_wrap
@@ -85,9 +84,10 @@ def qplot(
     p : ggplot
         ggplot object
     """
+    from patsy.eval import EvalEnvironment
+
     # Extract all recognizable aesthetic mappings from the parameters
     # String values e.g  "I('red')", "I(4)" are not treated as mappings
-
     environment = EvalEnvironment.capture(1)
     aesthetics = {} if x is None else {"x": x}
     if y is not None:

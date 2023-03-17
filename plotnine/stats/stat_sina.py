@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from scipy.interpolate import interp1d
 
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -203,6 +202,8 @@ class stat_sina(stat):
             data["density"] = 0
             data["scaled"] = 1
         elif params["method"] == "density":
+            from scipy.interpolate import interp1d
+
             # density kernel estimation
             range_y = data["y"].min(), data["y"].max()
             dens = compute_density(data["y"], weight, range_y, **params)

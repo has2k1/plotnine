@@ -3,10 +3,8 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
-import matplotlib.lines as mlines
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Rectangle
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
@@ -182,6 +180,9 @@ class geom_crossbar(geom):
         -------
         out : DrawingArea
         """
+        from matplotlib.lines import Line2D
+        from matplotlib.patches import Rectangle
+
         data["size"] *= SIZE_FACTOR
 
         # background
@@ -202,7 +203,7 @@ class geom_crossbar(geom):
         )
         da.add_artist(bg)
 
-        strike = mlines.Line2D(
+        strike = Line2D(
             [da.width * 0.125, da.width * 0.875],
             [da.height * 0.5, da.height * 0.5],
             linestyle=data["linetype"],

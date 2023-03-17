@@ -3,7 +3,6 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
-import matplotlib.lines as mlines
 import numpy as np
 import pandas as pd
 
@@ -117,10 +116,12 @@ class geom_vline(geom):
         -------
         out : DrawingArea
         """
+        from matplotlib.lines import Line2D
+
         x = [0.5 * da.width] * 2
         y = [0, da.height]
         data["size"] *= SIZE_FACTOR
-        key = mlines.Line2D(
+        key = Line2D(
             x,
             y,
             alpha=data["alpha"],

@@ -7,17 +7,9 @@ kernel densities with the wider scientific python ecosystem.
 Credit: Jake VanderPlas for the original kde_* functions
 https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
 """
-from contextlib import suppress
 
 import numpy as np
 import pandas.api.types as pdtypes
-from scipy.stats import gaussian_kde
-from statsmodels.nonparametric.kde import KDEUnivariate
-from statsmodels.nonparametric.kernel_density import KDEMultivariate
-
-# Not core dependency
-with suppress(ImportError):
-    from sklearn.neighbors import KernelDensity
 
 
 def kde_scipy(data, grid, **kwargs):
@@ -40,6 +32,8 @@ def kde_scipy(data, grid, **kwargs):
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
+    from scipy.stats import gaussian_kde
+
     kde = gaussian_kde(data.T, **kwargs)
     return kde.evaluate(grid.T)
 
@@ -64,6 +58,8 @@ def kde_statsmodels_u(data, grid, **kwargs):
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
+    from statsmodels.nonparametric.kde import KDEUnivariate
+
     kde = KDEUnivariate(data)
     kde.fit(**kwargs)
     return kde.evaluate(grid)
@@ -89,6 +85,8 @@ def kde_statsmodels_m(data, grid, **kwargs):
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
+    from statsmodels.nonparametric.kernel_density import KDEMultivariate
+
     kde = KDEMultivariate(data, **kwargs)
     return kde.pdf(grid)
 
@@ -113,6 +111,11 @@ def kde_sklearn(data, grid, **kwargs):
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
+    # Not core dependency
+    try:
+        from sklearn.neighbors import KernelDensity
+    except ImportError as err:
+        raise ImportError("scikit-learn is not installed") from err
     kde_skl = KernelDensity(**kwargs)
     kde_skl.fit(data)
     # score_samples() returns the log-likelihood of the samples

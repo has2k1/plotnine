@@ -4,19 +4,8 @@ import hashlib
 import typing
 from warnings import warn
 
-import matplotlib.collections as mcoll
-import matplotlib.text as mtext
-import matplotlib.transforms as mtransforms
 import numpy as np
 import pandas as pd
-from matplotlib.colors import ListedColormap
-from matplotlib.offsetbox import (
-    AuxTransformBox,
-    DrawingArea,
-    HPacker,
-    TextArea,
-    VPacker,
-)
 from mizani.bounds import rescale
 
 from ..exceptions import PlotnineWarning
@@ -155,6 +144,13 @@ class guide_colorbar(guide):
         out : matplotlib.offsetbox.Offsetbox
             A drawing of this legend
         """
+        from matplotlib.offsetbox import (
+            DrawingArea,
+            HPacker,
+            TextArea,
+            VPacker,
+        )
+
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbars = len(self.bar)
@@ -270,6 +266,9 @@ def add_interpolated_colorbar(da, colors, direction):
     """
     Add 'rastered' colorbar to DrawingArea
     """
+    from matplotlib.collections import QuadMesh
+    from matplotlib.colors import ListedColormap
+
     # Special case that arises due to not so useful
     # aesthetic mapping.
     if len(colors) == 1:
@@ -304,7 +303,7 @@ def add_interpolated_colorbar(da, colors, direction):
     # As a 3D (mesh_width x mesh_height x 2) coordinates array
     coordinates = np.stack([X, Y], axis=-1)
     cmap = ListedColormap(colors)
-    coll = mcoll.QuadMesh(
+    coll = QuadMesh(
         coordinates,
         antialiased=False,
         shading="gouraud",
@@ -319,6 +318,8 @@ def add_segmented_colorbar(da, colors, direction):
     """
     Add 'non-rastered' colorbar to DrawingArea
     """
+    from matplotlib.collections import PolyCollection
+
     nbreak = len(colors)
     if direction == "vertical":
         linewidth = da.height / nbreak
@@ -337,13 +338,15 @@ def add_segmented_colorbar(da, colors, direction):
             x2 = x1 + linewidth
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
 
-    coll = mcoll.PolyCollection(
+    coll = PolyCollection(
         verts, facecolors=colors, linewidth=0, antialiased=False
     )
     da.add_artist(coll)
 
 
 def add_ticks(da, locations, direction):
+    from matplotlib.collections import LineCollection
+
     segments = []
     if direction == "vertical":
         x1, x2, x3, x4 = np.array([0.0, 1 / 5, 4 / 5, 1.0]) * da.width
@@ -364,7 +367,7 @@ def add_ticks(da, locations, direction):
                 ]
             )
 
-    coll = mcoll.LineCollection(
+    coll = LineCollection(
         segments, color="#CCCCCC", linewidth=1, antialiased=False
     )
     da.add_artist(coll)
@@ -378,9 +381,12 @@ def create_labels(da, labels, locations, direction):
     # the text objects. We put two dummy children at
     # either end to gaurantee that when center packed
     # the labels in the labels_box matchup with the ticks.
+    from matplotlib.text import Text
+
+    from .._mpl.offsetbox import MyAuxTransformBox
+
     fontsize = 9
-    aux_transform = mtransforms.IdentityTransform()
-    labels_box = MyAuxTransformBox(aux_transform)
+    labels_box = MyAuxTransformBox()
     xs, ys = [0] * len(labels), locations
     ha, va = "left", "center"
 
@@ -390,14 +396,14 @@ def create_labels(da, labels, locations, direction):
         xs, ys = ys, xs
         ha, va = "center", "top"
         x2, y2 = da.width, 0
-    txt1 = mtext.Text(x1, y1, "", horizontalalignment=ha, verticalalignment=va)
-    txt2 = mtext.Text(x2, y2, "", horizontalalignment=ha, verticalalignment=va)
+    txt1 = Text(x1, y1, "", horizontalalignment=ha, verticalalignment=va)
+    txt2 = Text(x2, y2, "", horizontalalignment=ha, verticalalignment=va)
     labels_box.add_artist(txt1)
     labels_box.add_artist(txt2)
 
     legend_text = []
     for i, (x, y, text) in enumerate(zip(xs, ys, labels)):
-        txt = mtext.Text(
+        txt = Text(
             x,
             y,
             text,
@@ -411,36 +417,3 @@ def create_labels(da, labels, locations, direction):
 
 
 guide_colourbar = guide_colorbar
-
-
-# Fix AuxTransformBox, Adds a dpi_transform
-# See https://github.com/matplotlib/matplotlib/pull/7344
-class MyAuxTransformBox(AuxTransformBox):
-    def __init__(self, aux_transform):
-        AuxTransformBox.__init__(self, aux_transform)
-        self.dpi_transform = mtransforms.Affine2D()
-
-    def get_transform(self):
-        """
-        Return the :class:`~matplotlib.transforms.Transform` applied
-        to the children
-        """
-        return (
-            self.aux_transform
-            + self.ref_offset_transform
-            + self.dpi_transform
-            + self.offset_transform
-        )
-
-    def draw(self, renderer):
-        """
-        Draw the children
-        """
-        dpi_cor = renderer.points_to_pixels(1.0)
-        self.dpi_transform.clear()
-        self.dpi_transform.scale(dpi_cor, dpi_cor)
-
-        for c in self._children:
-            c.draw(renderer)
-
-        self.stale = False

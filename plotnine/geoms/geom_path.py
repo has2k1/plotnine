@@ -5,10 +5,6 @@ from collections import Counter
 from contextlib import suppress
 from warnings import warn
 
-import matplotlib.collections as mcoll
-import matplotlib.lines as mlines
-import matplotlib.patches as mpatches
-import matplotlib.path as mpath
 import numpy as np
 
 from ..doctools import document
@@ -189,10 +185,12 @@ class geom_path(geom):
         -------
         out : DrawingArea
         """
+        from matplotlib.lines import Line2D
+
         data["size"] *= SIZE_FACTOR
         x = [0, da.width]
         y = [0.5 * da.height] * 2
-        key = mlines.Line2D(
+        key = Line2D(
             x,
             y,
             alpha=data["alpha"],
@@ -289,6 +287,8 @@ class arrow:
             data["facecolor"] = data["color"]
 
         if not constant:
+            from matplotlib.collections import PathCollection
+
             # Get segments/points (x1, y1) -> (x2, y2)
             # for which to calculate the arrow heads
             idx1: list[int] = []
@@ -313,14 +313,16 @@ class arrow:
 
             if first:
                 paths = self.get_paths(x1, y1, x2, y2, panel_params, coord, ax)
-                coll = mcoll.PathCollection(paths, **d)
+                coll = PathCollection(paths, **d)
                 ax.add_collection(coll)
             if last:
                 x1, y1, x2, y2 = x2, y2, x1, y1
                 paths = self.get_paths(x1, y1, x2, y2, panel_params, coord, ax)
-                coll = mcoll.PathCollection(paths, **d)
+                coll = PathCollection(paths, **d)
                 ax.add_collection(coll)
         else:
+            from matplotlib.patches import PathPatch
+
             d = {
                 "zorder": params["zorder"],
                 "rasterized": params["raster"],
@@ -337,7 +339,7 @@ class arrow:
                 y1, y2 = data["y"].iloc[0:2]
                 x1, y1, x2, y2 = (np.array([i]) for i in (x1, y1, x2, y2))
                 paths = self.get_paths(x1, y1, x2, y2, panel_params, coord, ax)
-                patch = mpatches.PathPatch(paths[0], **d)
+                patch = PathPatch(paths[0], **d)
                 ax.add_artist(patch)
 
             if last:
@@ -346,7 +348,7 @@ class arrow:
                 x1, y1, x2, y2 = x2, y2, x1, y1
                 x1, y1, x2, y2 = (np.array([i]) for i in (x1, y1, x2, y2))
                 paths = self.get_paths(x1, y1, x2, y2, panel_params, coord, ax)
-                patch = mpatches.PathPatch(paths[0], **d)
+                patch = PathPatch(paths[0], **d)
                 ax.add_artist(patch)
 
     def get_paths(
@@ -389,7 +391,7 @@ class arrow:
         out : list of Path
             Paths that create arrow heads
         """
-        Path = mpath.Path
+        from matplotlib.path import Path
 
         # The arrowhead path has 3 vertices,
         # plus a dummy vertex for the STOP code
@@ -436,6 +438,8 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
     Draw independent line segments between all the
     points
     """
+    from matplotlib.collections import LineCollection
+
     color = to_rgba(data["color"], data["alpha"])
     # All we do is line-up all the points in a group
     # into segments, all in a single list.
@@ -460,7 +464,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
     linewidth = data.loc[indices, "size"]
     linestyle = data.loc[indices, "linetype"]
 
-    coll = mcoll.LineCollection(
+    coll = LineCollection(
         segments,
         edgecolor=edgecolor,
         linewidth=linewidth,
@@ -476,9 +480,11 @@ def _draw_lines(data: pd.DataFrame, ax: Axes, **params: Any):
     Draw a path with the same characteristics from the
     first point to the last point
     """
+    from matplotlib.lines import Line2D
+
     color = to_rgba(data["color"].iloc[0], data["alpha"].iloc[0])
     join_style = _get_joinstyle(data, params)
-    lines = mlines.Line2D(
+    lines = Line2D(
         data["x"],
         data["y"],
         color=color,

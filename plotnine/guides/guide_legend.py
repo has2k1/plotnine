@@ -9,12 +9,11 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-from matplotlib.offsetbox import HPacker, TextArea, VPacker
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
-from ..utils import SIZE_FACTOR, ColoredDrawingArea, remove_missing
+from ..utils import SIZE_FACTOR, remove_missing
 from .guide import guide
 
 if typing.TYPE_CHECKING:
@@ -289,6 +288,10 @@ class guide_legend(guide):
         out : matplotlib.offsetbox.Offsetbox
             A drawing of this legend
         """
+        from matplotlib.offsetbox import HPacker, TextArea, VPacker
+
+        from .._mpl.offsetbox import ColoredDrawingArea
+
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbreak = len(self.key)

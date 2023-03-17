@@ -4,16 +4,6 @@ import typing
 
 import numpy as np
 import pandas as pd
-from matplotlib.collections import LineCollection, PatchCollection
-from matplotlib.patches import PathPatch
-from matplotlib.path import Path
-
-try:
-    import geopandas  # noqa: F401
-except ImportError:
-    HAS_GEOPANDAS = False
-else:
-    HAS_GEOPANDAS = True
 
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -29,7 +19,15 @@ if typing.TYPE_CHECKING:
     from shapely.geometry.polygon import LinearRing, Polygon
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Aes, Axes, Coord, DataLike, DrawingArea, Layer
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+        DrawingArea,
+        Layer,
+        PathPatch,
+    )
 
 
 @document
@@ -74,14 +72,9 @@ class geom_map(geom):
         data: DataLike | None = None,
         **kwargs: Any,
     ):
-        if not HAS_GEOPANDAS:
-            raise PlotnineError(
-                "geom_map requires geopandas. " "Please install geopandas."
-            )
         geom.__init__(self, mapping, data, **kwargs)
         # Almost all geodataframes loaded from shapefiles
         # have a geometry column.
-        assert self.mapping is not None
         if "geometry" not in self.mapping:
             self.mapping["geometry"] = "geometry"
 
@@ -139,6 +132,8 @@ class geom_map(geom):
 
         geom_type = data.geometry.iloc[0].geom_type
         if geom_type in ("Polygon", "MultiPolygon"):
+            from matplotlib.collections import PatchCollection
+
             data["size"] *= SIZE_FACTOR
             patches = [PolygonPatch(g) for g in data["geometry"]]
             coll = PatchCollection(
@@ -177,6 +172,8 @@ class geom_map(geom):
             data["y"] = [p[1] for p in data["points"]]
             geom_point.draw_group(data, panel_params, coord, ax, **params)
         elif geom_type in ("LineString", "MultiLineString"):
+            from matplotlib.collections import LineCollection
+
             data["size"] *= SIZE_FACTOR
             data["color"] = to_rgba(data["color"], data["alpha"])
             segments = []
@@ -245,6 +242,8 @@ def PolygonPatch(
     by Sean Gillies (BSD license, https://pypi.org/project/descartes)
     which is nolonger being maintained.
     """
+    from matplotlib.patches import PathPatch
+    from matplotlib.path import Path
 
     def cw_coords(ring: LinearRing) -> npt.NDArray[Any]:
         """
@@ -302,3 +301,12 @@ def PolygonPatch(
 
     path = Path.make_compound_path(*_exterior, *_interior)
     return PathPatch(path)
+
+
+def check_geopandas():
+    try:
+        import geopandas  # noqa: F401
+    except ImportError:
+        raise PlotnineError(
+            "geom_map requires geopandas. Please install geopandas."
+        )

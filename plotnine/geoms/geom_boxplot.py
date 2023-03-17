@@ -3,10 +3,8 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
-import matplotlib.lines as mlines
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Rectangle
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
@@ -265,6 +263,9 @@ class geom_boxplot(geom):
         -------
         out : DrawingArea
         """
+        from matplotlib.lines import Line2D
+        from matplotlib.patches import Rectangle
+
         # box
         facecolor = to_rgba(data["fill"], data["alpha"])
         if facecolor is None:
@@ -289,7 +290,7 @@ class geom_boxplot(geom):
         kwargs["linewidth"] *= SIZE_FACTOR
 
         # middle strike through
-        strike = mlines.Line2D(
+        strike = Line2D(
             [da.width * 0.125, da.width * 0.875],
             [da.height * 0.5, da.height * 0.5],
             **kwargs,
@@ -297,14 +298,14 @@ class geom_boxplot(geom):
         da.add_artist(strike)
 
         # whiskers
-        top = mlines.Line2D(
+        top = Line2D(
             [da.width * 0.5, da.width * 0.5],
             [da.height * 0.75, da.height * 0.9],
             **kwargs,
         )
         da.add_artist(top)
 
-        bottom = mlines.Line2D(
+        bottom = Line2D(
             [da.width * 0.5, da.width * 0.5],
             [da.height * 0.25, da.height * 0.1],
             **kwargs,

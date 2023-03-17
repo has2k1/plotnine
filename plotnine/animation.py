@@ -3,7 +3,6 @@ from __future__ import annotations
 import typing
 from copy import copy
 
-import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.animation import ArtistAnimation
 
@@ -96,6 +95,8 @@ class PlotnineAnimation(ArtistAnimation):
         artists : list
             List of :class:`Matplotlib.artist.Artist`
         """
+        import matplotlib.pyplot as plt
+
         # For keeping track of artists for each frame
         artist_offsets: dict[str, list[int]] = {
             "collections": [],

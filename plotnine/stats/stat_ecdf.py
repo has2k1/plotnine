@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from statsmodels.distributions.empirical_distribution import ECDF
 
 from ..doctools import document
 from ..mapping.evaluation import after_stat
@@ -50,6 +49,8 @@ class stat_ecdf(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        from statsmodels.distributions.empirical_distribution import ECDF
+
         # If n is None, use raw values; otherwise interpolate
         if params["n"] is None:
             x = np.unique(data["x"])

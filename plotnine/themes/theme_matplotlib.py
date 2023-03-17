@@ -1,5 +1,3 @@
-import matplotlib as mpl
-
 from ..options import get_option
 from .elements import element_rect, element_text
 from .theme import theme
@@ -25,6 +23,8 @@ class theme_matplotlib(theme):
     """
 
     def __init__(self, rc=None, fname=None, use_defaults=True):
+        import matplotlib as mpl
+
         theme.__init__(
             self,
             text=element_text(

@@ -9,9 +9,10 @@ from __future__ import annotations
 import typing
 from copy import copy
 from dataclasses import dataclass, fields
-from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
 
 if typing.TYPE_CHECKING:
+    from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
+
     from plotnine.typing import (
         Axes,
         CoordRange,
