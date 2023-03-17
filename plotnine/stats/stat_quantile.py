@@ -1,7 +1,6 @@
 from warnings import warn
 
 import pandas as pd
-import statsmodels.formula.api as smf
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
@@ -81,6 +80,8 @@ def quant_pred(q, data, **params):
     """
     Quantile precitions
     """
+    import statsmodels.formula.api as smf
+
     mod = smf.quantreg(params["formula"], data)
     reg_res = mod.fit(q=q, **params["method_args"])
     out = pd.DataFrame(

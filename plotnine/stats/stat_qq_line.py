@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
-from scipy.stats.mstats import mquantiles
 
 from ..doctools import document
 from ..exceptions import PlotnineError
-from .distributions import get_continuous_distribution
 from .stat import stat
 from .stat_qq import stat_qq
 
@@ -72,6 +70,10 @@ class stat_qq_line(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        from scipy.stats.mstats import mquantiles
+
+        from .distributions import get_continuous_distribution
+
         line_p = params["line_p"]
         dparams = params["dparams"]
 

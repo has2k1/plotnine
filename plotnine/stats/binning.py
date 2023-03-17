@@ -4,8 +4,6 @@ import typing
 
 import numpy as np
 import pandas as pd
-from mizani.utils import round_any
-from scipy.stats import iqr
 
 from ..exceptions import PlotnineError
 from ..scales.scale import scale_discrete
@@ -29,6 +27,8 @@ def freedman_diaconis_bins(a):
     """
     Calculate number of hist bins using Freedman-Diaconis rule.
     """
+    from scipy.stats import iqr
+
     # From http://stats.stackexchange.com/questions/798/
     a = np.asarray(a)
     h = 2 * iqr(a, nan_policy="omit") / (len(a) ** (1 / 3))
@@ -257,6 +257,8 @@ def fuzzybreaks(
     -------
     out : array_like
     """
+    from mizani.utils import round_any
+
     # Bins for categorical data should take the width
     # of one level, and should show up centered over
     # their tick marks. All other parameters are ignored.

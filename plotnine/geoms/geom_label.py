@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import typing
 
-from matplotlib.patches import Rectangle
-
 from ..doctools import document
 from .geom_text import geom_text
 
@@ -102,6 +100,8 @@ class geom_label(geom_text):
         -------
         out : DrawingArea
         """
+        from matplotlib.patches import Rectangle
+
         if data["fill"]:
             rect = Rectangle(
                 (0, 0),

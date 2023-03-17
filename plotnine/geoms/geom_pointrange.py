@@ -83,7 +83,6 @@ class geom_pointrange(geom):
         -------
         out : DrawingArea
         """
-        assert lyr.geom is not None
         geom_path.draw_legend(data, da, lyr)
         data["size"] = data["size"] * lyr.geom.params["fatten"]
         data["stroke"] = geom_point.DEFAULT_AES["stroke"]

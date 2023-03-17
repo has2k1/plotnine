@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from scipy.spatial import ConvexHull
 
 from ..doctools import document
 from .stat import stat
@@ -50,6 +49,8 @@ class stat_hull(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        from scipy.spatial import ConvexHull
+
         hull = ConvexHull(
             data[["x", "y"]], qhull_options=params["qhull_options"]
         )

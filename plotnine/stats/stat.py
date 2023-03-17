@@ -22,12 +22,11 @@ from ..utils import (
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from patsy.eval import EvalEnvironment
-
     from plotnine.iapi import pos_scales
     from plotnine.typing import (
         Aes,
         DataLike,
+        EvalEnvironment,
         Geom,
         Layout,
     )

@@ -5,8 +5,6 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
-from scipy import linalg
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
@@ -55,6 +53,9 @@ class stat_ellipse(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        import scipy.stats as stats
+        from scipy import linalg
+
         level = params["level"]
         segments = params["segments"]
         type_ = params["type"]
@@ -170,6 +171,7 @@ def cov_trob(
       Statistics with S-PLUS*. Third Edition. Springer.
 
     """
+    from scipy import linalg
 
     def test_values(x):
         if pd.isnull(x).any() or np.isinf(x).any():

@@ -4,7 +4,6 @@ import typing
 
 import numpy as np
 import pandas as pd
-from scipy.interpolate import interp1d
 
 from ..doctools import document
 from ..utils import groupby_apply, interleave, resolution
@@ -182,6 +181,8 @@ def make_quantile_df(
     """
     Return a dataframe with info needed to draw quantile segments
     """
+    from scipy.interpolate import interp1d
+
     dens = data["density"].cumsum() / data["density"].sum()
     ecdf = interp1d(dens, data["y"], assume_sorted=True)
     ys = ecdf(draw_quantiles)

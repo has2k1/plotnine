@@ -1,16 +1,5 @@
 from warnings import warn
 
-from mizani.bounds import rescale_mid
-from mizani.palettes import (
-    brewer_pal,
-    cmap_d_pal,
-    cmap_pal,
-    desaturate_pal,
-    gradient_n_pal,
-    grey_pal,
-    hue_pal,
-)
-
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
@@ -48,6 +37,8 @@ class scale_color_hue(scale_discrete):
     na_value = "#7F7F7F"
 
     def __init__(self, h=0.01, l=0.6, s=0.65, color_space="hls", **kwargs):
+        from mizani.palettes import hue_pal
+
         self.palette = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
@@ -94,6 +85,8 @@ class scale_color_brewer(scale_discrete):
     na_value = "#7F7F7F"
 
     def __init__(self, type="seq", palette=1, direction=1, **kwargs):
+        from mizani.palettes import brewer_pal
+
         self.palette = brewer_pal(type, palette, direction=direction)
         scale_discrete.__init__(self, **kwargs)
 
@@ -130,6 +123,8 @@ class scale_color_grey(scale_discrete):
     _aesthetics = ["color"]
 
     def __init__(self, start=0.2, end=0.8, **kwargs):
+        from mizani.palettes import grey_pal
+
         # TODO: fix types in mizani
         self.palette = grey_pal(start, end)  # pyright: ignore
         scale_discrete.__init__(self, **kwargs)
@@ -180,6 +175,8 @@ class scale_color_gradient(scale_continuous):
         """
         Create colormap that will be used by the palette
         """
+        from mizani.palettes import gradient_n_pal
+
         # TODO: fix types in mizani
         self.palette = gradient_n_pal(
             [low, high], name="gradient"
@@ -225,6 +222,8 @@ class scale_color_desaturate(scale_continuous):
     na_value = "#7F7F7F"
 
     def __init__(self, color="red", prop=0, reverse=False, **kwargs):
+        from mizani.palettes import desaturate_pal
+
         # TODO: fix types in mizani
         self.palette = desaturate_pal(color, prop, reverse)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
@@ -280,6 +279,9 @@ class scale_color_gradient2(scale_continuous):
         midpoint=0,
         **kwargs,
     ):
+        from mizani.bounds import rescale_mid
+        from mizani.palettes import gradient_n_pal
+
         # All rescale functions should have the same signature
         def _rescale_mid(*args, **kwargs):
             return rescale_mid(*args, mid=midpoint, **kwargs)
@@ -333,6 +335,8 @@ class scale_color_gradientn(scale_continuous):
     na_value = "#7F7F7F"
 
     def __init__(self, colors, values=None, **kwargs):
+        from mizani.palettes import gradient_n_pal
+
         # TODO: fix types in mizani
         self.palette = gradient_n_pal(
             colors, values, "gradientn"
@@ -394,6 +398,8 @@ class scale_color_distiller(scale_color_gradientn):
         """
         Create colormap that will be used by the palette
         """
+        from mizani.palettes import brewer_pal
+
         if type.lower() in ("qual", "qualitative"):
             warn(
                 "Using a discrete color palette in a continuous scale."
@@ -453,6 +459,8 @@ class scale_color_cmap(scale_continuous):
     na_value = "#7F7F7F"
 
     def __init__(self, cmap_name="viridis", lut=None, **kwargs):
+        from mizani.palettes import cmap_pal
+
         # TODO: fix types in mizani
         self.palette = cmap_pal(cmap_name, lut)  # pyright: ignore
         super().__init__(**kwargs)
@@ -502,6 +510,8 @@ class scale_color_cmap_d(scale_discrete):
     na_value = "#7F7F7F"
 
     def __init__(self, name="viridis", lut=None, **kwargs):
+        from mizani.palettes import cmap_d_pal
+
         self.palette = cmap_d_pal(name, lut)
         super().__init__(**kwargs)
 

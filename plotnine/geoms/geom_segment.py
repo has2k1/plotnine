@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import typing
 
-import matplotlib.collections as mcoll
 import numpy as np
 import pandas as pd
 
@@ -69,6 +68,8 @@ class geom_segment(geom):
         ax: Axes,
         **params: Any,
     ):
+        from matplotlib.collections import LineCollection
+
         data = coord.transform(data, panel_params)
         data["size"] *= SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
@@ -78,7 +79,7 @@ class geom_segment(geom):
         x = interleave(data["x"], data["xend"])
         y = interleave(data["y"], data["yend"])
         segments = make_line_segments(x, y, ispath=False)
-        coll = mcoll.LineCollection(
+        coll = LineCollection(
             segments,
             edgecolor=color,
             linewidth=data["size"],

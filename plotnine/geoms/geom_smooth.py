@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import typing
 
-from matplotlib.patches import Rectangle
-
 from ..doctools import document
 from .geom import geom
 from .geom_line import geom_line, geom_path
@@ -107,8 +105,7 @@ class geom_smooth(geom):
         -------
         out : DrawingArea
         """
-        assert lyr.stat is not None
-        assert lyr.geom is not None
+        from matplotlib.patches import Rectangle
 
         try:
             has_se = lyr.stat.params["se"]

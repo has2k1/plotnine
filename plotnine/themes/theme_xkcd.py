@@ -1,7 +1,5 @@
 from copy import copy, deepcopy
 
-from matplotlib import patheffects
-
 from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme
 from .theme_gray import theme_gray
@@ -42,6 +40,8 @@ class theme_xkcd(theme_gray):
         stroke_size=4,
         stroke_color="white",
     ):
+        from matplotlib import patheffects
+
         theme_gray.__init__(self, base_size)
         self += theme(
             text=element_text(family=["xkcd", "Humor Sans", "Comic Sans MS"]),

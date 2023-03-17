@@ -3,9 +3,6 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
-import matplotlib.collections as mcoll
-import matplotlib.lines as mlines
-import matplotlib.patches as mpatches
 import numpy as np
 
 from ..doctools import document
@@ -185,6 +182,9 @@ class geom_dotplot(geom):
         ax: Axes,
         **params: Any,
     ):
+        from matplotlib.collections import PatchCollection
+        from matplotlib.patches import Ellipse
+
         data = coord.transform(data, panel_params)
         fill = to_rgba(data["fill"], data["alpha"])
         color = to_rgba(data["color"], data["alpha"])
@@ -214,10 +214,10 @@ class geom_dotplot(geom):
 
         circles = []
         for xy in zip(xpos, ypos):
-            patch = mpatches.Ellipse(xy, width=width, height=height)
+            patch = Ellipse(xy, width=width, height=height)
             circles.append(patch)
 
-        coll = mcoll.PatchCollection(
+        coll = PatchCollection(
             circles,
             edgecolors=color,
             facecolors=fill,
@@ -245,7 +245,9 @@ class geom_dotplot(geom):
         -------
         out : DrawingArea
         """
-        key = mlines.Line2D(
+        from matplotlib.lines import Line2D
+
+        key = Line2D(
             [0.5 * da.width],
             [0.5 * da.height],
             alpha=data["alpha"],

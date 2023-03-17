@@ -3,9 +3,7 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
-import matplotlib.image as mimage
 import numpy as np
-from matplotlib.colors import to_rgba_array
 
 from ..coords import coord_cartesian
 from ..doctools import document
@@ -144,6 +142,9 @@ class geom_raster(geom):
         """
         Plot all groups
         """
+        from matplotlib.colors import to_rgba_array
+        from matplotlib.image import AxesImage
+
         if not isinstance(coord, coord_cartesian):
             raise PlotnineError(
                 "geom_raster only works with cartesian coordinates"
@@ -172,7 +173,7 @@ class geom_raster(geom):
         X[:, :, 3] = 0
         X[yidx, xidx] = facecolor
 
-        im = mimage.AxesImage(
+        im = AxesImage(
             ax,
             data=X,
             interpolation=params["interpolation"],

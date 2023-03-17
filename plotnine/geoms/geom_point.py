@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import typing
 
-import matplotlib.lines as mlines
 import numpy as np
 
 from ..doctools import document
@@ -137,13 +136,15 @@ class geom_point(geom):
         -------
         out : DrawingArea
         """
+        from matplotlib.lines import Line2D
+
         if data["fill"] is None:
             data["fill"] = data["color"]
 
         size = (data["size"] + data["stroke"]) * SIZE_FACTOR
         stroke = data["stroke"] * SIZE_FACTOR
 
-        key = mlines.Line2D(
+        key = Line2D(
             [0.5 * da.width],
             [0.5 * da.height],
             alpha=data["alpha"],

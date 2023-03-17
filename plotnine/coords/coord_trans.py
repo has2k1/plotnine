@@ -5,9 +5,6 @@ from types import SimpleNamespace as NS
 from typing import overload
 from warnings import warn
 
-from mizani.bounds import squish_infinite
-from mizani.transforms import gettrans
-
 from ..exceptions import PlotnineWarning
 from ..iapi import panel_ranges, panel_view
 from ..positions.position import transform_position
@@ -63,6 +60,8 @@ class coord_trans(coord):
         ylim: Optional[TupleFloat2] = None,
         expand: bool = True,
     ):
+        from mizani.transforms import gettrans
+
         self.trans_x = gettrans(x)
         self.trans_y = gettrans(y)
         self.limits = NS(x=xlim, y=ylim)
@@ -71,6 +70,8 @@ class coord_trans(coord):
     def transform(
         self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
     ) -> pd.DataFrame:
+        from mizani.bounds import squish_infinite
+
         if not self.is_linear and munch:
             data = self.munch(data, panel_params)
 

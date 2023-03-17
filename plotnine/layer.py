@@ -14,12 +14,11 @@ from .utils import array_kind, check_required_aesthetics, ninteraction
 if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, SupportsIndex
 
-    from patsy.eval import EvalEnvironment
-
     from plotnine.typing import (
         Coord,
         DataFrameConvertible,
         DataLike,
+        EvalEnvironment,
         Geom,
         Ggplot,
         Layer,

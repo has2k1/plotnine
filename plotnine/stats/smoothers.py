@@ -3,15 +3,9 @@ from contextlib import suppress
 
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from patsy import dmatrices  # pyright: ignore
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import get_valid_kwargs
-
-smlowess = sm.nonparametric.lowess
 
 
 def predictdf(data, xseq, **params):
@@ -57,6 +51,8 @@ def lm(data, xseq, **params):
     """
     Fit OLS / WLS if data has weight
     """
+    import statsmodels.api as sm
+
     if params["formula"]:
         return lm_formula(data, xseq, **params)
 
@@ -95,6 +91,9 @@ def lm_formula(data, xseq, **params):
     """
     Fit OLS / WLS using a formula
     """
+    import statsmodels.api as sm
+    import statsmodels.formula.api as smf
+
     formula = params["formula"]
     eval_env = params["enviroment"]
     weights = data.get("weight", None)
@@ -119,6 +118,8 @@ def lm_formula(data, xseq, **params):
     data["y"] = results.predict(data)
 
     if params["se"]:
+        from patsy import dmatrices  # pyright: ignore
+
         _, predictors = dmatrices(formula, data, eval_env=eval_env)
         alpha = 1 - params["level"]
         prstd, iv_l, iv_u = wls_prediction_std(
@@ -134,6 +135,8 @@ def rlm(data, xseq, **params):
     """
     Fit RLM
     """
+    import statsmodels.api as sm
+
     if params["formula"]:
         return rlm_formula(data, xseq, **params)
 
@@ -163,6 +166,9 @@ def rlm_formula(data, xseq, **params):
     """
     Fit RLM using a formula
     """
+    import statsmodels.api as sm
+    import statsmodels.formula.api as smf
+
     eval_env = params["enviroment"]
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
@@ -187,6 +193,8 @@ def gls(data, xseq, **params):
     """
     Fit GLS
     """
+    import statsmodels.api as sm
+
     if params["formula"]:
         return gls_formula(data, xseq, **params)
 
@@ -216,6 +224,9 @@ def gls_formula(data, xseq, **params):
     """
     Fit GLL using a formula
     """
+    import statsmodels.api as sm
+    import statsmodels.formula.api as smf
+
     eval_env = params["enviroment"]
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
@@ -227,6 +238,8 @@ def gls_formula(data, xseq, **params):
     data["y"] = results.predict(data)
 
     if params["se"]:
+        from patsy import dmatrices  # pyright: ignore
+
         _, predictors = dmatrices(formula, data, eval_env=eval_env)
         alpha = 1 - params["level"]
         prstd, iv_l, iv_u = wls_prediction_std(
@@ -242,6 +255,8 @@ def glm(data, xseq, **params):
     """
     Fit GLM
     """
+    import statsmodels.api as sm
+
     if params["formula"]:
         return glm_formula(data, xseq, **params)
 
@@ -270,6 +285,9 @@ def glm_formula(data, xseq, **params):
     """
     Fit with GLM formula
     """
+    import statsmodels.api as sm
+    import statsmodels.formula.api as smf
+
     eval_env = params["enviroment"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
@@ -292,12 +310,14 @@ def lowess(data, xseq, **params):
     """
     Lowess fitting
     """
+    import statsmodels.api as sm
+
     for k in ("is_sorted", "return_sorted"):
         with suppress(KeyError):
             del params["method_args"][k]
             warnings.warn(f"Smoothing method argument: {k}, has been ignored.")
 
-    result = smlowess(
+    result = sm.nonparametric.lowess(
         data["y"],
         data["x"],
         frac=params["span"],
@@ -434,6 +454,8 @@ def tdist_ci(x, df, stderr, level):
     """
     Confidence Intervals using the t-distribution
     """
+    import scipy.stats as stats
+
     q = (1 + level) / 2
     if df is None:
         delta = stats.norm.ppf(q) * stderr
@@ -490,6 +512,8 @@ def wls_prediction_std(
     ----------
     Greene p.111 for OLS, extended to WLS by analogy
     """
+    import scipy.stats as stats
+
     # work around current bug:
     #    fit doesn't attach results to model, predict broken
     # res.model.results

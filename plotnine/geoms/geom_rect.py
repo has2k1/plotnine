@@ -4,7 +4,6 @@ import typing
 
 import numpy as np
 import pandas as pd
-from matplotlib.collections import PolyCollection
 
 from ..doctools import document
 from ..utils import SIZE_FACTOR, to_rgba
@@ -74,6 +73,8 @@ class geom_rect(geom):
         ax: Axes,
         **params: Any,
     ):
+        from matplotlib.collections import PolyCollection
+
         data = coord.transform(data, panel_params, munch=True)
         data["size"] *= SIZE_FACTOR
 

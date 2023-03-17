@@ -24,8 +24,6 @@ from ..utils import (
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from patsy.eval import EvalEnvironment
-
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         Aes,
@@ -33,6 +31,7 @@ if typing.TYPE_CHECKING:
         Coord,
         DataLike,
         DrawingArea,
+        EvalEnvironment,
         Ggplot,
         Layer,
         Layout,

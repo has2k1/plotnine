@@ -1,6 +1,5 @@
 from ..options import get_option
 from .elements import element_text
-from .seaborn_rcmod import set_theme
 from .theme import theme
 
 
@@ -33,6 +32,8 @@ class theme_seaborn(theme):
         font="sans-serif",
         font_scale=1,
     ):
+        from .seaborn_rcmod import set_theme
+
         rcparams = set_theme(
             context=context, style=style, font=font, font_scale=font_scale
         )

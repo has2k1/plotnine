@@ -5,7 +5,6 @@ from itertools import chain
 
 import numpy as np
 import pandas as pd
-from mizani.bounds import expand_range_distinct
 
 from ..doctools import document
 from ..exceptions import PlotnineError
@@ -132,6 +131,8 @@ class scale_position_discrete(scale_discrete):
 
         Unlike limits, this always returns a numeric vector of length 2
         """
+        from mizani.bounds import expand_range_distinct
+
         if limits is None:
             limits = self.limits
 

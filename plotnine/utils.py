@@ -12,15 +12,9 @@ from contextlib import suppress
 from warnings import warn
 from weakref import WeakValueDictionary
 
-import matplotlib.colors as mcolors
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
-from matplotlib.colors import colorConverter
-from matplotlib.offsetbox import DrawingArea
-from matplotlib.patches import Rectangle
-from mizani.bounds import zero_range
-from mizani.utils import multitype_sort
 
 # missing in type stubs
 from pandas.core.groupby import DataFrameGroupBy  # type: ignore
@@ -310,6 +304,8 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
         try:
             levels = sorted(set(x))
         except TypeError:
+            from mizani.utils import multitype_sort
+
             # x probably has NANs
             levels = multitype_sort(set(x))
 
@@ -531,15 +527,17 @@ def to_rgba(colors, alpha):
         If color c has an alpha channel, then alpha value
         a is ignored
         """
+        from matplotlib.colors import colorConverter, to_hex
+
         if c in ("None", "none"):
             return c
 
         _has_alpha = has_alpha(c)
-        c = mcolors.to_hex(c, keep_alpha=_has_alpha)
+        c = to_hex(c, keep_alpha=_has_alpha)
 
         if not _has_alpha:
             arr = colorConverter.to_rgba(c, a)
-            return mcolors.to_hex(arr, keep_alpha=True)
+            return to_hex(arr, keep_alpha=True)
 
         return c
 
@@ -666,34 +664,6 @@ def make_line_segments(
     n = len(x) // 2
     segments = np.reshape(list(zip(x, y)), [n, 2, 2])
     return segments
-
-
-class ColoredDrawingArea(DrawingArea):
-    """
-    A Drawing Area with a background color
-    """
-
-    def __init__(
-        self,
-        width: float,
-        height: float,
-        xdescent=0.0,
-        ydescent=0.0,
-        clip=True,
-        color="none",
-    ):
-        super().__init__(width, height, xdescent, ydescent, clip=clip)
-
-        self.patch = Rectangle(
-            (0, 0),
-            width=width,
-            height=height,
-            facecolor=color,
-            edgecolor="None",
-            linewidth=0,
-            antialiased=False,
-        )
-        self.add_artist(self.patch)
 
 
 def copy_keys(source, destination, keys=None):
@@ -1067,6 +1037,8 @@ def resolution(x, zero=True):
     res : resolution of x
         If x is an integer array, then the resolution is 1
     """
+    from mizani.bounds import zero_range
+
     x = np.asarray(x)
 
     # (unsigned) integers or an effective range of zero
