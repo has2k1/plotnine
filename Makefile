@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build doc clean visualize-tests
+.PHONY: clean-pyc clean-build doc clean visualize-tests build
 BROWSER := python -mwebbrowser
 
 help:
@@ -56,6 +56,8 @@ lint: ruff ruff-isort
 
 lint-fix:
 	make lint args="--fix"
+
+fix: black-fix lint-fix
 
 typecheck:
 	pyright
