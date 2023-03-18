@@ -3,7 +3,6 @@ name: build
 on: [push, pull_request]
 
 jobs:
-  # Unittests
   unittests:
     runs-on: ubuntu-latest
 
@@ -28,7 +27,7 @@ jobs:
         run: |
           pip install numpy
           pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
-          pip install ".[extra,testing]"
+          pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash
@@ -54,8 +53,7 @@ jobs:
           fail_ci_if_error: true
           name: "py${{ matrix.python-version }}"
 
-  # Linting
-  lint:
+  lint-and-format:
     runs-on: ubuntu-latest
 
     # We want to run on external PRs, but not on our own internal PRs as they'll be run
@@ -84,18 +82,16 @@ jobs:
         shell: bash
         run: pip list
 
-      - name: Lint with Ruff
+      - name: Check lint with Ruff
         shell: bash
         run: |
           make lint
 
-      - name: Lint with Black
+      - name: Check format with Black
         shell: bash
         run: |
-          make black
+          make format
 
-
-  # Typecheck
   typecheck:
     runs-on: ubuntu-latest
 
@@ -121,8 +117,7 @@ jobs:
         run: |
           pip install numpy
           pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
-          pip install ".[extra]"
-          pip install -r requirements/typing.txt
+          pip install ".[extra, typing]"
 
       - name: Environment Information
         shell: bash
@@ -132,8 +127,6 @@ jobs:
         shell: bash
         run: make typecheck
 
-
-  # Documentation
   documentation:
     runs-on: ubuntu-latest
 
@@ -158,8 +151,8 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install pandoc
-          pip install ".[testing,doc]"
-          pip install -r requirements/doc.txt
+          pip install ".[test,doc]"
+          pip install -r requirements/examples.txt
 
       - name: Environment Information
         shell: bash

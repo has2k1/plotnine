@@ -37,7 +37,9 @@ requires-python = ">=3.8"
 all = [
     "plotnine[extra]",
     "plotnine[doc]",
-    "plotnine[testing]",
+    "plotnine[lint]",
+    "plotnine[test]",
+    "plotnine[build]",
     "plotnine[dev]",
 ]
 
@@ -57,16 +59,28 @@ doc = [
     "importlib_resources",
 ]
 
-testing = [
+lint = [
+    "black>=23.1.0",
     "ruff",
+]
+
+test = [
     "pytest-cov"
 ]
 
-dev = [
+build = [
     "build",
-    "twine",
     "wheel",
-    "black>=23.1.0"
+]
+
+dev = [
+    "twine",
+    "plotnine[typing]",
+]
+
+typing = [
+    "pyright",
+    "pandas-stubs",
 ]
 
 [project.urls]
@@ -85,7 +99,7 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-########## Tool - setuptools ##########
+########## Tool - Setuptools ##########
 # If you only specify the top-level package (=plotnine) setuptools complains
 # about not listing the sub-packages. Since we want every sub-package in the
 # plotnine package, it is easier to use find directive.
@@ -96,12 +110,12 @@ include = ["plotnine*"]
 fallback_version = "999"
 version_scheme = 'post-release'
 
-########## Tool - pytest ##########
+########## Tool - Pytest ##########
 [tool.pytest.ini_options]
 testpaths = [
     "tests"
 ]
-doctest_optionflags = "ALLOW_UNICODE ALLOW_BYTES NORMALIZE_WHITESPACE"
+doctest_optionflags = "ALLOW_BYTES NORMALIZE_WHITESPACE"
 addopts = "--pyargs --cov=plotnine --cov-report=xml --import-mode=importlib"
 
 ########## Tool - Coverage ##########
@@ -118,13 +132,15 @@ omit = [
 
 disable_warnings = ["include-ignored"]
 
-########## Tool - Coverage ##########
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
     "^def test_",
     "if __name__ == .__main__.:",
     "raise NotImplementedError('Not Implemented')",
+    "if typing.TYPE_CHECKING:",
+    "except ImportError:",
+    "except PackageNotFoundError:",
 ]
 precision = 1
 
