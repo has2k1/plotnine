@@ -143,15 +143,16 @@ class geom_point(geom):
 
         size = (data["size"] + data["stroke"]) * SIZE_FACTOR
         stroke = data["stroke"] * SIZE_FACTOR
+        fill = to_rgba(data["fill"], data["alpha"])
+        color = to_rgba(data["color"], data["alpha"])
 
         key = Line2D(
             [0.5 * da.width],
             [0.5 * da.height],
-            alpha=data["alpha"],
             marker=data["shape"],
             markersize=size,
-            markerfacecolor=data["fill"],
-            markeredgecolor=data["color"],
+            markerfacecolor=fill,
+            markeredgecolor=color,
             markeredgewidth=stroke,
         )
         da.add_artist(key)
