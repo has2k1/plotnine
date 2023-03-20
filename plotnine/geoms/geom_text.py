@@ -274,14 +274,15 @@ class geom_text(geom):
         """
         from matplotlib.text import Text
 
+        color = to_rgba(data["color"], data["alpha"])
+
         key = Text(
             x=0.5 * da.width,  # pyright: ignore[reportGeneralTypeIssues]
             y=0.5 * da.height,  # pyright: ignore[reportGeneralTypeIssues]
             text="a",
-            alpha=data["alpha"],
             size=data["size"],
             family=lyr.geom.params["family"],
-            color=data["color"],
+            color=color,
             rotation=data["angle"],
             horizontalalignment="center",
             verticalalignment="center",

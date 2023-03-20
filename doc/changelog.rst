@@ -39,6 +39,9 @@ Bug Fixes
   `preserve="single"` for :class:`~plotnine.geoms.geom_rect` and any other
   geoms that accept a min-max range along the x-axis.
 
+- Fixed legend for :class:`~plotnine.geoms.geom_point` to accurately display
+  transparent fill colors that have been manually set. (:issue:`665`)
+
 v0.10.1
 -------
 (2022-09-10)

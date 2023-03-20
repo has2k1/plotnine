@@ -9,6 +9,8 @@ from plotnine import (
     geom_point,
     ggplot,
     guides,
+    lims,
+    scale_color_identity,
     scale_shape_manual,
     theme,
 )
@@ -71,6 +73,26 @@ def test_no_fill():
     )
 
     assert p == "no_fill"
+
+
+def test_legend_transparency():
+    n = 5
+
+    data = pd.DataFrame(
+        {
+            "x": list(range(n)) * 3,
+            "y": [1] * n + [2] * n + [3] * n,
+            "color": ["orange"] * n + ["red"] * n + ["#0000FF44"] * n,
+        }
+    )
+
+    p = (
+        ggplot(data, aes("x", "y", color="color"))
+        + geom_point(size=25, stroke=3)
+        + lims(x=(-2.5, 6.5), y=(-1.5, 5.5))
+        + scale_color_identity(guide="legend")
+    )
+    assert p == "legend_transparency"
 
 
 class TestColorFillonUnfilledShape:

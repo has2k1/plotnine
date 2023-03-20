@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing
 
 from ..doctools import document
+from ..utils import to_rgba
 from .geom import geom
 from .geom_line import geom_line, geom_path
 from .geom_ribbon import geom_ribbon
@@ -113,13 +114,13 @@ class geom_smooth(geom):
             has_se = False
 
         if has_se:
+            fill = to_rgba(data["fill"], data["alpha"])
             r = lyr.geom.params["legend_fill_ratio"]
             bg = Rectangle(
                 (0, (1 - r) * da.height / 2),
                 width=da.width,
                 height=r * da.height,
-                alpha=data["alpha"],
-                facecolor=data["fill"],
+                facecolor=fill,
                 linewidth=0,
             )
             da.add_artist(bg)

@@ -247,13 +247,13 @@ class geom_dotplot(geom):
         """
         from matplotlib.lines import Line2D
 
+        fill = to_rgba(data["fill"], data["alpha"])
         key = Line2D(
             [0.5 * da.width],
             [0.5 * da.height],
-            alpha=data["alpha"],
             marker="o",
             markersize=da.width / 2,
-            markerfacecolor=data["fill"],
+            markerfacecolor=fill,
             markeredgecolor=data["color"],
         )
         da.add_artist(key)

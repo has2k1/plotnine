@@ -190,13 +190,14 @@ class geom_path(geom):
         data["size"] *= SIZE_FACTOR
         x = [0, da.width]
         y = [0.5 * da.height] * 2
+        color = to_rgba(data["color"], data["alpha"])
+
         key = Line2D(
             x,
             y,
-            alpha=data["alpha"],
             linestyle=data["linetype"],
             linewidth=data["size"],
-            color=data["color"],
+            color=color,
             solid_capstyle="butt",
             antialiased=False,
         )
