@@ -32,10 +32,10 @@ clean-test:
 	rm -fr tests/result_images/*
 
 ruff:
-	ruff plotnine $(args)
+	ruff . $(args)
 
 ruff-isort:
-	ruff --select I001 --quiet plotnine $(args)
+	ruff --select I001 --quiet . $(args)
 
 format:
 	black . --check

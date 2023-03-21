@@ -172,7 +172,7 @@ class GalleryEntryExtractor:
             # Do not traverse all the sections, only look for those
             # that are siblings of the first node.
             ref_node = doctree[0][0]
-            kwargs = dict(descend=False, siblings=True)
+            kwargs = {"descend": False, "siblings": True}
             exnode = None  # Examples node
             for section in ref_node.traverse(nodes.section, **kwargs):
                 if section[0].astext() == "Examples":

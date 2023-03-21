@@ -819,7 +819,8 @@ def test_layer_with_only_infs():
 def test_discrete_scale_exceeding_maximum_number_of_values():
     df = pd.DataFrame(
         {
-            # not that it's the second c that triggered a bug in scale_discrete.map
+            # not that it's the second c that triggered a bug
+            # in scale_discrete.map
             "x": pd.Categorical(["c", "a", "c", "b", "c"]),
             "y": [0, 1, 2, 2, 3],
         }
