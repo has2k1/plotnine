@@ -37,7 +37,10 @@ def test_args():
         + stat_function(fun=fun, size=2, color="red", args=np.cos)
         + stat_function(fun=fun, size=2, color="green", args=(np.cos, 2, 1))
         + stat_function(
-            fun=fun, size=2, color="purple", args=dict(f=np.cos, mul=3, add=2)
+            fun=fun,
+            size=2,
+            color="purple",
+            args={"f": np.cos, "mul": 3, "add": 2},
         )
     )
 
