@@ -7,6 +7,7 @@ from warnings import warn
 
 from mizani.bounds import squish_infinite
 from mizani.transforms import gettrans
+import pandas as pd
 
 from ..exceptions import PlotnineWarning
 from ..iapi import panel_ranges, panel_view
@@ -75,7 +76,7 @@ class coord_trans(coord):
             data = self.munch(data, panel_params)
 
         def trans_x(col: FloatSeries) -> FloatSeries:
-            result = transform_value(self.trans_x, col, panel_params.x.range)
+            result = pd.Series(transform_value(self.trans_x, col, panel_params.x.range))
             if any(result.isnull()):
                 warn(
                     "Coordinate transform of x aesthetic "
