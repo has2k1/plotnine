@@ -30,7 +30,7 @@ class _scale_manual(scale_discrete):
             breaks: ScaleBreaksRaw = kwargs["breaks"]
             if isinstance(breaks, Sized):
                 if len(breaks) == len(values):
-                    values = {b: v for b, v in zip(breaks, values)}
+                    values = dict(zip(breaks, values))
 
         self._values = values
         scale_discrete.__init__(self, **kwargs)
