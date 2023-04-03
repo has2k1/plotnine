@@ -50,7 +50,6 @@ from plotnine.scales.scale_xy import (
     scale_x_continuous,
     scale_x_discrete,
     scale_y_continuous,
-    scale_y_discrete,
 )
 from plotnine.scales.scales import make_scale
 
@@ -252,8 +251,7 @@ def test_scale_identity():
     for name in scale_identity.__dict__:
         if is_identity_scale(name):
             s = getattr(scale_identity, name)()
-            assert s.palette(5) == 5
-            assert s.palette([1, 2, 3]) == [1, 2, 3]
+            assert s.map([1, 2, 3]) == [1, 2, 3]
 
 
 def test_scale_manual():
@@ -298,24 +296,6 @@ def test_alpha_palette():
     s = scale_alpha_continuous(range=(0.1, 1))
     value = s.palette(0.5)
     assert value == (0.1 + 1) / 2.0
-
-
-def test_xy_palette():
-    s = scale_x_discrete()
-    value = s.palette(3)
-    assert value == 3
-
-    s = scale_y_discrete()
-    value = s.palette(11.5)
-    assert value == 11.5
-
-    s = scale_x_continuous()
-    value = s.palette(3.63)
-    assert value == 3.63
-
-    s = scale_y_continuous()
-    value = s.palette(11.52)
-    assert value == 11.52
 
 
 def test_xy_limits():
