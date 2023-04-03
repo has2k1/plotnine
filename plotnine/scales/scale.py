@@ -177,6 +177,9 @@ class scale(metaclass=Registry):
     def palette(n):
         """
         Aesthetic mapping function
+
+        Note that not all scales need to implement/provide a palette.
+        For example identity & position scales do not use a palette.
         """
         raise NotImplementedError("Not Implemented")
 
@@ -506,7 +509,7 @@ class scale_discrete(scale):
 
     def map(
         self, x, limits: Optional[ScaleDiscreteLimits] = None
-    ) -> list[Any]:
+    ) -> Sequence[Any]:
         """
         Map values in x to a palette
         """
@@ -1035,14 +1038,15 @@ class scale_continuous(scale):
         breaks = self.inverse(breaks)
 
         if self.labels is True:
-            labels = self.trans.format(breaks)
+            labels: Sequence[str] = self.trans.format(breaks)
         elif self.labels in (False, None):
             labels = []
         elif callable(self.labels):
             labels = self.labels(breaks)
         elif isinstance(self.labels, dict):
             labels = [
-                str(self.labels[b]) if b in self.labels else b for b in breaks
+                str(self.labels[b]) if b in self.labels else str(b)
+                for b in breaks
             ]
         else:
             # When user sets breaks and labels of equal size,
