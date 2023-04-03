@@ -3,11 +3,11 @@ from __future__ import annotations
 import typing
 
 from ..doctools import document
-from ..utils import alias, identity
+from ..utils import alias
 from .scale import scale_continuous, scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Literal
+    from typing import Any, Literal, Sequence
 
 
 class MapTrainMixin:
@@ -17,7 +17,15 @@ class MapTrainMixin:
 
     guide: Literal["legend"] | None = None
 
-    def map(self, x):
+    def map(self, x: Sequence[Any]) -> Sequence[Any]:
+        """
+        Identity map
+
+        Notes
+        -----
+        Identity scales bypass the palette completely since the
+        map is the identity function.
+        """
         return x
 
     def train(self, x):
@@ -42,7 +50,6 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     """
 
     _aesthetics = ["color"]
-    palette = staticmethod(identity)
 
 
 @document
@@ -71,7 +78,6 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     """
 
     _aesthetics = ["shape"]
-    palette = staticmethod(identity)
 
 
 @document
@@ -87,7 +93,6 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     """
 
     _aesthetics = ["linetype"]
-    palette = staticmethod(identity)
 
 
 @document
@@ -103,7 +108,6 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     """
 
     _aesthetics = ["alpha"]
-    palette = staticmethod(identity)
 
 
 @document
@@ -119,7 +123,6 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     """
 
     _aesthetics = ["size"]
-    palette = staticmethod(identity)
 
 
 # American to British spelling
