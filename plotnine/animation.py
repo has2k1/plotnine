@@ -73,13 +73,13 @@ class PlotnineAnimation(ArtistAnimation):
 
     def _draw_plots(
         self, plots: Iterable[Ggplot]
-    ) -> tuple[Figure, list[Artist]]:
+    ) -> tuple[Figure, list[list[Artist]]]:
         with pd.option_context("mode.chained_assignment", None):
             return self.__draw_plots(plots)
 
     def __draw_plots(
         self, plots: Iterable[Ggplot]
-    ) -> tuple[Figure, list[Artist]]:
+    ) -> tuple[Figure, list[list[Artist]]]:
         """
         Plot and return the figure and artists
 
