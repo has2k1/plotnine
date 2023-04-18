@@ -47,4 +47,4 @@ Built with
 .. _scipy: https://scipy.org
 .. _mizani: https://mizani.readthedocs.io
 .. _ggplot2: http://ggplot2.org
-.. _ggpy: https://github.com/yhat/ggpy`
+.. _ggpy: https://github.com/yhat/ggpy
