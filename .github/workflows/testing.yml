@@ -26,7 +26,6 @@ jobs:
         shell: bash
         run: |
           pip install numpy
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
           pip install ".[extra,test]"
 
       - name: Environment Information
@@ -116,7 +115,6 @@ jobs:
         shell: bash
         run: |
           pip install numpy
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
           pip install ".[extra, typing]"
 
       - name: Environment Information

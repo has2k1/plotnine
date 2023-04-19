@@ -47,7 +47,7 @@ extra = [
     "adjustText",
     "geopandas",
     "scikit-learn",
-    "scikit-misc"
+    "scikit-misc>=0.2.0"
 ]
 
 doc = [
