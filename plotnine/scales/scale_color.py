@@ -1,9 +1,15 @@
+from __future__ import annotations
+
+import typing
 from warnings import warn
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
 from .scale import scale_continuous, scale_datetime, scale_discrete
+
+if typing.TYPE_CHECKING:
+    from typing import Literal
 
 
 # Discrete color scales #
@@ -84,7 +90,9 @@ class scale_color_brewer(scale_discrete):
     _aesthetics = ["color"]
     na_value = "#7F7F7F"
 
-    def __init__(self, type="seq", palette=1, direction=1, **kwargs):
+    def __init__(
+        self, type="seq", palette=1, direction: Literal[1, -1] = 1, **kwargs
+    ):
         from mizani.palettes import brewer_pal
 
         self.palette = brewer_pal(type, palette, direction=direction)
@@ -393,7 +401,12 @@ class scale_color_distiller(scale_color_gradientn):
     na_value = "#7F7F7F"
 
     def __init__(
-        self, type="seq", palette=1, values=None, direction=-1, **kwargs
+        self,
+        type="seq",
+        palette=1,
+        values=None,
+        direction: Literal[1, -1] = -1,
+        **kwargs,
     ):
         """
         Create colormap that will be used by the palette
