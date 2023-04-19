@@ -25,7 +25,6 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
-          pip install numpy
           pip install ".[extra,test]"
 
       - name: Environment Information
@@ -114,7 +113,6 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
-          pip install numpy
           pip install ".[extra, typing]"
 
       - name: Environment Information
