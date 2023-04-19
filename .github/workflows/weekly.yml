@@ -29,8 +29,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install numpy
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
-          pip install ".[extra,testing]"
+          pip install ".[extra,test]"
           pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
@@ -71,8 +70,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install numpy
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
-          pip install ".[extra,testing]"
+          pip install ".[extra,test]"
           pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
@@ -128,8 +126,7 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade git+https://github.com/matplotlib/matplotlib
           pip install numpy
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
-          pip install ".[extra,testing]"
+          pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash
@@ -183,8 +180,7 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade git+https://github.com/pandas-dev/pandas
           pip install numpy
-          pip install -i https://test.pypi.org/simple/ "scikit-misc==0.2.0rc3"
-          pip install ".[extra,testing]"
+          pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash
