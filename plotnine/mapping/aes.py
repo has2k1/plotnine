@@ -487,7 +487,7 @@ def is_position_aes(vars_):
     Figure out if an aesthetic is a position aesthetic or not
     """
     try:
-        return all([aes_to_scale(v) in {"x", "y"} for v in vars_])
+        return all(aes_to_scale(v) in {"x", "y"} for v in vars_)
     except TypeError:
         return aes_to_scale(vars_) in {"x", "y"}
 

@@ -90,7 +90,7 @@ class position_dodge(position):
         if n == 1:
             return data
 
-        if not all([col in data.columns for col in ["xmin", "xmax"]]):
+        if not all(col in data.columns for col in ["xmin", "xmax"]):
             data["xmin"] = data["x"]
             data["xmax"] = data["x"]
 
