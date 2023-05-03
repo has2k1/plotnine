@@ -93,7 +93,7 @@ class position_dodge2(position_dodge):
         padding = params["padding"]
         n = params["n"]
 
-        if not all([col in data.columns for col in ["xmin", "xmax"]]):
+        if not all(col in data.columns for col in ["xmin", "xmax"]):
             data["xmin"] = data["x"]
             data["xmax"] = data["x"]
 

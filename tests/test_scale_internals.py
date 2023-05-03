@@ -65,9 +65,9 @@ def test_discrete_color_palettes():
         m elements are None
         """
         assert len(colors) == n + m
-        assert all([c.startswith("#") for c in colors[:n]])
+        assert all(c.startswith("#") for c in colors[:n])
         if m > 0:
-            assert all([c is None for c in colors[-m:]])
+            assert all(c is None for c in colors[-m:])
 
     sc = scale_color
 
@@ -140,7 +140,7 @@ def test_continuous_color_palettes():
         assert color[0] == "#"
 
         colors = cscale.palette(alphas)
-        assert all([c[0] == "#" for c in colors])
+        assert all(c[0] == "#" for c in colors)
 
     s = sc.scale_color_gradient()
     _assert(s)
@@ -189,12 +189,12 @@ def test_linetype_palettes():
     s = scale_linetype_discrete()
     items = s.palette(N)
     assert len(items) == N
-    assert all([isinstance(x, str) for x in items])
+    assert all(isinstance(x, str) for x in items)
 
     with pytest.warns(UserWarning):
         # More values than palette has
         items = s.palette(N + 5)
-        assert all([isinstance(x, str) for x in items[:N]])
+        assert all(isinstance(x, str) for x in items[:N])
 
     with pytest.raises(PlotnineError):
         s = scale_linetype_continuous()
@@ -205,12 +205,12 @@ def test_shape_palettes():
     s = scale_shape_discrete()
     items = s.palette(N)
     assert len(items) == N
-    assert all([isinstance(x, str) for x in items])
+    assert all(isinstance(x, str) for x in items)
 
     with pytest.warns(UserWarning):
         # More values than palette has
         items = s.palette(N + 5)
-        assert all([isinstance(x, str) for x in items[:N]])
+        assert all(isinstance(x, str) for x in items[:N])
 
     with pytest.raises(PlotnineError):
         scale_shape_continuous()
@@ -221,7 +221,7 @@ def test_shape_palettes():
     s = scale_shape_discrete(unfilled=True)
     items = s.map(values, limits=values)
     assert len(items) == N
-    assert not all([isinstance(x, str) for x in items])
+    assert not all(isinstance(x, str) for x in items)
 
 
 def test_size_palette():
