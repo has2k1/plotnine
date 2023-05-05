@@ -18,8 +18,8 @@ if typing.TYPE_CHECKING:
 default_rcparams = {
     "axes.axisbelow": "True",
     "font.sans-serif": [
-        "DejaVu Sans",
         "Helvetica",
+        "DejaVu Sans",  # MPL ships with this one
         "Avant Garde",
         "Computer Modern Sans serif",
         "Arial",
