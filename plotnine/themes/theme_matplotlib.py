@@ -26,9 +26,10 @@ class theme_matplotlib(theme):
         import matplotlib as mpl
 
         m = get_option("base_margin")
+        base_size = mpl.rcParams.get("font.size", 11)
         super().__init__(
             text=element_text(
-                size=mpl.rcParams["font.size"],
+                size=base_size,
                 linespacing=1,
                 rotation=0,
             ),
@@ -75,12 +76,21 @@ class theme_matplotlib(theme):
             plot_caption=element_text(
                 ha="right",
                 va="bottom",
+                ma="right",
                 margin={"t": m, "units": "fig"},
             ),
             plot_margin=m,
-            plot_title=element_text(
+            plot_subtitle=element_text(
+                size=base_size * 0.9,
+                ha="left",
                 va="top",
-                ha="center",
+                ma="left",
+                margin={"b": m, "units": "fig"},
+            ),
+            plot_title=element_text(
+                ha="left",
+                va="top",
+                ma="left",
                 margin={"b": m, "units": "fig"},
             ),
             strip_align=0,

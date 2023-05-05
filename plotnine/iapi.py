@@ -71,6 +71,7 @@ class labels_view:
     stroke: Optional[str] = None
     title: Optional[str] = None
     caption: Optional[str] = None
+    subtitle: Optional[str] = None
 
     def update(self, other: labels_view):
         """
