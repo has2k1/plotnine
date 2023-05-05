@@ -580,6 +580,31 @@ class plot_title(themeable):
             text.set_visible(False)
 
 
+class plot_subtitle(themeable):
+    """
+    Plot subtitle
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+        super().apply_figure(figure, targets)
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties["margin"]
+        with suppress(KeyError):
+            text = targets["plot_subtitle"]
+            text.set(**properties)
+
+    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+        super().blank_figure(figure, targets)
+        with suppress(KeyError):
+            text = targets["plot_subtitle"]
+            text.set_visible(False)
+
+
 class plot_caption(themeable):
     """
     Plot caption
@@ -691,7 +716,7 @@ class strip_text(strip_text_x, strip_text_y):
     pass
 
 
-class title(axis_title, legend_title, plot_title):
+class title(axis_title, legend_title, plot_title, plot_subtitle, plot_caption):
     """
     All titles on the plot
 
