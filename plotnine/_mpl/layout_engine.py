@@ -25,23 +25,6 @@ if typing.TYPE_CHECKING:
 
 
 @dataclass
-class LayoutArtists:
-    """
-    MPL Artists that known to the
-    """
-
-    axs: list[Axes]
-    plot_caption: Optional[Text] = None
-    legend: Optional[AnchoredOffsetbox] = None
-    legend_position: Optional[LegendPosition] = None
-    strip_box: Optional[FancyBboxPatch] = None
-    strip_title: Optional[Text] = None
-    plot_title: Optional[Text] = None
-    axis_title_x: Optional[Text] = None
-    axis_title_y: Optional[Text] = None
-
-
-@dataclass
 class LayoutPack:
     """
     Objects required to compute the layout
@@ -57,7 +40,7 @@ class LayoutPack:
     legend: Optional[AnchoredOffsetbox] = None
     legend_position: Optional[LegendPosition] = None
     plot_caption: Optional[Text] = None
-    plot_title: Optional[Text] = None
+    plot_subtitle: Optional[Text] = None
     plot_title: Optional[Text] = None
 
 
@@ -94,7 +77,7 @@ class PlotnineLayoutEngine(LayoutEngine):
         with getattr(pack.renderer, "_draw_disabled", nullcontext)():
             tparams = get_plotnine_tight_layout(pack)
 
-        set_figure_artist_positions(self.plot, fig, tparams)
+        set_figure_artist_positions(pack, tparams)
         fig.subplots_adjust(**asdict(tparams.grid))
 
     def pack_information(self) -> LayoutPack:
@@ -124,5 +107,6 @@ class PlotnineLayoutEngine(LayoutEngine):
             legend=get("legend_background"),
             legend_position=legend_position,
             plot_caption=get("plot_caption"),
+            plot_subtitle=get("plot_subtitle"),
             plot_title=get("plot_title"),
         )

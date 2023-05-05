@@ -32,7 +32,6 @@ from .utils import (
 )
 
 if typing.TYPE_CHECKING:
-    from plotnine._mpl.layout_engine import LayoutArtists
     from plotnine.typing import (
         Axes,
         Coord,
@@ -71,7 +70,6 @@ class ggplot:
     theme: Theme
     facet: Facet
     coordinates: Coord
-    _layout_artists: LayoutArtists
 
     def __init__(
         self,
@@ -131,7 +129,6 @@ class ggplot:
             "environment",
             "figure",
             "_build_objs",
-            "_layout_artists",
         }
         for key, item in old.items():
             if key in shallow:
@@ -254,10 +251,7 @@ class ggplot:
         axs : array_like
             Array of Axes onto which to draw the plots
         """
-        from ._mpl.layout_engine import (
-            LayoutArtists,
-            PlotnineLayoutEngine,
-        )
+        from ._mpl.layout_engine import PlotnineLayoutEngine
 
         self = deepcopy(self)
         self.figure = figure
@@ -266,7 +260,6 @@ class ggplot:
             self._build()
 
             # setup
-            self._layout_artists = LayoutArtists(axs=axs)
             self._setup_parameters()
             self.theme.setup()
             self.facet.strips.generate()
@@ -379,8 +372,6 @@ class ggplot:
         """
         import matplotlib.pyplot as plt
 
-        from plotnine._mpl.layout_engine import LayoutArtists
-
         # Good for development
         if get_option("close_all_figures"):
             plt.close("all")
@@ -392,7 +383,6 @@ class ggplot:
 
         self.figure = figure
         self.axs = axs
-        self._layout_artists = LayoutArtists(axs=axs)
         return figure, axs
 
     def _draw_layers(self):
@@ -460,9 +450,6 @@ class ggplot:
         self.theme._targets["legend_background"] = anchored_box
         self.figure.add_artist(anchored_box)
 
-        self._layout_artists.legend = anchored_box
-        self._layout_artists.legend_position = self.guides.position
-
     def _draw_figure_texts(self):
         """
         Draw title, x label, y label and caption onto the figure
@@ -472,6 +459,7 @@ class ggplot:
 
         title = self.labels.get("title", "")
         caption = self.labels.get("caption", "")
+        subtitle = self.labels.get("subtitle", "")
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -482,18 +470,15 @@ class ggplot:
         # The locations are handled by the layout manager
         text_title = figure.text(0, 0, title)
         text_caption = figure.text(0, 0, caption)
+        text_subtitle = figure.text(0, 0, subtitle)
         text_x = figure.text(0, 0, labels.x)
         text_y = figure.text(0, 0, labels.y)
 
         theme._targets["plot_title"] = text_title
         theme._targets["plot_caption"] = text_caption
+        theme._targets["plot_subtitle"] = text_subtitle
         theme._targets["axis_title_x"] = text_x
         theme._targets["axis_title_y"] = text_y
-
-        self._layout_artists.plot_title = text_title
-        self._layout_artists.plot_caption = text_caption
-        self._layout_artists.axis_title_x = text_x
-        self._layout_artists.axis_title_y = text_y
 
     def _draw_watermarks(self):
         """

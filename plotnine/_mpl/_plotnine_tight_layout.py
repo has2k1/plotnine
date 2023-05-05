@@ -152,6 +152,8 @@ class top_spaces(_side_spaces):
     plot_margin: float = 0
     plot_title: float = 0
     plot_title_margin_bottom: float = 0
+    plot_subtitle: float = 0
+    plot_subtitle_margin_bottom: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
     top_strip_height: float = 0
@@ -519,6 +521,14 @@ def calculate_top_spaces(pack: LayoutPack) -> top_spaces:
             _property("plot_title", "margin").get_as("b", "fig") * F
         )
 
+    if pack.plot_subtitle:
+        space.plot_subtitle = bbox_in_figure_space(
+            pack.plot_subtitle, pack.figure, pack.renderer
+        ).height
+        space.plot_subtitle_margin_bottom = (
+            _property("plot_subtitle", "margin").get_as("b", "fig") * F
+        )
+
     if pack.legend and pack.legend_position == "top":
         space.legend = bbox_in_figure_space(
             pack.legend, pack.figure, pack.renderer
@@ -713,53 +723,59 @@ def get_max_yaxis_width(
 
 
 def set_figure_artist_positions(
-    plot: Ggplot,
-    fig: Figure,
+    pack: LayoutPack,
     tparams: TightParams,
 ):
     """
     Set the x,y position of the artists around the panels
     """
-    artists = plot._layout_artists
-    _property = plot.theme.themeables.property
+    _property = pack.theme.themeables.property
     spaces = tparams.spaces
     grid = tparams.grid
 
-    if artists.plot_title:
+    if pack.plot_title:
         try:
             ha = _property("plot_title", "ha")
         except KeyError:
             ha = "center"
-        artists.plot_title.set_y(spaces.t.edge("plot_title"))
-        horizonally_align_text_with_panels(artists.plot_title, grid, ha)
+        pack.plot_title.set_y(spaces.t.edge("plot_title"))
+        horizonally_align_text_with_panels(pack.plot_title, grid, ha)
 
-    if artists.plot_caption:
+    if pack.plot_subtitle:
+        try:
+            ha = _property("plot_subtitle", "ha")
+        except KeyError:
+            ha = "center"
+        pack.plot_subtitle.set_y(spaces.t.edge("plot_subtitle"))
+        horizonally_align_text_with_panels(pack.plot_subtitle, grid, ha)
+
+    if pack.plot_caption:
         try:
             ha = _property("plot_caption", "ha")
         except KeyError:
             ha = "right"
-        artists.plot_caption.set_y(spaces.b.edge("plot_caption"))
-        horizonally_align_text_with_panels(artists.plot_caption, grid, ha)
+        pack.plot_caption.set_y(spaces.b.edge("plot_caption"))
+        horizonally_align_text_with_panels(pack.plot_caption, grid, ha)
 
-    if artists.axis_title_x:
+    if pack.axis_title_x:
         try:
             ha = _property("axis_title_x", "ha")
         except KeyError:
             ha = "center"
-        artists.axis_title_x.set_y(spaces.b.edge("axis_title_x"))
-        horizonally_align_text_with_panels(artists.axis_title_x, grid, ha)
+        pack.axis_title_x.set_y(spaces.b.edge("axis_title_x"))
+        horizonally_align_text_with_panels(pack.axis_title_x, grid, ha)
 
-    if artists.axis_title_y:
+    if pack.axis_title_y:
         try:
             va = _property("axis_title_y", "va")
         except KeyError:
             va = "center"
-        artists.axis_title_y.set_x(spaces.l.edge("axis_title_y"))
-        vertically_align_text_with_panels(artists.axis_title_y, grid, va)
+        pack.axis_title_y.set_x(spaces.l.edge("axis_title_y"))
+        vertically_align_text_with_panels(pack.axis_title_y, grid, va)
 
-    if artists.legend and artists.legend_position:
+    if pack.legend and pack.legend_position:
         set_legend_position(
-            artists.legend, artists.legend_position, tparams, fig
+            pack.legend, pack.legend_position, tparams, pack.figure
         )
 
 

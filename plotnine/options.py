@@ -7,15 +7,16 @@ close_all_figures = False
 #: Theme used when none is added to the ggplot object
 current_theme = None
 
-#: The base font family for all text that is part of
-#: the theme
-base_family = "Dejavu Sans"
+#: The base font family for all text that is part of the theme.
+#: Default is sans-serif and one is choosen automatically from
+#: rcParams["font.san-serif"]
+base_family = "sans-serif"
 
 #: Default aspect ratio used by the themes
 aspect_ratio = "auto"
 
 #: Default DPI used by the themes
-dpi = 100
+dpi = 300
 
 #: Default figure size inches
 figure_size = (640 / dpi, 480 / dpi)

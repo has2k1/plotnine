@@ -32,6 +32,13 @@ New Features
 
   will create an `800px x 600px` image.
 
+- You can create a ``subtitle`` using :class:`~plotnine.labels.labs` and
+  style it using the ``plot_subtitle`` parameter to :class:`~plotnine.themes.theme`.
+
+  .. code-block:: python
+
+      theme(plot_subtitle=element_text(size=8))
+
 
 Enhancements
 ************
