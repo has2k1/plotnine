@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pytest
 
 from plotnine import (
     aes,
@@ -13,7 +12,6 @@ from plotnine import (
     ggplot,
 )
 from plotnine.data import mpg, mtcars
-from plotnine.exceptions import PlotnineWarning
 
 n = 10
 df = pd.DataFrame(
@@ -74,22 +72,6 @@ def test_facet_wrap_direction_v():
 def test_facet_wrap_not_as_table_direction_v():
     p = g + facet_wrap("~var1", as_table=False, dir="v")
     assert p == "facet_wrap_not_as_table_direction_v"
-
-
-def test_facet_wrap_axis_text_space_warning():
-    p = g + facet_wrap("~var1", scales="free_y")
-    with pytest.warns(PlotnineWarning) as record:
-        p.draw_test()
-
-    record = list(record)  # iterate more than 1 time
-    assert any("wspace" in str(r.message) for r in record)
-
-    p = g + facet_wrap("~var1", scales="free_x")
-    with pytest.warns(PlotnineWarning) as record:
-        p.draw_test()
-
-    record = list(record)  # iterate more than 1 time
-    assert any("hspace" in str(r.message) for r in record)
 
 
 # facet_grid

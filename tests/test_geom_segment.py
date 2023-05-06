@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, arrow, geom_segment, ggplot, theme
+from plotnine import aes, arrow, geom_segment, ggplot
 
 n = 4
 
@@ -14,7 +14,6 @@ df = pd.DataFrame(
         "z": range(1, n + 1),
     }
 )
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_aesthetics():
@@ -31,7 +30,7 @@ def test_aesthetics():
         )
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"
 
 
 def test_arrow():

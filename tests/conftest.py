@@ -54,13 +54,12 @@ def ggplot_equals(gg: ggplot, name: str) -> bool:
     """
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
-    bbox_inches = "tight" if "caption" in gg.labels else None
     # Save the figure before testing whether the original image
     # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
     gg += test_theme
     with _test_cleanup():
-        gg.save(filenames.result, verbose=False, bbox_inches=bbox_inches)
+        gg.save(filenames.result, verbose=False)
 
     if filenames.baseline.exists():
         shutil.copyfile(filenames.baseline, filenames.expected)

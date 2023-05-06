@@ -1,8 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, geom_col, ggplot, theme
-
-_theme = theme(subplots_adjust={"right": 0.80})
+from plotnine import aes, geom_col, ggplot
 
 df = pd.DataFrame(
     {
@@ -17,14 +15,14 @@ def test_reorder():
         ggplot(df, aes("reorder(x, y)", "y", fill="reorder(x, y)"))
         + geom_col()
     )
-    assert p + _theme == "reorder"
+    assert p == "reorder"
 
 
 def test_reorder_index():
     # The dataframe is created with ordering according to the y
     # variable. So the x index should be ordered acc. to y too
     p = ggplot(df, aes("reorder(x, x.index)", "y")) + geom_col()
-    assert p + _theme == "reorder_index"
+    assert p == "reorder_index"
 
 
 def test_labels_series():

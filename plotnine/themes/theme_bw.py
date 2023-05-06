@@ -17,7 +17,7 @@ class theme_bw(theme_gray):
     """
 
     def __init__(self, base_size=11, base_family=None):
-        theme_gray.__init__(self, base_size, base_family)
+        super().__init__(base_size, base_family)
         self += theme(
             axis_text=element_text(size=0.8 * base_size),
             legend_key=element_rect(color="#CCCCCC"),

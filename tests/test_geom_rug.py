@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import aes, coord_flip, geom_rug, ggplot, theme
+from plotnine import aes, coord_flip, geom_rug, ggplot
 
 n = 4
 seq = np.arange(1, n + 1)
@@ -12,7 +12,6 @@ df = pd.DataFrame(
         "z": seq,
     }
 )
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_aesthetics():
@@ -27,10 +26,10 @@ def test_aesthetics():
         + geom_rug(aes("x+8*n", "y+8*n", size="z"), sides="tblr")
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"
 
 
 def test_coord_flip():
     p = ggplot(df) + geom_rug(aes("x", "y"), size=2, sides="l") + coord_flip()
 
-    assert p + _theme == "coord_flip"
+    assert p == "coord_flip"

@@ -10,7 +10,7 @@ from dataclasses import dataclass
 if typing.TYPE_CHECKING:
     from typing import Any, Callable, Literal, Optional, Sequence
 
-    from plotnine.typing import TupleFloat3, TupleFloat4
+    from plotnine.typing import Theme, TupleFloat3, TupleFloat4
 
 
 class element_base:
@@ -36,6 +36,12 @@ class element_base:
         d = self.properties.copy()
         del d["visible"]
         return f"{d}"
+
+    def setup(self, theme: Theme):
+        """
+        Setup the theme_element before drawing
+        """
+        pass
 
 
 class element_line(element_base):
@@ -242,6 +248,13 @@ class element_text(element_base):
             if variables[name] is not None:
                 self.properties[name] = variables[name]
 
+    def setup(self, theme: Theme):
+        """
+        Setup the theme_element before drawing
+        """
+        if "margin" in self.properties:
+            self.properties["margin"].theme = theme
+
     def _translate_hjust(
         self, just: float
     ) -> Literal["left", "right", "center"]:
@@ -281,17 +294,20 @@ class element_blank(element_base):
 @dataclass
 class Margin:
     element: element_base
+    theme: Optional[Theme] = None
     t: float = 0
     b: float = 0
     l: float = 0
     r: float = 0
-    units: Literal["pt", "in", "lines"] = "pt"
+    units: Literal["pt", "in", "lines", "fig"] = "pt"
 
     def __post_init__(self):
-        if self.units in {"pts", "points", "px", "pixels"}:
+        if self.units in ("pts", "points", "px", "pixels"):
             self.units = "pt"
-        elif self.units in {"in", "inch", "inches"}:
+        elif self.units in ("in", "inch", "inches"):
             self.units = "in"
+        elif self.units in ("line", "lines"):
+            self.units = "lines"
 
     def __eq__(self, other: Any) -> bool:
         core = ("t", "b", "l", "r", "units")
@@ -312,31 +328,43 @@ class Margin:
     def get_as(
         self,
         loc: Literal["t", "b", "l", "r"],
-        units: Literal["pt", "in", "lines"] = "pt",
+        units: Literal["pt", "in", "lines", "fig"] = "pt",
     ) -> float:
         """
         Return key in given units
         """
+        assert self.theme is not None
         dpi = 72
-        size: float = self.element.properties.get("size", 0)
+        # TODO: Get the inherited size. We need to consider the
+        # themeables mro
+        size: float = self.element.properties.get("size", 11)
         from_units = self.units
         to_units = units
+        W: float
+        H: float
+        W, H = self.theme.themeables.property("figure_size")  # inches
+        L = (W * dpi) if loc in "tb" else (H * dpi)  # pts
 
         functions: dict[str, Callable[[float], float]] = {
-            "pt-lines": lambda x: x / size,
-            "pt-in": lambda x: x / dpi,
-            "lines-pt": lambda x: x * size,
-            "lines-in": lambda x: x * size / dpi,
-            "in-pt": lambda x: x * dpi,
+            "fig-in": lambda x: x * L / dpi,
+            "fig-lines": lambda x: x * L / size,
+            "fig-pt": lambda x: x * L,
+            "in-fig": lambda x: x * dpi / L,
             "in-lines": lambda x: x * dpi / size,
+            "in-pt": lambda x: x * dpi,
+            "lines-fig": lambda x: x * size / L,
+            "lines-in": lambda x: x * size / dpi,
+            "lines-pt": lambda x: x * size,
+            "pt-fig": lambda x: x / L,
+            "pt-in": lambda x: x / dpi,
+            "pt-lines": lambda x: x / size,
         }
 
         value: float = getattr(self, loc)
         if from_units != to_units:
-            conversion = "{}-{}".format(self.units, units)
+            conversion = f"{self.units}-{units}"
             try:
                 value = functions[conversion](value)
             except ZeroDivisionError:
                 value = 0
-
         return value

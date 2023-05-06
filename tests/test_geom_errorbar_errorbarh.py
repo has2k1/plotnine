@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, geom_errorbar, geom_errorbarh, ggplot, theme
+from plotnine import aes, geom_errorbar, geom_errorbarh, ggplot
 
 n = 4
 df = pd.DataFrame(
@@ -11,7 +11,6 @@ df = pd.DataFrame(
         "z": range(n),
     }
 )
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_errorbar_aesthetics():
@@ -24,7 +23,7 @@ def test_errorbar_aesthetics():
         + geom_errorbar(aes("x+4", size="z"))
     )
 
-    assert p + _theme == "errorbar_aesthetics"
+    assert p == "errorbar_aesthetics"
 
 
 def test_errorbarh_aesthetics():
@@ -37,4 +36,4 @@ def test_errorbarh_aesthetics():
         + geom_errorbarh(aes(y="x+4", size="z"))
     )
 
-    assert p + _theme == "errorbarh_aesthetics"
+    assert p == "errorbarh_aesthetics"

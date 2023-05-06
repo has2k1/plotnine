@@ -22,7 +22,6 @@ from plotnine import (
     position_nudge,
     position_stack,
     scale_y_log10,
-    theme,
 )
 from plotnine.exceptions import PlotnineError
 from plotnine.positions.position import position
@@ -45,7 +44,6 @@ df3 = pd.DataFrame(
     }
 )
 random_state.seed(1234567890)
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_jitter():
@@ -62,7 +60,7 @@ def test_jitter():
             random_state=random_state,
         )
     )
-    assert p + _theme == "jitter"
+    assert p == "jitter"
 
     with pytest.raises(PlotnineError):
         geom_jitter(position=position_jitter(), width=0.1)
@@ -74,14 +72,14 @@ def test_nudge():
         + geom_point(size=10)
         + geom_point(size=10, color="red", position=position_nudge(0.25, 0.25))
     )
-    assert p + _theme == "nudge"
+    assert p == "nudge"
 
 
 def test_stack():
     p = ggplot(df2, aes("factor(z)")) + geom_bar(
         aes(fill="factor(x)"), position="stack"
     )
-    assert p + _theme == "stack"
+    assert p == "stack"
 
 
 def test_stack_negative():
@@ -98,7 +96,7 @@ def test_stack_negative():
         )
     )
 
-    assert p + _theme == "stack-negative"
+    assert p == "stack-negative"
 
 
 def test_stack_non_linear_scale():
@@ -115,21 +113,21 @@ def test_stack_non_linear_scale():
         + geom_col()
         + scale_y_log10()
     )
-    assert p + _theme == "stack-non-linear-scale"
+    assert p == "stack-non-linear-scale"
 
 
 def test_fill():
     p = ggplot(df2, aes("factor(z)")) + geom_bar(
         aes(fill="factor(x)"), position="fill"
     )
-    assert p + _theme == "fill"
+    assert p == "fill"
 
 
 def test_dodge():
     p = ggplot(df2, aes("factor(z)")) + geom_bar(
         aes(fill="factor(x)"), position="dodge"
     )
-    assert p + _theme == "dodge"
+    assert p == "dodge"
 
 
 def test_dodge_preserve_single():
@@ -137,7 +135,7 @@ def test_dodge_preserve_single():
     p = ggplot(df1, aes("x", fill="y")) + geom_bar(
         position=position_dodge(preserve="single")
     )
-    assert p + _theme == "dodge_preserve_single"
+    assert p == "dodge_preserve_single"
 
 
 def test_dodge_preserve_single_text():
@@ -154,21 +152,21 @@ def test_dodge_preserve_single_text():
             va="bottom",
         )
     )
-    assert p + _theme == "dodge_preserve_single_text"
+    assert p == "dodge_preserve_single_text"
 
 
 def test_dodge2():
     p = ggplot(df3, aes("x", "y", color="c")) + geom_boxplot(
         position="dodge2", size=2
     )
-    assert p + _theme == "dodge2"
+    assert p == "dodge2"
 
 
 def test_dodge2_varwidth():
     p = ggplot(df3, aes("x", "y", color="c")) + geom_boxplot(
         position=position_dodge2(preserve="single"), varwidth=True, size=2
     )
-    assert p + _theme == "dodge2_varwidth"
+    assert p == "dodge2_varwidth"
 
 
 def test_dodge2_preserve_single_interval():
@@ -178,7 +176,7 @@ def test_dodge2_preserve_single_interval():
     p = ggplot(
         df, aes(xmin="x-.45", xmax="x+.45", ymin=0, ymax="y")
     ) + geom_rect(position=position_dodge2(preserve="single"))
-    assert p + _theme == "dodge2_preserve_single_interval"
+    assert p == "dodge2_preserve_single_interval"
 
 
 def test_jitterdodge():
@@ -196,7 +194,7 @@ def test_jitterdodge():
         + geom_point(size=10, fill="black")
         + geom_point(size=10, position=position)
     )
-    assert p + _theme == "jitterdodge"
+    assert p == "jitterdodge"
 
 
 def test_position_from_geom():

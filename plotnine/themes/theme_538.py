@@ -17,7 +17,7 @@ class theme_538(theme_gray):
     """
 
     def __init__(self, base_size=11, base_family="DejaVu Sans"):
-        theme_gray.__init__(self, base_size, base_family)
+        super().__init__(base_size, base_family)
         bgcolor = "#F0F0F0"
         self += theme(
             axis_ticks=element_blank(),

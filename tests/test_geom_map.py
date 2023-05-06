@@ -11,8 +11,6 @@ from shapely.geometry import (
 
 from plotnine import aes, facet_wrap, geom_map, ggplot, labs, theme
 
-_theme = theme(subplots_adjust={"right": 0.85})
-
 
 def test_geometries():
     # Points
@@ -53,7 +51,7 @@ def test_geometries():
         + labs(fill="miny")
     )
 
-    assert p + _theme == "geometries"
+    assert p == "geometries"
 
 
 def test_multipolygon():
@@ -82,7 +80,7 @@ def test_multipolygon():
         + theme(aspect_ratio=1)
     )
 
-    assert p + _theme == "multipolygon"
+    assert p == "multipolygon"
 
 
 def test_multipoint():
@@ -100,7 +98,7 @@ def test_multipoint():
         + geom_map(df, size=5, color="None")
         + labs(fill="miny")
     )
-    assert p + _theme == "multipoint"
+    assert p == "multipoint"
 
 
 def test_facet_wrap():
@@ -125,4 +123,4 @@ def test_facet_wrap():
         + facet_wrap("shape")
         + labs(fill="miny")
     )
-    assert p + _theme == "facet_wrap"
+    assert p == "facet_wrap"

@@ -20,7 +20,7 @@ from .guides.guides import guides
 from .iapi import mpl_save_view
 from .layer import Layers
 from .mapping.aes import aes, make_labels
-from .options import SUBPLOTS_ADJUST, get_option
+from .options import get_option
 from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 from .utils import (
@@ -32,6 +32,7 @@ from .utils import (
 )
 
 if typing.TYPE_CHECKING:
+    from plotnine._mpl.layout_engine import LayoutArtists
     from plotnine.typing import (
         Axes,
         Coord,
@@ -70,6 +71,7 @@ class ggplot:
     theme: Theme
     facet: Facet
     coordinates: Coord
+    _layout_artists: LayoutArtists
 
     def __init__(
         self,
@@ -124,7 +126,13 @@ class ggplot:
         new = result.__dict__
 
         # don't make a deepcopy of data, or environment
-        shallow = {"data", "environment", "figure", "_build_objs"}
+        shallow = {
+            "data",
+            "environment",
+            "figure",
+            "_build_objs",
+            "_layout_artists",
+        }
         for key, item in old.items():
             if key in shallow:
                 new[key] = old[key]
@@ -197,6 +205,8 @@ class ggplot:
         fig : ~matplotlib.figure.Figure
             Matplotlib figure
         """
+        from ._mpl.layout_engine import PlotnineLayoutEngine
+
         # Do not draw if drawn already.
         # This prevents a needless error when reusing
         # figure & axes in the jupyter notebook.
@@ -213,20 +223,19 @@ class ggplot:
             # setup
             figure, axs = self._create_figure()
             self._setup_parameters()
+            self.theme.setup()
             self.facet.strips.generate()
-            self._resize_panels()
 
             # Drawing
             self._draw_layers()
-            self._draw_labels()
             self._draw_breaks_and_labels()
             self._draw_legend()
-            self._draw_title()
-            self._draw_caption()
+            self._draw_figure_texts()
             self._draw_watermarks()
 
             # Artist object theming
             self.theme.apply()
+            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return self.figure
 
@@ -245,17 +254,31 @@ class ggplot:
         axs : array_like
             Array of Axes onto which to draw the plots
         """
+        from ._mpl.layout_engine import (
+            LayoutArtists,
+            PlotnineLayoutEngine,
+        )
+
         self = deepcopy(self)
         self.figure = figure
         self.axs = axs
         with plot_context(self):
             self._build()
+
+            # setup
+            self._layout_artists = LayoutArtists(axs=axs)
             self._setup_parameters()
+            self.theme.setup()
             self.facet.strips.generate()
+
+            # drawing
             self._draw_layers()
             self._draw_breaks_and_labels()
             self._draw_legend()
+
+            # artist theming
             self.theme.apply()
+            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return self
 
@@ -356,6 +379,8 @@ class ggplot:
         """
         import matplotlib.pyplot as plt
 
+        from plotnine._mpl.layout_engine import LayoutArtists
+
         # Good for development
         if get_option("close_all_figures"):
             plt.close("all")
@@ -367,14 +392,8 @@ class ggplot:
 
         self.figure = figure
         self.axs = axs
+        self._layout_artists = LayoutArtists(axs=axs)
         return figure, axs
-
-    def _resize_panels(self):
-        """
-        Resize panels
-        """
-        self.theme.setup_figure(self.figure)
-        self.facet.spaceout_and_resize_panels()
 
     def _draw_layers(self):
         """
@@ -424,184 +443,57 @@ class ggplot:
         if not legend_box:
             return
 
-        figure = self.figure
-        left = figure.subplotpars.left
-        right = figure.subplotpars.right
-        top = figure.subplotpars.top
-        bottom = figure.subplotpars.bottom
-        W, H = figure.get_size_inches()
-        position = self.guides.position
-        _property = self.theme.themeables.property
-        spacing = _property("legend_box_spacing")
-        strip_margin_x = _property("strip_margin_x")
-        strip_margin_y = _property("strip_margin_y")
-
-        right_strip_width = self.facet.strips.breadth("right")
-        top_strip_height = self.facet.strips.breadth("top")
-
-        # Other than when the legend is on the right the rest of
-        # the computed x, y locations are not gauranteed not to
-        # overlap with the axes or the labels. The user must then
-        # use the legend_margin theme parameter to adjust the
-        # location. This should get fixed when MPL has a better
-        # layout manager.
-        if position == "right":
-            loc = "center left"
-            pad = right_strip_width * (1 + strip_margin_x) + spacing
-            x = right + pad / W
-            y = 0.5
-        elif position == "left":
-            loc = "center right"
-            x = left - spacing / W
-            y = 0.5
-        elif position == "top":
-            loc = "lower center"
-            x = 0.5
-            pad = top_strip_height * (1 + strip_margin_y) + spacing
-            y = top + pad / H
-        elif position == "bottom":
-            loc = "upper center"
-            x = 0.5
-            y = bottom - spacing / H
-        else:
-            loc = "center"
-            x, y = position
-
         anchored_box = AnchoredOffsetbox(
-            loc=loc,
+            loc="center",
             child=legend_box,
             pad=0.0,
             frameon=False,
-            bbox_to_anchor=(x, y),
-            bbox_transform=figure.transFigure,
+            prop={"size": 0, "stretch": 0},
+            bbox_to_anchor=(0, 0),
+            bbox_transform=self.figure.transFigure,
             borderpad=0.0,
         )
 
         anchored_box.set_zorder(90.1)
+        anchored_box.set_in_layout(True)
+
         self.theme._targets["legend_background"] = anchored_box
-        ax = self.axs[0]
-        ax.add_artist(anchored_box)
+        self.figure.add_artist(anchored_box)
 
-    def _draw_labels(self):
-        """
-        Draw x and y labels onto the figure
-        """
-        from matplotlib.transforms import (
-            IdentityTransform,
-            blended_transform_factory,
-        )
+        self._layout_artists.legend = anchored_box
+        self._layout_artists.legend_position = self.guides.position
 
-        # This is very laboured. Should be changed when MPL
-        # finally has a constraint based layout manager.
+    def _draw_figure_texts(self):
+        """
+        Draw title, x label, y label and caption onto the figure
+        """
         figure = self.figure
         theme = self.theme
-        _property = self.theme.themeables.property
 
-        pad_x = _property("axis_title_x", "margin").get_as("t", "pt")
-        pad_y = _property("axis_title_y", "margin").get_as("r", "pt")
+        title = self.labels.get("title", "")
+        caption = self.labels.get("caption", "")
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
         labels = self.coordinates.labels(
             self.layout.set_xy_labels(self.labels)
         )
-        # The first axes object is on left, and the last axes object
-        # is at the bottom. We change the transform so that the relevant
-        # coordinate is in figure coordinates. This way we take
-        # advantage of how MPL adjusts the label position so that they
-        # do not overlap with the tick text. This works well for
-        # facetting with scales='fixed' and also when not facetting.
-        # first_ax = self.axs[0]
-        # last_ax = self.axs[-1]
 
-        xlabel = self.facet.last_ax.set_xlabel(labels.x, labelpad=pad_x)
-        ylabel = self.facet.first_ax.set_ylabel(labels.y, labelpad=pad_y)
+        # The locations are handled by the layout manager
+        text_title = figure.text(0, 0, title)
+        text_caption = figure.text(0, 0, caption)
+        text_x = figure.text(0, 0, labels.x)
+        text_y = figure.text(0, 0, labels.y)
 
-        xlabel.set_transform(
-            blended_transform_factory(figure.transFigure, IdentityTransform())
-        )
-        ylabel.set_transform(
-            blended_transform_factory(IdentityTransform(), figure.transFigure)
-        )
+        theme._targets["plot_title"] = text_title
+        theme._targets["plot_caption"] = text_caption
+        theme._targets["axis_title_x"] = text_x
+        theme._targets["axis_title_y"] = text_y
 
-        theme._targets["axis_title_x"] = xlabel
-        theme._targets["axis_title_y"] = ylabel
-
-    def _draw_title(self):
-        """
-        Draw title onto the figure
-        """
-        # This is very laboured. Should be changed when MPL
-        # finally has a constraint based layout manager.
-        figure = self.figure
-        theme = self.theme
-        title = self.labels.get("title", "")
-        _property = self.theme.themeables.property
-
-        # Pick suitable values in inches and convert them to
-        # transFigure dimension. This gives fixed spacing
-        # margins which work for oblong plots.
-        top = figure.subplotpars.top
-        W, H = figure.get_size_inches()
-
-        # Adjust the title to avoid overlap with the facet
-        # labels on the top row
-        # pad/H is inches in transFigure coordinates. A fixed
-        # margin value in inches prevents oblong plots from
-        # getting unpredictably large spaces.
-
-        linespacing = _property("plot_title", "linespacing")
-        fontsize = _property("plot_title", "size")
-        pad = _property("plot_title", "margin").get_as("b", "in")
-        ha = _property("plot_title", "ha")
-        strip_margin_y = _property("strip_margin_y")
-
-        dpi = 72.27
-        line_size = fontsize / dpi
-        num_lines = len(title.split("\n"))
-        title_size = line_size * linespacing * num_lines
-        strip_height = self.facet.strips.breadth("top")
-        strip_height *= 1 + strip_margin_y
-
-        if ha == "left":
-            x = SUBPLOTS_ADJUST["left"]
-        elif ha == "right":
-            x = SUBPLOTS_ADJUST["right"]
-        else:
-            # ha='center' is default
-            x = 0.5
-
-        y = top + (strip_height + title_size / 2 + pad) / H
-
-        text = figure.text(x, y, title, ha=ha, va="center")
-        theme._targets["plot_title"] = text
-
-    def _draw_caption(self):
-        """
-        Draw caption onto the figure
-        """
-        # This is very laboured. Should be changed when MPL
-        # finally has a constraint based layout manager.
-        figure = self.figure
-        theme = self.theme
-        caption = self.labels.get("caption", "")
-        _property = self.theme.themeables.property
-
-        # Pick suitable values in inches and convert them to
-        # transFigure dimension. This gives fixed spacing
-        # margins which work for oblong plots.
-        right = figure.subplotpars.right
-        W, H = figure.get_size_inches()
-
-        margin = _property("plot_caption", "margin")
-        right_pad = margin.get_as("r", "in")
-        top_pad = margin.get_as("t", "in")
-
-        x = right - right_pad / W
-        y = 0 - top_pad / H
-
-        text = figure.text(x, y, caption, ha="right", va="top")
-        theme._targets["plot_caption"] = text
+        self._layout_artists.plot_title = text_title
+        self._layout_artists.plot_caption = text_caption
+        self._layout_artists.axis_title_x = text_x
+        self._layout_artists.axis_title_y = text_y
 
     def _draw_watermarks(self):
         """
@@ -658,11 +550,7 @@ class ggplot:
         This method has the same arguments as :meth:`ggplot.save`.
         Use it to get access to the figure that will be saved.
         """
-        fig_kwargs: Dict[str, Any] = {
-            "bbox_inches": "tight",  # 'tight' is a good default
-            "format": format,
-        }
-        fig_kwargs.update(kwargs)
+        fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
 
         # filename, depends on the object
         if filename is None:

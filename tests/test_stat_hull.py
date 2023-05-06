@@ -1,7 +1,5 @@
-from plotnine import aes, geom_point, ggplot, stat_hull, theme
+from plotnine import aes, geom_point, ggplot, stat_hull
 from plotnine.data import mtcars
-
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_hull():
@@ -12,4 +10,4 @@ def test_hull():
         + stat_hull(size=1)
     )
 
-    assert p + _theme == "hull"
+    assert p == "hull"

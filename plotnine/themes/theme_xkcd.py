@@ -42,7 +42,7 @@ class theme_xkcd(theme_gray):
     ):
         from matplotlib import patheffects
 
-        theme_gray.__init__(self, base_size)
+        super().__init__(base_size)
         self += theme(
             text=element_text(family=["xkcd", "Humor Sans", "Comic Sans MS"]),
             axis_ticks=element_line(color="black", size=1.5),
@@ -50,6 +50,7 @@ class theme_xkcd(theme_gray):
             axis_ticks_direction="in",
             axis_ticks_length_major=6,
             legend_background=element_rect(color="black", fill="None"),
+            legend_margin=5,
             legend_key=element_rect(fill="None"),
             panel_border=element_rect(color="black", size=1.5),
             panel_grid=element_blank(),
@@ -57,7 +58,7 @@ class theme_xkcd(theme_gray):
             strip_background=element_rect(color="black", fill="white"),
             strip_background_x=element_rect(width=2 / 3.0),
             strip_background_y=element_rect(height=2 / 3.0),
-            strip_margin=-0.5,
+            strip_align=-0.5,
         )
 
         d = {

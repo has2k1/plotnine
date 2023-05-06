@@ -1,14 +1,12 @@
 import pandas as pd
 import pytest
 
-from plotnine import aes, geom_point, geom_vline, ggplot, theme
+from plotnine import aes, geom_point, geom_vline, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 
 df = pd.DataFrame(
     {"xintercept": [1, 2], "x": [0.5, 3], "y": [-1, 1], "z": range(2)}
 )
-
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_aesthetics():
@@ -26,7 +24,7 @@ def test_aesthetics():
         + geom_vline(aes(xintercept="xintercept+.4", size="z"))
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"
 
 
 def test_aes_inheritance():

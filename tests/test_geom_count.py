@@ -1,8 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, geom_count, ggplot, theme
-
-_theme = theme(subplots_adjust={"right": 0.85})
+from plotnine import aes, geom_count, ggplot
 
 df = pd.DataFrame(
     {
@@ -46,16 +44,16 @@ df = pd.DataFrame(
 def test_discrete_x():
     p = ggplot(df, aes("x", "y")) + geom_count()
 
-    assert p + _theme == "discrete_x"
+    assert p == "discrete_x"
 
 
 def test_discrete_y():
     p = ggplot(df, aes("y", "x")) + geom_count()
 
-    assert p + _theme == "discrete_y"
+    assert p == "discrete_y"
 
 
 def test_continuous_x_y():
     p = ggplot(df, aes("y", "y")) + geom_count()
 
-    assert p + _theme == "continuous_x_y"
+    assert p == "continuous_x_y"

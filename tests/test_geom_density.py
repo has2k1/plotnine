@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import aes, geom_density, ggplot, lims, theme
+from plotnine import aes, geom_density, ggplot, lims
 from plotnine.exceptions import PlotnineWarning
 
 n = 6  # Some even number greater than 2
@@ -16,29 +16,28 @@ df = pd.DataFrame(
 )
 
 p = ggplot(df, aes("x", fill="factor(z)"))
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_gaussian():
     p1 = p + geom_density(kernel="gaussian", alpha=0.3)
-    assert p1 + _theme == "gaussian"
+    assert p1 == "gaussian"
 
 
 def test_gaussian_weighted():
     p1 = p + geom_density(aes(weight="x"), kernel="gaussian", alpha=0.3)
-    assert p1 + _theme == "gaussian_weighted"
+    assert p1 == "gaussian_weighted"
 
 
 def test_gaussian_trimmed():
     p2 = p + geom_density(kernel="gaussian", alpha=0.3, trim=True)
-    assert p2 + _theme == "gaussian-trimmed"
+    assert p2 == "gaussian-trimmed"
 
 
 def test_triangular():
     p3 = p + geom_density(
         kernel="triangular", bw="normal_reference", alpha=0.3
     )  # other
-    assert p3 + _theme == "triangular"
+    assert p3 == "triangular"
 
 
 def test_few_datapoints():

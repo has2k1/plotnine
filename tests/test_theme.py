@@ -28,8 +28,6 @@ from plotnine import (
 )
 from plotnine.data import mtcars
 
-_theme = theme(subplots_adjust={"right": 0.80})
-
 
 def test_add_complete_complete():
     theme1 = theme_gray()
@@ -144,63 +142,63 @@ class TestThemes:
     def test_theme_538(self):
         p = self.g + labs(title="Theme 538") + theme_538()
 
-        assert p + _theme == "theme_538"
+        assert p == "theme_538"
 
     def test_theme_bw(self):
         p = self.g + labs(title="Theme BW") + theme_bw()
 
-        assert p + _theme == "theme_bw"
+        assert p == "theme_bw"
 
     def test_theme_classic(self):
         p = self.g + labs(title="Theme Classic") + theme_classic()
 
-        assert p + _theme == "theme_classic"
+        assert p == "theme_classic"
 
     def test_theme_dark(self):
         p = self.g + labs(title="Theme Dark") + theme_dark()
 
-        assert p + _theme == "theme_dark"
+        assert p == "theme_dark"
 
     def test_theme_gray(self):
         p = self.g + labs(title="Theme Gray") + theme_gray()
 
-        assert p + _theme == "theme_gray"
+        assert p == "theme_gray"
 
     def test_theme_light(self):
         p = self.g + labs(title="Theme Light") + theme_light()
 
-        assert p + _theme == "theme_light"
+        assert p == "theme_light"
 
     def test_theme_linedraw(self):
         p = self.g + labs(title="Theme Linedraw") + theme_linedraw()
 
-        assert p + _theme == "theme_linedraw"
+        assert p == "theme_linedraw"
 
     def test_theme_matplotlib(self):
         p = self.g + labs(title="Theme Matplotlib") + theme_matplotlib()
 
-        assert p + _theme == "theme_matplotlib"
+        assert p == "theme_matplotlib"
 
     def test_theme_minimal(self):
         p = self.g + labs(title="Theme Minimal") + theme_minimal()
 
-        assert p + _theme == "theme_minimal"
+        assert p == "theme_minimal"
 
     def test_theme_tufte(self):
         p = self.g + labs(title="Theme Tufte") + theme_tufte(ticks=False)
 
-        assert p + _theme == "theme_tufte"
+        assert p == "theme_tufte"
 
     @pytest.mark.xfail(reason="fails on github actions")
     def test_theme_seaborn(self):
         p = self.g + labs(title="Theme Seaborn") + theme_seaborn()
 
-        assert p + _theme == "theme_seaborn"
+        assert p == "theme_seaborn"
 
     def test_theme_void(self):
         p = self.g + labs(title="Theme Void") + theme_void()
 
-        assert p + _theme == "theme_void"
+        assert p == "theme_void"
 
     def test_theme_xkcd(self):
         p = (
@@ -214,6 +212,6 @@ class TestThemes:
         if os.environ.get("CI") or os.environ.get("TRAVIS"):
             # Github Actions and Travis do not have the fonts,
             # we still check to catch any other errors
-            assert p + _theme != "theme_gray"
+            assert p != "theme_gray"
         else:
-            assert p + _theme == "theme_xkcd"
+            assert p == "theme_xkcd"

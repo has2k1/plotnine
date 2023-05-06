@@ -47,9 +47,6 @@ class PlotnineAnimation(ArtistAnimation):
     2. The scales of all the plots should have the same limits. It is
        a good idea to create a scale (with limits) for each aesthetic
        and add them to all the plots.
-    3. For plots with legends or any other features that are cutoff,
-       use the :class:`~plotnine.themes.themeable.subplots_adjust`
-       themeable to create space for it.
     """
 
     def __init__(

@@ -7,7 +7,6 @@ from plotnine import (
     geom_histogram,
     geom_point,
     ggplot,
-    theme,
 )
 
 n = 10  # Some even number greater than 2
@@ -20,8 +19,6 @@ df = pd.DataFrame(
     }
 )
 
-_theme = theme(subplots_adjust={"right": 0.85})
-
 
 def test_midpoint():
     p = (
@@ -31,4 +28,4 @@ def test_midpoint():
         + geom_point(stat="bin", bins=n, size=4, stroke=0, color="red")
     )
 
-    assert p + _theme == "midpoint"
+    assert p == "midpoint"

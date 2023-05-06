@@ -17,7 +17,7 @@ class theme_linedraw(theme_gray):
     """
 
     def __init__(self, base_size=11, base_family=None):
-        theme_gray.__init__(self, base_size, base_family)
+        super().__init__(base_size, base_family)
         self += theme(
             axis_text=element_text(color="black", size=base_size * 0.8),
             axis_ticks=element_line(color="black", size=0.5),

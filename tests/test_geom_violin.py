@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import aes, coord_flip, facet_grid, geom_violin, ggplot, theme
+from plotnine import aes, coord_flip, facet_grid, geom_violin, ggplot
 from plotnine.data import mtcars
 
 n = 4
@@ -71,7 +71,6 @@ def test_quantiles_width_dodge():
         + geom_violin(aes(y="y"), draw_quantiles=[0.25, 0.75], size=2)
         + geom_violin(aes(y="y+25"), color="green", width=0.5, size=2)
         + geom_violin(aes(y="y+50", fill="factor(y%2)"), size=2)
-        + theme(subplots_adjust={"right": 0.85})
     )
     assert p == "quantiles_width_dodge"
 

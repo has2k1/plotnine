@@ -14,6 +14,7 @@ import typing
 from contextlib import suppress
 from copy import deepcopy
 from typing import Dict
+from warnings import warn
 
 from ..exceptions import PlotnineError
 from ..utils import RegistryHierarchyMeta, to_rgba
@@ -1387,13 +1388,10 @@ class axis_ticks_length_major(themeable):
         Value in points.
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
-        val = self.properties["value"]
-        rcParams["xtick.major.size"] = val
-        rcParams["ytick.major.size"] = val
-        return rcParams
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        ax.xaxis.set_tick_params(which="major", size=self.properties["value"])
+        ax.yaxis.set_tick_params(which="major", size=self.properties["value"])
 
 
 class axis_ticks_length_minor(themeable):
@@ -1406,13 +1404,10 @@ class axis_ticks_length_minor(themeable):
         Value in points.
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
-        val = self.properties["value"]
-        rcParams["xtick.minor.size"] = val
-        rcParams["ytick.minor.size"] = val
-        return rcParams
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        ax.xaxis.set_tick_params(which="minor", size=self.properties["value"])
+        ax.yaxis.set_tick_params(which="minor", size=self.properties["value"])
 
 
 class axis_ticks_length(axis_ticks_length_major, axis_ticks_length_minor):
@@ -1438,13 +1433,15 @@ class axis_ticks_pad_major(themeable):
         Value in points.
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
         val = self.properties["value"]
-        rcParams["xtick.major.pad"] = val
-        rcParams["ytick.major.pad"] = val
-        return rcParams
+
+        for t in ax.xaxis.get_major_ticks():
+            t.set_pad(val)
+
+        for t in ax.yaxis.get_major_ticks():
+            t.set_pad(val)
 
 
 class axis_ticks_pad_minor(themeable):
@@ -1456,13 +1453,15 @@ class axis_ticks_pad_minor(themeable):
     theme_element : float
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
         val = self.properties["value"]
-        rcParams["xtick.minor.pad"] = val
-        rcParams["ytick.minor.pad"] = val
-        return rcParams
+
+        for t in ax.xaxis.get_minor_ticks():
+            t.set_pad(val)
+
+        for t in ax.yaxis.get_minor_ticks():
+            t.set_pad(val)
 
 
 class axis_ticks_pad(axis_ticks_pad_major, axis_ticks_pad_minor):
@@ -1490,11 +1489,11 @@ class axis_ticks_direction_x(themeable):
         - ``inout`` - ticks inside and outside the panel
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
-        rcParams["xtick.direction"] = self.properties["value"]
-        return rcParams
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        ax.xaxis.set_tick_params(
+            which="major", tickdir=self.properties["value"]
+        )
 
 
 class axis_ticks_direction_y(themeable):
@@ -1509,11 +1508,11 @@ class axis_ticks_direction_y(themeable):
         - ``inout`` - ticks inside and outside the panel
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
-        rcParams["ytick.direction"] = self.properties["value"]
-        return rcParams
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        ax.yaxis.set_tick_params(
+            which="major", tickdir=self.properties["value"]
+        )
 
 
 class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
@@ -1533,13 +1532,12 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
 
 class panel_spacing_x(themeable):
     """
-    Horizontal spacing betweend the facet panels
+    Horizontal spacing between the facet panels
 
     Parameters
     ----------
     theme_element : float
-        Size in inches of the horizontal margins between the
-        facet panels.
+        Size as a fraction of the figure width.
     """
 
     pass
@@ -1552,8 +1550,14 @@ class panel_spacing_y(themeable):
     Parameters
     ----------
     theme_element : float
-        Size in inches of the vertical space between the
-        facet panels
+        Size as a fraction of the figure width.
+
+    Note
+    ----
+    It is deliberate to have the vertical spacing be a fraction of
+    the width. That means that when :class:`panel_spacing_x` is the
+    equal :class:`panel_spacing_x`, the spaces in both directions
+    will be equal.
     """
 
     pass
@@ -1572,6 +1576,7 @@ class panel_spacing(panel_spacing_x, panel_spacing_y):
     pass
 
 
+# TODO: Distinct margins in all four directions
 class plot_margin(themeable):
     """
     Plot Margin
@@ -1581,16 +1586,8 @@ class plot_margin(themeable):
     theme_element : float
         Must be in the [0, 1] range. It is specified
         as a fraction of the figure width and figure
-        height. Values outside that range will
-        stretch the figure.
+        height.
     """
-
-    def setup_figure(self, figure: Figure):
-        val = self.properties["value"]
-        if val is not None:
-            figure.subplots_adjust(
-                left=val, right=1 - val, bottom=val, top=1 - val
-            )
 
 
 class panel_ontop(themeable):
@@ -1633,12 +1630,13 @@ class dpi(themeable):
     theme_element : int
     """
 
+    # fig.set_dpi does not work
+    # https://github.com/matplotlib/matplotlib/issues/24644
+
     @property
     def rcParams(self) -> dict[str, Any]:
         rcParams = super().rcParams
-        val = self.properties["value"]
-        rcParams["figure.dpi"] = val
-        rcParams["savefig.dpi"] = "figure"
+        rcParams["figure.dpi"] = self.properties["value"]
         return rcParams
 
 
@@ -1652,53 +1650,8 @@ class figure_size(themeable):
         (width, height) in inches
     """
 
-    @property
-    def rcParams(self) -> dict[str, Any]:
-        rcParams = super().rcParams
-        try:
-            width, height = self.properties["value"]
-        except ValueError:
-            raise PlotnineError(
-                "figure_size should be a tuple (width, height) "
-                "with the values in inches"
-            )
-
-        rcParams["figure.figsize"] = "{}, {}".format(width, height)
-        return rcParams
-
-
-class subplots_adjust(themeable):
-    """
-    Adjust position of subplots on in the figure
-
-    Useful if part of the plot (most likely the legend)
-    are cut off.
-
-    Full access to the underlying Matplolib subplot
-    adjustment parameters
-
-    Parameters
-    ----------
-    theme_element : dict
-        See :class:`matplotlib.figure.SubplotParams`
-        for the keys that the dictionary *can* have.
-    """
-
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
-        params = self.properties["value"]
-        figure.subplots_adjust(
-            wspace=params.get("wspace", None),
-            hspace=params.get("hspace", None),
-        )
-
-    def setup_figure(self, figure: Figure):
-        params = self.properties["value"]
-        figure.subplots_adjust(
-            left=params.get("left", None),
-            right=params.get("right", None),
-            top=params.get("top", None),
-            bottom=params.get("bottom", None),
-        )
+        figure.set_size_inches(self.properties["value"])
 
 
 class legend_box(themeable):
@@ -1782,7 +1735,7 @@ class legend_key_size(legend_key_width, legend_key_height):
 
 class legend_margin(themeable):
     """
-    Padding between the legend the inner box
+    Padding between the legend and the inner box
 
     Parameters
     ----------
@@ -1793,12 +1746,12 @@ class legend_margin(themeable):
 
 class legend_box_spacing(themeable):
     """
-    Spacing between legend and the anchor point
+    Spacing between the legend and the plotting area
 
     Parameters
     ----------
     theme_element : float
-        Value in inches.
+        Value in points.
     """
 
 
@@ -1872,43 +1825,59 @@ class legend_entry_spacing(legend_entry_spacing_x, legend_entry_spacing_y):
     """
 
 
-class strip_margin_x(themeable):
+class strip_align_x(themeable):
     """
-    Vertical margin between the strip background and the panel border
+    Vertical alignment of the strip & its background w.r.t the panel border
 
     Parameters
     ----------
     theme_element : float
         Value as a proportion of the strip size. A good value
         should be the range :math:`[-1, 0.5]`. A negative value
-        puts the strip inside the axes and a positive value
-        creates a space between the strip and the axes.
+        puts the strip inside the axes. A positive value creates
+        a margin between the strip and the axes. `0` puts the
+        strip on top of the panels.
     """
 
 
-class strip_margin_y(themeable):
+class strip_align_y(themeable):
     """
-    Horizontal margin between the strip background and the panel border
+    Horizontal alignment of the strip & its background w.r.t the panel border
 
     Parameters
     ----------
     theme_element : float
         Value as a proportion of the strip size. A good value
         should be the range :math:`[-1, 0.5]`. A negative value
-        puts the strip inside the axes and a positive value
-        creates a space between the strip and the axes.
+        puts the strip inside the axes. A positive value creates
+        a margin between the strip and the axes. `0` puts the
+        strip exactly beside the panels.
     """
 
 
-class strip_margin(strip_margin_x, strip_margin_y):
+class strip_align(strip_align_x, strip_align_y):
     """
-    Margin between the strip background and the panel border
+    Alignment of the strip & its background w.r.t the panel border
 
     Parameters
     ----------
     theme_element : float
-        Value as a proportion of the strip size. A good value
+        Value as a proportion of the strip text size. A good value
         should be the range :math:`[-1, 0.5]`. A negative value
         puts the strip inside the axes and a positive value
         creates a space between the strip and the axes.
     """
+
+
+# Deprecated
+
+
+class subplots_adjust(themeable):
+    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+        warn(
+            "You no longer need to use subplots_adjust to make space for "
+            "the legend or text around the panels. This paramater will be "
+            "removed in a future version. You can still use 'plot_margin' "
+            "'panel_spacing' for your other spacing needs.",
+            FutureWarning,
+        )

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 import typing
-from contextlib import suppress
 from warnings import warn
 
 import numpy as np
@@ -181,61 +180,6 @@ class facet_wrap(facet):
 
         data.reset_index(drop=True, inplace=True)
         return data
-
-    def spaceout_and_resize_panels(self):
-        """
-        Adjust the spacing between the panels
-
-        Resize them to meet the aspect ratio
-        """
-        ncol = self.ncol
-        nrow = self.nrow
-        figure = self.figure
-        theme = self.theme
-        aspect_ratio = self._aspect_ratio()
-        _property = theme.themeables.property
-
-        left = figure.subplotpars.left
-        right = figure.subplotpars.right
-        top = figure.subplotpars.top
-        bottom = figure.subplotpars.bottom
-        top_strip_height = self.strips.breadth("top")
-        W, H = figure.get_size_inches()
-        spacing_x = _property("panel_spacing_x")
-        spacing_y = _property("panel_spacing_y")
-
-        if theme.themeables.is_blank("strip_text_x"):
-            top_strip_height = 0
-
-        # Account for the vertical sliding of the strip if any
-        with suppress(KeyError):
-            strip_margin_x = _property("strip_margin_x")
-            top_strip_height *= 1 + strip_margin_x
-
-        # The goal is to have equal spacing along the vertical
-        # and the horizontal. We use the wspace and compute
-        # the appropriate hspace. It would be a lot easier if
-        # MPL had a better layout manager.
-
-        # width of axes and height of axes
-        w = ((right - left) * W - spacing_x * (ncol - 1)) / ncol
-        h = (
-            (top - bottom) * H - (spacing_y + top_strip_height) * (nrow - 1)
-        ) / nrow
-
-        # aspect ratio changes the size of the figure
-        if aspect_ratio is not None:
-            h = w * aspect_ratio
-            H = (h * nrow + (spacing_y + top_strip_height) * (nrow - 1)) / (
-                top - bottom
-            )
-            figure.set_figheight(H)
-
-        # spacing
-        wspace = spacing_x / w
-        hspace = (spacing_y + top_strip_height) / h
-        figure.subplots_adjust(wspace=wspace, hspace=hspace)
-        self.check_axis_text_space()
 
     def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         s = strip(self.vars, layout_info, self, ax, "top")

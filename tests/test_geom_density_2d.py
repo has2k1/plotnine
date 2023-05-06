@@ -9,20 +9,14 @@ from plotnine import (
     lims,
     scale_size_radius,
     stat_density_2d,
-    theme,
 )
 
 n = 20
 adj = n // 4
 
 df = pd.DataFrame({"x": range(n), "y": range(n)})
-_theme = theme(subplots_adjust={"right": 0.85})
 
-p0 = (
-    ggplot(df, aes("x", "y"))
-    + lims(x=(-adj, n + adj), y=(-adj, n + adj))
-    + _theme
-)
+p0 = ggplot(df, aes("x", "y")) + lims(x=(-adj, n + adj), y=(-adj, n + adj))
 
 
 def test_contours():

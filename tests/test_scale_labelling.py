@@ -11,9 +11,6 @@ from plotnine import (
 )
 from plotnine.data import mtcars
 
-_theme = theme(subplots_adjust={"right": 0.80})
-_theme_captions = theme(subplots_adjust={"bottom": 0.30})
-
 c1 = "This is a sample caption"
 c2 = """\
 Lorem Ipsum is simply dummy text of the printing and typesetting industry.
@@ -32,7 +29,7 @@ def test_labelling_with_colour():
         + labs(colour="Colour Title")
     )
 
-    assert p + _theme == "labelling_with_colour"
+    assert p == "labelling_with_colour"
 
 
 def test_caption_simple():
@@ -47,7 +44,7 @@ def test_caption_complex():
         + geom_point()
         + labs(caption=c2)
         + facet_grid("am ~ vs")
-        + theme(plot_caption=element_text(x=0.125, ha="left", size=12))
+        + theme(plot_caption=element_text(ha="left", size=12))
     )
 
     assert p == "caption_complex"

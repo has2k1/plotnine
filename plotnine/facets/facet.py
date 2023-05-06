@@ -4,13 +4,12 @@ import itertools
 import types
 import typing
 from copy import copy, deepcopy
-from warnings import warn
 
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 
-from ..exceptions import PlotnineError, PlotnineWarning
+from ..exceptions import PlotnineError
 from ..scales.scales import Scales
 from ..utils import cross_join, match
 from .strips import Strips
@@ -19,6 +18,7 @@ if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional
 
     import numpy.typing as npt
+    from matplotlib.gridspec import GridSpec
 
     from plotnine.iapi import layout_details, panel_view
     from plotnine.typing import (
@@ -107,6 +107,8 @@ class facet:
         Literal["fixed", "free", "free_x", "free_y"]
         | dict[Literal["x", "y"], list[int]]
     ) = "fixed"
+
+    grid_spec: GridSpec
 
     def __init__(
         self,
@@ -412,6 +414,7 @@ class facet:
             height_ratios=space["y"],
             width_ratios=space["x"],
         )
+        self.grid_spec = gs
 
         # Create axes
         i = 1
@@ -473,41 +476,6 @@ class facet:
                 aspect_ratio = None
 
         return aspect_ratio
-
-    def spaceout_and_resize_panels(self):
-        """
-        Adjust the spacing between the panels
-
-        Resize them to meet the aspect ratio
-        """
-        pass
-
-    def check_axis_text_space(self):
-        _adjust = self.theme.themeables.get("subplots_adjust")
-        if _adjust:
-            has_wspace = "wspace" in _adjust.properties["value"]
-            has_hspace = "hspace" in _adjust.properties["value"]
-        else:
-            has_wspace = False
-            has_hspace = False
-
-        warn_x = self.ncol > 1 and self.free["y"] and not has_wspace
-        warn_y = self.nrow > 1 and self.free["x"] and not has_hspace
-
-        if warn_x:
-            warn(
-                "If you need more space for the x-axis tick text use "
-                "... + theme(subplots_adjust={'wspace': 0.25}). "
-                "Choose an appropriate value for 'wspace'.",
-                PlotnineWarning,
-            )
-        if warn_y:
-            warn(
-                "If you need more space for the y-axis tick text use "
-                "... + theme(subplots_adjust={'hspace': 0.25}). "
-                "Choose an appropriate value for 'hspace'",
-                PlotnineWarning,
-            )
 
 
 def combine_vars(
