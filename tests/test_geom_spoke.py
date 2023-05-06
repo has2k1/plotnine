@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from plotnine import aes, geom_spoke, ggplot, theme
+from plotnine import aes, geom_spoke, ggplot
 
 n = 4
 df = pd.DataFrame(
@@ -13,7 +13,6 @@ df = pd.DataFrame(
         "z": range(n),
     }
 )
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_aesthetics():
@@ -26,11 +25,11 @@ def test_aesthetics():
         + geom_spoke(aes("x+8", size="z"))
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"
 
 
 def test_unmapped_angle():
     p = ggplot(df, aes(y="y", angle="angle", radius="radius")) + geom_spoke(
         aes("x", "y"), angle=0, radius=1
     )
-    assert p + _theme == "test_unmapped_angle"
+    assert p == "test_unmapped_angle"

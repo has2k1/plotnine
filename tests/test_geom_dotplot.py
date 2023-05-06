@@ -1,9 +1,8 @@
 import pandas as pd
 
-from plotnine import aes, geom_dotplot, ggplot, theme
+from plotnine import aes, geom_dotplot, ggplot
 
 df = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_dotdensity():
@@ -56,7 +55,7 @@ class TestGrouping:
         }
     )
 
-    p = ggplot(df, aes("x", "x", fill="factor(g)", color="factor(g)")) + _theme
+    p = ggplot(df, aes("x", "x", fill="factor(g)", color="factor(g)"))
 
     def test_group_basic(self):
         p = self.p + geom_dotplot(bins=15)

@@ -9,7 +9,6 @@ from plotnine import (
     geom_tile,
     ggplot,
     labs,
-    theme,
 )
 
 n = 4
@@ -30,9 +29,6 @@ df = pd.DataFrame(
 df["x"] = df["xmin"] + 0.5
 df["y"] = df["ymin"] + 0.5
 
-# To leave enough room for the legend
-_theme = theme(subplots_adjust={"right": 0.85})
-
 
 def test_rect_aesthetics():
     p = (
@@ -50,7 +46,6 @@ def test_rect_aesthetics():
             color="yellow",
             size=2,
         )
-        + _theme
         +
         # for comparison with geom_tile which
         # has labels by default
@@ -95,7 +90,6 @@ def test_tile_aesthetics():
         + geom_tile(
             aes(y="y+8", linetype="factor(z+2)"), color="yellow", size=2
         )
-        + _theme
     )
 
     assert p == "tile-aesthetics"

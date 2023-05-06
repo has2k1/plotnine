@@ -17,10 +17,9 @@ class theme_minimal(theme_bw):
     """
 
     def __init__(self, base_size=11, base_family=None):
-        theme_bw.__init__(self, base_size, base_family)
+        super().__init__(base_size, base_family)
         self += theme(
             axis_ticks=element_blank(),
-            axis_ticks_length=12,
             legend_background=element_blank(),
             legend_key=element_blank(),
             panel_background=element_blank(),

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from plotnine import aes, geom_abline, geom_point, ggplot, theme
+from plotnine import aes, geom_abline, geom_point, ggplot
 from plotnine.exceptions import PlotnineWarning
 
 df = pd.DataFrame(
@@ -13,8 +13,6 @@ df = pd.DataFrame(
         "z": range(2),
     }
 )
-
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_aesthetics():
@@ -36,7 +34,7 @@ def test_aesthetics():
         + geom_abline(aes(slope="slope", intercept="intercept+.4", size="z"))
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"
 
 
 def test_aes_inheritance():

@@ -2,10 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import qplot, theme
+from plotnine import qplot
 from plotnine.exceptions import PlotnineWarning
-
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_scalars():
@@ -76,4 +74,4 @@ def test_series_labelling():
         }
     )
     p = qplot(df.x_axis_label, df.y_axis_label, color=df.color_label)
-    assert p + _theme == "series_labelling"
+    assert p == "series_labelling"

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, geom_polygon, ggplot, theme
+from plotnine import aes, geom_polygon, ggplot
 
 df = pd.DataFrame(
     {
@@ -9,7 +9,6 @@ df = pd.DataFrame(
         "z": ([1] * 4 + [2] * 3 + [3] * 6),
     }
 )
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_aesthetics():
@@ -30,7 +29,7 @@ def test_aesthetics():
         )
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"
 
 
 def test_no_fill():
@@ -40,4 +39,4 @@ def test_no_fill():
         + geom_polygon(aes(y="y+2"), fill="None", color="green", size=2)
         + geom_polygon(aes(y="y+4"), fill="none", color="blue", size=2)
     )
-    assert p + _theme == "no_fill"
+    assert p == "no_fill"

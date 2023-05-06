@@ -11,7 +11,6 @@ from plotnine import (
     geom_ribbon,
     ggplot,
     scale_x_continuous,
-    theme,
 )
 
 n = 4  # No. of ribbions in a vertical stack
@@ -27,7 +26,6 @@ df = pd.DataFrame(
         "z": np.repeat(range(n), m),
     }
 )
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def test_ribbon_aesthetics():
@@ -50,7 +48,7 @@ def test_ribbon_aesthetics():
         )
     )
 
-    assert p + _theme == "ribbon_aesthetics"
+    assert p == "ribbon_aesthetics"
 
 
 def test_area_aesthetics():
@@ -73,7 +71,7 @@ def test_area_aesthetics():
         )
     )
 
-    assert p + _theme == "area_aesthetics"
+    assert p == "area_aesthetics"
 
 
 def test_ribbon_facetting():
@@ -83,7 +81,7 @@ def test_ribbon_facetting():
         + facet_wrap("~ z")
     )
 
-    assert p + _theme == "ribbon_facetting"
+    assert p == "ribbon_facetting"
 
 
 def test_ribbon_coord_flip():
@@ -95,7 +93,7 @@ def test_ribbon_coord_flip():
         + coord_flip()
     )
 
-    assert p + _theme == "ribbon_coord_flip"
+    assert p == "ribbon_coord_flip"
 
 
 def test_ribbon_where():
@@ -114,7 +112,7 @@ def test_ribbon_where():
         )
         + geom_line()
     )
-    assert p + _theme == "ribbon_where"
+    assert p == "ribbon_where"
 
 
 class TestOutlineType:

@@ -53,8 +53,6 @@ from plotnine.scales.scale_xy import (
 )
 from plotnine.scales.scales import make_scale
 
-_theme = theme(subplots_adjust={"right": 0.85})
-
 
 # test palettes
 def test_discrete_color_palettes():
@@ -579,7 +577,7 @@ def test_multiple_aesthetics():
             type="qual", palette=1, aesthetics=["fill", "color"]
         )
     )
-    assert p + _theme == "multiple_aesthetics"
+    assert p == "multiple_aesthetics"
 
 
 def test_missing_manual_dict_aesthetic():
@@ -594,7 +592,7 @@ def test_missing_manual_dict_aesthetic():
         + geom_point(size=3)
         + scale_manual.scale_color_manual(values)
     )
-    assert p + _theme == "missing_manual_dict_aesthetic"
+    assert p == "missing_manual_dict_aesthetic"
 
 
 def test_missing_data_discrete_scale():
@@ -603,7 +601,7 @@ def test_missing_data_discrete_scale():
     p = ggplot(df, aes("a", "a")) + geom_point(
         aes(fill="b"), stroke=0, size=10
     )
-    assert p + _theme == "missing_data_discrete_scale"
+    assert p == "missing_data_discrete_scale"
 
 
 def test_missing_data_discrete_position_scale():
@@ -614,7 +612,7 @@ def test_missing_data_discrete_position_scale():
     )
 
     with pytest.warns(PlotnineWarning):
-        assert p + _theme == "missing_data_discrete_position_scale"
+        assert p == "missing_data_discrete_position_scale"
 
 
 df = pd.DataFrame(
@@ -633,7 +631,7 @@ def test_legend_ordering_global_aethetics_1():
     # 2. shape
     p = ggplot(df) + aes("x", "y", color="w", shape="z") + geom_point(size=5)
 
-    assert p + _theme == "legend_ordering_global_aesthetics_1"
+    assert p == "legend_ordering_global_aesthetics_1"
 
 
 def test_legend_ordering_global_aesthetics_2():
@@ -641,7 +639,7 @@ def test_legend_ordering_global_aesthetics_2():
     # 2. color
     p = ggplot(df) + aes("x", "y", shape="z", color="w") + geom_point(size=5)
 
-    assert p + _theme == "legend_ordering_global_aesthetics_2"
+    assert p == "legend_ordering_global_aesthetics_2"
 
 
 def test_legend_ordering_local_aethetics_1():
@@ -653,7 +651,7 @@ def test_legend_ordering_local_aethetics_1():
         + geom_point(aes(color="w", shape="z"), size=5)
     )
 
-    assert p + _theme == "legend_ordering_local_aesthetics_1"
+    assert p == "legend_ordering_local_aesthetics_1"
 
 
 def test_legend_ordering_local_aethetics_2():
@@ -665,7 +663,7 @@ def test_legend_ordering_local_aethetics_2():
         + geom_point(aes(shape="z", color="w"), size=5)
     )
 
-    assert p + _theme == "legend_ordering_local_aesthetics_2"
+    assert p == "legend_ordering_local_aesthetics_2"
 
 
 def test_legend_ordering_mixed_scope_aesthetics():
@@ -678,7 +676,7 @@ def test_legend_ordering_mixed_scope_aesthetics():
         + geom_point(aes(color="w"), size=5)
     )
 
-    assert p + _theme == "legend_ordering_mixed_scope_aesthetics"
+    assert p == "legend_ordering_mixed_scope_aesthetics"
 
 
 def test_legend_ordering_added_scales():
@@ -692,7 +690,7 @@ def test_legend_ordering_added_scales():
         + scale_color.scale_color_discrete()
     )
 
-    assert p + _theme == "legend_ordering_added_scales"
+    assert p == "legend_ordering_added_scales"
 
 
 def test_breaks_and_labels_outside_of_limits():
@@ -767,14 +765,9 @@ def test_ordinal_scale():
         {"x": pd.Categorical(list("abcd"), ordered=True), "y": [1, 2, 3, 4]}
     )
 
-    p = (
-        ggplot(df)
-        + aes("x", "y", color="-y", fill="x")
-        + geom_col(size=4)
-        + _theme
-    )
+    p = ggplot(df) + aes("x", "y", color="-y", fill="x") + geom_col(size=4)
 
-    assert p + _theme == "ordinal_scale"
+    assert p == "ordinal_scale"
 
 
 def test_layer_with_only_infs():

@@ -12,7 +12,6 @@ from plotnine import (
     lims,
     scale_color_identity,
     scale_shape_manual,
-    theme,
 )
 
 
@@ -51,7 +50,6 @@ def test_aesthetics():
             size=10,
             show_legend=False,
         )
-        + theme(subplots_adjust={"right": 0.85})
     )
 
     assert p == "aesthetics"
@@ -101,7 +99,6 @@ class TestColorFillonUnfilledShape:
         ggplot(df, aes("x", "y"))
         + geom_point(shape="3", size=10, stroke=3)
         + guides(fill=False)
-        + theme(subplots_adjust={"right": 0.85})
     )
 
     # Color  Fill  Result
