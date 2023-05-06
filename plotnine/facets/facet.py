@@ -260,7 +260,6 @@ class facet:
         """
         Compute ranges for the x and y scales
         """
-        # pyright: reportUnknownParameterType=false
         _layout = layout.layout
         panel_scales_x = layout.panel_scales_x
         panel_scales_y = layout.panel_scales_y
