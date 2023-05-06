@@ -105,6 +105,9 @@ Bug Fixes
 - Fixed legend for :class:`~plotnine.geoms.geom_point` to accurately display
   transparent fill colors that have been manually set. (:issue:`665`)
 
+- Fix issue where infinite limits for the `x` or `y` scales lead to an
+  exception. (:issue:`664`)
+
 v0.10.1
 -------
 (2022-09-10)
