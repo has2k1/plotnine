@@ -315,9 +315,19 @@ class facet:
         """
         from .._mpl.ticker import MyFixedFormatter
 
+        def _inf_to_none(
+            t: tuple[float, float]
+        ) -> tuple[float | None, float | None]:
+            """
+            Replace infinities with None
+            """
+            a = t[0] if np.isfinite(t[0]) else None
+            b = t[1] if np.isfinite(t[1]) else None
+            return (a, b)
+
         # limits
-        ax.set_xlim(panel_params.x.range)
-        ax.set_ylim(panel_params.y.range)
+        ax.set_xlim(_inf_to_none(panel_params.x.range))
+        ax.set_ylim(_inf_to_none(panel_params.y.range))
 
         if typing.TYPE_CHECKING:
             assert callable(ax.set_xticks)
