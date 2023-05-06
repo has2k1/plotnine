@@ -1,12 +1,11 @@
 import matplotlib.pyplot as plt
 import pytest
 
-from plotnine import labs, lims, qplot, theme, theme_minimal
+from plotnine import labs, lims, qplot, theme_minimal
 from plotnine.animation import PlotnineAnimation
 from plotnine.exceptions import PlotnineError
 
 plt.switch_backend("Agg")  # TravisCI needs this
-_theme = theme(subplots_adjust={"right": 0.80})
 
 x = [1, 2, 3, 4, 5]
 y = [1, 2, 3, 4, 5]
@@ -36,7 +35,6 @@ def test_animation():
             + lims(color=(1, 7))
             + labs(color="color")
             + theme_minimal()
-            + _theme
         )
 
     plots = [plot(i) for i in range(3)]
@@ -54,7 +52,6 @@ def test_animation_different_scale_limits():
             + _lims
             + labs(color="color")
             + theme_minimal()
-            + _theme
         )
 
     plots = [plot(i) for i in range(3)]

@@ -19,7 +19,7 @@ class theme_void(theme):
 
     def __init__(self, base_size=11, base_family=None):
         base_family = base_family or get_option("base_family")
-        half_line = base_size / 2
+        m = get_option("base_margin")
         # Use only inherited elements and make everything blank
         theme.__init__(
             self,
@@ -36,23 +36,23 @@ class theme_void(theme):
                 rotation=0,
                 margin={},
             ),
-            aspect_ratio=get_option("aspect_ratio"),
-            dpi=get_option("dpi"),
-            figure_size=get_option("figure_size"),
             axis_text_x=element_blank(),
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),
             axis_title_y=element_blank(),
+            aspect_ratio=get_option("aspect_ratio"),
+            dpi=get_option("dpi"),
+            figure_size=get_option("figure_size"),
             legend_box="auto",
             legend_box_just="auto",
-            legend_box_margin=10,
-            legend_box_spacing=0.1,
+            legend_box_margin=0,
+            legend_box_spacing=m * 3,
             legend_direction="auto",
             legend_entry_spacing_x=5,
             legend_entry_spacing_y=2,
             legend_key_height=18,
             legend_key_width=18,
-            legend_margin=10,
+            legend_margin=0,
             legend_position="right",
             legend_spacing=10,
             legend_text=element_text(
@@ -61,21 +61,43 @@ class theme_void(theme):
                 margin={"t": 3, "b": 3, "l": 3, "r": 3, "units": "pt"},
             ),
             legend_text_legend=element_text(va="baseline"),
-            legend_title=element_text(ha="left", margin={"b": 8}),
+            legend_title=element_text(
+                ha="left",
+                margin={
+                    "t": m,
+                    "b": m,
+                    "l": m,
+                    "r": m,
+                    "units": "fig",
+                },
+            ),
             legend_title_align="auto",
-            plot_margin=None,
-            plot_title=element_text(
-                margin={"b": half_line * 1.2, "units": "pt"}
-            ),
-            panel_spacing=0,
+            panel_spacing=m,
             plot_caption=element_text(
-                margin={"t": 7.2, "r": 0, "units": "pt"}
-            ),
-            strip_margin=0,
-            strip_text=element_text(
                 size=base_size * 0.8,
-                linespacing=1.8,
-                margin={"t": 3, "b": 3, "l": 3, "r": 3, "units": "pt"},
+                ha="right",
+                va="bottom",
+                margin={"t": m, "units": "fig"},
+            ),
+            plot_margin=m,
+            plot_title=element_text(
+                size=base_size * 1.2,
+                va="top",
+                ha="center",
+                margin={"b": m, "units": "fig"},
+            ),
+            strip_align=0,
+            strip_text=element_text(
+                color="#1A1A1A",
+                size=base_size * 0.8,
+                linespacing=1.0,
+                margin={
+                    "t": 1 / 3,
+                    "b": 1 / 3,
+                    "l": 1 / 3,
+                    "r": 1 / 3,
+                    "units": "lines",
+                },
             ),
             complete=True,
         )

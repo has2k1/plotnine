@@ -535,13 +535,12 @@ Users should never create instances of *themeable*.
    strip_background
    strip_background_x
    strip_background_y
-   strip_margin
-   strip_margin_x
-   strip_margin_y
+   strip_align
+   strip_align_x
+   strip_align_y
    strip_text
    strip_text_x
    strip_text_y
-   subplots_adjust
    text
    title
    themeable
@@ -598,6 +597,7 @@ to set a default theme using :func:`~plotnine.themes.theme_set`.
 
    aspect_ratio
    base_family
+   base_margin
    close_all_figures
    current_theme
    dpi

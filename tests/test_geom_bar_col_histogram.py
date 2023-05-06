@@ -10,7 +10,6 @@ from plotnine import (
     geom_text,
     ggplot,
     scale_x_sqrt,
-    theme,
 )
 from plotnine.stats.binning import freedman_diaconis_bins
 
@@ -26,13 +25,11 @@ df = pd.DataFrame(
     }
 )
 
-_theme = theme(subplots_adjust={"right": 0.85})
-
 
 def test_bar_count():
     p = ggplot(df, aes("x")) + geom_bar(aes(fill="factor(z)"))
 
-    assert p + _theme == "bar-count"
+    assert p == "bar-count"
 
 
 def test_col():
@@ -40,13 +37,13 @@ def test_col():
     # that is going on.
     p = ggplot(df) + geom_col(aes("x", "z", fill="factor(z)"), color="black")
 
-    assert p + _theme == "col"
+    assert p == "col"
 
 
 def test_histogram_count():
     p = ggplot(df, aes("x")) + geom_histogram(aes(fill="factor(z)"), bins=n)
 
-    assert p + _theme == "histogram-count"
+    assert p == "histogram-count"
 
 
 def test_scale_transformed_breaks():
@@ -68,7 +65,7 @@ def test_stat_count_int():
         + geom_text(aes(label=after_stat("count")), stat="count")
     )
 
-    assert p + _theme == "stat-count-int"
+    assert p == "stat-count-int"
 
 
 def test_stat_count_float():
@@ -81,7 +78,7 @@ def test_stat_count_float():
         + geom_text(aes(label=after_stat("count")), stat="count")
     )
 
-    assert p + _theme == "stat-count-float"
+    assert p == "stat-count-float"
 
 
 def test_freedman_diaconis_bins():

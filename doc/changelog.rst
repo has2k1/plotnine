@@ -5,6 +5,34 @@ v0.10.2
 -------
 (Not yet released)
 
+New Features
+************
+
+- A layout manager. Now you do not have to adjust spacing parameters
+  to prevent objects around the panels from overlapping.
+  Specifically, you can:
+
+  1. Set the legend position to "top", "left" or "bottom"
+  2. Use a large or multiline plot title
+  3. Use a large or multiline plot caption
+  4. Use :class:`~plotnine.facets.facet_wrap` with :py:`scales="free"`
+    :py:`scales="free_x"` or :py:`scales="free_y"`
+
+  You can now also align the `plot_title`, `axis_title_x`, `axis_title_y`
+  and `plot_caption` with respect to the panels. Set these to "left",
+  "right" & "center" for the horizontal flowing text. And "top", "right"
+  & "center" for the vertical flowing text.
+
+  Also, the size of the figure is exactly determined by the theme setting.
+  For example, this:
+
+  .. code-block:: python
+
+      theme(figure_size=(8, 6), dpi=100)
+
+  will create an `800px x 600px` image.
+
+
 Enhancements
 ************
 
@@ -22,6 +50,22 @@ API Changes
 
 - :meth:`~plotnine.ggplot.draw` no longer accepts the argument
   ``return_ggplot`` and the return value is always a matplolib figure.
+
+- Themeables :meth:`~plotnine.themes.themeable.strip_margin`,
+  :meth:`~plotnine.themes.themeable.strip_margin_x` and
+  :meth:`~plotnine.themes.themeable.strip_margin_y` have been renamed to
+  :meth:`~plotnine.themes.themeable.strip_align`,
+  :meth:`~plotnine.themes.themeable.strip_align_x`
+  :meth:`~plotnine.themes.themeable.strip_align_y` repectively.
+
+- :meth:`~plotnine.themes.themeables.subplots_adjust` has been deprecated.
+  You no longer need to use :py:`theme(subplots_adjust={"right": 0.85})` and
+  the like to make space for the legend or text around the panels.
+  In the future, this will through an error.
+
+- Changed default font-family (san-serif) from DejaVu Sans to Helvetica.
+
+- Default dpi has changed from 100 to 300.
 
 Bug Fixes
 *********

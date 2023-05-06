@@ -8,15 +8,13 @@ from plotnine import (
     geom_pointdensity,
     ggplot,
     scale_size_radius,
-    theme,
 )
 
 n = 16  # Some even number > 2
 
 df = pd.DataFrame({"x": range(n), "y": np.repeat(range(n // 2), 2)})
-_theme = theme(subplots_adjust={"right": 0.85})
 
-p0 = ggplot(df, aes("x", "y")) + _theme
+p0 = ggplot(df, aes("x", "y"))
 
 
 def test_pointdensity():

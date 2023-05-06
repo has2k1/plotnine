@@ -2,11 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import aes, geom_raster, ggplot, theme
+from plotnine import aes, geom_raster, ggplot
 from plotnine.exceptions import PlotnineWarning
-
-# To leave enough room for the legend
-_theme = theme(subplots_adjust={"right": 0.85})
 
 
 def _random_grid(n, m=None, seed=123):
@@ -24,7 +21,7 @@ def test_square():
     p = ggplot(df, aes("x", "y", fill="g")) + geom_raster(
         interpolation="bilinear"
     )
-    p + _theme == "square"
+    assert p == "square"
 
 
 def test_rectangle():
@@ -32,7 +29,7 @@ def test_rectangle():
     p = ggplot(df, aes("x", "y", fill="g")) + geom_raster(
         interpolation="bilinear"
     )
-    p + _theme == "rectangle"
+    assert p == "rectangle"
 
 
 def test_gap_no_interpolation():
@@ -41,7 +38,7 @@ def test_gap_no_interpolation():
     p = ggplot(df, aes("x", "y", fill="g")) + geom_raster()
     # Warns about uneven vertical intervals
     with pytest.warns(PlotnineWarning):
-        p + _theme == "gap_no_interpolation"
+        assert p == "gap_no_interpolation"
 
 
 def test_gap_with_interpolation():
@@ -52,4 +49,4 @@ def test_gap_with_interpolation():
     )
     # Warns about uneven vertical intervals
     with pytest.warns(PlotnineWarning):
-        p + _theme == "gap_with_interpolation"
+        assert p == "gap_with_interpolation"

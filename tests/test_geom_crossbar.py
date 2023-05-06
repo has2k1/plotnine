@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, geom_crossbar, ggplot, theme
+from plotnine import aes, geom_crossbar, ggplot
 
 n = 4
 df = pd.DataFrame(
@@ -13,8 +13,6 @@ df = pd.DataFrame(
     }
 )
 
-_theme = theme(subplots_adjust={"right": 0.85})
-
 
 def test_aesthetics():
     p = (
@@ -26,4 +24,4 @@ def test_aesthetics():
         + geom_crossbar(aes("x+4", size="z"))
     )
 
-    assert p + _theme == "aesthetics"
+    assert p == "aesthetics"

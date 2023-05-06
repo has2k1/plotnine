@@ -221,48 +221,6 @@ class facet_grid(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def spaceout_and_resize_panels(self):
-        """
-        Adjust the spacing between the panels
-
-        Resize them to the aspect ratio
-        """
-        ncol = self.ncol
-        nrow = self.nrow
-        figure = self.figure
-        theme = self.theme
-        aspect_ratio = self._aspect_ratio()
-        _property = theme.themeables.property
-
-        left = figure.subplotpars.left
-        right = figure.subplotpars.right
-        top = figure.subplotpars.top
-        bottom = figure.subplotpars.bottom
-        wspace = figure.subplotpars.wspace
-        W, H = figure.get_size_inches()
-        spacing_x = _property("panel_spacing_x")
-        spacing_y = _property("panel_spacing_y")
-
-        # The goal is to have equal spacing along the vertical
-        # and the horizontal. We use the wspace and compute
-        # the appropriate hspace. It would be a lot easier if
-        # MPL had a better layout manager.
-
-        # width of axes and height of axes
-        w = ((right - left) * W - spacing_x * (ncol - 1)) / ncol
-        h = ((top - bottom) * H - spacing_y * (nrow - 1)) / nrow
-
-        # aspect ratio changes the size of the figure
-        if aspect_ratio is not None:
-            h = w * aspect_ratio
-            H = (h * nrow + spacing_y * (nrow - 1)) / (top - bottom)
-            figure.set_figheight(H)
-
-        # spacing
-        wspace = spacing_x / w
-        hspace = spacing_y / h
-        figure.subplots_adjust(wspace=wspace, hspace=hspace)
-
     def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         lst = []
         toprow = layout_info.row == 1

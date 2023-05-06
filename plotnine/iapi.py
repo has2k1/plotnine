@@ -11,7 +11,7 @@ from copy import copy
 from dataclasses import dataclass, fields
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
+    from typing import Any, Dict, Iterator, List, Optional, Sequence
 
     from plotnine.typing import (
         Axes,
@@ -20,6 +20,7 @@ if typing.TYPE_CHECKING:
         Scale,
         ScaleBreaks,
         ScaleLimits,
+        StripPosition,
         TupleFloat2,
     )
 
@@ -180,19 +181,20 @@ class layout_details:
 
 
 @dataclass
-class strip_details:
+class strip_draw_info:
     """
-    Strip Details
+    Information required to draw strips
     """
 
     x: float
     y: float
-    box_x: float
-    box_y: float
+    ha: str
+    va: str
     box_width: float
     box_height: float
-    breadth_inches: float
-    location: Literal["right", "top"]
+    strip_text_margin: float
+    strip_align: float
+    position: StripPosition
     label: str
     ax: Axes
     rotation: float
@@ -212,7 +214,7 @@ class strip_label_details:
     def make(
         layout_info: layout_details,
         vars: list[str],
-        location: Literal["right", "top"],
+        location: StripPosition,
     ) -> strip_label_details:
         variables: dict[str, Any] = {
             v: str(layout_info.variables[v]) for v in vars

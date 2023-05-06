@@ -18,15 +18,19 @@ if typing.TYPE_CHECKING:
     import pandas as pd
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
+    from matplotlib.axis import Axis, XAxis, XTick, YAxis, YTick
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import DrawingArea
     from matplotlib.patches import PathPatch
+    from matplotlib.text import Text
     from mizani.transforms import trans
     from patsy.eval import EvalEnvironment
     from typing_extensions import TypeAlias
 
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
+    from plotnine.facets.facet_grid import facet_grid
+    from plotnine.facets.facet_wrap import facet_wrap
     from plotnine.facets.layout import Layout
     from plotnine.facets.strips import Strips
     from plotnine.geoms.geom import geom
@@ -148,10 +152,14 @@ if typing.TYPE_CHECKING:
         | StripLabellingDict
     )
 
+    StripPosition: TypeAlias = Literal["top", "right"]
+
     # Plotnine Classes
     Aes: TypeAlias = aes
     Coord: TypeAlias = coord
     Facet: TypeAlias = facet
+    FacetGrid: TypeAlias = facet_grid
+    FacetWrap: TypeAlias = facet_wrap
     Geom: TypeAlias = geom
     Ggplot: TypeAlias = ggplot
     Guide: TypeAlias = guide
@@ -241,3 +249,8 @@ if typing.TYPE_CHECKING:
 
     ## Coords
     CoordRange: TypeAlias = TupleFloat2
+
+    # Legend
+    LegendPosition: TypeAlias = (
+        Literal["left", "right", "top", "bottom"] | tuple[float, float]
+    )
