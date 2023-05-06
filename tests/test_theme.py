@@ -8,6 +8,7 @@ from plotnine import (
     element_line,
     element_text,
     facet_grid,
+    facet_wrap,
     geom_point,
     ggplot,
     labs,
@@ -215,3 +216,48 @@ class TestThemes:
             assert p != "theme_gray"
         else:
             assert p == "theme_xkcd"
+
+
+class TestLayout:
+    g = (
+        ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))
+        + geom_point()
+        + labs(  # New
+            x="Weight",
+            y="Miles Per Gallon",
+            title="Relationship between Weight and Fuel Efficiency in Cars",
+            subtitle="Should we be driving lighter cars?",
+            caption=(
+                "The plot shows a negative correlation between car weight\n"
+                "and fuel efficiency, with lighter cars generally achieving\n"
+                "higher miles per gallon"
+            ),
+        )
+    )
+
+    def test_default(self):
+        assert self.g == "default"
+
+    def test_legend_on_top(self):
+        p = self.g + theme(legend_position="top")
+        assert p == "legend_at_top"
+
+    def test_legend_on_the_left(self):
+        p = self.g + theme(legend_position="left")
+        assert p == "legend_on_the_left"
+
+    def test_legend_at_the_bottom(self):
+        p = self.g + theme(legend_position="bottom")
+        assert p == "legend_at_the_bottom"
+
+    def test_facet_grid(self):
+        p = self.g + facet_grid("am ~ gear")
+        assert p == "facet_grid"
+
+    def test_facet_wrap(self):
+        p = self.g + facet_wrap("carb", nrow=2)
+        assert p == "facet_wrap"
+
+    def test_facet_wrap_scales_free(self):
+        p = self.g + facet_wrap("carb", scales="free")
+        assert p == "facet_wrap_scales_free"
