@@ -80,6 +80,7 @@ dev = [
 
 typing = [
     "pyright",
+    "ipython",
     "pandas-stubs",
 ]
 
