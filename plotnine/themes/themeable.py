@@ -1577,8 +1577,8 @@ class panel_spacing_y(themeable):
     theme_element : float
         Size as a fraction of the figure width.
 
-    Note
-    ----
+    Notes
+    -----
     It is deliberate to have the vertical spacing be a fraction of
     the width. That means that when :class:`panel_spacing_x` is the
     equal :class:`panel_spacing_x`, the spaces in both directions
