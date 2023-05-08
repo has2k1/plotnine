@@ -30,6 +30,11 @@ if typing.TYPE_CHECKING:
 
     from plotnine.typing import DataLike, FloatArray, FloatArrayLike, IntArray
 
+    try:
+        from IPython.core.interactiveshell import InteractiveShell
+    except ImportError:
+        pass
+
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
@@ -1238,3 +1243,14 @@ class ignore_warnings:
 
     def __exit__(self, type, value, traceback):
         return self._cm.__exit__(type, value, traceback)
+
+
+def get_ipython() -> "InteractiveShell" | None:
+    """
+    Return running IPython instance or None
+    """
+    try:
+        from IPython.core.getipython import get_ipython
+    except ImportError:
+        return None
+    return get_ipython()
