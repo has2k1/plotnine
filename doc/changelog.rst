@@ -16,7 +16,7 @@ New Features
   2. Use a large or multiline plot title
   3. Use a large or multiline plot caption
   4. Use :class:`~plotnine.facets.facet_wrap` with :py:`scales="free"`
-    :py:`scales="free_x"` or :py:`scales="free_y"`
+     :py:`scales="free_x"` or :py:`scales="free_y"`
 
   You can now also align the `plot_title`, `axis_title_x`, `axis_title_y`
   and `plot_caption` with respect to the panels. Set these to "left",
