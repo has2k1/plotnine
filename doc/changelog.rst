@@ -28,7 +28,7 @@ New Features
 
   .. code-block:: python
 
-      theme(figure_size=(8, 6), dpi=100)
+     theme(figure_size=(8, 6), dpi=100)
 
   will create an `800px x 600px` image.
 
@@ -37,7 +37,7 @@ New Features
 
   .. code-block:: python
 
-      theme(plot_subtitle=element_text(size=8))
+     theme(plot_subtitle=element_text(size=8))
 
 
 Enhancements
@@ -46,6 +46,16 @@ Enhancements
 - :class:`~plotnine.ggplot` object gained a new method
   :meth:`~plotnine.ggplot.save_helper`. It gives you access to the
   matplotlib figure that will be saved to file.
+
+- When plotting with an ipython interactive backend (e.g. in a
+  jupyter notebook). The default image output is retina. You
+  do not need to run this command.
+
+  .. code-block:: python
+
+     %config InlineBackend.figure_format = "retina"
+
+  Plotnine still respects any values set the user.
 
 API Changes
 ***********
@@ -71,8 +81,6 @@ API Changes
   In the future, this will through an error.
 
 - Changed default font-family (san-serif) from DejaVu Sans to Helvetica.
-
-- Default dpi has changed from 100 to 300.
 
 Bug Fixes
 *********

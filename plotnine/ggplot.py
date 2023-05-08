@@ -25,6 +25,7 @@ from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 from .utils import (
     from_inches,
+    get_ipython,
     is_data_like,
     order_as_data_mapping,
     to_inches,
@@ -762,6 +763,16 @@ class plot_context:
         exits.
     """
 
+    # Default to retina unless user chooses otherwise
+    _IPYTHON_CONFIG: dict[str, dict[str, Any]] = {
+        "InlineBackend": {
+            "figure_format": "retina",
+            "close_figures": True,
+            "print_figure_kwargs": {"bbox_inches": None},
+        }
+    }
+    _ip_config_inlinebackend: dict[str, Any] = {}
+
     def __init__(self, plot: ggplot, show: bool = False):
         self.plot = plot
         self.show = show
@@ -782,6 +793,7 @@ class plot_context:
         )
         self.rc_context.__enter__()
         self.pd_option_context.__enter__()
+        self._enter_ipython()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -802,4 +814,35 @@ class plot_context:
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
         self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
+        self._exit_ipython()
         delattr(self.plot.theme, "_targets")
+
+    def _enter_ipython(self):
+        """
+        Setup ipython parameters in for the plot
+        """
+        ip = get_ipython()
+        if not ip:
+            return
+        elif not hasattr(ip.config, "InlineBackend"):
+            return
+
+        for key, value in self._IPYTHON_CONFIG["InlineBackend"].items():
+            if key not in ip.config.InlineBackend:  # pyright: ignore
+                self._ip_config_inlinebackend[key] = key
+                ip.run_line_magic("config", f"InlineBackend.{key} = {value!r}")
+
+    def _exit_ipython(self):
+        """
+        Undo ipython parameters in for the plot
+        """
+        ip = get_ipython()
+        if not ip:
+            return
+        elif not hasattr(ip.config, "InlineBackend"):
+            return
+
+        for key in self._ip_config_inlinebackend:
+            del ip.config["InlineBackend"][key]  # pyright: ignore
+
+        self._ip_config_inlinebackend = {}
