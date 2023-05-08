@@ -57,6 +57,10 @@ Enhancements
 
   Plotnine still respects any values set the user.
 
+- In an interactive setting, after drawing an image. The size of the figure
+  (in pixels) is printed e.g. `<Figure Size: (640 x 480)>`. Previously,
+  something like `<ggplot: (336175301)>` was printed.
+
 API Changes
 ***********
 
