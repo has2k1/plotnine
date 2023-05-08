@@ -25,14 +25,14 @@
     .sphx-glr-thumbcontainer .figure {
       margin: 5px;
       padding: 0px;
-      width: 196px;   /* thumbnail_size width */
-      height: 196px;  /* thumbnail_size width (for a square container) */
+      width: 294px;   /* thumbnail_size width */
+      height: 250px;  /* thumbnail_size height + room */
     }
 
     .sphx-glr-thumbcontainer img {
       display: inline;
-      max-height: 140px;      /* thumbnail_size height */
-      max-width: 196px;       /* thumbnail_size width */
+      max-height: 210px;      /* thumbnail_size height */
+      max-width: 294px;       /* thumbnail_size width */
     }
 
     /* Absolute positioning + padding + display-block creates large a
@@ -41,7 +41,7 @@
     .sphx-glr-thumbcontainer a.internal {
       position: absolute;
       display: block;
-      padding: 155px 10px 0;  /* 150 = thumbnail_size height + 15 */
+      padding: 225px 10px 0;  /* 210 = thumbnail_size height + 15 */
       top: 0;
       bottom: 0;
       left: 0;
@@ -69,7 +69,7 @@
       padding: 5px 15px;
       position: absolute;
       z-index: 98;
-      width: 196px;      /* approx. thumbnail_size width */
+      width: 294px;      /* approx. thumbnail_size width */
       bottom: 52%;
     }
 
