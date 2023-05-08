@@ -26,14 +26,10 @@ if typing.TYPE_CHECKING:
     from typing import Any, Callable, Sequence
 
     import numpy.typing as npt
+    from IPython.core.interactiveshell import InteractiveShell
     from typing_extensions import TypeGuard
 
     from plotnine.typing import DataLike, FloatArray, FloatArrayLike, IntArray
-
-    try:
-        from IPython.core.interactiveshell import InteractiveShell
-    except ImportError:
-        pass
 
 
 # Points and lines of equal size should give the
