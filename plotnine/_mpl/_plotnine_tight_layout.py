@@ -31,7 +31,6 @@ if typing.TYPE_CHECKING:
         Axes,
         Facet,
         Figure,
-        Ggplot,
         LegendPosition,
         Text,
         XTick,
