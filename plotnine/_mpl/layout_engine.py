@@ -10,7 +10,6 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.backend_bases import RendererBase
     from matplotlib.offsetbox import AnchoredOffsetbox
-    from matplotlib.patches import FancyBboxPatch
     from matplotlib.text import Text
 
     from plotnine.typing import (
