@@ -99,8 +99,9 @@ class guide(metaclass=Registry):
     available_aes: set[str] = set()
 
     def __init__(self, **kwargs):
+        no_default = {"title", "title_position", "label_position"}
         for k, v in kwargs.items():
-            if hasattr(self, k):
+            if hasattr(self, k) or k in no_default:
                 setattr(self, k, v)
             else:
                 tpl = "{} does not undestand attribute '{}'"
