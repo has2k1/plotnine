@@ -111,8 +111,13 @@ class ggplot:
         """
         Print/show the plot
         """
-        self.__str__()
-        return "<ggplot: (%d)>" % self.__hash__()
+        figure = self.draw(show=True)
+
+        dpi = figure.get_dpi()
+        W = int(figure.get_figwidth() * dpi)
+        H = int(figure.get_figheight() * dpi)
+
+        return f"<Figure Size: ({W} x {H})>"
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
         """
