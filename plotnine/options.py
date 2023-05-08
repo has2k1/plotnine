@@ -16,7 +16,7 @@ base_family = "sans-serif"
 aspect_ratio = "auto"
 
 #: Default DPI used by the themes
-dpi = 300
+dpi = 100
 
 #: Default figure size inches
 figure_size = (640 / dpi, 480 / dpi)
