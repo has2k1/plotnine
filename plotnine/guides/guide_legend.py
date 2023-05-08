@@ -46,10 +46,8 @@ class guide_legend(guide):
     """
 
     # general
-    # nrow: Optional[int] = None
-    # ncol: Optional[int] = None
-    nrow: int
-    ncol: int
+    nrow: int = -1
+    ncol: int = -1
     byrow = False
 
     # key
