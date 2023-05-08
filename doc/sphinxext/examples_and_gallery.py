@@ -65,7 +65,7 @@ IMG_RE = re.compile(r"^\s*\.\. image:: (\w+_examples\/(\w+\.png))")
 
 # Should be about the 11:8 ratio of the default figure size. When this
 # value is change, size adjustments should be made in gallery.rst css
-thumbnail_size = (196, 140)
+thumbnail_size = (294, 210)
 
 entry_html = """\
 <div class="sphx-glr-thumbcontainer" {tooltip}>
@@ -159,8 +159,11 @@ class GalleryEntryExtractor:
         thumbfilename_inhtml = Path("_images") / thumbfilename
         thumbfilename_dest = builddir / "_images" / thumbfilename
 
+        # Increase thumb resolution
+        thumb_size = thumbnail_size[0] * 2, thumbnail_size[1] * 2
+
         im = Image.open(imgfilename_src)
-        im.thumbnail(thumbnail_size)
+        im.thumbnail(thumb_size)
         im.save(thumbfilename_dest)
         return thumbfilename_inhtml
 
