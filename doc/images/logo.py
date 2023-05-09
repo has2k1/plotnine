@@ -40,11 +40,12 @@ df2 = df[n // 3 : 2 * n // 3]
 df3 = df[2 * n // 3 :: 12]
 
 p = (
-    ggplot(aes("x", "y", color="y", fill="y"))
+    ggplot(mapping=aes("x", "y", color="y", fill="y"))
     + annotate(
         geom="label",
-        x=0.295,
-        y=0.495,
+        x=0.260,
+        y=0.493,
+        family="Helvetica",
         label="pl  tnine",
         label_size=1.5,
         label_padding=0.1,
@@ -52,17 +53,17 @@ p = (
         fill=bcolor_lighter,
         color=bcolor,
     )
-    + geom_point(df1, size=8, stroke=0, show_legend=False)
-    + geom_line(df2, size=2, color=bcolor_darker, show_legend=False)
-    + geom_bar(df3, aes("x+.06"), stat="identity", size=0, show_legend=False)
+    + geom_point(data=df1, size=8, stroke=0, show_legend=False)
+    + geom_line(data=df2, size=2, color=bcolor_darker, show_legend=False)
+    + geom_bar(aes("x+.06"), df3, stat="identity", size=0, show_legend=False)
     + scale_color_gradientn(colors=gradient)
     + scale_fill_gradientn(colors=gradient)
     + theme_void()
     + theme(figure_size=(3.6, 3.6))
 )
 
-p.save("logo.pdf", pad_inches=-0.04)
+p.save("logo.pdf")
 
 # Remove the project name
 p.layers = p.layers.__class__(p.layers[1:])
-p.save("logo-small.pdf", pad_inches=-0.04)
+p.save("logo-small.pdf")
