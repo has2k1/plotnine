@@ -108,6 +108,10 @@ Bug Fixes
 - Fix issue where infinite limits for the `x` or `y` scales lead to an
   exception. (:issue:`664`)
 
+- Fixed :class:`~plotnine.geoms.geom_text` and
+  :class:`~plotnine.geoms.geom_label` when used with string formatting so that
+  missing values are removed. (:issue:`651`)
+
 v0.10.1
 -------
 (2022-09-10)

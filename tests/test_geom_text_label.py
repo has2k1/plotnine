@@ -119,3 +119,33 @@ def test_adjust_text_default_color():
         + geom_text(adjust_text=adjust_text2)
     )
     assert p == "adjust_text_default_color"
+
+
+def test_format_missing_values():
+    df = pd.DataFrame(
+        {
+            "x": [1, 2, 3, 4],
+            "y": [1, 2, 3, 4],
+            "c1": [1.1, 2.2, None, 4],
+            "c2": ["1.1", "2.2", None, (4, 0)],
+        }
+    )
+    p = (
+        ggplot(df, aes("x", "y"))
+        + geom_point()
+        + geom_text(
+            aes(label="c1"),
+            nudge_y=0.03,
+            va="bottom",
+            color="blue",
+            format_string="{}",
+        )
+        + geom_text(
+            aes(label="c2"),
+            nudge_y=-0.03,
+            va="top",
+            color="red",
+            format_string="{!r}",
+        )
+    )
+    assert p == "format_missing_values"
