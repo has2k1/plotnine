@@ -14,6 +14,7 @@ from plotnine import (
     scale_y_continuous,
 )
 from plotnine.data import mtcars
+from plotnine.exceptions import PlotnineWarning
 
 is_CI = os.environ.get("CI") is not None
 
@@ -148,4 +149,5 @@ def test_format_missing_values():
             format_string="{!r}",
         )
     )
-    assert p == "format_missing_values"
+    with pytest.warns(PlotnineWarning):
+        assert p == "format_missing_values"
