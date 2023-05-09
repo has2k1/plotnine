@@ -211,8 +211,8 @@ def evaluate(
     """
     env = env.with_outer_namespace(AES_INNER_NAMESPACE)
 
-    # Using `type` preserves the subclass of pd.DataFrame
-    evaled = type(data)(index=data.index)
+    # Store evaluation results in a dict column in a dict
+    evaled = {}
 
     # If a column name is not in the data, it is evaluated/transformed
     # in the environment of the call to ggplot
@@ -239,11 +239,8 @@ def evaluate(
             if len(data) and n != len(data) and n != 1:
                 raise PlotnineError(
                     "Aesthetics must either be length one, "
-                    + "or the same length as the data"
+                    "or the same length as the data"
                 )
-            # An empty dataframe does not admit a scalar value
-            elif len(evaled) and n == 1:
-                col = col[0]
             evaled[ae] = col
         elif is_known_scalar(col):
             if not len(evaled):
@@ -253,6 +250,9 @@ def evaluate(
             msg = "Do not know how to deal with aesthetic '{}'"
             raise PlotnineError(msg.format(ae))
 
+    # Using `type` preserves the subclass of pd.DataFrame
+    index = data.index if len(data.index) else None
+    evaled = type(data)(data=evaled, index=index)
     return evaled
 
 
