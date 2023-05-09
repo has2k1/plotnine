@@ -1,9 +1,11 @@
+.. _changelog:
+
 Changelog
 =========
 
-v0.10.2
+v0.11.0
 -------
-(Not yet released)
+(2023-05-09)
 
 New Features
 ************
