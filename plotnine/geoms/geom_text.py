@@ -146,15 +146,24 @@ class geom_text(geom):
         parse = self.params["parse"]
         fmt = self.params["format_string"]
 
+        def _format(series: pd.Series, tpl: str) -> list[str | None]:
+            """
+            Format items in series
+
+            Missing values are preserved as None
+            """
+            if series.dtype == float:
+                return [None if np.isnan(l) else tpl.format(l) for l in series]
+            else:
+                return [None if l is None else tpl.format(l) for l in series]
+
         # format
         if fmt:
-            data['label'] = [fmt.format(l) if not np.isnan(l) else np.nan
-                             for l in data['label']]
+            data["label"] = _format(data["label"], fmt)
 
         # Parse latex
         if parse:
-            data['label'] = [f'${l}$' if not np.isnan(l) else np.nan
-                             for l in data['label']]
+            data["label"] = _format(data["label"], "${}$")
 
         return data
 
