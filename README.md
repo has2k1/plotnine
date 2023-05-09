@@ -7,22 +7,22 @@
 [![Documentation](https://readthedocs.org/projects/plotnine/badge/?version=latest)](https://plotnine.readthedocs.io/en/latest/)
 [![Coverage](https://codecov.io/github/has2k1/plotnine/coverage.svg?branch=main)](https://codecov.io/github/has2k1/plotnine?branch=main)
 
-plotnine is an implementation of a *grammar of graphics* in Python,
-it is based on [ggplot2](https://github.com/tidyverse/ggplot2).
-The grammar allows users to compose plots by explicitly mapping data
-to the visual objects that make up the plot.
+plotnine is an implementation of a *grammar of graphics* in Python
+based on [ggplot2](https://github.com/tidyverse/ggplot2).
+The grammar allows you to compose plots by explicitly mapping variables in a
+dataframe to the visual objects that make up the plot.
 
 <img width="33%" align="right" src="./doc/images/logo-540.png">
 
-Plotting with a grammar is powerful, it makes custom (and otherwise
-complex) plots easy to think about and then create, while the
-simple plots remain simple.
+Plotting with a *grammar of graphics* is powerful. Custom (and otherwise
+complex) plots are easy to think about and build incrementaly, while the
+simple plots remain simple to create.
 
-To find out about all building blocks that you can use to create a
-plot, check out the [documentation](https://plotnine.readthedocs.io/en/latest/).
-Since plotnine has an API similar to ggplot2, where we lack in coverage the
+To learn more about how to use plotnine, check out the
+[documentation](https://plotnine.readthedocs.io/en/latest/). Since plotnine
+has an API similar to ggplot2, where it lacks in coverage the
 [ggplot2 documentation](http://ggplot2.tidyverse.org/reference/index.html)
-may be of some help.
+may be helpful.
 
 
 ## Example
@@ -37,7 +37,7 @@ Building a complex plot piece by piece.
 1. Scatter plot
 
    ```python
-   (ggplot(mtcars, aes('wt', 'mpg'))
+   (ggplot(mtcars, aes("wt", "mpg"))
     + geom_point())
    ```
 
@@ -46,7 +46,7 @@ Building a complex plot piece by piece.
 2. Scatter plot colored according some variable
 
    ```python
-   (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point())
    ```
 
@@ -56,9 +56,9 @@ Building a complex plot piece by piece.
    smoothed with a linear model with confidence intervals.
 
    ```python
-   (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
-    + stat_smooth(method='lm'))
+    + stat_smooth(method="lm"))
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-3.png">
@@ -68,10 +68,10 @@ Building a complex plot piece by piece.
    plotted on separate panels.
 
    ```python
-   (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
-    + stat_smooth(method='lm')
-    + facet_wrap('~gear'))
+    + stat_smooth(method="lm")
+    + facet_wrap("~gear"))
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-4.png">
@@ -81,10 +81,10 @@ Building a complex plot piece by piece.
    I) Make it playful
 
    ```python
-   (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
-    + stat_smooth(method='lm')
-    + facet_wrap('~gear')
+    + stat_smooth(method="lm")
+    + facet_wrap("~gear")
     + theme_xkcd())
    ```
 
@@ -93,10 +93,10 @@ Building a complex plot piece by piece.
    II) Or professional
 
    ```python
-   (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
-    + stat_smooth(method='lm')
-    + facet_wrap('~gear')
+    + stat_smooth(method="lm")
+    + facet_wrap("~gear")
     + theme_tufte())
    ```
 

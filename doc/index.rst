@@ -9,14 +9,13 @@
 A Grammar of Graphics for Python
 ================================
 
-plotnine is an implementation of a *grammar of graphics* in Python,
-it is based on ggplot2_. The grammar allows users to compose plots
-by explicitly mapping data to the visual objects that make up the
-plot.
+plotnine is an implementation of a *grammar of graphics* in Python
+based on ggplot2_. The grammar allows you to compose plots by explicitly
+mapping variables in a dataframe to the visual objects that make up the plot.
 
-Plotting with a grammar is powerful, it makes custom (and otherwise
-complex) plots easy to think about and then create, while the
-simple plots remain simple.
+Plotting with a *grammar of graphics* is powerful. Custom (and otherwise
+complex) plots are easy to think about and build incremently, while
+the simple plots remain simple to create.
 
 Example
 -------
@@ -25,10 +24,10 @@ Example
     from plotnine import ggplot, geom_point, aes, stat_smooth, facet_wrap
     from plotnine.data import mtcars
 
-    (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+    (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
      + geom_point()
-     + stat_smooth(method='lm')
-     + facet_wrap('~gear'))
+     + stat_smooth(method="lm")
+     + facet_wrap("~gear"))
 
 .. figure:: ./images/readme-image-4.png
    :scale: 33%
