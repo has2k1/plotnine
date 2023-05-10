@@ -7,6 +7,9 @@ v0.12.1
 -------
 (2023-05-09)
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7919297.svg
+   :target: https://doi.org/10.5281/zenodo.7919297
+
 New Features
 ************
 
