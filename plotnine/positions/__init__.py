@@ -10,7 +10,7 @@ from .position_jitterdodge import position_jitterdodge
 from .position_nudge import position_nudge
 from .position_stack import position_stack
 
-__all__ = [
+__all__ = (
     "position_dodge",
     "position_dodge2",
     "position_fill",
@@ -19,4 +19,4 @@ __all__ = [
     "position_jitterdodge",
     "position_nudge",
     "position_stack",
-]
+)

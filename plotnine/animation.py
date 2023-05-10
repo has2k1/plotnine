@@ -19,6 +19,8 @@ if typing.TYPE_CHECKING:
         Scale,
     )
 
+__all__ = ("PlotnineAnimation",)
+
 
 class PlotnineAnimation(ArtistAnimation):
     """

@@ -12,7 +12,7 @@ import pandas as pd
 from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
-__all__ = ["aes"]
+__all__ = ("aes",)
 
 X_AESTHETICS = {"x", "xmin", "xmax", "xend", "xintercept"}
 Y_AESTHETICS = {"y", "ymin", "ymax", "yend", "yintercept"}

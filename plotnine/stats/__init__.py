@@ -25,7 +25,7 @@ from .stat_summary_bin import stat_summary_bin
 from .stat_unique import stat_unique
 from .stat_ydensity import stat_ydensity
 
-__all__ = [
+__all__ = (
     "stat_count",
     "stat_bin",
     "stat_bin_2d",
@@ -50,4 +50,4 @@ __all__ = [
     "stat_summary_bin",
     "stat_unique",
     "stat_ydensity",
-]
+)

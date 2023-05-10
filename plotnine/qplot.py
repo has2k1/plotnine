@@ -23,6 +23,8 @@ if typing.TYPE_CHECKING:
 
     from plotnine.typing import DataLike, Ggplot, TupleFloat2
 
+__all__ = ("qplot",)
+
 
 def qplot(
     x: str | Iterable[Any] | range | None = None,

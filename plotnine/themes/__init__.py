@@ -14,7 +14,7 @@ from .theme_tufte import theme_tufte
 from .theme_void import theme_void
 from .theme_xkcd import theme_xkcd
 
-__all__ = [
+__all__ = (
     "element_blank",
     "element_line",
     "element_rect",
@@ -37,4 +37,4 @@ __all__ = [
     "theme_get",
     "theme_set",
     "theme_update",
-]
+)

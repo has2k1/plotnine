@@ -10,6 +10,8 @@ if typing.TYPE_CHECKING:
 
     import plotnine as p9
 
+__all__ = ("watermark",)
+
 
 class watermark:
     """

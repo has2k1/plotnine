@@ -46,6 +46,8 @@ if typing.TYPE_CHECKING:
         Watermark,
     )
 
+__all__ = ("ggplot", "ggsave", "save_as_pdf_pages")
+
 
 class ggplot:
     """

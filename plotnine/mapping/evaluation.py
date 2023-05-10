@@ -17,7 +17,7 @@ if typing.TYPE_CHECKING:
     from . import aes
 
 
-__all__ = ["after_stat", "after_scale", "stage"]
+__all__ = ("after_stat", "after_scale", "stage")
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
