@@ -1,4 +1,9 @@
-from typing import Any
+from __future__ import annotations
+
+import typing
+
+if typing.TYPE_CHECKING:
+    from typing import Any
 
 #: Development flag, e.g. set to ``True`` to prevent
 #: the queuing up of figures when errors happen.

@@ -14,13 +14,13 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import FloatArray, TupleFloat2
 
 
-__all__ = [
+__all__ = (
     "freedman_diaconis_bins",
     "breaks_from_bins",
     "breaks_from_binwidth",
     "assign_bins",
     "fuzzybreaks",
-]
+)
 
 
 def freedman_diaconis_bins(a):

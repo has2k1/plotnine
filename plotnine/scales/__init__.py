@@ -138,7 +138,7 @@ from .scale_xy import (
     scale_y_timedelta,
 )
 
-__all__ = [
+__all__ = (
     # color
     "scale_color_brewer",
     "scale_colour_brewer",
@@ -250,4 +250,4 @@ __all__ = [
     "ylim",
     "lims",
     "expand_limits",
-]
+)

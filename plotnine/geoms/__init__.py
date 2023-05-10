@@ -49,7 +49,7 @@ from .geom_tile import geom_tile
 from .geom_violin import geom_violin
 from .geom_vline import geom_vline
 
-__all__ = [
+__all__ = (
     "annotate",
     "annotation_logticks",
     "annotation_stripes",
@@ -98,4 +98,4 @@ __all__ = [
     "geom_tile",
     "geom_violin",
     "geom_vline",
-]
+)

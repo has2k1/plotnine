@@ -12,7 +12,7 @@ from .labelling import (
     labeller,
 )
 
-__all__ = [
+__all__ = (
     "facet_grid",
     "facet_null",
     "facet_wrap",
@@ -21,4 +21,4 @@ __all__ = [
     "label_context",
     "labeller",
     "as_labeller",
-]
+)

@@ -3,6 +3,17 @@
 Changelog
 =========
 
+v0.12.2
+-------
+(not-released-yet)
+
+Enhancements
+************
+
+- All `__all__` variables are explicitly assigned to help static typecheckers
+  infer module attributes. (:issue:`685`)
+
+
 v0.12.1
 -------
 (2023-05-09)

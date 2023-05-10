@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 
-__all__ = [
+__all__ = (
     "diamonds",
     "economics",
     "economics_long",
@@ -23,7 +23,7 @@ __all__ = [
     "presidential",
     "seals",
     "txhousing",
-]
+)
 
 data_dir = Path(__file__).parent
 
