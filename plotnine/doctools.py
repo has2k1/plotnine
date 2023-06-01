@@ -42,9 +42,8 @@ common_stat_param_values = common_geom_param_values
 # Templates for docstrings
 
 GEOM_SIGNATURE_TPL = """
-.. rubric:: Usage
 
-::
+**Usage**
 
     {signature}
 
@@ -60,9 +59,7 @@ The **bold** aesthetics are required.
 """
 
 STAT_SIGNATURE_TPL = """
-.. rubric:: Usage
-
-::
+**Usage**
 
     {signature}
 
@@ -179,7 +176,8 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     import os
     from tabulate import tabulate
 
-    if os.environ["DOC_GENERATION"]:
+    if os.environ.get("DOC_GENERATION"):
+        print("GENERATING DOCS FOR WEBSITE")
         return tabulate(list(contents.items()), headers = header, tablefmt="unsafehtml")
 
     def to_text(row: tuple[str, str]) -> str:
