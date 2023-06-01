@@ -176,6 +176,12 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     ========= =========
     """
 
+    import os
+    from tabulate import tabulate
+
+    if os.environ["DOC_GENERATION"]:
+        return tabulate(list(contents.items()), headers = header, tablefmt="unsafehtml")
+
     def to_text(row: tuple[str, str]) -> str:
         name, value = row
         m = max_col1_size + 1 - len(name)
