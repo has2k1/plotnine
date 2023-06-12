@@ -499,7 +499,7 @@ class scale_color_cmap_d(scale_discrete):
 
     Parameters
     ----------
-    name : str
+    cmap_name : str
         A standard Matplotlib colormap name. It must be of type
         :class:`matplotlib.colors.ListedColormap`.
         . The default is `viridis`. For the list of names checkout
@@ -522,10 +522,10 @@ class scale_color_cmap_d(scale_discrete):
     _aesthetics = ["color"]
     na_value = "#7F7F7F"
 
-    def __init__(self, name="viridis", lut=None, **kwargs):
+    def __init__(self, cmap_name="viridis", lut=None, **kwargs):
         from mizani.palettes import cmap_d_pal
 
-        self.palette = cmap_d_pal(name, lut)
+        self.palette = cmap_d_pal(cmap_name, lut)
         super().__init__(**kwargs)
 
 
