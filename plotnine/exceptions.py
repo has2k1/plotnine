@@ -44,5 +44,3 @@ class PlotnineWarning(UserWarning):
     """
     Warnings for ggplot inconsistencies
     """
-
-    pass

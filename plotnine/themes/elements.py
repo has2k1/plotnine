@@ -41,7 +41,6 @@ class element_base:
         """
         Setup the theme_element before drawing
         """
-        pass
 
 
 class element_line(element_base):

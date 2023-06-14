@@ -346,8 +346,6 @@ class gallery(nodes.General, nodes.Element):
     Empty gallery node
     """
 
-    pass
-
 
 class Gallery(Directive):
     """
