@@ -155,7 +155,7 @@ def run(show_browser=True):
     body = "".join(body_sections)
     html = html_template.format(failed=failed, body=body)
     index = image_dir / "index.html"
-    with open(index, "w") as f:
+    with index.open("w") as f:
         f.write(html)
 
     show_message = not show_browser
