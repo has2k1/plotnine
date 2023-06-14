@@ -193,7 +193,7 @@ stubPath = ""
 ########## Tool - Ruff ##########
 [tool.ruff]
 line-length = 79
-select = ["E", "F", "C", "TCH", "Q", "PIE"]
+select = ["E", "F", "C", "TCH", "Q", "PIE", "PTH"]
 ignore = [
     "E741",  # Ambiguous l
     "E743",  # Ambiguous I
