@@ -193,7 +193,7 @@ stubPath = ""
 ########## Tool - Ruff ##########
 [tool.ruff]
 line-length = 79
-select = ["E", "F", "C", "TCH"]
+select = ["E", "F", "C", "TCH", "Q", "PIE"]
 ignore = [
     "E741",  # Ambiguous l
     "E743",  # Ambiguous I
@@ -201,7 +201,7 @@ ignore = [
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "I", "TCH"]
+fixable = ["A", "B", "C", "D", "E", "F", "I", "TCH", "PIE"]
 unfixable = []
 
 # Exclude a variety of commonly ignored directories.

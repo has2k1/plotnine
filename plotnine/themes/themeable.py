@@ -213,7 +213,6 @@ class themeable(metaclass=RegistryHierarchyMeta):
         followed by extracting the portion of the axes specific to this
         themeable then applying the properties.
         """
-        pass
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
         """
@@ -223,7 +222,6 @@ class themeable(metaclass=RegistryHierarchyMeta):
         after plotting and all the elements are drawn onto the
         figure.
         """
-        pass
 
     def setup_figure(self, figure: Figure):
         """
@@ -234,19 +232,16 @@ class themeable(metaclass=RegistryHierarchyMeta):
         cases where the drawing functions need(or can make use of)
         this information.
         """
-        pass
 
     def blank_ax(self, ax: Axes):
         """
         Blank out theme elements
         """
-        pass
 
     def blank_figure(self, figure: Figure, targets: dict[str, Any]):
         """
         Blank out elements on the figure
         """
-        pass
 
 
 class Themeables(Dict[str, themeable]):
@@ -437,8 +432,6 @@ class axis_title(axis_title_x, axis_title_y):
     ----------
     theme_element : element_text
     """
-
-    pass
 
 
 class legend_title(themeable):
@@ -713,8 +706,6 @@ class strip_text(strip_text_x, strip_text_y):
     theme_element : element_text
     """
 
-    pass
-
 
 class title(axis_title, legend_title, plot_title, plot_subtitle, plot_caption):
     """
@@ -724,8 +715,6 @@ class title(axis_title, legend_title, plot_title, plot_subtitle, plot_caption):
     ----------
     theme_element : element_text
     """
-
-    pass
 
 
 class axis_text_x(themeable):
@@ -786,8 +775,6 @@ class axis_text(axis_text_x, axis_text_y):
     ----------
     theme_element : element_text
     """
-
-    pass
 
 
 class text(axis_text, legend_text, strip_text, title):
@@ -887,8 +874,6 @@ class axis_line(axis_line_x, axis_line_y):
     ----------
     theme_element : element_line
     """
-
-    pass
 
 
 class axis_ticks_minor_x(themeable):
@@ -1006,8 +991,6 @@ class axis_ticks_major(axis_ticks_major_x, axis_ticks_major_y):
     theme_element : element_line
     """
 
-    pass
-
 
 class axis_ticks_minor(axis_ticks_minor_x, axis_ticks_minor_y):
     """
@@ -1018,8 +1001,6 @@ class axis_ticks_minor(axis_ticks_minor_x, axis_ticks_minor_y):
     theme_element : element_line
     """
 
-    pass
-
 
 class axis_ticks(axis_ticks_major, axis_ticks_minor):
     """
@@ -1029,8 +1010,6 @@ class axis_ticks(axis_ticks_major, axis_ticks_minor):
     ----------
     theme_element : element_line
     """
-
-    pass
 
 
 class panel_grid_major_x(themeable):
@@ -1114,8 +1093,6 @@ class panel_grid_major(panel_grid_major_x, panel_grid_major_y):
     theme_element : element_line
     """
 
-    pass
-
 
 class panel_grid_minor(panel_grid_minor_x, panel_grid_minor_y):
     """
@@ -1126,8 +1103,6 @@ class panel_grid_minor(panel_grid_minor_x, panel_grid_minor_y):
     theme_element : element_line
     """
 
-    pass
-
 
 class panel_grid(panel_grid_major, panel_grid_minor):
     """
@@ -1137,8 +1112,6 @@ class panel_grid(panel_grid_major, panel_grid_minor):
     ----------
     theme_element : element_line
     """
-
-    pass
 
 
 class line(axis_line, axis_ticks, panel_grid):
@@ -1378,8 +1351,6 @@ class strip_background(strip_background_x, strip_background_y):
     theme_element : element_rect
     """
 
-    pass
-
 
 class rect(
     legend_key,
@@ -1396,8 +1367,6 @@ class rect(
     ----------
     theme_element : element_rect
     """
-
-    pass
 
 
 # value base themeables
@@ -1444,8 +1413,6 @@ class axis_ticks_length(axis_ticks_length_major, axis_ticks_length_minor):
     theme_element : float
         Value in points.
     """
-
-    pass
 
 
 class axis_ticks_pad_major(themeable):
@@ -1499,8 +1466,6 @@ class axis_ticks_pad(axis_ticks_pad_major, axis_ticks_pad_minor):
         Value in points.
     """
 
-    pass
-
 
 class axis_ticks_direction_x(themeable):
     """
@@ -1552,8 +1517,6 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
         - ``inout`` - ticks inside and outside the panel
     """
 
-    pass
-
 
 class panel_spacing_x(themeable):
     """
@@ -1564,8 +1527,6 @@ class panel_spacing_x(themeable):
     theme_element : float
         Size as a fraction of the figure width.
     """
-
-    pass
 
 
 class panel_spacing_y(themeable):
@@ -1585,8 +1546,6 @@ class panel_spacing_y(themeable):
     will be equal.
     """
 
-    pass
-
 
 class panel_spacing(panel_spacing_x, panel_spacing_y):
     """
@@ -1597,8 +1556,6 @@ class panel_spacing(panel_spacing_x, panel_spacing_y):
     theme_element : float
         Size in inches of the space between the facet panels
     """
-
-    pass
 
 
 # TODO: Distinct margins in all four directions
