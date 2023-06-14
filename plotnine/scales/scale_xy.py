@@ -223,7 +223,7 @@ class scale_position_continuous(scale_continuous):
         if limits is None:
             limits = self.limits
         scaled = self.oob(series, limits)
-        scaled[pd.isnull(scaled)] = self.na_value
+        scaled[pd.isna(scaled)] = self.na_value
         return scaled
 
 

@@ -13,12 +13,12 @@ from plotnine import (
 )
 
 n = 9
-df = pd.DataFrame({"x": np.arange(n) % 3 + 1, "y": range(n)})
+data = pd.DataFrame({"x": np.arange(n) % 3 + 1, "y": range(n)})
 
 
 def test_annotation_stripes():
     p = (
-        ggplot(df)
+        ggplot(data)
         + annotation_stripes(fill_range="no")
         + geom_point(aes("factor(x)", "y"))
         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
@@ -28,12 +28,12 @@ def test_annotation_stripes():
 
 
 def test_annotation_stripes_faceting():
-    n = len(df)
+    n = len(data)
 
-    df2 = pd.DataFrame(
+    data2 = pd.DataFrame(
         {
-            "x": np.hstack([df["x"], df["x"]]),
-            "y": np.hstack([df["y"], df["y"]]),
+            "x": np.hstack([data["x"], data["x"]]),
+            "y": np.hstack([data["y"], data["y"]]),
             "g": list("a" * n + "b" * n),
         }
     )
@@ -41,7 +41,7 @@ def test_annotation_stripes_faceting():
     p = (
         ggplot()
         + annotation_stripes(fill_range="no")
-        + geom_point(df2, aes("factor(x)", "y"))
+        + geom_point(data2, aes("factor(x)", "y"))
         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
         + facet_wrap("g")
     )
@@ -50,7 +50,7 @@ def test_annotation_stripes_faceting():
 
 def test_annotation_stripes_fill_range():
     p = (
-        ggplot(df)
+        ggplot(data)
         + annotation_stripes()
         + geom_point(aes("factor(x)", "y"))
         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
@@ -61,7 +61,7 @@ def test_annotation_stripes_fill_range():
 
 def test_annotation_stripes_fill_range_cycle():
     p = (
-        ggplot(df)
+        ggplot(data)
         + annotation_stripes(fill_range="cycle")
         + geom_point(aes("factor(x)", "y"))
         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
@@ -72,7 +72,7 @@ def test_annotation_stripes_fill_range_cycle():
 
 def test_annotation_stripes_coord_flip():
     p = (
-        ggplot(df)
+        ggplot(data)
         + annotation_stripes(fill_range="no")
         + geom_point(aes("factor(x)", "y"))
         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
@@ -84,7 +84,7 @@ def test_annotation_stripes_coord_flip():
 
 def test_annotation_stripes_continuous_scale():
     p = (
-        ggplot(df)
+        ggplot(data)
         + annotation_stripes()
         + geom_point(aes("x", "y"))
         + geom_vline(xintercept=[0.5, 1.5, 2.5, 3.5])
@@ -100,7 +100,7 @@ def test_invalid_orientation():
 
 def test_annotation_stripes_fill_direction_extend():
     p = (
-        ggplot(df)
+        ggplot(data)
         + annotation_stripes(
             fill=["red", "blue", "green"],
             fill_range="no",
@@ -116,7 +116,7 @@ def test_annotation_stripes_fill_direction_extend():
 
 def test_annotation_stripes_single_stripe():
     p = (
-        ggplot(df.assign(x=10))
+        ggplot(data.assign(x=10))
         + annotation_stripes(fill=["#FF0000", "#00FF00"])
         + geom_point(aes("factor(x)", "y"))
     )

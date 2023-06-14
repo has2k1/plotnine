@@ -5,7 +5,7 @@ import pandas as pd
 from plotnine import aes, geom_point, ggplot, stat_ellipse
 from plotnine.stats.stat_ellipse import cov_trob
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": [1, 2, 3, 4, 5],
         "y": [1, 4, 3, 6, 7],
@@ -16,7 +16,7 @@ df = pd.DataFrame(
 
 def test_ellipse():
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + stat_ellipse(type="t")
         + stat_ellipse(type="norm", color="red")
@@ -27,7 +27,7 @@ def test_ellipse():
 
 
 def test_cov_trob_2d():
-    x = np.array(df[["x", "y"]])
+    x = np.array(data[["x", "y"]])
     res = cov_trob(x, cor=True)
 
     # Values from MASS::cov.trob
@@ -43,7 +43,7 @@ def test_cov_trob_2d():
 
 
 def test_cov_trob_3d():
-    x = np.array(df[["x", "y", "z"]])
+    x = np.array(data[["x", "y", "z"]])
     res = cov_trob(x, cor=True)
 
     # Values from MASS::cov.trob

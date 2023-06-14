@@ -358,16 +358,16 @@ def check_required_aesthetics(required, present, name):
         raise PlotnineError(msg.format(name, ", ".join(missing_aes)))
 
 
-def uniquecols(df):
+def uniquecols(data):
     """
     Return unique columns
 
     This is used for figuring out which columns are
     constant within a group
     """
-    bool_idx = df.apply(lambda col: len(np.unique(col)) == 1, axis=0)
-    df = df.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
-    return df
+    bool_idx = data.apply(lambda col: len(np.unique(col)) == 1, axis=0)
+    data = data.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
+    return data
 
 
 def jitter(x, factor=1, amount=None, random_state=None):
@@ -436,7 +436,7 @@ def jitter(x, factor=1, amount=None, random_state=None):
 
 
 def remove_missing(
-    df: pd.DataFrame,
+    data: pd.DataFrame,
     na_rm: bool = False,
     vars: Sequence[str] | None = None,
     name: str = "",
@@ -457,27 +457,29 @@ def remove_missing(
     finite : bool
         If True replace the infinite values in addition to the NaNs
     """
-    n = len(df)
+    n = len(data)
 
     if vars is None:
-        vars = df.columns.to_list()
+        vars = data.columns.to_list()
     else:
-        vars = df.columns.intersection(list(vars)).to_list()
+        vars = data.columns.intersection(list(vars)).to_list()
 
     if finite:
         lst = [np.inf, -np.inf]
         to_replace = {v: lst for v in vars}
-        df.replace(to_replace, np.nan, inplace=True)
+        data.replace(to_replace, np.nan, inplace=True)
         txt = "non-finite"
     else:
         txt = "missing"
 
-    df = df.dropna(subset=vars)
-    df.reset_index(drop=True, inplace=True)
-    if len(df) < n and not na_rm:
+    data = data.dropna(subset=vars)
+    data.reset_index(drop=True, inplace=True)
+    if len(data) < n and not na_rm:
         msg = "{} : Removed {} rows containing {} values."
-        warn(msg.format(name, n - len(df), txt), PlotnineWarning, stacklevel=3)
-    return df
+        warn(
+            msg.format(name, n - len(data), txt), PlotnineWarning, stacklevel=3
+        )
+    return data
 
 
 def to_rgba(colors, alpha):
@@ -868,7 +870,7 @@ def copy_missing_columns(df, ref_df):
         idx = np.repeat(0, l1)
 
     for col in cols:
-        df[col] = ref_df.iloc[idx, _loc(col)].values
+        df[col] = ref_df.iloc[idx, _loc(col)].to_numpy()
 
 
 def data_mapping_as_kwargs(args, kwargs):
@@ -1073,7 +1075,7 @@ def cross_join(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
     all_columns = list(pd.Index(list(df1.columns) + list(df2.columns)))
     df1["key"] = 1
     df2["key"] = 1
-    return pd.merge(df1, df2, on="key").loc[:, all_columns]
+    return df1.merge(df2, on="key").loc[:, all_columns]
 
 
 def to_inches(value: float, units: str) -> float:

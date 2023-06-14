@@ -239,8 +239,10 @@ class guides(dict):
         # group guide definitions by hash, and
         # reduce each group to a single guide
         # using the guide.merge method
-        df = pd.DataFrame({"gdef": gdefs, "hash": [g.hash for g in gdefs]})
-        grouped = df.groupby("hash", sort=False)
+        definitions = pd.DataFrame(
+            {"gdef": gdefs, "hash": [g.hash for g in gdefs]}
+        )
+        grouped = definitions.groupby("hash", sort=False)
         gdefs = []
         for name, group in grouped:
             # merge

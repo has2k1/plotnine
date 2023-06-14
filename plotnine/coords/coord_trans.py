@@ -77,7 +77,7 @@ class coord_trans(coord):
 
         def trans_x(col: FloatSeries) -> FloatSeries:
             result = transform_value(self.trans_x, col, panel_params.x.range)
-            if any(result.isnull()):
+            if any(result.isna()):
                 warn(
                     "Coordinate transform of x aesthetic "
                     "created one or more NaN values.",
@@ -87,7 +87,7 @@ class coord_trans(coord):
 
         def trans_y(col: FloatSeries) -> FloatSeries:
             result = transform_value(self.trans_y, col, panel_params.y.range)
-            if any(result.isnull()):
+            if any(result.isna()):
                 warn(
                     "Coordinate transform of y aesthetic "
                     "created one or more NaN values.",

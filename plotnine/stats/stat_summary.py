@@ -24,7 +24,7 @@ def bootstrap_statistics(
     alpha = 1 - confidence_interval
     size = (n_samples, len(series))
     inds = random_state.randint(0, len(series), size=size)
-    samples = series.values[inds]
+    samples = series.to_numpy()[inds]
     means = np.sort(statistic(samples, axis=1))
     return pd.DataFrame(
         {

@@ -126,8 +126,8 @@ class geom_map(geom):
         if not len(data):
             return
 
-        data.loc[data["color"].isnull(), "color"] = "none"
-        data.loc[data["fill"].isnull(), "fill"] = "none"
+        data.loc[data["color"].isna(), "color"] = "none"
+        data.loc[data["fill"].isna(), "fill"] = "none"
         data["fill"] = to_rgba(data["fill"], data["alpha"])
 
         geom_type = data.geometry.iloc[0].geom_type

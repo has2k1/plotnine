@@ -6,7 +6,7 @@ from plotnine import aes, geom_line, ggplot, scale_linetype_manual
 def test_scale_linetype_manual_tuples():
     # linetype_manual accepts tuples as mapping results
     # this must be tested specifically.
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": [0, 1, 0, 1, 0, 1],
             "y": [0, 1, 0, 2, 0, 3],
@@ -14,7 +14,7 @@ def test_scale_linetype_manual_tuples():
         }
     )
 
-    p = ggplot(df)
+    p = ggplot(data)
     p += geom_line(aes(x="x", y="y", ymax="y+1", linetype="lt", group="lt"))
     p += scale_linetype_manual(
         values=(
@@ -29,7 +29,7 @@ def test_scale_linetype_manual_tuples():
 def test_scale_linetype_strings_tuples():
     # linetype_manual accepts tuples as mapping results
     # this must be tested specifically.
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": [0, 1, 0, 1, 0, 1],
             "y": [0, 1, 0, 2, 0, 3],
@@ -37,7 +37,7 @@ def test_scale_linetype_strings_tuples():
         }
     )
 
-    p = ggplot(df)
+    p = ggplot(data)
     p += geom_line(aes(x="x", y="y", ymax="y+1", linetype="lt", group="lt"))
     p += scale_linetype_manual(values=["solid", "dashed", "dotted"])
     assert p == "scale_linetype_manual_strings"

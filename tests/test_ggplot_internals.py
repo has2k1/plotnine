@@ -32,14 +32,14 @@ from plotnine import (
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.mapping.aes import is_valid_aesthetic
 
-df = pd.DataFrame({"x": np.arange(10), "y": np.arange(10)})
+data = pd.DataFrame({"x": np.arange(10), "y": np.arange(10)})
 
 
 def test_labels():
     """
     Test invalid arguments to chart components
     """
-    gg = ggplot(df, aes(x="x", y="y"))
+    gg = ggplot(data, aes(x="x", y="y"))
     gg = gg + geom_point()
     gg = gg + xlab("xlab")
     gg = gg + ylab("ylab")
@@ -69,19 +69,19 @@ def test_labels():
 
 
 def test_ggplot_parameters():
-    p = ggplot(df, aes("x"))
+    p = ggplot(data, aes("x"))
 
-    assert p.data is df
+    assert p.data is data
     assert p.mapping == aes("x")
     assert p.environment.namespace["np"] is np
     assert p.environment.namespace["pd"] is pd
 
-    p = ggplot(data=df, mapping=aes("x"))
-    assert p.data is df
+    p = ggplot(data=data, mapping=aes("x"))
+    assert p.data is data
     assert p.mapping == aes("x")
 
-    p = ggplot(data=df)
-    assert p.data is df
+    p = ggplot(data=data)
+    assert p.data is data
     assert p.mapping == aes()
 
     p = ggplot(mapping=aes("x"))
@@ -97,24 +97,24 @@ def test_ggplot_parameters():
 
 
 def test_ggplot_parameters_grouped():
-    p = df.groupby("x") >> ggplot(aes("x"))
+    p = data.groupby("x") >> ggplot(aes("x"))
     assert isinstance(p.data, pd.DataFrame)
 
 
 def test_data_transforms():
-    p = ggplot(aes(x="x", y="np.log(y+1)"), df)
+    p = ggplot(aes(x="x", y="np.log(y+1)"), data)
     p = p + geom_point()
     p.draw_test()
 
     with pytest.raises(Exception):
         # no numpy available
-        p = ggplot(aes(x="depth", y="ap.log(price)"), df)
+        p = ggplot(aes(x="depth", y="ap.log(price)"), data)
         p = p + geom_point()
         p.draw_test()
 
 
 def test_deepcopy():
-    p = ggplot(df, aes("x")) + geom_histogram()
+    p = ggplot(data, aes("x")) + geom_histogram()
     p2 = deepcopy(p)
     assert p is not p2
     # Not sure what we have to do for that...
@@ -199,20 +199,20 @@ def test_calculated_aes():
     mapping4 = aes("x", y="func(..density..)")
     _test()
 
-    df = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-    p = ggplot(df) + geom_bar(aes(x="x", fill=after_stat("count + 2")))
+    data = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    p = ggplot(data) + geom_bar(aes(x="x", fill=after_stat("count + 2")))
     p.draw_test()
 
-    p = ggplot(df) + geom_bar(aes(x="x", fill="stat(count + 2)"))
+    p = ggplot(data) + geom_bar(aes(x="x", fill="stat(count + 2)"))
     p.draw_test()
 
-    p = ggplot(df) + geom_bar(aes(x="x", fill="..count.. + 2"))
+    p = ggplot(data) + geom_bar(aes(x="x", fill="..count.. + 2"))
     p.draw_test()
 
 
 def test_after_scale_mapping():
-    df = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
-    df2 = pd.DataFrame(
+    data = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
+    data2 = pd.DataFrame(
         {
             # Same as above, but add 2 of each unique element
             "x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
@@ -220,16 +220,16 @@ def test_after_scale_mapping():
         }
     )
 
-    p = ggplot(df) + geom_bar(aes(x="x", ymax=after_scale("ymax + 2")))
-    p2 = ggplot(df2) + geom_bar(aes(x="x"))
+    p = ggplot(data) + geom_bar(aes(x="x", ymax=after_scale("ymax + 2")))
+    p2 = ggplot(data2) + geom_bar(aes(x="x"))
 
     assert p + lims(y=(0, 7)) == "after_scale_mapping"
     assert p2 + lims(y=(0, 7)) == "after_scale_mapping"
 
 
 def test_add_aes():
-    df = pd.DataFrame({"var1": [1, 2, 3, 4], "var2": 2})
-    p = ggplot(df) + geom_point()
+    data = pd.DataFrame({"var1": [1, 2, 3, 4], "var2": 2})
+    p = ggplot(data) + geom_point()
     p += aes("var1", "var2")
 
     assert p.mapping == aes("var1", "var2")
@@ -238,15 +238,15 @@ def test_add_aes():
 
 
 def test_nonzero_indexed_data():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {98: {"blip": 0, "blop": 1}, 99: {"blip": 1, "blop": 3}}
     ).T
-    p = ggplot(df, aes(x="blip", y="blop")) + geom_line()
+    p = ggplot(data, aes(x="blip", y="blop")) + geom_line()
     p.draw_test()
 
 
 def test_inplace_add():
-    p = _p = ggplot(df)
+    p = _p = ggplot(data)
 
     p += aes("x", "y")
     assert p is _p
@@ -292,19 +292,19 @@ def test_inplace_add():
 
 
 def test_rrshift_piping():
-    p = df >> ggplot(aes("x", "y")) + geom_point()
-    assert p.data is df
+    p = data >> ggplot(aes("x", "y")) + geom_point()
+    assert p.data is data
 
     with pytest.raises(PlotnineError):
-        df >> ggplot(df.copy(), aes("x", "y")) + geom_point()
+        data >> ggplot(data.copy(), aes("x", "y")) + geom_point()
 
     with pytest.raises(TypeError):
         "not a dataframe" >> ggplot(aes("x", "y")) + geom_point()
 
 
 def test_rrshift_piping_grouped():
-    p = df.groupby("x") >> ggplot(aes("x", "y")) + geom_point()
-    assert p.data is df
+    p = data.groupby("x") >> ggplot(aes("x", "y")) + geom_point()
+    assert p.data is data
 
 
 def test_adding_list_ggplot():
@@ -338,7 +338,7 @@ def test_iadding_list_ggplot():
 
 
 def test_adding_None():
-    p = ggplot(df, aes("x", "y")) + geom_point()
+    p = ggplot(data, aes("x", "y")) + geom_point()
     p2 = p + None
     assert p2 is not p
     assert isinstance(p2, ggplot)
@@ -349,7 +349,7 @@ def test_adding_None():
 
 
 def test_string_group():
-    p = ggplot(df, aes("x", "y")) + geom_point(group="pi")
+    p = ggplot(data, aes("x", "y")) + geom_point(group="pi")
     p.draw_test()
 
 
@@ -358,19 +358,19 @@ def test_to_pandas():
         def to_pandas(self):
             return pd.DataFrame({"x": [1, 2, 3], "y": [1, 2, 3]})
 
-    df = SomeDataType()
-    p1 = ggplot(df, aes("x", "y")) + geom_point()
-    p2 = df >> ggplot(aes("x", "y")) + geom_point()
+    data = SomeDataType()
+    p1 = ggplot(data, aes("x", "y")) + geom_point()
+    p2 = data >> ggplot(aes("x", "y")) + geom_point()
     assert p1 == "to_pandas"
     assert p2 == "to_pandas"
 
 
 def test_callable_as_data():
-    def _fn(df):
-        return df.rename(columns={"xx": "x", "yy": "y"})
+    def _fn(data):
+        return data.rename(columns={"xx": "x", "yy": "y"})
 
-    df = pd.DataFrame({"xx": [1, 2, 3], "yy": [1, 2, 3]})
-    p = ggplot(df, aes("x", "y")) + geom_point(_fn)
+    data = pd.DataFrame({"xx": [1, 2, 3], "yy": [1, 2, 3]})
+    p = ggplot(data, aes("x", "y")) + geom_point(_fn)
     p.draw_test()
 
 

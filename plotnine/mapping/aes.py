@@ -186,6 +186,9 @@ class aes(Dict[str, Any]):
         kwargs = self._convert_deprecated_expr(kwargs)
         self.update(kwargs)
 
+    def __iter__(self):
+        return iter(self.keys())
+
     def _convert_deprecated_expr(self, kwargs):
         """
         Handle old-style calculated aesthetic expression mappings

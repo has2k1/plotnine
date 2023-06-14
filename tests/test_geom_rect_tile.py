@@ -13,7 +13,7 @@ from plotnine import (
 
 n = 4
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "xmin": range(1, n * 2, 2),
         "xmax": range(2, n * 2 + 1, 2),
@@ -26,13 +26,13 @@ df = pd.DataFrame(
 # geom_rect and geom_tile are similar but
 # parameterised different
 # for geom_tile
-df["x"] = df["xmin"] + 0.5
-df["y"] = df["ymin"] + 0.5
+data["x"] = data["xmin"] + 0.5
+data["y"] = data["ymin"] + 0.5
 
 
 def test_rect_aesthetics():
     p = (
-        ggplot(df, aes(xmin="xmin", xmax="xmax", ymin="ymin", ymax="ymax"))
+        ggplot(data, aes(xmin="xmin", xmax="xmax", ymin="ymin", ymax="ymax"))
         + geom_rect()
         + geom_rect(
             aes(ymin="ymin+2", ymax="ymax+2", alpha="z"), show_legend=False
@@ -57,7 +57,7 @@ def test_rect_aesthetics():
 
 def test_rect_nofill():
     p = (
-        ggplot(df)
+        ggplot(data)
         + aes(xmin="xmin", xmax="xmax", ymin="ymin", ymax="ymax")
         + geom_rect(color="red", fill=None, size=2)
         + geom_rect(
@@ -82,7 +82,7 @@ def test_rect_nofill():
 
 def test_tile_aesthetics():
     p = (
-        ggplot(df, aes("x", "y", width=1, height=1))
+        ggplot(data, aes("x", "y", width=1, height=1))
         + geom_tile()
         + geom_tile(aes(y="y+2", alpha="z"), show_legend=False)
         + geom_tile(aes(y="y+4", fill="factor(z)"))
@@ -96,8 +96,8 @@ def test_tile_aesthetics():
 
 
 def test_infinite_rects():
-    df = pd.DataFrame({"x": range(10), "y": range(10)})
-    rdf = pd.DataFrame(
+    data = pd.DataFrame({"x": range(10), "y": range(10)})
+    rdata = pd.DataFrame(
         {
             "xmin": [3],
             "xmax": 7,
@@ -107,10 +107,10 @@ def test_infinite_rects():
     )
 
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + geom_rect(
-            data=rdf,
+            data=rdata,
             mapping=aes(xmin="xmin", xmax="xmax", ymin="ymin", ymax="ymax"),
             alpha=0.2,
             inherit_aes=False,
@@ -121,8 +121,8 @@ def test_infinite_rects():
 
 
 def test_coord_trans():
-    df = pd.DataFrame({"x": range(10), "y": range(10)})
-    rdf = pd.DataFrame(
+    data = pd.DataFrame({"x": range(10), "y": range(10)})
+    rdata = pd.DataFrame(
         {
             "xmin": [3],
             "xmax": 7,
@@ -132,10 +132,10 @@ def test_coord_trans():
     )
 
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + geom_rect(
-            data=rdf,
+            data=rdata,
             mapping=aes(xmin="xmin", xmax="xmax", ymin="ymin", ymax="ymax"),
             alpha=0.2,
             inherit_aes=False,
@@ -147,7 +147,7 @@ def test_coord_trans():
 
 
 def test_coord_trans_groups():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "xmin": [0, 2, 4],
             "xmax": [1, 3, 5],
@@ -158,7 +158,7 @@ def test_coord_trans_groups():
     )
 
     p = (
-        ggplot(df)
+        ggplot(data)
         + geom_rect(
             aes(xmin="xmin", xmax="xmax", ymin="ymin", ymax="ymax", fill="c")
         )

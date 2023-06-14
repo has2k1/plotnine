@@ -5,7 +5,7 @@ from plotnine import aes, geom_point, ggplot, stat_identity
 from plotnine.exceptions import PlotnineError
 from plotnine.geoms.geom import geom
 
-df = pd.DataFrame({"col1": [1, 2, 3, 4], "col2": 2, "col3": list("abcd")})
+data = pd.DataFrame({"col1": [1, 2, 3, 4], "col2": 2, "col3": list("abcd")})
 
 
 def test_geom_basics():
@@ -13,17 +13,17 @@ def test_geom_basics():
         DEFAULT_AES = {"color": None}
         DEFAULT_PARAMS = {"stat": "identity", "position": "identity"}
 
-    g = geom_abc(data=df)
-    assert g.data is df
+    g = geom_abc(data=data)
+    assert g.data is data
 
-    g = geom_abc(df)
-    assert g.data is df
+    g = geom_abc(data)
+    assert g.data is data
 
     # geom data should not mess with the main data
-    df_copy = df.copy()
-    p = ggplot(df, aes("col", "mpg")) + geom_abc(df_copy)
-    assert p.data is df
-    assert p.layers[0].geom.data is df_copy
+    data_copy = data.copy()
+    p = ggplot(data, aes("col", "mpg")) + geom_abc(data_copy)
+    assert p.data is data
+    assert p.layers[0].geom.data is data_copy
 
     g = geom_abc(aes(color="col1"))
     assert g.mapping["color"] == "col1"

@@ -81,6 +81,6 @@ class geom_step(geom_path):
         else:
             raise PlotnineError(f"Invalid direction `{direction}`")
 
-        df = pd.DataFrame({"x": new_x, "y": new_y})
-        copy_missing_columns(df, data)
-        geom_path.draw_group(df, panel_params, coord, ax, **params)
+        path_data = pd.DataFrame({"x": new_x, "y": new_y})
+        copy_missing_columns(path_data, data)
+        geom_path.draw_group(path_data, panel_params, coord, ax, **params)

@@ -66,10 +66,10 @@ class stat_function(stat):
     def __init__(self, mapping=None, data=None, **kwargs):
         if data is None:
 
-            def _data_func(df: pd.DataFrame) -> pd.DataFrame:
-                if df.empty:
-                    df = pd.DataFrame({"group": [1]})
-                return df
+            def _data_func(data: pd.DataFrame) -> pd.DataFrame:
+                if data.empty:
+                    data = pd.DataFrame({"group": [1]})
+                return data
 
             data = _data_func
 

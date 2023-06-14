@@ -96,7 +96,7 @@ class stat_density_2d(stat):
 
         # The grid must have a "similar" shape (n, p) to the var_data
         X, Y = np.meshgrid(x, y)
-        var_data = np.array([data["x"].values, data["y"].values]).T
+        var_data = np.array([data["x"].to_numpy(), data["y"].to_numpy()]).T
         grid = np.array([X.flatten(), Y.flatten()]).T
         density = kde(var_data, grid, package, **kde_params)
 
