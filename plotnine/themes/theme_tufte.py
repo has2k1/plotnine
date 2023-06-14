@@ -49,5 +49,5 @@ class theme_tufte(theme_bw):
             panel_grid=element_blank(),
             plot_background=element_blank(),
             strip_background=element_blank(),
-            **d,
+            **d,  # pyright: ignore
         )

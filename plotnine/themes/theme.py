@@ -431,4 +431,5 @@ def theme_update(**kwargs: themeable):
     kwargs : dict
         Theme elements
     """
-    theme_set(theme_get() + theme(**kwargs))
+    assert "complete" not in kwargs
+    theme_set(theme_get() + theme(**kwargs))  # pyright: ignore
