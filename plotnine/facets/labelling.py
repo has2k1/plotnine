@@ -4,11 +4,11 @@ import typing
 from abc import ABCMeta, abstractmethod
 
 from ..exceptions import PlotnineError
-from ..iapi import strip_label_details
 
 if typing.TYPE_CHECKING:
     from typing import Callable, Optional
 
+    from ..iapi import strip_label_details
     from ..typing import (
         CanBeStripLabellingFunc,
         StripLabellingFunc,
