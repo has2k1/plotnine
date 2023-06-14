@@ -223,4 +223,3 @@ class guide(metaclass=Registry):
 
         Returns guide if training is successful
         """
-        pass
