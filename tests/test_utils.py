@@ -48,16 +48,16 @@ def test__margins():
 
 
 def test_add_margins():
-    df = mtcars.loc[:, ["mpg", "disp", "vs", "am", "gear"]]
-    n = len(df)
+    data = mtcars.loc[:, ["mpg", "disp", "vs", "am", "gear"]]
+    n = len(data)
     all_lst = ["(all)"] * n
 
     vars = [("vs", "am"), ("gear",)]
-    dfx = add_margins(df, vars, True)
+    datax = add_margins(data, vars, True)
 
-    assert dfx["vs"].dtype == "category"
-    assert dfx["am"].dtype == "category"
-    assert dfx["gear"].dtype == "category"
+    assert datax["vs"].dtype == "category"
+    assert datax["am"].dtype == "category"
+    assert datax["gear"].dtype == "category"
 
     # What we expect, where each row is of
     # column length n
@@ -71,23 +71,23 @@ def test_add_margins():
     # *     *      (all)  (all)  (all)
     # *     *      *      (all)  (all)
 
-    assert all(dfx.loc[0 : n - 1, "am"] != all_lst)
-    assert all(dfx.loc[0 : n - 1, "vs"] != all_lst)
-    assert all(dfx.loc[0 : n - 1, "gear"] != all_lst)
+    assert all(datax.loc[0 : n - 1, "am"] != all_lst)
+    assert all(datax.loc[0 : n - 1, "vs"] != all_lst)
+    assert all(datax.loc[0 : n - 1, "gear"] != all_lst)
 
-    assert all(dfx.loc[n : 2 * n - 1, "vs"] == all_lst)
-    assert all(dfx.loc[n : 2 * n - 1, "am"] == all_lst)
+    assert all(datax.loc[n : 2 * n - 1, "vs"] == all_lst)
+    assert all(datax.loc[n : 2 * n - 1, "am"] == all_lst)
 
-    assert all(dfx.loc[2 * n : 3 * n - 1, "am"] == all_lst)
+    assert all(datax.loc[2 * n : 3 * n - 1, "am"] == all_lst)
 
-    assert all(dfx.loc[3 * n : 4 * n - 1, "gear"] == all_lst)
+    assert all(datax.loc[3 * n : 4 * n - 1, "gear"] == all_lst)
 
-    assert all(dfx.loc[4 * n : 5 * n - 1, "am"] == all_lst)
-    assert all(dfx.loc[4 * n : 5 * n - 1, "vs"] == all_lst)
-    assert all(dfx.loc[4 * n : 5 * n - 1, "gear"] == all_lst)
+    assert all(datax.loc[4 * n : 5 * n - 1, "am"] == all_lst)
+    assert all(datax.loc[4 * n : 5 * n - 1, "vs"] == all_lst)
+    assert all(datax.loc[4 * n : 5 * n - 1, "gear"] == all_lst)
 
-    assert all(dfx.loc[5 * n : 6 * n - 1, "am"] == all_lst)
-    assert all(dfx.loc[5 * n : 6 * n - 1, "gear"] == all_lst)
+    assert all(datax.loc[5 * n : 6 * n - 1, "am"] == all_lst)
+    assert all(datax.loc[5 * n : 6 * n - 1, "gear"] == all_lst)
 
 
 def test_ninteraction():
@@ -99,36 +99,36 @@ def test_ninteraction():
 
     # vector of unique values is equivalent to rank
     for case in simple_vectors:
-        df = pd.DataFrame(case)
-        rank = df.rank(method="min")
+        data = pd.DataFrame(case)
+        rank = data.rank(method="min")
         rank = rank[0].astype(int).tolist()
-        rank_df = ninteraction(df)
-        assert rank == rank_df
+        rank_data = ninteraction(data)
+        assert rank == rank_data
 
     # duplicates are numbered sequentially
-    # df                    ids
+    # data                    ids
     # [6, 6, 4, 4, 5, 5] -> [3, 3, 1, 1, 2, 2]
     for case in simple_vectors:
         rank = pd.DataFrame(case).rank(method="min")
         rank = rank[0].astype(int).repeat(2).tolist()
-        rank_df = ninteraction(pd.DataFrame(np.array(case).repeat(2)))
-        assert rank == rank_df
+        rank_data = ninteraction(pd.DataFrame(np.array(case).repeat(2)))
+        assert rank == rank_data
 
     # grids are correctly ranked
-    df = pd.DataFrame(list(itertools.product([1, 2], range(1, 11))))
-    assert ninteraction(df) == list(range(1, len(df) + 1))
-    assert ninteraction(df, drop=True) == list(range(1, len(df) + 1))
+    data = pd.DataFrame(list(itertools.product([1, 2], range(1, 11))))
+    assert ninteraction(data) == list(range(1, len(data) + 1))
+    assert ninteraction(data, drop=True) == list(range(1, len(data) + 1))
 
     # zero length dataframe
-    df = pd.DataFrame()
-    assert ninteraction(df) == []
+    data = pd.DataFrame()
+    assert ninteraction(data) == []
 
     # dataframe with single variable
-    df = pd.DataFrame({"a": ["a"]})
-    assert ninteraction(df) == [1]
+    data = pd.DataFrame({"a": ["a"]})
+    assert ninteraction(data) == [1]
 
-    df = pd.DataFrame({"a": ["b"]})
-    assert ninteraction(df) == [1]
+    data = pd.DataFrame({"a": ["b"]})
+    assert ninteraction(data) == [1]
 
 
 def test_ninteraction_datetime_series():
@@ -136,24 +136,24 @@ def test_ninteraction_datetime_series():
     # no longer compare as equal! This test ensures that case is
     # not happening
     lst = ["2020-01-01", "2020-01-02", "2020-01-03"]
-    df1 = pd.DataFrame(
+    data1 = pd.DataFrame(
         {
             "x": list("abcaabbcc"),
             "date_list": lst * 3,
         }
     )
-    df2 = pd.DataFrame(
+    data2 = pd.DataFrame(
         {
             "x": list("abcaabbcc"),
             "date_list": pd.to_datetime(lst * 3),
         }
     )
 
-    assert ninteraction(df1) == ninteraction(df2)
+    assert ninteraction(data1) == ninteraction(data2)
 
 
 def test_join_keys():
-    df1 = pd.DataFrame(
+    data1 = pd.DataFrame(
         {
             "a": [0, 0, 1, 1, 2, 2],
             "b": [0, 1, 2, 3, 1, 2],
@@ -162,13 +162,13 @@ def test_join_keys():
     )
 
     # same array and columns the keys should be the same
-    keys = join_keys(df1, df1, ["a", "b"])
+    keys = join_keys(data1, data1, ["a", "b"])
     assert list(keys["x"]) == [1, 2, 3, 4, 5, 6]
     assert list(keys["x"]) == [1, 2, 3, 4, 5, 6]
 
-    # Every other element of df2['b'] is changed
+    # Every other element of data2['b'] is changed
     # so every other key should be different
-    df2 = pd.DataFrame(
+    data2 = pd.DataFrame(
         {
             "a": [0, 0, 1, 1, 2, 2],
             "b": [0, 11, 2, 33, 1, 22],
@@ -176,7 +176,7 @@ def test_join_keys():
         }
     )
 
-    keys = join_keys(df1, df2, ["a", "b"])
+    keys = join_keys(data1, data2, ["a", "b"])
     assert list(keys["x"]) == [1, 2, 4, 5, 7, 8]
     assert list(keys["y"]) == [1, 3, 4, 6, 7, 9]
 
@@ -193,7 +193,7 @@ def test_match():
 
 
 def test_uniquecols():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": [1, 2, 3, 4],
             "y": ["a", "b", "c", "d"],
@@ -201,30 +201,30 @@ def test_uniquecols():
             "other": ["same"] * 4,
         }
     )
-    df2 = pd.DataFrame({"z": [8], "other": ["same"]})
-    result = uniquecols(df)
-    assert result.equals(df2)
+    data2 = pd.DataFrame({"z": [8], "other": ["same"]})
+    result = uniquecols(data)
+    assert result.equals(data2)
 
 
 def test_remove_missing():
-    df = pd.DataFrame({"a": [1.0, np.NaN, 3, np.inf], "b": [1, 2, 3, 4]})
-    df2 = pd.DataFrame({"a": [1.0, 3, np.inf], "b": [1, 3, 4]})
-    df3 = pd.DataFrame({"a": [1.0, 3], "b": [1, 3]})
+    data = pd.DataFrame({"a": [1.0, np.NaN, 3, np.inf], "b": [1, 2, 3, 4]})
+    data2 = pd.DataFrame({"a": [1.0, 3, np.inf], "b": [1, 3, 4]})
+    data3 = pd.DataFrame({"a": [1.0, 3], "b": [1, 3]})
 
     with warnings.catch_warnings(record=True) as w:
-        res = remove_missing(df, na_rm=True, vars=["b"])
-        res.equals(df)
+        res = remove_missing(data, na_rm=True, vars=["b"])
+        res.equals(data)
 
-        res = remove_missing(df)
-        res.equals(df2)
+        res = remove_missing(data)
+        res.equals(data2)
 
-        res = remove_missing(df, na_rm=True, finite=True)
-        res.equals(df3)
+        res = remove_missing(data, na_rm=True, finite=True)
+        res.equals(data3)
         assert len(w) == 1
 
 
 def test_pivot_apply():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "id": list("abcabc"),
             "x": [1, 2, 3, 11, 22, 33],
@@ -232,8 +232,8 @@ def test_pivot_apply():
         }
     )
 
-    res1 = pivot_apply(df, "x", "id", np.min)
-    res2 = pivot_apply(df, "y", "id", np.max)
+    res1 = pivot_apply(data, "x", "id", np.min)
+    res2 = pivot_apply(data, "y", "id", np.max)
 
     assert res1.index.tolist() == list("abc")
     assert res1.index.name == "id"

@@ -3,7 +3,7 @@ import pandas as pd
 
 from plotnine import aes, ggplot, stat_summary_bin
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "xd": list("aaaaabbbbcccccc"),
         "xc": range(0, 15),
@@ -13,7 +13,7 @@ df = pd.DataFrame(
 
 
 def test_discrete_x():
-    p = ggplot(df, aes("xd", "y")) + stat_summary_bin(
+    p = ggplot(data, aes("xd", "y")) + stat_summary_bin(
         fun_y=np.mean, fun_ymin=np.min, fun_ymax=np.max, geom="bar"
     )
 
@@ -21,7 +21,7 @@ def test_discrete_x():
 
 
 def test_continuous_x():
-    p = ggplot(df, aes("xc", "y")) + stat_summary_bin(
+    p = ggplot(data, aes("xc", "y")) + stat_summary_bin(
         fun_y=np.mean, fun_ymin=np.min, fun_ymax=np.max, bins=5, geom="bar"
     )
 

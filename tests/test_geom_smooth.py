@@ -20,22 +20,22 @@ n = 100
 x = np.linspace(0, 1, n)
 y = 4 * x + 5
 y_noisy = y + 0.1 * random_state.randn(n)
-df_linear = pd.DataFrame({"x": x, "y": y, "y_noisy": y_noisy})
+linear_data = pd.DataFrame({"x": x, "y": y, "y_noisy": y_noisy})
 
 
 # non-linear relationship
 x = np.linspace(-2 * np.pi, 2 * np.pi, n)
 y = np.sin(x)
 y_noisy = y + 0.1 * random_state.randn(n)
-df_non_linear = pd.DataFrame({"x": x, "y": y, "y_noisy": y_noisy})
+non_linear_data = pd.DataFrame({"x": x, "y": y, "y_noisy": y_noisy})
 
 # discrete_x
-df_discrete_x = pd.DataFrame(
+discrete_data_x = pd.DataFrame(
     {"x": range(10), "y": [1, 2, 3, 4, 4, 5, 6, 7, 8, 9]}
 )
 
 # continuous_x
-df_continuous_x = pd.DataFrame(
+continuous_data_x = pd.DataFrame(
     {"x": np.arange(1, 21) + 0.2, "y": range(1, 21)}
 )
 
@@ -44,12 +44,12 @@ n = 10
 x = np.arange(1, 1 + n)
 y = x + 11
 y_noisy = y + random_state.rand(n)
-df_linear_gtz = pd.DataFrame({"x": x, "y": y, "y_noisy": y_noisy})
+linear_data_gtz = pd.DataFrame({"x": x, "y": y, "y_noisy": y_noisy})
 
 
 def test_linear_smooth():
     p = (
-        ggplot(df_linear, aes("x"))
+        ggplot(linear_data, aes("x"))
         + geom_point(aes(y="y_noisy"))
         + geom_smooth(aes(y="y_noisy"), method="lm", span=0.3, color="blue")
     )
@@ -59,7 +59,7 @@ def test_linear_smooth():
 
 def test_linear_smooth_no_ci():
     p = (
-        ggplot(df_linear, aes("x"))
+        ggplot(linear_data, aes("x"))
         + geom_point(aes(y="y_noisy"))
         + geom_smooth(
             aes(y="y_noisy"), method="lm", span=0.3, color="blue", se=False
@@ -71,7 +71,7 @@ def test_linear_smooth_no_ci():
 
 def test_non_linear_smooth():
     p = (
-        ggplot(df_linear, aes("x"))
+        ggplot(linear_data, aes("x"))
         + geom_point(aes(y="y_noisy"))
         + geom_smooth(aes(y="y_noisy"), method="loess", span=0.3, color="blue")
     )
@@ -81,7 +81,7 @@ def test_non_linear_smooth():
 
 def test_non_linear_smooth_no_ci():
     p = (
-        ggplot(df_linear, aes("x"))
+        ggplot(linear_data, aes("x"))
         + geom_point(aes(y="y_noisy"))
         + geom_smooth(
             aes(y="y_noisy"), method="loess", span=0.3, color="blue", se=False
@@ -93,7 +93,7 @@ def test_non_linear_smooth_no_ci():
 
 def test_discrete_x():
     p = (
-        ggplot(df_discrete_x, aes("x", "y"))
+        ggplot(discrete_data_x, aes("x", "y"))
         + geom_point()
         + geom_smooth(color="blue")
     )
@@ -103,7 +103,7 @@ def test_discrete_x():
 
 def test_discrete_x_fullrange():
     p = (
-        ggplot(df_discrete_x, aes("x", "y"))
+        ggplot(discrete_data_x, aes("x", "y"))
         + geom_point()
         + geom_smooth(color="blue", fullrange=True)
     )
@@ -112,12 +112,12 @@ def test_discrete_x_fullrange():
 
 
 def test_continuous_x():
-    n = len(df_continuous_x)
+    n = len(continuous_data_x)
     p = (
-        ggplot(df_continuous_x, aes("x", "y"))
+        ggplot(continuous_data_x, aes("x", "y"))
         + geom_point()
         + geom_smooth(
-            df_continuous_x[3 : n - 3],
+            continuous_data_x[3 : n - 3],
             method="loess",
             color="blue",
             fullrange=False,
@@ -127,12 +127,12 @@ def test_continuous_x():
 
 
 def test_continuous_x_fullrange():
-    n = len(df_continuous_x)
+    n = len(continuous_data_x)
     p = (
-        ggplot(df_continuous_x, aes("x", "y"))
+        ggplot(continuous_data_x, aes("x", "y"))
         + geom_point()
         + geom_smooth(
-            df_continuous_x[3 : n - 3],
+            continuous_data_x[3 : n - 3],
             method="loess",
             color="blue",
             fullrange=True,
@@ -146,7 +146,7 @@ def test_continuous_x_fullrange():
 def test_coord_trans_se_false():
     # scatter plot with LM fit using log-log coordinates
     p = (
-        ggplot(df_linear_gtz, aes(x="x", y="y_noisy"))
+        ggplot(linear_data_gtz, aes(x="x", y="y_noisy"))
         + geom_point()
         + coord_trans(x="log10", y="log10")
         + geom_smooth(method="lm", se=False)
@@ -155,7 +155,7 @@ def test_coord_trans_se_false():
 
 
 class TestOther:
-    p = ggplot(df_linear, aes("x")) + geom_point(aes(y="y_noisy"))
+    p = ggplot(linear_data, aes("x")) + geom_point(aes(y="y_noisy"))
 
     def test_wls(self):
         p = self.p + geom_smooth(aes(y="y_noisy"), method="wls")
@@ -197,15 +197,15 @@ class TestOther:
 
 
 def test_sorts_by_x():
-    df = pd.DataFrame({"x": [5, 0, 1, 2, 3, 4], "y": range(6)})
-    p = ggplot(df, aes("x", "y")) + geom_smooth(stat="identity")
+    data = pd.DataFrame({"x": [5, 0, 1, 2, 3, 4], "y": range(6)})
+    p = ggplot(data, aes("x", "y")) + geom_smooth(stat="identity")
 
     assert p == "sorts_by_x"
 
 
 def test_legend_fill_ratio():
     p = (
-        ggplot(df_linear, aes("x", color="x<0.5"))
+        ggplot(linear_data, aes("x", color="x<0.5"))
         + geom_point(aes(y="y_noisy"))
         + geom_smooth(aes(y="y_noisy"), method="lm", size=0.5, span=0.3)
     )
@@ -214,7 +214,7 @@ def test_legend_fill_ratio():
 
 
 def test_init_and_fit_kwargs():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": np.arange(11),
             "y": [0, 0, 0, 0.05, 0.25, 0.5, 0.75, 0.95, 1, 1, 1],
@@ -222,7 +222,7 @@ def test_init_and_fit_kwargs():
     )
 
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + geom_smooth(
             method="glm",
@@ -243,7 +243,7 @@ mu = 0
 sigma = 0.065
 noise = random_state.randn(n) * sigma + mu
 x = np.linspace(-2 * np.pi, 2 * np.pi, n)
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": x,
         "y": np.sin(x) + noise,
@@ -252,7 +252,7 @@ df = pd.DataFrame(
 
 
 class TestFormula:
-    p = ggplot(df, aes("x", "y")) + geom_point()
+    p = ggplot(data, aes("x", "y")) + geom_point()
 
     def test_lm(self):
         p = self.p + stat_smooth(

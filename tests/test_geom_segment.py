@@ -5,7 +5,7 @@ from plotnine import aes, arrow, geom_segment, ggplot
 n = 4
 
 # stepped horizontal line segments
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": range(1, n + 1),
         "xend": range(2, n + 2),
@@ -18,7 +18,7 @@ df = pd.DataFrame(
 
 def test_aesthetics():
     p = (
-        ggplot(df, aes("x", "y", xend="xend", yend="yend"))
+        ggplot(data, aes("x", "y", xend="xend", yend="yend"))
         + geom_segment(size=2)
         +
         # Positive slope segments
@@ -35,7 +35,7 @@ def test_aesthetics():
 
 def test_arrow():
     p = (
-        ggplot(df, aes("x", "y", xend="xend", yend="yend"))
+        ggplot(data, aes("x", "y", xend="xend", yend="yend"))
         + geom_segment(aes("x+2", xend="xend+2"), arrow=arrow(), size=2)
         + geom_segment(
             aes("x+4", xend="xend+4"), arrow=arrow(ends="first"), size=2

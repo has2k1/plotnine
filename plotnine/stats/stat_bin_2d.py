@@ -123,14 +123,14 @@ class stat_bin_2d(stat):
         ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
         xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
 
-        df = pd.DataFrame(
+        bins_grid_long = pd.DataFrame(
             {
                 "xbins": xbins,
                 "ybins": ybins,
                 "weight": weight,
             }
         )
-        table = df.pivot_table(
+        table = bins_grid_long.pivot_table(
             "weight", index=["xbins", "ybins"], aggfunc=np.sum
         )["weight"]
 

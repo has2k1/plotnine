@@ -11,7 +11,7 @@ reps = np.hstack(
 )
 diagonal = np.repeat(np.arange(n), reps)
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": np.hstack([diagonal, diagonal]),
         "y": np.hstack([diagonal, diagonal[::-1]]),
@@ -20,18 +20,18 @@ df = pd.DataFrame(
 
 
 def test_drop_true():
-    p = ggplot(df, aes("x", "y")) + geom_bin_2d(binwidth=2, drop=True)
+    p = ggplot(data, aes("x", "y")) + geom_bin_2d(binwidth=2, drop=True)
     assert p == "drop_true"
 
 
 def test_drop_false():
-    p = ggplot(df, aes("x", "y")) + geom_bin_2d(binwidth=2, drop=False)
+    p = ggplot(data, aes("x", "y")) + geom_bin_2d(binwidth=2, drop=False)
     assert p == "drop_false"
 
 
 def test_scale_transformed_breaks():
-    df = pd.DataFrame({"x": [1, 10, 100, 1000], "y": range(4)})
-    p = ggplot(df, aes("x", "y")) + geom_bin_2d(
+    data = pd.DataFrame({"x": [1, 10, 100, 1000], "y": range(4)})
+    p = ggplot(data, aes("x", "y")) + geom_bin_2d(
         breaks=([5, 50, 500], [0.5, 1.5, 2.5])
     )
     out1 = layer_data(p)

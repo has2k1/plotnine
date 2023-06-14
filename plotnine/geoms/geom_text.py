@@ -192,19 +192,17 @@ class geom_text(geom):
 
         # Create a dataframe for the plotting data required
         # by ax.text
-        df = data[["x", "y", "size"]].copy()
-        df["s"] = data["label"]
-        df["rotation"] = data["angle"]
-        df["linespacing"] = data["lineheight"]
-        df["color"] = color
-        df["ha"] = data["ha"]
-        df["va"] = data["va"]
-        df["family"] = params["family"]
-        df["fontweight"] = params["fontweight"]
-        df["fontstyle"] = params["fontstyle"]
-        df["zorder"] = params["zorder"]
-        df["rasterized"] = params["raster"]
-        df["clip_on"] = True
+        plot_data = data[["x", "y", "size", "ha", "va"]].copy()
+        plot_data["s"] = data["label"]
+        plot_data["rotation"] = data["angle"]
+        plot_data["linespacing"] = data["lineheight"]
+        plot_data["color"] = color
+        plot_data["family"] = params["family"]
+        plot_data["fontweight"] = params["fontweight"]
+        plot_data["fontstyle"] = params["fontstyle"]
+        plot_data["zorder"] = params["zorder"]
+        plot_data["rasterized"] = params["raster"]
+        plot_data["clip_on"] = True
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox
         draw_label = "boxstyle" in params
@@ -212,7 +210,7 @@ class geom_text(geom):
             fill = to_rgba(data.pop("fill"), data["alpha"])
             if isinstance(fill, tuple):
                 fill = [list(fill)] * len(data["x"])
-            df["facecolor"] = fill
+            plot_data["facecolor"] = fill
 
             if params["boxstyle"] in ("round", "round4"):
                 boxstyle = "{},pad={},rounding_size={}".format(
@@ -238,7 +236,7 @@ class geom_text(geom):
 
         # For labels add a bbox
         for i in range(len(data)):
-            kw: dict["str", Any] = df.iloc[i].to_dict()
+            kw: dict["str", Any] = plot_data.iloc[i].to_dict()
             if draw_label:
                 kw["bbox"] = bbox
                 kw["bbox"]["edgecolor"] = params["boxcolor"] or kw["color"]

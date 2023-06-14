@@ -72,7 +72,7 @@ class stat_qq(stat):
 
         from .distributions import get_continuous_distribution
 
-        sample = data["sample"].sort_values().values
+        sample = data["sample"].sort_values().to_numpy()
         alpha, beta = params["alpha_beta"]
         quantiles = params["quantiles"]
 

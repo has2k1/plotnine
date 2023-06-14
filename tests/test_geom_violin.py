@@ -7,7 +7,7 @@ from plotnine.data import mtcars
 
 n = 4
 m = 10
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": np.repeat([chr(65 + i) for i in range(n)], m),
         "y": (
@@ -22,23 +22,23 @@ df = pd.DataFrame(
 
 class TestAesthetics:
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + geom_violin(aes(y="y"), size=2)
-        + geom_violin(df[: 2 * m], aes(y="y+25", fill="x"), size=2)
-        + geom_violin(df[2 * m :], aes(y="y+25", color="x"), size=2)
-        + geom_violin(df[2 * m :], aes(y="y+50", linetype="x"), size=2)
+        + geom_violin(data[: 2 * m], aes(y="y+25", fill="x"), size=2)
+        + geom_violin(data[2 * m :], aes(y="y+25", color="x"), size=2)
+        + geom_violin(data[2 * m :], aes(y="y+50", linetype="x"), size=2)
     )
 
     def test_aesthetics(self):
         assert self.p == "aesthetics"
 
-    def test_aesthetics_coordflip(self):
+    def test_aesthetics_coordatalip(self):
         assert self.p + coord_flip() == "aesthetics+coord_flip"
 
 
 def test_scale():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         +
         # Red should envelop blue
         geom_violin(aes(y="y"), scale="width", color="red", fill="red", size=2)
@@ -46,7 +46,7 @@ def test_scale():
             aes(y="y"), scale="area", color="blue", fill="blue", size=2
         )
         + geom_violin(
-            df[:36], aes(y="y+25"), scale="count", color="green", size=2
+            data[:36], aes(y="y+25"), scale="count", color="green", size=2
         )
         +
         # Yellow should envelop green
@@ -54,7 +54,7 @@ def test_scale():
             aes(y="y+25"), scale="count", color="yellow", fill="yellow", size=2
         )
         + geom_violin(
-            df[:36],
+            data[:36],
             aes(y="y+25"),
             scale="count",
             color="green",
@@ -67,7 +67,7 @@ def test_scale():
 
 def test_quantiles_width_dodge():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + geom_violin(aes(y="y"), draw_quantiles=[0.25, 0.75], size=2)
         + geom_violin(aes(y="y+25"), color="green", width=0.5, size=2)
         + geom_violin(aes(y="y+50", fill="factor(y%2)"), size=2)
@@ -93,13 +93,13 @@ def test_quantiles_input_checks():
 
 
 def test_no_trim():
-    p = ggplot(df, aes("x")) + geom_violin(aes(y="y"), trim=False, size=2)
+    p = ggplot(data, aes("x")) + geom_violin(aes(y="y"), trim=False, size=2)
     assert p == "no_trim"
 
 
 def test_style():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + geom_violin(aes(y="y"), style="right")
         + geom_violin(aes(y="y+25"), style="left")
     )
@@ -108,7 +108,7 @@ def test_style():
 
 def test_style_alternating():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + geom_violin(aes(y="y"), style="right-left", fill="green")
         + geom_violin(aes(y="y+25"), style="left-right", fill="yellow")
     )

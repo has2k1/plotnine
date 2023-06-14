@@ -86,7 +86,7 @@ class geom_rect(geom):
         color = data["color"]
 
         # prevent unnecessary borders
-        if all(color.isnull()):
+        if all(color.isna()):
             color = "none"
 
         col = PolyCollection(

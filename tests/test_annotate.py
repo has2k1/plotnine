@@ -5,12 +5,12 @@ from plotnine import aes, annotate, geom_point, geom_rect, geom_segment, ggplot
 from plotnine.exceptions import PlotnineError
 
 n = 4
-df = pd.DataFrame({"x": range(n), "y": range(n)})
+data = pd.DataFrame({"x": range(n), "y": range(n)})
 
 
 def test_multiple_annotation_geoms():
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + annotate("point", 0, 1, color="red", size=5)
         + annotate("text", 1, 2, label="Text", color="red", size=15, angle=45)

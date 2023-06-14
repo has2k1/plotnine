@@ -4,7 +4,7 @@ import pytest
 from plotnine import aes, geom_abline, geom_point, ggplot
 from plotnine.exceptions import PlotnineWarning
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "slope": [1, 1],
         "intercept": [1, -1],
@@ -17,7 +17,7 @@ df = pd.DataFrame(
 
 def test_aesthetics():
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + geom_abline(aes(slope="slope", intercept="intercept"), size=2)
         + geom_abline(
@@ -41,7 +41,7 @@ def test_aes_inheritance():
     # A default line (intercept = 0, slope = 1)
     p = (
         ggplot(
-            df,
+            data,
             aes(
                 "x",
                 "y",

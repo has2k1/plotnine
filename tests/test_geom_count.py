@@ -2,7 +2,7 @@ import pandas as pd
 
 from plotnine import aes, geom_count, ggplot
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": list("aaaaaaaaaabbbbbbbbbbcccccccccc"),
         "y": [
@@ -42,18 +42,18 @@ df = pd.DataFrame(
 
 
 def test_discrete_x():
-    p = ggplot(df, aes("x", "y")) + geom_count()
+    p = ggplot(data, aes("x", "y")) + geom_count()
 
     assert p == "discrete_x"
 
 
 def test_discrete_y():
-    p = ggplot(df, aes("y", "x")) + geom_count()
+    p = ggplot(data, aes("y", "x")) + geom_count()
 
     assert p == "discrete_y"
 
 
 def test_continuous_x_y():
-    p = ggplot(df, aes("y", "y")) + geom_count()
+    p = ggplot(data, aes("y", "y")) + geom_count()
 
     assert p == "continuous_x_y"

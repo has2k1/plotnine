@@ -289,7 +289,7 @@ class geom(metaclass=Registry):
         for pid, pdata in data.groupby("PANEL"):
             if len(pdata) == 0:
                 continue
-            ploc = pdata["PANEL"].iat[0] - 1
+            ploc = pdata["PANEL"].iloc[0] - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
             self.draw_panel(pdata, panel_params, coord, ax, **params)

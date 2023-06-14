@@ -58,20 +58,20 @@ def test_multiple_geoms():
     n = 3
     m = 10
     # n stairs of points, each m points high
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {"x": np.repeat(range(n), m), "y": np.linspace(0, n, n * m)}
     )
-    p = qplot("factor(x)", "y", data=df, geom=("boxplot", "point"))
+    p = qplot("factor(x)", "y", data=data, geom=("boxplot", "point"))
     assert p == "multiple_geoms"
 
 
 def test_series_labelling():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x_axis_label": [1, 2, 3],
             "y_axis_label": [1, 2, 3],
             "color_label": ["a", "b", "c"],
         }
     )
-    p = qplot(df.x_axis_label, df.y_axis_label, color=df.color_label)
+    p = qplot(data.x_axis_label, data.y_axis_label, color=data.color_label)
     assert p == "series_labelling"

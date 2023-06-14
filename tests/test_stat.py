@@ -70,9 +70,9 @@ def test_calculated_expressions():
 
 
 def test_removes_infinite_values():
-    df = mtcars.copy()
-    df.loc[[0, 5], "wt"] = [np.inf, -np.inf]
-    p = ggplot(df, aes(x="wt")) + geom_bar()
+    data = mtcars.copy()
+    data.loc[[0, 5], "wt"] = [np.inf, -np.inf]
+    p = ggplot(data, aes(x="wt")) + geom_bar()
 
     with pytest.warns(PlotnineWarning) as record:
         p._build()

@@ -65,9 +65,11 @@ class stat_count(stat):
 
         weight = data.get("weight", [1] * len(x))  # pyright: ignore
         width = params["width"]
-        df = pd.DataFrame({"weight": weight, "x": x})
+        xdata_long = pd.DataFrame({"x": x, "weight": weight})
         # weighted frequency count
-        count = df.pivot_table("weight", index=["x"], aggfunc=np.sum)["weight"]
+        count = xdata_long.pivot_table("weight", index=["x"], aggfunc=np.sum)[
+            "weight"
+        ]
         x = count.index
         count = count.to_numpy()
         return pd.DataFrame(

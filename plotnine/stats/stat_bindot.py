@@ -173,11 +173,11 @@ class stat_bindot(stat):
 
         if params["binaxis"] == "x":
             rangee = scales.x.dimension((0, 0))
-            values = data["x"].values
+            values = data["x"].to_numpy()
             midline = 0  #  Make pyright happy
         else:
             rangee = scales.y.dimension((0, 0))
-            values = data["y"].values
+            values = data["y"].to_numpy()
             # The middle of each group, on the stack axis
             midline = np.mean([data["x"].min(), data["x"].max()])
 
@@ -269,7 +269,7 @@ def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
     -------
     data : DataFrame
     """
-    if all(pd.isnull(x)):
+    if all(pd.isna(x)):
         return pd.DataFrame()
 
     if weight is None:
