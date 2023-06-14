@@ -224,7 +224,7 @@ class stat_sina(stat):
                 pd.Series(bin_index)
                 .groupby(bin_index)
                 .apply(len)[bin_index]
-                .values
+                .to_numpy()
             )
             data.loc[data["density"] <= bin_limit, "density"] = 0
             data["scaled"] = data["density"] / data["density"].max()

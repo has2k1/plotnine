@@ -516,7 +516,7 @@ class scale_discrete(scale):
         if limits is None:
             limits = self.limits
 
-        n = sum(~pd.isnull(list(limits)))
+        n = sum(~pd.isna(list(limits)))
         pal = self.palette(n)
         if isinstance(pal, dict):
             # manual palette with specific assignments
@@ -540,11 +540,11 @@ class scale_discrete(scale):
                 pal_match = list(pal[idx])
 
         if self.na_translate:
-            bool_pal_match = pd.isnull(pal_match)
+            bool_pal_match = pd.isna(pal_match)
             if len(bool_pal_match.shape) > 1:
                 # linetypes take tuples, these return 2d
                 bool_pal_match = bool_pal_match.any(axis=1)
-            bool_idx = pd.isnull(x) | bool_pal_match
+            bool_idx = pd.isna(x) | bool_pal_match
             if bool_idx.any():
                 pal_match = [
                     x if i else self.na_value
@@ -752,7 +752,7 @@ class scale_continuous(scale):
             # are not set or if any is None or NaN
             if len(self._limits) == len(self.range.range):
                 return tuple(
-                    self.trans.transform(r) if pd.isnull(l) else l
+                    self.trans.transform(r) if pd.isna(l) else l
                     for l, r in zip(self._limits, self.range.range)
                 )
         return tuple(self._limits)
@@ -925,7 +925,7 @@ class scale_continuous(scale):
         if scaled.dtype.kind == "U":
             scaled = [self.na_value if x == "nan" else x for x in scaled]
         else:
-            scaled[pd.isnull(scaled)] = self.na_value
+            scaled[pd.isna(scaled)] = self.na_value
         return scaled
 
     def get_breaks(

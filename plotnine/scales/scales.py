@@ -167,25 +167,22 @@ class Scales(List[scale]):
         # from category to int. Use a new dataframe
         # to collect these results.
         # Using `type` preserves the subclass of pd.DataFrame
-        df = type(data)(index=data.index)
-        discrete_cols = []
+        discrete_data = type(data)(index=data.index)
 
         # Loop through each variable, mapping across each scale,
         # then joining back into the copy of the data
         for col in vars:
             use_df = array_kind.discrete(data[col])
-            if use_df:
-                discrete_cols.append(col)
             for i, sc in enumerate(self, start=1):
                 bool_idx = i == idx
                 results = sc.map(data.loc[bool_idx, col])
                 if use_df:
-                    df.loc[bool_idx, col] = results
+                    discrete_data.loc[bool_idx, col] = results
                 else:
                     data.loc[bool_idx, col] = results
 
-        for col in discrete_cols:
-            data[col] = df[col]
+        for col in discrete_data:
+            data[col] = discrete_data[col]
 
     def reset(self):
         """
@@ -194,44 +191,44 @@ class Scales(List[scale]):
         for sc in self:
             sc.reset()
 
-    def train_df(self, df: pd.DataFrame, drop: bool = False):
+    def train_df(self, data: pd.DataFrame, drop: bool = False):
         """
         Train scales from a dataframe
         """
-        if (len(df) == 0) or (len(self) == 0):
+        if (len(data) == 0) or (len(self) == 0):
             return
 
         # Each scale trains the columns it understands
         for sc in self:
-            sc.train_df(df)
+            sc.train_df(data)
 
-    def map_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def map_df(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Map values from a dataframe.
 
         Returns dataframe
         """
-        if (len(df) == 0) or (len(self) == 0):
-            return df
+        if (len(data) == 0) or (len(self) == 0):
+            return data
 
         # Each scale maps the columns it understands
         for sc in self:
-            df = sc.map_df(df)
-        return df
+            data = sc.map_df(data)
+        return data
 
-    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def transform_df(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Transform values in a dataframe.
 
         Returns dataframe
         """
-        if (len(df) == 0) or (len(self) == 0):
-            return df
+        if (len(data) == 0) or (len(self) == 0):
+            return data
 
         # Each scale transforms the columns it understands
         for sc in self:
-            df = sc.transform_df(df)
-        return df
+            data = sc.transform_df(data)
+        return data
 
     def add_defaults(self, data, aesthetics):
         """

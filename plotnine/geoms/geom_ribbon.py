@@ -118,7 +118,7 @@ class geom_ribbon(geom):
         size = data["size"].iloc[0] * SIZE_FACTOR
         fill = to_rgba(data["fill"], data["alpha"])
 
-        if data["color"].isnull().all():
+        if data["color"].isna().all():
             color: ColorsLike = "none"
         else:
             color = data["color"]

@@ -106,13 +106,13 @@ class position_dodge2(position_dodge):
         # may not be
         res1 = pivot_apply(data, "xmin", "xid", np.min)
         res2 = pivot_apply(data, "xmax", "xid", np.max)
-        data["newx"] = (res1 + res2)[data["xid"].values].values / 2
+        data["newx"] = (res1 + res2)[data["xid"].to_numpy()].to_numpy() / 2
 
         if n is None:
             # If n is None, preserve total widths of elements at
             # each position by dividing widths by the number of
             # elements at that position
-            n = data["xid"].value_counts().values
+            n = data["xid"].value_counts().to_numpy()
             n = n[data.loc[:, "xid"] - 1]
             data["new_width"] = (data["xmax"] - data["xmin"]) / n
         else:

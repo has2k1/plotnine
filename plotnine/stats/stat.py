@@ -300,7 +300,7 @@ class stat(metaclass=Registry):
             # that does the real computation
             if len(pdata) == 0:
                 return pdata
-            pscales = layout.get_scales(pdata["PANEL"].iat[0])
+            pscales = layout.get_scales(pdata["PANEL"].iloc[0])
             return cls.compute_panel(pdata, pscales, **params)
 
         return groupby_apply(data, "PANEL", fn)
@@ -349,8 +349,8 @@ class stat(metaclass=Registry):
             if u.empty and len(u):
                 u = type(data)()
 
-            df = pd.concat([new, u], axis=1)
-            stats.append(df)
+            group_result = pd.concat([new, u], axis=1)
+            stats.append(group_result)
 
         stats = pd.concat(stats, axis=0, ignore_index=True)
         # Note: If the data coming in has columns with non-unique

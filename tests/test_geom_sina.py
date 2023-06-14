@@ -20,7 +20,7 @@ tri = np.hstack(
 
 cats = ["uni", "bi", "tri"]
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "dist": pd.Categorical(
             np.repeat(cats, [len(uni), len(bi), len(tri)]), categories=cats
@@ -33,7 +33,7 @@ df = pd.DataFrame(
 @pytest.mark.skip("Fix the limits")
 def test_scale_area():
     p = (
-        ggplot(df, aes("dist", "value"))
+        ggplot(data, aes("dist", "value"))
         + geom_violin(scale="area")
         + geom_sina(scale="area", random_state=123)
     )
@@ -44,7 +44,7 @@ def test_scale_area():
 @pytest.mark.skip("Fix the limits")
 def test_scale_count():
     p = (
-        ggplot(df, aes("dist", "value"))
+        ggplot(data, aes("dist", "value"))
         + geom_violin(scale="count")
         + geom_sina(scale="count", random_state=123)
     )
@@ -53,9 +53,9 @@ def test_scale_count():
 
 
 @pytest.mark.skip("Fix the limits")
-def test_scale_area_coordflip():
+def test_scale_area_coordatalip():
     p = (
-        ggplot(df, aes("dist", "value"))
+        ggplot(data, aes("dist", "value"))
         + geom_violin(scale="area")
         + geom_sina(scale="area", random_state=123)
         + coord_flip()
@@ -67,7 +67,7 @@ def test_scale_area_coordflip():
 @pytest.mark.skip("Fix the limits")
 def test_method_counts():
     p = (
-        ggplot(df, aes("dist", "value"))
+        ggplot(data, aes("dist", "value"))
         + geom_violin()
         + geom_sina(method="counts", random_state=123)
     )

@@ -109,7 +109,7 @@ class guide_legend(guide):
         This would create similar guides for fill and color where only
         a single guide would do
         """
-        self.key = pd.merge(self.key, other.key)
+        self.key = self.key.merge(other.key)
         duplicated = set(self.override_aes) & set(other.override_aes)
         if duplicated:
             warn("Duplicated override_aes is ignored.", PlotnineWarning)

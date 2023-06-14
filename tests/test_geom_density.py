@@ -8,14 +8,14 @@ from plotnine.exceptions import PlotnineWarning
 n = 6  # Some even number greater than 2
 
 # ladder: 0 1 times, 1 2 times, 2 3 times, ...
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": np.repeat(range(n + 1), range(n + 1)),
         "z": np.repeat(range(n // 2), range(3, n * 2, 4)),
     }
 )
 
-p = ggplot(df, aes("x", fill="factor(z)"))
+p = ggplot(data, aes("x", fill="factor(z)"))
 
 
 def test_gaussian():
@@ -41,10 +41,10 @@ def test_triangular():
 
 
 def test_few_datapoints():
-    df = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3], "z": list("abbccc")})
+    data = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3], "z": list("abbccc")})
 
     # Bandwidth not set
-    p = ggplot(df, aes("x", color="z")) + geom_density() + lims(x=(-3, 9))
+    p = ggplot(data, aes("x", color="z")) + geom_density() + lims(x=(-3, 9))
     with pytest.warns(PlotnineWarning) as record:
         p.draw_test()
 
@@ -52,5 +52,9 @@ def test_few_datapoints():
     assert any("e.g `bw=0.1`" in str(r.message) for r in record)
     assert any("Groups with fewer than 2" in str(r.message) for r in record)
 
-    p = ggplot(df, aes("x", color="z")) + geom_density(bw=0.1) + lims(x=(0, 4))
+    p = (
+        ggplot(data, aes("x", color="z"))
+        + geom_density(bw=0.1)
+        + lims(x=(0, 4))
+    )
     assert p == "few_datapoints"

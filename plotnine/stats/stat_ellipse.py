@@ -174,7 +174,7 @@ def cov_trob(
     from scipy import linalg
 
     def test_values(x):
-        if pd.isnull(x).any() or np.isinf(x).any():
+        if pd.isna(x).any() or np.isinf(x).any():
             raise ValueError("Missing or infinite values in 'x'")
 
     def scale_simp(x, center, n, p):

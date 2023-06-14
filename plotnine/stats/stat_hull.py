@@ -58,8 +58,8 @@ class stat_hull(stat):
 
         new_data = pd.DataFrame(
             {
-                "x": data["x"].iloc[idx].values,
-                "y": data["y"].iloc[idx].values,
+                "x": data["x"].iloc[idx].to_numpy(),
+                "y": data["y"].iloc[idx].to_numpy(),
                 "area": hull.area,
             }
         )

@@ -8,12 +8,12 @@ from plotnine import aes, geom_path, geom_point, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.layer import Layers, layer
 
-df = pd.DataFrame({"x": range(10), "y": range(10)})
+data = pd.DataFrame({"x": range(10), "y": range(10)})
 colors = ["red", "green", "blue"]
 
 n = 5000
 prg = np.random.RandomState(123)
-df_large = pd.DataFrame(
+larger_data = pd.DataFrame(
     {"x": prg.uniform(1, 1000, size=n), "y": prg.uniform(1, 1000, size=n)}
 )
 
@@ -34,7 +34,7 @@ class TestLayers:
     )
 
     def test_addition(self):
-        p = ggplot(df, aes("x", "y"))
+        p = ggplot(data, aes("x", "y"))
         p1 = p + self.lyrs[0] + self.lyrs[1] + self.lyrs[2]
         assert _get_colors(p1) == colors
 
@@ -56,7 +56,7 @@ class TestLayers:
             geom_point() + self.lyrs
 
     def test_slicing(self):
-        p = ggplot(df, aes("x", "y"))
+        p = ggplot(data, aes("x", "y"))
 
         _lyrs = self.lyrs[1:]
         assert isinstance(_lyrs, Layers)
@@ -84,7 +84,7 @@ def test_inserting_layers():
             return self.__radd__(gg)
 
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point(size=4)
         + as_first_layer(geom_point(color="cyan", size=8))
         - as_first_layer(geom_point(color="red", size=12))
@@ -107,7 +107,7 @@ def test_layer_with_nodata():
 
 
 class TestRasterizing:
-    p = ggplot(df_large, aes("x", "y"))
+    p = ggplot(larger_data, aes("x", "y"))
 
     def _assert_raster_smaller(self, p_no_raster, p_raster):
         # Plot and check that the file sizes are smaller when

@@ -28,7 +28,7 @@ labels = [
     "scales",
     "coordinates",
 ]
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": [1] * n,
         "y": range(n),
@@ -46,7 +46,7 @@ adjust_text = {
 
 def test_text_aesthetics():
     p = (
-        ggplot(df, aes(y="y", label="label"))
+        ggplot(data, aes(y="y", label="label"))
         + geom_text(aes("x", label="label"), size=15, ha="left")
         + geom_text(
             aes("x+1", angle="angle"), size=15, va="top", show_legend=False
@@ -65,7 +65,7 @@ def test_text_aesthetics():
 
 def test_label_aesthetics():
     p = (
-        ggplot(df, aes(y="y", label="label"))
+        ggplot(data, aes(y="y", label="label"))
         + geom_label(
             aes("x", label="label", fill="z"),
             size=15,
@@ -123,7 +123,7 @@ def test_adjust_text_default_color():
 
 
 def test_format_missing_values():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": [1, 2, 3, 4],
             "y": [1, 2, 3, 4],
@@ -132,7 +132,7 @@ def test_format_missing_values():
         }
     )
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + geom_text(
             aes(label="c1"),

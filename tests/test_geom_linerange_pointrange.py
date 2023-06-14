@@ -4,7 +4,7 @@ import pandas as pd
 from plotnine import aes, geom_linerange, geom_pointrange, ggplot
 
 n = 4
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": range(n),
         "y": np.arange(n) + 0.5,
@@ -17,7 +17,7 @@ df = pd.DataFrame(
 
 def test_linerange_aesthetics():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + geom_linerange(aes(ymin="ymin", ymax="ymax"), size=2)
         + geom_linerange(aes(ymin="ymin+1", ymax="ymax+1", alpha="z"), size=2)
         + geom_linerange(
@@ -31,7 +31,7 @@ def test_linerange_aesthetics():
 
 def test_pointrange_aesthetics():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + geom_pointrange(aes(y="y", ymin="ymin", ymax="ymax"), size=2)
         + geom_pointrange(
             aes(y="y+1", ymin="ymin+1", ymax="ymax+1", alpha="z"), size=2

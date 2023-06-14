@@ -345,12 +345,12 @@ def test_discrete_xy_scale_limits():
 
 
 def test_discrete_xy_scale_drop_limits():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {"x": list("aaaabbbbccccddd"), "c": list("112312231233123")}
     )
 
     p = (
-        ggplot(df)
+        ggplot(data)
         + geom_bar(aes(x="x", fill="c"))
         + scale_x_discrete(limits=list("abc"))
     )
@@ -443,14 +443,14 @@ def test_minor_breaks():
 
 
 def test_expand_limits():
-    df = pd.DataFrame({"x": range(5, 11), "y": range(5, 11)})
-    p = ggplot(df, aes("x", "y")) + geom_point() + expand_limits(y=(0, None))
+    data = pd.DataFrame({"x": range(5, 11), "y": range(5, 11)})
+    p = ggplot(data, aes("x", "y")) + geom_point() + expand_limits(y=(0, None))
     assert p == "expand_limits"
 
 
 def test_bool_mapping():
-    df = pd.DataFrame({"x": [1, 2, 3], "y": [True, False, False]})
-    p = ggplot(df, aes("x", "y")) + geom_point()
+    data = pd.DataFrame({"x": [1, 2, 3], "y": [True, False, False]})
+    p = ggplot(data, aes("x", "y")) + geom_point()
     assert p == "bool_mapping"
 
 
@@ -528,13 +528,13 @@ def test_no_scale_discrete_breaks():
 
 
 def test_scale_without_a_mapping():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": [1, 2, 3],
         }
     )
     p = (
-        ggplot(df, aes("x", "x"))
+        ggplot(data, aes("x", "x"))
         + geom_point()
         + scale_color.scale_color_continuous()
     )
@@ -569,9 +569,9 @@ def test_scale_continuous_mapping_nulls():
 
 
 def test_multiple_aesthetics():
-    df = pd.DataFrame({"x": [1, 2, 3], "y": [-1, -2, -3]})
+    data = pd.DataFrame({"x": [1, 2, 3], "y": [-1, -2, -3]})
     p = (
-        ggplot(df, aes("x", "x", color="factor(x)", fill="factor(y)"))
+        ggplot(data, aes("x", "x", color="factor(x)", fill="factor(y)"))
         + geom_point(size=9, stroke=2)
         + scale_color.scale_color_brewer(
             type="qual", palette=1, aesthetics=["fill", "color"]
@@ -581,14 +581,14 @@ def test_multiple_aesthetics():
 
 
 def test_missing_manual_dict_aesthetic():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {"x": range(15), "y": range(15), "c": np.repeat(list("ABC"), 5)}
     )
 
     values = {"A": "red", "B": "violet", "D": "blue"}
 
     p = (
-        ggplot(df, aes("x", "y", color="c"))
+        ggplot(data, aes("x", "y", color="c"))
         + geom_point(size=3)
         + scale_manual.scale_color_manual(values)
     )
@@ -596,18 +596,18 @@ def test_missing_manual_dict_aesthetic():
 
 
 def test_missing_data_discrete_scale():
-    df = pd.DataFrame({"a": [1, 2, 3], "b": ["a", "b", np.nan]})
+    data = pd.DataFrame({"a": [1, 2, 3], "b": ["a", "b", np.nan]})
 
-    p = ggplot(df, aes("a", "a")) + geom_point(
+    p = ggplot(data, aes("a", "a")) + geom_point(
         aes(fill="b"), stroke=0, size=10
     )
     assert p == "missing_data_discrete_scale"
 
 
 def test_missing_data_discrete_position_scale():
-    df = pd.DataFrame({"a": [1, 2, 3], "b": ["a", "b", None]})
+    data = pd.DataFrame({"a": [1, 2, 3], "b": ["a", "b", None]})
 
-    p = ggplot(df, aes("a", "b")) + geom_point(
+    p = ggplot(data, aes("a", "b")) + geom_point(
         aes(fill="b"), stroke=0, size=10
     )
 
@@ -615,7 +615,7 @@ def test_missing_data_discrete_position_scale():
         assert p == "missing_data_discrete_position_scale"
 
 
-df = pd.DataFrame(
+data = pd.DataFrame(
     {"x": range(4), "y": range(4), "w": list("wxyz"), "z": list("abcd")}
 )
 
@@ -629,7 +629,7 @@ df = pd.DataFrame(
 def test_legend_ordering_global_aethetics_1():
     # 1. color
     # 2. shape
-    p = ggplot(df) + aes("x", "y", color="w", shape="z") + geom_point(size=5)
+    p = ggplot(data) + aes("x", "y", color="w", shape="z") + geom_point(size=5)
 
     assert p == "legend_ordering_global_aesthetics_1"
 
@@ -637,7 +637,7 @@ def test_legend_ordering_global_aethetics_1():
 def test_legend_ordering_global_aesthetics_2():
     # 1. shape
     # 2. color
-    p = ggplot(df) + aes("x", "y", shape="z", color="w") + geom_point(size=5)
+    p = ggplot(data) + aes("x", "y", shape="z", color="w") + geom_point(size=5)
 
     assert p == "legend_ordering_global_aesthetics_2"
 
@@ -646,7 +646,7 @@ def test_legend_ordering_local_aethetics_1():
     # 1. color
     # 2. shape
     p = (
-        ggplot(df)
+        ggplot(data)
         + aes("x", "y")
         + geom_point(aes(color="w", shape="z"), size=5)
     )
@@ -658,7 +658,7 @@ def test_legend_ordering_local_aethetics_2():
     # 1. shape
     # 2. color
     p = (
-        ggplot(df)
+        ggplot(data)
         + aes("x", "y")
         + geom_point(aes(shape="z", color="w"), size=5)
     )
@@ -671,7 +671,7 @@ def test_legend_ordering_mixed_scope_aesthetics():
     # 1. color
     # 2. shape
     p = (
-        ggplot(df)
+        ggplot(data)
         + aes("x", "y", shape="z")
         + geom_point(aes(color="w"), size=5)
     )
@@ -684,7 +684,7 @@ def test_legend_ordering_added_scales():
     # 1. color
     # 2. shape
     p = (
-        ggplot(df)
+        ggplot(data)
         + aes("x", "y")
         + geom_point(aes(shape="z", color="w"), size=5)
         + scale_color.scale_color_discrete()
@@ -694,9 +694,9 @@ def test_legend_ordering_added_scales():
 
 
 def test_breaks_and_labels_outside_of_limits():
-    df = pd.DataFrame({"x": range(5, 11), "y": range(5, 11)})
+    data = pd.DataFrame({"x": range(5, 11), "y": range(5, 11)})
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + scale_x_continuous(
             limits=[7, 9.5],
@@ -743,7 +743,7 @@ def test_changing_scale_transform():
 def test_datetime_scale_limits():
     n = 6
 
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": [datetime(x, 1, 1) for x in range(2000, 2000 + n)],
             "y": range(n),
@@ -751,7 +751,7 @@ def test_datetime_scale_limits():
     )
 
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point()
         + lims(x=[datetime(2000, 1, 1), datetime(2007, 1, 1)])
         + theme(axis_text_x=element_text(angle=45))
@@ -761,19 +761,19 @@ def test_datetime_scale_limits():
 
 
 def test_ordinal_scale():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {"x": pd.Categorical(list("abcd"), ordered=True), "y": [1, 2, 3, 4]}
     )
 
-    p = ggplot(df) + aes("x", "y", color="-y", fill="x") + geom_col(size=4)
+    p = ggplot(data) + aes("x", "y", color="-y", fill="x") + geom_col(size=4)
 
     assert p == "ordinal_scale"
 
 
 def test_layer_with_only_infs():
-    df = pd.DataFrame({"x": ["a", "b"]})
+    data = pd.DataFrame({"x": ["a", "b"]})
     p = (
-        ggplot(df, aes("x", "x"))
+        ggplot(data, aes("x", "x"))
         + annotate(
             "rect",
             xmin=-np.inf,
@@ -790,7 +790,7 @@ def test_layer_with_only_infs():
 
 
 def test_discrete_scale_exceeding_maximum_number_of_values():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             # not that it's the second c that triggered a bug
             # in scale_discrete.map
@@ -799,7 +799,7 @@ def test_discrete_scale_exceeding_maximum_number_of_values():
         }
     )
     p = (
-        ggplot(df, aes("x", "y", color="x", shape="x"))
+        ggplot(data, aes("x", "y", color="x", shape="x"))
         + geom_point()
         + scale_color_manual(["red", "blue"])
     )
@@ -809,14 +809,14 @@ def test_discrete_scale_exceeding_maximum_number_of_values():
 
 def test_discrete_scale_for_empty_layer():
     # Ref: https://github.com/has2k1/plotnine/issues/647
-    df1 = pd.DataFrame({"x": list("abc"), "y": [1, 2, 3], "g": list("AAA")})
+    data1 = pd.DataFrame({"x": list("abc"), "y": [1, 2, 3], "g": list("AAA")})
 
-    df2 = pd.DataFrame({"x": list("abc"), "y": [4, 5, 6], "g": list("AAB")})
+    data2 = pd.DataFrame({"x": list("abc"), "y": [4, 5, 6], "g": list("AAB")})
 
     p = (
         ggplot(aes("x", "y"))
-        + geom_point(df1)
-        + geom_point(df2)
+        + geom_point(data1)
+        + geom_point(data2)
         + facet_wrap("g", scales="free_x")
     )
 

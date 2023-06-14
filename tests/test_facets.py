@@ -14,7 +14,7 @@ from plotnine import (
 from plotnine.data import mpg, mtcars
 
 n = 10
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": range(n),
         "y": range(n),
@@ -22,10 +22,10 @@ df = pd.DataFrame(
         "var2": np.tile(["a", "b"], n // 2),
     }
 )
-df["class"] = df["var1"]  # python keyword as column
-df["g"] = df["var1"]  # variable as a column
+data["class"] = data["var1"]  # python keyword as column
+data["g"] = data["var1"]  # variable as a column
 
-g = ggplot(df, aes("x", "y")) + geom_point(
+g = ggplot(data, aes("x", "y")) + geom_point(
     aes(color="factor(var1)"), size=5, show_legend=False
 )
 
@@ -117,11 +117,11 @@ def test_facet_grid_scales_free_x():
 
 
 def test_facet_grid_drop_false():
-    df = mpg.copy()
-    df["drv"] = pd.Categorical(df["drv"], ["4", "f", "r", "Q"])
+    data = mpg.copy()
+    data["drv"] = pd.Categorical(data["drv"], ["4", "f", "r", "Q"])
 
     p = (
-        ggplot(df, aes(x="displ", y="hwy"))
+        ggplot(data, aes(x="displ", y="hwy"))
         + geom_point()
         + facet_grid("drv ~ .", drop=False)
     )
@@ -179,11 +179,13 @@ def test_array_mapping_and_evaluation():
     # GH548
     # When we map to array/series of values, the aes evaluation
     # should not mix up the values.
-    df = pd.DataFrame({"x": range(12), "y": range(12), "g": list("abcd") * 3})
+    data = pd.DataFrame(
+        {"x": range(12), "y": range(12), "g": list("abcd") * 3}
+    )
 
     # should be the same as if color='g'
     p = (
-        ggplot(df, aes("x", "y", color=df["g"]))
+        ggplot(data, aes("x", "y", color=data["g"]))
         + geom_point(size=4)
         + geom_path()
         + facet_wrap("~g")

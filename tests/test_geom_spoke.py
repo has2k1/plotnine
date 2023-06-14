@@ -4,7 +4,7 @@ import pandas as pd
 from plotnine import aes, geom_spoke, ggplot
 
 n = 4
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": [1] * n,
         "y": range(n),
@@ -17,7 +17,7 @@ df = pd.DataFrame(
 
 def test_aesthetics():
     p = (
-        ggplot(df, aes(y="y", angle="angle", radius="radius"))
+        ggplot(data, aes(y="y", angle="angle", radius="radius"))
         + geom_spoke(aes("x"), size=2)
         + geom_spoke(aes("x+2", alpha="z"), size=2)
         + geom_spoke(aes("x+4", linetype="factor(z)"), size=2)
@@ -29,7 +29,7 @@ def test_aesthetics():
 
 
 def test_unmapped_angle():
-    p = ggplot(df, aes(y="y", angle="angle", radius="radius")) + geom_spoke(
+    p = ggplot(data, aes(y="y", angle="angle", radius="radius")) + geom_spoke(
         aes("x", "y"), angle=0, radius=1
     )
     assert p == "test_unmapped_angle"

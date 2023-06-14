@@ -71,7 +71,7 @@ class stat_pointdensity(stat):
         package = params["package"]
         kde_params = params["kde_params"]
 
-        var_data = np.array([data["x"].values, data["y"].values]).T
+        var_data = np.array([data["x"].to_numpy(), data["y"].to_numpy()]).T
         density = kde(var_data, var_data, package, **kde_params)
 
         data = pd.DataFrame(

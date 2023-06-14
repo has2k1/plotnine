@@ -6,12 +6,12 @@ from plotnine import aes, arrow, ggplot, stat_function
 from plotnine.exceptions import PlotnineError
 
 n = 10
-df = pd.DataFrame({"x": range(1, n + 1)})
+data = pd.DataFrame({"x": range(1, n + 1)})
 
 
 def test_limits():
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + stat_function(
             fun=np.cos, size=2, color="blue", arrow=arrow(ends="first")
         )
@@ -32,7 +32,7 @@ def test_args():
 
     # no args, single arg, tuple of args, dict of args
     p = (
-        ggplot(df, aes("x"))
+        ggplot(data, aes("x"))
         + stat_function(fun=fun, size=2, color="blue")
         + stat_function(fun=fun, size=2, color="red", args=np.cos)
         + stat_function(fun=fun, size=2, color="green", args=(np.cos, 2, 1))
@@ -49,10 +49,10 @@ def test_args():
 
 def test_exceptions():
     # no mapping, no limits
-    p = ggplot(df) + stat_function(fun=np.sin)
+    p = ggplot(data) + stat_function(fun=np.sin)
     p.draw_test()
 
     # fun not callable
     with pytest.raises(PlotnineError):
-        p = ggplot(df, aes("x"))
+        p = ggplot(data, aes("x"))
         print(p + stat_function(fun=1))

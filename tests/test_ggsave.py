@@ -96,10 +96,10 @@ class TestArguments:
         fn1 = next(filename_gen)
         fn2 = next(filename_gen)
 
-        df = pd.DataFrame({"x": range(4), "y": range(4), "b": list("aabb")})
+        data = pd.DataFrame({"x": range(4), "y": range(4), "b": list("aabb")})
 
         p = (
-            ggplot(df)
+            ggplot(data)
             + geom_point(aes("x", "y"))
             + facet_wrap("b")
             + theme_xkcd()

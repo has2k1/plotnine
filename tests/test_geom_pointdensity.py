@@ -12,9 +12,9 @@ from plotnine import (
 
 n = 16  # Some even number > 2
 
-df = pd.DataFrame({"x": range(n), "y": np.repeat(range(n // 2), 2)})
+data = pd.DataFrame({"x": range(n), "y": np.repeat(range(n // 2), 2)})
 
-p0 = ggplot(df, aes("x", "y"))
+p0 = ggplot(data, aes("x", "y"))
 
 
 def test_pointdensity():

@@ -3,7 +3,7 @@ import pandas as pd
 from plotnine import aes, geom_crossbar, ggplot
 
 n = 4
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": [1] * n,
         "ymin": range(1, 2 * n + 1, 2),
@@ -16,7 +16,7 @@ df = pd.DataFrame(
 
 def test_aesthetics():
     p = (
-        ggplot(df, aes(y="y", ymin="ymin", ymax="ymax"))
+        ggplot(data, aes(y="y", ymin="ymin", ymax="ymax"))
         + geom_crossbar(aes("x"), size=2)
         + geom_crossbar(aes("x+1", alpha="z"), fill="green", width=0.2, size=2)
         + geom_crossbar(aes("x+2", linetype="factor(z)"), size=2)

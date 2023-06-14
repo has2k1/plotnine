@@ -19,12 +19,12 @@ when an unknown printer took a galley of type and scrambled it to make
 a type specimen book."""
 
 
-df = pd.DataFrame({"x": [1, 2], "y": [3, 4], "cat": ["a", "b"]})
+data = pd.DataFrame({"x": [1, 2], "y": [3, 4], "cat": ["a", "b"]})
 
 
 def test_labelling_with_colour():
     p = (
-        ggplot(df, aes("x", "y", color="cat"))
+        ggplot(data, aes("x", "y", color="cat"))
         + geom_point()
         + labs(colour="Colour Title")
     )

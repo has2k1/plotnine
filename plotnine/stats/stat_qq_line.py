@@ -78,9 +78,9 @@ class stat_qq_line(stat):
         dparams = params["dparams"]
 
         # Compute theoretical values
-        df = stat_qq.compute_group(data, scales, **params)
-        sample = df["sample"].values
-        theoretical = df["theoretical"].to_numpy()
+        qq_gdata = stat_qq.compute_group(data, scales, **params)
+        sample = qq_gdata["sample"].to_numpy()
+        theoretical = qq_gdata["theoretical"].to_numpy()
 
         # Compute slope & intercept of the line through the quantiles
         cdist = get_continuous_distribution(params["distribution"])

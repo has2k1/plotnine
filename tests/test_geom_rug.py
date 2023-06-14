@@ -5,7 +5,7 @@ from plotnine import aes, coord_flip, geom_rug, ggplot
 
 n = 4
 seq = np.arange(1, n + 1)
-df = pd.DataFrame(
+data = pd.DataFrame(
     {
         "x": seq,
         "y": seq,
@@ -16,7 +16,7 @@ df = pd.DataFrame(
 
 def test_aesthetics():
     p = (
-        ggplot(df)
+        ggplot(data)
         + geom_rug(aes("x", "y"), size=2)
         + geom_rug(aes("x+2*n", "y+2*n", alpha="z"), size=2, sides="tr")
         + geom_rug(
@@ -30,6 +30,10 @@ def test_aesthetics():
 
 
 def test_coord_flip():
-    p = ggplot(df) + geom_rug(aes("x", "y"), size=2, sides="l") + coord_flip()
+    p = (
+        ggplot(data)
+        + geom_rug(aes("x", "y"), size=2, sides="l")
+        + coord_flip()
+    )
 
     assert p == "coord_flip"

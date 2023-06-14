@@ -16,7 +16,7 @@ from plotnine import (
 
 
 def test_aesthetics():
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "a": range(5),
             "b": 2,
@@ -31,7 +31,7 @@ def test_aesthetics():
     )
 
     p = (
-        ggplot(df, aes(y="a"))
+        ggplot(data, aes(y="a"))
         + geom_point(aes(x="b"))
         + geom_point(aes(x="c", size="a"))
         + geom_point(aes(x="d", alpha="a"), size=10, show_legend=False)
@@ -56,10 +56,10 @@ def test_aesthetics():
 
 
 def test_no_fill():
-    df = pd.DataFrame({"x": range(5), "y": range(5)})
+    data = pd.DataFrame({"x": range(5), "y": range(5)})
 
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point(color="red", fill=None, size=5, stroke=1.5)
         + geom_point(
             aes(y="y+1"), color="blue", fill="none", size=5, stroke=1.5
@@ -94,9 +94,9 @@ def test_legend_transparency():
 
 
 class TestColorFillonUnfilledShape:
-    df = pd.DataFrame({"x": range(6), "y": range(6), "z": list("aabbcc")})
+    data = pd.DataFrame({"x": range(6), "y": range(6), "z": list("aabbcc")})
     p = (
-        ggplot(df, aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_point(shape="3", size=10, stroke=3)
         + guides(fill=False)
     )
@@ -130,7 +130,7 @@ def test_custom_shapes():
     shapes = [rf"$\mathrm{{{x}}}$" for x in string.ascii_uppercase]
     theta = np.linspace(0, 2 * np.pi * (1 - 1 / n), n)
 
-    df = pd.DataFrame(
+    data = pd.DataFrame(
         {
             "x": np.sin(theta),
             "y": np.cos(theta),
@@ -139,7 +139,7 @@ def test_custom_shapes():
     )
 
     p = (
-        ggplot(df, aes("x", "y", shape="factor(range(n))", color="theta"))
+        ggplot(data, aes("x", "y", shape="factor(range(n))", color="theta"))
         + geom_point(size=10, show_legend=False)
         + scale_shape_manual(shapes)
         + coord_equal()

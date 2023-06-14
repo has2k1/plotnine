@@ -19,7 +19,7 @@ n = 99
 x = np.linspace(0, 1, n)
 y = np.exp(-7 * (x - 0.5) ** 2)
 
-df = pd.DataFrame({"x": x, "y": y})
+data = pd.DataFrame({"x": x, "y": y})
 
 bcolor = "#9e2f68"
 bcolor_lighter = "#f4d8e6"
@@ -35,9 +35,9 @@ gradient = (
     bcolor_darker,
 )
 
-df1 = df[: n // 3 : 9]
-df2 = df[n // 3 : 2 * n // 3]
-df3 = df[2 * n // 3 :: 12]
+data1 = data[: n // 3 : 9]
+data2 = data[n // 3 : 2 * n // 3]
+data3 = data[2 * n // 3 :: 12]
 
 p = (
     ggplot(mapping=aes("x", "y", color="y", fill="y"))
@@ -53,9 +53,9 @@ p = (
         fill=bcolor_lighter,
         color=bcolor,
     )
-    + geom_point(data=df1, size=8, stroke=0, show_legend=False)
-    + geom_line(data=df2, size=2, color=bcolor_darker, show_legend=False)
-    + geom_bar(aes("x+.06"), df3, stat="identity", size=0, show_legend=False)
+    + geom_point(data=data1, size=8, stroke=0, show_legend=False)
+    + geom_line(data=data2, size=2, color=bcolor_darker, show_legend=False)
+    + geom_bar(aes("x+.06"), data3, stat="identity", size=0, show_legend=False)
     + scale_color_gradientn(colors=gradient)
     + scale_fill_gradientn(colors=gradient)
     + theme_void()

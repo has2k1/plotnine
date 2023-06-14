@@ -298,8 +298,8 @@ def glm_formula(data, xseq, **params):
     data["y"] = results.predict(data)
 
     if params["se"]:
-        df = pd.DataFrame({"x": xseq})
-        prediction = results.get_prediction(df)
+        xdata = pd.DataFrame({"x": xseq})
+        prediction = results.get_prediction(xdata)
         ci = prediction.conf_int(1 - params["level"])
         data["ymin"] = ci[:, 0]
         data["ymax"] = ci[:, 1]
@@ -381,7 +381,7 @@ def loess(data, xseq, **params):
     else:
         prediction = lo.predict(xseq, stderror=False)
 
-    data["y"] = prediction.values
+    data["y"] = prediction.values  # noqa: PD011
 
     return data
 
@@ -403,8 +403,8 @@ def mavg(data, xseq, **params):
     data.reset_index(inplace=True, drop=True)
 
     if params["se"]:
-        df = n - window  # Original - Used
-        data["ymin"], data["ymax"] = tdist_ci(y, df, stderr, params["level"])
+        dof = n - window  # Original - Used
+        data["ymin"], data["ymax"] = tdist_ci(y, dof, stderr, params["level"])
         data["se"] = stderr
 
     return data
@@ -450,17 +450,17 @@ def gpr(data, xseq, **params):
     return data
 
 
-def tdist_ci(x, df, stderr, level):
+def tdist_ci(x, dof, stderr, level):
     """
     Confidence Intervals using the t-distribution
     """
     import scipy.stats as stats
 
     q = (1 + level) / 2
-    if df is None:
+    if dof is None:
         delta = stats.norm.ppf(q) * stderr
     else:
-        delta = stats.t.ppf(q, df) * stderr
+        delta = stats.t.ppf(q, dof) * stderr
     return x - delta, x + delta
 
 
