@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 import pytest
-
 from mizani.transforms import trans_new
+
 from plotnine import (
     aes,
     coord_fixed,
