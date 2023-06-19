@@ -119,6 +119,9 @@ class position(metaclass=Registry):
             Transforms y scale mappings
             Takes one argument, either a scalar or an array-type
         """
+        if len(data) == 0:
+            return data
+
         if trans_x:
             xs = [name for name in data.columns if name in X_AESTHETICS]
             data[xs] = data[xs].apply(trans_x)
