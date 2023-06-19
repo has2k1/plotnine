@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 import pytest
-
 from mizani.transforms import log_format, log_trans
+
 from plotnine import (
     aes,
     annotation_logticks,
