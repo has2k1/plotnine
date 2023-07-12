@@ -33,8 +33,16 @@ class guide_colorbar(guide):
         a smoother colorbar. Default is 20.
     raster : bool
         Whether to render the colorbar as a raster object.
+    frame_color : None
+        Color of surrounding frame. If None, no frame is drawn.
+    frame_linewidth : float
+        Line width of frame. Default is 1.
     ticks : bool
         Whether tick marks on colorbar should be visible.
+    ticks_color : str
+        Color to use for ticks. Default is "#CCCCCC".
+    ticks_linewidth : float
+        Width of the tick marks. Default is 1.
     draw_ulim : bool
         Whether to show the upper limit tick marks.
     draw_llim : bool
@@ -51,9 +59,13 @@ class guide_colorbar(guide):
     barheight = None
     nbin = 20  # maximum number of bins
     raster = True
+    frame_color = None
+    frame_linewidth = 1
 
     # ticks
     ticks = True
+    ticks_color = "#CCCCCC"
+    ticks_linewidth = 1
     draw_ulim = True
     draw_llim = True
 
@@ -214,7 +226,18 @@ class guide_colorbar(guide):
             if not self.draw_llim:
                 _locations = _locations[1:]
 
-            add_ticks(da, _locations, direction)
+            add_ticks(
+                da,
+                _locations,
+                direction,
+                self.ticks_color,
+                self.ticks_linewidth,
+            )
+
+        if self.frame_color:
+            add_frame(
+                da, width, height, self.frame_color, self.frame_linewidth
+            )
 
         # labels #
         if self.label:
@@ -262,6 +285,24 @@ class guide_colorbar(guide):
         return box
 
 
+def add_frame(da, width, height, color, linewidth):
+    """
+    Add frame to colorbar
+    """
+    from matplotlib.patches import Rectangle
+
+    rect = Rectangle(
+        (0, 0),
+        width,
+        height,
+        edgecolor=color,
+        linewidth=linewidth,
+        facecolor="none",
+        snap=True,
+    )
+    da.add_artist(rect)
+
+
 def add_interpolated_colorbar(da, colors, direction):
     """
     Add 'rastered' colorbar to DrawingArea
@@ -307,7 +348,6 @@ def add_interpolated_colorbar(da, colors, direction):
         coordinates,
         antialiased=False,
         shading="gouraud",
-        linewidth=0,
         cmap=cmap,
         array=Z.ravel(),
     )
@@ -344,7 +384,7 @@ def add_segmented_colorbar(da, colors, direction):
     da.add_artist(coll)
 
 
-def add_ticks(da, locations, direction):
+def add_ticks(da, locations, direction, color, linewidth):
     from matplotlib.collections import LineCollection
 
     segments = []
@@ -368,7 +408,7 @@ def add_ticks(da, locations, direction):
             )
 
     coll = LineCollection(
-        segments, color="#CCCCCC", linewidth=1, antialiased=False
+        segments, color=color, linewidth=linewidth, antialiased=False
     )
     da.add_artist(coll)
 

@@ -10,9 +10,12 @@ v0.12.2
 Enhancements
 ************
 
+- :class:`~plotnin.guide.guide_colorbar` Now supports additional 
+  styling parameters: `frame_color`, `frame_linewidth`, 
+  `ticks_color`, `ticks_linewidth`.
+
 - All `__all__` variables are explicitly assigned to help static typecheckers
   infer module attributes. (:issue:`685`)
-
 
 v0.12.1
 -------
