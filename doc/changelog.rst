@@ -3,6 +3,15 @@
 Changelog
 =========
 
+v0.12.2
+-------
+(2023-07-21)
+
+- This is a maintainance release that prevents newer versions of
+  mizani from breaking plotnine. This version depends on
+  `mizani<0.10.0`.
+
+
 v0.12.1
 -------
 (2023-05-09)
