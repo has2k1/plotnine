@@ -8,7 +8,7 @@ import pandas as pd
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
-from ..scales.scale import scale_continuous
+from ..scales.scale_continuous import scale_continuous
 from .stat import stat
 
 if typing.TYPE_CHECKING:

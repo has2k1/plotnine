@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from ..coords import coord_flip
-from ..scales.scale import scale_discrete
+from ..scales.scale_discrete import scale_discrete
 from .annotate import annotate
 from .geom import geom
 from .geom_polygon import geom_polygon

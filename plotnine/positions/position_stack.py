@@ -91,7 +91,7 @@ class position_stack(position):
             """
             Return trans if the scale in non-linear
             """
-            from ..scales.scale import scale_continuous
+            from ..scales.scale_continuous import scale_continuous
 
             if isinstance(sc, scale_continuous):
                 if _is_non_linear_trans(sc.trans):

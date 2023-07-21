@@ -6,7 +6,7 @@ from warnings import warn
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
-from .scale import scale_discrete
+from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
     from plotnine.typing import ScaleBreaksRaw

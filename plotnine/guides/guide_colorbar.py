@@ -10,7 +10,7 @@ from mizani.bounds import rescale
 
 from ..exceptions import PlotnineWarning
 from ..mapping.aes import rename_aesthetics
-from ..scales.scale import scale_continuous
+from ..scales.scale_continuous import scale_continuous
 from .guide import guide
 
 if typing.TYPE_CHECKING:

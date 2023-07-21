@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ..exceptions import PlotnineError
-from ..scales.scale import scale_discrete
+from ..scales.scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
     from typing import Optional
