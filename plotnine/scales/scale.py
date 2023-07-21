@@ -779,13 +779,11 @@ class scale_continuous(scale):
             return
 
         a, b = value
-        a, b = (
-            self.transform(a) if a is not None else a,
-            self.transform(b) if b is not None else b,
-        )
-        with suppress(TypeError):
-            if a > b:
-                a, b = b, a
+        a = self.transform([a])[0] if a is not None else a
+        b = self.transform([b])[0] if b is not None else b
+
+        if a is not None and b is not None and a > b:
+            a, b = b, a
 
         self._limits = a, b
 
