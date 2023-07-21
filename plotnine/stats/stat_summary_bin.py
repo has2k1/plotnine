@@ -3,7 +3,7 @@ import pandas as pd
 
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..scales.scale import scale_discrete
+from ..scales.scale_discrete import scale_discrete
 from ..utils import groupby_apply
 from .binning import fuzzybreaks
 from .stat import stat

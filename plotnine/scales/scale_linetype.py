@@ -3,7 +3,8 @@ from warnings import warn
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..utils import alias
-from .scale import scale_continuous, scale_discrete
+from .scale_continuous import scale_continuous
+from .scale_discrete import scale_discrete
 
 LINETYPES = ["solid", "dashed", "dashdot", "dotted"]
 

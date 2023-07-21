@@ -4,7 +4,8 @@ import typing
 
 from ..doctools import document
 from ..utils import alias
-from .scale import scale_continuous, scale_discrete
+from .scale_continuous import scale_continuous
+from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Sequence

@@ -8,7 +8,7 @@ import pandas as pd
 
 from ..coords import coord_flip
 from ..exceptions import PlotnineWarning
-from ..scales.scale import scale_continuous as ScaleContinuous
+from ..scales.scale_continuous import scale_continuous as ScaleContinuous
 from ..utils import log
 from .annotate import annotate
 from .geom_path import geom_path

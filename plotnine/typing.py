@@ -40,7 +40,9 @@ if typing.TYPE_CHECKING:
     from plotnine.layer import Layers, layer
     from plotnine.mapping.aes import aes
     from plotnine.positions.position import position
-    from plotnine.scales.scale import scale, scale_continuous, scale_discrete
+    from plotnine.scales.scale import scale
+    from plotnine.scales.scale_continuous import scale_continuous
+    from plotnine.scales.scale_discrete import scale_discrete
     from plotnine.scales.scales import Scales
     from plotnine.stats.stat import stat
     from plotnine.themes.theme import theme

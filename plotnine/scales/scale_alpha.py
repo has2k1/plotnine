@@ -5,7 +5,9 @@ import numpy as np
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..utils import alias
-from .scale import scale_continuous, scale_datetime, scale_discrete
+from .scale_continuous import scale_continuous
+from .scale_datetime import scale_datetime
+from .scale_discrete import scale_discrete
 
 
 @document
