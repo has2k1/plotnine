@@ -3,9 +3,17 @@
 Changelog
 =========
 
-v0.12.2
+v0.13.0
 -------
 (not-released-yet)
+
+Bug Fixes
+*********
+
+- Fixed handling of minor breaks in :class:`~plotnine.scales.scale_continuous`
+  to accept numpy arrays and when the scale has a transform, that the
+  minor breaks are supplied in user space and not transform space. Just
+  like the major breaks. (:issue:`685`)
 
 Enhancements
 ************

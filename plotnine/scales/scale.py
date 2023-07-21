@@ -745,7 +745,7 @@ class scale_continuous(scale):
             # Function works in the dataspace, but the limits are
             # stored in transformed space. The range of the scale is
             # in transformed space (i.e. with in the domain of the scale)
-            _range = self.trans.inverse(self.range.range)
+            _range = self.inverse(self.range.range)
             return tuple(self.trans.transform(self._limits(_range)))
         elif self._limits is not None and not self.range.is_empty():
             # Fall back to the range if the limits
@@ -780,8 +780,8 @@ class scale_continuous(scale):
 
         a, b = value
         a, b = (
-            self.trans.transform(a) if a is not None else a,
-            self.trans.transform(b) if b is not None else b,
+            self.transform(a) if a is not None else a,
+            self.transform(b) if b is not None else b,
         )
         with suppress(TypeError):
             if a > b:
@@ -957,15 +957,13 @@ class scale_continuous(scale):
         # To data space
         _limits = self.inverse(limits)
 
-        if self.is_empty():
+        if self.is_empty() or self.breaks is False or self.breaks is None:
             breaks = []
         elif self.breaks is True:
             # TODO: Fix this type mismatch in mizani with
             # a typevar so that type-in = type-out
             _tlimits = self.trans.breaks(_limits)
             breaks: ScaleContinuousBreaks = _tlimits  # pyright: ignore
-        elif self.breaks is False or self.breaks is None:
-            breaks = []
         elif zero_range(_limits):
             breaks = [_limits[0]]
         elif callable(self.breaks):
@@ -999,7 +997,9 @@ class scale_continuous(scale):
         if limits is None:
             limits = self.limits
 
-        if self.minor_breaks is True:
+        if self.minor_breaks is False or self.minor_breaks is None:
+            minor_breaks = []
+        elif self.minor_breaks is True:
             # TODO: Remove ignore when mizani is static typed
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
                 major, limits
@@ -1009,15 +1009,13 @@ class scale_continuous(scale):
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
                 major, limits, n=self.minor_breaks
             )  # pyright: ignore
-        elif self.minor_breaks in (False, None) or not len(major):
-            minor_breaks = []
         elif callable(self.minor_breaks):
-            breaks = self.minor_breaks(self.trans.inverse(limits))
+            breaks = self.minor_breaks(self.inverse(limits))
             _major = set(major)
-            minor = self.trans.transform(breaks)
+            minor = self.transform(breaks)
             minor_breaks = [x for x in minor if x not in _major]
         else:
-            minor_breaks = self.minor_breaks
+            minor_breaks = self.transform(self.minor_breaks)
 
         return minor_breaks
 
@@ -1036,11 +1034,12 @@ class scale_continuous(scale):
             breaks = self.get_breaks()
 
         breaks = self.inverse(breaks)
+        labels: Sequence[str]
 
-        if self.labels is True:
-            labels: Sequence[str] = self.trans.format(breaks)
-        elif self.labels in (False, None):
+        if self.labels is False or self.labels is None:
             labels = []
+        elif self.labels is True:
+            labels = self.trans.format(breaks)
         elif callable(self.labels):
             labels = self.labels(breaks)
         elif isinstance(self.labels, dict):
