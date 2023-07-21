@@ -279,7 +279,7 @@ def fuzzybreaks(
         binwidth = (srange[1] - srange[0]) / bins
 
     if boundary is None or np.isnan(boundary):
-        boundary = round_any(srange[0], binwidth, np.floor)  # pyright: ignore
+        boundary = round_any(srange[0], binwidth, np.floor)
 
     if recompute_bins:
         bins = int(np.ceil((srange[1] - boundary) / binwidth))
