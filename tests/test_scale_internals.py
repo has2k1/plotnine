@@ -49,6 +49,7 @@ from plotnine.scales.scale_size import (
 from plotnine.scales.scale_xy import (
     scale_x_continuous,
     scale_x_discrete,
+    scale_x_log10,
     scale_y_continuous,
 )
 from plotnine.scales.scales import make_scale
@@ -440,6 +441,22 @@ def test_minor_breaks():
     minor_breaks = s.get_minor_breaks(major=[0, 10, 20])
     expected_minor_breaks = [2.5, 5, 7.5, 12.5, 15, 17.5]
     assert np.allclose(minor_breaks, expected_minor_breaks, rtol=1e-12)
+
+
+def test_minor_breaks_trans():
+    limits = (1, 100)
+
+    breaks = np.array([1, 10, 100])
+    breaks_transformed = np.log10(breaks)
+
+    minor_breaks = np.hstack([np.arange(2, 9), np.arange(20, 90, 10)])
+    minor_breaks_transformed = np.log10(minor_breaks)
+
+    s = scale_x_log10(breaks=breaks, minor_breaks=minor_breaks, limits=limits)
+
+    npt.assert_array_equal(s.get_breaks(), breaks_transformed)
+
+    npt.assert_array_equal(s.get_minor_breaks(None), minor_breaks_transformed)
 
 
 def test_expand_limits():
