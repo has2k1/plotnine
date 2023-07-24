@@ -187,7 +187,7 @@ class TestOther:
 
     def test_gpr(self):
         try:
-            from sklearn import gaussian_process  # noqa:401
+            from sklearn import gaussian_process  # noqa: F401
         except ImportError:
             return
 
