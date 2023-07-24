@@ -34,32 +34,32 @@ class scale_datetime(scale_continuous):
     _trans = "datetime"
 
     def __init__(self, **kwargs):
-        from mizani.breaks import date_breaks
-        from mizani.formatters import date_format
+        from mizani.breaks import breaks_date
+        from mizani.labels import label_date
 
         # Permit the use of the general parameters for
         # specifying the format strings
         with suppress(KeyError):
             breaks = kwargs["breaks"]
             if isinstance(breaks, str):
-                kwargs["breaks"] = date_breaks(breaks)
+                kwargs["breaks"] = breaks_date(breaks)
 
         with suppress(KeyError):
             minor_breaks = kwargs["minor_breaks"]
             if isinstance(minor_breaks, str):
-                kwargs["minor_breaks"] = date_breaks(minor_breaks)
+                kwargs["minor_breaks"] = breaks_date(minor_breaks)
 
         # Using the more specific parameters take precedence
         with suppress(KeyError):
             breaks_fmt = kwargs.pop("date_breaks")
-            kwargs["breaks"] = date_breaks(breaks_fmt)
+            kwargs["breaks"] = breaks_date(breaks_fmt)
 
         with suppress(KeyError):
             labels_fmt = kwargs.pop("date_labels")
-            kwargs["labels"] = date_format(labels_fmt)
+            kwargs["labels"] = label_date(labels_fmt)
 
         with suppress(KeyError):
             minor_breaks_fmt = kwargs.pop("date_minor_breaks")
-            kwargs["minor_breaks"] = date_breaks(minor_breaks_fmt)
+            kwargs["minor_breaks"] = breaks_date(minor_breaks_fmt)
 
         scale_continuous.__init__(self, **kwargs)

@@ -138,9 +138,9 @@ def contour_lines(X, Y, Z, levels):
     )
 
     if isinstance(levels, int):
-        from mizani.breaks import extended_breaks
+        from mizani.breaks import breaks_extended
 
-        levels = extended_breaks(n=levels)((zmin, zmax))
+        levels = breaks_extended(n=levels)((zmin, zmax))
 
     # The counter_generator gives us a list of vertices that
     # represent all the contour lines at that level. There

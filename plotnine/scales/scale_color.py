@@ -188,9 +188,7 @@ class scale_color_gradient(scale_continuous):
         from mizani.palettes import gradient_n_pal
 
         # TODO: fix types in mizani
-        self.palette = gradient_n_pal(
-            [low, high], name="gradient"
-        )  # pyright: ignore
+        self.palette = gradient_n_pal([low, high])  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -298,9 +296,7 @@ class scale_color_gradient2(scale_continuous):
 
         kwargs["rescaler"] = _rescale_mid
         # TODO: fix types in mizani
-        self.palette = gradient_n_pal(
-            [low, mid, high], name="gradient2"
-        )  # pyright: ignore
+        self.palette = gradient_n_pal([low, mid, high])  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -348,9 +344,7 @@ class scale_color_gradientn(scale_continuous):
         from mizani.palettes import gradient_n_pal
 
         # TODO: fix types in mizani
-        self.palette = gradient_n_pal(
-            colors, values, "gradientn"
-        )  # pyright: ignore
+        self.palette = gradient_n_pal(colors, values)  # pyright: ignore
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -473,11 +467,11 @@ class scale_color_cmap(scale_continuous):
     guide = "colorbar"
     na_value = "#7F7F7F"
 
-    def __init__(self, cmap_name="viridis", lut=None, **kwargs):
+    def __init__(self, cmap_name="viridis", **kwargs):
         from mizani.palettes import cmap_pal
 
         # TODO: fix types in mizani
-        self.palette = cmap_pal(cmap_name, lut)  # pyright: ignore
+        self.palette = cmap_pal(cmap_name)  # pyright: ignore
         super().__init__(**kwargs)
 
 
@@ -524,10 +518,10 @@ class scale_color_cmap_d(scale_discrete):
     _aesthetics = ["color"]
     na_value = "#7F7F7F"
 
-    def __init__(self, cmap_name="viridis", lut=None, **kwargs):
+    def __init__(self, cmap_name="viridis", **kwargs):
         from mizani.palettes import cmap_d_pal
 
-        self.palette = cmap_d_pal(cmap_name, lut)
+        self.palette = cmap_d_pal(cmap_name)
         super().__init__(**kwargs)
 
 
