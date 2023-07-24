@@ -3,11 +3,11 @@ Little functions used all over the codebase
 """
 from __future__ import annotations
 
-import collections
 import inspect
 import itertools
 import typing
 import warnings
+from collections import defaultdict
 from contextlib import suppress
 from warnings import warn
 from weakref import WeakValueDictionary
@@ -29,7 +29,13 @@ if typing.TYPE_CHECKING:
     from IPython.core.interactiveshell import InteractiveShell
     from typing_extensions import TypeGuard
 
-    from plotnine.typing import DataLike, FloatArray, FloatArrayLike, IntArray
+    from plotnine.typing import (
+        AnyArrayLike,
+        DataLike,
+        FloatArray,
+        FloatArrayLike,
+        IntArray,
+    )
 
 
 # Points and lines of equal size should give the
@@ -109,6 +115,37 @@ def match(
     else:
         lst = [lookup[x] + start if x in lookup else nomatch for x in v1]
     return np.array(lst)
+
+
+def multitype_sort(arr: AnyArrayLike) -> list[Any]:
+    """
+    Sort elements of multiple types
+
+    x is assumed to contain elements of different types, such that
+    plain sort would raise a `TypeError`.
+
+    Parameters
+    ----------
+    a : array-like
+        Array of items to be sorted
+
+    Returns
+    -------
+    out : list
+        Items sorted within their type groups.
+    """
+    types = defaultdict(list)
+
+    for x in arr:
+        if isinstance(x, (int, float, complex)):
+            types["number"].append(x)
+        else:
+            types[type(x)].append(x)
+
+    for t, values in types.items():
+        types[t] = sorted(values)
+
+    return list(itertools.chain.from_iterable(types[t] for t in types))
 
 
 def _margins(
@@ -305,10 +342,8 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
         try:
             levels = sorted(set(x))
         except TypeError:
-            from mizani.utils import multitype_sort
-
             # x probably has NANs
-            levels = multitype_sort(set(x))
+            levels = multitype_sort(list(set(x)))
 
         lst = match(x, levels)
         lst = [item + 1 for item in lst]
@@ -783,7 +818,7 @@ class RegistryHierarchyMeta(type):
     def __init__(cls, name, bases, namespace):
         if not hasattr(cls, "_registry"):
             cls._registry = {}
-            cls._hierarchy = collections.defaultdict(list)
+            cls._hierarchy = defaultdict(list)
         else:
             cls._registry[name] = cls
             cls._hierarchy[name].append(name)

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from mizani.transforms import log_format, log_trans
+from mizani.transforms import label_log, log_trans
 
 from plotnine import (
     aes,
@@ -134,7 +134,7 @@ def test_annotation_logticks_base_8():
         + geom_point()
         + scale_x_continuous(
             trans=log_trans(base=base),
-            labels=log_format(base=base, mathtex=True),
+            labels=label_log(base=base, mathtex=True),
         )
         + theme(
             panel_grid_minor=element_line(color="green"),

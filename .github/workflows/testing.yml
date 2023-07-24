@@ -113,6 +113,7 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
+          pip install git+https://github.com/has2k1/mizani.git@main
           pip install ".[extra, typing]"
 
       - name: Environment Information
@@ -147,6 +148,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install pandoc
+          pip install git+https://github.com/has2k1/mizani.git@main
           pip install ".[test,doc]"
           pip install -r requirements/examples.txt
 
