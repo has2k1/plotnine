@@ -185,8 +185,8 @@ class scale(metaclass=Registry):
 
         Parameters
         ----------
-        x: pd.series | np.array
-            a column of data to train over
+        x: pd.Series | np.array
+            A column of data to train over
         """
         raise NotImplementedError("Not Implemented")
 

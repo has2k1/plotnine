@@ -136,7 +136,7 @@ def test_continuous_color_palettes():
         passed a list
         """
         color = cscale.palette(alpha)
-        assert color[0] == "#"
+        assert color[0][0] == "#"
 
         colors = cscale.palette(alphas)
         assert all(c[0] == "#" for c in colors)

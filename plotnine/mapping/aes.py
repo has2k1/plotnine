@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 import re
+import typing
 from collections.abc import Iterable
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import fields
-from typing import Any, Dict, overload
+from typing import Any, Dict
 
 import pandas as pd
 
 from ..iapi import labels_view
 from .evaluation import after_stat, stage
+
+if typing.TYPE_CHECKING:
+    from typing import TypeVar
+
+    THasAesNames = TypeVar("THasAesNames", bound=list[str] | dict[str, Any])
 
 __all__ = ("aes",)
 
@@ -298,19 +304,7 @@ class aes(Dict[str, Any]):
         return new
 
 
-@overload
-def rename_aesthetics(obj: list[str]) -> list[str]:
-    ...
-
-
-@overload
-def rename_aesthetics(obj: dict[str, Any]) -> dict[str, Any]:
-    ...
-
-
-def rename_aesthetics(
-    obj: list[str] | dict[str, Any]
-) -> list[str] | dict[str, Any]:
+def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
     """
     Rename aesthetics in obj
 
@@ -330,7 +324,9 @@ def rename_aesthetics(
             if name != new_name:
                 obj[new_name] = obj.pop(name)
     else:
-        obj = [name.replace("colour", "color") for name in obj]
+        for i, name in enumerate(obj):
+            if "colour" in name:
+                obj[i] = name.replace("colour", "color")
 
     return obj
 

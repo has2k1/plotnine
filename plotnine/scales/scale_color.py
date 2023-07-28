@@ -13,6 +13,8 @@ from .scale_discrete import scale_discrete
 if typing.TYPE_CHECKING:
     from typing import Literal
 
+    from mizani.typing import ColorScheme, ColorSchemeShort
+
 
 # Discrete color scales #
 # Note: plotnine operates in the hcl space
@@ -44,7 +46,14 @@ class scale_color_hue(scale_discrete):
     _aesthetics = ["color"]
     na_value = "#7F7F7F"
 
-    def __init__(self, h=0.01, l=0.6, s=0.65, color_space="hls", **kwargs):
+    def __init__(
+        self,
+        h=0.01,
+        l=0.6,
+        s=0.65,
+        color_space: Literal["hls", "husl"] = "hls",
+        **kwargs,
+    ):
         from mizani.palettes import hue_pal
 
         self.palette = hue_pal(h, l, s, color_space=color_space)
@@ -93,7 +102,11 @@ class scale_color_brewer(scale_discrete):
     na_value = "#7F7F7F"
 
     def __init__(
-        self, type="seq", palette=1, direction: Literal[1, -1] = 1, **kwargs
+        self,
+        type: ColorScheme | ColorSchemeShort = "seq",
+        palette=1,
+        direction: Literal[1, -1] = 1,
+        **kwargs,
     ):
         from mizani.palettes import brewer_pal
 
@@ -135,8 +148,7 @@ class scale_color_grey(scale_discrete):
     def __init__(self, start=0.2, end=0.8, **kwargs):
         from mizani.palettes import grey_pal
 
-        # TODO: fix types in mizani
-        self.palette = grey_pal(start, end)  # pyright: ignore
+        self.palette = grey_pal(start, end)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -398,7 +410,7 @@ class scale_color_distiller(scale_color_gradientn):
 
     def __init__(
         self,
-        type="seq",
+        type: ColorScheme | ColorSchemeShort = "seq",
         palette=1,
         values=None,
         direction: Literal[1, -1] = -1,

@@ -23,13 +23,13 @@ if typing.TYPE_CHECKING:
         AnyArrayLike,
         CoordRange,
         FloatArrayLike,
-        FloatArrayLikeTV,
         ScaleContinuousBreaks,
         ScaleContinuousBreaksRaw,
         ScaleContinuousLimits,
         ScaleContinuousLimitsRaw,
         ScaleLabels,
         ScaleMinorBreaksRaw,
+        TFloatArrayLike,
         Trans,
         TupleFloat2,
         TupleFloat4,
@@ -129,7 +129,6 @@ class scale_continuous(scale):
         t: Trans = gettrans(value)
         self._check_trans(t)
         self._trans = t
-        self._trans.aesthetic = self.aesthetics[0]  # pyright: ignore
 
     @property
     def limits(self):
@@ -148,10 +147,13 @@ class scale_continuous(scale):
             # Fall back to the range if the limits
             # are not set or if any is None or NaN
             if len(self._limits) == len(self.range.range):
-                return tuple(
-                    self.trans.transform(r) if pd.isna(l) else l
-                    for l, r in zip(self._limits, self.range.range)
-                )
+                l1, l2 = self._limits
+                r1, r2 = self.range.range
+                if l1 is None:
+                    l1 = self.trans.transform([r1])[0]
+                if l2 is None:
+                    l2 = self.trans.transform([r2])[0]
+                return l1, l2
         return tuple(self._limits)
 
     @limits.setter
@@ -190,8 +192,8 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        x: pd.series | np.array
-            a column of data to train over
+        x: pd.Series | np.array
+            A column of data to train over
         """
         if not len(x):
             return
@@ -212,7 +214,7 @@ class scale_continuous(scale):
 
         return df
 
-    def transform(self, x: FloatArrayLikeTV) -> FloatArrayLikeTV:
+    def transform(self, x: TFloatArrayLike) -> TFloatArrayLike:
         """
         Transform array|series x
         """
@@ -221,7 +223,7 @@ class scale_continuous(scale):
         except TypeError:
             return [self.trans.transform(val) for val in x]  # pyright: ignore
 
-    def inverse(self, x: FloatArrayLikeTV) -> FloatArrayLikeTV:
+    def inverse(self, x: TFloatArrayLike) -> TFloatArrayLike:
         """
         Inverse transform array|series x
         """
@@ -229,6 +231,15 @@ class scale_continuous(scale):
             return self.trans.inverse(x)
         except TypeError:
             return [self.trans.inverse(val) for val in x]  # pyright: ignore
+
+    @property
+    def is_linear(self) -> bool:
+        """
+        Return True if the scale is linear
+
+        Depends on the transformation.
+        """
+        return self.trans.transform_is_linear
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
@@ -395,15 +406,13 @@ class scale_continuous(scale):
         if self.minor_breaks is False or self.minor_breaks is None:
             minor_breaks = []
         elif self.minor_breaks is True:
-            # TODO: Remove ignore when mizani is static typed
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
                 major, limits
             )  # pyright: ignore
         elif isinstance(self.minor_breaks, int):
-            # TODO: Remove ignore when mizani is static typed
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
-                major, limits, n=self.minor_breaks
-            )  # pyright: ignore
+                major, limits, self.minor_breaks  # pyright: ignore
+            )
         elif callable(self.minor_breaks):
             breaks = self.minor_breaks(self.inverse(limits))
             _major = set(major)
@@ -434,7 +443,7 @@ class scale_continuous(scale):
         if self.labels is False or self.labels is None:
             labels = []
         elif self.labels is True:
-            labels = self.trans.format(breaks)
+            labels = self.trans.format(breaks)  # type: ignore
         elif callable(self.labels):
             labels = self.labels(breaks)
         elif isinstance(self.labels, dict):
