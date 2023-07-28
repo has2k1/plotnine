@@ -14,7 +14,6 @@ if typing.TYPE_CHECKING:
     )
 
     import numpy as np
-    import numpy.typing as npt
     import pandas as pd
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
@@ -24,6 +23,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.patches import PathPatch
     from matplotlib.text import Text
     from mizani.transforms import trans
+    from numpy.typing import NDArray
     from patsy.eval import EvalEnvironment
     from typing_extensions import TypeAlias
 
@@ -77,11 +77,11 @@ if typing.TYPE_CHECKING:
     TupleFloat4: TypeAlias = tuple[float, float, float, float]
 
     # Arrays (strictly numpy)
-    AnyArray: TypeAlias = npt.NDArray[Any]
-    BoolArray: TypeAlias = npt.NDArray[np.bool_]
-    FloatArray: TypeAlias = npt.NDArray[np.float64]
-    IntArray: TypeAlias = npt.NDArray[np.int64]
-    StrArray: TypeAlias = npt.NDArray[np.str_]
+    AnyArray: TypeAlias = NDArray[Any]
+    BoolArray: TypeAlias = NDArray[np.bool_]
+    FloatArray: TypeAlias = NDArray[np.float64]
+    IntArray: TypeAlias = NDArray[np.int64]
+    StrArray: TypeAlias = NDArray[np.str_]
 
     # Series
     AnySeries: TypeAlias = pd.Series[Any]
@@ -96,15 +96,7 @@ if typing.TYPE_CHECKING:
     # Type Variables
     # A array variable we can pass to a transforming function and expect
     # result to be of the same type
-    FloatArrayLikeTV = TypeVar(
-        "FloatArrayLikeTV",
-        # We cannot use FloatArrayLike type because pyright expect
-        # the result to be a FloatArrayLike
-        FloatArray,
-        FloatSeries,
-        Sequence[float],
-        TupleFloat2,
-    )
+    TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
 
     # Column transformation function
     TransformCol = Callable[[FloatSeries], FloatSeries | FloatArray]

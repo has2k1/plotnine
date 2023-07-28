@@ -42,12 +42,12 @@ class scale_datetime(scale_continuous):
         with suppress(KeyError):
             breaks = kwargs["breaks"]
             if isinstance(breaks, str):
-                kwargs["breaks"] = breaks_date(breaks)
+                kwargs["breaks"] = breaks_date(width=breaks)
 
         with suppress(KeyError):
             minor_breaks = kwargs["minor_breaks"]
             if isinstance(minor_breaks, str):
-                kwargs["minor_breaks"] = breaks_date(minor_breaks)
+                kwargs["minor_breaks"] = breaks_date(width=minor_breaks)
 
         # Using the more specific parameters take precedence
         with suppress(KeyError):

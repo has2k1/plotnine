@@ -16,7 +16,7 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DrawingArea, Layer
+    from plotnine.typing import Axes, Coord, DrawingArea, FloatSeries, Layer
 
 
 @document
@@ -90,28 +90,28 @@ class geom_dotplot(geom):
         # Set up the stacking function and range
         if gp["stackdir"] in (None, "up"):
 
-            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
+            def stackdots(a: FloatSeries) -> FloatSeries:
                 return a - 0.5
 
             stackaxismin: float = 0
             stackaxismax: float = 1
         elif gp["stackdir"] == "down":
 
-            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
+            def stackdots(a: FloatSeries) -> FloatSeries:
                 return -a + 0.5
 
             stackaxismin = -1
             stackaxismax = 0
         elif gp["stackdir"] == "center":
 
-            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
+            def stackdots(a: FloatSeries) -> FloatSeries:
                 return a - 1 - np.max(a - 1) / 2
 
             stackaxismin = -0.5
             stackaxismax = 0.5
         elif gp["stackdir"] == "centerwhole":
 
-            def stackdots(a: pd.Series[float]) -> pd.Series[float]:
+            def stackdots(a: FloatSeries) -> FloatSeries:
                 return a - 1 - np.floor(np.max(a - 1) / 2)
 
             stackaxismin = -0.5

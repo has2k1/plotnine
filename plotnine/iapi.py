@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
         Axes,
         CoordRange,
         Figure,
+        FloatArrayLike,
         Scale,
         ScaleBreaks,
         ScaledAestheticsName,
@@ -40,7 +41,7 @@ class scale_view:
     # Physical size of scale, including expansions
     range: CoordRange
     breaks: ScaleBreaks
-    minor_breaks: Sequence[float]
+    minor_breaks: FloatArrayLike
     labels: Sequence[str]
 
 

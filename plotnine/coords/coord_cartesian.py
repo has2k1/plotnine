@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import scale_view
     from plotnine.typing import (
         FloatArray,
+        FloatSeries,
         Scale,
         TupleFloat2,
     )
@@ -86,8 +87,8 @@ class coord_cartesian(coord):
 
     def distance(
         self,
-        x: pd.Series[float],
-        y: pd.Series[float],
+        x: FloatSeries,
+        y: FloatSeries,
         panel_params: panel_view,
     ) -> FloatArray:
         max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[

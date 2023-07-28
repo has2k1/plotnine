@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
+        FloatSeries,
         Ggplot,
         Scale,
     )
@@ -155,8 +156,8 @@ class coord:
 
     def distance(
         self,
-        x: pd.Series[float],
-        y: pd.Series[float],
+        x: FloatSeries,
+        y: FloatSeries,
         panel_params: panel_view,
     ) -> npt.NDArray[Any]:
         msg = "The coordinate should implement this method."

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import typing
 from types import SimpleNamespace as NS
-from typing import overload
 from warnings import warn
 
 from ..exceptions import PlotnineWarning
@@ -11,7 +10,7 @@ from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
 
 if typing.TYPE_CHECKING:
-    from typing import Optional, Sequence
+    from typing import Optional
 
     import pandas as pd
 
@@ -20,6 +19,7 @@ if typing.TYPE_CHECKING:
         FloatArray,
         FloatSeries,
         Scale,
+        TFloatArrayLike,
         Trans,
         TupleFloat2,
     )
@@ -138,8 +138,8 @@ class coord_trans(coord):
 
     def distance(
         self,
-        x: pd.Series[float],
-        y: pd.Series[float],
+        x: FloatSeries,
+        y: FloatSeries,
         panel_params: panel_view,
     ) -> FloatArray:
         max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[
@@ -150,23 +150,9 @@ class coord_trans(coord):
         return dist_euclidean(xt, yt) / max_dist
 
 
-@overload
 def transform_value(
-    trans: Trans, value: pd.Series[float], range: TupleFloat2
-) -> pd.Series[float]:
-    ...
-
-
-@overload
-def transform_value(
-    trans: Trans, value: Sequence[float], range: TupleFloat2
-) -> Sequence[float]:
-    ...
-
-
-def transform_value(
-    trans: Trans, value: pd.Series[float] | Sequence[float], range: TupleFloat2
-) -> pd.Series[float] | Sequence[float]:
+    trans: Trans, value: TFloatArrayLike, range: TupleFloat2
+) -> TFloatArrayLike:
     """
     Transform value
     """

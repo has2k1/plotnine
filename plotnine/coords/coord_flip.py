@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import typing
-from typing import overload
 
 import pandas as pd
 
@@ -9,7 +8,13 @@ from ..iapi import labels_view, panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
 
 if typing.TYPE_CHECKING:
+    from typing import TypeVar
+
     from plotnine.typing import Scale
+
+    THasLabels = TypeVar(
+        "THasLabels", bound=pd.DataFrame | labels_view | panel_view
+    )
 
 
 class coord_flip(coord_cartesian):
@@ -62,24 +67,7 @@ class coord_flip(coord_cartesian):
         return panel_ranges(x=panel_params.y.range, y=panel_params.x.range)
 
 
-@overload
-def flip_labels(obj: pd.DataFrame) -> pd.DataFrame:
-    ...
-
-
-@overload
-def flip_labels(obj: labels_view) -> labels_view:
-    ...
-
-
-@overload
-def flip_labels(obj: panel_view) -> panel_view:
-    ...
-
-
-def flip_labels(
-    obj: pd.DataFrame | labels_view | panel_view,
-) -> pd.DataFrame | labels_view | panel_view:
+def flip_labels(obj: THasLabels) -> THasLabels:
     """
     Rename fields x to y and y to x
 

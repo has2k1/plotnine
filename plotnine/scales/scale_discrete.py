@@ -93,8 +93,8 @@ class scale_discrete(scale):
 
         Parameters
         ----------
-        x: pd.series | np.array
-            a column of data to train over
+        x: pd.Series | np.array
+            A column of data to train over
         drop : bool
             Whether to drop(not include) unused categories
 
@@ -114,7 +114,8 @@ class scale_discrete(scale):
         """
         if limits is None:
             limits = self.limits
-        return expand_range_distinct(self.limits, expand)
+
+        return expand_range_distinct((0, len(limits)), expand)
 
     def expand_limits(
         self,

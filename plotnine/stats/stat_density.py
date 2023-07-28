@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from warnings import warn
 
@@ -8,6 +11,9 @@ from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.evaluation import after_stat
 from .stat import stat
+
+if typing.TYPE_CHECKING:
+    from plotnine.typing import FloatArrayLike
 
 
 # NOTE: Parameter discriptions are in
@@ -159,6 +165,8 @@ def compute_density(x, weight, range, **params):
     kernel = params["kernel"]
     n = len(x)
 
+    assert isinstance(bw, (str, float))  # type narrowing
+
     if n == 0 or (n == 1 and isinstance(bw, str)):
         if n == 1:
             warn(
@@ -193,7 +201,7 @@ def compute_density(x, weight, range, **params):
     kde = sm.nonparametric.KDEUnivariate(x)
     kde.fit(
         kernel=kernel,
-        bw=bw,
+        bw=bw,  # type: ignore
         fft=fft,
         weights=weight,
         adjust=params["adjust"],
@@ -237,7 +245,7 @@ def compute_density(x, weight, range, **params):
     )
 
 
-def nrd0(x):
+def nrd0(x: FloatArrayLike) -> float:
     """
     Port of R stats::bw.nrd0
 
@@ -263,8 +271,8 @@ def nrd0(x):
         )
 
     std: float = np.std(x, ddof=1)  # pyright: ignore
-    std_estimate: float = iqr(x) / 1.349
-    low_std = np.min((std, std_estimate))
+    std_estimate: float = iqr(x) / 1.349  # pyright: ignore
+    low_std = min(std, std_estimate)
     if low_std == 0:
         low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1
     return 0.9 * low_std * (n**-0.2)

@@ -49,7 +49,7 @@ class RangeContinuous(Range):
         Train continuous range
         """
         rng = None if self.is_empty() else self.range
-        self.range = scale_continuous.train(x, rng)  # pyright: ignore
+        self.range = scale_continuous.train(x, rng)
 
 
 class RangeDiscrete(Range):
@@ -64,6 +64,4 @@ class RangeDiscrete(Range):
         Train discrete range
         """
         rng = None if self.is_empty() else self.range
-        self.range = scale_discrete.train(
-            x, rng, drop, na_rm=na_rm
-        )  # pyright: ignore
+        self.range = scale_discrete.train(x, rng, drop, na_rm=na_rm)
