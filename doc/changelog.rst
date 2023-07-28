@@ -7,6 +7,11 @@ v0.13.0
 -------
 (not-released-yet)
 
+API Changes
+***********
+
+- Requires python >= 3.9
+
 Bug Fixes
 *********
 
