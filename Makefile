@@ -60,6 +60,9 @@ test: clean-test
 visualize-tests:
 	python tools/visualize_tests.py
 
+update-baseline-images:
+	python tools/update_baseline_images.py
+
 coverage:
 	coverage report -m
 	coverage html
