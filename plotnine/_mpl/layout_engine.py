@@ -4,13 +4,13 @@ import typing
 from dataclasses import asdict, dataclass
 
 from matplotlib.layout_engine import LayoutEngine
+from matplotlib.text import Text
 
 if typing.TYPE_CHECKING:
     from typing import Optional
 
     from matplotlib.backend_bases import RendererBase
     from matplotlib.offsetbox import AnchoredOffsetbox
-    from matplotlib.text import Text
 
     from plotnine.typing import (
         Any,
@@ -84,12 +84,21 @@ class PlotnineLayoutEngine(LayoutEngine):
         Put together objects required to do the layout
         """
         _property = self.plot.theme.themeables.property
+        is_blank = self.plot.theme.themeables.is_blank
+        get_target = self._theme_targets.get
 
         def get(th: str) -> Any:
             """
             Return themeable target or None
             """
-            return self._theme_targets.get(th, None)
+            if is_blank(th):
+                return None
+            else:
+                t = get_target(th, None)
+                if isinstance(t, Text):
+                    if not t._text:
+                        return None
+                return t
 
         legend_position = _property("legend_position")
         if legend_position in ("none", "None"):

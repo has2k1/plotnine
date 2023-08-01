@@ -464,6 +464,7 @@ class ggplot:
         """
         figure = self.figure
         theme = self.theme
+        _targets = theme._targets
 
         title = self.labels.get("title", "")
         caption = self.labels.get("caption", "")
@@ -482,11 +483,11 @@ class ggplot:
         text_x = figure.text(0, 0, labels.x)
         text_y = figure.text(0, 0, labels.y)
 
-        theme._targets["plot_title"] = text_title
-        theme._targets["plot_caption"] = text_caption
-        theme._targets["plot_subtitle"] = text_subtitle
-        theme._targets["axis_title_x"] = text_x
-        theme._targets["axis_title_y"] = text_y
+        _targets["plot_title"] = text_title
+        _targets["plot_caption"] = text_caption
+        _targets["plot_subtitle"] = text_subtitle
+        _targets["axis_title_x"] = text_x
+        _targets["axis_title_y"] = text_y
 
     def _draw_watermarks(self):
         """

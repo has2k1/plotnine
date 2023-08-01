@@ -128,6 +128,8 @@ class theme:
         axis_ticks_major_y=None,
         axis_ticks_major=None,
         axis_ticks_minor=None,
+        axis_ticks_x=None,
+        axis_ticks_y=None,
         axis_ticks=None,
         panel_grid_major_x=None,
         panel_grid_major_y=None,
