@@ -1002,6 +1002,26 @@ class axis_ticks_minor(axis_ticks_minor_x, axis_ticks_minor_y):
     """
 
 
+class axis_ticks_x(axis_ticks_major_x, axis_ticks_minor_x):
+    """
+    x major and minor axis tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_y(axis_ticks_major_y, axis_ticks_minor_y):
+    """
+    y major and minor axis tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
 class axis_ticks(axis_ticks_major, axis_ticks_minor):
     """
     x & y major and minor axis tick lines
