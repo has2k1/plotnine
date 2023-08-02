@@ -9,6 +9,7 @@ from plotnine import (
     element_text,
     facet_grid,
     facet_wrap,
+    geom_blank,
     geom_point,
     ggplot,
     labs,
@@ -131,6 +132,22 @@ def test_element_line_solid_capstyle():
     )
     # no exception
     p._build()
+
+
+def test_axis_ticks_and_length():
+    # https://github.com/has2k1/plotnine/issues/703
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_blank()
+        + theme_minimal()
+        + theme(
+            plot_margin=0.04,
+            axis_ticks_major_x=element_line(color="green", size=5),
+            axis_ticks_major_y=element_line(color="blue", size=5),
+            axis_ticks_length_major=9,
+        )
+    )
+    assert p == "axis_ticks_and_length"
 
 
 class TestThemes:
