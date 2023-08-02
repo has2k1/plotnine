@@ -20,6 +20,8 @@ Bug Fixes
   minor breaks are supplied in user space and not transform space. Just
   like the major breaks. (:issue:`685`)
 
+- Fix theming of axis_ticks with the size parameter. (:issue:`703`)
+
 Enhancements
 ************
 

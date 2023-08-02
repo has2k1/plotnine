@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import typing
 from contextlib import suppress
-from copy import deepcopy
 from typing import Dict
 from warnings import warn
 
@@ -888,14 +887,24 @@ class axis_ticks_minor_x(themeable):
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
 
-        d = deepcopy(self.properties)
+        # We have to use both
+        #    1. Tick.tick1line.set()
+        #    2. Axis.set_tick_params()
+        # We split the properties so that set_tick_params keeps
+        # record of the properties it cares about so that it does
+        # not undo them. GH703
+        properties = self.properties.copy()
+        tick_params = {}
         with suppress(KeyError):
-            d["markeredgewidth"] = d.pop("linewidth")
+            tick_params["width"] = properties.pop("linewidth")
         with suppress(KeyError):
-            d["markeredgecolor"] = d.pop("color")
+            tick_params["color"] = properties.pop("color")
 
         for tick in ax.xaxis.get_minor_ticks():
-            tick.tick1line.set(**d)
+            tick.tick1line.set(**properties)
+
+        if tick_params:
+            ax.xaxis.set_tick_params(which="minor", **tick_params)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -914,14 +923,18 @@ class axis_ticks_minor_y(themeable):
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
 
-        d = deepcopy(self.properties)
+        properties = self.properties.copy()
+        tick_params = {}
         with suppress(KeyError):
-            d["markeredgewidth"] = d.pop("linewidth")
+            tick_params["width"] = properties.pop("linewidth")
         with suppress(KeyError):
-            d["markeredgecolor"] = d.pop("color")
+            tick_params["color"] = properties.pop("color")
 
         for tick in ax.yaxis.get_minor_ticks():
-            tick.tick1line.set(**d)
+            tick.tick1line.set(**properties)
+
+        if tick_params:
+            ax.xaxis.set_tick_params(which="minor", **tick_params)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -940,15 +953,18 @@ class axis_ticks_major_x(themeable):
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
 
-        d = deepcopy(self.properties)
-        del d["visible"]
+        properties = self.properties.copy()
+        tick_params = {}
         with suppress(KeyError):
-            d["markeredgewidth"] = d.pop("linewidth")
+            tick_params["width"] = properties.pop("linewidth")
         with suppress(KeyError):
-            d["markeredgecolor"] = d.pop("color")
+            tick_params["color"] = properties.pop("color")
 
         for tick in ax.xaxis.get_major_ticks():
-            tick.tick1line.set(**d)
+            tick.tick1line.set(**properties)
+
+        if tick_params:
+            ax.xaxis.set_tick_params(which="major", **tick_params)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -967,15 +983,18 @@ class axis_ticks_major_y(themeable):
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
 
-        d = deepcopy(self.properties)
-        del d["visible"]
+        properties = self.properties.copy()
+        tick_params = {}
         with suppress(KeyError):
-            d["markeredgewidth"] = d.pop("linewidth")
+            tick_params["width"] = properties.pop("linewidth")
         with suppress(KeyError):
-            d["markeredgecolor"] = d.pop("color")
+            tick_params["color"] = properties.pop("color")
 
         for tick in ax.yaxis.get_major_ticks():
-            tick.tick1line.set(**d)
+            tick.tick1line.set(**properties)
+
+        if tick_params:
+            ax.yaxis.set_tick_params(which="major", **tick_params)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1256,7 +1275,7 @@ class panel_background(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        d = deepcopy(self.properties)
+        d = self.properties.copy()
         if "facecolor" in d and "alpha" in d:
             d["facecolor"] = to_rgba(d["facecolor"], d["alpha"])
             del d["alpha"]
@@ -1278,7 +1297,7 @@ class panel_border(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        d = deepcopy(self.properties)
+        d = self.properties.copy()
         # Be lenient, if using element_line
         with suppress(KeyError):
             d["edgecolor"] = d.pop("color")
@@ -1420,8 +1439,12 @@ class axis_ticks_length_minor(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        ax.xaxis.set_tick_params(which="minor", size=self.properties["value"])
-        ax.yaxis.set_tick_params(which="minor", size=self.properties["value"])
+        ax.xaxis.set_tick_params(
+            which="minor", length=self.properties["value"]
+        )
+        ax.yaxis.set_tick_params(
+            which="minor", length=self.properties["value"]
+        )
 
 
 class axis_ticks_length(axis_ticks_length_major, axis_ticks_length_minor):
