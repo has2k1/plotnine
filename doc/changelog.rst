@@ -14,6 +14,11 @@ API Changes
 
 New
 ***
+
+- Added symmetric logarithm transformation scales
+  :class:`~plotnine.scales.scale_x_symlog` and
+  :class:`~plotnine.scales.scale_x_symlog`
+
 - Gained themeables
 
   - :meth:`~plotnine.themes.themeable.plot_margin_left`

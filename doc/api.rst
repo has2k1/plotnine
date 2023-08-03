@@ -355,6 +355,7 @@ Position scales
    scale_x_log10
    scale_x_reverse
    scale_x_sqrt
+   scale_x_symlog
    scale_x_timedelta
    scale_y_continuous
    scale_y_date
@@ -363,6 +364,7 @@ Position scales
    scale_y_log10
    scale_y_reverse
    scale_y_sqrt
+   scale_y_symlog
    scale_y_timedelta
 
 
