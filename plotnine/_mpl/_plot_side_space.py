@@ -31,12 +31,7 @@ if typing.TYPE_CHECKING:
         TypeAlias,
     )
 
-    from plotnine.typing import (
-        Artist,
-        Axes,
-        XTick,
-        YTick,
-    )
+    from plotnine.typing import Artist, Axes, Text, XTick, YTick
 
     from .layout_engine import LayoutPack
 
@@ -127,13 +122,14 @@ class left_spaces(_side_spaces):
     legend_box_spacing: float = 0
     axis_title_y: float = 0
     axis_title_y_margin_right: float = 0
-    axis_y: float = 0
+    axis_ylabels: float = 0
+    axis_yticks: float = 0
 
     def _calculate(self):
         _property = self.pack.theme.themeables.property
         pack = self.pack
 
-        self.plot_margin = _property("plot_margin")
+        self.plot_margin = _property("plot_margin_left")
         if pack.legend and pack.legend_position == "left":
             self.legend += bbox_in_figure_space(
                 pack.legend, pack.figure, pack.renderer
@@ -148,9 +144,8 @@ class left_spaces(_side_spaces):
                 pack.axis_title_y, pack.figure, pack.renderer
             ).width
 
-        # Account for the space consumed by the axis even if it comes
-        # after the axis text
-        self.axis_y = max_yaxis_width(pack, "first_col")
+        self.axis_ylabels = max_ylabels_width(pack, "first_col")
+        self.axis_yticks = max_yticks_width(pack, "first_col")
 
     def edge(self, item: str) -> float:
         """
@@ -176,7 +171,7 @@ class right_spaces(_side_spaces):
         pack = self.pack
         _property = self.pack.theme.themeables.property
 
-        self.plot_margin = _property("plot_margin")
+        self.plot_margin = _property("plot_margin_right")
         if pack.legend and pack.legend_position == "right":
             self.legend = bbox_in_figure_space(
                 pack.legend, pack.figure, pack.renderer
@@ -216,7 +211,7 @@ class top_spaces(_side_spaces):
         W, H = _property("figure_size")
         F = W / H
 
-        self.plot_margin = _property("plot_margin")
+        self.plot_margin = _property("plot_margin_top")
         if pack.plot_title:
             self.plot_title = bbox_in_figure_space(
                 pack.plot_title, pack.figure, pack.renderer
@@ -264,7 +259,8 @@ class bottom_spaces(_side_spaces):
     legend_box_spacing: float = 0
     axis_title_x: float = 0
     axis_title_x_margin_top: float = 0
-    axis_ticks_x: float = 0
+    axis_xlabels: float = 0
+    axis_xticks: float = 0
 
     def edge(self, item: str) -> float:
         """
@@ -278,7 +274,7 @@ class bottom_spaces(_side_spaces):
         W, H = _property("figure_size")
         F = W / H
 
-        self.plot_margin = _property("plot_margin") * F
+        self.plot_margin = _property("plot_margin_bottom") * F
 
         if pack.plot_caption:
             self.plot_caption = bbox_in_figure_space(
@@ -303,7 +299,8 @@ class bottom_spaces(_side_spaces):
             )
 
         # Account for the space consumed by the axis
-        self.axis_ticks_x = max_xaxis_height(pack, "last_row")
+        self.axis_xticks = max_xticks_height(pack, "last_row")
+        self.axis_xlabels = max_xlabels_height(pack, "last_row")
 
 
 class LRTBSpaces:
@@ -431,9 +428,11 @@ def _calculate_panel_spacing_facet_wrap(
 
     if isinstance(pack.facet, facet_wrap):
         if pack.facet.free["x"]:
-            sh += max_xaxis_height(pack)
+            sh += max_xlabels_height(pack)
+            sh += max_xticks_height(pack)
         if pack.facet.free["y"]:
-            sw += max_yaxis_width(pack)
+            sw += max_ylabels_width(pack)
+            sw += max_yticks_width(pack)
 
     # width and height of axes as fraction of figure width & heigt
     w = ((spaces.right - spaces.left) - sw * (ncol - 1)) / ncol
@@ -543,7 +542,7 @@ def max_height(pack: LayoutPack, artists: Sequence[Artist]) -> float:
     return max(heights) if len(heights) else 0
 
 
-def get_xticks(pack: LayoutPack, ax: Axes) -> Iterator[XTick]:
+def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[XTick]:
     """
     Return all XTicks that will be shown
     """
@@ -559,7 +558,7 @@ def get_xticks(pack: LayoutPack, ax: Axes) -> Iterator[XTick]:
     return chain(major, minor)
 
 
-def get_yticks(pack: LayoutPack, ax: Axes) -> Iterator[YTick]:
+def get_yaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[YTick]:
     """
     Return all YTicks that will be shown
     """
@@ -575,47 +574,101 @@ def get_yticks(pack: LayoutPack, ax: Axes) -> Iterator[YTick]:
     return chain(major, minor)
 
 
-def max_xaxis_height(
+def get_xaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
+    """
+    Return all x-axis labels that will be shown
+    """
+    is_blank = pack.theme.themeables.is_blank
+    major, minor = [], []
+
+    if not is_blank("axis_x_text"):
+        major = ax.xaxis.get_major_ticks()
+
+    if not is_blank("axis_x_text"):
+        minor = ax.xaxis.get_minor_ticks()
+
+    return (tick.label1 for tick in chain(major, minor))
+
+
+def get_yaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
+    """
+    Return all y-axis labels that will be shown
+    """
+    is_blank = pack.theme.themeables.is_blank
+    major, minor = [], []
+
+    if not is_blank("axis_y_text"):
+        major = ax.yaxis.get_major_ticks()
+
+    if not is_blank("axis_y_text"):
+        minor = ax.yaxis.get_minor_ticks()
+
+    return (tick.label1 for tick in chain(major, minor))
+
+
+def max_xticks_height(
     pack: LayoutPack,
     axes_loc: AxesLocation = "all",
 ) -> float:
     """
-    Return maximum height[inches] of an xaxis
+    Return maximum height[inches] of x ticks
     """
     H = pack.figure.get_figheight()
-    # Note: Using the bbox of for axis ignores the ticklines
     heights = [
         tight_bbox_in_figure_space(
             tick.tick1line, pack.figure, pack.renderer
         ).height
         + tick.get_pad() / (72 * H)
-        + tight_bbox_in_figure_space(
-            tick.label1, pack.figure, pack.renderer
-        ).height
         for ax in filter_axes(pack.axs, axes_loc)
-        for tick in get_xticks(pack, ax)
+        for tick in get_xaxis_ticks(pack, ax)
     ]
     return max(heights) if len(heights) else 0
 
 
-def max_yaxis_width(
+def max_xlabels_height(
     pack: LayoutPack,
     axes_loc: AxesLocation = "all",
 ) -> float:
     """
-    Return maximum width[inches] of an xaxis
+    Return maximum height[inches] of x tick labels
+    """
+    heights = [
+        tight_bbox_in_figure_space(label, pack.figure, pack.renderer).height
+        for ax in filter_axes(pack.axs, axes_loc)
+        for label in get_xaxis_labels(pack, ax)
+    ]
+    return max(heights) if len(heights) else 0
+
+
+def max_yticks_width(
+    pack: LayoutPack,
+    axes_loc: AxesLocation = "all",
+) -> float:
+    """
+    Return maximum width[inches] of a y ticks
     """
     W = pack.figure.get_figwidth()
-    # Note: Using the bbox of for axis ignores the ticklines
     widths = [
         tight_bbox_in_figure_space(
             tick.tick1line, pack.figure, pack.renderer
         ).width
         + tick.get_pad() / (72 * W)
-        + tight_bbox_in_figure_space(
-            tick.label1, pack.figure, pack.renderer
-        ).width
         for ax in filter_axes(pack.axs, axes_loc)
-        for tick in get_yticks(pack, ax)
+        for tick in get_yaxis_ticks(pack, ax)
+    ]
+    return max(widths) if len(widths) else 0
+
+
+def max_ylabels_width(
+    pack: LayoutPack,
+    axes_loc: AxesLocation = "all",
+) -> float:
+    """
+    Return maximum width[inches] of a y tick labels
+    """
+    widths = [
+        tight_bbox_in_figure_space(label, pack.figure, pack.renderer).width
+        for ax in filter_axes(pack.axs, axes_loc)
+        for label in get_yaxis_labels(pack, ax)
     ]
     return max(widths) if len(widths) else 0
