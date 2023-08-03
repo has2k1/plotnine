@@ -426,3 +426,29 @@ class scale_y_reverse(scale_y_continuous):
     """
 
     _trans = "reverse"
+
+
+@document
+class scale_x_symlog(scale_x_continuous):
+    """
+    Continuous x position symmetric logarithm transformed scale
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+
+    _trans = "symlog"
+
+
+@document
+class scale_y_symlog(scale_y_continuous):
+    """
+    Continuous y position symmetric logarithm transformed scale
+
+    Parameters
+    ----------
+    {superclass_parameters}
+    """
+
+    _trans = "symlog"

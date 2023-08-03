@@ -127,6 +127,7 @@ from .scale_xy import (
     scale_x_log10,
     scale_x_reverse,
     scale_x_sqrt,
+    scale_x_symlog,
     scale_x_timedelta,
     scale_y_continuous,
     scale_y_date,  # pyright: ignore
@@ -135,6 +136,7 @@ from .scale_xy import (
     scale_y_log10,
     scale_y_reverse,
     scale_y_sqrt,
+    scale_y_symlog,
     scale_y_timedelta,
 )
 
@@ -236,6 +238,7 @@ __all__ = (
     "scale_x_log10",
     "scale_x_reverse",
     "scale_x_sqrt",
+    "scale_x_symlog",
     "scale_x_timedelta",
     "scale_y_continuous",
     "scale_y_date",
@@ -244,6 +247,7 @@ __all__ = (
     "scale_y_log10",
     "scale_y_reverse",
     "scale_y_sqrt",
+    "scale_y_symlog",
     "scale_y_timedelta",
     # limits
     "xlim",
