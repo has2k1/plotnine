@@ -150,6 +150,16 @@ def test_axis_ticks_and_length():
     assert p == "axis_ticks_and_length"
 
 
+def test_no_ticks():
+    # Without ticks, there should not be padding
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_blank()
+        + theme(axis_ticks_x=element_blank())
+    )
+    assert p == "no_ticks"
+
+
 class TestThemes:
     g = (
         ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))

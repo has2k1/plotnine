@@ -476,7 +476,11 @@ Users should never create instances of *themeable*.
    axis_ticks_direction_x
    axis_ticks_direction_y
    axis_ticks_length
+   axis_ticks_length_major_x
+   axis_ticks_length_major_y
    axis_ticks_length_major
+   axis_ticks_length_minor_x
+   axis_ticks_length_minor_y
    axis_ticks_length_minor
    axis_ticks_major
    axis_ticks_major_x
@@ -485,7 +489,11 @@ Users should never create instances of *themeable*.
    axis_ticks_minor_x
    axis_ticks_minor_y
    axis_ticks_pad
+   axis_ticks_pad_major_x
+   axis_ticks_pad_major_y
    axis_ticks_pad_major
+   axis_ticks_pad_minor_x
+   axis_ticks_pad_minor_y
    axis_ticks_pad_minor
    axis_title
    axis_title_x
@@ -529,6 +537,10 @@ Users should never create instances of *themeable*.
    panel_spacing_x
    panel_spacing_y
    plot_background
+   plot_margin_left
+   plot_margin_right
+   plot_margin_top
+   plot_margin_bottom
    plot_margin
    plot_title
    rect
