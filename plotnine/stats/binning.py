@@ -37,7 +37,7 @@ def freedman_diaconis_bins(a):
     if h == 0:
         bins = np.ceil(np.sqrt(a.size))
     else:
-        bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)
+        bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)  # type: ignore
 
     return int(bins)
 

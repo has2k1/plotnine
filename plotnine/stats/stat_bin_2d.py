@@ -104,13 +104,13 @@ class stat_bin_2d(stat):
         xbins = pd.cut(
             x,
             bins=xbreaks,  # pyright: ignore
-            labels=False,  # pyright: ignore
+            labels=False,
             right=True,
         )
         ybins = pd.cut(
             y,
             bins=ybreaks,  # pyright: ignore
-            labels=False,  # pyright: ignore
+            labels=False,
             right=True,
         )
 

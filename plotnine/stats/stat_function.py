@@ -85,12 +85,11 @@ class stat_function(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        fun: Callable[..., FloatArrayLike] = params["fun"]  # pyright: ignore
+        old_fun: Callable[..., FloatArrayLike] = params["fun"]
         n = params["n"]
         args = params["args"]
         xlim = params["xlim"]
         range_x = xlim or scales.x.dimension((0, 0))
-        old_fun = fun
 
         if isinstance(args, (list, tuple)):
 
