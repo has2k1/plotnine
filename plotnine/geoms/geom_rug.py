@@ -16,7 +16,7 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord
+    from plotnine.typing import Axes, Coord, FloatArray
 
 
 @document
@@ -87,6 +87,10 @@ class geom_rug(geom):
         ymin, ymax = panel_params.y.range
         xheight = (xmax - xmin) * params["length"]
         yheight = (ymax - ymin) * params["length"]
+
+        # Please the type checker
+        x: FloatArray
+        y: FloatArray
 
         if has_x:
             if "b" in sides:

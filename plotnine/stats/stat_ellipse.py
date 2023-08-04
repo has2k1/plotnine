@@ -13,7 +13,7 @@ from .stat import stat
 if typing.TYPE_CHECKING:
     from typing import Any, Optional
 
-    from plotnine.typing import FloatArrayLike
+    from plotnine.typing import FloatArray, FloatArrayLike
 
 
 @document
@@ -67,7 +67,7 @@ class stat_ellipse(stat):
             warn("Too few points to calculate an ellipse", PlotnineWarning)
             return pd.DataFrame({"x": [], "y": []})
 
-        m = np.asarray(data[["x", "y"]])
+        m: FloatArray = np.asarray(data[["x", "y"]])
 
         # The stats used to create the ellipse
         if type_ == "t":

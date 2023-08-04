@@ -282,7 +282,7 @@ def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
     if bins is None:
         bins = 30
     if binwidth is None:
-        binwidth = np.ptp(rangee) / bins
+        binwidth = np.ptp(rangee) / bins  # type: ignore
 
     # Sort weight and x, by x
     order = np.argsort(x)
