@@ -220,6 +220,12 @@ class scale(metaclass=Registry):
         """
         raise NotImplementedError("Not Implemented")
 
+    def inverse_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Inverse transform dataframe
+        """
+        raise NotImplementedError("Not Implemented")
+
     def inverse(self, x):
         """
         Inverse transform array|series x

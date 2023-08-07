@@ -211,7 +211,7 @@ class aes(Dict[str, Any]):
         return kwargs
 
     @property
-    def _starting(self):
+    def _starting(self) -> dict[str, Any]:
         """
         Return the subset of aesthetics mapped from the layer data
 
@@ -228,7 +228,7 @@ class aes(Dict[str, Any]):
         return d
 
     @property
-    def _calculated(self):
+    def _calculated(self) -> dict[str, Any]:
         """
         Return only the aesthetics mapped to calculated statistics
 
@@ -243,7 +243,7 @@ class aes(Dict[str, Any]):
         return d
 
     @property
-    def _scaled(self):
+    def _scaled(self) -> dict[str, Any]:
         """
         Return only the aesthetics mapped to after scaling
 

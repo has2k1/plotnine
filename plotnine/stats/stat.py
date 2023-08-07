@@ -42,11 +42,6 @@ class stat(metaclass=Registry):
     NON_MISSING_AES = set()
     DEFAULT_PARAMS = {}
 
-    # Should the values produced by the statistic also
-    # be transformed in the second pass when recently
-    # added statistics are trained to the scales
-    retransform = True
-
     # Stats may modify existing columns or create extra
     # columns.
     #

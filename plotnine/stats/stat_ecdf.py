@@ -32,8 +32,8 @@ class stat_ecdf(stat):
 
     ::
 
-        'x'  # x in the data
-        'y'  # cumulative density corresponding to x
+        'x'     # x in the data
+        'ecdf'  # cumulative density corresponding to x
 
     """
 
@@ -44,8 +44,8 @@ class stat_ecdf(stat):
         "na_rm": False,
         "n": None,
     }
-    DEFAULT_AES = {"y": after_stat("y")}
-    CREATES = {"y"}
+    DEFAULT_AES = {"y": after_stat("ecdf")}
+    CREATES = {"ecdf"}
 
     @classmethod
     def compute_group(cls, data, scales, **params):
@@ -57,6 +57,6 @@ class stat_ecdf(stat):
         else:
             x = np.linspace(data["x"].min(), data["x"].max(), params["n"])
 
-        y = ECDF(data["x"])(x)
-        res = pd.DataFrame({"x": x, "y": y})
+        ecdf = ECDF(data["x"])(x)
+        res = pd.DataFrame({"x": x, "ecdf": ecdf})
         return res

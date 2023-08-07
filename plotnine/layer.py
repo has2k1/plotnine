@@ -288,25 +288,25 @@ class layer:
         """
         Mapping aesthetics to computed statistics
         """
-        data = self.data
-        if not len(data):
-            return
-
         # Mixin default stat aesthetic mappings
-        aesthetics = self.mapping.inherit(self.stat.DEFAULT_AES)
-        stat_data = evaluate(aesthetics._calculated, data, plot.environment)
+        calculated = self.mapping.inherit(self.stat.DEFAULT_AES)._calculated
 
-        if not len(stat_data):
+        if not len(self.data) or not calculated:
             return
 
-        # (see stat_spoke for one exception)
-        if self.stat.retransform:
-            stat_data = plot.scales.transform_df(stat_data)
+        # The statistics are calculated in transformed space, but
+        # we evaluate the mapping to them in data space.
+        # NOTE: If the inverse-retransform turn out to be slow
+        # we can try applying them to only the required columns.
+        data = plot.scales.inverse_df(self.data)
+        stat_data = evaluate(calculated, data, plot.environment)
 
-        # When there are duplicate columns, we use the computed
+        # If there are duplicate columns, we use the computed
         # ones in stat_data
         columns = data.columns.difference(stat_data.columns)
-        self.data = pd.concat([data[columns], stat_data], axis=1)
+        data = pd.concat([data[columns], stat_data], axis=1)
+
+        self.data = plot.scales.transform_df(data)
 
         # Add any new scales, if needed
         new = {ae: ae for ae in stat_data.columns}
