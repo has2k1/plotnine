@@ -44,6 +44,7 @@ tbody tr td img{{
 </style>
 </head><body>
 {failed}
+{new}
 {body}
 </body></html>
 """
@@ -60,101 +61,105 @@ failed_template = """<h2>Only Failed</h2><table>
 </table>
 """
 
+new_template = """<h2>New Tests</h2><table>
+<thead><td>name</td><td>actual</td><td>expected</td><td>diff</td></thead>
+{rows}
+</table>
+"""
+
 row_template = """
 <tr>
     <td>{0}{1}</td>
-    <td>{2}</td>
+    <td><a href="{2}"><img src="{2}"></a></td>
     <td><a href="{3}"><img src="{3}"></a></td>
     <td>{4}</td>
 </tr>
 """
 
 linked_image_template = '<a href="{0}"><img src="{0}"></a>'
+IMAGE_DIR = Path("tests/result_images").resolve()
+expected_suffix = "-expected"
+failed_suffix = "-failed-diff"
+
+
+def make_row(actual, expected, failed):
+    _actual = f'<a href="{actual}"><img src="{actual}">'
+    _expected = f'<a href="{expected}"><img src="{expected}">'
+    _failed = f"--"
+
+    if failed:
+        _failed = f'<a href="{failed}">diff</a>'
+        status = "failed"
+    elif not expected:
+        status = "new"
+        _expected = ""
+        _failed = ""
+    else:
+        status = "passed"
+
+    return f"""
+<tr>
+    <td>{actual.name}<br />({status})</td>
+    <td>{_actual}</td>
+    <td>{_expected}</td>
+    <td>{_failed}</td>
+</tr>
+"""
+
+
+def get_test_images():
+    subdirs = (name for name in IMAGE_DIR.iterdir() if name.is_dir())
+    for subdir in sorted(subdirs):
+        for file in subdir.iterdir():
+            cflag = (
+                file.is_dir()
+                or file.suffix != ".png"
+                or file.stem.endswith(failed_suffix)
+                or file.stem.endswith(expected_suffix)
+            )
+            if cflag:
+                continue
+
+            expected = file.with_stem(f"{file.stem}{expected_suffix}")
+            failed = file.with_stem(f"{file.stem}{failed_suffix}")
+            if not expected.exists():
+                expected = None
+            if not failed.exists():
+                failed = None
+
+            yield (subdir, file, expected, failed)
 
 
 def run(show_browser=True):
-    """
-    Build a website for visual comparison
-    """
-    # The path is from the project root
-    image_dir = Path("tests/result_images").resolve()
-    _subdirs = [name for name in image_dir.iterdir() if name.is_dir()]
-
     failed_rows = []
+    new_rows = []
     body_sections = []
-    for subdir in sorted(_subdirs):
-        if subdir == "test_compare_images":
-            # These are the images which test the image comparison functions.
-            continue
+    subdir_d = defaultdict(list)
 
-        # pictures = defaultdict(dict)
-        pictures = defaultdict(dict)
-        for file in subdir.iterdir():
-            if file.is_dir():
-                continue
+    for subdir, actual, expected, failed in get_test_images():
+        row = make_row(actual, expected, failed)
+        if failed:
+            failed_rows.append(row)
+        elif not expected:
+            new_rows.append(row)
+        else:
+            subdir_d[subdir].append(row)
 
-            fn = file.stem
-            fext = file.suffix
-            if fext != ".png":
-                continue
-
-            # Always use / for URLs.
-            if "-failed-diff" in fn:
-                pictures[fn[:-12]]["failed"] = file
-            elif "-expected" in fn:
-                pictures[fn[:-9]]["expected"] = file
-            else:
-                pictures[fn]["actual"] = file
-
-        subdir_rows = []
-        for name, test in sorted(pictures.items()):
-            expected_image = test.get("expected", "")
-            actual_image = test.get("actual", "")
-
-            if "failed" in test:
-                # A real failure in the image generation, resulting in
-                # different images.
-                status = "<br />(failed)"
-                failed = f"<a href='{test['failed']}'>diff</a>"
-                current = linked_image_template.format(actual_image)
-                failed_rows.append(
-                    row_template.format(
-                        name, "", current, expected_image, failed
-                    )
-                )
-            elif "actual" not in test:
-                # A failure in the test, resulting in no current image
-                status = "<br />(failed)"
-                failed = "--"
-                current = "(Failure in test, no image produced)"
-                failed_rows.append(
-                    row_template.format(
-                        name, "", current, expected_image, failed
-                    )
-                )
-            else:
-                status = "<br />(passed)"
-                failed = "--"
-                current = linked_image_template.format(actual_image)
-
-            subdir_rows.append(
-                row_template.format(
-                    name, status, current, expected_image, failed
-                )
-            )
-
+    for subdir, rows in subdir_d.items():
         body_sections.append(
-            subdir_template.format(subdir=subdir, rows="\n".join(subdir_rows))
+            subdir_template.format(subdir=subdir, rows="\n".join(rows))
         )
 
+    failed = ""
+    new = ""
     if failed_rows:
         failed = failed_template.format(rows="\n".join(failed_rows))
-    else:
-        failed = ""
+    if new_rows:
+        new = new_template.format(rows="\n".join(new_rows))
 
     body = "".join(body_sections)
-    html = html_template.format(failed=failed, body=body)
-    index = image_dir / "index.html"
+    html = html_template.format(failed=failed, new=new, body=body)
+    index = IMAGE_DIR / "index.html"
     with index.open("w") as f:
         f.write(html)
 
@@ -163,12 +168,12 @@ def run(show_browser=True):
         try:
             import webbrowser
 
-            webbrowser.open(index)
+            webbrowser.open(f"{index}")
         except Exception:
             show_message = True
 
     if show_message:
-        print(f"Open {index.resolve()} in a browser for a visual comparison.")
+        print(f"open {index.resolve()} in a browser for a visual comparison.")
 
 
 if __name__ == "__main__":
