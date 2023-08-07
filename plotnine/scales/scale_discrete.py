@@ -308,3 +308,10 @@ class scale_discrete(scale):
         """
         # Discrete scales do not do transformations
         return x
+
+    def inverse_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Inverse Transform dataframe
+        """
+        # Discrete scales do not do transformations
+        return df

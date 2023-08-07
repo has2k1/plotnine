@@ -11,6 +11,8 @@ API Changes
 ***********
 
 - Requires python >= 3.9
+- The name of the calculated aesthetic of
+  :class:`~plotnine.stats.stat_function` changed from `y` to `fx`.
 
 New
 ***

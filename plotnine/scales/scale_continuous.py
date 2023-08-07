@@ -223,6 +223,20 @@ class scale_continuous(scale):
         except TypeError:
             return [self.trans.transform(val) for val in x]  # pyright: ignore
 
+    def inverse_df(self, df):
+        """
+        Inverse Transform dataframe
+        """
+        if len(df) == 0:
+            return
+
+        aesthetics = set(self.aesthetics) & set(df.columns)
+        for ae in aesthetics:
+            with suppress(TypeError):
+                df[ae] = self.inverse(df[ae])
+
+        return df
+
     def inverse(self, x: TFloatArrayLike) -> TFloatArrayLike:
         """
         Inverse transform array|series x

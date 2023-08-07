@@ -251,7 +251,7 @@ def evaluate(
             raise PlotnineError(msg.format(ae))
 
     # Using `type` preserves the subclass of pd.DataFrame
-    index = data.index if len(data.index) else None
+    index = data.index if len(data.index) and evaled else None
     evaled = type(data)(data=evaled, index=index)
     return evaled
 

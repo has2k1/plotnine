@@ -46,8 +46,8 @@ class stat_function(stat):
 
     ::
 
-        'x'  # x points are which the function is evaluated
-        'y'  # Points evaluated at x
+        'x'   # x points at which the function is evaluated
+        'fx'  # points evaluated at each x
     """
 
     DEFAULT_PARAMS = {
@@ -60,8 +60,8 @@ class stat_function(stat):
         "xlim": None,
     }
 
-    DEFAULT_AES = {"y": after_stat("y")}
-    CREATES = {"y"}
+    DEFAULT_AES = {"y": after_stat("fx")}
+    CREATES = {"fx"}
 
     def __init__(self, mapping=None, data=None, **kwargs):
         if data is None:
@@ -119,9 +119,9 @@ class stat_function(stat):
 
         # We know these can handle array-likes
         if isinstance(old_fun, (np.ufunc, np.vectorize)):
-            y = fun(x)
+            fx = fun(x)
         else:
-            y = [fun(val) for val in x]
+            fx = [fun(val) for val in x]
 
-        new_data = pd.DataFrame({"x": x, "y": y})
+        new_data = pd.DataFrame({"x": x, "fx": fx})
         return new_data
