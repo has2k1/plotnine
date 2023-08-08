@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 import html
-from importlib.resources import files
+import typing
 from pathlib import Path
-from typing import Union
 
 from griffe import dataclasses as dc
-from griffe.docstrings import dataclasses as ds
 from numpydoc.docscrape import NumpyDocString
 from plum import dispatch
-from quartodoc import MdRenderer, layout
+from quartodoc import MdRenderer
 from quartodoc import ast as qast
+from quartodoc.layout import DocClass
 from quartodoc.renderers.base import convert_rst_link_to_md
 from tabulate import tabulate
 
@@ -39,11 +38,11 @@ class Renderer(MdRenderer):
         return table.replace("<table", '<table class="table" ')
 
     @dispatch
-    def render(self, el: layout.DocClass):
+    def render(self, el: DocClass):  # type: ignore
         return super().render(el)
 
     @dispatch
-    def render(self, el: Union[dc.Object, dc.Alias]):
+    def render(self, el: dc.Object | dc.Alias):  # type: ignore # noqa: F811
         rendered = super().render(el)
 
         converted = convert_rst_link_to_md(rendered)
@@ -57,10 +56,11 @@ class Renderer(MdRenderer):
         return converted
 
     @dispatch
-    def render(self, el: qast.DocstringSectionSeeAlso):
+    def render(self, el: qast.DocstringSectionSeeAlso):  # noqa: F811
         lines = el.value.split("\n")
 
-        # each entry in result has form: ([('func1', '<directive>), ...], <description>)
+        # each entry in result has form:
+        # ([('func1', '<directive>), ...], <description>)
         parsed = NumpyDocString("")._parse_see_also(lines)
 
         result = []
@@ -77,10 +77,22 @@ class Renderer(MdRenderer):
 
         return "* " + "\n* ".join(result)
 
-    def render_annotation(self, el: dc.Name | dc.Expression | None):
+    def render_annotation(
+        self, el: dc.Name | dc.Expression | None  # type: ignore
+    ):
         return super().render_annotation(el)
 
     @dispatch
     def summarize(self, el: dc.Object | dc.Alias):
         result = super().summarize(el)
         return html.escape(result)
+
+    @dispatch
+    def signature(self, el: dc.Object | dc.Alias):
+        # Informative geom and stat signatures are generated dynamically and
+        # are part of the docstring. quartoc has empty signatures because it
+        # (or griffe) cannot pickup those of the base class.
+        skip = el.name.startswith("geom_") or el.name.startswith("stat_")
+        if skip:
+            return ""
+        return super().signature(el)  # type: ignore
