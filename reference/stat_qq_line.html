@@ -129,7 +129,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -145,9 +144,9 @@ ul.task-list li input[type="checkbox"] {
 <p>Calculate line through quantile-quantile plot</p>
 <p><strong>Usage</strong></p>
 <pre><code>stat_qq_line(mapping=None, data=None, geom='qq_line', position='identity',
-             na_rm=False, fullrange=False, alpha_beta=(0.375, 0.375),
-             quantiles=None, dparams={}, distribution='norm', line_p=(0.25,
-             0.75), **kwargs)</code></pre>
+             na_rm=False, dparams={}, distribution='norm', alpha_beta=(0.375,
+             0.375), fullrange=False, quantiles=None, line_p=(0.25, 0.75),
+             **kwargs)</code></pre>
 <p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
@@ -213,31 +212,6 @@ The <strong>bold</strong> aesthetics are required.
 <ul>
 <li><code>scipy.stats.mstats.plotting_positions</code>: Uses <code>alpha_beta</code><br>to calculate the quantiles.</li>
 </ul>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_qq_line.CREATES">CREATES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_qq_line.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_qq_line.REQUIRED_AES">REQUIRED_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

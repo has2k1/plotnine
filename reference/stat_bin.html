@@ -128,7 +128,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#plotnine.stats.stat_bin" id="toc-plotnine.stats.stat_bin" class="nav-link active" data-scroll-target="#plotnine.stats.stat_bin">stat_bin</a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -144,8 +143,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Count cases in each interval</p>
 <p><strong>Usage</strong></p>
 <pre><code>stat_bin(mapping=None, data=None, geom='histogram', position='stack',
-         na_rm=False, bins=None, boundary=None, center=None, pad=False,
-         binwidth=None, breaks=None, closed='right', **kwargs)</code></pre>
+         na_rm=False, boundary=None, closed='right', binwidth=None,
+         center=None, pad=False, breaks=None, bins=None, **kwargs)</code></pre>
 <p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
@@ -231,35 +230,6 @@ The <strong>bold</strong> aesthetics are required.
      'ngroup'   # number of points in group</code></pre>
 <p>data : dataframe, optional The data to be displayed in this layer. If <code>None</code>, the data from from the :py:<code>ggplot()</code> call is used. If specified, it overrides the data from the :py:<code>ggplot()</code> call. geom : str or geom, optional (default: ~plotnine.geoms.geom_histogram) The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine. position : str or position, optional (default: ~plotnine.positions.position_stack) Position adjustment. If it is a string, it must be registered and known to Plotnine. na_rm : bool, optional (default: False) If <code>False</code>, removes missing values with a warning. If <code>True</code> silently removes missing values.</p>
 <p>binwidth : float, optional (default: None) The width of the bins. The default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data. bins : int, optional (default: None) Number of bins. Overridden by binwidth. If <code>None</code>, a number is computed using the freedman-diaconis method. breaks : array-like, optional (default: None) Bin boundaries. This supercedes the <code>binwidth</code>, <code>bins</code>, <code>center</code> and <code>boundary</code>. center : float, optional (default: None) The center of one of the bins. Note that if center is above or below the range of the data, things will be shifted by an appropriate number of widths. To center on integers, for example, use :py:<code>width=1</code> and :py:<code>center=0</code>, even if 0 i s outside the range of the data. At most one of center and boundary may be specified. boundary : float, optional (default: None) A boundary between two bins. As with center, things are shifted when boundary is outside the range of the data. For example, to center on integers, use :py:<code>width=1</code> and :py:<code>boundary=0.5</code>, even if 1 is outside the range of the data. At most one of center and boundary may be specified. closed : str, optional (default: right) Which edge of the bins is included, <em>left</em> or <em>right</em>. pad : bool, optional (default: False) If <code>True</code>, adds empty bins at either side of x. This ensures that frequency polygons touch 0.</p>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_bin.CREATES">CREATES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_bin.DEFAULT_AES">DEFAULT_AES</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_bin.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_bin.REQUIRED_AES">REQUIRED_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

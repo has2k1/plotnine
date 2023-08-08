@@ -129,7 +129,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -145,8 +144,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Compute Sina plot values</p>
 <p><strong>Usage</strong></p>
 <pre><code>stat_sina(mapping=None, data=None, geom='sina', position='dodge', na_rm=False,
-          bins=None, adjust=1, bin_limit=1, bw='nrd0', binwidth=None,
-          scale='area', method='density', maxwidth=None, random_state=None,
+          random_state=None, maxwidth=None, adjust=1, method='density',
+          binwidth=None, scale='area', bw='nrd0', bin_limit=1, bins=None,
           **kwargs)</code></pre>
 <p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
 <section id="parameters" class="level2">
@@ -228,35 +227,6 @@ The <strong>bold</strong> aesthetics are required.
 <ul>
 <li><a href="../reference/geom_sina.html#plotnine.geoms.geom_sina">plotnine.geoms.geom_sina</a></li>
 </ul>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_sina.CREATES">CREATES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_sina.DEFAULT_AES">DEFAULT_AES</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_sina.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_sina.REQUIRED_AES">REQUIRED_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

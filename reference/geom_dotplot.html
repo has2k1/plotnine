@@ -129,11 +129,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
-  <ul class="collapse">
-  <li><a href="#plotnine.geoms.geom_dotplot.draw_legend" id="toc-plotnine.geoms.geom_dotplot.draw_legend" class="nav-link" data-scroll-target="#plotnine.geoms.geom_dotplot.draw_legend">draw_legend</a></li>
-  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -150,7 +145,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Usage</strong></p>
 <pre><code>geom_dotplot(mapping=None, data=None, stat='bindot', position='identity',
              na_rm=False, inherit_aes=True, show_legend=None, raster=False,
-             stackdir='up', stackratio=1, stackgroups=False, dotsize=1,
+             stackgroups=False, stackdir='up', dotsize=1, stackratio=1,
              **kwargs)</code></pre>
 <p>Only the <code>data</code> and <code>mapping</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>stat</code>.</p>
 <section id="parameters" class="level2">
@@ -255,148 +250,8 @@ The <strong>bold</strong> aesthetics are required.
 <ul>
 <li><a href="../reference/stat_bindot.html#plotnine.stats.stat_bindot">plotnine.stats.stat_bindot</a></li>
 </ul>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_dotplot.DEFAULT_AES">DEFAULT_AES</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.geoms.geom_dotplot.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_dotplot.NON_MISSING_AES">NON_MISSING_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.geoms.geom_dotplot.REQUIRED_AES">REQUIRED_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_dotplot.draw_legend">draw_legend</a></td>
-<td>Draw a point in the box</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.geoms.geom_dotplot.draw_legend" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.geoms.geom_dotplot.draw_legend">draw_legend</h3>
-<p><code>geoms.geom_dotplot.draw_legend(data, da, lyr)</code></p>
-<p>Draw a point in the box</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-Series
-</td>
-<td>
-Data Row
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>da</code>
-</td>
-<td>
-DrawingArea
-</td>
-<td>
-Canvas
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>lyr</code>
-</td>
-<td>
-layer
-</td>
-<td>
-Layer
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-DrawingArea
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
 
 
-</section>
-</section>
 </section>
 </section>
 

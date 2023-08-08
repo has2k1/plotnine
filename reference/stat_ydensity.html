@@ -129,7 +129,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -145,8 +144,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Density estimate</p>
 <p><strong>Usage</strong></p>
 <pre><code>stat_ydensity(mapping=None, data=None, geom='violin', position='dodge',
-              na_rm=False, adjust=1, kernel='gaussian', bw='nrd0',
-              scale='area', n=1024, trim=True, **kwargs)</code></pre>
+              na_rm=False, kernel='gaussian', adjust=1, trim=True,
+              scale='area', n=1024, bw='nrd0', **kwargs)</code></pre>
 <p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
@@ -228,39 +227,6 @@ The <strong>bold</strong> aesthetics are required.
 <li><code>statsmodels.nonparametric.kde.KDEUnivariate</code></li>
 <li><code>statsmodels.nonparametric.kde.KDEUnivariate.fit</code></li>
 </ul>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_ydensity.CREATES">CREATES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_ydensity.DEFAULT_AES">DEFAULT_AES</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_ydensity.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.stats.stat_ydensity.NON_MISSING_AES">NON_MISSING_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat_ydensity.REQUIRED_AES">REQUIRED_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

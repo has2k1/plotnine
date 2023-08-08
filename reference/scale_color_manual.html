@@ -125,10 +125,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.scales.scale_manual.scale_color_manual" id="toc-plotnine.scales.scale_manual.scale_color_manual" class="nav-link active" data-scroll-target="#plotnine.scales.scale_manual.scale_color_manual">scale_color_manual</a>
+  <li><a href="#plotnine.scales.scale_color_manual" id="toc-plotnine.scales.scale_color_manual" class="nav-link active" data-scroll-target="#plotnine.scales.scale_color_manual">scale_color_manual</a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -138,9 +137,9 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="plotnine.scales.scale_manual.scale_color_manual" class="level1">
+<section id="plotnine.scales.scale_color_manual" class="level1">
 <h1>scale_color_manual</h1>
-<p><code>scales.scale_manual.scale_color_manual()</code></p>
+<p><code>scales.scale_color_manual()</code></p>
 <p>Custom discrete color scale</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
@@ -196,23 +195,6 @@ For example,
 
 If not specified, suitable defaults are chosen.</code></pre>
 <p>name : str, optional Name used as the label of the scale. This is what shows up as the axis label or legend title. Suitable defaults are chosen depending on the type of scale. labels : list or callable, optional List of <code>str</code>. Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings. palette : callable, optional Function to map data points onto the scale. Most scales define their own palettes. aesthetics : list, optional list of <code>str</code>. Aesthetics covered by the scale. These are defined by each scale and the user should probably not change them. Have fun. limits : array_like, optional Limits of the scale. For scales that deal with categoricals, these may be a subset or superset of the categories. Data values that are not in the limits will be treated as missing data and represented with the <code>na_value</code>. drop : bool Whether to drop unused categories from the scale na_translate : bool If <code>True</code> translate missing values and show them. If <code>False</code> remove missing values. Default value is <code>True</code> na_value : object If <code>na_translate=True</code>, what aesthetic value should be assigned to the missing values. This parameter does not apply to position scales where <code>nan</code> is always placed on the right.</p>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_manual.scale_color_manual.na_value">na_value</a></td>
-<td>str(object='') -&gt; str</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

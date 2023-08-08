@@ -166,11 +166,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
-  <ul class="collapse">
-  <li><a href="#plotnine.geoms.geom_boxplot.draw_legend" id="toc-plotnine.geoms.geom_boxplot.draw_legend" class="nav-link" data-scroll-target="#plotnine.geoms.geom_boxplot.draw_legend">draw_legend</a></li>
-  </ul></li>
   </ul></li>
   </ul>
 <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../plotnine-examples/plotnine_examples/examples/geom_boxplot-preview.html"><i class="bi bi-journal-code"></i>A box and whiskers plot</a></li></ul></div></nav>
@@ -187,9 +182,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Usage</strong></p>
 <pre><code>geom_boxplot(mapping=None, data=None, stat='boxplot', position='dodge2',
              na_rm=False, inherit_aes=True, show_legend=None, raster=False,
-             outlier_shape='o', notch=False, width=None, outlier_color=None,
-             notchwidth=0.5, fatten=2, outlier_size=1.5, outlier_alpha=1,
-             outlier_stroke=0.5, varwidth=False, **kwargs)</code></pre>
+             outlier_alpha=1, outlier_color=None, notch=False,
+             outlier_size=1.5, width=None, outlier_stroke=0.5, varwidth=False,
+             fatten=2, notchwidth=0.5, outlier_shape='o', **kwargs)</code></pre>
 <p>Only the <code>data</code> and <code>mapping</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>stat</code>.</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
@@ -480,144 +475,8 @@ The <strong>bold</strong> aesthetics are required.
 </div>
 </section>
 <a class="quarto-notebook-link" id="nblink-1" href="../plotnine-examples/plotnine_examples/examples/geom_boxplot-preview.html#cell-0">Source: A box and whiskers plot</a></div>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_boxplot.DEFAULT_AES">DEFAULT_AES</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.geoms.geom_boxplot.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_boxplot.REQUIRED_AES">REQUIRED_AES</a></td>
-<td>set() -&gt; new empty set object</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_boxplot.draw_legend">draw_legend</a></td>
-<td>Draw a rectangle in the box</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.geoms.geom_boxplot.draw_legend" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.geoms.geom_boxplot.draw_legend">draw_legend</h3>
-<p><code>geoms.geom_boxplot.draw_legend(data, da, lyr)</code></p>
-<p>Draw a rectangle in the box</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-Series
-</td>
-<td>
-Data Row
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>da</code>
-</td>
-<td>
-DrawingArea
-</td>
-<td>
-Canvas
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>lyr</code>
-</td>
-<td>
-layer
-</td>
-<td>
-Layer
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-DrawingArea
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
 
 
-</section>
-</section>
 </section>
 </section>
 

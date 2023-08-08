@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – scale_continuous.scale_continuous</title>
+<title>Plotnine – scale_color_continuous</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -125,28 +125,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous" id="toc-plotnine.scales.scale_continuous.scale_continuous" class="nav-link active" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous">scale_continuous.scale_continuous</a>
+  <li><a href="#plotnine.scales.scale_color_continuous" id="toc-plotnine.scales.scale_color_continuous" class="nav-link active" data-scroll-target="#plotnine.scales.scale_color_continuous">scale_color_continuous</a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
-  <ul class="collapse">
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.default_expansion" id="toc-plotnine.scales.scale_continuous.scale_continuous.default_expansion" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.default_expansion">default_expansion</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.dimension" id="toc-plotnine.scales.scale_continuous.scale_continuous.dimension" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.dimension">dimension</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.expand_limits" id="toc-plotnine.scales.scale_continuous.scale_continuous.expand_limits" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.expand_limits">expand_limits</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.get_bounded_breaks" id="toc-plotnine.scales.scale_continuous.scale_continuous.get_bounded_breaks" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.get_bounded_breaks">get_bounded_breaks</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.get_breaks" id="toc-plotnine.scales.scale_continuous.scale_continuous.get_breaks" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.get_breaks">get_breaks</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.get_labels" id="toc-plotnine.scales.scale_continuous.scale_continuous.get_labels" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.get_labels">get_labels</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.get_minor_breaks" id="toc-plotnine.scales.scale_continuous.scale_continuous.get_minor_breaks" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.get_minor_breaks">get_minor_breaks</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.inverse" id="toc-plotnine.scales.scale_continuous.scale_continuous.inverse" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.inverse">inverse</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.inverse_df" id="toc-plotnine.scales.scale_continuous.scale_continuous.inverse_df" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.inverse_df">inverse_df</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.palette" id="toc-plotnine.scales.scale_continuous.scale_continuous.palette" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.palette">palette</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.train" id="toc-plotnine.scales.scale_continuous.scale_continuous.train" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.train">train</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.transform" id="toc-plotnine.scales.scale_continuous.scale_continuous.transform" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.transform">transform</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.transform_df" id="toc-plotnine.scales.scale_continuous.scale_continuous.transform_df" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.transform_df">transform_df</a></li>
-  <li><a href="#plotnine.scales.scale_continuous.scale_continuous.view" id="toc-plotnine.scales.scale_continuous.scale_continuous.view" class="nav-link" data-scroll-target="#plotnine.scales.scale_continuous.scale_continuous.view">view</a></li>
-  </ul></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -156,10 +138,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="plotnine.scales.scale_continuous.scale_continuous" class="level1">
-<h1>scale_continuous.scale_continuous</h1>
-<p><code>scales.scale_continuous.scale_continuous(self, **kwargs)</code></p>
-<p>Base class for all continuous scales</p>
+<section id="plotnine.scales.scale_color_continuous" class="level1">
+<h1>scale_color_continuous</h1>
+<p><code>scales.scale_color_cmap(self, cmap_name='viridis', **kwargs)</code></p>
+<p>Create color scales using Matplotlib colormaps</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
 <table class="table">
@@ -180,6 +162,34 @@ Default
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<code>cmap_name</code>
+</td>
+<td>
+str
+</td>
+<td>
+A standard Matplotlib colormap name. The default is <code>viridis</code>. For the list of names checkout the output of <code>matplotlib.cm.cmap_d.keys()</code> or see the <code>documentation &lt;http://matplotlib.org/users/colormaps.html&gt;</code>_.
+</td>
+<td>
+<code>'viridis'</code>
+</td>
+</tr>
+<tr>
+<td>
+<code>lut</code>
+</td>
+<td>
+None | int
+</td>
+<td>
+This is the number of entries desired in the lookup table. Default is <code>None</code>, leave it up Matplotlib.
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
 <tr>
 <td>
 <code>breaks</code>
@@ -245,20 +255,6 @@ array_like
 </td>
 <td>
 Limits of the scale. Most commonly, these are the min &amp; max values for the scales. For scales that deal with categoricals, these may be a subset or superset of the categories.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>na_value</code>
-</td>
-<td>
-scalar
-</td>
-<td>
-What value to assign to missing values. Default is to assign <code>np.nan</code>.
 </td>
 <td>
 <em>required</em>
@@ -348,299 +344,15 @@ Function to rescale data points so that they can be handled by the palette. Defa
 <em>required</em>
 </td>
 </tr>
-</tbody>
-</table>
-</section>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes</h2>
-<p>If using the class directly all arguments must be keyword arguments.</p>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.breaks">breaks</a></td>
-<td>bool(x) -&gt; bool</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.is_linear">is_linear</a></td>
-<td>Return True if the scale is linear</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.minor_breaks">minor_breaks</a></td>
-<td>bool(x) -&gt; bool</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.oob">oob</a></td>
-<td>Convert any values outside of range to a <strong>NULL</strong> type object.</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.rescaler">rescaler</a></td>
-<td>Rescale numeric vector to have specified minimum and maximum.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.default_expansion">default_expansion</a></td>
-<td>Get the default expansion for continuous scale</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.dimension">dimension</a></td>
-<td>Get the phyical size of the scale</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.expand_limits">expand_limits</a></td>
-<td>Calculate the final range in coordinate space</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.get_bounded_breaks">get_bounded_breaks</a></td>
-<td>Return Breaks that are within limits</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.get_breaks">get_breaks</a></td>
-<td>Generate breaks for the axis or legend</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.get_labels">get_labels</a></td>
-<td>Generate labels for the axis or legend</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.get_minor_breaks">get_minor_breaks</a></td>
-<td>Return minor breaks</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.inverse">inverse</a></td>
-<td>Inverse transform array|series x</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.inverse_df">inverse_df</a></td>
-<td>Inverse Transform dataframe</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.palette">palette</a></td>
-<td>Aesthetic mapping function</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.train">train</a></td>
-<td>Train scale</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.transform">transform</a></td>
-<td>Transform array|series x</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.transform_df">transform_df</a></td>
-<td>Transform dataframe</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.scales.scale_continuous.scale_continuous.view">view</a></td>
-<td>Information about the trained scale</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.scales.scale_continuous.scale_continuous.default_expansion" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.default_expansion">default_expansion</h3>
-<p><code>scales.scale_continuous.scale_continuous.default_expansion(self, mult=0.05, add=0, expand=True)</code></p>
-<p>Get the default expansion for continuous scale</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.dimension" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.dimension">dimension</h3>
-<p><code>scales.scale_continuous.scale_continuous.dimension(self, expand=(0, 0, 0, 0), limits=None)</code></p>
-<p>Get the phyical size of the scale</p>
-<p>Unlike limits, this always returns a numeric vector of length 2</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.expand_limits" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.expand_limits">expand_limits</h3>
-<p><code>scales.scale_continuous.scale_continuous.expand_limits(self, limits, expand, coord_limits, trans)</code></p>
-<p>Calculate the final range in coordinate space</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.get_bounded_breaks" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.get_bounded_breaks">get_bounded_breaks</h3>
-<p><code>scales.scale_continuous.scale_continuous.get_bounded_breaks(self, limits=None)</code></p>
-<p>Return Breaks that are within limits</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.get_breaks" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.get_breaks">get_breaks</h3>
-<p><code>scales.scale_continuous.scale_continuous.get_breaks(self, limits=None)</code></p>
-<p>Generate breaks for the axis or legend</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td>
-<code>limits</code>
+<code>na_value</code>
 </td>
 <td>
-list - like | None
+str
 </td>
 <td>
-If None the self.limits are used They are expected to be in transformed space.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-array - like
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="notes-1" class="level4">
-<h4 class="anchored" data-anchor-id="notes-1">Notes</h4>
-<p>Breaks are calculated in data space and returned in transformed space since all data is plotted in transformed space.</p>
-</section>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.get_labels" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.get_labels">get_labels</h3>
-<p><code>scales.scale_continuous.scale_continuous.get_labels(self, breaks=None)</code></p>
-<p>Generate labels for the axis or legend</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>breaks</code>
-</td>
-<td>
-typing.Optional[plotnine.typing.ScaleContinuousBreaks]
-</td>
-<td>
-If None, use self.breaks.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.get_minor_breaks" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.get_minor_breaks">get_minor_breaks</h3>
-<p><code>scales.scale_continuous.scale_continuous.get_minor_breaks(self, major, limits=None)</code></p>
-<p>Return minor breaks</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.inverse" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.inverse">inverse</h3>
-<p><code>scales.scale_continuous.scale_continuous.inverse(self, x)</code></p>
-<p>Inverse transform array|series x</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.inverse_df" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.inverse_df">inverse_df</h3>
-<p><code>scales.scale_continuous.scale_continuous.inverse_df(self, df)</code></p>
-<p>Inverse Transform dataframe</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.palette" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.palette">palette</h3>
-<p><code>scales.scale_continuous.scale_continuous.palette(arr)</code></p>
-<p>Aesthetic mapping function</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.train" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.train">train</h3>
-<p><code>scales.scale_continuous.scale_continuous.train(self, x)</code></p>
-<p>Train scale</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>x</code>
-</td>
-<td>
-</td>
-<td>
-A column of data to train over
+Color of missing values. Default is <code>'None'</code>
 </td>
 <td>
 <em>required</em>
@@ -649,24 +361,14 @@ A column of data to train over
 </tbody>
 </table>
 </section>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.transform" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.transform">transform</h3>
-<p><code>scales.scale_continuous.scale_continuous.transform(self, x)</code></p>
-<p>Transform array|series x</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.transform_df" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.transform_df">transform_df</h3>
-<p><code>scales.scale_continuous.scale_continuous.transform_df(self, df)</code></p>
-<p>Transform dataframe</p>
-</section>
-<section id="plotnine.scales.scale_continuous.scale_continuous.view" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.scales.scale_continuous.scale_continuous.view">view</h3>
-<p><code>scales.scale_continuous.scale_continuous.view(self, limits=None, range=None)</code></p>
-<p>Information about the trained scale</p>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See Also</h2>
+<ul>
+<li><code>matplotlib.cm</code></li>
+<li><code>matplotlib.colors</code></li>
+</ul>
 
 
-</section>
 </section>
 </section>
 

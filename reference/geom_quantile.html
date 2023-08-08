@@ -128,7 +128,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#plotnine.geoms.geom_quantile" id="toc-plotnine.geoms.geom_quantile" class="nav-link active" data-scroll-target="#plotnine.geoms.geom_quantile">geom_quantile</a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -145,7 +144,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Usage</strong></p>
 <pre><code>geom_quantile(mapping=None, data=None, stat='quantile', position='identity',
               na_rm=False, inherit_aes=True, show_legend=None, raster=False,
-              linejoin='round', lineend='butt', **kwargs)</code></pre>
+              lineend='butt', linejoin='round', **kwargs)</code></pre>
 <p>Only the <code>data</code> and <code>mapping</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>stat</code>.</p>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
@@ -253,27 +252,6 @@ The <strong>bold</strong> aesthetics are required.
 </table>
 <p>data : dataframe, optional The data to be displayed in this layer. If <code>None</code>, the data from from the :py:<code>ggplot()</code> call is used. If specified, it overrides the data from the :py:<code>ggplot()</code> call. stat : str or stat, optional (default: ~plotnine.stats.stat_quantile) The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine. position : str or position, optional (default: ~plotnine.positions.position_identity) Position adjustment. If it is a string, it must be registered and known to Plotnine. na_rm : bool, optional (default: False) If <code>False</code>, removes missing values with a warning. If <code>True</code> silently removes missing values. inherit_aes : bool, optional (default: True) If <code>False</code>, overrides the default aesthetics. show_legend : bool or dict, optional (default: None) Whether this layer should be included in the legends. <code>None</code> the default, includes any aesthetics that are mapped. If a <code>bool</code>, <code>False</code> never includes and <code>True</code> always includes. A <code>dict</code> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g :py:<code>show_legend={'color': False}</code>, any other aesthetic are included by default. raster : bool, optional (default: False) If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.</p>
 <p>lineend : str (default: butt) Line end style, of of <em>butt</em>, <em>round</em> or <em>projecting.</em> This option is applied for solid linetypes. linejoin : str (default: round) Line join style, one of <em>round</em>, <em>miter</em> or <em>bevel</em>. This option is applied for solid linetypes.</p>
-</section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.geoms.geom_quantile.DEFAULT_AES">DEFAULT_AES</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.geoms.geom_quantile.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
-<td>dict() -&gt; new empty dictionary</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>
