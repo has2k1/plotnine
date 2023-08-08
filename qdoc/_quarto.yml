@@ -1,0 +1,276 @@
+project:
+  type: website
+  resources:
+    - objects.json
+  render:
+    - "reference/**.qmd"
+    - "*.qmd"
+    - "*.ipynb"
+    - "*.md"
+
+filters:
+  - interlinks
+
+interlinks:
+  sources: {}
+
+website:
+  title: Plotnine
+  navbar:
+    left:
+      - file: gallery/index.qmd
+      - file: reference/index.qmd
+        text: "Reference"
+      - file: tutorials/index.qmd
+      - file: about.qmd
+    right:
+      - icon: github
+        href: https://github.com/has2k1/plotnine
+
+format:
+  html:
+    toc: true
+    css: styles.css
+
+quartodoc:
+  style: pkgdown
+  dir: reference
+  package: plotnine
+  dynamic: true
+  renderer:
+    style: _renderer.py
+
+  sections:
+    - title: Plot creation
+      desc: ""
+      contents:
+        - ggplot
+        - qplot
+        - watermark
+        - layer
+        - name: PlotnineAnimation
+          package: plotnine.animation
+        - save_as_pdf_pages
+    - title: Mapping aesthetics
+      desc: |
+        Aesthetics are the visual properties of a plot. The following functions
+        control how the data (and calculations based on the data) is mapped to
+        the aesthetics.
+      package: plotnine.mapping
+      contents:
+        - name: aes
+          members: []
+        - after_stat
+        - after_scale
+        - stage
+    - title: geom
+      desc: |
+        Base class of all geoms
+      package: plotnine.geoms.geom
+      contents:
+        - geom
+    - title: geoms
+      desc: |
+        Geometric objects (geoms) are responsible for the visual representation
+        of data points.  geom_* classes determine the kind of geometric objects
+        and every plot must have at least one geom added to it. The distinct
+        visual aspects of the representation are controlled by the aes mapping.
+      package: plotnine.geoms
+      contents:
+        - geom_abline
+        - geom_area
+        - geom_bar
+        - geom_blank
+        - geom_boxplot
+        - geom_col
+        - geom_count
+        - geom_crossbar
+        - geom_density
+        - geom_density_2d
+        - geom_dotplot
+        - geom_errorbar
+        - geom_errorbarh
+        - geom_freqpoly
+        - geom_bin_2d
+        - geom_histogram
+        - geom_hline
+        - geom_jitter
+        - geom_label
+        - geom_line
+        - geom_linerange
+        - geom_map
+        - geom_path
+        - geom_point
+        - geom_pointdensity
+        - geom_pointrange
+        - geom_polygon
+        - geom_quantile
+        - geom_qq
+        - geom_qq_line
+        - geom_raster
+        - geom_rect
+        - geom_ribbon
+        - geom_rug
+        - geom_segment
+        - geom_sina
+        - geom_smooth
+        - geom_spoke
+        - geom_step
+        - geom_text
+        - geom_tile
+        - geom_violin
+        - geom_vline
+    - title: related to geoms
+      desc: ""
+      package: plotnine.geoms
+      contents:
+        - annotate
+        - annotation_logticks
+        - annotation_stripes
+        # TODO: where is this?
+        #- geom_path.arrow
+    - title: Labels
+      desc: ""
+      package: plotnine.labels
+      contents:
+        - labs
+        - xlab
+        - ylab
+        - ggtitle
+    - title: stats
+      desc: |
+        Statistical transformations (stats) do aggregations and other computations
+        on data before it is drawn out. `stat_*` determine the type of computation done
+        on the data. Different types of computations yield varied results, so a `stat`
+        must be paired with a `geom` that can represent all or some of the computations.
+      package: plotnine.stats
+
+      contents:
+        # note it is this in plotnine docs: ~stat.stat
+        # template: members-example.rst
+        - stat
+        # template: main.rst
+        - stat_bin
+        - stat_bin_2d
+        - stat_bindot
+        - stat_boxplot
+        - stat_count
+        - stat_density
+        - stat_density_2d
+        - stat_ecdf
+        - stat_ellipse
+        - stat_function
+        - stat_hull
+        - stat_identity
+        - stat_qq
+        - stat_qq_line
+        - stat_quantile
+        - stat_sina
+        - stat_smooth
+        - stat_sum
+        - stat_summary
+        - stat_summary_bin
+        - stat_unique
+        - stat_ydensity
+
+    - title: facets
+      desc: |
+        Faceting is a way to subset data and plot it on different panels.
+      package: plotnine.facets
+      contents:
+        # note it is this in plotnine docs: ~stat.stat
+        # template: members-example.rst
+        - facet
+        # template: main.rst
+        - facet_grid
+        - facet_null
+        - facet_wrap
+        # these had a ~ in front of them
+        - labelling.labeller
+        - labelling.as_labeller
+        - labelling.label_value
+        - labelling.label_both
+        - labelling.label_context
+    - title: scales
+      desc: |
+        Scales control the mapping from data to aesthetics. They take data and
+        adjust it to fit the different aspects of the visual sense i.e. length,
+        colour, size and shape.
+      package: plotnine.scales
+      contents:
+        # these had a ~ in front of them
+        # template: members-example.rst
+        - scale.scale
+        - scale.scale_discrete
+        - scale.scale_continuous
+        - scale.scale_datetime
+    - title: Alpha scales
+      desc: ""
+      package: plotnine.scales.scale_alpha
+      contents:
+        - scale_alpha
+        - scale_alpha_discrete
+        # TODO: can't load. is this an alias of scale_alpha or something?
+        #- scale_alpha_continuous
+        - scale_alpha_datetime
+    - title: Identity scales
+      desc: ""
+      package: plotnine.scales.scale_identity
+      contents:
+        - scale_alpha_identity
+        - scale_color_identity
+        # TODO: can't load
+        # - scale_colour_identity
+        - scale_fill_identity
+        - scale_linetype_identity
+        - scale_shape_identity
+        - scale_size_identity
+    - title: Color and fill scales
+      desc: ""
+      package: plotnine.scales.scale_color
+      contents:
+        - scale_color_brewer
+        # TODO: this is an alias for the cmap below
+        #- scale_color_continuous
+        - scale_color_cmap
+        #
+        - scale_color_desaturate
+        - scale_color_datetime
+        # TODO:
+        #- scale_color_discrete
+        - scale_color_distiller
+        - scale_color_gradient
+        - scale_color_gradient2
+        - scale_color_gradientn
+        # TODO: alias for grey
+        #- scale_color_gray
+        - scale_color_grey
+        - scale_color_hue
+        - scale_fill_brewer
+        - scale_fill_cmap
+        # TODO: alias for cmap
+        #- scale_fill_continuous
+        - scale_fill_datetime
+        - scale_fill_desaturate
+        # TODO:
+        #- scale_fill_discrete
+        - scale_fill_distiller
+        - scale_fill_gradient
+        - scale_fill_gradient2
+        - scale_fill_gradientn
+        # TODO: alias for grey
+        #- scale_fill_gray
+        - scale_fill_grey
+        - scale_fill_hue
+    - title: Manual scales
+      desc: ""
+      package: plotnine.scales.scale_manual
+      contents:
+        - scale_alpha_manual
+        - scale_color_manual
+        # TODO: can't load
+        # - scale_colour_manual
+        - scale_fill_manual
+        - scale_linetype_manual
+        - scale_shape_manual
+        - scale_size_manual

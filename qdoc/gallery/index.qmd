@@ -1,0 +1,129 @@
+---
+format:
+  html:
+    toc: false
+title: Gallery
+jupyter: python3
+---
+
+```{python}
+#| include: false
+import nbformat
+import io
+import base64
+from PIL import Image
+from pathlib import Path
+
+
+THUMBNAIL_SIZE = (294, 210)
+
+p_examples = Path("../plotnine-examples/plotnine_examples/examples")
+
+# note that plotnine site uses essentially /_images
+p_thumbnails = Path("thumbnails")
+
+gallery_notebooks = {
+    "PlotnineAnimation": p_examples / "PlotnineAnimation.ipynb",
+    "geom_col": p_examples / "geom_col.ipynb",
+    "geom_density": p_examples / "geom_density.ipynb",
+    "geom_map": p_examples / "geom_map.ipynb",
+    "geom_segment": p_examples / "geom_segment.ipynb",
+    "geom_smooth": p_examples / "geom_smooth.ipynb",
+    "geom_tile": p_examples / "geom_tile.ipynb",
+    "geom_violin": p_examples / "geom_violin.ipynb",
+    "scale_x_continuous": p_examples / "scale_x_continuous.ipynb",
+}
+
+
+def extract_image(fname):
+    cell_plots = []
+    nb = nbformat.read(open(fname), as_version=4)
+    for ii, cell in enumerate(nb["cells"]):
+        if "Gallery Plot" in cell.source:
+            out_plots = [x for x in cell.outputs if x.output_type == "display_data"]
+            if not out_plots:
+                raise Exception()
+
+            title = find_first_title(reversed(nb["cells"][:ii])) or ""
+            # currently, I think the gallery only gets the first plot
+            cell_plots.append((title, out_plots[0]))
+    
+    if cell_plots:
+        return cell_plots
+    
+    raise Exception("No image found")
+
+
+def find_first_title(cells):
+    md_cells = list(filter(lambda c: c["cell_type"] == "markdown", cells))
+    for cell in md_cells:
+        for line in cell["source"].splitlines():
+            if line.startswith("### "):
+                return line.replace("### ", "")
+
+
+def create_thumbnail(output, dst_thumb: str, thumbnail_size: tuple[int, int]):
+    img_str = output["data"]["image/png"]
+    # meta = output["metadata"]["image/png"]
+
+    file = io.BytesIO(base64.decodebytes(img_str.encode()))
+    img = Image.open(file)
+
+    # taken from https://github.com/has2k1/plotnine/blob/main/doc/sphinxext/examples_and_gallery.py#L68
+    # thumbnail_size = (294, 210)
+    thumb_size = thumbnail_size[0] * 2, thumbnail_size[1] * 2
+
+    # I'm not sure if this just 
+    img.thumbnail(thumb_size)
+
+    p_dst = Path(f"{dst_thumb}.png")
+    p_dst.parent.mkdir(exist_ok=True, parents=True)
+
+    img.save(str(p_dst))
+
+    return str(p_dst)
+
+def gallery(entries):
+    combined = "\n\n".join(entries)
+
+    return f":::::: {{.gallery .list .grid}}\n{combined}\n::::::"
+
+
+def gallery_entry(src_thumbnail: str, href: str, title: str):
+    return f"""
+<div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+<a href="{href}">
+  <div class="card-header py-1 px-2 border-bottom border-1 bg-light">
+  <p>{title}</p>
+  </div>
+  <div class="gallery-card-body">
+  <img src="{src_thumbnail}">
+  </div>
+</a>
+</div>
+"""
+    
+entries = []
+
+for notebook_name, path in gallery_notebooks.items():
+    cell_plots = extract_image(path)
+    for title, output in cell_plots:
+        # TODO: this removes the trailing # from the SpiralAnimation title
+        title = title.replace(" ###", "")
+
+        anchor = title.replace(" ", "-").lower()
+        thumb_name = p_thumbnails / f"{notebook_name}--{anchor}"
+        dst_fname = create_thumbnail(output, thumb_name, THUMBNAIL_SIZE)
+        entries.append(gallery_entry(dst_fname, f"/reference/{notebook_name}.qmd#{anchor}", title))
+
+```
+
+::: {.column-body-outset}
+
+```{python}
+#| output: asis
+#| echo: false 
+print(gallery(entries))
+```
+
+:::

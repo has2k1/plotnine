@@ -73,6 +73,12 @@ doc:
 	$(MAKE) -C doc html
 	$(BROWSER) doc/_build/html/index.html
 
+qdoc:
+	$(MAKE) -C qdoc docs-build
+
+qdoc-preview:
+	$(MAKE) -C qdoc preview
+
 release: clean
 	bash ./tools/release.sh
 
