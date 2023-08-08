@@ -39,13 +39,12 @@ jobs:
       - name: Install Package
         run: |
           python -m pip install ".[doc]"
-          python -m pip install -r requirements/doc.txt
 
       - name: Build docs
         run: |
-          make render
+          make doc
 
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: _site
+          folder: qdoc/_site

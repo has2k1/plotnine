@@ -1,7 +1,1 @@
-plotnine-examples
-reference/
-_site/
-.quarto/
-gallery/thumbnails
-objects.json
-.luarc.json
+/.quarto/
