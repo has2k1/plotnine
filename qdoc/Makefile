@@ -6,7 +6,5 @@ doc:
 	DOC_GENERATION=1 python -m quartodoc build
 	quarto render
 
-render: doc
-
 preview:
 	quarto preview
