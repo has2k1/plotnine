@@ -42,6 +42,7 @@ def result_to_baseline():
     """
     for image in new_test_images():
         new_baseline_image = baseline_path(image)
+        new_baseline_image.parent.mkdir(parents=True, exist_ok=True)
         image.replace(new_baseline_image)
 
 
