@@ -52,8 +52,10 @@ extra = [
 doc = [
     "jupyter",
     "nbsphinx",
+    "click",
     "numpydoc>=0.9.1",
     "sphinx>=6.1.0",
+    "pyyaml",
     # Use importlib.resources when min supported python >= 3.9.0
     "importlib_resources",
 ]
