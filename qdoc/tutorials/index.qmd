@@ -1,0 +1,11 @@
+# Tutorials
+
+- [a-pyqt5-application](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-a-pyqt5-application.ipynb)
+- [altering-colors](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-altering-colors.ipynb)
+- [automatic-grouping-insufficient](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-automatic-grouping-insufficient.ipynb)
+- [manipulating-date-breaks-and-date-labels](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-manipulating-date-breaks-and-date-labels.ipynb)
+- [order-plot-series](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-order-plot-series.ipynb)
+- [show-counts-and-percentages-for-bar-plots](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-show-counts-and-percentages-for-bar-plots.ipynb)
+- [show-counts-on-a-stacked-bar-plot](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-show-counts-on-a-stacked-bar-plot.ipynb)
+- [using-letter-as-shapes](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-using-letter-as-shapes.ipynb)
+- [using-notebook-widgets](/plotnine-examples/plotnine_examples/tutorials/miscellaneous-using-notebook-widgets.ipynb)

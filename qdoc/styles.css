@@ -1,0 +1,19 @@
+.gallery .gallery-card-body {
+    height: 250px;
+}
+
+.gallery .gallery-card-body img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.gallery .card-header {
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.gallery .card-header a {
+    text-decoration: none;
+}
