@@ -85,7 +85,7 @@ failed_suffix = "-failed-diff"
 def make_row(actual, expected, failed):
     _actual = f'<a href="{actual}"><img src="{actual}">'
     _expected = f'<a href="{expected}"><img src="{expected}">'
-    _failed = f"--"
+    _failed = "--"
 
     if failed:
         _failed = f'<a href="{failed}">diff</a>'
