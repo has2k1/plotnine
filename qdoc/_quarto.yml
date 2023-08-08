@@ -201,9 +201,9 @@ quartodoc:
         # these had a ~ in front of them
         # template: members-example.rst
         - scale.scale
-        - scale.scale_discrete
-        - scale.scale_continuous
-        - scale.scale_datetime
+        - scale_discrete.scale_discrete
+        - scale_continuous.scale_continuous
+        - scale_datetime.scale_datetime
     - title: Alpha scales
       desc: ""
       package: plotnine.scales.scale_alpha
