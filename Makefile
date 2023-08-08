@@ -68,15 +68,10 @@ coverage:
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
-# doc:
-# 	$(MAKE) -C doc clean
-# 	$(MAKE) -C doc html
-# 	$(BROWSER) doc/_build/html/index.html
-
 doc:
-	$(MAKE) -C qdoc doc
+	$(MAKE) -C qdoc render
 
-qdoc-preview:
+doc-preview:
 	$(MAKE) -C qdoc preview
 
 release: clean
