@@ -6,7 +6,6 @@ project:
     - "reference/**.qmd"
     - "*.qmd"
     - "*.ipynb"
-    - "*.md"
 
 filters:
   - interlinks
@@ -51,6 +50,7 @@ quartodoc:
         - name: PlotnineAnimation
           package: plotnine.animation
         - save_as_pdf_pages
+
     - title: Mapping aesthetics
       desc: |
         Aesthetics are the visual properties of a plot. The following functions
@@ -63,26 +63,32 @@ quartodoc:
         - after_stat
         - after_scale
         - stage
-    - title: geom
-      desc: |
-        Base class of all geoms
-      package: plotnine.geoms.geom
-      contents:
-        - geom
+
+
     - title: geoms
       desc: |
         Geometric objects (geoms) are responsible for the visual representation
         of data points.  geom_* classes determine the kind of geometric objects
         and every plot must have at least one geom added to it. The distinct
         visual aspects of the representation are controlled by the aes mapping.
-      package: plotnine.geoms
+
+    - package: plotnine.geoms.geom
+      options: &main
+        members: []
+      contents:
+        - geom
+
+    - package: plotnine.geoms
+      options: *main
       contents:
         - geom_abline
         - geom_area
         - geom_bar
         - geom_blank
         - geom_boxplot
-        - geom_col
+        - name: geom_col
+          members: []
+
         - geom_count
         - geom_crossbar
         - geom_density
@@ -120,35 +126,44 @@ quartodoc:
         - geom_tile
         - geom_violin
         - geom_vline
-    - title: related to geoms
+
+    - subtitle: related to geoms
       desc: ""
       package: plotnine.geoms
+      options: *main
       contents:
         - annotate
         - annotation_logticks
         - annotation_stripes
-        # TODO: where is this?
-        #- geom_path.arrow
-    - title: Labels
+        # TODO: need ~
+        - geom_path:arrow
+    - subtitle: Labels
       desc: ""
       package: plotnine.labels
+      options: *main
       contents:
         - labs
         - xlab
         - ylab
         - ggtitle
+
+
     - title: stats
       desc: |
         Statistical transformations (stats) do aggregations and other computations
         on data before it is drawn out. `stat_*` determine the type of computation done
         on the data. Different types of computations yield varied results, so a `stat`
         must be paired with a `geom` that can represent all or some of the computations.
-      package: plotnine.stats
 
+    - package: plotnine.stats
       contents:
         # note it is this in plotnine docs: ~stat.stat
         # template: members-example.rst
         - stat
+
+    - package: plotnine.stats
+      options: *main
+      contents:
         # template: main.rst
         - stat_bin
         - stat_bin_2d
@@ -173,14 +188,20 @@ quartodoc:
         - stat_unique
         - stat_ydensity
 
+
     - title: facets
       desc: |
         Faceting is a way to subset data and plot it on different panels.
-      package: plotnine.facets
+
+    - package: plotnine.facets
       contents:
         # note it is this in plotnine docs: ~stat.stat
         # template: members-example.rst
         - facet
+
+    - package: plotnine.facets
+      options: *main
+      contents:
         # template: main.rst
         - facet_grid
         - facet_null
@@ -191,86 +212,377 @@ quartodoc:
         - labelling.label_value
         - labelling.label_both
         - labelling.label_context
+
     - title: scales
       desc: |
         Scales control the mapping from data to aesthetics. They take data and
         adjust it to fit the different aspects of the visual sense i.e. length,
         colour, size and shape.
+
+    - subtitle: Base scales
       package: plotnine.scales
+      options: *main
       contents:
         # these had a ~ in front of them
         # template: members-example.rst
-        - scale.scale
-        - scale_discrete.scale_discrete
-        - scale_continuous.scale_continuous
-        - scale_datetime.scale_datetime
-    - title: Alpha scales
+        - name: scale
+          package: plotnine.scales.scale
+        - name: scale_discrete
+          package: plotnine.scales.scale_discrete
+        - name: scale_continuous
+          package: plotnine.scales.scale_continuous
+        - name: scale_datetime
+          package: plotnine.scales.scale_datetime
+
+    - subtitle: Alpha scales
       desc: ""
       package: plotnine.scales.scale_alpha
+      options: *main
       contents:
         - scale_alpha
         - scale_alpha_discrete
-        # TODO: can't load. is this an alias of scale_alpha or something?
-        #- scale_alpha_continuous
+        - name: scale_alpha_continuous
+          dynamic: plotnine.scales.scale_alpha.scale_alpha
         - scale_alpha_datetime
-    - title: Identity scales
+
+    - subtitle: Identity scales
       desc: ""
       package: plotnine.scales.scale_identity
+      options: *main
       contents:
         - scale_alpha_identity
         - scale_color_identity
-        # TODO: can't load
-        # - scale_colour_identity
+        - name: scale_colour_identity
+          dynamic: plotnine.scales.scale_color_identity
         - scale_fill_identity
         - scale_linetype_identity
         - scale_shape_identity
         - scale_size_identity
-    - title: Color and fill scales
+
+    - subtitle: Color and fill scales
       desc: ""
-      package: plotnine.scales.scale_color
+      package: plotnine.scales
+      options: *main
       contents:
         - scale_color_brewer
-        # TODO: this is an alias for the cmap below
-        #- scale_color_continuous
+        - name: scale_color_continuous
+          dynamic: plotnine.scales.scale_color_cmap
         - scale_color_cmap
-        #
         - scale_color_desaturate
         - scale_color_datetime
-        # TODO:
-        #- scale_color_discrete
+        - name: scale_color_discrete
+          dynamic: plotnine.scales.scale_color_hue
         - scale_color_distiller
         - scale_color_gradient
         - scale_color_gradient2
         - scale_color_gradientn
-        # TODO: alias for grey
-        #- scale_color_gray
+        - name: scale_color_gray
+          dynamic: plotnine.scales.scale_color_grey
         - scale_color_grey
         - scale_color_hue
         - scale_fill_brewer
         - scale_fill_cmap
-        # TODO: alias for cmap
-        #- scale_fill_continuous
+        - name: scale_fill_continuous
+          dynamic: plotnine.scales.scale_fill_cmap
         - scale_fill_datetime
         - scale_fill_desaturate
-        # TODO:
-        #- scale_fill_discrete
+        - name: scale_fill_discrete
+          dynamic: plotnine.scales.scale_fill_hue
         - scale_fill_distiller
         - scale_fill_gradient
         - scale_fill_gradient2
         - scale_fill_gradientn
-        # TODO: alias for grey
-        #- scale_fill_gray
+        - name: scale_fill_gray
+          dynamic: plotnine.scales.scale_fill_grey
+
         - scale_fill_grey
         - scale_fill_hue
-    - title: Manual scales
+
+    - subtitle: Manual scales
       desc: ""
-      package: plotnine.scales.scale_manual
+      package: plotnine.scales
+      options: *main
       contents:
         - scale_alpha_manual
         - scale_color_manual
-        # TODO: can't load
-        # - scale_colour_manual
+        - name: scale_colour_manual
+          dynamic: plotnine.scales.scale_manual.scale_color_manual
         - scale_fill_manual
         - scale_linetype_manual
         - scale_shape_manual
         - scale_size_manual
+
+    - subtitle: Linetype scales
+      package: plotnine.scales
+      options: *main
+      contents:
+        - scale_linetype
+        - name: scale_linetype_discrete
+          dynamic: plotnine.scales.scale_linetype.scale_linetype
+
+    - subtitle: Shape scales
+      package: plotnine.scales
+      options: *main
+      contents:
+        - scale_shape
+        - name: scale_shape_discrete
+          dynamic: plotnine.scales.scale_shape.scale_shape
+
+    - subtitle: Size scales
+      package: plotnine.scales
+      options: *main
+      contents:
+        - name: scale_size
+          dynamic: plotnine.scales.scale_size_continuous
+        - scale_size_area
+        - scale_size_continuous
+        - scale_size_discrete
+        - scale_size_radius
+        - scale_size_datetime
+
+    - subtitle: Position scales
+      package: plotnine.scales
+      contents:
+        - scale_x_continuous
+        - name: scale_x_date
+          dynamic: plotnine.scales.scale_x_datetime
+        - scale_x_datetime
+        - scale_x_discrete
+        - scale_x_log10
+        - scale_x_reverse
+        - scale_x_sqrt
+        - scale_x_timedelta
+        - scale_y_continuous
+        - name: scale_y_date
+          dynamic: plotnine.scales.scale_y_datetime
+        - scale_y_datetime
+        - scale_y_discrete
+        - scale_y_log10
+        - scale_y_reverse
+        - scale_y_sqrt
+        - scale_y_timedelta
+
+
+    - subtitle: Scale limits
+      package: plotnine.scales
+      options: *main
+      contents:
+        - lims
+        - xlim
+        - ylim
+        - expand_limits
+
+    - subtitle: Scale guides
+      package: plotnine.guides
+      options: *main
+      contents:
+        - guides
+        - guide
+        - guide_legend
+        - guide_colorbar
+
+    - title: positions
+      desc: |
+        Overlapping objects can be visualized better if their positions are adjusted.
+        That is what the `position_*` class do. Each `geom` is associated with one position adjustment class.
+      package: plotnine.positions
+      options: *main
+      contents:
+        - position_dodge
+        - position_dodge2
+        - position_fill
+        - position_identity
+        - position_jitter
+        - position_jitterdodge
+        - position_nudge
+        - position_stack
+
+
+    - title: themes
+      desc: |
+        Themes control the visual appearance of the non-data elements the plot.
+      package: plotnine.themes
+      options: *main
+      contents:
+        - theme
+        - theme_538
+        - theme_bw
+        - theme_classic
+        - theme_dark
+        - theme_gray
+        - name: theme_grey
+          dynamic: plotnine.themes.theme_gray
+        - theme_light
+        - theme_linedraw
+        - theme_matplotlib
+        - theme_minimal
+        - theme_seaborn
+        - theme_tufte
+        - theme_void
+        - theme_xkcd
+
+    - subtitle: Themeables
+      desc: |
+        These define aspects of a plot that can be themed.
+        They can be used to create a new theme or modify an existing theme.
+        They define the keyword arguments to `theme`.
+        Users should never create instances of themeable.
+      package: plotnine.themes.themeable
+      contents:
+        - aspect_ratio
+        - axis_line
+        - axis_line_x
+        - axis_line_y
+        - axis_text
+        - axis_text_x
+        - axis_text_y
+        - axis_ticks
+        - axis_ticks_direction
+        - axis_ticks_direction_x
+        - axis_ticks_direction_y
+        - axis_ticks_length
+        - axis_ticks_length_major
+        - axis_ticks_length_minor
+        - axis_ticks_major
+        - axis_line
+        - axis_line_x
+        - axis_line_y
+        - axis_text
+        - axis_text_x
+        - axis_text_y
+        - axis_ticks
+        - axis_ticks_direction
+        - axis_ticks_direction_x
+        - axis_ticks_direction_y
+        - axis_ticks_length
+        - axis_ticks_length_major
+        - axis_ticks_length_minor
+        - axis_ticks_major
+        - axis_ticks_major_x
+        - axis_ticks_major_y
+        - axis_ticks_minor
+        - axis_ticks_minor_x
+        - axis_ticks_minor_y
+        - axis_ticks_pad
+        - axis_ticks_pad_major
+        - axis_ticks_pad_minor
+        - axis_title
+        - axis_title_x
+        - axis_title_y
+        - dpi
+        - figure_size
+        - legend_background
+        - legend_box
+        - legend_box_background
+        - legend_box_just
+        - legend_box_margin
+        - legend_box_spacing
+        - legend_direction
+        - legend_entry_spacing
+        - legend_entry_spacing_x
+        - legend_entry_spacing_y
+        - legend_key
+        - legend_key_height
+        - legend_key_size
+        - legend_key_width
+        - legend_margin
+        - legend_position
+        - legend_spacing
+        - legend_text
+        - legend_text_colorbar
+        - legend_text_legend
+        - legend_title
+        - legend_title_align
+        - line
+        - panel_background
+        - panel_border
+        - panel_grid
+        - panel_grid_major
+        - panel_grid_major_x
+        - panel_grid_major_y
+        - panel_grid_minor
+        - panel_grid_minor_x
+        - panel_grid_minor_y
+        - panel_ontop
+        - panel_spacing
+        - panel_spacing_x
+        - panel_spacing_y
+        - plot_background
+        - plot_margin
+        - plot_title
+        - rect
+        - strip_background
+        - strip_background_x
+        - strip_background_y
+        - strip_align
+        - strip_align_x
+        - strip_align_y
+        - strip_text
+        - strip_text_x
+        - strip_text_y
+        - text
+        - title
+        - themeable
+
+    - subtitle: Theme helper functions and classes
+      package: plotnine.themes
+      options: *main
+      contents:
+        - theme_set
+        - theme_get
+        - theme_update
+        - element_line
+        - element_rect
+        - element_text
+
+    - title: coordinates
+      desc: |
+        Coordinate systems put together the two position scales to produce a 2d location.
+      package: plotnine.coords
+      options: *main
+      contents:
+        - coord_cartesian
+        - coord_equal
+        - coord_fixed
+        - coord_flip
+        - coord_trans
+
+    - title: options
+      desc: |
+        When working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using `theme_set()`.
+      package: plotnine.options
+      options:
+        dynamic: false
+      contents:
+        # TODO: these use sphinx's docstring comment syntax, which we don't support
+        - aspect_ratio
+        - base_family
+        - base_margin
+        - close_all_figures
+        - current_theme
+        - dpi
+        - figure_size
+        - get_option
+        - set_option
+
+    - title: datasets
+      desc: |
+        These datasets ship with the plotnine and you can import them with from the `plotnine.data` sub-package.
+      package: plotnine.data
+      contents:
+        - diamonds
+        - economics
+        - economics_long
+        - faithful
+        - faithfuld
+        - huron
+        - luv_colours
+        - meat
+        - midwest
+        - mpg
+        - msleep
+        - mtcars
+        - pageviews
+        - presidential
+        - seals
+        - txhousing
