@@ -174,11 +174,13 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     """
 
     import os
+
     from tabulate import tabulate
 
     if os.environ.get("DOC_GENERATION"):
-        print("GENERATING DOCS FOR WEBSITE")
-        return tabulate(list(contents.items()), headers = header, tablefmt="unsafehtml")
+        return tabulate(
+            list(contents.items()), headers=header, tablefmt="unsafehtml"
+        )
 
     def to_text(row: tuple[str, str]) -> str:
         name, value = row
