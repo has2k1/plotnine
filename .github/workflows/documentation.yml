@@ -1,0 +1,51 @@
+name: Documentation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "dev", "qdoc", "dev-*"]
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.11]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Checkout plotne-examples
+        uses: actions/checkout@v3
+        with:
+          repository: has2k1/plotnine-examples
+          path: qdoc/plotnine-examples
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.4.268"
+
+      - name: Install Package
+        run: |
+          python -m pip install ".[doc]"
+          python -m pip install -r requirements/doc.txt
+
+      - name: Build docs
+        run: |
+          make render
+
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: _site
