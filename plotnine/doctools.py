@@ -346,7 +346,7 @@ def parameters_str_to_dict(param_section: str) -> dict[str, str]:
 
     See Also
     --------
-    [](`~plotnine.doctools.parameters_dict_to_str`)
+    plotnine.doctools.parameters_dict_to_str
     """
     d = {}
     previous_param = ""
@@ -383,7 +383,7 @@ def parameters_dict_to_str(d: dict[str, str]) -> str:
 
     See Also
     --------
-    [](`~plotnine.doctools.parameters_str_to_dict`)
+    plotnine.doctools.parameters_str_to_dict
     """
     return "\n".join(d.values())
 
