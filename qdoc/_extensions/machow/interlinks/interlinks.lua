@@ -169,7 +169,9 @@ return {
             for k, v in pairs(meta.interlinks.sources) do
                 json = read_json(quarto.project.offset .. "/_inv/" .. k .. "_objects.json")
                 prefix = pandoc.utils.stringify(v.url)
-                fixup_json(json, prefix)
+                if json ~= nil then
+                  fixup_json(json, prefix)
+                end
             end
             json = read_json(quarto.project.offset .. "/objects.json")
             if json ~= nil then
