@@ -19,7 +19,7 @@ class position_dodge2(position_dodge):
     Dodge overlaps and place objects side-by-side
 
     This is an enhanced version of
-    :class:`~plotnine.positions.position_dodge` that can deal
+    [](`~plotnine.positions.position_dodge`) that can deal
     with rectangular overlaps that do not share a lower x border.
 
     Parameters

@@ -93,7 +93,7 @@ class stat(metaclass=Registry):
 
         Raises
         ------
-        :class:`PlotnineError` if unable to create a `stat`.
+        [](`~plotnine.exceptions.PlotnineError`) if unable to create a `stat`.
         """
         name = geom.params["stat"]
         kwargs = geom._kwargs

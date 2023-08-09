@@ -53,7 +53,8 @@ class theme:
 
             theme_gray() + theme_xkcd()
 
-        will be completely determined by :class:`theme_xkcd`, but::
+        will be completely determined by [](`~plotnine.themes.theme_xkcd`),
+        but:
 
             theme_gray() + theme(axis_text_x=element_text(angle=45))
 
@@ -64,13 +65,12 @@ class theme:
         elements that are subclasses of `themeable`. Many themeables
         are defined using theme elements i.e
 
-            - :class:`element_line`
-            - :class:`element_rect`
-            - :class:`element_text`
+          - [](`~plotnine.themes.element_line`)
+          - [](`~plotnine.themes.element_rect`)
+          - [](`~plotnine.themes.element_text`)
 
         These simply bind together all the aspects of a themeable
-        that can be themed. See
-        :class:`~plotnine.themes.themeable.themeable`.
+        that can be themed. See [](`~plotnine.themes.themeable.themeable`).
 
     Notes
     -----
@@ -346,7 +346,7 @@ class theme:
              ggplot() + theme()
              theme1() + theme2()
 
-        In both cases, `self` is the :class:`theme`
+        In both cases, `self` is the [](`~plotnine.themes.theme`)
         on the right hand side.
 
         Subclasses should not override this method.
@@ -402,9 +402,9 @@ def theme_get() -> theme:
     """
     Return the default theme
 
-    The default theme is the one set (using :func:`theme_set`) by
-    the user. If none has been set, then :class:`theme_gray` is
-    the default.
+    The default theme is the one set (using [](`~plotnine.themes.theme_set`))
+    by the user. If none has been set, then [](`~plotnine.themes.theme_gray`)
+    is the default.
     """
     from .theme_gray import theme_gray
 

@@ -186,14 +186,14 @@ class geom(metaclass=Registry):
         1. The ``stat`` does not create all the aesthetics (usually
            position aesthetics) required for drawing the ``geom``,
            but those aesthetics can be computed from the available
-           data. For example :class:`~plotnine.geoms.geom_boxplot`
-           and :class:`~plotnine.geoms.geom_violin`.
+           data. For example [](`~plotnine.geoms.geom_boxplot`)
+           and [](`~plotnine.geoms.geom_violin`).
 
         2. The ``geom`` inherits from another ``geom`` (superclass) which
            does the drawing and the superclass requires certain aesthetics
            to be present in the data. For example
-           :class:`~plotnine.geoms.geom_tile` and
-           :class:`~plotnine.geoms.geom_area`.
+           [](`~plotnine.geoms.geom_tile`) and
+           [](`~plotnine.geoms.geom_area`).
 
         Parameters
         ----------
@@ -393,7 +393,7 @@ class geom(metaclass=Registry):
         the lines with the same linestyle and plot them as one
         unit. In this case, draw_group calls this function to do
         the plotting. For an example see
-        :class:`~plotnine.geoms.geom_point`.
+        [](`~plotnine.geoms.geom_point`).
 
         Parameters
         ----------
@@ -486,7 +486,7 @@ class geom(metaclass=Registry):
 
         geoms that infer extra information from missing values
         should override this method. For example
-        :class:`~plotnine.geoms.geom_path`.
+        [](`~plotnine.geoms.geom_path`).
 
         Parameters
         ----------

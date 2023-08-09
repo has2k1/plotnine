@@ -911,9 +911,11 @@ def data_mapping_as_kwargs(args, kwargs):
     Parameters
     ----------
     args : tuple
-        Arguments to :class:`geom` or :class:`stat`.
+        Arguments to [](`~plotnine.geoms.geom`) or
+        [](`~plotnine.stats.stat`).
     kwargs : dict
-        Keyword arguments to :class:`geom` or :class:`stat`.
+        Keyword arguments to [](`~plotnine.geoms.geom`) or
+        [](`~plotnine.stats.stat`).
 
     Returns
     -------

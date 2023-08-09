@@ -7,7 +7,7 @@ class geom_density_2d(geom_path):
     """
     2D density estimate
 
-    This is a 2d version of :class:`~plotnine.geoms.geom_density`.
+    This is a 2d version of [](`~plotnine.geoms.geom_density`).
 
     {usage}
 

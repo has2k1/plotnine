@@ -34,7 +34,7 @@ class coord_fixed(coord_cartesian):
     Notes
     -----
     To specify aspect ratio of the visual size for the axes use the
-    :class:`~plotnine.themes.themeable.aspect_ratio` themeable::
+    [](`~plotnine.themes.themeable.aspect_ratio`) themeable::
 
         ggplot(data, aes('x', 'y')) + theme(aspect_ratio=0.5)
 

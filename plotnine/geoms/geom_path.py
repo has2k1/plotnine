@@ -216,7 +216,7 @@ class arrow:
     Define arrow (actually an arrowhead)
 
     This is used to define arrow heads for
-    :class:`.geom_path`.
+    [](`~plotnine.geoms.geom_path`).
 
     Parameters
     ----------
