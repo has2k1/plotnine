@@ -17,7 +17,8 @@ from pathlib import Path
 
 THUMBNAIL_SIZE = (294, 210)
 
-p_examples = Path("../plotnine-examples/plotnine_examples/examples")
+DOC_DIR = Path(".").resolve().parent
+p_examples = DOC_DIR / "plotnine_examples/examples"
 
 # note that plotnine site uses essentially /_images
 p_thumbnails = Path("thumbnails")
@@ -47,10 +48,10 @@ def extract_image(fname):
             title = find_first_title(reversed(nb["cells"][:ii])) or ""
             # currently, I think the gallery only gets the first plot
             cell_plots.append((title, out_plots[0]))
-    
+
     if cell_plots:
         return cell_plots
-    
+
     raise Exception("No image found")
 
 
@@ -73,7 +74,7 @@ def create_thumbnail(output, dst_thumb: str, thumbnail_size: tuple[int, int]):
     # thumbnail_size = (294, 210)
     thumb_size = thumbnail_size[0] * 2, thumbnail_size[1] * 2
 
-    # I'm not sure if this just 
+    # I'm not sure if this just
     img.thumbnail(thumb_size)
 
     p_dst = Path(f"{dst_thumb}.png")
@@ -102,7 +103,7 @@ def gallery_entry(src_thumbnail: str, href: str, title: str):
 </a>
 </div>
 """
-    
+
 entries = []
 
 for notebook_name, path in gallery_notebooks.items():
@@ -122,7 +123,7 @@ for notebook_name, path in gallery_notebooks.items():
 
 ```{python}
 #| output: asis
-#| echo: false 
+#| echo: false
 print(gallery(entries))
 ```
 
