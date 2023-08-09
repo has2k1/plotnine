@@ -83,10 +83,8 @@ def after_stat(x):
 
     See Also
     --------
-    [](~plotnine.mappgin.after_scale) : For how to alter aesthetics after
-    the data has been mapped by the scale.
-    [](~plotnine.mappgin.stage) : For how to map to aesthetics at more than
-    one stage of the plot building pipeline.
+    plotnine.mapping.after_scale
+    plotnine.mapping.stage
     """
     return stage(after_stat=x)
 
@@ -105,10 +103,8 @@ def after_scale(x):
 
     See Also
     --------
-    [](~plotnine.mapping.after_stat) : For how to map aesthetics to variable
-    calculated by the stat
-    [](~plotnine.mapping.stage) : For how to map to aesthetics at more than
-    one stage of the plot building pipeline.
+    plotnine.mapping.after_stat
+    plotnine.mapping.stage
     """
     return stage(after_scale=x)
 
