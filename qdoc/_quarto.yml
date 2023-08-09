@@ -1,5 +1,7 @@
 project:
   type: website
+  pre-render: _config.py
+  output-dir: _site
   resources:
     - objects.json
   render:
@@ -34,7 +36,8 @@ interlinks:
       url: https://patsy.readthedocs.io/en/stable
 
 website:
-  title: Plotnine
+  title: "plotnine {{< env VERSION >}}"
+  page-navigation: true
   navbar:
     left:
       - file: gallery/index.qmd

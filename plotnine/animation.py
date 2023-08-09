@@ -31,7 +31,7 @@ class PlotnineAnimation(ArtistAnimation):
     plots : iterable
         ggplot objects that make up the the frames of the animation
     interval : number, optional
-       Delay between frames in milliseconds. Defaults to 200.
+        Delay between frames in milliseconds. Defaults to 200.
     repeat_delay : number, optional
         If the animation in repeated, adds a delay in milliseconds
         before repeating the animation. Defaults to `None`.

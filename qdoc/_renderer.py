@@ -13,10 +13,10 @@ from quartodoc.layout import DocClass
 from quartodoc.renderers.base import convert_rst_link_to_md
 from tabulate import tabulate
 
-P_ROOT = Path(__file__).parent
-EXAMPLES_FOLDER = P_ROOT / "plotnine-examples/plotnine_examples"
+DOC_DIR = Path(__file__).parent
+EXAMPLES_DIR = DOC_DIR / "plotnine_examples"
 
-DOCSTRING_TMPL = """\
+DOCSTRING_TPL = """\
 {rendered}
 
 Examples
@@ -47,11 +47,11 @@ class Renderer(MdRenderer):
 
         converted = convert_rst_link_to_md(rendered)
 
-        p_example = EXAMPLES_FOLDER / "examples" / (el.name + ".ipynb")
-        if p_example.exists():
-            rel_path = Path("..") / p_example.relative_to(P_ROOT)
-            example = f"{{{{< embed {rel_path} echo=true >}}}}"
-            return DOCSTRING_TMPL.format(rendered=converted, examples=example)
+        example_path = EXAMPLES_DIR / "examples" / (el.name + ".ipynb")
+        if example_path.exists():
+            rel_path = Path("..") / example_path.relative_to(DOC_DIR)
+            example = "{{< embed" f" {rel_path} " "echo=true >}}"
+            return DOCSTRING_TPL.format(rendered=converted, examples=example)
 
         return converted
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import typing
 from functools import lru_cache
@@ -146,6 +147,7 @@ DOCSTRING_SECTIONS = {
 }
 
 PARAM_PATTERN = re.compile(r"\s*" r"([_A-Za-z]\w*)" r"\s:\s")
+GENERATING_QUARTODOC = os.environ.get("GENERATING_QUARTODOC")
 
 
 def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
@@ -172,12 +174,9 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     fill      :py:`None`
     ========= =========
     """
-
-    import os
-
     from tabulate import tabulate
 
-    if os.environ.get("DOC_GENERATION"):
+    if GENERATING_QUARTODOC:
         return tabulate(
             list(contents.items()), headers=header, tablefmt="unsafehtml"
         )
