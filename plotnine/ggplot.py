@@ -670,11 +670,11 @@ def save_as_pdf_pages(
     **kwargs: Any,
 ):
     """
-    Save multiple :class:`ggplot` objects to a PDF file, one per page.
+    Save multiple [](`~plotnine.ggplot`) objects to a PDF file, one per page.
 
     Parameters
     ----------
-    plots : collection or generator of :class:`ggplot`
+    plots : collection or generator of [](`~plotnine.ggplot`)
         Plot objects to write to file. `plots` may be either a
         collection such as a :py:class:`list` or :py:class:`set`:
 
@@ -682,7 +682,7 @@ def save_as_pdf_pages(
         >>> plots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]
         >>> save_as_pdf_pages(plots)
 
-        or, a generator that yields :class:`ggplot` objects:
+        or, a generator that yields [](`~plotnine.ggplot`) objects:
 
         >>> def myplots():
         >>>     for i in range(1, 3):
@@ -718,7 +718,7 @@ def save_as_pdf_pages(
 
     Unlike :meth:`ggplot.save`, :meth:`save_as_pdf_pages` does not
     process arguments for `height` or `width`. To set the figure size,
-    add :class:`~plotnine.themes.themeable.figure_size` to the theme
+    add [](`~plotnine.themes.themeable.figure_size`) to the theme
     for some or all of the objects in `plots`:
 
     >>> plot = ggplot(…)

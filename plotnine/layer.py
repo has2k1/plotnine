@@ -35,7 +35,7 @@ class layer:
     Layer
 
     When a ``geom`` or ``stat`` is added to a
-    :class:`~plotnine.ggplot` object, it creates a single layer.
+    [](`~plotnine.ggplot`) object, it creates a single layer.
     This class is a representation of that layer.
 
     Parameters
@@ -49,12 +49,12 @@ class layer:
         Aesthetic mappings.
     data : dataframe, optional
         Data plotted in this layer. If ``None``, the data from
-        the :class:`~plotnine.ggplot` object will be used.
+        the [](`~plotnine.ggplot`) object will be used.
     position : position, optional
         Position object to adjust the geometries in this layer.
     inherit_aes : bool, optional
         If ``True`` inherit from the aesthetic mappings of
-        the :class:`~plotnine.ggplot` object. Default ``True``.
+        the [](`~plotnine.ggplot`) object. Default ``True``.
     show_legend : bool or None, optional
         Whether to make up and show a legend for the mappings
         of this layer. If ``None`` then an automatic/good choice
@@ -97,7 +97,7 @@ class layer:
     @staticmethod
     def from_geom(geom: Geom) -> Layer:
         """
-        Create a layer given a :class:`geom`
+        Create a layer given a [](`~plotnine.geoms.geom`)
 
         Parameters
         ----------

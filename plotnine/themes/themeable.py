@@ -81,8 +81,8 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     Notes
     -----
-    A user should never create instances of class :class:`themeable` or
-    subclasses of it.
+    A user should never create instances of class
+    [](`~plotnine.themes.themeable`) or subclasses of it.
     """
 
     order = 0
@@ -116,10 +116,10 @@ class themeable(metaclass=RegistryHierarchyMeta):
         theme_element : element object
             A of the type required by the theme
             For lines, text and rects it should be one of:
-            :class:`element_line`,
-            :class:`element_rect`,
-            :class:`element_text` or
-            :class:`element_blank`
+            [](`~plotnine.themes.element_line`),
+            [](`~plotnine.themes.element_rect`),
+            [](`~plotnine.themes.element_text`) or
+            [](`~plotnine.themes.element_blank`)
 
         Returns
         -------
@@ -1876,7 +1876,7 @@ class aspect_ratio(themeable):
     Notes
     -----
     For a fixed relationship between the ``x`` and ``y`` scales,
-    use :class:`~plotnine.coords.coord_fixed`.
+    use [](`~plotnine.coords.coord_fixed`).
     """
 
 

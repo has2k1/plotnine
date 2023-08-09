@@ -22,7 +22,7 @@ class guide(metaclass=Registry):
     title : str | None
         Title of the guide. If ``None``, title is not shown.
         Default is the name of the aesthetic or the name
-        specified using :class:`~plotnine.components.labels.lab`
+        specified using [](`~plotnine.components.labels.lab`)
     title_position : str in ``['top', 'bottom', 'left', 'right']``
         Position of title
     title_theme : element_text

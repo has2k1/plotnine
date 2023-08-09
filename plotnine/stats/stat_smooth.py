@@ -116,9 +116,9 @@ class stat_smooth(stat):
 
     Notes
     -----
-    :class:`~plotnine.geoms.geom_smooth` and :class:`.stat_smooth` are
+    [](`~plotnine.geoms.geom_smooth`) and [](`~plotnine.stats.stat_smooth`) are
     effectively aliases, they both use the same arguments.
-    Use :class:`~plotnine.geoms.geom_smooth` unless
+    Use [](`~plotnine.geoms.geom_smooth`) unless
     you want to display the results with a non-standard geom.
     """
 

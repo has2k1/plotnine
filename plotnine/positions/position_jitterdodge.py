@@ -14,8 +14,8 @@ class position_jitterdodge(position):
     Dodge and jitter to minimise overlap
 
     Useful when aligning points generated through
-    :class:`~plotnine.geoms.geom_point` with dodged a
-    :class:`~plotnine.geoms.geom_boxplot`.
+    [](`~plotnine.geoms.geom_point`) with dodged a
+    [](`~plotnine.geoms.geom_boxplot`).
 
     Parameters
     ----------

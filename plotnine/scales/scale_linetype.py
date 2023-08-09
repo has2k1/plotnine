@@ -23,7 +23,7 @@ class scale_linetype(scale_discrete):
     The available linetypes are
     ``'solid', 'dashed', 'dashdot', 'dotted'``
     If you need more custom linetypes, use
-    :class:`~plotnine.scales.scale_linetype_manual`
+    [](`~plotnine.scales.scale_linetype_manual`)
     """
 
     _aesthetics = ["linetype"]

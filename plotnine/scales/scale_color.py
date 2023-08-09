@@ -185,8 +185,8 @@ class scale_color_gradient(scale_continuous):
 
     See Also
     --------
-    :class:`.scale_color_gradient2`
-    :class:`.scale_color_gradientn`
+    [](`~plotnine.scales.scale_color_gradient2`)
+    [](`~plotnine.scales.scale_color_gradientn`)
     """
 
     _aesthetics = ["color"]
@@ -283,8 +283,8 @@ class scale_color_gradient2(scale_continuous):
 
     See Also
     --------
-    :class:`.scale_color_gradient`
-    :class:`.scale_color_gradientn`
+    [](`~plotnine.scales.scale_color_gradient`)
+    [](`~plotnine.scales.scale_color_gradientn`)
     """
 
     _aesthetics = ["color"]
@@ -344,8 +344,8 @@ class scale_color_gradientn(scale_continuous):
 
     See Also
     --------
-    :class:`.scale_color_gradient`
-    :class:`.scale_color_gradientn`
+    [](`~plotnine.scales.scale_color_gradient`)
+    [](`~plotnine.scales.scale_color_gradientn`)
     """
 
     _aesthetics = ["color"]
@@ -378,10 +378,11 @@ class scale_color_distiller(scale_color_gradientn):
     """
     Sequential and diverging continuous color scales
 
-    This is a convinience scale around :class:`.scale_color_gradientn`
-    with colors from `colorbrewer.org <http://colorbrewer2.org/>`_.
-    It smoothly interpolates 7 colors from a brewer palette to create
-    a continuous palette.
+    This is a convinience scale around
+    [](`~plotnine.scales.scale_color_gradientn`) with colors from
+    `colorbrewer.org <http://colorbrewer2.org/>`_. It smoothly
+    interpolates 7 colors from a brewer palette to create a
+    continuous palette.
 
     Parameters
     ----------

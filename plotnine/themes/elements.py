@@ -179,9 +179,9 @@ class element_text(element_base):
 
     Notes
     -----
-    :class:`element_text` will accept parameters that conform to the
-    **ggplot2** *element_text* API, but it is preferable the
-    **Matplotlib** based API described above.
+    [](`~plotnine.themes.element_text`) will accept parameters that
+    conform to the **ggplot2** *element_text* API, but it is preferable
+    the **Matplotlib** based API described above.
     """
 
     def __init__(
