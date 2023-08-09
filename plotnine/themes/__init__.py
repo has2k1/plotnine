@@ -4,7 +4,7 @@ from .theme_538 import theme_538
 from .theme_bw import theme_bw
 from .theme_classic import theme_classic
 from .theme_dark import theme_dark
-from .theme_gray import theme_gray, theme_grey  # type: ignore[attr-defined]
+from .theme_gray import theme_gray, theme_grey
 from .theme_light import theme_light
 from .theme_linedraw import theme_linedraw
 from .theme_matplotlib import theme_matplotlib

@@ -158,4 +158,4 @@ class theme_gray(theme):
         )
 
 
-alias("theme_grey", theme_gray)
+theme_grey = alias("theme_grey", theme_gray)

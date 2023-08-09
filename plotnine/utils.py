@@ -837,17 +837,16 @@ def alias(name, class_object):
     `class_a` is registered by its metaclass,
     `class_b` is not. The solution
 
-        alias('class_b', class_a)
+        class_b = alias('class_b', class_a)
 
     is equivalent to:
 
         class_b = class_a
         Register['class_b'] = class_a
     """
-    module = inspect.getmodule(class_object)
-    module.__dict__[name] = class_object
     if isinstance(class_object, Registry):
         Registry[name] = class_object
+    return class_object
 
 
 def get_kwarg_names(func):

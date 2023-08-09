@@ -33,7 +33,7 @@ class scale_alpha(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
-alias("scale_alpha_continuous", scale_alpha)
+scale_alpha_continuous = alias("scale_alpha_continuous", scale_alpha)
 
 
 @document
