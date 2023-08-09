@@ -256,8 +256,8 @@ class scale_y_discrete(scale_position_discrete):
 
 
 # Not part of the user API
-alias("scale_x_ordinal", scale_x_discrete)
-alias("scale_y_ordinal", scale_y_discrete)
+scale_x_ordinal = alias("scale_x_ordinal", scale_x_discrete)
+scale_y_ordinal = alias("scale_y_ordinal", scale_y_discrete)
 
 
 @document
@@ -320,8 +320,8 @@ class scale_y_datetime(scale_datetime, scale_y_continuous):
     """
 
 
-alias("scale_x_date", scale_x_datetime)
-alias("scale_y_date", scale_y_datetime)
+scale_x_date = alias("scale_x_date", scale_x_datetime)
+scale_y_date = alias("scale_y_date", scale_y_datetime)
 
 
 @document

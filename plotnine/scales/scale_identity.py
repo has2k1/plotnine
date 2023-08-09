@@ -127,4 +127,4 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
 
 
 # American to British spelling
-alias("scale_colour_identity", scale_color_identity)
+scale_colour_identity = alias("scale_colour_identity", scale_color_identity)

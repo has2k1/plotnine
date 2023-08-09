@@ -75,4 +75,4 @@ class scale_stroke_discrete(scale_stroke_ordinal):
         super().__init__(self, **kwargs)
 
 
-alias("scale_stroke", scale_stroke_continuous)
+scale_stroke = alias("scale_stroke", scale_stroke_continuous)
