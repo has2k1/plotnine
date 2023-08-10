@@ -124,12 +124,12 @@ def reorder(x, y, fun=np.median, ascending=True):
     x : list-like
         Values that will make up the categorical.
     y : list-like
-        Values by which ``c`` will be ordered.
+        Values by which `c` will be ordered.
     fun : callable
-        Summarising function to ``x`` for each category in ``c``.
+        Summarising function to `x` for each category in `c`.
         Default is the *median*.
     ascending : bool
-        If ``True``, the ``c`` is ordered in ascending order of ``x``.
+        If `True`, the `c` is ordered in ascending order of `x`.
 
     Examples
     --------

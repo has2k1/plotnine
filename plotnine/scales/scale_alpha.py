@@ -17,9 +17,9 @@ class scale_alpha(scale_continuous):
 
     Parameters
     ----------
-    range : array_like
+    range : tuple
         Range ([Minimum, Maximum]) of output alpha values.
-        Should be between 0 and 1. Default is ``(0.1, 1)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 
@@ -43,9 +43,9 @@ class scale_alpha_ordinal(scale_discrete):
 
     Parameters
     ----------
-    range : array_like
+    range : tuple
         Range ([Minimum, Maximum]) of output alpha values.
-        Should be between 0 and 1. Default is ``(0.1, 1)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 
@@ -86,9 +86,9 @@ class scale_alpha_datetime(scale_datetime):
 
     Parameters
     ----------
-    range : array_like
+    range : tuple
         Range ([Minimum, Maximum]) of output alpha values.
-        Should be between 0 and 1. Default is ``(0.1, 1)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 

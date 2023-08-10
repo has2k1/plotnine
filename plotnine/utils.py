@@ -416,12 +416,12 @@ def jitter(x, factor=1, amount=None, random_state=None):
         has no effect.
     amount : float
         This defines the range ([-amount, amount]) of the jitter to
-        apply to the values. If `0` then ``amount = factor * z/50``.
-        If `None` then ``amount = factor * d/5``, where d is about
+        apply to the values. If `0` then `amount = factor * z/50`.
+        If `None` then `amount = factor * d/5`, where d is about
         the smallest difference between `x` values and `z` is the
         range of the `x` values.
     random_state : int or ~numpy.random.RandomState, optional
-        Seed or Random number generator to use. If ``None``, then
+        Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 
     References:
@@ -653,14 +653,14 @@ def pivot_apply(df, column, index, func, *args, **kwargs):
         Function to apply to each column group. It *should* return
         a single value.
     *args : tuple
-        Arguments to ``func``
+        Arguments to `func`
     **kwargs : dict
-        Keyword arguments to ``func``
+        Keyword arguments to `func`
 
     Returns
     -------
     out : dataframe
-        Dataframe with index ``index`` and column ``column`` of
+        Dataframe with index `index` and column `column` of
         computed/aggregate values .
     """
 
@@ -795,15 +795,15 @@ class RegistryHierarchyMeta(type):
 
     The class has gets two properties:
 
-    1. ``_registry`` a dictionary of all the subclasses of the
+    1. `_registry` a dictionary of all the subclasses of the
        base class. The keys are the names of the classes and
        the values are the class objects.
-    2. ``_hierarchy`` a dictionary (default) that holds the
+    2. `_hierarchy` a dictionary (default) that holds the
        inheritance hierarchy of each class. Each key is a class
        and the value is a list of classes. The first name in the
        list is that of the key class.
 
-    The goal of the ``_hierarchy`` object to facilitate the
+    The goal of the `_hierarchy` object to facilitate the
     lookup of themeable properties taking into consideration the
     inheritance hierarchy. For example if `strip_text_x` inherits
     from `strip_text` which inherits from `text`, then if a property

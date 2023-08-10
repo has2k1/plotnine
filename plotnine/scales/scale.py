@@ -39,53 +39,55 @@ class scale(metaclass=Registry):
 
     Parameters
     ----------
-    breaks : array_like or callable, optional
-        Major break points. Alternatively, a callable that
+    breaks : bool, list, callable, default=True
+        List of major break points. Or a callable that
         takes a tuple of limits and returns a list of breaks.
-        Default is to automatically calculate the breaks.
-    expand : tuple, optional
+        If `True`, automatically calculate the breaks.
+    expand : tuple, default=None
         Multiplicative and additive expansion constants
         that determine how the scale is expanded. If
         specified must be of length 2 or 4. Specifically the
-        values are in this order::
+        values are in this order:
 
-            (mul, add)
-            (mul_low, add_low, mul_high, add_high)
+        ```
+        (mul, add)
+        (mul_low, add_low, mul_high, add_high)
+        ```
 
         For example,
 
-            - ``(0, 0)`` - Do not expand.
-            - ``(0, 1)`` - Expand lower and upper limits by 1 unit.
-            - ``(1, 0)`` - Expand lower and upper limits by 100%.
-            - ``(0, 0, 0, 0)`` - Do not expand, as ``(0, 0)``.
-            - ``(0, 0, 0, 1)`` - Expand upper limit by 1 unit.
-            - ``(0, 1, 0.1, 0)`` - Expand lower limit by 1 unit and
-              upper limit by 10%.
-            - ``(0, 0, 0.1, 2)`` - Expand upper limit by 10% plus
-              2 units.
+        - `(0, 0)` - Do not expand.
+        - `(0, 1)` - Expand lower and upper limits by 1 unit.
+        - `(1, 0)` - Expand lower and upper limits by 100%.
+        - `(0, 0, 0, 0)` - Do not expand, as `(0, 0)`.
+        - `(0, 0, 0, 1)` - Expand upper limit by 1 unit.
+        - `(0, 1, 0.1, 0)` - Expand lower limit by 1 unit and
+          upper limit by 10%.
+        - `(0, 0, 0.1, 2)` - Expand upper limit by 10% plus
+          2 units.
 
         If not specified, suitable defaults are chosen.
-    name : str, optional
+    name : str, default=None
         Name used as the label of the scale. This is what
         shows up as the axis label or legend title. Suitable
         defaults are chosen depending on the type of scale.
-    labels : list or callable, optional
-        List of :class:`str`. Labels at the `breaks`.
+    labels : bool, list, callable, default=True
+        List of :py:class:`str`. Labels at the `breaks`.
         Alternatively, a callable that takes an array_like of
         break points as input and returns a list of strings.
-    limits : array_like, optional
+    limits : array_like, default=None
         Limits of the scale. Most commonly, these are the
         min & max values for the scales. For scales that
         deal with categoricals, these may be a subset or
         superset of the categories.
-    na_value : scalar
+    na_value : scalar, default=float("nan")
         What value to assign to missing values. Default
-        is to assign ``np.nan``.
-    palette : callable, optional
+        is to assign `np.nan`.
+    palette : callable, default=None
         Function to map data points onto the scale. Most
         scales define their own palettes.
-    aesthetics : list, optional
-        list of :class:`str`. Aesthetics covered by the
+    aesthetics : list, str, default=None
+        list of :py:class:`str`. Aesthetics covered by the
         scale. These are defined by each scale and the
         user should probably not change them. Have fun.
     """

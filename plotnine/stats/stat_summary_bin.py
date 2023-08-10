@@ -28,20 +28,20 @@ class stat_summary_bin(stat):
     bins : int or tuple, optional (default: 30)
         Number of bins. Overridden by binwidth.
     breaks : array-like(s), optional (default: None)
-        Bin boundaries. This supercedes the ``binwidth``, ``bins``
-        and ``boundary`` arguments.
+        Bin boundaries. This supercedes the `binwidth`, `bins`
+        and `boundary` arguments.
     boundary : float or tuple, optional (default: None)
         A boundary between two bins. As with center, things are
         shifted when boundary is outside the range of the data.
-        For example, to center on integers, use :py:`width=1` and
-        :py:`boundary=0.5`, even if 1 is outside the range of the
+        For example, to center on integers, use `width=1`{.py} and
+        `boundary=0.5`{.py}, even if 1 is outside the range of the
         data. At most one of center and boundary may be specified.
     fun_data : str or function, optional
         One of
-        :py:`['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow',
-        'mean_se']` or any function that takes a array and returns a
-        dataframe with three rows indexed as ``y``, ``ymin`` and ``ymax``.
-        Defaults to :py:`'mean_se'`.
+        `['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow',
+        'mean_se']`{.py} or any function that takes a array and returns a
+        dataframe with three rows indexed as `y`, `ymin` and `ymax`.
+        Defaults to `'mean_se'`{.py}.
     fun_y : function, optional (default: None)
         Any function that takes an array-like and returns a single value
     fun_ymax : function, optional (default: None)
@@ -53,7 +53,7 @@ class stat_summary_bin(stat):
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
     random_state : int or ~numpy.random.RandomState, optional
-        Seed or Random number generator to use. If ``None``, then
+        Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 
     Notes
@@ -70,17 +70,17 @@ class stat_summary_bin(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'bin'    # bin identifier
-        'width'  # bin width
-        'ymin'   # ymin computed by the summary function
-        'ymax'   # ymax computed by the summary function
+    ```python
+    "bin"    # bin identifier
+    "width"  # bin width
+    "ymin"   # ymin computed by the summary function
+    "ymax"   # ymax computed by the summary function
+    ```
 
     Calculated aesthetics are accessed using the `after_stat` function.
-    e.g. :py:`after_stat('ymin')`.
+    e.g. `after_stat('ymin')`{.py}.
     """
 
     REQUIRED_AES = {"x", "y"}

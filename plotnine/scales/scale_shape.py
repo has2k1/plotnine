@@ -57,7 +57,7 @@ class scale_shape(scale_discrete):
     Parameters
     ----------
     unfilled : bool
-        If ``True``, then all shapes will have no interiors
+        If `True`, then all shapes will have no interiors
         that can be a filled.
     {superclass_parameters}
     """

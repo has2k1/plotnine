@@ -27,20 +27,18 @@ class scale_color_hue(scale_discrete):
     ----------
     h : float
         first hue. Must be in the range [0, 1]
-        Default is ``0.01``
     l : float
         lightness. Must be in the range [0, 1]
-        Default is ``0.6``
     s : float
         saturation. Must be in the range [0, 1]
-        Default is ``0.65``
-    colorspace : str in ``['hls', 'husl']``
-        Color space to use.
-        `hls <https://en.wikipedia.org/wiki/HSL_and_HSV>`_
-        `husl <http://www.husl-colors.org/>`_
+    colorspace : str, default="hls"
+        Color space to use. Should be one of
+        [hls](https://en.wikipedia.org/wiki/HSL_and_HSV)
+        or
+        [husl](http://www.husl-colors.org/).
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'#7F7F7F'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -82,20 +80,19 @@ class scale_color_brewer(scale_discrete):
 
     Parameters
     ----------
-    type : str in ``['seq', 'div', 'qual']``
+    type : "seq", "div", "qual", default="seq"
         Type of data. Sequential, diverging or qualitative
-    palette : int | str
+    palette : int, str, default=1
          If a string, will use that named palette.
          If a number, will index into the list of palettes
-         of appropriate type. Default is 1
-    direction: int in ``[-1, 1]``
-         Sets the order of colors in the scale. If 1,
-         the default, colors are as output by
-         mizani.palettes.brewer_pal(). If -1,
+         of appropriate type.
+    direction: 1 or -1, default=1
+         Sets the order of colors in the scale. If 1, colors are
+         as output by [](`~mizani.palettes.brewer_pal`). If -1,
          the order of colors is reversed.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -134,12 +131,10 @@ class scale_color_grey(scale_discrete):
 
     Parameters
     ----------
-    start : float
+    start : float, default=0.2
         grey value at low end of palette.
-        Default is 0.2
-    end : float
+    end : float, default=0.8
         grey value at high end of palette
-        Default is 0.8
     {superclass_parameters}
     """
 
@@ -180,8 +175,8 @@ class scale_color_gradient(scale_continuous):
     high : str
         high color
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
 
     See Also
     --------
@@ -224,17 +219,17 @@ class scale_color_desaturate(scale_continuous):
 
     Parameters
     ----------
-    color : str, optional (Default: 'red')
+    color : str,  default="red"
         Color to desaturate
-    prop : float, optional (Default: 0)
+    prop : float, default=0
         Saturation channel of color will be multiplied by
         this value.
-    reverse : bool, optional (Default: False)
+    reverse : bool, default=False
         Whether to go from color to desaturated color
         or desaturated color to color.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -269,17 +264,17 @@ class scale_color_gradient2(scale_continuous):
 
     Parameters
     ----------
-    low : str, optional
+    low : str
         low color
-    mid : str, optional
+    mid : str
         mid point color
-    high : str, optional
+    high : str
         high color
-    midpoint : float, optional (Default: 0)
+    midpoint : float, default=0
         Mid point of the input data range.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values
 
     See Also
     --------
@@ -332,15 +327,15 @@ class scale_color_gradientn(scale_continuous):
 
     Parameters
     ----------
-    colors : list
+    colors : list,
         list of colors
-    values : list, optional
+    values : list, default=None
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values
 
     See Also
     --------
@@ -380,29 +375,29 @@ class scale_color_distiller(scale_color_gradientn):
 
     This is a convinience scale around
     [](`~plotnine.scales.scale_color_gradientn`) with colors from
-    `colorbrewer.org <http://colorbrewer2.org/>`_. It smoothly
+    [colorbrewer.org](http://colorbrewer2.org). It smoothly
     interpolates 7 colors from a brewer palette to create a
     continuous palette.
 
     Parameters
     ----------
-    type : str in ``['seq', 'div']``
+    type : "seq", "div", default="seq"
         Type of data. Sequential, diverging or qualitative
-    palette : int | str
+    palette : int, str, default=1
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
-    values : list, optional
+    values : list, default=None
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
-    direction: int in ``[-1, 1]``
+    direction: -1, 1, default=-1
         Sets the order of colors in the scale. If 1
-        colors are as output by mizani.palettes.brewer_pal().
-        If -1, the default, the order of colors is reversed.
+        colors are as output by [](`~mizani.palettes.brewer_pal`).
+        If -1, the order of colors is reversed.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -457,18 +452,14 @@ class scale_color_cmap(scale_continuous):
 
     Parameters
     ----------
-    cmap_name : str
+    cmap_name : str, default="viridis"
         A standard Matplotlib colormap name. The default is
         `viridis`. For the list of names checkout the output
-        of ``matplotlib.cm.cmap_d.keys()`` or see the
+        of `matplotlib.cm.cmap_d.keys()` or see the
         `documentation <http://matplotlib.org/users/colormaps.html>`_.
-    lut : None | int
-        This is the number of entries desired in the
-        lookup table. Default is `None`, leave it up
-        Matplotlib.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
 
     See Also
     --------
@@ -508,19 +499,15 @@ class scale_color_cmap_d(scale_discrete):
 
     Parameters
     ----------
-    cmap_name : str
+    cmap_name : str, default="viridis"
         A standard Matplotlib colormap name. It must be of type
         :class:`matplotlib.colors.ListedColormap`.
         . The default is `viridis`. For the list of names checkout
-        the output of ``matplotlib.cm.cmap_d.keys()`` or see the
+        the output of `matplotlib.cm.cmap_d.keys()` or see the
         `documentation <http://matplotlib.org/users/colormaps.html>`_.
-    lut : None | int
-        This is the number of entries desired in the
-        lookup table. Default is `None`, leave it up
-        Matplotlib.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
 
     See Also
     --------

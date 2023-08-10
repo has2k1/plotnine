@@ -43,8 +43,8 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     It is probably better to think if this hierarchy of leveraging
     Python's multiple inheritance to implement composition. For example
-    the ``axis_title`` themeable is *composed of* the ``x_axis_title`` and the
-    ``y_axis_title``. We are just using multiple inheritance to specify
+    the `axis_title` themeable is *composed of* the `x_axis_title` and the
+    `y_axis_title`. We are just using multiple inheritance to specify
     this composition.
 
     When implementing a new themeable based on the ggplot2 documentation,
@@ -53,10 +53,10 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     For example, to implement,
 
-    - ``axis_title_x`` - ``x`` axis label (element_text;
-      inherits from ``axis_title``)
-    - ``axis_title_y`` - ``y`` axis label (element_text;
-      inherits from ``axis_title``)
+    - `axis_title_x` - `x` axis label (element_text;
+      inherits from `axis_title`)
+    - `axis_title_y` - `y` axis label (element_text;
+      inherits from `axis_title`)
 
 
     You would have this implementation:
@@ -347,7 +347,7 @@ class Themeables(Dict[str, themeable]):
         If the *name* is not in the list of themeables then
         the lookup falls back to inheritance hierarchy.
         If none of the themeables are in the hierarchy are
-        present, ``False`` is returned.
+        present, `False` is returned.
 
         Parameters
         ----------
@@ -1696,10 +1696,10 @@ class axis_ticks_direction_x(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['in', 'out', 'inout']``
-        - ``in`` - ticks inside the panel
-        - ``out`` - ticks outside the panel
-        - ``inout`` - ticks inside and outside the panel
+    theme_element : "in", "out", "inout"
+        - `in` - ticks inside the panel
+        - `out` - ticks outside the panel
+        - `inout` - ticks inside and outside the panel
     """
 
     def apply_ax(self, ax: Axes):
@@ -1715,10 +1715,10 @@ class axis_ticks_direction_y(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['in', 'out', 'inout']``
-        - ``in`` - ticks inside the panel
-        - ``out`` - ticks outside the panel
-        - ``inout`` - ticks inside and outside the panel
+    theme_element : "in", "out", "inout"
+        - `in` - ticks inside the panel
+        - `out` - ticks outside the panel
+        - `inout` - ticks inside and outside the panel
     """
 
     def apply_ax(self, ax: Axes):
@@ -1734,10 +1734,10 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
 
     Parameters
     ----------
-    theme_element : {'in', 'out', 'inout'}
-        - ``in`` - ticks inside the panel
-        - ``out`` - ticks outside the panel
-        - ``inout`` - ticks inside and outside the panel
+    theme_element : "in", "out", "inout"
+        - `in` - ticks inside the panel
+        - `out` - ticks outside the panel
+        - `inout` - ticks inside and outside the panel
     """
 
 
@@ -1875,7 +1875,7 @@ class aspect_ratio(themeable):
 
     Notes
     -----
-    For a fixed relationship between the ``x`` and ``y`` scales,
+    For a fixed relationship between the `x` and `y` scales,
     use [](`~plotnine.coords.coord_fixed`).
     """
 
@@ -1919,7 +1919,7 @@ class legend_box(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['vertical', 'horizontal']``
+    theme_element : "vertical", "horizontal"
         Whether to stack up the legends vertically or
         horizontally.
     """
@@ -1943,7 +1943,7 @@ class legend_box_just(themeable):
     Parameters
     ----------
     theme_element : str
-        One of *left*, *right*, *center*, *top* or *bottom*
+        One of `["left", "right", "center", "top", "bottom"]`{.py}
         depending the value of :class:`legend_box`.
     """
 
@@ -1954,7 +1954,7 @@ class legend_direction(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['vertical', 'horizontal']``
+    theme_element : str in `["vertical", "horizontal"]`{.py}
         Vertically or horizontally
     """
 
@@ -2032,8 +2032,9 @@ class legend_position(themeable):
     Parameters
     ----------
     theme_element : str or tuple
-        If a string it should be one of *right*, *left*, *top*
-        *bottom* or *none*. If a tuple, it should be two floats each
+        If a string it should be one of
+        `["right", "left", "top", "bottom", "none"]`{.py}
+        If a tuple, it should be two floats each
         in the approximate range [0, 1]. The tuple specifies the
         location of the legend in screen coordinates.
     """
@@ -2046,8 +2047,8 @@ class legend_title_align(themeable):
     Parameters
     ----------
     theme_element : str or tuple
-        If a string it should be one of *right*, *left*, *center*,
-        *top* or *bottom*.
+        If a string it should be one of
+        `["right", "left", "center", "top", "bottom"]`{.py}
     """
 
 
@@ -2092,7 +2093,7 @@ class strip_align_x(themeable):
     ----------
     theme_element : float
         Value as a proportion of the strip size. A good value
-        should be the range :math:`[-1, 0.5]`. A negative value
+        should be the range `[-1, 0.5]`. A negative value
         puts the strip inside the axes. A positive value creates
         a margin between the strip and the axes. `0` puts the
         strip on top of the panels.
@@ -2107,7 +2108,7 @@ class strip_align_y(themeable):
     ----------
     theme_element : float
         Value as a proportion of the strip size. A good value
-        should be the range :math:`[-1, 0.5]`. A negative value
+        should be the range `[-1, 0.5]`. A negative value
         puts the strip inside the axes. A positive value creates
         a margin between the strip and the axes. `0` puts the
         strip exactly beside the panels.
@@ -2122,7 +2123,7 @@ class strip_align(strip_align_x, strip_align_y):
     ----------
     theme_element : float
         Value as a proportion of the strip text size. A good value
-        should be the range :math:`[-1, 0.5]`. A negative value
+        should be the range `[-1, 0.5]`. A negative value
         puts the strip inside the axes and a positive value
         creates a space between the strip and the axes.
     """

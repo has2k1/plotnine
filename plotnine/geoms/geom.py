@@ -58,7 +58,7 @@ class geom(metaclass=Registry):
     #: geom/layer specific dataframe
     data: DataLike
 
-    #: mappings i.e. :py:`aes(x='col1', fill='col2')`
+    #: mappings i.e. `aes(x='col1', fill='col2')`{.py}
     mapping: Aes
 
     aes_params: dict[str, Any] = {}  # setting of aesthetic
@@ -183,13 +183,13 @@ class geom(metaclass=Registry):
         drawing. The base class method does nothing, geoms can override
         this method for two reasons:
 
-        1. The ``stat`` does not create all the aesthetics (usually
-           position aesthetics) required for drawing the ``geom``,
+        1. The `stat` does not create all the aesthetics (usually
+           position aesthetics) required for drawing the `geom`,
            but those aesthetics can be computed from the available
            data. For example [](`~plotnine.geoms.geom_boxplot`)
            and [](`~plotnine.geoms.geom_violin`).
 
-        2. The ``geom`` inherits from another ``geom`` (superclass) which
+        2. The `geom` inherits from another `geom` (superclass) which
            does the drawing and the superclass requires certain aesthetics
            to be present in the data. For example
            [](`~plotnine.geoms.geom_tile`) and

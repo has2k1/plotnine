@@ -21,7 +21,7 @@ class scale_linetype(scale_discrete):
     Notes
     -----
     The available linetypes are
-    ``'solid', 'dashed', 'dashdot', 'dotted'``
+    `'solid', 'dashed', 'dashdot', 'dotted'`
     If you need more custom linetypes, use
     [](`~plotnine.scales.scale_linetype_manual`)
     """

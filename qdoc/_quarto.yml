@@ -13,27 +13,31 @@ filters:
   - interlinks
 
 interlinks:
-  sources:
-    python:
-      url: https://docs.python.org/3/
-    matplotlib:
-      url: https://matplotlib.org/stable
-    numpy:
-      url: https://numpy.org/doc/stable/
-    scipy:
-      url: https://docs.scipy.org/doc/scipy
-    statsmodels:
-      url: https://www.statsmodels.org/stable/
-    pandas:
-      url: https://pandas.pydata.org/pandas-docs/stable/
-    sklearn:
-      url: https://scikit-learn.org/stable/
-    skmisc:
-      url: https://has2k1.github.io/scikit-misc/stable/
-    adjustText:
-      url: https://adjusttext.readthedocs.io/en/latest/
-    patsy:
-      url: https://patsy.readthedocs.io/en/stable
+  sources: {}
+  # interlinks are slow
+  # sources:
+  #   python:
+  #     url: https://docs.python.org/3/
+  #   matplotlib:
+  #     url: https://matplotlib.org/stable/
+  #   mizani:
+  #     url: https://mizani.readthedocs.io/stable/
+  #   numpy:
+  #     url: https://numpy.org/doc/stable/
+  #   scipy:
+  #     url: https://docs.scipy.org/doc/scipy/
+  #   statsmodels:
+  #     url: https://www.statsmodels.org/stable/
+  #   pandas:
+  #     url: https://pandas.pydata.org/pandas-docs/stable/
+  #   sklearn:
+  #     url: https://scikit-learn.org/stable/
+  #   skmisc:
+  #     url: https://has2k1.github.io/scikit-misc/stable/
+  #   adjustText:
+  #     url: https://adjusttext.readthedocs.io/en/latest/
+  #   patsy:
+  #      url: https://patsy.readthedocs.io/en/stable/
 
 website:
   title: "plotnine {{< env VERSION >}}"

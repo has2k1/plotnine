@@ -21,7 +21,7 @@ class labs:
     ----------
     kwargs : dict
         Aesthetics (with scales) to be renamed. You can also
-        set the ``title`` and ``caption``.
+        set the `title` and `caption`.
     """
 
     labels: labels_view

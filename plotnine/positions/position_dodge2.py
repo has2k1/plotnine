@@ -24,21 +24,20 @@ class position_dodge2(position_dodge):
 
     Parameters
     ----------
-    width: float
+    width: float, default=None
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
-    preserve: str in ``['total', 'single']``
+    preserve: "total", "single", default="total"
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
-    padding : float
+    padding : float, default=0.1
         Padding between elements at the same position.
         Elements are shrunk by this proportion to allow space
-        between them (Default: 0.1)
-    reverse : bool
+        between them.
+    reverse : bool, default=False
         Reverse the default ordering of the groups. This is
         useful if you're rotating both the plot and legend.
-        (Default: False)
     """
 
     REQUIRED_AES = {"x"}

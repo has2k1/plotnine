@@ -17,33 +17,31 @@ class stat_qq_line(stat):
     Parameters
     ----------
     {common_parameters}
-    distribution : str (default: norm)
+    distribution : str, default="norm"
         Distribution or distribution function name. The default is
         *norm* for a normal probability plot. Objects that look enough
         like a stats.distributions instance (i.e. they have a ppf
         method) are also accepted. See :mod:`scipy stats <scipy.stats>`
         for available distributions.
-    dparams : dict, optional
+    dparams : dict, default=None
         Distribution-specific shape parameters (shape parameters plus
         location and scale).
-    quantiles : array_like, optional
+    quantiles : array_like, default=None
         Probability points at which to calculate the theoretical
         quantile values. If provided, must be the same number as
         as the sample data points. The default is to use calculated
-        theoretical points, use to ``alpha_beta`` control how
+        theoretical points, use to `alpha_beta` control how
         these points are generated.
-    alpha_beta : tuple
+    alpha_beta : tuple, default=(3/8, 3/8)
         Parameter values to use when calculating the quantiles.
-        Default is :py:`(3/8, 3/8)`.
-    line_p : tuple, optional
+    line_p : tuple, default=(0.25, 0.75)
         Quantiles to use when fitting a Q-Q line. Must be 2 values.
-        Default is :py:`(0.25, 0.75)`.
-    fullrange : bool
-        If :py:`True` the fit will span the full range of the plot.
+    fullrange : bool, default=False
+        If `True`{.py} the fit will span the full range of the plot.
 
     See Also
     --------
-    scipy.stats.mstats.plotting_positions : Uses ``alpha_beta``
+    scipy.stats.mstats.plotting_positions : Uses `alpha_beta`
         to calculate the quantiles.
     """
 

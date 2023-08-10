@@ -93,7 +93,7 @@ class xlim(_lim):
     limits : array_like
         Min and max limits. Must be of size 2.
         You can also pass two values e.g
-        ``xlim(40, 100)``
+        `xlim(40, 100)`
     """
 
     aesthetic = "x"
@@ -108,11 +108,11 @@ class ylim(_lim):
     limits : array_like
         Min and max limits. Must be of size 2.
         You can also pass two values e.g
-        ``ylim(40, 100)``
+        `ylim(40, 100)`
 
     Notes
     -----
-    If the 2nd value of ``limits`` is less than
+    If the 2nd value of `limits` is less than
     the first, a reversed scale will be created.
     """
 
@@ -183,11 +183,11 @@ class lims:
     ----------
     kwargs : dict
         Aesthetic and the values of the limits.
-        e.g ``x=(40, 100)``
+        e.g `x=(40, 100)`
 
     Notes
     -----
-    If the 2nd value of ``limits`` is less than
+    If the 2nd value of `limits` is less than
     the first, a reversed scale will be created.
     """
 

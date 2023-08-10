@@ -17,9 +17,9 @@ class position_nudge(position):
 
     Parameters
     ----------
-    x : float
+    x : float, default=0
         Horizontal nudge
-    y : float
+    y : float, default=0
         Vertical nudge
     """
 

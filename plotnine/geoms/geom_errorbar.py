@@ -28,9 +28,8 @@ class geom_errorbar(geom):
     Parameters
     ----------
     {common_parameters}
-    width : float or None, optional (default: 0.5)
-        Bar width. If :py:`None`, the width is set to
-        `90%` of the resolution of the data.
+    width : float, default=0.5
+        Bar width as a fraction of the resolution of the data.
     """
 
     DEFAULT_AES = {

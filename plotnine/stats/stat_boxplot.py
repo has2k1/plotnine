@@ -16,7 +16,7 @@ class stat_boxplot(stat):
     Parameters
     ----------
     {common_parameters}
-    coef : float, optional (default: 1.5)
+    coef : float, default=1.5
         Length of the whiskers as a multiple of the Interquartile
         Range.
 
@@ -28,31 +28,35 @@ class stat_boxplot(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
+    ```python
+    "width"  # width of boxplot
+    "lower"  # lower hinge, 25% quantile
+    "middle" # median, 50% quantile
+    "upper"  # upper hinge, 75% quantile
 
-        'width'  # width of boxplot
-        'lower'  # lower hinge, 25% quantile
-        'middle' # median, 50% quantile
-        'upper'  # upper hinge, 75% quantile
+    # lower edge of notch, computed as;
+    # median - 1.58 * IQR / sqrt(n)
+    "notchlower"
 
-        'notchlower' #  lower edge of notch, computed as;
-                     # median - 1.58 * IQR / sqrt(n)
+    # upper edge of notch, computed as;
+    # median + 1.58 * IQR / sqrt(n)
+    "notchupper"
 
-        'notchupper' # upper edge of notch, computed as;
-                     # median + 1.58 * IQR / sqrt(n)
+    # lower whisker, computed as; smallest observation
+    # greater than or equal to lower hinge - 1.5 * IQR
+    "ymin"
 
-        'ymin'  # lower whisker, computed as; smallest observation
-                # greater than or equal to lower hinge - 1.5 * IQR
-
-        'ymax'  # upper whisker, computed as; largest observation
-                # less than or equal to upper hinge + 1.5 * IQR
+    # upper whisker, computed as; largest observation
+    # less than or equal to upper hinge + 1.5 * IQR
+    "ymax"
+    ```
 
         'n'     # Number of observations at a position
 
     Calculated aesthetics are accessed using the `after_stat` function.
-    e.g. :py:`after_stat('width')`.
+    e.g. `after_stat('width')`{.py}.
     """
 
     REQUIRED_AES = {"x", "y"}
@@ -177,10 +181,10 @@ def weighted_boxplot_stats(x, weights=None, whis=1.5):
         The data beyond the whisker are considered outliers.
 
         If a float, the lower whisker is at the lowest datum above
-        ``Q1 - whis*(Q3-Q1)``, and the upper whisker at the highest
-        datum below ``Q3 + whis*(Q3-Q1)``, where Q1 and Q3 are the
+        `Q1 - whis*(Q3-Q1)`, and the upper whisker at the highest
+        datum below `Q3 + whis*(Q3-Q1)`, where Q1 and Q3 are the
         first and third quartiles.  The default value of
-        ``whis = 1.5`` corresponds to Tukey's original definition of
+        `whis = 1.5` corresponds to Tukey's original definition of
         boxplots.
 
     Notes

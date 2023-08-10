@@ -16,9 +16,9 @@ class scale_stroke_continuous(scale_continuous):
 
     Parameters
     ----------
-    range : array_like
+    range : tuple
         Range ([Minimum, Maximum]) of output stroke values.
-        Should be between 0 and 1. Default is ``(1, 6)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 
@@ -39,9 +39,9 @@ class scale_stroke_ordinal(scale_discrete):
 
     Parameters
     ----------
-    range : array_like
+    range : tuple
         Range ([Minimum, Maximum]) of output stroke values.
-        Should be between 0 and 1. Default is ``(1, 6)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 

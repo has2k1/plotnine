@@ -34,39 +34,39 @@ class geom_text(geom):
     Parameters
     ----------
     {common_parameters}
-    parse : bool (default: False)
-        If :py:`True`, the labels will be rendered with
-        `latex <http://matplotlib.org/users/usetex.html>`_.
-    family : str (default: None)
+    parse : bool, default=False
+        If `True`{.py}, the labels will be rendered with
+        [latex](http://matplotlib.org/users/usetex.html).
+    family : str, default=None
         Font family.
-    fontweight : int or str (default: normal)
+    fontweight : int, str, default="normal"
         Font weight.
-    fontstyle : str (default: normal)
-        Font style. One of *normal*, *italic* or *oblique*
-    nudge_x : float (default: 0)
+    fontstyle : "normal", "italic", "oblique", default="normal"
+        Font style.
+    nudge_x : float, default=0
         Horizontal adjustment to apply to the text
-    nudge_y : float (default: 0)
+    nudge_y : float, default=0
         Vertical adjustment to apply to the text
-    adjust_text: dict (default: None)
+    adjust_text: dict, default=None
         Parameters to :class:`adjustText.adjust_text` will repel
         overlapping texts. This parameter takes priority of over
-        ``nudge_x`` and ``nudge_y``.
+        `nudge_x` and `nudge_y`.
 
-        ``adjust_text`` does not work well when it is used in the
+        `adjust_text` does not work well when it is used in the
         first layer of the plot, or if it is the only layer.
         For more see the documentation at
         https://github.com/Phlya/adjustText/wiki .
-    format_string : str (default: None)
-        If not :py:`None`, then the text is formatted with this
+    format_string : str, default=None
+        If not `None`{.py}, then the text is formatted with this
         string using :meth:`str.format` e.g::
 
             # 2.348 -> "2.35%"
             geom_text(format_string="{:.2f}%")
 
-    path_effects : list (default: None)
-        If not :py:`None`, then the text will use these effects.
-        See `path_effects
-        <https://matplotlib.org/tutorials/advanced/patheffects_guide.html>`_
+    path_effects : list, default=None
+        If not `None`{.py}, then the text will use these effects.
+        See
+        [](https://matplotlib.org/tutorials/advanced/patheffects_guide.html)
         documentation for more details.
 
     See Also
@@ -80,14 +80,15 @@ class geom_text(geom):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Aesthetics Descriptions
+    **Aesthetics Descriptions**
 
     ha
-        Horizontal alignment. One of *left*, *center* or *right.*
+
+    :   Horizontal alignment. One of *left*, *center* or *right.*
 
     va
-        Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
 
+    :   Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
     """
     DEFAULT_AES = {
         "alpha": 1,

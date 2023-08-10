@@ -169,11 +169,11 @@ class element_text(element_base):
         Background color
     margin : dict
         Margin around the text. The keys are one of
-        ``['t', 'b', 'l', 'r']`` and ``units``. The units are
+        ``['t', 'b', 'l', 'r']`` and `units`. The units are
         one of ``['pt', 'lines', 'in']``. The *units* default
-        to ``pt`` and the other keys to ``0``. Not all text
+        to `pt` and the other keys to `0`. Not all text
         themeables support margin parameters and other than the
-        ``units``, only some of the other keys may apply.
+        `units`, only some of the other keys may apply.
     kwargs : dict
         Parameters recognised by :class:`matplotlib.text.Text`
 

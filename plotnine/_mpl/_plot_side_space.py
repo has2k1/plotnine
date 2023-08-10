@@ -4,8 +4,8 @@ nicely fit in the figure. In doing so, only axis labels, tick labels, axes
 titles and offsetboxes that are anchored to axes are currently considered.
 
 Internally, this module assumes that the margins (left margin, etc.) which are
-differences between ``Axes.get_tightbbox`` and ``Axes.bbox`` are independent of
-Axes position. This may fail if ``Axes.adjustable`` is ``datalim`` as well as
+differences between `Axes.get_tightbbox` and `Axes.bbox` are independent of
+Axes position. This may fail if `Axes.adjustable` is `datalim` as well as
 such cases as when left or right margin are affected by xlabel.
 """
 from __future__ import annotations

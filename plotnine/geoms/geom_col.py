@@ -17,8 +17,8 @@ class geom_col(geom_bar):
     Parameters
     ----------
     {common_parameters}
-    width : float, (default: None)
-        Bar width. If :py:`None`, the width is set to
+    width : float, default=None
+        Bar width. If `None`{.py}, the width is set to
         `90%` of the resolution of the data.
 
     See Also

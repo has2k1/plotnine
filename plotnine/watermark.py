@@ -19,13 +19,13 @@ class watermark:
 
     Parameters
     ----------
-    filename : str | pathlib.Path
+    filename : str, pathlib.Path
         Image file
-    xo : int, optional
-        x position offset in pixels. Default is 0.
-    yo : int, optional
-        y position offset in pixels. Default is 0.
-    alpha : float, optional
+    xo : int
+        x position offset in pixels.
+    yo : int
+        y position offset in pixels.
+    alpha : float
         Alpha blending value.
     kwargs : dict
         Additional parameters passed to

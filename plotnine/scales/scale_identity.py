@@ -46,8 +46,8 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : None, 'legend', default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["color"]
@@ -74,8 +74,8 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : None, 'legend', default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["shape"]
@@ -89,8 +89,8 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : None, 'legend', default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["linetype"]
@@ -104,8 +104,8 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : None, 'legend', default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["alpha"]
@@ -119,8 +119,8 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : None, 'legend', default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["size"]

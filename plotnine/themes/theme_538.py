@@ -9,10 +9,10 @@ class theme_538(theme_gray):
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 11.
-    base_family : str, optional
+        the base font size.
+    base_family : str
         Base font family.
     """
 

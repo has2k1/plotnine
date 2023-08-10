@@ -37,23 +37,23 @@ class scale_discrete(scale):
     Parameters
     ----------
     {superclass_parameters}
-    limits : array_like, optional
+    limits : array_like, default=None
         Limits of the scale. For scales that deal with
         categoricals, these may be a subset or superset of
         the categories. Data values that are not in the limits
         will be treated as missing data and represented with
-        the ``na_value``.
-    drop : bool
+        the `na_value`.
+    drop : bool, default=True
         Whether to drop unused categories from
         the scale
-    na_translate : bool
-        If ``True`` translate missing values and show them.
-        If ``False`` remove missing values. Default value is
-        ``True``
+    na_translate : bool, default=True
+        If `True` translate missing values and show them.
+        If `False` remove missing values. Default value is
+        `True`
     na_value : object
-        If ``na_translate=True``, what aesthetic value should be
+        If `na_translate=True`, what aesthetic value should be
         assigned to the missing values. This parameter does not
-        apply to position scales where ``nan`` is always placed
+        apply to position scales where `nan` is always placed
         on the right.
     """
 
