@@ -33,13 +33,11 @@ class geom_path(geom):
     Parameters
     ----------
     {common_parameters}
-    lineend : str (default: butt)
-        Line end style, of of *butt*, *round* or *projecting.*
-        This option is applied for solid linetypes.
-    linejoin : str (default: round)
-        Line join style, one of *round*, *miter* or *bevel*.
-        This option is applied for solid linetypes.
-    arrow : plotnine.geoms.geom_path.arrow (default: None)
+    lineend : "butt", "round", "projecting", default="butt"
+        Line end style. This option is applied for solid linetypes.
+    linejoin : "round", "miter", "bevel", default="round"
+        Line join style. This option is applied for solid linetypes.
+    arrow : ~plotnine.geoms.geom_path.arrow, default=None
         Arrow specification. Default is no arrow.
 
     See Also
@@ -225,10 +223,10 @@ class arrow:
         single edge.
     length : int | float
         of the edge in "inches"
-    ends : str in ``['last', 'first', 'both']``
+    ends : "last", "first", "both"
         At which end of the line to draw the
         arrowhead
-    type : str in ``['open', 'closed']``
+    type : "open", "closed"
         When it is closed, it is also filled
     """
 

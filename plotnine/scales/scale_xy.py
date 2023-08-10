@@ -41,7 +41,7 @@ class scale_position_discrete(scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    limits : array_like, optional
+    limits : array_like, default=None
         Limits of the scale. For discrete scale, these are
         the categories (unique values) of the variable.
         For scales that deal with categoricals, these may

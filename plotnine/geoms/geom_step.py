@@ -28,15 +28,14 @@ class geom_step(geom_path):
     Parameters
     ----------
     {common_parameters}
-    direction : str, optional (default: hv)
-        One of *hv*, *vh* or *mid*, for horizontal-vertical steps,
+    direction : "hv", "vh", "mid", default="hv"
+        horizontal-vertical steps,
         vertical-horizontal steps or steps half-way between adjacent
         x values.
 
     See Also
     --------
-    plotnine.geoms.geom_path : For documentation of extra
-        parameters.
+    plotnine.geoms.geom_path : For documentation of extra parameters.
     """
 
     DEFAULT_PARAMS = {

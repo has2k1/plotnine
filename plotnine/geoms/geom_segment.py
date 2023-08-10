@@ -30,16 +30,14 @@ class geom_segment(geom):
     Parameters
     ----------
     {common_parameters}
-    lineend : str (default: butt)
-        Line end style, of of *butt*, *round* or *projecting.*
-        This option is applied for solid linetypes.
-    arrow : plotnine.geoms.geom_path.arrow (default: None)
+    lineend : "butt", "round", "projecting", default="butt"
+        Line end style. This option is applied for solid linetypes.
+    arrow : ~plotnine.geoms.geom_path.arrow, default=None
         Arrow specification. Default is no arrow.
 
     See Also
     --------
-    plotnine.geoms.geom_path.arrow : for adding arrowhead(s)
-        to segments.
+    plotnine.geoms.geom_path.arrow : for adding arrowhead(s) to segments.
     """
 
     DEFAULT_AES = {

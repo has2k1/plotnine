@@ -46,7 +46,7 @@ class geom_map(geom):
     Notes
     -----
     This geom is best suited for plotting a shapefile read into
-    geopandas dataframe. The dataframe should have a ``geometry``
+    geopandas dataframe. The dataframe should have a `geometry`
     column.
     """
 

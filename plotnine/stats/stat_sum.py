@@ -22,13 +22,12 @@ class stat_sum(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'n'     # Number of observations at a position
-        'prop'  # Ratio of points in that panel at a position
-
+    ```python
+    "n"     # Number of observations at a position
+    "prop"  # Ratio of points in that panel at a position
+    ```
     """
 
     REQUIRED_AES = {"x", "y"}

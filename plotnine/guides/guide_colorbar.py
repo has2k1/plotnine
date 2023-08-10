@@ -23,23 +23,26 @@ class guide_colorbar(guide):
 
     Parameters
     ----------
-    barwidth : float
-        Width (in pixels) of the colorbar.
-    barheight : float
-        Height (in pixels) of the colorbar. The height is multiplied by
-        a factor of 5.
-    nbin : int
+    barwidth : float, default=None
+        Width (in pixels) of the colorbar. If `None`, the
+        [](`~plotnine.themes.themeable.legend_key_width`) is
+        used. The value is multiplied by `1.45`.
+    barheight : float, default= None
+        Height (in pixels) of the colorbar.
+        [](`~plotnine.themes.themeable.legend_key_height`) is
+        used. The value is multiplied by `5 * 1.45`.
+    nbin : int, default=20
         Number of bins for drawing a colorbar. A larger value yields
-        a smoother colorbar. Default is 20.
-    raster : bool
+        a smoother colorbar
+    raster : bool, defaut=False
         Whether to render the colorbar as a raster object.
-    ticks : bool
+    ticks : bool, default=True
         Whether tick marks on colorbar should be visible.
-    draw_ulim : bool
+    draw_ulim : bool, default=True
         Whether to show the upper limit tick marks.
-    draw_llim : bool
+    draw_llim : bool, default=TRue
         Whether to show the lower limit tick marks.
-    direction : str in ``['horizontal', 'vertical']``
+    direction : "horizontal", "vertical", default="horizontal"
         Direction of the guide.
     kwargs : dict
         Parameters passed on to :class:`.guide`

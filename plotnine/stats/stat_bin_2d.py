@@ -24,32 +24,32 @@ class stat_bin_2d(stat):
     bins : int, optional (default: 30)
         Number of bins. Overridden by binwidth.
     breaks : array-like(s), optional (default: None)
-        Bin boundaries. This supercedes the ``binwidth``, ``bins``,
-        ``center`` and ``boundary``. It can be an array_like or
+        Bin boundaries. This supercedes the `binwidth`, `bins`,
+        `center` and `boundary`. It can be an array_like or
         a list of two array_likes to provide distinct breaks for
-        the ``x`` and ``y`` axes.
+        the `x` and `y` axes.
     binwidth : float, optional (default: None)
         The width of the bins. The default is to use bins bins that
         cover the range of the data. You should always override this
         value, exploring multiple widths to find the best to illustrate
         the stories in your data.
     drop : bool, optional (default: False)
-        If :py:`True`, removes all cells with zero counts.
+        If `True`{.py}, removes all cells with zero counts.
     """
 
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'xmin'    # x lower bound for the bin
-        'xmax'    # x upper bound for the bin
-        'ymin'    # y lower bound for the bin
-        'ymax'    # y upper bound for the bin
-        'count'   # number of points in bin
-        'density' # density of points in bin, scaled to integrate to 1
+    ```python
+    "xmin"    # x lower bound for the bin
+    "xmax"    # x upper bound for the bin
+    "ymin"    # y lower bound for the bin
+    "ymax"    # y upper bound for the bin
+    "count"   # number of points in bin
+    "density" # density of points in bin, scaled to integrate to 1
+    ```
 
     """
     REQUIRED_AES = {"x", "y"}

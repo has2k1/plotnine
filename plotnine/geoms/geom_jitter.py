@@ -23,16 +23,16 @@ class geom_jitter(geom_point):
     Parameters
     ----------
     {common_parameters}
-    width : float, optional
+    width : float, default=None
         Proportion to jitter in horizontal direction.
         The default value is that from
         [](`~plotnine.positions.position_jitter`)
-    height : float, optional
+    height : float, default=None
         Proportion to jitter in vertical direction.
         The default value is that from
         [](`~plotnine.positions.position_jitter`).
-    random_state : int or ~numpy.random.RandomState, optional
-        Seed or Random number generator to use. If ``None``, then
+    random_state : int, ~numpy.random.RandomState, default=None
+        Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 
     See Also

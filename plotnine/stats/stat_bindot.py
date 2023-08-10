@@ -28,41 +28,37 @@ class stat_bindot(stat):
     Parameters
     ----------
     {common_parameters}
-    bins : int, optional (default: None)
-        Number of bins. Overridden by binwidth. If :py:`None`,
+    bins : int, default=None
+        Number of bins. Overridden by binwidth. If `None`{.py},
         a number is computed using the freedman-diaconis method.
-    binwidth : float, optional (default: None)
-        When :py:`method='dotdensity'`, this specifies the maximum
-        binwidth. When :py:`method='histodot'`, this specifies the
-        binwidth. This supercedes the ``bins``.
-    origin : float, optional (default: None)
-        When :py:`method='histodot'`, origin of the first bin.
+    binwidth : float, default=None
+        When `method='dotdensity'`{.py}, this specifies the maximum
+        binwidth. When `method='histodot'`{.py}, this specifies the
+        binwidth. This supercedes the `bins`.
+    origin : float, default=None
+        When `method='histodot'`{.py}, origin of the first bin.
     width : float, optional (default: 0.9)
-        When :py:`binaxis='y'`, the spacing of the dotstacks for
+        When `binaxis='y'`{.py}, the spacing of the dotstacks for
         dodging.
-    binaxis : str, optional (default: x)
-        Axis to bin along. Either :py:`'x'` or :py:`'y'`
-    method : str, optional (default: dotdensity)
-        One of *dotdensity* or *histodot*. These provide either of
-        dot-density binning or fixed bin widths.
-    binpositions : str, optional (default: bygroup)
-        Position of the bins when :py:`method='dotdensity'`. The value
-        is one of::
-
-            'bygroup'  # positions of the bins for each group are
-                       # determined separately.
-            'all'      # positions of the bins are determined with all
-                       # data taken together. This aligns the dots
-                       # stacks across multiple groups.
-
-    drop : bool, optional (default: False)
-        If :py:`True`, remove all bins with zero counts.
-    right : bool, optional (default: True)
-        When :py:`method='histodot'`, :py:`True` means include right
-        edge of the bins and if :py:`False` the left edge is included.
-    breaks : array-like, optional (default: None)
-        Bin boundaries for :py:`method='histodot'`. This supercedes the
-        ``binwidth`` and ``bins``.
+    binaxis : "x", "y", default="x"
+        Axis to bin along.
+    method : "dotdensity", "histodot", default="dotdensity"
+        Whether to do dot-density binning or fixed widths binning.
+    binpositions : "all", "bygroup", default="bygroup"
+        Position of the bins when `method="dotdensity"`{.py}. The value
+        - `bygroup` -  positions of the bins for each group are
+        determined separately.
+        - `all` - positions of the bins are determined with all
+        data taken together. This aligns the dots
+        stacks across multiple groups.
+    drop : bool, default=False
+        If `True`{.py}, remove all bins with zero counts.
+    right : bool, default=True
+        When `method='histodot'`{.py}, :py:`True` means include right
+        edge of the bins and if `False`{.py} the left edge is included.
+    breaks : array-like, default=None
+        Bin boundaries for `method='histodot'`{.py}. This supercedes the
+        `binwidth` and `bins`.
 
     See Also
     --------
@@ -72,14 +68,14 @@ class stat_bindot(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-         'count'    # number of points in bin
-         'density'  # density of points in bin, scaled to integrate to 1
-         'ncount'   # count, scaled to maximum of 1
-         'ndensity' # density, scaled to maximum of 1
+    ```python
+    "count"    # number of points in bin
+    "density"  # density of points in bin, scaled to integrate to 1
+    "ncount"   # count, scaled to maximum of 1
+    "ndensity" # density, scaled to maximum of 1
+    ```
 
     """
 

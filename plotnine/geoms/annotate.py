@@ -49,8 +49,8 @@ class annotate:
 
     Notes
     -----
-    The positioning aethetics ``x, y, xmin, ymin, xmax, ymax, xend, yend,
-    xintercept, yintercept`` depend on which `geom` is used.
+    The positioning aethetics `x, y, xmin, ymin, xmax, ymax, xend, yend,
+    xintercept, yintercept` depend on which `geom` is used.
 
     You should choose or ignore accordingly.
 

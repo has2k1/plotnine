@@ -230,8 +230,8 @@ class Layout:
         Parameters
         ----------
         labels : labels_view
-            Labels as specified by the user through the ``labs`` or
-            ``xlab`` calls.
+            Labels as specified by the user through the `labs` or
+            `xlab` calls.
 
         Returns
         -------
@@ -251,8 +251,8 @@ class Layout:
         Parameters
         ----------
         labels : labels_view
-            Labels as specified by the user through the ``labs`` or
-            ``ylab`` calls.
+            Labels as specified by the user through the `labs` or
+            `ylab` calls.
 
         Returns
         -------
@@ -272,8 +272,8 @@ class Layout:
         Parameters
         ----------
         labels : labels_view
-            Labels as specified by the user through the ``labs`` or
-            ``ylab`` calls.
+            Labels as specified by the user through the `labs` or
+            `ylab` calls.
 
         Returns
         -------

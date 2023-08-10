@@ -636,11 +636,11 @@ class ggplot:
             DPI to use for raster graphics. If None, defaults to using
             the `dpi` of theme, if none is set then a `dpi` of 100.
         limitsize : bool
-            If ``True`` (the default), ggsave will not save images
+            If `True` (the default), ggsave will not save images
             larger than 50x50 inches, to prevent the common error
             of specifying dimensions in pixels.
         verbose : bool
-            If ``True``, print the saving information.
+            If `True`, print the saving information.
         kwargs : dict
             Additional arguments to pass to matplotlib `savefig()`.
         """
@@ -696,7 +696,7 @@ def save_as_pdf_pages(
         Path to save plot to (if you just want to set path and
         not filename).
     verbose : :py:class:`bool`
-        If ``True``, print the saving information.
+        If `True`, print the saving information.
     kwargs : :py:class:`dict`
         Additional arguments to pass to
         :py:meth:`matplotlib.figure.Figure.savefig`.

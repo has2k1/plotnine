@@ -50,7 +50,7 @@ def mean_cl_boot(
     confidence_interval : float
         Confidence interval in the range (0, 1).
     random_state : int or ~numpy.random.RandomState, optional
-        Seed or Random number generator to use. If ``None``, then
+        Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
     """
     return bootstrap_statistics(
@@ -190,39 +190,40 @@ class stat_summary(stat):
     Parameters
     ----------
     {common_parameters}
-    fun_data : str or function, optional
-        One of::
+    fun_data : str or function, default="mean_cl_boot"
+        One of:
 
-            # Bootstrapped mean, confidence interval
-            # Arguments:
-            #     n_samples - No. of samples to draw
-            #     confidence_interval
-            #     random_state
-            'mean_cl_boot'
+        ```python
+        # Bootstrapped mean, confidence interval
+        # Arguments:
+        #     n_samples - No. of samples to draw
+        #     confidence_interval
+        #     random_state
+        "mean_cl_boot"
 
-            # Mean, C.I. assuming normal distribution
-            # Arguments:
-            #     confidence_interval
-            'mean_cl_normal'
+        # Mean, C.I. assuming normal distribution
+        # Arguments:
+        #     confidence_interval
+        "mean_cl_normal"
 
-            # Mean, standard deviation * constant
-            # Arguments:
-            #     mult - multiplication factor
-            'mean_sdl'
+        # Mean, standard deviation * constant
+        # Arguments:
+        #     mult - multiplication factor
+        "mean_sdl"
 
-            # Median, outlier quantiles with equal tail areas
-            # Arguments:
-            #     confidence_interval
-            'median_hilow'
+        # Median, outlier quantiles with equal tail areas
+        # Arguments:
+        #     confidence_interval
+        "median_hilow"
 
-            # Mean, Standard Errors * constant
-            # Arguments:
-            #     mult - multiplication factor
-            'mean_se'
+        # Mean, Standard Errors * constant
+        # Arguments:
+        #     mult - multiplication factor
+        "mean_se"
+        ```
 
         or any function that takes a array and returns a dataframe
-        with three columns named ``y``, ``ymin`` and ``ymax``.
-        Defaults to :py:`'mean_cl_boot'`.
+        with three columns named `y`, `ymin` and `ymax`.
     fun_y : function, optional (default: None)
         Any function that takes a array-like and returns a value
         fun_ymin : function (default:None)
@@ -236,13 +237,13 @@ class stat_summary(stat):
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
     random_state : int or ~numpy.random.RandomState, optional
-        Seed or Random number generator to use. If ``None``, then
+        Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 
     Notes
     -----
-    If any of ``fun_y``, ``fun_ymin`` or ``fun_ymax`` are provided, the
-    value of ``fun_data`` will be ignored.
+    If any of `fun_y`, `fun_ymin` or `fun_ymax` are provided, the
+    value of `fun_data` will be ignored.
 
     See Also
     --------
@@ -252,16 +253,16 @@ class stat_summary(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'ymin'  # ymin computed by the summary function
-        'ymax'  # ymax computed by the summary function
-        'n'     # Number of observations at a position
+    ```python
+    "ymin"  # ymin computed by the summary function
+    "ymax"  # ymax computed by the summary function
+    "n"     # Number of observations at a position
+    ```
 
     Calculated aesthetics are accessed using the `after_stat` function.
-    e.g. :py:`after_stat('ymin')`.
+    e.g. `after_stat('ymin')`{.py}.
     """
 
     REQUIRED_AES = {"x", "y"}

@@ -79,15 +79,15 @@ class _geom_logticks(geom_rug):
         ----------
         base : float or None
             Base of the logarithm in which the ticks will be
-            calculated. If ``None``, the base of the log transform
+            calculated. If `None`, the base of the log transform
             the scale will be used.
         sides : str (default: bl)
             Sides onto which to draw the marks. Any combination
-            chosen from the characters ``btlr``, for *bottom*, *top*,
-            *left* or *right* side marks. If ``coord_flip()`` is used,
+            chosen from the characters `btlr`, for *bottom*, *top*,
+            *left* or *right* side marks. If `coord_flip()` is used,
             these are the sides *before* the flip.
         panel_params : panel_view
-            ``x`` and ``y`` view scale values.
+            `x` and `y` view scale values.
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the geom.
 
@@ -253,8 +253,8 @@ class annotation_logticks(annotate):
     ----------
     sides : str (default: bl)
         Sides onto which to draw the marks. Any combination
-        chosen from the characters ``btlr``, for *bottom*, *top*,
-        *left* or *right* side marks. If ``coord_flip()`` is used,
+        chosen from the characters `btlr`, for *bottom*, *top*,
+        *left* or *right* side marks. If `coord_flip()` is used,
         these are the sides *after* the flip.
     alpha : float (default: 1)
         Transparency of the ticks
@@ -269,7 +269,7 @@ class annotation_logticks(annotate):
         ticks relative to panel size
     base : float (default: None)
         Base of the logarithm in which the ticks will be
-        calculated. If ``None``, the base used to log transform
+        calculated. If `None`, the base used to log transform
         the scale will be used.
     """
 

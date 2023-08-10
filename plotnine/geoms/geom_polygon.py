@@ -30,7 +30,7 @@ class geom_polygon(geom):
 
     Notes
     -----
-    All paths in the same ``group`` aesthetic value make up a polygon.
+    All paths in the same `group` aesthetic value make up a polygon.
     """
 
     DEFAULT_AES = {

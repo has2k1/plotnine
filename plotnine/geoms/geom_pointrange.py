@@ -27,7 +27,7 @@ class geom_pointrange(geom):
     Parameters
     ----------
     {common_parameters}
-    fatten : float, optional (default: 2)
+    fatten : float, default=2
         A multiplicative factor used to increase the size of the
         point along the line-range.
     """

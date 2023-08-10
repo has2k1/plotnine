@@ -21,7 +21,7 @@ class geom_bar(geom_rect):
     ----------
     {common_parameters}
     width : float, optional (default None)
-        Bar width. If :py:`None`, the width is set to
+        Bar width. If `None`{.py}, the width is set to
         `90%` of the resolution of the data.
 
     See Also

@@ -30,32 +30,33 @@ class geom_ribbon(geom):
     Parameters
     ----------
     {common_parameters}
-    outline_type : 'upper' | 'lower' | 'both' | 'full'
+    outline_type : "upper", "lower", "both", "full", default="both"
         How to stroke to outline of the region / area.
-            * 'upper' - draw only upper bounding line'
-            * 'lower' - draw only lower bounding line'
-            * 'both' - draw both upper & lower bounding lines
-            * 'full' - draw closed polygon around the area.
+        - `upper` - draw only upper bounding line
+        - `lower` - draw only lower bounding line
+        - `both` - draw both upper & lower bounding lines
+        - `full` - draw closed polygon around the area.
     """
 
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Aesthetics Descriptions
+    **Aesthetics Descriptions**
 
     where
-        Define where to exclude horizontal regions from being filled.
-        Regions between any two ``False`` values are skipped.
+
+    :   Define where to exclude horizontal regions from being filled.
+        Regions between any two `False` values are skipped.
         For sensible demarcation the value used in the *where* predicate
-        expression should match the ``ymin`` value or expression. i.e.
+        expression should match the `ymin` value or expression. i.e.
 
-        ::
+        ```python
+         aes(ymin=0, ymax='col1', where='col1 > 0')  # good
+         aes(ymin=0, ymax='col1', where='col1 > 10')  # bad
 
-            aes(ymin=0, ymax='col1', where='col1 > 0')  # good
-            aes(ymin=0, ymax='col1', where='col1 > 10')  # bad
-
-            aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
-            aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
+         aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
+         aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
+        ```
     """
     DEFAULT_AES = {
         "alpha": 1,

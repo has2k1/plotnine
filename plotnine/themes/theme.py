@@ -76,7 +76,7 @@ class theme:
     -----
     When subclassing, make sure to call :python:`theme.__init__`.
     After which you can customise :python:`self._rcParams` within
-    the ``__init__`` method of the new theme. The ``rcParams``
+    the `__init__` method of the new theme. The `rcParams`
     should not be modified after that.
     """
 

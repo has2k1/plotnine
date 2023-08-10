@@ -40,7 +40,9 @@ class guides(dict):
     ----------
     kwargs : dict
         aesthetic - guide pairings. e.g
-        ``color=guide_colorbar()``
+        ```python
+        guides(color=guide_colorbar())
+        ```
     """
 
     # Determined from the theme when the guides are
@@ -226,15 +228,18 @@ class guides(dict):
         """
         Merge overlapped guides
 
-        For example::
+        For example:
 
-            from plotnine import *
-            gg = ggplot(mtcars, aes(y='wt', x='mpg', colour='factor(cyl)'))
-            gg = gg + stat_smooth(aes(fill='factor(cyl)'), method='lm')
-            gg = gg + geom_point()
-            gg
+        ```python
+         from plotnine import *
+         p = (
+            ggplot(mtcars, aes(y="wt", x="mpg", colour="factor(cyl)"))
+            + stat_smooth(aes(fill="factor(cyl)"), method="lm")
+            + geom_point()
+         )
+        ```
 
-        This would create two guides with the same hash
+        would create two guides with the same hash
         """
         # group guide definitions by hash, and
         # reduce each group to a single guide

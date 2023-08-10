@@ -27,7 +27,7 @@ class geom_smooth(geom):
     Parameters
     ----------
     {common_parameters}
-    legend_fill_ratio : float (default: 0.5)
+    legend_fill_ratio : float, default=0.5
         How much (vertically) of the legend box should be filled by
         the color that indicates the confidence intervals. Should be
         in the range [0, 1].

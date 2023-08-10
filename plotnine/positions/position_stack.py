@@ -16,6 +16,12 @@ class position_stack(position):
 
     The objects to stack are those that have
     an overlapping x range.
+
+    Parameters
+    ----------
+    vjust: float
+        By what fraction to avoid overlapping the lower object,
+        where `0` gives a complete overlap and `1` gives no overlap.
     """
 
     fill = False

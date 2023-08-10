@@ -28,24 +28,24 @@ class geom_dotplot(geom):
 
     Parameters
     ----------
-    {common_parameters}
-    stackdir : str (default: up)
+    {commonparameters}
+    stackdir : str, default="up"
         Direction in which to stack the dots. Options are
-        :py:`['up', 'down', 'center', 'centerwhole']`
-    stackratio : float (default: 1)
+        `['up', 'down', 'center', 'centerwhole']`{.py}
+    stackratio : float, default=1
         How close to stack the dots. If value is less than 1,
         the dots overlap, if greater than 1 they are spaced.
-    dotsize : float (default: 1)
-        Diameter of dots relative to ``binwidth``.
-    stackgroups : bool (default: False)
-        If :py:`True`, the dots are stacked across groups.
+    dotsize : float, default=1
+        Diameter of dots relative to `binwidth`.
+    stackgroups : bool, default=False
+        If `True`{.py}, the dots are stacked across groups.
 
     See Also
     --------
-    plotnine.stats.stat_bindot
+    plotnine.stats.statbindot
     """
 
-    DEFAULT_AES = {"alpha": 1, "color": "black", "fill": "black"}
+    DEFAULTAES = {"alpha": 1, "color": "black", "fill": "black"}
     REQUIRED_AES = {"x", "y"}
     NON_MISSING_AES = {"size", "shape"}
     DEFAULT_PARAMS = {

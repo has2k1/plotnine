@@ -15,11 +15,11 @@ class position_dodge(position):
 
     Parameters
     ----------
-    width: float
+    width: float, default=None
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
-    preserve: str in ``['total', 'single']``
+    preserve: "total", "single", default="total"
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
     """

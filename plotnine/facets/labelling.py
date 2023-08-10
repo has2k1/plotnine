@@ -153,16 +153,15 @@ class labeller:
 
     Parameters
     ----------
-    rows : str | function | None
+    rows : str, callable
         How to label the rows
-    cols : str | function | None
+    cols : str, callable
         How to label the columns
     multi_line : bool
         Whether to place each variable on a separate line
-    default : function | str
-        Fallback labelling function. If it is a string,
-        it should be the name of one the labelling
-        functions provided by plotnine.
+    default : str, callable
+        Fallback labelling function. If it is a string, it should be
+        one of `["label_value", "label_both", "label_context"]`{.py}.
     kwargs : dict
         {variable name : function | string} pairs for
         renaming variables. A function to rename the variable

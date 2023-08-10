@@ -16,7 +16,7 @@ class stat_ecdf(stat):
     Parameters
     ----------
     {common_parameters}
-    n  : int (default: None)
+    n  : int, default=None
         This is the number of points to interpolate with.
         If :py:`None`, do not interpolate.
 
@@ -28,13 +28,12 @@ class stat_ecdf(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'x'     # x in the data
-        'ecdf'  # cumulative density corresponding to x
-
+    ```python
+    "x"     # x in the data
+    "ecdf"  # cumulative density corresponding to x
+    ```
     """
 
     REQUIRED_AES = {"x"}

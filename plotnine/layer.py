@@ -34,39 +34,38 @@ class layer:
     """
     Layer
 
-    When a ``geom`` or ``stat`` is added to a
-    [](`~plotnine.ggplot`) object, it creates a single layer.
-    This class is a representation of that layer.
+    When a `geom` or `stat` is added to a [](`~plotnine.ggplot`) object,
+    it creates a single layer. This class is a representation of that layer.
 
     Parameters
     ----------
-    geom : geom, optional
+    geom : geom
         geom to used to draw this layer.
-    stat : stat, optional
+    stat : stat
         stat used for the statistical transformation of
         data in this layer
-    mapping : aes, optional
+    mapping : aes
         Aesthetic mappings.
-    data : dataframe, optional
-        Data plotted in this layer. If ``None``, the data from
+    data : dataframe
+        Data plotted in this layer. If `None`, the data from
         the [](`~plotnine.ggplot`) object will be used.
-    position : position, optional
+    position : position
         Position object to adjust the geometries in this layer.
-    inherit_aes : bool, optional
-        If ``True`` inherit from the aesthetic mappings of
-        the [](`~plotnine.ggplot`) object. Default ``True``.
-    show_legend : bool or None, optional
+    inherit_aes : bool
+        If `True` inherit from the aesthetic mappings of
+        the [](`~plotnine.ggplot`) object.
+    show_legend : bool or None
         Whether to make up and show a legend for the mappings
-        of this layer. If ``None`` then an automatic/good choice
-        is made. Default is ``None``.
-    raster : bool, optional (default: False)
-        If ``True``, draw onto this layer a raster (bitmap) object
+        of this layer. If `None` then an automatic/good choice
+        is made
+    raster : bool
+        If `True`, draw onto this layer a raster (bitmap) object
         even if the final image format is vector.
 
     Notes
     -----
     There is no benefit to manually creating a layer. You should
-    always use a ``geom`` or ``stat``.
+    always use a `geom` or `stat`.
     """
 
     # Data for this layer

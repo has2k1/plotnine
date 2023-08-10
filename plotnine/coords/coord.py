@@ -99,7 +99,7 @@ class coord:
         Return desired aspect ratio for the plot
 
         If not overridden by the subclass, this method
-        returns ``None``, which means that the coordinate
+        returns `None`, which means that the coordinate
         system does not influence the aspect ratio.
         """
         return None

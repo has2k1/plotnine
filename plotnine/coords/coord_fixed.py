@@ -19,24 +19,22 @@ class coord_fixed(coord_cartesian):
     ----------
     ratio : float
         Desired aspect_ratio (:math:`y/x`) of the panel(s).
-        Default is 1.
-    xlim : None | (float, float)
-        Limits for x axis. If None, then they are
-        automatically computed.
-    ylim : None | (float, float)
-        Limits for y axis. If None, then they are
-        automatically computed.
-    expand : bool
-        If `True`, expand the coordinate axes by
-        some factor. If `False`, use the limits
-        from the data.
+    xlim : tuple[float, float], default=None
+        Limits for x axis. If None, then they are automatically computed.
+    ylim : tuple[float, float], default=None
+        Limits for y axis. If None, then they are automatically computed.
+    expand : bool, default=True
+        If `True`, expand the coordinate axes by some factor. If `False`,
+        use the limits from the data.
 
     Notes
     -----
     To specify aspect ratio of the visual size for the axes use the
-    [](`~plotnine.themes.themeable.aspect_ratio`) themeable::
+    [](`~plotnine.themes.themeable.aspect_ratio`) themeable.
 
-        ggplot(data, aes('x', 'y')) + theme(aspect_ratio=0.5)
+    ```python
+    ggplot(data, aes('x', 'y')) + theme(aspect_ratio=0.5)
+    ```
 
     When changing the `aspect_ratio` in either way, the `width` of the
     panel remains constant (as derived from the

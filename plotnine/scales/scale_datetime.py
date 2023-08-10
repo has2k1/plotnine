@@ -13,21 +13,21 @@ class scale_datetime(scale_continuous):
 
     Parameters
     ----------
-    date_breaks : str
+    date_breaks : str, default=None
         A string giving the distance between major breaks.
         For example `'2 weeks'`, `'5 years'`. If specified,
-        ``date_breaks`` takes precedence over
-        ``breaks``.
-    date_labels : str
+        `date_breaks` takes precedence over
+        `breaks`.
+    date_labels : str, default=None
         Format string for the labels.
         See :ref:`strftime <strftime-strptime-behavior>`.
-        If specified, ``date_labels`` takes precedence over
-        ``labels``.
-    date_minor_breaks : str
+        If specified, `date_labels` takes precedence over
+        `labels`.
+    date_minor_breaks : str, default=None
         A string giving the distance between minor breaks.
         For example `'2 weeks'`, `'5 years'`. If specified,
-        ``date_minor_breaks`` takes precedence over
-        ``minor_breaks``.
+        `date_minor_breaks` takes precedence over
+        `minor_breaks`.
     {superclass_parameters}
     """
 

@@ -32,10 +32,9 @@ class geom_crossbar(geom):
     Parameters
     ----------
     {common_parameters}
-    width : float or None, optional (default: 0.5)
-        Box width. If :py:`None`, the width is set to
-        `90%` of the resolution of the data.
-    fatten : float, optional (default: 2)
+    width : float, default=0.5
+        Box width as a fraction of the resolution of the data.
+    fatten : float, default=2
         A multiplicative factor used to increase the size of the
         middle bar across the box.
     """

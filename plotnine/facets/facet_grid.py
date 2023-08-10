@@ -37,28 +37,32 @@ class facet_grid(facet):
         must of size two, the elements of which must be
         strings or lists. If string formula is not processed
         as you may expect, use tuple/list. For example, the
-        follow two specifications are equivalent::
+        follow two specifications are equivalent:
 
-            'func(var4) ~ func(var1+var3) + func(var2)'
-            ['func(var4)', ('func(var1+var3)', 'func(var2)')]
+        ```python
+        "func(var4) ~ func(var1+var3) + func(var2)"
+
+        ["func(var4)", ("func(var1+var3)", "func(var2)")]
+        ```
 
         There may be cases where you cannot use a
-        use a pure string formula, e.g.::
+        use a pure string formula, e.g.
 
-            ['var4', ('var1+var3', 'var2')]
-
+        ```python
+        ['var4', ('var1+var3', 'var2')]
+        ```
     margins : bool | list[str]
         variable names to compute margins for.
         True will compute all possible margins.
     space : str | dict
-        Control the size of the  ``x`` or ``y`` sides of the panels.
-        The size also depends to the ``scales`` parameter.
+        Control the size of the  `x` or `y` sides of the panels.
+        The size also depends to the `scales` parameter.
 
         If a string, it should be one of
         ``['fixed', 'free', 'free_x', 'free_y']``. Currently, only the
         ``'fixed'`` option is supported.
 
-        Alternatively if a ``dict``, it indicates the relative facet
+        Alternatively if a `dict`, it indicates the relative facet
         size ratios such as::
 
             {'x': [1, 2], 'y': [3, 1, 1]}
@@ -71,23 +75,22 @@ class facet_grid(facet):
         Note that the number of dimensions in the list must equal the
         number of facets that will be produced.
 
-    shrink : bool
+    shrink : bool, default=True
         Whether to shrink the scales to the output of the
-        statistics instead of the raw data. Default is ``True``.
-    labeller : str | function
-        How to label the facets. If it is a ``str``, it should
-        be one of ``'label_value'`` ``'label_both'`` or
-        ``'label_context'``. Default is ``'label_value'``
-    as_table : bool
-        If ``True``, the facets are laid out like a table with
-        the highest values at the bottom-right. If ``False``
+        statistics instead of the raw data.
+    labeller : str, callable, default="label_value"
+        How to label the facets. A string value if it should be
+        one of `["label_value", "label_both", "label_context"]`{.py}.
+    as_table : bool, default=True
+        If `True`, the facets are laid out like a table with
+        the highest values at the bottom-right. If `False`
         the facets are laid out like a plot with the highest
-        value a the top-right. Default it ``True``.
-    drop : bool
-        If ``True``, all factor levels not used in the data
-        will automatically be dropped. If ``False``, all
+        value a the top-right
+    drop : bool, default=True
+        If `True`, all factor levels not used in the data
+        will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
-        or not they appear in the data. Default is ``True``.
+        or not they appear in the data.
     """
 
     rows: list[str]

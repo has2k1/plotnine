@@ -143,7 +143,7 @@ class aes(Dict[str, Any]):
 
         1. columns in the dataframe
         2. variables in the namespace
-        3. aesthetic values (columns) calculated by the ``stat``
+        3. aesthetic values (columns) calculated by the `stat`
 
       with the column names having precedence over the variables.
       For expressions, columns in the dataframe that are mapped to

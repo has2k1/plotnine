@@ -47,20 +47,20 @@ class scale_continuous(scale):
     trans : str | function
         Name of a trans function or a trans function.
         See :mod:`mizani.transforms` for possible options.
-    oob : function
+    oob : callable, default=mizani.bounds.censor
         Function to deal with out of bounds (limits)
         data points. Default is to turn them into
-        ``np.nan``, which then get dropped.
-    minor_breaks : list-like or int or callable or None
+        `np.nan`, which then get dropped.
+    minor_breaks : list, int, callable, default=None
         If a list-like, it is the minor breaks points.
         If an integer, it is the number of minor breaks between
         any set of major breaks.
         If a function, it should have the signature
-        ``func(limits)`` and return a list-like of consisting
+        `func(limits)` and return a list-like of consisting
         of the minor break points.
-        If ``None``, no minor breaks are calculated.
+        If `None`, no minor breaks are calculated.
         The default is to automatically calculate them.
-    rescaler : function, optional
+    rescaler : callable, default=mizani.bounds.rescale
         Function to rescale data points so that they can
         be handled by the palette. Default is to rescale
         them onto the [0, 1] range. Scales that inherit

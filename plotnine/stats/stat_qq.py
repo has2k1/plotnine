@@ -18,40 +18,39 @@ class stat_qq(stat):
     Parameters
     ----------
     {common_parameters}
-    distribution : str (default: norm)
+    distribution : str, default="norm"
         Distribution or distribution function name. The default is
         *norm* for a normal probability plot. Objects that look enough
         like a stats.distributions instance (i.e. they have a ppf
         method) are also accepted. See :mod:`scipy stats <scipy.stats>`
         for available distributions.
-    dparams : dict
+    dparams : dict, default=None
         Distribution-specific shape parameters (shape parameters plus
         location and scale).
-    quantiles : array_like, optional
+    quantiles : array_like, default=None
         Probability points at which to calculate the theoretical
         quantile values. If provided, must be the same number as
         as the sample data points. The default is to use calculated
-        theoretical points, use to ``alpha_beta`` control how
+        theoretical points, use to `alpha_beta` control how
         these points are generated.
-    alpha_beta : tuple
+    alpha_beta : tuple, default=(3/8, 3/8)
         Parameter values to use when calculating the quantiles.
-        Default is :py:`(3/8, 3/8)`.
 
     See Also
     --------
-    scipy.stats.mstats.plotting_positions : Uses ``alpha_beta``
+    scipy.stats.mstats.plotting_positions : Uses `alpha_beta`
         to calculate the quantiles.
     """
 
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-         'theoretical'  # theoretical quantiles
-         'sample'       # sample quantiles
+    ```python
+    'theoretical'  # theoretical quantiles
+    'sample'       # sample quantiles
+    ```
 
     """
     REQUIRED_AES = {"sample"}

@@ -45,29 +45,30 @@ class geom_label(geom_text):
     Parameters
     ----------
     {common_parameters}
-    boxstyle : str, optional (default: round)
-        Options are::
-
-            'circle'
-            'darrow'
-            'larrow'
-            'rarrow'
-            'round '
-            'round4'
-            'roundtooth'
-            'sawtooth'
-            'square'
-    boxcolor: None, str or rgba tuple (default: None)
+    boxstyle : str, default="round"
+        Options are:
+        ```python
+        'circle'
+        'darrow'
+        'larrow'
+        'rarrow'
+        'round '
+        'round4'
+        'roundtooth'
+        'sawtooth'
+        'square'
+        ````
+    boxcolor: strr, rgba tuple, default=None
         Color of box around the text. If None, the color is
         the same as the text.
-    label_padding : float, optional (default: 0.25)
+    label_padding : float, default=0.25
         Amount of padding
-    label_r : float, optional (default: 0.25)
+    label_r : float, default=0.25
         Rounding radius of corners.
-    label_size : float, optional (default: 0.7)
+    label_size : float, default=0.7
         Linewidth of the label boundary.
-    tooth_size : float, optional (default: None)
-        Size of the ``roundtooth`` or ``sawtooth`` if they
+    tooth_size : float, default=None
+        Size of the `roundtooth` or `sawtooth` if they
         are the chosen *boxstyle*. The default depends
         on Matplotlib
 

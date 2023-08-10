@@ -14,9 +14,9 @@ class facet_null(facet):
 
     Parameters
     ----------
-    shrink : bool
+    shrink : bool, default=True
         Whether to shrink the scales to the output of the
-        statistics instead of the raw data. Default is ``True``.
+        statistics instead of the raw data.
     """
 
     def __init__(self, shrink: bool = True):

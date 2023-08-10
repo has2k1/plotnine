@@ -56,9 +56,9 @@ def qplot(
         will create one, extracting arrays from the
         current environment.
     geom : str | list
-        *geom(s)* to do the drawing. If ``auto``, defaults
-        to 'point' if ``x`` and ``y`` are specified or
-        'histogram' if only ``x`` is specified.
+        *geom(s)* to do the drawing. If `auto`, defaults
+        to 'point' if `x` and `y` are specified or
+        'histogram' if only `x` is specified.
     facets : str
         Facets
     margins : bool | list[str]

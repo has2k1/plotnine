@@ -19,49 +19,52 @@ class guide(metaclass=Registry):
 
     Parameters
     ----------
-    title : str | None
-        Title of the guide. If ``None``, title is not shown.
+    title : str, None
+        Title of the guide. If `None`, title is not shown.
         Default is the name of the aesthetic or the name
         specified using [](`~plotnine.components.labels.lab`)
-    title_position : str in ``['top', 'bottom', 'left', 'right']``
-        Position of title
-    title_theme : element_text
+    title_position : str, default="auto"
+        Position of title. One of
+        `["top", "bottom", "left", "right"]`{.py}
+    title_theme : element_text, default=None
         Control over the title theme.
-        Default is to use ``legend_title`` in a theme.
-    title_hjust : float
+        Default is to use `legend_title` in a theme.
+    title_hjust : float, default=None
         Horizontal justification of title text.
-    title_vjust : float
+    title_vjust : float, default=None
         Vertical justification of title text.
-    title_separation : float
+    title_separation : float, default=None
         Separation between the title text and the colorbar.
         Value is in pixels.
-    label : bool
+    label : bool, default=True
         Whether to show labels
-    label_position : str in ``['top', 'bottom', 'left', 'right']``
+    label_position : str, default="auto"
         Position of the labels.
-        The defaults are ``'bottom'`` for a horizontal guide and
-        '``right``' for a vertical guide.
-    label_theme : element_text
+        One of `["top", "bottom", "left", "right"]`{.py}.
+        The default is "bottom" for a horizontal guide and
+        "right" for a vertical guide.
+    label_theme : element_text, default=None
         Control over the label theme.
-        Default is to use ``legend_text`` in a theme.
-    label_hjust : float
+        Default is to use `legend_text` in a theme.
+    label_hjust : float, default=None
         Horizontal justification of label text.
-    label_vjust : float
+    label_vjust : float, default=None
         Vertical justification of label text.
-    label_separation : float
+    label_separation : float, default=None
         Separation between the label text and the colorbar.
         Value is in pixels.
-    direction : str in ``['horizontal', 'vertical']``
-        Direction of the guide.
-    default_unit : str
-        Unit for ``keywidth`` and ``keyheight``
-    override_aes : dict
+    direction : "horizontal", "vertical", default="auto"
+        Direction of the guide. The default is depends on
+        [](`~plotnine.themes.themeable.legend_position`).
+    default_unit : str, default="lines"
+        Unit for `keywidth` and `keyheight`.
+    override_aes : dict, default={}
         Aesthetic parameters of legend key.
-    reverse : bool
+    reverse : bool, default=False
         Whether to reverse the order of the legends.
-    order : int
+    order : int, default=0
         Order of this guide among multiple guides.
-        Should be in the range [0, 99]. Default is ``0``.
+        Should be in the range [0, 99].
 
     Notes
     -----
@@ -90,7 +93,7 @@ class guide(metaclass=Registry):
 
     # general
     direction: Optional[Literal["horizontal", "vertical"]] = None
-    default_unit = "line"
+    default_unit = "lines"
     override_aes: dict[str, Any] = {}
     reverse = False
     order = 0
@@ -165,7 +168,7 @@ class guide(metaclass=Registry):
                 self._title_align = "center"
 
         # by default, direction of each guide depends on
-        # the position all the guides
+        # the position of all the guides
         position = _property("legend_position")
         self.direction = _property("legend_direction")
         if self.direction == "auto":
