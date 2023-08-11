@@ -28,10 +28,9 @@ class geom_dotplot(geom):
 
     Parameters
     ----------
-    {commonparameters}
-    stackdir : str, default="up"
+    {common_parameters}
+    stackdir : "up" | "down" | "center", | "centerwhole", default="up"
         Direction in which to stack the dots. Options are
-        `['up', 'down', 'center', 'centerwhole']`{.py}
     stackratio : float, default=1
         How close to stack the dots. If value is less than 1,
         the dots overlap, if greater than 1 they are spaced.
@@ -45,7 +44,7 @@ class geom_dotplot(geom):
     plotnine.stats.statbindot
     """
 
-    DEFAULTAES = {"alpha": 1, "color": "black", "fill": "black"}
+    DEFAULT_AES = {"alpha": 1, "color": "black", "fill": "black"}
     REQUIRED_AES = {"x", "y"}
     NON_MISSING_AES = {"size", "shape"}
     DEFAULT_PARAMS = {

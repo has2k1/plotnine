@@ -29,29 +29,28 @@ class annotation_stripes(annotate):
     Parameters
     ----------
     fill : list-like
-        List of colors for the strips. The default  is
-        `("#AAAAAA", "#CCCCCC")`
-    fill_range: 'cycle' | 'nocycle' | 'auto' | 'no'
-        How to fill stripes beyond the range of scale::
+        List of colors for the strips.
+    fill_range: "cycle" | "nocycle" | "auto" | "no"
+        How to fill stripes beyond the range of scale:
 
-            'cycle'      # keep cycling the colors of the
-                         # stripes after the range ends
-            'nocycle'    # stop cycling the colors of the
-                         # stripes after the range ends
-            'auto'       # 'cycle' for continuous scales and
-                         # 'nocycle' for discrete scales.
-            'no'         # Do not add stripes passed the range
-                         # passed the range of the scales
-
-        Default is 'auto'.
-    direction : 'vertical' or 'horizontal'
+        ```python
+        "cycle"      # keep cycling the colors of the
+                     # stripes after the range ends
+        "nocycle"    # stop cycling the colors of the
+                     # stripes after the range ends
+        "auto"       # "cycle" for continuous scales and
+                     # "nocycle" for discrete scales.
+        "no"         # Do not add stripes passed the range
+                     # passed the range of the scales
+        ```
+    direction : "vertical" | "horizontal"
         Orientation of the stripes
     extend : tuple
         Range of the stripes. The default is (0, 1), top to bottom.
         The values should be in the range [0, 1].
     **kwargs : dict
         Other aesthetic parameters for the rectangular stripes.
-        They include; *alpha*, *color*, *linetype*, and *size*.
+        They include; `alpha`, `color`, `linetype`, and `size`.
     """
 
     def __init__(

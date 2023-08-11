@@ -22,7 +22,7 @@ class annotate:
 
     Parameters
     ----------
-    geom : geom or str
+    geom : geom | str
         geom to use for annotation, or name of geom (e.g. 'point').
     x : float
         Position

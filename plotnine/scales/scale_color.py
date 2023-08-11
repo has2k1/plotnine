@@ -80,13 +80,13 @@ class scale_color_brewer(scale_discrete):
 
     Parameters
     ----------
-    type : "seq", "div", "qual", default="seq"
+    type : "seq" | "div" | "qual", default="seq"
         Type of data. Sequential, diverging or qualitative
-    palette : int, str, default=1
+    palette : int | str, default=1
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type.
-    direction: 1 or -1, default=1
+    direction: 1 | -1, default=1
          Sets the order of colors in the scale. If 1, colors are
          as output by [](`~mizani.palettes.brewer_pal`). If -1,
          the order of colors is reversed.
@@ -219,7 +219,7 @@ class scale_color_desaturate(scale_continuous):
 
     Parameters
     ----------
-    color : str,  default="red"
+    color : str, default="red"
         Color to desaturate
     prop : float, default=0
         Saturation channel of color will be multiplied by
@@ -381,9 +381,9 @@ class scale_color_distiller(scale_color_gradientn):
 
     Parameters
     ----------
-    type : "seq", "div", default="seq"
+    type : "seq" | "div", default="seq"
         Type of data. Sequential, diverging or qualitative
-    palette : int, str, default=1
+    palette : int | str, default=1
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
@@ -391,7 +391,7 @@ class scale_color_distiller(scale_color_gradientn):
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
-    direction: -1, 1, default=-1
+    direction: -1 | 1, default=-1
         Sets the order of colors in the scale. If 1
         colors are as output by [](`~mizani.palettes.brewer_pal`).
         If -1, the order of colors is reversed.

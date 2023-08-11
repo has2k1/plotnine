@@ -19,7 +19,7 @@ class watermark:
 
     Parameters
     ----------
-    filename : str, pathlib.Path
+    filename : str | pathlib.Path
         Image file
     xo : int
         x position offset in pixels.

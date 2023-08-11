@@ -24,7 +24,7 @@ class position_jitter(position):
     height : float, default=None
         Proportion to jitter in vertical direction.
         If `None`, `0.4` of the resolution of the data.
-    random_state : int, ~numpy.random.RandomState, default=None
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
     """

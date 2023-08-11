@@ -10,10 +10,10 @@ class theme_void(theme):
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 11.
-    base_family : int, optional
+        the base font size.
+    base_family : str
         Base font family.
     """
 

@@ -19,7 +19,7 @@ class guide(metaclass=Registry):
 
     Parameters
     ----------
-    title : str, None
+    title : str, default=None
         Title of the guide. If `None`, title is not shown.
         Default is the name of the aesthetic or the name
         specified using [](`~plotnine.components.labels.lab`)
@@ -53,7 +53,7 @@ class guide(metaclass=Registry):
     label_separation : float, default=None
         Separation between the label text and the colorbar.
         Value is in pixels.
-    direction : "horizontal", "vertical", default="auto"
+    direction : "horizontal" | "vertical", default="auto"
         Direction of the guide. The default is depends on
         [](`~plotnine.themes.themeable.legend_position`).
     default_unit : str, default="lines"

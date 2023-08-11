@@ -22,10 +22,10 @@ class stat_density_2d(stat):
         Number of equally spaced points at which the density is to
         be estimated. For efficient computation, it should be a power
         of two.
-    levels : int, array_like, default=5
+    levels : int | array_like, default=5
         Contour levels. If an integer, it specifies the maximum number
         of levels, if array_like it is the levels themselves.
-    package : "statsmodels", "scipy", "sklearn", default="statsmodels"
+    package : "statsmodels" | "scipy" | "sklearn", default="statsmodels"
         Package whose kernel density estimation to use.
     kde_params : dict
         Keyword arguments to pass on to the kde class.

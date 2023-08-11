@@ -39,9 +39,9 @@ class geom_text(geom):
         [latex](http://matplotlib.org/users/usetex.html).
     family : str, default=None
         Font family.
-    fontweight : int, str, default="normal"
+    fontweight : int | str, default="normal"
         Font weight.
-    fontstyle : "normal", "italic", "oblique", default="normal"
+    fontstyle : "normal" | "italic" | "oblique", default="normal"
         Font style.
     nudge_x : float, default=0
         Horizontal adjustment to apply to the text
@@ -51,18 +51,18 @@ class geom_text(geom):
         Parameters to :class:`adjustText.adjust_text` will repel
         overlapping texts. This parameter takes priority of over
         `nudge_x` and `nudge_y`.
-
         `adjust_text` does not work well when it is used in the
         first layer of the plot, or if it is the only layer.
         For more see the documentation at
         https://github.com/Phlya/adjustText/wiki .
     format_string : str, default=None
         If not `None`{.py}, then the text is formatted with this
-        string using :meth:`str.format` e.g::
+        string using :meth:`str.format` e.g:
 
-            # 2.348 -> "2.35%"
-            geom_text(format_string="{:.2f}%")
-
+        ```python
+        # 2.348 -> "2.35%"
+        geom_text(format_string="{:.2f}%")
+        ```
     path_effects : list, default=None
         If not `None`{.py}, then the text will use these effects.
         See

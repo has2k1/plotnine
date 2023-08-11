@@ -141,7 +141,7 @@ def assign_bins(x, breaks, weight=None, pad=False, closed="right"):
         table. If `None`, then each value in `x` has a weight of 1.
     pad : bool
         If `True`, add empty bins at either end of `x`.
-    closed : str in ``['right', 'left']``
+    closed : "right" | "left"
         Whether the right or left edges of the bins are part of the
         bin.
 

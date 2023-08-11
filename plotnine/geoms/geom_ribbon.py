@@ -30,12 +30,12 @@ class geom_ribbon(geom):
     Parameters
     ----------
     {common_parameters}
-    outline_type : "upper", "lower", "both", "full", default="both"
+    outline_type : "upper" | "lower" | "both" | "full", default="both"
         How to stroke to outline of the region / area.
-        - `upper` - draw only upper bounding line
-        - `lower` - draw only lower bounding line
-        - `both` - draw both upper & lower bounding lines
-        - `full` - draw closed polygon around the area.
+        If `upper`, draw only upper bounding line.
+        If `lower`, draw only lower bounding line.
+        If `both`, draw both upper & lower bounding lines.
+        If `full`, draw closed polygon around the area.
     """
 
     _aesthetics_doc = """

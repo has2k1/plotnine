@@ -19,7 +19,7 @@ class stat_ydensity(stat):
     Parameters
     ----------
     {common_parameters}
-    kernel : str, optional (default: 'gaussian')
+    kernel : str, default='gaussian'
         Kernel used for density estimation. One of:
 
         ```python
@@ -32,26 +32,27 @@ class stat_ydensity(stat):
         "triweight"
         "uniform"
         ```
-    adjust : float, optional (default: 1)
+    adjust : float, default=1
         An adjustment factor for the `bw`. Bandwidth becomes
         `bw * adjust`{.py}.
         Adjustment of the bandwidth.
-    trim : bool, optional (default: False)
+    trim : bool, default=False
         This parameter only matters if you are displaying multiple
         densities in one plot. If `False`{.py}, the default, each
         density is computed on the full range of the data. If
         `True`{.py}, each density is computed over the range of that
         group; this typically means the estimated x values will not
         line-up, and hence you won't be able to stack density values.
-    n : int, optional(default: 1024)
+    n : int, default=1024
         Number of equally spaced points at which the density is to
         be estimated. For efficient computation, it should be a power
         of two.
-    bw : str or float, optional (default: 'nrd0')
+    bw : str | float, default="nrd0"
         The bandwidth to use, If a float is given, it is the bandwidth.
         The `str` choices are:
 
         ```python
+        "nrd0"
         "normal_reference"
         "scott"
         "silverman"
@@ -59,21 +60,12 @@ class stat_ydensity(stat):
 
         `nrd0` is a port of `stats::bw.nrd0` in R; it is eqiuvalent
         to `silverman` when there is more than 1 value in a group.
-    scale : (default: area)
+    scale : "area" | "count" | "width", default="area"
         How to scale the violins. The options are:
-
-        ```python
-        # all violins have the same area, before
-        # trimming the tails.
-        "area"
-
-        # areas are scaled proportionally to the number
-        # of observations.
-        "count"
-
-        # all violins have the same maximum width.
-        "width"
-        ```
+        If `area` all violins have the same area, before trimming the tails.
+        If `count` the areas are scaled proportionally to the number of
+        observations.
+        If `width` all violins have the same maximum width.
 
     See Also
     --------

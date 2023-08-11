@@ -40,7 +40,7 @@ class facet:
 
     Parameters
     ----------
-    scales : "fixed", "free", "free_x", "free_y", default="fixed"
+    scales : "fixed" | "free" | "free_x" | "free_y", default="fixed"
         Whether `x` or `y` scales should be allowed (free)
         to vary according to the data on each of the panel.
     shrink : bool
@@ -49,7 +49,7 @@ class facet:
     shrink : bool, default=True
         Whether to shrink the scales to the output of the
         statistics instead of the raw data.
-    labeller : str, callable, default="label_value"
+    labeller : str | callable, default="label_value"
         How to label the facets. A string value if it should be
         one of `["label_value", "label_both", "label_context"]`{.py}.
     as_table : bool, default=True
@@ -62,12 +62,12 @@ class facet:
         will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
         or not they appear in the data.
-    dir : "h", "v", default="h"
+    dir : "h" | "v", default="h"
         Direction in which to layout the panels. `h` for
         horizontal and `v` for vertical.
     """
 
-    #: number of columns
+    # , number of columns
     ncol: int
     #: number of rows
     nrow: int

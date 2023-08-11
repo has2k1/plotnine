@@ -216,7 +216,7 @@ def expand_limits(**kwargs):
 
     Parameters
     ----------
-    kwargs : dict or dataframe
+    kwargs : dict | dataframe
         Data to use in expanding the limits.
         The keys should be aesthetic names
         e.g. *x*, *y*, *colour*, ...

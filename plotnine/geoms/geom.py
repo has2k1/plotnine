@@ -318,19 +318,19 @@ class geom(metaclass=Registry):
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
-            to the geom are::
+            to the geom are:
 
-                'panel_params.x.range'  # tuple
-                'panel_params.y.range'  # tuple
-
+            ```python
+            "panel_params.x.range"  # tuple
+            "panel_params.y.range"  # tuple
+            ```
         coord : coord
-            Coordinate (e.g. coord_cartesian) system of the
-            geom.
+            Coordinate (e.g. coord_cartesian) system of the geom.
         ax : axes
             Axes on which to plot.
         params : dict
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         for _, gdata in data.groupby("group"):
             gdata.reset_index(inplace=True, drop=True)
@@ -356,19 +356,19 @@ class geom(metaclass=Registry):
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
-            the geom are::
+            the geom are:
 
-                'x_range'  # tuple
-                'y_range'  # tuple
-
+            ```python
+            "x_range"  # tuple
+            "y_range"  # tuple
+            ```
         coord : coord
-            Coordinate (e.g. coord_cartesian) system of the
-            geom.
+            Coordinate (e.g. coord_cartesian) system of the geom.
         ax : axes
             Axes on which to plot.
         params : dict
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
@@ -404,16 +404,19 @@ class geom(metaclass=Registry):
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
-            the geom are::
+            the geom are:
 
-                'x_range'  # tuple
-                'y_range'  # tuple
+            ```python
+            "x_range"  # tuple
+            "y_range"  # tuple
+            ```
 
             In rare cases a geom may need access to the x or y scales.
-            Those are available at::
+            Those are available at:
 
-                'scales'   # SimpleNamespace
-
+            ```python
+            "scales"   # SimpleNamespace
+            ```
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the
             geom.
@@ -421,7 +424,7 @@ class geom(metaclass=Registry):
             Axes on which to plot.
         params : dict
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)

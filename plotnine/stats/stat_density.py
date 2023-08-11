@@ -57,7 +57,7 @@ class stat_density(stat):
         of two.
     gridsize : int, default=None
         If gridsize is `None`{.py}, `max(len(x), 50)`{.py} is used.
-    bw : str, float, default="nrd0"
+    bw : str | float, default="nrd0"
         The bandwidth to use, If a float is given, it is the bandwidth.
         The options are:
 

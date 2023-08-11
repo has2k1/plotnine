@@ -33,9 +33,9 @@ class geom_path(geom):
     Parameters
     ----------
     {common_parameters}
-    lineend : "butt", "round", "projecting", default="butt"
+    lineend : "butt" | "round" | "projecting", default="butt"
         Line end style. This option is applied for solid linetypes.
-    linejoin : "round", "miter", "bevel", default="round"
+    linejoin : "round" | "miter" | "bevel", default="round"
         Line join style. This option is applied for solid linetypes.
     arrow : ~plotnine.geoms.geom_path.arrow, default=None
         Arrow specification. Default is no arrow.
@@ -223,10 +223,10 @@ class arrow:
         single edge.
     length : int | float
         of the edge in "inches"
-    ends : "last", "first", "both"
+    ends : "last" | "first" | "both"
         At which end of the line to draw the
         arrowhead
-    type : "open", "closed"
+    type : "open" | "closed"
         When it is closed, it is also filled
     """
 
@@ -263,11 +263,12 @@ class arrow:
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
-            to the geom are::
+            to the geom are:
 
-                'panel_params.x.range'  # tuple
-                'panel_params.y.range'  # tuple
-
+            ```python
+            "panel_params.x.range"  # tuple
+            "panel_params.y.range"  # tuple
+            ```
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the
             geom.
@@ -278,7 +279,7 @@ class arrow:
             the arrows are per segment of the path
         params : dict
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         first = self.ends in ("first", "both")
         last = self.ends in ("last", "both")
@@ -375,19 +376,18 @@ class arrow:
             List of points that define the tails of the arrows.
             The arrow heads will be at x1, y1. If you need them
             at x2, y2 reverse the input.
-
         panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
-            to the geom are::
+            to the geom are:
 
-                'panel_params.x.range'  # tuple
-                'panel_params.y.range'  # tuple
-
+            ```python
+            "panel_params.x.range"  # tuple
+            "panel_params.y.range"  # tuple
+            ```
         coord : coord
-            Coordinate (e.g. coord_cartesian) system of the
-            geom.
+            Coordinate (e.g. coord_cartesian) system of the geom.
         ax : axes
             Axes on which to plot.
 

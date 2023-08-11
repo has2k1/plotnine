@@ -37,14 +37,14 @@ class stat_bindot(stat):
         binwidth. This supercedes the `bins`.
     origin : float, default=None
         When `method='histodot'`{.py}, origin of the first bin.
-    width : float, optional (default: 0.9)
+    width : float, default=0.9
         When `binaxis='y'`{.py}, the spacing of the dotstacks for
         dodging.
-    binaxis : "x", "y", default="x"
+    binaxis : "x" | "y", default="x"
         Axis to bin along.
-    method : "dotdensity", "histodot", default="dotdensity"
+    method : "dotdensity" | "histodot", default="dotdensity"
         Whether to do dot-density binning or fixed widths binning.
-    binpositions : "all", "bygroup", default="bygroup"
+    binpositions : "all" | "bygroup", default="bygroup"
         Position of the bins when `method="dotdensity"`{.py}. The value
         - `bygroup` -  positions of the bins for each group are
         determined separately.

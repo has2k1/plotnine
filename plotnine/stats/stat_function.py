@@ -27,7 +27,7 @@ class stat_function(stat):
     Parameters
     ----------
     {common_parameters}
-    fun : function
+    fun : callable
         Function to evaluate.
     n : int, default=101
         Number of points at which to evaluate the function.
@@ -35,7 +35,7 @@ class stat_function(stat):
         `x` limits for the range. The default depends on
         the `x` aesthetic. There is not an `x` aesthetic
         then the `xlim` must be provided.
-    args : tuple, dict, default=None
+    args : tuple | dict, default=None
         Arguments to pass to `fun`.
     """
 
@@ -45,8 +45,8 @@ class stat_function(stat):
     **Options for computed aesthetics**
 
     ```python
-    'x'   # x points at which the function is evaluated
-    'fx'  # points evaluated at each x
+    "x"   # x points at which the function is evaluated
+    "fx"  # points evaluated at each x
     ```
 
     """

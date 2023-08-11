@@ -53,7 +53,7 @@ class geom_boxplot(geom):
         has a width parameter, that takes precedence over this one.
     outlier_alpha : float, default=1
         Transparency of the outlier points.
-    outlier_color : str, tuple, default=None
+    outlier_color : str | tuple, default=None
         Color of the outlier points.
     outlier_shape : str, default="o"
         Shape of the outlier points. An empty string hides the outliers.

@@ -477,24 +477,24 @@ def wls_prediction_std(
 
     Parameters
     ----------
-    res : regression result instance
+    res : regression-result
         results of WLS or OLS regression required attributes see notes
-    exog : array_like (optional)
+    exog : array_like
         exogenous variables for points to predict
-    weights : scalar or array_like (optional)
+    weights : scalar | array_like
         weights as defined for WLS (inverse of variance of observation)
-    alpha : float (default: alpha = 0.05)
+    alpha : float
         confidence level for two-sided hypothesis
     interval : str
         Type of interval to compute. One of "confidence" or "prediction"
 
     Returns
     -------
-    predstd : array_like, 1d
-        standard error of prediction
-        same length as rows of exog
+    predstd : array_like
+        Standard error of prediction. It must be the same length as rows
+        of exog.
     interval_l, interval_u : array_like
-        lower und upper confidence bounds
+        Lower und upper confidence bounds
 
     Notes
     -----

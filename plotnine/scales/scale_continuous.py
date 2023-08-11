@@ -44,14 +44,14 @@ class scale_continuous(scale):
     Parameters
     ----------
     {superclass_parameters}
-    trans : str | function
+    trans : str | callable
         Name of a trans function or a trans function.
         See :mod:`mizani.transforms` for possible options.
     oob : callable, default=mizani.bounds.censor
         Function to deal with out of bounds (limits)
         data points. Default is to turn them into
         `np.nan`, which then get dropped.
-    minor_breaks : list, int, callable, default=None
+    minor_breaks : list | int | callable, default=None
         If a list-like, it is the minor breaks points.
         If an integer, it is the number of minor breaks between
         any set of major breaks.
@@ -445,7 +445,7 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        breaks: None or array-like
+        breaks: None | array-like
             If None, use self.breaks.
         """
         if breaks is None:

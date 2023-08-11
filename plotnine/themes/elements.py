@@ -148,18 +148,18 @@ class element_text(element_base):
     family : str
         Font family. See :meth:`matplotlib.text.Text.set_family`
         for supported values.
-    style : str in ``['normal', 'italic', 'oblique']``
+    style : "normal" | "italic" | "oblique"`
         Font style
     color : str | tuple
         Text color
     weight : str
-        Should be one of *normal*, *bold*, *heavy*, *light*,
-        *ultrabold* or *ultralight*.
+        Should be one of `normal`, `bold`, `heavy`, `light`,
+        `ultrabold` or `ultralight`.
     size : float
         text size
-    ha : str in ``['center', 'left', 'right']``
+    ha : "center" | "left" | "right"
         Horizontal Alignment.
-    va : str in ``['center' , 'top', 'bottom', 'baseline']``
+    va : "center" | "top" | "bottom" | "baseline"
         Vertical alignment.
     rotation : float
         Rotation angle in the range [0, 360]
@@ -167,13 +167,13 @@ class element_text(element_base):
         Line spacing
     backgroundcolor : str | tuple
         Background color
-    margin : dict
-        Margin around the text. The keys are one of
-        ``['t', 'b', 'l', 'r']`` and `units`. The units are
-        one of ``['pt', 'lines', 'in']``. The *units* default
-        to `pt` and the other keys to `0`. Not all text
-        themeables support margin parameters and other than the
-        `units`, only some of the other keys may apply.
+    margin : dict, default={"t": 0, "b": 0, "l": 0, "r": 0, "units": "pt"}
+        Margin around the text. The keys are
+        `t`, `b`, `l`, `r` and `units`.
+        The `tblr` keys are floats.
+        The `units` is one of `pt`, `lines` or `in`.
+        Not all text themeables support margin parameters and other
+        than the `units`, only some of the other keys may apply.
     kwargs : dict
         Parameters recognised by :class:`matplotlib.text.Text`
 

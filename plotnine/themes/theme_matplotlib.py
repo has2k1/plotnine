@@ -12,7 +12,7 @@ class theme_matplotlib(theme):
 
     Parameters
     ----------
-    rc :  dict
+    rc : dict
         rcParams which should be applied on top of mathplotlib default.
     fname : str
         Filename to a matplotlibrc file

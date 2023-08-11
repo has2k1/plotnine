@@ -20,39 +20,38 @@ class stat_summary_bin(stat):
     Parameters
     ----------
     {common_parameters}
-    binwidth : float or tuple, optional (default: None)
+    binwidth : float | tuple, default=None
         The width of the bins. The default is to use bins bins that
         cover the range of the data. You should always override this
         value, exploring multiple widths to find the best to illustrate
         the stories in your data.
-    bins : int or tuple, optional (default: 30)
+    bins : int | tuple, default=30
         Number of bins. Overridden by binwidth.
-    breaks : array-like(s), optional (default: None)
+    breaks : array-likes, default=None
         Bin boundaries. This supercedes the `binwidth`, `bins`
         and `boundary` arguments.
-    boundary : float or tuple, optional (default: None)
+    boundary : float | tuple, default=None
         A boundary between two bins. As with center, things are
         shifted when boundary is outside the range of the data.
         For example, to center on integers, use `width=1`{.py} and
         `boundary=0.5`{.py}, even if 1 is outside the range of the
         data. At most one of center and boundary may be specified.
-    fun_data : str or function, optional
-        One of
-        `['mean_cl_boot', 'mean_cl_normal', 'mean_sdl', 'median_hilow',
-        'mean_se']`{.py} or any function that takes a array and returns a
+    fun_data : str | callable, default="mean_se"
+        If a string, should be one of `mean_cl_boot`, `mean_cl_normal`,
+        `mean_sdl`, `median_hilow`, `mean_se`.
+        If a function, it should that takes an array and return a
         dataframe with three rows indexed as `y`, `ymin` and `ymax`.
-        Defaults to `'mean_se'`{.py}.
-    fun_y : function, optional (default: None)
-        Any function that takes an array-like and returns a single value
-    fun_ymax : function, optional (default: None)
-        Any function that takes an array-like and returns a single value
-    fun_args : dict, optional (default: None)
+    fun_y : callable, default=None
+        A function that takes an array-like and returns a single value
+    fun_ymax : callable, default=None
+        A function that takes an array-like and returns a single value
+    fun_args : dict, default=None
         Arguments to any of the functions. Provided the names of the
         arguments of the different functions are in not conflict, the
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
-    random_state : int or ~numpy.random.RandomState, optional
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 

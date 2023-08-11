@@ -28,17 +28,17 @@ class PlotnineAnimation(ArtistAnimation):
 
     Parameters
     ----------
-    plots : iterable
+    plots :
         ggplot objects that make up the the frames of the animation
-    interval : number, optional
+    interval : int
         Delay between frames in milliseconds. Defaults to 200.
-    repeat_delay : number, optional
+    repeat_delay : int
         If the animation in repeated, adds a delay in milliseconds
         before repeating the animation. Defaults to `None`.
-    repeat : bool, optional
+    repeat : bool
         Controls whether the animation should repeat when the sequence
         of frames is completed. Defaults to `True`.
-    blit : bool, optional
+    blit : bool
         Controls whether blitting is used to optimize drawing. Defaults
         to `False`.
 

@@ -17,7 +17,7 @@ class stat_pointdensity(stat):
     Parameters
     ----------
     {common_parameters}
-    package : "statsmodels", "scipy", "sklearn", default="statsmodels"
+    package : "statsmodels" | "scipy" | "sklearn", default="statsmodels"
         Package whose kernel density estimation to use.
     kde_params : dict, default=None
         Keyword arguments to pass on to the kde class.

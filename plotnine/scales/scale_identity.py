@@ -46,7 +46,7 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None, 'legend', default=None
+    guide : None | "legend", default=None
         Whether to include a legend.
     """
 
@@ -74,7 +74,7 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None, 'legend', default=None
+    guide : None | "legend", default=None
         Whether to include a legend.
     """
 
@@ -89,7 +89,7 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None, 'legend', default=None
+    guide : None | "legend", default=None
         Whether to include a legend.
     """
 
@@ -104,7 +104,7 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None, 'legend', default=None
+    guide : None | "legend", default=None
         Whether to include a legend.
     """
 
@@ -119,7 +119,7 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None, 'legend', default=None
+    guide : None | "legend", default=None
         Whether to include a legend.
     """
 

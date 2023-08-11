@@ -27,7 +27,7 @@ class stat_sina(stat):
         illustrate the stories in your data.
     bins : int, default=50
         Number of bins. Overridden by binwidth.
-    method : "density", "counts", default="density"
+    method : "density" | "counts", default="density"
         Choose the method to spread the samples within the same bin
         along the x-axis. Available methods: "density", "counts"
         (can be abbreviated, e.g. "d"). See Details.
@@ -37,7 +37,7 @@ class stat_sina(stat):
     adjust : float, default=1
         Adjusts the bandwidth of the density kernel when
         `method="density"`. see [](`~plotnine.stats.stat_density`).
-    bw : str, float, default="nrd0"
+    bw : str | float, default="nrd0"
         The bandwidth to use, If a float is given, it is the bandwidth.
         The `str`{.py} choices are:
         `"nrd0", "normal_reference", "scott", "silverman"`{.py}
@@ -48,10 +48,10 @@ class stat_sina(stat):
         If the samples within the same y-axis bin are more
         than `bin_limit`, the samples's X coordinates will be adjusted.
         This parameter is effective only when `method='counts'`{.py}
-    random_state : int, ~numpy.random.RandomState, default=None
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
-    scale : "area", "count", "width", default="area"
+    scale : "area" | "count" | "width", default="area"
         How to scale the sina groups.
 
         - `area` - Scale by the largest density/bin among the different sinas

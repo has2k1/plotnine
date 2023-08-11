@@ -155,7 +155,7 @@ class ggplot:
 
         Parameters
         ----------
-        other : object or Sequence
+        other : object | Sequence
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
@@ -174,7 +174,7 @@ class ggplot:
 
         Parameters
         ----------
-        other : object or Sequence
+        other : object | Sequence
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
@@ -202,7 +202,7 @@ class ggplot:
 
         Parameters
         ----------
-        show : bool (default: False)
+        show : bool
             Whether to show the plot.
 
         Returns
@@ -614,7 +614,7 @@ class ggplot:
 
         Parameters
         ----------
-        filename : str | pathlib.Path, optional
+        filename : str | pathlib.Path
             File name to write the plot to. If not specified, a name
             like “plotnine-save-<hash>.<format>” is used.
         format : str
@@ -623,10 +623,10 @@ class ggplot:
         path : str
             Path to save plot to (if you just want to set path and
             not filename).
-        width : number, optional
+        width : number
             Width (defaults to value set by the theme). If specified
             the `height` must also be given.
-        height : number, optional
+        height : number
             Height (defaults to value set by the theme). If specified
             the `width` must also be given.
         units : str
@@ -674,57 +674,66 @@ def save_as_pdf_pages(
 
     Parameters
     ----------
-    plots : collection or generator of [](`~plotnine.ggplot`)
+    plots :
         Plot objects to write to file. `plots` may be either a
         collection such as a :py:class:`list` or :py:class:`set`:
 
-        >>> base_plot = ggplot(…)
-        >>> plots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]
-        >>> save_as_pdf_pages(plots)
+        ```python
+        base_plot = ggplot(…)
+        plots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]
+        save_as_pdf_pages(plots)
+        ```
 
         or, a generator that yields [](`~plotnine.ggplot`) objects:
 
-        >>> def myplots():
-        >>>     for i in range(1, 3):
-        >>>         yield ggplot(…) + ggtitle('%d of 3' % i)
-        >>> save_as_pdf_pages(myplots())
-
-    filename : :py:class:`str`, optional
+        ```python
+        def myplots():
+            for i in range(1, 3):
+                yield ggplot(…) + ggtitle('%d of 3' % i)
+        save_as_pdf_pages(myplots())
+        ```
+    filename : str
         File name to write the plot to. If not specified, a name
         like “plotnine-save-<hash>.pdf” is used.
-    path : :py:class:`str`, optional
+    path : str
         Path to save plot to (if you just want to set path and
         not filename).
-    verbose : :py:class:`bool`
+    verbose : bool
         If `True`, print the saving information.
-    kwargs : :py:class:`dict`
+    kwargs : dict
         Additional arguments to pass to
         :py:meth:`matplotlib.figure.Figure.savefig`.
 
     Notes
     -----
-    Using pandas' :meth:`~pandas.DataFrame.groupby` methods, tidy data
+    Using pandas :meth:`~pandas.DataFrame.groupby` methods, tidy data
     can be “faceted” across pages:
 
-    >>> from plotnine.data import mtcars
-    >>> def facet_pages(column)
-    >>>     base_plot = [
-    >>>         aes(x='wt', y='mpg', label='name'),
-    >>>         geom_text(),
-    >>>         ]
-    >>>     for label, group_data in mtcars.groupby(column):
-    >>>         yield ggplot(group_data) + base_plot + ggtitle(label)
-    >>> save_as_pdf_pages(facet_pages('cyl'))
+    ```python
+    from plotnine.data import mtcars
+
+    def facet_pages(column)
+        base_plot = [
+            aes(x='wt', y='mpg', label='name'),
+            geom_text(),
+            ]
+        for label, group_data in mtcars.groupby(column):
+            yield ggplot(group_data) + base_plot + ggtitle(label)
+
+    save_as_pdf_pages(facet_pages('cyl'))
+    ```
 
     Unlike :meth:`ggplot.save`, :meth:`save_as_pdf_pages` does not
     process arguments for `height` or `width`. To set the figure size,
     add [](`~plotnine.themes.themeable.figure_size`) to the theme
     for some or all of the objects in `plots`:
 
-    >>> plot = ggplot(…)
-    >>> # The following are equivalent
-    >>> plot.save('filename.pdf', height=6, width=8)
-    >>> save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
+    ```python
+    plot = ggplot(…)
+    # The following are equivalent
+    plot.save('filename.pdf', height=6, width=8)
+    save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
+    ```
     """
     from matplotlib.backends.backend_pdf import PdfPages
 
@@ -766,9 +775,9 @@ class plot_context:
     ----------
     plot : ggplot
         ggplot object to be built within the context.
-    show : bool (default: False)
-        Whether to show (``plt.show()``) the plot before the context
         exits.
+    show : bool
+        Whether to show the plot.
     """
 
     # Default to retina unless user chooses otherwise
