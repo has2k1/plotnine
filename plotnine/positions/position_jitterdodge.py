@@ -26,7 +26,7 @@ class position_jitterdodge(position):
         Proportion to jitter in vertical direction.
     dodge_width : float, default=0.75
         Amount to dodge in horizontal direction.
-    random_state : int, ~numpy.random.RandomState, default=None
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
     """

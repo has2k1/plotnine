@@ -219,9 +219,10 @@ class guide_legend(guide):
         # Take a peak into data['size'] to make sure the
         # legend dimensions are big enough
         """
-        >>> gg = ggplot(diamonds, aes(x='cut', y='clarity'))
-        >>> gg = gg + stat_sum(aes(group='cut'))
-        >>> gg + scale_size(range=(3, 25))
+       (ggplot(diamonds, aes(x="cut", y="clarity"))
+        + stat_sum(aes(group="cut"))
+        + scale_size(range=(3, 25)
+       )
 
         Note the different height sizes for the entries
         """

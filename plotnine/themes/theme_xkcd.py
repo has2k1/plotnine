@@ -22,7 +22,7 @@ class theme_xkcd(theme_gray):
         The factor by which the length is randomly scaled. Default is 2.
     stroke_size : float
         Size of the stroke to apply to the lines and text paths.
-    stroke_color : str, tuple
+    stroke_color : str | tuple
         Color of the strokes. Use `"none"` for no color.
     """
 

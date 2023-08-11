@@ -68,7 +68,7 @@ def qplot(
         x-axis limits
     ylim : tuple
         y-axis limits
-    log : str in ``{'x', 'y', 'xy'}``
+    log : "x" | "y" | "xy"
         Which (if any) variables to log transform.
     main : str
         Plot title

@@ -112,10 +112,10 @@ class position(metaclass=Registry):
         ----------
         data : dataframe
             Data to transform
-        trans_x : function
+        trans_x : callable
             Transforms x scale mappings
             Takes one argument, either a scalar or an array-type
-        trans_y : function
+        trans_y : callable
             Transforms y scale mappings
             Takes one argument, either a scalar or an array-type
         """

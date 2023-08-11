@@ -39,7 +39,7 @@ class scale(metaclass=Registry):
 
     Parameters
     ----------
-    breaks : bool, list, callable, default=True
+    breaks : bool | list | callable, default=True
         List of major break points. Or a callable that
         takes a tuple of limits and returns a list of breaks.
         If `True`, automatically calculate the breaks.
@@ -71,7 +71,7 @@ class scale(metaclass=Registry):
         Name used as the label of the scale. This is what
         shows up as the axis label or legend title. Suitable
         defaults are chosen depending on the type of scale.
-    labels : bool, list, callable, default=True
+    labels : bool | list | callable, default=True
         List of :py:class:`str`. Labels at the `breaks`.
         Alternatively, a callable that takes an array_like of
         break points as input and returns a list of strings.
@@ -86,7 +86,7 @@ class scale(metaclass=Registry):
     palette : callable, default=None
         Function to map data points onto the scale. Most
         scales define their own palettes.
-    aesthetics : list, str, default=None
+    aesthetics : list | str, default=None
         list of :py:class:`str`. Aesthetics covered by the
         scale. These are defined by each scale and the
         user should probably not change them. Have fun.

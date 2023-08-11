@@ -77,11 +77,11 @@ class _geom_logticks(geom_rug):
 
         Parameters
         ----------
-        base : float or None
+        base : float | None
             Base of the logarithm in which the ticks will be
             calculated. If `None`, the base of the log transform
             the scale will be used.
-        sides : str (default: bl)
+        sides : str, default="bl"
             Sides onto which to draw the marks. Any combination
             chosen from the characters `btlr`, for *bottom*, *top*,
             *left* or *right* side marks. If `coord_flip()` is used,
@@ -251,23 +251,23 @@ class annotation_logticks(annotate):
 
     Parameters
     ----------
-    sides : str (default: bl)
+    sides : str, default="bl"
         Sides onto which to draw the marks. Any combination
         chosen from the characters `btlr`, for *bottom*, *top*,
         *left* or *right* side marks. If `coord_flip()` is used,
         these are the sides *after* the flip.
-    alpha : float (default: 1)
+    alpha : float, default=1)
         Transparency of the ticks
-    color : str | tuple (default: 'black')
+    color : str | tuple, default="black"
         Colour of the ticks
     size : float
         Thickness of the ticks
-    linetype : 'solid' | 'dashed' | 'dashdot' | 'dotted' | tuple
-        Type of line. Default is *solid*.
-    lengths: tuple (default (0.036, 0.0225, 0.012))
+    linetype : "solid" | "dashed" | "dashdot" | "dotted" | tuple[float]
+        Type of line
+    lengths: tuple[float], default=(0.036, 0.0225, 0.012)
         length of the ticks drawn for full / half / tenth
         ticks relative to panel size
-    base : float (default: None)
+    base : float, default=None
         Base of the logarithm in which the ticks will be
         calculated. If `None`, the base used to log transform
         the scale will be used.

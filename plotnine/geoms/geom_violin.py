@@ -28,7 +28,7 @@ class geom_violin(geom):
     Parameters
     ----------
     {common_parameters}
-    draw_quantiles : float, list[float], default=None
+    draw_quantiles : float | list[float], default=None
        draw horizontal lines at the given quantiles (0..1)
        of the density estimate.
     style : str, default="full"

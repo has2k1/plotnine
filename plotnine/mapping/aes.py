@@ -175,7 +175,7 @@ class aes(Dict[str, Any]):
          ```
 
       2. `reorder` - This function changes the order of first variable
-         based on values of the second variable::
+         based on values of the second variable:
 
          ```python
          df = pd.DataFrame({
@@ -325,12 +325,12 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
 
     Parameters
     ----------
-    obj : dict or list
+    obj : dict | list
         Object that contains aesthetics names
 
     Returns
     -------
-    obj : dict or list
+    obj : dict | list
         Object that contains aesthetics names
     """
     if isinstance(obj, dict):

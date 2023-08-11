@@ -19,8 +19,8 @@ class stat_smooth(stat):
     Parameters
     ----------
     {common_parameters}
-    method : str, callable, default="auto"
-        The available methods are::
+    method : str | callable, default="auto"
+        The available methods are:
         ```python
         "auto"       # Use loess if (n<1000), glm otherwise
         "lm", "ols"  # Linear Model

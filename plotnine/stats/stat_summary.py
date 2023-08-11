@@ -45,11 +45,11 @@ def mean_cl_boot(
     ----------
     series : pandas.Series
         Values
-    n_samples : int (default: 1000)
+    n_samples : int, default=1000
         Number of sample to draw.
     confidence_interval : float
         Confidence interval in the range (0, 1).
-    random_state : int or ~numpy.random.RandomState, optional
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
     """
@@ -190,8 +190,8 @@ class stat_summary(stat):
     Parameters
     ----------
     {common_parameters}
-    fun_data : str or function, default="mean_cl_boot"
-        One of:
+    fun_data : str | callable, default="mean_cl_boot"
+        If string, it should be one of:
 
         ```python
         # Bootstrapped mean, confidence interval
@@ -224,19 +224,19 @@ class stat_summary(stat):
 
         or any function that takes a array and returns a dataframe
         with three columns named `y`, `ymin` and `ymax`.
-    fun_y : function, optional (default: None)
+    fun_y : callable, default=None
         Any function that takes a array-like and returns a value
-        fun_ymin : function (default:None)
+    fun_ymin : callable, default=None
         Any function that takes an array-like and returns a value
-    fun_ymax : function, optional (default: None)
+    fun_ymax : callable, default=None
         Any function that takes an array-like and returns a value
-    fun_args : dict, optional (default: None)
+    fun_args : dict, default=None
         Arguments to any of the functions. Provided the names of the
         arguments of the different functions are in not conflict, the
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
-    random_state : int or ~numpy.random.RandomState, optional
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 

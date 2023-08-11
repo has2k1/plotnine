@@ -34,7 +34,7 @@ class guide_colorbar(guide):
     nbin : int, default=20
         Number of bins for drawing a colorbar. A larger value yields
         a smoother colorbar
-    raster : bool, defaut=False
+    raster : bool, default=False
         Whether to render the colorbar as a raster object.
     ticks : bool, default=True
         Whether tick marks on colorbar should be visible.
@@ -42,7 +42,7 @@ class guide_colorbar(guide):
         Whether to show the upper limit tick marks.
     draw_llim : bool, default=TRue
         Whether to show the lower limit tick marks.
-    direction : "horizontal", "vertical", default="horizontal"
+    direction : "horizontal" | "vertical", default="horizontal"
         Direction of the guide.
     kwargs : dict
         Parameters passed on to :class:`.guide`

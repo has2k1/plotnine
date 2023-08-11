@@ -69,7 +69,7 @@ used by the `geom`.
 
 common_params_doc = {
     "mapping": """\
-Aesthetic mappings created with [](`~plotnine.mapping.aes`). If specified \
+Aesthetic mappings created with :class:`~plotnine.mapping.aes`). If specified \
 and `inherit_aes=True`{.py}, it is combined with the default mapping for \
 the plot. You must supply mapping if there is no plot mapping.""",
     "data": """\
@@ -106,15 +106,15 @@ mapping : aes, default=None
     {_aesthetics_doc}
 data : dataframe, default=None
     {data}
-stat : str or stat, default={default_stat}
+stat : str | stat, default="{default_stat}"
     {stat}
-position : str or position, default={default_position}
+position : str | position, default="{default_position}"
     {position}
 na_rm : bool, default={default_na_rm}
     {na_rm}
 inherit_aes : bool, default={default_inherit_aes}
     {inherit_aes}
-show_legend : bool or dict, default=None
+show_legend : bool | dict, default=None
     {show_legend}
 raster : bool, default={default_raster}
     {raster}
@@ -126,9 +126,9 @@ mapping : aes, default=None
     {_aesthetics_doc}
 data : dataframe, default=None
     {data}
-geom : str or geom, default={default_geom}
+geom : str | geom, default="{default_geom}"
     {stat}
-position : str or position, default={default_position}
+position : str | position, default="{default_position}"
     {position}
 na_rm : bool, default={default_na_rm}
     {na_rm}
@@ -291,7 +291,7 @@ def param_spec(line: str) -> str | None:
 
     Returns
     -------
-    name : str or None
+    name : str | None
         Name of the parameter if the line for the parameter
         type specification and None otherwise.
 
@@ -420,7 +420,7 @@ def document_geom(geom: type[Geom]) -> type[Geom]:
 
     table = dict_to_table(("Aesthetic", "Default value"), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
-    tpl = dedent(geom._aesthetics_doc.strip("\n"))
+    tpl = dedent(geom._aesthetics_doc).strip()
     aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
     aesthetics_doc = indent(aesthetics_doc, " " * 4)
 
@@ -467,7 +467,7 @@ def document_stat(stat: type[Stat]) -> type[Stat]:
     contents.update(sorted(stat.DEFAULT_AES.items()))
     table = dict_to_table(("Aesthetic", "Default value"), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
-    tpl = dedent(stat._aesthetics_doc.strip("\n"))
+    tpl = dedent(stat._aesthetics_doc).strip()
     aesthetics_doc = tpl.replace("{aesthetics_table}", aesthetics_table)
     aesthetics_doc = indent(aesthetics_doc, " " * 4)
 

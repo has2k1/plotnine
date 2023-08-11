@@ -113,7 +113,7 @@ def set_theme(
         Color palette, see :func:`color_palette`
     font : string
         Font family, see matplotlib font manager.
-    font_scale : float, optional
+    font_scale : float
         Separate scaling factor to independently scale the size of the
         font elements.
     color_codes : bool
@@ -151,9 +151,9 @@ def axes_style(style=None, rc=None):
 
     Parameters
     ----------
-    style : dict, None, or one of {darkgrid, whitegrid, dark, white, ticks}
+    style : "darkgrid" | "whitegrid" | "dark" | "white" | "ticks" | dict | None
         A dictionary of parameters or the name of a preconfigured set.
-    rc : dict, optional
+    rc : dict
         Parameter mappings to override the values in the preset seaborn
         style dictionaries. This only updates parameters that are
         considered part of the style definition.
@@ -312,9 +312,9 @@ def set_style(style=None, rc=None):
 
     Parameters
     ----------
-    style : dict, None, or one of {darkgrid, whitegrid, dark, white, ticks}
+    style : "darkgrid" | "whitegrid" | "dark" | "white" | "ticks" | dict | None
         A dictionary of parameters or the name of a preconfigured set.
-    rc : dict, optional
+    rc : dict
         Parameter mappings to override the values in the preset seaborn
         style dictionaries. This only updates parameters that are
         considered part of the style definition.

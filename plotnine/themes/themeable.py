@@ -61,17 +61,17 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     You would have this implementation:
 
-    ::
 
-        class axis_title_x(themeable):
-            ...
+    ```python
+    class axis_title_x(themeable):
+        ...
 
-        class axis_title_y(themeable):
-            ...
+    class axis_title_y(themeable):
+        ...
 
-        class axis_title(axis_title_x, axis_title_y):
-            ...
-
+    class axis_title(axis_title_x, axis_title_y):
+        ...
+    ```
 
     If the superclasses fully implement the subclass, the body of the
     subclass should be "pass". Python(__mro__) will do the right thing.
@@ -1696,10 +1696,10 @@ class axis_ticks_direction_x(themeable):
 
     Parameters
     ----------
-    theme_element : "in", "out", "inout"
-        - `in` - ticks inside the panel
-        - `out` - ticks outside the panel
-        - `inout` - ticks inside and outside the panel
+    theme_element : "in" | "out" | "inout"
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+        `inout` for ticks inside and outside the panel.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1715,10 +1715,10 @@ class axis_ticks_direction_y(themeable):
 
     Parameters
     ----------
-    theme_element : "in", "out", "inout"
-        - `in` - ticks inside the panel
-        - `out` - ticks outside the panel
-        - `inout` - ticks inside and outside the panel
+    theme_element : "in" | "out" | "inout"
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+        `inout` for ticks inside and outside the panel.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1734,10 +1734,10 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
 
     Parameters
     ----------
-    theme_element : "in", "out", "inout"
-        - `in` - ticks inside the panel
-        - `out` - ticks outside the panel
-        - `inout` - ticks inside and outside the panel
+    theme_element : "in" | "out" | "inout"
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+        `inout` for ticks inside and outside the panel.
     """
 
 
@@ -1919,7 +1919,7 @@ class legend_box(themeable):
 
     Parameters
     ----------
-    theme_element : "vertical", "horizontal"
+    theme_element : "vertical" | "horizontal"
         Whether to stack up the legends vertically or
         horizontally.
     """
@@ -1942,9 +1942,8 @@ class legend_box_just(themeable):
 
     Parameters
     ----------
-    theme_element : str
-        One of `["left", "right", "center", "top", "bottom"]`{.py}
-        depending the value of :class:`legend_box`.
+    theme_element : "left", "right", "center", "top", "bottom", default=None
+        If `None`, the value that will apply depends on :class:`legend_box`.
     """
 
 
@@ -1954,7 +1953,7 @@ class legend_direction(themeable):
 
     Parameters
     ----------
-    theme_element : str in `["vertical", "horizontal"]`{.py}
+    theme_element : "vertical" | "horizontal"
         Vertically or horizontally
     """
 
@@ -2031,12 +2030,10 @@ class legend_position(themeable):
 
     Parameters
     ----------
-    theme_element : str or tuple
-        If a string it should be one of
-        `["right", "left", "top", "bottom", "none"]`{.py}
-        If a tuple, it should be two floats each
-        in the approximate range [0, 1]. The tuple specifies the
-        location of the legend in screen coordinates.
+    theme_element : "right" | "left" | "top" | "bottom" | "none" | tuple
+        If `none`, no legend.
+        If a tuple, 2-floats in the range `[0, 1]` for the location
+        in screen coordinates.
     """
 
 
@@ -2046,9 +2043,8 @@ class legend_title_align(themeable):
 
     Parameters
     ----------
-    theme_element : str or tuple
-        If a string it should be one of
-        `["right", "left", "center", "top", "bottom"]`{.py}
+    theme_element : "right" | "left" | "center" | "top" | "bottom" | "auto"
+        If `auto`, depends on the position of the legend.
     """
 
 

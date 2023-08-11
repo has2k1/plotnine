@@ -420,7 +420,7 @@ def jitter(x, factor=1, amount=None, random_state=None):
         If `None` then `amount = factor * d/5`, where d is about
         the smallest difference between `x` values and `z` is the
         range of the `x` values.
-    random_state : int or ~numpy.random.RandomState, optional
+    random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
 
@@ -607,7 +607,7 @@ def groupby_apply(
     ----------
     cols : str | list of str
         columns to groupby
-    func : function
+    func : callable
         function to call on the grouped data
     *args : tuple
         positional parameters to pass to func
@@ -649,7 +649,7 @@ def pivot_apply(df, column, index, func, *args, **kwargs):
     index : str
         Column that will be grouped on (and whose unique values
         will make up the index of the returned dataframe)
-    func : function
+    func : callable
         Function to apply to each column group. It *should* return
         a single value.
     *args : tuple
@@ -1182,7 +1182,7 @@ class array_kind:
 
         Parameters
         ----------
-        arr : numpy.array or pandas.series
+        arr : numpy.array | pandas.series
             Must have a dtype
 
         Returns
@@ -1246,15 +1246,15 @@ def log(x, base=None):
 
     Parameters
     ----------
-    x : float or array_like
+    x : float | array_like
         Input values
-    base : int or float (Default: None)
+    base : int | float, default=None
         Base of the log. If `None`, the natural logarithm
         is computed (`base=np.e`).
 
     Returns
     -------
-    out : float or ndarray
+    out : float | ndarray
         Calculated result
     """
     if base == 10:

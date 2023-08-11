@@ -19,11 +19,11 @@ class coord_fixed(coord_cartesian):
     ----------
     ratio : float
         Desired aspect_ratio (:math:`y/x`) of the panel(s).
-    xlim : tuple[float, float], default=None
+    xlim : tuple[float, float]
         Limits for x axis. If None, then they are automatically computed.
-    ylim : tuple[float, float], default=None
+    ylim : tuple[float, float]
         Limits for y axis. If None, then they are automatically computed.
-    expand : bool, default=True
+    expand : bool
         If `True`, expand the coordinate axes by some factor. If `False`,
         use the limits from the data.
 

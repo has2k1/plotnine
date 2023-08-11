@@ -174,9 +174,9 @@ def weighted_boxplot_stats(x, weights=None, whis=1.5):
     ----------
     x : array_like
         Data
-    weights : array_like, optional
+    weights : array_like
         Weights associated with the data.
-    whis : float, optional (default: 1.5)
+    whis : float
         Position of the whiskers beyond the interquartile range.
         The data beyond the whisker are considered outliers.
 

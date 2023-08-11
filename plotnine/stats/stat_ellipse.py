@@ -26,17 +26,16 @@ class stat_ellipse(stat):
     Parameters
     ----------
     {common_parameters}
-    type : "t", "norm", "euclid", default="t"
+    type : "t" | "norm" | "euclid", default="t"
         The type of ellipse.
-
-        - `t` - assumes a multivariate t-distribution, and
-        - `norm` - assumes a multivariate normal distribution.
-        - `euclid` - draws a circle with the radius equal to
+        `t` assumes a multivariate t-distribution.
+        `norm` assumes a multivariate normal distribution.
+        `euclid` draws a circle with the radius equal to
         `level`, representing the euclidean distance from the center.
 
     level : float, default=0.95
         The confidence level at which to draw the ellipse.
-    segments : int, ptional (default=51
+    segments : int, default=51
         Number of segments to be used in drawing the ellipse.
     """
 
@@ -131,8 +130,8 @@ def cov_trob(
         if the case i actually occurred `wt[i]` times.
     cor : bool
         Flag to choose between returning the correlation
-        (``cor=True``) or covariance (``cor=False``) matrix.
-    center : array or bool
+        (`cor=True`) or covariance (`cor=False`) matrix.
+    center : array | bool
         A logical value or a numeric vector providing the location
         about which the covariance is to be taken.
         If `center=False`, no centering is done; if

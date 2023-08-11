@@ -12,13 +12,13 @@ class scale_expand(scale):
 
     Parameters
     ----------
-    base_param_1 : int or float
+    base_param_1 : int | float
         Base Param 1 Description
     base_param_2 : str
         Base Param 2 Description
     base_param_3 : dict
         Base Param 3 Description
-    specific_parameter : str, optional
+    specific_parameter : str
         Base Specific Parameter Description
     """
 
@@ -29,7 +29,7 @@ class mixin:
 
     Parameters
     ----------
-    mixin_param_1 : int or float
+    mixin_param_1 : int | float
         Mixin Param 1 Description
     mixin_param_2 : str
         Mixin Param 2 Description
@@ -44,7 +44,7 @@ class scale_expand_earth(mixin, scale_expand):
     Parameters
     ----------
     {superclass_parameters}
-    derived_param_1 : int or float
+    derived_param_1 : int | float
         Derived Param 1 Description
     derived_param_2: float
         Derived Param 2 Description
@@ -64,7 +64,7 @@ def test_document_scale():
     assert doc.count("mixin_param_2") == 1
 
     # overridden parameter
-    assert "specific_parameter : str, optional" not in doc
+    assert "specific_parameter : str" in doc
     assert "Base Specific Parameter Description" not in doc
     assert doc.count("specific_parameter : str") == 1
     assert doc.count("Derived Specific Parameter Description") == 1
@@ -92,8 +92,9 @@ class geom_abc(geom):
 
 def test_document_geom():
     doc = geom_abc.__doc__
-    assert "~plotnine.stats.stat_bin" in doc
-    assert "position_stack" in doc
+    # assert "~plotnine.stats.stat_bin" in doc
+    assert 'stat, default="bin"' in doc
+    assert 'position, default="position_stack"' in doc
 
 
 @document
@@ -115,4 +116,5 @@ class stat_abc(stat):
 def test_document_stat():
     doc = stat_abc.__doc__
     assert "geom_abc" in doc
-    assert "~plotnine.positions.position_stack" in doc
+    # assert "~plotnine.positions.position_stack" in doc
+    assert 'position, default="stack"' in doc

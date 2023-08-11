@@ -12,9 +12,9 @@ class geom_quantile(geom_path):
     Parameters
     ----------
     {common_parameters}
-    lineend : "butt", "round", "projecting", default="butt"
+    lineend : "butt" | "round" | "projecting", default="butt"
         Line end style. This option is applied for solid linetypes.
-    linejoin : "round", "miter", "bevel", default="round"
+    linejoin : "round" | "miter" | "bevel", default="round"
         Line join style. This option is applied for solid linetypes.
     """
 

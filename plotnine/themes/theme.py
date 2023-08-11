@@ -49,25 +49,28 @@ class theme:
     complete : bool
         Themes that are complete will override any existing themes.
         themes that are not complete (ie. partial) will add to or
-        override specific elements of the current theme. e.g::
+        override specific elements of the current theme. e.g:
 
-            theme_gray() + theme_xkcd()
+        ```python
+        theme_gray() + theme_xkcd()
+        ```
 
         will be completely determined by [](`~plotnine.themes.theme_xkcd`),
         but:
 
-            theme_gray() + theme(axis_text_x=element_text(angle=45))
+        ```python
+        theme_gray() + theme(axis_text_x=element_text(angle=45))
+        ```
 
         will only modify the x-axis text.
-
     kwargs: dict
         kwargs are :ref:`themeables <themeables>`. The themeables are
         elements that are subclasses of `themeable`. Many themeables
         are defined using theme elements i.e
 
-          - [](`~plotnine.themes.element_line`)
-          - [](`~plotnine.themes.element_rect`)
-          - [](`~plotnine.themes.element_text`)
+        - [](`~plotnine.themes.element_line`)
+        - [](`~plotnine.themes.element_rect`)
+        - [](`~plotnine.themes.element_text`)
 
         These simply bind together all the aspects of a themeable
         that can be themed. See [](`~plotnine.themes.themeable.themeable`).
@@ -341,10 +344,12 @@ class theme:
         """
         Add theme to ggplot object or to another theme
 
-        This will be called in one of two ways::
+        This will be called in one of two ways:
 
-             ggplot() + theme()
-             theme1() + theme2()
+        ```python
+        ggplot() + theme()
+        theme1() + theme2()
+        ```
 
         In both cases, `self` is the [](`~plotnine.themes.theme`)
         on the right hand side.

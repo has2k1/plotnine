@@ -59,13 +59,15 @@ class facet_grid(facet):
         The size also depends to the `scales` parameter.
 
         If a string, it should be one of
-        ``['fixed', 'free', 'free_x', 'free_y']``. Currently, only the
-        ``'fixed'`` option is supported.
+        `['fixed', 'free', 'free_x', 'free_y']`{.py}.
+        Currently, only the `'fixed'` option is supported.
 
         Alternatively if a `dict`, it indicates the relative facet
-        size ratios such as::
+        size ratios such as:
 
-            {'x': [1, 2], 'y': [3, 1, 1]}
+        ```python
+        {"x": [1, 2], "y": [3, 1, 1]}
+        ```
 
         This means that in the horizontal direction, the second panel
         will be twice the length of the first. In the vertical direction
@@ -74,11 +76,10 @@ class facet_grid(facet):
 
         Note that the number of dimensions in the list must equal the
         number of facets that will be produced.
-
     shrink : bool, default=True
         Whether to shrink the scales to the output of the
         statistics instead of the raw data.
-    labeller : str, callable, default="label_value"
+    labeller : str | callable, default="label_value"
         How to label the facets. A string value if it should be
         one of `["label_value", "label_both", "label_context"]`{.py}.
     as_table : bool, default=True

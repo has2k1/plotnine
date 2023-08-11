@@ -319,10 +319,11 @@ class stat(metaclass=Registry):
         scales : dataclass
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
-            to find out the physical size of a scale. e.g::
+            to find out the physical size of a scale. e.g.
 
-                range_x = scales.x.dimension()
-
+            ```python
+            range_x = scales.x.dimension()
+            ```
         params : dict
             The parameters for the stat. It includes default
             values if user did not set a particular parameter.
@@ -371,10 +372,11 @@ class stat(metaclass=Registry):
         scales : types.SimpleNamespace
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
-            to find out the physical size of a scale. e.g::
+            to find out the physical size of a scale. e.g.
 
-                range_x = scales.x.dimension()
-
+            ```python
+            range_x = scales.x.dimension()
+            ```
         params : dict
             Parameters
         """

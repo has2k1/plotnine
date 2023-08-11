@@ -54,7 +54,7 @@ class layer:
     inherit_aes : bool
         If `True` inherit from the aesthetic mappings of
         the [](`~plotnine.ggplot`) object.
-    show_legend : bool or None
+    show_legend : bool | None
         Whether to make up and show a legend for the mappings
         of this layer. If `None` then an automatic/good choice
         is made
@@ -375,7 +375,7 @@ class layer:
 
         Parameters
         ----------
-        data : dataframe, optional
+        data : dataframe
             Data
         aes_modifiers : dict
             Expression to evaluate and replace aesthetics in
