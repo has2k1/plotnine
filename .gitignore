@@ -95,6 +95,7 @@ plotnine/_version.py
 qdoc/plotnine_examples/
 qdoc/reference/
 qdoc/_site/
+qdoc/_inv/
 qdoc/.quarto/
 qdoc/gallery/thumbnails
 qdoc/objects.json
