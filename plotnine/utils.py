@@ -14,7 +14,6 @@ from weakref import WeakValueDictionary
 
 import numpy as np
 import pandas as pd
-import pandas.api.types as pdtypes
 
 # missing in type stubs
 from pandas.core.groupby import DataFrameGroupBy  # type: ignore
@@ -244,14 +243,14 @@ def add_margins(
     categories = {}
     for v in itertools.chain(*vars):
         col = df[v]
-        if not pdtypes.is_categorical_dtype(df[v]):
+        if not isinstance(df[v], pd.Categorical):
             col = pd.Categorical(df[v])
         categories[v] = col.categories
         if "(all)" not in categories[v]:
             categories[v] = categories[v].insert(len(categories[v]), "(all)")
 
     for v in merged.columns.intersection(list(categories.keys())):
-        merged[v] = merged[v].astype(pdtypes.CategoricalDtype(categories[v]))
+        merged[v] = merged[v].astype(pd.CategoricalDtype(categories[v]))
 
     return merged
 
@@ -323,9 +322,7 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
     if len(x) == 0:
         return []
 
-    categorical = pdtypes.is_categorical_dtype(x)
-
-    if categorical:
+    if array_kind.categorical(x):
         if drop:
             x = x.cat.remove_unused_categories()
             lst = list(x.cat.codes + 1)
@@ -630,7 +627,7 @@ def groupby_apply(
         axis = 0
 
     lst = []
-    for _, d in df.groupby(cols):
+    for _, d in df.groupby(cols, observed=True):
         # function fn should be free to modify dataframe d, therefore
         # do not mark d as a slice of df i.e no SettingWithCopyWarning
         lst.append(func(d, *args, **kwargs))
@@ -1217,9 +1214,29 @@ class array_kind:
         out : bool
             Whether array `arr` is an ordered categorical
         """
-        if pdtypes.is_categorical_dtype(arr):
+        if isinstance(arr.dtype, pd.CategoricalDtype):
             return arr.cat.ordered
         return False
+
+    @staticmethod
+    def categorical(arr):
+        """
+        Return True if array is a categorical
+
+        Parameters
+        ----------
+        arr : list-like
+            List
+
+        Returns
+        -------
+        bool
+            Whether array `arr` is a categorical
+        """
+        if not hasattr(arr, "dtype"):
+            return False
+
+        return isinstance(arr.dtype, pd.CategoricalDtype)
 
 
 def log(x, base=None):

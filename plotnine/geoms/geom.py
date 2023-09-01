@@ -286,7 +286,7 @@ class geom(metaclass=Registry):
             includes the stacking order of the layer in
             the plot (*zorder*)
         """
-        for pid, pdata in data.groupby("PANEL"):
+        for pid, pdata in data.groupby("PANEL", observed=True):
             if len(pdata) == 0:
                 continue
             ploc = pdata["PANEL"].iloc[0] - 1

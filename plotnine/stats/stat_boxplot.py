@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pandas.api.types as pdtypes
 
 from ..doctools import document
 from ..utils import resolution
@@ -97,7 +96,7 @@ class stat_boxplot(stat):
         else:
             width = params["width"]
 
-        if pdtypes.is_categorical_dtype(data["x"]):
+        if isinstance(data["x"].dtype, pd.CategoricalDtype):
             x = data["x"].iloc[0]
         else:
             x = np.mean([data["x"].min(), data["x"].max()])

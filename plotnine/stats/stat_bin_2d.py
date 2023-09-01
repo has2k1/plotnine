@@ -131,7 +131,7 @@ class stat_bin_2d(stat):
             }
         )
         table = bins_grid_long.pivot_table(
-            "weight", index=["xbins", "ybins"], aggfunc=np.sum
+            "weight", index=["xbins", "ybins"], aggfunc="sum"
         )["weight"]
 
         # create rectangles
