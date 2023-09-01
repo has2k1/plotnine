@@ -9,7 +9,8 @@ https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
 """
 
 import numpy as np
-import pandas.api.types as pdtypes
+
+from ..utils import array_kind
 
 
 def kde_scipy(data, grid, **kwargs):
@@ -214,13 +215,10 @@ def get_var_type(col):
     The origin of the character codes is
     :class:`statsmodels.nonparametric.kernel_density.KDEMultivariate`.
     """
-    if pdtypes.is_numeric_dtype(col):
-        # continuous
+    if array_kind.continuous(col):
         return "c"
-    elif pdtypes.is_categorical_dtype(col):
-        # ordered or unordered
-        return "o" if col.cat.ordered else "u"
+    elif array_kind.discrete(col):
+        return "o" if array_kind.ordinal else "u"
     else:
-        # unordered if unsure, e.g string columns that
-        # are not categorical
+        # unordered if unsure
         return "u"

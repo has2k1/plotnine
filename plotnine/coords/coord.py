@@ -168,10 +168,18 @@ class coord:
     ) -> pd.DataFrame:
         ranges = self.backtransform_range(panel_params)
 
-        data.loc[data["x"] == -np.inf, "x"] = ranges.x[0]
-        data.loc[data["x"] == np.inf, "x"] = ranges.x[1]
-        data.loc[data["y"] == -np.inf, "y"] = ranges.y[0]
-        data.loc[data["y"] == np.inf, "y"] = ranges.y[1]
+        x_neginf = np.isneginf(data["x"])
+        x_posinf = np.isposinf(data["x"])
+        y_neginf = np.isneginf(data["y"])
+        y_posinf = np.isposinf(data["y"])
+        if x_neginf.any():
+            data.loc[x_neginf, "x"] = ranges.x[0]
+        if x_posinf.any():
+            data.loc[x_posinf, "x"] = ranges.x[1]
+        if y_neginf.any():
+            data.loc[y_neginf, "y"] = ranges.y[0]
+        if y_posinf.any():
+            data.loc[y_posinf, "y"] = ranges.y[1]
 
         dist = self.distance(data["x"], data["y"], panel_params)
         bool_idx = (

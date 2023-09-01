@@ -160,7 +160,10 @@ def reorder(x, y, fun=np.median, ascending=True):
     if len(x) != len(y):
         raise ValueError(f"Lengths are not equal. {len(x)=}, {len(x)=}")
     summary = (
-        pd.Series(y).groupby(x).apply(fun).sort_values(ascending=ascending)
+        pd.Series(y)
+        .groupby(x, observed=True)
+        .apply(fun)
+        .sort_values(ascending=ascending)
     )
     cats = summary.index.to_list()
     return pd.Categorical(x, categories=cats)
