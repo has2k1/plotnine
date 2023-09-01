@@ -104,13 +104,13 @@ class stat_bin_2d(stat):
         xbins = pd.cut(
             x,
             bins=xbreaks,  # pyright: ignore
-            labels=False,  # pyright: ignore
+            labels=False,
             right=True,
         )
         ybins = pd.cut(
             y,
             bins=ybreaks,  # pyright: ignore
-            labels=False,  # pyright: ignore
+            labels=False,
             right=True,
         )
 
@@ -123,15 +123,15 @@ class stat_bin_2d(stat):
         ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
         xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
 
-        df = pd.DataFrame(
+        bins_grid_long = pd.DataFrame(
             {
                 "xbins": xbins,
                 "ybins": ybins,
                 "weight": weight,
             }
         )
-        table = df.pivot_table(
-            "weight", index=["xbins", "ybins"], aggfunc=np.sum
+        table = bins_grid_long.pivot_table(
+            "weight", index=["xbins", "ybins"], aggfunc="sum"
         )["weight"]
 
         # create rectangles

@@ -14,13 +14,13 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import FloatArray, TupleFloat2
 
 
-__all__ = [
+__all__ = (
     "freedman_diaconis_bins",
     "breaks_from_bins",
     "breaks_from_binwidth",
     "assign_bins",
     "fuzzybreaks",
-]
+)
 
 
 def freedman_diaconis_bins(a):
@@ -37,7 +37,7 @@ def freedman_diaconis_bins(a):
     if h == 0:
         bins = np.ceil(np.sqrt(a.size))
     else:
-        bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)
+        bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)  # type: ignore
 
     return int(bins)
 
@@ -168,10 +168,10 @@ def assign_bins(x, breaks, weight=None, pad=False, closed="right"):
     #   - the bins to which each x is assigned
     #   - the weight of each x value
     # Then create a weighted frequency table
-    df = pd.DataFrame({"bin_idx": bin_idx, "weight": weight})
-    wftable = df.pivot_table("weight", index=["bin_idx"], aggfunc=np.sum)[
-        "weight"
-    ]
+    bins_long = pd.DataFrame({"bin_idx": bin_idx, "weight": weight})
+    wftable = bins_long.pivot_table(
+        "weight", index=["bin_idx"], aggfunc="sum"
+    )["weight"]
 
     # Empty bins get no value in the computed frequency table.
     # We need to add the zeros and since frequency table is a
@@ -279,7 +279,7 @@ def fuzzybreaks(
         binwidth = (srange[1] - srange[0]) / bins
 
     if boundary is None or np.isnan(boundary):
-        boundary = round_any(srange[0], binwidth, np.floor)  # pyright: ignore
+        boundary = round_any(srange[0], binwidth, np.floor)
 
     if recompute_bins:
         bins = int(np.ceil((srange[1] - boundary) / binwidth))
