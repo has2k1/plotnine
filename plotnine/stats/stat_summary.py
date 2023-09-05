@@ -258,6 +258,7 @@ class stat_summary(stat):
 
         'ymin'  # ymin computed by the summary function
         'ymax'  # ymax computed by the summary function
+        'n'     # Number of observations at a position
 
     Calculated aesthetics are accessed using the `after_stat` function.
     e.g. :py:`after_stat('ymin')`.
@@ -275,7 +276,7 @@ class stat_summary(stat):
         "fun_args": None,
         "random_state": None,
     }
-    CREATES = {"ymin", "ymax"}
+    CREATES = {"ymin", "ymax", "n"}
 
     def setup_params(self, data):
         keys = ("fun_data", "fun_y", "fun_ymin", "fun_ymax")
@@ -315,6 +316,7 @@ class stat_summary(stat):
             summary = func(df)
             summary["x"] = x
             summary["group"] = group
+            summary["n"] = len(df)
             unique = uniquecols(df)
             if "y" in unique:
                 unique = unique.drop("y", axis=1)
