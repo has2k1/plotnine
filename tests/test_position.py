@@ -13,6 +13,7 @@ from plotnine import (
     geom_jitter,
     geom_point,
     geom_rect,
+    geom_segment,
     geom_text,
     ggplot,
     position_dodge,
@@ -22,6 +23,7 @@ from plotnine import (
     position_nudge,
     position_stack,
     scale_y_log10,
+    stage,
 )
 from plotnine.exceptions import PlotnineError
 from plotnine.positions.position import position
@@ -155,6 +157,42 @@ def test_dodge_preserve_single_text():
         )
     )
     assert p == "dodge_preserve_single_text"
+
+
+def test_dodge_segment():
+    data = pd.DataFrame(
+        {
+            "x": list("aaaabbbb"),
+            "y": [1, 2, 4, 5, 6, 7, 9, 10],
+            "g": list("rrssrrss"),
+        }
+    )
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_segment(
+            aes(
+                x=stage("x", after_stat="x-.45"),
+                xend=after_stat("x+.45"),
+                yend=after_stat("y"),
+            ),
+            stat="summary",
+            fun_y=np.mean,
+        )
+        + geom_segment(
+            aes(
+                x=stage("x", after_stat="x-.45"),
+                xend=after_stat("x+.45"),
+                yend=after_stat("y"),
+                color="g",
+            ),
+            stat="summary",
+            position=position_dodge(width=0.9),
+            fun_y=np.mean,
+        )
+        + geom_point(aes(y="y", color="g"), position=position_dodge(width=0.9))
+    )
+
+    assert p == "dodge_segment"
 
 
 def test_dodge2():

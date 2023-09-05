@@ -150,6 +150,10 @@ class position_dodge2(position_dodge):
             data["xmin"] = data["x"] - pad_width / 2
             data["xmax"] = data["x"] + pad_width / 2
 
+        if "x" in data and "xend" in data:
+            data["x"] = data["xmin"]
+            data["xend"] = data["xmax"]
+
         data = data.drop(columns=["xid", "newx", "new_width"], errors="ignore")
         return data
 
