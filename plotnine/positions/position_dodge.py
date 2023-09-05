@@ -33,9 +33,17 @@ class position_dodge(position):
         }
 
     def setup_data(self, data, params):
-        has_xmin_xmax = "xmin" in data and "xmax" in data
-        if "x" not in data and has_xmin_xmax:
-            data["x"] = (data["xmin"] + data["xmax"]) / 2
+        # # e.g. geom_segment should be dodgeable
+        if "x" in data and "xend" in data:
+            if "xmin" not in data:
+                data["xmin"] = data.pop("x")
+            if "xmax" not in data:
+                data["xmax"] = data["xend"]
+
+        if "x" not in data:
+            if "xmin" in data and "xmax" in data:
+                data["x"] = (data["xmin"] + data["xmax"]) / 2
+
         return super().setup_data(data, params)
 
     def setup_params(self, data):
@@ -108,5 +116,9 @@ class position_dodge(position):
         data["x"] = data["x"] + width * ((groupidx - 0.5) / n - 0.5)
         data["xmin"] = data["x"] - (d_width / n) / 2  # type: ignore
         data["xmax"] = data["x"] + (d_width / n) / 2  # type: ignore
+
+        if "x" in data and "xend" in data:
+            data["x"] = data["xmin"]
+            data["xend"] = data["xmax"]
 
         return data
