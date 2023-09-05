@@ -49,6 +49,8 @@ class stat_boxplot(stat):
         'ymax'  # upper whisker, computed as; largest observation
                 # less than or equal to upper hinge + 1.5 * IQR
 
+        'n'     # Number of observations at a position
+
     Calculated aesthetics are accessed using the `after_stat` function.
     e.g. :py:`after_stat('width')`.
     """
@@ -73,6 +75,7 @@ class stat_boxplot(stat):
         "notchlower",
         "width",
         "relvarwidth",
+        "n",
     }
 
     def setup_params(self, data):
@@ -82,6 +85,7 @@ class stat_boxplot(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
+        n = len(data)
         y = data["y"].to_numpy()
         if "weight" in data:
             weights = data["weight"]
@@ -113,6 +117,7 @@ class stat_boxplot(stat):
             "x": x,
             "width": width,
             "relvarwidth": np.sqrt(total_weight),
+            "n": n,
         }
         return pd.DataFrame(d)
 

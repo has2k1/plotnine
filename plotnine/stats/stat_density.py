@@ -97,6 +97,8 @@ class stat_density(stat):
 
         'scaled'    # density estimate, scaled to maximum of 1
 
+        'n'         # Number of observations at a position
+
     """
     REQUIRED_AES = {"x"}
     DEFAULT_PARAMS = {
