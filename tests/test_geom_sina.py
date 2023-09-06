@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pytest
 
 from plotnine import aes, coord_flip, geom_sina, geom_violin, ggplot
 
@@ -30,7 +29,6 @@ data = pd.DataFrame(
 )
 
 
-@pytest.mark.skip("Fix the limits")
 def test_scale_area():
     p = (
         ggplot(data, aes("dist", "value"))
@@ -41,7 +39,6 @@ def test_scale_area():
     assert p == "scale_area"
 
 
-@pytest.mark.skip("Fix the limits")
 def test_scale_count():
     p = (
         ggplot(data, aes("dist", "value"))
@@ -52,7 +49,6 @@ def test_scale_count():
     assert p == "scale_count"
 
 
-@pytest.mark.skip("Fix the limits")
 def test_scale_area_coordatalip():
     p = (
         ggplot(data, aes("dist", "value"))
@@ -64,7 +60,6 @@ def test_scale_area_coordatalip():
     assert p == "scale_area+coord_flip"
 
 
-@pytest.mark.skip("Fix the limits")
 def test_method_counts():
     p = (
         ggplot(data, aes("dist", "value"))
