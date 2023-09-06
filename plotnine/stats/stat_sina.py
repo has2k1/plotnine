@@ -4,7 +4,6 @@ import pandas as pd
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.aes import has_groups
-from ..mapping.evaluation import after_stat
 from ..utils import array_kind, jitter, resolution
 from .binning import breaks_from_bins, breaks_from_binwidth
 from .stat import stat
@@ -86,7 +85,6 @@ class stat_sina(stat):
     """
 
     REQUIRED_AES = {"x", "y"}
-    DEFAULT_AES = {"xend": after_stat("scaled")}
     DEFAULT_PARAMS = {
         "geom": "sina",
         "position": "dodge",
@@ -172,6 +170,10 @@ class stat_sina(stat):
             msg = "Unknown scale value '{}'"
             raise PlotnineError(msg.format(params["scale"]))
 
+        is_infinite = ~np.isfinite(data["sinawidth"])
+        if is_infinite.any():
+            data.loc[is_infinite, "sinawidth"] = 0
+
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
         data["x_diff"] = (
@@ -182,9 +184,13 @@ class stat_sina(stat):
         )
         data["width"] = maxwidth
 
-        # jitter y values if the input is input is integer
-        if (data["y"] == np.floor(data["y"])).all():
-            data["y"] = jitter(data["y"], random_state=random_state)
+        # jitter y values if the input is integer,
+        # but not if it is the same value
+        y = data["y"].to_numpy()
+        all_integers = (y == np.floor(y)).all()
+        some_are_unique = len(np.unique(y)) > 1
+        if all_integers and some_are_unique:
+            data["y"] = jitter(y, random_state=random_state)
 
         return data
 
@@ -194,6 +200,7 @@ class stat_sina(stat):
         bins = params["bins"]
         bin_limit = params["bin_limit"]
         weight = None
+        y = data["y"]
 
         if len(data) == 0:
             return pd.DataFrame()
@@ -201,25 +208,26 @@ class stat_sina(stat):
         elif len(data) < 3:
             data["density"] = 0
             data["scaled"] = 1
+        elif len(np.unique(y)) < 2:
+            data["density"] = 1
+            data["scaled"] = 1
         elif params["method"] == "density":
             from scipy.interpolate import interp1d
 
             # density kernel estimation
-            range_y = data["y"].min(), data["y"].max()
-            dens = compute_density(data["y"], weight, range_y, **params)
+            range_y = y.min(), y.max()
+            dens = compute_density(y, weight, range_y, **params)
             densf = interp1d(
                 dens["x"],
                 dens["density"],
                 bounds_error=False,
                 fill_value="extrapolate",  # pyright: ignore
             )
-            data["density"] = densf(data["y"])
+            data["density"] = densf(y)
             data["scaled"] = data["density"] / dens["density"].max()
         else:
             # bin based estimation
-            bin_index = pd.cut(
-                data["y"], bins, include_lowest=True, labels=False
-            )
+            bin_index = pd.cut(y, bins, include_lowest=True, labels=False)
             data["density"] = (
                 pd.Series(bin_index)
                 .groupby(bin_index)
