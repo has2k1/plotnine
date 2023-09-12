@@ -103,6 +103,11 @@ class stat_ydensity(stat):
     DEFAULT_AES = {"weight": None}
     CREATES = {"width", "violinwidth"}
 
+    def setup_data(self, data):
+        if "x" not in data:
+            data["x"] = 0
+        return data
+
     def setup_params(self, data):
         params = self.params.copy()
 

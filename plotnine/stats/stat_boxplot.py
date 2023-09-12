@@ -78,9 +78,15 @@ class stat_boxplot(stat):
         "n",
     }
 
+    def setup_data(self, data):
+        if "x" not in data:
+            data["x"] = 0
+        return data
+
     def setup_params(self, data):
         if self.params["width"] is None:
-            self.params["width"] = resolution(data["x"], False) * 0.75
+            x = data["x"] if "x" in data else 0
+            self.params["width"] = resolution(x, False) * 0.75
         return self.params
 
     @classmethod
