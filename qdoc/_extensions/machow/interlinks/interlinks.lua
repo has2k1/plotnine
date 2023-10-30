@@ -5,15 +5,22 @@
 --- An incomplete link type, missing a uri
 --- Internally we represent that link as follows
 --- @alias ilinkT
---- | { name: string, role: string?, domain: string?, inv_name: string?, external: boolean?, shortened: boolean? }
+--- | { name: string, role: string, domain: string, inv_name: string?, external: boolean?, shortened: boolean? }
 --- Any other fields are irrelevant
 ---
 --- A complete link type, has a uri
 --- For links to this project, the uri is a relative path from  documentation root.
 --- For links to other projects, the uri is a full url (including the domain)
 --- @alias clinkT
---- | { uri: string, name: string, role: string?, domain: string?, inv_name: string? }
+--- | { uri: string, name: string, role: string, domain: string, priority: number, dispname: string, inv_name: string? }
 --- Any other fields are irrelevant
+---
+--- Type for the global inventory
+--- indexed by:
+---   name
+---   domain
+--- @alias inventoryT
+--- | table<string, table<string, clinkT[]>>
 
 -- Local references to all the global variables we expect to be available
 local quarto = _G.quarto --- @diagnostic disable-line:undefined-field
@@ -39,17 +46,84 @@ The keys are the names of the links i.e.
   inventory["pkg.mod.cls"] = { { name = "pkg.mod.cls", ... }, ...}
   inventory["some_label"] = { { name = "some_label", role = "label", ... }, ... }
 ]]
---- @type table<string, clinkT[]>
+--- @type inventoryT
 local inventory = {}
-local CACHE_FILENAME = qdoc_root .. "/.quarto/interlinks/inventory.json"
+local CACHE_FILEPATH = qdoc_root .. "/.quarto/interlinks/inventory.bin"
 
+--- Serialize an object
+---
+--- Limitations:
+---   - Cannot handle self referencing tables
+---   - Has a naive test for detecting arrays
+---
+--- @param obj table|string|number|string|nil object to serialize
+--- @return string # The serialized object.
+local function serialize(obj)
+  -- Implemented with a list that accummulates tokens.
+  -- Tried concatenating strings, it is very slow
+  local acc = {}
+  local depth = 0
+  local _serialize
+
+  local function table_tostring(tbl)
+    depth = depth + 1
+    acc[#acc+1] = "{"
+
+    -- This is a naive test for an array. The only foolproof way
+    -- is to iterate over the whole table
+    local is_array = (#tbl > 0) or (next(tbl) == nil)
+    local indent = string.rep(" ", depth)
+
+    for k, v in pairs(tbl) do
+      if not is_array then
+        acc[#acc+1] = ("\n%s["):format(indent)
+        _serialize(k)
+        acc[#acc+1] = "] = "
+      end
+      _serialize(v)
+      acc[#acc+1] = ", "
+    end
+
+    if is_array then
+      acc[#acc] = nil
+      indent = ""
+    else
+      indent = "\n" .. indent:sub(1, -2)
+    end
+
+    acc[#acc+1] =  indent .. "}"
+    depth = depth - 1
+  end
+
+  local serialize_funcs = {
+    ["nil"] = function(x) acc[#acc+1] = tostring(x) end,
+    number = function(x) acc[#acc+1] = tostring(x) end,
+    boolean = function(x) acc[#acc+1] = tostring(x) end,
+    string = function(x) acc[#acc+1] = string.format("%q", x) end,
+    table = table_tostring
+  }
+
+  -- Do the serializing
+  function _serialize(x)
+    local f = serialize_funcs[type(x)]
+    assert(f, "Cannot serialize object of type: " .. type(x))
+    f(x)
+  end
+
+  _serialize(obj)
+  return table.concat(acc, "")
+end
+
+local function serialize_to_return_value2(obj)
+  return "return " .. serialize(obj)
+end
 
 --- Check if file exists
 ---
---- @param filename string
+--- @param filepath string
 --- @return boolean
-local function file_exists(filename)
-  local f = io.open(filename, "r")
+local function file_exists(filepath)
+  local f = io.open(filepath, "r")
   if f then
     io.close(f)
     return true
@@ -58,64 +132,172 @@ local function file_exists(filename)
   end
 end
 
---- Write to file
+--- Write to a file
 --- Creates directories as required
 ---
---- @param filename string
 --- @param content string
-local function write_to_file(filename, content)
-  local dir = filename:gsub ("[^/]+$", "")
+--- @param filepath string
+--- @raise exception if file cannot be opened
+local function write_to_file(content, filepath)
+  local dir = filepath:gsub ("[^/]+$", "")
   pandoc.system.make_directory(dir, true)
 
-  local file = io.open(filename, "w")
-  assert(file)
+  local file = io.open(filepath, "w")
+  assert(file, "Could not open file: " .. filepath .. " for writing")
   file:write(content)
   file:close()
 end
 
---- Write to file
+--- Read from a file
 ---
---- @param filename string
+--- @param filepath string The file to read.
 --- @return string # content of the file
-local function read_from_file(filename, read_params)
+--- @raise exception if file cannot be opened
+local function read_from_file(filepath, read_params)
   if not read_params then
     read_params = "a"
   end
 
-  local file = io.open(filename, "r")
-  assert(file)
+  local file = io.open(filepath, "r")
+  assert(file, "Could not open file: " .. filepath .. " for reading")
   local content = file:read(read_params)
   file:close()
   return content
 end
 
 
+--- Cache to disk
+---
+--- @param obj any object to write to file
+--- @param filepath string Where to write
+local function cache_to_disk(obj, filepath)
+  -- create a binary string representation of a function that
+  -- returns the object being cached
+  local obj_return = serialize_to_return_value2(obj)
+  write_to_file(obj_return, filepath .. ".txt")
+  local obj_func = load(obj_return)
+  assert(obj_func, "Could not serialize object of type: " .. type(obj))
+  local binary_fstr = string.dump(obj_func)
+  write_to_file(binary_fstr, filepath)
+end
+
+--- Read cache obj
+---
+--- @param filepath string Where to read
+--- @return any Cached object
+local function read_disk_cache(filepath)
+  return loadfile(filepath)()
+end
+
+--- Read inventory file
+---
+--- The format of the inventory file is
+---
+---     # Project: {project-name}
+---     # Version: {project-version}
+---     {name} {domain}:{role} {priority} {uri} {dispname}
+---     {name} {domain}:{role} {priority} {uri} {dispname}
+---     {name} {domain}:{role} {priority} {uri} {dispname}
+---     ...
+---
+--- 1. The {dispname} matches until the end of the line, and
+---    {dispname} == "-", it's value is the same as the {name}
+--- 2. A {uri} that ends with "#$" has an anchor that is equal
+---    to the {name}
+---
+--- This function cannot read a json inventory.
+---
+--- @param filepath string path to the inventory file.
+local function read_inventory_text(filepath)
+  local contents = read_from_file(filepath, "a")
+  local project = contents:match("# Project: (%S+)")
+  local version = contents:match("# Version: (%S+)")
+  local data = {project = project, version = version, items = {}}
+
+  local pattern =
+    "^" ..
+      "(.-)%s+" ..        -- name
+      "([%S:]-):" ..      -- domain
+      "([%S]+)%s+" ..     -- role
+      "(%-?%d+)%s+" ..    -- priority
+      "(%S*)%s+" ..       -- uri
+      "(.-)\r?$"          -- dispname
+
+  -- All non-empty lines that do not start with "#"
+  -- should match the pattern
+  for line in contents:gmatch("[^\r\n]+") do
+    if not line:match("^#") then
+      local name, domain, role, priority, uri, dispname = line:match(pattern)
+
+      -- error out onl lines like
+      -- " domain:role 1 uri dispname"
+      if name == nil then
+        error("Error parsing line: " .. line)
+      end
+
+      data.items[#data.items + 1] = {
+        name = name,
+        domain = domain,
+        role = role,
+        priority = tonumber(priority),
+        uri = uri,
+        dispname = dispname
+      }
+    end
+  end
+  return data
+end
+
 --- Add a source of links to the inventory
 ---
---- @param filename string
---- @param prefix string A prefix to the original uris in the source file
----   so that they are resolvable.
+--- @param base_filepath string path to the file without an extension
+---   This function tries .txt file then a .json
+--- @param prefix string A prefix to the original uris in the inventory file
+---   that makes them resolvable.
 ---   For external links, it should be the source url
 ---   For internal links, it should be a "/".
-local function add_link_source_to_inventory(filename, prefix)
-  local contents = read_from_file(filename, "a")
+local function add_link_source_to_inventory(base_filepath, prefix)
+  local txt_filepath = base_filepath .. ".txt"
+  local json_filepath = base_filepath .. ".json"
 
-  -- NOTE: Down the line, change to pandoc.json.decode as
-  -- it now exposes the same method.
-  local json = quarto.json.decode(contents)
-
-  if not json then
-    return
+  -- Try .txt then .json
+  local status, project_inv = pcall(read_inventory_text, txt_filepath)
+  if not status then
+    local contents = read_from_file(json_filepath, "a")
+    -- NOTE: Down the line, change to pandoc.json.decode as
+    -- it now exposes the same method.
+    project_inv = quarto.json.decode(contents)
+    if not project_inv then
+      return
+    end
   end
 
-  prefix = prefix or ""
+  -- Insert new_item into table in assending priority
+  local function priority_insert(tbl, new_item)
+    local idx = #tbl
+    for i, item in ipairs(tbl) do
+      if new_item.priority > item.priority then
+        idx = i
+        break
+      end
+    end
+    table.insert(tbl, idx, new_item)
+  end
 
-  for _, item in ipairs(json.items) do
+  -- Add the projects inventory items to the global inventory
+  -- The key for each item is the prefixed-uri
+  prefix = prefix or ""
+  for _, item in ipairs(project_inv.items) do
     item.uri = prefix .. item.uri
-    if inventory[item.name] then
-      table.insert(inventory[item.name], item)
+    item.priority = tonumber(item.priority)
+    if not inventory[item.name] then
+      inventory[item.name] = {}
+    end
+
+    if inventory[item.name][item.domain] then
+      priority_insert(inventory[item.name][item.domain], item)
     else
-      inventory[item.name] = {item}
+      inventory[item.name][item.domain] = {item}
     end
   end
 end
@@ -123,13 +305,15 @@ end
 
 --- Build inventory index from the sources
 ---
---- @param sources table[]
+--- @param sources table<table<string>> A list of
+--- (base filepaths, prefix) i.e. the inventory file and the
+--- uri prefix that would make links resolvable.
 local function build_inventory(sources)
-  local filename
+  local base_filepath
   local prefix
   for _, item in pairs(sources) do
-    filename, prefix = item[1], item[2]
-    add_link_source_to_inventory(filename, prefix)
+    base_filepath, prefix = item[1], item[2]
+    add_link_source_to_inventory(base_filepath, prefix)
   end
 end
 
@@ -137,20 +321,18 @@ end
 --- Write inventory to file cache
 ---
 local function write_inventory_cache()
-  local json = quarto.json.encode(inventory)
-  write_to_file(CACHE_FILENAME, json)
+  cache_to_disk(inventory, CACHE_FILEPATH)
 end
 
 
 --- Load inventory from the file cache
+--- @return inventoryT
 local function read_inventory_cache()
-  if not file_exists(CACHE_FILENAME) then
+  local status, contents = pcall(read_disk_cache, CACHE_FILEPATH)
+  if not status then
     return {}
   end
-
-  local contents = read_from_file(CACHE_FILENAME)
-  local json = quarto.json.decode(contents)
-  return json
+  return contents
 end
 
 
@@ -164,32 +346,85 @@ local function lookup_complete_link(ilink)
   -- 2. Filter out links whose other attributes (inv_name, role, domain)
   --    do not match. Ignore attributes that are missing in the ilink.
   local results = {}
-  local candidates = inventory[ilink.name] or {}
-  local attributes_match
+  local domains = inventory[ilink.name] or {}
 
-  for _, item in ipairs(candidates) do
-    attributes_match = not (
+  --- Detect any attribute in the candidate item that defers from
+  ---
+  --- @param item clinkT
+  local function attributes_can_match(item)
+    return not (
       -- e.g. :external+<inv_name>:<domain>:<role>:`<name>`
       (item.inv_name and item.inv_name ~= ilink.inv_name) or
       (ilink.role and item.role ~= ilink.role) or
       (ilink.domain and item.domain ~= ilink.domain)
     )
+  end
 
-    if attributes_match then
-      table.insert(results, item)
+  --- Select potential references in from a list
+  ---
+  --- @param domain_tbl table<clinkT> links for a name reference all in
+  --- the same domain and ordered in descending to priority.
+  --- @return table<clinkT> # Matches with the highest priority
+  local function select_from_domain(domain_tbl)
+    local lst = {}
+    for _, item in ipairs(domain_tbl) do
+      if attributes_can_match(item) then
+        if #lst > 0 then
+          if lst[#lst].priority > item.priority then
+            break
+          end
+        end
+        table.insert(lst, item)
+      end
     end
+    return lst
+  end
+
+  --- Select potential references from multiple domains
+  ---
+  --- @param tbl table<string, table<clinkT>> Lists (per domain) of links for
+  --- a name for each domain. These come from an entry in the inventory table.
+  --- @return table<clinkT> # Matches with the highest priority
+  local function select_across_domains(tbl)
+    local lst = {}
+    for _, candidates in pairs(tbl) do
+      for _, item in ipairs(select_from_domain(candidates)) do
+        -- NOTE: Currently getting away without checking
+        -- the priority
+        table.insert(lst, item)
+      end
+    end
+    return lst
+  end
+
+  --- The domain & role of the interlink are optional and if they
+  --- are missing, we prefer the py domain. This should match the
+  --- user's intent nearly all the time.
+  if not ilink.domain and not ilink.role then
+    -- :target:
+    if domains["py"] then
+      results = select_from_domain(domains["py"])
+    else
+      results = select_across_domains(domains)
+    end
+  elseif not ilink.domain and ilink.role ~= nil then
+    -- :role:target:
+    results = select_across_domains(domains)
+  elseif ilink.domain ~= nil and not ilink.role then
+    -- :domain::target: # This should be rare
+    results = select_from_domain(domains[ilink.domain])
+  else
+    -- :domain:role:target:
+    results = select_across_domains(domains)
   end
 
   if #results == 1 then
     return results[1]
-  end
-
-  if #results > 1 then
+  elseif #results > 1 then
     print("Found multiple matches for " .. ilink.name)
     quarto.utils.dump(results)
   elseif #results == 0 then
-    print("Found no matches for object:")
-    quarto.utils.dump(ilink)
+    print("Found no matches for object: " .. ilink.name)
   end
 
   return nil
@@ -222,6 +457,8 @@ end
 local function standardize_role(role)
   if role == "func" then
     return "function"
+  elseif role == "mod" then
+    return "module"
   end
 
   return role
@@ -310,21 +547,21 @@ end
 --- Process .qmd meta and build inventory from the source
 --- @param meta table pandoc.Meta
 local function Meta(meta)
-  if not next(inventory) and file_exists(CACHE_FILENAME) then
+  if not next(inventory) and file_exists(CACHE_FILEPATH) then
     inventory = read_inventory_cache()
     return
   end
 
-  local filename = qdoc_root .. "/objects.json"
+  local base_filepath = qdoc_root .. "/objects"
   local prefix
   local sources = {
-    { filename, "/" },
+    { base_filepath, "/" },
   }
 
   for k, v in pairs(meta.interlinks.sources) do
-    filename = qdoc_root .. "/_inv/" .. k .. "_objects.json"
+    base_filepath = qdoc_root .. "/_inv/" .. k .. "_objects"
     prefix = pandoc.utils.stringify(v.url)
-    table.insert(sources, {filename, prefix})
+    table.insert(sources, {base_filepath, prefix})
   end
 
   build_inventory(sources)
