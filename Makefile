@@ -69,7 +69,7 @@ coverage:
 	$(BROWSER) htmlcov/index.html
 
 doc:
-	$(MAKE) -C qdoc render
+	$(MAKE) -C qdoc doc
 
 doc-preview:
 	$(MAKE) -C qdoc preview
