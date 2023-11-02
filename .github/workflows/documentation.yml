@@ -20,25 +20,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Checkout plotne-examples
-        uses: actions/checkout@v3
-        with:
-          repository: has2k1/plotnine-examples
-          path: qdoc/plotnine-examples
-
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: "1.4.268"
+          version: "1.4.468"
 
       - name: Install Package
         run: |
+          python -m pip install "git+https://github.com/has2k1/plotnine-examples"
+          python -m pip install "git+https://github.com/has2k1/quartodoc.git@numpydoc-renderer"
           python -m pip install ".[doc]"
+
+      - name: Environment Information
+        shell: bash
+        run: |
+          ls -la
+          ls -la qdoc
+          pip list
 
       - name: Build docs
         run: |
