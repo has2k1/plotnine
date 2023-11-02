@@ -183,8 +183,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Compute density estimate</p>
 <p><strong>Usage</strong></p>
 <pre><code>stat_density(mapping=None, data=None, geom='density', position='stack',
-             na_rm=False, cut=3, bw='nrd0', kernel='gaussian', n=1024,
-             gridsize=None, trim=False, clip=(-inf, inf), adjust=1, **kwargs)</code></pre>
+             na_rm=False, n=1024, cut=3, bw='nrd0', gridsize=None,
+             kernel='gaussian', trim=False, adjust=1, clip=(-inf, inf),
+             **kwargs)</code></pre>
 <p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
 </div>
 <section id="parameters" class="level2">
