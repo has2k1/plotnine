@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – ggplot</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – ggplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,12 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +88,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -143,74 +144,31 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.ggplot" class="level1">
 <h1>ggplot</h1>
+<div class="signature">
 <p><code>ggplot(self, data=None, mapping=None, environment=None)</code></p>
+</div>
+<div class="description">
 <p>Create a new ggplot object</p>
+</div>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dd>
 Default data for plot. Every layer that does not have data of its own will use this one.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>mapping</code>
-</td>
-<td>
-aes
-</td>
-<td>
+</dd>
+<dt><code>mapping: <a href="../reference/aes.html#plotnine.mapping.aes">aes</a> = None</code></dt>
+<dd>
 Default aesthetics mapping for the plot. These will be used by all layers unless specifically overridden.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>environment</code>
-</td>
-<td>
-~patsy.Eval.EvalEnvironment
-</td>
-<td>
+</dd>
+<dt><code>environment: ~<a href="https://patsy.readthedocs.io/en/stable/API-reference.html#module-patsy">patsy</a>.<code>Eval</code>.<code>EvalEnvironment</code> = None</code></dt>
+<dd>
 If a variable defined in the aesthetic mapping is not found in the data, ggplot will look for it in this namespace. It defaults to using the environment/namespace. in which <code>ggplot()</code> is called.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
@@ -238,245 +196,96 @@ If a variable defined in the aesthetic mapping is not found in the data, ggplot 
 </table>
 <section id="plotnine.ggplot.draw" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.ggplot.draw">draw</h3>
-<p><code>ggplot.draw(self, show=False)</code></p>
+<div class="signature">
+<p><code>ggplot.draw(show=False)</code></p>
+</div>
+<div class="description">
 <p>Render the complete plot</p>
+</div>
 <section id="parameters-1" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>show</code>
-</td>
-<td>
-bool (default: False)
-</td>
-<td>
+<dl>
+<dt><code>show: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
 Whether to show the plot.
-</td>
-<td>
-<code>False</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns" class="level4">
 <h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-~matplotlib.figure.Figure
-</td>
-<td>
+<dl>
+<dt><code>fig: ~<a href="https://matplotlib.org/stable/index.html#module-matplotlib">matplotlib</a>.<a href="https://matplotlib.org/stable/api/figure_api.html#module-matplotlib.figure">figure</a>.<a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure">Figure</a></code></dt>
+<dd>
 Matplotlib figure
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.ggplot.save" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.ggplot.save">save</h3>
-<p><code>ggplot.save(self, filename=None, format=None, path='', width=None, height=None, units='in', dpi=None, limitsize=True, verbose=True, **kwargs)</code></p>
+<div class="signature">
+<p><code>ggplot.save(filename=None, format=None, path='', width=None, height=None, units='in', dpi=None, limitsize=True, verbose=True, **kwargs)</code></p>
+</div>
+<div class="description">
 <p>Save a ggplot object as an image file</p>
+</div>
 <section id="parameters-2" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>filename</code>
-</td>
-<td>
-str | pathlib.Path
-</td>
-<td>
+<dl>
+<dt><code>filename: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/pathlib.html#module-pathlib">pathlib</a>.<a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path">Path</a> = None</code></dt>
+<dd>
 File name to write the plot to. If not specified, a name like “plotnine-save-<hash>.<format>” is used.
-</format></hash></td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>format</code>
-</td>
-<td>
-str
-</td>
-<td>
+</format></hash></dd>
+<dt><code>format: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = None</code></dt>
+<dd>
 Image format to use, automatically extract from file name extension.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>path</code>
-</td>
-<td>
-str
-</td>
-<td>
+</dd>
+<dt><code>path: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = ’’</code></dt>
+<dd>
 Path to save plot to (if you just want to set path and not filename).
-</td>
-<td>
-<code>''</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>width</code>
-</td>
-<td>
-number
-</td>
-<td>
+</dd>
+<dt><code>width: <a href="https://docs.python.org/3/c-api/number.html#number">number</a> = None</code></dt>
+<dd>
 Width (defaults to value set by the theme). If specified the <code>height</code> must also be given.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>height</code>
-</td>
-<td>
-number
-</td>
-<td>
+</dd>
+<dt><code>height: <a href="https://docs.python.org/3/c-api/number.html#number">number</a> = None</code></dt>
+<dd>
 Height (defaults to value set by the theme). If specified the <code>width</code> must also be given.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>units</code>
-</td>
-<td>
-str
-</td>
-<td>
+</dd>
+<dt><code>units: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = ‘in’</code></dt>
+<dd>
 Units for width and height when either one is explicitly specified (in, cm, or mm).
-</td>
-<td>
-<code>'in'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>dpi</code>
-</td>
-<td>
-float
-</td>
-<td>
+</dd>
+<dt><code>dpi: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
 DPI to use for raster graphics. If None, defaults to using the <code>dpi</code> of theme, if none is set then a <code>dpi</code> of 100.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>limitsize</code>
-</td>
-<td>
-bool
-</td>
-<td>
+</dd>
+<dt><code>limitsize: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
 If <code>True</code> (the default), ggsave will not save images larger than 50x50 inches, to prevent the common error of specifying dimensions in pixels.
-</td>
-<td>
-<code>True</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>verbose</code>
-</td>
-<td>
-bool
-</td>
-<td>
+</dd>
+<dt><code>verbose: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
 If <code>True</code>, print the saving information.
-</td>
-<td>
-<code>True</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>kwargs</code>
-</td>
-<td>
-dict
-</td>
-<td>
+</dd>
+<dt><code>kwargs: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {}</code></dt>
+<dd>
 Additional arguments to pass to matplotlib <code>savefig()</code>.
-</td>
-<td>
-<code>{}</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.ggplot.save_helper" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.ggplot.save_helper">save_helper</h3>
-<p><code>ggplot.save_helper(self, filename=None, format=None, path=None, width=None, height=None, units='in', dpi=None, limitsize=True, verbose=True, **kwargs)</code></p>
+<div class="signature">
+<p><code>ggplot.save_helper(filename=None, format=None, path=None, width=None, height=None, units='in', dpi=None, limitsize=True, verbose=True, **kwargs)</code></p>
+</div>
+<div class="description">
+<p>Create MPL figure that will be saved</p>
+</div>
 <section id="notes" class="level4">
 <h4 class="anchored" data-anchor-id="notes">Notes</h4>
-<p>This method has the same arguments as <code>ggplot.save</code>. Use it to get access to the figure that will be saved.</p>
+<p>This method has the same arguments as :meth:<code>ggplot.save</code>. Use it to get access to the figure that will be saved.</p>
 
 
 </section>
@@ -613,15 +422,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -630,6 +462,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -672,6 +505,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -743,6 +599,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

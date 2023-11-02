@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – geom_boxplot</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – geom_boxplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,12 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -98,9 +99,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -110,11 +108,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -124,27 +122,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -165,57 +163,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.geoms.geom_boxplot" id="toc-plotnine.geoms.geom_boxplot" class="nav-link active" data-scroll-target="#plotnine.geoms.geom_boxplot">geom_boxplot</a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../plotnine-examples/plotnine_examples/examples/geom_boxplot-preview.html"><i class="bi bi-journal-code"></i>A box and whiskers plot</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
 
+
 <section id="plotnine.geoms.geom_boxplot" class="level1">
 <h1>geom_boxplot</h1>
+<div class="signature">
 <p><code>geoms.geom_boxplot(self, mapping=None, data=None, **kwargs)</code></p>
+</div>
+<div class="description">
 <p>Box and whiskers plot</p>
 <p><strong>Usage</strong></p>
 <pre><code>geom_boxplot(mapping=None, data=None, stat='boxplot', position='dodge2',
              na_rm=False, inherit_aes=True, show_legend=None, raster=False,
-             outlier_alpha=1, outlier_color=None, notch=False,
-             outlier_size=1.5, width=None, outlier_stroke=0.5, varwidth=False,
-             fatten=2, notchwidth=0.5, outlier_shape='o', **kwargs)</code></pre>
+             notch=False, outlier_shape='o', outlier_stroke=0.5,
+             outlier_size=1.5, outlier_color=None, width=None, fatten=2,
+             notchwidth=0.5, varwidth=False, outlier_alpha=1, **kwargs)</code></pre>
 <p>Only the <code>data</code> and <code>mapping</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>stat</code>.</p>
+</div>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>mapping</code>
-</td>
-<td>
-aes
-</td>
-<td>
-Aesthetic mappings created with <code>aes</code>. If specified and :py:<code>inherit.aes=True</code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.
-<table class="table">
+<dl>
+<dt><code>mapping: <code>aes</code> = None</code></dt>
+<dd>
+<p>Aesthetic mappings created with :class:<code>~plotnine.mapping.aes</code>). If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
+<table>
 <thead>
 <tr>
 <th>
@@ -274,7 +253,7 @@ Default value
 alpha
 </td>
 <td>
-1
+<code class="sourceCode python"><span class="dv">1</span></code>
 </td>
 </tr>
 <tr>
@@ -282,7 +261,7 @@ alpha
 color
 </td>
 <td>
-#333333
+<code class="sourceCode python"><span class="co">'#333333'</span></code>
 </td>
 </tr>
 <tr>
@@ -290,7 +269,7 @@ color
 fill
 </td>
 <td>
-white
+<code class="sourceCode python"><span class="co">'white'</span></code>
 </td>
 </tr>
 <tr>
@@ -305,7 +284,7 @@ group
 linetype
 </td>
 <td>
-solid
+<code class="sourceCode python"><span class="co">'solid'</span></code>
 </td>
 </tr>
 <tr>
@@ -313,7 +292,7 @@ solid
 shape
 </td>
 <td>
-o
+<code class="sourceCode python"><span class="co">'o'</span></code>
 </td>
 </tr>
 <tr>
@@ -321,7 +300,7 @@ o
 size
 </td>
 <td>
-0.5
+<code class="sourceCode python"><span class="fl">0.5</span></code>
 </td>
 </tr>
 <tr>
@@ -329,152 +308,82 @@ size
 weight
 </td>
 <td>
-1
+<code class="sourceCode python"><span class="dv">1</span></code>
 </td>
 </tr>
 </tbody>
 </table>
-The <strong>bold</strong> aesthetics are required.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
-<p>data : dataframe, optional The data to be displayed in this layer. If <code>None</code>, the data from from the :py:<code>ggplot()</code> call is used. If specified, it overrides the data from the :py:<code>ggplot()</code> call. stat : str or stat, optional (default: ~plotnine.stats.stat_boxplot) The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine. position : str or position, optional (default: ~plotnine.positions.position_dodge2) Position adjustment. If it is a string, it must be registered and known to Plotnine. na_rm : bool, optional (default: False) If <code>False</code>, removes missing values with a warning. If <code>True</code> silently removes missing values. inherit_aes : bool, optional (default: True) If <code>False</code>, overrides the default aesthetics. show_legend : bool or dict, optional (default: None) Whether this layer should be included in the legends. <code>None</code> the default, includes any aesthetics that are mapped. If a <code>bool</code>, <code>False</code> never includes and <code>True</code> always includes. A <code>dict</code> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g :py:<code>show_legend={'color': False}</code>, any other aesthetic are included by default. raster : bool, optional (default: False) If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.</p>
-<p>width : float, optional (default None) Box width. If <code>None</code>, the width is set to <code>90%</code> of the resolution of the data. Note that if the stat has a width parameter, that takes precedence over this one. outlier_alpha : float, optional (default: 1) Transparency of the outlier points. outlier_color : str or tuple, optional (default: None) Color of the outlier points. outlier_shape : str, optional (default: o) Shape of the outlier points. An empty string hides the outliers. outlier_size : float, optional (default: 1.5) Size of the outlier points. outlier_stroke : float, optional (default: 0.5) Stroke-size of the outlier points. notch : bool, optional (default: False) Whether the boxes should have a notch. varwidth : bool, optional (default: False) If <code>True</code>, boxes are drawn with widths proportional to the square-roots of the number of observations in the groups. notchwidth : float, optional (default: 0.5) Width of notch relative to the body width. fatten : float, optional (default: 2) A multiplicative factor used to increase the size of the middle bar across the box.</p>
-</section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-07-21T11:17:43.492248Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-07-21T11:17:43.491881Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-07-21T11:17:44.038830Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-07-21T11:17:44.037614Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_boxplot,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_jitter,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    scale_x_discrete,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    coord_flip</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="a-box-and-whiskers-plot" class="level3">
-<h3 class="anchored" data-anchor-id="a-box-and-whiskers-plot">A box and whiskers plot</h3>
-<p><em>The boxplot compactly displays the distribution of a continuous variable.</em></p>
-<p>Read more: + <a href="https://en.wikipedia.org/wiki/Box_plot">wikipedia</a> + <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">ggplot2 docs</a></p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-07-21T11:17:44.043054Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-07-21T11:17:44.042649Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-07-21T11:17:44.056936Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-07-21T11:17:44.056053Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">'data/flights.csv'</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">year</th>
-<th data-quarto-table-cell-role="th">month</th>
-<th data-quarto-table-cell-role="th">passengers</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>1949</td>
-<td>January</td>
-<td>112</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>1949</td>
-<td>February</td>
-<td>118</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>1949</td>
-<td>March</td>
-<td>132</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>1949</td>
-<td>April</td>
-<td>129</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>1949</td>
-<td>May</td>
-<td>121</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Basic boxplot</p>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-07-21T11:17:44.106930Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-07-21T11:17:44.106646Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-07-21T11:17:44.110978Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-07-21T11:17:44.110302Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> [month[:<span class="dv">3</span>] <span class="cf">for</span> month <span class="kw">in</span> flights.month[:<span class="dv">12</span>]]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(months)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']</code></pre>
-</div>
-</div>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-07-21T11:17:44.114123Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-07-21T11:17:44.113870Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-07-21T11:17:45.710673Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-07-21T11:17:45.710184Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">'month'</span>)  <span class="co"># change ticks labels on OX</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="geom_boxplot_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
-</div>
-</div>
-<p>Horizontal boxplot</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-07-21T11:17:45.713498Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-07-21T11:17:45.713195Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-07-21T11:17:46.598081Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-07-21T11:17:46.597482Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        labels<span class="op">=</span>months[::<span class="op">-</span><span class="dv">1</span>], </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        limits<span class="op">=</span>flights.month[<span class="dv">11</span>::<span class="op">-</span><span class="dv">1</span>],</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">'month'</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="geom_boxplot_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
-</div>
-</div>
-<p>Boxplot with jittered points:</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-07-21T11:17:46.600773Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-07-21T11:17:46.600576Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-07-21T11:17:47.441138Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-07-21T11:17:47.440502Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>)) </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot()</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_jitter()</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">'month'</span>)  <span class="co"># change ticks labels on OX</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="geom_boxplot_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
-</div>
-</div>
-</section>
-<a class="quarto-notebook-link" id="nblink-1" href="../plotnine-examples/plotnine_examples/examples/geom_boxplot-preview.html#cell-0">Source: A box and whiskers plot</a></div>
+<p>The <strong>bold</strong> aesthetics are required.</p>
+</dd>
+<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dd>
+The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.
+</dd>
+<dt><code>stat: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stat.html#module-stat">stat</a> = “boxplot”</code></dt>
+<dd>
+The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.
+</dd>
+<dt><code>position: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <code>position</code> = “dodge2”</code></dt>
+<dd>
+Position adjustment. If it is a string, it must be registered and known to Plotnine.
+</dd>
+<dt><code>na_rm: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.
+</dd>
+<dt><code>inherit_aes: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+If <code class="sourceCode python"><span class="va">False</span></code>, overrides the default aesthetics.
+</dd>
+<dt><code>show_legend: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = None</code></dt>
+<dd>
+Whether this layer should be included in the legends. <code class="sourceCode python"><span class="va">None</span></code> the default, includes any aesthetics that are mapped. If a :class:<code>bool</code>, <code class="sourceCode python"><span class="va">False</span></code> never includes and <code class="sourceCode python"><span class="va">True</span></code> always includes. A :class:<code>dict</code> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g <code class="sourceCode python">show_legend<span class="op">=</span>{<span class="st">'color'</span>: <span class="va">False</span>}</code>, any other aesthetic are included by default.
+</dd>
+<dt><code>raster: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.
+</dd>
+<dt><code>width: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
+Box width. If <code class="sourceCode python"><span class="va">None</span></code>, the width is set to <code>90%</code> of the resolution of the data. Note that if the stat has a width parameter, that takes precedence over this one.
+</dd>
+<dt><code>outlier_alpha: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 1</code></dt>
+<dd>
+Transparency of the outlier points.
+</dd>
+<dt><code>outlier_color: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> = None</code></dt>
+<dd>
+Color of the outlier points.
+</dd>
+<dt><code>outlier_shape: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = “o”</code></dt>
+<dd>
+Shape of the outlier points. An empty string hides the outliers.
+</dd>
+<dt><code>outlier_size: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 1.5</code></dt>
+<dd>
+Size of the outlier points.
+</dd>
+<dt><code>outlier_stroke: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.5</code></dt>
+<dd>
+Stroke-size of the outlier points.
+</dd>
+<dt><code>notch: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+Whether the boxes should have a notch.
+</dd>
+<dt><code>varwidth: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+If <code class="sourceCode python"><span class="va">True</span></code>, boxes are drawn with widths proportional to the square-roots of the number of observations in the groups.
+</dd>
+<dt><code>notchwidth: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.5</code></dt>
+<dd>
+Width of notch relative to the body width.
+</dd>
+<dt><code>fatten: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 2</code></dt>
+<dd>
+A multiplicative factor used to increase the size of the middle bar across the box.
+</dd>
+</dl>
 
 
 </section>
@@ -609,15 +518,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -626,6 +558,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -668,6 +601,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -739,6 +695,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

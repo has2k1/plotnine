@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – diamonds</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – diamonds</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,12 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +88,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -134,17 +135,71 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.data.diamonds" class="level1">
 <h1>diamonds</h1>
-<p><code>data.diamonds</code></p>
+<p><span class="signature"><code>data.diamonds</code></span></p>
+<div class="description">
 <p>Prices of 50,000 round cut diamonds</p>
-<p>.. rubric:: Description</p>
+<p><strong>Description</strong></p>
 <p>A dataset containing the prices and other attributes of almost 54,000 diamonds. The variables are as follows:</p>
-<p>.. rubric:: Format</p>
+<p><strong>Format</strong></p>
 <p>A data frame with 53940 rows and 10 variables:</p>
-<p>======== ================================== Column Description ======== ================================== price price in US dollars ($326–$18,823) carat weight of the diamond (0.2–5.01) cut quality of the cut (Fair, Good, Very Good, Premium, Ideal) color diamond colour, from J (worst) to D (best) clarity a measurement of how clear the diamond is</p>
-<pre><code>      (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))</code></pre>
-<p>x length in mm (0–10.74) y width in mm (0–58.9) z depth in mm (0–31.8) depth total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79) table width of top of diamond relative to widest point (43–95) ======== ==================================</p>
+<table class="table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 84%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>price</td>
+<td>price in US dollars ($326–$18,823)</td>
+</tr>
+<tr class="even">
+<td>carat</td>
+<td>weight of the diamond (0.2–5.01)</td>
+</tr>
+<tr class="odd">
+<td>cut</td>
+<td>quality of the cut (Fair, Good, Very Good, Premium, Ideal)</td>
+</tr>
+<tr class="even">
+<td>color</td>
+<td>diamond colour, from J (worst) to D (best)</td>
+</tr>
+<tr class="odd">
+<td>clarity</td>
+<td>a measurement of how clear the diamond is (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))</td>
+</tr>
+<tr class="even">
+<td>x</td>
+<td>length in mm (0–10.74)</td>
+</tr>
+<tr class="odd">
+<td>y</td>
+<td>width in mm (0–58.9)</td>
+</tr>
+<tr class="even">
+<td>z</td>
+<td>depth in mm (0–31.8)</td>
+</tr>
+<tr class="odd">
+<td>depth</td>
+<td>total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)</td>
+</tr>
+<tr class="even">
+<td>table</td>
+<td>width of top of diamond relative to widest point (43–95)</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 
 </section>
@@ -278,15 +333,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -295,6 +373,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -337,6 +416,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -408,6 +510,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – annotation_stripes</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – annotation_stripes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,12 +79,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +108,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +122,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -137,103 +172,48 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.geoms.annotation_stripes" class="level1">
 <h1>annotation_stripes</h1>
+<div class="signature">
 <p><code>geoms.annotation_stripes(self, fill=('#AAAAAA', '#CCCCCC'), fill_range='auto', direction='vertical', extend=(0, 1), **kwargs)</code></p>
+</div>
+<div class="description">
 <p>Alternating stripes, centered around each label.</p>
 <p>Useful as a background for geom_jitter.</p>
+</div>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>fill</code>
-</td>
-<td>
-list - like
-</td>
-<td>
-List of colors for the strips. The default is <code>("#AAAAAA", "#CCCCCC")</code>
-</td>
-<td>
-<code>('#AAAAAA', '#CCCCCC')</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>fill_range</code>
-</td>
-<td>
-typing.Literal[‘auto’, ‘cycle’, ‘no’, ‘nocycle’]
-</td>
-<td>
-How to fill stripes beyond the range of scale:: ‘cycle’ # keep cycling the colors of the # stripes after the range ends ‘nocycle’ # stop cycling the colors of the # stripes after the range ends ‘auto’ # ‘cycle’ for continuous scales and # ‘nocycle’ for discrete scales. ‘no’ # Do not add stripes passed the range # passed the range of the scales Default is ‘auto’.
-</td>
-<td>
-<code>'auto'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>direction</code>
-</td>
-<td>
-‘vertical’ or ‘horizontal’
-</td>
-<td>
+<dl>
+<dt><code>fill: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> - <code>like</code> = (‘#AAAAAA’, ‘#CCCCCC’)</code></dt>
+<dd>
+List of colors for the strips.
+</dd>
+<dt><code>fill_range: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[‘auto’, ‘cycle’, ‘no’, ‘nocycle’] = ‘auto’</code></dt>
+<dd>
+<p>How to fill stripes beyond the range of scale:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">"cycle"</span>      <span class="co"># keep cycling the colors of the</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>             <span class="co"># stripes after the range ends</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">"nocycle"</span>    <span class="co"># stop cycling the colors of the</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="co"># stripes after the range ends</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">"auto"</span>       <span class="co"># "cycle" for continuous scales and</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>             <span class="co"># "nocycle" for discrete scales.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">"no"</span>         <span class="co"># Do not add stripes passed the range</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>             <span class="co"># passed the range of the scales</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</dd>
+<dt><code>direction: ‘vertical’ | ‘horizontal’ = ‘vertical’</code></dt>
+<dd>
 Orientation of the stripes
-</td>
-<td>
-<code>'vertical'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>extend</code>
-</td>
-<td>
-tuple
-</td>
-<td>
+</dd>
+<dt><code>extend: <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> = (0, 1)</code></dt>
+<dd>
 Range of the stripes. The default is (0, 1), top to bottom. The values should be in the range [0, 1].
-</td>
-<td>
-<code>(0, 1)</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>**kwargs</code>
-</td>
-<td>
-dict
-</td>
-<td>
-Other aesthetic parameters for the rectangular stripes. They include; <em>alpha</em>, <em>color</em>, <em>linetype</em>, and <em>size</em>.
-</td>
-<td>
-<code>{}</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt><code>**kwargs: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {}</code></dt>
+<dd>
+Other aesthetic parameters for the rectangular stripes. They include; <code>alpha</code>, <code>color</code>, <code>linetype</code>, and <code>size</code>.
+</dd>
+</dl>
 
 
 </section>
@@ -368,15 +348,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -385,6 +388,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -427,6 +431,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -498,6 +525,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

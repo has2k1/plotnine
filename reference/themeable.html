@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – themeable</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – themeable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,12 +79,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +108,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +122,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -127,8 +162,8 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#plotnine.themes.themeable.themeable" id="toc-plotnine.themes.themeable.themeable" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.themeable">themeable</a>
   <ul class="collapse">
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
   <li><a href="#plotnine.themes.themeable.themeable.apply" id="toc-plotnine.themes.themeable.themeable.apply" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply">apply</a></li>
@@ -150,13 +185,12 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.themes.themeable.themeable" class="level1">
 <h1>themeable</h1>
+<div class="signature">
 <p><code>themes.themeable.themeable(self, theme_element=None)</code></p>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes</h2>
-<p>A user should never create instances of class <code>themeable</code> or subclasses of it.</p>
-</section>
+</div>
 <section id="attributes" class="level2">
 <h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
 <table class="table">
@@ -177,6 +211,33 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+<div class="description">
+<p>Abstract class of things that can be themed.</p>
+<p>Every subclass of themeable is stored in a dict at :python:<code>themeable.register</code> with the name of the subclass as the key.</p>
+<p>It is the base of a class hierarchy that uses inheritance in a non-traditional manner. In the textbook use of class inheritance, superclasses are general and subclasses are specializations. In some since the hierarchy used here is the opposite in that superclasses are more specific than subclasses.</p>
+<p>It is probably better to think if this hierarchy of leveraging Python’s multiple inheritance to implement composition. For example the <code>axis_title</code> themeable is <em>composed of</em> the <code>x_axis_title</code> and the <code>y_axis_title</code>. We are just using multiple inheritance to specify this composition.</p>
+<p>When implementing a new themeable based on the ggplot2 documentation, it is important to keep this in mind and reverse the order of the “inherits from” in the documentation.</p>
+<p>For example, to implement,</p>
+<ul>
+<li><code>axis_title_x</code> - <code>x</code> axis label (element_text; inherits from <code>axis_title</code>)</li>
+<li><code>axis_title_y</code> - <code>y</code> axis label (element_text; inherits from <code>axis_title</code>)</li>
+</ul>
+<p>You would have this implementation:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title_x(themeable):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title_y(themeable):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title(axis_title_x, axis_title_y):</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the superclasses fully implement the subclass, the body of the subclass should be “pass”. Python(<strong>mro</strong>) will do the right thing.</p>
+<p>When a method does require implementation, call :python:<code>super()</code> then add the themeable’s implementation to the axes.</p>
+</div>
+</section>
+<section id="notes" class="level2">
+<h2 class="anchored" data-anchor-id="notes">Notes</h2>
+<p>A user should never create instances of class <code></code> or subclasses of it.</p>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
@@ -228,189 +289,140 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="plotnine.themes.themeable.themeable.apply" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply">apply</h3>
-<p><code>themes.themeable.themeable.apply(self, theme)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.apply(theme)</code></p>
+</div>
+<div class="description">
 <p>Called by the theme to apply the themeable</p>
 <p>Subclasses shouldn’t have to override this method to customize.</p>
+</div>
 </section>
 <section id="plotnine.themes.themeable.themeable.apply_ax" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply_ax">apply_ax</h3>
-<p><code>themes.themeable.themeable.apply_ax(self, ax)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.apply_ax(ax)</code></p>
+</div>
+<div class="description">
 <p>Called after a chart has been plotted.</p>
 <p>Subclasses can override this method to customize the plot according to the theme.</p>
+</div>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>ax</code>
-</td>
-<td>
-matplotlib.axes.Axes
-</td>
-<td>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-<p>This method should be implemented as super(…).apply_ax() followed by extracting the portion of the axes specific to this themeable then applying the properties.</p>
+<dl>
+<dt><code>ax: <a href="https://matplotlib.org/stable/index.html#module-matplotlib">matplotlib</a>.<a href="https://matplotlib.org/stable/api/axes_api.html#module-matplotlib.axes">axes</a>.<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes">Axes</a></code></dt>
+<dd>
+
+</dd>
+<dt><code>This</code></dt>
+<dd>
+
+</dd>
+<dt><code>followed</code></dt>
+<dd>
+
+</dd>
+<dt><code>themeable</code></dt>
+<dd>
+
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.themes.themeable.themeable.apply_figure" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply_figure">apply_figure</h3>
-<p><code>themes.themeable.themeable.apply_figure(self, figure, targets)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.apply_figure(figure, targets)</code></p>
+</div>
+<div class="description">
 <p>Apply theme to the figure</p>
-<p>Compared to <code>setup_figure</code>, this method is called after plotting and all the elements are drawn onto the figure.</p>
+<p>Compared to :meth:<code>setup_figure</code>, this method is called after plotting and all the elements are drawn onto the figure.</p>
+</div>
 </section>
 <section id="plotnine.themes.themeable.themeable.blank_ax" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.blank_ax">blank_ax</h3>
-<p><code>themes.themeable.themeable.blank_ax(self, ax)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.blank_ax(ax)</code></p>
+</div>
+<div class="description">
 <p>Blank out theme elements</p>
+</div>
 </section>
 <section id="plotnine.themes.themeable.themeable.blank_figure" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.blank_figure">blank_figure</h3>
-<p><code>themes.themeable.themeable.blank_figure(self, figure, targets)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.blank_figure(figure, targets)</code></p>
+</div>
+<div class="description">
 <p>Blank out elements on the figure</p>
+</div>
 </section>
 <section id="plotnine.themes.themeable.themeable.from_class_name" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.from_class_name">from_class_name</h3>
+<div class="signature">
 <p><code>themes.themeable.themeable.from_class_name(name, theme_element)</code></p>
+</div>
+<div class="description">
 <p>Create a themeable by name</p>
+</div>
 <section id="parameters-1" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>name</code>
-</td>
-<td>
-str
-</td>
-<td>
+<dl>
+<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code></dt>
+<dd>
 Class name
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>theme_element</code>
-</td>
-<td>
-element object
-</td>
-<td>
-A of the type required by the theme For lines, text and rects it should be one of: <code>element_line</code>, <code>element_rect</code>, <code>element_text</code> or <code>element_blank</code>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt><code>theme_element: element object</code></dt>
+<dd>
+A of the type required by the theme For lines, text and rects it should be one of: <a href="../reference/element_line.html#plotnine.themes.element_line"><code>element_line</code></a>, <a href="../reference/element_rect.html#plotnine.themes.element_rect"><code>element_rect</code></a>, <a href="../reference/element_text.html#plotnine.themes.element_text"><code>element_text</code></a> or <code></code>
+</dd>
+</dl>
 </section>
 <section id="returns" class="level4">
 <h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Themeable
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
+<dl>
+<dt><code>out: <code>Themeable</code></code></dt>
+<dd>
+
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.themes.themeable.themeable.is_blank" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.is_blank">is_blank</h3>
-<p><code>themes.themeable.themeable.is_blank(self)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.is_blank()</code></p>
+</div>
+<div class="description">
 <p>Return True if theme_element is made of element_blank</p>
+</div>
 </section>
 <section id="plotnine.themes.themeable.themeable.merge" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.merge">merge</h3>
-<p><code>themes.themeable.themeable.merge(self, other)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.merge(other)</code></p>
+</div>
+<div class="description">
 <p>Merge properties of other into self</p>
+</div>
 <section id="raises" class="level4">
 <h4 class="anchored" data-anchor-id="raises">Raises</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-ValueError
-</td>
-<td>
+<dl>
+<dt><code><a href="https://docs.python.org/3/library/exceptions.html#ValueError">ValueError</a></code></dt>
+<dd>
 If any of the properties are blank
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.themes.themeable.themeable.setup_figure" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.setup_figure">setup_figure</h3>
-<p><code>themes.themeable.themeable.setup_figure(self, figure)</code></p>
+<div class="signature">
+<p><code>themes.themeable.themeable.setup_figure(figure)</code></p>
+</div>
+<div class="description">
 <p>Apply theme to the figure</p>
-<p>Compared to <code>apply_figure</code>, this method is called before any plotting is done. This is necessary in some cases where the drawing functions need(or can make use of) this information.</p>
+<p>Compared to :meth:<code>apply_figure</code>, this method is called before any plotting is done. This is necessary in some cases where the drawing functions need(or can make use of) this information.</p>
+</div>
 
 
 </section>
@@ -546,15 +558,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -563,6 +598,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -605,6 +641,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -676,6 +735,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

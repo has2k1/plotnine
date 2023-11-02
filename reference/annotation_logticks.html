@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – annotation_logticks</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – annotation_logticks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,12 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +88,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -137,131 +138,48 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.geoms.annotation_logticks" class="level1">
 <h1>annotation_logticks</h1>
+<div class="signature">
 <p><code>geoms.annotation_logticks(self, sides='bl', alpha=1, color='black', size=0.5, linetype='solid', lengths=(0.036, 0.0225, 0.012), base=None)</code></p>
+</div>
+<div class="description">
 <p>Marginal log ticks.</p>
 <p>If added to a plot that does not have a log10 axis on the respective side, a warning will be issued.</p>
+</div>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>sides</code>
-</td>
-<td>
-str (default: bl)
-</td>
-<td>
+<dl>
+<dt><code>sides: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = “bl”</code></dt>
+<dd>
 Sides onto which to draw the marks. Any combination chosen from the characters <code>btlr</code>, for <em>bottom</em>, <em>top</em>, <em>left</em> or <em>right</em> side marks. If <code>coord_flip()</code> is used, these are the sides <em>after</em> the flip.
-</td>
-<td>
-<code>'bl'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>alpha</code>
-</td>
-<td>
-float (default: 1)
-</td>
-<td>
+</dd>
+<dt><code>alpha: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 1)</code></dt>
+<dd>
 Transparency of the ticks
-</td>
-<td>
-<code>1</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>color</code>
-</td>
-<td>
-str | tuple (default: ‘black’)
-</td>
-<td>
+</dd>
+<dt><code>color: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> = “black”</code></dt>
+<dd>
 Colour of the ticks
-</td>
-<td>
-<code>'black'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>size</code>
-</td>
-<td>
-float
-</td>
-<td>
+</dd>
+<dt><code>size: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.5</code></dt>
+<dd>
 Thickness of the ticks
-</td>
-<td>
-<code>0.5</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>linetype</code>
-</td>
-<td>
-‘solid’ | ‘dashed’ | ‘dashdot’ | ‘dotted’ | tuple
-</td>
-<td>
-Type of line. Default is <em>solid</em>.
-</td>
-<td>
-<code>'solid'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>lengths</code>
-</td>
-<td>
-TupleFloat3
-</td>
-<td>
+</dd>
+<dt><code>linetype: ‘solid’ | ‘dashed’ | ‘dashdot’ | ‘dotted’ | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>] = ‘solid’</code></dt>
+<dd>
+Type of line
+</dd>
+<dt><code>lengths: <code>TupleFloat3</code> = (0.036, 0.0225, 0.012)</code></dt>
+<dd>
 length of the ticks drawn for full / half / tenth ticks relative to panel size
-</td>
-<td>
-<code>(0.036, 0.0225, 0.012)</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>base</code>
-</td>
-<td>
-float (default: None)
-</td>
-<td>
+</dd>
+<dt><code>base: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
 Base of the logarithm in which the ticks will be calculated. If <code>None</code>, the base used to log transform the scale will be used.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 
 
 </section>
@@ -396,15 +314,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -413,6 +354,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -455,6 +397,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -526,6 +491,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

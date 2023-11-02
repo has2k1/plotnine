@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – facet</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – facet</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,12 +79,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +108,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +122,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -148,9 +183,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.facets.facet" class="level1">
 <h1>facet</h1>
-<p><code>facets.facet</code></p>
+<p><span class="signature"><code>facets.facet</code></span></p>
 <section id="classes" class="level2">
 <h2 class="anchored" data-anchor-id="classes">Classes</h2>
 <table class="table">
@@ -169,115 +205,9 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="plotnine.facets.facet.facet" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.facets.facet.facet">facet</h3>
+<div class="signature">
 <p><code>facets.facet.facet(self, scales='fixed', shrink=True, labeller='label_value', as_table=True, drop=True, dir='h')</code></p>
-<p>Base class for all facets</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>scales</code>
-</td>
-<td>
-str in <code>['fixed', 'free', 'free_x', 'free_y']</code>
-</td>
-<td>
-Whether <code>x</code> or <code>y</code> scales should be allowed (free) to vary according to the data along the rows or the columns. Default is <code>'fixed'</code>.
-</td>
-<td>
-<code>'fixed'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>shrink</code>
-</td>
-<td>
-bool
-</td>
-<td>
-Whether to shrink the scales to the output of the statistics instead of the raw data. Default is <code>True</code>.
-</td>
-<td>
-<code>True</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>labeller</code>
-</td>
-<td>
-str | function
-</td>
-<td>
-How to label the facets. If it is a <code>str</code>, it should be one of <code>'label_value'</code> <code>'label_both'</code> or <code>'label_context'</code>. Default is <code>'label_value'</code>
-</td>
-<td>
-<code>'label_value'</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>as_table</code>
-</td>
-<td>
-bool
-</td>
-<td>
-If <code>True</code>, the facets are laid out like a table with the highest values at the bottom-right. If <code>False</code> the facets are laid out like a plot with the highest value a the top-right. Default it <code>True</code>.
-</td>
-<td>
-<code>True</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>drop</code>
-</td>
-<td>
-bool
-</td>
-<td>
-If <code>True</code>, all factor levels not used in the data will automatically be dropped. If <code>False</code>, all factor levels will be shown, regardless of whether or not they appear in the data. Default is <code>True</code>.
-</td>
-<td>
-<code>True</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>dir</code>
-</td>
-<td>
-str in <code>['h', 'v']</code>
-</td>
-<td>
-Direction in which to layout the panels. <code>h</code> for horizontal and <code>v</code> for vertical.
-</td>
-<td>
-<code>'h'</code>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
+</div>
 <section id="attributes" class="level4">
 <h4 class="anchored" data-anchor-id="attributes">Attributes</h4>
 <table class="table">
@@ -310,10 +240,46 @@ Direction in which to layout the panels. <code>h</code> for horizontal and <code
 </tr>
 <tr class="even">
 <td><a href="#plotnine.facets.facet.facet.space">space</a></td>
-<td>str(object='') -&gt; str</td>
+<td>str(object=’’) -&gt; str</td>
 </tr>
 </tbody>
 </table>
+<div class="description">
+<p>Base class for all facets</p>
+</div>
+</section>
+<section id="parameters" class="level4">
+<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<dl>
+<dt><code>scales: ‘fixed’ | ‘free’ | ‘free_x’ | ‘free_y’ = “fixed”</code></dt>
+<dd>
+Whether <code>x</code> or <code>y</code> scales should be allowed (free) to vary according to the data on each of the panel.
+</dd>
+<dt><code>shrink: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+Whether to shrink the scales to the output of the statistics instead of the raw data. Default is <code>True</code>.
+</dd>
+<dt><code>shrink: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+Whether to shrink the scales to the output of the statistics instead of the raw data.
+</dd>
+<dt><code>labeller: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a> = “label_value”</code></dt>
+<dd>
+How to label the facets. A string value if it should be one of <code class="sourceCode python">[<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span>]</code>.
+</dd>
+<dt><code>as_table: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+If <code>True</code>, the facets are laid out like a table with the highest values at the bottom-right. If <code>False</code> the facets are laid out like a plot with the highest value a the top-right
+</dd>
+<dt><code>drop: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+If <code>True</code>, all factor levels not used in the data will automatically be dropped. If <code>False</code>, all factor levels will be shown, regardless of whether or not they appear in the data.
+</dd>
+<dt><code>dir: ‘h’ | ‘v’ = “h”</code></dt>
+<dd>
+Direction in which to layout the panels. <code>h</code> for horizontal and <code>v</code> for vertical.
+</dd>
+</dl>
 </section>
 <section id="methods" class="level4">
 <h4 class="anchored" data-anchor-id="methods">Methods</h4>
@@ -369,435 +335,204 @@ Direction in which to layout the panels. <code>h</code> for horizontal and <code
 </table>
 <section id="plotnine.facets.facet.facet.compute_layout" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.compute_layout">compute_layout</h5>
-<p><code>facets.facet.facet.compute_layout(self, data)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.compute_layout(data)</code></p>
+</div>
+<div class="description">
 <p>Compute layout</p>
+</div>
 <section id="parameters-1" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-Dataframes
-</td>
-<td>
+<dl>
+<dt><code>data: <code>Dataframes</code></code></dt>
+<dd>
 Dataframe for a each layer
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.finish_data" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.finish_data">finish_data</h5>
-<p><code>facets.facet.facet.finish_data(self, data, layout)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.finish_data(data, layout)</code></p>
+</div>
+<div class="description">
 <p>Modify data before it is drawn out by the geom</p>
 <p>The default is to return the data without modification. Subclasses should override this method as the require.</p>
+</div>
 <section id="parameters-2" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-DataFrame
-</td>
-<td>
+<dl>
+<dt><code>data: <code>DataFrame</code></code></dt>
+<dd>
 A single layer’s data.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>layout</code>
-</td>
-<td>
+</dd>
+<dt><code>layout: <code>Layout</code></code></dt>
+<dd>
 Layout
-</td>
-<td>
-Layout
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns" class="level6">
 <h6 class="anchored" data-anchor-id="returns">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-DataFrame
-</td>
-<td>
+<dl>
+<dt><code>data: <code>DataFrame</code></code></dt>
+<dd>
 Modified layer data
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.make_ax_strips" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.make_ax_strips">make_ax_strips</h5>
-<p><code>facets.facet.facet.make_ax_strips(self, layout_info, ax)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.make_ax_strips(layout_info, ax)</code></p>
+</div>
+<div class="description">
 <p>Create strips for the facet</p>
+</div>
 <section id="parameters-3" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>layout_info</code>
-</td>
-<td>
-dict - like
-</td>
-<td>
+<dl>
+<dt><code>layout_info: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> - <code>like</code></code></dt>
+<dd>
 Layout information. Row from the layout table
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-<p>ax : axes Axes to label</p>
+</dd>
+<dt><code>ax: <code>axes</code></code></dt>
+<dd>
+Axes to label
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.make_axes" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.make_axes">make_axes</h5>
-<p><code>facets.facet.facet.make_axes(self, figure, layout, coordinates)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.make_axes(figure, layout, coordinates)</code></p>
+</div>
+<div class="description">
 <p>Create and return Matplotlib axes</p>
+</div>
 </section>
 <section id="plotnine.facets.facet.facet.map" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.map">map</h5>
-<p><code>facets.facet.facet.map(self, data, layout)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.map(data, layout)</code></p>
+</div>
+<div class="description">
 <p>Assign a data points to panels</p>
+</div>
 <section id="parameters-4" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-4">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-DataFrame
-</td>
-<td>
+<dl>
+<dt><code>data: <code>DataFrame</code></code></dt>
+<dd>
 Data for a layer
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>layout</code>
-</td>
-<td>
-DataFrame
-</td>
-<td>
+</dd>
+<dt><code>layout: <code>DataFrame</code></code></dt>
+<dd>
 As returned by self.compute_layout
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-1" class="level6">
 <h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-DataFrame
-</td>
-<td>
+<dl>
+<dt><code>data: <code>DataFrame</code></code></dt>
+<dd>
 Data with all points mapped to the panels on which they will be plotted.
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.set_limits_breaks_and_labels" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.set_limits_breaks_and_labels">set_limits_breaks_and_labels</h5>
-<p><code>facets.facet.facet.set_limits_breaks_and_labels(self, panel_params, ax)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.set_limits_breaks_and_labels(panel_params, ax)</code></p>
+</div>
+<div class="description">
 <p>Add limits, breaks and labels to the axes</p>
+</div>
 <section id="parameters-5" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-5">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>ranges</code>
-</td>
-<td>
-dict - like
-</td>
-<td>
+<dl>
+<dt><code>ranges: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> - <code>like</code></code></dt>
+<dd>
 range information for the axes
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>ax</code>
-</td>
-<td>
+</dd>
+<dt><code>ax: <code>Axes</code></code></dt>
+<dd>
 Axes
-</td>
-<td>
-Axes
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.set_properties" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.set_properties">set_properties</h5>
-<p><code>facets.facet.facet.set_properties(self, gg)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.set_properties(gg)</code></p>
+</div>
+<div class="description">
 <p>Copy required properties from ggplot object</p>
+</div>
 </section>
 <section id="plotnine.facets.facet.facet.setup_data" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.setup_data">setup_data</h5>
-<p><code>facets.facet.facet.setup_data(self, data)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.setup_data(data)</code></p>
+</div>
+<div class="description">
 <p>Allow the facet to manipulate the data</p>
+</div>
 <section id="parameters-6" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-6">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-list of dataframes
-</td>
-<td>
+<dl>
+<dt><code>data: list of dataframes</code></dt>
+<dd>
 Data for each of the layers
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-2" class="level6">
 <h6 class="anchored" data-anchor-id="returns-2">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-list of dataframes
-</td>
-<td>
+<dl>
+<dt><code>data: list of dataframes</code></dt>
+<dd>
 Data for each of the layers
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="notes" class="level6">
 <h6 class="anchored" data-anchor-id="notes">Notes</h6>
-<p>This method will be called after <code>setup_params</code>, therefore the <code>params</code> property will be set.</p>
+<p>This method will be called after :meth:<code>setup_params</code>, therefore the <code>params</code> property will be set.</p>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.setup_params" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.setup_params">setup_params</h5>
-<p><code>facets.facet.facet.setup_params(self, data)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.setup_params(data)</code></p>
+</div>
+<div class="description">
 <p>Create facet parameters</p>
+</div>
 <section id="parameters-7" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-7">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-list of dataframes
-</td>
-<td>
+<dl>
+<dt><code>data: list of dataframes</code></dt>
+<dd>
 Plot data and data for the layers
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.facet.train_position_scales" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.train_position_scales">train_position_scales</h5>
-<p><code>facets.facet.facet.train_position_scales(self, layout, layers)</code></p>
+<div class="signature">
+<p><code>facets.facet.facet.train_position_scales(layout, layers)</code></p>
+</div>
+<div class="description">
 <p>Compute ranges for the x and y scales</p>
+</div>
 </section>
 </section>
 </section>
@@ -836,119 +571,75 @@ Plot data and data for the layers
 </table>
 <section id="plotnine.facets.facet.add_missing_facets" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.facets.facet.add_missing_facets">add_missing_facets</h3>
+<div class="signature">
 <p><code>facets.facet.add_missing_facets(data, layout, vars, facet_vals)</code></p>
+</div>
+<div class="description">
 <p>Add missing facets</p>
+</div>
 </section>
 <section id="plotnine.facets.facet.combine_vars" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.facets.facet.combine_vars">combine_vars</h3>
+<div class="signature">
 <p><code>facets.facet.combine_vars(data, environment, vars, drop=True)</code></p>
+</div>
+<div class="description">
 <p>Generate all combinations of data needed for facetting</p>
 <p>The first data frame in the list should be the default data for the plot. Other data frames in the list are ones that are added to the layers.</p>
+</div>
 </section>
 <section id="plotnine.facets.facet.eval_facet_vars" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.facets.facet.eval_facet_vars">eval_facet_vars</h3>
+<div class="signature">
 <p><code>facets.facet.eval_facet_vars(data, vars, env)</code></p>
+</div>
+<div class="description">
 <p>Evaluate facet variables</p>
+</div>
 <section id="parameters-8" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-DataFrame
-</td>
-<td>
+<dl>
+<dt><code>data: <code>DataFrame</code></code></dt>
+<dd>
 Factet dataframe
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>vars</code>
-</td>
-<td>
-list
-</td>
-<td>
+</dd>
+<dt><code>vars: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></code></dt>
+<dd>
 Facet variables
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>env</code>
-</td>
-<td>
-environment
-</td>
-<td>
+</dd>
+<dt><code>env: <code>environment</code></code></dt>
+<dd>
 Plot environment
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-3" class="level4">
 <h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-DataFrame
-</td>
-<td>
+<dl>
+<dt><code>facet_vals: <code>DataFrame</code></code></dt>
+<dd>
 Facet values that correspond to the specified variables.
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.facets.facet.layout_null" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.facets.facet.layout_null">layout_null</h3>
+<div class="signature">
 <p><code>facets.facet.layout_null()</code></p>
+</div>
+<div class="description">
 <p>Layout Null</p>
+</div>
 </section>
 <section id="plotnine.facets.facet.unique_combs" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.facets.facet.unique_combs">unique_combs</h3>
+<div class="signature">
 <p><code>facets.facet.unique_combs(df)</code></p>
+</div>
+<div class="description">
 <p>Generate all possible combinations of the values in the columns</p>
+</div>
 
 
 </section>
@@ -1084,15 +775,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -1101,6 +815,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1143,6 +858,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -1214,6 +952,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

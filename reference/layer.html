@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – layer</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – layer</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,12 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +88,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -146,9 +147,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.layer" class="level1">
 <h1>layer</h1>
-<p><code>layer</code></p>
+<p><span class="signature"><code>layer</code></span></p>
 <section id="classes" class="level2">
 <h2 class="anchored" data-anchor-id="classes">Classes</h2>
 <table class="table">
@@ -171,149 +173,59 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="plotnine.layer.Layers" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.layer.Layers">Layers</h3>
+<div class="signature">
 <p><code>layer.Layers()</code></p>
+</div>
+<div class="description">
 <p>List of layers</p>
 <p>During the plot building pipeline, many operations are applied at all layers in the plot. This class makes those tasks easier.</p>
+</div>
 </section>
 <section id="plotnine.layer.layer" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.layer.layer">layer</h3>
+<div class="signature">
 <p><code>layer.layer(self, geom, stat, *, mapping, data, position, inherit_aes=True, show_legend=None, raster=False)</code></p>
+</div>
+<div class="description">
 <p>Layer</p>
 <p>When a <code>geom</code> or <code>stat</code> is added to a <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object, it creates a single layer. This class is a representation of that layer.</p>
+</div>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>geom</code>
-</td>
-<td>
-geom
-</td>
-<td>
+<dl>
+<dt><code>geom: <code>geom</code></code></dt>
+<dd>
 geom to used to draw this layer.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>stat</code>
-</td>
-<td>
-stat
-</td>
-<td>
+</dd>
+<dt><code>stat: <code>stat</code></code></dt>
+<dd>
 stat used for the statistical transformation of data in this layer
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>mapping</code>
-</td>
-<td>
-aes
-</td>
-<td>
+</dd>
+<dt><code>mapping: <a href="../reference/aes.html#plotnine.mapping.aes">aes</a></code></dt>
+<dd>
 Aesthetic mappings.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+</dd>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Data plotted in this layer. If <code>None</code>, the data from the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object will be used.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>position</code>
-</td>
-<td>
-position
-</td>
-<td>
+</dd>
+<dt><code>position: <code>position</code></code></dt>
+<dd>
 Position object to adjust the geometries in this layer.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>inherit_aes</code>
-</td>
-<td>
-bool
-</td>
-<td>
-If <code>True</code> inherit from the aesthetic mappings of the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object. Default <code>True</code>.
-</td>
-<td>
-<code>True</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>show_legend</code>
-</td>
-<td>
-bool or None
-</td>
-<td>
-Whether to make up and show a legend for the mappings of this layer. If <code>None</code> then an automatic/good choice is made. Default is <code>None</code>.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>raster</code>
-</td>
-<td>
-bool, optional (default: False)
-</td>
-<td>
+</dd>
+<dt><code>inherit_aes: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+If <code>True</code> inherit from the aesthetic mappings of the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object.
+</dd>
+<dt><code>show_legend: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | None = None</code></dt>
+<dd>
+Whether to make up and show a legend for the mappings of this layer. If <code>None</code> then an automatic/good choice is made
+</dd>
+<dt><code>raster: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
 If <code>True</code>, draw onto this layer a raster (bitmap) object even if the final image format is vector.
-</td>
-<td>
-<code>False</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="notes" class="level4">
 <h4 class="anchored" data-anchor-id="notes">Notes</h4>
@@ -351,7 +263,7 @@ If <code>True</code>, draw onto this layer a raster (bitmap) object even if the 
 </tr>
 <tr class="even">
 <td><a href="#plotnine.layer.layer.from_geom">from_geom</a></td>
-<td>Create a layer given a :class:<code>geom</code></td>
+<td>Create a layer given a <code></code></td>
 </tr>
 <tr class="odd">
 <td><a href="#plotnine.layer.layer.map_statistic">map_statistic</a></td>
@@ -373,219 +285,139 @@ If <code>True</code>, draw onto this layer a raster (bitmap) object even if the 
 </table>
 <section id="plotnine.layer.layer.compute_aesthetics" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.compute_aesthetics">compute_aesthetics</h5>
-<p><code>layer.layer.compute_aesthetics(self, plot)</code></p>
+<div class="signature">
+<p><code>layer.layer.compute_aesthetics(plot)</code></p>
+</div>
+<div class="description">
 <p>Return a dataframe where the columns match the aesthetic mappings</p>
 <p>Transformations like ‘factor(cyl)’ and other expression evaluation are made in here</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.compute_position" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.compute_position">compute_position</h5>
-<p><code>layer.layer.compute_position(self, layout)</code></p>
+<div class="signature">
+<p><code>layer.layer.compute_position(layout)</code></p>
+</div>
+<div class="description">
 <p>Compute the position of each geometric object</p>
 <p>This is in concert with the other objects in the panel depending on the position class of the geom</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.compute_statistic" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.compute_statistic">compute_statistic</h5>
-<p><code>layer.layer.compute_statistic(self, layout)</code></p>
+<div class="signature">
+<p><code>layer.layer.compute_statistic(layout)</code></p>
+</div>
+<div class="description">
 <p>Compute &amp; return statistics for this layer</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.draw" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.draw">draw</h5>
-<p><code>layer.layer.draw(self, layout, coord)</code></p>
+<div class="signature">
+<p><code>layer.layer.draw(layout, coord)</code></p>
+</div>
+<div class="description">
 <p>Draw geom</p>
+</div>
 <section id="parameters-1" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>layout</code>
-</td>
-<td>
-Layout
-</td>
-<td>
+<dl>
+<dt><code>layout: <code>Layout</code></code></dt>
+<dd>
 Layout object created when the plot is getting built
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>coord</code>
-</td>
-<td>
-coord
-</td>
-<td>
+</dd>
+<dt><code>coord: <code>coord</code></code></dt>
+<dd>
 Type of coordinate axes
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.layer.layer.finish_statistics" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.finish_statistics">finish_statistics</h5>
-<p><code>layer.layer.finish_statistics(self)</code></p>
+<div class="signature">
+<p><code>layer.layer.finish_statistics()</code></p>
+</div>
+<div class="description">
 <p>Prepare/modify data for plotting</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.from_geom" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.from_geom">from_geom</h5>
+<div class="signature">
 <p><code>layer.layer.from_geom(geom)</code></p>
-<p>Create a layer given a <code>geom</code></p>
+</div>
+<div class="description">
+<p>Create a layer given a <code></code></p>
+</div>
 <section id="parameters-2" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>geom</code>
-</td>
-<td>
-geom
-</td>
-<td>
+<dl>
+<dt><code>geom: <code>geom</code></code></dt>
+<dd>
 <code>geom</code> from which a layer will be created
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns" class="level6">
 <h6 class="anchored" data-anchor-id="returns">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-layer
-</td>
-<td>
+<dl>
+<dt><code>out: <a href="../reference/layer.html#plotnine.layer.layer">layer</a></code></dt>
+<dd>
 Layer that represents the specific <code>geom</code>.
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.layer.layer.map_statistic" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.map_statistic">map_statistic</h5>
-<p><code>layer.layer.map_statistic(self, plot)</code></p>
+<div class="signature">
+<p><code>layer.layer.map_statistic(plot)</code></p>
+</div>
+<div class="description">
 <p>Mapping aesthetics to computed statistics</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.setup" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.setup">setup</h5>
-<p><code>layer.layer.setup(self, plot)</code></p>
+<div class="signature">
+<p><code>layer.layer.setup(plot)</code></p>
+</div>
+<div class="description">
 <p>Prepare layer for the plot building</p>
 <p>Give the layer access to the data, mapping and environment</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.setup_data" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.setup_data">setup_data</h5>
-<p><code>layer.layer.setup_data(self)</code></p>
+<div class="signature">
+<p><code>layer.layer.setup_data()</code></p>
+</div>
+<div class="description">
 <p>Prepare/modify data for plotting</p>
+</div>
 </section>
 <section id="plotnine.layer.layer.use_defaults" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.layer.layer.use_defaults">use_defaults</h5>
-<p><code>layer.layer.use_defaults(self, data=None, aes_modifiers=None)</code></p>
+<div class="signature">
+<p><code>layer.layer.use_defaults(data=None, aes_modifiers=None)</code></p>
+</div>
+<div class="description">
 <p>Prepare/modify data for plotting</p>
+</div>
 <section id="parameters-3" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dd>
 Data
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>aes_modifiers</code>
-</td>
-<td>
-dict
-</td>
-<td>
+</dd>
+<dt><code>aes_modifiers: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = None</code></dt>
+<dd>
 Expression to evaluate and replace aesthetics in the data.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 </section>
@@ -613,64 +445,34 @@ Expression to evaluate and replace aesthetics in the data.
 </table>
 <section id="plotnine.layer.add_group" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.layer.add_group">add_group</h3>
+<div class="signature">
 <p><code>layer.add_group(data)</code></p>
+</div>
+<div class="description">
 <p>Add group to the dataframe</p>
 <p>The group depends on the interaction of the discrete aesthetic columns in the dataframe.</p>
+</div>
 </section>
 <section id="plotnine.layer.discrete_columns" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.layer.discrete_columns">discrete_columns</h3>
+<div class="signature">
 <p><code>layer.discrete_columns(df, ignore)</code></p>
+</div>
+<div class="description">
 <p>Return a list of the discrete columns in the dataframe</p>
+</div>
 <section id="parameters-4" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>df</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>df: <code>dataframe</code></code></dt>
+<dd>
 Data
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>ignore</code>
-</td>
-<td>
-list[str]
-</td>
-<td>
+</dd>
+<dt><code>ignore: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</code></dt>
+<dd>
 A list|set|tuple with the names of the columns to skip.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 
 
 </section>
@@ -807,15 +609,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -824,6 +649,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -866,6 +692,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -937,6 +786,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

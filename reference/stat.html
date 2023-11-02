@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – stat</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – stat</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,12 +79,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +108,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +122,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -140,9 +175,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.stats.stat" class="level1">
 <h1>stat</h1>
-<p><code>stats.stat</code></p>
+<p><span class="signature"><code>stats.stat</code></span></p>
 <section id="classes" class="level2">
 <h2 class="anchored" data-anchor-id="classes">Classes</h2>
 <table class="table">
@@ -161,8 +197,9 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="plotnine.stats.stat.stat" class="level3">
 <h3 class="anchored" data-anchor-id="plotnine.stats.stat.stat">stat</h3>
+<div class="signature">
 <p><code>stats.stat.stat(self, mapping=None, data=None, **kwargs)</code></p>
-<p>Base class of all stats</p>
+</div>
 <section id="attributes" class="level4">
 <h4 class="anchored" data-anchor-id="attributes">Attributes</h4>
 <table class="table">
@@ -195,6 +232,9 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+<div class="description">
+<p>Base class of all stats</p>
+</div>
 </section>
 <section id="methods" class="level4">
 <h4 class="anchored" data-anchor-id="methods">Methods</h4>
@@ -250,202 +290,105 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="plotnine.stats.stat.stat.aesthetics" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.aesthetics">aesthetics</h5>
-<p><code>stats.stat.stat.aesthetics(cls)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.aesthetics()</code></p>
+</div>
+<div class="description">
 <p>Return a set of all non-computed aesthetics for this stat.</p>
 <p>stats should not override this method.</p>
+</div>
 </section>
 <section id="plotnine.stats.stat.stat.compute_group" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.compute_group">compute_group</h5>
-<p><code>stats.stat.stat.compute_group(cls, data, scales, **params)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.compute_group(data, scales, **params)</code></p>
+</div>
+<div class="description">
 <p>Calculate statistics for the group</p>
 <p>All stats should implement this method</p>
+</div>
 <section id="parameters" class="level6">
 <h6 class="anchored" data-anchor-id="parameters">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Data for a group
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>scales</code>
-</td>
-<td>
-types.SimpleNamespace
-</td>
-<td>
-x (<code>scales.x</code>) and y (<code>scales.y</code>) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g:: range_x = scales.x.dimension()
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-<p>params : dict Parameters</p>
+</dd>
+<dt><code>scales: <a href="https://docs.python.org/3/library/types.html#module-types">types</a>.<a href="https://docs.python.org/3/library/types.html#types.SimpleNamespace">SimpleNamespace</a></code></dt>
+<dd>
+<p>x (<code>scales.x</code>) and y (<code>scales.y</code>) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>range_x <span class="op">=</span> scales.x.dimension()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</dd>
+<dt><code>params: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {}</code></dt>
+<dd>
+Parameters
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.compute_layer" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.compute_layer">compute_layer</h5>
-<p><code>stats.stat.stat.compute_layer(cls, data, params, layout)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.compute_layer(data, params, layout)</code></p>
+</div>
+<div class="description">
 <p>Calculate statistics for this layers</p>
 <p>This is the top-most computation method for the stat. It does not do any computations, but it knows how to verify the data, partition it call the next computation method and merge results.</p>
 <p>stats should not override this method.</p>
+</div>
 <section id="parameters-1" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-panda.DataFrame
-</td>
-<td>
+<dl>
+<dt><code>data: <code>panda</code>.<code>DataFrame</code></code></dt>
+<dd>
 Data points for all objects in a layer.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>params</code>
-</td>
-<td>
-dict
-</td>
-<td>
+</dd>
+<dt><code>params: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></code></dt>
+<dd>
 Stat parameters
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>layout</code>
-</td>
-<td>
-plotnine.layout.Layout
-</td>
-<td>
+</dd>
+<dt><code>layout: <code>plotnine</code>.<code>layout</code>.<code>Layout</code></code></dt>
+<dd>
 Panel layout information
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.compute_panel" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.compute_panel">compute_panel</h5>
-<p><code>stats.stat.stat.compute_panel(cls, data, scales, **params)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.compute_panel(data, scales, **params)</code></p>
+</div>
+<div class="description">
 <p>Calculate the statistics for all the groups</p>
 <p>Return the results in a single dataframe.</p>
 <p>This is a default function that can be overriden by individual stats</p>
+</div>
 <section id="parameters-2" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 data for the computing
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>scales</code>
-</td>
-<td>
-dataclass
-</td>
-<td>
-x (<code>scales.x</code>) and y (<code>scales.y</code>) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g:: range_x = scales.x.dimension()
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-<p>params : dict The parameters for the stat. It includes default values if user did not set a particular parameter.</p>
+</dd>
+<dt><code>scales: <code>dataclass</code></code></dt>
+<dd>
+<p>x (<code>scales.x</code>) and y (<code>scales.y</code>) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>range_x <span class="op">=</span> scales.x.dimension()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</dd>
+<dt><code>params: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {}</code></dt>
+<dd>
+The parameters for the stat. It includes default values if user did not set a particular parameter.
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.finish_layer" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.finish_layer">finish_layer</h5>
-<p><code>stats.stat.stat.finish_layer(self, data, params)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.finish_layer(data, params)</code></p>
+</div>
+<div class="description">
 <p>Modify data after the aesthetics have been mapped</p>
 <p>This can be used by stats that require access to the mapped values of the computed aesthetics, part 3 as shown below.</p>
 <pre><code>1. stat computes and creates variables
@@ -453,405 +396,165 @@ x (<code>scales.x</code>) and y (<code>scales.y</code>) scale objects. The most 
 3. stat sees and modifies data according to the
    aesthetic values</code></pre>
 <p>The default to is to do nothing.</p>
+</div>
 <section id="parameters-3" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Data for the layer
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>params</code>
-</td>
-<td>
-dict
-</td>
-<td>
+</dd>
+<dt><code>params: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></code></dt>
+<dd>
 Paremeters
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns" class="level6">
 <h6 class="anchored" data-anchor-id="returns">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Modified data
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.from_geom" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.from_geom">from_geom</h5>
+<div class="signature">
 <p><code>stats.stat.stat.from_geom(geom)</code></p>
+</div>
+<div class="description">
 <p>Return an instantiated stat object</p>
 <p>stats should not override this method.</p>
+</div>
 <section id="parameters-4" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-4">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
+<dl>
+<dt><code>geom: <code>geom</code></code></dt>
+<dd>
 <code>geom</code>
-</td>
-<td>
-geom
-</td>
-<td>
-<code>geom</code>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-1" class="level6">
 <h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-stat
-</td>
-<td>
+<dl>
+<dt><code>out: <a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></code></dt>
+<dd>
 A stat object
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="raises" class="level6">
 <h6 class="anchored" data-anchor-id="raises">Raises</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>PlotnineError</code> if unable to create a <code>stat</code>.
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
+<dl>
+<dt><code><code></code> if unable to create a <code>stat</code>.</code></dt>
+<dd>
+
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.setup_data" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.setup_data">setup_data</h5>
-<p><code>stats.stat.stat.setup_data(self, data)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.setup_data(data)</code></p>
+</div>
+<div class="description">
 <p>Overide to modify data before compute_layer is called</p>
+</div>
 <section id="parameters-5" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-5">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Data
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-2" class="level6">
 <h6 class="anchored" data-anchor-id="returns-2">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>out: <code>dataframe</code></code></dt>
+<dd>
 Data
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.setup_params" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.setup_params">setup_params</h5>
-<p><code>stats.stat.stat.setup_params(self, data)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.setup_params(data)</code></p>
+</div>
+<div class="description">
 <p>Overide this to verify or adjust parameters</p>
+</div>
 <section id="parameters-6" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-6">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Data
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-3" class="level6">
 <h6 class="anchored" data-anchor-id="returns-3">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-dict
-</td>
-<td>
+<dl>
+<dt><code>out: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></code></dt>
+<dd>
 Parameters used by the stats.
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.to_layer" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.to_layer">to_layer</h5>
-<p><code>stats.stat.stat.to_layer(self)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.to_layer()</code></p>
+</div>
+<div class="description">
 <p>Make a layer that represents this stat</p>
+</div>
 <section id="returns-4" class="level6">
 <h6 class="anchored" data-anchor-id="returns-4">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-layer
-</td>
-<td>
+<dl>
+<dt><code>out: <a href="../reference/layer.html#plotnine.layer.layer">layer</a></code></dt>
+<dd>
 Layer
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 </section>
 <section id="plotnine.stats.stat.stat.use_defaults" class="level5">
 <h5 class="anchored" data-anchor-id="plotnine.stats.stat.stat.use_defaults">use_defaults</h5>
-<p><code>stats.stat.stat.use_defaults(self, data)</code></p>
+<div class="signature">
+<p><code>stats.stat.stat.use_defaults(data)</code></p>
+</div>
+<div class="description">
 <p>Combine data with defaults and set aesthetics from parameters</p>
 <p>stats should not override this method.</p>
+</div>
 <section id="parameters-7" class="level6">
 <h6 class="anchored" data-anchor-id="parameters-7">Parameters</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>data</code>
-</td>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>data: <code>dataframe</code></code></dt>
+<dd>
 Data used for drawing the geom.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </section>
 <section id="returns-5" class="level6">
 <h6 class="anchored" data-anchor-id="returns-5">Returns</h6>
-<table class="table">
-<thead>
-<tr>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-dataframe
-</td>
-<td>
+<dl>
+<dt><code>out: <code>dataframe</code></code></dt>
+<dd>
 Data used for drawing the geom.
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 
 
 </section>
@@ -990,15 +693,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -1007,6 +733,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1049,6 +776,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -1120,6 +870,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

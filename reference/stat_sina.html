@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – stat_sina</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – stat_sina</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,12 +79,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +108,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +122,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -138,46 +173,28 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.stats.stat_sina" class="level1">
 <h1>stat_sina</h1>
+<div class="signature">
 <p><code>stats.stat_sina()</code></p>
+</div>
+<div class="description">
 <p>Compute Sina plot values</p>
 <p><strong>Usage</strong></p>
 <pre><code>stat_sina(mapping=None, data=None, geom='sina', position='dodge', na_rm=False,
-          random_state=None, maxwidth=None, adjust=1, method='density',
-          binwidth=None, scale='area', bw='nrd0', bin_limit=1, bins=None,
+          method='density', binwidth=None, bw='nrd0', adjust=1, bins=None,
+          bin_limit=1, maxwidth=None, random_state=None, scale='area',
           **kwargs)</code></pre>
 <p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
+</div>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>mapping</code>
-</td>
-<td>
-aes
-</td>
-<td>
-Aesthetic mappings created with <code>aes</code>. If specified and :py:<code>inherit.aes=True</code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.
-<table class="table">
+<dl>
+<dt><code>mapping: <code>aes</code> = None</code></dt>
+<dd>
+<p>Aesthetic mappings created with :class:<code>~plotnine.mapping.aes</code>). If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
+<table>
 <thead>
 <tr>
 <th>
@@ -208,25 +225,85 @@ Default value
 xend
 </td>
 <td>
-after_stat(‘scaled’)
+<code class="sourceCode python">after_stat(<span class="st">'scaled'</span>)</code>
 </td>
 </tr>
 </tbody>
 </table>
-The <strong>bold</strong> aesthetics are required.
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="see-also" class="level2">
-<h2 class="anchored" data-anchor-id="see-also">See Also</h2>
+<p>The <strong>bold</strong> aesthetics are required.</p>
+<p><strong>Options for computed aesthetics</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"quantile"</span>  <span class="co"># quantile</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">"group"</span>     <span class="co"># group identifier</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Calculated aesthetics are accessed using the <code>after_stat</code> function. e.g.&nbsp;<code class="sourceCode python">after_stat(<span class="st">'quantile'</span>)</code>.</p>
+</dd>
+<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dd>
+The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.
+</dd>
+<dt><code>geom: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <code>geom</code> = “sina”</code></dt>
+<dd>
+The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.
+</dd>
+<dt><code>position: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <code>position</code> = “dodge”</code></dt>
+<dd>
+Position adjustment. If it is a string, it must be registered and known to Plotnine.
+</dd>
+<dt><code>na_rm: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.
+</dd>
+<dt><code>binwidth: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
+The width of the bins. The default is to use bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data.
+</dd>
+<dt><code>bins: <a href="https://docs.python.org/3/library/functions.html#int">int</a> = 50</code></dt>
+<dd>
+Number of bins. Overridden by binwidth.
+</dd>
+<dt><code>method: <code>density</code> | <code>counts</code> = “density”</code></dt>
+<dd>
+Choose the method to spread the samples within the same bin along the x-axis. Available methods: “density”, “counts” (can be abbreviated, e.g.&nbsp;“d”). See Details.
+</dd>
+<dt><code>maxwidth: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
+Control the maximum width the points can spread into. Values should be in the range (0, 1).
+</dd>
+<dt><code>adjust: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 1</code></dt>
+<dd>
+Adjusts the bandwidth of the density kernel when <code>method="density"</code>. see <a href="../reference/stat_density.html#plotnine.stats.stat_density"><code>stat_density</code></a>.
+</dd>
+<dt><code>bw: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#float">float</a> = “nrd0”</code></dt>
+<dd>
+<p>The bandwidth to use, If a float is given, it is the bandwidth. The <code class="sourceCode python"><span class="bu">str</span></code> choices are: <code class="sourceCode python"><span class="co">"nrd0"</span>, <span class="st">"normal_reference"</span>, <span class="st">"scott"</span>, <span class="st">"silverman"</span></code></p>
+<p><code>nrd0</code> is a port of <code>stats::bw.nrd0</code> in R; it is eqiuvalent to <code>silverman</code> when there is more than 1 value in a group.</p>
+</dd>
+<dt><code>bin_limit: <a href="https://docs.python.org/3/library/functions.html#int">int</a> = 1</code></dt>
+<dd>
+If the samples within the same y-axis bin are more than <code>bin_limit</code>, the samples’s X coordinates will be adjusted. This parameter is effective only when <code class="sourceCode python">method<span class="op">=</span><span class="st">'counts'</span></code>
+</dd>
+<dt><code>random_state: <a href="https://docs.python.org/3/library/functions.html#int">int</a> | ~<a href="https://numpy.org/doc/stable/reference/index.html#module-numpy">numpy</a>.<a href="https://numpy.org/doc/stable/reference/random/index.html#module-numpy.random">random</a>.<a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState">RandomState</a> = None</code></dt>
+<dd>
+Seed or Random number generator to use. If <code>None</code>, then numpy global generator :class:<code>numpy.random</code> is used.
+</dd>
+<dt><code>scale: <code>area</code> | <code>count</code> | <code>width</code> = “area”</code></dt>
+<dd>
+<p>How to scale the sina groups.</p>
 <ul>
-<li><a href="../reference/geom_sina.html#plotnine.geoms.geom_sina">plotnine.geoms.geom_sina</a></li>
+<li><code>area</code> - Scale by the largest density/bin among the different sinas</li>
+<li><code>count</code> - areas are scaled proportionally to the number of points</li>
+<li><code>width</code> - Only scale according to the maxwidth parameter.</li>
 </ul>
+</dd>
+</dl>
+</section>
+<section id="see-also" class="level2 admonition">
+<h2 class="admonition anchored" data-anchor-id="see-also">See Also</h2>
+<dl>
+<dt><a href="../reference/geom_sina.html#plotnine.geoms.geom_sina">plotnine.geoms.geom_sina</a></dt>
+<dd>
+
+</dd>
+</dl>
 
 
 </section>
@@ -361,15 +438,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -378,6 +478,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -420,6 +521,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -491,6 +615,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

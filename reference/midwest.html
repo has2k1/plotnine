@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – midwest</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – midwest</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,12 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +88,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -134,15 +135,139 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.data.midwest" class="level1">
 <h1>midwest</h1>
-<p><code>data.midwest</code></p>
+<p><span class="signature"><code>data.midwest</code></span></p>
+<div class="description">
 <p>Midwest demographics.</p>
-<p>.. rubric:: Description</p>
+<p><strong>Description</strong></p>
 <p>Demographic information of midwest counties</p>
-<p>.. rubric:: Format</p>
+<p><strong>Format</strong></p>
 <p>A data frame with 437 rows and 28 variables</p>
-<p>===================== ============================ Column Description ===================== ============================ PID county state area poptotal Total population popdensity Population density popwhite Number of whites popblack Number of blacks popamerindian Number of American Indians popasian Number of Asians popother Number of other races percwhite Percent white percblack Percent black percamerindan Percent American Indian percasian Percent Asian percother Percent other races popadults Number of adults perchsd percollege Percent college educated percprof Percent profession poppovertyknown percpovertyknown percbelowpoverty percchildbelowpovert percadultpoverty percelderlypoverty inmetro In a metro area category ===================== ============================</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PID</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>county</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>state</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>area</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>poptotal</td>
+<td>Total population</td>
+</tr>
+<tr class="even">
+<td>popdensity</td>
+<td>Population density</td>
+</tr>
+<tr class="odd">
+<td>popwhite</td>
+<td>Number of whites</td>
+</tr>
+<tr class="even">
+<td>popblack</td>
+<td>Number of blacks</td>
+</tr>
+<tr class="odd">
+<td>popamerindian</td>
+<td>Number of American Indians</td>
+</tr>
+<tr class="even">
+<td>popasian</td>
+<td>Number of Asians</td>
+</tr>
+<tr class="odd">
+<td>popother</td>
+<td>Number of other races</td>
+</tr>
+<tr class="even">
+<td>percwhite</td>
+<td>Percent white</td>
+</tr>
+<tr class="odd">
+<td>percblack</td>
+<td>Percent black</td>
+</tr>
+<tr class="even">
+<td>percamerindan</td>
+<td>Percent American Indian</td>
+</tr>
+<tr class="odd">
+<td>percasian</td>
+<td>Percent Asian</td>
+</tr>
+<tr class="even">
+<td>percother</td>
+<td>Percent other races</td>
+</tr>
+<tr class="odd">
+<td>popadults</td>
+<td>Number of adults</td>
+</tr>
+<tr class="even">
+<td>perchsd</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>percollege</td>
+<td>Percent college educated</td>
+</tr>
+<tr class="even">
+<td>percprof</td>
+<td>Percent profession</td>
+</tr>
+<tr class="odd">
+<td>poppovertyknown</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>percpovertyknown</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>percbelowpoverty</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>percchildbelowpovert</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>percadultpoverty</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>percelderlypoverty</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>inmetro</td>
+<td>In a metro area</td>
+</tr>
+<tr class="even">
+<td>category</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 
 
 </section>
@@ -276,15 +401,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -293,6 +441,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -335,6 +484,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -406,6 +578,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

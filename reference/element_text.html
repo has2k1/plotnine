@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.268">
+<meta name="generator" content="quarto-1.4.468">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plotnine – element_text</title>
+<title>plotnine {{&lt; env VERSION &gt;}} – element_text</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,12 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -73,11 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Plotnine</span>
+    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -87,27 +88,27 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html" rel="" target="">
- <span class="menu-text">Gallery</span></a>
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../reference/index.html" rel="" target="">
- <span class="menu-text">Reference</span></a>
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html" rel="" target="">
- <span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About Plotnine</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Plotnine</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/has2k1/plotnine" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -138,204 +139,71 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <section id="plotnine.themes.element_text" class="level1">
 <h1>element_text</h1>
+<div class="signature">
 <p><code>themes.element_text(self, family=None, style=None, weight=None, color=None, size=None, ha=None, va=None, rotation=None, linespacing=None, backgroundcolor=None, margin=None, **kwargs)</code></p>
+</div>
+<div class="description">
 <p>Theme element: Text</p>
+</div>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
-<table class="table">
-<thead>
-<tr>
-<th>
-Name
-</th>
-<th>
-Type
-</th>
-<th>
-Description
-</th>
-<th>
-Default
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>family</code>
-</td>
-<td>
-str
-</td>
-<td>
-Font family. See <code>matplotlib.text.Text.set_family</code> for supported values.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>style</code>
-</td>
-<td>
-str in <code>['normal', 'italic', 'oblique']</code>
-</td>
-<td>
+<dl>
+<dt><code>family: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = None</code></dt>
+<dd>
+Font family. See :meth:<code>matplotlib.text.Text.set_family</code> for supported values.
+</dd>
+<dt><code>style: “normal” | “italic” | “oblique”` = None</code></dt>
+<dd>
 Font style
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>color</code>
-</td>
-<td>
-str | tuple
-</td>
-<td>
+</dd>
+<dt><code>color: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> = None</code></dt>
+<dd>
 Text color
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>weight</code>
-</td>
-<td>
-str
-</td>
-<td>
-Should be one of <em>normal</em>, <em>bold</em>, <em>heavy</em>, <em>light</em>, <em>ultrabold</em> or <em>ultralight</em>.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>size</code>
-</td>
-<td>
-float
-</td>
-<td>
+</dd>
+<dt><code>weight: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = None</code></dt>
+<dd>
+Should be one of <code>normal</code>, <code>bold</code>, <code>heavy</code>, <code>light</code>, <code>ultrabold</code> or <code>ultralight</code>.
+</dd>
+<dt><code>size: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
 text size
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>ha</code>
-</td>
-<td>
-str in <code>['center', 'left', 'right']</code>
-</td>
-<td>
+</dd>
+<dt><code>ha: ‘center’ | ‘left’ | ‘right’ = None</code></dt>
+<dd>
 Horizontal Alignment.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>va</code>
-</td>
-<td>
-str in <code>['center' , 'top', 'bottom', 'baseline']</code>
-</td>
-<td>
+</dd>
+<dt><code>va: ‘center’ | ‘top’ | ‘bottom’ | ‘baseline’ = None</code></dt>
+<dd>
 Vertical alignment.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>rotation</code>
-</td>
-<td>
-float
-</td>
-<td>
+</dd>
+<dt><code>rotation: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
 Rotation angle in the range [0, 360]
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>linespacing</code>
-</td>
-<td>
-float
-</td>
-<td>
+</dd>
+<dt><code>linespacing: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dd>
 Line spacing
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>backgroundcolor</code>
-</td>
-<td>
-str | tuple
-</td>
-<td>
+</dd>
+<dt><code>backgroundcolor: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> = None</code></dt>
+<dd>
 Background color
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>margin</code>
-</td>
-<td>
-dict
-</td>
-<td>
-Margin around the text. The keys are one of <code>['t', 'b', 'l', 'r']</code> and <code>units</code>. The units are one of <code>['pt', 'lines', 'in']</code>. The <em>units</em> default to <code>pt</code> and the other keys to <code>0</code>. Not all text themeables support margin parameters and other than the <code>units</code>, only some of the other keys may apply.
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-<tr>
-<td>
-<code>kwargs</code>
-</td>
-<td>
-dict
-</td>
-<td>
-Parameters recognised by <code>matplotlib.text.Text</code>
-</td>
-<td>
-<code>{}</code>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt><code>margin: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {“t”: 0, “b”: 0, “l”: 0, “r”: 0, “units”: “pt”}</code></dt>
+<dd>
+Margin around the text. The keys are <code>t</code>, <code>b</code>, <code>l</code>, <code>r</code> and <code>units</code>. The <code>tblr</code> keys are floats. The <code>units</code> is one of <code>pt</code>, <code>lines</code> or <code>in</code>. Not all text themeables support margin parameters and other than the <code>units</code>, only some of the other keys may apply.
+</dd>
+<dt><code>kwargs: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {}</code></dt>
+<dd>
+Parameters recognised by :class:<code>matplotlib.text.Text</code>
+</dd>
+</dl>
 </section>
 <section id="notes" class="level2">
 <h2 class="anchored" data-anchor-id="notes">Notes</h2>
-<p><code>element_text</code> will accept parameters that conform to the <strong>ggplot2</strong> <em>element_text</em> API, but it is preferable the <strong>Matplotlib</strong> based API described above.</p>
+<p><a href="../reference/element_text.html#plotnine.themes.element_text"><code>element_text</code></a> will accept parameters that conform to the <strong>ggplot2</strong> <em>element_text</em> API, but it is preferable the <strong>Matplotlib</strong> based API described above.</p>
 
 
 </section>
@@ -470,15 +338,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -487,6 +378,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -529,6 +421,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -600,6 +515,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
