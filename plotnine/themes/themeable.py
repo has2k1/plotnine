@@ -82,7 +82,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
     Notes
     -----
     A user should never create instances of class
-    [](`~plotnine.themes.themeable`) or subclasses of it.
+    [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
     """
 
     order = 0
@@ -123,7 +123,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
         Returns
         -------
-        out : Themeable
+        out : plotnine.themes.themeable.themeable
         """
         msg = f"There no themeable element called: {name}"
         try:

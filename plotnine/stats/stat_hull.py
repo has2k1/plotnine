@@ -22,7 +22,7 @@ class stat_hull(stat):
 
     Raises
     ------
-    QhullError
+    scipy.spatial.QhullError
         Raised when Qhull encounters an error condition,
         such as geometrical degeneracy when options to resolve are
         not enabled.

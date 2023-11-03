@@ -32,7 +32,7 @@ class stat_density_2d(stat):
 
     See Also
     --------
-    statsmodels.nonparametric.kde.KDEMultivariate
+    statsmodels.nonparametric.kernel_density.KDEMultivariate
     scipy.stats.gaussian_kde
     sklearn.neighbors.KernelDensity
     """
