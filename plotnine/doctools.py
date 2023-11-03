@@ -173,18 +173,11 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     """
     from tabulate import tabulate
 
-    if GENERATING_QUARTODOC:
-        tablefmt = "unsafehtml"
-        rows = []
-        for name, value in contents.items():
-            if value != "":
-                value = f"`{repr(value)}`" "{.py}"
-            rows.append((name, value))
-    else:
-        tablefmt = "grid"
-        rows = list(contents.items())
-
-    return tabulate(rows, headers=header, tablefmt=tablefmt)
+    rows = [
+        (name, value if value == "" else f"`{value!r}`" "{.py}")
+        for name, value in contents.items()
+    ]
+    return tabulate(rows, headers=header, tablefmt="grid")
 
 
 def make_signature(
