@@ -545,6 +545,7 @@ quartodoc:
         - element_line
         - element_rect
         - element_text
+        - element_blank
 
     - title: coordinates
       desc: |
