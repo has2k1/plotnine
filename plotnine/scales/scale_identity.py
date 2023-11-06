@@ -8,7 +8,7 @@ from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from typing import Any, Literal, Optional, Sequence
 
 
 class MapTrainMixin:
@@ -16,7 +16,7 @@ class MapTrainMixin:
     Override map and train methods
     """
 
-    guide: Literal["legend"] | None = None
+    guide: Optional[Literal["legend"]] = None
 
     def map(self, x: Sequence[Any]) -> Sequence[Any]:
         """
@@ -46,7 +46,7 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | "legend", default=None
+    guide : Optional[Literal["legend"]], default=None
         Whether to include a legend.
     """
 
@@ -74,7 +74,7 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | "legend", default=None
+    guide : Optional[Literal["legend"]], default=None
         Whether to include a legend.
     """
 
@@ -89,7 +89,7 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | "legend", default=None
+    guide : Optional[Literal["legend"]], default=None
         Whether to include a legend.
     """
 
@@ -104,7 +104,7 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | "legend", default=None
+    guide : Optional[Literal["legend"]], default=None
         Whether to include a legend.
     """
 
@@ -119,7 +119,7 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | "legend", default=None
+    guide : Optional[Literal["legend"]], default=None
         Whether to include a legend.
     """
 

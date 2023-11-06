@@ -17,7 +17,7 @@ class stat_pointdensity(stat):
     Parameters
     ----------
     {common_parameters}
-    package : "statsmodels" | "scipy" | "sklearn", default="statsmodels"
+    package : Literal["statsmodels", "scipy", "sklearn"], default="statsmodels"
         Package whose kernel density estimation to use.
     kde_params : dict, default=None
         Keyword arguments to pass on to the kde class.
@@ -71,7 +71,7 @@ class stat_pointdensity(stat):
         kde_params = params["kde_params"]
 
         var_data = np.array([data["x"].to_numpy(), data["y"].to_numpy()]).T
-        density = kde(var_data, var_data, package, **kde_params)
+        density = kde(var_data, var_data, package, **kde_params)  # type: ignore
 
         data = pd.DataFrame(
             {

@@ -11,6 +11,8 @@ from ..utils import groupby_apply, pivot_apply
 from .position_dodge import position_dodge
 
 if typing.TYPE_CHECKING:
+    from typing import Literal, Optional
+
     from plotnine.typing import IntArray
 
 
@@ -24,18 +26,18 @@ class position_dodge2(position_dodge):
 
     Parameters
     ----------
-    width: float, default=None
+    width :
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
-    preserve: "total", "single", default="total"
+    preserve :
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
-    padding : float, default=0.1
+    padding :
         Padding between elements at the same position.
         Elements are shrunk by this proportion to allow space
         between them.
-    reverse : bool, default=False
+    reverse :
         Reverse the default ordering of the groups. This is
         useful if you're rotating both the plot and legend.
     """
@@ -43,7 +45,11 @@ class position_dodge2(position_dodge):
     REQUIRED_AES = {"x"}
 
     def __init__(
-        self, width=None, preserve="total", padding=0.1, reverse=False
+        self,
+        width: Optional[float] = None,
+        preserve: Literal["total", "single"] = "total",
+        padding: float = 0.1,
+        reverse: bool = False,
     ):
         self.params = {
             "width": width,

@@ -11,7 +11,7 @@ from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Literal
+    from typing import Literal, Optional, Sequence
 
     from mizani.typing import ColorScheme, ColorSchemeShort
 
@@ -25,13 +25,13 @@ class scale_color_hue(scale_discrete):
 
     Parameters
     ----------
-    h : float
+    h :
         first hue. Must be in the range [0, 1]
-    l : float
+    l :
         lightness. Must be in the range [0, 1]
-    s : float
+    s :
         saturation. Must be in the range [0, 1]
-    colorspace : str, default="hls"
+    colorspace :
         Color space to use. Should be one of
         [hls](https://en.wikipedia.org/wiki/HSL_and_HSV)
         or
@@ -46,9 +46,9 @@ class scale_color_hue(scale_discrete):
 
     def __init__(
         self,
-        h=0.01,
-        l=0.6,
-        s=0.65,
+        h: float = 0.01,
+        l: float = 0.6,
+        s: float = 0.65,
         color_space: Literal["hls", "husl"] = "hls",
         **kwargs,
     ):
@@ -80,7 +80,7 @@ class scale_color_brewer(scale_discrete):
 
     Parameters
     ----------
-    type : "seq" | "div" | "qual", default="seq"
+    type :
         Type of data. Sequential, diverging or qualitative
     palette : int | str, default=1
          If a string, will use that named palette.
@@ -101,7 +101,7 @@ class scale_color_brewer(scale_discrete):
     def __init__(
         self,
         type: ColorScheme | ColorSchemeShort = "seq",
-        palette=1,
+        palette: int | str = 1,
         direction: Literal[1, -1] = 1,
         **kwargs,
     ):
@@ -381,17 +381,17 @@ class scale_color_distiller(scale_color_gradientn):
 
     Parameters
     ----------
-    type : "seq" | "div", default="seq"
+    type :
         Type of data. Sequential, diverging or qualitative
-    palette : int | str, default=1
+    palette :
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
-    values : list, default=None
+    values :
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
-    direction: -1 | 1, default=-1
+    direction :
         Sets the order of colors in the scale. If 1
         colors are as output by [](`~mizani.palettes.brewer_pal`).
         If -1, the order of colors is reversed.
@@ -407,8 +407,8 @@ class scale_color_distiller(scale_color_gradientn):
     def __init__(
         self,
         type: ColorScheme | ColorSchemeShort = "seq",
-        palette=1,
-        values=None,
+        palette: int | str = 1,
+        values: Optional[Sequence[float]] = None,
         direction: Literal[1, -1] = -1,
         **kwargs,
     ):
@@ -452,7 +452,7 @@ class scale_color_cmap(scale_continuous):
 
     Parameters
     ----------
-    cmap_name : str, default="viridis"
+    cmap_name :
         A standard Matplotlib colormap name. The default is
         `viridis`. For the list of names checkout the output
         of `matplotlib.cm.cmap_d.keys()` or see the
@@ -471,7 +471,7 @@ class scale_color_cmap(scale_continuous):
     guide = "colorbar"
     na_value = "#7F7F7F"
 
-    def __init__(self, cmap_name="viridis", **kwargs):
+    def __init__(self, cmap_name: str = "viridis", **kwargs):
         from mizani.palettes import cmap_pal
 
         # TODO: fix types in mizani
@@ -499,7 +499,7 @@ class scale_color_cmap_d(scale_discrete):
 
     Parameters
     ----------
-    cmap_name : str, default="viridis"
+    cmap_name :
         A standard Matplotlib colormap name. It must be of type
         :class:`matplotlib.colors.ListedColormap`.
         . The default is `viridis`. For the list of names checkout
@@ -518,7 +518,7 @@ class scale_color_cmap_d(scale_discrete):
     _aesthetics = ["color"]
     na_value = "#7F7F7F"
 
-    def __init__(self, cmap_name="viridis", **kwargs):
+    def __init__(self, cmap_name: str = "viridis", **kwargs):
         from mizani.palettes import cmap_d_pal
 
         self.palette = cmap_d_pal(cmap_name)

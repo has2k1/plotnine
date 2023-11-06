@@ -23,7 +23,7 @@ class stat_bin_2d(stat):
     {common_parameters}
     bins : int, default=30
         Number of bins. Overridden by binwidth.
-    breaks : array-like(s), default=None
+    breaks : array_like | tuple[array_like, array_like] , default=None
         Bin boundaries. This supercedes the `binwidth`, `bins`,
         `center` and `boundary`. It can be an array_like or
         a list of two array_likes to provide distinct breaks for

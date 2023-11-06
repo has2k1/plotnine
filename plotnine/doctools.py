@@ -69,7 +69,7 @@ used by the `geom`.
 
 common_params_doc = {
     "mapping": """\
-Aesthetic mappings created with :class:`~plotnine.mapping.aes`). If specified \
+Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If specified \
 and `inherit_aes=True`{.py}, it is combined with the default mapping for \
 the plot. You must supply mapping if there is no plot mapping.""",
     "data": """\
@@ -89,9 +89,9 @@ silently removes missing values.""",
 If `False`{.py}, overrides the default aesthetics.""",
     "show_legend": """\
 Whether this layer should be included in the legends. `None`{.py} the \
-default, includes any aesthetics that are mapped. If a :class:`bool`, \
+default, includes any aesthetics that are mapped. If a [](:class:`bool`), \
 `False`{.py} never includes and `True`{.py} always includes. A \
-:class:`dict` can be used to *exclude* specific aesthetis of the layer \
+[](:class:`dict`) can be used to *exclude* specific aesthetis of the layer \
 from showing in the legend. e.g `show_legend={'color': False}`{.py}, \
 any other aesthetic are included by default.""",
     "raster": """\
@@ -101,10 +101,10 @@ the final image is in vector format.""",
 
 
 GEOM_PARAMS_TPL = """
-mapping : aes, default=None
+mapping : plotnine.mapping.aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : dataframe, default=None
+data : ~pandas.dataframe, default=None
     {data}
 stat : str | stat, default="{default_stat}"
     {stat}
@@ -124,7 +124,7 @@ STAT_PARAMS_TPL = """
 mapping : aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : dataframe, default=None
+data : ~pandas.dataframe, default=None
     {data}
 geom : str | geom, default="{default_geom}"
     {stat}

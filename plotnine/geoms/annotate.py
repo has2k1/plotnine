@@ -22,29 +22,29 @@ class annotate:
 
     Parameters
     ----------
-    geom : geom | str
+    geom :
         geom to use for annotation, or name of geom (e.g. 'point').
-    x : float
+    x :
         Position
-    y : float
+    y :
         Position
-    xmin : float
+    xmin :
         Position
-    ymin : float
+    ymin :
         Position
-    xmax : float
+    xmax :
         Position
-    ymax : float
+    ymax :
         Position
-    xend : float
+    xend :
         Position
-    yend : float
+    yend :
         Position
-    xintercept : float
+    xintercept :
         Position
-    yintercept : float
+    yintercept :
         Position
-    kwargs : dict
+    kwargs :
         Other aesthetics or parameters to the geom.
 
     Notes

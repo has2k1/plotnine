@@ -16,7 +16,7 @@ class scale_stroke_continuous(scale_continuous):
 
     Parameters
     ----------
-    range : tuple
+    range :
         Range ([Minimum, Maximum]) of output stroke values.
         Should be between 0 and 1.
     {superclass_parameters}
@@ -24,7 +24,7 @@ class scale_stroke_continuous(scale_continuous):
 
     _aesthetics = ["stroke"]
 
-    def __init__(self, range=(1, 6), **kwargs):
+    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
         from mizani.palettes import rescale_pal
 
         # TODO: fix types in mizani
@@ -39,7 +39,7 @@ class scale_stroke_ordinal(scale_discrete):
 
     Parameters
     ----------
-    range : tuple
+    range :
         Range ([Minimum, Maximum]) of output stroke values.
         Should be between 0 and 1.
     {superclass_parameters}
@@ -47,8 +47,8 @@ class scale_stroke_ordinal(scale_discrete):
 
     _aesthetics = ["stroke"]
 
-    def __init__(self, range=(1, 6), **kwargs):
-        def palette(n):
+    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
+        def palette(n: int):
             return np.linspace(range[0], range[1], n)
 
         self.palette = palette
@@ -72,7 +72,7 @@ class scale_stroke_discrete(scale_stroke_ordinal):
             "Using stroke for a ordinal variable is not advised.",
             PlotnineWarning,
         )
-        super().__init__(self, **kwargs)
+        super().__init__(**kwargs)
 
 
 scale_stroke = alias("scale_stroke", scale_stroke_continuous)

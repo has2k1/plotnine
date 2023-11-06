@@ -28,6 +28,7 @@ if typing.TYPE_CHECKING:
         DataLike,
         EvalEnvironment,
         Geom,
+        Ggplot,
         Layout,
     )
 
@@ -83,12 +84,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        geom : geom
-            `geom`
+        geom :
+            A geom object
 
         Returns
         -------
-        out : stat
+        stat
             A stat object
 
         Raises
@@ -164,12 +165,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data used for drawing the geom.
 
         Returns
         -------
-        out : dataframe
+        out :
             Data used for drawing the geom.
         """
         missing = (
@@ -193,12 +194,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
 
         Returns
         -------
-        out : dict
+        out :
             Parameters used by the stats.
         """
         return self.params
@@ -209,12 +210,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
 
         Returns
         -------
-        out : dataframe
+        out :
             Data
         """
         return data
@@ -237,14 +238,14 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data for the layer
-        params : dict
+        params :
             Paremeters
 
         Returns
         -------
-        data : dataframe
+        data :
             Modified data
         """
         return data
@@ -265,11 +266,11 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : panda.DataFrame
+        data :
             Data points for all objects in a layer.
-        params : dict
+        params :
             Stat parameters
-        layout : plotnine.layout.Layout
+        layout :
             Panel layout information
         """
         check_required_aesthetics(
@@ -314,9 +315,9 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             data for the computing
-        scales : dataclass
+        scales :
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
             to find out the physical size of a scale. e.g.
@@ -324,7 +325,7 @@ class stat(metaclass=Registry):
             ```python
             range_x = scales.x.dimension()
             ```
-        params : dict
+        params :
             The parameters for the stat. It includes default
             values if user did not set a particular parameter.
         """
@@ -367,9 +368,9 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data for a group
-        scales : types.SimpleNamespace
+        scales :
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
             to find out the physical size of a scale. e.g.
@@ -377,36 +378,36 @@ class stat(metaclass=Registry):
             ```python
             range_x = scales.x.dimension()
             ```
-        params : dict
+        params :
             Parameters
         """
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(cls.__name__))
 
-    def __radd__(self, gg):
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add layer representing stat object on the right
 
         Parameters
         ----------
-        gg : ggplot
+        gg :
             ggplot object
 
         Returns
         -------
-        out : ggplot
+        out :
             ggplot object with added layer
         """
         gg += self.to_layer()  # Add layer
         return gg
 
-    def to_layer(self):
+    def to_layer(self) -> layer:
         """
         Make a layer that represents this stat
 
         Returns
         -------
-        out : layer
+        out :
             Layer
         """
         # Create, geom from stat, then layer from geom

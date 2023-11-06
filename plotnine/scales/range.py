@@ -7,7 +7,7 @@ from mizani.scale import scale_continuous, scale_discrete
 if typing.TYPE_CHECKING:
     from typing import Any, Sequence
 
-    from plotnine.typing import TupleFloat2
+    from plotnine.typing import AnyArrayLike, FloatArrayLike, TupleFloat2
 
 
 class Range:
@@ -44,7 +44,7 @@ class RangeContinuous(Range):
 
     range: TupleFloat2
 
-    def train(self, x: Sequence[Any]):
+    def train(self, x: FloatArrayLike):
         """
         Train continuous range
         """
@@ -59,7 +59,7 @@ class RangeDiscrete(Range):
 
     range: Sequence[Any]
 
-    def train(self, x: Sequence[Any], drop: bool = False, na_rm: bool = False):
+    def train(self, x: AnyArrayLike, drop: bool = False, na_rm: bool = False):
         """
         Train discrete range
         """

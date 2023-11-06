@@ -81,17 +81,17 @@ def match(
 
     Parameters
     ----------
-    v1: array-like
+    v1: array_like
         the values to be matched
 
-    v2: array-like
+    v2: array_like
         the values to be matched against
 
     nomatch: int
         the value to be returned in the case when
         no match is found.
 
-    incomparables: array-like
+    incomparables: array_like
         a list of values that cannot be matched.
         Any value in v1 matching a value in this list
         is assigned the nomatch value.
@@ -125,7 +125,7 @@ def multitype_sort(arr: AnyArrayLike) -> list[Any]:
 
     Parameters
     ----------
-    a : array-like
+    a : array_like
         Array of items to be sorted
 
     Returns
@@ -314,7 +314,7 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
 
     Parameters
     ----------
-    x : array-like
+    x : array_like
         items to associate ids with
     drop : bool
         Whether to drop unused factor levels
@@ -678,9 +678,9 @@ def make_line_segments(
 
     Parameters
     ----------
-    x : array-like
+    x : array_like
         x points
-    y : array-like
+    y : array_like
         y points
     ispath : bool
         If True, the points represent a path from one point
@@ -1064,7 +1064,8 @@ def resolution(x, zero=True):
 
     Parameters
     ----------
-    x    : 1D array-like
+    x : array_like
+        1-Dimension
     zero : Boolean
         Whether to include zero values in the computation
 

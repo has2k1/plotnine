@@ -29,18 +29,18 @@ class geom_violin(geom):
     ----------
     {common_parameters}
     draw_quantiles : float | list[float], default=None
-       draw horizontal lines at the given quantiles (0..1)
-       of the density estimate.
+        draw horizontal lines at the given quantiles (0..1)
+        of the density estimate.
     style : str, default="full"
-       The type of violin plot to draw. The options are:
+        The type of violin plot to draw. The options are:
 
-       ```python
-       'full'        # Regular (2 sided violins)
-       'left'        # Left-sided half violins
-       'right'       # Right-sided half violins
-       'left-right'  # Alternate (left first) half violins by the group
-       'right-left'  # Alternate (right first) half violins by the group
-       ```
+        ```python
+        'full'        # Regular (2 sided violins)
+        'left'        # Left-sided half violins
+        'right'       # Right-sided half violins
+        'left-right'  # Alternate (left first) half violins by the group
+        'right-left'  # Alternate (right first) half violins by the group
+        ```
     """
 
     DEFAULT_AES = {

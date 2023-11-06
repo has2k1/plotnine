@@ -37,7 +37,7 @@ def get_option(name: str) -> Any:
 
     Parameters
     ----------
-    name : str
+    name :
         Name of the option
     """
     d = globals()
@@ -56,14 +56,14 @@ def set_option(name: str, value: Any) -> Any:
 
     Parameters
     ----------
-    name : str
+    name :
         Name of the option
-    value : object
+    value :
         New value of the option
 
     Returns
     -------
-    old : object
+    :
         Old value of the option
     """
     d = globals()

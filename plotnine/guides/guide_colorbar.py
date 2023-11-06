@@ -27,7 +27,7 @@ class guide_colorbar(guide):
         Width (in pixels) of the colorbar. If `None`, the
         [](`~plotnine.themes.themeable.legend_key_width`) is
         used. The value is multiplied by `1.45`.
-    barheight : float, default= None
+    barheight : float, default=None
         Height (in pixels) of the colorbar.
         [](`~plotnine.themes.themeable.legend_key_height`) is
         used. The value is multiplied by `5 * 1.45`.
@@ -40,9 +40,9 @@ class guide_colorbar(guide):
         Whether tick marks on colorbar should be visible.
     draw_ulim : bool, default=True
         Whether to show the upper limit tick marks.
-    draw_llim : bool, default=TRue
+    draw_llim : bool, default=True
         Whether to show the lower limit tick marks.
-    direction : "horizontal" | "vertical", default="horizontal"
+    direction : Literal["horizontal", "vertical"], default="horizontal"
         Direction of the guide.
     kwargs : dict
         Parameters passed on to :class:`.guide`

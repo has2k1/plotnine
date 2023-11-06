@@ -23,6 +23,7 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import layout_details, panel_view
     from plotnine.typing import (
         Axes,
+        CanBeStripLabellingFunc,
         Coord,
         EvalEnvironment,
         Figure,
@@ -40,29 +41,26 @@ class facet:
 
     Parameters
     ----------
-    scales : "fixed" | "free" | "free_x" | "free_y", default="fixed"
+    scales :
         Whether `x` or `y` scales should be allowed (free)
         to vary according to the data on each of the panel.
-    shrink : bool
+    shrink :
         Whether to shrink the scales to the output of the
         statistics instead of the raw data. Default is `True`.
-    shrink : bool, default=True
-        Whether to shrink the scales to the output of the
-        statistics instead of the raw data.
-    labeller : str | callable, default="label_value"
+    labeller :
         How to label the facets. A string value if it should be
         one of `["label_value", "label_both", "label_context"]`{.py}.
-    as_table : bool, default=True
+    as_table :
         If `True`, the facets are laid out like a table with
         the highest values at the bottom-right. If `False`
         the facets are laid out like a plot with the highest
         value a the top-right
-    drop : bool, default=True
+    drop :
         If `True`, all factor levels not used in the data
         will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
         or not they appear in the data.
-    dir : "h" | "v", default="h"
+    dir :
         Direction in which to layout the panels. `h` for
         horizontal and `v` for vertical.
     """
@@ -115,9 +113,7 @@ class facet:
         self,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         shrink: bool = True,
-        labeller: Literal[
-            "label_value", "label_both", "label_context"
-        ] = "label_value",
+        labeller: CanBeStripLabellingFunc = "label_value",
         as_table: bool = True,
         drop: bool = True,
         dir: Literal["h", "v"] = "h",
@@ -159,12 +155,12 @@ class facet:
 
         Parameters
         ----------
-        data : list of dataframes
+        data :
             Data for each of the layers
 
         Returns
         -------
-        data : list of dataframes
+        :
             Data for each of the layers
 
         Notes
@@ -180,7 +176,7 @@ class facet:
 
         Parameters
         ----------
-        data : list of dataframes
+        data :
             Plot data and data for the layers
         """
         self.params = {}
@@ -209,14 +205,14 @@ class facet:
 
         Parameters
         ----------
-        data : DataFrame
+        data :
             Data for a layer
-        layout : DataFrame
+        layout :
             As returned by self.compute_layout
 
         Returns
         -------
-        data : DataFrame
+        :
             Data with all points mapped to the panels
             on which they will be plotted.
         """
@@ -232,7 +228,7 @@ class facet:
 
         Parameters
         ----------
-        data : Dataframes
+        data :
             Dataframe for a each layer
         """
         msg = "{} should implement this method."
@@ -247,14 +243,14 @@ class facet:
 
         Parameters
         ----------
-        data : DataFrame
+        data :
             A single layer's data.
-        layout : Layout
+        layout :
             Layout
 
         Returns
         -------
-        data : DataFrame
+        :
             Modified layer data
         """
         return data
@@ -295,10 +291,10 @@ class facet:
 
         Parameters
         ----------
-        layout_info : dict-like
+        layout_info :
             Layout information. Row from the layout table
 
-        ax : axes
+        ax :
             Axes to label
         """
         return Strips()
@@ -309,9 +305,9 @@ class facet:
 
         Parameters
         ----------
-        ranges : dict-like
+        panel_params :
             range information for the axes
-        ax : Axes
+        ax :
             Axes
         """
         from .._mpl.ticker import MyFixedFormatter
@@ -629,16 +625,16 @@ def eval_facet_vars(
 
     Parameters
     ----------
-    data : DataFrame
+    data :
         Factet dataframe
-    vars : list
+    vars :
         Facet variables
-    env : environment
+    env :
         Plot environment
 
     Returns
     -------
-    facet_vals : DataFrame
+    :
         Facet values that correspond to the specified
         variables.
     """

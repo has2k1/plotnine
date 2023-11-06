@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence
 
     from plotnine.typing import (
+        AnyArrayLike,
         CoordRange,
         ScaleDiscreteBreaks,
         ScaleDiscreteBreaksRaw,
@@ -81,21 +82,21 @@ class scale_discrete(scale):
         self._limits = value
 
     @staticmethod
-    def palette(n: int) -> Sequence[Any]:
+    def palette(n: int) -> AnyArrayLike:
         """
         Aesthetic mapping function
         """
         raise NotImplementedError("Not Implemented")
 
-    def train(self, x, drop=False):
+    def train(self, x: AnyArrayLike, drop=False):
         """
         Train scale
 
         Parameters
         ----------
-        x: pd.Series | np.array
+        x:
             A column of data to train over
-        drop : bool
+        drop :
             Whether to drop(not include) unused categories
 
         A discrete range is stored in a list

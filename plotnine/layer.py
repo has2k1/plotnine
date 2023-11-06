@@ -39,26 +39,26 @@ class layer:
 
     Parameters
     ----------
-    geom : geom
+    geom :
         geom to used to draw this layer.
-    stat : stat
+    stat :
         stat used for the statistical transformation of
         data in this layer
-    mapping : aes
+    mapping :
         Aesthetic mappings.
-    data : dataframe
+    data :
         Data plotted in this layer. If `None`, the data from
         the [](`~plotnine.ggplot`) object will be used.
-    position : position
+    position :
         Position object to adjust the geometries in this layer.
-    inherit_aes : bool
+    inherit_aes :
         If `True` inherit from the aesthetic mappings of
         the [](`~plotnine.ggplot`) object.
-    show_legend : bool | None
+    show_legend :
         Whether to make up and show a legend for the mappings
         of this layer. If `None` then an automatic/good choice
         is made
-    raster : bool
+    raster :
         If `True`, draw onto this layer a raster (bitmap) object
         even if the final image format is vector.
 
@@ -100,7 +100,7 @@ class layer:
 
         Parameters
         ----------
-        geom : geom
+        geom :
             `geom` from which a layer will be created
 
         Returns
@@ -170,7 +170,7 @@ class layer:
 
         Parameters
         ----------
-        plot_data : dataframe
+        plot_data :
             ggplot object data
         """
         if plot_data is None:
@@ -216,7 +216,7 @@ class layer:
 
         Parameters
         ----------
-        plot_mapping : aes
+        plot_mapping :
             ggplot object mapping
         """
         if self.inherit_aes:
@@ -243,7 +243,7 @@ class layer:
 
         Parameters
         ----------
-        plot_environment : ~patsy.Eval.EvalEnvironment
+        plot_environment :
             Namespace in which to execute aesthetic expressions.
         """
         self.geom.environment = plot_environment
@@ -375,9 +375,9 @@ class layer:
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
-        aes_modifiers : dict
+        aes_modifiers :
             Expression to evaluate and replace aesthetics in
             the data.
         """

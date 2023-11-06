@@ -17,7 +17,7 @@ class scale_alpha(scale_continuous):
 
     Parameters
     ----------
-    range : tuple
+    range :
         Range ([Minimum, Maximum]) of output alpha values.
         Should be between 0 and 1.
     {superclass_parameters}
@@ -25,7 +25,7 @@ class scale_alpha(scale_continuous):
 
     _aesthetics = ["alpha"]
 
-    def __init__(self, range=(0.1, 1), **kwargs):
+    def __init__(self, range: tuple[float, float] = (0.1, 1), **kwargs):
         from mizani.palettes import rescale_pal
 
         # TODO: fix types in mizani
@@ -43,7 +43,7 @@ class scale_alpha_ordinal(scale_discrete):
 
     Parameters
     ----------
-    range : tuple
+    range :
         Range ([Minimum, Maximum]) of output alpha values.
         Should be between 0 and 1.
     {superclass_parameters}
@@ -51,7 +51,7 @@ class scale_alpha_ordinal(scale_discrete):
 
     _aesthetics = ["alpha"]
 
-    def __init__(self, range=(0.1, 1), **kwargs):
+    def __init__(self, range: tuple[float, float] = (0.1, 1), **kwargs):
         def palette(n):
             return np.linspace(range[0], range[1], n)
 
@@ -94,7 +94,7 @@ class scale_alpha_datetime(scale_datetime):
 
     _aesthetics = ["alpha"]
 
-    def __init__(self, range=(0.1, 1), **kwargs):
+    def __init__(self, range: tuple[float, float] = (0.1, 1), **kwargs):
         from mizani.palettes import rescale_pal
 
         # TODO: fix types in mizani

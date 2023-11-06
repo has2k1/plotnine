@@ -95,7 +95,7 @@ class stat_density_2d(stat):
         X, Y = np.meshgrid(x, y)
         var_data = np.array([data["x"].to_numpy(), data["y"].to_numpy()]).T
         grid = np.array([X.flatten(), Y.flatten()]).T
-        density = kde(var_data, grid, package, **kde_params)
+        density = kde(var_data, grid, package, **kde_params)  # type: ignore
 
         if params["contour"]:
             Z = density.reshape(len(x), len(y))

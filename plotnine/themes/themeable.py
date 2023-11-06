@@ -76,7 +76,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
     If the superclasses fully implement the subclass, the body of the
     subclass should be "pass". Python(__mro__) will do the right thing.
 
-    When a method does require implementation, call :python:`super()`
+    When a method does require implementation, call `super()`{.py}
     then add the themeable's implementation to the axes.
 
     Notes
@@ -204,13 +204,14 @@ class themeable(metaclass=RegistryHierarchyMeta):
         Subclasses can override this method to customize the plot
         according to the theme.
 
+        This method should be implemented as `super().apply_ax()`{.py}
+        followed by extracting the portion of the axes specific to this
+        themeable then applying the properties.
+
+
         Parameters
         ----------
         ax : matplotlib.axes.Axes
-
-        This method should be implemented as super(...).apply_ax()
-        followed by extracting the portion of the axes specific to this
-        themeable then applying the properties.
         """
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):

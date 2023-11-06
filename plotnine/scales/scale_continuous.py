@@ -74,6 +74,7 @@ class scale_continuous(scale):
 
     _range_class = RangeContinuous
     _limits: Optional[ScaleContinuousLimitsRaw]
+    range: RangeContinuous
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)  # what to do with out of bounds data points
     breaks: ScaleContinuousBreaksRaw
@@ -163,7 +164,7 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        value : array-like | callable
+        value : array_like | callable
             Limits in the dataspace.
         """
         # Notes
@@ -186,14 +187,9 @@ class scale_continuous(scale):
 
         self._limits = a, b
 
-    def train(self, x):
+    def train(self, x: FloatArrayLike):
         """
-        Train scale
-
-        Parameters
-        ----------
-        x: pd.Series | np.array
-            A column of data to train over
+        Train continuous scale
         """
         if not len(x):
             return
@@ -356,14 +352,14 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        limits : list-like | None
+        limits : list_like | None
             If None the self.limits are used
             They are expected to be in transformed
             space.
 
         Returns
         -------
-        out : array-like
+        out : array_like
 
         Notes
         -----
@@ -445,7 +441,7 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        breaks: None | array-like
+        breaks: None | array_like
             If None, use self.breaks.
         """
         if breaks is None:
