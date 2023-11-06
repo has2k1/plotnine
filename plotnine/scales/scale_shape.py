@@ -56,7 +56,7 @@ class scale_shape(scale_discrete):
 
     Parameters
     ----------
-    unfilled : bool
+    unfilled :
         If `True`, then all shapes will have no interiors
         that can be a filled.
     {superclass_parameters}
@@ -64,7 +64,7 @@ class scale_shape(scale_discrete):
 
     _aesthetics = ["shape"]
 
-    def __init__(self, unfilled=False, **kwargs):
+    def __init__(self, unfilled: bool = False, **kwargs):
         from mizani.palettes import manual_pal
 
         if unfilled:

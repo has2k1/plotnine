@@ -39,12 +39,12 @@ class stage:
 
     Parameters
     ----------
-    start : expression | array_like | scalar
+    start : str | array_like | scalar
         Aesthetic expression using primary variables from the layer
         data.
-    after_stat : expression
+    after_stat : str
         Aesthetic expression using variables calculated by the stat.
-    after_scale : expression
+    after_scale : str
         Aesthetic expression using aesthetics of the layer.
     """
 
@@ -179,17 +179,17 @@ def evaluate(
 
     Parameters
     ----------
-    aesthetics : dict-like
+    aesthetics :
         Aesthetics to evaluate. They must be of the form {name: expr}
-    data : pd.DataFrame
+    data :
         Dataframe whose columns are/may-be variables in the aesthetic
         expressions i.e. it is a namespace with variables.
-    env : ~patsy.Eval.Environment
+    env :
         Environment in which the aesthetics are evaluated
 
     Returns
     -------
-    evaled : pd.DataFrame
+    pd.DataFrame
         Dataframe of the form {name: result}, where each column is the
         result from evaluating an expression.
 

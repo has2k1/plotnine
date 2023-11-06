@@ -58,7 +58,7 @@ class geom_label(geom_text):
         'sawtooth'
         'square'
         ````
-    boxcolor: strr, rgba tuple, default=None
+    boxcolor: str, tuple[float, float, float, float], default=None
         Color of box around the text. If None, the color is
         the same as the text.
     label_padding : float, default=0.25

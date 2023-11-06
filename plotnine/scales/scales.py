@@ -132,7 +132,7 @@ class Scales(List[scale]):
             These should be all the aesthetics of
             a scale type that are present in the
             data. e.g x, xmin, xmax
-        idx : array-like
+        idx : array_like
             indices that map the data points to the
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array
@@ -157,7 +157,7 @@ class Scales(List[scale]):
             This is modified inplace
         vars : list | tuple
             columns to map
-        idx : array-like
+        idx : array_like
             indices that link the data points to the
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array

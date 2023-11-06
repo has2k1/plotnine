@@ -89,9 +89,9 @@ class PlotnineAnimation(ArtistAnimation):
 
         Returns
         -------
-        figure : matplotlib.figure.Figure
+        figure
             Matplotlib figure
-        artists : list
+        artists
             List of :class:`Matplotlib.artist.Artist`
         """
         import matplotlib.pyplot as plt

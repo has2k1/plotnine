@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from copy import copy
 
@@ -6,6 +9,11 @@ from ..mapping.aes import SCALED_AESTHETICS
 from ..utils import jitter, resolution
 from .position import position
 from .position_dodge import position_dodge
+
+if typing.TYPE_CHECKING:
+    from typing import Optional
+
+    import numpy as np
 
 
 # Adjust position by simultaneously dodging and jittering
@@ -19,14 +27,14 @@ class position_jitterdodge(position):
 
     Parameters
     ----------
-    jitter_width : float, default=None
+    jitter_width :
         Proportion to jitter in horizontal direction.
         If `None`, `0.4` of the resolution of the data.
-    jitter_height : float, default=0
+    jitter_height :
         Proportion to jitter in vertical direction.
-    dodge_width : float, default=0.75
+    dodge_width :
         Amount to dodge in horizontal direction.
-    random_state : int | ~numpy.random.RandomState, default=None
+    random_state :
         Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
     """
@@ -36,10 +44,10 @@ class position_jitterdodge(position):
 
     def __init__(
         self,
-        jitter_width=None,
-        jitter_height=0,
-        dodge_width=0.75,
-        random_state=None,
+        jitter_width: Optional[float] = None,
+        jitter_height: float = 0,
+        dodge_width: float = 0.75,
+        random_state: Optional[int | np.random.RandomState] = None,
     ):
         self.params = {
             "jitter_width": jitter_width,

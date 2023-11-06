@@ -19,14 +19,16 @@ class position_stack(position):
 
     Parameters
     ----------
-    vjust: float
+    vjust :
         By what fraction to avoid overlapping the lower object,
         where `0` gives a complete overlap and `1` gives no overlap.
+    reverse :
+        Reverse the order of the stacked groups if true.
     """
 
     fill = False
 
-    def __init__(self, vjust=1, reverse=False):
+    def __init__(self, vjust: float = 1, reverse: bool = False):
         self.params = {"vjust": vjust, "reverse": reverse}
 
     def setup_params(self, data):

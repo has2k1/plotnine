@@ -17,13 +17,13 @@ class position_nudge(position):
 
     Parameters
     ----------
-    x : float, default=0
+    x :
         Horizontal nudge
-    y : float, default=0
+    y :
         Vertical nudge
     """
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x: float = 0, y: float = 0):
         self.params = {"x": x, "y": y}
 
     @classmethod

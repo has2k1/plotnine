@@ -55,13 +55,13 @@ class ggplot:
 
     Parameters
     ----------
-    data : dataframe
+    data :
         Default data for plot. Every layer that does not
         have data of its own will use this one.
-    mapping : aes
+    mapping :
         Default aesthetics mapping for the plot. These will be used
         by all layers unless specifically overridden.
-    environment : ~patsy.Eval.EvalEnvironment
+    environment :
         If a variable defined in the aesthetic mapping is not
         found in the data, ggplot will look for it in this
         namespace. It defaults to using the environment/namespace.
@@ -76,9 +76,9 @@ class ggplot:
 
     def __init__(
         self,
-        data: DataLike | None = None,
-        mapping: aes | None = None,
-        environment: EvalEnvironment | None = None,
+        data: Optional[DataLike] = None,
+        mapping: Optional[aes] = None,
+        environment: Optional[EvalEnvironment] = None,
     ):
         from patsy.eval import EvalEnvironment
 
@@ -155,7 +155,7 @@ class ggplot:
 
         Parameters
         ----------
-        other : object | Sequence
+        other :
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
@@ -174,7 +174,7 @@ class ggplot:
 
         Parameters
         ----------
-        other : object | Sequence
+        other :
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
@@ -202,12 +202,12 @@ class ggplot:
 
         Parameters
         ----------
-        show : bool
+        show :
             Whether to show the plot.
 
         Returns
         -------
-        fig : ~matplotlib.figure.Figure
+        :
             Matplotlib figure
         """
         from ._mpl.layout_engine import PlotnineLayoutEngine
@@ -254,9 +254,9 @@ class ggplot:
 
         Parameters
         ----------
-        figure : ~matplotlib.figure.Figure
+        figure :
             Matplotlib figure
-        axs : array_like
+        axs :
             Array of Axes onto which to draw the plots
         """
         from ._mpl.layout_engine import PlotnineLayoutEngine
@@ -598,13 +598,13 @@ class ggplot:
 
     def save(
         self,
-        filename: Union[str, Path] | None = None,
-        format: str | None = None,
+        filename: Optional[str | Path] = None,
+        format: Optional[str] = None,
         path: str = "",
-        width: float | None = None,
-        height: float | None = None,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
         units: str = "in",
-        dpi: float | None = None,
+        dpi: Optional[int] = None,
         limitsize: bool = True,
         verbose: bool = True,
         **kwargs: Any,
@@ -614,34 +614,34 @@ class ggplot:
 
         Parameters
         ----------
-        filename : str | pathlib.Path
+        filename :
             File name to write the plot to. If not specified, a name
             like “plotnine-save-<hash>.<format>” is used.
-        format : str
+        format :
             Image format to use, automatically extract from
             file name extension.
-        path : str
+        path :
             Path to save plot to (if you just want to set path and
             not filename).
-        width : number
+        width :
             Width (defaults to value set by the theme). If specified
             the `height` must also be given.
-        height : number
+        height :
             Height (defaults to value set by the theme). If specified
             the `width` must also be given.
-        units : str
+        units :
             Units for width and height when either one is explicitly
             specified (in, cm, or mm).
-        dpi : float
+        dpi :
             DPI to use for raster graphics. If None, defaults to using
             the `dpi` of theme, if none is set then a `dpi` of 100.
-        limitsize : bool
+        limitsize :
             If `True` (the default), ggsave will not save images
             larger than 50x50 inches, to prevent the common error
             of specifying dimensions in pixels.
-        verbose : bool
+        verbose :
             If `True`, print the saving information.
-        kwargs : dict
+        kwargs :
             Additional arguments to pass to matplotlib `savefig()`.
         """
         sv = self.save_helper(
@@ -692,15 +692,15 @@ def save_as_pdf_pages(
                 yield ggplot(…) + ggtitle('%d of 3' % i)
         save_as_pdf_pages(myplots())
         ```
-    filename : str
+    filename :
         File name to write the plot to. If not specified, a name
         like “plotnine-save-<hash>.pdf” is used.
-    path : str
+    path :
         Path to save plot to (if you just want to set path and
         not filename).
-    verbose : bool
+    verbose :
         If `True`, print the saving information.
-    kwargs : dict
+    kwargs :
         Additional arguments to pass to
         :py:meth:`matplotlib.figure.Figure.savefig`.
 
@@ -773,10 +773,10 @@ class plot_context:
 
     Parameters
     ----------
-    plot : ggplot
+    plot :
         ggplot object to be built within the context.
         exits.
-    show : bool
+    show :
         Whether to show the plot.
     """
 

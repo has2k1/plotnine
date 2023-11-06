@@ -29,7 +29,7 @@ class geom_dotplot(geom):
     Parameters
     ----------
     {common_parameters}
-    stackdir : "up" | "down" | "center", | "centerwhole", default="up"
+    stackdir : Literal["up", "down", "center", "centerwhole"], default="up"
         Direction in which to stack the dots. Options are
     stackratio : float, default=1
         How close to stack the dots. If value is less than 1,

@@ -26,7 +26,7 @@ class stat_ellipse(stat):
     Parameters
     ----------
     {common_parameters}
-    type : "t" | "norm" | "euclid", default="t"
+    type : Litera["t", "norm", "euclid"], default="t"
         The type of ellipse.
         `t` assumes a multivariate t-distribution.
         `norm` assumes a multivariate normal distribution.

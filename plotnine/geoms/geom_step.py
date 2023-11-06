@@ -28,7 +28,7 @@ class geom_step(geom_path):
     Parameters
     ----------
     {common_parameters}
-    direction : "hv" | "vh" | "mid", default="hv"
+    direction : Literal["hv", "vh", "mid"], default="hv"
         horizontal-vertical steps,
         vertical-horizontal steps or steps half-way between adjacent
         x values.

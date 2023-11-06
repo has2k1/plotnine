@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from copy import copy
 
@@ -8,6 +11,9 @@ from ..exceptions import PlotnineError
 from ..utils import groupby_apply, match
 from .position import position
 
+if typing.TYPE_CHECKING:
+    from typing import Literal, Optional
+
 
 class position_dodge(position):
     """
@@ -15,18 +21,22 @@ class position_dodge(position):
 
     Parameters
     ----------
-    width: float, default=None
+    width :
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
-    preserve: "total", "single", default="total"
+    preserve :
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
     """
 
     REQUIRED_AES = {"x"}
 
-    def __init__(self, width=None, preserve="total"):
+    def __init__(
+        self,
+        width: Optional[float] = None,
+        preserve: Literal["total", "single"] = "total",
+    ):
         self.params = {
             "width": width,
             "preserve": preserve,

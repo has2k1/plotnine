@@ -41,7 +41,7 @@ class geom_text(geom):
         Font family.
     fontweight : int | str, default="normal"
         Font weight.
-    fontstyle : "normal" | "italic" | "oblique", default="normal"
+    fontstyle : Literal["normal", "italic", "oblique"], default="normal"
         Font style.
     nudge_x : float, default=0
         Horizontal adjustment to apply to the text

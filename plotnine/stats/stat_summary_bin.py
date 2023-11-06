@@ -27,7 +27,7 @@ class stat_summary_bin(stat):
         the stories in your data.
     bins : int | tuple, default=30
         Number of bins. Overridden by binwidth.
-    breaks : array-likes, default=None
+    breaks : array_like | tuple[array_like, array_like], default=None
         Bin boundaries. This supercedes the `binwidth`, `bins`
         and `boundary` arguments.
     boundary : float | tuple, default=None
@@ -42,9 +42,9 @@ class stat_summary_bin(stat):
         If a function, it should that takes an array and return a
         dataframe with three rows indexed as `y`, `ymin` and `ymax`.
     fun_y : callable, default=None
-        A function that takes an array-like and returns a single value
+        A function that takes an array_like and returns a single value
     fun_ymax : callable, default=None
-        A function that takes an array-like and returns a single value
+        A function that takes an array_like and returns a single value
     fun_args : dict, default=None
         Arguments to any of the functions. Provided the names of the
         arguments of the different functions are in not conflict, the
@@ -58,7 +58,7 @@ class stat_summary_bin(stat):
     Notes
     -----
     The *binwidth*, *bins*, *breaks* and *bounary* arguments can be a
-    tuples with two values (``(xaxis-value, yaxis-value)``) of the
+    tuples with two values `(xaxis-value, yaxis-value)` of the
     required type.
 
     See Also

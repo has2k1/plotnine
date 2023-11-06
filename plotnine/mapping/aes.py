@@ -14,7 +14,7 @@ from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
 if typing.TYPE_CHECKING:
-    from typing import TypeVar
+    from typing import Any, Sequence, TypeVar
 
     THasAesNames = TypeVar("THasAesNames", bound=list[str] | dict[str, Any])
 
@@ -76,9 +76,9 @@ class aes(Dict[str, Any]):
 
     Parameters
     ----------
-    x : expression | array_like | scalar
+    x : str | array_like | scalar
         x aesthetic mapping
-    y : expression | array_like | scalar
+    y : str | array_like | scalar
         y aesthetic mapping
     **kwargs : dict
         Other aesthetic mappings
@@ -90,7 +90,7 @@ class aes(Dict[str, Any]):
 
     The value of each mapping must be one of:
 
-    - **string**
+    - **str**
 
       ```python
        import pandas as pd
@@ -325,7 +325,7 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
 
     Parameters
     ----------
-    obj : dict | list
+    obj :
         Object that contains aesthetics names
 
     Returns
@@ -346,7 +346,7 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
     return obj
 
 
-def is_calculated_aes(ae):
+def is_calculated_aes(ae: Any) -> bool:
     """
     Return True if Aesthetic expression maps to calculated statistic
 
@@ -485,7 +485,7 @@ def strip_calculated_markers(value):
     return strip_stat(strip_dots(value))
 
 
-def aes_to_scale(var):
+def aes_to_scale(var: str):
     """
     Look up the scale that should be used for a given aesthetic
     """
@@ -496,14 +496,11 @@ def aes_to_scale(var):
     return var
 
 
-def is_position_aes(vars_):
+def is_position_aes(vars_: Sequence[str]):
     """
     Figure out if an aesthetic is a position aesthetic or not
     """
-    try:
-        return all(aes_to_scale(v) in {"x", "y"} for v in vars_)
-    except TypeError:
-        return aes_to_scale(vars_) in {"x", "y"}
+    return all(aes_to_scale(v) in {"x", "y"} for v in vars_)
 
 
 def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
@@ -546,21 +543,16 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
     )
 
 
-def is_valid_aesthetic(value, ae):
+def is_valid_aesthetic(value: Any, ae: str) -> bool:
     """
     Return True if `value` looks valid.
 
     Parameters
     ----------
-    value : object
+    value :
         Value to check
-    ae : str
+    ae :
         Aesthetic name
-
-    Returns
-    -------
-    out : bool
-        Whether the value is of a valid looking form.
 
     Notes
     -----
@@ -629,13 +621,13 @@ def is_valid_aesthetic(value, ae):
     return False
 
 
-def has_groups(data):
+def has_groups(data: pd.DataFrame) -> bool:
     """
     Check if data is grouped
 
     Parameters
     ----------
-    data : dataframe
+    data :
         Data
 
     Returns

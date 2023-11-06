@@ -19,7 +19,7 @@ from .themes import theme
 from .utils import Registry, array_kind
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Iterable, Literal
+    from typing import Any, Iterable, Literal, Optional
 
     from plotnine.typing import DataLike, Ggplot, TupleFloat2
 
@@ -27,19 +27,19 @@ __all__ = ("qplot",)
 
 
 def qplot(
-    x: str | Iterable[Any] | range | None = None,
-    y: str | Iterable[Any] | range | None = None,
-    data: DataLike | None = None,
+    x: Optional[str | Iterable[Any] | range] = None,
+    y: Optional[str | Iterable[Any] | range] = None,
+    data: Optional[DataLike] = None,
     facets: str = "",
     margins: bool | list[str] = False,
     geom: str | list[str] | tuple[str] = "auto",
-    xlim: TupleFloat2 | None = None,
-    ylim: TupleFloat2 | None = None,
-    log: Literal["x", "y", "xy"] | None = None,
-    main: str | None = None,
-    xlab: str | None = None,
-    ylab: str | None = None,
-    asp: float | None = None,
+    xlim: Optional[TupleFloat2] = None,
+    ylim: Optional[TupleFloat2] = None,
+    log: Optional[Literal["x", "y", "xy"]] = None,
+    main: Optional[str] = None,
+    xlab: Optional[str] = None,
+    ylab: Optional[str] = None,
+    asp: Optional[float] = None,
     **kwargs: Any,
 ) -> Ggplot:
     """
@@ -47,43 +47,43 @@ def qplot(
 
     Parameters
     ----------
-    x : str | array_like
+    x :
         x aesthetic
-    y : str | array_like
+    y :
         y aesthetic
-    data : dataframe
+    data :
         Data frame to use (optional). If not specified,
         will create one, extracting arrays from the
         current environment.
-    geom : str | list
+    geom :
         *geom(s)* to do the drawing. If `auto`, defaults
         to 'point' if `x` and `y` are specified or
         'histogram' if only `x` is specified.
-    facets : str
+    facets :
         Facets
-    margins : bool | list[str]
+    margins :
         variable names to compute margins for. True will compute
         all possible margins. Depends on the facetting.
-    xlim : tuple
+    xlim :
         x-axis limits
-    ylim : tuple
+    ylim :
         y-axis limits
-    log : "x" | "y" | "xy"
+    log :
         Which (if any) variables to log transform.
-    main : str
+    main :
         Plot title
-    xlab : str
+    xlab :
         x-axis label
-    ylab : str
+    ylab :
         y-axis label
-    asp : str | float
+    asp :
         The y/x aspect ratio.
-    **kwargs : dict
+    **kwargs :
         Arguments passed on to the geom.
 
     Returns
     -------
-    p : ggplot
+    :
         ggplot object
     """
     from patsy.eval import EvalEnvironment

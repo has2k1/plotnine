@@ -53,7 +53,7 @@ class guide(metaclass=Registry):
     label_separation : float, default=None
         Separation between the label text and the colorbar.
         Value is in pixels.
-    direction : "horizontal" | "vertical", default="auto"
+    direction : Literal["horizontal", "vertical", "auto"], default="auto"
         Direction of the guide. The default is depends on
         [](`~plotnine.themes.themeable.legend_position`).
     default_unit : str, default="lines"

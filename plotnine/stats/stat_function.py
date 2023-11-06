@@ -35,7 +35,7 @@ class stat_function(stat):
         `x` limits for the range. The default depends on
         the `x` aesthetic. There is not an `x` aesthetic
         then the `xlim` must be provided.
-    args : tuple | dict, default=None
+    args : Optional[tuple[Any] | dict[str, Any]], default=None
         Arguments to pass to `fun`.
     """
 
@@ -118,7 +118,7 @@ class stat_function(stat):
         if isinstance(scales.x, scale_continuous):
             x = scales.x.trans.inverse(x)
 
-        # We know these can handle array-likes
+        # We know these can handle array_likes
         if isinstance(old_fun, (np.ufunc, np.vectorize)):
             fx = fun(x)
         else:

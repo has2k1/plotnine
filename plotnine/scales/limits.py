@@ -90,7 +90,7 @@ class xlim(_lim):
 
     Parameters
     ----------
-    limits : array_like
+    *limits :
         Min and max limits. Must be of size 2.
         You can also pass two values e.g
         `xlim(40, 100)`
@@ -105,7 +105,7 @@ class ylim(_lim):
 
     Parameters
     ----------
-    limits : array_like
+    *limits :
         Min and max limits. Must be of size 2.
         You can also pass two values e.g
         `ylim(40, 100)`
@@ -181,7 +181,7 @@ class lims:
 
     Parameters
     ----------
-    kwargs : dict
+    kwargs :
         Aesthetic and the values of the limits.
         e.g `x=(40, 100)`
 

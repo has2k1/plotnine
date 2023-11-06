@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
     from typing import Any, Optional, Type
 
     import pandas as pd
+    from numpy.typing import NDArray
 
     from plotnine.typing import (
         CoordRange,
@@ -181,13 +182,13 @@ class scale(metaclass=Registry):
         """
         raise NotImplementedError("Not Implemented")
 
-    def train(self, x):
+    def train(self, x: pd.Series | NDArray):
         """
         Train scale
 
         Parameters
         ----------
-        x: pd.Series | np.array
+        x :
             A column of data to train over
         """
         raise NotImplementedError("Not Implemented")

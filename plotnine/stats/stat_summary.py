@@ -225,11 +225,11 @@ class stat_summary(stat):
         or any function that takes a array and returns a dataframe
         with three columns named `y`, `ymin` and `ymax`.
     fun_y : callable, default=None
-        Any function that takes a array-like and returns a value
+        Any function that takes a array_like and returns a value
     fun_ymin : callable, default=None
-        Any function that takes an array-like and returns a value
+        Any function that takes an array_like and returns a value
     fun_ymax : callable, default=None
-        Any function that takes an array-like and returns a value
+        Any function that takes an array_like and returns a value
     fun_args : dict, default=None
         Arguments to any of the functions. Provided the names of the
         arguments of the different functions are in not conflict, the

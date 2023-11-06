@@ -33,9 +33,9 @@ class geom_path(geom):
     Parameters
     ----------
     {common_parameters}
-    lineend : "butt" | "round" | "projecting", default="butt"
+    lineend : Literal["butt", "round", "projecting"], default="butt"
         Line end style. This option is applied for solid linetypes.
-    linejoin : "round" | "miter" | "bevel", default="round"
+    linejoin : Literal["round", "miter", "bevel"], default="round"
         Line join style. This option is applied for solid linetypes.
     arrow : ~plotnine.geoms.geom_path.arrow, default=None
         Arrow specification. Default is no arrow.

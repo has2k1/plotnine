@@ -30,7 +30,7 @@ class geom_ribbon(geom):
     Parameters
     ----------
     {common_parameters}
-    outline_type : "upper" | "lower" | "both" | "full", default="both"
+    outline_type : Literal["upper", "lower", "both", "full"], default="both"
         How to stroke to outline of the region / area.
         If `upper`, draw only upper bounding line.
         If `lower`, draw only lower bounding line.

@@ -74,7 +74,7 @@ class stat_density(stat):
         Defines the length of the grid past the lowest and highest
         values of `x` so that the kernel goes to zero. The end points
         are `-/+ cut*bw*{min(x) or max(x)}`.
-    clip : tuple, default=(-inf, inf)
+    clip : tuple[float, float], default=(-inf, inf)
         Values in `x` that are outside of the range given by clip are
         dropped. The number of values in `x` is then shortened.
 

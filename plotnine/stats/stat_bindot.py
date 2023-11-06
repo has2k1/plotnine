@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import typing
 from warnings import warn
 
 import numpy as np
@@ -16,6 +17,11 @@ from .binning import (
     freedman_diaconis_bins,
 )
 from .stat import stat
+
+if typing.TYPE_CHECKING:
+    from typing import Literal, Optional
+
+    from plotnine.typing import FloatArray, FloatArrayLike, TupleFloat2
 
 
 @document
@@ -40,11 +46,11 @@ class stat_bindot(stat):
     width : float, default=0.9
         When `binaxis='y'`{.py}, the spacing of the dotstacks for
         dodging.
-    binaxis : "x" | "y", default="x"
+    binaxis : Literal["x", "y"], default="x"
         Axis to bin along.
-    method : "dotdensity" | "histodot", default="dotdensity"
+    method : Literal["dotdensity", "histodot"], default="dotdensity"
         Whether to do dot-density binning or fixed widths binning.
-    binpositions : "all" | "bygroup", default="bygroup"
+    binpositions : Literal["all", "bygroup"], default="bygroup"
         Position of the bins when `method="dotdensity"`{.py}. The value
         - `bygroup` -  positions of the bins for each group are
         determined separately.
@@ -56,7 +62,7 @@ class stat_bindot(stat):
     right : bool, default=True
         When `method='histodot'`{.py}, :py:`True` means include right
         edge of the bins and if `False`{.py} the left edge is included.
-    breaks : array-like, default=None
+    breaks : FloatArray, default=None
         Bin boundaries for `method='histodot'`{.py}. This supercedes the
         `binwidth` and `bins`.
 
@@ -124,10 +130,11 @@ class stat_bindot(stat):
             and params["binpositions"] == "all"
         ):
             binaxis = params["binaxis"]
+            weight: pd.Series | None = data.get("weight")  # pyright: ignore
             if binaxis == "x":
                 newdata = densitybin(
                     x=data["x"],
-                    weight=data.get("weight"),
+                    weight=weight,
                     binwidth=params["binwidth"],
                     bins=params["bins"],
                 )
@@ -138,7 +145,7 @@ class stat_bindot(stat):
             elif binaxis == "y":
                 newdata = densitybin(
                     x=data["y"],
-                    weight=data.get("weight"),
+                    weight=weight,
                     binwidth=params["binwidth"],
                     bins=params["bins"],
                 )
@@ -189,7 +196,7 @@ class stat_bindot(stat):
 
             closed = "right" if params["right"] else "left"
             data = assign_bins(
-                values, breaks, data.get("weight"), pad=False, closed=closed
+                values, breaks, weight, pad=False, closed=closed
             )
             # for consistency
             data.rename(
@@ -242,7 +249,13 @@ class stat_bindot(stat):
         return data
 
 
-def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
+def densitybin(
+    x,
+    weight: FloatArrayLike | None,
+    binwidth: float | None,
+    bins: int = 30,
+    rangee: Optional[tuple[float, float]] = None,
+):
     """
     Do density binning
 
@@ -250,9 +263,9 @@ def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
 
     Parameters
     ----------
-    x : array-like
+    x : array_like
         Numbers to bin
-    weight : array-like
+    weight : array_like
         Weights
     binwidth : numeric
         Size of the bins
@@ -278,7 +291,7 @@ def densitybin(x, weight=None, binwidth=None, bins=None, rangee=None):
     if bins is None:
         bins = 30
     if binwidth is None:
-        binwidth = np.ptp(rangee) / bins  # type: ignore
+        binwidth = np.ptp(rangee) / bins
 
     # Sort weight and x, by x
     order = np.argsort(x)

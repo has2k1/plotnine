@@ -27,7 +27,7 @@ class stat_sina(stat):
         illustrate the stories in your data.
     bins : int, default=50
         Number of bins. Overridden by binwidth.
-    method : "density" | "counts", default="density"
+    method : Literal["density", "counts"], default="density"
         Choose the method to spread the samples within the same bin
         along the x-axis. Available methods: "density", "counts"
         (can be abbreviated, e.g. "d"). See Details.
