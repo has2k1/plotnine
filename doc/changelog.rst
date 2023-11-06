@@ -3,12 +3,30 @@
 Changelog
 =========
 
+v0.12.4
+-------
+(2023-11-06)
+
+Bug Fixes
+*********
+- Fixed :class:`~plotnine.positions.position_dodge` to work with
+  to work for :class:`~plotnine.geoms.geom_segment`.
+
+- Fixed the `x` limits when plotting :class:`~plotnine.geoms.geom_sina`.
+
+- Fixed :class:`~plotnine.stats.stat_boxplot` and
+  :class:`~plotnine.stats.stat_ydensity` when there is no `x` aesthetic.
+
+Enhancements
+************
+- Return group counts for :class:`~plotnine.stats.stat_summary`.
+
 v0.12.3
 -------
 (2023-09-01)
 
 Enhancements
-------------
+************
 
 - Resolved Future Warnings from pandas-2.1.0
 
