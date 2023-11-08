@@ -30,5 +30,22 @@ def generate_environment_file():
     env_filepath.write_text(contents)
 
 
+def copy_tutorials():
+    """
+    Copy the tutorials in plotnine_examples
+    """
+    # Old files
+    to_dir = DOC_DIR / "tutorials"
+    for path in to_dir.glob("*.ipynb"):
+        path.unlink()
+
+    # new_files
+    from_dir = _files("plotnine_examples.tutorials")
+    for src in from_dir.glob("*.ipynb"):  # type: ignore
+        dest = to_dir / src.name
+        shutil.copy(src, dest)
+
+
 if __name__ == "__main__":
     generate_environment_file()
+    copy_tutorials()

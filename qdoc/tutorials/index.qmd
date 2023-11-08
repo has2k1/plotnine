@@ -1,11 +1,19 @@
-# Tutorials
+---
+format:
+  html:
+    toc: false
+title: Tutorials
+jupyter: python3
+cache:
+   false
+---
 
-- [a-pyqt5-application](/plotnine_examples/tutorials/miscellaneous-a-pyqt5-application.ipynb)
-- [altering-colors](/plotnine_examples/tutorials/miscellaneous-altering-colors.ipynb)
-- [automatic-grouping-insufficient](/plotnine_examples/tutorials/miscellaneous-automatic-grouping-insufficient.ipynb)
-- [manipulating-date-breaks-and-date-labels](/plotnine_examples/tutorials/miscellaneous-manipulating-date-breaks-and-date-labels.ipynb)
-- [order-plot-series](/plotnine_examples/tutorials/miscellaneous-order-plot-series.ipynb)
-- [show-counts-and-percentages-for-bar-plots](/plotnine_examples/tutorials/miscellaneous-show-counts-and-percentages-for-bar-plots.ipynb)
-- [show-counts-on-a-stacked-bar-plot](/plotnine_examples/tutorials/miscellaneous-show-counts-on-a-stacked-bar-plot.ipynb)
-- [using-letter-as-shapes](/plotnine_examples/tutorials/miscellaneous-using-letter-as-shapes.ipynb)
-- [using-notebook-widgets](/plotnine_examples/tutorials/miscellaneous-using-notebook-widgets.ipynb)
+
+```{python}
+#| output: asis
+#| echo: false
+from _tutorials import generate_tutorials_links
+tutorials = generate_tutorials_links()
+
+print(tutorials)
+```
