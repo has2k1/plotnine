@@ -30,17 +30,5 @@ def generate_environment_file():
     env_filepath.write_text(contents)
 
 
-def link_to_examples():
-    """
-    Copy the plotnine_examples package root
-    """
-    dest = DOC_DIR / "plotnine_examples"
-    if dest.is_dir() and not dest.is_symlink():
-        shutil.rmtree(dest)
-    src = _files("plotnine_examples")
-    shutil.copytree(src, dest)  # type: ignore
-
-
 if __name__ == "__main__":
     generate_environment_file()
-    link_to_examples()
