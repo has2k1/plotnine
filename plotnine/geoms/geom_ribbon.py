@@ -43,7 +43,7 @@ class geom_ribbon(geom):
 
     **Aesthetics Descriptions**
 
-    where
+    `where`
 
     :   Define where to exclude horizontal regions from being filled.
         Regions between any two `False` values are skipped.
