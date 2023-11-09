@@ -514,7 +514,7 @@ end
 --- Used as a fallback for broken links
 --- @param link table pandoc link
 local function get_link_content(link)
-  return pandoc.Code(pandoc.utils.stringify(link.content))
+  return pandoc.Str(pandoc.utils.stringify(link.content))
 end
 
 
