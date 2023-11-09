@@ -107,6 +107,10 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def render_annotation(self, el: expr.Expression) -> str:
+        # A type annotation with ~ removes the qualname prefix
+        s = el.full
+        if s[0] == "~":
+            return str(InterLink(el.kind, s[1:]))
         return "".join(self.render_annotation(a) for a in el)
 
     # signature method --------------------------------------------------------
