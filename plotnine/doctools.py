@@ -104,7 +104,7 @@ GEOM_PARAMS_TPL = """
 mapping : plotnine.mapping.aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : ~pandas.dataframe, default=None
+data : ~pandas.DataFrame, default=None
     {data}
 stat : str | stat, default="{default_stat}"
     {stat}
@@ -124,7 +124,7 @@ STAT_PARAMS_TPL = """
 mapping : aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : ~pandas.dataframe, default=None
+data : ~pandas.Dataframe, default=None
     {data}
 geom : str | geom, default="{default_geom}"
     {stat}
