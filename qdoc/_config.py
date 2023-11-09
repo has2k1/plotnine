@@ -1,3 +1,4 @@
+import hashlib
 import re
 import shutil
 from importlib.metadata import version as get_version
@@ -17,6 +18,7 @@ def generate_environment_file():
     Generate _enviroment file in the quartodoc project directory
     """
     version = get_version("plotnine")
+    filepath = DOC_DIR / "_environment"
 
     # The scm-version scheme adds .date suffix to the version
     # if the repo is dirty. For better look while developing,
@@ -25,25 +27,44 @@ def generate_environment_file():
     if dirty_pattern.search(version):
         version = dirty_pattern.sub("", version)
 
-    env_filepath = DOC_DIR / "_environment"
+    # FIXME: We return because modifying the _environment file
+    # breaks "quarto render"
+    if filepath.exists():
+        return
+
     contents = ENV_TPL.format(version=version)
-    env_filepath.write_text(contents)
+    filepath.write_text(contents)
 
 
 def copy_tutorials():
     """
     Copy the tutorials in plotnine_examples
     """
-    # Old files
-    to_dir = DOC_DIR / "tutorials"
-    for path in to_dir.glob("*.ipynb"):
-        path.unlink()
 
-    # new_files
-    from_dir = _files("plotnine_examples.tutorials")
-    for src in from_dir.glob("*.ipynb"):  # type: ignore
-        dest = to_dir / src.name
-        shutil.copy(src, dest)
+    # NOTE: To avoid confusing the watcher used by "quarto preview",
+    # we copy only if the original files are different.
+    def same_contents(f1, f2):
+        h1 = hashlib.md5(f1.read_bytes()).hexdigest()
+        h2 = hashlib.md5(f2.read_bytes()).hexdigest()
+        return h1 == h2
+
+    src_dir = _files("plotnine_examples.tutorials")
+    dest_dir = DOC_DIR / "tutorials"
+
+    src_files = src_dir.glob("*.ipynb")  # type: ignore
+    cur_dest_files = dest_dir.glob("*.ipynb")
+    new_dest_files = []
+
+    for src in src_files:
+        dest = dest_dir / src.name
+        new_dest_files.append(dest)
+        if dest.exists() and same_contents(src, dest):
+            continue
+        shutil.copyfile(src, dest)
+
+    # Remove any deleted files
+    for dest in set(cur_dest_files).difference(new_dest_files):
+        dest.unlink()
 
 
 if __name__ == "__main__":
