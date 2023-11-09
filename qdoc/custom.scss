@@ -41,6 +41,46 @@
    object-fit: contain;
 }
 
+// docstring parameters
+section#parameters>dl>dt:not(:first-child) {
+   @extend .mt-3;
+}
+
+section#parameters>dl>dd {
+   @extend .mt-1;
+   @extend .mb-0;
+   @extend .ms-5;
+}
+
+section#parameters>dl>dd>table {
+   @extend .table-bordered;
+   @extend .table-striped;
+   min-width: 33%;
+   width: 0;
+}
+
+section#parameters>dl>dd>table>thead {
+   border-top: 0px solid $border-color;
+   border-bottom: 0.15em solid $border-color;
+}
+
+section#parameters>dl>dd>table td {
+   @extend .px-2;
+   @extend .py-1;
+}
+section#parameters>dl>dt code {
+   @extend .py-1;
+   font-weight: normal;
+}
+
+section#parameters>dl>dd dl dt {
+   font-weight: normal;
+}
+
+section#parameters>dl>dd dl dd {
+   @extend .ms-3;
+}
+
 /*-- scss:mixins --*/
 
 /*-- scss:functions --*/
