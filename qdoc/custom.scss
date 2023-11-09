@@ -41,6 +41,13 @@
    object-fit: contain;
 }
 
+// docstring signature
+.signature>p>code {
+   @extend .py-2;
+   @extend .px-1;
+   display: block;
+}
+
 // docstring parameters
 section#parameters>dl>dt:not(:first-child) {
    @extend .mt-3;
