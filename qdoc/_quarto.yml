@@ -55,7 +55,10 @@ website:
 format:
   html:
     toc: true
-    css: styles.css
+    theme:
+      - lumen
+      - custom.scss
+
 from: markdown+definition_lists
 
 quartodoc:

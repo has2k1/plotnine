@@ -46,14 +46,20 @@ class GalleryImage:
     target: str
 
     def __str__(self):
-        out_cls = "card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2"
-        in_cls = "card-header py-1 px-2 border-bottom border-1 bg-light"
+        # card, card-header, card-body create bootstrap components
+        # https://getbootstrap.com/docs/5.3/components/card/
+        #
+        # For a responsive layout, use bootstrap grid classes that select
+        # for different screen sizes
+        # https://getbootstrap.com/docs/5.3/layout/grid/#grid-options
+        out_cls = "card g-col-12 g-col-sm-6 g-col-md-4"
+        in_cls = "card-header"
         res = Div(
             [
                 Div(self.title, Attr(None, in_cls.split())),
                 Div(
                     Link(Image(src=self.thumbnail), target=self.target),
-                    Attr(None, ["gallery-card-body"]),
+                    Attr(None, ["card-body"]),
                 ),
             ],
             Attr(None, out_cls.split()),
@@ -152,5 +158,5 @@ def generate_gallery() -> str:
     """
     notebooks = sorted(EXAMPLES_DIR.glob("*.ipynb"))
     images = get_gallery_images(notebooks)
-    gallery = Div(list(images), Attr(classes=["gallery", "list", "grid"]))
+    gallery = Div(list(images), Attr(classes=["gallery", "grid"]))
     return str(gallery)
