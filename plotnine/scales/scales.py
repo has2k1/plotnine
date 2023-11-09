@@ -53,7 +53,7 @@ class Scales(List[scale]):
         # super() does not work well with reloads
         list.append(self, sc)
 
-    def find(self, aesthetic: ScaledAestheticsName) -> list[bool]:
+    def find(self, aesthetic: ScaledAestheticsName | str) -> list[bool]:
         """
         Find scales for given aesthetic
 
@@ -68,7 +68,9 @@ class Scales(List[scale]):
         lst = [s.aesthetics for s in self]
         return list(itertools.chain(*lst))
 
-    def get_scales(self, aesthetic: ScaledAestheticsName) -> Scale | None:
+    def get_scales(
+        self, aesthetic: ScaledAestheticsName | str
+    ) -> Scale | None:
         """
         Return the scale for the aesthetic or None if there isn't one
 
