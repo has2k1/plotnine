@@ -82,11 +82,11 @@ class geom_text(geom):
 
     **Aesthetics Descriptions**
 
-    ha
+    `ha`
 
     :   Horizontal alignment. One of *left*, *center* or *right.*
 
-    va
+    `va`
 
     :   Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
     """
