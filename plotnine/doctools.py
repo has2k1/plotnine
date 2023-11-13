@@ -44,7 +44,9 @@ GEOM_SIGNATURE_TPL = """
 
 **Usage**
 
-    {signature}
+```{{.py}}
+{signature}
+```
 
 Only the `data` and `mapping` can be positional, the rest must
 be keyword arguments. `**kwargs` can be aesthetics (or parameters)
@@ -59,7 +61,9 @@ The **bold** aesthetics are required."""
 STAT_SIGNATURE_TPL = """
 **Usage**
 
-    {signature}
+```{{.py}}
+{signature}
+```
 
 Only the `mapping` and `data` can be positional, the rest must
 be keyword arguments. `**kwargs` can be aesthetics (or parameters)
@@ -101,7 +105,7 @@ the final image is in vector format.""",
 
 
 GEOM_PARAMS_TPL = """
-mapping : plotnine.mapping.aes, default=None
+mapping : ~plotnine.mapping.aes, default=None
     {mapping}
     {_aesthetics_doc}
 data : ~pandas.DataFrame, default=None
@@ -215,12 +219,12 @@ def make_signature(
     for key in set(params) - seen:
         tokens_append(key, params[key])
 
-    # name, 1 opening bracket, 4 spaces in SIGNATURE_TPL
+    # name, 1 opening bracket
     s_params = ", ".join(tokens)
     s1 = f"{name}("
     s2 = f"{s_params}, **kwargs)"
     line_width = 78 - len(s1)
-    indent_spaces = " " * (len(s1) + 4)
+    indent_spaces = " " * len(s1)
     s2_lines = wrap(s2, width=line_width)
     s2_indented = f"\n{indent_spaces}".join(s2_lines)
     return f"{s1}{s2_indented}"
@@ -233,14 +237,14 @@ def docstring_section_lines(docstring: str, section_name: str) -> str:
 
     Paramters
     ---------
-    docstring : str
+    docstring :
         Docstring
-    section_name : str
+    section_name :
         Name of section to return
 
     Returns
     -------
-    section : str
+    :
         Section minus the header
     """
     lines = []
