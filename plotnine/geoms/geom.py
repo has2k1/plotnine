@@ -106,12 +106,12 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        stat : stat
+        stat :
             `stat`
 
         Returns
         -------
-        out : geom
+        :
             A geom object
 
         Raises
@@ -197,12 +197,12 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data used for drawing the geom.
 
         Returns
         -------
-        out : dataframe
+        :
             Data used for drawing the geom.
         """
         return data
@@ -217,14 +217,14 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data used for drawing the geom.
-        aes_modifiers : dict
+        aes_modifiers :
             Aesthetics
 
         Returns
         -------
-        out : dataframe
+        :
             Data used for drawing the geom.
         """
         missing_aes = (
@@ -274,14 +274,14 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : DataFrame
+        data :
             DataFrame specific for this layer
-        layout : Layout
+        layout :
             Layout object created when the plot is getting
             built
-        coord : coord
+        coord :
             Type of coordinate axes
-        params : dict
+        params :
             Combined *geom* and *stat* parameters. Also
             includes the stacking order of the layer in
             the plot (*zorder*)
@@ -311,10 +311,10 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : panel_view
+        panel_params :
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
@@ -324,11 +324,11 @@ class geom(metaclass=Registry):
             "panel_params.x.range"  # tuple
             "panel_params.y.range"  # tuple
             ```
-        coord : coord
+        coord :
             Coordinate (e.g. coord_cartesian) system of the geom.
-        ax : axes
+        ax :
             Axes on which to plot.
-        params : dict
+        params :
             Combined parameters for the geom and stat. Also
             includes the `zorder`.
         """
@@ -349,10 +349,10 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : panel_view
+        panel_params :
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
@@ -397,10 +397,10 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : panel_view
+        panel_params :
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
@@ -417,12 +417,12 @@ class geom(metaclass=Registry):
             ```python
             "scales"   # SimpleNamespace
             ```
-        coord : coord
+        coord :
             Coordinate (e.g. coord_cartesian) system of the
             geom.
-        ax : axes
+        ax :
             Axes on which to plot.
-        params : dict
+        params :
             Combined parameters for the geom and stat. Also
             includes the `zorder`.
         """
@@ -435,12 +435,12 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        gg : ggplot
+        gg :
             ggplot object
 
         Returns
         -------
-        out : ggplot
+        :
             ggplot object with added layer.
         """
         gg += self.to_layer()  # Add layer
@@ -452,7 +452,7 @@ class geom(metaclass=Registry):
 
         Returns
         -------
-        out : layer
+        :
             Layer
         """
         return layer.from_geom(self)
@@ -493,12 +493,12 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
 
         Returns
         -------
-        out : dataframe
+        :
             Data without the NaNs.
 
         Notes
@@ -523,16 +523,17 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : Series
-            Data Row
-        da : DrawingArea
-            Canvas
-        lyr : layer
-            Layer
+        data :
+            A of the data plotted to this layer
+        da :
+            Canvas on which to draw
+        lyr :
+            Layer that the geom belongs to.
 
         Returns
         -------
-        out : DrawingArea
+        :
+            The DrawingArea after a layer has been drawn onto it.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)

@@ -42,7 +42,7 @@ class geom_path(geom):
 
     See Also
     --------
-    plotnine.geoms.arrow : for adding arrowhead(s) to paths.
+    plotnine.geoms.geom_path.arrow : for adding arrowhead(s) to paths.
     """
 
     DEFAULT_AES = {
