@@ -110,9 +110,10 @@ mapping : ~plotnine.mapping.aes, default=None
     {_aesthetics_doc}
 data : ~pandas.DataFrame, default=None
     {data}
-stat : str | stat, default="{default_stat}"
+stat : str | ~plotnine.stats.stat.stat, default="{default_stat}"
     {stat}
-position : str | position, default="{default_position}"
+position : str | ~plotnine.positions.position.position, \
+default="{default_position}"
     {position}
 na_rm : bool, default={default_na_rm}
     {na_rm}
@@ -125,14 +126,15 @@ raster : bool, default={default_raster}
 """
 
 STAT_PARAMS_TPL = """
-mapping : aes, default=None
+mapping : ~plotnine.mapping.aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : ~pandas.Dataframe, default=None
+data : ~pandas.DataFrame, default=None
     {data}
-geom : str | geom, default="{default_geom}"
+geom : str | ~plotnine.geoms.geom.geom, default="{default_geom}"
     {stat}
-position : str | position, default="{default_position}"
+position : str | ~plotnine.positions.position.position, \
+default="{default_position}"
     {position}
 na_rm : bool, default={default_na_rm}
     {na_rm}

@@ -48,12 +48,12 @@ class coord:
 
         Parameters
         ----------
-        data : list[DataFrames]
+        data :
             Data for alls Layer
 
         Returns
         -------
-        out : list[DataFrame]
+        :
             Modified layer data
         """
         return data
@@ -67,7 +67,7 @@ class coord:
 
         Parameters
         ----------
-        data : list of dataframes
+        data :
             Data for each layer before it is manipulated in
             any way.
         """
@@ -79,12 +79,12 @@ class coord:
 
         Parameters
         ----------
-        layout : dataframe
+        layout :
             Dataframe in which data is assigned to panels and scales
 
         Returns
         -------
-        out : dataframe
+        :
             layout dataframe altered to according to the requirements
             of the coordinate system.
 
@@ -110,12 +110,12 @@ class coord:
 
         Parameters
         ----------
-        cur_labels : labels_view
+        cur_labels :
             Current labels. The coord can modify them as necessary.
 
         Returns
         -------
-        out : dict
+        :
             Modified labels. Same object as the input.
         """
         return cur_labels

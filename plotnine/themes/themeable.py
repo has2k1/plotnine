@@ -114,7 +114,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         name : str
             Class name
         theme_element : element object
-            A of the type required by the theme
+            An element of the type required by the theme.
             For lines, text and rects it should be one of:
             [](`~plotnine.themes.element_line`),
             [](`~plotnine.themes.element_rect`),
@@ -1735,7 +1735,7 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
 
     Parameters
     ----------
-    theme_element : Litera["in", "out", "inout"]
+    theme_element : Literal["in", "out", "inout"]
         `in` for ticks inside the panel.
         `out` for ticks outside the panel.
         `inout` for ticks inside and outside the panel.
