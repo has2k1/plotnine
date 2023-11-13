@@ -30,6 +30,7 @@ if typing.TYPE_CHECKING:
         Trans,
         TupleFloat2,
         TupleFloat3,
+        TupleFloat4,
     )
 
 
@@ -251,23 +252,23 @@ class annotation_logticks(annotate):
 
     Parameters
     ----------
-    sides : str, default="bl"
+    sides :
         Sides onto which to draw the marks. Any combination
         chosen from the characters `btlr`, for *bottom*, *top*,
         *left* or *right* side marks. If `coord_flip()` is used,
         these are the sides *after* the flip.
-    alpha : float, default=1)
+    alpha :
         Transparency of the ticks
-    color : str | tuple, default="black"
+    color :
         Colour of the ticks
-    size : float
+    size :
         Thickness of the ticks
-    linetype : "solid" | "dashed" | "dashdot" | "dotted" | tuple[float]
+    linetype :
         Type of line
-    lengths: tuple[float], default=(0.036, 0.0225, 0.012)
+    lengths:
         length of the ticks drawn for full / half / tenth
         ticks relative to panel size
-    base : float, default=None
+    base :
         Base of the logarithm in which the ticks will be
         calculated. If `None`, the base used to log transform
         the scale will be used.
@@ -277,9 +278,10 @@ class annotation_logticks(annotate):
         self,
         sides: str = "bl",
         alpha: float = 1,
-        color: str | tuple[float, ...] = "black",
+        color: str | TupleFloat3 | TupleFloat4 = "black",
         size: float = 0.5,
-        linetype: str | tuple[float, ...] = "solid",
+        linetype: Literal["solid", "dashed", "dashdot", "dotted"]
+        | Sequence[float] = "solid",
         lengths: TupleFloat3 = (0.036, 0.0225, 0.012),
         base: float | None = None,
     ):

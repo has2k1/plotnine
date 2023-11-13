@@ -60,7 +60,7 @@ class stat_ydensity(stat):
 
         `nrd0` is a port of `stats::bw.nrd0` in R; it is eqiuvalent
         to `silverman` when there is more than 1 value in a group.
-    scale : "area" | "count" | "width", default="area"
+    scale : Literal["area", "count", "width"], default="area"
         How to scale the violins. The options are:
         If `area` all violins have the same area, before trimming the tails.
         If `count` the areas are scaled proportionally to the number of
