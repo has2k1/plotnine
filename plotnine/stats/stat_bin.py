@@ -48,7 +48,7 @@ class stat_bin(stat):
         For example, to center on integers, use `width=1`{.py} and
         `boundary=0.5`{.py}, even if 1 is outside the range of the
         data. At most one of center and boundary may be specified.
-    closed : "left" | "right", default="right"
+    closed : Literal["left", "right"], default="right"
         Which edge of the bins is included.
     pad : bool, default=False
         If `True`{.py}, adds empty bins at either side of x.

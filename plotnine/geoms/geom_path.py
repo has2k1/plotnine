@@ -218,15 +218,15 @@ class arrow:
 
     Parameters
     ----------
-    angle : int | float
+    angle :
         angle in degrees between the tail a
         single edge.
-    length : int | float
+    length :
         of the edge in "inches"
-    ends : "last" | "first" | "both"
+    ends :
         At which end of the line to draw the
         arrowhead
-    type : "open" | "closed"
+    type :
         When it is closed, it is also filled
     """
 

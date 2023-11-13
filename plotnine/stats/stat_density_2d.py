@@ -25,7 +25,7 @@ class stat_density_2d(stat):
     levels : int | array_like, default=5
         Contour levels. If an integer, it specifies the maximum number
         of levels, if array_like it is the levels themselves.
-    package : "statsmodels" | "scipy" | "sklearn", default="statsmodels"
+    package : Literal["statsmodels", "scipy", "sklearn"], default="statsmodels"
         Package whose kernel density estimation to use.
     kde_params : dict
         Keyword arguments to pass on to the kde class.

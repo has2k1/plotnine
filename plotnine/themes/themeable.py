@@ -1697,7 +1697,7 @@ class axis_ticks_direction_x(themeable):
 
     Parameters
     ----------
-    theme_element : "in" | "out" | "inout"
+    theme_element : Literal["in", "out", "inout"]
         `in` for ticks inside the panel.
         `out` for ticks outside the panel.
         `inout` for ticks inside and outside the panel.
@@ -1716,7 +1716,7 @@ class axis_ticks_direction_y(themeable):
 
     Parameters
     ----------
-    theme_element : "in" | "out" | "inout"
+    theme_element : Literal["in", "out", "inout"]
         `in` for ticks inside the panel.
         `out` for ticks outside the panel.
         `inout` for ticks inside and outside the panel.
@@ -1735,7 +1735,7 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
 
     Parameters
     ----------
-    theme_element : "in" | "out" | "inout"
+    theme_element : Litera["in", "out", "inout"]
         `in` for ticks inside the panel.
         `out` for ticks outside the panel.
         `inout` for ticks inside and outside the panel.
@@ -1920,7 +1920,7 @@ class legend_box(themeable):
 
     Parameters
     ----------
-    theme_element : "vertical" | "horizontal"
+    theme_element : Literal["vertical", "horizontal"]
         Whether to stack up the legends vertically or
         horizontally.
     """
@@ -1954,7 +1954,7 @@ class legend_direction(themeable):
 
     Parameters
     ----------
-    theme_element : "vertical" | "horizontal"
+    theme_element : Literal["vertical", "horizontal"]
         Vertically or horizontally
     """
 

@@ -31,7 +31,7 @@ class facet_wrap(facet):
 
     Parameters
     ----------
-    facets : str | tuple
+    facets :
         Variables to groupby and plot on different panels.
         If a string formula is used it should be right sided,
         e.g `"~ a + b"`, `("a", "b")`
@@ -39,26 +39,26 @@ class facet_wrap(facet):
         Number of rows
     ncol : int, default=None
         Number of columns
-    scales : "fixed" | "free" | "free_x" | "free_y", default="fixed"
+    scales :
         Whether `x` or `y` scales should be allowed (free)
         to vary according to the data on each of the panel.
-    shrink : bool, default=True
+    shrink :
         Whether to shrink the scales to the output of the
         statistics instead of the raw data.
-    labeller : str | callable, default="label_value"
+    labeller :
         How to label the facets. A string value if it should be
         one of `["label_value", "label_both", "label_context"]`{.py}.
-    as_table : bool, default=True
+    as_table :
         If `True`, the facets are laid out like a table with
         the highest values at the bottom-right. If `False`
         the facets are laid out like a plot with the highest
         value a the top-right
-    drop : bool, default=True
+    drop :
         If `True`, all factor levels not used in the data
         will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
         or not they appear in the data.
-    dir : "h" | "v", default="h"
+    dir :
         Direction in which to layout the panels. `h` for
         horizontal and `v` for vertical.
     """

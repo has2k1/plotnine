@@ -145,36 +145,36 @@ class element_text(element_base):
 
     Parameters
     ----------
-    family : str
+    family :
         Font family. See :meth:`matplotlib.text.Text.set_family`
         for supported values.
-    style : "normal" | "italic" | "oblique"`
+    style :
         Font style
-    color : str | tuple
+    color :
         Text color
-    weight : str
+    weight :
         Should be one of `normal`, `bold`, `heavy`, `light`,
         `ultrabold` or `ultralight`.
-    size : float
+    size :
         text size
-    ha : "center" | "left" | "right"
+    ha :
         Horizontal Alignment.
-    va : "center" | "top" | "bottom" | "baseline"
+    va :
         Vertical alignment.
-    rotation : float
+    rotation :
         Rotation angle in the range [0, 360]
     linespacing : float
         Line spacing
-    backgroundcolor : str | tuple
+    backgroundcolor :
         Background color
-    margin : dict, default={"t": 0, "b": 0, "l": 0, "r": 0, "units": "pt"}
+    margin :
         Margin around the text. The keys are
         `t`, `b`, `l`, `r` and `units`.
         The `tblr` keys are floats.
         The `units` is one of `pt`, `lines` or `in`.
         Not all text themeables support margin parameters and other
         than the `units`, only some of the other keys may apply.
-    kwargs : dict
+    kwargs :
         Parameters recognised by :class:`matplotlib.text.Text`
 
     Notes
@@ -196,7 +196,9 @@ class element_text(element_base):
         rotation: Optional[float] = None,
         linespacing: Optional[float] = None,
         backgroundcolor: Optional[str | TupleFloat3 | TupleFloat4] = None,
-        margin: Optional[dict[str, Any]] = None,
+        margin: Optional[
+            dict[Literal["t", "b", "l", "r", "units"], Any]
+        ] = None,
         **kwargs: Any,
     ):
         # ggplot2 translation
