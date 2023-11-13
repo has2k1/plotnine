@@ -103,13 +103,12 @@ quartodoc:
         visual aspects of the representation are controlled by the aes mapping.
 
     - package: plotnine.geoms.geom
-      options: &main
-        members: []
       contents:
         - geom
 
     - package: plotnine.geoms
-      options: *main
+      options: &no-members
+        members: []
       contents:
         - geom_abline
         - geom_area
@@ -160,17 +159,17 @@ quartodoc:
     - subtitle: related to geoms
       desc: ""
       package: plotnine.geoms
-      options: *main
+      options: *no-members
       contents:
         - annotate
         - annotation_logticks
         - annotation_stripes
-        # TODO: need ~
-        - geom_path:arrow
+        - name: arrow
+          package: plotnine.geoms.geom_path
     - subtitle: Labels
       desc: ""
       package: plotnine.labels
-      options: *main
+      options: *no-members
       contents:
         - labs
         - xlab
@@ -185,16 +184,13 @@ quartodoc:
         on the data. Different types of computations yield varied results, so a `stat`
         must be paired with a `geom` that can represent all or some of the computations.
 
-    - package: plotnine.stats
+    - package: plotnine.stats.stat
       contents:
-        # note it is this in plotnine docs: ~stat.stat
-        # template: members-example.rst
         - stat
 
     - package: plotnine.stats
-      options: *main
+      options: *no-members
       contents:
-        # template: main.rst
         - stat_bin
         - stat_bin_2d
         - stat_bindot
@@ -218,30 +214,29 @@ quartodoc:
         - stat_unique
         - stat_ydensity
 
-
     - title: facets
       desc: |
         Faceting is a way to subset data and plot it on different panels.
 
-    - package: plotnine.facets
+    - package: plotnine.facets.facet
       contents:
-        # note it is this in plotnine docs: ~stat.stat
-        # template: members-example.rst
         - facet
 
     - package: plotnine.facets
-      options: *main
+      options: *no-members
       contents:
-        # template: main.rst
         - facet_grid
         - facet_null
         - facet_wrap
-        # these had a ~ in front of them
-        - labelling.labeller
-        - labelling.as_labeller
-        - labelling.label_value
-        - labelling.label_both
-        - labelling.label_context
+
+    - package: plotnine.facets.labelling
+      options: *no-members
+      contents:
+        - labeller
+        - as_labeller
+        - label_value
+        - label_both
+        - label_context
 
     - title: scales
       desc: |
@@ -251,10 +246,8 @@ quartodoc:
 
     - subtitle: Base scales
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
-        # these had a ~ in front of them
-        # template: members-example.rst
         - name: scale
           package: plotnine.scales.scale
         - name: scale_discrete
@@ -267,7 +260,7 @@ quartodoc:
     - subtitle: Alpha scales
       desc: ""
       package: plotnine.scales.scale_alpha
-      options: *main
+      options: *no-members
       contents:
         - scale_alpha
         - scale_alpha_discrete
@@ -277,7 +270,7 @@ quartodoc:
     - subtitle: Identity scales
       desc: ""
       package: plotnine.scales.scale_identity
-      options: *main
+      options: *no-members
       contents:
         - scale_alpha_identity
         - scale_color_identity
@@ -290,7 +283,7 @@ quartodoc:
     - subtitle: Color and fill scales
       desc: ""
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
         - scale_color_brewer
         - scale_color_continuous
@@ -322,7 +315,7 @@ quartodoc:
     - subtitle: Manual scales
       desc: ""
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
         - scale_alpha_manual
         - scale_color_manual
@@ -334,21 +327,21 @@ quartodoc:
 
     - subtitle: Linetype scales
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
         - scale_linetype
         - scale_linetype_discrete
 
     - subtitle: Shape scales
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
         - scale_shape
         - scale_shape_discrete
 
     - subtitle: Size scales
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
         - scale_size
         - scale_size_area
@@ -377,22 +370,28 @@ quartodoc:
         - scale_y_sqrt
         - scale_y_timedelta
 
-
     - subtitle: Scale limits
       package: plotnine.scales
-      options: *main
+      options: *no-members
       contents:
         - lims
         - xlim
         - ylim
         - expand_limits
 
-    - subtitle: Scale guides
-      package: plotnine.guides
-      options: *main
+    - title: Scale guides
+      desc: |
+        Guides allow you to interpret data represented on a scales.
+        Guides include the `x` and `y` axes, legends and colorbars.
+
+    - package: plotnine.guides.guide
+      contents:
+        - guide
+
+    - package: plotnine.guides
+      options: *no-members
       contents:
         - guides
-        - guide
         - guide_legend
         - guide_colorbar
 
@@ -400,8 +399,13 @@ quartodoc:
       desc: |
         Overlapping objects can be visualized better if their positions are adjusted.
         That is what the `position_*` class do. Each `geom` is associated with one position adjustment class.
-      package: plotnine.positions
-      options: *main
+
+    - package: plotnine.positions.position
+      contents:
+        - position
+
+    - package: plotnine.positions
+      options: *no-members
       contents:
         - position_dodge
         - position_dodge2
@@ -417,7 +421,7 @@ quartodoc:
       desc: |
         Themes control the visual appearance of the non-data elements the plot.
       package: plotnine.themes
-      options: *main
+      options: *no-members
       contents:
         - theme
         - theme_538
@@ -540,7 +544,7 @@ quartodoc:
 
     - subtitle: Theme helper functions and classes
       package: plotnine.themes
-      options: *main
+      options: *no-members
       contents:
         - theme_set
         - theme_get
@@ -553,8 +557,13 @@ quartodoc:
     - title: coordinates
       desc: |
         Coordinate systems put together the two position scales to produce a 2d location.
-      package: plotnine.coords
-      options: *main
+
+    - package: plotnine.coords.coord
+      contents:
+        - coord
+
+    - package: plotnine.coords
+      options: *no-members
       contents:
         - coord_cartesian
         - coord_equal
