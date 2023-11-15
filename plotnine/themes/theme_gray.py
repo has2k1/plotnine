@@ -158,4 +158,5 @@ class theme_gray(theme):
         )
 
 
-theme_grey = alias("theme_grey", theme_gray)
+class theme_grey(theme_gray, alias):
+    pass

@@ -188,4 +188,5 @@ class scale_size_manual(_scale_manual):
 
 
 # American to British spelling
-scale_colour_manual = alias("scale_colour_manual", scale_color_manual)
+class scale_colour_manual(scale_color_manual, alias):
+    pass

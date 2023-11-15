@@ -561,30 +561,94 @@ class scale_fill_datetime(scale_datetime, scale_fill_cmap):
 
 
 # Default scales
-scale_color_discrete = alias("scale_color_discrete", scale_color_hue)
-scale_color_continuous = alias("scale_color_continuous", scale_color_cmap)
-scale_color_ordinal = alias("scale_color_ordinal", scale_color_cmap_d)
-scale_fill_discrete = alias("scale_fill_discrete", scale_fill_hue)
-scale_fill_continuous = alias("scale_fill_continuous", scale_fill_cmap)
-scale_fill_ordinal = alias("scale_fill_ordinal", scale_fill_cmap_d)
+class scale_color_discrete(scale_color_hue, alias):
+    pass
+
+
+class scale_color_continuous(scale_color_cmap, alias):
+    pass
+
+
+class scale_color_ordinal(scale_color_cmap_d, alias):
+    pass
+
+
+class scale_fill_discrete(scale_fill_hue, alias):
+    pass
+
+
+class scale_fill_continuous(scale_fill_cmap, alias):
+    pass
+
+
+class scale_fill_ordinal(scale_fill_cmap_d, alias):
+    pass
+
 
 # American to British spelling
-scale_colour_hue = alias("scale_colour_hue", scale_color_hue)
-scale_color_gray = alias("scale_color_gray", scale_color_grey)
-scale_colour_grey = alias("scale_colour_grey", scale_color_grey)
-scale_colour_gray = alias("scale_colour_gray", scale_color_grey)
-scale_fill_gray = alias("scale_fill_gray", scale_fill_grey)
-scale_colour_brewer = alias("scale_colour_brewer", scale_color_brewer)
-scale_colour_desaturate = alias(
-    "scale_colour_desaturate", scale_color_desaturate
-)
-scale_colour_gradient = alias("scale_colour_gradient", scale_color_gradient)
-scale_colour_gradient2 = alias("scale_colour_gradient2", scale_color_gradient2)
-scale_colour_gradientn = alias("scale_colour_gradientn", scale_color_gradientn)
-scale_colour_discrete = alias("scale_colour_discrete", scale_color_hue)
-scale_colour_continuous = alias("scale_colour_continuous", scale_color_cmap)
-scale_colour_distiller = alias("scale_colour_distiller", scale_color_distiller)
-scale_colour_cmap = alias("scale_colour_cmap", scale_color_cmap)
-scale_colour_cmap_d = alias("scale_colour_cmap_d", scale_color_cmap_d)
-scale_colour_datetime = alias("scale_colour_datetime", scale_color_datetime)
-scale_colour_ordinal = alias("scale_colour_ordinal", scale_color_cmap_d)
+class scale_colour_hue(scale_color_hue, alias):
+    pass
+
+
+class scale_color_gray(scale_color_grey, alias):
+    pass
+
+
+class scale_colour_grey(scale_color_grey, alias):
+    pass
+
+
+class scale_colour_gray(scale_color_grey, alias):
+    pass
+
+
+class scale_fill_gray(scale_fill_grey, alias):
+    pass
+
+
+class scale_colour_brewer(scale_color_brewer, alias):
+    pass
+
+
+class scale_colour_desaturate(scale_color_desaturate, alias):
+    pass
+
+
+class scale_colour_gradient(scale_color_gradient, alias):
+    pass
+
+
+class scale_colour_gradient2(scale_color_gradient2, alias):
+    pass
+
+
+class scale_colour_gradientn(scale_color_gradientn, alias):
+    pass
+
+
+class scale_colour_discrete(scale_color_hue, alias):
+    pass
+
+
+class scale_colour_continuous(scale_color_cmap, alias):
+    pass
+
+
+class scale_colour_distiller(scale_color_distiller, alias):
+    pass
+
+
+class scale_colour_cmap(scale_color_cmap, alias):
+    pass
+
+
+class scale_colour_cmap_d(scale_color_cmap_d, alias):
+    pass
+
+
+class scale_colour_datetime(scale_color_datetime, alias):
+    pass
+
+
+class scale_colour_ordinal(scale_color_cmap_d, alias):
+    pass

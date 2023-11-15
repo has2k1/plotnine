@@ -78,7 +78,8 @@ class scale_size_continuous(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
-scale_size = alias("scale_size", scale_size_continuous)
+class scale_size(scale_size_continuous, alias):
+    pass
 
 
 @document
