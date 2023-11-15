@@ -10,4 +10,4 @@ render: build
 doc: interlinks render
 
 preview:
-	quarto preview
+	quarto preview --port 42000 --no-browser
