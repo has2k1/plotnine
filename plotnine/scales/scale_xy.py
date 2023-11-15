@@ -256,8 +256,12 @@ class scale_y_discrete(scale_position_discrete):
 
 
 # Not part of the user API
-scale_x_ordinal = alias("scale_x_ordinal", scale_x_discrete)
-scale_y_ordinal = alias("scale_y_ordinal", scale_y_discrete)
+class scale_x_ordinal(scale_x_discrete, alias):
+    pass
+
+
+class scale_y_ordinal(scale_y_discrete, alias):
+    pass
 
 
 @document
@@ -320,8 +324,12 @@ class scale_y_datetime(scale_datetime, scale_y_continuous):
     """
 
 
-scale_x_date = alias("scale_x_date", scale_x_datetime)
-scale_y_date = alias("scale_y_date", scale_y_datetime)
+class scale_x_date(scale_x_datetime, alias):
+    pass
+
+
+class scale_y_date(scale_y_datetime, alias):
+    pass
 
 
 @document

@@ -722,6 +722,25 @@ def copy_keys(source, destination, keys=None):
     return destination
 
 
+class alias:
+    """
+    Mixin to create an alias of a Registry class object
+
+    This is used by the Registry metaclass to make the subclass
+    an alias of the superclass.
+
+    ```python
+    class A(metaclass=Registry): __base__ = True
+    class B(A): pass
+    class C(B, alias): pass
+
+    C is B  # True
+    ```
+    """
+
+    pass
+
+
 class RegistryMeta(type):
     """
     Make a metaclass scriptable
@@ -786,6 +805,8 @@ class Registry(type, metaclass=RegistryMeta):
         sub_cls = super().__new__(cls, name, bases, namespace)
         if not namespace.pop("__base__", False):
             cls._registry[name] = sub_cls
+            if len(bases) == 2 and bases[1] is alias:
+                sub_cls = bases[0]
         return sub_cls
 
 
@@ -822,31 +843,6 @@ class RegistryHierarchyMeta(type):
             for base in bases:
                 for base2 in base.mro()[:-2]:
                     cls._hierarchy[base2.__name__].append(name)
-
-
-def alias(name, class_object):
-    """
-    Create an alias of a class object
-
-    The objective of this method is to have
-    an alias that is Registered. i.e If we have
-
-        class_b = class_a
-
-    Makes `class_b` an alias of `class_a`, but if
-    `class_a` is registered by its metaclass,
-    `class_b` is not. The solution
-
-        class_b = alias('class_b', class_a)
-
-    is equivalent to:
-
-        class_b = class_a
-        Register['class_b'] = class_a
-    """
-    if isinstance(class_object, Registry):
-        Registry[name] = class_object
-    return class_object
 
 
 def get_kwarg_names(func):
