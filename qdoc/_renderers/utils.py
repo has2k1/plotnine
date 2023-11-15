@@ -6,7 +6,7 @@ from typing import Optional
 from griffe import dataclasses as dc
 from quartodoc.pandoc.inlines import Link
 
-from .typing import DisplayNameFormat
+from .typing import DisplayNameFormat, DocObjectKind
 
 
 @dataclass
@@ -118,6 +118,16 @@ def get_object_display_name(
         return el.canonical_path
     else:
         raise ValueError(f"Unknown format {format!r} for an object name.")
+
+
+def get_object_kind(el: dc.Alias | dc.Object) -> DocObjectKind:
+    """
+    Get an objects kind
+    """
+    kind: DocObjectKind = el.kind.value  # type: ignore
+    if el.is_function and el.parent and el.parent.is_class:
+        kind = "method"
+    return kind
 
 
 def get_method_parameters(el: dc.Function) -> dc.Parameters:

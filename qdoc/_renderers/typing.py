@@ -1,5 +1,10 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, TypeAlias
 
-DisplayNameFormat = Literal["full", "name", "short", "relative"]
+DisplayNameFormat: TypeAlias = Literal[
+    "full", "name", "short", "relative", "canonical"
+]
+DocObjectKind: TypeAlias = Literal[
+    "module", "class", "method", "function", "attribute", "alias"
+]
