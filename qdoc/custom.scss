@@ -1,8 +1,78 @@
-// Ref: https://getbootstrap.com/docs/5.3/utilities/spacing/
+// Ref:
+// - https://getbootstrap.com/docs/5.3/utilities/spacing/
+// - https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
 
 /*-- scss:defaults --*/
+$primary: #9E2F68;
+$table-striped-bg: #F0F6F6;
+$font-family-base: "Source Sans Pro";
+$font-family-code: "Source Code Pro";
+$table-striped-order: even;
+$headings-font-weight: 300 !default;
+
+$class-symbol-color: $primary;
+$method-symbol-color: #D95F02;
+$function-symbol-color: #7570B3;
+$alias-symbol-color: #E7298A;
+$module-symbol-color: #377EB8;
+$attribute-symbol-color: #1B9E77;
+
 
 /*-- scss:rules --*/
+
+a {
+   text-decoration: none;
+}
+
+h2, .h2 {
+   border-bottom: 0rem;
+}
+
+// Set headings boldness back to the bootstrap default.
+// quarto changes it for h1, h2, h3!
+h1, .h2, h2, .h2, h3, .h3 {
+   @extend .fw-medium;
+}
+
+table {
+   @extend .table-bordered;
+   @extend .table-striped;
+}
+
+.table > tbody {
+   // quarto adds a bottom color that is different from the border color,
+   // that looks good the default
+   border-bottom-color: $table-border-color;
+}
+
+// docstring signature
+section.level1 > .doc-signature {
+   border-top: 0.25rem solid lighten($primary, 25%);
+   background-color: lighten($primary, 50%);
+}
+
+section.level1 > .doc-signature  code {
+   color: lighten($primary, 20%);
+   font-size: 0.9rem;
+}
+
+section:not(.level1) > .doc-signature {
+   border-left: 0.25rem solid $gray-500;
+   background-color: $gray-200;
+}
+
+section:not(.level1) > .doc-signature code {
+   color: $gray-800;
+}
+
+section .doc-signature code {
+   @extend .py-1;
+   @extend .px-1;
+   @extend .fw-medium;
+   display: block;
+   background-color: unset;
+}
+
 
 // gallery
 
@@ -41,51 +111,107 @@
    object-fit: contain;
 }
 
-// docstring signature
-.signature>p>code {
-   @extend .py-2;
-   @extend .px-1;
-   display: block;
-}
-
-// docstring parameters
-section#parameters>dl>dt:not(:first-child) {
+// docstring definition-items
+.doc .doc-definition-items > dl > dt:not(:first-child) {
    @extend .mt-3;
 }
 
-section#parameters>dl>dd {
+.doc .doc-definition-items > dl > dd {
    @extend .mt-1;
    @extend .mb-0;
    @extend .ms-5;
 }
 
-section#parameters>dl>dd>table {
-   @extend .table-bordered;
-   @extend .table-striped;
+// docstring parameters
+
+.doc .doc-definition-items > dl > dd > table {
    min-width: 33%;
    width: 0;
 }
 
-section#parameters>dl>dd>table>thead {
-   border-top: 0px solid $border-color;
+.doc .doc-definition-items > dl > dd > table > thead {
+   border-top: 0rem solid $border-color;
    border-bottom: 0.15em solid $border-color;
 }
 
-section#parameters>dl>dd>table td {
+.doc .doc-definition-items > dl > dd > table td {
    @extend .px-2;
    @extend .py-1;
 }
-section#parameters>dl>dt code {
+.doc .doc-definition-items > dl > dt code {
    @extend .py-1;
+   display: block;
    font-weight: normal;
 }
 
-section#parameters>dl>dd dl dt {
-   font-weight: normal;
+// docstring object symbols
+.content code.doc-symbol {
+   font-size: 0.9rem;
 }
 
-section#parameters>dl>dd dl dd {
-   @extend .ms-3;
+.sidebar code.doc-symbol {
+   @extend .px-1;
+   font-size: 0.55rem;
+}
+
+.content code.doc-symbol-class,
+.sidebar code.doc-symbol-class {
+   color: $class-symbol-color;
+   background-color: tint-color($class-symbol-color, 95%);
+}
+
+.content code.doc-symbol-method,
+.sidebar code.doc-symbol-method {
+   color: $method-symbol-color;
+   background-color: tint-color($method-symbol-color, 95%);
+}
+
+.content code.doc-symbol-module,
+.sidebar code.doc-symbol-module {
+   color: $module-symbol-color;
+   background-color: tint-color($module-symbol-color, 95%);
+}
+
+.content code.doc-symbol-function,
+.sidebar code.doc-symbol-function {
+   color: $function-symbol-color;
+   background-color: tint-color($function-symbol-color, 95%);
+}
+
+.content code.doc-symbol-alias,
+.sidebar code.doc-symbol-alias {
+   color: $alias-symbol-color;
+   background-color: tint-color($alias-symbol-color, 95%);
+}
+
+.content code.doc-symbol-attribute,
+.sidebar code.doc-symbol-attribute {
+   color: $attribute-symbol-color;
+   background-color: tint-color($attribute-symbol-color, 95%);
+}
+
+code.doc-symbol-class::after {
+   content: "class";
+}
+
+code.doc-symbol-method::after {
+   content: "meth";
+}
+
+code.doc-symbol-module::after {
+   content: "mod";
+}
+
+code.doc-symbol-function::after {
+   content: "func";
+}
+
+code.doc-symbol-alias::after {
+   content: "alias";
+}
+
+code.doc-symbol-attribute::after {
+   content: "attr";
 }
 
 /*-- scss:mixins --*/

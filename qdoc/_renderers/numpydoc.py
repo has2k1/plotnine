@@ -4,7 +4,7 @@ import html
 import typing
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Optional, Sequence, TypeAlias
+from typing import Literal, Optional, Sequence, TypeAlias
 from warnings import warn
 
 from griffe import dataclasses as dc
@@ -45,6 +45,7 @@ from .utils import (
     build_parameter,
     get_method_parameters,
     get_object_display_name,
+    get_object_kind,
     interlink_ref_to_link,
 )
 
@@ -60,7 +61,8 @@ class NumpyDocRenderer(Renderer):
     header_level: int = 1
     show_signature: bool = True
     show_signature_annotations: bool = False
-    display_name_format: DisplayNameFormat = "relative"
+    display_name_format: DisplayNameFormat | Literal["auto"] = "auto"
+    signature_name_format: DisplayNameFormat = "name"
 
     # style: str = field(default="numpydoc", init=False)
     style: str = "numpydoc"
@@ -133,21 +135,24 @@ class NumpyDocRenderer(Renderer):
         if not self.show_signature:
             return ""
 
-        name = get_object_display_name(source or el)
+        name = get_object_display_name(
+            source or el, self.signature_name_format
+        )
         pars = self.render(get_method_parameters(el))  # type: ignore
-        sig = Div(Code(f"{name}({pars})"), Attr(classes=["signature"]))
+        sig = Div(Code(f"{name}({pars})"), Attr(classes=["doc-signature"]))
         return str(sig)
 
     @dispatch
     def signature(
         self, el: dc.Module | dc.Attribute, source: Optional[dc.Alias] = None
     ) -> str:
-        name = get_object_display_name(source or el)
-
+        name = get_object_display_name(
+            source or el, self.signature_name_format
+        )
         if not name:
             return ""
 
-        sig = Span(Code(name), Attr(classes=["signature"]))
+        sig = Span(Code(name), Attr(classes=["doc-signature"]))
         return str(sig)
 
     # render_header method ----------------------------------------------------
@@ -155,10 +160,36 @@ class NumpyDocRenderer(Renderer):
     @dispatch
     def render_header(self, el: layout.Doc):
         """Render the header of a docstring, including any anchors."""
+        kind = get_object_kind(el.obj)
+        display_name_format = self.display_name_format
+        if display_name_format == "auto":
+            if self.header_level == 1:
+                display_name_format = "full"
+            else:
+                display_name_format = "name"
+
+        name = get_object_display_name(el.obj, display_name_format)
+        symbol_code = Code(
+            # Pandoc requires some space to create empty code tags
+            " ",
+            Attr(
+                classes=[
+                    "doc-symbol",
+                    "doc-symbol-heading",
+                    f"doc-symbol-{kind}",
+                ]
+            ),
+        )
+        object_name = Span(
+            name, Attr(classes=["doc", "doc-object-name", f"doc-{kind}-name"])
+        )
         h = Header(
             level=self.header_level,
-            content=el.name,
-            attr=Attr(identifier=el.obj.path),
+            content=Inlines([symbol_code, object_name]),
+            attr=Attr(
+                identifier=el.obj.path,
+                classes=["doc", "doc-object", f"doc-{kind}"],
+            ),
         )
         return str(h)
 
@@ -280,27 +311,30 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def render(self, el: dc.Object | dc.Alias):  # type: ignore
-        """Render high level objects representing functions, classes, etc.."""
+        """
+        Render high level objects representing functions, classes, etc
+        """
         sections: list[Block] = []
 
         if el.docstring:
             patched_sections = qast.transform(el.docstring.parsed)
+            # Parameters, Returns, Notes, See Also ... sections
             for section in patched_sections:  # type: ignore
                 title = (section.title or section.kind.value).title()
                 body = self.render(section)
+                slug = title.lower().replace(" ", "-")
+                section_classes = ["doc", f"doc-{slug}"]
 
-                if title == "Text":
-                    sections.append(Div(body, Attr(classes=["description"])))
-                elif title == "Deprecated":
-                    sections.append(Plain(body))
+                if title in ("Text", "Deprecated"):
+                    content = Div(body, Attr(classes=section_classes))
                 else:
-                    if title == "See Also":
-                        attr = Attr(classes=["admonition"])
-                    else:
-                        attr = None
-
-                    header = Header(self.header_level + 1, title, attr)
-                    sections.append(Blocks([header, body]))
+                    header = Header(
+                        self.header_level + 1,
+                        title,
+                        Attr(classes=section_classes),
+                    )
+                    content = Blocks([header, body])
+                sections.append(content)
 
         return str(Blocks(sections))
 
@@ -374,11 +408,15 @@ class NumpyDocRenderer(Renderer):
 
         output-format: quarto/pandoc
         """
-        content = [
+        list_items: list[DefinitionItem] = [
             self.render(ds_parameter)  # type: ignore
             for ds_parameter in el.value
         ]
-        return str(DefinitionList(content))  # type: ignore
+        div = Div(
+            DefinitionList(list_items),
+            Attr(classes=["doc", "doc-definition-items"]),
+        )
+        return str(div)
 
     # text ----
     # note this can be a number of things. for example, opening docstring text,
@@ -404,7 +442,7 @@ class NumpyDocRenderer(Renderer):
                     el.value.description.strip(),
                 ]
             ),
-            Attr(classes=["deprecated"]),
+            Attr(classes=["doc-deprecated"]),
         )
 
         return str(content)
