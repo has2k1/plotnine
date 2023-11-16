@@ -218,6 +218,40 @@ code.doc-symbol-attribute::after {
    content: "attr";
 }
 
+// docstring object labels
+
+.content code.doc-label {
+   @extend .fw-normal;
+   @extend .small;
+   font-size: 0.785rem;
+   color: $gray-800;
+   background-color: $gray-100;
+}
+
+.content code.doc-label-staticmethod::after {
+   content: "staticmethod";
+}
+
+.content code.doc-label-classmethod::after {
+   content: "classmethod";
+}
+
+.content code.doc-label-abstractmethod::after {
+   content: "abstractmethod";
+}
+
+.content code.doc-label-cached::after {
+   content: "cached";
+}
+
+.content code.doc-label-property::after {
+   content: "property";
+}
+
+.content code.doc-label-typing.overload::after {
+   content: "typing.overload";
+}
+
 /*-- scss:mixins --*/
 
 /*-- scss:functions --*/
