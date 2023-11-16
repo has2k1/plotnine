@@ -140,8 +140,15 @@ def get_method_parameters(el: dc.Function) -> dc.Parameters:
         A griffe function / method
     """
     # adapted from mkdocstrings-python jinja tempalate
-    if el.parent and el.parent.is_class and len(el.parameters) > 0:
-        if el.parameters[0].name in {"self", "cls"}:
-            return dc.Parameters(*list(el.parameters)[1:])
+    if not len(el.parameters) > 0 or not el.parent:
+        return el.parameters
+
+    param = el.parameters[0].name
+    omit_first_parameter = (
+        el.parent.is_class and param in ("self", "cls")
+    ) or (el.parent.is_module and el.is_class and param == "self")
+
+    if omit_first_parameter:
+        return dc.Parameters(*list(el.parameters)[1:])
 
     return el.parameters
