@@ -103,17 +103,16 @@ class NumpyDocRenderer(Renderer):
         return ""
 
     @dispatch
-    def render_annotation(self, el: expr.Name):  # type: ignore
-        # e.g. Name(source="Optional", full="typing.Optional")
-        return str(InterLink(el.source, f"{el.full}"))
+    def render_annotation(self, el: expr.ExprName):  # type: ignore
+        return str(InterLink(el.name, el.canonical_path))
 
     @dispatch
-    def render_annotation(self, el: expr.Expression) -> str:
+    def render_annotation(self, el: expr.Expr) -> str:
         # A type annotation with ~ removes the qualname prefix
-        s = el.full
-        if s[0] == "~":
-            return str(InterLink(el.kind, s[1:]))
-        return "".join(self.render_annotation(a) for a in el)
+        path_str = el.canonical_path
+        if path_str[0] == "~":
+            return str(InterLink(el.canonical_name, path_str[1:]))
+        return "".join(self.render_annotation(a) for a in el)  # type: ignore
 
     # signature method --------------------------------------------------------
 
