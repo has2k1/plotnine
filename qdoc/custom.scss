@@ -154,6 +154,10 @@ section .doc-signature code {
    font-size: 0.55rem;
 }
 
+.sidebar ul > li > a:has(.doc-symbol) {
+   white-space: nowrap;
+}
+
 .content code.doc-symbol-class,
 .sidebar code.doc-symbol-class {
    color: $class-symbol-color;
