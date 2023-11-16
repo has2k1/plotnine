@@ -46,6 +46,7 @@ from .utils import (
     get_method_parameters,
     get_object_display_name,
     get_object_kind,
+    get_object_labels,
     interlink_ref_to_link,
 )
 
@@ -160,6 +161,7 @@ class NumpyDocRenderer(Renderer):
     def render_header(self, el: layout.Doc):
         """Render the header of a docstring, including any anchors."""
         kind = get_object_kind(el.obj)
+        labels = get_object_labels(el.obj)
         display_name_format = self.display_name_format
         if display_name_format == "auto":
             if self.header_level == 1:
@@ -182,9 +184,27 @@ class NumpyDocRenderer(Renderer):
         object_name = Span(
             name, Attr(classes=["doc", "doc-object-name", f"doc-{kind}-name"])
         )
+
+        if labels:
+            lst = []
+            for label in labels:
+                lst.append(
+                    Code(
+                        " ",
+                        Attr(
+                            classes=["doc", "doc-label", f"doc-label-{label}"]
+                        ),
+                    )
+                )
+            label_code = Span(
+                Inlines(lst), Attr(classes=["doc", "doc-labels"])
+            )
+        else:
+            label_code = ""
+
         h = Header(
             level=self.header_level,
-            content=Inlines([symbol_code, object_name]),
+            content=Inlines([symbol_code, object_name, label_code]),
             attr=Attr(
                 identifier=el.obj.path,
                 classes=["doc", "doc-object", f"doc-{kind}"],

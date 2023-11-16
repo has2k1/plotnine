@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Sequence
 
 from griffe import dataclasses as dc
 from quartodoc.pandoc.inlines import Link
@@ -152,3 +152,27 @@ def get_method_parameters(el: dc.Function) -> dc.Parameters:
         return dc.Parameters(*list(el.parameters)[1:])
 
     return el.parameters
+
+
+def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
+    """
+    Return labels for an object (iff object is a function/method)
+
+    Parameters
+    ----------
+    el:
+        A griffe object
+    """
+    # Only check for the labels we care about
+    lst = (
+        "cached",
+        "property",
+        "classmethod",
+        "staticmethod",
+        "abstractmethod",
+        "typing.overload",
+    )
+    if el.is_function:
+        return tuple(label for label in lst if label in el.labels)
+    else:
+        return tuple()
