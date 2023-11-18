@@ -48,6 +48,7 @@ from .utils import (
     get_object_kind,
     get_object_labels,
     interlink_ref_to_link,
+    make_formatted_signature,
 )
 
 SummaryRow: TypeAlias = tuple[str, str]
@@ -138,8 +139,12 @@ class NumpyDocRenderer(Renderer):
         name = get_object_display_name(
             source or el, self.signature_name_format
         )
-        pars = self.render(get_method_parameters(el))  # type: ignore
-        sig = Div(Code(f"{name}({pars})"), Attr(classes=["doc-signature"]))
+        params = self.render(get_method_parameters(el))  # type: ignore
+        sig_str = make_formatted_signature(name, params)  # type: ignore
+        sig = Div(
+            CodeBlock(sig_str, Attr(classes=["py"])),
+            Attr(classes=["doc-signature"]),
+        )
         return str(sig)
 
     @dispatch
@@ -359,8 +364,8 @@ class NumpyDocRenderer(Renderer):
 
     # signature parts -------------------------------------------------------------
     @dispatch
-    def render(self, el: dc.Parameters):  # type: ignore
-        params = []
+    def render(self, el: dc.Parameters) -> list[str]:  # type: ignore
+        params: list[str] = []
         prev, cur = 0, 1
         state = (dc.ParameterKind.positional_or_keyword,) * 2
 
@@ -379,7 +384,7 @@ class NumpyDocRenderer(Renderer):
 
             params.append(self.render(parameter))  # type: ignore
 
-        return ", ".join(params)
+        return params
 
     @dispatch
     def render(self, el: dc.Parameter):  # type: ignore
@@ -402,7 +407,7 @@ class NumpyDocRenderer(Renderer):
                 dc.ParameterKind.var_positional,
             }
             if el.kind not in variable_kind:
-                default = str(el.default)
+                default = el.default
 
         return build_parameter(name, annotation, default)
 
