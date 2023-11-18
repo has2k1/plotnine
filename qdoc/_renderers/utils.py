@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from textwrap import indent
 from typing import Optional, Sequence
 
 from griffe import dataclasses as dc
+from griffe import expressions as expr
 from quartodoc.pandoc.inlines import Link
 
 from .typing import DisplayNameFormat, DocObjectKind
@@ -72,7 +74,7 @@ def interlink_ref_to_link(interlink_ref: tuple[str | None, str]) -> InterLink:
 
 
 def build_parameter(
-    name: str, annotation: Optional[str], default: Optional[str]
+    name: str, annotation: Optional[str], default: Optional[str | expr.Expr]
 ) -> str:
     """
     Create code snippet that defines a parameter
@@ -87,6 +89,8 @@ def build_parameter(
         else:
             param = f"{name}"
     else:
+        default = use_double_qoutes(str(default))
+
         if annotation:
             param = f"{name}: {annotation} = {default}"
         else:
@@ -176,3 +180,36 @@ def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
         return tuple(label for label in lst if label in el.labels)
     else:
         return tuple()
+
+
+def use_double_qoutes(s: str) -> str:
+    """
+    Change a repr str to use double quotes
+
+    Parameters
+    ----------
+    s:
+        A repr string
+    """
+    if len(s) >= 2:
+        if s[0] == s[-1] == "'":
+            s = f'"{s[1:-1]}"'
+    return s
+
+
+def make_formatted_signature(name: str, params_lst: list[str]) -> str:
+    # Format to a maximum width of 78 chars
+    # It fails when a parameter declarations is longer than 78
+    opening = f"{name}("
+    params_string = ", ".join(params_lst)
+    closing = ")"
+    pad = " " * 4
+    if len(opening) + len(params_string) > 78:
+        line_pad = f"\n{pad}"
+        # One parameter per line
+        if len(params_string) > 74:
+            params_string = f",{line_pad}".join(params_lst)
+        params_string = f"{line_pad}{params_string}"
+        closing = f"\n{closing}"
+    sig = f"{opening}{params_string}{closing}"
+    return sig
