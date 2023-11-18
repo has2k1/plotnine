@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import os
 import re
 import typing
@@ -41,17 +42,11 @@ common_stat_param_values = common_geom_param_values
 # Templates for docstrings
 
 GEOM_SIGNATURE_TPL = """
-
 **Usage**
 
-```{{.py}}
 {signature}
-```
 
-Only the `data` and `mapping` can be positional, the rest must
-be keyword arguments. `**kwargs` can be aesthetics (or parameters)
-used by the `stat`.
-"""
+""".strip()
 
 AESTHETICS_TABLE_TPL = """
 {table}
@@ -61,15 +56,9 @@ The **bold** aesthetics are required."""
 STAT_SIGNATURE_TPL = """
 **Usage**
 
-```{{.py}}
 {signature}
-```
 
-Only the `mapping` and `data` can be positional, the rest must
-be keyword arguments. `**kwargs` can be aesthetics (or parameters)
-used by the `geom`.
-"""
-
+""".strip()
 
 common_params_doc = {
     "mapping": """\
@@ -140,6 +129,16 @@ na_rm : bool, default={default_na_rm}
     {na_rm}
 """
 
+geom_kwargs = """\
+**kwargs: Any
+    Aesthetics or parameters used by the `stat`.
+"""
+
+stat_kwargs = """\
+**kwargs: Any
+    Aesthetics or parameters used by the `geom`.
+"""
+
 DOCSTRING_SECTIONS = {
     "parameters",
     "see also",
@@ -150,6 +149,10 @@ DOCSTRING_SECTIONS = {
 }
 
 PARAM_PATTERN = re.compile(r"\s*" r"([_A-Za-z]\w*)" r"\s:\s")
+SECTIONS_PATTERN = re.compile(
+    r"\n(?P<section>(?:\w+|(\w+\s\w+)+))\s*"  # section name
+    r"\n-{3,}\n",  # underline
+)
 GENERATING_QUARTODOC = os.environ.get("GENERATING_QUARTODOC")
 
 
@@ -200,36 +203,39 @@ def make_signature(
     come first in the list, and they get take their values from
     either the params-dict or the common_geom_param_values-dict.
     """
-    tokens = []
-    seen = set()
-
-    def tokens_append(key: str, value: Any):
-        if isinstance(value, str):
-            value = f"'{value}'"
-        tokens.append(f"{key}={value}")
+    params_lst = []
+    _common_params_lookup = set(common_params)
+    it = itertools.chain(
+        common_params, (p for p in params if p not in _common_params_lookup)
+    )
 
     # preferred params come first
-    for key in common_params:
-        seen.add(key)
-        try:
-            value = params[key]
-        except KeyError:
-            value = common_param_values[key]
-        tokens_append(key, value)
+    for i, key in enumerate(it):
+        value = params.get(key, common_param_values.get(key))
+        eq = "=" if key else ""
+        if isinstance(value, str):
+            value = f'"{value}"'
+        params_lst.append(f"{key}={value}")
+        if i == 1:
+            params_lst.append("*")
 
-    # other params (these are the geom/stat specific parameters
-    for key in set(params) - seen:
-        tokens_append(key, params[key])
+    params_lst.append("**kwargs")
 
-    # name, 1 opening bracket
-    s_params = ", ".join(tokens)
-    s1 = f"{name}("
-    s2 = f"{s_params}, **kwargs)"
-    line_width = 78 - len(s1)
-    indent_spaces = " " * len(s1)
-    s2_lines = wrap(s2, width=line_width)
-    s2_indented = f"\n{indent_spaces}".join(s2_lines)
-    return f"{s1}{s2_indented}"
+    # Format to a maximum width of 78 chars
+    # It fails when a parameter declarations is longer than 78
+    opening = f"{name}("
+    params_string = ", ".join(params_lst)
+    closing = ")"
+    pad = " " * 4
+    if len(opening) + len(params_string) > 78:
+        line_pad = f"\n{pad}"
+        # One parameter per line
+        if len(params_string) > 74:
+            params_string = f",{line_pad}".join(params_lst)
+        params_string = f"{line_pad}{params_string}"
+        closing = f"\n{closing}"
+    sig = f"{opening}{params_string}{closing}"
+    return indent(sig, pad)
 
 
 @lru_cache(maxsize=256)
@@ -237,8 +243,8 @@ def docstring_section_lines(docstring: str, section_name: str) -> str:
     """
     Return a section of a numpydoc string
 
-    Paramters
-    ---------
+    Parameters
+    ----------
     docstring :
         Docstring
     section_name :
@@ -270,6 +276,28 @@ def docstring_section_lines(docstring: str, section_name: str) -> str:
         elif inside_section:
             lines.append(line)
     return "\n".join(lines)
+
+
+def append_to_section(s: str, docstring: str, section: str) -> str:
+    """
+    Append string s to a section in the docstring
+    """
+    idx = -1
+    found = False
+    for m in SECTIONS_PATTERN.finditer(docstring):
+        if section == m.group("section"):
+            found = True
+        elif found:
+            idx = m.start()
+            break
+
+    if found:
+        if idx == -1:
+            s = f"\n{s}"
+        top, bottom = docstring[:idx], docstring[idx:]
+        docstring = f"{top}{s}{bottom}"
+
+    return docstring
 
 
 def docstring_parameters_section(obj: Any) -> str:
@@ -397,9 +425,8 @@ def document_geom(geom: type[Geom]) -> type[Geom]:
     It replaces `{usage}`, `{common_parameters}` and
     `{aesthetics}` with generated documentation.
     """
-    # Dedented so that it lineups (in sphinx) with the part
-    # generated parts when put together
     docstring = dedent(geom.__doc__ or "")
+    docstring = append_to_section(geom_kwargs, docstring, "Parameters")
 
     # usage
     signature = make_signature(
@@ -451,6 +478,7 @@ def document_stat(stat: type[Stat]) -> type[Stat]:
     # Dedented so that it lineups (in sphinx) with the part
     # generated parts when put together
     docstring = dedent(stat.__doc__ or "")
+    docstring = append_to_section(stat_kwargs, docstring, "Parameters")
 
     # usage:
     signature = make_signature(
