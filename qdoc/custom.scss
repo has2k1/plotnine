@@ -17,6 +17,8 @@ $alias-symbol-color: #E7298A;
 $module-symbol-color: #377EB8;
 $attribute-symbol-color: #1B9E77;
 
+$signature-border-color: tint-color($primary, 15%);
+$signature-background-color: shade-color(tint-color($primary, 95%), 2.5%);
 
 /*-- scss:rules --*/
 
@@ -45,34 +47,20 @@ table {
    border-bottom-color: $table-border-color;
 }
 
-// docstring signature
-section.level1 > .doc-signature {
-   border-top: 0.25rem solid lighten($primary, 25%);
-   background-color: lighten($primary, 50%);
+// docstring signatures
+section > .doc-signature {
+   @extend .mb-3;
 }
 
-section.level1 > .doc-signature  code {
-   color: lighten($primary, 20%);
-   font-size: 0.9rem;
+section.level1 > .doc-signature > div.sourceCode{
+   border-top: 0.25rem solid $signature-border-color;
+   background-color: $signature-background-color;
 }
 
-section:not(.level1) > .doc-signature {
-   border-left: 0.25rem solid $gray-500;
-   background-color: $gray-200;
+section:not(.level1) > .doc-signature > div.sourceCode {
+   border-left: 0.25rem solid $signature-border-color;
+   background-color: $signature-background-color;
 }
-
-section:not(.level1) > .doc-signature code {
-   color: $gray-800;
-}
-
-section .doc-signature code {
-   @extend .py-1;
-   @extend .px-1;
-   @extend .fw-medium;
-   display: block;
-   background-color: unset;
-}
-
 
 // gallery
 
