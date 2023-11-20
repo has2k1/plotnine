@@ -146,6 +146,10 @@ div.doc-contents.doc-nested,
    font-weight: normal;
 }
 
+.doc .doc-definition-items dt > code span a {
+   color: $primary;
+}
+
 // docstring object symbols
 .content code.doc-symbol {
    font-size: 0.9rem;
