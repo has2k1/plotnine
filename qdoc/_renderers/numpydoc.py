@@ -157,7 +157,10 @@ class NumpyDocRenderer(Renderer):
         if not name:
             return ""
 
-        sig = Span(Code(name), Attr(classes=["doc-signature"]))
+        sig = Div(
+            CodeBlock(name, Attr(classes=["py"])),
+            Attr(classes=["doc-signature"]),
+        )
         return str(sig)
 
     # render_header method ----------------------------------------------------
@@ -244,6 +247,8 @@ class NumpyDocRenderer(Renderer):
         class_docs = []
         meth_docs = []
 
+        classes = ["doc", "doc-contents"]
+
         if el.members:
             raw_attrs = [x for x in el.members if x.obj.is_attribute]
             raw_classes = [x for x in el.members if x.obj.is_class]
@@ -297,8 +302,14 @@ class NumpyDocRenderer(Renderer):
                     ]
                 meth_docs = [section_header, str(meth_table), *docs]
 
-        parts = [title, sig, *attr_docs, body, *class_docs, *meth_docs]
-        return str(Blocks(parts))
+        if any((attr_docs, class_docs, meth_docs)):
+            classes.append("doc-nested")
+
+        content = Div(
+            Blocks([body, *attr_docs, *class_docs, *meth_docs]),
+            Attr(classes=classes),
+        )
+        return str(Blocks([title, sig, content]))
 
     @dispatch
     def render(self, el: layout.Page):  # type: ignore
@@ -329,7 +340,8 @@ class NumpyDocRenderer(Renderer):
         title = self.render_header(el)
         signature = self.signature(el)  # type: ignore
         doc = self.render(el.obj)  # type: ignore
-        return str(Blocks([title, signature, doc]))  # type: ignore
+        content = Div(doc, Attr(classes=["doc", "doc-contents"]))
+        return str(Blocks([title, signature, content]))  # type: ignore
 
     # render griffe objects ---------------------------------------------------
 

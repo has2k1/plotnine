@@ -52,14 +52,21 @@ section > .doc-signature {
    @extend .mb-3;
 }
 
+section > .doc-signature > div.sourceCode{
+   background-color: $signature-background-color;
+}
+
 section.level1 > .doc-signature > div.sourceCode{
    border-top: 0.25rem solid $signature-border-color;
-   background-color: $signature-background-color;
 }
 
 section:not(.level1) > .doc-signature > div.sourceCode {
    border-left: 0.25rem solid $signature-border-color;
-   background-color: $signature-background-color;
+}
+
+section > .doc-signature > div.sourceCode code{
+   max-height: 20rem;
+   overflow: auto;
 }
 
 // gallery
@@ -97,6 +104,13 @@ section:not(.level1) > .doc-signature > div.sourceCode {
    width: 100%;
    height: 100%;
    object-fit: contain;
+}
+
+// docstring contents
+div.doc-contents.doc-nested,
+.doc-nested div.doc-contents{
+   @extend .ps-3;
+   border-left: 0.025rem solid $gray-500;
 }
 
 // docstring definition-items
