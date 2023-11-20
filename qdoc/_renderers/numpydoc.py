@@ -42,7 +42,8 @@ from tabulate import tabulate
 from .typing import DisplayNameFormat
 from .utils import (
     InterLink,
-    build_parameter,
+    build_docstring_parameter,
+    build_signature_parameter,
     get_method_parameters,
     get_object_display_name,
     get_object_kind,
@@ -53,6 +54,12 @@ from .utils import (
 
 SummaryRow: TypeAlias = tuple[str, str]
 
+# NOTE
+# Attribute
+#    show_signature_annotations: bool
+# Has been removed until we can find a way to do it where the
+# annotations do not make signature significantly less readable.
+
 
 @dataclass
 class NumpyDocRenderer(Renderer):
@@ -62,7 +69,6 @@ class NumpyDocRenderer(Renderer):
 
     header_level: int = 1
     show_signature: bool = True
-    show_signature_annotations: bool = False
     display_name_format: DisplayNameFormat | Literal["auto"] = "auto"
     signature_name_format: DisplayNameFormat = "name"
 
@@ -377,6 +383,11 @@ class NumpyDocRenderer(Renderer):
     # signature parts -------------------------------------------------------------
     @dispatch
     def render(self, el: dc.Parameters) -> list[str]:  # type: ignore
+        """
+        All parameters in a function/ method signature
+
+        i.e. The stuff in the brackets of func(a, b, c=3, d=4, **kwargs)
+        """
         params: list[str] = []
         prev, cur = 0, 1
         state = (dc.ParameterKind.positional_or_keyword,) * 2
@@ -400,17 +411,17 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def render(self, el: dc.Parameter):  # type: ignore
+        """
+        Parameter for the function/method signature
+
+        i.e. A single item in the brackets of func(a, b, c=3, d=4, **kwargs)
+        """
         if el.kind == dc.ParameterKind.var_keyword:
             name = f"**{el.name}"
         elif el.kind == dc.ParameterKind.var_positional:
             name = f"*{el.name}"
         else:
             name = el.name
-
-        if self.show_signature_annotations:
-            annotation = self.render_annotation(el.annotation)  # type: ignore
-        else:
-            annotation = ""
 
         default = None
         if el.default is not None:
@@ -421,7 +432,7 @@ class NumpyDocRenderer(Renderer):
             if el.kind not in variable_kind:
                 default = el.default
 
-        return build_parameter(name, annotation, default)
+        return build_signature_parameter(name, None, default)
 
     # render docstring parts --------------------------------------------------
 
@@ -502,7 +513,7 @@ class NumpyDocRenderer(Renderer):
         name = getattr(el, "name", None) or ""
         annotation = self.render_annotation(el.annotation)  # type: ignore
         default = getattr(el, "default", None)
-        term = build_parameter(name, annotation, default)
+        term = build_docstring_parameter(name, annotation, default)
         # Annotations are enclosed in code html tag so that contained
         # interlink references can be processed.
         return Code(term).html, el.description

@@ -6,7 +6,8 @@ from typing import Optional, Sequence
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
-from quartodoc.pandoc.inlines import Link
+from quartodoc.pandoc.components import Attr
+from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
 
 from .typing import DisplayNameFormat, DocObjectKind
 
@@ -73,30 +74,50 @@ def interlink_ref_to_link(interlink_ref: tuple[str | None, str]) -> InterLink:
     return InterLink(content=name, target=target)
 
 
-def build_parameter(
+def build_signature_parameter(
     name: str, annotation: Optional[str], default: Optional[str | expr.Expr]
 ) -> str:
     """
     Create code snippet that defines a parameter
     """
-    if not name and annotation:
-        # e.g. Return values may not have a name
-        return f"{annotation}"
+    parts = []
+    if name:
+        parts.append(name)
+    if annotation:
+        parts.append(f": {annotation}")
+        if default:
+            parts.append(f" = {default}")
+    elif default:
+        parts.append(f"={default}")
 
-    if default is None:
-        if annotation:
-            param = f"{name}: {annotation}"
-        else:
-            param = f"{name}"
-    else:
-        default = use_double_qoutes(str(default))
+    return "".join(parts)
 
-        if annotation:
-            param = f"{name}: {annotation} = {default}"
-        else:
-            param = f"{name}={default}"
 
-    return param
+def build_docstring_parameter(
+    name: str, annotation: Optional[str], default: Optional[str | expr.Expr]
+) -> str:
+    """
+    Create code snippet that defines a parameter
+    """
+    lst = []
+    if name:
+        lst.append(Span(name, Attr(classes=["doc-parameter-name"])))
+    if annotation:
+        if name:
+            lst.append(
+                Span(":", Attr(classes=["doc-parameter-annotation-sep"]))
+            )
+        lst.append(
+            Span(annotation, Attr(classes=["doc-parameter-annotation"]))
+        )
+    if default:
+        lst.extend(
+            [
+                Span("=", Attr(classes=["doc-parameter-default-sep"])),
+                Span(str(default), Attr(classes=["doc-parameter-default"])),
+            ]
+        )
+    return str(Inlines(lst))
 
 
 def get_object_display_name(
