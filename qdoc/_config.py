@@ -36,9 +36,9 @@ def generate_environment_file():
     filepath.write_text(contents)
 
 
-def copy_tutorials():
+def copy_examples_and_tutorials():
     """
-    Copy the tutorials in plotnine_examples
+    Copy the examples & tutorials in plotnine_examples
     """
 
     # NOTE: To avoid confusing the watcher used by "quarto preview",
@@ -48,25 +48,26 @@ def copy_tutorials():
         h2 = hashlib.md5(f2.read_bytes()).hexdigest()
         return h1 == h2
 
-    src_dir = _files("plotnine_examples.tutorials")
-    dest_dir = DOC_DIR / "tutorials"
+    def copy(src_dir, dest_dir):
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        src_files = src_dir.glob("*.ipynb")
+        cur_dest_files = dest_dir.glob("*.ipynb")
+        new_dest_files = []
+        for src in src_files:
+            dest = dest_dir / src.name
+            new_dest_files.append(dest)
+            if dest.exists() and same_contents(src, dest):
+                continue
+            shutil.copyfile(src, dest)
 
-    src_files = src_dir.glob("*.ipynb")  # type: ignore
-    cur_dest_files = dest_dir.glob("*.ipynb")
-    new_dest_files = []
+        # Remove any deleted files
+        for dest in set(cur_dest_files).difference(new_dest_files):
+            dest.unlink()
 
-    for src in src_files:
-        dest = dest_dir / src.name
-        new_dest_files.append(dest)
-        if dest.exists() and same_contents(src, dest):
-            continue
-        shutil.copyfile(src, dest)
-
-    # Remove any deleted files
-    for dest in set(cur_dest_files).difference(new_dest_files):
-        dest.unlink()
+    copy(_files("plotnine_examples.examples"), DOC_DIR / "examples")
+    copy(_files("plotnine_examples.tutorials"), DOC_DIR / "tutorials")
 
 
 if __name__ == "__main__":
     generate_environment_file()
-    copy_tutorials()
+    copy_examples_and_tutorials()
