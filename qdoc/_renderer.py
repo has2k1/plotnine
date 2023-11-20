@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import typing
+from importlib.resources import files as _files
 from pathlib import Path
 from textwrap import dedent
 
@@ -14,7 +15,7 @@ from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
 from quartodoc.pandoc.components import Attr
 
 DOC_DIR = Path(__file__).parent
-EXAMPLES_DIR = DOC_DIR / "plotnine_examples"
+EXAMPLES_DIR = DOC_DIR / "examples"
 
 DOC_SIGNATURE_TPL = """\
 ::: {{.doc-signature}}
@@ -43,7 +44,7 @@ class Renderer(NumpyDocRenderer):
         Override method to embed examples notebook after the docstring
         """
         docstring_qmd = super().render(el)  # type: ignore
-        notebook = EXAMPLES_DIR / "examples" / f"{el.name}.ipynb"
+        notebook = EXAMPLES_DIR / f"{el.name}.ipynb"
         if not notebook.exists():
             return docstring_qmd
 

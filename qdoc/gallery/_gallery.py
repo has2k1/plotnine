@@ -19,8 +19,7 @@ DOC_DIR = THIS_DIR.parent
 
 # String in code cell that creates an image that will be in the gallery
 GALLERY_TAG = "# Gallery Plot"
-# EXAMPLES_DIR = DOC_DIR / "plotnine_examples/examples"
-EXAMPLES_DIR: Path = _files("plotnine_examples.examples")  # type: ignore
+EXAMPLES_DIR = DOC_DIR / "examples"
 THUMBNAILS_DIR = Path("thumbnails")
 THUMBNAIL_SIZE = (294, 210)
 
