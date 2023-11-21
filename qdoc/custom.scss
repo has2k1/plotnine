@@ -47,6 +47,37 @@ table {
    border-bottom-color: $table-border-color;
 }
 
+// docstring spacing and indentation
+section.doc-has-member-docs > :nth-child(n+3):nth-last-child(n+1),
+section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(n+1) {
+   @extend .ps-4;
+   border-left: 0.025rem solid $gray-500;
+}
+
+.content .doc section > *:first-child,
+.content .doc div > *:first-child {
+   @extend .mt-0;
+}
+
+.content .doc section > *:last-child,
+.content .doc div > *:last-child,
+.content .doc section > table {
+   @extend .mb-0;
+}
+
+.content .doc section {
+   @extend .pt-4;
+}
+
+.content .doc h2 {
+   @extend .pb-0;
+}
+
+.content .doc h3 {
+   @extend .mb-3;
+}
+
+
 // docstring signatures
 section > .doc-signature {
    @extend .mb-3;
@@ -104,13 +135,6 @@ section > .doc-signature > div.sourceCode code{
    width: 100%;
    height: 100%;
    object-fit: contain;
-}
-
-// docstring contents
-div.doc-contents.doc-nested,
-.doc-nested div.doc-contents{
-   @extend .ps-3;
-   border-left: 0.025rem solid $gray-500;
 }
 
 // docstring definition-items

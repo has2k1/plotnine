@@ -172,7 +172,7 @@ class NumpyDocRenderer(Renderer):
     # render_header method ----------------------------------------------------
 
     @dispatch
-    def render_header(self, el: layout.Doc):
+    def render_header(self, el: layout.Doc) -> Header:
         """Render the header of a docstring, including any anchors."""
         kind = get_object_kind(el.obj)
         labels = get_object_labels(el.obj)
@@ -196,7 +196,7 @@ class NumpyDocRenderer(Renderer):
             ),
         )
         object_name = Span(
-            name, Attr(classes=["doc", "doc-object-name", f"doc-{kind}-name"])
+            name, Attr(classes=["doc-object-name", f"doc-{kind}-name"])
         )
 
         if labels:
@@ -205,26 +205,23 @@ class NumpyDocRenderer(Renderer):
                 lst.append(
                     Code(
                         " ",
-                        Attr(
-                            classes=["doc", "doc-label", f"doc-label-{label}"]
-                        ),
+                        Attr(classes=["doc-label", f"doc-label-{label}"]),
                     )
                 )
-            label_code = Span(
-                Inlines(lst), Attr(classes=["doc", "doc-labels"])
-            )
+            label_code = Span(Inlines(lst), Attr(classes=["doc-labels"]))
         else:
             label_code = ""
+
+        classes = ["doc", "doc-object", f"doc-{kind}"]
+        if hasattr(el, "members") and el.members:
+            classes.append("doc-has-member-docs")
 
         h = Header(
             level=self.header_level,
             content=Inlines([symbol_code, object_name, label_code]),
-            attr=Attr(
-                identifier=el.obj.path,
-                classes=["doc", "doc-object", f"doc-{kind}"],
-            ),
+            attr=Attr(identifier=el.obj.path, classes=classes),
         )
-        return str(h)
+        return h
 
     # render method -----------------------------------------------------------
 
@@ -245,15 +242,19 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def render(self, el: layout.DocClass | layout.DocModule):  # type: ignore
-        title = self.render_header(el)
+        """
+        Render documentation for a class or a module
+
+        Whether to include members (attributes, classes or methods) is based
+        on the config.
+        """
+        header = self.render_header(el)
         sig = self.signature(el)
         body = self.render(el.obj)  # type: ignore
 
         attr_docs = []
         class_docs = []
         meth_docs = []
-
-        classes = ["doc", "doc-contents"]
 
         if el.members:
             raw_attrs = [x for x in el.members if x.obj.is_attribute]
@@ -264,7 +265,11 @@ class NumpyDocRenderer(Renderer):
             header_row = ("Name", "Description")
 
             if raw_attrs and not _has_attr_section(el.obj.docstring):
-                section_header = Header(self.header_level + 1, "Attributes")
+                section_header = Header(
+                    self.header_level + 1,
+                    "Attributes",
+                    Attr(classes=["doc-attributes"]),
+                )
                 rows: list[SummaryRow] = [
                     self.summarize(a) for a in raw_attrs  # type: ignore
                 ]
@@ -272,7 +277,11 @@ class NumpyDocRenderer(Renderer):
                 attr_docs = [section_header, str(attr_table)]
 
             if raw_classes:
-                section_header = Header(self.header_level + 1, "Classes")
+                section_header = Header(
+                    self.header_level + 1,
+                    "Classes",
+                    Attr(classes=["doc-classes"]),
+                )
                 rows: list[SummaryRow] = [
                     self.summarize(a) for a in raw_classes  # type: ignore
                 ]
@@ -293,7 +302,11 @@ class NumpyDocRenderer(Renderer):
                 else:
                     section_name = "Functions"
 
-                section_header = Header(self.header_level + 1, section_name)
+                section_header = Header(
+                    self.header_level + 1,
+                    section_name,
+                    Attr(classes=["doc-methods"]),
+                )
                 rows: list[SummaryRow] = [  # type: ignore
                     self.summarize(m) for m in raw_meths
                 ]
@@ -308,14 +321,9 @@ class NumpyDocRenderer(Renderer):
                     ]
                 meth_docs = [section_header, str(meth_table), *docs]
 
-        if any((attr_docs, class_docs, meth_docs)):
-            classes.append("doc-nested")
-
-        content = Div(
-            Blocks([body, *attr_docs, *class_docs, *meth_docs]),
-            Attr(classes=classes),
+        return str(
+            Blocks([header, sig, body, *attr_docs, *class_docs, *meth_docs])
         )
-        return str(Blocks([title, sig, content]))
 
     @dispatch
     def render(self, el: layout.Page):  # type: ignore
@@ -346,8 +354,7 @@ class NumpyDocRenderer(Renderer):
         title = self.render_header(el)
         signature = self.signature(el)  # type: ignore
         doc = self.render(el.obj)  # type: ignore
-        content = Div(doc, Attr(classes=["doc", "doc-contents"]))
-        return str(Blocks([title, signature, content]))  # type: ignore
+        return str(Blocks([title, signature, doc]))  # type: ignore
 
     # render griffe objects ---------------------------------------------------
 
@@ -365,7 +372,7 @@ class NumpyDocRenderer(Renderer):
                 title = (section.title or section.kind.value).title()
                 body = self.render(section)
                 slug = title.lower().replace(" ", "-")
-                section_classes = ["doc", f"doc-{slug}"]
+                section_classes = [f"doc-{slug}"]
 
                 if title in ("Text", "Deprecated"):
                     content = Div(body, Attr(classes=section_classes))
@@ -461,7 +468,7 @@ class NumpyDocRenderer(Renderer):
         ]
         div = Div(
             DefinitionList(list_items),
-            Attr(classes=["doc", "doc-definition-items"]),
+            Attr(classes=["doc-definition-items"]),
         )
         return str(div)
 
