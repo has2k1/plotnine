@@ -61,6 +61,9 @@ Bug Fixes
 - Fixed space handling around `axis_label`, `axis_text` and `axis_ticks` when
   the ticks are turned off.
 
+- Fixed bug in :class:`~plotnine.geoms.geom_path` where the lineend parameter
+  was ignored. (:issue:`727`)
+
 Enhancements
 ************
 
