@@ -139,7 +139,10 @@ def get_gallery_images(
     Return all gallery images
     """
     for filepath in nb_filepaths:
-        yield from get_gallery_images_in_notebook(filepath)
+        try:
+            yield from get_gallery_images_in_notebook(filepath)
+        except Exception as err:
+            raise Exception(f"Could not process {filepath}") from err
 
 
 def generate_gallery() -> str:
@@ -155,7 +158,11 @@ def generate_gallery() -> str:
     -----
     Calling this function invokes functions with a side-effects.
     """
-    notebooks = sorted(EXAMPLES_DIR.glob("*.ipynb"))
+    notebooks = sorted(
+        fp
+        for fp in EXAMPLES_DIR.glob("*.ipynb")
+        if not fp.name.endswith(".out.ipynb")
+    )
     images = get_gallery_images(notebooks)
     gallery = Div(list(images), Attr(classes=["gallery", "grid"]))
     return str(gallery)

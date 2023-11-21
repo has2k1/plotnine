@@ -7,7 +7,7 @@ project:
   render:
     - "reference/**.qmd"
     - "*.qmd"
-    - "*.ipynb"
+    - "tutorials/*.ipynb"
 
 filters:
   - interlinks
