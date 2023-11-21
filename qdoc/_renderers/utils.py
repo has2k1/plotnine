@@ -80,6 +80,9 @@ def build_signature_parameter(
     """
     Create code snippet that defines a parameter
     """
+    if isinstance(default, str):
+        default = repr_double_qoutes(default)
+
     parts = []
     if name:
         parts.append(name)
@@ -99,6 +102,9 @@ def build_docstring_parameter(
     """
     Create code snippet that defines a parameter
     """
+    if isinstance(default, str):
+        default = repr_double_qoutes(default)
+
     lst = []
     if name:
         lst.append(Span(name, Attr(classes=["doc-parameter-name"])))
@@ -203,7 +209,7 @@ def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
         return tuple()
 
 
-def use_double_qoutes(s: str) -> str:
+def repr_double_qoutes(s: str) -> str:
     """
     Change a repr str to use double quotes
 
