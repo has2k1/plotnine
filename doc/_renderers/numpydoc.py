@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import html
 import typing
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
 from typing import Literal, Optional, Sequence, TypeAlias
 from warnings import warn
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
+from griffe.docstrings import Parser
 from griffe.docstrings import dataclasses as ds
 from numpydoc.docscrape import NumpyDocString
 from plum import dispatch

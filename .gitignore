@@ -92,12 +92,13 @@ plotnine/_version.py
 
 
 # Documentation
-qdoc/plotnine_examples/
-qdoc/reference/
-qdoc/_site/
-qdoc/_inv/
-qdoc/.quarto/
-qdoc/gallery/thumbnails
-qdoc/objects.json
-qdoc/.luarc.json
-qdoc/_environment
+doc/plotnine_examples/
+doc/reference/
+doc/_site/
+doc/_inv/
+doc/.quarto/
+doc/gallery/thumbnails
+doc/objects.json
+doc/objects.txt
+doc/.luarc.json
+doc/_environment
