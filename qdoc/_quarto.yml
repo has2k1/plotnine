@@ -43,11 +43,16 @@ website:
   page-navigation: true
   navbar:
     left:
-      - file: gallery/index.qmd
       - file: reference/index.qmd
         text: "Reference"
+      - file: gallery/index.qmd
       - file: tutorials/index.qmd
-      - file: about.qmd
+      - text: "Pages"
+        menu:
+        - installation.qmd
+        - changelog.qmd
+        - external-resources.qmd
+        - about.qmd
     right:
       - icon: github
         href: https://github.com/has2k1/plotnine
@@ -76,7 +81,8 @@ quartodoc:
         - ggplot
         - qplot
         - watermark
-        - layer
+        - name: layer
+          package: plotnine.layer
         - name: PlotnineAnimation
           package: plotnine.animation
         - save_as_pdf_pages
@@ -269,7 +275,7 @@ quartodoc:
 
     - subtitle: Identity scales
       desc: ""
-      package: plotnine.scales.scale_identity
+      package: plotnine.scales
       options: *no-members
       contents:
         - scale_alpha_identity
@@ -360,6 +366,7 @@ quartodoc:
         - scale_x_log10
         - scale_x_reverse
         - scale_x_sqrt
+        - scale_x_symlog
         - scale_x_timedelta
         - scale_y_continuous
         - scale_y_date
@@ -368,6 +375,7 @@ quartodoc:
         - scale_y_log10
         - scale_y_reverse
         - scale_y_sqrt
+        - scale_y_symlog
         - scale_y_timedelta
 
     - subtitle: Scale limits
@@ -447,6 +455,10 @@ quartodoc:
         Users should never create instances of themeable.
       package: plotnine.themes.themeable
       contents:
+        - themeable
+
+    - package: plotnine.themes.themeable
+      contents:
         - aspect_ratio
         - axis_line
         - axis_line_x
@@ -460,21 +472,11 @@ quartodoc:
         - axis_ticks_direction_y
         - axis_ticks_length
         - axis_ticks_length_major
+        - axis_ticks_length_major_x
+        - axis_ticks_length_major_y
         - axis_ticks_length_minor
-        - axis_ticks_major
-        - axis_line
-        - axis_line_x
-        - axis_line_y
-        - axis_text
-        - axis_text_x
-        - axis_text_y
-        - axis_ticks
-        - axis_ticks_direction
-        - axis_ticks_direction_x
-        - axis_ticks_direction_y
-        - axis_ticks_length
-        - axis_ticks_length_major
-        - axis_ticks_length_minor
+        - axis_ticks_length_minor_x
+        - axis_ticks_length_minor_y
         - axis_ticks_major
         - axis_ticks_major_x
         - axis_ticks_major_y
@@ -483,7 +485,13 @@ quartodoc:
         - axis_ticks_minor_y
         - axis_ticks_pad
         - axis_ticks_pad_major
+        - axis_ticks_pad_major_x
+        - axis_ticks_pad_major_y
         - axis_ticks_pad_minor
+        - axis_ticks_pad_minor_x
+        - axis_ticks_pad_minor_y
+        - axis_ticks_x
+        - axis_ticks_y
         - axis_title
         - axis_title_x
         - axis_title_y
@@ -526,21 +534,27 @@ quartodoc:
         - panel_spacing_x
         - panel_spacing_y
         - plot_background
+        - plot_caption
         - plot_margin
+        - plot_margin_bottom
+        - plot_margin_left
+        - plot_margin_right
+        - plot_margin_top
+        - plot_subtitle
         - plot_title
         - rect
-        - strip_background
-        - strip_background_x
-        - strip_background_y
         - strip_align
         - strip_align_x
         - strip_align_y
+        - strip_background
+        - strip_background_x
+        - strip_background_y
         - strip_text
         - strip_text_x
         - strip_text_y
+        - subplots_adjust
         - text
         - title
-        - themeable
 
     - subtitle: Theme helper functions and classes
       package: plotnine.themes
