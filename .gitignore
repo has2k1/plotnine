@@ -96,6 +96,7 @@ doc/plotnine_examples/
 doc/reference/
 doc/_site/
 doc/_inv/
+doc/_extensions/
 doc/.quarto/
 doc/gallery/thumbnails
 doc/objects.json
