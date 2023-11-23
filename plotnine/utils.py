@@ -804,9 +804,11 @@ class Registry(type, metaclass=RegistryMeta):
     def __new__(cls, name, bases, namespace):
         sub_cls = super().__new__(cls, name, bases, namespace)
         if not namespace.pop("__base__", False):
-            cls._registry[name] = sub_cls
+            # A sub_cls is an alias of a base class if it has
+            # alias as the second base class
             if len(bases) == 2 and bases[1] is alias:
                 sub_cls = bases[0]
+            cls._registry[name] = sub_cls
         return sub_cls
 
 
