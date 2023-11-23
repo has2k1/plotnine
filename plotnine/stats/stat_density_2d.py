@@ -74,9 +74,9 @@ class stat_density_2d(stat):
         if params["package"] == "statsmodels":
             params["package"] = "statsmodels-m"
             if "var_type" not in kde_params:
-                kde_params["var_type"] = "{}{}".format(
-                    get_var_type(data["x"]), get_var_type(data["y"])
-                )
+                x_type = get_var_type(data["x"])
+                y_type = get_var_type(data["y"])
+                kde_params["var_type"] = f"{x_type}{y_type}"
 
         return params
 

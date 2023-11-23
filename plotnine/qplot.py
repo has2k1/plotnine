@@ -147,8 +147,9 @@ def qplot(
                 try:
                     x = env.eval(aesthetics["x"], inner_namespace=data)
                 except Exception:
-                    msg = "Could not evaluate aesthetic 'x={}'"
-                    raise PlotnineError(msg.format(aesthetics["x"]))
+                    raise PlotnineError(
+                        f"Could not evaluate aesthetic 'x={aesthetics['x']}'"
+                    )
             elif not hasattr(aesthetics["x"], "dtype"):
                 x = np.asarray(aesthetics["x"])
 
@@ -200,7 +201,7 @@ def qplot(
     for g in geom:
         geom_name = f"geom_{g}"
         geom_klass = Registry[geom_name]
-        stat_name = "stat_{}".format(geom_klass.DEFAULT_PARAMS["stat"])
+        stat_name = f"stat_{geom_klass.DEFAULT_PARAMS['stat']}"
         stat_klass = Registry[stat_name]
         # find params
         recognized = kwargs.keys() & (

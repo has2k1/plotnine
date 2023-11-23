@@ -107,8 +107,10 @@ class guide(metaclass=Registry):
             if hasattr(self, k) or k in no_default:
                 setattr(self, k, v)
             else:
-                tpl = "{} does not undestand attribute '{}'"
-                raise PlotnineError(tpl.format(self.__class__.__name__, k))
+                raise PlotnineError(
+                    f"{self.__class__.__name__} "
+                    f"does not undestand attribute '{k}'"
+                )
 
     def _set_defaults(self, theme: Theme):
         """
@@ -131,13 +133,14 @@ class guide(metaclass=Registry):
             self.label_position = "right"
 
         if self.label_position not in valid_locations:
-            msg = "label position '{}' is invalid"
-            raise PlotnineError(msg.format(self.label_position))
+            raise PlotnineError(
+                f"label position '{self.label_position}' is invalid"
+            )
 
         # label margin
         # legend_text_legend or legend_text_colorbar
         _legend_type = self.__class__.__name__.split("_")[-1]
-        name = "legend_text_{}".format(_legend_type)
+        name = f"legend_text_{_legend_type}"
         loc = margin_location_lookup[self.label_position[0]]
         margin = _property(name, "margin")
         self._label_margin = margin.get_as(loc, "pt")
@@ -156,8 +159,9 @@ class guide(metaclass=Registry):
             elif self.direction == "horizontal":
                 self.title_position = "left"
         if self.title_position not in valid_locations:
-            msg = "legend title position '{}' is invalid"
-            raise PlotnineError(msg.format(self.title_position))
+            raise PlotnineError(
+                f"legend title position '{self.title_position}' is invalid"
+            )
 
         # title alignment
         self._title_align = _property("legend_title_align")

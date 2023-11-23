@@ -88,7 +88,7 @@ def quant_pred(q, data, **params):
         {
             "x": [data["x"].min(), data["x"].max()],
             "quantile": q,
-            "group": "{}-{}".format(data["group"].iloc[0], q),
+            "group": f"{data['group'].iloc[0]}-{q}",
         }
     )
     out["y"] = reg_res.predict(out)
