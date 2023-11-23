@@ -214,20 +214,20 @@ class geom_text(geom):
             plot_data["facecolor"] = fill
 
             if params["boxstyle"] in ("round", "round4"):
-                boxstyle = "{},pad={},rounding_size={}".format(
-                    params["boxstyle"],
-                    params["label_padding"],
-                    params["label_r"],
+                boxstyle = (
+                    f"{params['boxstyle']},"
+                    f"pad={params['label_padding']},"
+                    f"rounding_size={params['label_r']}"
                 )
             elif params["boxstyle"] in ("roundtooth", "sawtooth"):
-                boxstyle = "{},pad={},tooth_size={}".format(
-                    params["boxstyle"],
-                    params["label_padding"],
-                    params["tooth_size"],
+                boxstyle = (
+                    f"{params['boxstyle']},"
+                    f"pad={params['label_padding']},"
+                    f"tooth_size={params['tooth_size']}"
                 )
             else:
-                boxstyle = "{},pad={}".format(
-                    params["boxstyle"], params["label_padding"]
+                boxstyle = (
+                    f"{params['boxstyle']}," f"pad={params['label_padding']},"
                 )
             bbox = {"linewidth": params["label_size"], "boxstyle": boxstyle}
         else:
@@ -237,7 +237,7 @@ class geom_text(geom):
 
         # For labels add a bbox
         for i in range(len(data)):
-            kw: dict["str", Any] = plot_data.iloc[i].to_dict()
+            kw: dict[str, Any] = plot_data.iloc[i].to_dict()
             if draw_label:
                 kw["bbox"] = bbox
                 kw["bbox"]["edgecolor"] = params["boxcolor"] or kw["color"]
