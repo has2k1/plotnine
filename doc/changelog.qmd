@@ -53,8 +53,11 @@
 - Fixed space handling around `axis_label`, `axis_text` and `axis_ticks` when
   the ticks are turned off.
 
-[](- Fixed bug in :class:`~plotnine.geoms.geom_path`) where the lineend parameter
+- Fixed bug in [](:class:`~plotnine.geoms.geom_path`) where the lineend parameter
   was ignored. ({{< issue 727 >}})
+
+- Fixed bug where `theme(legend_background=element_blank())`{.py} messed up
+  the position of the legend, instead of only removing the background.
 
 ### Enhancements
 

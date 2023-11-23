@@ -1778,7 +1778,7 @@ class panel_spacing(panel_spacing_x, panel_spacing_y):
     Parameters
     ----------
     theme_element : float
-        Size in inches of the space between the facet panels
+        Size as a fraction of the figure's dimension.
     """
 
 
