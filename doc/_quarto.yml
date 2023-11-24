@@ -78,6 +78,7 @@ issuey:
 quartodoc:
   style: pkgdown
   dir: reference
+  title: API Reference
   package: plotnine
   dynamic: true
   renderer:
@@ -108,7 +109,6 @@ quartodoc:
         - after_stat
         - after_scale
         - stage
-
 
     - title: geoms
       desc: |
@@ -190,7 +190,6 @@ quartodoc:
         - xlab
         - ylab
         - ggtitle
-
 
     - title: stats
       desc: |
