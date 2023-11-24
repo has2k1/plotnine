@@ -544,15 +544,20 @@ class NumpyDocRenderer(Renderer):
         except ValueError:
             return el.value
 
-        content = []
+        list_items = []
         for interlink_refs, description_parts in parsed_see_also_lines:
             term_links = [
                 str(interlink_ref_to_link(ref)) for ref in interlink_refs
             ]
             term = ", ".join(term_links)
             desc = " ".join(description_parts)
-            content.append((term, desc))
-        return str(DefinitionList(content))
+            list_items.append((term, desc))
+
+        div = Div(
+            DefinitionList(list_items),
+            Attr(classes=["doc-definition-items"]),
+        )
+        return str(div)
 
     @dispatch
     def render(self, el: qast.DocstringSectionNotes):  # type: ignore
