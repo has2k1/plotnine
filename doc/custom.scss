@@ -87,39 +87,45 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 }
 
 
-.content .doc section {
+.doc section {
    @extend .pt-4;
 }
 
-.content .doc h2 {
+.doc h2 {
    @extend .pb-0;
 }
 
-.content .doc h3 {
+.doc h3,
+.doc h4 {
    @extend .mb-3;
 }
 
 
 // docstring signatures
-section > .doc-signature {
-   @extend .mb-3;
-}
-
-section > .doc-signature > div.sourceCode{
+.doc > .doc-signature > div.sourceCode{
    background-color: $signature-background-color;
 }
 
-section.level1 > .doc-signature > div.sourceCode{
+.doc.level1 > .doc-signature > div.sourceCode{
    border-top: 0.25rem solid $signature-border-color;
 }
 
-section:not(.level1) > .doc-signature > div.sourceCode {
+.doc:not(.level1) > .doc-signature > div.sourceCode {
    border-left: 0.25rem solid $signature-border-color;
 }
 
-section > .doc-signature > div.sourceCode code{
+.doc > .doc-signature > div.sourceCode code{
    max-height: 20rem;
    overflow: auto;
+}
+
+// Reference/Index
+
+// Give all the tables on the index page the same with.
+// It looks better, but as table cells do not respond to
+// min-width styling, this is not a perfect solution.
+.doc-index .doc-summary-table td:first-child{
+   width: 30%;
 }
 
 // gallery
