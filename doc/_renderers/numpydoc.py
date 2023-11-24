@@ -605,15 +605,20 @@ class NumpyDocRenderer(Renderer):
         content = ""
 
         if el.title:
-            header = Header(2, f"{el.title}")
+            header = Header(2, f"{el.title}", Attr(classes=["doc-summary"]))
         elif el.subtitle:
-            header = Header(3, f"{el.subtitle}")
+            header = Header(
+                3, f"{el.subtitle}", Attr(classes=["doc-summary-subgroup"])
+            )
 
         if el.contents:
             rows: list[SummaryRow] = []
             for child in el.contents:
                 rows.extend(self.summarize(child))  # type: ignore
-            content = str(tabulate(rows, tablefmt="grid"))
+            content = Div(
+                str(tabulate(rows, tablefmt="grid")),
+                Attr(classes=["doc-summary-table"]),
+            )
 
         return Blocks([header, desc, content])
 
