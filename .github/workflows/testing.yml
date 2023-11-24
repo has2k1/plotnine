@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.9, 3.11]
+        python-version: [3.9, 3.12]
 
     steps:
       - name: Checkout Code
@@ -144,21 +144,23 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.4.510"
+
       - name: Install Packages
         shell: bash
         run: |
           sudo apt-get install pandoc
           pip install git+https://github.com/has2k1/mizani.git@main
           pip install ".[test,doc]"
-          pip install -r requirements/examples.txt
+          pip install -r requirements/doc.txt
 
       - name: Environment Information
         shell: bash
         run: pip list
 
-      - name: Build Documentation
-        shell: bash
+      - name: Build documentation
         run: |
-          pushd doc
-          SPHINXOPTS=-W
-          make html && popd
+          make doc

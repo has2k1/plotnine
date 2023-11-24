@@ -3,7 +3,7 @@ name: Documentation
 on:
   workflow_dispatch:
   push:
-    branches: ["main", "dev", "qdoc", "dev-*"]
+    branches: ["main", "dev", "doc", "qdoc", "dev-*"]
   pull_request:
   release:
     types: [published]
@@ -28,19 +28,20 @@ jobs:
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: "1.4.468"
+          version: "1.4.510"
 
       - name: Install Package
         run: |
           python -m pip install "git+https://github.com/has2k1/plotnine-examples"
           python -m pip install "git+https://github.com/has2k1/quartodoc.git@numpydoc-renderer"
           python -m pip install ".[doc]"
+          quarto add has2k1/issuey
 
       - name: Environment Information
         shell: bash
         run: |
           ls -la
-          ls -la qdoc
+          ls -la doc
           pip list
 
       - name: Build docs
@@ -50,4 +51,4 @@ jobs:
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: qdoc/_site
+          folder: doc/_site

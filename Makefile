@@ -69,10 +69,10 @@ coverage:
 	$(BROWSER) htmlcov/index.html
 
 doc:
-	$(MAKE) -C qdoc doc
+	$(MAKE) -C doc doc
 
 doc-preview:
-	$(MAKE) -C qdoc preview
+	$(MAKE) -C doc preview
 
 release: clean
 	bash ./tools/release.sh
