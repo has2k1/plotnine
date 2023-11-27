@@ -156,7 +156,7 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def signature(
-        self, el: dc.Module | dc.Attribute, source: Optional[dc.Alias] = None
+        self, el: dc.Module, source: Optional[dc.Alias] = None
     ) -> str:
         name = get_object_display_name(
             source or el, self.signature_name_format
@@ -169,6 +169,23 @@ class NumpyDocRenderer(Renderer):
             Attr(classes=["doc-signature"]),
         )
         return str(sig)
+
+    @dispatch
+    def signature(
+        self, el: dc.Attribute, source: Optional[dc.Alias] = None
+    ) -> str:
+        """
+        Render an attribute
+        """
+        name = get_object_display_name(
+            source or el, self.signature_name_format
+        )
+        annotation = self.render_annotation(el.annotation)  # type: ignore
+        sig = Div(
+            CodeBlock(name, Attr(classes=["py"])),
+            Attr(classes=["doc-signature"]),
+        )
+        return build_signature_parameter(name, annotation, el.value)
 
     # render_header method ----------------------------------------------------
 
