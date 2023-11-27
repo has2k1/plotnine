@@ -85,7 +85,7 @@ quartodoc:
     style: _renderer.py
 
   sections:
-    - title: Plot creation
+    - title: Creating a Plot
       desc: ""
       contents:
         - ggplot
@@ -97,7 +97,7 @@ quartodoc:
           package: plotnine.animation
         - save_as_pdf_pages
 
-    - title: Mapping aesthetics
+    - title: Mapping Aesthetics
       desc: |
         Aesthetics are the visual properties of a plot. The following functions
         control how the data (and calculations based on the data) is mapped to
@@ -110,7 +110,7 @@ quartodoc:
         - after_scale
         - stage
 
-    - title: geoms
+    - title: Geoms
       desc: |
         Geometric objects (geoms) are responsible for the visual representation
         of data points.  geom_* classes determine the kind of geometric objects
@@ -130,9 +130,7 @@ quartodoc:
         - geom_bar
         - geom_blank
         - geom_boxplot
-        - name: geom_col
-          members: []
-
+        - geom_col
         - geom_count
         - geom_crossbar
         - geom_density
@@ -171,7 +169,7 @@ quartodoc:
         - geom_violin
         - geom_vline
 
-    - subtitle: related to geoms
+    - subtitle: Annotations
       desc: ""
       package: plotnine.geoms
       options: *no-members
@@ -181,6 +179,7 @@ quartodoc:
         - annotation_stripes
         - name: arrow
           package: plotnine.geoms.geom_path
+
     - subtitle: Labels
       desc: ""
       package: plotnine.labels
@@ -191,12 +190,13 @@ quartodoc:
         - ylab
         - ggtitle
 
-    - title: stats
+    - title: Stats
       desc: |
-        Statistical transformations (stats) do aggregations and other computations
-        on data before it is drawn out. `stat_*` determine the type of computation done
-        on the data. Different types of computations yield varied results, so a `stat`
-        must be paired with a `geom` that can represent all or some of the computations.
+        Statistical transformations (stats) do aggregations and other
+        computations on data before it is drawn out. `stat_*` determine the
+        type of computation done on the data. Different types of computations
+        yield varied results, so a `stat` must be paired with a `geom` that
+        can represent all or some of the computations.
 
     - package: plotnine.stats.stat
       contents:
@@ -228,13 +228,14 @@ quartodoc:
         - stat_unique
         - stat_ydensity
 
-    - title: facets
+    - title: Facets
       desc: |
         Faceting is a way to subset data and plot it on different panels.
 
     - package: plotnine.facets.facet
       contents:
-        - facet
+        - name: facet
+          include_attributes: false
 
     - package: plotnine.facets
       options: *no-members
@@ -252,13 +253,13 @@ quartodoc:
         - label_both
         - label_context
 
-    - title: scales
+    - title: Scales
       desc: |
         Scales control the mapping from data to aesthetics. They take data and
         adjust it to fit the different aspects of the visual sense i.e. length,
         colour, size and shape.
 
-    - subtitle: Base scales
+    - subtitle: Base Scales
       package: plotnine.scales
       options: *no-members
       contents:
@@ -271,7 +272,7 @@ quartodoc:
         - name: scale_datetime
           package: plotnine.scales.scale_datetime
 
-    - subtitle: Alpha scales
+    - subtitle: Alpha Scales
       desc: ""
       package: plotnine.scales.scale_alpha
       options: *no-members
@@ -281,7 +282,7 @@ quartodoc:
         - scale_alpha_continuous
         - scale_alpha_datetime
 
-    - subtitle: Identity scales
+    - subtitle: Identity Scales
       desc: ""
       package: plotnine.scales
       options: *no-members
@@ -294,7 +295,7 @@ quartodoc:
         - scale_shape_identity
         - scale_size_identity
 
-    - subtitle: Color and fill scales
+    - subtitle: Color and Fill Scales
       desc: ""
       package: plotnine.scales
       options: *no-members
@@ -326,7 +327,7 @@ quartodoc:
         - scale_fill_grey
         - scale_fill_hue
 
-    - subtitle: Manual scales
+    - subtitle: Manual Scales
       desc: ""
       package: plotnine.scales
       options: *no-members
@@ -339,21 +340,21 @@ quartodoc:
         - scale_shape_manual
         - scale_size_manual
 
-    - subtitle: Linetype scales
+    - subtitle: Linetype Scales
       package: plotnine.scales
       options: *no-members
       contents:
         - scale_linetype
         - scale_linetype_discrete
 
-    - subtitle: Shape scales
+    - subtitle: Shape Scales
       package: plotnine.scales
       options: *no-members
       contents:
         - scale_shape
         - scale_shape_discrete
 
-    - subtitle: Size scales
+    - subtitle: Size Scales
       package: plotnine.scales
       options: *no-members
       contents:
@@ -364,7 +365,7 @@ quartodoc:
         - scale_size_radius
         - scale_size_datetime
 
-    - subtitle: Position scales
+    - subtitle: Position Scales
       package: plotnine.scales
       contents:
         - scale_x_continuous
@@ -386,7 +387,7 @@ quartodoc:
         - scale_y_symlog
         - scale_y_timedelta
 
-    - subtitle: Scale limits
+    - subtitle: Scale Limits
       package: plotnine.scales
       options: *no-members
       contents:
@@ -395,14 +396,15 @@ quartodoc:
         - ylim
         - expand_limits
 
-    - title: Scale guides
+    - title: Scale Guides
       desc: |
         Guides allow you to interpret data represented on a scales.
         Guides include the `x` and `y` axes, legends and colorbars.
 
     - package: plotnine.guides.guide
       contents:
-        - guide
+        - name: guide
+          include_attributes: false
 
     - package: plotnine.guides
       options: *no-members
@@ -411,14 +413,16 @@ quartodoc:
         - guide_legend
         - guide_colorbar
 
-    - title: positions
+    - title: Positions
       desc: |
-        Overlapping objects can be visualized better if their positions are adjusted.
-        That is what the `position_*` class do. Each `geom` is associated with one position adjustment class.
+        Overlapping objects can be visualized better if their positions are
+        adjusted. That is what the `position_*` class do. Each `geom` is
+        associated with one position adjustment class.
 
     - package: plotnine.positions.position
       contents:
-        - position
+        - name: position
+          include_attributes: false
 
     - package: plotnine.positions
       options: *no-members
@@ -433,13 +437,18 @@ quartodoc:
         - position_stack
 
 
-    - title: themes
+    - title: Themes
       desc: |
         Themes control the visual appearance of the non-data elements the plot.
-      package: plotnine.themes
+
+    - package: plotnine.themes
+      contents:
+        - name: theme
+          include_attributes: false
+
+    - package: plotnine.themes
       options: *no-members
       contents:
-        - theme
         - theme_538
         - theme_bw
         - theme_classic
@@ -564,7 +573,7 @@ quartodoc:
         - text
         - title
 
-    - subtitle: Theme helper functions and classes
+    - subtitle: Helpfull Functions & Classes for Theming
       package: plotnine.themes
       options: *no-members
       contents:
@@ -576,9 +585,10 @@ quartodoc:
         - element_text
         - element_blank
 
-    - title: coordinates
+    - title: Coordinates
       desc: |
-        Coordinate systems put together the two position scales to produce a 2d location.
+        Coordinate systems put together the two position scales to produce
+        a 2d location.
 
     - package: plotnine.coords.coord
       contents:
@@ -593,14 +603,15 @@ quartodoc:
         - coord_flip
         - coord_trans
 
-    - title: options
+    - title: Options
       desc: |
-        When working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using `theme_set()`.
+        When working interactively, some of the options make it convenient to
+        create plots that have a common look and feel. Another way to do it,
+        to set a default theme using `theme_set()`.
       package: plotnine.options
       options:
         dynamic: false
       contents:
-        # TODO: these use sphinx's docstring comment syntax, which we don't support
         - aspect_ratio
         - base_family
         - base_margin
@@ -611,9 +622,10 @@ quartodoc:
         - get_option
         - set_option
 
-    - title: datasets
+    - title: Datasets
       desc: |
-        These datasets ship with the plotnine and you can import them with from the `plotnine.data` sub-package.
+        These datasets ship with the plotnine and you can import them with
+        from the `plotnine.data` sub-package.
       package: plotnine.data
       contents:
         - diamonds
