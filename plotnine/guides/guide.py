@@ -104,7 +104,7 @@ class guide(metaclass=Registry):
             if hasattr(self, k) or k in no_default:
                 setattr(self, k, v)
             else:
-                tpl = "{} does not undestand attribute '{}'"
+                tpl = "{} does not understand attribute '{}'"
                 raise PlotnineError(tpl.format(self.__class__.__name__, k))
 
     def _set_defaults(self, theme: Theme):
