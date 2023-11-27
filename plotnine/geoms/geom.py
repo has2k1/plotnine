@@ -43,23 +43,23 @@ class geom(metaclass=Registry):
 
     __base__ = True
 
-    #: Default aesthetics for the geom
     DEFAULT_AES: dict[str, Any] = {}
+    """Default aesthetics for the geom"""
 
-    #: Required aesthetics for the geom
     REQUIRED_AES: set[str] = set()
+    """Required aesthetics for the geom"""
 
-    #: Required aesthetics for the geom
     NON_MISSING_AES: set[str] = set()
+    """Required aesthetics for the geom"""
 
-    #: Required parameters for the geom
     DEFAULT_PARAMS: dict[str, Any] = {}
+    """Required parameters for the geom"""
 
-    #: geom/layer specific dataframe
     data: DataLike
+    """Geom/layer specific dataframe"""
 
-    #: mappings i.e. `aes(x='col1', fill='col2')`{.py}
     mapping: Aes
+    """Mappings i.e. `aes(x='col1', fill='col2')`{.py}"""
 
     aes_params: dict[str, Any] = {}  # setting of aesthetic
     params: dict[str, Any]  # parameter settings

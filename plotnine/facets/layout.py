@@ -28,22 +28,22 @@ class Layout:
     Layout of entire plot
     """
 
-    #: facet
+    # facet
     facet: Facet
 
-    #: coordinate system
+    # coordinate system
     coord: Coord
 
-    #: A dataframe with the layout information of the plot
+    # A dataframe with the layout information of the plot
     layout: pd.DataFrame
 
-    #: List of x scales
+    # List of x scales
     panel_scales_x: Scales
 
-    #: List of y scales
+    # List of y scales
     panel_scales_y: Scales
 
-    #: Range & breaks information for each panel
+    # Range & breaks information for each panel
     panel_params: list[panel_view]
 
     axs: list[Axes]  # MPL axes
