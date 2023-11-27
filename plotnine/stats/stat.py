@@ -38,23 +38,33 @@ class stat(metaclass=Registry):
 
     __base__ = True
 
-    REQUIRED_AES = set()
-    DEFAULT_AES = {}
-    NON_MISSING_AES = set()
-    DEFAULT_PARAMS = {}
+    DEFAULT_AES: dict[str, Any] = {}
+    """Default aesthetics for the stat"""
 
-    # Stats may modify existing columns or create extra
-    # columns.
-    #
-    # Any extra columns that may be created by the stat
-    # should be specified in this set
-    # see: stat_bin
-    CREATES = set()
+    REQUIRED_AES: set[str] = set()
+    """Required aesthetics for the stat"""
 
-    # Documentation for the aesthetics. It ie added under the
-    # documentation for mapping parameter. Use {aesthetics_table}
-    # placeholder to insert a table for all the aesthetics and
-    # their default values.
+    NON_MISSING_AES: set[str] = set()
+    """Required aesthetics for the stat"""
+
+    DEFAULT_PARAMS: dict[str, Any] = {}
+    """Required parameters for the stat"""
+
+    CREATES: set[str] = set()
+    """
+    Stats may modify existing columns or create extra
+    columns.
+
+    Any extra columns that may be created by the stat
+    should be specified in this set
+    see: stat_bin
+
+    Documentation for the aesthetics. It ie added under the
+    documentation for mapping parameter. Use {aesthetics_table}
+    placeholder to insert a table for all the aesthetics and
+    their default values.
+    """
+
     _aesthetics_doc = "{aesthetics_table}"
 
     # Plot namespace, it gets its value when the plot is being

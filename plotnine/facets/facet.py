@@ -65,40 +65,55 @@ class facet:
         horizontal and `v` for vertical.
     """
 
-    # , number of columns
+    # number of columns
     ncol: int
-    #: number of rows
+
+    # number of rows
     nrow: int
+
     as_table = True
     drop = True
     shrink = True
-    #: Which axis scales are free
+
+    # Which axis scales are free
     free: dict[Literal["x", "y"], bool]
-    #: A dict of parameters created depending on the data
-    #: (Intended for extensions)
+
+    # A dict of parameters created depending on the data
+    # (Intended for extensions)
     params: dict[str, Any]
+
     # Theme object, automatically updated before drawing the plot
     theme: Theme
+
     # Figure object on which the facet panels are created
     figure: Figure
+
     # coord object, automatically updated before drawing the plot
     coordinates: Coord
+
     # layout object, automatically updated before drawing the plot
     layout: Layout
+
     # Axes
     axs: list[Axes]
+
     # The first and last axes according to how MPL creates them.
     # Used for labelling the x and y axes,
     first_ax: Axes
     last_ax: Axes
+
     # Number of facet variables along the horizontal axis
     num_vars_x = 0
+
     # Number of facet variables along the vertical axis
     num_vars_y = 0
+
     # ggplot object that the facet belongs to
     plot: Ggplot
+
     # Facet strips
     strips: Strips
+
     # Control the relative size of multiple facets
     # Use a subclass to change the default.
     # See: facet_grid for an example

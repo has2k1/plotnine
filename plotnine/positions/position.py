@@ -30,6 +30,9 @@ class position(metaclass=Registry):
     __base__ = True
 
     REQUIRED_AES: set[str] = set()
+    """
+    Aesthetics required for the positioning
+    """
     params: dict[str, Any]
 
     def __init__(self):

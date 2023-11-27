@@ -36,8 +36,8 @@ class LayoutPack:
     facet: Facet
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
-    #: The legend references the legend_background. That is the
-    #: AnchoredOffsetbox that contains all the legends.
+    # The legend references the legend_background. That is the
+    # AnchoredOffsetbox that contains all the legends.
     legend: Optional[AnchoredOffsetbox] = None
     legend_position: Optional[LegendPosition] = None
     plot_caption: Optional[Text] = None

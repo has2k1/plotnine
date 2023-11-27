@@ -116,7 +116,7 @@ class scale(metaclass=Registry):
     # (min, max) - set by user
     _limits: ScaleLimitsRaw = None
 
-    #: multiplicative and additive expansion constants
+    # multiplicative and additive expansion constants
     expand: Optional[TupleFloat2 | TupleFloat4] = None
 
     # range of aesthetic, instantiated in __init__
