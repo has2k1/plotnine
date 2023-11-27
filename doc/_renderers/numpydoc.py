@@ -181,11 +181,9 @@ class NumpyDocRenderer(Renderer):
             source or el, self.signature_name_format
         )
         annotation = self.render_annotation(el.annotation)  # type: ignore
-        sig = Div(
-            CodeBlock(name, Attr(classes=["py"])),
-            Attr(classes=["doc-signature"]),
-        )
-        return build_signature_parameter(name, annotation, el.value)
+        declaration = build_docstring_parameter(name, annotation, el.value)
+        sig = Div(Code(declaration).html, Attr(classes=["doc-signature"]))
+        return str(sig)
 
     # render_header method ----------------------------------------------------
 
@@ -539,8 +537,11 @@ class NumpyDocRenderer(Renderer):
         annotation = self.render_annotation(el.annotation)  # type: ignore
         default = getattr(el, "default", None)
         term = build_docstring_parameter(name, annotation, default)
-        # Annotations are enclosed in code html tag so that contained
-        # interlink references can be processed.
+
+        # Annotations are expressed in html so that contained interlink
+        # references can be processed. Pandoc does not recognise any form
+        # of markup within backquotes `...`, but it does it the markup is
+        # withing html code tags.
         return Code(term).html, el.description
 
     @dispatch

@@ -177,6 +177,15 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 }
 
 // docstring parameters
+.doc code:has(> span.doc-parameter-name) {
+   @extend .py-1;
+   display: block;
+   font-weight: normal;
+}
+
+.doc code .doc-parameter-annotation a {
+   color: $primary;
+}
 
 .doc .doc-definition-items > dl > dd > table {
    min-width: 33%;
@@ -191,15 +200,6 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 .doc .doc-definition-items > dl > dd > table td {
    @extend .px-2;
    @extend .py-1;
-}
-.doc .doc-definition-items > dl > dt code {
-   @extend .py-1;
-   display: block;
-   font-weight: normal;
-}
-
-.doc .doc-definition-items dt > code span a {
-   color: $primary;
 }
 
 // docstring object symbols
