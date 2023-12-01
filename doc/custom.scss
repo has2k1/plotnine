@@ -119,6 +119,22 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
    overflow: auto;
 }
 
+// TypeAlias code
+.doc .doc-typing-typealias p:has(> code) {
+   @extend .mb-0;
+}
+
+.doc .doc-typing-typealias code {
+   @extend .p-1;
+   display: block;
+   font-weight: normal;
+   color: var(--quarto-hl-ot-color);
+}
+
+.doc .doc-typing-typealias code a {
+   color: $primary;
+}
+
 // Reference/Index
 
 // Give all the tables on the index page the same with.

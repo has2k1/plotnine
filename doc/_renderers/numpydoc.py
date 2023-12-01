@@ -4,6 +4,7 @@ import html
 import typing
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Literal, Optional, Sequence, TypeAlias
 from warnings import warn
 
@@ -40,7 +41,9 @@ from quartodoc.renderers.base import Renderer
 from quartodoc.renderers.md_renderer import _has_attr_section
 from tabulate import tabulate
 
+from .format import formatted_signature, repr_obj
 from .typing import DisplayNameFormat
+from .typing_modules import TypingModules
 from .utils import (
     InterLink,
     build_docstring_parameter,
@@ -50,7 +53,6 @@ from .utils import (
     get_object_kind,
     get_object_labels,
     interlink_ref_to_link,
-    make_formatted_signature,
 )
 
 SummaryRow: TypeAlias = tuple[str, str]
@@ -72,6 +74,7 @@ class NumpyDocRenderer(Renderer):
     show_signature: bool = True
     display_name_format: DisplayNameFormat | Literal["auto"] = "auto"
     signature_name_format: DisplayNameFormat = "name"
+    typing_module_paths: list[str] = field(default_factory=list)
 
     # style: str = field(default="numpydoc", init=False)
     style: str = "numpydoc"
@@ -105,7 +108,7 @@ class NumpyDocRenderer(Renderer):
         el:
             An object representing a type annotation.
         """
-        return el
+        return repr_obj(el)  # type: ignore
 
     @dispatch
     def render_annotation(self, el: None) -> str:  # type: ignore
@@ -147,7 +150,7 @@ class NumpyDocRenderer(Renderer):
             source or el, self.signature_name_format
         )
         params = self.render(get_method_parameters(el))  # type: ignore
-        sig_str = make_formatted_signature(name, params)  # type: ignore
+        sig_str = formatted_signature(name, params)  # type: ignore
         sig = Div(
             CodeBlock(sig_str, Attr(classes=["py"])),
             Attr(classes=["doc-signature"]),
@@ -699,3 +702,10 @@ class NumpyDocRenderer(Renderer):
             return section.value.split("\n")[0]
 
         return ""
+
+    def pages_written(self):
+        """
+        Render typing information and the interlinks
+        """
+        mods = TypingModules(self.typing_module_paths, self.builder)
+        mods.render_information_pages()

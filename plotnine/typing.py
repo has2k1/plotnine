@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import (
     Any,
     Callable,
-    Dict,
     Literal,
     Protocol,
     Sequence,
@@ -99,7 +98,7 @@ FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
 TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
 
 # Column transformation function
-TransformCol = Callable[[FloatSeries], FloatSeries | FloatArray]
+TransformCol: TypeAlias = Callable[[FloatSeries], FloatSeries | FloatArray]
 
 # Input data can be a DataFrame, a DataFrame factory or things that
 # are convertible to DataFrames.
@@ -133,7 +132,7 @@ StripLabellingFunc: TypeAlias = Callable[
 ]
 
 StripLabellingDict: TypeAlias = (
-    Dict[str, str] | Dict[str, Callable[[str], str]]
+    dict[str, str] | dict[str, Callable[[str], str]]
 )
 
 # Can be coerced to a StripLabellingFunc
