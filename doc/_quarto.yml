@@ -83,6 +83,8 @@ quartodoc:
   dynamic: true
   renderer:
     style: _renderer.py
+    typing_module_paths:
+      - plotnine.typing
 
   sections:
     - title: Creating a Plot

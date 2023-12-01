@@ -1,14 +1,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cache, cached_property
 from textwrap import indent
 from typing import Optional, Sequence
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
+from griffe.collections import LinesCollection, ModulesCollection
+from griffe.dataclasses import Alias
+from griffe.docstrings.parsers import Parser, parse
+from griffe.loader import GriffeLoader
+from quartodoc import layout
+from quartodoc.autosummary import Builder, get_object
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
+from quartodoc.parsers import get_parser_defaults
 
+from .format import interlink_identifiers, pretty_code, repr_obj
 from .typing import DisplayNameFormat, DocObjectKind
 
 
@@ -80,8 +89,8 @@ def build_signature_parameter(
     """
     Create code snippet that defines a parameter
     """
-    if isinstance(default, str):
-        default = repr_double_qoutes(default)
+    if default:
+        default = repr_obj(default)  # type: ignore
 
     parts = []
     if name:
@@ -102,9 +111,6 @@ def build_docstring_parameter(
     """
     Create code snippet that defines a parameter
     """
-    if isinstance(default, str):
-        default = repr_double_qoutes(default)
-
     lst = []
     if name:
         lst.append(Span(name, Attr(classes=["doc-parameter-name"])))
@@ -113,14 +119,16 @@ def build_docstring_parameter(
             lst.append(
                 Span(":", Attr(classes=["doc-parameter-annotation-sep"]))
             )
+        annotation = pretty_code(annotation)
         lst.append(
             Span(annotation, Attr(classes=["doc-parameter-annotation"]))
         )
     if default:
+        default = pretty_code(repr_obj(default))  # type: ignore
         lst.extend(
             [
                 Span("=", Attr(classes=["doc-parameter-default-sep"])),
-                Span(str(default), Attr(classes=["doc-parameter-default"])),
+                Span(default, Attr(classes=["doc-parameter-default"])),
             ]
         )
     return str(Inlines(lst))
@@ -209,34 +217,14 @@ def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
         return tuple()
 
 
-def repr_double_qoutes(s: str) -> str:
+def get_canonical_path_lookup(el: expr.Expr) -> dict[str, str]:
     """
-    Change a repr str to use double quotes
-
-    Parameters
-    ----------
-    s:
-        A repr string
+    Return lookup table for the canonical path of identifiers in expression
     """
-    if len(s) >= 2:
-        if s[0] == s[-1] == "'":
-            s = f'"{s[1:-1]}"'
-    return s
-
-
-def make_formatted_signature(name: str, params_lst: list[str]) -> str:
-    # Format to a maximum width of 78 chars
-    # It fails when a parameter declarations is longer than 78
-    opening = f"{name}("
-    params_string = ", ".join(params_lst)
-    closing = ")"
-    pad = " " * 4
-    if len(opening) + len(params_string) > 78:
-        line_pad = f"\n{pad}"
-        # One parameter per line
-        if len(params_string) > 74:
-            params_string = f",{line_pad}".join(params_lst)
-        params_string = f"{line_pad}{params_string}"
-        closing = f"\n{closing}"
-    sig = f"{opening}{params_string}{closing}"
-    return sig
+    lookup = {"TypeAlias": "typing.TypeAlias"}
+    for o in el.iterate():
+        # Assumes that name of an expresssion is a valid python
+        # identifier
+        if isinstance(o, expr.ExprName):
+            lookup[o.name] = o.canonical_path
+    return lookup
