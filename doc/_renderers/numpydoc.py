@@ -53,6 +53,7 @@ from .utils import (
     get_object_kind,
     get_object_labels,
     interlink_ref_to_link,
+    make_doc_labels,
 )
 
 SummaryRow: TypeAlias = tuple[str, str]
@@ -218,26 +219,14 @@ class NumpyDocRenderer(Renderer):
             name, Attr(classes=["doc-object-name", f"doc-{kind}-name"])
         )
 
-        if labels:
-            lst = []
-            for label in labels:
-                lst.append(
-                    Code(
-                        " ",
-                        Attr(classes=["doc-label", f"doc-label-{label}"]),
-                    )
-                )
-            label_code = Span(Inlines(lst), Attr(classes=["doc-labels"]))
-        else:
-            label_code = ""
-
+        doc_labels = make_doc_labels(labels)
         classes = ["doc", "doc-object", f"doc-{kind}"]
         if hasattr(el, "members") and el.members:
             classes.append("doc-has-member-docs")
 
         h = Header(
             level=self.header_level,
-            content=Inlines([symbol_code, object_name, label_code]),
+            content=Inlines([symbol_code, object_name, doc_labels]),
             attr=Attr(identifier=el.obj.path, classes=classes),
         )
         return h
