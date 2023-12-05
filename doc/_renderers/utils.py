@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cache, cached_property
 from textwrap import indent
-from typing import Optional, Sequence
+from typing import Literal, Optional, Sequence
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
@@ -212,7 +212,9 @@ def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
         "typing.overload",
     )
     if el.is_function:
-        return tuple(label for label in lst if label in el.labels)
+        return tuple(
+            label.replace(".", "-") for label in lst if label in el.labels
+        )
     else:
         return tuple()
 
@@ -228,3 +230,24 @@ def get_canonical_path_lookup(el: expr.Expr) -> dict[str, str]:
         if isinstance(o, expr.ExprName):
             lookup[o.name] = o.canonical_path
     return lookup
+
+
+def make_doc_labels(labels: Sequence[str]) -> Span | Literal[""]:
+    """
+    Create codes used for doc labels
+
+    Given the label names, it returns a Code object that
+    creates the following HTML
+    <span class="doc-labels">
+        <code class="doc-label doc-label-name1"></code>
+        <code class="doc-label doc-label-name2"></code>
+    </span>
+    """
+    if not labels:
+        return ""
+
+    codes = [
+        Code(" ", Attr(classes=["doc-label", f"doc-label-{label}"]))
+        for label in labels
+    ]
+    return Span(codes, Attr(classes=["doc-labels"]))
