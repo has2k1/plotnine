@@ -124,7 +124,7 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
    @extend .mb-0;
 }
 
-.doc .doc-typing-typealias code {
+.doc code.doc-typing-typealias-definition {
    @extend .p-1;
    display: block;
    font-weight: normal;
@@ -325,6 +325,15 @@ code.doc-symbol-attribute::after {
 .content code.doc-label-typing-overload::after {
    content: "typing.overload";
 }
+
+.content code.doc-label-typing-typealias::after {
+   content: "typealias";
+}
+
+.content code.doc-label-typing-protocol::after {
+   content: "protocol";
+}
+
 
 /*-- scss:mixins --*/
 
