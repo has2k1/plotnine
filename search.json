@@ -4,7 +4,7 @@
     "href": "tutorials/index.html",
     "title": "Tutorials",
     "section": "",
-    "text": "Custom sorting of plot series\nUsing slightly altered colors to make a distinction between related data\nWhen the automatic groups are not sufficient\nManipulating date breaks and date labels\nUsing letters as shapes\nUsing ipyWidgets\nShow counts on a stacked bar plot\nShow counts and percentages for bar plots\nA PyQt5 Application"
+    "text": "Using slightly altered colors to make a distinction between related data\nShow counts and percentages for bar plots\nShow counts on a stacked bar plot\nWhen the automatic groups are not sufficient\nManipulating date breaks and date labels\nUsing ipyWidgets\nCustom sorting of plot series\nA PyQt5 Application\nUsing letters as shapes"
   },
   {
     "objectID": "index.html",
