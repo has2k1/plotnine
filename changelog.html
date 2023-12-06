@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.521">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>plotnine {{&lt; env VERSION &gt;}} – changelog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">plotnine {{&lt; env VERSION &gt;}}</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./reference/index.html"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="./installation.html">
+ <span class="dropdown-text">Installation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#changelog" id="toc-changelog" class="nav-link active" data-scroll-target="#changelog">Changelog</a>
+  <ul class="collapse">
+  <li><a href="#v0.13.0" id="toc-v0.13.0" class="nav-link" data-scroll-target="#v0.13.0">v0.13.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes" id="toc-api-changes" class="nav-link" data-scroll-target="#api-changes">API Changes</a></li>
+  <li><a href="#new" id="toc-new" class="nav-link" data-scroll-target="#new">New</a></li>
+  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug Fixes</a></li>
+  <li><a href="#enhancements" id="toc-enhancements" class="nav-link" data-scroll-target="#enhancements">Enhancements</a></li>
+  </ul></li>
+  <li><a href="#v0.12.1" id="toc-v0.12.1" class="nav-link" data-scroll-target="#v0.12.1">v0.12.1</a>
+  <ul class="collapse">
+  <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New Features</a></li>
+  <li><a href="#enhancements-1" id="toc-enhancements-1" class="nav-link" data-scroll-target="#enhancements-1">Enhancements</a></li>
+  <li><a href="#api-changes-1" id="toc-api-changes-1" class="nav-link" data-scroll-target="#api-changes-1">API Changes</a></li>
+  <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug Fixes</a></li>
+  </ul></li>
+  <li><a href="#v0.10.1" id="toc-v0.10.1" class="nav-link" data-scroll-target="#v0.10.1">v0.10.1</a></li>
+  <li><a href="#v0.10.0" id="toc-v0.10.0" class="nav-link" data-scroll-target="#v0.10.0">v0.10.0</a>
+  <ul class="collapse">
+  <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug Fixes</a></li>
+  <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New Features</a></li>
+  <li><a href="#api-changes-2" id="toc-api-changes-2" class="nav-link" data-scroll-target="#api-changes-2">API Changes</a></li>
+  </ul></li>
+  <li><a href="#v0.9.0" id="toc-v0.9.0" class="nav-link" data-scroll-target="#v0.9.0">v0.9.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-3" id="toc-api-changes-3" class="nav-link" data-scroll-target="#api-changes-3">API Changes</a></li>
+  <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New Features</a></li>
+  <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug Fixes</a></li>
+  <li><a href="#enhancements-2" id="toc-enhancements-2" class="nav-link" data-scroll-target="#enhancements-2">Enhancements</a></li>
+  </ul></li>
+  <li><a href="#v0.8.0" id="toc-v0.8.0" class="nav-link" data-scroll-target="#v0.8.0">v0.8.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-4" id="toc-api-changes-4" class="nav-link" data-scroll-target="#api-changes-4">API Changes</a></li>
+  <li><a href="#new-features-3" id="toc-new-features-3" class="nav-link" data-scroll-target="#new-features-3">New Features</a></li>
+  <li><a href="#bug-fixes-4" id="toc-bug-fixes-4" class="nav-link" data-scroll-target="#bug-fixes-4">Bug Fixes</a></li>
+  <li><a href="#enhancements-3" id="toc-enhancements-3" class="nav-link" data-scroll-target="#enhancements-3">Enhancements</a></li>
+  </ul></li>
+  <li><a href="#v0.7.1" id="toc-v0.7.1" class="nav-link" data-scroll-target="#v0.7.1">v0.7.1</a>
+  <ul class="collapse">
+  <li><a href="#bug-fixes-5" id="toc-bug-fixes-5" class="nav-link" data-scroll-target="#bug-fixes-5">Bug Fixes</a></li>
+  </ul></li>
+  <li><a href="#v0.7.0" id="toc-v0.7.0" class="nav-link" data-scroll-target="#v0.7.0">v0.7.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-5" id="toc-api-changes-5" class="nav-link" data-scroll-target="#api-changes-5">API Changes</a></li>
+  <li><a href="#new-features-4" id="toc-new-features-4" class="nav-link" data-scroll-target="#new-features-4">New Features</a></li>
+  <li><a href="#bug-fixes-6" id="toc-bug-fixes-6" class="nav-link" data-scroll-target="#bug-fixes-6">Bug Fixes</a></li>
+  <li><a href="#enhancements-4" id="toc-enhancements-4" class="nav-link" data-scroll-target="#enhancements-4">Enhancements</a></li>
+  </ul></li>
+  <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-6" id="toc-api-changes-6" class="nav-link" data-scroll-target="#api-changes-6">API Changes</a></li>
+  <li><a href="#new-features-5" id="toc-new-features-5" class="nav-link" data-scroll-target="#new-features-5">New Features</a></li>
+  <li><a href="#bug-fixes-7" id="toc-bug-fixes-7" class="nav-link" data-scroll-target="#bug-fixes-7">Bug Fixes</a></li>
+  <li><a href="#enhancements-5" id="toc-enhancements-5" class="nav-link" data-scroll-target="#enhancements-5">Enhancements</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="changelog" class="level1">
+<h1>Changelog</h1>
+<section id="v0.13.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.13.0">v0.13.0</h2>
+<p>(not-released-yet)</p>
+<section id="api-changes" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
+<ul>
+<li>Requires python &gt;= 3.9</li>
+<li>The name of the calculated aesthetic of <a href="./reference/stat_function.html#plotnine.stats.stat_function"><code>stat_function</code></a> changed from <code>y</code> to <code>fx</code>.</li>
+</ul>
+</section>
+<section id="new" class="level3">
+<h3 class="anchored" data-anchor-id="new">New</h3>
+<ul>
+<li><p>Added symmetric logarithm transformation scales <a href="./reference/scale_x_symlog.html#plotnine.scales.scale_x_symlog"><code>scale_x_symlog</code></a> and <a href="./reference/scale_y_symlog.html#plotnine.scales.scale_y_symlog"><code>scale_y_symlog</code></a></p></li>
+<li><p>Gained themeables</p>
+<ul>
+<li><a href="./reference/plot_margin_left.html#plotnine.themes.themeable.plot_margin_left"><code>plot_margin_left</code></a></li>
+<li><a href="./reference/plot_margin_right.html#plotnine.themes.themeable.plot_margin_right"><code>plot_margin_right</code></a></li>
+<li><a href="./reference/plot_margin_top.html#plotnine.themes.themeable.plot_margin_top"><code>plot_margin_top</code></a></li>
+<li><a href="./reference/plot_margin_bottom.html#plotnine.themes.themeable.plot_margin_bottom"><code>plot_margin_bottom</code></a></li>
+</ul>
+<p>to set the plot margin on each side independently.</p></li>
+<li><p>Gained themeables</p>
+<ul>
+<li><a href="./reference/axis_ticks_length_major_x.html#plotnine.themes.themeable.axis_ticks_length_major_x"><code>axis_ticks_length_major_x</code></a></li>
+<li><a href="./reference/axis_ticks_length_major_y.html#plotnine.themes.themeable.axis_ticks_length_major_y"><code>axis_ticks_length_major_y</code></a></li>
+<li><a href="./reference/axis_ticks_length_minor_x.html#plotnine.themes.themeable.axis_ticks_length_minor_x"><code>axis_ticks_length_minor_x</code></a></li>
+<li><a href="./reference/axis_ticks_length_minor_y.html#plotnine.themes.themeable.axis_ticks_length_minor_y"><code>axis_ticks_length_minor_y</code></a></li>
+</ul>
+<p>to control the x &amp; y axis ticks length.</p></li>
+<li><p>Gained themeables</p>
+<ul>
+<li><a href="./reference/axis_ticks_pad_major_x.html#plotnine.themes.themeable.axis_ticks_pad_major_x"><code>axis_ticks_pad_major_x</code></a></li>
+<li><a href="./reference/axis_ticks_pad_minor_y.html#plotnine.themes.themeable.axis_ticks_pad_minor_y"><code>axis_ticks_pad_minor_y</code></a></li>
+</ul>
+<p>to control the x &amp; y tick padding.</p></li>
+</ul>
+</section>
+<section id="bug-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
+<ul>
+<li><p>Fixed handling of minor breaks in <a href="./reference/scale_continuous.html#plotnine.scales.scale_continuous.scale_continuous"><code>scale_continuous</code></a> to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. ({{&lt; issue 685 &gt;}})</p></li>
+<li><p>Fixed theming of axis_ticks with the size parameter. ({{&lt; issue 703 &gt;}})</p></li>
+<li><p>Fixed space handling around <code>axis_label</code>, <code>axis_text</code> and <code>axis_ticks</code> when the ticks are turned off.</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geoms.geom_path"><code>geom_path</code></a> where the lineend parameter was ignored. ({{&lt; issue 727 &gt;}})</p></li>
+<li><p>Fixed bug where <code class="sourceCode python">theme(legend_background<span class="op">=</span>element_blank())</code> messed up the position of the legend, instead of only removing the background.</p></li>
+</ul>
+</section>
+<section id="enhancements" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements">Enhancements</h3>
+<ul>
+<li>All <code>__all__</code> variables are explicitly assigned to help static typecheckers infer module attributes. ({{&lt; issue 685 &gt;}})</li>
+</ul>
+</section>
+</section>
+<section id="v0.12.1" class="level2">
+<h2 class="anchored" data-anchor-id="v0.12.1">v0.12.1</h2>
+<p>(2023-05-09)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.7919297"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7919297.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="new-features" class="level3">
+<h3 class="anchored" data-anchor-id="new-features">New Features</h3>
+<ul>
+<li><p>A layout manager. Now you do not have to adjust spacing parameters to prevent objects around the panels from overlapping. Specifically, you can:</p>
+<ol type="1">
+<li>Set the legend position to “top”, “left” or “bottom”</li>
+<li>Use a large or multiline plot title</li>
+<li>Use a large or multiline plot caption</li>
+<li>Use <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> with <code class="sourceCode python">scales<span class="op">=</span><span class="st">"free"</span></code> <code class="sourceCode python">scales<span class="op">=</span><span class="st">"free_x"</span></code> or <code class="sourceCode python">scales<span class="op">=</span><span class="st">"free_y"</span></code></li>
+</ol>
+<p>You can now also align the <code>plot_title</code>, <code>axis_title_x</code>, <code>axis_title_y</code> and <code>plot_caption</code> with respect to the panels. Set these to “left”, “right” &amp; “center” for the horizontal flowing text. And “top”, “right” &amp; “center” for the vertical flowing text.</p>
+<p>Also, the size of the figure is exactly determined by the theme setting. For example, this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>will create an <code>800px x 600px</code> image.</p></li>
+<li><p>You can create a <code>subtitle</code> using <a href="./reference/labs.html#plotnine.labels.labs"><code>labs</code></a> and style it using the <code>plot_subtitle</code> parameter to <a href="./reference/theme.html#plotnine.themes.theme"><code>theme</code></a>.</p>
+<p>```py theme(plot_subtitle=element_text(size=8))</p></li>
+</ul>
+</section>
+<section id="enhancements-1" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-1">Enhancements</h3>
+<ul>
+<li><p><a href="./reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object gained a new method . It gives you access to the matplotlib figure that will be saved to file.</p></li>
+<li><p>When plotting with an ipython interactive backend (e.g.&nbsp;in a jupyter notebook). The default image output is retina. You do not need to run this command.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Plotnine still respects any values set the user.</p></li>
+<li><p>In an interactive setting, after drawing an image. The size of the figure (in pixels) is printed e.g.&nbsp;<code>&lt;Figure Size: (640 x 480)&gt;</code>. Previously, something like <code>&lt;ggplot: (336175301)&gt;</code> was printed.</p></li>
+</ul>
+</section>
+<section id="api-changes-1" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-1">API Changes</h3>
+<ul>
+<li><p> and now accept the same types of objects. In this change has gained the ability to accept a list of objects.</p></li>
+<li><p> no longer accepts the argument <code>return_ggplot</code> and the return value is always a matplolib figure.</p></li>
+<li><p>Themeables <code>strip_margin</code>, <code>strip_margin_x</code> and <code>strip_margin_y</code>) have been renamed to <a href="./reference/strip_align.html#plotnine.themes.themeable.strip_align"><code>strip_align</code></a>, <a href="./reference/strip_align_x.html#plotnine.themes.themeable.strip_align_x"><code>strip_align_x</code></a> <a href="./reference/strip_align_y.html#plotnine.themes.themeable.strip_align_y"><code>strip_align_y</code></a> repectively.</p></li>
+<li><p><a href="./reference/subplots_adjust.html#plotnine.themes.themeable.subplots_adjust"><code>subplots_adjust</code></a> has been deprecated. You no longer need to use <code class="sourceCode python">theme(subplots_adjust<span class="op">=</span>{<span class="st">"right"</span>: <span class="fl">0.85</span>})</code> and the like to make space for the legend or text around the panels. In the future, this will through an error.</p></li>
+<li><p>Changed default font-family (san-serif) from DejaVu Sans to Helvetica.</p></li>
+</ul>
+</section>
+<section id="bug-fixes-1" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-1">Bug Fixes</h3>
+<ul>
+<li><p>Fixed bug where a discrete position scale failed when mapping an empty variable. ({{&lt; issue 647 &gt;}})</p></li>
+<li><p>Fixed bug where <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> with a datetime column run into an exception. ({{&lt; issue 629 &gt;}})</p></li>
+<li><p>Fixed bug where <a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>geom_violin</code></a> with facetting and <code>"scales = free"</code> did not work. ({{&lt; issue 655 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>position_dodge2</code></a> to work with <code>preserve="single"</code> for <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>geom_rect</code></a> and any other geoms that accept a min-max range along the x-axis.</p></li>
+<li><p>Fixed legend for <a href="./reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a> to accurately display transparent fill colors that have been manually set. ({{&lt; issue 665 &gt;}})</p></li>
+<li><p>Fix issue where infinite limits for the <code>x</code> or <code>y</code> scales lead to an exception. ({{&lt; issue 664 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> and <a href="./reference/geom_label.html#plotnine.geoms.geom_label"><code>geom_label</code></a> when used with string formatting so that missing values are removed. ({{&lt; issue 651 &gt;}})</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.10.1" class="level2">
+<h2 class="anchored" data-anchor-id="v0.10.1">v0.10.1</h2>
+<p>(2022-09-10)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.7124917"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124917.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<p><em>This is a re-release of v0.10.0</em>.</p>
+<p>In the previous release the project description fileformat changed and not all references to it were corrected. PYPI read file that did not exist, got no description. This release is fixes error.</p>
+</section>
+<section id="v0.10.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.10.0">v0.10.0</h2>
+<p>(2022-09-10)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.7124912"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124912.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="bug-fixes-2" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-2">Bug Fixes</h3>
+<ul>
+<li><p>Fixed bug in <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> where bins whose edges are zero or negative would yield the wrong plot. ({{&lt; issue 604 &gt;}})</p></li>
+<li><p>Fixed bug <a href="./reference/stat_density_2d.html#plotnine.stats.stat_density_2d"><code>stat_density_2d</code></a> which had been broken by Matplotlib 1.6.0. ({{&lt; issue 619 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> when using <code>adjust_text</code> for the arrows to have the same color as the text.</p></li>
+</ul>
+</section>
+<section id="new-features-1" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-1">New Features</h3>
+<ul>
+<li><p><a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>where</code> which can be used shade withing given limits .</p></li>
+<li><p>Added support for objects with a <code>to_pandas</code> method to convert them to a pandas dataframe. You can now pass in <a href="https://pola.rs">polars</a> dataframes.</p></li>
+<li><p><a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>outline_type</code> which controls how to stroke the boundaries of the shaded area. This parameter is also available to <a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a>. :issue:<code>605</code></p></li>
+</ul>
+</section>
+<section id="api-changes-2" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-2">API Changes</h3>
+<ul>
+<li><p>The automatic groups generated by the system and depending on the aesthetic mappings now only depend those aesthetics that have scales. This is more strict than has been, should affect very few cases of code that has been written and it should be less suprising to the users.</p></li>
+<li><p><a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a> now default to showing only the upper outline/boundary of the area. Use <code>outline_type="full"</code> for the old behaviour.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.9.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.9.0">v0.9.0</h2>
+<p>(2022-07-01)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.7124918"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="api-changes-3" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-3">API Changes</h3>
+<ul>
+<li>For the calls to <code>ggplot</code>, the order of the positional arguments is <code>(data, mapping)</code> and for calls <code>geoms</code> and <code>stats</code> the order is <code>(mapping, data)</code>. In practice, you can still provide one/two positional arguments in any order. However, the are a few cases where old code will breaks due to duplicate parameters.</li>
+</ul>
+</section>
+<section id="new-features-2" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-2">New Features</h3>
+<ul>
+<li><p>Added <a href="./reference/geom_pointdensity.html#plotnine.geoms.geom_pointdensity"><code>geom_pointdensity</code></a>, a 2D density plot that does not hide the distribution of the individual data points.</p></li>
+<li><p><a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>position_dodge2</code></a> gained the ability to reverse the order of the plotted groups. ({{&lt; issue 515 &gt;}})</p></li>
+<li><p>Added <a href="./reference/theme_tufte.html#plotnine.themes.theme_tufte"><code>theme_tufte</code></a>, a theme that reduces the distractions around plot data.</p></li>
+<li><p><a href="./reference/labs.html#plotnine.labels.labs"><code>labs</code></a> can now be used to create a <code>caption</code>. This caption can be styled using the <code>plot_caption</code> parameter to <a href="./reference/theme.html#plotnine.themes.theme"><code>theme</code></a>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>You can now align the <code>plot_title</code> horizontally to the left or right.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">'left'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Before, the title was always centered.</p></li>
+</ul>
+</section>
+<section id="bug-fixes-3" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-3">Bug Fixes</h3>
+<ul>
+<li><p>Fixed bug in <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> where the <code>drop</code> parameter was ignored. ({{&lt; issue 510 &gt;}})</p></li>
+<li><p>Fixed issue with <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a> where the wrong range was used for the x|y axis. ({{&lt; issue 525 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> where using a coordinate transformation without computing the standard error led to a crash. ({{&lt; issue 526 &gt;}})</p></li>
+<li><p>Fixed bug where you could not specific the cap/end of a dashed line when styling a plot with <a href="./reference/element_line.html#plotnine.themes.element_line"><code>element_line</code></a>.</p></li>
+<li><p>Fixed legend for <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> so that the entries have the same stroke and points on the map. ({{&lt; issue 534 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_histogram.html#plotnine.geoms.geom_histogram"><code>geom_histogram</code></a> for some cases when it fails to automatically determine the number of bins. ({{&lt; issue 543 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> when mapping to lists/arrays/series so that the rows mapped this way are not mixed up. ({{&lt; issue 548 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> not to error for matplotlib &gt;= 3.5.0 so that it does not throw a Numpy error. ({{&lt; issue 567 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> to be able to draw Polygons with holes in them.</p></li>
+<li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> to be able to draw MultiPolygons.</p></li>
+<li><p>Fixed <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> and <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> to work properly with <code>None</code> values. ({{&lt; issue 523 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a> to respect not to use the <code>fill</code> mapping on unfilled shapes. ({{&lt; issue 100 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/position_stack.html#plotnine.positions.position_stack"><code>position_stack</code></a> to work with scales that have non-linear transformations. e.g. <a href="./reference/scale_y_log10.html#plotnine.scales.scale_y_log10"><code>scale_y_log10</code></a>. ({{&lt; issue 580 &gt;}})</p></li>
+<li><p>Fixed scales to work with limits passed as a function.</p></li>
+<li><p>Fixed <a href="./reference/axis_ticks.html#plotnine.themes.themeable.axis_ticks"><code>axis_ticks</code></a> so you can change the colour of the axis ticks. This was probably a regression due to changes in Matplotlib.</p></li>
+<li><p>Fixed <a href="./reference/panel_ontop.html#plotnine.themes.themeable.panel_ontop"><code>panel_ontop</code></a> so that if is set to <code>False</code>, then the data visualised below the grid-lines. ({{&lt; issue 585 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a>, <a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a> to work with <a href="./reference/coord_flip.html#plotnine.coords.coord_flip"><code>coord_flip</code></a>. ({{&lt; issue 596 &gt;}})</p></li>
+</ul>
+</section>
+<section id="enhancements-2" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-2">Enhancements</h3>
+<ul>
+<li><p><a href="./reference/stat_summary.html#plotnine.stats.stat_summary"><code>stat_summary</code></a> now has a default summary function. ({{&lt; issue 528 &gt;}})</p></li>
+<li><p><a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>stat_density</code></a> now uses a fast computation path for gaussian densities with no weights. This was probably a regression.</p></li>
+<li><p><a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> can now draw MultiPoints, MultiLineStrings and MultiPolgons.</p></li>
+<li><p><a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> with <code>adjust_text</code> can now be used in more than one layer with good enough results.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.8.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.8.0">v0.8.0</h2>
+<p>(2021-03-24)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.4636791"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="api-changes-4" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-4">API Changes</h3>
+<ul>
+<li>How you map to calculated aesthetics has changed. Use the <a href="./reference/after_stat.html#plotnine.mapping.after_stat"><code>after_stat</code></a> function. The old methods <code>'stat(name)'</code> and <code>'..name..'</code> have been deprecated.</li>
+</ul>
+</section>
+<section id="new-features-3" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-3">New Features</h3>
+<ul>
+<li><p>You can now map to aesthetics at three different stages. See <a href="./reference/aes.html#plotnine.mapping.aes"><code>aes</code></a>, <a href="./reference/after_stat.html#plotnine.mapping.after_stat"><code>after_stat</code></a>, <a href="./reference/after_scale.html#plotnine.mapping.after_scale"><code>after_scale</code></a> and <a href="./reference/stage.html#plotnine.mapping.stage"><code>stage</code></a>.</p></li>
+<li><p><a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>geom_violin</code></a> gained the a new parameter <code>style</code> with which you can draw half violin (density curve on one side and flat on the other).</p></li>
+<li><p>Added <a href="./reference/geom_raster.html#plotnine.geoms.geom_raster"><code>geom_raster</code></a>.</p></li>
+<li><p><code>geoms</code> gained new parameter <code>raster</code> for the . You can use it to rasterize any layer when the resulting plot is of vector format e.g.&nbsp;<code>pdf</code>.</p></li>
+<li><p>Using the <code>space</code> parameter, <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> gained the ability to have rows and columns of panels of different sizes.</p></li>
+</ul>
+</section>
+<section id="bug-fixes-4" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-4">Bug Fixes</h3>
+<ul>
+<li><p>Fixed issue where some plots with a colorbar would fail for specific themes. ({{&lt; issue 424 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> to plot <code>MultiLineString</code> geom types.</p></li>
+<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> to allow any order of <code>mapping</code> and <code>data</code> positional arguments.</p></li>
+<li><p>Fixed bug were the plotted image may have ignored theming that relied on some Matplotlib rcParams. ({{&lt; issue 451 &gt;}})</p></li>
+<li><p>Fixed the <code>weight</code> aesthetic in <a href="./reference/geom_boxplot.html#plotnine.geoms.geom_boxplot"><code>geom_boxplot</code></a>, previously ignored it is now recognised. ({{&lt; issue 438 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a> and <a href="./reference/annotation_stripes.html#plotnine.geoms.annotation_stripes"><code>annotation_stripes</code></a> to work without global data and aesthetics. ({{&lt; issue 469 &gt;}})</p></li>
+<li><p>Fix <a href="./reference/scale_shape_discrete.html#plotnine.scales.scale_shape_discrete"><code>scale_shape_discrete</code></a> when printing many unfilled shapes not to assign the same shapes to more than one group. ({{&lt; issue 473 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_ellipse.html#plotnine.stats.stat_ellipse"><code>stat_ellipse</code></a> where the center of the ellipse assuming a multivariate t-distribution was incorrectly calculated. ({{&lt; issue 493 &gt;}})</p></li>
+<li><p>Fixed calculation of <code>ndensity</code> in <a href="./reference/stat_bin.html#plotnine.stats.stat_bin"><code>stat_bin</code></a>. ({{&lt; issue 494 &gt;}})</p></li>
+</ul>
+</section>
+<section id="enhancements-3" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-3">Enhancements</h3>
+<ul>
+<li><p>Manual scales now match the values of the breaks if the breaks are given. ({{&lt; issue 445 &gt;}})</p></li>
+<li><p>Using <code>print</code> to show a ggplot object will not show the hash (<code>&lt;ggplot: ...&gt;</code>) anymore. There is now a difference between <code>repr(p)</code> and <code>str(p)</code>. ({{&lt; issue 453 &gt;}})</p></li>
+<li><p>Added option to for the <code>base_family</code> of a theme, now you can set it once with and have it be applied to all themes. ({{&lt; issue 436 &gt;}})</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">'base_family'</span>, <span class="st">'Comic Sans MS'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>You can now add <code>None</code> to a ggplot, doing so returns a copy of the the ggplot object. ({{&lt; issue 474 &gt;}})</p></li>
+<li><p>Better handling of multiline facet labels. ({{&lt; issue 484 &gt;}})</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.7.1" class="level2">
+<h2 class="anchored" data-anchor-id="v0.7.1">v0.7.1</h2>
+<p>(2020-08-05)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.3973626"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3973626.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="bug-fixes-5" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-5">Bug Fixes</h3>
+<ul>
+<li><p>Fixed issue where a plot has no data and the geoms have no data, but the mappings are valid. ({{&lt; issue 404 &gt;}})</p></li>
+<li><p>Fixed <code>preserve='single'</code> in <a href="./reference/position_dodge.html#plotnine.positions.position_dodge"><code>plotnine.positions.position_dodge</code></a> and <a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>plotnine.positions.position_dodge2</code></a> to work for geoms that only have <code>x</code> aesthetic and not <code>xmin</code> and <code>xmax</code> e.g <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>plotnine.geoms.geom_text</code></a>.</p></li>
+<li><p>Fix regression in <code>v0.7.0</code> where plots with a colorbar would fail if using <a href="./reference/theme_matplotlib.html#plotnine.themes.theme_matplotlib"><code>theme_matplotlib</code></a>.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.7.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.7.0">v0.7.0</h2>
+<p>(2020-06-05)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.3878645"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="api-changes-5" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-5">API Changes</h3>
+<ul>
+<li><p>Changed the default method of caculating bandwidth for all stats that use kernel density estimation. The affected stats are <a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>stat_density</code></a>, <a href="./reference/stat_ydensity.html#plotnine.stats.stat_ydensity"><code>stat_ydensity</code></a>, and <a href="./reference/stat_sina.html#plotnine.stats.stat_sina"><code>stat_sina</code></a>. These stats can now work with groups that have a single unique value.</p></li>
+<li><p>Changed to refer to the same scale as <a href="./reference/scale_color_continuous.html#plotnine.scales.scale_color_continuous"><code>plotnine.scales.scale_color_continuous</code></a>.</p></li>
+<li><p>Changed <a href="./reference/scale_color_cmap.html#plotnine.scales.scale_color_cmap"><code>plotnine.scales.scale_color_cmap</code></a> so the parameter <code>cmap_name</code> refers to the name of the color palette and <code>name</code> refers to the name of the scale. ({{&lt; issue 371 &gt;}})</p></li>
+</ul>
+</section>
+<section id="new-features-4" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-4">New Features</h3>
+<ul>
+<li><p><code>aes</code> got an internal function <code>reorder</code> which makes it easy to change the ordering of a discrete variable according to some other variable/column.</p></li>
+<li><p><a href="./reference/stat_smooth.html#plotnine.stats.stat_smooth"><code>stat_smooth</code></a> can now use formulae for linear models.</p></li>
+</ul>
+</section>
+<section id="bug-fixes-6" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-6">Bug Fixes</h3>
+<ul>
+<li><p>Fixed issue where a wrong warning could be issued about changing the transform of a specialised scale. It mostly affected the <em>timedelta</em> scale.</p></li>
+<li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>plotnine.geoms.geom_violin</code></a> and other geoms when used with <code>position='dodge'</code> not to crash when if a layer has an empty group of data.</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geoms.geom_path"><code>plotnine.geoms.geom_path</code></a> for some cases when groups had less than 2 points. ({{&lt; issue 319 &gt;}})</p></li>
+<li><p>Fixed all stats that compute kernel density estimates to work when all the data points are the same. ({{&lt; issue 317 &gt;}})</p></li>
+<li><p>Fixed issue where setting the group to a string value i.e.&nbsp;<code>group='string'</code> outside <code>aes()</code> failed due to an error.</p></li>
+<li><p>Fixed issue where discrete position scales could not deal with fewer limits than those present in the data. ({{&lt; issue 342 &gt;}})</p></li>
+<li><p>Fixed issue with using custom tuple linetypes~ with <a href="./reference/scale_linetype_manual.html#plotnine.scales.scale_linetype_manual"><code>plotnine.scales.scale_linetype_manual</code></a>. ({{&lt; issue 352 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>plotnine.geoms.geom_map</code></a> to work with facets. ({{&lt; issue 359 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/position_jitterdodge.html#plotnine.positions.position_jitterdodge"><code>plotnine.positions.position_jitterdodge</code></a> to work when <code>color</code> is used as an aesthetic. ({{&lt; issue 372 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_qq.html#plotnine.geoms.geom_qq"><code>plotnine.geoms.geom_qq</code></a> to work with facets. ({{&lt; issue 379 &gt;}})</p></li>
+<li><p>Fixed skewed head in <a href="./reference/arrow.html#plotnine.geoms.geom_path.arrow"><code>plotnine.geoms.geom_path.arrow</code></a> when drawn on facetted plot. ({{&lt; issue 388 &gt;}})</p></li>
+<li><p>Fixed issue with <a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>plotnine.stats.stat_density</code></a> where weights could not be used with a gaussian model. ({{&lt; issue 392 &gt;}})</p></li>
+<li><p>Fixed bug where <a href="./reference/guide_colorbar.html#plotnine.guides.guide_colorbar"><code>guide_colorbar</code></a> width and height could not be controlled by <a href="./reference/legend_key_width.html#plotnine.themes.themeable.legend_key_width"><code>legend_key_width</code></a> and <a href="./reference/legend_key_height.html#plotnine.themes.themeable.legend_key_height"><code>legend_key_height</code></a>. ({{&lt; issue 360 &gt;}})</p></li>
+</ul>
+</section>
+<section id="enhancements-4" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-4">Enhancements</h3>
+<ul>
+<li><p>You can now set the bandwidth parameter <code>bw</code> of <a href="./reference/stat_ydensity.html#plotnine.stats.stat_ydensity"><code>stat_ydensity</code></a>.</p></li>
+<li><p>Parameters <code>ha</code> and <code>va</code> of <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> have been converted to aesthetics. You can now map to them. ({{&lt; issue 325 &gt;}})</p></li>
+<li><p>All themes (except <code>theme_matplotlib</code>) now do not show minor ticks. ({{&lt; issue 348 &gt;}})</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.6.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.6.0">v0.6.0</h2>
+<p>(2019-08-21)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.3373970"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="api-changes-6" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-6">API Changes</h3>
+<ul>
+<li><p>The <code>draw</code> parameter of <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>plotnine.geoms.geom_map</code></a> has been removed. Shapefiles should contain only one type of geometry and that is the geometry that is drawn.</p></li>
+<li><p>Ordinal (Ordered categorical) columns are now mapped to ordinal scales. This creates different plots.</p></li>
+<li><p>The default mapping for the computed aesthetic <em>size</em> of <a href="./reference/stat_sum.html#plotnine.stats.stat_sum"><code>stat_sum</code></a> has changed to <code>'stat(n)'</code>. This also changes the default plot for <a href="./reference/geom_count.html#plotnine.geoms.geom_count"><code>geom_count</code></a>.</p></li>
+</ul>
+</section>
+<section id="new-features-5" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-5">New Features</h3>
+<ul>
+<li><a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> gained the <code>adjust_text</code> parameter, and can now repel text.</li>
+<li>Added <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a>.</li>
+<li>Added <a href="./reference/geom_sina.html#plotnine.geoms.geom_sina"><code>geom_sina</code></a></li>
+<li>Added scales for ordinal (ordered categorical) columns.</li>
+<li><a href="./reference/geom_step.html#plotnine.geoms.geom_step"><code>geom_step</code></a> gained the option <code>mid</code> for the direction parameter. The steps are taken mid-way between adjacent x values.</li>
+<li>Added <a href="./reference/annotation_stripes.html#plotnine.geoms.annotation_stripes"><code>annotation_stripes</code></a>.</li>
+</ul>
+</section>
+<section id="bug-fixes-7" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-7">Bug Fixes</h3>
+<ul>
+<li><p>Fixed bug where facetting would fail if done on a plot with annotation(s) and one of the facetting columns was also a variable in the environment.</p></li>
+<li><p>Fixed bug where <a href="./reference/coord_flip.html#plotnine.coords.coord_flip"><code>coord_flip</code></a> would not flip geoms created by <a href="./reference/geom_rug.html#plotnine.geoms.geom_rug"><code>geom_rug</code></a>. ({{&lt; issue 216 &gt;}})</p></li>
+<li><p>Fixed bug where plots with <a href="./reference/theme_xkcd.html#plotnine.themes.theme_xkcd"><code>theme_xkcd</code></a> cannot be saved twice. ({{&lt; issue 199 &gt;}})</p></li>
+<li><p>Fixed bug that made it impossible to map to columns with the same name as a calculated columns of the stat. ({{&lt; issue 234 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> that made it difficult to use it with stats other than <a href="./reference/stat_smooth.html#plotnine.stats.stat_smooth"><code>stat_smooth</code></a>. ({{&lt; issue 242 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/position_dodge.html#plotnine.positions.position_dodge"><code>position_dodge</code></a> where by bar plot could get thinner when facetting and useing <code>preserve = 'single'</code>. ({{&lt; issue 224 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a> where if the transformation reversed the original limits, the order in which the data was laid out remained unchanged. ({{&lt; issue 253 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_count.html#plotnine.stats.stat_count"><code>stat_count</code></a> where <code>float</code> weights were rounded and lead to a wrong plot. ({{&lt; issue 260 &gt;}})</p></li>
+<li><p>Fixed bug where one could not use the British spelling <code>colour</code> to rename a color scale. ({{&lt; issue 264 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/lims.html#plotnine.scales.lims"><code>lims</code></a>, <a href="./reference/xlim.html#plotnine.scales.xlim"><code>xlim</code></a>, and <a href="./reference/ylim.html#plotnine.scales.ylim"><code>ylim</code></a> where <code>datetime</code> and <code>timedelta</code> limits resulted in an error.</p></li>
+<li><p>Fixed bug where <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>geom_rect</code></a> could not be used with <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a>. ({{&lt; issue 256 &gt;}})</p></li>
+<li><p>Fixed bug where using free scales with facetting and flipping the coordinate axes could give unexpected results. ({{&lt; issue 286 &gt;}})</p></li>
+<li><p>Fixed unwanted tick along the axis for versions of Matplotlib &gt;= 3.1.0.</p></li>
+<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> not to error when using <code>hjust</code> and <code>vjust</code>. ({{&lt; issue 287 &gt;}})</p></li>
+<li><p>Fixed bug where <a href="./reference/geom_abline.html#plotnine.geoms.geom_abline"><code>geom_abline</code></a> <a href="./reference/geom_hline.html#plotnine.geoms.geom_hline"><code>geom_hline</code></a> and <a href="./reference/geom_vline.html#plotnine.geoms.geom_vline"><code>geom_vline</code></a> could give wrong results when used with <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a>.</p></li>
+<li><p>Fixed bug where layers with only infinite values would lead to an exception if they were the first layer encountered when choosing a scale.</p></li>
+</ul>
+</section>
+<section id="enhancements-5" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-5">Enhancements</h3>
+<ul>
+<li><p>Legends are now plotted in a predictable order which dedends on how the plot is constructed.</p></li>
+<li><p>The spokes drawn by <a href="./reference/geom_spoke.html#plotnine.geoms.geom_spoke"><code>geom_spoke</code></a> can now have a fixed angle.</p></li>
+<li><p>Aesthetics that share a scale (e.g.&nbsp;color and fill can have the same scale) get different guides if mapped to different columns.</p></li>
+<li><p>When the transform of a specialised (one that is not and identity scale) continuous scale is altered, the user is warned about a possible error in what they expect. (</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        typesetMath(container);
+        return container.innerHTML
+      } else {
+        typesetMath(note);
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – guide</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -60,6 +94,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -67,7 +102,6 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -88,21 +122,40 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -126,7 +179,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.guides.guide" id="toc-plotnine.guides.guide" class="nav-link active" data-scroll-target="#plotnine.guides.guide">guide</a></li>
+  <li><a href="#plotnine.guides.guide.guide" id="toc-plotnine.guides.guide.guide" class="nav-link active" data-scroll-target="#plotnine.guides.guide.guide"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.guides.guide.guide</span></a>
+  <ul class="collapse">
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#plotnine.guides.guide.guide.legend_aesthetics" id="toc-plotnine.guides.guide.guide.legend_aesthetics" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.legend_aesthetics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">legend_aesthetics</span></a></li>
+  <li><a href="#plotnine.guides.guide.guide.train" id="toc-plotnine.guides.guide.guide.train" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.train"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">train</span></a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -136,11 +198,161 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="plotnine.guides.guide" class="level1">
-<h1>guide</h1>
-<p><span class="signature"><code>guides.guide</code></span></p>
+<section id="plotnine.guides.guide.guide" class="level1 doc doc-object doc-class doc-has-member-docs">
+<h1 class="doc doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.guides.guide.guide</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>guide(<span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Base class for all guides</p>
+</div>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">title</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Title of the guide. If <code>None</code>, title is not shown. Default is the name of the aesthetic or the name specified using </p>
+</dd>
+<dt><code><span class="doc-parameter-name">title_position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"auto"</span></span></code></dt>
+<dd>
+<p>Position of title. One of <code class="sourceCode python">[<span class="st">"top"</span>, <span class="st">"bottom"</span>, <span class="st">"left"</span>, <span class="st">"right"</span>]</code></p>
+</dd>
+<dt><code><span class="doc-parameter-name">title_theme</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_text</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Control over the title theme. Default is to use <code>legend_title</code> in a theme.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">title_hjust</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Horizontal justification of title text.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">title_vjust</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Vertical justification of title text.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">title_separation</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Separation between the title text and the colorbar. Value is in pixels.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">label</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dd>
+<p>Whether to show labels</p>
+</dd>
+<dt><code><span class="doc-parameter-name">label_position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"auto"</span></span></code></dt>
+<dd>
+<p>Position of the labels. One of <code class="sourceCode python">[<span class="st">"top"</span>, <span class="st">"bottom"</span>, <span class="st">"left"</span>, <span class="st">"right"</span>]</code>. The default is “bottom” for a horizontal guide and “right” for a vertical guide.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">label_theme</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_text</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Control over the label theme. Default is to use <code>legend_text</code> in a theme.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">label_hjust</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Horizontal justification of label text.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">label_vjust</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Vertical justification of label text.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">label_separation</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Separation between the label text and the colorbar. Value is in pixels.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">direction</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"horizontal"</span>, <span class="st">"vertical"</span>, <span class="st">"auto"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"auto"</span></span></code></dt>
+<dd>
+<p>Direction of the guide. The default is depends on <a href="../reference/legend_position.html#plotnine.themes.themeable.legend_position"><code>legend_position</code></a>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">default_unit</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"lines"</span></span></code></dt>
+<dd>
+<p>Unit for <code>keywidth</code> and <code>keyheight</code>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">override_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Aesthetic parameters of legend key.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">reverse</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
+<dd>
+<p>Whether to reverse the order of the legends.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">order</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0</span></code></dt>
+<dd>
+<p>Order of this guide among multiple guides. Should be in the range [0, 99].</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
+<p>At the moment not all parameters have been fully implemented.</p>
+</section>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#plotnine.guides.guide.guide.legend_aesthetics">legend_aesthetics</a></td>
+<td>Return the aesthetics that contribute to the legend</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.guides.guide.guide.train">train</a></td>
+<td>Create the key for the guide</td>
+</tr>
+</tbody>
+</table>
+<section id="plotnine.guides.guide.guide.legend_aesthetics" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.guides.guide.guide.legend_aesthetics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">legend_aesthetics</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>legend_aesthetics(layer, plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Return the aesthetics that contribute to the legend</p>
+</div>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">layer</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Layer</span></code></dt>
+<dd>
+<p>Layer whose legend is to be drawn</p>
+</dd>
+<dt><code><span class="doc-parameter-name">plot</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a></span></code></dt>
+<dd>
+<p>Plot object</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">matched</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span></code></dt>
+<dd>
+<p>List of the names of the aethetics that contribute to the legend.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.guides.guide.guide.train" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.guides.guide.guide.train"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">train</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>train(scale, aesthetic<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Create the key for the guide</p>
+<p>Returns guide if training is successful</p>
+</div>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -297,8 +509,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – layer</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -60,6 +94,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -67,7 +102,6 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -88,21 +122,40 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -126,17 +179,22 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.layer" id="toc-plotnine.layer" class="nav-link active" data-scroll-target="#plotnine.layer">layer</a>
+  <li><a href="#plotnine.layer.layer" id="toc-plotnine.layer.layer" class="nav-link active" data-scroll-target="#plotnine.layer.layer"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.layer.layer</span></a>
   <ul class="collapse">
-  <li><a href="#classes" id="toc-classes" class="nav-link" data-scroll-target="#classes">Classes</a>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
-  <li><a href="#plotnine.layer.Layers" id="toc-plotnine.layer.Layers" class="nav-link" data-scroll-target="#plotnine.layer.Layers">Layers</a></li>
-  <li><a href="#plotnine.layer.layer" id="toc-plotnine.layer.layer" class="nav-link" data-scroll-target="#plotnine.layer.layer">layer</a></li>
-  </ul></li>
-  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a>
-  <ul class="collapse">
-  <li><a href="#plotnine.layer.add_group" id="toc-plotnine.layer.add_group" class="nav-link" data-scroll-target="#plotnine.layer.add_group">add_group</a></li>
-  <li><a href="#plotnine.layer.discrete_columns" id="toc-plotnine.layer.discrete_columns" class="nav-link" data-scroll-target="#plotnine.layer.discrete_columns">discrete_columns</a></li>
+  <li><a href="#plotnine.layer.layer.compute_aesthetics" id="toc-plotnine.layer.layer.compute_aesthetics" class="nav-link" data-scroll-target="#plotnine.layer.layer.compute_aesthetics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_aesthetics</span></a></li>
+  <li><a href="#plotnine.layer.layer.compute_position" id="toc-plotnine.layer.layer.compute_position" class="nav-link" data-scroll-target="#plotnine.layer.layer.compute_position"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_position</span></a></li>
+  <li><a href="#plotnine.layer.layer.compute_statistic" id="toc-plotnine.layer.layer.compute_statistic" class="nav-link" data-scroll-target="#plotnine.layer.layer.compute_statistic"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_statistic</span></a></li>
+  <li><a href="#plotnine.layer.layer.draw" id="toc-plotnine.layer.layer.draw" class="nav-link" data-scroll-target="#plotnine.layer.layer.draw"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
+  <li><a href="#plotnine.layer.layer.finish_statistics" id="toc-plotnine.layer.layer.finish_statistics" class="nav-link" data-scroll-target="#plotnine.layer.layer.finish_statistics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">finish_statistics</span></a></li>
+  <li><a href="#plotnine.layer.layer.from_geom" id="toc-plotnine.layer.layer.from_geom" class="nav-link" data-scroll-target="#plotnine.layer.layer.from_geom"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_geom</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.layer.layer.map_statistic" id="toc-plotnine.layer.layer.map_statistic" class="nav-link" data-scroll-target="#plotnine.layer.layer.map_statistic"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">map_statistic</span></a></li>
+  <li><a href="#plotnine.layer.layer.setup" id="toc-plotnine.layer.layer.setup" class="nav-link" data-scroll-target="#plotnine.layer.layer.setup"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></a></li>
+  <li><a href="#plotnine.layer.layer.setup_data" id="toc-plotnine.layer.layer.setup_data" class="nav-link" data-scroll-target="#plotnine.layer.layer.setup_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
+  <li><a href="#plotnine.layer.layer.use_defaults" id="toc-plotnine.layer.layer.use_defaults" class="nav-link" data-scroll-target="#plotnine.layer.layer.use_defaults"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -148,91 +206,70 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="plotnine.layer" class="level1">
-<h1>layer</h1>
-<p><span class="signature"><code>layer</code></span></p>
-<section id="classes" class="level2">
-<h2 class="anchored" data-anchor-id="classes">Classes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.layer.Layers">Layers</a></td>
-<td>List of layers</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.layer.layer">layer</a></td>
-<td>Layer</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.layer.Layers" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.layer.Layers">Layers</h3>
-<div class="signature">
-<p><code>layer.Layers()</code></p>
+<section id="plotnine.layer.layer" class="level1 doc doc-object doc-class doc-has-member-docs">
+<h1 class="doc doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.layer.layer</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>layer(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    geom,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    stat,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    mapping,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    position,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    inherit_aes<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    show_legend<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    raster<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
-<p>List of layers</p>
-<p>During the plot building pipeline, many operations are applied at all layers in the plot. This class makes those tasks easier.</p>
-</div>
-</section>
-<section id="plotnine.layer.layer" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.layer.layer">layer</h3>
-<div class="signature">
-<p><code>layer.layer(self, geom, stat, *, mapping, data, position, inherit_aes=True, show_legend=None, raster=False)</code></p>
-</div>
-<div class="description">
+<div class="doc-text">
 <p>Layer</p>
 <p>When a <code>geom</code> or <code>stat</code> is added to a <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object, it creates a single layer. This class is a representation of that layer.</p>
 </div>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<div class="doc-definition-items">
 <dl>
-<dt><code>geom: <code>geom</code></code></dt>
+<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Geom">Geom</a></span></code></dt>
 <dd>
-geom to used to draw this layer.
+<p>geom to used to draw this layer.</p>
 </dd>
-<dt><code>stat: <code>stat</code></code></dt>
+<dt><code><span class="doc-parameter-name">stat</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Stat">Stat</a></span></code></dt>
 <dd>
-stat used for the statistical transformation of data in this layer
+<p>stat used for the statistical transformation of data in this layer</p>
 </dd>
-<dt><code>mapping: <a href="../reference/aes.html#plotnine.mapping.aes">aes</a></code></dt>
+<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/aes.html#plotnine.mapping.aes">aes</a></span></code></dt>
 <dd>
-Aesthetic mappings.
+<p>Aesthetic mappings.</p>
 </dd>
-<dt><code>data: <code>dataframe</code></code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="../reference/typing.html#plotnine.typing.LayerDataLike">LayerDataLike</a>]</span></code></dt>
 <dd>
-Data plotted in this layer. If <code>None</code>, the data from the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object will be used.
+<p>Data plotted in this layer. If <code>None</code>, the data from the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object will be used.</p>
 </dd>
-<dt><code>position: <code>position</code></code></dt>
+<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Position">Position</a></span></code></dt>
 <dd>
-Position object to adjust the geometries in this layer.
+<p>Position object to adjust the geometries in this layer.</p>
 </dd>
-<dt><code>inherit_aes: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">inherit_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-If <code>True</code> inherit from the aesthetic mappings of the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object.
+<p>If <code>True</code> inherit from the aesthetic mappings of the <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object.</p>
 </dd>
-<dt><code>show_legend: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | None = None</code></dt>
+<dt><code><span class="doc-parameter-name">show_legend</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-Whether to make up and show a legend for the mappings of this layer. If <code>None</code> then an automatic/good choice is made
+<p>Whether to make up and show a legend for the mappings of this layer. If <code>None</code> then an automatic/good choice is made</p>
 </dd>
-<dt><code>raster: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dt><code><span class="doc-parameter-name">raster</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-If <code>True</code>, draw onto this layer a raster (bitmap) object even if the final image format is vector.
+<p>If <code>True</code>, draw onto this layer a raster (bitmap) object even if the final image format is vector.</p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="notes" class="level4">
-<h4 class="anchored" data-anchor-id="notes">Notes</h4>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
 <p>There is no benefit to manually creating a layer. You should always use a <code>geom</code> or <code>stat</code>.</p>
 </section>
-<section id="methods" class="level4">
-<h4 class="anchored" data-anchor-id="methods">Methods</h4>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
 <table class="table">
 <thead>
 <tr class="header">
@@ -263,7 +300,7 @@ If <code>True</code>, draw onto this layer a raster (bitmap) object even if the 
 </tr>
 <tr class="even">
 <td><a href="#plotnine.layer.layer.from_geom">from_geom</a></td>
-<td>Create a layer given a <code></code></td>
+<td>Create a layer given a </td>
 </tr>
 <tr class="odd">
 <td><a href="#plotnine.layer.layer.map_statistic">map_statistic</a></td>
@@ -283,196 +320,149 @@ If <code>True</code>, draw onto this layer a raster (bitmap) object even if the 
 </tr>
 </tbody>
 </table>
-<section id="plotnine.layer.layer.compute_aesthetics" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.compute_aesthetics">compute_aesthetics</h5>
-<div class="signature">
-<p><code>layer.layer.compute_aesthetics(plot)</code></p>
+<section id="plotnine.layer.layer.compute_aesthetics" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.compute_aesthetics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_aesthetics</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>compute_aesthetics(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Return a dataframe where the columns match the aesthetic mappings</p>
 <p>Transformations like ‘factor(cyl)’ and other expression evaluation are made in here</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.compute_position" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.compute_position">compute_position</h5>
-<div class="signature">
-<p><code>layer.layer.compute_position(layout)</code></p>
+<section id="plotnine.layer.layer.compute_position" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.compute_position"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_position</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>compute_position(layout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Compute the position of each geometric object</p>
 <p>This is in concert with the other objects in the panel depending on the position class of the geom</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.compute_statistic" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.compute_statistic">compute_statistic</h5>
-<div class="signature">
-<p><code>layer.layer.compute_statistic(layout)</code></p>
+<section id="plotnine.layer.layer.compute_statistic" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.compute_statistic"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_statistic</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>compute_statistic(layout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Compute &amp; return statistics for this layer</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.draw" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.draw">draw</h5>
-<div class="signature">
-<p><code>layer.layer.draw(layout, coord)</code></p>
+<section id="plotnine.layer.layer.draw" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.draw"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>draw(layout, coord)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Draw geom</p>
 </div>
-<section id="parameters-1" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>layout: <code>Layout</code></code></dt>
+<dt><code><span class="doc-parameter-name">layout</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Layout</span></code></dt>
 <dd>
-Layout object created when the plot is getting built
+<p>Layout object created when the plot is getting built</p>
 </dd>
-<dt><code>coord: <code>coord</code></code></dt>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">coord</span></code></dt>
 <dd>
-Type of coordinate axes
+<p>Type of coordinate axes</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.layer.layer.finish_statistics" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.finish_statistics">finish_statistics</h5>
-<div class="signature">
-<p><code>layer.layer.finish_statistics()</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.layer.layer.finish_statistics" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.finish_statistics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">finish_statistics</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>finish_statistics()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Prepare/modify data for plotting</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.from_geom" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.from_geom">from_geom</h5>
-<div class="signature">
-<p><code>layer.layer.from_geom(geom)</code></p>
+<section id="plotnine.layer.layer.from_geom" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.from_geom"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_geom</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>from_geom(geom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
-<p>Create a layer given a <code></code></p>
+<div class="doc-text">
+<p>Create a layer given a </p>
 </div>
-<section id="parameters-2" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
+<section id="parameters-2" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>geom: <code>geom</code></code></dt>
+<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Geom">Geom</a></span></code></dt>
 <dd>
-<code>geom</code> from which a layer will be created
+<p><code>geom</code> from which a layer will be created</p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="returns" class="level6">
-<h6 class="anchored" data-anchor-id="returns">Returns</h6>
+<section id="returns" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>out: <a href="../reference/layer.html#plotnine.layer.layer">layer</a></code></dt>
+<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/layer.html#plotnine.layer.layer">layer</a></span></code></dt>
 <dd>
-Layer that represents the specific <code>geom</code>.
+<p>Layer that represents the specific <code>geom</code>.</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.layer.layer.map_statistic" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.map_statistic">map_statistic</h5>
-<div class="signature">
-<p><code>layer.layer.map_statistic(plot)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.layer.layer.map_statistic" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.map_statistic"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">map_statistic</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb8"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>map_statistic(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Mapping aesthetics to computed statistics</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.setup" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.setup">setup</h5>
-<div class="signature">
-<p><code>layer.layer.setup(plot)</code></p>
+<section id="plotnine.layer.layer.setup" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.setup"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb9"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>setup(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Prepare layer for the plot building</p>
 <p>Give the layer access to the data, mapping and environment</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.setup_data" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.setup_data">setup_data</h5>
-<div class="signature">
-<p><code>layer.layer.setup_data()</code></p>
+<section id="plotnine.layer.layer.setup_data" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.setup_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>setup_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Prepare/modify data for plotting</p>
 </div>
 </section>
-<section id="plotnine.layer.layer.use_defaults" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.layer.layer.use_defaults">use_defaults</h5>
-<div class="signature">
-<p><code>layer.layer.use_defaults(data=None, aes_modifiers=None)</code></p>
+<section id="plotnine.layer.layer.use_defaults" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.use_defaults"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb11"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data<span class="op">=</span><span class="va">None</span>, aes_modifiers<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Prepare/modify data for plotting</p>
 </div>
-<section id="parameters-3" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
+<section id="parameters-3" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a> | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-Data
+<p>Data</p>
 </dd>
-<dt><code>aes_modifiers: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">aes_modifiers</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-Expression to evaluate and replace aesthetics in the data.
+<p>Expression to evaluate and replace aesthetics in the data.</p>
 </dd>
 </dl>
-</section>
-</section>
-</section>
-</section>
-</section>
-<section id="functions" class="level2">
-<h2 class="anchored" data-anchor-id="functions">Functions</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.layer.add_group">add_group</a></td>
-<td>Add group to the dataframe</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.layer.discrete_columns">discrete_columns</a></td>
-<td>Return a list of the discrete columns in the dataframe</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.layer.add_group" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.layer.add_group">add_group</h3>
-<div class="signature">
-<p><code>layer.add_group(data)</code></p>
 </div>
-<div class="description">
-<p>Add group to the dataframe</p>
-<p>The group depends on the interaction of the discrete aesthetic columns in the dataframe.</p>
-</div>
-</section>
-<section id="plotnine.layer.discrete_columns" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.layer.discrete_columns">discrete_columns</h3>
-<div class="signature">
-<p><code>layer.discrete_columns(df, ignore)</code></p>
-</div>
-<div class="description">
-<p>Return a list of the discrete columns in the dataframe</p>
-</div>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
-<dl>
-<dt><code>df: <code>dataframe</code></code></dt>
-<dd>
-Data
-</dd>
-<dt><code>ignore: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</code></dt>
-<dd>
-A list|set|tuple with the names of the columns to skip.
-</dd>
-</dl>
 
 
 </section>
@@ -634,8 +624,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

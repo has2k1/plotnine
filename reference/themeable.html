@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – themeable</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,7 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -122,21 +122,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -160,21 +179,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.themeable" id="toc-plotnine.themes.themeable.themeable" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.themeable">themeable</a>
+  <li><a href="#plotnine.themes.themeable.themeable" id="toc-plotnine.themes.themeable.themeable" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.themeable"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.themeable</span></a>
   <ul class="collapse">
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
-  <li><a href="#plotnine.themes.themeable.themeable.apply" id="toc-plotnine.themes.themeable.themeable.apply" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply">apply</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.apply_ax" id="toc-plotnine.themes.themeable.themeable.apply_ax" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply_ax">apply_ax</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.apply_figure" id="toc-plotnine.themes.themeable.themeable.apply_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply_figure">apply_figure</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.blank_ax" id="toc-plotnine.themes.themeable.themeable.blank_ax" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.blank_ax">blank_ax</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.blank_figure" id="toc-plotnine.themes.themeable.themeable.blank_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.blank_figure">blank_figure</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.from_class_name" id="toc-plotnine.themes.themeable.themeable.from_class_name" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.from_class_name">from_class_name</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.is_blank" id="toc-plotnine.themes.themeable.themeable.is_blank" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.is_blank">is_blank</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.merge" id="toc-plotnine.themes.themeable.themeable.merge" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.merge">merge</a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.setup_figure" id="toc-plotnine.themes.themeable.themeable.setup_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.setup_figure">setup_figure</a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.apply" id="toc-plotnine.themes.themeable.themeable.apply" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.apply_ax" id="toc-plotnine.themes.themeable.themeable.apply_ax" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply_ax"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply_ax</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.apply_figure" id="toc-plotnine.themes.themeable.themeable.apply_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.apply_figure"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply_figure</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.blank_ax" id="toc-plotnine.themes.themeable.themeable.blank_ax" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.blank_ax"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">blank_ax</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.blank_figure" id="toc-plotnine.themes.themeable.themeable.blank_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.blank_figure"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">blank_figure</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.from_class_name" id="toc-plotnine.themes.themeable.themeable.from_class_name" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.from_class_name"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_class_name</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.is_blank" id="toc-plotnine.themes.themeable.themeable.is_blank" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.is_blank"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">is_blank</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.merge" id="toc-plotnine.themes.themeable.themeable.merge" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.merge"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">merge</span></a></li>
+  <li><a href="#plotnine.themes.themeable.themeable.setup_figure" id="toc-plotnine.themes.themeable.themeable.setup_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.setup_figure"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_figure</span></a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -186,13 +205,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plotnine.themes.themeable.themeable" class="level1">
-<h1>themeable</h1>
-<div class="signature">
-<p><code>themes.themeable.themeable(self, theme_element=None)</code></p>
+<section id="plotnine.themes.themeable.themeable" class="level1 doc doc-object doc-class doc-has-member-docs">
+<h1 class="doc doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.themeable</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>themeable(theme_element<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
+<div class="doc-text">
+<p>Abstract class of things that can be themed.</p>
+<p>Every subclass of themeable is stored in a dict at :python:<code>themeable.register</code> with the name of the subclass as the key.</p>
+<p>It is the base of a class hierarchy that uses inheritance in a non-traditional manner. In the textbook use of class inheritance, superclasses are general and subclasses are specializations. In some since the hierarchy used here is the opposite in that superclasses are more specific than subclasses.</p>
+<p>It is probably better to think if this hierarchy of leveraging Python’s multiple inheritance to implement composition. For example the <code>axis_title</code> themeable is <em>composed of</em> the <code>x_axis_title</code> and the <code>y_axis_title</code>. We are just using multiple inheritance to specify this composition.</p>
+<p>When implementing a new themeable based on the ggplot2 documentation, it is important to keep this in mind and reverse the order of the “inherits from” in the documentation.</p>
+<p>For example, to implement,</p>
+<ul>
+<li><code>axis_title_x</code> - <code>x</code> axis label (element_text; inherits from <code>axis_title</code>)</li>
+<li><code>axis_title_y</code> - <code>y</code> axis label (element_text; inherits from <code>axis_title</code>)</li>
+</ul>
+<p>You would have this implementation:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title_x(themeable):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title_y(themeable):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title(axis_title_x, axis_title_y):</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the superclasses fully implement the subclass, the body of the subclass should be “pass”. Python(<strong>mro</strong>) will do the right thing.</p>
+<p>When a method does require implementation, call <code class="sourceCode python"><span class="bu">super</span>()</code> then add the themeable’s implementation to the axes.</p>
+</div>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
+<p>A user should never create instances of class or subclasses of it.</p>
+</section>
+<section id="attributes" class="level2 doc-attributes">
+<h2 class="doc-attributes anchored" data-anchor-id="attributes">Attributes</h2>
 <table class="table">
 <thead>
 <tr class="header">
@@ -211,36 +257,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div class="description">
-<p>Abstract class of things that can be themed.</p>
-<p>Every subclass of themeable is stored in a dict at :python:<code>themeable.register</code> with the name of the subclass as the key.</p>
-<p>It is the base of a class hierarchy that uses inheritance in a non-traditional manner. In the textbook use of class inheritance, superclasses are general and subclasses are specializations. In some since the hierarchy used here is the opposite in that superclasses are more specific than subclasses.</p>
-<p>It is probably better to think if this hierarchy of leveraging Python’s multiple inheritance to implement composition. For example the <code>axis_title</code> themeable is <em>composed of</em> the <code>x_axis_title</code> and the <code>y_axis_title</code>. We are just using multiple inheritance to specify this composition.</p>
-<p>When implementing a new themeable based on the ggplot2 documentation, it is important to keep this in mind and reverse the order of the “inherits from” in the documentation.</p>
-<p>For example, to implement,</p>
-<ul>
-<li><code>axis_title_x</code> - <code>x</code> axis label (element_text; inherits from <code>axis_title</code>)</li>
-<li><code>axis_title_y</code> - <code>y</code> axis label (element_text; inherits from <code>axis_title</code>)</li>
-</ul>
-<p>You would have this implementation:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title_x(themeable):</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title_y(themeable):</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> axis_title(axis_title_x, axis_title_y):</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If the superclasses fully implement the subclass, the body of the subclass should be “pass”. Python(<strong>mro</strong>) will do the right thing.</p>
-<p>When a method does require implementation, call :python:<code>super()</code> then add the themeable’s implementation to the axes.</p>
-</div>
 </section>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes</h2>
-<p>A user should never create instances of class <code></code> or subclasses of it.</p>
-</section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
 <table class="table">
 <thead>
 <tr class="header">
@@ -287,139 +306,136 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<section id="plotnine.themes.themeable.themeable.apply" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply">apply</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.apply(theme)</code></p>
+<section id="plotnine.themes.themeable.themeable.apply" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">apply</span>(theme)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Called by the theme to apply the themeable</p>
 <p>Subclasses shouldn’t have to override this method to customize.</p>
 </div>
 </section>
-<section id="plotnine.themes.themeable.themeable.apply_ax" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply_ax">apply_ax</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.apply_ax(ax)</code></p>
+<section id="plotnine.themes.themeable.themeable.apply_ax" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply_ax"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply_ax</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>apply_ax(ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Called after a chart has been plotted.</p>
 <p>Subclasses can override this method to customize the plot according to the theme.</p>
+<p>This method should be implemented as <code class="sourceCode python"><span class="bu">super</span>().apply_ax()</code> followed by extracting the portion of the axes specific to this themeable then applying the properties.</p>
 </div>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>ax: <a href="https://matplotlib.org/stable/index.html#module-matplotlib">matplotlib</a>.<a href="https://matplotlib.org/stable/api/axes_api.html#module-matplotlib.axes">axes</a>.<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes">Axes</a></code></dt>
-<dd>
-
-</dd>
-<dt><code>This</code></dt>
-<dd>
-
-</dd>
-<dt><code>followed</code></dt>
-<dd>
-
-</dd>
-<dt><code>themeable</code></dt>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://matplotlib.org/stable/index.html#module-matplotlib">matplotlib</a>.<a href="https://matplotlib.org/stable/api/axes_api.html#module-matplotlib.axes">axes</a>.<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes">Axes</a></span></code></dt>
 <dd>
 
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.themes.themeable.themeable.apply_figure" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply_figure">apply_figure</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.apply_figure(figure, targets)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.themes.themeable.themeable.apply_figure" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.apply_figure"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply_figure</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>apply_figure(figure, targets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Apply theme to the figure</p>
 <p>Compared to :meth:<code>setup_figure</code>, this method is called after plotting and all the elements are drawn onto the figure.</p>
 </div>
 </section>
-<section id="plotnine.themes.themeable.themeable.blank_ax" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.blank_ax">blank_ax</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.blank_ax(ax)</code></p>
+<section id="plotnine.themes.themeable.themeable.blank_ax" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.blank_ax"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">blank_ax</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>blank_ax(ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Blank out theme elements</p>
 </div>
 </section>
-<section id="plotnine.themes.themeable.themeable.blank_figure" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.blank_figure">blank_figure</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.blank_figure(figure, targets)</code></p>
+<section id="plotnine.themes.themeable.themeable.blank_figure" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.blank_figure"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">blank_figure</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>blank_figure(figure, targets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Blank out elements on the figure</p>
 </div>
 </section>
-<section id="plotnine.themes.themeable.themeable.from_class_name" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.from_class_name">from_class_name</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.from_class_name(name, theme_element)</code></p>
+<section id="plotnine.themes.themeable.themeable.from_class_name" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.from_class_name"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_class_name</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb8"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>from_class_name(name, theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Create a themeable by name</p>
 </div>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code></dt>
+<dt><code><span class="doc-parameter-name">name</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span></code></dt>
 <dd>
-Class name
+<p>Class name</p>
 </dd>
-<dt><code>theme_element: element object</code></dt>
+<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element object</span></code></dt>
 <dd>
-A of the type required by the theme For lines, text and rects it should be one of: <a href="../reference/element_line.html#plotnine.themes.element_line"><code>element_line</code></a>, <a href="../reference/element_rect.html#plotnine.themes.element_rect"><code>element_rect</code></a>, <a href="../reference/element_text.html#plotnine.themes.element_text"><code>element_text</code></a> or <code></code>
+<p>An element of the type required by the theme. For lines, text and rects it should be one of: <a href="../reference/element_line.html#plotnine.themes.element_line"><code>element_line</code></a>, <a href="../reference/element_rect.html#plotnine.themes.element_rect"><code>element_rect</code></a>, <a href="../reference/element_text.html#plotnine.themes.element_text"><code>element_text</code></a> or <a href="../reference/element_blank.html#plotnine.themes.element_blank"><code>element_blank</code></a></p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>out: <code>Themeable</code></code></dt>
+<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">plotnine.themes.themeable.<a href="../reference/themeable.html#plotnine.themes.themeable.themeable">themeable</a></span></code></dt>
 <dd>
 
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.themes.themeable.themeable.is_blank" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.is_blank">is_blank</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.is_blank()</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.themes.themeable.themeable.is_blank" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.is_blank"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">is_blank</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb9"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>is_blank()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Return True if theme_element is made of element_blank</p>
 </div>
 </section>
-<section id="plotnine.themes.themeable.themeable.merge" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.merge">merge</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.merge(other)</code></p>
+<section id="plotnine.themes.themeable.themeable.merge" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.merge"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">merge</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>merge(other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Merge properties of other into self</p>
 </div>
-<section id="raises" class="level4">
-<h4 class="anchored" data-anchor-id="raises">Raises</h4>
+<section id="raises" class="level4 doc-raises">
+<h4 class="doc-raises anchored" data-anchor-id="raises">Raises</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code><a href="https://docs.python.org/3/library/exceptions.html#ValueError">ValueError</a></code></dt>
+<dt><code><span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/exceptions.html#ValueError">ValueError</a></span></code></dt>
 <dd>
-If any of the properties are blank
+<p>If any of the properties are blank</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.themes.themeable.themeable.setup_figure" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.themes.themeable.themeable.setup_figure">setup_figure</h3>
-<div class="signature">
-<p><code>themes.themeable.themeable.setup_figure(figure)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.themes.themeable.themeable.setup_figure" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.setup_figure"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_figure</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb11"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>setup_figure(figure)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Apply theme to the figure</p>
 <p>Compared to :meth:<code>apply_figure</code>, this method is called before any plotting is done. This is necessary in some cases where the drawing functions need(or can make use of) this information.</p>
 </div>
@@ -583,8 +599,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

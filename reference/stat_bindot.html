@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – stat_bindot</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,7 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -122,21 +122,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -160,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.stats.stat_bindot" id="toc-plotnine.stats.stat_bindot" class="nav-link active" data-scroll-target="#plotnine.stats.stat_bindot">stat_bindot</a>
+  <li><a href="#plotnine.stats.stat_bindot" id="toc-plotnine.stats.stat_bindot" class="nav-link active" data-scroll-target="#plotnine.stats.stat_bindot"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.stats.stat_bindot</span></a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
@@ -174,52 +193,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plotnine.stats.stat_bindot" class="level1">
-<h1>stat_bindot</h1>
-<div class="signature">
-<p><code>stats.stat_bindot()</code></p>
+<section id="plotnine.stats.stat_bindot" class="level1 doc doc-object doc-class">
+<h1 class="doc doc-object doc-class"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.stats.stat_bindot</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat_bindot(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    geom<span class="op">=</span><span class="st">"dotplot"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"identity"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    binwidth<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    binaxis<span class="op">=</span><span class="st">"x"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"dotdensity"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    binpositions<span class="op">=</span><span class="st">"bygroup"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    drop<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    right<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Binning for a dot plot</p>
-<p><strong>Usage</strong></p>
-<pre><code>stat_bindot(mapping=None, data=None, geom='dotplot', position='identity',
-            na_rm=False, origin=None, breaks=None, method='dotdensity',
-            bins=None, binwidth=None, binaxis='x', binpositions='bygroup',
-            drop=False, width=0.9, right=True, **kwargs)</code></pre>
-<p>Only the <code>mapping</code> and <code>data</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>geom</code>.</p>
 </div>
-<section id="parameters" class="level2">
-<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<div class="doc-definition-items">
 <dl>
-<dt><code>mapping: <code>aes</code> = None</code></dt>
+<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/aes.html#plotnine.mapping.aes">aes</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Aesthetic mappings created with :class:<code>~plotnine.mapping.aes</code>). If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
-<table>
+<p>Aesthetic mappings created with <a href="../reference/aes.html#plotnine.mapping.aes">aes</a>. If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
+<table class="table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 40%">
+</colgroup>
 <thead>
-<tr>
-<th>
-Aesthetic
-</th>
-<th>
-Default value
-</th>
+<tr class="header">
+<th>Aesthetic</th>
+<th>Default value</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-<strong>x</strong>
-</td>
-<td>
-</td>
+<tr class="odd">
+<td><strong>x</strong></td>
+<td></td>
 </tr>
-<tr>
-<td>
-y
-</td>
-<td>
-<code class="sourceCode python">after_stat(<span class="st">'count'</span>)</code>
-</td>
+<tr class="even">
+<td>y</td>
+<td><code class="sourceCode python">after_stat(<span class="st">'count'</span>)</code></td>
 </tr>
 </tbody>
 </table>
@@ -230,72 +255,79 @@ y
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">"ncount"</span>   <span class="co"># count, scaled to maximum of 1</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">"ndensity"</span> <span class="co"># density, scaled to maximum of 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
-<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.
+<p>The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.</p>
 </dd>
-<dt><code>geom: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <code>geom</code> = “dotplot”</code></dt>
+<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"dotplot"</span></span></code></dt>
 <dd>
-The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.
+<p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
 </dd>
-<dt><code>position: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <code>position</code> = “identity”</code></dt>
+<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"identity"</span></span></code></dt>
 <dd>
-Position adjustment. If it is a string, it must be registered and known to Plotnine.
+<p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
 </dd>
-<dt><code>na_rm: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.
+<p>If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.</p>
 </dd>
-<dt><code>bins: <a href="https://docs.python.org/3/library/functions.html#int">int</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">bins</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-Number of bins. Overridden by binwidth. If <code class="sourceCode python"><span class="va">None</span></code>, a number is computed using the freedman-diaconis method.
+<p>Number of bins. Overridden by binwidth. If <code class="sourceCode python"><span class="va">None</span></code>, a number is computed using the freedman-diaconis method.</p>
 </dd>
-<dt><code>binwidth: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">binwidth</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-When <code class="sourceCode python">method<span class="op">=</span><span class="st">'dotdensity'</span></code>, this specifies the maximum binwidth. When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, this specifies the binwidth. This supercedes the <code>bins</code>.
+<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">'dotdensity'</span></code>, this specifies the maximum binwidth. When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, this specifies the binwidth. This supercedes the <code>bins</code>.</p>
 </dd>
-<dt><code>origin: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">origin</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, origin of the first bin.
+<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, origin of the first bin.</p>
 </dd>
-<dt><code>width: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.9</code></dt>
+<dt><code><span class="doc-parameter-name">width</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0.9</span></code></dt>
 <dd>
-When <code class="sourceCode python">binaxis<span class="op">=</span><span class="st">'y'</span></code>, the spacing of the dotstacks for dodging.
+<p>When <code class="sourceCode python">binaxis<span class="op">=</span><span class="st">'y'</span></code>, the spacing of the dotstacks for dodging.</p>
 </dd>
-<dt><code>binaxis: ‘x’ | ‘y’ = “x”</code></dt>
+<dt><code><span class="doc-parameter-name">binaxis</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"x"</span>, <span class="st">"y"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"x"</span></span></code></dt>
 <dd>
-Axis to bin along.
+<p>Axis to bin along.</p>
 </dd>
-<dt><code>method: ‘dotdensity’ | ‘histodot’ = “dotdensity”</code></dt>
+<dt><code><span class="doc-parameter-name">method</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"dotdensity"</span>, <span class="st">"histodot"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"dotdensity"</span></span></code></dt>
 <dd>
-Whether to do dot-density binning or fixed widths binning.
+<p>Whether to do dot-density binning or fixed widths binning.</p>
 </dd>
-<dt><code>binpositions: ‘all’ | ‘bygroup’ = “bygroup”</code></dt>
+<dt><code><span class="doc-parameter-name">binpositions</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"all"</span>, <span class="st">"bygroup"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"bygroup"</span></span></code></dt>
 <dd>
-Position of the bins when <code class="sourceCode python">method<span class="op">=</span><span class="st">"dotdensity"</span></code>. The value - <code>bygroup</code> - positions of the bins for each group are determined separately. - <code>all</code> - positions of the bins are determined with all data taken together. This aligns the dots stacks across multiple groups.
+<p>Position of the bins when <code class="sourceCode python">method<span class="op">=</span><span class="st">"dotdensity"</span></code>. The value - <code>bygroup</code> - positions of the bins for each group are determined separately. - <code>all</code> - positions of the bins are determined with all data taken together. This aligns the dots stacks across multiple groups.</p>
 </dd>
-<dt><code>drop: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dt><code><span class="doc-parameter-name">drop</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-If <code class="sourceCode python"><span class="va">True</span></code>, remove all bins with zero counts.
+<p>If <code class="sourceCode python"><span class="va">True</span></code>, remove all bins with zero counts.</p>
 </dd>
-<dt><code>right: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">right</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, :py:<code>True</code> means include right edge of the bins and if <code class="sourceCode python"><span class="va">False</span></code> the left edge is included.
+<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, :py:<code>True</code> means include right edge of the bins and if <code class="sourceCode python"><span class="va">False</span></code> the left edge is included.</p>
 </dd>
-<dt><code>breaks: <a href="https://docs.python.org/3/library/array.html#module-array">array</a> - <code>like</code> = None</code></dt>
+<dt><code><span class="doc-parameter-name">breaks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.FloatArray">FloatArray</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-Bin boundaries for <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>. This supercedes the <code>binwidth</code> and <code>bins</code>.
+<p>Bin boundaries for <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>. This supercedes the <code>binwidth</code> and <code>bins</code>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Aesthetics or parameters used by the <code>geom</code>.</p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="see-also" class="level2 admonition">
-<h2 class="admonition anchored" data-anchor-id="see-also">See Also</h2>
+<section id="see-also" class="level2 doc-see-also">
+<h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
+<div class="doc-definition-items">
 <dl>
 <dt><a href="../reference/stat_bin.html#plotnine.stats.stat_bin">plotnine.stats.stat_bin</a></dt>
 <dd>
 
 </dd>
 </dl>
+</div>
 
 
 </section>
@@ -455,8 +487,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

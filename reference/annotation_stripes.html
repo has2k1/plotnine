@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – annotation_stripes</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,7 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -122,21 +122,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -160,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.geoms.annotation_stripes" id="toc-plotnine.geoms.annotation_stripes" class="nav-link active" data-scroll-target="#plotnine.geoms.annotation_stripes">annotation_stripes</a>
+  <li><a href="#plotnine.geoms.annotation_stripes" id="toc-plotnine.geoms.annotation_stripes" class="nav-link active" data-scroll-target="#plotnine.geoms.annotation_stripes"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.annotation_stripes</span></a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   </ul></li>
@@ -173,47 +192,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plotnine.geoms.annotation_stripes" class="level1">
-<h1>annotation_stripes</h1>
-<div class="signature">
-<p><code>geoms.annotation_stripes(self, fill=('#AAAAAA', '#CCCCCC'), fill_range='auto', direction='vertical', extend=(0, 1), **kwargs)</code></p>
+<section id="plotnine.geoms.annotation_stripes" class="level1 doc doc-object doc-class">
+<h1 class="doc doc-object doc-class"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.annotation_stripes</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>annotation_stripes(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span>(<span class="st">"#AAAAAA"</span>, <span class="st">"#CCCCCC"</span>),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    fill_range<span class="op">=</span><span class="st">"auto"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    direction<span class="op">=</span><span class="st">"vertical"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    extend<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Alternating stripes, centered around each label.</p>
 <p>Useful as a background for geom_jitter.</p>
 </div>
-<section id="parameters" class="level2">
-<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<div class="doc-definition-items">
 <dl>
-<dt><code>fill: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> - <code>like</code> = (‘#AAAAAA’, ‘#CCCCCC’)</code></dt>
+<dt><code><span class="doc-parameter-name">fill</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">(<span class="st">"#AAAAAA"</span>, <span class="st">"#CCCCCC"</span>)</span></code></dt>
 <dd>
-List of colors for the strips.
+<p>List of colors for the strips.</p>
 </dd>
-<dt><code>fill_range: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[‘auto’, ‘cycle’, ‘no’, ‘nocycle’] = ‘auto’</code></dt>
+<dt><code><span class="doc-parameter-name">fill_range</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"auto"</span>, <span class="st">"cycle"</span>, <span class="st">"no"</span>, <span class="st">"nocycle"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"auto"</span></span></code></dt>
 <dd>
 <p>How to fill stripes beyond the range of scale:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">"cycle"</span>      <span class="co"># keep cycling the colors of the</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>             <span class="co"># stripes after the range ends</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">"nocycle"</span>    <span class="co"># stop cycling the colors of the</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="co"># stripes after the range ends</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">"auto"</span>       <span class="co"># "cycle" for continuous scales and</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>             <span class="co"># "nocycle" for discrete scales.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">"no"</span>         <span class="co"># Do not add stripes passed the range</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>             <span class="co"># passed the range of the scales</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"cycle"</span>      <span class="co"># keep cycling the colors of the</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             <span class="co"># stripes after the range ends</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">"nocycle"</span>    <span class="co"># stop cycling the colors of the</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>             <span class="co"># stripes after the range ends</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">"auto"</span>       <span class="co"># "cycle" for continuous scales and</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>             <span class="co"># "nocycle" for discrete scales.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">"no"</span>         <span class="co"># Do not add stripes passed the range</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>             <span class="co"># passed the range of the scales</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
-<dt><code>direction: ‘vertical’ | ‘horizontal’ = ‘vertical’</code></dt>
+<dt><code><span class="doc-parameter-name">direction</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"horizontal"</span>, <span class="st">"vertical"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"vertical"</span></span></code></dt>
 <dd>
-Orientation of the stripes
+<p>Orientation of the stripes</p>
 </dd>
-<dt><code>extend: <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> = (0, 1)</code></dt>
+<dt><code><span class="doc-parameter-name">extend</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.TupleFloat2">TupleFloat2</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">(0, 1)</span></code></dt>
 <dd>
-Range of the stripes. The default is (0, 1), top to bottom. The values should be in the range [0, 1].
+<p>Range of the stripes. The default is (0, 1), top to bottom. The values should be in the range [0, 1].</p>
 </dd>
-<dt><code>**kwargs: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = {}</code></dt>
+<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
 <dd>
-Other aesthetic parameters for the rectangular stripes. They include; <code>alpha</code>, <code>color</code>, <code>linetype</code>, and <code>size</code>.
+<p>Other aesthetic parameters for the rectangular stripes. They include; <code>alpha</code>, <code>color</code>, <code>linetype</code>, and <code>size</code>.</p>
 </dd>
 </dl>
+</div>
 
 
 </section>
@@ -373,8 +400,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – facet</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,7 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -122,21 +122,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -160,19 +179,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.facets.facet" id="toc-plotnine.facets.facet" class="nav-link active" data-scroll-target="#plotnine.facets.facet">facet</a>
+  <li><a href="#plotnine.facets.facet.facet" id="toc-plotnine.facets.facet.facet" class="nav-link active" data-scroll-target="#plotnine.facets.facet.facet"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.facets.facet.facet</span></a>
   <ul class="collapse">
-  <li><a href="#classes" id="toc-classes" class="nav-link" data-scroll-target="#classes">Classes</a>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
-  <li><a href="#plotnine.facets.facet.facet" id="toc-plotnine.facets.facet.facet" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet">facet</a></li>
-  </ul></li>
-  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a>
-  <ul class="collapse">
-  <li><a href="#plotnine.facets.facet.add_missing_facets" id="toc-plotnine.facets.facet.add_missing_facets" class="nav-link" data-scroll-target="#plotnine.facets.facet.add_missing_facets">add_missing_facets</a></li>
-  <li><a href="#plotnine.facets.facet.combine_vars" id="toc-plotnine.facets.facet.combine_vars" class="nav-link" data-scroll-target="#plotnine.facets.facet.combine_vars">combine_vars</a></li>
-  <li><a href="#plotnine.facets.facet.eval_facet_vars" id="toc-plotnine.facets.facet.eval_facet_vars" class="nav-link" data-scroll-target="#plotnine.facets.facet.eval_facet_vars">eval_facet_vars</a></li>
-  <li><a href="#plotnine.facets.facet.layout_null" id="toc-plotnine.facets.facet.layout_null" class="nav-link" data-scroll-target="#plotnine.facets.facet.layout_null">layout_null</a></li>
-  <li><a href="#plotnine.facets.facet.unique_combs" id="toc-plotnine.facets.facet.unique_combs" class="nav-link" data-scroll-target="#plotnine.facets.facet.unique_combs">unique_combs</a></li>
+  <li><a href="#plotnine.facets.facet.facet.compute_layout" id="toc-plotnine.facets.facet.facet.compute_layout" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.compute_layout"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_layout</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.finish_data" id="toc-plotnine.facets.facet.facet.finish_data" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.finish_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">finish_data</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.make_ax_strips" id="toc-plotnine.facets.facet.facet.make_ax_strips" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.make_ax_strips"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">make_ax_strips</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.make_axes" id="toc-plotnine.facets.facet.facet.make_axes" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.make_axes"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">make_axes</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.map" id="toc-plotnine.facets.facet.facet.map" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.map"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">map</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.set_limits_breaks_and_labels" id="toc-plotnine.facets.facet.facet.set_limits_breaks_and_labels" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.set_limits_breaks_and_labels"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">set_limits_breaks_and_labels</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.set_properties" id="toc-plotnine.facets.facet.facet.set_properties" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.set_properties"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">set_properties</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.setup_data" id="toc-plotnine.facets.facet.facet.setup_data" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.setup_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.setup_params" id="toc-plotnine.facets.facet.facet.setup_params" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.setup_params"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></a></li>
+  <li><a href="#plotnine.facets.facet.facet.train_position_scales" id="toc-plotnine.facets.facet.facet.train_position_scales" class="nav-link" data-scroll-target="#plotnine.facets.facet.facet.train_position_scales"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">train_position_scales</span></a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -184,105 +205,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plotnine.facets.facet" class="level1">
-<h1>facet</h1>
-<p><span class="signature"><code>facets.facet</code></span></p>
-<section id="classes" class="level2">
-<h2 class="anchored" data-anchor-id="classes">Classes</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.facet">facet</a></td>
-<td>Base class for all facets</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.facets.facet.facet" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.facets.facet.facet">facet</h3>
-<div class="signature">
-<p><code>facets.facet.facet(self, scales='fixed', shrink=True, labeller='label_value', as_table=True, drop=True, dir='h')</code></p>
+<section id="plotnine.facets.facet.facet" class="level1 doc doc-object doc-class doc-has-member-docs">
+<h1 class="doc doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.facets.facet.facet</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>facet(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    scales<span class="op">=</span><span class="st">"fixed"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    shrink<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    labeller<span class="op">=</span><span class="st">"label_value"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    as_table<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    drop<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dir</span><span class="op">=</span><span class="st">"h"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="attributes" class="level4">
-<h4 class="anchored" data-anchor-id="attributes">Attributes</h4>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.facet.as_table">as_table</a></td>
-<td>bool(x) -&gt; bool</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.facets.facet.facet.drop">drop</a></td>
-<td>bool(x) -&gt; bool</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.facet.num_vars_x">num_vars_x</a></td>
-<td>int([x]) -&gt; integer</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.facets.facet.facet.num_vars_y">num_vars_y</a></td>
-<td>int([x]) -&gt; integer</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.facet.shrink">shrink</a></td>
-<td>bool(x) -&gt; bool</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.facets.facet.facet.space">space</a></td>
-<td>str(object=’’) -&gt; str</td>
-</tr>
-</tbody>
-</table>
-<div class="description">
+<div class="doc-text">
 <p>Base class for all facets</p>
 </div>
-</section>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<div class="doc-definition-items">
 <dl>
-<dt><code>scales: ‘fixed’ | ‘free’ | ‘free_x’ | ‘free_y’ = “fixed”</code></dt>
+<dt><code><span class="doc-parameter-name">scales</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"fixed"</span>, <span class="st">"free"</span>, <span class="st">"free_x"</span>, <span class="st">"free_y"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"fixed"</span></span></code></dt>
 <dd>
-Whether <code>x</code> or <code>y</code> scales should be allowed (free) to vary according to the data on each of the panel.
+<p>Whether <code>x</code> or <code>y</code> scales should be allowed (free) to vary according to the data on each of the panel.</p>
 </dd>
-<dt><code>shrink: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">shrink</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-Whether to shrink the scales to the output of the statistics instead of the raw data. Default is <code>True</code>.
+<p>Whether to shrink the scales to the output of the statistics instead of the raw data. Default is <code>True</code>.</p>
 </dd>
-<dt><code>shrink: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">labeller</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.CanBeStripLabellingFunc">CanBeStripLabellingFunc</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"label_value"</span></span></code></dt>
 <dd>
-Whether to shrink the scales to the output of the statistics instead of the raw data.
+<p>How to label the facets. A string value if it should be one of <code class="sourceCode python">[<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span>]</code>.</p>
 </dd>
-<dt><code>labeller: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a> = “label_value”</code></dt>
+<dt><code><span class="doc-parameter-name">as_table</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-How to label the facets. A string value if it should be one of <code class="sourceCode python">[<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span>]</code>.
+<p>If <code>True</code>, the facets are laid out like a table with the highest values at the bottom-right. If <code>False</code> the facets are laid out like a plot with the highest value a the top-right</p>
 </dd>
-<dt><code>as_table: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">drop</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-If <code>True</code>, the facets are laid out like a table with the highest values at the bottom-right. If <code>False</code> the facets are laid out like a plot with the highest value a the top-right
+<p>If <code>True</code>, all factor levels not used in the data will automatically be dropped. If <code>False</code>, all factor levels will be shown, regardless of whether or not they appear in the data.</p>
 </dd>
-<dt><code>drop: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">dir</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"h"</span>, <span class="st">"v"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"h"</span></span></code></dt>
 <dd>
-If <code>True</code>, all factor levels not used in the data will automatically be dropped. If <code>False</code>, all factor levels will be shown, regardless of whether or not they appear in the data.
-</dd>
-<dt><code>dir: ‘h’ | ‘v’ = “h”</code></dt>
-<dd>
-Direction in which to layout the panels. <code>h</code> for horizontal and <code>v</code> for vertical.
+<p>Direction in which to layout the panels. <code>h</code> for horizontal and <code>v</code> for vertical.</p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="methods" class="level4">
-<h4 class="anchored" data-anchor-id="methods">Methods</h4>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
 <table class="table">
 <thead>
 <tr class="header">
@@ -333,312 +303,225 @@ Direction in which to layout the panels. <code>h</code> for horizontal and <code
 </tr>
 </tbody>
 </table>
-<section id="plotnine.facets.facet.facet.compute_layout" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.compute_layout">compute_layout</h5>
-<div class="signature">
-<p><code>facets.facet.facet.compute_layout(data)</code></p>
+<section id="plotnine.facets.facet.facet.compute_layout" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.compute_layout"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_layout</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>compute_layout(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Compute layout</p>
 </div>
-<section id="parameters-1" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: <code>Dataframes</code></code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a>]</span></code></dt>
 <dd>
-Dataframe for a each layer
+<p>Dataframe for a each layer</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.facet.finish_data" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.finish_data">finish_data</h5>
-<div class="signature">
-<p><code>facets.facet.facet.finish_data(data, layout)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.facets.facet.facet.finish_data" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.finish_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">finish_data</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>finish_data(data, layout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Modify data before it is drawn out by the geom</p>
 <p>The default is to return the data without modification. Subclasses should override this method as the require.</p>
 </div>
-<section id="parameters-2" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
+<section id="parameters-2" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: <code>DataFrame</code></code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
 <dd>
-A single layer’s data.
+<p>A single layer’s data.</p>
 </dd>
-<dt><code>layout: <code>Layout</code></code></dt>
+<dt><code><span class="doc-parameter-name">layout</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Layout</span></code></dt>
 <dd>
-Layout
+<p>Layout</p>
 </dd>
 </dl>
-</section>
-<section id="returns" class="level6">
-<h6 class="anchored" data-anchor-id="returns">Returns</h6>
-<dl>
-<dt><code>data: <code>DataFrame</code></code></dt>
-<dd>
-Modified layer data
-</dd>
-</dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.facet.make_ax_strips" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.make_ax_strips">make_ax_strips</h5>
-<div class="signature">
-<p><code>facets.facet.facet.make_ax_strips(layout_info, ax)</code></p>
 </div>
-<div class="description">
+</section>
+<section id="returns" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Modified layer data</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.facets.facet.facet.make_ax_strips" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.make_ax_strips"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">make_ax_strips</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>make_ax_strips(layout_info, ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Create strips for the facet</p>
 </div>
-<section id="parameters-3" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
+<section id="parameters-3" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>layout_info: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> - <code>like</code></code></dt>
+<dt><code><span class="doc-parameter-name">layout_info</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">layout_details</span></code></dt>
 <dd>
-Layout information. Row from the layout table
+<p>Layout information. Row from the layout table</p>
 </dd>
-<dt><code>ax: <code>axes</code></code></dt>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Axes</span></code></dt>
 <dd>
-Axes to label
+<p>Axes to label</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.facet.make_axes" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.make_axes">make_axes</h5>
-<div class="signature">
-<p><code>facets.facet.facet.make_axes(figure, layout, coordinates)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.facets.facet.facet.make_axes" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.make_axes"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">make_axes</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>make_axes(figure, layout, coordinates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Create and return Matplotlib axes</p>
 </div>
 </section>
-<section id="plotnine.facets.facet.facet.map" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.map">map</h5>
-<div class="signature">
-<p><code>facets.facet.facet.map(data, layout)</code></p>
+<section id="plotnine.facets.facet.facet.map" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.map"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">map</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>(data, layout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Assign a data points to panels</p>
 </div>
-<section id="parameters-4" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-4">Parameters</h6>
+<section id="parameters-4" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: <code>DataFrame</code></code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
 <dd>
-Data for a layer
+<p>Data for a layer</p>
 </dd>
-<dt><code>layout: <code>DataFrame</code></code></dt>
+<dt><code><span class="doc-parameter-name">layout</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
 <dd>
-As returned by self.compute_layout
+<p>As returned by self.compute_layout</p>
 </dd>
 </dl>
-</section>
-<section id="returns-1" class="level6">
-<h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
-<dl>
-<dt><code>data: <code>DataFrame</code></code></dt>
-<dd>
-Data with all points mapped to the panels on which they will be plotted.
-</dd>
-</dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.facet.set_limits_breaks_and_labels" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.set_limits_breaks_and_labels">set_limits_breaks_and_labels</h5>
-<div class="signature">
-<p><code>facets.facet.facet.set_limits_breaks_and_labels(panel_params, ax)</code></p>
 </div>
-<div class="description">
+</section>
+<section id="returns-1" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-1">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data with all points mapped to the panels on which they will be plotted.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.facets.facet.facet.set_limits_breaks_and_labels" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.set_limits_breaks_and_labels"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">set_limits_breaks_and_labels</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>set_limits_breaks_and_labels(panel_params, ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Add limits, breaks and labels to the axes</p>
 </div>
-<section id="parameters-5" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-5">Parameters</h6>
+<section id="parameters-5" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>ranges: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> - <code>like</code></code></dt>
+<dt><code><span class="doc-parameter-name">panel_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">panel_view</span></code></dt>
 <dd>
-range information for the axes
+<p>range information for the axes</p>
 </dd>
-<dt><code>ax: <code>Axes</code></code></dt>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Axes</span></code></dt>
 <dd>
-Axes
+<p>Axes</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.facet.set_properties" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.set_properties">set_properties</h5>
-<div class="signature">
-<p><code>facets.facet.facet.set_properties(gg)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.facets.facet.facet.set_properties" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.set_properties"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">set_properties</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb8"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>set_properties(gg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Copy required properties from ggplot object</p>
 </div>
 </section>
-<section id="plotnine.facets.facet.facet.setup_data" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.setup_data">setup_data</h5>
-<div class="signature">
-<p><code>facets.facet.facet.setup_data(data)</code></p>
+<section id="plotnine.facets.facet.facet.setup_data" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.setup_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb9"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Allow the facet to manipulate the data</p>
 </div>
-<section id="parameters-6" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-6">Parameters</h6>
+<section id="parameters-6" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: list of dataframes</code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a>]</span></code></dt>
 <dd>
-Data for each of the layers
+<p>Data for each of the layers</p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="returns-2" class="level6">
-<h6 class="anchored" data-anchor-id="returns-2">Returns</h6>
+<section id="returns-2" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-2">Returns</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: list of dataframes</code></dt>
+<dt><code><span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a>]</span></code></dt>
 <dd>
-Data for each of the layers
+<p>Data for each of the layers</p>
 </dd>
 </dl>
+</div>
 </section>
-<section id="notes" class="level6">
-<h6 class="anchored" data-anchor-id="notes">Notes</h6>
+<section id="notes" class="level4 doc-notes">
+<h4 class="doc-notes anchored" data-anchor-id="notes">Notes</h4>
 <p>This method will be called after :meth:<code>setup_params</code>, therefore the <code>params</code> property will be set.</p>
 </section>
 </section>
-<section id="plotnine.facets.facet.facet.setup_params" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.setup_params">setup_params</h5>
-<div class="signature">
-<p><code>facets.facet.facet.setup_params(data)</code></p>
+<section id="plotnine.facets.facet.facet.setup_params" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.setup_params"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Create facet parameters</p>
 </div>
-<section id="parameters-7" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-7">Parameters</h6>
+<section id="parameters-7" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
+<div class="doc-definition-items">
 <dl>
-<dt><code>data: list of dataframes</code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a>]</span></code></dt>
 <dd>
-Plot data and data for the layers
+<p>Plot data and data for the layers</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.facet.train_position_scales" class="level5">
-<h5 class="anchored" data-anchor-id="plotnine.facets.facet.facet.train_position_scales">train_position_scales</h5>
-<div class="signature">
-<p><code>facets.facet.facet.train_position_scales(layout, layers)</code></p>
 </div>
-<div class="description">
+</section>
+</section>
+<section id="plotnine.facets.facet.facet.train_position_scales" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.facets.facet.facet.train_position_scales"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">train_position_scales</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb11"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>train_position_scales(layout, layers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
 <p>Compute ranges for the x and y scales</p>
-</div>
-</section>
-</section>
-</section>
-</section>
-<section id="functions" class="level2">
-<h2 class="anchored" data-anchor-id="functions">Functions</h2>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.add_missing_facets">add_missing_facets</a></td>
-<td>Add missing facets</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.facets.facet.combine_vars">combine_vars</a></td>
-<td>Generate all combinations of data needed for facetting</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.eval_facet_vars">eval_facet_vars</a></td>
-<td>Evaluate facet variables</td>
-</tr>
-<tr class="even">
-<td><a href="#plotnine.facets.facet.layout_null">layout_null</a></td>
-<td>Layout Null</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.facets.facet.unique_combs">unique_combs</a></td>
-<td>Generate all possible combinations of the values in the columns</td>
-</tr>
-</tbody>
-</table>
-<section id="plotnine.facets.facet.add_missing_facets" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.facets.facet.add_missing_facets">add_missing_facets</h3>
-<div class="signature">
-<p><code>facets.facet.add_missing_facets(data, layout, vars, facet_vals)</code></p>
-</div>
-<div class="description">
-<p>Add missing facets</p>
-</div>
-</section>
-<section id="plotnine.facets.facet.combine_vars" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.facets.facet.combine_vars">combine_vars</h3>
-<div class="signature">
-<p><code>facets.facet.combine_vars(data, environment, vars, drop=True)</code></p>
-</div>
-<div class="description">
-<p>Generate all combinations of data needed for facetting</p>
-<p>The first data frame in the list should be the default data for the plot. Other data frames in the list are ones that are added to the layers.</p>
-</div>
-</section>
-<section id="plotnine.facets.facet.eval_facet_vars" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.facets.facet.eval_facet_vars">eval_facet_vars</h3>
-<div class="signature">
-<p><code>facets.facet.eval_facet_vars(data, vars, env)</code></p>
-</div>
-<div class="description">
-<p>Evaluate facet variables</p>
-</div>
-<section id="parameters-8" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
-<dl>
-<dt><code>data: <code>DataFrame</code></code></dt>
-<dd>
-Factet dataframe
-</dd>
-<dt><code>vars: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></code></dt>
-<dd>
-Facet variables
-</dd>
-<dt><code>env: <code>environment</code></code></dt>
-<dd>
-Plot environment
-</dd>
-</dl>
-</section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
-<dl>
-<dt><code>facet_vals: <code>DataFrame</code></code></dt>
-<dd>
-Facet values that correspond to the specified variables.
-</dd>
-</dl>
-</section>
-</section>
-<section id="plotnine.facets.facet.layout_null" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.facets.facet.layout_null">layout_null</h3>
-<div class="signature">
-<p><code>facets.facet.layout_null()</code></p>
-</div>
-<div class="description">
-<p>Layout Null</p>
-</div>
-</section>
-<section id="plotnine.facets.facet.unique_combs" class="level3">
-<h3 class="anchored" data-anchor-id="plotnine.facets.facet.unique_combs">unique_combs</h3>
-<div class="signature">
-<p><code>facets.facet.unique_combs(df)</code></p>
-</div>
-<div class="description">
-<p>Generate all possible combinations of the values in the columns</p>
 </div>
 
 
@@ -800,8 +683,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

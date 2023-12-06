@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – geom_density_2d</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,7 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -122,21 +122,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -160,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.geoms.geom_density_2d" id="toc-plotnine.geoms.geom_density_2d" class="nav-link active" data-scroll-target="#plotnine.geoms.geom_density_2d">geom_density_2d</a>
+  <li><a href="#plotnine.geoms.geom_density_2d" id="toc-plotnine.geoms.geom_density_2d" class="nav-link active" data-scroll-target="#plotnine.geoms.geom_density_2d"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom_density_2d</span></a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   </ul></li>
@@ -173,124 +192,111 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plotnine.geoms.geom_density_2d" class="level1">
-<h1>geom_density_2d</h1>
-<div class="signature">
-<p><code>geoms.geom_density_2d()</code></p>
+<section id="plotnine.geoms.geom_density_2d" class="level1 doc doc-object doc-class">
+<h1 class="doc doc-object doc-class"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom_density_2d</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom_density_2d(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    stat<span class="op">=</span><span class="st">"density_2d"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"identity"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    inherit_aes<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    show_legend<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    raster<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>2D density estimate</p>
 <p>This is a 2d version of <a href="../reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a>.</p>
-<p><strong>Usage</strong></p>
-<pre><code>geom_density_2d(mapping=None, data=None, stat='density_2d',
-                position='identity', na_rm=False, inherit_aes=True,
-                show_legend=None, raster=False, **kwargs)</code></pre>
-<p>Only the <code>data</code> and <code>mapping</code> can be positional, the rest must be keyword arguments. <code>**kwargs</code> can be aesthetics (or parameters) used by the <code>stat</code>.</p>
 </div>
-<section id="parameters" class="level2">
-<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<div class="doc-definition-items">
 <dl>
-<dt><code>mapping: <code>aes</code> = None</code></dt>
+<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/aes.html#plotnine.mapping.aes">aes</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Aesthetic mappings created with :class:<code>~plotnine.mapping.aes</code>). If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
-<table>
+<p>Aesthetic mappings created with <a href="../reference/aes.html#plotnine.mapping.aes">aes</a>. If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
+<table class="table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 25%">
+</colgroup>
 <thead>
-<tr>
-<th>
-Aesthetic
-</th>
-<th>
-Default value
-</th>
+<tr class="header">
+<th>Aesthetic</th>
+<th>Default value</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-<strong>x</strong>
-</td>
-<td>
-</td>
+<tr class="odd">
+<td><strong>x</strong></td>
+<td></td>
 </tr>
-<tr>
-<td>
-<strong>y</strong>
-</td>
-<td>
-</td>
+<tr class="even">
+<td><strong>y</strong></td>
+<td></td>
 </tr>
-<tr>
-<td>
-alpha
-</td>
-<td>
-<code class="sourceCode python"><span class="dv">1</span></code>
-</td>
+<tr class="odd">
+<td>alpha</td>
+<td><code class="sourceCode python"><span class="dv">1</span></code></td>
 </tr>
-<tr>
-<td>
-color
-</td>
-<td>
-<code class="sourceCode python"><span class="co">'black'</span></code>
-</td>
+<tr class="even">
+<td>color</td>
+<td><code class="sourceCode python"><span class="co">'black'</span></code></td>
 </tr>
-<tr>
-<td>
-group
-</td>
-<td>
-</td>
+<tr class="odd">
+<td>group</td>
+<td></td>
 </tr>
-<tr>
-<td>
-linetype
-</td>
-<td>
-<code class="sourceCode python"><span class="co">'solid'</span></code>
-</td>
+<tr class="even">
+<td>linetype</td>
+<td><code class="sourceCode python"><span class="co">'solid'</span></code></td>
 </tr>
-<tr>
-<td>
-size
-</td>
-<td>
-<code class="sourceCode python"><span class="fl">0.5</span></code>
-</td>
+<tr class="odd">
+<td>size</td>
+<td><code class="sourceCode python"><span class="fl">0.5</span></code></td>
 </tr>
 </tbody>
 </table>
 <p>The <strong>bold</strong> aesthetics are required.</p>
 </dd>
-<dt><code>data: <code>dataframe</code> = None</code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.
+<p>The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.</p>
 </dd>
-<dt><code>stat: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stat.html#module-stat">stat</a> = “density_2d”</code></dt>
+<dt><code><span class="doc-parameter-name">stat</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"density_2d"</span></span></code></dt>
 <dd>
-The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.
+<p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
 </dd>
-<dt><code>position: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <code>position</code> = “identity”</code></dt>
+<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"identity"</span></span></code></dt>
 <dd>
-Position adjustment. If it is a string, it must be registered and known to Plotnine.
+<p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
 </dd>
-<dt><code>na_rm: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.
+<p>If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.</p>
 </dd>
-<dt><code>inherit_aes: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">inherit_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-If <code class="sourceCode python"><span class="va">False</span></code>, overrides the default aesthetics.
+<p>If <code class="sourceCode python"><span class="va">False</span></code>, overrides the default aesthetics.</p>
 </dd>
-<dt><code>show_legend: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">show_legend</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-Whether this layer should be included in the legends. <code class="sourceCode python"><span class="va">None</span></code> the default, includes any aesthetics that are mapped. If a :class:<code>bool</code>, <code class="sourceCode python"><span class="va">False</span></code> never includes and <code class="sourceCode python"><span class="va">True</span></code> always includes. A :class:<code>dict</code> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g <code class="sourceCode python">show_legend<span class="op">=</span>{<span class="st">'color'</span>: <span class="va">False</span>}</code>, any other aesthetic are included by default.
+<p>Whether this layer should be included in the legends. <code class="sourceCode python"><span class="va">None</span></code> the default, includes any aesthetics that are mapped. If a <a href="https://docs.python.org/3/library/functions.html#bool"><code>bool</code></a>, <code class="sourceCode python"><span class="va">False</span></code> never includes and <code class="sourceCode python"><span class="va">True</span></code> always includes. A <a href="https://docs.python.org/3/library/stdtypes.html#dict"><code>dict</code></a> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g <code class="sourceCode python">show_legend<span class="op">=</span>{<span class="st">'color'</span>: <span class="va">False</span>}</code>, any other aesthetic are included by default.</p>
 </dd>
-<dt><code>raster: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dt><code><span class="doc-parameter-name">raster</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.
+<p>If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Aesthetics or parameters used by the <code>stat</code>.</p>
 </dd>
 </dl>
+</div>
 
 
 </section>
@@ -450,8 +456,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

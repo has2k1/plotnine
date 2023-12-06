@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – index</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,6 +60,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -67,7 +68,6 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -88,21 +88,40 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link active" href="../reference/index.html" aria-current="page"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -126,40 +145,40 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#function-reference" id="toc-function-reference" class="nav-link active" data-scroll-target="#function-reference">Function reference</a>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link active" data-scroll-target="#api-reference">API Reference</a>
   <ul class="collapse">
-  <li><a href="#plot-creation" id="toc-plot-creation" class="nav-link" data-scroll-target="#plot-creation">Plot creation</a></li>
-  <li><a href="#mapping-aesthetics" id="toc-mapping-aesthetics" class="nav-link" data-scroll-target="#mapping-aesthetics">Mapping aesthetics</a></li>
-  <li><a href="#geoms" id="toc-geoms" class="nav-link" data-scroll-target="#geoms">geoms</a>
+  <li><a href="#creating-a-plot" id="toc-creating-a-plot" class="nav-link" data-scroll-target="#creating-a-plot">Creating a Plot</a></li>
+  <li><a href="#mapping-aesthetics" id="toc-mapping-aesthetics" class="nav-link" data-scroll-target="#mapping-aesthetics">Mapping Aesthetics</a></li>
+  <li><a href="#geoms" id="toc-geoms" class="nav-link" data-scroll-target="#geoms">Geoms</a>
   <ul class="collapse">
-  <li><a href="#related-to-geoms" id="toc-related-to-geoms" class="nav-link" data-scroll-target="#related-to-geoms">related to geoms</a></li>
+  <li><a href="#annotations" id="toc-annotations" class="nav-link" data-scroll-target="#annotations">Annotations</a></li>
   <li><a href="#labels" id="toc-labels" class="nav-link" data-scroll-target="#labels">Labels</a></li>
   </ul></li>
-  <li><a href="#stats" id="toc-stats" class="nav-link" data-scroll-target="#stats">stats</a></li>
-  <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets">facets</a></li>
-  <li><a href="#scales" id="toc-scales" class="nav-link" data-scroll-target="#scales">scales</a>
+  <li><a href="#stats" id="toc-stats" class="nav-link" data-scroll-target="#stats">Stats</a></li>
+  <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets">Facets</a></li>
+  <li><a href="#scales" id="toc-scales" class="nav-link" data-scroll-target="#scales">Scales</a>
   <ul class="collapse">
-  <li><a href="#base-scales" id="toc-base-scales" class="nav-link" data-scroll-target="#base-scales">Base scales</a></li>
-  <li><a href="#alpha-scales" id="toc-alpha-scales" class="nav-link" data-scroll-target="#alpha-scales">Alpha scales</a></li>
-  <li><a href="#identity-scales" id="toc-identity-scales" class="nav-link" data-scroll-target="#identity-scales">Identity scales</a></li>
-  <li><a href="#color-and-fill-scales" id="toc-color-and-fill-scales" class="nav-link" data-scroll-target="#color-and-fill-scales">Color and fill scales</a></li>
-  <li><a href="#manual-scales" id="toc-manual-scales" class="nav-link" data-scroll-target="#manual-scales">Manual scales</a></li>
-  <li><a href="#linetype-scales" id="toc-linetype-scales" class="nav-link" data-scroll-target="#linetype-scales">Linetype scales</a></li>
-  <li><a href="#shape-scales" id="toc-shape-scales" class="nav-link" data-scroll-target="#shape-scales">Shape scales</a></li>
-  <li><a href="#size-scales" id="toc-size-scales" class="nav-link" data-scroll-target="#size-scales">Size scales</a></li>
-  <li><a href="#position-scales" id="toc-position-scales" class="nav-link" data-scroll-target="#position-scales">Position scales</a></li>
-  <li><a href="#scale-limits" id="toc-scale-limits" class="nav-link" data-scroll-target="#scale-limits">Scale limits</a></li>
-  <li><a href="#scale-guides" id="toc-scale-guides" class="nav-link" data-scroll-target="#scale-guides">Scale guides</a></li>
+  <li><a href="#base-scales" id="toc-base-scales" class="nav-link" data-scroll-target="#base-scales">Base Scales</a></li>
+  <li><a href="#alpha-scales" id="toc-alpha-scales" class="nav-link" data-scroll-target="#alpha-scales">Alpha Scales</a></li>
+  <li><a href="#identity-scales" id="toc-identity-scales" class="nav-link" data-scroll-target="#identity-scales">Identity Scales</a></li>
+  <li><a href="#color-and-fill-scales" id="toc-color-and-fill-scales" class="nav-link" data-scroll-target="#color-and-fill-scales">Color and Fill Scales</a></li>
+  <li><a href="#manual-scales" id="toc-manual-scales" class="nav-link" data-scroll-target="#manual-scales">Manual Scales</a></li>
+  <li><a href="#linetype-scales" id="toc-linetype-scales" class="nav-link" data-scroll-target="#linetype-scales">Linetype Scales</a></li>
+  <li><a href="#shape-scales" id="toc-shape-scales" class="nav-link" data-scroll-target="#shape-scales">Shape Scales</a></li>
+  <li><a href="#size-scales" id="toc-size-scales" class="nav-link" data-scroll-target="#size-scales">Size Scales</a></li>
+  <li><a href="#position-scales" id="toc-position-scales" class="nav-link" data-scroll-target="#position-scales">Position Scales</a></li>
+  <li><a href="#scale-limits" id="toc-scale-limits" class="nav-link" data-scroll-target="#scale-limits">Scale Limits</a></li>
   </ul></li>
-  <li><a href="#positions" id="toc-positions" class="nav-link" data-scroll-target="#positions">positions</a></li>
-  <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes">themes</a>
+  <li><a href="#scale-guides" id="toc-scale-guides" class="nav-link" data-scroll-target="#scale-guides">Scale Guides</a></li>
+  <li><a href="#positions" id="toc-positions" class="nav-link" data-scroll-target="#positions">Positions</a></li>
+  <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes">Themes</a>
   <ul class="collapse">
   <li><a href="#themeables" id="toc-themeables" class="nav-link" data-scroll-target="#themeables">Themeables</a></li>
-  <li><a href="#theme-helper-functions-and-classes" id="toc-theme-helper-functions-and-classes" class="nav-link" data-scroll-target="#theme-helper-functions-and-classes">Theme helper functions and classes</a></li>
+  <li><a href="#helpfull-functions-classes-for-theming" id="toc-helpfull-functions-classes-for-theming" class="nav-link" data-scroll-target="#helpfull-functions-classes-for-theming">Helpfull Functions &amp; Classes for Theming</a></li>
   </ul></li>
-  <li><a href="#coordinates" id="toc-coordinates" class="nav-link" data-scroll-target="#coordinates">coordinates</a></li>
-  <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options">options</a></li>
-  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">datasets</a></li>
+  <li><a href="#coordinates" id="toc-coordinates" class="nav-link" data-scroll-target="#coordinates">Coordinates</a></li>
+  <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options">Options</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -170,10 +189,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="function-reference" class="level1">
-<h1>Function reference</h1>
-<section id="plot-creation" class="level2">
-<h2 class="anchored" data-anchor-id="plot-creation">Plot creation</h2>
+<section id="api-reference" class="level1 doc doc-index">
+<h1 class="doc doc-index">API Reference</h1>
+<section id="creating-a-plot" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="creating-a-plot">Creating a Plot</h2>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -189,8 +209,8 @@ ul.task-list li input[type="checkbox"] {
 <td>Add watermark to plot</td>
 </tr>
 <tr class="even">
-<td><a href="../reference/layer.html#plotnine.layer">layer</a></td>
-<td></td>
+<td><a href="../reference/layer.html#plotnine.layer.layer">layer</a></td>
+<td>Layer</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/PlotnineAnimation.html#plotnine.animation.PlotnineAnimation">PlotnineAnimation</a></td>
@@ -202,10 +222,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="mapping-aesthetics" class="level2">
-<h2 class="anchored" data-anchor-id="mapping-aesthetics">Mapping aesthetics</h2>
+<section id="mapping-aesthetics" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="mapping-aesthetics">Mapping Aesthetics</h2>
 <p>Aesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -226,10 +248,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="geoms" class="level2">
-<h2 class="anchored" data-anchor-id="geoms">geoms</h2>
+<section id="geoms" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="geoms">Geoms</h2>
 <p>Geometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -238,6 +262,8 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -414,8 +440,10 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<section id="related-to-geoms" class="level3">
-<h3 class="anchored" data-anchor-id="related-to-geoms">related to geoms</h3>
+</div>
+<section id="annotations" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="annotations">Annotations</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -431,14 +459,16 @@ ul.task-list li input[type="checkbox"] {
 <td>Alternating stripes, centered around each label.</td>
 </tr>
 <tr class="even">
-<td><a href="geom_path:arrow.qmd#plotnine.geoms.geom_path.arrow">geom_path:arrow</a></td>
+<td><a href="../reference/arrow.html#plotnine.geoms.geom_path.arrow">arrow</a></td>
 <td>Define arrow (actually an arrowhead)</td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="labels" class="level3">
-<h3 class="anchored" data-anchor-id="labels">Labels</h3>
+<section id="labels" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="labels">Labels</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -459,19 +489,23 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 </section>
-<section id="stats" class="level2">
-<h2 class="anchored" data-anchor-id="stats">stats</h2>
+<section id="stats" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="stats">Stats</h2>
 <p>Statistical transformations (stats) do aggregations and other computations on data before it is drawn out. <code>stat_*</code> determine the type of computation done on the data. Different types of computations yield varied results, so a <code>stat</code> must be paired with a <code>geom</code> that can represent all or some of the computations.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
-<td><a href="../reference/stat.html#plotnine.stats.stat">stat</a></td>
-<td></td>
+<td><a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></td>
+<td>Base class of all stats</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -564,18 +598,22 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="facets" class="level2">
-<h2 class="anchored" data-anchor-id="facets">facets</h2>
+<section id="facets" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="facets">Facets</h2>
 <p>Faceting is a way to subset data and plot it on different panels.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
-<td><a href="../reference/facet.html#plotnine.facets.facet">facet</a></td>
-<td></td>
+<td><a href="../reference/facet.html#plotnine.facets.facet.facet">facet</a></td>
+<td>Base class for all facets</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -590,34 +628,42 @@ ul.task-list li input[type="checkbox"] {
 <td><a href="../reference/facet_wrap.html#plotnine.facets.facet_wrap">facet_wrap</a></td>
 <td>Wrap 1D Panels onto 2D surface</td>
 </tr>
-<tr class="even">
-<td><a href="../reference/labelling.labeller.html#plotnine.facets.labelling.labeller">labelling.labeller</a></td>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/labeller.html#plotnine.facets.labelling.labeller">labeller</a></td>
 <td>Facet Strip Labelling</td>
 </tr>
-<tr class="odd">
-<td><a href="../reference/labelling.as_labeller.html#plotnine.facets.labelling.as_labeller">labelling.as_labeller</a></td>
+<tr class="even">
+<td><a href="../reference/as_labeller.html#plotnine.facets.labelling.as_labeller">as_labeller</a></td>
 <td>Coerse to labeller</td>
 </tr>
-<tr class="even">
-<td><a href="../reference/labelling.label_value.html#plotnine.facets.labelling.label_value">labelling.label_value</a></td>
+<tr class="odd">
+<td><a href="../reference/label_value.html#plotnine.facets.labelling.label_value">label_value</a></td>
 <td>Keep value as the label</td>
 </tr>
-<tr class="odd">
-<td><a href="../reference/labelling.label_both.html#plotnine.facets.labelling.label_both">labelling.label_both</a></td>
+<tr class="even">
+<td><a href="../reference/label_both.html#plotnine.facets.labelling.label_both">label_both</a></td>
 <td>Concatenate the facet variable with the value</td>
 </tr>
-<tr class="even">
-<td><a href="../reference/labelling.label_context.html#plotnine.facets.labelling.label_context">labelling.label_context</a></td>
+<tr class="odd">
+<td><a href="../reference/label_context.html#plotnine.facets.labelling.label_context">label_context</a></td>
 <td>Create an unabiguous label string</td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="scales" class="level2">
-<h2 class="anchored" data-anchor-id="scales">scales</h2>
+<section id="scales" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="scales">Scales</h2>
 <p>Scales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e.&nbsp;length, colour, size and shape.</p>
-<section id="base-scales" class="level3">
-<h3 class="anchored" data-anchor-id="base-scales">Base scales</h3>
+<section id="base-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="base-scales">Base Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -638,9 +684,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="alpha-scales" class="level3">
-<h3 class="anchored" data-anchor-id="alpha-scales">Alpha scales</h3>
+<section id="alpha-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="alpha-scales">Alpha Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -661,44 +709,48 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="identity-scales" class="level3">
-<h3 class="anchored" data-anchor-id="identity-scales">Identity scales</h3>
+<section id="identity-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="identity-scales">Identity Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
-<td><a href="../reference/scale_alpha_identity.html#plotnine.scales.scale_identity.scale_alpha_identity">scale_alpha_identity</a></td>
+<td><a href="../reference/scale_alpha_identity.html#plotnine.scales.scale_alpha_identity">scale_alpha_identity</a></td>
 <td>No alpha scaling</td>
 </tr>
 <tr class="even">
-<td><a href="../reference/scale_color_identity.html#plotnine.scales.scale_identity.scale_color_identity">scale_color_identity</a></td>
+<td><a href="../reference/scale_color_identity.html#plotnine.scales.scale_color_identity">scale_color_identity</a></td>
 <td>No color scaling</td>
 </tr>
 <tr class="odd">
-<td><a href="../reference/scale_colour_identity.html#plotnine.scales.scale_identity.scale_colour_identity">scale_colour_identity</a></td>
+<td><a href="../reference/scale_colour_identity.html#plotnine.scales.scale_colour_identity">scale_colour_identity</a></td>
 <td>No color scaling</td>
 </tr>
 <tr class="even">
-<td><a href="../reference/scale_fill_identity.html#plotnine.scales.scale_identity.scale_fill_identity">scale_fill_identity</a></td>
+<td><a href="../reference/scale_fill_identity.html#plotnine.scales.scale_fill_identity">scale_fill_identity</a></td>
 <td>No color scaling</td>
 </tr>
 <tr class="odd">
-<td><a href="../reference/scale_linetype_identity.html#plotnine.scales.scale_identity.scale_linetype_identity">scale_linetype_identity</a></td>
+<td><a href="../reference/scale_linetype_identity.html#plotnine.scales.scale_linetype_identity">scale_linetype_identity</a></td>
 <td>No linetype scaling</td>
 </tr>
 <tr class="even">
-<td><a href="../reference/scale_shape_identity.html#plotnine.scales.scale_identity.scale_shape_identity">scale_shape_identity</a></td>
+<td><a href="../reference/scale_shape_identity.html#plotnine.scales.scale_shape_identity">scale_shape_identity</a></td>
 <td>No shape scaling</td>
 </tr>
 <tr class="odd">
-<td><a href="../reference/scale_size_identity.html#plotnine.scales.scale_identity.scale_size_identity">scale_size_identity</a></td>
+<td><a href="../reference/scale_size_identity.html#plotnine.scales.scale_size_identity">scale_size_identity</a></td>
 <td>No size scaling</td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="color-and-fill-scales" class="level3">
-<h3 class="anchored" data-anchor-id="color-and-fill-scales">Color and fill scales</h3>
+<section id="color-and-fill-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="color-and-fill-scales">Color and Fill Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -807,9 +859,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="manual-scales" class="level3">
-<h3 class="anchored" data-anchor-id="manual-scales">Manual scales</h3>
+<section id="manual-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="manual-scales">Manual Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -842,9 +896,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="linetype-scales" class="level3">
-<h3 class="anchored" data-anchor-id="linetype-scales">Linetype scales</h3>
+<section id="linetype-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="linetype-scales">Linetype Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -857,9 +913,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="shape-scales" class="level3">
-<h3 class="anchored" data-anchor-id="shape-scales">Shape scales</h3>
+<section id="shape-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="shape-scales">Shape Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -872,9 +930,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="size-scales" class="level3">
-<h3 class="anchored" data-anchor-id="size-scales">Size scales</h3>
+<section id="size-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="size-scales">Size Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -903,9 +963,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="position-scales" class="level3">
-<h3 class="anchored" data-anchor-id="position-scales">Position scales</h3>
+<section id="position-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="position-scales">Position Scales</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -937,36 +999,44 @@ ul.task-list li input[type="checkbox"] {
 <td>Continuous x position sqrt transformed scale</td>
 </tr>
 <tr class="even">
+<td><a href="../reference/scale_x_symlog.html#plotnine.scales.scale_x_symlog">scale_x_symlog</a></td>
+<td>Continuous x position symmetric logarithm transformed scale</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/scale_x_timedelta.html#plotnine.scales.scale_x_timedelta">scale_x_timedelta</a></td>
 <td>Continuous x position for timedelta data points</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/scale_y_continuous.html#plotnine.scales.scale_y_continuous">scale_y_continuous</a></td>
 <td>Continuous y position</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/scale_y_date.html#plotnine.scales.scale_y_date">scale_y_date</a></td>
 <td>Continuous y position for datetime data points</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/scale_y_datetime.html#plotnine.scales.scale_y_datetime">scale_y_datetime</a></td>
 <td>Continuous y position for datetime data points</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/scale_y_discrete.html#plotnine.scales.scale_y_discrete">scale_y_discrete</a></td>
 <td>Discrete y position</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/scale_y_log10.html#plotnine.scales.scale_y_log10">scale_y_log10</a></td>
 <td>Continuous y position log10 transformed scale</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/scale_y_reverse.html#plotnine.scales.scale_y_reverse">scale_y_reverse</a></td>
 <td>Continuous y position reverse transformed scale</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/scale_y_sqrt.html#plotnine.scales.scale_y_sqrt">scale_y_sqrt</a></td>
 <td>Continuous y position sqrt transformed scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_y_symlog.html#plotnine.scales.scale_y_symlog">scale_y_symlog</a></td>
+<td>Continuous y position symmetric logarithm transformed scale</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/scale_y_timedelta.html#plotnine.scales.scale_y_timedelta">scale_y_timedelta</a></td>
@@ -974,9 +1044,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="scale-limits" class="level3">
-<h3 class="anchored" data-anchor-id="scale-limits">Scale limits</h3>
+<section id="scale-limits" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="scale-limits">Scale Limits</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -997,9 +1069,23 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="scale-guides" class="level3">
-<h3 class="anchored" data-anchor-id="scale-guides">Scale guides</h3>
+</section>
+<section id="scale-guides" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="scale-guides">Scale Guides</h2>
+<p>Guides allow you to interpret data represented on a scales. Guides include the <code>x</code> and <code>y</code> axes, legends and colorbars.</p>
+<div class="doc-summary-table">
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/guide.html#plotnine.guides.guide.guide">guide</a></td>
+<td>Base class for all guides</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -1007,24 +1093,31 @@ ul.task-list li input[type="checkbox"] {
 <td>Guides for each scale</td>
 </tr>
 <tr class="even">
-<td><a href="../reference/guide.html#plotnine.guides.guide">guide</a></td>
-<td></td>
-</tr>
-<tr class="odd">
 <td><a href="../reference/guide_legend.html#plotnine.guides.guide_legend">guide_legend</a></td>
 <td>Legend guide</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/guide_colorbar.html#plotnine.guides.guide_colorbar">guide_colorbar</a></td>
 <td>Guide colorbar</td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-</section>
-<section id="positions" class="level2">
-<h2 class="anchored" data-anchor-id="positions">positions</h2>
+<section id="positions" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="positions">Positions</h2>
 <p>Overlapping objects can be visualized better if their positions are adjusted. That is what the <code>position_*</code> class do. Each <code>geom</code> is associated with one position adjustment class.</p>
+<div class="doc-summary-table">
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/position.html#plotnine.positions.position.position">position</a></td>
+<td>Base class for all positions</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -1061,77 +1154,97 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="themes" class="level2">
-<h2 class="anchored" data-anchor-id="themes">themes</h2>
+<section id="themes" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="themes">Themes</h2>
 <p>Themes control the visual appearance of the non-data elements the plot.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
 <td><a href="../reference/theme.html#plotnine.themes.theme">theme</a></td>
 <td>Base class for themes</td>
 </tr>
-<tr class="even">
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="table">
+<tbody>
+<tr class="odd">
 <td><a href="../reference/theme_538.html#plotnine.themes.theme_538">theme_538</a></td>
 <td>Theme in the likeness of fivethirtyeight.com plots</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/theme_bw.html#plotnine.themes.theme_bw">theme_bw</a></td>
 <td>White background with black gridlines</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/theme_classic.html#plotnine.themes.theme_classic">theme_classic</a></td>
 <td>A classic-looking theme, with x &amp; y axis lines and no gridlines</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/theme_dark.html#plotnine.themes.theme_dark">theme_dark</a></td>
 <td>The dark cousin of <a href="../reference/theme_light.html#plotnine.themes.theme_light"><code>theme_light</code></a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/theme_gray.html#plotnine.themes.theme_gray">theme_gray</a></td>
 <td>A gray background with white gridlines.</td>
 </tr>
-<tr class="odd">
-<td><a href="../reference/theme_grey.html#plotnine.themes.theme_grey">theme_grey</a></td>
-<td>A gray background with white gridlines.</td>
-</tr>
 <tr class="even">
+<td><a href="../reference/theme_grey.html#plotnine.themes.theme_grey">theme_grey</a></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/theme_light.html#plotnine.themes.theme_light">theme_light</a></td>
 <td>A theme similar to <a href="../reference/theme_linedraw.html#plotnine.themes.theme_linedraw"><code>theme_linedraw</code></a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/theme_linedraw.html#plotnine.themes.theme_linedraw">theme_linedraw</a></td>
 <td>A theme with only black lines of various widths on white backgrounds</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/theme_matplotlib.html#plotnine.themes.theme_matplotlib">theme_matplotlib</a></td>
 <td>The default matplotlib look and feel.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/theme_minimal.html#plotnine.themes.theme_minimal">theme_minimal</a></td>
 <td>A minimalistic theme with no background annotations</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/theme_seaborn.html#plotnine.themes.theme_seaborn">theme_seaborn</a></td>
 <td>Theme for seaborn.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/theme_tufte.html#plotnine.themes.theme_tufte">theme_tufte</a></td>
 <td>Tufte Maximal Data, Minimal Ink Theme</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/theme_void.html#plotnine.themes.theme_void">theme_void</a></td>
 <td>A classic-looking theme, with x &amp; y axis lines and</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/theme_xkcd.html#plotnine.themes.theme_xkcd">theme_xkcd</a></td>
 <td>xkcd theme</td>
 </tr>
 </tbody>
 </table>
-<section id="themeables" class="level3">
-<h3 class="anchored" data-anchor-id="themeables">Themeables</h3>
+</div>
+<section id="themeables" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="themeables">Themeables</h3>
 <p>These define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to <code>theme</code>. Users should never create instances of themeable.</p>
+<div class="doc-summary-table">
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/themeable.html#plotnine.themes.themeable.themeable">themeable</a></td>
+<td>Abstract class of things that can be themed.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -1187,64 +1300,24 @@ ul.task-list li input[type="checkbox"] {
 <td>Axis major-tick length</td>
 </tr>
 <tr class="even">
-<td><a href="../reference/axis_ticks_length_minor.html#plotnine.themes.themeable.axis_ticks_length_minor">axis_ticks_length_minor</a></td>
-<td>Axis minor-tick length</td>
+<td><a href="../reference/axis_ticks_length_major_x.html#plotnine.themes.themeable.axis_ticks_length_major_x">axis_ticks_length_major_x</a></td>
+<td>x-axis major-tick length</td>
 </tr>
 <tr class="odd">
-<td><a href="../reference/axis_ticks_major.html#plotnine.themes.themeable.axis_ticks_major">axis_ticks_major</a></td>
-<td>x &amp; y axis major tick lines</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/axis_line.html#plotnine.themes.themeable.axis_line">axis_line</a></td>
-<td>x &amp; y axis lines</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/axis_line_x.html#plotnine.themes.themeable.axis_line_x">axis_line_x</a></td>
-<td>x-axis line</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/axis_line_y.html#plotnine.themes.themeable.axis_line_y">axis_line_y</a></td>
-<td>y-axis line</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/axis_text.html#plotnine.themes.themeable.axis_text">axis_text</a></td>
-<td>Axis tick labels</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/axis_text_x.html#plotnine.themes.themeable.axis_text_x">axis_text_x</a></td>
-<td>x-axis tick labels</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/axis_text_y.html#plotnine.themes.themeable.axis_text_y">axis_text_y</a></td>
-<td>y-axis tick labels</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/axis_ticks.html#plotnine.themes.themeable.axis_ticks">axis_ticks</a></td>
-<td>x &amp; y major and minor axis tick lines</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/axis_ticks_direction.html#plotnine.themes.themeable.axis_ticks_direction">axis_ticks_direction</a></td>
-<td>axis tick direction</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/axis_ticks_direction_x.html#plotnine.themes.themeable.axis_ticks_direction_x">axis_ticks_direction_x</a></td>
-<td>x-axis tick direction</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/axis_ticks_direction_y.html#plotnine.themes.themeable.axis_ticks_direction_y">axis_ticks_direction_y</a></td>
-<td>y-axis tick direction</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/axis_ticks_length.html#plotnine.themes.themeable.axis_ticks_length">axis_ticks_length</a></td>
-<td>Axis tick length</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/axis_ticks_length_major.html#plotnine.themes.themeable.axis_ticks_length_major">axis_ticks_length_major</a></td>
-<td>Axis major-tick length</td>
+<td><a href="../reference/axis_ticks_length_major_y.html#plotnine.themes.themeable.axis_ticks_length_major_y">axis_ticks_length_major_y</a></td>
+<td>y-axis major-tick length</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_ticks_length_minor.html#plotnine.themes.themeable.axis_ticks_length_minor">axis_ticks_length_minor</a></td>
 <td>Axis minor-tick length</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_length_minor_x.html#plotnine.themes.themeable.axis_ticks_length_minor_x">axis_ticks_length_minor_x</a></td>
+<td>x-axis minor-tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_length_minor_y.html#plotnine.themes.themeable.axis_ticks_length_minor_y">axis_ticks_length_minor_y</a></td>
+<td>x-axis minor-tick length</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/axis_ticks_major.html#plotnine.themes.themeable.axis_ticks_major">axis_ticks_major</a></td>
@@ -1279,8 +1352,32 @@ ul.task-list li input[type="checkbox"] {
 <td>Axis major-tick padding</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_ticks_pad_major_x.html#plotnine.themes.themeable.axis_ticks_pad_major_x">axis_ticks_pad_major_x</a></td>
+<td>x-axis major-tick padding</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_pad_major_y.html#plotnine.themes.themeable.axis_ticks_pad_major_y">axis_ticks_pad_major_y</a></td>
+<td>y-axis major-tick padding</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_ticks_pad_minor.html#plotnine.themes.themeable.axis_ticks_pad_minor">axis_ticks_pad_minor</a></td>
 <td>Axis minor-tick padding</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_pad_minor_x.html#plotnine.themes.themeable.axis_ticks_pad_minor_x">axis_ticks_pad_minor_x</a></td>
+<td>x-axis minor-tick padding</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_pad_minor_y.html#plotnine.themes.themeable.axis_ticks_pad_minor_y">axis_ticks_pad_minor_y</a></td>
+<td>y-axis minor-tick padding</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_x.html#plotnine.themes.themeable.axis_ticks_x">axis_ticks_x</a></td>
+<td>x major and minor axis tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_y.html#plotnine.themes.themeable.axis_ticks_y">axis_ticks_y</a></td>
+<td>y major and minor axis tick lines</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_title.html#plotnine.themes.themeable.axis_title">axis_title</a></td>
@@ -1451,8 +1548,32 @@ ul.task-list li input[type="checkbox"] {
 <td>Plot background</td>
 </tr>
 <tr class="even">
+<td><a href="../reference/plot_caption.html#plotnine.themes.themeable.plot_caption">plot_caption</a></td>
+<td>Plot caption</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/plot_margin.html#plotnine.themes.themeable.plot_margin">plot_margin</a></td>
 <td>Plot Margin</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_margin_bottom.html#plotnine.themes.themeable.plot_margin_bottom">plot_margin_bottom</a></td>
+<td>Plot Margin at the bottom</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_margin_left.html#plotnine.themes.themeable.plot_margin_left">plot_margin_left</a></td>
+<td>Plot Margin on the left</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_margin_right.html#plotnine.themes.themeable.plot_margin_right">plot_margin_right</a></td>
+<td>Plot Margin on the right</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_margin_top.html#plotnine.themes.themeable.plot_margin_top">plot_margin_top</a></td>
+<td>Plot Margin at the top</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_subtitle.html#plotnine.themes.themeable.plot_subtitle">plot_subtitle</a></td>
+<td>Plot subtitle</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/plot_title.html#plotnine.themes.themeable.plot_title">plot_title</a></td>
@@ -1463,28 +1584,28 @@ ul.task-list li input[type="checkbox"] {
 <td>All rectangle elements</td>
 </tr>
 <tr class="odd">
-<td><a href="../reference/strip_background.html#plotnine.themes.themeable.strip_background">strip_background</a></td>
-<td>Facet label background</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/strip_background_x.html#plotnine.themes.themeable.strip_background_x">strip_background_x</a></td>
-<td>Horizontal facet label background</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/strip_background_y.html#plotnine.themes.themeable.strip_background_y">strip_background_y</a></td>
-<td>Vertical facet label background</td>
-</tr>
-<tr class="even">
 <td><a href="../reference/strip_align.html#plotnine.themes.themeable.strip_align">strip_align</a></td>
 <td>Alignment of the strip &amp; its background w.r.t the panel border</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/strip_align_x.html#plotnine.themes.themeable.strip_align_x">strip_align_x</a></td>
 <td>Vertical alignment of the strip &amp; its background w.r.t the panel border</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/strip_align_y.html#plotnine.themes.themeable.strip_align_y">strip_align_y</a></td>
 <td>Horizontal alignment of the strip &amp; its background w.r.t the panel border</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_background.html#plotnine.themes.themeable.strip_background">strip_background</a></td>
+<td>Facet label background</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_background_x.html#plotnine.themes.themeable.strip_background_x">strip_background_x</a></td>
+<td>Horizontal facet label background</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_background_y.html#plotnine.themes.themeable.strip_background_y">strip_background_y</a></td>
+<td>Vertical facet label background</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/strip_text.html#plotnine.themes.themeable.strip_text">strip_text</a></td>
@@ -1499,22 +1620,24 @@ ul.task-list li input[type="checkbox"] {
 <td>Facet labels along the vertical axis</td>
 </tr>
 <tr class="even">
+<td><a href="../reference/subplots_adjust.html#plotnine.themes.themeable.subplots_adjust">subplots_adjust</a></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/text.html#plotnine.themes.themeable.text">text</a></td>
 <td>All text elements in the plot</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/title.html#plotnine.themes.themeable.title">title</a></td>
 <td>All titles on the plot</td>
 </tr>
-<tr class="even">
-<td><a href="../reference/themeable.html#plotnine.themes.themeable.themeable">themeable</a></td>
-<td>Abstract class of things that can be themed.</td>
-</tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="theme-helper-functions-and-classes" class="level3">
-<h3 class="anchored" data-anchor-id="theme-helper-functions-and-classes">Theme helper functions and classes</h3>
+<section id="helpfull-functions-classes-for-theming" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="helpfull-functions-classes-for-theming">Helpfull Functions &amp; Classes for Theming</h3>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -1541,13 +1664,29 @@ ul.task-list li input[type="checkbox"] {
 <td><a href="../reference/element_text.html#plotnine.themes.element_text">element_text</a></td>
 <td>Theme element: Text</td>
 </tr>
+<tr class="odd">
+<td><a href="../reference/element_blank.html#plotnine.themes.element_blank">element_blank</a></td>
+<td>Theme element: Blank</td>
+</tr>
 </tbody>
 </table>
+</div>
 </section>
 </section>
-<section id="coordinates" class="level2">
-<h2 class="anchored" data-anchor-id="coordinates">coordinates</h2>
+<section id="coordinates" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="coordinates">Coordinates</h2>
 <p>Coordinate systems put together the two position scales to produce a 2d location.</p>
+<div class="doc-summary-table">
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/coord.html#plotnine.coords.coord.coord">coord</a></td>
+<td>Base class for all coordinate systems</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -1572,39 +1711,41 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="options" class="level2">
-<h2 class="anchored" data-anchor-id="options">options</h2>
+<section id="options" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="options">Options</h2>
 <p>When working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using <code>theme_set()</code>.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
 <td><a href="../reference/aspect_ratio.html#plotnine.options.aspect_ratio">aspect_ratio</a></td>
-<td></td>
+<td>Default aspect ratio used by the themes</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/base_family.html#plotnine.options.base_family">base_family</a></td>
-<td></td>
+<td>The base font family for all text that is part of the theme.</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/base_margin.html#plotnine.options.base_margin">base_margin</a></td>
-<td></td>
+<td>A size that is proportional of the figure width and</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/close_all_figures.html#plotnine.options.close_all_figures">close_all_figures</a></td>
-<td></td>
+<td>Development flag, e.g.&nbsp;set to <code>True</code> to prevent</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/current_theme.html#plotnine.options.current_theme">current_theme</a></td>
-<td></td>
+<td>Theme used when none is added to the ggplot object</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/dpi.html#plotnine.options.dpi">dpi</a></td>
-<td></td>
+<td>Default DPI used by the themes</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/figure_size.html#plotnine.options.figure_size">figure_size</a></td>
-<td></td>
+<td>Default figure size inches</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/get_option.html#plotnine.options.get_option">get_option</a></td>
@@ -1616,10 +1757,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="datasets" class="level2">
-<h2 class="anchored" data-anchor-id="datasets">datasets</h2>
+<section id="datasets" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="datasets">Datasets</h2>
 <p>These datasets ship with the plotnine and you can import them with from the <code>plotnine.data</code> sub-package.</p>
+<div class="doc-summary-table">
 <table class="table">
 <tbody>
 <tr class="odd">
@@ -1688,6 +1831,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 
 
 </section>
@@ -1847,8 +1991,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.468">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; env VERSION &gt;}} – geom</title>
+<title>plotnine ?env:VERSION</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -60,6 +94,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -67,7 +102,6 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -88,21 +122,40 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About Plotnine</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../installation.html">
+ <span class="dropdown-text">Installation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -126,7 +179,24 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.geoms.geom.geom" id="toc-plotnine.geoms.geom.geom" class="nav-link active" data-scroll-target="#plotnine.geoms.geom.geom">geom</a></li>
+  <li><a href="#plotnine.geoms.geom.geom" id="toc-plotnine.geoms.geom.geom" class="nav-link active" data-scroll-target="#plotnine.geoms.geom.geom"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom.geom</span></a>
+  <ul class="collapse">
+  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#plotnine.geoms.geom.geom.aesthetics" id="toc-plotnine.geoms.geom.geom.aesthetics" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.aesthetics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">aesthetics</span> <span class="doc-labels"><code class="doc-label doc-label-classmethod"></code></span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.draw_group" id="toc-plotnine.geoms.geom.geom.draw_group" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.draw_group"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_group</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.draw_layer" id="toc-plotnine.geoms.geom.geom.draw_layer" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.draw_layer"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_layer</span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.draw_legend" id="toc-plotnine.geoms.geom.geom.draw_legend" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.draw_legend"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_legend</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.draw_panel" id="toc-plotnine.geoms.geom.geom.draw_panel" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.draw_panel"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_panel</span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.draw_unit" id="toc-plotnine.geoms.geom.geom.draw_unit" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.draw_unit"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_unit</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.from_stat" id="toc-plotnine.geoms.geom.geom.from_stat" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.from_stat"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_stat</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.handle_na" id="toc-plotnine.geoms.geom.geom.handle_na" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.handle_na"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">handle_na</span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.setup_data" id="toc-plotnine.geoms.geom.geom.setup_data" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.setup_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.to_layer" id="toc-plotnine.geoms.geom.geom.to_layer" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.to_layer"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_layer</span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.use_defaults" id="toc-plotnine.geoms.geom.geom.use_defaults" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.use_defaults"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -136,16 +206,489 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="plotnine.geoms.geom.geom" class="level1">
-<h1>geom</h1>
-<div class="signature">
-<p><code>geoms.geom.geom(self, mapping=None, data=None, **kwargs)</code></p>
+<section id="plotnine.geoms.geom.geom" class="level1 doc doc-object doc-class doc-has-member-docs">
+<h1 class="doc doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom.geom</span></h1>
+<div class="doc-signature">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom(mapping<span class="op">=</span><span class="va">None</span>, data<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="description">
+<div class="doc-text">
 <p>Base class of all Geoms</p>
 </div>
+<section id="attributes" class="level2 doc-attributes">
+<h2 class="doc-attributes anchored" data-anchor-id="attributes">Attributes</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.DEFAULT_AES">DEFAULT_AES</a></td>
+<td>dict() -&gt; new empty dictionary</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.DEFAULT_PARAMS">DEFAULT_PARAMS</a></td>
+<td>dict() -&gt; new empty dictionary</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.NON_MISSING_AES">NON_MISSING_AES</a></td>
+<td>set() -&gt; new empty set object</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.REQUIRED_AES">REQUIRED_AES</a></td>
+<td>set() -&gt; new empty set object</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.aes_params">aes_params</a></td>
+<td>dict() -&gt; new empty dictionary</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.data">data</a></td>
+<td>Geom/layer specific dataframe</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.legend_geom">legend_geom</a></td>
+<td>str(object=’’) -&gt; str</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.mapping">mapping</a></td>
+<td>Mappings i.e.&nbsp;<code class="sourceCode python">aes(x<span class="op">=</span><span class="st">'col1'</span>, fill<span class="op">=</span><span class="st">'col2'</span>)</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.aesthetics">aesthetics</a></td>
+<td>Return all the aesthetics for this geom</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.draw_group">draw_group</a></td>
+<td>Plot data belonging to a group.</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.draw_layer">draw_layer</a></td>
+<td>Draw layer across all panels</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.draw_legend">draw_legend</a></td>
+<td>Draw a rectangle in the box</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.draw_panel">draw_panel</a></td>
+<td>Plot all groups</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.draw_unit">draw_unit</a></td>
+<td>Plot data belonging to a unit.</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.from_stat">from_stat</a></td>
+<td>Return an instantiated geom object</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.handle_na">handle_na</a></td>
+<td>Remove rows with NaN values</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.setup_data">setup_data</a></td>
+<td>Modify the data before drawing takes place</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.to_layer">to_layer</a></td>
+<td>Make a layer that represents this geom</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.use_defaults">use_defaults</a></td>
+<td>Combine data with defaults and set aesthetics from parameters</td>
+</tr>
+</tbody>
+</table>
+<section id="plotnine.geoms.geom.geom.aesthetics" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.aesthetics"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">aesthetics</span> <span class="doc-labels"><code class="doc-label doc-label-classmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>aesthetics()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Return all the aesthetics for this geom</p>
+<p>geoms should not override this method.</p>
+</div>
+</section>
+<section id="plotnine.geoms.geom.geom.draw_group" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.draw_group"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_group</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>draw_group(data, panel_params, coord, ax, <span class="op">**</span>params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Plot data belonging to a group.</p>
+</div>
+<section id="parameters" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data to be plotted by this geom. This is the dataframe created in the plot_build pipeline.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">panel_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">panel_view</span></code></dt>
+<dd>
+<p>The scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Keys of interest to the geom are:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">"x_range"</span>  <span class="co"># tuple</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">"y_range"</span>  <span class="co"># tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</dd>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">coord</span></code></dt>
+<dd>
+<p>Coordinate (e.g.&nbsp;coord_cartesian) system of the geom.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">axes</span></code></dt>
+<dd>
+<p>Axes on which to plot.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Combined parameters for the geom and stat. Also includes the <code>zorder</code>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.draw_layer" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.draw_layer"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_layer</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>draw_layer(data, layout, coord, <span class="op">**</span>params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Draw layer across all panels</p>
+<p>geoms should not override this method.</p>
+</div>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>DataFrame specific for this layer</p>
+</dd>
+<dt><code><span class="doc-parameter-name">layout</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Layout</span></code></dt>
+<dd>
+<p>Layout object created when the plot is getting built</p>
+</dd>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Coord">Coord</a></span></code></dt>
+<dd>
+<p>Type of coordinate axes</p>
+</dd>
+<dt><code><span class="doc-parameter-name">params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Combined <em>geom</em> and <em>stat</em> parameters. Also includes the stacking order of the layer in the plot (<em>zorder</em>)</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.draw_legend" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.draw_legend"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_legend</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>draw_legend(data, da, lyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Draw a rectangle in the box</p>
+</div>
+<section id="parameters-2" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series">Series</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span></code></dt>
+<dd>
+<p>A of the data plotted to this layer</p>
+</dd>
+<dt><code><span class="doc-parameter-name">da</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">DrawingArea</span></code></dt>
+<dd>
+<p>Canvas on which to draw</p>
+</dd>
+<dt><code><span class="doc-parameter-name">lyr</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Layer">Layer</a></span></code></dt>
+<dd>
+<p>Layer that the geom belongs to.</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation">DrawingArea</span></code></dt>
+<dd>
+<p>The DrawingArea after a layer has been drawn onto it.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.draw_panel" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.draw_panel"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_panel</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>draw_panel(data, panel_params, coord, ax, <span class="op">**</span>params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Plot all groups</p>
+<p>For efficiency, geoms that do not need to partition different groups before plotting should override this method and avoid the groupby.</p>
+</div>
+<section id="parameters-3" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data to be plotted by this geom. This is the dataframe created in the plot_build pipeline.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">panel_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">panel_view</span></code></dt>
+<dd>
+<p>The scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Attributes are of interest to the geom are:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">"panel_params.x.range"</span>  <span class="co"># tuple</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">"panel_params.y.range"</span>  <span class="co"># tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</dd>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Coord">Coord</a></span></code></dt>
+<dd>
+<p>Coordinate (e.g.&nbsp;coord_cartesian) system of the geom.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Axes</span></code></dt>
+<dd>
+<p>Axes on which to plot.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Combined parameters for the geom and stat. Also includes the <code>zorder</code>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.draw_unit" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.draw_unit"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw_unit</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb9"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>draw_unit(data, panel_params, coord, ax, <span class="op">**</span>params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Plot data belonging to a unit.</p>
+<p>A matplotlib plot function may require that an aethestic have a single unique value. e.g.&nbsp;linestyle=‘dashed’ and not linestyle=[‘dashed’, ‘dotted’, …]. A single call to such a function can only plot lines with the same linestyle. However, if the plot we want has more than one line with different linestyles, we need to group the lines with the same linestyle and plot them as one unit. In this case, draw_group calls this function to do the plotting. For an example see <a href="../reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a>.</p>
+</div>
+<section id="parameters-4" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data to be plotted by this geom. This is the dataframe created in the plot_build pipeline.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">panel_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">panel_view</span></code></dt>
+<dd>
+<p>The scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Keys of interest to the geom are:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">"x_range"</span>  <span class="co"># tuple</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">"y_range"</span>  <span class="co"># tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In rare cases a geom may need access to the x or y scales. Those are available at:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">"scales"</span>   <span class="co"># SimpleNamespace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</dd>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Coord">Coord</a></span></code></dt>
+<dd>
+<p>Coordinate (e.g.&nbsp;coord_cartesian) system of the geom.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Axes</span></code></dt>
+<dd>
+<p>Axes on which to plot.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dd>
+<p>Combined parameters for the geom and stat. Also includes the <code>zorder</code>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.from_stat" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.from_stat"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_stat</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb12"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>from_stat(stat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Return an instantiated geom object</p>
+<p>geoms should not override this method.</p>
+</div>
+<section id="parameters-5" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">stat</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></span></code></dt>
+<dd>
+<p><code>stat</code></p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns-1" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-1">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span></code></dt>
+<dd>
+<p>A geom object</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="raises" class="level4 doc-raises">
+<h4 class="doc-raises anchored" data-anchor-id="raises">Raises</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation">PlotnineError</span></code></dt>
+<dd>
+<p>If unable to create a <code>geom</code>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.handle_na" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.handle_na"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">handle_na</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb13"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>handle_na(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Remove rows with NaN values</p>
+<p>geoms that infer extra information from missing values should override this method. For example <a href="../reference/geom_path.html#plotnine.geoms.geom_path"><code>geom_path</code></a>.</p>
+</div>
+<section id="parameters-6" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns-2" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-2">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data without the NaNs.</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="notes" class="level4 doc-notes">
+<h4 class="doc-notes anchored" data-anchor-id="notes">Notes</h4>
+<p>Shows a warning if the any rows are removed and the <code>na_rm</code> parameter is False. It only takes into account the columns of the required aesthetics.</p>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.setup_data" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.setup_data"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb14"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Modify the data before drawing takes place</p>
+<p>This function is called <em>before</em> position adjustments are done. It is used by geoms to create the final aesthetics used for drawing. The base class method does nothing, geoms can override this method for two reasons:</p>
+<ol type="1">
+<li><p>The <code>stat</code> does not create all the aesthetics (usually position aesthetics) required for drawing the <code>geom</code>, but those aesthetics can be computed from the available data. For example <a href="../reference/geom_boxplot.html#plotnine.geoms.geom_boxplot"><code>geom_boxplot</code></a> and <a href="../reference/geom_violin.html#plotnine.geoms.geom_violin"><code>geom_violin</code></a>.</p></li>
+<li><p>The <code>geom</code> inherits from another <code>geom</code> (superclass) which does the drawing and the superclass requires certain aesthetics to be present in the data. For example <a href="../reference/geom_tile.html#plotnine.geoms.geom_tile"><code>geom_tile</code></a> and <a href="../reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a>.</p></li>
+</ol>
+</div>
+<section id="parameters-7" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data used for drawing the geom.</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns-3" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-3">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data used for drawing the geom.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.to_layer" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.to_layer"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_layer</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb15"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>to_layer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Make a layer that represents this geom</p>
+</div>
+<section id="returns-4" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-4">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Layer">Layer</a></span></code></dt>
+<dd>
+<p>Layer</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.geoms.geom.geom.use_defaults" class="level3 doc doc-object doc-method">
+<h3 class="doc doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.use_defaults"><code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb16"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data, aes_modifiers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Combine data with defaults and set aesthetics from parameters</p>
+<p>geoms should not override this method.</p>
+</div>
+<section id="parameters-8" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data used for drawing the geom.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">aes_modifiers</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span></code></dt>
+<dd>
+<p>Aesthetics</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns-5" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-5">Returns</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data used for drawing the geom.</p>
+</dd>
+</dl>
+</div>
 
 
+</section>
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -302,8 +845,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML
