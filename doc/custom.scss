@@ -73,10 +73,15 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 .doc section.doc-methods > table,    // case 1
 .doc section.doc-classes > table,    // case 1
 .doc .doc-definition-items > dl,     // case 2
+.doc .doc-definition-items > dl > dd:last-child > p:last-child, // case 2
 .doc .doc-text > p:last-child,         // case 2
 
 // This affects the reference/index page
-.doc .doc-summary-table:not(:has(+ .doc-summary-table)) table {  // case 2
+.doc .doc-summary-table:not(:has(+ .doc-summary-table)) table, // case 2
+
+// TypeAlias code
+.doc .doc-typing-typealias p:has(> code), // case 2
+.doc .doc-typing-typealias > div:last-child { // case 2
    @extend .mb-0;
 }
 
@@ -120,10 +125,6 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 }
 
 // TypeAlias code
-.doc .doc-typing-typealias p:has(> code) {
-   @extend .mb-0;
-}
-
 .doc code.doc-typing-typealias-definition {
    @extend .p-1;
    display: block;
@@ -327,11 +328,11 @@ code.doc-symbol-attribute::after {
 }
 
 .content code.doc-label-typing-typealias::after {
-   content: "typealias";
+   content: "TypeAlias";
 }
 
-.content code.doc-label-typing-protocol::after {
-   content: "protocol";
+.content code.doc-label-Protocol::after {
+   content: "Protocol";
 }
 
 
