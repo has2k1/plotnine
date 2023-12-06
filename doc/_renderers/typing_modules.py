@@ -19,9 +19,10 @@ from quartodoc.pandoc.blocks import (
 )
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines
+from quartodoc.renderers.base import Renderer
 
 from .format import interlink_identifiers, pretty_code, repr_obj
-from .utils import make_doc_labels
+from .utils import is_protocol, is_typealias, make_doc_labels
 
 
 @dataclass
@@ -40,6 +41,11 @@ class TypingModule:
     module_path: str
     builder: Builder
 
+    def __post_init__(self):
+        self.renderer = self.builder.renderer
+        self.package = self.builder.package
+        self.dir = self.builder.dir
+
     @cached_property
     def base_uri(self) -> str:
         """
@@ -51,12 +57,10 @@ class TypingModule:
             - the module's aliases should be written (.qmd)
             - the interlinks should point (.html#anchor)
         """
-        dir = self.builder.dir
-        package = self.builder.package
         path = self.module_path
-        if path.startswith(package):
-            path = path[len(package) + 1 :]
-        return f"{dir}/{path}"
+        if path.startswith(self.package):
+            path = path[len(self.package) + 1 :]
+        return f"{self.dir}/{path}"
 
     @cached_property
     def obj(self):
@@ -116,26 +120,14 @@ class TypingModule:
 
         protocol_items = self.protocol_documentation_items
         if protocol_items:
-            _title = Header(
-                level=2,
-                content="Protocols",
-                attr=Attr(classes=["doc", "doc-typing-protocols"]),
-            )
-            _definitions = render_protocol_definitions(protocol_items)
-
-            page_content.extend([_title, _definitions])
+            content = ProtocolsDoc(protocol_items, self.renderer).render()
+            page_content.append(content)
             self.builder.items.extend(protocol_items)
 
         typealias_items = self.typealias_documentation_items
         if typealias_items:
-            _title = Header(
-                level=2,
-                content="Type Aliases",
-                attr=Attr(classes=["doc", "doc-typing-typealiases"]),
-            )
-            _definitions = render_typealias_definitions(typealias_items)
-
-            page_content.extend([_title, _definitions])
+            content = TypeAliasesDoc(typealias_items).render()
+            page_content.append(content)
             self.builder.items.extend(typealias_items)
 
         filepath = Path(self.base_uri).with_suffix(".qmd")
@@ -166,106 +158,141 @@ class TypingModules(list[TypingModule]):
             typing_module.render_information_page()
 
 
-def is_typealias(obj: dc.Object | dc.Alias) -> bool:
+@dataclass
+class ProtocolDoc:
     """
-    Return True if obj is a declaration of a TypeAlias
+    Document a single Protocol
     """
-    # TODO:
-    # Figure out if this handles new-style typealiases introduced
-    # in python 3.12 to handle
-    if not (isinstance(obj, dc.Attribute) and obj.annotation):
-        return False
-    elif isinstance(obj.annotation, expr.ExprName):
-        return obj.annotation.name == "TypeAlias"
-    elif isinstance(obj.annotation, str):
-        return True
-    return False
+
+    obj: dc.Class
+    """Protocol Object"""
+
+    renderer: Renderer
+    """Renderer that is documenting the package"""
+
+    def __post_init__(self):
+        """
+        Create layout.Doc object for the Protocol
+        """
+        from_griffe = layout.Doc.from_griffe
+        members = [from_griffe(m.name, m) for m in self.obj.members.values()]
+        self.doc = from_griffe(self.obj.name, self.obj, members)
+
+    def render(self) -> Block:
+        """
+        Return the documentation
+        """
+        with self.renderer._increment_header_level(2):  # type: ignore
+            res = self.renderer.render(self.doc)
+        return Blocks([res])
 
 
-def is_protocol(obj: dc.Object | dc.Alias) -> bool:
+@dataclass
+class ProtocolsDoc(list[ProtocolDoc]):
     """
-    Return True if obj is a class defining a typing Protocol
+    Document Protocols for the type information page
     """
-    return (
-        isinstance(obj, dc.Class)
-        and isinstance(obj.bases, list)
-        and isinstance(obj.bases[-1], expr.ExprName)
-        and obj.bases[-1].canonical_path == "typing.Protocol"
-    )
+
+    items: list[layout.Item]
+    """Documentation Items with Protocol objects"""
+
+    renderer: Renderer
+    """Renderer that is documenting the package"""
+
+    def __post_init__(self):
+        """
+        Create the list of TypingProtocol
+        """
+        for item in self.items:
+            obj = cast(dc.Class, item.obj)
+            self.append(ProtocolDoc(obj, self.renderer))
+
+    def render(self) -> Block:
+        """
+        Return the documentation for all the Protocols
+        """
+        if not self:
+            return Blocks([])
+
+        title = Header(
+            level=2,
+            content="Protocols",
+            attr=Attr(classes=["doc", "doc-typing-protocols"]),
+        )
+        definitions = [tpd.render() for tpd in self]
+        return Blocks([title, definitions])
 
 
-def render_typealias_definition(el: dc.Object | dc.Alias) -> Div:
+@dataclass
+class TypeAliasDoc:
     """
-    Turn the code that defines a TypeAlias into markdown
+    Document a single TypeAlias
     """
-    if isinstance(el, dc.Attribute):
-        content = pretty_code(interlink_identifiers(el))
-    else:
-        content = str(el)
-    return Div(
-        Code(content, Attr(classes=["doc-typing-typealias-definition"])).html,
-        Attr(classes=["sourceCode"]),
-    )
 
+    obj: dc.Attribute
+    """TypeAlias Object"""
 
-def render_typealias_definitions(items: list[layout.Item]) -> Blocks:
-    """
-    Turn TypeAliases into markdown
-    """
-    aliases = []
-    Header(1, content=[Code("a")])
+    def __post_init__(self):
+        """
+        Create layout.Doc object for the Protocol
+        """
+        from_griffe = layout.Doc.from_griffe
+        members = [from_griffe(m.name, m) for m in self.obj.members.values()]
+        self.doc = from_griffe(self.obj.name, self.obj, members)
 
-    for item in items:
+    def render(self) -> Block:
+        """
+        Return the documentation
+        """
         header = Header(
             level=3,
             content=Inlines(
-                [item.obj.name, make_doc_labels(["typing-typealias"])]
+                [self.obj.name, make_doc_labels(["typing-typealias"])]
             ),
             attr=Attr(
-                item.obj.canonical_path, classes=["doc-typing-typealias"]
+                self.obj.canonical_path, classes=["doc-typing-typealias"]
             ),
         )
-
-        definition = render_typealias_definition(item.obj)
-
-        if item.obj.docstring:
-            docstring = Div(
-                item.obj.docstring.value,
-                Attr(classes=["doc-typing-typealias-docstring"]),
-            )
-        else:
-            docstring = ""
-
-        aliases.extend([header, definition, docstring])
-
-    return Blocks(aliases)
-
-
-def render_protocol_definition(el: dc.Class) -> CodeBlock:
-    """
-    Turn the code that a TypeAlias into markdown
-    """
-    return CodeBlock(el.source, Attr(classes=["python"]))
-
-
-def render_protocol_definitions(items: list[layout.Item]) -> Blocks:
-    """
-    Turn Typing Protocols into markdown
-    """
-    protocols = []
-
-    for item in items:
-        header = Header(
-            level=3,
-            content=Inlines(
-                [item.obj.name, make_doc_labels(["typing-protocol"])]
-            ),
-            attr=Attr(
-                item.obj.canonical_path, classes=["doc-typing-protocol"]
-            ),
+        stmt = interlink_identifiers(self.obj)
+        value = stmt[stmt.find("=") + 1 :].strip()
+        definition = Div(
+            Code(
+                pretty_code(value),
+                Attr(classes=["doc-typing-typealias-definition"]),
+            ).html,
+            Attr(classes=["sourceCode"]),
         )
-        obj = cast(dc.Class, item.obj)
-        definition = render_protocol_definition(obj)
-        protocols.extend([header, definition])
+        return Blocks([header, definition])
 
-    return Blocks(protocols)
+
+@dataclass
+class TypeAliasesDoc(list[TypeAliasDoc]):
+    """
+    Document multiple TypeAliases
+    """
+
+    items: list[layout.Item]
+    """Documentation Items with TypeAlias objects"""
+
+    def __post_init__(self):
+        """
+        Create list of TypeAlias
+        """
+        for item in self.items:
+            obj = cast(dc.Attribute, item.obj)
+            self.append(TypeAliasDoc(obj))
+
+    def render(self) -> Blocks:
+        """
+        Return the documentation for all the Protocols
+        """
+        if not self:
+            return Blocks([])
+
+        title = Header(
+            level=2,
+            content="Type Aliases",
+            attr=Attr(classes=["doc", "doc-typing-typealiases"]),
+        )
+        definitions = [t.render() for t in self]
+        return Blocks([title, definitions])

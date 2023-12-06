@@ -58,6 +58,35 @@ def shortcode(name: str, *args: str, **kwargs: str):
     return f"{{{{< {content} >}}}}"
 
 
+def is_typealias(obj: dc.Object | dc.Alias) -> bool:
+    """
+    Return True if obj is a declaration of a TypeAlias
+    """
+    # TODO:
+    # Figure out if this handles new-style typealiases introduced
+    # in python 3.12 to handle
+    if not (isinstance(obj, dc.Attribute) and obj.annotation):
+        return False
+    elif isinstance(obj.annotation, expr.ExprName):
+        return obj.annotation.name == "TypeAlias"
+    elif isinstance(obj.annotation, str):
+        return True
+    return False
+
+
+def is_protocol(obj: dc.Object | dc.Alias) -> bool:
+    """
+    Return True if obj is a class defining a typing Protocol
+    """
+    return (
+        isinstance(obj, dc.Class)
+        and isinstance(obj.bases, list)
+        and len(obj.bases) > 0
+        and isinstance(obj.bases[-1], expr.ExprName)
+        and obj.bases[-1].canonical_path == "typing.Protocol"
+    )
+
+
 def interlink_ref_to_link(interlink_ref: tuple[str | None, str]) -> InterLink:
     """
     Convert an rst reference to a quoted link
@@ -215,6 +244,10 @@ def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
         return tuple(
             label.replace(".", "-") for label in lst if label in el.labels
         )
+    elif el.is_attribute and is_typealias(el):
+        return ("TypeAlias",)
+    elif el.is_class and is_protocol(el):
+        return ("Protocol",)
     else:
         return tuple()
 

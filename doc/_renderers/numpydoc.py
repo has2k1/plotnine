@@ -20,6 +20,7 @@ from quartodoc.pandoc.blocks import (
     Block,
     Blocks,
     CodeBlock,
+    DefinitionItem,
     DefinitionList,
     Div,
     Header,
@@ -35,7 +36,6 @@ from quartodoc.pandoc.inlines import (
     Span,
     Strong,
 )
-from quartodoc.pandoc.typing import DefinitionItem
 from quartodoc.renderers import MdRenderer
 from quartodoc.renderers.base import Renderer
 from quartodoc.renderers.md_renderer import _has_attr_section
