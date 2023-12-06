@@ -53,6 +53,16 @@ class PlotAddable(Protocol):
     def __radd__(self, other: ggplot) -> ggplot:
         """
         Add to ggplot object
+
+        Parameters
+        ----------
+        other :
+            ggplot object
+
+        Returns
+        -------
+        :
+            ggplot object
         """
         ...
 
@@ -65,6 +75,11 @@ class DataFrameConvertible(Protocol):
     def to_pandas(self) -> pd.DataFrame:
         """
         Convert to pandas dataframe
+
+        Returns
+        -------
+        :
+            Pandas representation of this object.
         """
         ...
 
