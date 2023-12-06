@@ -163,6 +163,6 @@ def generate_gallery() -> str:
         for fp in EXAMPLES_DIR.glob("*.ipynb")
         if not fp.name.endswith(".out.ipynb")
     )
-    images = get_gallery_images(notebooks)
+    images = (str(img) for img in get_gallery_images(notebooks))
     gallery = Div(list(images), Attr(classes=["gallery", "grid"]))
     return str(gallery)
