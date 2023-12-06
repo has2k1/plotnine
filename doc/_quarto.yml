@@ -14,6 +14,7 @@ filters:
 
 # interlinks are slow
 interlinks:
+  fast: true
   sources:
     python:
       url: https://docs.python.org/3/
