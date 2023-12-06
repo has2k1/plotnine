@@ -32,8 +32,9 @@ jobs:
 
       - name: Install Package
         run: |
-          pip install -r requirements/doc.txt
+          pip install git+https://github.com/has2k1/mizani.git@main
           python -m pip install ".[doc]"
+          pip install -r requirements/doc.txt
           quarto add has2k1/issuey
 
       - name: Environment Information
