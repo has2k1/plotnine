@@ -124,18 +124,6 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
    overflow: auto;
 }
 
-// TypeAlias code
-.doc code.doc-typing-typealias-definition {
-   @extend .p-1;
-   display: block;
-   font-weight: normal;
-   color: var(--quarto-hl-ot-color);
-}
-
-.doc .doc-typing-typealias code a {
-   color: $primary;
-}
-
 // Reference/Index
 
 // Give all the tables on the index page the same with.
@@ -193,17 +181,6 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
    @extend .ms-5;
 }
 
-// docstring parameters
-.doc code:has(> span.doc-parameter-name) {
-   @extend .py-1;
-   display: block;
-   font-weight: normal;
-}
-
-.doc code .doc-parameter-annotation a {
-   color: $primary;
-}
-
 .doc .doc-definition-items > dl > dd > table {
    min-width: 33%;
    width: 0;
@@ -217,6 +194,20 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 .doc .doc-definition-items > dl > dd > table td {
    @extend .px-2;
    @extend .py-1;
+}
+
+// Definitions that are code
+.doc .doc-definition-items dt code,
+.doc code.doc-typing-typealias-definition {
+   @extend .py-1;
+   display: block;
+   font-weight: normal;
+   color: var(--quarto-hl-ot-color);
+}
+
+.doc .doc-definition-items dt code a,
+.doc .doc-typing-typealias code a {
+   color: $primary;
 }
 
 // docstring object symbols
