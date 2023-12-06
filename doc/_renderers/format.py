@@ -25,6 +25,9 @@ STRING_RE = re.compile(
 # This translation table maps the quotes to html escape sequences
 QUOTES_TRANSLATION = str.maketrans({'"': "&quot;", "'": "&apos;"})
 
+# Characters that can appear that the start of a markedup string
+MARKDOWN_START_CHARS = {"_", "*"}
+
 
 def escape_quotes(s: str) -> str:
     """
@@ -41,6 +44,18 @@ def escape_indents(s: str) -> str:
     to preserve the formatting.
     """
     return s.replace(" " * 4, "&nbsp;" * 4).replace("\n", "<br>")
+
+
+def markdown_escape(s: str) -> str:
+    """
+    Escape string that may be interpreted as markdown
+
+    This function is deliberately not robust to all possibilities. It
+    will improve as needed.
+    """
+    if s and s[0] in MARKDOWN_START_CHARS:
+        s = rf"\{s}"
+    return s
 
 
 def string_match_highlight_func(m: re.Match) -> str:

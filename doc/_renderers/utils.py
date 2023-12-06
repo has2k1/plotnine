@@ -17,7 +17,12 @@ from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
 from quartodoc.parsers import get_parser_defaults
 
-from .format import interlink_identifiers, pretty_code, repr_obj
+from .format import (
+    interlink_identifiers,
+    markdown_escape,
+    pretty_code,
+    repr_obj,
+)
 from .typing import DisplayNameFormat, DocObjectKind
 
 
@@ -177,15 +182,16 @@ def get_object_display_name(
         The format to use for the object's name.
     """
     if format in ("name", "short"):
-        return el.name
+        res = el.name
     elif format == "relative":
-        return ".".join(el.path.split(".")[1:])
+        res = ".".join(el.path.split(".")[1:])
     elif format == "full":
-        return el.path
+        res = el.path
     elif format == "canonical":
-        return el.canonical_path
+        res = el.canonical_path
     else:
         raise ValueError(f"Unknown format {format!r} for an object name.")
+    return res
 
 
 def get_object_kind(el: dc.Alias | dc.Object) -> DocObjectKind:
