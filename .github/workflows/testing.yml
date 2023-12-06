@@ -156,6 +156,7 @@ jobs:
           pip install git+https://github.com/has2k1/mizani.git@main
           pip install ".[test,doc]"
           pip install -r requirements/doc.txt
+          quarto add --no-prompt has2k1/issuey
 
       - name: Environment Information
         shell: bash

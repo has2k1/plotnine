@@ -35,7 +35,7 @@ jobs:
           pip install git+https://github.com/has2k1/mizani.git@main
           python -m pip install ".[doc]"
           pip install -r requirements/doc.txt
-          quarto add has2k1/issuey
+          quarto add --no-prompt has2k1/issuey
 
       - name: Environment Information
         shell: bash
