@@ -41,7 +41,7 @@ from quartodoc.renderers.base import Renderer
 from quartodoc.renderers.md_renderer import _has_attr_section
 from tabulate import tabulate
 
-from .format import formatted_signature, repr_obj
+from .format import formatted_signature, markdown_escape, repr_obj
 from .typing import DisplayNameFormat
 from .typing_modules import TypingModules
 from .utils import (
@@ -117,7 +117,7 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def render_annotation(self, el: expr.ExprName):  # type: ignore
-        return str(InterLink(el.name, el.canonical_path))
+        return str(InterLink(markdown_escape(el.name), el.canonical_path))
 
     @dispatch
     def render_annotation(self, el: expr.Expr) -> str:
@@ -216,7 +216,8 @@ class NumpyDocRenderer(Renderer):
             ),
         )
         object_name = Span(
-            name, Attr(classes=["doc-object-name", f"doc-{kind}-name"])
+            markdown_escape(name),
+            Attr(classes=["doc-object-name", f"doc-{kind}-name"]),
         )
 
         doc_labels = make_doc_labels(labels)
@@ -336,7 +337,9 @@ class NumpyDocRenderer(Renderer):
     @dispatch
     def render(self, el: layout.Page):  # type: ignore
         if el.summary:
-            header = Header(self.header_level, el.summary.name)
+            header = Header(
+                self.header_level, markdown_escape(el.summary.name)
+            )
             desc = el.summary.desc
         else:
             header, desc = "", ""
@@ -638,7 +641,7 @@ class NumpyDocRenderer(Renderer):
         Summarize a Page that is part of a Layout
         """
         if el.summary is not None:
-            link = Link(el.summary.name, f"{el.path}.qmd")
+            link = Link(markdown_escape(el.summary.name), f"{el.path}.qmd")
             return [(str(link), el.summary.desc)]
 
         if len(el.contents) > 1 and not el.flatten:
@@ -663,7 +666,7 @@ class NumpyDocRenderer(Renderer):
     ) -> tuple[str, str]:
         # TODO: assumes that files end with .qmd
         path = f"{path}.qmd" if path else ""
-        link = Link(el.name, f"{path}#{el.anchor}")
+        link = Link(markdown_escape(el.name), f"{path}#{el.anchor}")
         description = self.summarize(el.obj)  # type: ignore
         return (str(link), description)
 
@@ -674,7 +677,7 @@ class NumpyDocRenderer(Renderer):
 
         Returns an interlink and a description of the object/reference
         """
-        link = InterLink(None, el.name)
+        link = InterLink(None, markdown_escape(el.name))
         description = self.summarize(el.obj)
         return (str(link), description)
 
