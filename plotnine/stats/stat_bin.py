@@ -112,7 +112,6 @@ class stat_bin(stat):
 
     @classmethod
     def compute_group(cls, data, scales, **params):
-        weight = data.get("weight")
         if params["breaks"] is not None:
             breaks = np.asarray(params["breaks"])
             if hasattr(scales.x, "transform"):

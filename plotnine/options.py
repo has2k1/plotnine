@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Optional, Type
+    from typing import Any, Literal, Optional, Type
 
     from plotnine.typing import Theme
 

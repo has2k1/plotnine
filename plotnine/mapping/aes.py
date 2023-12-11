@@ -14,7 +14,7 @@ from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence, TypeVar
+    from typing import Sequence, TypeVar
 
     THasAesNames = TypeVar("THasAesNames", bound=list[str] | dict[str, Any])
 

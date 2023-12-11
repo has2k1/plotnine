@@ -1,28 +1,29 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from griffe import dataclasses as dc
-from griffe import expressions as expr
 from quartodoc import layout
 from quartodoc.autosummary import Builder, get_object
 from quartodoc.pandoc.blocks import (
     Block,
     Blocks,
-    CodeBlock,
     Div,
     Header,
 )
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines
-from quartodoc.renderers.base import Renderer
 
-from .format import interlink_identifiers, pretty_code, repr_obj
+from .format import interlink_identifiers, pretty_code
 from .utils import is_protocol, is_typealias, make_doc_labels
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from quartodoc.renderers.base import Renderer
 
 
 @dataclass

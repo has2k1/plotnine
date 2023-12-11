@@ -1,29 +1,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import cache, cached_property
-from textwrap import indent
-from typing import Literal, Optional, Sequence
+from typing import TYPE_CHECKING, Literal, Optional, Sequence
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
-from griffe.collections import LinesCollection, ModulesCollection
-from griffe.dataclasses import Alias
-from griffe.docstrings.parsers import Parser, parse
-from griffe.loader import GriffeLoader
-from quartodoc import layout
-from quartodoc.autosummary import Builder, get_object
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
-from quartodoc.parsers import get_parser_defaults
 
 from .format import (
-    interlink_identifiers,
-    markdown_escape,
     pretty_code,
     repr_obj,
 )
-from .typing import DisplayNameFormat, DocObjectKind
+
+if TYPE_CHECKING:
+    from .typing import DisplayNameFormat, DocObjectKind  # noqa: TCH001
 
 
 @dataclass
@@ -255,7 +246,7 @@ def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
     elif el.is_class and is_protocol(el):
         return ("Protocol",)
     else:
-        return tuple()
+        return ()
 
 
 def get_canonical_path_lookup(el: expr.Expr) -> dict[str, str]:
