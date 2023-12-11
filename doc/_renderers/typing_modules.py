@@ -39,10 +39,10 @@ class TypingModule:
     """
 
     module_path: str
+    renderer: Renderer
     builder: Builder
 
     def __post_init__(self):
-        self.renderer = self.builder.renderer
         self.package = self.builder.package
         self.dir = self.builder.dir
 
@@ -140,15 +140,15 @@ class TypingModules(list[TypingModule]):
     A collection of TypingModules
     """
 
-    module_paths: list[str]
+    renderer: Renderer
     builder: Builder
 
     def __post_init__(self):
         """
         Create the list from the module_paths
         """
-        for module_path in self.module_paths:
-            self.append(TypingModule(module_path, self.builder))
+        for module_path in self.renderer.typing_module_paths:  # type: ignore
+            self.append(TypingModule(module_path, self.renderer, self.builder))
 
     def render_information_pages(self):
         """
