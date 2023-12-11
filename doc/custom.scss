@@ -171,6 +171,10 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
 }
 
 // docstring definition-items
+.doc .doc-definition-items dt {
+   font-weight: normal;
+}
+
 .doc .doc-definition-items > dl > dt:not(:first-child) {
    @extend .mt-3;
 }
