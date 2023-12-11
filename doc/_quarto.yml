@@ -3,7 +3,7 @@ project:
   pre-render: _config.py
   output-dir: _site
   resources:
-    - objects.json
+    - objects.txt
   render:
     - "reference/**.qmd"
     - "*.qmd"
@@ -91,7 +91,8 @@ quartodoc:
     - title: Creating a Plot
       desc: ""
       contents:
-        - ggplot
+        - name: ggplot
+          package: plotnine.ggplot
         - qplot
         - watermark
         - name: layer
