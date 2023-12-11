@@ -695,9 +695,9 @@ class NumpyDocRenderer(Renderer):
 
         return ""
 
-    def pages_written(self):
+    def _pages_written(self, builder):
         """
         Render typing information and the interlinks
         """
-        mods = TypingModules(self.typing_module_paths, self.builder)
+        mods = TypingModules(self, builder)
         mods.render_information_pages()
