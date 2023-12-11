@@ -738,7 +738,7 @@ class alias:
     ```
     """
 
-    pass
+    ...
 
 
 class RegistryMeta(type):

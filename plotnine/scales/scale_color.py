@@ -327,7 +327,7 @@ class scale_color_gradientn(scale_continuous):
 
     Parameters
     ----------
-    colors : list,
+    colors : list
         list of colors
     values : list, default=None
         list of points in the range [0, 1] at which to

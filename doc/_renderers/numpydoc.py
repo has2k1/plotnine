@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-import html
-import typing
-from contextlib import contextmanager, suppress
+from contextlib import contextmanager
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Literal, Optional, Sequence, TypeAlias
+from typing import TYPE_CHECKING, Literal, Optional, TypeAlias
 from warnings import warn
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
-from griffe.docstrings import Parser
 from griffe.docstrings import dataclasses as ds
 from numpydoc.docscrape import NumpyDocString
 from plum import dispatch
@@ -24,25 +20,19 @@ from quartodoc.pandoc.blocks import (
     DefinitionList,
     Div,
     Header,
-    Plain,
 )
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import (
     Code,
-    Emph,
-    Inline,
     Inlines,
     Link,
     Span,
-    Strong,
 )
-from quartodoc.renderers import MdRenderer
 from quartodoc.renderers.base import Renderer
 from quartodoc.renderers.md_renderer import _has_attr_section
 from tabulate import tabulate
 
 from .format import formatted_signature, markdown_escape, repr_obj
-from .typing import DisplayNameFormat
 from .typing_modules import TypingModules
 from .utils import (
     InterLink,
@@ -57,6 +47,9 @@ from .utils import (
 )
 
 SummaryRow: TypeAlias = tuple[str, str]
+
+if TYPE_CHECKING:
+    from .typing import DisplayNameFormat
 
 # NOTE
 # Attribute
@@ -398,7 +391,7 @@ class NumpyDocRenderer(Renderer):
 
         return str(Blocks(sections))
 
-    # signature parts -------------------------------------------------------------
+    # signature parts ---------------------------------------------------------
     @dispatch
     def render(self, el: dc.Parameters) -> list[str]:  # type: ignore
         """
@@ -646,8 +639,8 @@ class NumpyDocRenderer(Renderer):
 
         if len(el.contents) > 1 and not el.flatten:
             raise ValueError(
-                "Cannot summarize Page. Either set its `summary` attribute with name "
-                "and description details, or set `flatten` to True."
+                "Cannot summarize Page. Either set its `summary` attribute "
+                "with name and description details, or set `flatten` to True."
             )
 
         items: list[SummaryRow] = [

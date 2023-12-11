@@ -6,7 +6,7 @@ from plotnine import aes, ggplot, stat_summary_bin
 data = pd.DataFrame(
     {
         "xd": list("aaaaabbbbcccccc"),
-        "xc": range(0, 15),
+        "xc": range(15),
         "y": [1, 2, 3, 4, 5, 1.5, 1.5, 6, 6, 5, 5, 5, 5, 5, 5],
     }
 )

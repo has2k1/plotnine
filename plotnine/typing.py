@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from typing import (
     Any,
     Callable,
@@ -21,7 +22,7 @@ from matplotlib.text import Text
 from mizani.transforms import trans
 from numpy.typing import NDArray
 from patsy.eval import EvalEnvironment
-from typing_extensions import TypeAlias
+from typing_extensions import TypeAlias  # noqa: TCH002
 
 from plotnine.coords.coord import coord
 from plotnine.facets.facet import facet

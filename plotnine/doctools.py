@@ -5,7 +5,7 @@ import os
 import re
 import typing
 from functools import lru_cache
-from textwrap import dedent, indent, wrap
+from textwrap import dedent, indent
 
 if typing.TYPE_CHECKING:
     from typing import Any, Type, TypeVar
@@ -62,9 +62,9 @@ STAT_SIGNATURE_TPL = """
 
 common_params_doc = {
     "mapping": """\
-Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If specified \
-and `inherit_aes=True`{.py}, it is combined with the default mapping for \
-the plot. You must supply mapping if there is no plot mapping.""",
+Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If
+specified and `inherit_aes=True`{.py}, it is combined with the default mapping
+for the plot. You must supply mapping if there is no plot mapping.""",
     "data": """\
 The data to be displayed in this layer. If `None`{.py}, the data from \
 from the `ggplot()`{.py} call is used. If specified, it overrides the \
@@ -212,7 +212,6 @@ def make_signature(
     # preferred params come first
     for i, key in enumerate(it):
         value = params.get(key, common_param_values.get(key))
-        eq = "=" if key else ""
         if isinstance(value, str):
             value = f'"{value}"'
         params_lst.append(f"{key}={value}")

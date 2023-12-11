@@ -8,7 +8,6 @@ from typing import Generator, Sequence
 
 import nbformat
 import PIL.Image
-from importlib_resources import files as _files
 from nbformat.notebooknode import NotebookNode
 from quartodoc.pandoc.blocks import Div
 from quartodoc.pandoc.components import Attr

@@ -19,9 +19,9 @@ from .binning import (
 from .stat import stat
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional
+    from typing import Optional
 
-    from plotnine.typing import FloatArray, FloatArrayLike, TupleFloat2
+    from plotnine.typing import FloatArrayLike
 
 
 @document
