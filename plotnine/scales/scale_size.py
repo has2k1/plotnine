@@ -27,8 +27,8 @@ class scale_size_ordinal(scale_discrete):
     _aesthetics = ["size"]
 
     def __init__(self, range: tuple[float, float] = (2, 6), **kwargs):
-        def palette(n):
-            area = np.linspace(range[0] ** 2, range[1] ** 2, n)
+        def palette(value):
+            area = np.linspace(range[0] ** 2, range[1] ** 2, value)
             return np.sqrt(area)
 
         self.palette = palette

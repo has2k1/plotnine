@@ -14,7 +14,7 @@ from ..scales.scale_continuous import scale_continuous
 from .guide import guide
 
 if typing.TYPE_CHECKING:
-    from plotnine.typing import ScaleContinuous
+    from plotnine.scales.scale import scale
 
 
 class guide_colorbar(guide):
@@ -63,17 +63,17 @@ class guide_colorbar(guide):
     # parameter
     available_aes = {"colour", "color", "fill"}
 
-    def train(self, scale: ScaleContinuous, aesthetic=None):
+    def train(self, scale: scale, aesthetic=None):
+        if not isinstance(scale, scale_continuous):
+            warn("colorbar guide needs continuous scales", PlotnineWarning)
+            return None
+
         if aesthetic is None:
             aesthetic = scale.aesthetics[0]
 
         # Do nothing if scales are inappropriate
         if set(scale.aesthetics) & self.available_aes == 0:
             warn("colorbar guide needs appropriate scales.", PlotnineWarning)
-            return None
-
-        if not isinstance(scale, scale_continuous):
-            warn("colorbar guide needs continuous scales", PlotnineWarning)
             return None
 
         # value = breaks (numeric) is used for determining the

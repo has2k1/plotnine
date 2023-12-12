@@ -10,7 +10,8 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
-    from plotnine.typing import Scale, Theme
+    from plotnine.scales.scale import scale
+    from plotnine.typing import Theme
 
 
 class guide(metaclass=Registry):
@@ -223,7 +224,7 @@ class guide(metaclass=Registry):
         return matched
 
     def train(
-        self, scale: Scale, aesthetic: Optional[str] = None
+        self, scale: scale, aesthetic: Optional[str] = None
     ) -> guide | None:
         """
         Create the key for the guide

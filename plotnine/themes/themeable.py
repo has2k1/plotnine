@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import typing
 from contextlib import suppress
-from typing import Dict
 from warnings import warn
 
 from ..exceptions import PlotnineError
@@ -20,7 +19,8 @@ from ..utils import RegistryHierarchyMeta, to_rgba
 from .elements import element_base, element_blank
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Mapping, Type
+    from collections.abc import Mapping
+    from typing import Any, Type
 
     from matplotlib.patches import Patch
 
@@ -244,14 +244,14 @@ class themeable(metaclass=RegistryHierarchyMeta):
         """
 
 
-class Themeables(Dict[str, themeable]):
+class Themeables(dict[str, themeable]):
     """
     Collection of themeables
 
     The key is the name of the class.
     """
 
-    def update(self, other: Themeables):
+    def update(self, other: Themeables, **kwargs):  # type: ignore
         """
         Update themeables with those from `other`
 
@@ -284,7 +284,7 @@ class Themeables(Dict[str, themeable]):
                 # could not merge blank element.
                 self[new_key] = new
 
-    def values(self) -> list[themeable]:
+    def values(self):
         """
         Return a list of themeables sorted in reverse based
         on the their depth in the inheritance hierarchy.
@@ -295,14 +295,14 @@ class Themeables(Dict[str, themeable]):
             - merge :class:`axis_line_x` into :class:`axis_line`
         """
         hierarchy = themeable._hierarchy
-        result: list[themeable] = []
-        seen = set()
+        result: dict[str, themeable] = {}
         for _, lst in hierarchy.items():
             for name in reversed(lst):
-                if name in self and name not in seen:
-                    result.append(self[name])
-                    seen.add(name)
-        return result
+                if name in self and name not in result:
+                    result[name] = self[name]
+        return result.values()
+
+        # return ValuesView(result)
 
     def property(self, name: str, key: str = "value") -> Any:
         """

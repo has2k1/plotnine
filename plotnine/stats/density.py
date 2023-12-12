@@ -103,7 +103,7 @@ def kde_statsmodels_m(
     from statsmodels.nonparametric.kernel_density import KDEMultivariate
 
     kde = KDEMultivariate(data, **kwargs)
-    return kde.pdf(grid)  # type: ignore
+    return kde.pdf(grid)
 
 
 def kde_sklearn(

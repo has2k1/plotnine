@@ -190,6 +190,6 @@ class stat_ydensity(stat):
 
         # Compute width if x has multiple values
         if len(np.unique(data["x"])) > 1:
-            dens["width"] = np.ptp(data["x"]) * 0.9  # type: ignore
+            dens["width"] = np.ptp(data["x"]) * 0.9
 
         return dens

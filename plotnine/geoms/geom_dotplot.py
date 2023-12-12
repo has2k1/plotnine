@@ -104,14 +104,14 @@ class geom_dotplot(geom):
         elif gp["stackdir"] == "center":
 
             def stackdots(a: FloatSeries) -> FloatSeries:
-                return a - 1 - np.max(a - 1) / 2  # type: ignore
+                return a - 1 - np.max(a - 1) / 2
 
             stackaxismin = -0.5
             stackaxismax = 0.5
         elif gp["stackdir"] == "centerwhole":
 
             def stackdots(a: FloatSeries) -> FloatSeries:
-                return a - 1 - np.floor(np.max(a - 1) / 2)  # type: ignore
+                return a - 1 - np.floor(np.max(a - 1) / 2)
 
             stackaxismin = -0.5
             stackaxismax = 0.5

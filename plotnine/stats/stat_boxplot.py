@@ -106,7 +106,7 @@ class stat_boxplot(stat):
         res = weighted_boxplot_stats(y, weights=weights, whis=params["coef"])
 
         if len(np.unique(data["x"])) > 1:
-            width = np.ptp(data["x"]) * 0.9  # type: ignore
+            width = np.ptp(data["x"]) * 0.9
         else:
             width = params["width"]
 
