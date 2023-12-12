@@ -147,15 +147,6 @@ class ggplot:
 
         return result
 
-    def __getstate__(self):
-        d = dict(self.__dict__)
-        del d["environment"]
-        return d
-
-    def __setstate__(self, d):
-        d["environment"] = {}
-        return d
-
     def __iadd__(
         self, other: PlotAddable | list[PlotAddable] | None
     ) -> ggplot:
