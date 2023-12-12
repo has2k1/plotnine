@@ -224,7 +224,7 @@ def compute_density(x, weight, range, **params):
         y = []
         for _x in x2:
             result = kde.evaluate(_x)
-            if isinstance(result, float):
+            if isinstance(result, (float, int)):
                 y.append(result)
             else:
                 y.append(result[0])

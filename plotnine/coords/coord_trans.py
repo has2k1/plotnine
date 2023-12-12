@@ -115,14 +115,16 @@ class coord_trans(coord):
                 scale.limits, expansion, coord_limits, trans
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
-            sv.range = tuple(sorted(ranges.range_coord))
+            sv.range = tuple(sorted(ranges.range_coord))  # type: ignore
             sv.breaks = transform_value(
                 trans,
                 # TODO: fix typecheck
-                sv.breaks,  # pyright: ignore
-                sv.range,
+                sv.breaks,  # type: ignore
+                sv.range,  # type: ignore
             )
-            sv.minor_breaks = transform_value(trans, sv.minor_breaks, sv.range)
+            sv.minor_breaks = transform_value(
+                trans, sv.minor_breaks, sv.range  # type: ignore
+            )
             return sv
 
         out = panel_view(

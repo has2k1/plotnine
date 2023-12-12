@@ -81,8 +81,7 @@ class scale_discrete(scale):
     def limits(self, value: ScaleDiscreteLimitsRaw):
         self._limits = value
 
-    @staticmethod
-    def palette(n: int) -> AnyArrayLike:
+    def palette(self, value: int) -> AnyArrayLike:
         """
         Aesthetic mapping function
         """

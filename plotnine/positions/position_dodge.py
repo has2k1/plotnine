@@ -124,8 +124,8 @@ class position_dodge(position):
         # Find the center for each group, then use that to
         # calculate xmin and xmax
         data["x"] = data["x"] + width * ((groupidx - 0.5) / n - 0.5)
-        data["xmin"] = data["x"] - (d_width / n) / 2  # type: ignore
-        data["xmax"] = data["x"] + (d_width / n) / 2  # type: ignore
+        data["xmin"] = data["x"] - (d_width / n) / 2
+        data["xmax"] = data["x"] + (d_width / n) / 2
 
         if "x" in data and "xend" in data:
             data["x"] = data["xmin"]

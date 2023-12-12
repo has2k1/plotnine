@@ -53,8 +53,8 @@ class scale_alpha_ordinal(scale_discrete):
     _aesthetics = ["alpha"]
 
     def __init__(self, range: tuple[float, float] = (0.1, 1), **kwargs):
-        def palette(n):
-            return np.linspace(range[0], range[1], n)
+        def palette(value):
+            return np.linspace(range[0], range[1], value)
 
         self.palette = palette
         scale_discrete.__init__(self, **kwargs)

@@ -48,8 +48,8 @@ class scale_stroke_ordinal(scale_discrete):
     _aesthetics = ["stroke"]
 
     def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
-        def palette(n: int):
-            return np.linspace(range[0], range[1], n)
+        def palette(value: int):
+            return np.linspace(range[0], range[1], value)
 
         self.palette = palette
         scale_discrete.__init__(self, **kwargs)

@@ -162,8 +162,7 @@ class scale(metaclass=Registry):
         gg.scales.append(copy(self))
         return gg
 
-    @staticmethod
-    def palette(n):
+    def palette(self, value):
         """
         Aesthetic mapping function
 

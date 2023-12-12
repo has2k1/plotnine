@@ -63,9 +63,10 @@ class SFancyBboxPatch(FancyBboxPatch):
         self.set_mutation_scale(fontsize_in_pixel)
         self._update = True
 
-    def get_window_extent(self, renderer):
+    def get_window_extent(self, renderer=None):
         """
         Location & dimensions of the box
         """
-        self.update_position_size(renderer)
+        if renderer:
+            self.update_position_size(renderer)
         return super().get_window_extent(renderer)

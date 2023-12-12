@@ -50,7 +50,7 @@ def expand_range(
         Coordinate transformation
     """
     x_coord_space = tuple(trans.transform(x))
-    x_coord = _expand_range_distinct(x_coord_space, expand)
+    x_coord = _expand_range_distinct(x_coord_space, expand)  # type: ignore
 
     with ignore_warnings(RuntimeWarning):
         # Consequences of the runtimewarning (NaNs and infs)

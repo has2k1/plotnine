@@ -298,7 +298,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
 
     combs = np.array(np.hstack([1, np.cumprod(ndistinct[:-1])]))
     mat = np.array(ids)
-    res = (mat - 1) @ combs.T + 1  # type: ignore
+    res = (mat - 1) @ combs.T + 1
     res = np.array(res).flatten().tolist()
 
     if drop:
@@ -331,7 +331,7 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
             if has_nan:
                 # NaNs are -1, we give them the highest code
                 nan_code = -1
-                new_nan_code = np.max(x.cat.codes) + 1  # type: ignore
+                new_nan_code = np.max(x.cat.codes) + 1
                 lst = [val if val != nan_code else new_nan_code for val in x]
             else:
                 lst = list(x.cat.codes + 1)
@@ -459,10 +459,10 @@ def jitter(x, factor=1, amount=None, random_state=None):
         elif xx != 0:
             d = xx / 10.0
         else:
-            d = z / 10  # type: ignore
+            d = z / 10
         amount = factor / 5.0 * abs(d)
     elif amount == 0:
-        amount = factor * (z / 50.0)  # type: ignore
+        amount = factor * (z / 50.0)
 
     return x + random_state.uniform(-amount, amount, len(x))
 
@@ -1295,7 +1295,7 @@ class ignore_warnings:
         return self._cm.__exit__(type, value, traceback)
 
 
-def get_ipython() -> "InteractiveShell" | None:
+def get_ipython() -> "InteractiveShell | None":
     """
     Return running IPython instance or None
     """

@@ -321,7 +321,7 @@ class scale_continuous(scale):
         return super().default_expansion(mult, add, expand)
 
     @staticmethod
-    def palette(arr: FloatArrayLike) -> Sequence[Any]:
+    def palette(value: FloatArrayLike) -> Sequence[Any]:
         """
         Aesthetic mapping function
         """

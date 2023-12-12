@@ -16,7 +16,7 @@ class Range:
     """
 
     # Holds the range information after training
-    range: TupleFloat2
+    range: Any
 
     def reset(self):
         """
