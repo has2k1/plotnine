@@ -6,8 +6,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-from plotnine.data import mtcars
-from plotnine.utils import (
+from plotnine._utils import (
     _margins,
     add_margins,
     join_keys,
@@ -17,6 +16,7 @@ from plotnine.utils import (
     remove_missing,
     uniquecols,
 )
+from plotnine.data import mtcars
 
 
 def test__margins():
