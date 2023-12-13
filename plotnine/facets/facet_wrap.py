@@ -7,8 +7,8 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import join_keys, match
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import join_keys, match
 from .facet import (
     add_missing_facets,
     combine_vars,

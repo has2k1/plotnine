@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
+from .._utils import get_valid_kwargs, uniquecols
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import get_valid_kwargs, uniquecols
 from .stat import stat
 
 

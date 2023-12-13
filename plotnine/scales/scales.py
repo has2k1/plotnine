@@ -9,9 +9,10 @@ from warnings import warn
 import numpy as np
 import pandas.api.types as pdtypes
 
+from .._utils import array_kind
+from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import aes_to_scale
-from ..utils import Registry, array_kind
 from .scale import scale
 
 if typing.TYPE_CHECKING:

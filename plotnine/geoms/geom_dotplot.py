@@ -5,9 +5,9 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import groupby_apply, resolution, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import groupby_apply, resolution, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:

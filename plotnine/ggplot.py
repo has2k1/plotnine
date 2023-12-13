@@ -11,6 +11,14 @@ from warnings import warn
 
 import pandas as pd
 
+from ._utils import (
+    from_inches,
+    get_ipython,
+    is_data_like,
+    order_as_data_mapping,
+    to_inches,
+    ungroup,
+)
 from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_null
@@ -23,14 +31,6 @@ from .mapping.aes import aes, make_labels
 from .options import get_option
 from .scales.scales import Scales
 from .themes.theme import theme, theme_get
-from .utils import (
-    from_inches,
-    get_ipython,
-    is_data_like,
-    order_as_data_mapping,
-    to_inches,
-    ungroup,
-)
 
 if typing.TYPE_CHECKING:
     from plotnine.typing import (

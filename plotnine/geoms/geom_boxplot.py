@@ -6,16 +6,16 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from ..doctools import document
-from ..exceptions import PlotnineWarning
-from ..positions import position_dodge2
-from ..positions.position import position
-from ..utils import (
+from .._utils import (
     SIZE_FACTOR,
     copy_missing_columns,
     resolution,
     to_rgba,
 )
+from ..doctools import document
+from ..exceptions import PlotnineWarning
+from ..positions import position_dodge2
+from ..positions.position import position
 from .geom import geom
 from .geom_crossbar import geom_crossbar
 from .geom_point import geom_point

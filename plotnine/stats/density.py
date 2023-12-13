@@ -13,7 +13,7 @@ import typing
 
 import numpy as np
 
-from ..utils import array_kind
+from .._utils import array_kind
 
 if typing.TYPE_CHECKING:
     from typing import Any, Literal

@@ -586,7 +586,7 @@ def document(cls: Type[T]) -> Type[T]:
     if cls.__doc__ is None:
         return cls
 
-    baseclass_name = cls.mro()[-2].__name__
+    baseclass_name = cls.mro()[-3].__name__
 
     try:
         return DOC_FUNCTIONS[baseclass_name](cls)

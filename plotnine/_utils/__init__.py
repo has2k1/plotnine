@@ -3,11 +3,13 @@ Little functions used all over the codebase
 """
 from __future__ import annotations
 
+import abc
 import inspect
 import itertools
 import typing
 import warnings
 from collections import defaultdict
+from collections.abc import Iterable
 from contextlib import suppress
 from warnings import warn
 from weakref import WeakValueDictionary
@@ -18,8 +20,8 @@ import pandas as pd
 # missing in type stubs
 from pandas.core.groupby import DataFrameGroupBy  # type: ignore
 
-from .exceptions import PlotnineError, PlotnineWarning
-from .mapping import aes
+from ..exceptions import PlotnineError, PlotnineWarning
+from ..mapping import aes
 
 if typing.TYPE_CHECKING:
     from typing import Any, Callable, Optional, Sequence
@@ -44,18 +46,14 @@ if typing.TYPE_CHECKING:
 SIZE_FACTOR = np.sqrt(np.pi)
 
 
-def is_scalar_or_string(val):
+def is_scalar(val):
     """
-    Return whether the given object is a scalar or string like.
-    """
-    return is_string(val) or not np.iterable(val)
+    Return whether the given object is a scalar
 
-
-def is_string(obj: Any) -> TypeGuard[str]:
+    A scalar is a single object i.e. not a collection therefore
+    not iterable. Except strings are scalars.
     """
-    Return True if *obj* is a string
-    """
-    return isinstance(obj, str)
+    return not isinstance(val, Iterable) or isinstance(val, str)
 
 
 def is_list_like(obj: Any) -> bool:
@@ -541,7 +539,7 @@ def to_rgba(colors, alpha):
     """
 
     def is_iterable(var):
-        return np.iterable(var) and not is_string(var)
+        return np.iterable(var) and not isinstance(var, str)
 
     def has_alpha(c):
         if isinstance(c, tuple):
@@ -720,131 +718,6 @@ def copy_keys(source, destination, keys=None):
     for k in set(source) & set(keys):
         destination[k] = source[k]
     return destination
-
-
-class alias:
-    """
-    Mixin to create an alias of a Registry class object
-
-    This is used by the Registry metaclass to make the subclass
-    an alias of the superclass.
-
-    ```python
-    class A(metaclass=Registry): __base__ = True
-    class B(A): pass
-    class C(B, alias): pass
-
-    C is B  # True
-    ```
-    """
-
-    ...
-
-
-class RegistryMeta(type):
-    """
-    Make a metaclass scriptable
-    """
-
-    _registry: WeakValueDictionary[str, Any] = WeakValueDictionary()
-
-    # In here "self" refers to the meta class although it is never
-    # instantiated
-    def __getitem__(self, key):
-        try:
-            return self._registry[key]
-        except KeyError:
-            msg = (
-                "'{}' Not in Registry. Make sure the module in "
-                "which it is defined has been imported."
-            )
-            raise PlotnineError(msg.format(key))
-
-    def __setitem__(self, key, value):
-        self._registry[key] = value
-
-    def __iter__(self):
-        return self._registry.__iter__()
-
-    def keys(self):
-        return self._registry.keys()
-
-    def values(self):
-        return self._registry.values()
-
-    def items(self):
-        return self._registry.items()
-
-
-class Registry(type, metaclass=RegistryMeta):
-    """
-    Creates class that automatically registers all subclasses
-
-    To prevent the base class from showing up in the registry,
-    it should have an attribute `__base__ = True`. This metaclass
-    uses a single dictionary to register all types of subclasses.
-
-    To access the registered objects, use:
-
-        obj = Registry['name']
-
-    To explicitly register objects
-
-        Registry['name'] = obj
-
-    Notes
-    -----
-    When objects are deleted, they are automatically removed
-    from the Registry.
-    """
-
-    # namespace is of the class that subclasses Registry (or a
-    # subclasses a subclass of Registry, ...) being created
-    # e.g. geom, geom_point, ...
-    def __new__(cls, name, bases, namespace):
-        sub_cls = super().__new__(cls, name, bases, namespace)
-        if not namespace.pop("__base__", False):
-            # A sub_cls is an alias of a base class if it has
-            # alias as the second base class
-            if len(bases) == 2 and bases[1] is alias:
-                sub_cls = bases[0]
-            cls._registry[name] = sub_cls
-        return sub_cls
-
-
-class RegistryHierarchyMeta(type):
-    """
-    Create a class that registers subclasses and the Hierarchy
-
-    The class has gets two properties:
-
-    1. `_registry` a dictionary of all the subclasses of the
-       base class. The keys are the names of the classes and
-       the values are the class objects.
-    2. `_hierarchy` a dictionary (default) that holds the
-       inheritance hierarchy of each class. Each key is a class
-       and the value is a list of classes. The first name in the
-       list is that of the key class.
-
-    The goal of the `_hierarchy` object to facilitate the
-    lookup of themeable properties taking into consideration the
-    inheritance hierarchy. For example if `strip_text_x` inherits
-    from `strip_text` which inherits from `text`, then if a property
-    of `strip_text_x` is requested, the lookup should fallback to
-    the other two if `strip_text_x` is not present or is missing
-    the requested property.
-    """
-
-    def __init__(cls, name, bases, namespace):
-        if not hasattr(cls, "_registry"):
-            cls._registry = {}
-            cls._hierarchy = defaultdict(list)
-        else:
-            cls._registry[name] = cls
-            cls._hierarchy[name].append(name)
-            for base in bases:
-                for base2 in base.mro()[:-2]:
-                    cls._hierarchy[base2.__name__].append(name)
 
 
 def get_kwarg_names(func):
@@ -1304,53 +1177,3 @@ def get_ipython() -> "InteractiveShell | None":
     except ImportError:
         return None
     return get_ipython()
-
-
-def get_plotnine_all(use_clipboard=True) -> Optional[str]:
-    """
-    Generate package level * (star) imports for plotnine
-
-    The contents of __all__ in plotnine/__init__.py
-    """
-    from importlib import import_module
-    from textwrap import indent
-
-    modules = (
-        "coords",
-        "facets",
-        "geoms",
-        "ggplot",
-        "guides",
-        "labels",
-        "mapping",
-        "positions",
-        "qplot",
-        "scales",
-        "stats",
-        "themes",
-        "watermark",
-    )
-
-    comma_join = ",\n".join
-
-    def get_all_from_module(name):
-        """
-        Module level imports
-        """
-        qname = f"plotnine.{name}"
-        comment = f"# {qname}\n"
-        m = import_module(qname)
-        return comment + comma_join(f'"{x}"' for x in sorted(m.__all__))
-
-    _imports = "\n".join(f"from .{name} import *" for name in modules)
-    lst = indent(
-        comma_join(get_all_from_module(name) for name in modules), " " * 4
-    )
-    _all = f"__all__ = (\n{lst}\n)"
-    content = f"{_imports}\n\n{_all}"
-    if use_clipboard:
-        from pandas.io import clipboard
-
-        clipboard.copy(content)  # pyright: ignore
-    else:
-        return content

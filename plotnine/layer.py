@@ -6,10 +6,10 @@ from typing import Iterable, List, overload
 
 import pandas as pd
 
+from ._utils import array_kind, check_required_aesthetics, ninteraction
 from .exceptions import PlotnineError
 from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes
 from .mapping.evaluation import evaluate, stage
-from .utils import array_kind, check_required_aesthetics, ninteraction
 
 if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, SupportsIndex

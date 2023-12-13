@@ -4,9 +4,9 @@ import typing
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
 from ..scales.scale_shape import FILLED_SHAPES
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:

@@ -7,8 +7,8 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import Registry, is_string
 from .guide import guide as guide_class
 
 if typing.TYPE_CHECKING:
@@ -217,7 +217,7 @@ class guides(dict):
         """
         Validate guide object
         """
-        if is_string(guide):
+        if isinstance(guide, str):
             guide = Registry[f"guide_{guide}"]()
 
         if not isinstance(guide, guide_class):

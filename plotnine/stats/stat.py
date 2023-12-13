@@ -5,19 +5,18 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..exceptions import PlotnineError
-from ..layer import layer
-from ..mapping import aes
-from ..utils import (
-    Registry,
+from .._utils import (
     check_required_aesthetics,
     copy_keys,
     data_mapping_as_kwargs,
     groupby_apply,
-    is_string,
     remove_missing,
     uniquecols,
 )
+from .._utils.registry import Register, Registry
+from ..exceptions import PlotnineError
+from ..layer import layer
+from ..mapping import aes
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -32,11 +31,11 @@ if typing.TYPE_CHECKING:
         Layout,
     )
 
+from abc import ABC
 
-class stat(metaclass=Registry):
+
+class stat(ABC, metaclass=Register):
     """Base class of all stats"""
-
-    __base__ = True
 
     DEFAULT_AES: dict[str, Any] = {}
     """Default aesthetics for the stat"""
@@ -117,7 +116,7 @@ class stat(metaclass=Registry):
             return name
         elif isinstance(name, type) and issubclass(name, stat):
             klass = name
-        elif is_string(name):
+        elif isinstance(name, str):
             if not name.startswith("stat_"):
                 name = f"stat_{name}"
             klass = Registry[name]

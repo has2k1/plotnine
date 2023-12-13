@@ -5,9 +5,9 @@ import typing
 import numpy as np
 import pandas as pd
 
+from .._utils import copy_missing_columns
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import copy_missing_columns
 from .geom import geom
 from .geom_path import geom_path
 

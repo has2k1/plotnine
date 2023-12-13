@@ -1,23 +1,23 @@
 from __future__ import annotations
 
 import typing
+from abc import ABC
 from copy import deepcopy
 from itertools import chain, repeat
 
+from .._utils import (
+    copy_keys,
+    data_mapping_as_kwargs,
+    is_list_like,
+    remove_missing,
+)
+from .._utils.registry import Register, Registry
 from ..exceptions import PlotnineError
 from ..layer import layer
 from ..mapping.aes import is_valid_aesthetic, rename_aesthetics
 from ..mapping.evaluation import evaluate
 from ..positions.position import position
 from ..stats.stat import stat
-from ..utils import (
-    Registry,
-    copy_keys,
-    data_mapping_as_kwargs,
-    is_list_like,
-    is_string,
-    remove_missing,
-)
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -38,10 +38,8 @@ if typing.TYPE_CHECKING:
     )
 
 
-class geom(metaclass=Registry):
+class geom(ABC, metaclass=Register):
     """Base class of all Geoms"""
-
-    __base__ = True
 
     DEFAULT_AES: dict[str, Any] = {}
     """Default aesthetics for the geom"""
@@ -126,7 +124,7 @@ class geom(metaclass=Registry):
 
         if isinstance(name, type) and issubclass(name, geom):
             klass = name
-        elif is_string(name):
+        elif isinstance(name, str):
             if not name.startswith("geom_"):
                 name = f"geom_{name}"
             klass = Registry[name]

@@ -5,8 +5,8 @@ import typing
 import numpy as np
 import pandas as pd
 
+from .._utils import groupby_apply, interleave, resolution
 from ..doctools import document
-from ..utils import groupby_apply, interleave, resolution
 from .geom import geom
 from .geom_path import geom_path
 from .geom_polygon import geom_polygon

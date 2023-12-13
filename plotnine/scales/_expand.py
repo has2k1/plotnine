@@ -5,8 +5,8 @@ import typing
 import numpy as np
 from mizani.bounds import expand_range_distinct
 
+from .._utils import ignore_warnings
 from ..iapi import range_view
-from ..utils import ignore_warnings
 
 if typing.TYPE_CHECKING:
     from typing import Type

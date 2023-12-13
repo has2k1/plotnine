@@ -5,8 +5,8 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import remove_missing
 from ..exceptions import PlotnineWarning
-from ..utils import remove_missing
 from .position import position
 
 

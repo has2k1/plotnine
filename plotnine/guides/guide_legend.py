@@ -10,10 +10,10 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import SIZE_FACTOR, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
-from ..utils import SIZE_FACTOR, remove_missing
 from .guide import guide
 
 if typing.TYPE_CHECKING:

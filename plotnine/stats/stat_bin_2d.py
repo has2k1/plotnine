@@ -4,9 +4,9 @@ import types
 import numpy as np
 import pandas as pd
 
+from .._utils import is_scalar
 from ..doctools import document
 from ..mapping.evaluation import after_stat
-from ..utils import is_scalar_or_string
 from .binning import fuzzybreaks
 from .stat import stat
 
@@ -173,7 +173,7 @@ def dual_param(value):
     Used to apply same value to x & y axes if only one
     value is given.
     """
-    if is_scalar_or_string(value):
+    if is_scalar(value):
         return types.SimpleNamespace(x=value, y=value)
 
     if hasattr(value, "x") and hasattr(value, "y"):

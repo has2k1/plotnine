@@ -4,8 +4,8 @@ import typing
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
