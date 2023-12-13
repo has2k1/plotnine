@@ -5,10 +5,10 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import resolution
 from ..coords import coord_cartesian
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import resolution
 from .geom import geom
 from .geom_polygon import geom_polygon
 

@@ -5,7 +5,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from ..utils import jitter, resolution
+from .._utils import jitter, resolution
 from .position import position
 
 if typing.TYPE_CHECKING:

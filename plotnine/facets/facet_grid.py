@@ -4,8 +4,8 @@ import typing
 
 import pandas as pd
 
+from .._utils import add_margins, cross_join, join_keys, match, ninteraction
 from ..exceptions import PlotnineError
-from ..utils import add_margins, cross_join, join_keys, match, ninteraction
 from .facet import (
     add_missing_facets,
     combine_vars,

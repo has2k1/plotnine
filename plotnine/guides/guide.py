@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import typing
+from abc import ABC
 
+from .._utils.registry import Register
 from ..exceptions import PlotnineError
-from ..utils import Registry
 
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional
@@ -14,7 +15,7 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import Theme
 
 
-class guide(metaclass=Registry):
+class guide(ABC, metaclass=Register):
     """
     Base class for all guides
 
@@ -71,8 +72,6 @@ class guide(metaclass=Registry):
     -----
     At the moment not all parameters have been fully implemented.
     """
-
-    __base__ = True
 
     # Must be updated before the draw method is called
     theme: Theme

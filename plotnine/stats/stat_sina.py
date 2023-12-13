@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
+from .._utils import array_kind, jitter, resolution
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.aes import has_groups
-from ..utils import array_kind, jitter, resolution
 from .binning import breaks_from_bins, breaks_from_binwidth
 from .stat import stat
 from .stat_density import compute_density

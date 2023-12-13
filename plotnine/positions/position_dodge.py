@@ -7,8 +7,8 @@ from copy import copy
 import numpy as np
 import pandas as pd
 
+from .._utils import groupby_apply, match
 from ..exceptions import PlotnineError
-from ..utils import groupby_apply, match
 from .position import position
 
 if typing.TYPE_CHECKING:

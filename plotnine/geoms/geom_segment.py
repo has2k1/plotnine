@@ -5,8 +5,8 @@ import typing
 import numpy as np
 import pandas as pd
 
+from .._utils import SIZE_FACTOR, interleave, make_line_segments, to_rgba
 from ..doctools import document
-from ..utils import SIZE_FACTOR, interleave, make_line_segments, to_rgba
 from .geom import geom
 from .geom_path import geom_path
 

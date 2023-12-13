@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import typing
 
+from .._utils import resolution
 from ..doctools import document
-from ..utils import resolution
 from .geom_rect import geom_rect
 
 if typing.TYPE_CHECKING:

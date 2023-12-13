@@ -4,9 +4,9 @@ import typing
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, make_line_segments, to_rgba
 from ..coords import coord_flip
 from ..doctools import document
-from ..utils import SIZE_FACTOR, make_line_segments, to_rgba
 from .geom import geom
 from .geom_path import geom_path
 

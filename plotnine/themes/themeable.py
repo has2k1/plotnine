@@ -14,8 +14,9 @@ import typing
 from contextlib import suppress
 from warnings import warn
 
+from .._utils import to_rgba
+from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError
-from ..utils import RegistryHierarchyMeta, to_rgba
 from .elements import element_base, element_blank
 
 if typing.TYPE_CHECKING:

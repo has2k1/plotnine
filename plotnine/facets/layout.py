@@ -5,9 +5,9 @@ from contextlib import suppress
 
 import numpy as np
 
+from .._utils import match
 from ..exceptions import PlotnineError
 from ..iapi import labels_view, layout_details, pos_scales
-from ..utils import match
 
 if typing.TYPE_CHECKING:
     import pandas as pd

@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
 
+from .._utils import match
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import range_view, scale_view
-from ..utils import match
 from ._expand import expand_range
 from .range import RangeContinuous
 from .scale import scale

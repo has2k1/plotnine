@@ -6,10 +6,10 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import order_as_data_mapping, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..positions import position_nudge
-from ..utils import order_as_data_mapping, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:

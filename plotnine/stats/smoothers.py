@@ -4,8 +4,8 @@ from contextlib import suppress
 import numpy as np
 import pandas as pd
 
+from .._utils import get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import get_valid_kwargs
 
 
 def predictdf(data, xseq, **params):

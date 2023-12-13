@@ -4,11 +4,12 @@ import typing
 
 import pandas as pd
 
+from .._utils import is_scalar
+from .._utils.registry import Registry
 from ..exceptions import PlotnineError
 from ..geoms.geom import geom as geom_base_class
 from ..mapping import aes
 from ..mapping.aes import POSITION_AESTHETICS
-from ..utils import Registry, is_scalar_or_string
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -88,7 +89,7 @@ class annotate:
         # Check if the aesthetics are of compatible lengths
         lengths, info_tokens = [], []
         for ae, val in aesthetics.items():
-            if is_scalar_or_string(val):
+            if is_scalar(val):
                 continue
             lengths.append(len(val))
             info_tokens.append((ae, len(val)))
@@ -99,7 +100,7 @@ class annotate:
             raise PlotnineError(msg)
 
         # Stop pandas from complaining about all scalars
-        if all(is_scalar_or_string(val) for val in pos_aesthetics.values()):
+        if all(is_scalar(val) for val in pos_aesthetics.values()):
             for ae in pos_aesthetics.keys():
                 pos_aesthetics[ae] = [pos_aesthetics[ae]]
                 break

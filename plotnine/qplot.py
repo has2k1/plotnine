@@ -7,6 +7,8 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from ._utils import array_kind
+from ._utils.registry import Registry
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_grid, facet_null, facet_wrap
 from .facets.facet_grid import parse_grid_facets
@@ -16,7 +18,6 @@ from .labels import labs
 from .mapping.aes import ALL_AESTHETICS, SCALED_AESTHETICS, aes
 from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
-from .utils import Registry, array_kind
 
 if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal, Optional

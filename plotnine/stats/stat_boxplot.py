@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from .._utils import resolution
 from ..doctools import document
-from ..utils import resolution
 from .stat import stat
 
 

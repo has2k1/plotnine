@@ -6,10 +6,10 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import groupby_apply
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.evaluation import after_stat
-from ..utils import groupby_apply
 from .binning import (
     assign_bins,
     breaks_from_bins,

@@ -6,10 +6,11 @@ from itertools import chain
 import numpy as np
 import pandas as pd
 
+from .._utils import array_kind, match
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..iapi import range_view
-from ..utils import alias, array_kind, match
 from ._expand import expand_range
 from .range import RangeContinuous
 from .scale_continuous import scale_continuous

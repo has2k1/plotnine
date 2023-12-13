@@ -7,9 +7,9 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, make_line_segments, match, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import SIZE_FACTOR, make_line_segments, match, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:

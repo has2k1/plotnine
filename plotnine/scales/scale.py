@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import typing
+from abc import ABC
 from copy import copy, deepcopy
 from warnings import warn
 
 import numpy as np
 
+from .._utils.registry import Register
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import is_position_aes, rename_aesthetics
-from ..utils import Registry
 from .range import Range
 
 if typing.TYPE_CHECKING:
@@ -34,7 +35,7 @@ if typing.TYPE_CHECKING:
     from ..iapi import range_view, scale_view
 
 
-class scale(metaclass=Registry):
+class scale(ABC, metaclass=Register):
     """
     Base class for all scales
 
@@ -93,7 +94,8 @@ class scale(metaclass=Registry):
         user should probably not change them. Have fun.
     """
 
-    __base__ = True
+    # major breaks
+    breaks: ScaleBreaksRaw = True
 
     # aesthetics affected by this scale
     _aesthetics: list[ScaledAestheticsName] = []
@@ -103,9 +105,6 @@ class scale(metaclass=Registry):
 
     # used as the axis label or legend title
     name: str | None = None
-
-    # major breaks
-    breaks: ScaleBreaksRaw = True
 
     # labels at the breaks
     labels: ScaleLabelsRaw = True
