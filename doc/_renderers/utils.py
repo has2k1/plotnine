@@ -1,20 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Optional, Sequence
+from typing import Literal, Optional, Sequence
 
 from griffe import dataclasses as dc
 from griffe import expressions as expr
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
 
-from .format import (
-    pretty_code,
-    repr_obj,
-)
-
-if TYPE_CHECKING:
-    from .typing import DisplayNameFormat, DocObjectKind  # noqa: TCH001
+from .format import pretty_code, repr_obj
+from .typing import DisplayNameFormat, DocObjectKind  # noqa: TCH001
 
 
 @dataclass

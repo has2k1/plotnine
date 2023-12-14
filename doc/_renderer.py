@@ -3,22 +3,17 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from textwrap import dedent
-from typing import TYPE_CHECKING
+from typing import TypeGuard
 
 from _renderers.numpydoc import NumpyDocRenderer
 from _renderers.utils import InterLink, shortcode
+from griffe import dataclasses as dc
+from griffe import expressions as expr
 from plum import dispatch
+from quartodoc import layout
 from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Inlines, Span
-
-if TYPE_CHECKING:
-    from typing import TypeGuard
-
-    from griffe import dataclasses as dc
-    from griffe import expressions as expr
-    from quartodoc import layout
-
 
 DOC_DIR = Path(__file__).parent
 EXAMPLES_DIR = DOC_DIR / "examples"

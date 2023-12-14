@@ -4,7 +4,7 @@ from abc import ABCMeta
 from collections import defaultdict
 from weakref import WeakValueDictionary
 
-from ..exceptions import PlotnineError, PlotnineWarning
+from ..exceptions import PlotnineError
 
 
 class alias:

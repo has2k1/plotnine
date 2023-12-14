@@ -11,7 +11,7 @@ from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Callable, Literal, Optional, Sequence
+    from typing import Literal, Optional, Sequence
 
     from mizani.typing import ColorScheme, ColorSchemeShort
 

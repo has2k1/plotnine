@@ -3,7 +3,6 @@ Little functions used all over the codebase
 """
 from __future__ import annotations
 
-import abc
 import inspect
 import itertools
 import typing
@@ -12,7 +11,6 @@ from collections import defaultdict
 from collections.abc import Iterable
 from contextlib import suppress
 from warnings import warn
-from weakref import WeakValueDictionary
 
 import numpy as np
 import pandas as pd
@@ -24,7 +22,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Callable, Optional, Sequence
+    from typing import Any, Callable, Sequence
 
     import numpy.typing as npt
     from IPython.core.interactiveshell import InteractiveShell
