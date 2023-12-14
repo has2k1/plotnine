@@ -123,7 +123,9 @@ class coord_trans(coord):
                 sv.range,  # type: ignore
             )
             sv.minor_breaks = transform_value(
-                trans, sv.minor_breaks, sv.range  # type: ignore
+                trans,
+                sv.minor_breaks,
+                sv.range,  # type: ignore
             )
             return sv
 

@@ -29,9 +29,14 @@ doc_signature_pattern = re.compile(
 )
 
 usage_pattern = re.compile(
-    r"\n\n?\*\*Usage\*\*" r".+?\n" r"(?P<usage_signature>"
+    r"\n\n?\*\*Usage\*\*"
+    r".+?\n"
+    r"(?P<usage_signature>"
     # Indented signature block
-    r"\s{4}\w" r".*?\n" r"\s{4}\)" r")",
+    r"\s{4}\w"
+    r".*?\n"
+    r"\s{4}\)"
+    r")",
     re.DOTALL,
 )
 

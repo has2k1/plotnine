@@ -237,7 +237,7 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     idx = np.hstack(
         [
             np.repeat(data.index[:-1], extra),
-            len(data) - 1
+            len(data) - 1,
             # data.index[-1] # TODO: Maybe not
         ]
     )

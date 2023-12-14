@@ -74,7 +74,6 @@ jobs:
         shell: bash
         run: |
           pip install ruff
-          pip install black
 
       - name: Environment Information
         shell: bash
@@ -85,7 +84,7 @@ jobs:
         run: |
           make lint
 
-      - name: Check format with Black
+      - name: Check format with Ruff
         shell: bash
         run: |
           make format

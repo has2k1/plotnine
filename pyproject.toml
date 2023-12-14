@@ -62,7 +62,6 @@ doc = [
 ]
 
 lint = [
-    "black>=23.1.0",
     "ruff",
 ]
 
@@ -226,13 +225,3 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 "doc/_renderers/format.py" = ["F811"]
 "doc/_renderer.py" = ["F811"]
 "doc/*" = ["TCH002", "TCH003"]
-
-
-########## Tool - Black ##########
-[tool.black]
-line-length = 79
-extend-exclude = '''
-(
- seaborn_rcmod\.py
-)
-'''
