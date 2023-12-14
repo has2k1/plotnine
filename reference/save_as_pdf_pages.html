@@ -199,19 +199,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>save_as_pdf_pages(plots, filename<span class="op">=</span><span class="va">None</span>, path<span class="op">=</span><span class="va">None</span>, verbose<span class="op">=</span><span class="va">True</span>, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>Save multiple <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> objects to a PDF file, one per page.</p>
+<p>Save multiple objects to a PDF file, one per page.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">plots</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Iterable">Iterable</a>[<a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a>]</span></code></dt>
+<dt><code><span class="doc-parameter-name">plots</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Iterable">Iterable</a>[<a href="../reference/ggplot.html#plotnine.ggplot.ggplot">ggplot</a>]</span></code></dt>
 <dd>
 <p>Plot objects to write to file. <code>plots</code> may be either a collection such as a :py:class:<code>list</code> or :py:class:<code>set</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>base_plot <span class="op">=</span> ggplot(…)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plots <span class="op">=</span> [base_plot <span class="op">+</span> ggtitle(<span class="st">'</span><span class="sc">%d</span><span class="st"> of 3'</span> <span class="op">%</span> i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>save_as_pdf_pages(plots)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>or, a generator that yields <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> objects:</p>
+<p>or, a generator that yields objects:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myplots():</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">3</span>):</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> ggplot(…) <span class="op">+</span> ggtitle(<span class="st">'</span><span class="sc">%d</span><span class="st"> of 3'</span> <span class="op">%</span> i)</span>
