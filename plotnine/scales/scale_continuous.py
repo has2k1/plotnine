@@ -20,7 +20,6 @@ if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, Type
 
     from plotnine.typing import (
-        AnyArrayLike,
         CoordRange,
         FloatArrayLike,
         ScaleContinuousBreaks,

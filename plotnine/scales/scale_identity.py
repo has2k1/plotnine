@@ -8,7 +8,7 @@ from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from typing import Any, Sequence
 
 
 class MapTrainMixin:

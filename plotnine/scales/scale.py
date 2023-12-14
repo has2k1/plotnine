@@ -14,21 +14,17 @@ from ..mapping.aes import is_position_aes, rename_aesthetics
 from .range import Range
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Callable, Literal, Optional, Type
+    from typing import Any, Literal, Optional
 
     import pandas as pd
     from numpy.typing import NDArray
 
     from plotnine.typing import (
-        CoordRange,
         ScaleBreaks,
-        ScaleBreaksRaw,
         ScaledAestheticsName,
         ScaleLabels,
         ScaleLabelsRaw,
         ScaleLimits,
-        ScaleLimitsRaw,
-        Trans,
         TupleFloat2,
         TupleFloat4,
     )
