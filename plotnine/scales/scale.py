@@ -6,6 +6,7 @@ from copy import copy, deepcopy
 from warnings import warn
 
 import numpy as np
+from mizani.palettes import identity_pal
 
 from .._utils.registry import Register
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -13,7 +14,7 @@ from ..mapping.aes import is_position_aes, rename_aesthetics
 from .range import Range
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Optional, Type
+    from typing import Any, Callable, Literal, Optional, Type
 
     import pandas as pd
     from numpy.typing import NDArray
@@ -95,7 +96,7 @@ class scale(ABC, metaclass=Register):
     """
 
     # major breaks
-    breaks: ScaleBreaksRaw = True
+    breaks = True
 
     # aesthetics affected by this scale
     _aesthetics: list[ScaledAestheticsName] = []
@@ -110,17 +111,19 @@ class scale(ABC, metaclass=Register):
     labels: ScaleLabelsRaw = True
 
     # legend or any other guide
-    guide: str | None = "legend"
+    guide: Optional[Literal["legend", "colorbar"]] = "legend"
 
     # (min, max) - set by user
-    _limits: ScaleLimitsRaw = None
+    _limits = None
 
     # multiplicative and additive expansion constants
     expand: Optional[TupleFloat2 | TupleFloat4] = None
 
-    # range of aesthetic, instantiated in __init__
-    range: Range
+    # range class for the aesthetic
     _range_class: type[Range] = Range
+
+    # Default palette
+    _palette = identity_pal()
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -168,7 +171,7 @@ class scale(ABC, metaclass=Register):
         Note that not all scales need to implement/provide a palette.
         For example identity & position scales do not use a palette.
         """
-        raise NotImplementedError("Not Implemented")
+        return self._palette(value)  # type: ignore
 
     def map(self, x, limits=None):
         """
@@ -199,10 +202,10 @@ class scale(ABC, metaclass=Register):
 
     def expand_limits(
         self,
-        limits: ScaleLimits,
-        expand: TupleFloat2 | TupleFloat4,
-        coord_limits: CoordRange | None,
-        trans: Trans | Type[Trans],
+        limits,  # : ScaleLimits
+        expand,  # : TupleFloat2 | TupleFloat4
+        coord_limits,  # : CoordRange | None
+        trans,  # : Trans | Type[Trans]
     ) -> range_view:
         """
         Exand the limits of the scale
@@ -235,8 +238,8 @@ class scale(ABC, metaclass=Register):
 
     def view(
         self,
-        limits: Optional[ScaleLimits] = None,
-        range: Optional[CoordRange] = None,
+        limits=None,  #  : Optional[ScaleLimits]
+        range=None,  #  : Optional[CoordRange] = None
     ) -> scale_view:
         """
         Information about the trained scale
@@ -307,7 +310,10 @@ class scale(ABC, metaclass=Register):
         raise NotImplementedError("Not Implemented")
 
     @limits.setter
-    def limits(self, value: ScaleLimitsRaw):
+    def limits(
+        self,
+        value,  #  : ScaleLimitsRaw
+    ):
         raise NotImplementedError("Not Implemented")
 
     def train_df(self, df: pd.DataFrame):
@@ -331,20 +337,27 @@ class scale(ABC, metaclass=Register):
 
         return df
 
-    def get_labels(self, breaks: Optional[ScaleBreaks] = None) -> ScaleLabels:
+    def get_labels(
+        self,
+        breaks=None,  # : Optional[ScaleBreaks]
+    ) -> ScaleLabels:
         """
         Get labels, calculating them if required
         """
         raise NotImplementedError()
 
-    def get_breaks(self, limits: Optional[ScaleLimits] = None) -> ScaleBreaks:
+    def get_breaks(
+        self,
+        limits=None,  # : Optional[ScaleLimits]
+    ) -> ScaleBreaks:
         """
         Get Breaks
         """
         raise NotImplementedError()
 
     def get_bounded_breaks(
-        self, limits: Optional[ScaleLimits] = None
+        self,
+        limits=None,  # : Optional[ScaleLimits]
     ) -> ScaleBreaks:
         """
         Return Breaks that are within the limits

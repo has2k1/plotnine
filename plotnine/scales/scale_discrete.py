@@ -29,6 +29,10 @@ if typing.TYPE_CHECKING:
         TupleFloat4,
     )
 
+# Range, RangeDiscrete, RangeContinuous
+# ScaleBreaksRaw, ScaleDiscreteBreaksRaw, ScaleContinuousBreaksRaw
+# ScaleLimitsRaw, ScaleDiscreteLimitsRaw, ScaleContinuousLimitsRaw
+
 
 @document
 class scale_discrete(scale):
@@ -81,11 +85,11 @@ class scale_discrete(scale):
     def limits(self, value: ScaleDiscreteLimitsRaw):
         self._limits = value
 
-    def palette(self, value: int) -> AnyArrayLike:
+    def palette(self, value: int) -> AnyArrayLike | dict[Any, Any]:
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError("Not Implemented")
+        return super().palette(value)
 
     def train(self, x: AnyArrayLike, drop=False):
         """

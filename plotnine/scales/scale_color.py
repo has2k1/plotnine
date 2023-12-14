@@ -11,7 +11,7 @@ from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from typing import Callable, Literal, Optional, Sequence
 
     from mizani.typing import ColorScheme, ColorSchemeShort
 
@@ -54,7 +54,7 @@ class scale_color_hue(scale_discrete):
     ):
         from mizani.palettes import hue_pal
 
-        self.palette = hue_pal(h, l, s, color_space=color_space)
+        self._palette = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -107,7 +107,7 @@ class scale_color_brewer(scale_discrete):
     ):
         from mizani.palettes import brewer_pal
 
-        self.palette = brewer_pal(type, palette, direction=direction)
+        self._palette = brewer_pal(type, palette, direction=direction)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -143,7 +143,7 @@ class scale_color_grey(scale_discrete):
     def __init__(self, start=0.2, end=0.8, **kwargs):
         from mizani.palettes import grey_pal
 
-        self.palette = grey_pal(start, end)
+        self._palette = grey_pal(start, end)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -194,8 +194,7 @@ class scale_color_gradient(scale_continuous):
         """
         from mizani.palettes import gradient_n_pal
 
-        # TODO: fix types in mizani
-        self.palette = gradient_n_pal([low, high])  # pyright: ignore
+        self._palette = gradient_n_pal([low, high])
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -521,7 +520,7 @@ class scale_color_cmap_d(scale_discrete):
     def __init__(self, cmap_name: str = "viridis", **kwargs):
         from mizani.palettes import cmap_d_pal
 
-        self.palette = cmap_d_pal(cmap_name)
+        self._palette = cmap_d_pal(cmap_name)
         super().__init__(**kwargs)
 
 

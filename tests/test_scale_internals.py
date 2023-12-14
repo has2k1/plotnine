@@ -381,7 +381,7 @@ def test_setting_limits_transformed():
 
 def test_scale_continuous_limits_as_function():
     def reverse(x):
-        return list(reversed(x))
+        return tuple(reversed(x))
 
     x = [1, 2, 3, 4]
     sc1 = scale_x_continuous()

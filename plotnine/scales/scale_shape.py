@@ -67,10 +67,8 @@ class scale_shape(scale_discrete):
     def __init__(self, unfilled: bool = False, **kwargs):
         from mizani.palettes import manual_pal
 
-        if unfilled:
-            self.palette = manual_pal(unfilled_shapes)
-        else:
-            self.palette = manual_pal(shapes)
+        _shapes = unfilled_shapes if unfilled else shapes
+        self._palette = manual_pal(_shapes)
         scale_discrete.__init__(self, **kwargs)
 
 
