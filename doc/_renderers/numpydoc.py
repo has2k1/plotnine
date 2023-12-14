@@ -273,7 +273,8 @@ class NumpyDocRenderer(Renderer):
                     Attr(classes=["doc-attributes"]),
                 )
                 rows: list[SummaryRow] = [
-                    self.summarize(a) for a in raw_attrs  # type: ignore
+                    self.summarize(a)  # type: ignore
+                    for a in raw_attrs
                 ]
                 attr_table = tabulate(rows, header_row, "grid")
                 attr_docs = [section_header, str(attr_table)]
@@ -285,13 +286,14 @@ class NumpyDocRenderer(Renderer):
                     Attr(classes=["doc-classes"]),
                 )
                 rows: list[SummaryRow] = [
-                    self.summarize(a) for a in raw_classes  # type: ignore
+                    self.summarize(a)  # type: ignore
+                    for a in raw_classes
                 ]
                 summary_table = tabulate(rows, header_row, "grid")
 
                 n = 1 if el.flat else 2
                 with self._increment_header_level(n):
-                    docs = [  # type: ignore
+                    docs = [
                         self.render(m)
                         for m in raw_classes
                         if isinstance(m, layout.Doc)
@@ -534,7 +536,8 @@ class NumpyDocRenderer(Renderer):
 
     @dispatch
     def render(  # type: ignore
-        self, el: qast.DocstringSectionSeeAlso  # noqa: F811
+        self,
+        el: qast.DocstringSectionSeeAlso,  # noqa: F811
     ):
         """
         Parse See Also
@@ -573,7 +576,8 @@ class NumpyDocRenderer(Renderer):
     @dispatch
     def render(self, el: ds.DocstringSectionExamples):  # type: ignore
         content = [
-            self.render(qast.transform(c)) for c in el.value  # type: ignore
+            self.render(qast.transform(c))  # type: ignore
+            for c in el.value
         ]
         return str(Blocks(content))
 
@@ -644,7 +648,8 @@ class NumpyDocRenderer(Renderer):
             )
 
         items: list[SummaryRow] = [
-            self.summarize(c, el.path) for c in el.contents  # type: ignore
+            self.summarize(c, el.path)  # type: ignore
+            for c in el.contents
         ]
         return items
 

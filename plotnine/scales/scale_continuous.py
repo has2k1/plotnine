@@ -421,7 +421,9 @@ class scale_continuous(scale):
             )  # pyright: ignore
         elif isinstance(self.minor_breaks, int):
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
-                major, limits, self.minor_breaks  # pyright: ignore
+                major,
+                limits,
+                self.minor_breaks,  # pyright: ignore
             )
         elif callable(self.minor_breaks):
             breaks = self.minor_breaks(self.inverse(limits))

@@ -38,10 +38,10 @@ ruff-isort:
 	ruff --select I001 --quiet . $(args)
 
 format:
-	black . --check
+	ruff format . --check
 
 format-fix:
-	black .
+	ruff format .
 
 lint: ruff ruff-isort
 

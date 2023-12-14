@@ -215,8 +215,7 @@ def test_after_scale_mapping():
     data2 = pd.DataFrame(
         {
             # Same as above, but add 2 of each unique element
-            "x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
-            + [1, 2, 3, 4] * 2
+            "x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4] + [1, 2, 3, 4] * 2
         }
     )
 

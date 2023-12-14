@@ -239,7 +239,7 @@ class facet_grid(facet):
 
 
 def parse_grid_facets(
-    facets: str | tuple[str | list[str], str | list[str]]
+    facets: str | tuple[str | list[str], str | list[str]],
 ) -> tuple[list[str], list[str]]:
     """
     Return two lists of facetting variables, for the rows & columns

@@ -328,7 +328,7 @@ class facet:
         from .._mpl.ticker import MyFixedFormatter
 
         def _inf_to_none(
-            t: tuple[float, float]
+            t: tuple[float, float],
         ) -> tuple[float | None, float | None]:
             """
             Replace infinities with None
