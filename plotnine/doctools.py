@@ -14,6 +14,14 @@ if typing.TYPE_CHECKING:
 
     T = TypeVar("T")
 
+# Markup that is robust for documentation needs grid tables
+# using tabulate and it is only required when
+# building documentation.
+try:
+    from tabulate import tabulate as table_function
+except ImportError:
+    from ._utils import simple_table as table_function
+
 
 # Parameter arguments that are listed first in the geom and
 # stat class signatures
@@ -172,21 +180,17 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     --------
     >>> d = {"alpha": 1, "color": "blue", "fill": None}
     >>> print(dict_to_table(("Aesthetic", "Default Value"), d))
-    ========= =========
-    Aesthetic Default Value
-    ========= =========
-    alpha     `1`
-    color     `'blue'`
-    fill      `None`
-    ========= =========
+    Aesthetic  Default Value
+    ---------  -------------
+    alpha      `1`
+    color      `'blue'`
+    fill       `None`
     """
-    from tabulate import tabulate
-
     rows = [
         (name, value if value == "" else f"`{value!r}`" "{.py}")
         for name, value in contents.items()
     ]
-    return tabulate(rows, headers=header, tablefmt="grid")
+    return table_function(rows, headers=header, tablefmt="grid")
 
 
 def make_signature(
