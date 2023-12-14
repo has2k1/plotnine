@@ -31,7 +31,7 @@ class scale_linetype(scale_discrete):
     def __init__(self, **kwargs):
         from mizani.palettes import manual_pal
 
-        self.palette = manual_pal(LINETYPES)
+        self._palette = manual_pal(LINETYPES)
         super().__init__(**kwargs)
 
 

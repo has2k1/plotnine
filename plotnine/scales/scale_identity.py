@@ -16,9 +16,9 @@ class MapTrainMixin:
     Override map and train methods
     """
 
-    guide: Optional[Literal["legend"]] = None
+    guide = None
 
-    def map(self, x: Sequence[Any]) -> Sequence[Any]:
+    def map(self, x, limits=None) -> Sequence[Any]:
         """
         Identity map
 
@@ -29,7 +29,7 @@ class MapTrainMixin:
         """
         return x
 
-    def train(self, x):
+    def train(self, x, drop=False):
         # do nothing if no guide,
         # otherwise train so we know what breaks to use
         if self.guide is None:

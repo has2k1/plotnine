@@ -28,8 +28,7 @@ class scale_alpha(scale_continuous):
     def __init__(self, range: tuple[float, float] = (0.1, 1), **kwargs):
         from mizani.palettes import rescale_pal
 
-        # TODO: fix types in mizani
-        self.palette = rescale_pal(range)  # pyright: ignore
+        self._palette = rescale_pal(range)
         scale_continuous.__init__(self, **kwargs)
 
 

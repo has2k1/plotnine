@@ -143,7 +143,8 @@ class scale_continuous(scale):
             # stored in transformed space. The range of the scale is
             # in transformed space (i.e. with in the domain of the scale)
             _range = self.inverse(self.range.range)
-            return tuple(self.trans.transform(self._limits(_range)))
+            return self.trans.transform(self._limits(_range))
+            # return tuple(self.trans.transform(self._limits(_range)))
         elif self._limits is not None and not self.range.is_empty():
             # Fall back to the range if the limits
             # are not set or if any is None or NaN
@@ -155,7 +156,8 @@ class scale_continuous(scale):
                 if l2 is None:
                     l2 = self.trans.transform([r2])[0]
                 return l1, l2
-        return tuple(self._limits)
+
+        return self._limits
 
     @limits.setter
     def limits(self, value: ScaleContinuousLimitsRaw):
@@ -224,7 +226,7 @@ class scale_continuous(scale):
         Inverse Transform dataframe
         """
         if len(df) == 0:
-            return
+            return df
 
         aesthetics = set(self.aesthetics) & set(df.columns)
         for ae in aesthetics:
@@ -320,16 +322,15 @@ class scale_continuous(scale):
         """
         return super().default_expansion(mult, add, expand)
 
-    @staticmethod
-    def palette(value: FloatArrayLike) -> Sequence[Any]:
+    def palette(self, value: FloatArrayLike) -> Sequence[Any]:
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError("Not Implemented")
+        return super().palette(value)
 
     def map(
-        self, x: AnyArrayLike, limits: Optional[ScaleContinuousLimits] = None
-    ) -> AnyArrayLike:
+        self, x: FloatArrayLike, limits: Optional[ScaleContinuousLimits] = None
+    ) -> FloatArrayLike:
         if limits is None:
             limits = self.limits
 

@@ -181,7 +181,6 @@ defineConstant = { DEBUG = true }
 # typeCheckingMode = "strict"
 useLibraryCodeForTypes = true
 reportUnnecessaryTypeIgnoreComment = true
-# reportUnsupportedDunderAll = false
 
 
 # Specifies a list of execution environments (see below). Execution
