@@ -34,16 +34,13 @@ clean-test:
 ruff:
 	ruff . $(args)
 
-ruff-isort:
-	ruff --select I001 --quiet . $(args)
-
 format:
 	ruff format . --check
 
 format-fix:
 	ruff format .
 
-lint: ruff ruff-isort
+lint: ruff
 
 lint-fix:
 	make lint args="--fix"
