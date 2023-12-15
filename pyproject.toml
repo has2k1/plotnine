@@ -221,7 +221,7 @@ ignore = [
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "D", "E", "F", "I", "TCH", "PIE"]
+fixable = ["ALL"]
 unfixable = []
 
 # Exclude a variety of commonly ignored directories.
