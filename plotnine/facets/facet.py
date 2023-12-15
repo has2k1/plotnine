@@ -407,11 +407,9 @@ class facet:
         }
 
         if isinstance(space, str):
-            if space == "fixed":
-                space = default_space
             # TODO: Implement 'free', 'free_x' & 'free_y'
-            else:
-                space = default_space
+            # This is the value of "fixed" space
+            space = default_space
         elif isinstance(space, dict):
             if "x" not in space:
                 space["x"] = default_space["x"]

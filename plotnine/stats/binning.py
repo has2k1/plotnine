@@ -76,12 +76,11 @@ def breaks_from_binwidth(
             "Only one of 'boundary' and 'center' " "may be specified."
         )
     elif boundary is None:
-        if center is None:
-            # This puts min and max of data in outer half
-            # of their bins
-            boundary = binwidth / 2
-        else:
-            boundary = center - binwidth / 2
+        # When center is None, put the min and max of data in outer
+        # half of their bins
+        boundary = binwidth / 2
+        if center is not None:
+            boundary = center - boundary
 
     epsilon = np.finfo(float).eps
     shift = np.floor((x_range[0] - boundary) / binwidth)

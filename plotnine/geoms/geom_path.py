@@ -461,11 +461,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
 
     segments = np.vstack(_segments).tolist()
 
-    if color is None:
-        edgecolor = color
-    else:
-        edgecolor = [color[i] for i in indices]
-
+    edgecolor = color if color is None else [color[i] for i in indices]
     linewidth = data.loc[indices, "size"]
     linestyle = data.loc[indices, "linetype"]
 

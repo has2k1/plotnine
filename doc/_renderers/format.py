@@ -88,9 +88,8 @@ def repr_obj(s: str) -> str:  # type: ignore
     """
     Repr of str enclosed double quotes
     """
-    if len(s) >= 2:
-        if s[0] == s[-1] == "'":
-            s = f'"{s[1:-1]}"'
+    if len(s) >= 2 and (s[0] == s[-1] == "'"):
+        s = f'"{s[1:-1]}"'
     return s
 
 

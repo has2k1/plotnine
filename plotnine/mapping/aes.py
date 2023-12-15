@@ -219,10 +219,9 @@ class aes(Dict[str, Any]):
         "..count.." to after_stat(count)
         """
         for name, value in kwargs.items():
-            if not isinstance(value, stage):
-                if is_calculated_aes(value):
-                    _after_stat = strip_calculated_markers(value)
-                    kwargs[name] = after_stat(_after_stat)
+            if not isinstance(value, stage) and is_calculated_aes(value):
+                _after_stat = strip_calculated_markers(value)
+                kwargs[name] = after_stat(_after_stat)
         return kwargs
 
     @property
@@ -378,12 +377,7 @@ def is_calculated_aes(ae: Any) -> bool:
     """
     if not isinstance(ae, str):
         return False
-
-    for pattern in (STAT_RE, DOTS_RE):
-        if pattern.search(ae):
-            return True
-
-    return False
+    return any(pattern.search(ae) for pattern in (STAT_RE, DOTS_RE))
 
 
 def strip_stat(value):

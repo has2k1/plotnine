@@ -287,13 +287,15 @@ class stat_summary(stat):
         if self.params["fun_args"] is None:
             self.params["fun_args"] = {}
 
-        if "random_state" not in self.params["fun_args"]:
-            if self.params["random_state"]:
-                random_state = self.params["random_state"]
-                if random_state is None:
-                    random_state = np.random
-                elif isinstance(random_state, int):
-                    random_state = np.random.RandomState(random_state)
+        if (
+            "random_state" not in self.params["fun_args"]
+            and self.params["random_state"]
+        ):
+            random_state = self.params["random_state"]
+            if random_state is None:
+                random_state = np.random
+            elif isinstance(random_state, int):
+                random_state = np.random.RandomState(random_state)
 
                 self.params["fun_args"]["random_state"] = random_state
 

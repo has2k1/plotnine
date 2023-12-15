@@ -191,10 +191,7 @@ class NumpyDocRenderer(Renderer):
         labels = get_object_labels(el.obj)
         display_name_format = self.display_name_format
         if display_name_format == "auto":
-            if self.header_level == 1:
-                display_name_format = "full"
-            else:
-                display_name_format = "name"
+            display_name_format = "full" if self.header_level == 1 else "name"
 
         name = get_object_display_name(el.obj, display_name_format)
         symbol_code = Code(

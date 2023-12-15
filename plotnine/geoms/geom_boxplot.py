@@ -113,13 +113,16 @@ class geom_boxplot(geom):
         if varwidth:
             if isinstance(_position, str):
                 kwargs["position"] = position_dodge2(preserve="single")
-            elif isinstance(_position, position):
-                if _position.params["preserve"] == "total":
-                    warn(
-                        "Cannot preserve total widths when varwidth=True",
-                        PlotnineWarning,
-                    )
-                    _position.params["preserve"] = "single"
+            elif (
+                isinstance(_position, position)
+                and _position.params["preserve"] == "total"
+            ):
+                warn(
+                    "Cannot preserve total widths when varwidth=True",
+                    PlotnineWarning,
+                    stacklevel=2,
+                )
+                _position.params["preserve"] = "single"
 
         super().__init__(mapping, data, **kwargs)
 

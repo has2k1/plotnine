@@ -838,9 +838,7 @@ class plot_context:
         Setup ipython parameters in for the plot
         """
         ip = get_ipython()
-        if not ip:
-            return
-        elif not hasattr(ip.config, "InlineBackend"):
+        if not ip or not hasattr(ip.config, "InlineBackend"):
             return
 
         for key, value in self._IPYTHON_CONFIG["InlineBackend"].items():
@@ -853,9 +851,7 @@ class plot_context:
         Undo ipython parameters in for the plot
         """
         ip = get_ipython()
-        if not ip:
-            return
-        elif not hasattr(ip.config, "InlineBackend"):
+        if not ip or not hasattr(ip.config, "InlineBackend"):
             return
 
         for key in self._ip_config_inlinebackend:

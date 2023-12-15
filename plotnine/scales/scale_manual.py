@@ -28,9 +28,8 @@ class _scale_manual(scale_discrete):
             from collections.abc import Sized
 
             breaks: ScaleBreaksRaw = kwargs["breaks"]
-            if isinstance(breaks, Sized):
-                if len(breaks) == len(values):
-                    values = dict(zip(breaks, values))
+            if isinstance(breaks, Sized) and len(breaks) == len(values):
+                values = dict(zip(breaks, values))
 
         self._values = values
         scale_discrete.__init__(self, **kwargs)
