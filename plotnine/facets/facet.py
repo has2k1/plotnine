@@ -383,10 +383,10 @@ class facet:
         shallow = {"figure", "axs", "first_ax", "last_ax"}
         for key, item in old.items():
             if key in shallow:
-                new[key] = old[key]
+                new[key] = item
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 

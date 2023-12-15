@@ -148,9 +148,9 @@ class layer:
 
         for key, item in old.items():
             if key == "data":
-                new[key] = old[key]
+                new[key] = item
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 

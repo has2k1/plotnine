@@ -281,7 +281,7 @@ class aes(Dict[str, Any]):
 
         # Just copy the keys and point to the env
         for key, item in self.items():
-            result[key] = deepcopy(self[key], memo)
+            result[key] = deepcopy(item, memo)
 
         return result
 
