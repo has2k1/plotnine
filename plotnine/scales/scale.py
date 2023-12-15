@@ -177,7 +177,7 @@ class scale(ABC, metaclass=Register):
         make sure that sensible values are sent and
         return from the palette.
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def train(self, x: pd.Series | NDArray):
         """
@@ -188,13 +188,13 @@ class scale(ABC, metaclass=Register):
         x :
             A column of data to train over
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def dimension(self, expand=None, limits=None):
         """
         Get the phyical size of the scale.
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def expand_limits(
         self,
@@ -206,31 +206,31 @@ class scale(ABC, metaclass=Register):
         """
         Exand the limits of the scale
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transform dataframe
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def transform(self, x):
         """
         Transform array|series x
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def inverse_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Inverse transform dataframe
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def inverse(self, x):
         """
         Inverse transform array|series x
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def view(
         self,
@@ -240,7 +240,7 @@ class scale(ABC, metaclass=Register):
         """
         Information about the trained scale
         """
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def default_expansion(
         self,
@@ -303,14 +303,14 @@ class scale(ABC, metaclass=Register):
 
     @property
     def limits(self) -> ScaleLimits:
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     @limits.setter
     def limits(
         self,
         value,  #  : ScaleLimitsRaw
     ):
-        raise NotImplementedError("Not Implemented")
+        raise NotImplementedError
 
     def train_df(self, df: pd.DataFrame):
         """
@@ -340,7 +340,7 @@ class scale(ABC, metaclass=Register):
         """
         Get labels, calculating them if required
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def get_breaks(
         self,
@@ -349,7 +349,7 @@ class scale(ABC, metaclass=Register):
         """
         Get Breaks
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def get_bounded_breaks(
         self,
@@ -358,4 +358,4 @@ class scale(ABC, metaclass=Register):
         """
         Return Breaks that are within the limits
         """
-        raise NotImplementedError()
+        raise NotImplementedError
