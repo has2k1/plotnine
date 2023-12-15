@@ -298,7 +298,7 @@ class Themeables(dict[str, themeable]):
         """
         hierarchy = themeable._hierarchy
         result: dict[str, themeable] = {}
-        for _, lst in hierarchy.items():
+        for lst in hierarchy.values():
             for name in reversed(lst):
                 if name in self and name not in result:
                     result[name] = self[name]

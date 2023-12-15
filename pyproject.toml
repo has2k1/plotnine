@@ -207,6 +207,7 @@ select = [
    "TRY200",
    "FLY",
    "NPY",
+   "PERF102"
 ]
 ignore = [
     "E741",  # Ambiguous l

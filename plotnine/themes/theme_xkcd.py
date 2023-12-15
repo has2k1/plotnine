@@ -80,7 +80,7 @@ class theme_xkcd(theme_gray):
         for key, item in old.items():
             if key == "_rcParams":
                 continue
-            new[key] = deepcopy(old[key], memo)
+            new[key] = deepcopy(item, memo)
 
         result._rcParams = {}
         for k, v in self._rcParams.items():
