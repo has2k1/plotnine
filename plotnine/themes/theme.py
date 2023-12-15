@@ -11,6 +11,8 @@ from .themeable import Themeables, themeable
 if typing.TYPE_CHECKING:
     from typing import Any, Type
 
+    from typing_extensions import Self
+
     from plotnine.typing import Axes, Figure, Ggplot
 
 # All complete themes are initiated with these rcparams. They
@@ -227,18 +229,17 @@ class theme:
         for name, element in kwargs.items():
             self.themeables[name] = new(name, element)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Test if themes are equal
 
         Mostly for testing purposes
         """
-        # criteria for equality are
-        # - Equal themeables
-        # - Equal rcParams
-        c1 = self.themeables == other.themeables
-        c2 = self.rcParams == other.rcParams
-        return c1 and c2
+        return other is self or (
+            isinstance(other, type(self))
+            and other.themeables == self.themeables
+            and other.rcParams == self.rcParams
+        )
 
     def apply(self):
         """
@@ -376,11 +377,12 @@ class theme:
                 # e.g. other + theme(...)
                 return other.add_theme(self)
 
-    def __iadd__(self, other: theme) -> theme:
+    def __iadd__(self, other: theme) -> Self:
         """
         Add theme to theme
         """
-        return self.add_theme(other)
+        self.add_theme(other)
+        return self
 
     def __deepcopy__(self, memo: dict) -> theme:
         """

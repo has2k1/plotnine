@@ -24,8 +24,6 @@ class alias:
     ```
     """
 
-    ...
-
 
 class _Registry(WeakValueDictionary):
     def __getitem__(self, key):

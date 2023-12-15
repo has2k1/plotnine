@@ -161,11 +161,12 @@ class themeable(metaclass=RegistryHierarchyMeta):
         else:
             self.properties.update(other.properties)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         "Mostly for unittesting."
-        c1 = type(self) is type(other)
-        c2: bool = self.properties == other.properties
-        return c1 and c2
+        return other is self or (
+            isinstance(other, type(self))
+            and self.properties == other.properties
+        )
 
     @property
     def rcParams(self) -> dict[str, Any]:

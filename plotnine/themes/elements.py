@@ -310,21 +310,19 @@ class Margin:
         elif self.units in ("line", "lines"):
             self.units = "lines"
 
-    def __eq__(self, other: Any) -> bool:
-        core = ("t", "b", "l", "r", "units")
-        if self is other:
-            return True
+    def __eq__(self, other: object) -> bool:
+        def _size(m: Margin):
+            return m.element.properties.get("size")
 
-        if type(self) is not type(other):
-            return False
-
-        for attr in core:
-            if getattr(self, attr) != getattr(other, attr):
-                return False
-
-        s_size = self.element.properties.get("size")
-        o_size = other.element.properties.get("size")
-        return s_size == o_size
+        return other is self or (
+            isinstance(other, type(self))
+            and other.t == self.t
+            and other.b == self.b
+            and other.l == self.l
+            and other.r == self.r
+            and other.units == self.units
+            and _size(other) == _size(self)
+        )
 
     def get_as(
         self,
