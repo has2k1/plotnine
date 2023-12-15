@@ -384,7 +384,7 @@ class ggplot:
         if get_option("close_all_figures"):
             plt.close("all")
 
-        figure: Figure = plt.figure()  # pyright: ignore
+        figure: Figure = plt.figure()
         axs = self.facet.make_axes(
             figure, self.layout.layout, self.coordinates
         )
@@ -435,6 +435,7 @@ class ggplot:
         """
         Draw legend onto the figure
         """
+        from matplotlib.font_manager import FontProperties
         from matplotlib.offsetbox import AnchoredOffsetbox
 
         legend_box = self.guides.build(self)
@@ -446,7 +447,7 @@ class ggplot:
             child=legend_box,
             pad=0.0,
             frameon=False,
-            prop={"size": 0, "stretch": 0},
+            prop=FontProperties(size=0, stretch=0),
             bbox_to_anchor=(0, 0),
             bbox_transform=self.figure.transFigure,
             borderpad=0.0,
@@ -480,8 +481,8 @@ class ggplot:
         text_title = figure.text(0, 0, title)
         text_caption = figure.text(0, 0, caption)
         text_subtitle = figure.text(0, 0, subtitle)
-        text_x = figure.text(0, 0, labels.x)
-        text_y = figure.text(0, 0, labels.y)
+        text_x = figure.text(0, 0, labels.x or "")
+        text_y = figure.text(0, 0, labels.y or "")
 
         _targets["plot_title"] = text_title
         _targets["plot_caption"] = text_caption

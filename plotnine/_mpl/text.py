@@ -32,8 +32,8 @@ class SText(Text):
         }
 
         super().__init__(
-            info.x,  # type: ignore
-            info.y,  # type: ignore
+            info.x,
+            info.y,
             info.label,
             **kwargs,
         )

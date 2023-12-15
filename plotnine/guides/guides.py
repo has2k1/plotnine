@@ -49,7 +49,9 @@ class guides(dict):
     # getting built
     position: Literal["left", "right", "top", "bottom"] | TupleFloat2
     box_direction: Literal["horizontal", "vertical", "auto"]
-    box_align: Literal["left", "right", "top", "bottom", "center", "auto"]
+    box_align: Literal[
+        "left", "right", "top", "bottom", "center", "baseline", "auto"
+    ]
     box_margin: int
     spacing: float
 
@@ -336,7 +338,7 @@ class guides(dict):
 
         box = packer(
             children=gboxes,
-            align=self.box_align,
+            align=self.box_align,  # type: ignore
             pad=self.box_margin,
             sep=self.spacing,
         )

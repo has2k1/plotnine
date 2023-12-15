@@ -18,7 +18,14 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Aes, Axes, Coord, DataLike, DrawingArea, Layer
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+        DrawingArea,
+        Layer,
+    )
 
 
 # Note: hjust & vjust are parameters instead of aesthetics
@@ -289,8 +296,8 @@ class geom_text(geom):
         color = to_rgba(data["color"], data["alpha"])
 
         key = Text(
-            x=0.5 * da.width,  # pyright: ignore[reportGeneralTypeIssues]
-            y=0.5 * da.height,  # pyright: ignore[reportGeneralTypeIssues]
+            x=0.5 * da.width,
+            y=0.5 * da.height,
             text="a",
             size=data["size"],
             family=lyr.geom.params["family"],

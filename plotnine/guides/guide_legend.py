@@ -315,8 +315,6 @@ class guide_legend(guide):
         # labels
         labels = []
         for item in self.key["label"]:
-            if isinstance(item, float) and float.is_integer(item):
-                item = int(item)  # 1.0 to 1
             va = "center" if self.label_position == "top" else "baseline"
             ta = TextArea(item, textprops={"color": "black", "va": va})
             labels.append(ta)

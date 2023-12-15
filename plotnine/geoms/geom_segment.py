@@ -78,7 +78,7 @@ class geom_segment(geom):
         y = interleave(data["y"], data["yend"])
         segments = make_line_segments(x, y, ispath=False)
         coll = LineCollection(
-            segments,
+            list(segments),
             edgecolor=color,
             linewidth=data["size"],
             linestyle=data["linetype"][0],

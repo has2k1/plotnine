@@ -459,7 +459,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
         y = data["y"].iloc[idx]
         _segments.append(make_line_segments(x, y, ispath=True))
 
-    segments = np.vstack(_segments)
+    segments = np.vstack(_segments).tolist()
 
     if color is None:
         edgecolor = color

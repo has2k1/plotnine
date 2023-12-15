@@ -271,4 +271,4 @@ def set_legend_position(
 
     anchor_point = (x, y)
     legend.loc = AnchoredOffsetbox.codes[loc]
-    legend.set_bbox_to_anchor(anchor_point, fig.transFigure)
+    legend.set_bbox_to_anchor(anchor_point, fig.transFigure)  # type: ignore

@@ -1,4 +1,6 @@
-from matplotlib.ticker import FixedFormatter, locale
+import locale
+
+from matplotlib.ticker import FixedFormatter
 
 
 class MyFixedFormatter(FixedFormatter):

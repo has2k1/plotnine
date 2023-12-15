@@ -338,8 +338,8 @@ class facet:
             return (a, b)
 
         # limits
-        ax.set_xlim(_inf_to_none(panel_params.x.range))
-        ax.set_ylim(_inf_to_none(panel_params.y.range))
+        ax.set_xlim(*_inf_to_none(panel_params.x.range))
+        ax.set_ylim(*_inf_to_none(panel_params.y.range))
 
         if typing.TYPE_CHECKING:
             assert callable(ax.set_xticks)

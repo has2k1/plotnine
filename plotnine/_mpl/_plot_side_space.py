@@ -29,9 +29,12 @@ if typing.TYPE_CHECKING:
         Literal,
         Sequence,
         TypeAlias,
+        TypeGuard,
     )
 
-    from plotnine.typing import Artist, Axes, Text, XTick, YTick
+    from matplotlib.axis import Tick
+
+    from plotnine.typing import Artist, Axes, Text
 
     from .layout_engine import LayoutPack
 
@@ -474,7 +477,7 @@ def filter_axes(axs, get: AxesLocation = "all"):
     ]
 
 
-def is_top_strip_boxpatch(artist: Artist) -> bool:
+def is_top_strip_boxpatch(artist: Artist) -> TypeGuard[SFancyBboxPatch]:
     """
     Return True if artist is a patch/background of the top strip of a facet
     """
@@ -483,7 +486,7 @@ def is_top_strip_boxpatch(artist: Artist) -> bool:
     return False
 
 
-def is_right_strip_boxpatch(artist: Artist) -> bool:
+def is_right_strip_boxpatch(artist: Artist) -> TypeGuard[SFancyBboxPatch]:
     """
     Return True if artist is a patch/background of the right strip of a facet
     """
@@ -542,7 +545,7 @@ def max_height(pack: LayoutPack, artists: Sequence[Artist]) -> float:
     return max(heights) if len(heights) else 0
 
 
-def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[XTick]:
+def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:
     """
     Return all XTicks that will be shown
     """
@@ -558,7 +561,7 @@ def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[XTick]:
     return chain(major, minor)
 
 
-def get_yaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[YTick]:
+def get_yaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:
     """
     Return all YTicks that will be shown
     """
@@ -618,7 +621,7 @@ def max_xticks_height(
         tight_bbox_in_figure_space(
             tick.tick1line, pack.figure, pack.renderer
         ).height
-        + tick.get_pad() / (72 * H)
+        + (tick.get_pad() or 0) / (72 * H)
         for ax in filter_axes(pack.axs, axes_loc)
         for tick in get_xaxis_ticks(pack, ax)
     ]
@@ -652,7 +655,7 @@ def max_yticks_width(
         tight_bbox_in_figure_space(
             tick.tick1line, pack.figure, pack.renderer
         ).width
-        + tick.get_pad() / (72 * W)
+        + (tick.get_pad() or 0) / (72 * W)
         for ax in filter_axes(pack.axs, axes_loc)
         for tick in get_yaxis_ticks(pack, ax)
     ]
