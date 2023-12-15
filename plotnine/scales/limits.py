@@ -202,8 +202,9 @@ class lims:
         for ae, value in self._kwargs.items():
             try:
                 klass = getattr(thismodule, f"{ae}lim")
-            except AttributeError:
-                raise PlotnineError("Cannot change limits for '{}'")
+            except AttributeError as e:
+                msg = "Cannot change limits for '{}'"
+                raise PlotnineError(msg) from e
 
             gg += klass(value)
 

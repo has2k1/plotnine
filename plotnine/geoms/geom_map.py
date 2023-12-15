@@ -306,7 +306,6 @@ def PolygonPatch(
 def check_geopandas():
     try:
         import geopandas  # noqa: F401
-    except ImportError:
-        raise PlotnineError(
-            "geom_map requires geopandas. Please install geopandas."
-        )
+    except ImportError as e:
+        msg = "geom_map requires geopandas. Please install geopandas."
+        raise PlotnineError(msg) from e

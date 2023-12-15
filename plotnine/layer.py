@@ -131,9 +131,9 @@ class layer:
         """
         try:
             gg.layers.append(self)
-        except AttributeError:
-            msg = "Cannot add layer to object of type {!r}".format
-            raise PlotnineError(msg(type(gg)))
+        except AttributeError as e:
+            msg = f"Cannot add layer to object of type {type(gg)!r}"
+            raise PlotnineError(msg) from e
         return gg
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> layer:
@@ -186,13 +186,14 @@ class layer:
         if self._data is None:
             try:
                 self.data = copy(data)
-            except AttributeError:
+            except AttributeError as e:
                 _geom_name = self.geom.__class__.__name__
                 _data_name = data.__class__.__name__
-                raise PlotnineError(
+                msg = (
                     f"{_geom_name} layer expects a dataframe, "
                     f"but it got {_data_name} instead."
                 )
+                raise PlotnineError(msg) from e
         elif callable(self._data):
             self.data = self._data(data)
             if not isinstance(self.data, pd.DataFrame):

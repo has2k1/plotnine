@@ -33,9 +33,9 @@ def predictdf(data, xseq, **params):
     if isinstance(method, str):
         try:
             method = methods[method]
-        except KeyError:
-            msg = "Method should be one of {}"
-            raise PlotnineError(msg.format(list(methods.keys())))
+        except KeyError as e:
+            msg = f"Method should be one of {list(methods.keys())}"
+            raise PlotnineError(msg) from e
 
     if not callable(method):
         msg = (
@@ -342,8 +342,9 @@ def loess(data, xseq, **params):
     """
     try:
         from skmisc.loess import loess as loess_klass
-    except ImportError:
-        raise PlotnineError("For loess smoothing, install 'scikit-misc'")
+    except ImportError as e:
+        msg = "For loess smoothing, install 'scikit-misc'"
+        raise PlotnineError(msg) from e
 
     try:
         weights = data["weight"]
@@ -416,11 +417,12 @@ def gpr(data, xseq, **params):
     """
     try:
         from sklearn import gaussian_process
-    except ImportError:
-        raise PlotnineError(
+    except ImportError as e:
+        msg = (
             "To use gaussian process smoothing, "
             "You need to install scikit-learn."
         )
+        raise PlotnineError(msg) from e
 
     kwargs = params["method_args"]
     if not kwargs:

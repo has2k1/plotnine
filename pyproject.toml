@@ -192,13 +192,31 @@ stubPath = ""
 ########## Tool - Ruff ##########
 [tool.ruff]
 line-length = 79
-select = ["E", "F", "I", "TCH", "Q", "PIE", "PTH", "PD", "PYI", "RSE", "SIM"]
+select = [
+   "E",
+   "F",
+   "I",
+   "TCH",
+   "Q",
+   "PIE",
+   "PTH",
+   "PD",
+   "PYI",
+   "RSE",
+   "SIM",
+   "TRY200",
+   "FLY",
+   "NPY",
+]
 ignore = [
     "E741",  # Ambiguous l
     "E743",  # Ambiguous I
     # .reset_index, .rename, .replace
     # This will remain the correct choice until we enable copy-on-write
-    "PD002"
+    "PD002",
+    # Use specific rule codes when ignoring type issues and
+    # not # type: ignore
+    "PGH003"
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

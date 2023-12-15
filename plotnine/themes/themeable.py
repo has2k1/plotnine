@@ -129,8 +129,8 @@ class themeable(metaclass=RegistryHierarchyMeta):
         msg = f"There no themeable element called: {name}"
         try:
             klass: Type[themeable] = themeable._registry[name]
-        except KeyError:
-            raise PlotnineError(msg)
+        except KeyError as e:
+            raise PlotnineError(msg) from e
 
         if not issubclass(klass, themeable):
             raise PlotnineError(msg)

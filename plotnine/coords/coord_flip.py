@@ -83,9 +83,6 @@ def flip_labels(obj: THasLabels) -> THasLabels:
                 new_label = b + label[1:]
                 df[new_label] = df.pop(label)
 
-    # TODO: pyright cannot handle
-    # isinstance(obj, (labels_view, panel_view))
-    # keep checking with future versions.
     if isinstance(obj, pd.DataFrame):
         sub("x", "z", obj)
         sub("y", "x", obj)

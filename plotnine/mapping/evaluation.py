@@ -223,31 +223,33 @@ def evaluate(
                 try:
                     new_val = env.eval(col, inner_namespace=data)
                 except Exception as e:
-                    raise PlotnineError(_TPL_EVAL_FAIL.format(ae, col, str(e)))
+                    msg = _TPL_EVAL_FAIL.format(ae, col, str(e))
+                    raise PlotnineError(msg) from e
 
                 try:
                     evaled[ae] = new_val
                 except Exception as e:
-                    raise PlotnineError(
-                        _TPL_BAD_EVAL_TYPE.format(
-                            ae, col, str(type(new_val)), str(e)
-                        )
+                    msg = _TPL_BAD_EVAL_TYPE.format(
+                        ae, col, str(type(new_val)), str(e)
                     )
+                    raise PlotnineError(msg) from e
+
         elif pdtypes.is_list_like(col):
             n = len(col)
             if len(data) and n != len(data) and n != 1:
-                raise PlotnineError(
+                msg = (
                     "Aesthetics must either be length one, "
                     "or the same length as the data"
                 )
+                raise PlotnineError(msg)
             evaled[ae] = col
         elif is_known_scalar(col):
             if not len(evaled):
                 col = [col]
             evaled[ae] = col
         else:
-            msg = "Do not know how to deal with aesthetic '{}'"
-            raise PlotnineError(msg.format(ae))
+            msg = f"Do not know how to deal with aesthetic '{ae}'"
+            raise PlotnineError(msg)
 
     # Using `type` preserves the subclass of pd.DataFrame
     index = data.index if len(data.index) and evaled else None

@@ -279,8 +279,8 @@ def parse_grid_facets(
     # 'func(c) ~ func(a+1) + func(b+2)'
     try:
         lhs, rhs = facets.split("~")
-    except ValueError:
-        raise PlotnineError(error_msg_f)
+    except ValueError as e:
+        raise PlotnineError(error_msg_f) from e
     else:
         lhs = lhs.strip()
         rhs = rhs.strip()

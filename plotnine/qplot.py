@@ -147,10 +147,9 @@ def qplot(
             if isinstance(aesthetics["x"], str):
                 try:
                     x = env.eval(aesthetics["x"], inner_namespace=data)
-                except Exception:
-                    raise PlotnineError(
-                        f"Could not evaluate aesthetic 'x={aesthetics['x']}'"
-                    )
+                except Exception as e:
+                    msg = f"Could not evaluate aesthetic 'x={aesthetics['x']}'"
+                    raise PlotnineError(msg) from e
             elif not hasattr(aesthetics["x"], "dtype"):
                 x = np.asarray(aesthetics["x"])
 

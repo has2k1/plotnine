@@ -246,7 +246,7 @@ class geom(ABC, metaclass=Register):
         for ae, value in self.aes_params.items():
             try:
                 data[ae] = value
-            except ValueError:
+            except ValueError as e:
                 # sniff out the special cases, like custom
                 # tupled linetypes, shapes and colors
                 if is_valid_aesthetic(value, ae):
@@ -254,8 +254,11 @@ class geom(ABC, metaclass=Register):
                 elif num_panels > 1 and is_list_like(value):
                     data[ae] = list(chain(*repeat(value, num_panels)))
                 else:
-                    msg = "'{}' does not look like a " "valid value for `{}`"
-                    raise PlotnineError(msg.format(value, ae))
+                    msg = (
+                        f"'{value}' does not look like a "
+                        f"valid value for `{ae}`"
+                    )
+                    raise PlotnineError(msg) from e
 
         return data
 
