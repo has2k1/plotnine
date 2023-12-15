@@ -106,17 +106,15 @@ class scale_continuous(scale):
         new_trans_name = t.__class__.__name__
         if new_trans_name.endswith("_trans"):
             new_trans_name = new_trans_name[:-6]
-        if orig_trans_name != "identity":
-            if new_trans_name != orig_trans_name:
-                warn(
-                    "You have changed the transform of a specialised scale. "
-                    "The result may not be what you expect.\n"
-                    "Original transform: {}\n"
-                    "New transform: {}".format(
-                        orig_trans_name, new_trans_name
-                    ),
-                    PlotnineWarning,
-                )
+        if orig_trans_name not in ("identity", new_trans_name):
+            warn(
+                "You have changed the transform of a specialised scale. "
+                "The result may not be what you expect.\n"
+                "Original transform: {}\n"
+                "New transform: {}".format(orig_trans_name, new_trans_name),
+                PlotnineWarning,
+                stacklevel=2,
+            )
 
     @property
     def trans(self) -> Trans:
@@ -143,18 +141,21 @@ class scale_continuous(scale):
             # in transformed space (i.e. with in the domain of the scale)
             _range = self.inverse(self.range.range)
             return self.trans.transform(self._limits(_range))
-            # return tuple(self.trans.transform(self._limits(_range)))
-        elif self._limits is not None and not self.range.is_empty():
+        elif (
+            self._limits is not None
+            and not self.range.is_empty()
+            and
             # Fall back to the range if the limits
             # are not set or if any is None or NaN
-            if len(self._limits) == len(self.range.range):
-                l1, l2 = self._limits
-                r1, r2 = self.range.range
-                if l1 is None:
-                    l1 = self.trans.transform([r1])[0]
-                if l2 is None:
-                    l2 = self.trans.transform([r2])[0]
-                return l1, l2
+            len(self._limits) == len(self.range.range)
+        ):
+            l1, l2 = self._limits
+            r1, r2 = self.range.range
+            if l1 is None:
+                l1 = self.trans.transform([r1])[0]
+            if l2 is None:
+                l2 = self.trans.transform([r2])[0]
+            return l1, l2
 
         return self._limits
 

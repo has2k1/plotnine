@@ -101,7 +101,7 @@ class annotate:
 
         # Stop pandas from complaining about all scalars
         if all(is_scalar(val) for val in pos_aesthetics.values()):
-            for ae in pos_aesthetics.keys():
+            for ae in pos_aesthetics:
                 pos_aesthetics[ae] = [pos_aesthetics[ae]]
                 break
 

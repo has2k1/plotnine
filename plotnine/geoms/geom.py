@@ -240,10 +240,7 @@ class geom(ABC, metaclass=Register):
         for ae in evaled.columns.intersection(data.columns):
             data[ae] = evaled[ae]
 
-        if "PANEL" in data:
-            num_panels = len(data["PANEL"].unique())
-        else:
-            num_panels = 1
+        num_panels = len(data["PANEL"].unique()) if "PANEL" in data else 1
 
         # Aesthetics set as parameters to the geom/stat
         for ae, value in self.aes_params.items():

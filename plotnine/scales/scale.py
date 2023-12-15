@@ -131,9 +131,12 @@ class scale(ABC, metaclass=Register):
 
         self.range = self._range_class()
 
-        if np.iterable(self.breaks) and np.iterable(self.labels):
-            if len(self.breaks) != len(self.labels):  # pyright: ignore
-                raise PlotnineError("Breaks and labels have unequal lengths")
+        if (
+            np.iterable(self.breaks)
+            and np.iterable(self.labels)
+            and len(self.breaks) != len(self.labels)  # type: ignore
+        ):
+            raise PlotnineError("Breaks and labels have unequal lengths")
 
         if (
             self.breaks is None

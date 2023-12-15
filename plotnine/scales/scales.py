@@ -265,7 +265,7 @@ class Scales(List[scale]):
 
         # aesthetics that do not have scales present
         # We preserve the order of the aesthetics
-        new_aesthetics = [x for x in aesthetics.keys() if x not in aws]
+        new_aesthetics = [x for x in aesthetics if x not in aws]
         if not new_aesthetics:
             return
 

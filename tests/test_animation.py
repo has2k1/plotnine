@@ -43,10 +43,7 @@ def test_animation():
 
 def test_animation_different_scale_limits():
     def plot(i):
-        if i == 2:
-            _lims = lims(color=(3, 7))
-        else:
-            _lims = lims(color=(1, 7))
+        _lims = lims(color=((3, 7) if i == 2 else (1, 7)))
         return (
             qplot(x, y, color=colors[i], xlab="x", ylab="y")
             + _lims

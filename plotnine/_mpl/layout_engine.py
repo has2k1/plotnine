@@ -97,9 +97,8 @@ class PlotnineLayoutEngine(LayoutEngine):
                 return None
             else:
                 t = get_target(th, None)
-                if isinstance(t, Text):
-                    if t.get_text() == "":
-                        return None
+                if isinstance(t, Text) and t.get_text() == "":
+                    return None
                 return t
 
         legend_position = _property("legend_position")

@@ -178,17 +178,20 @@ class stat_smooth(stat):
             else:
                 params["method"] = "glm"
 
-        if params["method"] == "mavg":
-            if "window" not in params["method_args"]:
-                window = len(data) // 10
-                warnings.warn(
-                    "No 'window' specified in the method_args. "
-                    f"Using window = {window}. "
-                    "The same window is used for all groups or "
-                    "facets",
-                    PlotnineWarning,
-                )
-                params["method_args"]["window"] = window
+        if (
+            params["method"] == "mavg"
+            and "window" not in params["method_args"]
+        ):
+            window = len(data) // 10
+            warnings.warn(
+                "No 'window' specified in the method_args. "
+                f"Using window = {window}. "
+                "The same window is used for all groups or "
+                "facets",
+                PlotnineWarning,
+                stacklevel=2,
+            )
+            params["method_args"]["window"] = window
 
         if params["formula"]:
             allowed = {"lm", "ols", "wls", "glm", "rlm", "gls"}

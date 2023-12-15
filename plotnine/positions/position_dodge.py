@@ -50,9 +50,8 @@ class position_dodge(position):
             if "xmax" not in data:
                 data["xmax"] = data["xend"]
 
-        if "x" not in data:
-            if "xmin" in data and "xmax" in data:
-                data["x"] = (data["xmin"] + data["xmax"]) / 2
+        if "x" not in data and "xmin" in data and "xmax" in data:
+            data["x"] = (data["xmin"] + data["xmax"]) / 2
 
         return super().setup_data(data, params)
 

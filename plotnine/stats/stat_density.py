@@ -194,10 +194,7 @@ def compute_density(x, weight, range, **params):
     else:
         weight = np.asarray(weight, dtype=float)
 
-    if kernel == "gau" and weight is None:
-        fft = True
-    else:
-        fft = False
+    fft = kernel == "gau" and weight is None
 
     if bw == "nrd0":
         bw = nrd0(x)

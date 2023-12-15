@@ -90,9 +90,7 @@ def flip_labels(obj: THasLabels) -> THasLabels:
         sub("x", "z", obj)
         sub("y", "x", obj)
         sub("z", "y", obj)
-    elif isinstance(obj, labels_view):
-        obj.x, obj.y = obj.y, obj.x
-    elif isinstance(obj, panel_view):
-        obj.x, obj.y = obj.y, obj.x
+    elif isinstance(obj, (labels_view, panel_view)):
+        obj.x, obj.y = obj.y, obj.x  # type: ignore
 
     return obj

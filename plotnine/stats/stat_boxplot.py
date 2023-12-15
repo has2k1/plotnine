@@ -208,18 +208,12 @@ def weighted_boxplot_stats(x, weights=None, whis=1.5):
     # low extreme
     loval = q1 - whis * iqr
     lox = x[x >= loval]
-    if len(lox) == 0 or np.min(lox) > q1:
-        whislo = q1
-    else:
-        whislo = np.min(lox)
+    whislo = q1 if (len(lox) == 0 or np.min(lox) > q1) else np.min(lox)
 
     # high extreme
     hival = q3 + whis * iqr
     hix = x[x <= hival]
-    if len(hix) == 0 or np.max(hix) < q3:
-        whishi = q3
-    else:
-        whishi = np.max(hix)
+    whishi = q3 if (len(hix) == 0 or np.max(hix) < q3) else np.max(hix)
 
     bpstats = {
         "fliers": x[(x < whislo) | (x > whishi)],
