@@ -25,7 +25,7 @@ class _PlotnineAnimation(PlotnineAnimation):
     def __init__(
         self, plots, interval=200, repeat_delay=None, repeat=True, blit=False
     ):
-        figure, artists = self._draw_plots(plots)
+        self._draw_plots(plots)
 
 
 def test_animation():

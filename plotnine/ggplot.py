@@ -224,7 +224,7 @@ class ggplot:
             self._build()
 
             # setup
-            figure, axs = self._create_figure()
+            figure, _ = self._create_figure()
             self._setup_parameters()
             self.theme.setup()
             self.facet.strips.generate()

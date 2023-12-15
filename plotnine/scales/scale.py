@@ -237,8 +237,8 @@ class scale(ABC, metaclass=Register):
 
     def view(
         self,
-        limits=None,  #  : Optional[ScaleLimits]
-        range=None,  #  : Optional[CoordRange] = None
+        limits=None,  # : Optional[ScaleLimits]
+        range=None,  # : Optional[CoordRange] = None
     ) -> scale_view:
         """
         Information about the trained scale
@@ -311,7 +311,7 @@ class scale(ABC, metaclass=Register):
     @limits.setter
     def limits(
         self,
-        value,  #  : ScaleLimitsRaw
+        value,  # : ScaleLimitsRaw
     ):
         raise NotImplementedError
 

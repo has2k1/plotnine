@@ -177,7 +177,7 @@ class stat_bindot(stat):
         if params["binaxis"] == "x":
             rangee = scales.x.dimension((0, 0))
             values = data["x"].to_numpy()
-            midline = 0  #  Make pyright happy
+            midline = 0  # Make pyright happy
         else:
             rangee = scales.y.dimension((0, 0))
             values = data["y"].to_numpy()
