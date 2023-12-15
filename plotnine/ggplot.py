@@ -842,7 +842,7 @@ class plot_context:
             return
 
         for key, value in self._IPYTHON_CONFIG["InlineBackend"].items():
-            if key not in ip.config.InlineBackend:  # pyright: ignore
+            if key not in ip.config.InlineBackend:
                 self._ip_config_inlinebackend[key] = key
                 ip.run_line_magic("config", f"InlineBackend.{key} = {value!r}")
 
@@ -855,6 +855,6 @@ class plot_context:
             return
 
         for key in self._ip_config_inlinebackend:
-            del ip.config["InlineBackend"][key]  # pyright: ignore
+            del ip.config["InlineBackend"][key]
 
         self._ip_config_inlinebackend = {}
