@@ -98,7 +98,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             else:
                 t = get_target(th, None)
                 if isinstance(t, Text):
-                    if not t._text:
+                    if t.get_text() == "":
                         return None
                 return t
 

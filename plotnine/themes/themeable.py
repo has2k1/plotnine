@@ -303,8 +303,6 @@ class Themeables(dict[str, themeable]):
                     result[name] = self[name]
         return result.values()
 
-        # return ValuesView(result)
-
     def property(self, name: str, key: str = "value") -> Any:
         """
         Get the value a specific themeable(s) property
@@ -734,7 +732,7 @@ class axis_text_x(themeable):
         properties = self.properties.copy()
         with suppress(KeyError):
             del properties["margin"]
-        labels = ax.get_xticklabels()  # pyright: ignore
+        labels = ax.get_xticklabels()
         for l in labels:
             l.set(**properties)
 
@@ -759,7 +757,7 @@ class axis_text_y(themeable):
         properties = self.properties.copy()
         with suppress(KeyError):
             del properties["margin"]
-        labels = ax.get_yticklabels()  # pyright: ignore
+        labels = ax.get_yticklabels()
         for l in labels:
             l.set(**properties)
 
@@ -1944,7 +1942,8 @@ class legend_box_just(themeable):
 
     Parameters
     ----------
-    theme_element : "left", "right", "center", "top", "bottom", default=None
+    theme_element : "left", "right", "center", "top", "bottom", "baseline", \
+                    default=None
         If `None`, the value that will apply depends on :class:`legend_box`.
     """
 

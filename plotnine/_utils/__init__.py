@@ -5,11 +5,11 @@ from __future__ import annotations
 
 import inspect
 import itertools
-import typing
 import warnings
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from contextlib import suppress
+from typing import TYPE_CHECKING, cast, overload
 from warnings import warn
 
 import numpy as np
@@ -21,15 +21,17 @@ from pandas.core.groupby import DataFrameGroupBy  # type: ignore
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
-if typing.TYPE_CHECKING:
-    from typing import Any, Callable, Sequence
+if TYPE_CHECKING:
+    from typing import Any, Callable
 
     import numpy.typing as npt
     from IPython.core.interactiveshell import InteractiveShell
+    from matplotlib.typing import ColorType
     from typing_extensions import TypeGuard
 
     from plotnine.typing import (
         AnyArrayLike,
+        AnySeries,
         DataLike,
         FloatArray,
         FloatArrayLike,
@@ -510,7 +512,29 @@ def remove_missing(
     return data
 
 
-def to_rgba(colors, alpha):
+@overload
+def to_rgba(colors: ColorType, alpha: float) -> ColorType:
+    ...
+
+
+@overload
+def to_rgba(
+    colors: Sequence[ColorType], alpha: float
+) -> Sequence[ColorType] | ColorType:
+    ...
+
+
+@overload
+def to_rgba(
+    colors: AnySeries, alpha: AnySeries
+) -> Sequence[ColorType] | ColorType:
+    ...
+
+
+def to_rgba(
+    colors: Sequence[ColorType] | AnySeries | ColorType,
+    alpha: float | Sequence[float] | AnySeries,
+) -> Sequence[ColorType] | ColorType:
     """
     Covert hex colors to rgba values.
 
@@ -535,23 +559,20 @@ def to_rgba(colors, alpha):
     However :), the colors can be rgba hex values or
     list-likes and the alpha dimension will be respected.
     """
+    from matplotlib.typing import ColorType
 
     def is_iterable(var):
         return np.iterable(var) and not isinstance(var, str)
 
     def has_alpha(c):
-        if isinstance(c, tuple):
-            if len(c) == 4:
-                return True
-        elif isinstance(c, str):
-            if c[0] == "#" and len(c) == 9:
-                return True
-        return False
+        return (isinstance(c, tuple) and len(c) == 4) or (
+            isinstance(c, str) and len(c) == 9 and c[0] == "#"
+        )
 
     def no_color(c):
-        return c is None or c == "" or c.lower() == "none"
+        return c is None or c.lower() in ("none", "")
 
-    def to_rgba_hex(c, a):
+    def to_rgba_hex(c: ColorType, a: float) -> str:
         """
         Conver rgb color to rgba hex value
 
@@ -573,17 +594,22 @@ def to_rgba(colors, alpha):
         return c
 
     if is_iterable(colors):
+        colors = cast(Sequence[ColorType], colors)
+
         if all(no_color(c) for c in colors):
             return "none"
 
-        if is_iterable(alpha):
+        if isinstance(alpha, (Sequence, pd.Series)):
             return [to_rgba_hex(c, a) for c, a in zip(colors, alpha)]
         else:
             return [to_rgba_hex(c, alpha) for c in colors]
     else:
+        colors = cast(ColorType, colors)
+
         if no_color(colors):
             return colors
-        if is_iterable(alpha):
+
+        if isinstance(alpha, (Sequence, pd.Series)):
             return [to_rgba_hex(colors, a) for a in alpha]
         else:
             return to_rgba_hex(colors, alpha)

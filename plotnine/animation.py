@@ -208,7 +208,7 @@ class PlotnineAnimation(ArtistAnimation):
         for frame_no, p in enumerate(plots):
             if figure is None:
                 figure = p.draw()
-                axs = figure.get_axes()  # pyright: ignore
+                axs = figure.get_axes()
                 initialise_artist_offsets(len(axs))
                 scales = p._build_objs.scales
                 set_scale_limits(scales)
@@ -219,7 +219,7 @@ class PlotnineAnimation(ArtistAnimation):
             artists.append(get_frame_artists(axs))
 
         if figure is None:
-            figure = plt.figure()  # pyright: ignore
+            figure = plt.figure()
 
         assert figure is not None
         # Prevent Jupyter from plotting any static figure

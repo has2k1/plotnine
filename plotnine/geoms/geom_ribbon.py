@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import typing
-from contextlib import suppress
 
 from .._utils import SIZE_FACTOR, to_rgba
 from ..coords import coord_flip
@@ -135,12 +134,8 @@ class geom_ribbon(geom):
             _x, _min, _max = data["x"], data["ymin"], data["ymax"]
 
         # We only change this defaults for fill_between when necessary
-        where = None
-        interpolate = False
-        with suppress(KeyError):
-            if not data["where"].all():
-                where = data["where"]
-                interpolate = True
+        where = data.get("where", None)
+        interpolate = not (where is None or where.all())  # type: ignore
 
         if params["outline_type"] != "full":
             size = 0
@@ -149,8 +144,8 @@ class geom_ribbon(geom):
         fill_between(
             _x,
             _min,
-            _max,  # pyright: ignore[reportGeneralTypeIssues]
-            where=where,
+            _max,
+            where=where,  # type: ignore
             interpolate=interpolate,
             facecolor=fill,
             edgecolor=color,
