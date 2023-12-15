@@ -152,7 +152,7 @@ def contour_lines(X, Y, Z, levels):
     level_values = []
     start_pid = 1
     for level in levels:
-        vertices, _ = cgen.create_contour(level)
+        vertices, *_ = cgen.create_contour(level)
         for pid, piece in enumerate(vertices, start=start_pid):
             n = len(piece)  # pyright: ignore
             segments.append(piece)
