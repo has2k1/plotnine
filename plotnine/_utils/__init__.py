@@ -1026,8 +1026,9 @@ def to_inches(value: float, units: str) -> float:
     }
     try:
         return lookup[units](value)
-    except KeyError:
-        raise PlotnineError(f"Unknown units '{units}'")
+    except KeyError as e:
+        msg = f"Unknown units '{units}'"
+        raise PlotnineError(msg) from e
 
 
 def from_inches(value: float, units: str) -> float:
@@ -1049,8 +1050,9 @@ def from_inches(value: float, units: str) -> float:
     }
     try:
         return lookup[units](value)
-    except KeyError:
-        raise PlotnineError(f"Unknown units '{units}'")
+    except KeyError as e:
+        msg = f"Unknown units '{units}'"
+        raise PlotnineError(msg) from e
 
 
 class array_kind:

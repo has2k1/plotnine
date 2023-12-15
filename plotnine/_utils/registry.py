@@ -29,12 +29,12 @@ class _Registry(WeakValueDictionary):
     def __getitem__(self, key):
         try:
             return super().__getitem__(key)
-        except KeyError:
+        except KeyError as e:
             msg = (
-                "'{}' Not in Registry. Make sure the module in "
+                f"'{key}' Not in Registry. Make sure the module in "
                 "which it is defined has been imported."
             )
-            raise PlotnineError(msg.format(key))
+            raise PlotnineError(msg) from e
 
 
 Registry = _Registry()
