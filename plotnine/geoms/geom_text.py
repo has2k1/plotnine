@@ -160,7 +160,7 @@ class geom_text(geom):
 
             Missing values are preserved as None
             """
-            if series.dtype == float:
+            if series.dtype == "float":
                 return [None if np.isnan(l) else tpl.format(l) for l in series]
             else:
                 return [None if l is None else tpl.format(l) for l in series]
@@ -314,6 +314,5 @@ def check_adjust_text():
     try:
         pass
     except ImportError as err:
-        raise PlotnineError(
-            "To use adjust_text you must install the adjustText package."
-        ) from err
+        msg = "To use adjust_text you must install the adjustText package."
+        raise PlotnineError(msg) from err

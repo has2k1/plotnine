@@ -87,7 +87,6 @@ class _side_spaces(ABC):
         """
         Calculate the space taken up by each artist
         """
-        ...
 
     @property
     def total(self) -> float:
