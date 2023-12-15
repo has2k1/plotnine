@@ -3,7 +3,7 @@ name: Documentation
 on:
   workflow_dispatch:
   push:
-    branches: ["main", "dev", "doc", "qdoc", "dev-*"]
+    branches: ["main", "dev", "doc", "dev-*"]
   pull_request:
   release:
     types: [published]
