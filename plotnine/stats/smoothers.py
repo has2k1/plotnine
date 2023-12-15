@@ -42,7 +42,7 @@ def predictdf(data, xseq, **params):
             "'method' should either be a string or a function"
             "with the signature `func(data, xseq, **params)`"
         )
-        raise PlotnineError()
+        raise PlotnineError(msg)
 
     return method(data, xseq, **params)
 
