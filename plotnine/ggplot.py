@@ -33,6 +33,8 @@ from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 
 if typing.TYPE_CHECKING:
+    from typing_extensions import Self
+
     from plotnine.typing import (
         Axes,
         Coord,
@@ -147,9 +149,7 @@ class ggplot:
 
         return result
 
-    def __iadd__(
-        self, other: PlotAddable | list[PlotAddable] | None
-    ) -> ggplot:
+    def __iadd__(self, other: PlotAddable | list[PlotAddable] | None) -> Self:
         """
         Add other to ggplot object
 
@@ -162,11 +162,9 @@ class ggplot:
         if isinstance(other, Sequence):
             for item in other:
                 item.__radd__(self)
-            return self
-        elif other is None:
-            return self
-        else:
-            return other.__radd__(self)
+        elif other is not None:
+            other.__radd__(self)
+        return self
 
     def __add__(self, other: PlotAddable | list[PlotAddable] | None) -> ggplot:
         """
@@ -795,7 +793,7 @@ class plot_context:
         self.plot = plot
         self.show = show
 
-    def __enter__(self) -> plot_context:
+    def __enter__(self) -> Self:
         """
         Enclose in matplolib & pandas environments
         """

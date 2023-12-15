@@ -129,7 +129,7 @@ DataLike: TypeAlias = Data | DataFrameConvertible
 
 LayerData: TypeAlias = pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]
 LayerDataLike: TypeAlias = LayerData | DataFrameConvertible
-ColorLike: TypeAlias = str | Literal["None", "none"]
+ColorLike: TypeAlias = str
 ColorsLike: TypeAlias = (
     ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray
 )
