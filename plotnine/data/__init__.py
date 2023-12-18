@@ -188,7 +188,7 @@ A data frame with 1155 rows and 4 variables
 
 **References**
 
-[](http://www.stat.berkeley.edu/~brill/Papers/jspifinal.pdf)
+<http://www.stat.berkeley.edu/~brill/Papers/jspifinal.pdf>
 """
 
 economics.__doc__ = """
@@ -213,11 +213,11 @@ A data frame with 478 rows and 6 variables
 | uempmed  | median duration of unemployment, in week [^4]                  |
 | pop      | total population, in thousands [^5]                            |
 
-[^1]: [](http://research.stlouisfed.org/fred2/series/PSAVERT)
-[^2]: [](http://research.stlouisfed.org/fred2/series/PCE)
-[^3]: [](http://research.stlouisfed.org/fred2/series/UNEMPLOY)
-[^4]: [](http://research.stlouisfed.org/fred2/series/UEMPMED)
-[^5]: [](http://research.stlouisfed.org/fred2/series/POP)
+[^1]: <http://research.stlouisfed.org/fred2/series/PSAVERT>
+[^2]: <http://research.stlouisfed.org/fred2/series/PCE>
+[^3]: <http://research.stlouisfed.org/fred2/series/UNEMPLOY>
+[^4]: <http://research.stlouisfed.org/fred2/series/UEMPMED>
+[^5]: <http://research.stlouisfed.org/fred2/series/POP>
 """
 
 economics_long.__doc__ = economics.__doc__
