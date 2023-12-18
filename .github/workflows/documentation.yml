@@ -2,15 +2,39 @@ name: Documentation
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["main", "dev", "doc", "dev-*"]
-  pull_request:
-  release:
-    types: [published]
+  workflow_call:
 
 jobs:
-  build:
+  parse_commit_info:
     runs-on: ubuntu-latest
+    outputs:
+      can_deploy: ${{ steps.decide.outputs.can_deploy }}
+      deploy_to: ${{ steps.decide.outputs.deploy_to }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Copy build utils
+        run: |
+          cp -r .github/utils ../utils
+
+      - name: Decide Whether to Build and/or Release
+        id: decide
+        run: |
+          set -xe
+          CAN_DEPLOY=$(python ../utils/please.py can_i_deploy_documentation)
+          DEPLOY_TO=$(python ../utils/please.py where_can_i_deploy_documentation)
+
+          echo "can_deploy=$CAN_DEPLOY" >> $GITHUB_OUTPUT
+          echo "deploy_to=$DEPLOY_TO" >> $GITHUB_OUTPUT
+          echo github.ref ${{ github.ref }}
+
+  build-documentation:
+    runs-on: ubuntu-latest
+    needs: parse_commit_info
 
     strategy:
       matrix:
@@ -31,11 +55,12 @@ jobs:
           version: "1.4.528"
 
       - name: Install Package
+        shell: bash
         run: |
           pip install git+https://github.com/has2k1/mizani.git@main
           python -m pip install ".[doc]"
           pip install -r requirements/doc.txt
-          quarto add --no-prompt has2k1/issuey
+          pushd doc; quarto add --no-prompt has2k1/issuey; popd
 
       - name: Environment Information
         shell: bash
@@ -45,10 +70,21 @@ jobs:
           pip list
 
       - name: Build docs
+        shell: bash
         run: |
-          make doc
+          pushd doc; make doc; popd
+
+      - name: Environment Information
+        shell: bash
+        run: |
+          ls -la doc
+          ls -la doc/reference
+          ls -la doc/examples
+          ls -la doc/tutorials
 
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
+        if: contains(needs.parse_commit_info.outputs.can_deploy, 'true')
         with:
           folder: doc/_site
+          branch: ${{ needs.parse_commit_info.outputs.deploy_to }}
