@@ -40,7 +40,7 @@ interlinks:
       url: https://patsy.readthedocs.io/en/stable/
 
 website:
-  title: "plotnine {{< env VERSION >}}"
+  title: "plotnine {{< var version >}}"
   page-navigation: true
   navbar:
     left:
