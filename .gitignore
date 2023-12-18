@@ -103,3 +103,4 @@ doc/objects.json
 doc/objects.txt
 doc/.luarc.json
 doc/_environment
+doc/_variables.yml
