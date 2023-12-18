@@ -28,7 +28,7 @@ jobs:
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: "1.4.521"
+          version: "1.4.528"
 
       - name: Install Package
         run: |
