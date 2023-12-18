@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.521">
+<meta name="generator" content="quarto-1.4.528">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine ?env:VERSION</title>
+<title>plotnine ?var:version</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -100,6 +100,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -112,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
+    <span class="navbar-title">plotnine <strong>?var:version</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -183,9 +186,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../examples/geom_col-preview.html"><i class="bi bi-journal-code"></i>Two Variable Bar Plot</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -325,6 +329,222 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 </dl>
 </div>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<div class="quarto-embed-nb-cell">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:26.927625Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:26.927314Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:27.425411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:27.424721Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_text,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    position_dodge,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    lims,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    theme,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    element_blank,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="two-variable-bar-plot" class="level3">
+<h3 class="anchored" data-anchor-id="two-variable-bar-plot">Two Variable Bar Plot</h3>
+<p><em>Visualising on a single plot the values of a variable that has nested (and independent) variables</em></p>
+<p>Create the data</p>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:27.429192Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:27.428919Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:27.441698Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:27.441189Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'variable'</span>: [<span class="st">'gender'</span>, <span class="st">'gender'</span>, <span class="st">'age'</span>, <span class="st">'age'</span>, <span class="st">'age'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>],</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'category'</span>: [<span class="st">'Female'</span>, <span class="st">'Male'</span>, <span class="st">'1-24'</span>, <span class="st">'25-54'</span>, <span class="st">'55+'</span>, <span class="st">'Lo'</span>, <span class="st">'Lo-Med'</span>, <span class="st">'Med'</span>, <span class="st">'High'</span>],</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'value'</span>: [<span class="dv">60</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">30</span>, <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">25</span>, <span class="dv">40</span>],</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'variable'</span>] <span class="op">=</span> pd.Categorical(df[<span class="st">'variable'</span>], categories<span class="op">=</span>[<span class="st">'gender'</span>, <span class="st">'age'</span>, <span class="st">'income'</span>])</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'category'</span>] <span class="op">=</span> pd.Categorical(df[<span class="st">'category'</span>], categories<span class="op">=</span>df[<span class="st">'category'</span>])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>gender</td>
+<td>Female</td>
+<td>60</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>gender</td>
+<td>Male</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>age</td>
+<td>1-24</td>
+<td>50</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>age</td>
+<td>25-54</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>age</td>
+<td>55+</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>income</td>
+<td>Lo</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>income</td>
+<td>Lo-Med</td>
+<td>25</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>income</td>
+<td>Med</td>
+<td>25</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>income</td>
+<td>High</td>
+<td>40</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>We want to visualise this data and at a galance get an idea to how the <code>value</code> breaks down along the <code>category</code>s for the different <code>variable</code>. Note that each <code>variable</code> has different <code>category</code>s.</p>
+<p>First we make a simple plot with all this information and see what to draw from it.</p>
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:27.480652Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:27.480420Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:28.524985Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:28.524393Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_col_files/figure-html/..-examples-geom_col-cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>All the <code>value</code>s along each variable add up to 100, but stacked together the difference within and without the groups is not clear. The solution is to <code>dodge</code> the bars.</p>
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:28.527984Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:28.527725Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:28.820313Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:28.819746Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>))                     <span class="co"># modified</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_col_files/figure-html/..-examples-geom_col-cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is good, it gives us the plot we want but the legend is not great. Each <code>variable</code> has a different set of <code>category</code>s, but the legend has them all clamped together. We cannot easily change the legend, but we can replicate it’s purpose by labelling the individual bars.</p>
+<p>To do this, we create a <code>geom_text</code> with <code>position_dodge(width=0.9)</code> to match the ratio of the space taken up by each variable. If there was no spacing between the bars of different variables, we would have <code>width=1</code>.</p>
+<p>A minor quack, when text extends beyond the limits we have to manually make space or it would get clipped. Therefore we adjust the bottom <code>y</code> limits.</p>
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:28.823143Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:28.822939Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:29.244861Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:29.244310Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)                              <span class="co"># new</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>, show_legend<span class="op">=</span><span class="va">False</span>)   <span class="co"># modified</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(y<span class="op">=-</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">'category'</span>),                          <span class="co"># new</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'gray'</span>, size<span class="op">=</span><span class="dv">8</span>, angle<span class="op">=</span><span class="dv">45</span>, va<span class="op">=</span><span class="st">'top'</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))                                                 <span class="co"># new</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_col_files/figure-html/..-examples-geom_col-cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Would it look too crowded if we add value labels on top of the bars?</p>
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:29.247879Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:29.247674Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:29.720230Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:29.719665Z&quot;}" data-scrolled="false" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(y<span class="op">=-</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">'category'</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'gray'</span>, size<span class="op">=</span><span class="dv">8</span>, angle<span class="op">=</span><span class="dv">45</span>, va<span class="op">=</span><span class="st">'top'</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'value'</span>),                                    <span class="co"># new</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             size<span class="op">=</span><span class="dv">8</span>, va<span class="op">=</span><span class="st">'bottom'</span>, format_string<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">%'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_col_files/figure-html/..-examples-geom_col-cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>That looks okay. The <code>value</code>s line up with the <code>category</code>s because we used the same <code>dodge</code> parameters. For the final polish, we remove the y-axis, clear out the panel and make the <code>variable</code> and <code>category</code> labels have the same color.</p>
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:29.723181Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:29.722991Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:30.191494Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:30.190839Z&quot;}" data-scrolled="false" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ccolor <span class="op">=</span> <span class="st">'#555555'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(y<span class="op">=-</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">'category'</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span>ccolor, size<span class="op">=</span><span class="dv">8</span>, angle<span class="op">=</span><span class="dv">45</span>, va<span class="op">=</span><span class="st">'top'</span>)              <span class="co"># modified</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'value'</span>),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>             size<span class="op">=</span><span class="dv">8</span>, va<span class="op">=</span><span class="st">'bottom'</span>, format_string<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">%'</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'white'</span>),               <span class="co"># new</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>         axis_title_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>         axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span><span class="st">'black'</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>         axis_line_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>         axis_text_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>         axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>ccolor),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>         axis_ticks_major_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>         panel_grid<span class="op">=</span>element_blank(),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>         panel_border<span class="op">=</span>element_blank())</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_col_files/figure-html/..-examples-geom_col-cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Credit</strong>: I saved a plot this example is based on a while ago and forgot/misplaced the link to the source. The user considered it a minor coup.</p>
+</section>
+<a class="quarto-notebook-link" id="nblink-1" href="../examples/geom_col-preview.html#cell-0">Source: Two Variable Bar Plot</a></div>
 
 
 </section>
@@ -459,27 +679,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
@@ -494,10 +693,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             break;
           }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -506,7 +709,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
       return note.innerHTML;
     }
   }

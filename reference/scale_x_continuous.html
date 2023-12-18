@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.521">
+<meta name="generator" content="quarto-1.4.528">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine ?env:VERSION</title>
+<title>plotnine ?var:version</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine <strong>?env:VERSION</strong></span>
+    <span class="navbar-title">plotnine <strong>?var:version</strong></span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -182,9 +182,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.scales.scale_x_continuous" id="toc-plotnine.scales.scale_x_continuous" class="nav-link active" data-scroll-target="#plotnine.scales.scale_x_continuous"><code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scales.scale_x_continuous</span></a>
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../examples/scale_x_continuous-preview.html"><i class="bi bi-journal-code"></i>Guitar Neck ###</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -267,6 +268,120 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 </dl>
 </div>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<div class="quarto-embed-nb-cell">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:20.118799Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:20.118388Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:21.192168Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:21.191317Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    geom_path,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    scale_x_continuous,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    scale_y_continuous,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    guides,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    theme,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    element_rect</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mizani.transforms <span class="im">import</span> trans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="guitar-neck" class="level3">
+<h3 class="anchored" data-anchor-id="guitar-neck">Guitar Neck</h3>
+<p><em>Using a transformed x-axis to visualise guitar chords</em></p>
+<p>The x-axis is transformed to resemble the narrowing width of frets on a 25.5 inch Strat. To do that we create custom transformation.</p>
+<p>The key parts of <em>any</em> transform object are the <code>transform</code> and <code>inverse</code> functions.</p>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:21.196111Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:21.195763Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:21.201554Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:21.200902Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> frets_trans(trans):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Frets Transformation</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    number_of_frets <span class="op">=</span> <span class="dv">23</span>               <span class="co"># Including fret 0</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    domain <span class="op">=</span> (<span class="dv">0</span>, number_of_frets<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transform(x):</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> np.asarray(x)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">25.5</span> <span class="op">-</span> (<span class="fl">25.5</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">**</span> (x<span class="op">/</span><span class="dv">12</span>)))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> inverse(x):</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> np.asarray(x)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">12</span> <span class="op">*</span> np.log2(<span class="fl">25.5</span><span class="op">/</span>(<span class="fl">25.5</span><span class="op">-</span>x))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">@classmethod</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> breaks_(cls, limits):</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Fixed major breaks</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> cls.domain</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">@classmethod</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> minor_breaks(cls, major, limits):</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The major breaks as passed to this method are in transformed space.</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The minor breaks are calculated in data space to reveal the </span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># non-linearity of the scale.</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        _major <span class="op">=</span> cls.inverse(major)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        minor <span class="op">=</span> cls.transform(np.linspace(<span class="op">*</span>_major, cls.number_of_frets))</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> minor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The above transform is different from most in that, breaks and minor breaks do not change. This is common of very specialized scales. It can also be a key requirement when creating graphics for demontration purposes.</p>
+<p>Some chord Data</p>
+<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:21.205211Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:21.204968Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:21.210965Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:21.210330Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Notes: the 0 fret is an open strum, all other frets are played half-way between fret bars.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The strings are 1:low E, 2: A, 3: D, 4: G, 5: B, 6: E</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>c_chord <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Fret'</span>:   [<span class="dv">0</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>, <span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">0</span>],</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'String'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Sequence based on the number of notes in the chord</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>c_chord[<span class="st">'Sequence'</span>] <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">1</span><span class="op">+</span><span class="bu">len</span>(c_chord[<span class="st">'Fret'</span>])))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard markings for a Stratocaster</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>markings <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Fret'</span>:   [<span class="fl">2.5</span>, <span class="fl">4.5</span>, <span class="fl">6.5</span>, <span class="fl">8.5</span>, <span class="fl">11.5</span>, <span class="fl">11.5</span>, <span class="fl">14.5</span>, <span class="fl">16.5</span>, <span class="fl">18.5</span>, <span class="fl">20.5</span>],</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'String'</span>: [<span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Visualizing the chord</p>
+<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:21.214168Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:21.213917Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:21.832377Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:21.831758Z&quot;}" data-scrolled="true" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look and feel of the graphic</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>neck_color <span class="op">=</span> <span class="st">'#FFDDCC'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>fret_color <span class="op">=</span> <span class="st">'#998888'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>string_color <span class="op">=</span> <span class="st">'#AA9944'</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>neck_theme <span class="op">=</span> theme(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    figure_size<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">2</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>neck_color),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_y<span class="op">=</span>element_line(color<span class="op">=</span>string_color, size<span class="op">=</span><span class="fl">2.2</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_x<span class="op">=</span>element_line(color<span class="op">=</span>fret_color, size<span class="op">=</span><span class="fl">2.2</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_x<span class="op">=</span>element_line(color<span class="op">=</span>fret_color, size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>(ggplot(c_chord, aes(<span class="st">'Fret'</span>, <span class="st">'String'</span>))</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_path(aes(color<span class="op">=</span><span class="st">'Sequence'</span>), size<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">'Sequence'</span>), fill<span class="op">=</span><span class="st">'#FFFFFF'</span>, size<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(data<span class="op">=</span>markings, fill<span class="op">=</span><span class="st">'#000000'</span>, size<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_x_continuous(trans<span class="op">=</span>frets_trans)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_continuous(breaks<span class="op">=</span><span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">7</span>), minor_breaks<span class="op">=</span>[])</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(color<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> neck_theme</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="scale_x_continuous_files/figure-html/..-examples-scale_x_continuous-cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Credit</strong>: This example was motivated by <a href="https://github.com/jonvitale">Jonathan Vitale</a> who wanted to create graphics for a guitar scale trainer.</p>
+</section>
+<a class="quarto-notebook-link" id="nblink-1" href="../examples/scale_x_continuous-preview.html#cell-0">Source: Guitar Neck ###</a></div>
 
 
 </section>
@@ -401,27 +516,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
@@ -436,10 +530,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             break;
           }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -448,7 +546,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
       return note.innerHTML;
     }
   }
