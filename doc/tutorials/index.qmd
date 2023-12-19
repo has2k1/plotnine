@@ -1,13 +1,7 @@
 ---
-format:
-  html:
-    toc: false
-title: Tutorials
 jupyter: python3
-cache:
-   false
 ---
-
+# Tutorials
 
 ```{python}
 #| output: asis

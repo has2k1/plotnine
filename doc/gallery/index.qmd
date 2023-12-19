@@ -1,10 +1,8 @@
 ---
-format:
-  html:
-    toc: false
-title: Gallery
 jupyter: python3
 ---
+
+# Gallery
 
 ::: {.column-body-outset}
 ```{python}
