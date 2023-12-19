@@ -78,6 +78,7 @@ jobs:
         shell: bash
         run: |
           ls -la doc
+          cat doc/_variables.yml
           ls -la doc/reference
           ls -la doc/examples
           ls -la doc/tutorials
