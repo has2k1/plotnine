@@ -207,7 +207,7 @@ not exist, got no description. This release is fixes error.
 - [](:class:`~plotnine.geoms.geom_ribbon`) acquired new parameter `outline_type`
   which controls how to stroke the boundaries of the shaded area. This parameter
   is also available to [](:class:`~plotnine.geoms.geom_area`) and
-  [](:class:`~plotnine.geoms.geom_density`). :issue:`605`
+  [](:class:`~plotnine.geoms.geom_density`). ({{< issue 605 >}})
 
 ### API Changes
 
@@ -614,7 +614,7 @@ not exist, got no description. This release is fixes error.
 
 - When the transform of a specialised (one that is not and identity scale) continuous
   scale is altered, the user is warned about a possible error in what they expect.
-  ({{< issue 254 >, :issue:`255`}})
+  ({{< issue 254 >}}, {{< issue 255 >}})
 
 - The `method_args` parameter in [](:class:`~plotnine.stats.stat_smooth`) can now
   differentiate between arguments for initialising and those for fitting the
