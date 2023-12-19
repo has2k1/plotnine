@@ -70,9 +70,9 @@ STAT_SIGNATURE_TPL = """
 
 common_params_doc = {
     "mapping": """\
-Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If
-specified and `inherit_aes=True`{.py}, it is combined with the default mapping
-for the plot. You must supply mapping if there is no plot mapping.""",
+Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If \
+specified and `inherit_aes=True`{.py}, it is combined with the default \
+mapping for the plot. You must supply mapping if there is no plot mapping.""",
     "data": """\
 The data to be displayed in this layer. If `None`{.py}, the data from \
 from the `ggplot()`{.py} call is used. If specified, it overrides the \
