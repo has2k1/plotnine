@@ -91,12 +91,16 @@ section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(
    @extend .mb-0;
 }
 
+section.doc > h1, // case 1
 .doc section > h2,  // case 1
 .doc section > h3,  // case 1
 .doc section > h4 { // case 1
    @extend .mt-0;
 }
 
+section.doc > h1 + section {
+   @extend .pt-0;
+}
 
 .doc section {
    @extend .pt-4;
