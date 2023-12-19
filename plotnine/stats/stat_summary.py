@@ -297,7 +297,7 @@ class stat_summary(stat):
             elif isinstance(random_state, int):
                 random_state = np.random.RandomState(random_state)
 
-                self.params["fun_args"]["random_state"] = random_state
+            self.params["fun_args"]["random_state"] = random_state
 
         return self.params
 
