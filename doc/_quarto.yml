@@ -1,6 +1,5 @@
 project:
   type: website
-  output-dir: _site
   resources:
     - objects.txt
   render:
@@ -11,7 +10,6 @@ project:
 filters:
   - interlinks
 
-# interlinks are slow
 interlinks:
   fast: true
   sources:
@@ -63,9 +61,6 @@ format:
     theme:
       - lumen
       - custom.scss
-
-from: markdown+definition_lists
-
 
 issuey:
   issue-url: "https://github.com/has2k1/plotnine/issues/%id"
