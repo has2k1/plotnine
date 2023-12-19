@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; var version &gt;}} – changelog</title>
+<title>plotnine 0.0.post1+g2329418</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine {{&lt; var version &gt;}}</span>
+    <span class="navbar-title">plotnine 0.0.post1+g2329418</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -235,6 +235,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#bug-fixes-7" id="toc-bug-fixes-7" class="nav-link" data-scroll-target="#bug-fixes-7">Bug Fixes</a></li>
   <li><a href="#enhancements-5" id="toc-enhancements-5" class="nav-link" data-scroll-target="#enhancements-5">Enhancements</a></li>
   </ul></li>
+  <li><a href="#v0.5.1" id="toc-v0.5.1" class="nav-link" data-scroll-target="#v0.5.1">v0.5.1</a>
+  <ul class="collapse">
+  <li><a href="#bug-fixes-8" id="toc-bug-fixes-8" class="nav-link" data-scroll-target="#bug-fixes-8">Bug Fixes</a></li>
+  </ul></li>
+  <li><a href="#v0.5.0" id="toc-v0.5.0" class="nav-link" data-scroll-target="#v0.5.0">v0.5.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-7" id="toc-api-changes-7" class="nav-link" data-scroll-target="#api-changes-7">API Changes</a></li>
+  <li><a href="#bug-fixes-9" id="toc-bug-fixes-9" class="nav-link" data-scroll-target="#bug-fixes-9">Bug Fixes</a></li>
+  <li><a href="#enhancements-6" id="toc-enhancements-6" class="nav-link" data-scroll-target="#enhancements-6">Enhancements</a></li>
+  </ul></li>
+  <li><a href="#v0.4.0" id="toc-v0.4.0" class="nav-link" data-scroll-target="#v0.4.0">v0.4.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-8" id="toc-api-changes-8" class="nav-link" data-scroll-target="#api-changes-8">API Changes</a></li>
+  <li><a href="#new-features-6" id="toc-new-features-6" class="nav-link" data-scroll-target="#new-features-6">New Features</a></li>
+  <li><a href="#bug-fixes-10" id="toc-bug-fixes-10" class="nav-link" data-scroll-target="#bug-fixes-10">Bug Fixes</a></li>
+  </ul></li>
+  <li><a href="#v0.3.0" id="toc-v0.3.0" class="nav-link" data-scroll-target="#v0.3.0">v0.3.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-9" id="toc-api-changes-9" class="nav-link" data-scroll-target="#api-changes-9">API Changes</a></li>
+  <li><a href="#new-features-7" id="toc-new-features-7" class="nav-link" data-scroll-target="#new-features-7">New Features</a></li>
+  <li><a href="#enhancements-7" id="toc-enhancements-7" class="nav-link" data-scroll-target="#enhancements-7">Enhancements</a></li>
+  <li><a href="#bug-fixes-11" id="toc-bug-fixes-11" class="nav-link" data-scroll-target="#bug-fixes-11">Bug Fixes</a></li>
+  </ul></li>
+  <li><a href="#v0.2.1" id="toc-v0.2.1" class="nav-link" data-scroll-target="#v0.2.1">v0.2.1</a></li>
+  <li><a href="#v0.2.0" id="toc-v0.2.0" class="nav-link" data-scroll-target="#v0.2.0">v0.2.0</a>
+  <ul class="collapse">
+  <li><a href="#api-changes-10" id="toc-api-changes-10" class="nav-link" data-scroll-target="#api-changes-10">API Changes</a></li>
+  </ul></li>
+  <li><a href="#v0.1.0" id="toc-v0.1.0" class="nav-link" data-scroll-target="#v0.1.0">v0.1.0</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -396,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p><a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>where</code> which can be used shade withing given limits .</p></li>
 <li><p>Added support for objects with a <code>to_pandas</code> method to convert them to a pandas dataframe. You can now pass in <a href="https://pola.rs">polars</a> dataframes.</p></li>
-<li><p><a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>outline_type</code> which controls how to stroke the boundaries of the shaded area. This parameter is also available to <a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a>. :issue:<code>605</code></p></li>
+<li><p><a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>outline_type</code> which controls how to stroke the boundaries of the shaded area. This parameter is also available to <a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/605" title="Issue: #605">#605</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes-2" class="level3">
@@ -643,9 +672,220 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Legends are now plotted in a predictable order which dedends on how the plot is constructed.</p></li>
 <li><p>The spokes drawn by <a href="./reference/geom_spoke.html#plotnine.geoms.geom_spoke"><code>geom_spoke</code></a> can now have a fixed angle.</p></li>
 <li><p>Aesthetics that share a scale (e.g.&nbsp;color and fill can have the same scale) get different guides if mapped to different columns.</p></li>
-<li><p>When the transform of a specialised (one that is not and identity scale) continuous scale is altered, the user is warned about a possible error in what they expect. (</p></li>
+<li><p>When the transform of a specialised (one that is not and identity scale) continuous scale is altered, the user is warned about a possible error in what they expect. (<a href="https://github.com/has2k1/plotnine/issues/254" title="Issue: #254">#254</a>, <a href="https://github.com/has2k1/plotnine/issues/255" title="Issue: #255">#255</a>)</p></li>
+<li><p>The <code>method_args</code> parameter in <a href="./reference/stat_smooth.html#plotnine.stats.stat_smooth"><code>stat_smooth</code></a> can now differentiate between arguments for initialising and those for fitting the smoothing model.</p></li>
+<li><p> can now deal with more geoms e.g. <a href="./reference/geom_boxplot.html#plotnine.geoms.geom_boxplot"><code>geom_boxplot</code></a>.</p></li>
+<li><p>The <code>limits</code> parameter of <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> and <a href="./reference/scale_y_discrete.html#plotnine.scales.scale_y_discrete"><code>scale_y_discrete</code></a> can now be a function.</p></li>
+<li><p>The <code>width</code> of the boxplot can now be set irrespective of the stat.</p></li>
+<li><p>The mid-point color of <a href="./reference/scale_color_distiller.html#plotnine.scales.scale_color_distiller"><code>scale_color_distiller</code></a> now matches that of the trainned data.</p></li>
+<li><p>The way in which layers are created has been refactored to give packages that that extend plotnine more flexibility in manipulating the layers.</p></li>
+<li><p>You can now specify one sided limits for coordinates. e.g. <code class="sourceCode python">coord_cartesian(limits<span class="op">=</span>(<span class="va">None</span>, <span class="dv">10</span>))</code>.</p></li>
+<li><p>All the themeables have been lifted into the definition of <a href="./reference/theme.html#plotnine.themes.theme"><code>theme</code></a> so they can be suggested autocomplete.</p></li>
 </ul>
 </section>
+</section>
+<section id="v0.5.1" class="level2">
+<h2 class="anchored" data-anchor-id="v0.5.1">v0.5.1</h2>
+<p>(2018-10-17)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.1464803"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464803.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="bug-fixes-8" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-8">Bug Fixes</h3>
+<ul>
+<li>Changed the dependency for mizani to <code>v0.5.2</code>. This fixes an issue where facetting may create plots with missing items. (<a href="https://github.com/has2k1/plotnine/issues/210" title="Issue: #210">#210</a>)</li>
+</ul>
+</section>
+</section>
+<section id="v0.5.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.5.0">v0.5.0</h2>
+<p>(2018-10-16)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.1464204"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464204.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="api-changes-7" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-7">API Changes</h3>
+<ul>
+<li>Plotnine 0.5.0 only supports Python 3.5 and higher</li>
+<li>geopandas has been removed as a requirement for installation. Users of <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> will have to install it separately. (<a href="https://github.com/has2k1/plotnine/issues/178" title="Issue: #178">#178</a>)</li>
+</ul>
+</section>
+<section id="bug-fixes-9" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-9">Bug Fixes</h3>
+<ul>
+<li><p>Fixed issue where with the <code>subplots_adjust</code> themeable could not be used to set the <code>wspace</code> and <code>hspace</code> Matplotlib subplot parameters. (<a href="https://github.com/has2k1/plotnine/issues/185" title="Issue: #185">#185</a>)</p></li>
+<li><p>Fixed in <a href="./reference/stat_bin.html#plotnine.stats.stat_bin"><code>stat_bin</code></a> where setting custom limits for the scale leads to an error. (<a href="https://github.com/has2k1/plotnine/issues/189" title="Issue: #189">#189</a>)</p></li>
+<li><p>Fixed issue interactive plots where the x &amp; y coordinates of the mouse do not show. (<a href="https://github.com/has2k1/plotnine/issues/187" title="Issue: #187">#187</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_abline.html#plotnine.geoms.geom_abline"><code>geom_abline</code></a> where passing the mapping as a keyword parameter lead to a wrong plot. (<a href="https://github.com/has2k1/plotnine/issues/196" title="Issue: #196">#196</a>)</p></li>
+<li><p>Fixed issue where <code>minor_breaks</code> for tranformed scaled would have to be given in the transformed coordinates. Know they are given the data coordinates just like the major <code>breaks</code>.</p></li>
+</ul>
+</section>
+<section id="enhancements-6" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-6">Enhancements</h3>
+<ul>
+<li><p>For all geoms, with <a href="./reference/coord_cartesian.html#plotnine.coords.coord_cartesian"><code>coord_cartesian</code></a> <code>float('inf')</code> or <code>np.inf</code> are interpreted as the boundary of the plot panel.</p></li>
+<li><p>Discrete scales now show missing data (<code>None</code> and <code>nan</code>). This behaviour is controlled by the new <code>na_translate</code> option.</p></li>
+<li><p>The <code>minor_breaks</code> parameter for continuous scales can now be given as an integer. An integer is taken to controll the number of minor breaks between any set of major breaks.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.4.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.4.0">v0.4.0</h2>
+<p><em>2018-01-08</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.1325309"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1325309.svg" class="img-fluid figure-img" alt="image"></a></p>
+<figcaption>image</figcaption>
+</figure>
+</div>
+<section id="api-changes-8" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-8">API Changes</h3>
+<ul>
+<li><p>Calculated aesthetics are accessed using the function. The old method (double dots <code>..name..</code>) still works.</p></li>
+<li><p><a href="./reference/stat_qq.html#plotnine.stats.stat_qq"><code>stat_qq</code></a> calculates slightly different points for the theoretical quantiles.</p></li>
+<li><p>The <code>scales</code> (when set to <em>free</em>, <em>free_x</em> or <em>free_y</em>) parameter of <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> assigns the same scale across the rows and columns.</p></li>
+</ul>
+</section>
+<section id="new-features-6" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-6">New Features</h3>
+<ul>
+<li><p>Added <a href="./reference/geom_qq_line.html#plotnine.geoms.geom_qq_line"><code>geom_qq_line</code></a> and <a href="./reference/stat_qq_line.html#plotnine.stats.stat_qq_line"><code>stat_qq_line</code></a>, for lines through Q-Q plots.</p></li>
+<li><p>Added <a href="./reference/geom_density_2d.html#plotnine.geoms.geom_density_2d"><code>geom_density_2d</code></a> and .</p></li>
+<li><p>Added <a href="./reference/stat_ellipse.html#plotnine.stats.stat_ellipse"><code>stat_ellipse</code></a>.</p></li>
+<li><p>Added <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a>.</p></li>
+<li><p>Plotnine learned to respect plydata groups.</p></li>
+<li><p>Added <a href="./reference/stat_hull.html#plotnine.stats.stat_hull"><code>stat_hull</code></a>.</p></li>
+<li><p>Added .</p></li>
+</ul>
+</section>
+<section id="bug-fixes-10" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-10">Bug Fixes</h3>
+<ul>
+<li><p>Fixed issue where colorbars may chop off the colors at the limits of a scale.</p></li>
+<li><p>Fixed issue with creating fixed mappings to datetime and timedelta type values. (<a href="https://github.com/has2k1/plotnine/issues/88" title="Issue: #88">#88</a>)</p></li>
+<li><p>Fixed <a href="./reference/scale_x_datetime.html#plotnine.scales.scale_x_datetime"><code>scale_x_datetime</code></a> and <a href="./reference/scale_y_datetime.html#plotnine.scales.scale_y_datetime"><code>scale_y_datetime</code></a> to handle the intercepts along the axes. (<a href="https://github.com/has2k1/plotnine/issues/97" title="Issue: #97">#97</a>)</p></li>
+<li><p>Fixed <a href="./reference/stat_bin.html#plotnine.stats.stat_bin"><code>stat_bin</code></a> and <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> to properly handle the <code>breaks</code> parameter when used with a transforming scale.</p></li>
+<li><p>Fixed issue with x and y scales where the <code>name</code> of the scale was ignored when determining the axis titles. Now, the <code>name</code> parameter is specified, it is used as the title. (<a href="https://github.com/has2k1/plotnine/issues/105" title="Issue: #105">#105</a>)</p></li>
+<li><p>Fixed bug in discrete scales where a column could not be mapped to integer values. (<a href="https://github.com/has2k1/plotnine/issues/108" title="Issue: #108">#108</a>)</p></li>
+<li><p>Make it possible to hide the legend with <code>theme(legend_position='none')</code>. (<a href="https://github.com/has2k1/plotnine/issues/119" title="Issue: #119">#119</a>)</p></li>
+<li><p>Fixed issue in <a href="./reference/stat_summary_bin.html#plotnine.stats.stat_summary_bin"><code>stat_summary_bin</code></a> where some input values gave an error. (<a href="https://github.com/has2k1/plotnine/issues/123" title="Issue: #123">#123</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a> to sort data before plotting. (<a href="https://github.com/has2k1/plotnine/issues/127" title="Issue: #127">#127</a>)</p></li>
+<li><p>Fixed <code>IndexError</code> in <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> when row/column variable has 1 unique value. (<a href="https://github.com/has2k1/plotnine/issues/129" title="Issue: #129">#129</a>)</p></li>
+<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> when <code>scale='free'</code>, <code>scale='free_x'</code> or <code>scale='free_y'</code>, the panels share axes along the row or column.</p></li>
+<li><p>Fixed <a href="./reference/geom_boxplot.html#plotnine.geoms.geom_boxplot"><code>geom_boxplot</code></a> so that user can create a boxplot by specifying all required aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/136" title="Issue: #136">#136</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>geom_violin</code></a> to work when some groups are empty. (<a href="https://github.com/has2k1/plotnine/issues/131" title="Issue: #131">#131</a>)</p></li>
+<li><p>Fixed continuous scales to accept <code>minor=None</code>. (<a href="https://github.com/has2k1/plotnine/issues/120" title="Issue: #120">#120</a>)</p></li>
+<li><p>Fixed bug for discrete position scales, where <code>drop=False</code> did not drop unused categories. (<a href="https://github.com/has2k1/plotnine/issues/139" title="Issue: #139">#139</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_ydensity.html#plotnine.stats.stat_ydensity"><code>stat_ydensity</code></a> that caused an exception when a panel had no data. (<a href="https://github.com/has2k1/plotnine/issues/147" title="Issue: #147">#147</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a> where coordinate transformation and facetting could fail with a <code>KeyError</code>. (<a href="https://github.com/has2k1/plotnine/issues/151" title="Issue: #151">#151</a>)</p></li>
+<li><p>Fixed bug that lead to a <code>TypeError</code> when aesthetic mappings to could be recognised as being groupable. It was easy to stumble on this bug when using <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/165" title="Issue: #165">#165</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> where some combination of parameters lead to unexpected panel arrangements. (<a href="https://github.com/has2k1/plotnine/issues/163" title="Issue: #163">#163</a>)</p></li>
+<li><p>Fixed bug where the legend text of colorbars could not be themed. (<a href="https://github.com/has2k1/plotnine/issues/171" title="Issue: #171">#171</a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.3.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.3.0">v0.3.0</h2>
+<p><em>(2017-11-08)</em></p>
+<section id="api-changes-9" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-9">API Changes</h3>
+<ul>
+<li><p><a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> gained an extra parameter <code>legend_fill_ratio</code> that control the area of the legend that is filled to indicate confidence intervals. (<a href="https://github.com/has2k1/plotnine/issues/32" title="Issue: #32">#32</a>)</p></li>
+<li><p> gained an extra parameter <code>verbose</code>. It no longer guesses when to print information and when not to.</p></li>
+<li><p> gained an extra parameter <code>return_ggplot</code>.</p></li>
+<li><p>If the <code>minor_breaks</code> parameter of scales is a callable, it now expects one argument, the <code>limits</code>. Previously it accepted <code>breaks</code> and <code>limits</code>.</p></li>
+</ul>
+</section>
+<section id="new-features-7" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-7">New Features</h3>
+<ul>
+<li>Added <a href="./reference/PlotnineAnimation.html#plotnine.animation.PlotnineAnimation"><code>PlotnineAnimation</code></a> for animations.</li>
+<li>Added <a href="./reference/watermark.html#plotnine.watermark"><code>watermark</code></a> for watermarks.</li>
+<li>Added datetime scales for <code>alpha</code>, <code>colour</code>, <code>fill</code> and <code>size</code> aesthetics</li>
+</ul>
+</section>
+<section id="enhancements-7" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements-7">Enhancements</h3>
+<ul>
+<li><p>Changed parameter settings for <a href="./reference/stat_smooth.html#plotnine.stats.stat_smooth"><code>stat_smooth</code></a>.</p>
+<ol>
+<li>Default <code>span=0.75</code> instead of <code>2/3</code></li>
+<li>When using loess smoothing, the control parameter <code>surface</code> is only set to the value <code>'direct'</code> if predictions will be made outside the data range.</li>
+</ol></li>
+<li><p>Better control of scale limits. You can now specify individual limits of a scale.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>xlim(<span class="va">None</span>, <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can also use <a href="./reference/expand_limits.html#plotnine.scales.expand_limits"><code>expand_limits</code></a></p></li>
+<li><p>Low and high limits can now be expanded separately with different factors multiplicative and additive factors.</p></li>
+<li><p>The layer parameter <code>show_legend</code> can now accept a <code>dict</code> for finer grained control of which aesthetics to exclude in the legend.</p></li>
+<li><p>Infinite values are removed before statistical computations <code>stats</code>. (<a href="https://github.com/has2k1/plotnine/issues/40" title="Issue: #40">#40</a>).</p>
+<p><code>stats</code> also gained new parameter <code>na_rm</code>, that controls whether missing values are removed before statistical computations.</p></li>
+<li><p><a href="./reference/qplot.html#plotnine.qplot"><code>qplot</code></a> can now use the name and a Pandas series to label the scales of the aesthetics.</p></li>
+<li><p>You can now put stuff to add to a ggplot object into a list and add that that instead. No need to wrap the list around the internal class <code>Layers</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lst <span class="op">=</span> [geom_point(), geom_line()]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> ggplot(df, aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(g <span class="op">+</span> lst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Using a list allows you to bundle up objects. It can be convenient when creating some complicated plots. See the Periodic Table Example.</p></li>
+<li><p>You can now use a <code>dict</code> (with manual scales) to map data values to aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/169" title="Issue: #169">#169</a>)</p></li>
+<li><p>You can now specify infinite coordinates with <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>plotnine.geoms.geom_rect</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/166" title="Issue: #166">#166</a>)</p></li>
+</ul>
+</section>
+<section id="bug-fixes-11" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-11">Bug Fixes</h3>
+<ul>
+<li><p>Fixed bug where facetting led to a reordering of the data. This would manifest as a bug for <code>geoms</code> where order was important. (<a href="https://github.com/has2k1/plotnine/issues/26" title="Issue: #26">#26</a>)</p></li>
+<li><p>Fix bug where facetting by a column whose name (eg. <code>class</code>) is a python keyword resulted in an exception. (<a href="https://github.com/has2k1/plotnine/issues/28" title="Issue: #28">#28</a>)</p></li>
+<li><p>Fix bug where y-axis scaling was calculated from the <code>xlim</code> argument.</p></li>
+<li><p>Fix bug where initialising geoms from stats, and positions from geoms, when passed as classes (e.g.&nbsp;<code class="sourceCode python">stat_smooth(geom<span class="op">=</span>geom_point)</code>, would fail.</p></li>
+<li><p>Fixed bug in where specifying the <code>width</code> and <code>height</code> would mess up the <code>strip_text</code> and <code>spacing</code> for the facetted plots. (<a href="https://github.com/has2k1/plotnine/issues/44" title="Issue: #44">#44</a>).</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_abline.html#plotnine.geoms.geom_abline"><code>geom_abline</code></a>, <a href="./reference/geom_hline.html#plotnine.geoms.geom_hline"><code>geom_hline</code></a> and <a href="./reference/geom_vline.html#plotnine.geoms.geom_vline"><code>geom_vline</code></a> where facetting on a column that is not mapped to an aesthetic fails. (<a href="https://github.com/has2k1/plotnine/issues/48" title="Issue: #48">#48</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a>, the <code>fontstyle</code> parameter was being ignored.</p></li>
+<li><p>Fixed bug where boolean data was mapped to the same value on the coordinate axis. (<a href="https://github.com/has2k1/plotnine/issues/57" title="Issue: #57">#57</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> where the <code>scales</code> sometimes has no effect. (<a href="https://github.com/has2k1/plotnine/issues/58" title="Issue: #58">#58</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_boxplot.html#plotnine.stats.stat_boxplot"><code>stat_boxplot</code></a> where setting the <code>width</code> parameter caused an exception.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.2.1" class="level2">
+<h2 class="anchored" data-anchor-id="v0.2.1">v0.2.1</h2>
+<p><em>(2017-06-22)</em></p>
+<ul>
+<li><p>Fixed bug where manually setting the aesthetic <code>fill=None</code> or <code>fill='None'</code> could lead to a black fill instead of an empty fill.</p></li>
+<li><p>Fixed bug where computed aesthetics could not be used in larger statements. (<a href="https://github.com/has2k1/plotnine/issues/7" title="Issue: #7">#7</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_summary.html#plotnine.stats.stat_summary"><code>stat_summary</code></a> where the you got an exception for some types of the <code>x</code> aesthetic values.</p></li>
+<li><p>Fixed bug where <code class="sourceCode python">ggplot(data<span class="op">=</span>df)</code> resulted in an exception.</p></li>
+<li><p>Fixed missing axis ticks and labels for <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> when the scales are allowed to vary (e.g <code>scales='free'</code>) between the panels.</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>stat_density</code></a> where changing the x limits lead to an exception. (<a href="https://github.com/has2k1/plotnine/issues/22" title="Issue: #22">#22</a>)</p></li>
+</ul>
+</section>
+<section id="v0.2.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.2.0">v0.2.0</h2>
+<p><em>(2017-05-18)</em></p>
+<ul>
+<li><p>Fixed bug in <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> and <a href="./reference/scale_y_discrete.html#plotnine.scales.scale_y_discrete"><code>scale_y_discrete</code></a> where if they were instantiated with parameter <code>limits</code> that is either a numpy array or a pandas series, plotting would fail with a .</p></li>
+<li><p>Fixed exceptions when using <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html#pandas.pivot_table"><code>pandas.pivot_table</code></a> for Pandas v0.20.0. The API was <a href="http://pandas.pydata.org/pandas-docs/version/0.20/whatsnew.html#pivot-table-always-returns-a-dataframe">fixed</a>.</p></li>
+<li><p>Fixed issues where lines/paths with segments that all belonged in the same group had joins that in some cases were “butted”.</p></li>
+</ul>
+<section id="api-changes-10" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-10">API Changes</h3>
+<ul>
+<li><p><a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> now uses <code>ha</code> and <code>va</code> as parameter names for the horizontal and vertical alignment. This is what matplotlib users expect. The previous names <code>hjust</code> and <code>vjust</code> are silently accepted.</p></li>
+<li><p> can now be used to bundle up <code>geoms</code> and <code>stats</code>. This makes it easy to reuse <code>geoms</code> and <code>stats</code> or organise them in sensible bundles when making complex plots.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0.1.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.1.0">v0.1.0</h2>
+<p><em>(2017-04-25)</em></p>
+<p>First public release</p>
+
+
 </section>
 </section>
 
