@@ -47,6 +47,12 @@ table {
    border-bottom-color: $table-border-color;
 }
 
+// The default background color for the dropdown is
+// off-white and it washes out the text color.
+.navbar .dropdown-item {
+   color: $gray-800;
+}
+
 // docstring spacing and indentation
 section.doc-has-member-docs > :nth-child(n+3):nth-last-child(n+1),
 section.doc-has-member-docs section.doc-object > :nth-child(n+3):nth-last-child(n+1) {
