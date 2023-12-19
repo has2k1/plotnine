@@ -38,6 +38,7 @@ interlinks:
 
 website:
   title: "plotnine {{< var version >}}"
+  favicon: "images/favicon.ico"
   page-navigation: true
   navbar:
     left:
