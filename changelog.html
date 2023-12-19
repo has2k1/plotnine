@@ -287,17 +287,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
 <ul>
-<li><p>Fixed handling of minor breaks in <a href="./reference/scale_continuous.html#plotnine.scales.scale_continuous.scale_continuous"><code>scale_continuous</code></a> to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. ({{&lt; issue 685 &gt;}})</p></li>
-<li><p>Fixed theming of axis_ticks with the size parameter. ({{&lt; issue 703 &gt;}})</p></li>
+<li><p>Fixed handling of minor breaks in <a href="./reference/scale_continuous.html#plotnine.scales.scale_continuous.scale_continuous"><code>scale_continuous</code></a> to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. (<a href="https://github.com/has2k1/plotnine/issues/685" title="Issue: #685">#685</a>)</p></li>
+<li><p>Fixed theming of axis_ticks with the size parameter. (<a href="https://github.com/has2k1/plotnine/issues/703" title="Issue: #703">#703</a>)</p></li>
 <li><p>Fixed space handling around <code>axis_label</code>, <code>axis_text</code> and <code>axis_ticks</code> when the ticks are turned off.</p></li>
-<li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geoms.geom_path"><code>geom_path</code></a> where the lineend parameter was ignored. ({{&lt; issue 727 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geoms.geom_path"><code>geom_path</code></a> where the lineend parameter was ignored. (<a href="https://github.com/has2k1/plotnine/issues/727" title="Issue: #727">#727</a>)</p></li>
 <li><p>Fixed bug where <code class="sourceCode python">theme(legend_background<span class="op">=</span>element_blank())</code> messed up the position of the legend, instead of only removing the background.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
 <h3 class="anchored" data-anchor-id="enhancements">Enhancements</h3>
 <ul>
-<li>All <code>__all__</code> variables are explicitly assigned to help static typecheckers infer module attributes. ({{&lt; issue 685 &gt;}})</li>
+<li>All <code>__all__</code> variables are explicitly assigned to help static typecheckers infer module attributes. (<a href="https://github.com/has2k1/plotnine/issues/685" title="Issue: #685">#685</a>)</li>
 </ul>
 </section>
 </section>
@@ -351,13 +351,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes-1" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes-1">Bug Fixes</h3>
 <ul>
-<li><p>Fixed bug where a discrete position scale failed when mapping an empty variable. ({{&lt; issue 647 &gt;}})</p></li>
-<li><p>Fixed bug where <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> with a datetime column run into an exception. ({{&lt; issue 629 &gt;}})</p></li>
-<li><p>Fixed bug where <a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>geom_violin</code></a> with facetting and <code>"scales = free"</code> did not work. ({{&lt; issue 655 &gt;}})</p></li>
+<li><p>Fixed bug where a discrete position scale failed when mapping an empty variable. (<a href="https://github.com/has2k1/plotnine/issues/647" title="Issue: #647">#647</a>)</p></li>
+<li><p>Fixed bug where <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> with a datetime column run into an exception. (<a href="https://github.com/has2k1/plotnine/issues/629" title="Issue: #629">#629</a>)</p></li>
+<li><p>Fixed bug where <a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>geom_violin</code></a> with facetting and <code>"scales = free"</code> did not work. (<a href="https://github.com/has2k1/plotnine/issues/655" title="Issue: #655">#655</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>position_dodge2</code></a> to work with <code>preserve="single"</code> for <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>geom_rect</code></a> and any other geoms that accept a min-max range along the x-axis.</p></li>
-<li><p>Fixed legend for <a href="./reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a> to accurately display transparent fill colors that have been manually set. ({{&lt; issue 665 &gt;}})</p></li>
-<li><p>Fix issue where infinite limits for the <code>x</code> or <code>y</code> scales lead to an exception. ({{&lt; issue 664 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> and <a href="./reference/geom_label.html#plotnine.geoms.geom_label"><code>geom_label</code></a> when used with string formatting so that missing values are removed. ({{&lt; issue 651 &gt;}})</p></li>
+<li><p>Fixed legend for <a href="./reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a> to accurately display transparent fill colors that have been manually set. (<a href="https://github.com/has2k1/plotnine/issues/665" title="Issue: #665">#665</a>)</p></li>
+<li><p>Fix issue where infinite limits for the <code>x</code> or <code>y</code> scales lead to an exception. (<a href="https://github.com/has2k1/plotnine/issues/664" title="Issue: #664">#664</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> and <a href="./reference/geom_label.html#plotnine.geoms.geom_label"><code>geom_label</code></a> when used with string formatting so that missing values are removed. (<a href="https://github.com/has2k1/plotnine/issues/651" title="Issue: #651">#651</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -385,8 +385,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes-2" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes-2">Bug Fixes</h3>
 <ul>
-<li><p>Fixed bug in <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> where bins whose edges are zero or negative would yield the wrong plot. ({{&lt; issue 604 &gt;}})</p></li>
-<li><p>Fixed bug <a href="./reference/stat_density_2d.html#plotnine.stats.stat_density_2d"><code>stat_density_2d</code></a> which had been broken by Matplotlib 1.6.0. ({{&lt; issue 619 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> where bins whose edges are zero or negative would yield the wrong plot. (<a href="https://github.com/has2k1/plotnine/issues/604" title="Issue: #604">#604</a>)</p></li>
+<li><p>Fixed bug <a href="./reference/stat_density_2d.html#plotnine.stats.stat_density_2d"><code>stat_density_2d</code></a> which had been broken by Matplotlib 1.6.0. (<a href="https://github.com/has2k1/plotnine/issues/619" title="Issue: #619">#619</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> when using <code>adjust_text</code> for the arrows to have the same color as the text.</p></li>
 </ul>
 </section>
@@ -425,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="new-features-2">New Features</h3>
 <ul>
 <li><p>Added <a href="./reference/geom_pointdensity.html#plotnine.geoms.geom_pointdensity"><code>geom_pointdensity</code></a>, a 2D density plot that does not hide the distribution of the individual data points.</p></li>
-<li><p><a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>position_dodge2</code></a> gained the ability to reverse the order of the plotted groups. ({{&lt; issue 515 &gt;}})</p></li>
+<li><p><a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>position_dodge2</code></a> gained the ability to reverse the order of the plotted groups. (<a href="https://github.com/has2k1/plotnine/issues/515" title="Issue: #515">#515</a>)</p></li>
 <li><p>Added <a href="./reference/theme_tufte.html#plotnine.themes.theme_tufte"><code>theme_tufte</code></a>, a theme that reduces the distractions around plot data.</p></li>
 <li><p><a href="./reference/labs.html#plotnine.labels.labs"><code>labs</code></a> can now be used to create a <code>caption</code>. This caption can be styled using the <code>plot_caption</code> parameter to <a href="./reference/theme.html#plotnine.themes.theme"><code>theme</code></a>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
@@ -437,29 +437,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes-3" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes-3">Bug Fixes</h3>
 <ul>
-<li><p>Fixed bug in <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> where the <code>drop</code> parameter was ignored. ({{&lt; issue 510 &gt;}})</p></li>
-<li><p>Fixed issue with <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a> where the wrong range was used for the x|y axis. ({{&lt; issue 525 &gt;}})</p></li>
-<li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> where using a coordinate transformation without computing the standard error led to a crash. ({{&lt; issue 526 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> where the <code>drop</code> parameter was ignored. (<a href="https://github.com/has2k1/plotnine/issues/510" title="Issue: #510">#510</a>)</p></li>
+<li><p>Fixed issue with <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a> where the wrong range was used for the x|y axis. (<a href="https://github.com/has2k1/plotnine/issues/525" title="Issue: #525">#525</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> where using a coordinate transformation without computing the standard error led to a crash. (<a href="https://github.com/has2k1/plotnine/issues/526" title="Issue: #526">#526</a>)</p></li>
 <li><p>Fixed bug where you could not specific the cap/end of a dashed line when styling a plot with <a href="./reference/element_line.html#plotnine.themes.element_line"><code>element_line</code></a>.</p></li>
-<li><p>Fixed legend for <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> so that the entries have the same stroke and points on the map. ({{&lt; issue 534 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/geom_histogram.html#plotnine.geoms.geom_histogram"><code>geom_histogram</code></a> for some cases when it fails to automatically determine the number of bins. ({{&lt; issue 543 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> when mapping to lists/arrays/series so that the rows mapped this way are not mixed up. ({{&lt; issue 548 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> not to error for matplotlib &gt;= 3.5.0 so that it does not throw a Numpy error. ({{&lt; issue 567 &gt;}})</p></li>
+<li><p>Fixed legend for <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> so that the entries have the same stroke and points on the map. (<a href="https://github.com/has2k1/plotnine/issues/534" title="Issue: #534">#534</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_histogram.html#plotnine.geoms.geom_histogram"><code>geom_histogram</code></a> for some cases when it fails to automatically determine the number of bins. (<a href="https://github.com/has2k1/plotnine/issues/543" title="Issue: #543">#543</a>)</p></li>
+<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facets.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facets.facet_wrap"><code>facet_wrap</code></a> when mapping to lists/arrays/series so that the rows mapped this way are not mixed up. (<a href="https://github.com/has2k1/plotnine/issues/548" title="Issue: #548">#548</a>)</p></li>
+<li><p>Fixed <a href="./reference/stat_bin_2d.html#plotnine.stats.stat_bin_2d"><code>stat_bin_2d</code></a> not to error for matplotlib &gt;= 3.5.0 so that it does not throw a Numpy error. (<a href="https://github.com/has2k1/plotnine/issues/567" title="Issue: #567">#567</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> to be able to draw Polygons with holes in them.</p></li>
 <li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> to be able to draw MultiPolygons.</p></li>
-<li><p>Fixed <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> and <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> to work properly with <code>None</code> values. ({{&lt; issue 523 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a> to respect not to use the <code>fill</code> mapping on unfilled shapes. ({{&lt; issue 100 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/position_stack.html#plotnine.positions.position_stack"><code>position_stack</code></a> to work with scales that have non-linear transformations. e.g. <a href="./reference/scale_y_log10.html#plotnine.scales.scale_y_log10"><code>scale_y_log10</code></a>. ({{&lt; issue 580 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> and <a href="./reference/scale_x_discrete.html#plotnine.scales.scale_x_discrete"><code>scale_x_discrete</code></a> to work properly with <code>None</code> values. (<a href="https://github.com/has2k1/plotnine/issues/523" title="Issue: #523">#523</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_point.html#plotnine.geoms.geom_point"><code>geom_point</code></a> to respect not to use the <code>fill</code> mapping on unfilled shapes. (<a href="https://github.com/has2k1/plotnine/issues/100" title="Issue: #100">#100</a>)</p></li>
+<li><p>Fixed <a href="./reference/position_stack.html#plotnine.positions.position_stack"><code>position_stack</code></a> to work with scales that have non-linear transformations. e.g. <a href="./reference/scale_y_log10.html#plotnine.scales.scale_y_log10"><code>scale_y_log10</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/580" title="Issue: #580">#580</a>)</p></li>
 <li><p>Fixed scales to work with limits passed as a function.</p></li>
 <li><p>Fixed <a href="./reference/axis_ticks.html#plotnine.themes.themeable.axis_ticks"><code>axis_ticks</code></a> so you can change the colour of the axis ticks. This was probably a regression due to changes in Matplotlib.</p></li>
-<li><p>Fixed <a href="./reference/panel_ontop.html#plotnine.themes.themeable.panel_ontop"><code>panel_ontop</code></a> so that if is set to <code>False</code>, then the data visualised below the grid-lines. ({{&lt; issue 585 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a>, <a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a> to work with <a href="./reference/coord_flip.html#plotnine.coords.coord_flip"><code>coord_flip</code></a>. ({{&lt; issue 596 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/panel_ontop.html#plotnine.themes.themeable.panel_ontop"><code>panel_ontop</code></a> so that if is set to <code>False</code>, then the data visualised below the grid-lines. (<a href="https://github.com/has2k1/plotnine/issues/585" title="Issue: #585">#585</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_ribbon.html#plotnine.geoms.geom_ribbon"><code>geom_ribbon</code></a>, <a href="./reference/geom_area.html#plotnine.geoms.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geoms.geom_density"><code>geom_density</code></a> to work with <a href="./reference/coord_flip.html#plotnine.coords.coord_flip"><code>coord_flip</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/596" title="Issue: #596">#596</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements-2" class="level3">
 <h3 class="anchored" data-anchor-id="enhancements-2">Enhancements</h3>
 <ul>
-<li><p><a href="./reference/stat_summary.html#plotnine.stats.stat_summary"><code>stat_summary</code></a> now has a default summary function. ({{&lt; issue 528 &gt;}})</p></li>
+<li><p><a href="./reference/stat_summary.html#plotnine.stats.stat_summary"><code>stat_summary</code></a> now has a default summary function. (<a href="https://github.com/has2k1/plotnine/issues/528" title="Issue: #528">#528</a>)</p></li>
 <li><p><a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>stat_density</code></a> now uses a fast computation path for gaussian densities with no weights. This was probably a regression.</p></li>
 <li><p><a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> can now draw MultiPoints, MultiLineStrings and MultiPolgons.</p></li>
 <li><p><a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> with <code>adjust_text</code> can now be used in more than one layer with good enough results.</p></li>
@@ -494,27 +494,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes-4" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes-4">Bug Fixes</h3>
 <ul>
-<li><p>Fixed issue where some plots with a colorbar would fail for specific themes. ({{&lt; issue 424 &gt;}})</p></li>
+<li><p>Fixed issue where some plots with a colorbar would fail for specific themes. (<a href="https://github.com/has2k1/plotnine/issues/424" title="Issue: #424">#424</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>geom_map</code></a> to plot <code>MultiLineString</code> geom types.</p></li>
 <li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> to allow any order of <code>mapping</code> and <code>data</code> positional arguments.</p></li>
-<li><p>Fixed bug were the plotted image may have ignored theming that relied on some Matplotlib rcParams. ({{&lt; issue 451 &gt;}})</p></li>
-<li><p>Fixed the <code>weight</code> aesthetic in <a href="./reference/geom_boxplot.html#plotnine.geoms.geom_boxplot"><code>geom_boxplot</code></a>, previously ignored it is now recognised. ({{&lt; issue 438 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a> and <a href="./reference/annotation_stripes.html#plotnine.geoms.annotation_stripes"><code>annotation_stripes</code></a> to work without global data and aesthetics. ({{&lt; issue 469 &gt;}})</p></li>
-<li><p>Fix <a href="./reference/scale_shape_discrete.html#plotnine.scales.scale_shape_discrete"><code>scale_shape_discrete</code></a> when printing many unfilled shapes not to assign the same shapes to more than one group. ({{&lt; issue 473 &gt;}})</p></li>
-<li><p>Fixed bug in <a href="./reference/stat_ellipse.html#plotnine.stats.stat_ellipse"><code>stat_ellipse</code></a> where the center of the ellipse assuming a multivariate t-distribution was incorrectly calculated. ({{&lt; issue 493 &gt;}})</p></li>
-<li><p>Fixed calculation of <code>ndensity</code> in <a href="./reference/stat_bin.html#plotnine.stats.stat_bin"><code>stat_bin</code></a>. ({{&lt; issue 494 &gt;}})</p></li>
+<li><p>Fixed bug were the plotted image may have ignored theming that relied on some Matplotlib rcParams. (<a href="https://github.com/has2k1/plotnine/issues/451" title="Issue: #451">#451</a>)</p></li>
+<li><p>Fixed the <code>weight</code> aesthetic in <a href="./reference/geom_boxplot.html#plotnine.geoms.geom_boxplot"><code>geom_boxplot</code></a>, previously ignored it is now recognised. (<a href="https://github.com/has2k1/plotnine/issues/438" title="Issue: #438">#438</a>)</p></li>
+<li><p>Fixed <a href="./reference/annotation_logticks.html#plotnine.geoms.annotation_logticks"><code>annotation_logticks</code></a> and <a href="./reference/annotation_stripes.html#plotnine.geoms.annotation_stripes"><code>annotation_stripes</code></a> to work without global data and aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/469" title="Issue: #469">#469</a>)</p></li>
+<li><p>Fix <a href="./reference/scale_shape_discrete.html#plotnine.scales.scale_shape_discrete"><code>scale_shape_discrete</code></a> when printing many unfilled shapes not to assign the same shapes to more than one group. (<a href="https://github.com/has2k1/plotnine/issues/473" title="Issue: #473">#473</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_ellipse.html#plotnine.stats.stat_ellipse"><code>stat_ellipse</code></a> where the center of the ellipse assuming a multivariate t-distribution was incorrectly calculated. (<a href="https://github.com/has2k1/plotnine/issues/493" title="Issue: #493">#493</a>)</p></li>
+<li><p>Fixed calculation of <code>ndensity</code> in <a href="./reference/stat_bin.html#plotnine.stats.stat_bin"><code>stat_bin</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/494" title="Issue: #494">#494</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements-3" class="level3">
 <h3 class="anchored" data-anchor-id="enhancements-3">Enhancements</h3>
 <ul>
-<li><p>Manual scales now match the values of the breaks if the breaks are given. ({{&lt; issue 445 &gt;}})</p></li>
-<li><p>Using <code>print</code> to show a ggplot object will not show the hash (<code>&lt;ggplot: ...&gt;</code>) anymore. There is now a difference between <code>repr(p)</code> and <code>str(p)</code>. ({{&lt; issue 453 &gt;}})</p></li>
-<li><p>Added option to for the <code>base_family</code> of a theme, now you can set it once with and have it be applied to all themes. ({{&lt; issue 436 &gt;}})</p>
+<li><p>Manual scales now match the values of the breaks if the breaks are given. (<a href="https://github.com/has2k1/plotnine/issues/445" title="Issue: #445">#445</a>)</p></li>
+<li><p>Using <code>print</code> to show a ggplot object will not show the hash (<code>&lt;ggplot: ...&gt;</code>) anymore. There is now a difference between <code>repr(p)</code> and <code>str(p)</code>. (<a href="https://github.com/has2k1/plotnine/issues/453" title="Issue: #453">#453</a>)</p></li>
+<li><p>Added option to for the <code>base_family</code> of a theme, now you can set it once with and have it be applied to all themes. (<a href="https://github.com/has2k1/plotnine/issues/436" title="Issue: #436">#436</a>)</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">'base_family'</span>, <span class="st">'Comic Sans MS'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>You can now add <code>None</code> to a ggplot, doing so returns a copy of the the ggplot object. ({{&lt; issue 474 &gt;}})</p></li>
-<li><p>Better handling of multiline facet labels. ({{&lt; issue 484 &gt;}})</p></li>
+<li><p>You can now add <code>None</code> to a ggplot, doing so returns a copy of the the ggplot object. (<a href="https://github.com/has2k1/plotnine/issues/474" title="Issue: #474">#474</a>)</p></li>
+<li><p>Better handling of multiline facet labels. (<a href="https://github.com/has2k1/plotnine/issues/484" title="Issue: #484">#484</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -530,7 +530,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes-5" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes-5">Bug Fixes</h3>
 <ul>
-<li><p>Fixed issue where a plot has no data and the geoms have no data, but the mappings are valid. ({{&lt; issue 404 &gt;}})</p></li>
+<li><p>Fixed issue where a plot has no data and the geoms have no data, but the mappings are valid. (<a href="https://github.com/has2k1/plotnine/issues/404" title="Issue: #404">#404</a>)</p></li>
 <li><p>Fixed <code>preserve='single'</code> in <a href="./reference/position_dodge.html#plotnine.positions.position_dodge"><code>plotnine.positions.position_dodge</code></a> and <a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>plotnine.positions.position_dodge2</code></a> to work for geoms that only have <code>x</code> aesthetic and not <code>xmin</code> and <code>xmax</code> e.g <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>plotnine.geoms.geom_text</code></a>.</p></li>
 <li><p>Fix regression in <code>v0.7.0</code> where plots with a colorbar would fail if using <a href="./reference/theme_matplotlib.html#plotnine.themes.theme_matplotlib"><code>theme_matplotlib</code></a>.</p></li>
 </ul>
@@ -550,7 +550,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>Changed the default method of caculating bandwidth for all stats that use kernel density estimation. The affected stats are <a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>stat_density</code></a>, <a href="./reference/stat_ydensity.html#plotnine.stats.stat_ydensity"><code>stat_ydensity</code></a>, and <a href="./reference/stat_sina.html#plotnine.stats.stat_sina"><code>stat_sina</code></a>. These stats can now work with groups that have a single unique value.</p></li>
 <li><p>Changed to refer to the same scale as <a href="./reference/scale_color_continuous.html#plotnine.scales.scale_color_continuous"><code>plotnine.scales.scale_color_continuous</code></a>.</p></li>
-<li><p>Changed <a href="./reference/scale_color_cmap.html#plotnine.scales.scale_color_cmap"><code>plotnine.scales.scale_color_cmap</code></a> so the parameter <code>cmap_name</code> refers to the name of the color palette and <code>name</code> refers to the name of the scale. ({{&lt; issue 371 &gt;}})</p></li>
+<li><p>Changed <a href="./reference/scale_color_cmap.html#plotnine.scales.scale_color_cmap"><code>plotnine.scales.scale_color_cmap</code></a> so the parameter <code>cmap_name</code> refers to the name of the color palette and <code>name</code> refers to the name of the scale. (<a href="https://github.com/has2k1/plotnine/issues/371" title="Issue: #371">#371</a>)</p></li>
 </ul>
 </section>
 <section id="new-features-4" class="level3">
@@ -565,25 +565,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>Fixed issue where a wrong warning could be issued about changing the transform of a specialised scale. It mostly affected the <em>timedelta</em> scale.</p></li>
 <li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geoms.geom_violin"><code>plotnine.geoms.geom_violin</code></a> and other geoms when used with <code>position='dodge'</code> not to crash when if a layer has an empty group of data.</p></li>
-<li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geoms.geom_path"><code>plotnine.geoms.geom_path</code></a> for some cases when groups had less than 2 points. ({{&lt; issue 319 &gt;}})</p></li>
-<li><p>Fixed all stats that compute kernel density estimates to work when all the data points are the same. ({{&lt; issue 317 &gt;}})</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geoms.geom_path"><code>plotnine.geoms.geom_path</code></a> for some cases when groups had less than 2 points. (<a href="https://github.com/has2k1/plotnine/issues/319" title="Issue: #319">#319</a>)</p></li>
+<li><p>Fixed all stats that compute kernel density estimates to work when all the data points are the same. (<a href="https://github.com/has2k1/plotnine/issues/317" title="Issue: #317">#317</a>)</p></li>
 <li><p>Fixed issue where setting the group to a string value i.e.&nbsp;<code>group='string'</code> outside <code>aes()</code> failed due to an error.</p></li>
-<li><p>Fixed issue where discrete position scales could not deal with fewer limits than those present in the data. ({{&lt; issue 342 &gt;}})</p></li>
-<li><p>Fixed issue with using custom tuple linetypes~ with <a href="./reference/scale_linetype_manual.html#plotnine.scales.scale_linetype_manual"><code>plotnine.scales.scale_linetype_manual</code></a>. ({{&lt; issue 352 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>plotnine.geoms.geom_map</code></a> to work with facets. ({{&lt; issue 359 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/position_jitterdodge.html#plotnine.positions.position_jitterdodge"><code>plotnine.positions.position_jitterdodge</code></a> to work when <code>color</code> is used as an aesthetic. ({{&lt; issue 372 &gt;}})</p></li>
-<li><p>Fixed <a href="./reference/geom_qq.html#plotnine.geoms.geom_qq"><code>plotnine.geoms.geom_qq</code></a> to work with facets. ({{&lt; issue 379 &gt;}})</p></li>
-<li><p>Fixed skewed head in <a href="./reference/arrow.html#plotnine.geoms.geom_path.arrow"><code>plotnine.geoms.geom_path.arrow</code></a> when drawn on facetted plot. ({{&lt; issue 388 &gt;}})</p></li>
-<li><p>Fixed issue with <a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>plotnine.stats.stat_density</code></a> where weights could not be used with a gaussian model. ({{&lt; issue 392 &gt;}})</p></li>
-<li><p>Fixed bug where <a href="./reference/guide_colorbar.html#plotnine.guides.guide_colorbar"><code>guide_colorbar</code></a> width and height could not be controlled by <a href="./reference/legend_key_width.html#plotnine.themes.themeable.legend_key_width"><code>legend_key_width</code></a> and <a href="./reference/legend_key_height.html#plotnine.themes.themeable.legend_key_height"><code>legend_key_height</code></a>. ({{&lt; issue 360 &gt;}})</p></li>
+<li><p>Fixed issue where discrete position scales could not deal with fewer limits than those present in the data. (<a href="https://github.com/has2k1/plotnine/issues/342" title="Issue: #342">#342</a>)</p></li>
+<li><p>Fixed issue with using custom tuple linetypes~ with <a href="./reference/scale_linetype_manual.html#plotnine.scales.scale_linetype_manual"><code>plotnine.scales.scale_linetype_manual</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/352" title="Issue: #352">#352</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_map.html#plotnine.geoms.geom_map"><code>plotnine.geoms.geom_map</code></a> to work with facets. (<a href="https://github.com/has2k1/plotnine/issues/359" title="Issue: #359">#359</a>)</p></li>
+<li><p>Fixed <a href="./reference/position_jitterdodge.html#plotnine.positions.position_jitterdodge"><code>plotnine.positions.position_jitterdodge</code></a> to work when <code>color</code> is used as an aesthetic. (<a href="https://github.com/has2k1/plotnine/issues/372" title="Issue: #372">#372</a>)</p></li>
+<li><p>Fixed <a href="./reference/geom_qq.html#plotnine.geoms.geom_qq"><code>plotnine.geoms.geom_qq</code></a> to work with facets. (<a href="https://github.com/has2k1/plotnine/issues/379" title="Issue: #379">#379</a>)</p></li>
+<li><p>Fixed skewed head in <a href="./reference/arrow.html#plotnine.geoms.geom_path.arrow"><code>plotnine.geoms.geom_path.arrow</code></a> when drawn on facetted plot. (<a href="https://github.com/has2k1/plotnine/issues/388" title="Issue: #388">#388</a>)</p></li>
+<li><p>Fixed issue with <a href="./reference/stat_density.html#plotnine.stats.stat_density"><code>plotnine.stats.stat_density</code></a> where weights could not be used with a gaussian model. (<a href="https://github.com/has2k1/plotnine/issues/392" title="Issue: #392">#392</a>)</p></li>
+<li><p>Fixed bug where <a href="./reference/guide_colorbar.html#plotnine.guides.guide_colorbar"><code>guide_colorbar</code></a> width and height could not be controlled by <a href="./reference/legend_key_width.html#plotnine.themes.themeable.legend_key_width"><code>legend_key_width</code></a> and <a href="./reference/legend_key_height.html#plotnine.themes.themeable.legend_key_height"><code>legend_key_height</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/360" title="Issue: #360">#360</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements-4" class="level3">
 <h3 class="anchored" data-anchor-id="enhancements-4">Enhancements</h3>
 <ul>
 <li><p>You can now set the bandwidth parameter <code>bw</code> of <a href="./reference/stat_ydensity.html#plotnine.stats.stat_ydensity"><code>stat_ydensity</code></a>.</p></li>
-<li><p>Parameters <code>ha</code> and <code>va</code> of <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> have been converted to aesthetics. You can now map to them. ({{&lt; issue 325 &gt;}})</p></li>
-<li><p>All themes (except <code>theme_matplotlib</code>) now do not show minor ticks. ({{&lt; issue 348 &gt;}})</p></li>
+<li><p>Parameters <code>ha</code> and <code>va</code> of <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> have been converted to aesthetics. You can now map to them. (<a href="https://github.com/has2k1/plotnine/issues/325" title="Issue: #325">#325</a>)</p></li>
+<li><p>All themes (except <code>theme_matplotlib</code>) now do not show minor ticks. (<a href="https://github.com/has2k1/plotnine/issues/348" title="Issue: #348">#348</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -619,19 +619,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes-7">Bug Fixes</h3>
 <ul>
 <li><p>Fixed bug where facetting would fail if done on a plot with annotation(s) and one of the facetting columns was also a variable in the environment.</p></li>
-<li><p>Fixed bug where <a href="./reference/coord_flip.html#plotnine.coords.coord_flip"><code>coord_flip</code></a> would not flip geoms created by <a href="./reference/geom_rug.html#plotnine.geoms.geom_rug"><code>geom_rug</code></a>. ({{&lt; issue 216 &gt;}})</p></li>
-<li><p>Fixed bug where plots with <a href="./reference/theme_xkcd.html#plotnine.themes.theme_xkcd"><code>theme_xkcd</code></a> cannot be saved twice. ({{&lt; issue 199 &gt;}})</p></li>
-<li><p>Fixed bug that made it impossible to map to columns with the same name as a calculated columns of the stat. ({{&lt; issue 234 &gt;}})</p></li>
-<li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> that made it difficult to use it with stats other than <a href="./reference/stat_smooth.html#plotnine.stats.stat_smooth"><code>stat_smooth</code></a>. ({{&lt; issue 242 &gt;}})</p></li>
-<li><p>Fixed bug in <a href="./reference/position_dodge.html#plotnine.positions.position_dodge"><code>position_dodge</code></a> where by bar plot could get thinner when facetting and useing <code>preserve = 'single'</code>. ({{&lt; issue 224 &gt;}})</p></li>
-<li><p>Fixed bug in <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a> where if the transformation reversed the original limits, the order in which the data was laid out remained unchanged. ({{&lt; issue 253 &gt;}})</p></li>
-<li><p>Fixed bug in <a href="./reference/stat_count.html#plotnine.stats.stat_count"><code>stat_count</code></a> where <code>float</code> weights were rounded and lead to a wrong plot. ({{&lt; issue 260 &gt;}})</p></li>
-<li><p>Fixed bug where one could not use the British spelling <code>colour</code> to rename a color scale. ({{&lt; issue 264 &gt;}})</p></li>
+<li><p>Fixed bug where <a href="./reference/coord_flip.html#plotnine.coords.coord_flip"><code>coord_flip</code></a> would not flip geoms created by <a href="./reference/geom_rug.html#plotnine.geoms.geom_rug"><code>geom_rug</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/216" title="Issue: #216">#216</a>)</p></li>
+<li><p>Fixed bug where plots with <a href="./reference/theme_xkcd.html#plotnine.themes.theme_xkcd"><code>theme_xkcd</code></a> cannot be saved twice. (<a href="https://github.com/has2k1/plotnine/issues/199" title="Issue: #199">#199</a>)</p></li>
+<li><p>Fixed bug that made it impossible to map to columns with the same name as a calculated columns of the stat. (<a href="https://github.com/has2k1/plotnine/issues/234" title="Issue: #234">#234</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geoms.geom_smooth"><code>geom_smooth</code></a> that made it difficult to use it with stats other than <a href="./reference/stat_smooth.html#plotnine.stats.stat_smooth"><code>stat_smooth</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/242" title="Issue: #242">#242</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/position_dodge.html#plotnine.positions.position_dodge"><code>position_dodge</code></a> where by bar plot could get thinner when facetting and useing <code>preserve = 'single'</code>. (<a href="https://github.com/has2k1/plotnine/issues/224" title="Issue: #224">#224</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a> where if the transformation reversed the original limits, the order in which the data was laid out remained unchanged. (<a href="https://github.com/has2k1/plotnine/issues/253" title="Issue: #253">#253</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/stat_count.html#plotnine.stats.stat_count"><code>stat_count</code></a> where <code>float</code> weights were rounded and lead to a wrong plot. (<a href="https://github.com/has2k1/plotnine/issues/260" title="Issue: #260">#260</a>)</p></li>
+<li><p>Fixed bug where one could not use the British spelling <code>colour</code> to rename a color scale. (<a href="https://github.com/has2k1/plotnine/issues/264" title="Issue: #264">#264</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/lims.html#plotnine.scales.lims"><code>lims</code></a>, <a href="./reference/xlim.html#plotnine.scales.xlim"><code>xlim</code></a>, and <a href="./reference/ylim.html#plotnine.scales.ylim"><code>ylim</code></a> where <code>datetime</code> and <code>timedelta</code> limits resulted in an error.</p></li>
-<li><p>Fixed bug where <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>geom_rect</code></a> could not be used with <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a>. ({{&lt; issue 256 &gt;}})</p></li>
-<li><p>Fixed bug where using free scales with facetting and flipping the coordinate axes could give unexpected results. ({{&lt; issue 286 &gt;}})</p></li>
+<li><p>Fixed bug where <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>geom_rect</code></a> could not be used with <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/256" title="Issue: #256">#256</a>)</p></li>
+<li><p>Fixed bug where using free scales with facetting and flipping the coordinate axes could give unexpected results. (<a href="https://github.com/has2k1/plotnine/issues/286" title="Issue: #286">#286</a>)</p></li>
 <li><p>Fixed unwanted tick along the axis for versions of Matplotlib &gt;= 3.1.0.</p></li>
-<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> not to error when using <code>hjust</code> and <code>vjust</code>. ({{&lt; issue 287 &gt;}})</p></li>
+<li><p>Fixed <a href="./reference/geom_text.html#plotnine.geoms.geom_text"><code>geom_text</code></a> not to error when using <code>hjust</code> and <code>vjust</code>. (<a href="https://github.com/has2k1/plotnine/issues/287" title="Issue: #287">#287</a>)</p></li>
 <li><p>Fixed bug where <a href="./reference/geom_abline.html#plotnine.geoms.geom_abline"><code>geom_abline</code></a> <a href="./reference/geom_hline.html#plotnine.geoms.geom_hline"><code>geom_hline</code></a> and <a href="./reference/geom_vline.html#plotnine.geoms.geom_vline"><code>geom_vline</code></a> could give wrong results when used with <a href="./reference/coord_trans.html#plotnine.coords.coord_trans"><code>coord_trans</code></a>.</p></li>
 <li><p>Fixed bug where layers with only infinite values would lead to an exception if they were the first layer encountered when choosing a scale.</p></li>
 </ul>
