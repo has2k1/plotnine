@@ -10,7 +10,7 @@ interlinks:
 	quartodoc interlinks
 
 build:
-	python _pre_build.py
+	python _config.py
 	quartodoc build
 
 render: build

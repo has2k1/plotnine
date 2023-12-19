@@ -1,6 +1,5 @@
 project:
   type: website
-  pre-render: _config.py
   output-dir: _site
   resources:
     - objects.txt
