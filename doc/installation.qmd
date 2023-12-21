@@ -1,4 +1,6 @@
-# Installation
+---
+title: Installation
+---
 
 plotnine can be can be installed in a couple of ways, depending on purpose.
 

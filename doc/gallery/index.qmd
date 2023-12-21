@@ -1,8 +1,7 @@
 ---
 jupyter: python3
+title: Gallery
 ---
-
-# Gallery
 
 ::: {.column-body-outset}
 ```{python}

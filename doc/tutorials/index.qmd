@@ -1,7 +1,7 @@
 ---
 jupyter: python3
+title: Tutorials
 ---
-# Tutorials
 
 ```{python}
 #| output: asis

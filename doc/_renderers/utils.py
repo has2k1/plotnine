@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, Optional, Sequence
+from typing import Any, Literal, Optional, Sequence
 
+import yaml
 from griffe import dataclasses as dc
 from griffe import expressions as expr
+from quartodoc.pandoc.blocks import Block, Blocks, Header
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
 

@@ -1,4 +1,6 @@
-# Changelog
+---
+title: Changelog
+---
 
 ## v0.13.0
 (not-released-yet)
