@@ -104,7 +104,7 @@ class guide_colorbar(guide):
                 self.__class__.__name__,
             ]
         )
-        self.hash = hashlib.md5(info.encode("utf-8")).hexdigest()
+        self.hash = hashlib.sha256(info.encode("utf-8")).hexdigest()
         return self
 
     def merge(self, other):
