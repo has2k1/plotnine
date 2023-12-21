@@ -1,8 +1,8 @@
 import re
+from functools import singledispatch
 
 import griffe.dataclasses as dc
 import griffe.expressions as expr
-from plum import dispatch
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Span
 
@@ -73,18 +73,23 @@ def highlight_strings(s: str) -> str:
     return STRING_RE.sub(string_match_highlight_func, s)
 
 
-@dispatch
-def repr_obj(obj: expr.Expr):  # type: ignore
+@singledispatch
+def repr_obj(obj) -> str:
+    return repr(obj)
+
+
+@repr_obj.register
+def _(obj: expr.Expr) -> str:
     """
     Representation of an expression as code
     """
     # We expect the obj expression to consist of
     # a combination of only strings and name expressions
-    return "".join(repr_obj(x) for x in obj.iterate())  # type: ignore
+    return "".join(repr_obj(x) for x in obj.iterate())
 
 
-@dispatch
-def repr_obj(s: str) -> str:  # type: ignore
+@repr_obj.register
+def _(s: str) -> str:
     """
     Repr of str enclosed double quotes
     """
@@ -93,8 +98,8 @@ def repr_obj(s: str) -> str:  # type: ignore
     return s
 
 
-@dispatch
-def repr_obj(obj: expr.ExprName) -> str:
+@repr_obj.register
+def _(obj: expr.ExprName) -> str:
     """
     A named expression
     """

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING, Literal, Optional, TypeAlias
 from warnings import warn
 
@@ -33,6 +34,7 @@ from quartodoc.renderers.md_renderer import _has_attr_section
 from tabulate import tabulate
 
 from .format import formatted_signature, markdown_escape, repr_obj
+from .pandoc.blocks import RawHTMLBlockTag, RenderedDocObject
 from .typing_modules import TypingModules
 from .utils import (
     InterLink,
@@ -193,31 +195,23 @@ class NumpyDocRenderer(Renderer):
         if display_name_format == "auto":
             display_name_format = "full" if self.header_level == 1 else "name"
 
-        name = get_object_display_name(el.obj, display_name_format)
+        name = markdown_escape(
+            get_object_display_name(el.obj, display_name_format)
+        )
         symbol_code = Code(
             # Pandoc requires some space to create empty code tags
             " ",
-            Attr(
-                classes=[
-                    "doc-symbol",
-                    "doc-symbol-heading",
-                    f"doc-symbol-{kind}",
-                ]
-            ),
-        )
-        object_name = Span(
-            markdown_escape(name),
-            Attr(classes=["doc-object-name", f"doc-{kind}-name"]),
+            Attr(classes=["doc-symbol", f"doc-symbol-{kind}"]),
         )
 
         doc_labels = make_doc_labels(labels)
-        classes = ["doc", "doc-object", f"doc-{kind}"]
+        classes = ["doc-object", f"doc-{kind}"]
         if hasattr(el, "members") and el.members:
             classes.append("doc-has-member-docs")
 
         h = Header(
             level=self.header_level,
-            content=Inlines([symbol_code, object_name, doc_labels]),
+            content=Inlines([symbol_code, name, doc_labels]),
             attr=Attr(identifier=el.obj.path, classes=classes),
         )
         return h
@@ -240,7 +234,9 @@ class NumpyDocRenderer(Renderer):
         raise NotImplementedError(f"Unsupported Doc type: {type(el)}")
 
     @dispatch
-    def render(self, el: layout.DocClass | layout.DocModule):  # type: ignore
+    def render(  # type: ignore
+        self, el: layout.DocClass | layout.DocModule
+    ) -> RenderedDocObject:
         """
         Render documentation for a class or a module
 
@@ -322,22 +318,37 @@ class NumpyDocRenderer(Renderer):
                     ]
                 meth_docs = [section_header, str(meth_table), *docs]
 
-        return str(
-            Blocks([header, sig, body, *attr_docs, *class_docs, *meth_docs])
+        return RenderedDocObject(
+            header, sig, Blocks([body, *attr_docs, *class_docs, *meth_docs])
         )
 
     @dispatch
     def render(self, el: layout.Page):  # type: ignore
-        if el.summary:
-            header = Header(
-                self.header_level, markdown_escape(el.summary.name)
-            )
-            desc = el.summary.desc
-        else:
-            header, desc = "", ""
+        contents: list[RenderedDocObject] = [
+            self.render(c)
+            for c in el.contents  # type: ignore
+        ]
 
-        contents = [self.render(c) for c in el.contents]  # type: ignore
-        page = Blocks([header, desc, *contents])  # type: ignore
+        title, desc = "", ""
+
+        # If a page documents a single object, lift-up the title of
+        # that object to be the quarto-title of the page.
+        if len(contents) == 1:
+            rendered_obj = contents[0]
+            title = rendered_obj.title
+            rendered_obj.title = None
+        elif el.summary:
+            title = Header(self.header_level, markdown_escape(el.summary.name))
+            desc = el.summary.desc
+
+        header = RawHTMLBlockTag(
+            "header",
+            Div(title, Attr(classes=["quarto-title"])),
+            Attr(
+                "title-block-header", classes=["quarto-title-block", "default"]
+            ),
+        )
+        page = Div([header, desc, *contents], Attr(classes=["doc"]))
         return str(page)
 
     @dispatch
@@ -353,11 +364,11 @@ class NumpyDocRenderer(Renderer):
     @dispatch
     def render(  # type: ignore
         self, el: layout.DocFunction | layout.DocAttribute
-    ):
+    ) -> RenderedDocObject:
         title = self.render_header(el)
         signature = self.signature(el)  # type: ignore
-        doc = self.render(el.obj)  # type: ignore
-        return str(Blocks([title, signature, doc]))  # type: ignore
+        body = self.render(el.obj)  # type: ignore
+        return RenderedDocObject(title, signature, body)
 
     # render griffe objects ---------------------------------------------------
 

@@ -1,4 +1,6 @@
-# A Grammar of Graphics for Python
+---
+title: A Grammar of Graphics for Python
+---
 
 ![](images/logo-540.png){.float-end .w-25}
 

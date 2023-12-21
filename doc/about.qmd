@@ -1,4 +1,7 @@
-# About Plotnine
+---
+title: About Plotnine
+---
+
 
 ## History and objective
 

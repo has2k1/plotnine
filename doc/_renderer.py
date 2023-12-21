@@ -6,6 +6,7 @@ from textwrap import dedent
 from typing import TypeGuard
 
 from _renderers.numpydoc import NumpyDocRenderer
+from _renderers.pandoc.blocks import RenderedDocObject
 from _renderers.utils import InterLink, shortcode
 from griffe import dataclasses as dc
 from griffe import expressions as expr
@@ -84,10 +85,11 @@ class Renderer(NumpyDocRenderer):
         this method grabs the "Usage signature" and makes it the
         main signature.
         """
-        docstring = super().render(el)
-        m = usage_pattern.search(docstring)
+        rendered_obj: RenderedDocObject = super().render(el)  # type: ignore
+        body = str(rendered_obj.body)
+        m = usage_pattern.search(body)
         if not m:
-            return docstring
+            return rendered_obj
 
         usage_signature = dedent(m.group("usage_signature"))
         new_signature_block = str(
@@ -97,9 +99,10 @@ class Renderer(NumpyDocRenderer):
             )
         )
 
-        res = usage_pattern.sub("", docstring)
-        res = doc_signature_pattern.sub(new_signature_block, res)
-        return res
+        body = usage_pattern.sub("", body)
+        body = doc_signature_pattern.sub(new_signature_block, body)
+        rendered_obj.body = body
+        return rendered_obj
 
     @dispatch
     def summarize(self, obj: dc.Object | dc.Alias) -> str:

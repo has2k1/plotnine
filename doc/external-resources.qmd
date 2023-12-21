@@ -1,4 +1,6 @@
-# External Resources
+---
+title: External Resources
+---
 
 ## Articles
 
