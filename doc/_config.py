@@ -46,8 +46,8 @@ def copy_examples_and_tutorials():
     # NOTE: To avoid confusing the watcher used by "quarto preview",
     # we copy only if the original files are different.
     def same_contents(f1, f2):
-        h1 = hashlib.md5(f1.read_bytes()).hexdigest()
-        h2 = hashlib.md5(f2.read_bytes()).hexdigest()
+        h1 = hashlib.sha256(f1.read_bytes()).hexdigest()
+        h2 = hashlib.sha256(f2.read_bytes()).hexdigest()
         return h1 == h2
 
     def copy(src_dir, dest_dir):
