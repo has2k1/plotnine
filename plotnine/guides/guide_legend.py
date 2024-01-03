@@ -93,7 +93,7 @@ class guide_legend(guide):
         info = "\n".join(
             [self.title, labels, str(self.direction), self.__class__.__name__]
         )
-        self.hash = hashlib.md5(info.encode("utf-8")).hexdigest()
+        self.hash = hashlib.sha256(info.encode("utf-8")).hexdigest()
         return self
 
     def merge(self, other):
