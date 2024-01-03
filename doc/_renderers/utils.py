@@ -1,17 +1,19 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Literal, Optional, Sequence
+from dataclasses import dataclass, field
+from typing import (
+    TypeGuard,
+    TypeVar,
+)
 
-import yaml
 from griffe import dataclasses as dc
 from griffe import expressions as expr
-from quartodoc.pandoc.blocks import Block, Blocks, Header
-from quartodoc.pandoc.components import Attr
-from quartodoc.pandoc.inlines import Code, Inlines, Link, Span
+from quartodoc import layout
+from quartodoc.pandoc.inlines import Link
 
-from .format import pretty_code, repr_obj
-from .typing import DisplayNameFormat, DocObjectKind  # noqa: TCH001
+from .typing import DocMemberType, DocType  # noqa: TCH001
+
+T = TypeVar("T")
 
 
 @dataclass
@@ -80,201 +82,56 @@ def is_protocol(obj: dc.Object | dc.Alias) -> bool:
     )
 
 
-def interlink_ref_to_link(interlink_ref: tuple[str | None, str]) -> InterLink:
+def is_typevar(obj: dc.Object | dc.Alias) -> bool:
     """
-    Convert an rst reference to a quoted link
-
-    The interlink has been parsed into a tuple form.
-
-    e.g.
-
-    1. Written as - ":meth:`class.some_method`:"
-       Parsed value - ("class.some_method", "meth")
-       Return value is a link with target - "`:meth:class.some_method`"
-
-    2. Written as - "class.some_method"
-       Parsed value - ("class.some_method", None)
-       Return value is a link with target - "`class.some_method`"
-
-    This method creates a link that can be represented in
-    markdown and that is later processed by the lua interlinks
-    filter into its final form.
+    Return True if obj is a declaration of a TypeVar
     """
-    name, role = interlink_ref
-    target = f":{role}:{name}:" if role else f"{name}"
-    return InterLink(content=name, target=target)
-
-
-def build_signature_parameter(
-    name: str, annotation: Optional[str], default: Optional[str | expr.Expr]
-) -> str:
-    """
-    Create code snippet that defines a parameter
-    """
-    if default:
-        default = repr_obj(default)  # type: ignore
-
-    parts = []
-    if name:
-        parts.append(name)
-    if annotation:
-        parts.append(f": {annotation}")
-        if default:
-            parts.append(f" = {default}")
-    elif default:
-        parts.append(f"={default}")
-
-    return "".join(parts)
-
-
-def build_docstring_parameter(
-    name: str, annotation: Optional[str], default: Optional[str | expr.Expr]
-) -> str:
-    """
-    Create code snippet that defines a parameter
-    """
-    lst = []
-    if name:
-        lst.append(Span(name, Attr(classes=["doc-parameter-name"])))
-    if annotation:
-        if name:
-            lst.append(
-                Span(":", Attr(classes=["doc-parameter-annotation-sep"]))
-            )
-        annotation = pretty_code(annotation)
-        lst.append(
-            Span(annotation, Attr(classes=["doc-parameter-annotation"]))
-        )
-    if default:
-        default = pretty_code(repr_obj(default))  # type: ignore
-        lst.extend(
-            [
-                Span("=", Attr(classes=["doc-parameter-default-sep"])),
-                Span(default, Attr(classes=["doc-parameter-default"])),
-            ]
-        )
-    return str(Inlines(lst))
-
-
-def get_object_display_name(
-    el: dc.Alias | dc.Object, format: DisplayNameFormat = "relative"
-) -> str:
-    """
-    Return a name to use for the object
-
-    Parameters
-    ----------
-    el:
-        A griffe Alias or Object
-    format:
-        The format to use for the object's name.
-    """
-    if format in ("name", "short"):
-        res = el.name
-    elif format == "relative":
-        res = ".".join(el.path.split(".")[1:])
-    elif format == "full":
-        res = el.path
-    elif format == "canonical":
-        res = el.canonical_path
-    else:
-        raise ValueError(f"Unknown format {format!r} for an object name.")
-    return res
-
-
-def get_object_kind(el: dc.Alias | dc.Object) -> DocObjectKind:
-    """
-    Get an objects kind
-    """
-    kind: DocObjectKind = el.kind.value  # type: ignore
-    if el.is_function and el.parent and el.parent.is_class:
-        kind = "method"
-    return kind
-
-
-def get_method_parameters(el: dc.Function) -> dc.Parameters:
-    """
-    Return the parameters of a method
-
-    Parameters
-    ----------
-    el:
-        A griffe function / method
-    """
-    # adapted from mkdocstrings-python jinja tempalate
-    if not len(el.parameters) > 0 or not el.parent:
-        return el.parameters
-
-    param = el.parameters[0].name
-    omit_first_parameter = (
-        el.parent.is_class and param in ("self", "cls")
-    ) or (el.parent.is_module and el.is_class and param == "self")
-
-    if omit_first_parameter:
-        return dc.Parameters(*list(el.parameters)[1:])
-
-    return el.parameters
-
-
-def get_object_labels(el: dc.Alias | dc.Object) -> Sequence[str]:
-    """
-    Return labels for an object (iff object is a function/method)
-
-    Parameters
-    ----------
-    el:
-        A griffe object
-    """
-    # Only check for the labels we care about
-    lst = (
-        "cached",
-        "property",
-        "classmethod",
-        "staticmethod",
-        "abstractmethod",
-        "typing.overload",
+    return (
+        isinstance(obj, dc.Attribute)
+        and hasattr(obj, "value")
+        and isinstance(obj.value, expr.ExprCall)
+        and isinstance(obj.value.function, expr.ExprName)
+        and obj.value.function.name == "TypeVar"
     )
-    if el.is_function:
-        return tuple(
-            label.replace(".", "-") for label in lst if label in el.labels
-        )
-    elif el.is_attribute and is_typealias(el):
-        return ("TypeAlias",)
-    elif el.is_class and is_protocol(el):
-        return ("Protocol",)
-    else:
-        return ()
 
 
-def get_canonical_path_lookup(el: expr.Expr) -> dict[str, str]:
+class isDoc:
     """
-    Return lookup table for the canonical path of identifiers in expression
+    TypeGuards for layout.Doc objects
     """
-    lookup = {"TypeAlias": "typing.TypeAlias"}
-    for o in el.iterate():
-        # Assumes that name of an expresssion is a valid python
-        # identifier
-        if isinstance(o, expr.ExprName):
-            lookup[o.name] = o.canonical_path
-    return lookup
+
+    @staticmethod
+    def Function(el: DocMemberType) -> TypeGuard[layout.DocFunction]:
+        return el.obj.is_function
+
+    @staticmethod
+    def Class(el: DocMemberType) -> TypeGuard[layout.DocClass]:
+        return el.obj.is_class
+
+    @staticmethod
+    def Attribute(el: DocMemberType) -> TypeGuard[layout.DocAttribute]:
+        return el.obj.is_attribute
+
+    @staticmethod
+    def Module(el: DocMemberType) -> TypeGuard[layout.DocModule]:
+        return el.obj.is_attribute
 
 
-def make_doc_labels(labels: Sequence[str]) -> Span | Literal[""]:
+def griffe_to_doc(obj: dc.Object | dc.Alias) -> DocType:
     """
-    Create codes used for doc labels
+    Convert griffe object to a quartodoc documentable type
 
-    Given the label names, it returns a Code object that
-    creates the following HTML
-    <span class="doc-labels">
-        <code class="doc-label doc-label-name1"></code>
-        <code class="doc-label doc-label-name2"></code>
-    </span>
+    The function recursively includes all members.
     """
-    if not labels:
-        return ""
+    return layout.Doc.from_griffe(
+        obj.name,
+        obj,
+        members=[griffe_to_doc(m) for m in obj.all_members.values()],
+    )
 
-    codes = [
-        Code(" ", Attr(classes=["doc-label", f"doc-label-{label}"]))
-        for label in labels
-    ]
-    return Span(codes, Attr(classes=["doc-labels"]))
+
+def no_init(default: T) -> T:
+    """
+    Set defaut value of a dataclass field that will not be __init__ed
+    """
+    return field(init=False, default=default)

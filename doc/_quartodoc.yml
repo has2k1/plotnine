@@ -109,7 +109,6 @@ quartodoc:
     - subtitle: Labels
       desc: ""
       package: plotnine.labels
-      options: *no-members
       contents:
         - labs
         - xlab

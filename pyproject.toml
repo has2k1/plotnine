@@ -241,4 +241,3 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 "doc/_renderers/numpydoc.py" = ["F811"]
 "doc/_renderers/format.py" = ["F811"]
 "doc/_renderer.py" = ["F811"]
-"doc/*" = ["TCH002", "TCH003"]
