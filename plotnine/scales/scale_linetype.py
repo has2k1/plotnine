@@ -1,8 +1,8 @@
 from warnings import warn
 
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import alias
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
@@ -21,9 +21,9 @@ class scale_linetype(scale_discrete):
     Notes
     -----
     The available linetypes are
-    ``'solid', 'dashed', 'dashdot', 'dotted'``
+    `'solid', 'dashed', 'dashdot', 'dotted'`
     If you need more custom linetypes, use
-    :class:`~plotnine.scales.scale_linetype_manual`
+    [](`~plotnine.scales.scale_linetype_manual`)
     """
 
     _aesthetics = ["linetype"]
@@ -31,7 +31,7 @@ class scale_linetype(scale_discrete):
     def __init__(self, **kwargs):
         from mizani.palettes import manual_pal
 
-        self.palette = manual_pal(LINETYPES)
+        self._palette = manual_pal(LINETYPES)
         super().__init__(**kwargs)
 
 
@@ -66,4 +66,5 @@ class scale_linetype_continuous(scale_continuous):
         )
 
 
-alias("scale_linetype_discrete", scale_linetype)
+class scale_linetype_discrete(scale_linetype, alias):
+    pass

@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 from matplotlib.patches import FancyBboxPatch
-from matplotlib.text import _get_textbox
+from matplotlib.text import _get_textbox  # type: ignore
 from matplotlib.transforms import Affine2D
 
 if typing.TYPE_CHECKING:
@@ -58,14 +58,15 @@ class SFancyBboxPatch(FancyBboxPatch):
             .translate(posx + x, posy + y)
         )
         fontsize_in_pixel = renderer.points_to_pixels(
-            text.get_size()  # pyright: ignore
+            text.get_size()  # type: ignore
         )
-        self.set_mutation_scale(fontsize_in_pixel)
+        self.set_mutation_scale(fontsize_in_pixel)  # type: ignore
         self._update = True
 
-    def get_window_extent(self, renderer):
+    def get_window_extent(self, renderer=None):
         """
         Location & dimensions of the box
         """
-        self.update_position_size(renderer)
+        if renderer:
+            self.update_position_size(renderer)
         return super().get_window_extent(renderer)

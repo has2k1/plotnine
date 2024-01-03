@@ -26,18 +26,16 @@ class stat_ellipse(stat):
     Parameters
     ----------
     {common_parameters}
-    type : str in ['t', 'norm', 'euclid'] (default: 't')
+    type : Literal["t", "norm", "euclid"], default="t"
         The type of ellipse.
+        `t` assumes a multivariate t-distribution.
+        `norm` assumes a multivariate normal distribution.
+        `euclid` draws a circle with the radius equal to
+        `level`, representing the euclidean distance from the center.
 
-        - ``'t'`` - assumes a multivariate t-distribution, and
-        - ``'norm'`` - assumes a multivariate normal distribution.
-        - ``'euclid'`` - draws a circle with the radius equal to
-          `level`, representing the euclidean distance from the
-          center.
-
-    level : float, optional (default: 0.95)
+    level : float, default=0.95
         The confidence level at which to draw the ellipse.
-    segments : int, optional (default: 51)
+    segments : int, default=51
         Number of segments to be used in drawing the ellipse.
     """
 
@@ -121,7 +119,7 @@ def cov_trob(
     breakdown point.
 
     **credit**: This function a port of the R function
-    ``MASS::cov.trob``.
+    `MASS::cov.trob`.
 
     Parameters
     ----------
@@ -129,15 +127,15 @@ def cov_trob(
         data matrix. Missing values (NaNs) are not allowed.
     wt : array
         A vector of weights for each case: these are treated as
-        if the case i actually occurred ``wt[i]`` times.
+        if the case i actually occurred `wt[i]` times.
     cor : bool
         Flag to choose between returning the correlation
-        (``cor=True``) or covariance (``cor=False``) matrix.
-    center : array or bool
+        (`cor=True`) or covariance (`cor=False`) matrix.
+    center : array | bool
         A logical value or a numeric vector providing the location
         about which the covariance is to be taken.
-        If ``center=False``, no centering is done; if
-        ``center=True`` the MLE of the location vector is used.
+        If `center=False`, no centering is done; if
+        `center=True` the MLE of the location vector is used.
     nu : int
         'degrees of freedom' for the multivariate t distribution.
         Must exceed 2 (so that the covariance matrix is finite).
@@ -151,15 +149,15 @@ def cov_trob(
     out : dict
         A dictionary with with the following key-value
 
-        - ``cov`` : the fitted covariance matrix.
-        - ``center`` : the estimated or specified location vector.
-        - ``wt`` : the specified weights: only returned if the
+        - `cov` : the fitted covariance matrix.
+        - `center` : the estimated or specified location vector.
+        - `wt` : the specified weights: only returned if the
            wt argument was given.
-        - ``n_obs`` : the number of cases used in the fitting.
-        - ``cor`` : the fitted correlation matrix: only returned
-          if ``cor=True``.
-        - ``call`` : The matched call.
-        - ``iter`` : The number of iterations used.
+        - `n_obs` : the number of cases used in the fitting.
+        - `cor` : the fitted correlation matrix: only returned
+          if `cor=True`.
+        - `call` : The matched call.
+        - `iter` : The number of iterations used.
 
     References
     ----------

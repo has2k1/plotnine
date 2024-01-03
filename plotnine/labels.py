@@ -19,9 +19,9 @@ class labs:
 
     Parameters
     ----------
-    kwargs : dict
+    kwargs :
         Aesthetics (with scales) to be renamed. You can also
-        set the ``title`` and ``caption``.
+        set the `title` and `caption`.
     """
 
     labels: labels_view
@@ -46,7 +46,7 @@ class xlab(labs):
 
     Parameters
     ----------
-    xlab : str
+    xlab :
         x-axis label
     """
 
@@ -62,7 +62,7 @@ class ylab(labs):
 
     Parameters
     ----------
-    ylab : str
+    ylab :
         y-axis label
     """
 
@@ -78,7 +78,7 @@ class ggtitle(labs):
 
     Parameters
     ----------
-    title : str
+    title :
         Plot title
     """
 

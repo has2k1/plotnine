@@ -4,11 +4,12 @@ import typing
 
 import pandas as pd
 
+from .._utils import is_scalar
+from .._utils.registry import Registry
 from ..exceptions import PlotnineError
 from ..geoms.geom import geom as geom_base_class
 from ..mapping import aes
 from ..mapping.aes import POSITION_AESTHETICS
-from ..utils import Registry, is_scalar_or_string
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -22,35 +23,35 @@ class annotate:
 
     Parameters
     ----------
-    geom : geom or str
+    geom :
         geom to use for annotation, or name of geom (e.g. 'point').
-    x : float
+    x :
         Position
-    y : float
+    y :
         Position
-    xmin : float
+    xmin :
         Position
-    ymin : float
+    ymin :
         Position
-    xmax : float
+    xmax :
         Position
-    ymax : float
+    ymax :
         Position
-    xend : float
+    xend :
         Position
-    yend : float
+    yend :
         Position
-    xintercept : float
+    xintercept :
         Position
-    yintercept : float
+    yintercept :
         Position
-    kwargs : dict
+    kwargs :
         Other aesthetics or parameters to the geom.
 
     Notes
     -----
-    The positioning aethetics ``x, y, xmin, ymin, xmax, ymax, xend, yend,
-    xintercept, yintercept`` depend on which `geom` is used.
+    The positioning aethetics `x, y, xmin, ymin, xmax, ymax, xend, yend,
+    xintercept, yintercept` depend on which `geom` is used.
 
     You should choose or ignore accordingly.
 
@@ -88,7 +89,7 @@ class annotate:
         # Check if the aesthetics are of compatible lengths
         lengths, info_tokens = [], []
         for ae, val in aesthetics.items():
-            if is_scalar_or_string(val):
+            if is_scalar(val):
                 continue
             lengths.append(len(val))
             info_tokens.append((ae, len(val)))
@@ -99,8 +100,8 @@ class annotate:
             raise PlotnineError(msg)
 
         # Stop pandas from complaining about all scalars
-        if all(is_scalar_or_string(val) for val in pos_aesthetics.values()):
-            for ae in pos_aesthetics.keys():
+        if all(is_scalar(val) for val in pos_aesthetics.values()):
+            for ae in pos_aesthetics:
                 pos_aesthetics[ae] = [pos_aesthetics[ae]]
                 break
 

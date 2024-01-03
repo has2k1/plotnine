@@ -3,9 +3,9 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import alias
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
@@ -28,19 +28,18 @@ class _scale_manual(scale_discrete):
             from collections.abc import Sized
 
             breaks: ScaleBreaksRaw = kwargs["breaks"]
-            if isinstance(breaks, Sized):
-                if len(breaks) == len(values):
-                    values = dict(zip(breaks, values))
+            if isinstance(breaks, Sized) and len(breaks) == len(values):
+                values = dict(zip(breaks, values))
 
         self._values = values
         scale_discrete.__init__(self, **kwargs)
 
-    def palette(self, n):
+    def palette(self, value):
         max_n = len(self._values)
-        if n > max_n:
+        if value > max_n:
             msg = (
                 f"The palette of {self.__class__.__name__} can return a "
-                f"maximum of {max_n} values. {n} were requested from it."
+                f"maximum of {max_n} values. {value} were requested from it."
             )
             warn(msg, PlotnineWarning)
         return self._values
@@ -55,7 +54,7 @@ class scale_color_manual(_scale_manual):
     ----------
     values : array_like | dict
         Colors that make up the palette. The values will be matched with
-        the ``limits`` of the scale or the ``breaks`` if provided.
+        the `limits` of the scale or the `breaks` if provided.
         If it is a dict then it should map data values to colors.
 
     {superclass_parameters}
@@ -74,7 +73,7 @@ class scale_fill_manual(_scale_manual):
     ----------
     values : array_like | dict
         Colors that make up the palette. The values will be matched with
-        the ``limits`` of the scale or the ``breaks`` if provided.
+        the `limits` of the scale or the `breaks` if provided.
         If it is a dict then it should map data values to colors.
     {superclass_parameters}
     """
@@ -93,8 +92,8 @@ class scale_shape_manual(_scale_manual):
     values : array_like | dict
         Shapes that make up the palette. See
         :mod:`matplotlib.markers.` for list of all possible
-        shapes. The values will be matched with the ``limits``
-        of the scale or the ``breaks`` if provided.
+        shapes. The values will be matched with the `limits`
+        of the scale or the `breaks` if provided.
         If it is a dict then it should map data values to shapes.
     {superclass_parameters}
 
@@ -113,25 +112,25 @@ class scale_linetype_manual(_scale_manual):
 
     Parameters
     ----------
-    values : list-like | dict
+    values : list | dict
         Linetypes that make up the palette.
         Possible values of the list are:
 
-            1. Strings like
+        1. Strings like
 
-            ::
+        ```python
+        'solid'                # solid line
+        'dashed'               # dashed line
+        'dashdot'              # dash-dotted line
+        'dotted'               # dotted line
+        'None' or ' ' or ''    # draw nothing
+        ```
 
-                'solid'                # solid line
-                'dashed'               # dashed line
-                'dashdot'              # dash-dotted line
-                'dotted'               # dotted line
-                'None' or ' ' or ''    # draw nothing
+        2. Tuples of the form (offset, (on, off, on, off, ....))
+           e.g. (0, (1, 1)), (1, (2, 2)), (2, (5, 3, 1, 3))
 
-            2. Tuples of the form (offset, (on, off, on, off, ....))
-               e.g. (0, (1, 1)), (1, (2, 2)), (2, (5, 3, 1, 3))
-
-        The values will be matched with the ``limits`` of the scale
-        or the ``breaks`` if provided.
+        The values will be matched with the `limits` of the scale
+        or the `breaks` if provided.
         If it is a dict then it should map data values to linetypes.
     {superclass_parameters}
 
@@ -161,7 +160,7 @@ class scale_alpha_manual(_scale_manual):
     values : array_like | dict
         Alpha values (in the [0, 1] range) that make up
         the palette. The values will be matched with the
-        ``limits`` of the scale or the ``breaks`` if provided.
+        `limits` of the scale or the `breaks` if provided.
         If it is a dict then it should map data values to alpha
         values.
     {superclass_parameters}
@@ -179,7 +178,7 @@ class scale_size_manual(_scale_manual):
     ----------
     values : array_like | dict
         Sizes that make up the palette. The values will be matched
-        with the ``limits`` of the scale or the ``breaks`` if provided.
+        with the `limits` of the scale or the `breaks` if provided.
         If it is a dict then it should map data values to sizes.
     {superclass_parameters}
     """
@@ -188,4 +187,5 @@ class scale_size_manual(_scale_manual):
 
 
 # American to British spelling
-alias("scale_colour_manual", scale_color_manual)
+class scale_colour_manual(scale_color_manual, alias):
+    pass

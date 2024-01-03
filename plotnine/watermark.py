@@ -4,7 +4,7 @@ import typing
 
 if typing.TYPE_CHECKING:
     import pathlib
-    from typing import Any
+    from typing import Any, Optional
 
     import matplotlib.figure
 
@@ -19,15 +19,15 @@ class watermark:
 
     Parameters
     ----------
-    filename : str | pathlib.Path
+    filename :
         Image file
-    xo : int, optional
-        x position offset in pixels. Default is 0.
-    yo : int, optional
-        y position offset in pixels. Default is 0.
-    alpha : float, optional
+    xo :
+        x position offset in pixels.
+    yo :
+        y position offset in pixels.
+    alpha :
         Alpha blending value.
-    kwargs : dict
+    kwargs :
         Additional parameters passed to
         :meth:`matplotlib.figure.figimage`.
 
@@ -41,7 +41,7 @@ class watermark:
         filename: str | pathlib.Path,
         xo: int = 0,
         yo: int = 0,
-        alpha: float | None = None,
+        alpha: Optional[float] = None,
         **kwargs: Any,
     ):
         self.filename = filename
@@ -63,7 +63,7 @@ class watermark:
 
         Parameters
         ----------
-        figure : Matplotlib.figure.Figure
+        figure :
             Matplolib figure on which to draw
         """
         from matplotlib.image import imread

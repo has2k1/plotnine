@@ -72,7 +72,7 @@ def ggplot_equals(gg: ggplot, name: str) -> bool:
         filenames.expected, filenames.result, TOLERANCE, in_decorator=True
     )
     gg._err = err  # For the pytest error message
-    return False if err else True
+    return not err
 
 
 ggplot.__eq__ = ggplot_equals

@@ -10,10 +10,10 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import SIZE_FACTOR, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
-from ..utils import SIZE_FACTOR, remove_missing
 from .guide import guide
 
 if typing.TYPE_CHECKING:
@@ -31,18 +31,18 @@ class guide_legend(guide):
 
     Parameters
     ----------
-    nrow : int
+    nrow : int, default=None
         Number of rows of legends.
-    ncol : int
+    ncol : int, default=None
         Number of columns of legends.
-    byrow : bool
+    byrow : bool, default=False
         Whether to fill the legend row-wise or column-wise.
-    keywidth : float
+    keywidth : float, default=None
         Width of the legend key.
-    keyheight : float
+    keyheight : float, default=None
         Height of the legend key.
     kwargs : dict
-        Parameters passed on to :class:`.guide`
+        Parameters passed on to [](`~plotnine.guides.guide`).
     """
 
     # general
@@ -62,12 +62,12 @@ class guide_legend(guide):
         Create the key for the guide
 
         The key is a dataframe with two columns:
-            - scale name : values
-            - label : labels for each value
 
-        scale name is one of the aesthetics
-        ['x', 'y', 'color', 'fill', 'size', 'shape', 'alpha',
-         'stroke']
+        - scale name : values
+        - label : labels for each value
+
+        scale name is one of the aesthetics: `x`, `y`, `color`,
+        `fill`, `size`, `shape`, `alpha`, `stroke`.
 
         Returns this guide if trainning is successful and None
         if it fails
@@ -100,13 +100,17 @@ class guide_legend(guide):
         """
         Merge overlapped guides
 
-        For example::
+        For example:
 
-            from ggplot import *
-            gg = ggplot(aes(x='cut', fill='cut', color='cut'), data=diamonds)
-            gg + stat_bin()
+        ```python
+        from ggplot import *
+        p = (
+            ggplot(aes(x='cut', fill='cut', color='cut'), data=diamonds)
+            + stat_bin()
+        )
+        ```
 
-        This would create similar guides for fill and color where only
+        Would create similar guides for fill and color where only
         a single guide would do
         """
         self.key = self.key.merge(other.key)
@@ -215,9 +219,10 @@ class guide_legend(guide):
         # Take a peak into data['size'] to make sure the
         # legend dimensions are big enough
         """
-        >>> gg = ggplot(diamonds, aes(x='cut', y='clarity'))
-        >>> gg = gg + stat_sum(aes(group='cut'))
-        >>> gg + scale_size(range=(3, 25))
+       (ggplot(diamonds, aes(x="cut", y="clarity"))
+        + stat_sum(aes(group="cut"))
+        + scale_size(range=(3, 25)
+       )
 
         Note the different height sizes for the entries
         """
@@ -310,8 +315,6 @@ class guide_legend(guide):
         # labels
         labels = []
         for item in self.key["label"]:
-            if isinstance(item, float) and float.is_integer(item):
-                item = int(item)  # 1.0 to 1
             va = "center" if self.label_position == "top" else "baseline"
             ta = TextArea(item, textprops={"color": "black", "va": va})
             labels.append(ta)

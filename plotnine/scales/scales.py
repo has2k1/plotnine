@@ -9,9 +9,10 @@ from warnings import warn
 import numpy as np
 import pandas.api.types as pdtypes
 
+from .._utils import array_kind
+from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import aes_to_scale
-from ..utils import Registry, array_kind
 from .scale import scale
 
 if typing.TYPE_CHECKING:
@@ -53,7 +54,7 @@ class Scales(List[scale]):
         # super() does not work well with reloads
         list.append(self, sc)
 
-    def find(self, aesthetic: ScaledAestheticsName) -> list[bool]:
+    def find(self, aesthetic: ScaledAestheticsName | str) -> list[bool]:
         """
         Find scales for given aesthetic
 
@@ -68,7 +69,9 @@ class Scales(List[scale]):
         lst = [s.aesthetics for s in self]
         return list(itertools.chain(*lst))
 
-    def get_scales(self, aesthetic: ScaledAestheticsName) -> Scale | None:
+    def get_scales(
+        self, aesthetic: ScaledAestheticsName | str
+    ) -> Scale | None:
         """
         Return the scale for the aesthetic or None if there isn't one
 
@@ -132,7 +135,7 @@ class Scales(List[scale]):
             These should be all the aesthetics of
             a scale type that are present in the
             data. e.g x, xmin, xmax
-        idx : array-like
+        idx : array_like
             indices that map the data points to the
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array
@@ -157,7 +160,7 @@ class Scales(List[scale]):
             This is modified inplace
         vars : list | tuple
             columns to map
-        idx : array-like
+        idx : array_like
             indices that link the data points to the
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array
@@ -262,7 +265,7 @@ class Scales(List[scale]):
 
         # aesthetics that do not have scales present
         # We preserve the order of the aesthetics
-        new_aesthetics = [x for x in aesthetics.keys() if x not in aws]
+        new_aesthetics = [x for x in aesthetics if x not in aws]
         if not new_aesthetics:
             return
 

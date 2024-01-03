@@ -32,21 +32,16 @@ class coord_trans(coord):
     Parameters
     ----------
     x : str | trans
-        Name of transform or `trans` class to
-        transform the x axis
+        Name of transform or `trans` class to transform the x axis
     y : str | trans
-        Name of transform or `trans` class to
-        transform the y axis
-    xlim : None | (float, float)
-        Limits for x axis. If None, then they are
-        automatically computed.
-    ylim : None | (float, float)
-        Limits for y axis. If None, then they are
-        automatically computed.
+        Name of transform or `trans` class to transform the y axis
+    xlim : tuple[float, float]
+        Limits for x axis. If None, then they are automatically computed.
+    ylim : tuple[float, float]
+        Limits for y axis. If None, then they are automatically computed.
     expand : bool
-        If `True`, expand the coordinate axes by
-        some factor. If `False`, use the limits
-        from the data.
+        If `True`, expand the coordinate axes by some factor. If `False`,
+        use the limits from the data.
     """
 
     trans_x: Trans
@@ -120,14 +115,18 @@ class coord_trans(coord):
                 scale.limits, expansion, coord_limits, trans
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
-            sv.range = tuple(sorted(ranges.range_coord))
+            sv.range = tuple(sorted(ranges.range_coord))  # type: ignore
             sv.breaks = transform_value(
                 trans,
                 # TODO: fix typecheck
-                sv.breaks,  # pyright: ignore
-                sv.range,
+                sv.breaks,  # type: ignore
+                sv.range,  # type: ignore
             )
-            sv.minor_breaks = transform_value(trans, sv.minor_breaks, sv.range)
+            sv.minor_breaks = transform_value(
+                trans,
+                sv.minor_breaks,
+                sv.range,  # type: ignore
+            )
             return sv
 
         out = panel_view(

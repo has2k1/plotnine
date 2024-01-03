@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import typing
-from contextlib import suppress
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..coords import coord_flip
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_path import geom_path
 from .geom_polygon import geom_polygon
@@ -30,32 +29,33 @@ class geom_ribbon(geom):
     Parameters
     ----------
     {common_parameters}
-    outline_type : 'upper' | 'lower' | 'both' | 'full'
+    outline_type : Literal["upper", "lower", "both", "full"], default="both"
         How to stroke to outline of the region / area.
-            * 'upper' - draw only upper bounding line'
-            * 'lower' - draw only lower bounding line'
-            * 'both' - draw both upper & lower bounding lines
-            * 'full' - draw closed polygon around the area.
+        If `upper`, draw only upper bounding line.
+        If `lower`, draw only lower bounding line.
+        If `both`, draw both upper & lower bounding lines.
+        If `full`, draw closed polygon around the area.
     """
 
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Aesthetics Descriptions
+    **Aesthetics Descriptions**
 
-    where
-        Define where to exclude horizontal regions from being filled.
-        Regions between any two ``False`` values are skipped.
+    `where`
+
+    :   Define where to exclude horizontal regions from being filled.
+        Regions between any two `False` values are skipped.
         For sensible demarcation the value used in the *where* predicate
-        expression should match the ``ymin`` value or expression. i.e.
+        expression should match the `ymin` value or expression. i.e.
 
-        ::
+        ```python
+         aes(ymin=0, ymax='col1', where='col1 > 0')  # good
+         aes(ymin=0, ymax='col1', where='col1 > 10')  # bad
 
-            aes(ymin=0, ymax='col1', where='col1 > 0')  # good
-            aes(ymin=0, ymax='col1', where='col1 > 10')  # bad
-
-            aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
-            aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
+         aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
+         aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
+        ```
     """
     DEFAULT_AES = {
         "alpha": 1,
@@ -134,12 +134,8 @@ class geom_ribbon(geom):
             _x, _min, _max = data["x"], data["ymin"], data["ymax"]
 
         # We only change this defaults for fill_between when necessary
-        where = None
-        interpolate = False
-        with suppress(KeyError):
-            if not data["where"].all():
-                where = data["where"]
-                interpolate = True
+        where = data.get("where", None)
+        interpolate = not (where is None or where.all())  # type: ignore
 
         if params["outline_type"] != "full":
             size = 0
@@ -148,8 +144,8 @@ class geom_ribbon(geom):
         fill_between(
             _x,
             _min,
-            _max,  # pyright: ignore[reportGeneralTypeIssues]
-            where=where,
+            _max,
+            where=where,  # type: ignore
             interpolate=interpolate,
             facecolor=fill,
             edgecolor=color,

@@ -5,9 +5,9 @@ from contextlib import suppress
 
 import numpy as np
 
+from .._utils import match
 from ..exceptions import PlotnineError
 from ..iapi import labels_view, layout_details, pos_scales
-from ..utils import match
 
 if typing.TYPE_CHECKING:
     import pandas as pd
@@ -28,22 +28,22 @@ class Layout:
     Layout of entire plot
     """
 
-    #: facet
+    # facet
     facet: Facet
 
-    #: coordinate system
+    # coordinate system
     coord: Coord
 
-    #: A dataframe with the layout information of the plot
+    # A dataframe with the layout information of the plot
     layout: pd.DataFrame
 
-    #: List of x scales
+    # List of x scales
     panel_scales_x: Scales
 
-    #: List of y scales
+    # List of y scales
     panel_scales_y: Scales
 
-    #: Range & breaks information for each panel
+    # Range & breaks information for each panel
     panel_params: list[panel_view]
 
     axs: list[Axes]  # MPL axes
@@ -230,8 +230,8 @@ class Layout:
         Parameters
         ----------
         labels : labels_view
-            Labels as specified by the user through the ``labs`` or
-            ``xlab`` calls.
+            Labels as specified by the user through the `labs` or
+            `xlab` calls.
 
         Returns
         -------
@@ -251,8 +251,8 @@ class Layout:
         Parameters
         ----------
         labels : labels_view
-            Labels as specified by the user through the ``labs`` or
-            ``ylab`` calls.
+            Labels as specified by the user through the `labs` or
+            `ylab` calls.
 
         Returns
         -------
@@ -272,8 +272,8 @@ class Layout:
         Parameters
         ----------
         labels : labels_view
-            Labels as specified by the user through the ``labs`` or
-            ``ylab`` calls.
+            Labels as specified by the user through the `labs` or
+            `ylab` calls.
 
         Returns
         -------

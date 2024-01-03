@@ -14,7 +14,7 @@ from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
 if typing.TYPE_CHECKING:
-    from typing import TypeVar
+    from typing import Sequence, TypeVar
 
     THasAesNames = TypeVar("THasAesNames", bound=list[str] | dict[str, Any])
 
@@ -76,9 +76,9 @@ class aes(Dict[str, Any]):
 
     Parameters
     ----------
-    x : expression | array_like | scalar
+    x : str | array_like | scalar
         x aesthetic mapping
-    y : expression | array_like | scalar
+    y : str | array_like | scalar
         y aesthetic mapping
     **kwargs : dict
         Other aesthetic mappings
@@ -90,87 +90,105 @@ class aes(Dict[str, Any]):
 
     The value of each mapping must be one of:
 
-    - **string**::
+    - **str**
 
-            import pandas as pd
-            import numpy as np
+      ```python
+       import pandas as pd
+       import numpy as np
 
-            arr = [11, 12, 13]
-            df = pd.DataFrame({'alpha': [1, 2, 3],
-                               'beta': [1, 2, 3],
-                               'gam ma': [1, 2, 3]})
+       arr = [11, 12, 13]
+       df = pd.DataFrame({
+           "alpha": [1, 2, 3],
+           "beta": [1, 2, 3],
+           "gam ma": [1, 2, 3]
+       })
 
-            # Refer to a column in a dataframe
-            ggplot(df, aes(x='alpha', y='beta'))
+       # Refer to a column in a dataframe
+       ggplot(df, aes(x="alpha", y="beta"))
+       ```
 
-    - **array_like**::
+    - **array_like**
 
-            # A variable
-            ggplot(df, aes(x='alpha', y=arr))
+      ```python
+      # A variable
+      ggplot(df, aes(x="alpha", y=arr))
 
-            # or an inplace list
-            ggplot(df, aes(x='alpha', y=[4, 5, 6]))
+      # or an inplace list
+      ggplot(df, aes(x="alpha", y=[4, 5, 6]))
+      ```
 
-    - **scalar**::
+    - **scalar**
 
-            # A scalar value/variable
-            ggplot(df, aes(x='alpha', y=4))
+      ```python
+      # A scalar value/variable
+      ggplot(df, aes(x="alpha", y=4))
 
-            # The above statement is equivalent to
-            ggplot(df, aes(x='alpha', y=[4, 4, 4]))
+      # The above statement is equivalent to
+      ggplot(df, aes(x="alpha", y=[4, 4, 4]))
+      ```
 
-    - **String expression**::
+    - **String expression**
 
-            ggplot(df, aes(x='alpha', y='2*beta'))
-            ggplot(df, aes(x='alpha', y='np.sin(beta)'))
-            ggplot(df, aes(x='df.index', y='beta'))
+      ```python
+      ggplot(df, aes(x="alpha", y="2*beta"))
+      ggplot(df, aes(x="alpha", y="np.sin(beta)"))
+      ggplot(df, aes(x="df.index", y="beta"))
 
-            # If `count` is an aesthetic calculated by a stat
-            ggplot(df, aes(x='alpha', y=after_stat('count')))
-            ggplot(df, aes(x='alpha', y=after_stat('count/np.max(count)')))
+      # If `count` is an aesthetic calculated by a stat
+      ggplot(df, aes(x="alpha", y=after_stat("count")))
+      ggplot(df, aes(x="alpha", y=after_stat("count/np.max(count)")))
+      ```
 
       The strings in the expression can refer to;
 
         1. columns in the dataframe
         2. variables in the namespace
-        3. aesthetic values (columns) calculated by the ``stat``
+        3. aesthetic values (columns) calculated by the `stat`
 
       with the column names having precedence over the variables.
       For expressions, columns in the dataframe that are mapped to
       must have names that would be valid python variable names.
 
-      This is okay::
+      This is okay:
 
-        # 'gam ma' is a column in the dataframe
-        ggplot(df, aes(x='df.index', y='gam ma'))
+      ```python
+      # "gam ma" is a column in the dataframe
+      ggplot(df, aes(x="df.index", y="gam ma"))
+      ```
 
-      While this is not::
+      While this is not:
 
-        # 'gam ma' is a column in the dataframe, but not
-        # valid python variable name
-        ggplot(df, aes(x='df.index', y='np.sin(gam ma)'))
+      ```python
+      # "gam ma" is a column in the dataframe, but not
+      # valid python variable name
+      ggplot(df, aes(x="df.index", y="np.sin(gam ma)"))
+      ```
 
-    ``aes`` has 2 internal methods you can use to transform variables being
+    `aes` has 2 internal methods you can use to transform variables being
     mapped.
 
-        1. ``factor`` - This function turns the variable into a factor.
-            It is just an alias to ``pd.Categorical``::
+      1. `factor` - This function turns the variable into a factor.
+         It is just an alias to `pandas.Categorical`:
 
-                ggplot(mtcars, aes(x='factor(cyl)')) + geom_bar()
+         ```python
+         ggplot(mtcars, aes(x="factor(cyl)")) + geom_bar()
+         ```
 
-        2. ``reorder`` - This function changes the order of first variable
-            based on values of the second variable::
+      2. `reorder` - This function changes the order of first variable
+         based on values of the second variable:
 
-                df = pd.DataFrame({
-                    'x': ['b', 'd', 'c', 'a'],
-                    'y': [1, 2, 3, 4]
-                })
+         ```python
+         df = pd.DataFrame({
+             "x": ["b", "d", "c", "a"],
+             "y": [1, 2, 3, 4]
+         })
 
-                ggplot(df, aes('reorder(x, y)', 'y')) + geom_col()
+         ggplot(df, aes("reorder(x, y)", "y")) + geom_col()
+         ```
 
-    .. rubric:: The group aesthetic
+    **The group aesthetic**
 
-    ``group`` is a special aesthetic that the user can *map* to.
+    `group` is a special aesthetic that the user can *map* to.
     It is used to group the plotted items. If not specified, it
     is automatically computed and in most cases the computed
     groups are sufficient. However, there may be cases were it is
@@ -178,12 +196,9 @@ class aes(Dict[str, Any]):
 
     See Also
     --------
-    :func:`after_stat` : For how to map aesthetics to variable calculated
-        by the stat
-    :func:`after_scale` : For how to alter aesthetics after the data has been
-        mapped by the scale.
-    :class:`stage` : For how to map to evaluate the mapping to aesthetics at
-        more than one stage of the plot building pipeline.
+    plotnine.mapping.after_stat
+    plotnine.mapping.after_scale
+    plotnine.mapping.stage
     """
 
     def __init__(self, *args, **kwargs):
@@ -200,14 +215,13 @@ class aes(Dict[str, Any]):
         Handle old-style calculated aesthetic expression mappings
 
         Just converts them to use `stage` e.g.
-        'stat(count)' to after_stat(count)
-        '..count..' to after_stat(count)
+        "stat(count)" to after_stat(count)
+        "..count.." to after_stat(count)
         """
         for name, value in kwargs.items():
-            if not isinstance(value, stage):
-                if is_calculated_aes(value):
-                    _after_stat = strip_calculated_markers(value)
-                    kwargs[name] = after_stat(_after_stat)
+            if not isinstance(value, stage) and is_calculated_aes(value):
+                _after_stat = strip_calculated_markers(value)
+                kwargs[name] = after_stat(_after_stat)
         return kwargs
 
     @property
@@ -267,7 +281,7 @@ class aes(Dict[str, Any]):
 
         # Just copy the keys and point to the env
         for key, item in self.items():
-            result[key] = deepcopy(self[key], memo)
+            result[key] = deepcopy(item, memo)
 
         return result
 
@@ -310,12 +324,12 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
 
     Parameters
     ----------
-    obj : dict or list
+    obj :
         Object that contains aesthetics names
 
     Returns
     -------
-    obj : dict or list
+    obj : dict | list
         Object that contains aesthetics names
     """
     if isinstance(obj, dict):
@@ -331,7 +345,7 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
     return obj
 
 
-def is_calculated_aes(ae):
+def is_calculated_aes(ae: Any) -> bool:
     """
     Return True if Aesthetic expression maps to calculated statistic
 
@@ -343,32 +357,27 @@ def is_calculated_aes(ae):
     ae : object
         Single aesthetic mapping
 
-    >>> is_calculated_aes('density')
+    >>> is_calculated_aes("density")
     False
 
     >>> is_calculated_aes(4)
     False
 
-    >>> is_calculated_aes('..density..')
+    >>> is_calculated_aes("..density..")
     True
 
-    >>> is_calculated_aes('stat(density)')
+    >>> is_calculated_aes("stat(density)")
     True
 
-    >>> is_calculated_aes('stat(100*density)')
+    >>> is_calculated_aes("stat(100*density)")
     True
 
-    >>> is_calculated_aes('100*stat(density)')
+    >>> is_calculated_aes("100*stat(density)")
     True
     """
     if not isinstance(ae, str):
         return False
-
-    for pattern in (STAT_RE, DOTS_RE):
-        if pattern.search(ae):
-            return True
-
-    return False
+    return any(pattern.search(ae) for pattern in (STAT_RE, DOTS_RE))
 
 
 def strip_stat(value):
@@ -386,19 +395,19 @@ def strip_stat(value):
     out : object
         Aesthetic value with the dots removed.
 
-    >>> strip_stat('stat(density + stat(count))')
+    >>> strip_stat("stat(density + stat(count))")
     density + count
 
-    >>> strip_stat('stat(density) + 5')
+    >>> strip_stat("stat(density) + 5")
     density + 5
 
-    >>> strip_stat('5 + stat(func(density))')
+    >>> strip_stat("5 + stat(func(density))")
     5 + func(density)
 
-    >>> strip_stat('stat(func(density) + var1)')
+    >>> strip_stat("stat(func(density) + var1)")
     func(density) + var1
 
-    >>> strip_stat('stat + var1')
+    >>> strip_stat("stat + var1")
     stat + var1
 
     >>> strip_stat(4)
@@ -470,7 +479,7 @@ def strip_calculated_markers(value):
     return strip_stat(strip_dots(value))
 
 
-def aes_to_scale(var):
+def aes_to_scale(var: str):
     """
     Look up the scale that should be used for a given aesthetic
     """
@@ -481,14 +490,11 @@ def aes_to_scale(var):
     return var
 
 
-def is_position_aes(vars_):
+def is_position_aes(vars_: Sequence[str]):
     """
     Figure out if an aesthetic is a position aesthetic or not
     """
-    try:
-        return all(aes_to_scale(v) in {"x", "y"} for v in vars_)
-    except TypeError:
-        return aes_to_scale(vars_) in {"x", "y"}
+    return all(aes_to_scale(v) in {"x", "y"} for v in vars_)
 
 
 def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
@@ -531,21 +537,16 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
     )
 
 
-def is_valid_aesthetic(value, ae):
+def is_valid_aesthetic(value: Any, ae: str) -> bool:
     """
     Return True if `value` looks valid.
 
     Parameters
     ----------
-    value : object
+    value :
         Value to check
-    ae : str
+    ae :
         Aesthetic name
-
-    Returns
-    -------
-    out : bool
-        Whether the value is of a valid looking form.
 
     Notes
     -----
@@ -614,13 +615,13 @@ def is_valid_aesthetic(value, ae):
     return False
 
 
-def has_groups(data):
+def has_groups(data: pd.DataFrame) -> bool:
     """
     Check if data is grouped
 
     Parameters
     ----------
-    data : dataframe
+    data :
         Data
 
     Returns

@@ -6,16 +6,16 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from ..doctools import document
-from ..exceptions import PlotnineWarning
-from ..positions import position_dodge2
-from ..positions.position import position
-from ..utils import (
+from .._utils import (
     SIZE_FACTOR,
     copy_missing_columns,
     resolution,
     to_rgba,
 )
+from ..doctools import document
+from ..exceptions import PlotnineWarning
+from ..positions import position_dodge2
+from ..positions.position import position
 from .geom import geom
 from .geom_crossbar import geom_crossbar
 from .geom_point import geom_point
@@ -47,29 +47,29 @@ class geom_boxplot(geom):
     Parameters
     ----------
     {common_parameters}
-    width : float, optional (default None)
-        Box width. If :py:`None`, the width is set to
+    width : float, default=None
+        Box width. If `None`{.py}, the width is set to
         `90%` of the resolution of the data. Note that if the stat
         has a width parameter, that takes precedence over this one.
-    outlier_alpha : float, optional (default: 1)
+    outlier_alpha : float, default=1
         Transparency of the outlier points.
-    outlier_color : str or tuple, optional (default: None)
+    outlier_color : str | tuple, default=None
         Color of the outlier points.
-    outlier_shape : str, optional (default: o)
+    outlier_shape : str, default="o"
         Shape of the outlier points. An empty string hides the outliers.
-    outlier_size : float, optional (default: 1.5)
+    outlier_size : float, default=1.5
         Size of the outlier points.
-    outlier_stroke : float, optional (default: 0.5)
+    outlier_stroke : float, default=0.5
         Stroke-size of the outlier points.
-    notch : bool, optional (default: False)
+    notch : bool, default=False
         Whether the boxes should have a notch.
-    varwidth : bool, optional (default: False)
-        If :py:`True`, boxes are drawn with widths proportional to
+    varwidth : bool, default=False
+        If `True`{.py}, boxes are drawn with widths proportional to
         the square-roots of the number of observations in the
         groups.
-    notchwidth : float, optional (default: 0.5)
+    notchwidth : float, default=0.5
         Width of notch relative to the body width.
-    fatten : float, optional (default: 2)
+    fatten : float, default=2
         A multiplicative factor used to increase the size of the
         middle bar across the box.
     """
@@ -113,13 +113,16 @@ class geom_boxplot(geom):
         if varwidth:
             if isinstance(_position, str):
                 kwargs["position"] = position_dodge2(preserve="single")
-            elif isinstance(_position, position):
-                if _position.params["preserve"] == "total":
-                    warn(
-                        "Cannot preserve total widths when varwidth=True",
-                        PlotnineWarning,
-                    )
-                    _position.params["preserve"] = "single"
+            elif (
+                isinstance(_position, position)
+                and _position.params["preserve"] == "total"
+            ):
+                warn(
+                    "Cannot preserve total widths when varwidth=True",
+                    PlotnineWarning,
+                    stacklevel=2,
+                )
+                _position.params["preserve"] = "single"
 
         super().__init__(mapping, data, **kwargs)
 

@@ -12,10 +12,9 @@ class theme_matplotlib(theme):
 
     Parameters
     ----------
-    rc :  dict, optional
-        rcParams which should be applied on top of
-        mathplotlib default.
-    fname : str, optional
+    rc : dict
+        rcParams which should be applied on top of mathplotlib default.
+    fname : str
         Filename to a matplotlibrc file
     use_defaults : bool
         If `True` (the default) resets the plot setting

@@ -5,18 +5,18 @@ from .theme_gray import theme_gray
 
 class theme_dark(theme_gray):
     """
-    The dark cousin of :class:`theme_light`
+    The dark cousin of [](`~plotnine.themes.theme_light`)
 
     It has  similar line sizes but a dark background. Useful to
     make thin colored lines pop out.
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 11.
-    base_family : str, optional
-        Base font family.
+        the base font size.
+    base_family : str
+        Base font family. If `None`, use [](`plotnine.options.base_family`).
     """
 
     def __init__(self, base_size=11, base_family=None):

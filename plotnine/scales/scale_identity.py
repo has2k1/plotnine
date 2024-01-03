@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import typing
 
+from .._utils.registry import alias
 from ..doctools import document
-from ..utils import alias
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from typing import Any, Sequence
 
 
 class MapTrainMixin:
@@ -16,9 +16,9 @@ class MapTrainMixin:
     Override map and train methods
     """
 
-    guide: Literal["legend"] | None = None
+    guide = None
 
-    def map(self, x: Sequence[Any]) -> Sequence[Any]:
+    def map(self, x, limits=None) -> Sequence[Any]:
         """
         Identity map
 
@@ -29,7 +29,7 @@ class MapTrainMixin:
         """
         return x
 
-    def train(self, x):
+    def train(self, x, drop=False):
         # do nothing if no guide,
         # otherwise train so we know what breaks to use
         if self.guide is None:
@@ -46,8 +46,8 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : Optional[Literal["legend"]], default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["color"]
@@ -74,8 +74,8 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : Optional[Literal["legend"]], default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["shape"]
@@ -89,8 +89,8 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : Optional[Literal["legend"]], default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["linetype"]
@@ -104,8 +104,8 @@ class scale_alpha_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : Optional[Literal["legend"]], default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["alpha"]
@@ -119,12 +119,13 @@ class scale_size_identity(MapTrainMixin, scale_continuous):
     Parameters
     ----------
     {superclass_parameters}
-    guide : None | 'legend'
-        Whether to include a legend. Default is None.
+    guide : Optional[Literal["legend"]], default=None
+        Whether to include a legend.
     """
 
     _aesthetics = ["size"]
 
 
 # American to British spelling
-alias("scale_colour_identity", scale_color_identity)
+class scale_colour_identity(scale_color_identity, alias):
+    pass

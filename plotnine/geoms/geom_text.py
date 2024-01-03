@@ -6,10 +6,10 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import order_as_data_mapping, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..positions import position_nudge
-from ..utils import order_as_data_mapping, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
@@ -18,7 +18,14 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Aes, Axes, Coord, DataLike, DrawingArea, Layer
+    from plotnine.typing import (
+        Aes,
+        Axes,
+        Coord,
+        DataLike,
+        DrawingArea,
+        Layer,
+    )
 
 
 # Note: hjust & vjust are parameters instead of aesthetics
@@ -34,39 +41,39 @@ class geom_text(geom):
     Parameters
     ----------
     {common_parameters}
-    parse : bool (default: False)
-        If :py:`True`, the labels will be rendered with
-        `latex <http://matplotlib.org/users/usetex.html>`_.
-    family : str (default: None)
+    parse : bool, default=False
+        If `True`{.py}, the labels will be rendered with
+        [latex](http://matplotlib.org/users/usetex.html).
+    family : str, default=None
         Font family.
-    fontweight : int or str (default: normal)
+    fontweight : int | str, default="normal"
         Font weight.
-    fontstyle : str (default: normal)
-        Font style. One of *normal*, *italic* or *oblique*
-    nudge_x : float (default: 0)
+    fontstyle : Literal["normal", "italic", "oblique"], default="normal"
+        Font style.
+    nudge_x : float, default=0
         Horizontal adjustment to apply to the text
-    nudge_y : float (default: 0)
+    nudge_y : float, default=0
         Vertical adjustment to apply to the text
-    adjust_text: dict (default: None)
+    adjust_text: dict, default=None
         Parameters to :class:`adjustText.adjust_text` will repel
         overlapping texts. This parameter takes priority of over
-        ``nudge_x`` and ``nudge_y``.
-
-        ``adjust_text`` does not work well when it is used in the
+        `nudge_x` and `nudge_y`.
+        `adjust_text` does not work well when it is used in the
         first layer of the plot, or if it is the only layer.
         For more see the documentation at
         https://github.com/Phlya/adjustText/wiki .
-    format_string : str (default: None)
-        If not :py:`None`, then the text is formatted with this
-        string using :meth:`str.format` e.g::
+    format_string : str, default=None
+        If not `None`{.py}, then the text is formatted with this
+        string using :meth:`str.format` e.g:
 
-            # 2.348 -> "2.35%"
-            geom_text(format_string="{:.2f}%")
-
-    path_effects : list (default: None)
-        If not :py:`None`, then the text will use these effects.
-        See `path_effects
-        <https://matplotlib.org/tutorials/advanced/patheffects_guide.html>`_
+        ```python
+        # 2.348 -> "2.35%"
+        geom_text(format_string="{:.2f}%")
+        ```
+    path_effects : list, default=None
+        If not `None`{.py}, then the text will use these effects.
+        See
+        [](https://matplotlib.org/tutorials/advanced/patheffects_guide.html)
         documentation for more details.
 
     See Also
@@ -80,14 +87,15 @@ class geom_text(geom):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Aesthetics Descriptions
+    **Aesthetics Descriptions**
 
-    ha
-        Horizontal alignment. One of *left*, *center* or *right.*
+    `ha`
 
-    va
-        Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
+    :   Horizontal alignment. One of *left*, *center* or *right.*
 
+    `va`
+
+    :   Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
     """
     DEFAULT_AES = {
         "alpha": 1,
@@ -152,7 +160,7 @@ class geom_text(geom):
 
             Missing values are preserved as None
             """
-            if series.dtype == float:
+            if series.dtype == "float":
                 return [None if np.isnan(l) else tpl.format(l) for l in series]
             else:
                 return [None if l is None else tpl.format(l) for l in series]
@@ -213,20 +221,20 @@ class geom_text(geom):
             plot_data["facecolor"] = fill
 
             if params["boxstyle"] in ("round", "round4"):
-                boxstyle = "{},pad={},rounding_size={}".format(
-                    params["boxstyle"],
-                    params["label_padding"],
-                    params["label_r"],
+                boxstyle = (
+                    f"{params['boxstyle']},"
+                    f"pad={params['label_padding']},"
+                    f"rounding_size={params['label_r']}"
                 )
             elif params["boxstyle"] in ("roundtooth", "sawtooth"):
-                boxstyle = "{},pad={},tooth_size={}".format(
-                    params["boxstyle"],
-                    params["label_padding"],
-                    params["tooth_size"],
+                boxstyle = (
+                    f"{params['boxstyle']},"
+                    f"pad={params['label_padding']},"
+                    f"tooth_size={params['tooth_size']}"
                 )
             else:
-                boxstyle = "{},pad={}".format(
-                    params["boxstyle"], params["label_padding"]
+                boxstyle = (
+                    f"{params['boxstyle']}," f"pad={params['label_padding']},"
                 )
             bbox = {"linewidth": params["label_size"], "boxstyle": boxstyle}
         else:
@@ -236,7 +244,7 @@ class geom_text(geom):
 
         # For labels add a bbox
         for i in range(len(data)):
-            kw: dict["str", Any] = plot_data.iloc[i].to_dict()
+            kw: dict[str, Any] = plot_data.iloc[i].to_dict()
             if draw_label:
                 kw["bbox"] = bbox
                 kw["bbox"]["edgecolor"] = params["boxcolor"] or kw["color"]
@@ -288,8 +296,8 @@ class geom_text(geom):
         color = to_rgba(data["color"], data["alpha"])
 
         key = Text(
-            x=0.5 * da.width,  # pyright: ignore[reportGeneralTypeIssues]
-            y=0.5 * da.height,  # pyright: ignore[reportGeneralTypeIssues]
+            x=0.5 * da.width,
+            y=0.5 * da.height,
             text="a",
             size=data["size"],
             family=lyr.geom.params["family"],
@@ -306,6 +314,5 @@ def check_adjust_text():
     try:
         pass
     except ImportError as err:
-        raise PlotnineError(
-            "To use adjust_text you must install the adjustText package."
-        ) from err
+        msg = "To use adjust_text you must install the adjustText package."
+        raise PlotnineError(msg) from err

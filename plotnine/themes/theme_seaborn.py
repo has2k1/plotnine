@@ -14,13 +14,13 @@ class theme_seaborn(theme):
 
     Parameters
     ----------
-    style: str in ``['whitegrid', 'darkgrid', 'nogrid', 'ticks']``
+    style: "whitegrid", "darkgrid", "nogrid", "ticks"
         Style of axis background.
-    context: str in ``['notebook', 'talk', 'paper', 'poster']``
+    context: "notebook", "talk", "paper", "poster"]``
         Intended context for resulting figures.
     font : str
         Font family, see matplotlib font manager.
-    font_scale : float, optional
+    font_scale : float
         Separate scaling factor to independently scale the
         size of the font elements.
     """

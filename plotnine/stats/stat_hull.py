@@ -15,14 +15,14 @@ class stat_hull(stat):
     Parameters
     ----------
     {common_parameters}
-    qhull_options: str, optional
+    qhull_options: str, default=None
         Additional options to pass to Qhull.
         See `Qhull <http://www.qhull.org/>`__ documentation
         for details.
 
     Raises
     ------
-    QhullError
+    scipy.spatial.QhullError
         Raised when Qhull encounters an error condition,
         such as geometrical degeneracy when options to resolve are
         not enabled.
@@ -31,11 +31,11 @@ class stat_hull(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'area'  # Area of the convex hull
+    ```python
+    "area"  # Area of the convex hull
+    ```
 
     """
     REQUIRED_AES = {"x", "y"}

@@ -5,8 +5,8 @@ import typing
 import numpy as np
 import pandas as pd
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_polygon import geom_polygon
 

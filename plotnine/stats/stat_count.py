@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
+from .._utils import resolution
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
-from ..utils import resolution
 from .stat import stat
 
 
@@ -18,9 +18,8 @@ class stat_count(stat):
     Parameters
     ----------
     {common_parameters}
-    width : float, optional (default: None)
-        Bar width. By default, set to 90% of the
-        resolution of the data
+    width : float, default=None
+        Bar width. If None, set to 90% of the resolution of the data.
 
     See Also
     --------
@@ -30,12 +29,12 @@ class stat_count(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'count'  # Number of observations at a position
-        'prop'   # Ratio of points in the panel at a position
+    ```python
+    "count"  # Number of observations at a position
+    "prop"   # Ratio of points in the panel at a position
+    ```
 
     """
 

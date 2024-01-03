@@ -4,9 +4,9 @@ import typing
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
 from ..scales.scale_shape import FILLED_SHAPES
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
@@ -89,7 +89,7 @@ class geom_point(geom):
         size = ((data["size"] + data["stroke"]) ** 2) * np.pi
         stroke = data["stroke"] * SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
-        shape = data.loc[0, "shape"]
+        shape = data["shape"].iloc[0]
 
         # It is common to forget that scatter points are
         # filled and slip-up by manually assigning to the

@@ -5,8 +5,8 @@ import typing
 import numpy as np
 from mizani.bounds import expand_range_distinct
 
+from .._utils import ignore_warnings
 from ..iapi import range_view
-from ..utils import ignore_warnings
 
 if typing.TYPE_CHECKING:
     from typing import Type
@@ -50,7 +50,7 @@ def expand_range(
         Coordinate transformation
     """
     x_coord_space = tuple(trans.transform(x))
-    x_coord = _expand_range_distinct(x_coord_space, expand)
+    x_coord = _expand_range_distinct(x_coord_space, expand)  # type: ignore
 
     with ignore_warnings(RuntimeWarning):
         # Consequences of the runtimewarning (NaNs and infs)

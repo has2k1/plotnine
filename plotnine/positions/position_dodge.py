@@ -1,12 +1,18 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from copy import copy
 
 import numpy as np
 import pandas as pd
 
+from .._utils import groupby_apply, match
 from ..exceptions import PlotnineError
-from ..utils import groupby_apply, match
 from .position import position
+
+if typing.TYPE_CHECKING:
+    from typing import Literal, Optional
 
 
 class position_dodge(position):
@@ -15,18 +21,22 @@ class position_dodge(position):
 
     Parameters
     ----------
-    width: float
+    width :
         Dodging width, when different to the width of the
         individual elements. This is useful when you want
         to align narrow geoms with wider geoms
-    preserve: str in ``['total', 'single']``
+    preserve :
         Should dodging preserve the total width of all elements
         at a position, or the width of a single element?
     """
 
     REQUIRED_AES = {"x"}
 
-    def __init__(self, width=None, preserve="total"):
+    def __init__(
+        self,
+        width: Optional[float] = None,
+        preserve: Literal["total", "single"] = "total",
+    ):
         self.params = {
             "width": width,
             "preserve": preserve,
@@ -40,9 +50,8 @@ class position_dodge(position):
             if "xmax" not in data:
                 data["xmax"] = data["xend"]
 
-        if "x" not in data:
-            if "xmin" in data and "xmax" in data:
-                data["x"] = (data["xmin"] + data["xmax"]) / 2
+        if "x" not in data and "xmin" in data and "xmax" in data:
+            data["x"] = (data["xmin"] + data["xmax"]) / 2
 
         return super().setup_data(data, params)
 
@@ -114,8 +123,8 @@ class position_dodge(position):
         # Find the center for each group, then use that to
         # calculate xmin and xmax
         data["x"] = data["x"] + width * ((groupidx - 0.5) / n - 0.5)
-        data["xmin"] = data["x"] - (d_width / n) / 2  # type: ignore
-        data["xmax"] = data["x"] + (d_width / n) / 2  # type: ignore
+        data["xmin"] = data["x"] - (d_width / n) / 2
+        data["xmax"] = data["x"] + (d_width / n) / 2
 
         if "x" in data and "xend" in data:
             data["x"] = data["xmin"]

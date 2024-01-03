@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.9, 3.11]
+        python-version: [3.9, 3.12]
 
     steps:
       - name: Checkout Code
@@ -74,7 +74,6 @@ jobs:
         shell: bash
         run: |
           pip install ruff
-          pip install black
 
       - name: Environment Information
         shell: bash
@@ -85,7 +84,7 @@ jobs:
         run: |
           make lint
 
-      - name: Check format with Black
+      - name: Check format with Ruff
         shell: bash
         run: |
           make format
@@ -124,41 +123,8 @@ jobs:
         shell: bash
         run: make typecheck
 
-  documentation:
-    runs-on: ubuntu-latest
-
-    # We want to run on external PRs, but not on our own internal PRs as they'll be run
-    # by the push to the branch.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-
-    strategy:
-      matrix:
-        python-version: [3.11]
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install Packages
-        shell: bash
-        run: |
-          sudo apt-get install pandoc
-          pip install git+https://github.com/has2k1/mizani.git@main
-          pip install ".[test,doc]"
-          pip install -r requirements/examples.txt
-
-      - name: Environment Information
-        shell: bash
-        run: pip list
-
-      - name: Build Documentation
-        shell: bash
-        run: |
-          pushd doc
-          SPHINXOPTS=-W
-          make html && popd
+  call-build-documentation:
+    if: |
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+    uses: ./.github/workflows/documentation.yml

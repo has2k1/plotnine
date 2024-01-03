@@ -7,29 +7,30 @@ class theme_tufte(theme_bw):
     """
     Tufte Maximal Data, Minimal Ink Theme
 
-    Theme based on Chapter 6 'Data-Ink Maximization and Graphical
+    Theme based on Chapter 6 Data-Ink Maximization and Graphical
     Design of Edward Tufte *The Visual Display of Quantitative
     Information*. No border, no axis lines, no grids. This theme
-    works best in combination with :class:`geom_rug()` or
-    :class:`geom_rangeframe()`.
+    works best in combination with [](`~plotnine.geoms.geom_rug`).
 
-    The default font family is set to 'serif' as he uses serif
-    fonts for labels in 'The Visual Display of Quantitative
-    Information'. The serif font used by Tufte in his books is
+    The default font family is set to "serif" as he uses serif
+    fonts for labels in _The Visual Display of Quantitative
+    Information_. The serif font used by Tufte in his books is
     a variant of Bembo, while the sans serif font is Gill Sans.
     If these fonts are installed on your system, consider setting
     them explicitly via the argument `base_family`.
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 11.
-    base_family : str, optional
-        Base font family.
-    ticks: logical, optional
-        Show axis ticks?
+        the base font size.
+    base_family : str
+        Base font family. If `None`, use [](`plotnine.options.base_family`).
+    ticks: bool
+        Whether to show axis ticks.
 
+    References
+    ----------
     Tufte, Edward R. (2001) The Visual Display of Quantitative
     Information, Chapter 6.
 

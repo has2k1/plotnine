@@ -5,18 +5,18 @@ from .theme_gray import theme_gray
 
 class theme_light(theme_gray):
     """
-    A theme similar to :class:`theme_linedraw`
+    A theme similar to [](`~plotnine.themes.theme_linedraw`)
 
     Has light grey lines lines and axes to direct more attention
     towards the data.
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 11.
-    base_family : str, optional
-        Base font family.
+        the base font size.
+    base_family : str
+        Base font family. If `None`, use [](`plotnine.options.base_family`).
     """
 
     def __init__(self, base_size=11, base_family=None):

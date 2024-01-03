@@ -5,10 +5,10 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import resolution
 from ..coords import coord_cartesian
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import resolution
 from .geom import geom
 from .geom_polygon import geom_polygon
 
@@ -32,26 +32,41 @@ class geom_raster(geom):
     ----------
     {common_parameters}
 
-    hjust : float (default: 0.5)
-        Horizontal justification for the rectangle at point ``x``.
+    hjust : float, default=0.5
+        Horizontal justification for the rectangle at point `x`.
         Default is 0.5, which centers the rectangle horizontally.
-        Must be in the range ``[0, 1]``.
-    vjust : float (default: 0.5)
-        Vertical justification for the rectangle at point ``y``
+        Must be in the range `[0, 1]`.
+    vjust : float, default=0.5
+        Vertical justification for the rectangle at point `y`
         Default is 0.5, which centers the rectangle vertically.
-        Must be in the range ``[0, 1]``.
-    interpolation : str | None (default: None)
+        Must be in the range `[0, 1]`.
+    interpolation : str, default=None
         How to calculate values between the center points of
-        adjacent rectangles. The default is :py:`None` not to
+        adjacent rectangles. The default is `None`{.py} not to
         interpolate. Allowed values are:
-        :py:`'none', 'antialiased', 'nearest', 'bilinear', 'bicubic',`
-        :py:`'spline16', 'spline36', 'hanning', 'hamming', 'hermite',`
-        :py:`'kaiser', 'quadric', 'catrom', 'gaussian', 'bessel',`
-        :py:`'mitchell', 'sinc', 'lanczos', 'blackman'`
-
-    filterrad : float, (default: 4.0)
+        ```python
+        "antialiased"
+        "nearest"
+        "bilinear"
+        "bicubic"
+        "spline16"
+        "spline36"
+        "hanning"
+        "hamming"
+        "hermite"
+        "kaiser"
+        "quadric"
+        "catrom"
+        "gaussian"
+        "bessel"
+        "mitchell"
+        "sinc"
+        "lanczos"
+        "blackman"
+        ```
+    filterrad : float, default=4.0
         The filter radius for filters that have a radius parameter, i.e.
-        when interpolation is one of: *'sinc', 'lanczos' or 'blackman'*.
+        when interpolation is one of: `sinc`, `lanczos`, `blackman`.
         Must be a number greater than zero.
 
     See Also

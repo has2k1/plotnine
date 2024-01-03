@@ -1,60 +1,44 @@
-# Makefile for Sphinx documentation
-#
+.PHONY: help Makefile
+.DEFAULT_GOAL := help
 
-# You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = plotnine
-SOURCEDIR     = .
-PAPER         =
-BUILDDIR      = _build
+define PRINT_HELP_PYSCRIPT
+import re
+import sys
 
-# For make theme
-BOOTSWATCHTHEME = united
-brand-primary = \#9E2F68
-headings-font-weight = bold
-font-family-sans-serif = '"system-ui", "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'
+target_pattern = re.compile(r"^([a-zA-Z1-9_-]+):.*?## (.*)$$")
+for line in sys.stdin:
+	match = target_pattern.match(line)
+	if match:
+		target, help = match.groups()
+		print(f"{target:<20} {help}")
+endef
+export PRINT_HELP_PYSCRIPT
 
-# Put it first so that "make" without argument is like "make help".
+
 help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	@echo "  theme    to create a custom sphinx boostrap theme"
-	@echo "  logo     to generate logo images"
-	@echo "  readme_images to generate images used in README.rst"
+	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-.PHONY: help Makefile theme logo readme_images
+clean:  ## Remove build artefacts
+	rm -rf .quarto
+	rm -rf tutorials/*.ipynb
+	rm -rf examples/*.ipynb
+	rm -rf reference/
+	rm -rf _site/
+	rm -rf _inv/
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+interlink:  ## Gather interlinks
+	quartodoc interlinks
 
-theme:
-	../tools/build_theme.sh --theme $(BOOTSWATCHTHEME) \
-	   --brand-primary '$(brand-primary)' \
-	   --headings-font-weight $(headings-font-weight) \
-	   --font-family-sans-serif '$(font-family-sans-serif)'
+config:  ## Configure project for quartodoc and quarto
+	python _config.py
 
-logo:
-	cd images; \
-	python logo.py; \
-	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
-	   -gravity center -scale 528x528 -extent 540x540 \
-	   -border 6 -bordercolor '#441A3F'\
-	   logo.pdf logo-540.png; \
-	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
-	   -gravity center -scale 176x176 -extent 180x180 \
-	   -border 2 -bordercolor '#441A3F'\
-	   logo.pdf logo-180.png; \
-	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
-	   -gravity center -scale 32x32 \
-	   -border 2 -bordercolor '#441A3F'\
-	   logo-small.pdf logo-32.png; \
-	convert -trim -density 300 -alpha remove -background '#FFFFFF' \
-	   -gravity center -scale 32x32 \
-	   -border 2 -bordercolor '#441A3F'\
-	   logo-small.pdf favicon.ico;
+docstrings: config  ## Generate qmd files from the docstrings
+	quartodoc build --config _quartodoc.yml
 
-readme_images:
-	cd images; \
-	python readme_images.py
+html: docstrings  ## Build html site
+	quarto render
+
+doc: clean interlink html  ## Build html documentation from a clean slate
+
+preview:  ## Preview html website
+	quarto preview --port 42000 --no-browser

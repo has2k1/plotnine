@@ -28,17 +28,17 @@ class PlotnineAnimation(ArtistAnimation):
 
     Parameters
     ----------
-    plots : iterable
+    plots :
         ggplot objects that make up the the frames of the animation
-    interval : number, optional
-       Delay between frames in milliseconds. Defaults to 200.
-    repeat_delay : number, optional
+    interval : int
+        Delay between frames in milliseconds. Defaults to 200.
+    repeat_delay : int
         If the animation in repeated, adds a delay in milliseconds
         before repeating the animation. Defaults to `None`.
-    repeat : bool, optional
+    repeat : bool
         Controls whether the animation should repeat when the sequence
         of frames is completed. Defaults to `True`.
-    blit : bool, optional
+    blit : bool
         Controls whether blitting is used to optimize drawing. Defaults
         to `False`.
 
@@ -89,9 +89,9 @@ class PlotnineAnimation(ArtistAnimation):
 
         Returns
         -------
-        figure : matplotlib.figure.Figure
+        figure
             Matplotlib figure
-        artists : list
+        artists
             List of :class:`Matplotlib.artist.Artist`
         """
         import matplotlib.pyplot as plt
@@ -208,7 +208,7 @@ class PlotnineAnimation(ArtistAnimation):
         for frame_no, p in enumerate(plots):
             if figure is None:
                 figure = p.draw()
-                axs = figure.get_axes()  # pyright: ignore
+                axs = figure.get_axes()
                 initialise_artist_offsets(len(axs))
                 scales = p._build_objs.scales
                 set_scale_limits(scales)
@@ -219,7 +219,7 @@ class PlotnineAnimation(ArtistAnimation):
             artists.append(get_frame_artists(axs))
 
         if figure is None:
-            figure = plt.figure()  # pyright: ignore
+            figure = plt.figure()
 
         assert figure is not None
         # Prevent Jupyter from plotting any static figure

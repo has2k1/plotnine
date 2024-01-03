@@ -6,8 +6,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-from plotnine.data import mtcars
-from plotnine.utils import (
+from plotnine._utils import (
     _margins,
     add_margins,
     join_keys,
@@ -17,6 +16,7 @@ from plotnine.utils import (
     remove_missing,
     uniquecols,
 )
+from plotnine.data import mtcars
 
 
 def test__margins():
@@ -207,7 +207,7 @@ def test_uniquecols():
 
 
 def test_remove_missing():
-    data = pd.DataFrame({"a": [1.0, np.NaN, 3, np.inf], "b": [1, 2, 3, 4]})
+    data = pd.DataFrame({"a": [1.0, np.nan, 3, np.inf], "b": [1, 2, 3, 4]})
     data2 = pd.DataFrame({"a": [1.0, 3, np.inf], "b": [1, 3, 4]})
     data3 = pd.DataFrame({"a": [1.0, 3], "b": [1, 3]})
 

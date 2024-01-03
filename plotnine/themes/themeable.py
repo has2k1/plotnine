@@ -12,15 +12,16 @@ from __future__ import annotations
 
 import typing
 from contextlib import suppress
-from typing import Dict
 from warnings import warn
 
+from .._utils import to_rgba
+from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError
-from ..utils import RegistryHierarchyMeta, to_rgba
 from .elements import element_base, element_blank
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Mapping, Type
+    from collections.abc import Mapping
+    from typing import Any, Type
 
     from matplotlib.patches import Patch
 
@@ -43,8 +44,8 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     It is probably better to think if this hierarchy of leveraging
     Python's multiple inheritance to implement composition. For example
-    the ``axis_title`` themeable is *composed of* the ``x_axis_title`` and the
-    ``y_axis_title``. We are just using multiple inheritance to specify
+    the `axis_title` themeable is *composed of* the `x_axis_title` and the
+    `y_axis_title`. We are just using multiple inheritance to specify
     this composition.
 
     When implementing a new themeable based on the ggplot2 documentation,
@@ -53,36 +54,36 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     For example, to implement,
 
-    - ``axis_title_x`` - ``x`` axis label (element_text;
-      inherits from ``axis_title``)
-    - ``axis_title_y`` - ``y`` axis label (element_text;
-      inherits from ``axis_title``)
+    - `axis_title_x` - `x` axis label (element_text;
+      inherits from `axis_title`)
+    - `axis_title_y` - `y` axis label (element_text;
+      inherits from `axis_title`)
 
 
     You would have this implementation:
 
-    ::
 
-        class axis_title_x(themeable):
-            ...
+    ```python
+    class axis_title_x(themeable):
+        ...
 
-        class axis_title_y(themeable):
-            ...
+    class axis_title_y(themeable):
+        ...
 
-        class axis_title(axis_title_x, axis_title_y):
-            ...
-
+    class axis_title(axis_title_x, axis_title_y):
+        ...
+    ```
 
     If the superclasses fully implement the subclass, the body of the
     subclass should be "pass". Python(__mro__) will do the right thing.
 
-    When a method does require implementation, call :python:`super()`
+    When a method does require implementation, call `super()`{.py}
     then add the themeable's implementation to the axes.
 
     Notes
     -----
-    A user should never create instances of class :class:`themeable` or
-    subclasses of it.
+    A user should never create instances of class
+    [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
     """
 
     order = 0
@@ -114,22 +115,22 @@ class themeable(metaclass=RegistryHierarchyMeta):
         name : str
             Class name
         theme_element : element object
-            A of the type required by the theme
+            An element of the type required by the theme.
             For lines, text and rects it should be one of:
-            :class:`element_line`,
-            :class:`element_rect`,
-            :class:`element_text` or
-            :class:`element_blank`
+            [](`~plotnine.themes.element_line`),
+            [](`~plotnine.themes.element_rect`),
+            [](`~plotnine.themes.element_text`) or
+            [](`~plotnine.themes.element_blank`)
 
         Returns
         -------
-        out : Themeable
+        out : plotnine.themes.themeable.themeable
         """
         msg = f"There no themeable element called: {name}"
         try:
             klass: Type[themeable] = themeable._registry[name]
-        except KeyError:
-            raise PlotnineError(msg)
+        except KeyError as e:
+            raise PlotnineError(msg) from e
 
         if not issubclass(klass, themeable):
             raise PlotnineError(msg)
@@ -160,11 +161,12 @@ class themeable(metaclass=RegistryHierarchyMeta):
         else:
             self.properties.update(other.properties)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         "Mostly for unittesting."
-        c1 = type(self) is type(other)
-        c2: bool = self.properties == other.properties
-        return c1 and c2
+        return other is self or (
+            isinstance(other, type(self))
+            and self.properties == other.properties
+        )
 
     @property
     def rcParams(self) -> dict[str, Any]:
@@ -204,13 +206,14 @@ class themeable(metaclass=RegistryHierarchyMeta):
         Subclasses can override this method to customize the plot
         according to the theme.
 
+        This method should be implemented as `super().apply_ax()`{.py}
+        followed by extracting the portion of the axes specific to this
+        themeable then applying the properties.
+
+
         Parameters
         ----------
         ax : matplotlib.axes.Axes
-
-        This method should be implemented as super(...).apply_ax()
-        followed by extracting the portion of the axes specific to this
-        themeable then applying the properties.
         """
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
@@ -243,14 +246,14 @@ class themeable(metaclass=RegistryHierarchyMeta):
         """
 
 
-class Themeables(Dict[str, themeable]):
+class Themeables(dict[str, themeable]):
     """
     Collection of themeables
 
     The key is the name of the class.
     """
 
-    def update(self, other: Themeables):
+    def update(self, other: Themeables, **kwargs):  # type: ignore
         """
         Update themeables with those from `other`
 
@@ -283,7 +286,7 @@ class Themeables(Dict[str, themeable]):
                 # could not merge blank element.
                 self[new_key] = new
 
-    def values(self) -> list[themeable]:
+    def values(self):
         """
         Return a list of themeables sorted in reverse based
         on the their depth in the inheritance hierarchy.
@@ -294,14 +297,12 @@ class Themeables(Dict[str, themeable]):
             - merge :class:`axis_line_x` into :class:`axis_line`
         """
         hierarchy = themeable._hierarchy
-        result: list[themeable] = []
-        seen = set()
-        for _, lst in hierarchy.items():
+        result: dict[str, themeable] = {}
+        for lst in hierarchy.values():
             for name in reversed(lst):
-                if name in self and name not in seen:
-                    result.append(self[name])
-                    seen.add(name)
-        return result
+                if name in self and name not in result:
+                    result[name] = self[name]
+        return result.values()
 
     def property(self, name: str, key: str = "value") -> Any:
         """
@@ -347,7 +348,7 @@ class Themeables(Dict[str, themeable]):
         If the *name* is not in the list of themeables then
         the lookup falls back to inheritance hierarchy.
         If none of the themeables are in the hierarchy are
-        present, ``False`` is returned.
+        present, `False` is returned.
 
         Parameters
         ----------
@@ -732,7 +733,7 @@ class axis_text_x(themeable):
         properties = self.properties.copy()
         with suppress(KeyError):
             del properties["margin"]
-        labels = ax.get_xticklabels()  # pyright: ignore
+        labels = ax.get_xticklabels()
         for l in labels:
             l.set(**properties)
 
@@ -757,7 +758,7 @@ class axis_text_y(themeable):
         properties = self.properties.copy()
         with suppress(KeyError):
             del properties["margin"]
-        labels = ax.get_yticklabels()  # pyright: ignore
+        labels = ax.get_yticklabels()
         for l in labels:
             l.set(**properties)
 
@@ -1696,10 +1697,10 @@ class axis_ticks_direction_x(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['in', 'out', 'inout']``
-        - ``in`` - ticks inside the panel
-        - ``out`` - ticks outside the panel
-        - ``inout`` - ticks inside and outside the panel
+    theme_element : Literal["in", "out", "inout"]
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+        `inout` for ticks inside and outside the panel.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1715,10 +1716,10 @@ class axis_ticks_direction_y(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['in', 'out', 'inout']``
-        - ``in`` - ticks inside the panel
-        - ``out`` - ticks outside the panel
-        - ``inout`` - ticks inside and outside the panel
+    theme_element : Literal["in", "out", "inout"]
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+        `inout` for ticks inside and outside the panel.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1734,10 +1735,10 @@ class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
 
     Parameters
     ----------
-    theme_element : {'in', 'out', 'inout'}
-        - ``in`` - ticks inside the panel
-        - ``out`` - ticks outside the panel
-        - ``inout`` - ticks inside and outside the panel
+    theme_element : Literal["in", "out", "inout"]
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+        `inout` for ticks inside and outside the panel.
     """
 
 
@@ -1777,7 +1778,7 @@ class panel_spacing(panel_spacing_x, panel_spacing_y):
     Parameters
     ----------
     theme_element : float
-        Size in inches of the space between the facet panels
+        Size as a fraction of the figure's dimension.
     """
 
 
@@ -1875,8 +1876,8 @@ class aspect_ratio(themeable):
 
     Notes
     -----
-    For a fixed relationship between the ``x`` and ``y`` scales,
-    use :class:`~plotnine.coords.coord_fixed`.
+    For a fixed relationship between the `x` and `y` scales,
+    use [](`~plotnine.coords.coord_fixed`).
     """
 
 
@@ -1919,7 +1920,7 @@ class legend_box(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['vertical', 'horizontal']``
+    theme_element : Literal["vertical", "horizontal"]
         Whether to stack up the legends vertically or
         horizontally.
     """
@@ -1942,9 +1943,9 @@ class legend_box_just(themeable):
 
     Parameters
     ----------
-    theme_element : str
-        One of *left*, *right*, *center*, *top* or *bottom*
-        depending the value of :class:`legend_box`.
+    theme_element : "left", "right", "center", "top", "bottom", "baseline", \
+                    default=None
+        If `None`, the value that will apply depends on :class:`legend_box`.
     """
 
 
@@ -1954,7 +1955,7 @@ class legend_direction(themeable):
 
     Parameters
     ----------
-    theme_element : str in ``['vertical', 'horizontal']``
+    theme_element : Literal["vertical", "horizontal"]
         Vertically or horizontally
     """
 
@@ -2031,11 +2032,10 @@ class legend_position(themeable):
 
     Parameters
     ----------
-    theme_element : str or tuple
-        If a string it should be one of *right*, *left*, *top*
-        *bottom* or *none*. If a tuple, it should be two floats each
-        in the approximate range [0, 1]. The tuple specifies the
-        location of the legend in screen coordinates.
+    theme_element : "right" | "left" | "top" | "bottom" | "none" | tuple
+        If `none`, no legend.
+        If a tuple, 2-floats in the range `[0, 1]` for the location
+        in screen coordinates.
     """
 
 
@@ -2045,9 +2045,8 @@ class legend_title_align(themeable):
 
     Parameters
     ----------
-    theme_element : str or tuple
-        If a string it should be one of *right*, *left*, *center*,
-        *top* or *bottom*.
+    theme_element : "right" | "left" | "center" | "top" | "bottom" | "auto"
+        If `auto`, depends on the position of the legend.
     """
 
 
@@ -2092,7 +2091,7 @@ class strip_align_x(themeable):
     ----------
     theme_element : float
         Value as a proportion of the strip size. A good value
-        should be the range :math:`[-1, 0.5]`. A negative value
+        should be the range `[-1, 0.5]`. A negative value
         puts the strip inside the axes. A positive value creates
         a margin between the strip and the axes. `0` puts the
         strip on top of the panels.
@@ -2107,7 +2106,7 @@ class strip_align_y(themeable):
     ----------
     theme_element : float
         Value as a proportion of the strip size. A good value
-        should be the range :math:`[-1, 0.5]`. A negative value
+        should be the range `[-1, 0.5]`. A negative value
         puts the strip inside the axes. A positive value creates
         a margin between the strip and the axes. `0` puts the
         strip exactly beside the panels.
@@ -2122,7 +2121,7 @@ class strip_align(strip_align_x, strip_align_y):
     ----------
     theme_element : float
         Value as a proportion of the strip text size. A good value
-        should be the range :math:`[-1, 0.5]`. A negative value
+        should be the range `[-1, 0.5]`. A negative value
         puts the strip inside the axes and a positive value
         creates a space between the strip and the axes.
     """

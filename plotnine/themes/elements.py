@@ -145,43 +145,43 @@ class element_text(element_base):
 
     Parameters
     ----------
-    family : str
+    family :
         Font family. See :meth:`matplotlib.text.Text.set_family`
         for supported values.
-    style : str in ``['normal', 'italic', 'oblique']``
+    style :
         Font style
-    color : str | tuple
+    color :
         Text color
-    weight : str
-        Should be one of *normal*, *bold*, *heavy*, *light*,
-        *ultrabold* or *ultralight*.
-    size : float
+    weight :
+        Should be one of `normal`, `bold`, `heavy`, `light`,
+        `ultrabold` or `ultralight`.
+    size :
         text size
-    ha : str in ``['center', 'left', 'right']``
+    ha :
         Horizontal Alignment.
-    va : str in ``['center' , 'top', 'bottom', 'baseline']``
+    va :
         Vertical alignment.
-    rotation : float
+    rotation :
         Rotation angle in the range [0, 360]
     linespacing : float
         Line spacing
-    backgroundcolor : str | tuple
+    backgroundcolor :
         Background color
-    margin : dict
-        Margin around the text. The keys are one of
-        ``['t', 'b', 'l', 'r']`` and ``units``. The units are
-        one of ``['pt', 'lines', 'in']``. The *units* default
-        to ``pt`` and the other keys to ``0``. Not all text
-        themeables support margin parameters and other than the
-        ``units``, only some of the other keys may apply.
-    kwargs : dict
+    margin :
+        Margin around the text. The keys are
+        `t`, `b`, `l`, `r` and `units`.
+        The `tblr` keys are floats.
+        The `units` is one of `pt`, `lines` or `in`.
+        Not all text themeables support margin parameters and other
+        than the `units`, only some of the other keys may apply.
+    kwargs :
         Parameters recognised by :class:`matplotlib.text.Text`
 
     Notes
     -----
-    :class:`element_text` will accept parameters that conform to the
-    **ggplot2** *element_text* API, but it is preferable the
-    **Matplotlib** based API described above.
+    [](`~plotnine.themes.element_text`) will accept parameters that
+    conform to the **ggplot2** *element_text* API, but it is preferable
+    the **Matplotlib** based API described above.
     """
 
     def __init__(
@@ -196,7 +196,9 @@ class element_text(element_base):
         rotation: Optional[float] = None,
         linespacing: Optional[float] = None,
         backgroundcolor: Optional[str | TupleFloat3 | TupleFloat4] = None,
-        margin: Optional[dict[str, Any]] = None,
+        margin: Optional[
+            dict[Literal["t", "b", "l", "r", "units"], Any]
+        ] = None,
         **kwargs: Any,
     ):
         # ggplot2 translation
@@ -308,21 +310,19 @@ class Margin:
         elif self.units in ("line", "lines"):
             self.units = "lines"
 
-    def __eq__(self, other: Any) -> bool:
-        core = ("t", "b", "l", "r", "units")
-        if self is other:
-            return True
+    def __eq__(self, other: object) -> bool:
+        def _size(m: Margin):
+            return m.element.properties.get("size")
 
-        if type(self) is not type(other):
-            return False
-
-        for attr in core:
-            if getattr(self, attr) != getattr(other, attr):
-                return False
-
-        s_size = self.element.properties.get("size")
-        o_size = other.element.properties.get("size")
-        return s_size == o_size
+        return other is self or (
+            isinstance(other, type(self))
+            and other.t == self.t
+            and other.b == self.b
+            and other.l == self.l
+            and other.r == self.r
+            and other.units == self.units
+            and _size(other) == _size(self)
+        )
 
     def get_as(
         self,

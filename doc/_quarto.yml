@@ -1,0 +1,72 @@
+project:
+  type: website
+  resources:
+    - objects.txt
+  render:
+    - "reference/**.qmd"
+    - "*.qmd"
+    - "tutorials/*.ipynb"
+
+website:
+  title: "plotnine {{< var version >}}"
+  favicon: "images/favicon.ico"
+  page-navigation: true
+  navbar:
+    left:
+      - file: reference/index.qmd
+        text: "Reference"
+      - file: gallery/index.qmd
+      - file: tutorials/index.qmd
+      - text: "Pages"
+        menu:
+          - installation.qmd
+          - changelog.qmd
+          - external-resources.qmd
+          - about.qmd
+    right:
+      - icon: github
+        href: https://github.com/has2k1/plotnine
+
+format:
+  html:
+    toc: true
+    theme:
+      - lumen
+      - custom.scss
+
+filters:
+  - interlinks
+
+interlinks:
+  fast: true
+  sources:
+    python:
+      url: https://docs.python.org/3/
+    matplotlib:
+      url: https://matplotlib.org/stable/
+    mizani:
+      url: https://mizani.readthedocs.io/en/stable/
+    numpy:
+      url: https://numpy.org/doc/stable/
+    scipy:
+      url: https://docs.scipy.org/doc/scipy/
+    statsmodels:
+      url: https://www.statsmodels.org/stable/
+    pandas:
+      url: https://pandas.pydata.org/pandas-docs/stable/
+    sklearn:
+      url: https://scikit-learn.org/stable/
+    skmisc:
+      url: https://has2k1.github.io/scikit-misc/stable/
+    adjustText:
+      url: https://adjusttext.readthedocs.io/en/latest/
+    patsy:
+      url: https://patsy.readthedocs.io/en/stable/
+
+issuey:
+  issue-url: "https://github.com/has2k1/plotnine/issues/%id"
+  issue-text: "#%id"
+  issue-title: "Issue: #%id"
+  pull-request-url: "https://github.com/has2k1/plotnine/pulls/%id"
+  pull-request-text: "PR%id"
+  pull-request-title: "Pull Request: #%id"

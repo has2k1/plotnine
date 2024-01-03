@@ -1,11 +1,19 @@
+from __future__ import annotations
+
+import typing
 from contextlib import suppress
 from copy import copy
 
+from .._utils import jitter, resolution
 from ..exceptions import PlotnineError
 from ..mapping.aes import SCALED_AESTHETICS
-from ..utils import jitter, resolution
 from .position import position
 from .position_dodge import position_dodge
+
+if typing.TYPE_CHECKING:
+    from typing import Optional
+
+    import numpy as np
 
 
 # Adjust position by simultaneously dodging and jittering
@@ -14,22 +22,20 @@ class position_jitterdodge(position):
     Dodge and jitter to minimise overlap
 
     Useful when aligning points generated through
-    :class:`~plotnine.geoms.geom_point` with dodged a
-    :class:`~plotnine.geoms.geom_boxplot`.
+    [](`~plotnine.geoms.geom_point`) with dodged a
+    [](`~plotnine.geoms.geom_boxplot`).
 
     Parameters
     ----------
-    jitter_width : float
+    jitter_width :
         Proportion to jitter in horizontal direction.
-        Default is ``0.4`` of the resolution of the data.
-    jitter_height : float
+        If `None`, `0.4` of the resolution of the data.
+    jitter_height :
         Proportion to jitter in vertical direction.
-        Default is ``0.0`` of the resolution of the data.
-    dodge_width : float
+    dodge_width :
         Amount to dodge in horizontal direction.
-        Default is ``0.75``
-    random_state : int or ~numpy.random.RandomState, optional
-        Seed or Random number generator to use. If ``None``, then
+    random_state :
+        Seed or Random number generator to use. If `None`, then
         numpy global generator :class:`numpy.random` is used.
     """
 
@@ -38,10 +44,10 @@ class position_jitterdodge(position):
 
     def __init__(
         self,
-        jitter_width=None,
-        jitter_height=0,
-        dodge_width=0.75,
-        random_state=None,
+        jitter_width: Optional[float] = None,
+        jitter_height: float = 0,
+        dodge_width: float = 0.75,
+        random_state: Optional[int | np.random.RandomState] = None,
     ):
         self.params = {
             "jitter_width": jitter_width,

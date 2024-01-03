@@ -4,9 +4,9 @@ import typing
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, make_line_segments, to_rgba
 from ..coords import coord_flip
 from ..doctools import document
-from ..utils import SIZE_FACTOR, make_line_segments, to_rgba
 from .geom import geom
 from .geom_path import geom_path
 
@@ -29,13 +29,12 @@ class geom_rug(geom):
     Parameters
     ----------
     {common_parameters}
-    sides : str (default: bl)
+    sides : str, default="bl"
         Sides onto which to draw the marks. Any combination
-        chosen from the characters ``btlr``, for *bottom*, *top*,
+        chosen from the characters `"btlr"`, for *bottom*, *top*,
         *left* or *right* side marks.
-    length: float
-        length of marks in fractions of
-        horizontal/vertical panel size (default 0.03)
+    length: float, default=0.03
+        length of marks in fractions of horizontal/vertical panel size.
     """
 
     DEFAULT_AES = {

@@ -1,8 +1,8 @@
 from warnings import warn
 
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import alias
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
@@ -56,21 +56,19 @@ class scale_shape(scale_discrete):
 
     Parameters
     ----------
-    unfilled : bool
-        If ``True``, then all shapes will have no interiors
+    unfilled :
+        If `True`, then all shapes will have no interiors
         that can be a filled.
     {superclass_parameters}
     """
 
     _aesthetics = ["shape"]
 
-    def __init__(self, unfilled=False, **kwargs):
+    def __init__(self, unfilled: bool = False, **kwargs):
         from mizani.palettes import manual_pal
 
-        if unfilled:
-            self.palette = manual_pal(unfilled_shapes)
-        else:
-            self.palette = manual_pal(shapes)
+        _shapes = unfilled_shapes if unfilled else shapes
+        self._palette = manual_pal(_shapes)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -105,4 +103,5 @@ class scale_shape_continuous(scale_continuous):
         raise PlotnineError("A continuous variable can not be mapped to shape")
 
 
-alias("scale_shape_discrete", scale_shape)
+class scale_shape_discrete(scale_shape, alias):
+    pass

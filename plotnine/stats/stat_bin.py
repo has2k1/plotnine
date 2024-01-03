@@ -24,49 +24,49 @@ class stat_bin(stat):
     Parameters
     ----------
     {common_parameters}
-    binwidth : float, optional (default: None)
+    binwidth : float, default=None
         The width of the bins. The default is to use bins bins that
         cover the range of the data. You should always override this
         value, exploring multiple widths to find the best to illustrate
         the stories in your data.
-    bins : int, optional (default: None)
-        Number of bins. Overridden by binwidth. If :py:`None`,
+    bins : int, default=None
+        Number of bins. Overridden by binwidth. If `None`{.py},
         a number is computed using the freedman-diaconis method.
-    breaks : array-like, optional (default: None)
-        Bin boundaries. This supercedes the ``binwidth``, ``bins``,
-        ``center`` and ``boundary``.
-    center : float, optional (default: None)
+    breaks : array_like, default=None
+        Bin boundaries. This supercedes the `binwidth`, `bins`,
+        `center` and `boundary`.
+    center : float, default=None
         The center of one of the bins. Note that if center is above
         or below the range of the data, things will be shifted by
         an appropriate number of widths. To center on integers, for
-        example, use :py:`width=1` and :py:`center=0`, even if 0 i
+        example, use `width=1`{.py} and :py:`center=0`, even if 0 i
         s outside the range of the data. At most one of center and
         boundary may be specified.
-    boundary : float, optional (default: None)
+    boundary : float, default=None
         A boundary between two bins. As with center, things are
         shifted when boundary is outside the range of the data.
-        For example, to center on integers, use :py:`width=1` and
-        :py:`boundary=0.5`, even if 1 is outside the range of the
+        For example, to center on integers, use `width=1`{.py} and
+        `boundary=0.5`{.py}, even if 1 is outside the range of the
         data. At most one of center and boundary may be specified.
-    closed : str, optional (default: right)
-        Which edge of the bins is included, *left* or *right*.
-    pad : bool, optional (default: False)
-        If :py:`True`, adds empty bins at either side of x.
+    closed : Literal["left", "right"], default="right"
+        Which edge of the bins is included.
+    pad : bool, default=False
+        If `True`{.py}, adds empty bins at either side of x.
         This ensures that frequency polygons touch 0.
     """
 
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-         'count'    # number of points in bin
-         'density'  # density of points in bin, scaled to integrate to 1
-         'ncount'   # count, scaled to maximum of 1
-         'ndensity' # density, scaled to maximum of 1
-         'ngroup'   # number of points in group
+    ```python
+    "count"    # number of points in bin
+    "density"  # density of points in bin, scaled to integrate to 1
+    "ncount"   # count, scaled to maximum of 1
+    "ndensity" # density, scaled to maximum of 1
+    "ngroup"   # number of points in group
+    ```
 
     """
     REQUIRED_AES = {"x"}
@@ -134,7 +134,7 @@ class stat_bin(stat):
         new_data = assign_bins(
             data["x"],
             breaks,
-            data.get("weight"),
+            data.get("weight"),  # type: ignore
             params["pad"],
             params["closed"],
         )

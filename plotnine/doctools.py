@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import itertools
+import os
 import re
 import typing
 from functools import lru_cache
-from textwrap import dedent, indent, wrap
-
-import numpy as np
+from textwrap import dedent, indent
 
 if typing.TYPE_CHECKING:
     from typing import Any, Type, TypeVar
@@ -13,6 +13,14 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import Geom, Scale, Stat
 
     T = TypeVar("T")
+
+# Markup that is robust for documentation needs grid tables
+# using tabulate and it is only required when
+# building documentation.
+try:
+    from tabulate import tabulate as table_function
+except ImportError:
+    from ._utils import simple_table as table_function
 
 
 # Parameter arguments that are listed first in the geom and
@@ -42,45 +50,33 @@ common_stat_param_values = common_geom_param_values
 # Templates for docstrings
 
 GEOM_SIGNATURE_TPL = """
-.. rubric:: Usage
+**Usage**
 
-::
+{signature}
 
-    {signature}
-
-Only the ``data`` and ``mapping`` can be positional, the rest must
-be keyword arguments. ``**kwargs`` can be aesthetics (or parameters)
-used by the ``stat``.
-"""
+""".strip()
 
 AESTHETICS_TABLE_TPL = """
 {table}
 
-The **bold** aesthetics are required.
-"""
+The **bold** aesthetics are required."""
 
 STAT_SIGNATURE_TPL = """
-.. rubric:: Usage
+**Usage**
 
-::
+{signature}
 
-    {signature}
-
-Only the ``mapping`` and ``data`` can be positional, the rest must
-be keyword arguments. ``**kwargs`` can be aesthetics (or parameters)
-used by the ``geom``.
-"""
-
+""".strip()
 
 common_params_doc = {
     "mapping": """\
-Aesthetic mappings created with :meth:`~plotnine.aes`. If specified and \
-:py:`inherit.aes=True`, it is combined with the default mapping for the plot. \
-You must supply mapping if there is no plot mapping.""",
+Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If \
+specified and `inherit_aes=True`{.py}, it is combined with the default \
+mapping for the plot. You must supply mapping if there is no plot mapping.""",
     "data": """\
-The data to be displayed in this layer. If :py:`None`, the data from \
-from the :py:`ggplot()` call is used. If specified, it overrides the \
-data from the :py:`ggplot()` call.""",
+The data to be displayed in this layer. If `None`{.py}, the data from \
+from the `ggplot()`{.py} call is used. If specified, it overrides the \
+data from the `ggplot()`{.py} call.""",
     "stat": """\
 The statistical transformation to use on the data for this layer. \
 If it is a string, it must be the registered and known to Plotnine.""",
@@ -88,55 +84,67 @@ If it is a string, it must be the registered and known to Plotnine.""",
 Position adjustment. If it is a string, it must be registered and \
 known to Plotnine.""",
     "na_rm": """\
-If :py:`False`, removes missing values with a warning. If :py:`True` \
+If `False`{.py}, removes missing values with a warning. If `True`{.py} \
 silently removes missing values.""",
     "inherit_aes": """\
-If :py:`False`, overrides the default aesthetics.""",
+If `False`{.py}, overrides the default aesthetics.""",
     "show_legend": """\
-Whether this layer should be included in the legends. :py:`None` the \
-default, includes any aesthetics that are mapped. If a :class:`bool`, \
-:py:`False` never includes and :py:`True` always includes. A \
-:class:`dict` can be used to *exclude* specific aesthetis of the layer \
-from showing in the legend. e.g :py:`show_legend={'color': False}`, \
+Whether this layer should be included in the legends. `None`{.py} the \
+default, includes any aesthetics that are mapped. If a [](:class:`bool`), \
+`False`{.py} never includes and `True`{.py} always includes. A \
+[](:class:`dict`) can be used to *exclude* specific aesthetis of the layer \
+from showing in the legend. e.g `show_legend={'color': False}`{.py}, \
 any other aesthetic are included by default.""",
     "raster": """\
-If ``True``, draw onto this layer a raster (bitmap) object even if\
+If `True`, draw onto this layer a raster (bitmap) object even if\
 the final image is in vector format.""",
 }
 
 
-GEOM_PARAMS_TPL = """\
-mapping : aes, optional
+GEOM_PARAMS_TPL = """
+mapping : ~plotnine.mapping.aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : dataframe, optional
+data : ~pandas.DataFrame, default=None
     {data}
-stat : str or stat, optional (default: {default_stat})
+stat : str | ~plotnine.stats.stat.stat, default="{default_stat}"
     {stat}
-position : str or position, optional (default: {default_position})
+position : str | ~plotnine.positions.position.position, \
+default="{default_position}"
     {position}
-na_rm : bool, optional (default: {default_na_rm})
+na_rm : bool, default={default_na_rm}
     {na_rm}
-inherit_aes : bool, optional (default: {default_inherit_aes})
+inherit_aes : bool, default={default_inherit_aes}
     {inherit_aes}
-show_legend : bool or dict, optional (default: None)
+show_legend : bool | dict, default=None
     {show_legend}
-raster : bool, optional (default: {default_raster})
+raster : bool, default={default_raster}
     {raster}
 """
 
-STAT_PARAMS_TPL = """\
-mapping : aes, optional
+STAT_PARAMS_TPL = """
+mapping : ~plotnine.mapping.aes, default=None
     {mapping}
     {_aesthetics_doc}
-data : dataframe, optional
+data : ~pandas.DataFrame, default=None
     {data}
-geom : str or geom, optional (default: {default_geom})
+geom : str | ~plotnine.geoms.geom.geom, default="{default_geom}"
     {stat}
-position : str or position, optional (default: {default_position})
+position : str | ~plotnine.positions.position.position, \
+default="{default_position}"
     {position}
-na_rm : bool, optional (default: {default_na_rm})
+na_rm : bool, default={default_na_rm}
     {na_rm}
+"""
+
+geom_kwargs = """\
+**kwargs: Any
+    Aesthetics or parameters used by the `stat`.
+"""
+
+stat_kwargs = """\
+**kwargs: Any
+    Aesthetics or parameters used by the `geom`.
 """
 
 DOCSTRING_SECTIONS = {
@@ -149,6 +157,11 @@ DOCSTRING_SECTIONS = {
 }
 
 PARAM_PATTERN = re.compile(r"\s*" r"([_A-Za-z]\w*)" r"\s:\s")
+SECTIONS_PATTERN = re.compile(
+    r"\n(?P<section>(?:\w+|(\w+\s\w+)+))\s*"  # section name
+    r"\n-{3,}\n",  # underline
+)
+GENERATING_QUARTODOC = os.environ.get("GENERATING_QUARTODOC")
 
 
 def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
@@ -167,39 +180,17 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     --------
     >>> d = {"alpha": 1, "color": "blue", "fill": None}
     >>> print(dict_to_table(("Aesthetic", "Default Value"), d))
-    ========= =========
-    Aesthetic Default Value
-    ========= =========
-    alpha     :py:`1`
-    color     :py:`'blue'`
-    fill      :py:`None`
-    ========= =========
+    Aesthetic  Default Value
+    ---------  -------------
+    alpha      `1`
+    color      `'blue'`
+    fill       `None`
     """
-
-    def to_text(row: tuple[str, str]) -> str:
-        name, value = row
-        m = max_col1_size + 1 - len(name)
-        spacing = " " * m
-        return "".join([name, spacing, value])
-
-    def longest_value(row: tuple[str, str]) -> int:
-        return max(len(value) for value in row)
-
-    rows = []
-    for name, value in contents.items():
-        # code highlighting
-        if value != "":
-            if isinstance(value, str):
-                value = f"'{value}'"
-            value = f":py:`{value}`"
-        rows.append((name, value))
-
-    n = max(longest_value(row) for row in [header] + rows)
-    hborder = "=" * n, "=" * n
-    rows = [hborder, header, hborder] + rows + [hborder]
-    max_col1_size = np.max([len(col1) for col1, _ in rows])
-    table = "\n".join([to_text(row) for row in rows])
-    return table
+    rows = [
+        (name, value if value == "" else f"`{value!r}`" "{.py}")
+        for name, value in contents.items()
+    ]
+    return table_function(rows, headers=header, tablefmt="grid")
 
 
 def make_signature(
@@ -216,36 +207,38 @@ def make_signature(
     come first in the list, and they get take their values from
     either the params-dict or the common_geom_param_values-dict.
     """
-    tokens = []
-    seen = set()
-
-    def tokens_append(key: str, value: Any):
-        if isinstance(value, str):
-            value = f"'{value}'"
-        tokens.append(f"{key}={value}")
+    params_lst = []
+    _common_params_lookup = set(common_params)
+    it = itertools.chain(
+        common_params, (p for p in params if p not in _common_params_lookup)
+    )
 
     # preferred params come first
-    for key in common_params:
-        seen.add(key)
-        try:
-            value = params[key]
-        except KeyError:
-            value = common_param_values[key]
-        tokens_append(key, value)
+    for i, key in enumerate(it):
+        value = params.get(key, common_param_values.get(key))
+        if isinstance(value, str):
+            value = f'"{value}"'
+        params_lst.append(f"{key}={value}")
+        if i == 1:
+            params_lst.append("*")
 
-    # other params (these are the geom/stat specific parameters
-    for key in set(params) - seen:
-        tokens_append(key, params[key])
+    params_lst.append("**kwargs")
 
-    # name, 1 opening bracket, 4 spaces in SIGNATURE_TPL
-    s_params = ", ".join(tokens)
-    s1 = f"{name}("
-    s2 = f"{s_params}, **kwargs)"
-    line_width = 78 - len(s1)
-    indent_spaces = " " * (len(s1) + 4)
-    s2_lines = wrap(s2, width=line_width)
-    s2_indented = f"\n{indent_spaces}".join(s2_lines)
-    return f"{s1}{s2_indented}"
+    # Format to a maximum width of 78 chars
+    # It fails when a parameter declarations is longer than 78
+    opening = f"{name}("
+    params_string = ", ".join(params_lst)
+    closing = ")"
+    pad = " " * 4
+    if len(opening) + len(params_string) > 78:
+        line_pad = f"\n{pad}"
+        # One parameter per line
+        if len(params_string) > 74:
+            params_string = f",{line_pad}".join(params_lst)
+        params_string = f"{line_pad}{params_string}"
+        closing = f"\n{closing}"
+    sig = f"{opening}{params_string}{closing}"
+    return indent(sig, pad)
 
 
 @lru_cache(maxsize=256)
@@ -253,16 +246,16 @@ def docstring_section_lines(docstring: str, section_name: str) -> str:
     """
     Return a section of a numpydoc string
 
-    Paramters
-    ---------
-    docstring : str
+    Parameters
+    ----------
+    docstring :
         Docstring
-    section_name : str
+    section_name :
         Name of section to return
 
     Returns
     -------
-    section : str
+    :
         Section minus the header
     """
     lines = []
@@ -288,6 +281,28 @@ def docstring_section_lines(docstring: str, section_name: str) -> str:
     return "\n".join(lines)
 
 
+def append_to_section(s: str, docstring: str, section: str) -> str:
+    """
+    Append string s to a section in the docstring
+    """
+    idx = -1
+    found = False
+    for m in SECTIONS_PATTERN.finditer(docstring):
+        if section == m.group("section"):
+            found = True
+        elif found:
+            idx = m.start()
+            break
+
+    if found:
+        if idx == -1:
+            s = f"\n{s}"
+        top, bottom = docstring[:idx], docstring[idx:]
+        docstring = f"{top}{s}{bottom}"
+
+    return docstring
+
+
 def docstring_parameters_section(obj: Any) -> str:
     """
     Return the parameters section of a docstring
@@ -306,7 +321,7 @@ def param_spec(line: str) -> str | None:
 
     Returns
     -------
-    name : str or None
+    name : str | None
         Name of the parameter if the line for the parameter
         type specification and None otherwise.
 
@@ -334,13 +349,13 @@ def parameters_str_to_dict(param_section: str) -> dict[str, str]:
     d : dict
         Dictionary of the parameters in the order that they
         are described in the parameters section. The dict
-        is of the form ``{param: all_parameter_text}``.
-        You can reconstruct the ``param_section`` from the
+        is of the form `{param: all_parameter_text}`.
+        You can reconstruct the `param_section` from the
         keys of the dictionary.
 
     See Also
     --------
-    :func:`parameters_dict_to_str`
+    plotnine.doctools.parameters_dict_to_str
     """
     d = {}
     previous_param = ""
@@ -377,12 +392,12 @@ def parameters_dict_to_str(d: dict[str, str]) -> str:
 
     See Also
     --------
-    :func:`parameters_str_to_dict`
+    plotnine.doctools.parameters_str_to_dict
     """
     return "\n".join(d.values())
 
 
-def qualified_name(s: str | type | object, prefix: str) -> str:
+def default_class_name(s: str | type | object) -> str:
     """
     Return the qualified name of s
 
@@ -390,22 +405,15 @@ def qualified_name(s: str | type | object, prefix: str) -> str:
 
     Examples
     --------
-    >>> qualified_name('bin', 'stat_')
-    '~plotnine.stats.stat_bin'
-    >>> qualified_name('point', 'geom_')
-    '~plotnine.geoms.geom_point'
-    >>> qualified_name('stack', 'position_')
-    '~plotnine.positions.position_'
+    >>> qualified_name('stat_bin')
+    'stat_bin'
+    >>> qualified_name(stat_bin)
+    'stat_bin'
+    >>> qualified_name(stat_bin())
+    'stat_bin'
     """
-    lookup = {
-        "stat_": "~plotnine.stats.stat_",
-        "geom_": "~plotnine.geoms.geom_",
-        "position_": "~plotnine.positions.position_",
-    }
     if isinstance(s, str):
-        if not s.startswith(prefix) and prefix in lookup:
-            pre = lookup[prefix]
-            s = f"{pre}{s}"
+        return s
     elif isinstance(s, type):
         s = s.__name__
     else:
@@ -420,9 +428,8 @@ def document_geom(geom: type[Geom]) -> type[Geom]:
     It replaces `{usage}`, `{common_parameters}` and
     `{aesthetics}` with generated documentation.
     """
-    # Dedented so that it lineups (in sphinx) with the part
-    # generated parts when put together
     docstring = dedent(geom.__doc__ or "")
+    docstring = append_to_section(geom_kwargs, docstring, "Parameters")
 
     # usage
     signature = make_signature(
@@ -442,21 +449,21 @@ def document_geom(geom: type[Geom]) -> type[Geom]:
 
     table = dict_to_table(("Aesthetic", "Default value"), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
-    tpl = dedent(geom._aesthetics_doc.lstrip("\n"))
+    tpl = dedent(geom._aesthetics_doc).strip()
     aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
     aesthetics_doc = indent(aesthetics_doc, " " * 4)
 
     # common_parameters
     d = geom.DEFAULT_PARAMS
     common_parameters = GEOM_PARAMS_TPL.format(
-        default_stat=qualified_name(d["stat"], "stat_"),
-        default_position=qualified_name(d["position"], "position_"),
+        default_stat=default_class_name(d["stat"]),
+        default_position=default_class_name(d["position"]),
         default_na_rm=d["na_rm"],
         default_inherit_aes=d.get("inherit_aes", True),
         default_raster=d.get("raster", False),
         _aesthetics_doc=aesthetics_doc,
         **common_params_doc,
-    )
+    ).strip()
 
     docstring = docstring.replace("{usage}", usage)
     docstring = docstring.replace("{common_parameters}", common_parameters)
@@ -474,6 +481,7 @@ def document_stat(stat: type[Stat]) -> type[Stat]:
     # Dedented so that it lineups (in sphinx) with the part
     # generated parts when put together
     docstring = dedent(stat.__doc__ or "")
+    docstring = append_to_section(stat_kwargs, docstring, "Parameters")
 
     # usage:
     signature = make_signature(
@@ -489,19 +497,19 @@ def document_stat(stat: type[Stat]) -> type[Stat]:
     contents.update(sorted(stat.DEFAULT_AES.items()))
     table = dict_to_table(("Aesthetic", "Default value"), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
-    tpl = dedent(stat._aesthetics_doc.lstrip("\n"))
-    aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
+    tpl = dedent(stat._aesthetics_doc).strip()
+    aesthetics_doc = tpl.replace("{aesthetics_table}", aesthetics_table)
     aesthetics_doc = indent(aesthetics_doc, " " * 4)
 
     # common_parameters
     d = stat.DEFAULT_PARAMS
     common_parameters = STAT_PARAMS_TPL.format(
-        default_geom=qualified_name(d["geom"], "geom_"),
-        default_position=qualified_name(d["position"], "position_"),
+        default_geom=default_class_name(d["geom"]),
+        default_position=default_class_name(d["position"]),
         default_na_rm=d["na_rm"],
         _aesthetics_doc=aesthetics_doc,
         **common_params_doc,
-    )
+    ).strip()
 
     docstring = docstring.replace("{usage}", usage)
     docstring = docstring.replace("{common_parameters}", common_parameters)
@@ -582,7 +590,7 @@ def document(cls: Type[T]) -> Type[T]:
     if cls.__doc__ is None:
         return cls
 
-    baseclass_name = cls.mro()[-2].__name__
+    baseclass_name = cls.mro()[-3].__name__
 
     try:
         return DOC_FUNCTIONS[baseclass_name](cls)

@@ -3,11 +3,11 @@ from contextlib import suppress
 
 import pandas as pd
 
+from .._utils import array_kind
 from ..exceptions import PlotnineError
 from ..geoms import geom_blank
 from ..mapping.aes import ALL_AESTHETICS, aes
 from ..scales.scales import make_scale
-from ..utils import array_kind
 
 
 # By adding limits, we create a scale of the appropriate type
@@ -90,10 +90,10 @@ class xlim(_lim):
 
     Parameters
     ----------
-    limits : array_like
+    *limits :
         Min and max limits. Must be of size 2.
         You can also pass two values e.g
-        ``xlim(40, 100)``
+        `xlim(40, 100)`
     """
 
     aesthetic = "x"
@@ -105,14 +105,14 @@ class ylim(_lim):
 
     Parameters
     ----------
-    limits : array_like
+    *limits :
         Min and max limits. Must be of size 2.
         You can also pass two values e.g
-        ``ylim(40, 100)``
+        `ylim(40, 100)`
 
     Notes
     -----
-    If the 2nd value of ``limits`` is less than
+    If the 2nd value of `limits` is less than
     the first, a reversed scale will be created.
     """
 
@@ -181,13 +181,13 @@ class lims:
 
     Parameters
     ----------
-    kwargs : dict
+    kwargs :
         Aesthetic and the values of the limits.
-        e.g ``x=(40, 100)``
+        e.g `x=(40, 100)`
 
     Notes
     -----
-    If the 2nd value of ``limits`` is less than
+    If the 2nd value of `limits` is less than
     the first, a reversed scale will be created.
     """
 
@@ -202,8 +202,9 @@ class lims:
         for ae, value in self._kwargs.items():
             try:
                 klass = getattr(thismodule, f"{ae}lim")
-            except AttributeError:
-                raise PlotnineError("Cannot change limits for '{}'")
+            except AttributeError as e:
+                msg = "Cannot change limits for '{}'"
+                raise PlotnineError(msg) from e
 
             gg += klass(value)
 
@@ -216,7 +217,7 @@ def expand_limits(**kwargs):
 
     Parameters
     ----------
-    kwargs : dict or dataframe
+    kwargs : dict | dataframe
         Data to use in expanding the limits.
         The keys should be aesthetic names
         e.g. *x*, *y*, *colour*, ...

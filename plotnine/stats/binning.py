@@ -9,9 +9,9 @@ from ..exceptions import PlotnineError
 from ..scales.scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
+    from typing import Literal, Optional
 
-    from plotnine.typing import FloatArray, TupleFloat2
+    from plotnine.typing import FloatArray, FloatArrayLike, TupleFloat2
 
 
 __all__ = (
@@ -37,7 +37,7 @@ def freedman_diaconis_bins(a):
     if h == 0:
         bins = np.ceil(np.sqrt(a.size))
     else:
-        bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)  # type: ignore
+        bins = np.ceil((np.nanmax(a) - np.nanmin(a)) / h)
 
     return int(bins)
 
@@ -53,14 +53,14 @@ def breaks_from_binwidth(
 
     Parameters
     ----------
-    x_range : array_like
+    x_range :
         Range over with to calculate the breaks. Must be
         of size 2.
-    binwidth : float
+    binwidth :
         Separation between the breaks
-    center : float
+    center :
         The center of one of the bins
-    boundary : float
+    boundary :
         A boundary between two bins
 
     Returns
@@ -76,12 +76,11 @@ def breaks_from_binwidth(
             "Only one of 'boundary' and 'center' " "may be specified."
         )
     elif boundary is None:
-        if center is None:
-            # This puts min and max of data in outer half
-            # of their bins
-            boundary = binwidth / 2
-        else:
-            boundary = center - binwidth / 2
+        # When center is None, put the min and max of data in outer
+        # half of their bins
+        boundary = binwidth / 2
+        if center is not None:
+            boundary = center - boundary
 
     epsilon = np.finfo(float).eps
     shift = np.floor((x_range[0] - boundary) / binwidth)
@@ -94,20 +93,25 @@ def breaks_from_binwidth(
     return breaks
 
 
-def breaks_from_bins(x_range, bins=30, center=None, boundary=None):
+def breaks_from_bins(
+    x_range: TupleFloat2,
+    bins: int = 30,
+    center: Optional[float] = None,
+    boundary: Optional[float] = None,
+):
     """
     Calculate breaks given binwidth
 
     Parameters
     ----------
-    x_range : array_like
+    x_range :
         Range over with to calculate the breaks. Must be
         of size 2.
-    bins : int
+    bins :
         Number of bins
-    center : float
+    center :
         The center of one of the bins
-    boundary : float
+    boundary :
         A boundary between two bins
 
     Returns
@@ -126,22 +130,28 @@ def breaks_from_bins(x_range, bins=30, center=None, boundary=None):
     return breaks_from_binwidth(x_range, binwidth, center, boundary)
 
 
-def assign_bins(x, breaks, weight=None, pad=False, closed="right"):
+def assign_bins(
+    x,
+    breaks: FloatArrayLike,
+    weight: Optional[FloatArrayLike] = None,
+    pad: bool = False,
+    closed: Literal["right", "left"] = "right",
+):
     """
     Assign value in x to bins demacated by the break points
 
     Parameters
     ----------
-    x : array_like
+    x :
         Values to be binned.
-    breaks : array_like
+    breaks :
         Sequence of break points.
-    weight : array_like
+    weight :
         Weight of each value in `x`. Used in creating the frequency
         table. If `None`, then each value in `x` has a weight of 1.
-    pad : bool
+    pad :
         If `True`, add empty bins at either end of `x`.
-    closed : str in ``['right', 'left']``
+    closed :
         Whether the right or left edges of the bins are part of the
         bin.
 
@@ -159,10 +169,14 @@ def assign_bins(x, breaks, weight=None, pad=False, closed="right"):
         weight[np.isnan(weight)] = 0
 
     bin_idx = pd.cut(
-        x, bins=breaks, labels=False, right=right, include_lowest=True
+        x,
+        bins=breaks,  # type: ignore
+        labels=False,
+        right=right,
+        include_lowest=True,
     )
     bin_widths = np.diff(breaks)
-    bin_x = (breaks[:-1] + breaks[1:]) * 0.5
+    bin_x = (breaks[:-1] + breaks[1:]) * 0.5  # type: ignore
 
     # Create a dataframe with two columns:
     #   - the bins to which each x is assigned

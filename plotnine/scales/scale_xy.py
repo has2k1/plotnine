@@ -6,10 +6,11 @@ from itertools import chain
 import numpy as np
 import pandas as pd
 
+from .._utils import array_kind, match
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..iapi import range_view
-from ..utils import alias, array_kind, match
 from ._expand import expand_range
 from .range import RangeContinuous
 from .scale_continuous import scale_continuous
@@ -41,7 +42,7 @@ class scale_position_discrete(scale_discrete):
     Parameters
     ----------
     {superclass_parameters}
-    limits : array_like, optional
+    limits : array_like, default=None
         Limits of the scale. For discrete scale, these are
         the categories (unique values) of the variable.
         For scales that deal with categoricals, these may
@@ -66,28 +67,28 @@ class scale_position_discrete(scale_discrete):
     def is_empty(self) -> bool:
         return super().is_empty() and self.range_c.is_empty()
 
-    def train(self, series):
+    def train(self, x, drop=False):
         # The discrete position scale is capable of doing
         # training for continuous data.
         # This complicates training and mapping, but makes it
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
-        if array_kind.continuous(series):
-            self.range_c.train(series)
+        if array_kind.continuous(x):
+            self.range_c.train(x)
         else:
-            self.range.train(series, drop=self.drop)
+            self.range.train(x, drop=self.drop)
 
-    def map(self, series, limits=None):
+    def map(self, x, limits=None):
         # Discrete values are converted into integers starting
         # at 1
         if limits is None:
             limits = self.limits
-        if array_kind.discrete(series):
+        if array_kind.discrete(x):
             # TODO: Rewrite without using numpy
             seq = np.arange(1, len(limits) + 1)
-            idx = np.asarray(match(series, limits, nomatch=len(series)))
+            idx = np.asarray(match(x, limits, nomatch=len(x)))
             if not len(idx):
-                return np.array([])
+                return []
             try:
                 seq = seq[idx]
             except IndexError:
@@ -96,8 +97,8 @@ class scale_position_discrete(scale_discrete):
                 seq = np.hstack((seq.astype(float), np.nan))
                 idx = np.clip(idx, 0, len(seq) - 1)
                 seq = seq[idx]
-            return seq
-        return series
+            return list(seq)
+        return list(x)
 
     @property
     def limits(self):
@@ -216,15 +217,15 @@ class scale_position_continuous(scale_continuous):
     # All positions have no guide
     guide = None
 
-    def map(self, series, limits=None):
+    def map(self, x, limits=None):
         # Position aesthetics don't map, because the coordinate
         # system takes care of it.
         # But the continuous scale has to deal with out of bound points
-        if not len(series):
-            return series
+        if not len(x):
+            return x
         if limits is None:
             limits = self.limits
-        scaled = self.oob(series, limits)
+        scaled = self.oob(x, limits)  # type: ignore
         scaled[pd.isna(scaled)] = self.na_value
         return scaled
 
@@ -256,8 +257,12 @@ class scale_y_discrete(scale_position_discrete):
 
 
 # Not part of the user API
-alias("scale_x_ordinal", scale_x_discrete)
-alias("scale_y_ordinal", scale_y_discrete)
+class scale_x_ordinal(scale_x_discrete, alias):
+    pass
+
+
+class scale_y_ordinal(scale_y_discrete, alias):
+    pass
 
 
 @document
@@ -320,8 +325,12 @@ class scale_y_datetime(scale_datetime, scale_y_continuous):
     """
 
 
-alias("scale_x_date", scale_x_datetime)
-alias("scale_y_date", scale_y_datetime)
+class scale_x_date(scale_x_datetime, alias):
+    pass
+
+
+class scale_y_date(scale_y_datetime, alias):
+    pass
 
 
 @document

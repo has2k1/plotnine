@@ -3,32 +3,46 @@ from __future__ import annotations
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Literal, Optional, Type
 
-#: Development flag, e.g. set to ``True`` to prevent
-#: the queuing up of figures when errors happen.
+    from plotnine.typing import Theme
+
 close_all_figures = False
+"""
+Development flag, e.g. set to `True` to prevent
+the queuing up of figures when errors happen.
+"""
 
-#: Theme used when none is added to the ggplot object
-current_theme = None
+current_theme: Optional[Theme | Type[Theme]] = None
+"""Theme used when none is added to the ggplot object"""
 
-#: The base font family for all text that is part of the theme.
-#: Default is sans-serif and one is choosen automatically from
-#: rcParams["font.san-serif"]
-base_family = "sans-serif"
+base_family: str = "sans-serif"
+"""
+The base font family for all text that is part of the theme.
+Default is sans-serif and one is choosen automatically from
+rcParams["font.san-serif"]
+"""
 
-#: Default aspect ratio used by the themes
-aspect_ratio = "auto"
+aspect_ratio: Literal["auto"] | float = "auto"
+"""
+Default aspect ratio used by the themes
+"""
 
-#: Default DPI used by the themes
-dpi = 100
+dpi: int = 100
+"""
+Default DPI used by the themes
+"""
 
-#: Default figure size inches
-figure_size = (640 / dpi, 480 / dpi)
+figure_size: tuple[float, float] = (640 / dpi, 480 / dpi)
+"""
+Default figure size inches
+"""
 
-#: A size that is proportional of the figure width and
-#: is used by some themes to determine other margins
-base_margin = 0.01
+base_margin: float = 0.01
+"""
+A size that is proportional of the figure width and
+is used by some themes to determine other margins
+"""
 
 
 def get_option(name: str) -> Any:
@@ -37,7 +51,7 @@ def get_option(name: str) -> Any:
 
     Parameters
     ----------
-    name : str
+    name :
         Name of the option
     """
     d = globals()
@@ -56,14 +70,14 @@ def set_option(name: str, value: Any) -> Any:
 
     Parameters
     ----------
-    name : str
+    name :
         Name of the option
-    value : object
+    value :
         New value of the option
 
     Returns
     -------
-    old : object
+    :
         Old value of the option
     """
     d = globals()

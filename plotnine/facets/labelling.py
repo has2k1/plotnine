@@ -54,7 +54,7 @@ def label_both(
         Label information to be modified.
     multi_line : bool
         Whether to place each variable on a separate line
-    sep :  str
+    sep : str
         Separation between variable name and value
 
     Returns
@@ -88,7 +88,7 @@ def label_context(
         Label information
     multi_line : bool
         Whether to place each variable on a separate line
-    sep :  str
+    sep : str
         Separation between variable name and value
 
     Returns
@@ -120,9 +120,9 @@ def as_labeller(
 
     Parameters
     ----------
-    x : function | dict
+    x : callable | dict
         Object to coerce
-    default : str | function
+    default : str | callable
         Default labeller. If it is a string,
         it should be the name of one the labelling
         functions provided by plotnine.
@@ -153,16 +153,15 @@ class labeller:
 
     Parameters
     ----------
-    rows : str | function | None
+    rows : str | callable
         How to label the rows
-    cols : str | function | None
+    cols : str | callable
         How to label the columns
     multi_line : bool
         Whether to place each variable on a separate line
-    default : function | str
-        Fallback labelling function. If it is a string,
-        it should be the name of one the labelling
-        functions provided by plotnine.
+    default : str | callable
+        Fallback labelling function. If it is a string, it should be
+        one of `["label_value", "label_both", "label_context"]`{.py}.
     kwargs : dict
         {variable name : function | string} pairs for
         renaming variables. A function to rename the variable

@@ -19,11 +19,11 @@ class stat_quantile(stat):
     Parameters
     ----------
     {common_parameters}
-    quantiles : tuple, optional (default: (0.25, 0.5, 0.75))
+    quantiles : tuple, default=(0.25, 0.5, 0.75)
         Quantiles of y to compute
-    formula : str, optional (default: 'y ~ x')
+    formula : str, default="y ~ x"
         Formula relating y variables to x variables
-    method_args : dict, optional
+    method_args : dict, default=None
         Extra arguments passed on to the model fitting method,
         :meth:`statsmodels.regression.quantile_regression.QuantReg.fit`.
 
@@ -36,15 +36,15 @@ class stat_quantile(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-         'quantile'  # quantile
-         'group'     # group identifier
+    ```python
+    "quantile"  # quantile
+    "group"     # group identifier
+    ```
 
     Calculated aesthetics are accessed using the `after_stat` function.
-    e.g. :py:`after_stat('quantile')`.
+    e.g. `after_stat('quantile')`{.py}.
     """
 
     REQUIRED_AES = {"x", "y"}
@@ -88,7 +88,7 @@ def quant_pred(q, data, **params):
         {
             "x": [data["x"].min(), data["x"].max()],
             "quantile": q,
-            "group": "{}-{}".format(data["group"].iloc[0], q),
+            "group": f"{data['group'].iloc[0]}-{q}",
         }
     )
     out["y"] = reg_res.predict(out)

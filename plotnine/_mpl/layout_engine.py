@@ -36,6 +36,8 @@ class LayoutPack:
     facet: Facet
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
+    # The legend references the legend_background. That is the
+    # AnchoredOffsetbox that contains all the legends.
     legend: Optional[AnchoredOffsetbox] = None
     legend_position: Optional[LegendPosition] = None
     plot_caption: Optional[Text] = None
@@ -95,9 +97,8 @@ class PlotnineLayoutEngine(LayoutEngine):
                 return None
             else:
                 t = get_target(th, None)
-                if isinstance(t, Text):
-                    if not t._text:
-                        return None
+                if isinstance(t, Text) and t.get_text() == "":
+                    return None
                 return t
 
         legend_position = _property("legend_position")
@@ -112,7 +113,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             facet=self.plot.facet,
             axis_title_x=get("axis_title_x"),
             axis_title_y=get("axis_title_y"),
-            legend=get("legend_background"),
+            legend=get_target("legend_background"),
             legend_position=legend_position,
             plot_caption=get("plot_caption"),
             plot_subtitle=get("plot_subtitle"),

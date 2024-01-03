@@ -1,0 +1,15 @@
+---
+jupyter: python3
+title: Gallery
+---
+
+::: {.column-body-outset}
+```{python}
+#| output: asis
+#| echo: false
+from _gallery import generate_gallery
+gallery = generate_gallery()
+
+print(gallery)
+```
+:::

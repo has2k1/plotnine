@@ -44,7 +44,7 @@ def test_ribbon_aesthetics():
         + geom_ribbon(aes("x+5*width", size="z"), color="black", fill=None)
         + scale_x_continuous(
             breaks=[i * 2 * np.pi for i in range(7)],
-            labels=["0"] + [rf"${2*i}\pi$" for i in range(1, 7)],
+            labels=["0"] + [rf"${2 * i}\pi$" for i in range(1, 7)],
         )
     )
 
@@ -67,7 +67,7 @@ def test_area_aesthetics():
         + geom_area(aes("x+5*width", size="z"), color="black", fill=None)
         + scale_x_continuous(
             breaks=[i * 2 * np.pi for i in range(7)],
-            labels=["0"] + [rf"${2*i}\pi$" for i in range(1, 7)],
+            labels=["0"] + [rf"${2 * i}\pi$" for i in range(1, 7)],
         )
     )
 

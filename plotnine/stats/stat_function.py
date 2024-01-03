@@ -27,27 +27,28 @@ class stat_function(stat):
     Parameters
     ----------
     {common_parameters}
-    fun : function
+    fun : callable
         Function to evaluate.
-    n : int, optional (default: 101)
+    n : int, default=101
         Number of points at which to evaluate the function.
-    xlim : tuple (default: None)
-        ``x`` limits for the range. The default depends on
-        the ``x`` aesthetic. There is not an ``x`` aesthetic
-        then the ``xlim`` must be provided.
-    args : tuple or dict (default: None)
-        Arguments to pass to ``fun``.
+    xlim : tuple, default=None
+        `x` limits for the range. The default depends on
+        the `x` aesthetic. There is not an `x` aesthetic
+        then the `xlim` must be provided.
+    args : Optional[tuple[Any] | dict[str, Any]], default=None
+        Arguments to pass to `fun`.
     """
 
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
+    ```python
+    "x"   # x points at which the function is evaluated
+    "fx"  # points evaluated at each x
+    ```
 
-        'x'   # x points at which the function is evaluated
-        'fx'  # points evaluated at each x
     """
 
     DEFAULT_PARAMS = {
@@ -117,7 +118,7 @@ class stat_function(stat):
         if isinstance(scales.x, scale_continuous):
             x = scales.x.trans.inverse(x)
 
-        # We know these can handle array-likes
+        # We know these can handle array_likes
         if isinstance(old_fun, (np.ufunc, np.vectorize)):
             fx = fun(x)
         else:

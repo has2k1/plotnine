@@ -2,9 +2,9 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import alias
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
@@ -16,15 +16,15 @@ class scale_stroke_continuous(scale_continuous):
 
     Parameters
     ----------
-    range : array_like
+    range :
         Range ([Minimum, Maximum]) of output stroke values.
-        Should be between 0 and 1. Default is ``(1, 6)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 
     _aesthetics = ["stroke"]
 
-    def __init__(self, range=(1, 6), **kwargs):
+    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
         from mizani.palettes import rescale_pal
 
         # TODO: fix types in mizani
@@ -39,17 +39,17 @@ class scale_stroke_ordinal(scale_discrete):
 
     Parameters
     ----------
-    range : array_like
+    range :
         Range ([Minimum, Maximum]) of output stroke values.
-        Should be between 0 and 1. Default is ``(1, 6)``
+        Should be between 0 and 1.
     {superclass_parameters}
     """
 
     _aesthetics = ["stroke"]
 
-    def __init__(self, range=(1, 6), **kwargs):
-        def palette(n):
-            return np.linspace(range[0], range[1], n)
+    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
+        def palette(value: int):
+            return np.linspace(range[0], range[1], value)
 
         self.palette = palette
         scale_discrete.__init__(self, **kwargs)
@@ -72,7 +72,8 @@ class scale_stroke_discrete(scale_stroke_ordinal):
             "Using stroke for a ordinal variable is not advised.",
             PlotnineWarning,
         )
-        super().__init__(self, **kwargs)
+        super().__init__(**kwargs)
 
 
-alias("scale_stroke", scale_stroke_continuous)
+class scale_stroke(scale_stroke_continuous, alias):
+    pass

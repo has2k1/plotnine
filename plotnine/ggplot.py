@@ -11,6 +11,14 @@ from warnings import warn
 
 import pandas as pd
 
+from ._utils import (
+    from_inches,
+    get_ipython,
+    is_data_like,
+    order_as_data_mapping,
+    to_inches,
+    ungroup,
+)
 from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_null
@@ -23,16 +31,10 @@ from .mapping.aes import aes, make_labels
 from .options import get_option
 from .scales.scales import Scales
 from .themes.theme import theme, theme_get
-from .utils import (
-    from_inches,
-    get_ipython,
-    is_data_like,
-    order_as_data_mapping,
-    to_inches,
-    ungroup,
-)
 
 if typing.TYPE_CHECKING:
+    from typing_extensions import Self
+
     from plotnine.typing import (
         Axes,
         Coord,
@@ -55,13 +57,13 @@ class ggplot:
 
     Parameters
     ----------
-    data : dataframe
+    data :
         Default data for plot. Every layer that does not
         have data of its own will use this one.
-    mapping : aes
+    mapping :
         Default aesthetics mapping for the plot. These will be used
         by all layers unless specifically overridden.
-    environment : ~patsy.Eval.EvalEnvironment
+    environment :
         If a variable defined in the aesthetic mapping is not
         found in the data, ggplot will look for it in this
         namespace. It defaults to using the environment/namespace.
@@ -76,9 +78,9 @@ class ggplot:
 
     def __init__(
         self,
-        data: DataLike | None = None,
-        mapping: aes | None = None,
-        environment: EvalEnvironment | None = None,
+        data: Optional[DataLike] = None,
+        mapping: Optional[aes] = None,
+        environment: Optional[EvalEnvironment] = None,
     ):
         from patsy.eval import EvalEnvironment
 
@@ -140,33 +142,29 @@ class ggplot:
         }
         for key, item in old.items():
             if key in shallow:
-                new[key] = old[key]
+                new[key] = item
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 
-    def __iadd__(
-        self, other: PlotAddable | list[PlotAddable] | None
-    ) -> ggplot:
+    def __iadd__(self, other: PlotAddable | list[PlotAddable] | None) -> Self:
         """
         Add other to ggplot object
 
         Parameters
         ----------
-        other : object or Sequence
+        other :
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
         if isinstance(other, Sequence):
             for item in other:
                 item.__radd__(self)
-            return self
-        elif other is None:
-            return self
-        else:
-            return other.__radd__(self)
+        elif other is not None:
+            other.__radd__(self)
+        return self
 
     def __add__(self, other: PlotAddable | list[PlotAddable] | None) -> ggplot:
         """
@@ -174,7 +172,7 @@ class ggplot:
 
         Parameters
         ----------
-        other : object or Sequence
+        other :
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
@@ -202,12 +200,12 @@ class ggplot:
 
         Parameters
         ----------
-        show : bool (default: False)
+        show :
             Whether to show the plot.
 
         Returns
         -------
-        fig : ~matplotlib.figure.Figure
+        :
             Matplotlib figure
         """
         from ._mpl.layout_engine import PlotnineLayoutEngine
@@ -226,7 +224,7 @@ class ggplot:
             self._build()
 
             # setup
-            figure, axs = self._create_figure()
+            figure, _ = self._create_figure()
             self._setup_parameters()
             self.theme.setup()
             self.facet.strips.generate()
@@ -254,9 +252,9 @@ class ggplot:
 
         Parameters
         ----------
-        figure : ~matplotlib.figure.Figure
+        figure :
             Matplotlib figure
-        axs : array_like
+        axs :
             Array of Axes onto which to draw the plots
         """
         from ._mpl.layout_engine import PlotnineLayoutEngine
@@ -384,7 +382,7 @@ class ggplot:
         if get_option("close_all_figures"):
             plt.close("all")
 
-        figure: Figure = plt.figure()  # pyright: ignore
+        figure: Figure = plt.figure()
         axs = self.facet.make_axes(
             figure, self.layout.layout, self.coordinates
         )
@@ -435,6 +433,7 @@ class ggplot:
         """
         Draw legend onto the figure
         """
+        from matplotlib.font_manager import FontProperties
         from matplotlib.offsetbox import AnchoredOffsetbox
 
         legend_box = self.guides.build(self)
@@ -446,7 +445,7 @@ class ggplot:
             child=legend_box,
             pad=0.0,
             frameon=False,
-            prop={"size": 0, "stretch": 0},
+            prop=FontProperties(size=0, stretch=0),
             bbox_to_anchor=(0, 0),
             bbox_transform=self.figure.transFigure,
             borderpad=0.0,
@@ -480,8 +479,8 @@ class ggplot:
         text_title = figure.text(0, 0, title)
         text_caption = figure.text(0, 0, caption)
         text_subtitle = figure.text(0, 0, subtitle)
-        text_x = figure.text(0, 0, labels.x)
-        text_y = figure.text(0, 0, labels.y)
+        text_x = figure.text(0, 0, labels.x or "")
+        text_y = figure.text(0, 0, labels.y or "")
 
         _targets["plot_title"] = text_title
         _targets["plot_caption"] = text_caption
@@ -598,13 +597,13 @@ class ggplot:
 
     def save(
         self,
-        filename: Union[str, Path] | None = None,
-        format: str | None = None,
+        filename: Optional[str | Path] = None,
+        format: Optional[str] = None,
         path: str = "",
-        width: float | None = None,
-        height: float | None = None,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
         units: str = "in",
-        dpi: float | None = None,
+        dpi: Optional[int] = None,
         limitsize: bool = True,
         verbose: bool = True,
         **kwargs: Any,
@@ -614,34 +613,34 @@ class ggplot:
 
         Parameters
         ----------
-        filename : str | pathlib.Path, optional
+        filename :
             File name to write the plot to. If not specified, a name
             like “plotnine-save-<hash>.<format>” is used.
-        format : str
+        format :
             Image format to use, automatically extract from
             file name extension.
-        path : str
+        path :
             Path to save plot to (if you just want to set path and
             not filename).
-        width : number, optional
+        width :
             Width (defaults to value set by the theme). If specified
             the `height` must also be given.
-        height : number, optional
+        height :
             Height (defaults to value set by the theme). If specified
             the `width` must also be given.
-        units : str
+        units :
             Units for width and height when either one is explicitly
             specified (in, cm, or mm).
-        dpi : float
+        dpi :
             DPI to use for raster graphics. If None, defaults to using
             the `dpi` of theme, if none is set then a `dpi` of 100.
-        limitsize : bool
-            If ``True`` (the default), ggsave will not save images
+        limitsize :
+            If `True` (the default), ggsave will not save images
             larger than 50x50 inches, to prevent the common error
             of specifying dimensions in pixels.
-        verbose : bool
-            If ``True``, print the saving information.
-        kwargs : dict
+        verbose :
+            If `True`, print the saving information.
+        kwargs :
             Additional arguments to pass to matplotlib `savefig()`.
         """
         sv = self.save_helper(
@@ -670,61 +669,70 @@ def save_as_pdf_pages(
     **kwargs: Any,
 ):
     """
-    Save multiple :class:`ggplot` objects to a PDF file, one per page.
+    Save multiple [](`~plotnine.ggplot`) objects to a PDF file, one per page.
 
     Parameters
     ----------
-    plots : collection or generator of :class:`ggplot`
+    plots :
         Plot objects to write to file. `plots` may be either a
         collection such as a :py:class:`list` or :py:class:`set`:
 
-        >>> base_plot = ggplot(…)
-        >>> plots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]
-        >>> save_as_pdf_pages(plots)
+        ```python
+        base_plot = ggplot(…)
+        plots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]
+        save_as_pdf_pages(plots)
+        ```
 
-        or, a generator that yields :class:`ggplot` objects:
+        or, a generator that yields [](`~plotnine.ggplot`) objects:
 
-        >>> def myplots():
-        >>>     for i in range(1, 3):
-        >>>         yield ggplot(…) + ggtitle('%d of 3' % i)
-        >>> save_as_pdf_pages(myplots())
-
-    filename : :py:class:`str`, optional
+        ```python
+        def myplots():
+            for i in range(1, 3):
+                yield ggplot(…) + ggtitle('%d of 3' % i)
+        save_as_pdf_pages(myplots())
+        ```
+    filename :
         File name to write the plot to. If not specified, a name
         like “plotnine-save-<hash>.pdf” is used.
-    path : :py:class:`str`, optional
+    path :
         Path to save plot to (if you just want to set path and
         not filename).
-    verbose : :py:class:`bool`
-        If ``True``, print the saving information.
-    kwargs : :py:class:`dict`
+    verbose :
+        If `True`, print the saving information.
+    kwargs :
         Additional arguments to pass to
         :py:meth:`matplotlib.figure.Figure.savefig`.
 
     Notes
     -----
-    Using pandas' :meth:`~pandas.DataFrame.groupby` methods, tidy data
+    Using pandas :meth:`~pandas.DataFrame.groupby` methods, tidy data
     can be “faceted” across pages:
 
-    >>> from plotnine.data import mtcars
-    >>> def facet_pages(column)
-    >>>     base_plot = [
-    >>>         aes(x='wt', y='mpg', label='name'),
-    >>>         geom_text(),
-    >>>         ]
-    >>>     for label, group_data in mtcars.groupby(column):
-    >>>         yield ggplot(group_data) + base_plot + ggtitle(label)
-    >>> save_as_pdf_pages(facet_pages('cyl'))
+    ```python
+    from plotnine.data import mtcars
+
+    def facet_pages(column)
+        base_plot = [
+            aes(x='wt', y='mpg', label='name'),
+            geom_text(),
+            ]
+        for label, group_data in mtcars.groupby(column):
+            yield ggplot(group_data) + base_plot + ggtitle(label)
+
+    save_as_pdf_pages(facet_pages('cyl'))
+    ```
 
     Unlike :meth:`ggplot.save`, :meth:`save_as_pdf_pages` does not
     process arguments for `height` or `width`. To set the figure size,
-    add :class:`~plotnine.themes.themeable.figure_size` to the theme
+    add [](`~plotnine.themes.themeable.figure_size`) to the theme
     for some or all of the objects in `plots`:
 
-    >>> plot = ggplot(…)
-    >>> # The following are equivalent
-    >>> plot.save('filename.pdf', height=6, width=8)
-    >>> save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
+    ```python
+    plot = ggplot(…)
+    # The following are equivalent
+    plot.save('filename.pdf', height=6, width=8)
+    save_as_pdf_pages([plot + theme(figure_size=(8, 6))])
+    ```
     """
     from matplotlib.backends.backend_pdf import PdfPages
 
@@ -764,11 +772,11 @@ class plot_context:
 
     Parameters
     ----------
-    plot : ggplot
+    plot :
         ggplot object to be built within the context.
-    show : bool (default: False)
-        Whether to show (``plt.show()``) the plot before the context
         exits.
+    show :
+        Whether to show the plot.
     """
 
     # Default to retina unless user chooses otherwise
@@ -785,7 +793,7 @@ class plot_context:
         self.plot = plot
         self.show = show
 
-    def __enter__(self) -> plot_context:
+    def __enter__(self) -> Self:
         """
         Enclose in matplolib & pandas environments
         """
@@ -830,13 +838,11 @@ class plot_context:
         Setup ipython parameters in for the plot
         """
         ip = get_ipython()
-        if not ip:
-            return
-        elif not hasattr(ip.config, "InlineBackend"):
+        if not ip or not hasattr(ip.config, "InlineBackend"):
             return
 
         for key, value in self._IPYTHON_CONFIG["InlineBackend"].items():
-            if key not in ip.config.InlineBackend:  # pyright: ignore
+            if key not in ip.config.InlineBackend:
                 self._ip_config_inlinebackend[key] = key
                 ip.run_line_magic("config", f"InlineBackend.{key} = {value!r}")
 
@@ -845,12 +851,10 @@ class plot_context:
         Undo ipython parameters in for the plot
         """
         ip = get_ipython()
-        if not ip:
-            return
-        elif not hasattr(ip.config, "InlineBackend"):
+        if not ip or not hasattr(ip.config, "InlineBackend"):
             return
 
         for key in self._ip_config_inlinebackend:
-            del ip.config["InlineBackend"][key]  # pyright: ignore
+            del ip.config["InlineBackend"][key]
 
         self._ip_config_inlinebackend = {}

@@ -7,9 +7,9 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, make_line_segments, match, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import SIZE_FACTOR, make_line_segments, match, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
@@ -33,18 +33,16 @@ class geom_path(geom):
     Parameters
     ----------
     {common_parameters}
-    lineend : str (default: butt)
-        Line end style, of of *butt*, *round* or *projecting.*
-        This option is applied for solid linetypes.
-    linejoin : str (default: round)
-        Line join style, one of *round*, *miter* or *bevel*.
-        This option is applied for solid linetypes.
-    arrow : plotnine.geoms.geom_path.arrow (default: None)
+    lineend : Literal["butt", "round", "projecting"], default="butt"
+        Line end style. This option is applied for solid linetypes.
+    linejoin : Literal["round", "miter", "bevel"], default="round"
+        Line join style. This option is applied for solid linetypes.
+    arrow : ~plotnine.geoms.geom_path.arrow, default=None
         Arrow specification. Default is no arrow.
 
     See Also
     --------
-    plotnine.geoms.arrow : for adding arrowhead(s) to paths.
+    plotnine.geoms.geom_path.arrow : for adding arrowhead(s) to paths.
     """
 
     DEFAULT_AES = {
@@ -216,19 +214,19 @@ class arrow:
     Define arrow (actually an arrowhead)
 
     This is used to define arrow heads for
-    :class:`.geom_path`.
+    [](`~plotnine.geoms.geom_path`).
 
     Parameters
     ----------
-    angle : int | float
+    angle :
         angle in degrees between the tail a
         single edge.
-    length : int | float
+    length :
         of the edge in "inches"
-    ends : str in ``['last', 'first', 'both']``
+    ends :
         At which end of the line to draw the
         arrowhead
-    type : str in ``['open', 'closed']``
+    type :
         When it is closed, it is also filled
     """
 
@@ -265,11 +263,12 @@ class arrow:
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
-            to the geom are::
+            to the geom are:
 
-                'panel_params.x.range'  # tuple
-                'panel_params.y.range'  # tuple
-
+            ```python
+            "panel_params.x.range"  # tuple
+            "panel_params.y.range"  # tuple
+            ```
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the
             geom.
@@ -280,7 +279,7 @@ class arrow:
             the arrows are per segment of the path
         params : dict
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         first = self.ends in ("first", "both")
         last = self.ends in ("last", "both")
@@ -377,19 +376,18 @@ class arrow:
             List of points that define the tails of the arrows.
             The arrow heads will be at x1, y1. If you need them
             at x2, y2 reverse the input.
-
         panel_params : panel_view
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
-            to the geom are::
+            to the geom are:
 
-                'panel_params.x.range'  # tuple
-                'panel_params.y.range'  # tuple
-
+            ```python
+            "panel_params.x.range"  # tuple
+            "panel_params.y.range"  # tuple
+            ```
         coord : coord
-            Coordinate (e.g. coord_cartesian) system of the
-            geom.
+            Coordinate (e.g. coord_cartesian) system of the geom.
         ax : axes
             Axes on which to plot.
 
@@ -461,13 +459,9 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
         y = data["y"].iloc[idx]
         _segments.append(make_line_segments(x, y, ispath=True))
 
-    segments = np.vstack(_segments)
+    segments = np.vstack(_segments).tolist()
 
-    if color is None:
-        edgecolor = color
-    else:
-        edgecolor = [color[i] for i in indices]
-
+    edgecolor = color if color is None else [color[i] for i in indices]
     linewidth = data.loc[indices, "size"]
     linestyle = data.loc[indices, "linetype"]
 
@@ -476,7 +470,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
         edgecolor=edgecolor,
         linewidth=linewidth,
         linestyle=linestyle,
-        capstyle=params["lineend"],
+        capstyle=params.get("lineend", None),
         zorder=params["zorder"],
         rasterized=params["raster"],
     )

@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
 
+from .._utils import match
 from ..doctools import document
 from ..iapi import range_view, scale_view
-from ..utils import match
 from ._expand import expand_range
 from .range import RangeDiscrete
 from .scale import scale
@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence
 
     from plotnine.typing import (
+        AnyArrayLike,
         CoordRange,
         ScaleDiscreteBreaks,
         ScaleDiscreteBreaksRaw,
@@ -28,6 +29,10 @@ if typing.TYPE_CHECKING:
         TupleFloat4,
     )
 
+# Range, RangeDiscrete, RangeContinuous
+# ScaleBreaksRaw, ScaleDiscreteBreaksRaw, ScaleContinuousBreaksRaw
+# ScaleLimitsRaw, ScaleDiscreteLimitsRaw, ScaleContinuousLimitsRaw
+
 
 @document
 class scale_discrete(scale):
@@ -37,23 +42,23 @@ class scale_discrete(scale):
     Parameters
     ----------
     {superclass_parameters}
-    limits : array_like, optional
+    limits : array_like, default=None
         Limits of the scale. For scales that deal with
         categoricals, these may be a subset or superset of
         the categories. Data values that are not in the limits
         will be treated as missing data and represented with
-        the ``na_value``.
-    drop : bool
+        the `na_value`.
+    drop : bool, default=True
         Whether to drop unused categories from
         the scale
-    na_translate : bool
-        If ``True`` translate missing values and show them.
-        If ``False`` remove missing values. Default value is
-        ``True``
+    na_translate : bool, default=True
+        If `True` translate missing values and show them.
+        If `False` remove missing values. Default value is
+        `True`
     na_value : object
-        If ``na_translate=True``, what aesthetic value should be
+        If `na_translate=True`, what aesthetic value should be
         assigned to the missing values. This parameter does not
-        apply to position scales where ``nan`` is always placed
+        apply to position scales where `nan` is always placed
         on the right.
     """
 
@@ -80,22 +85,21 @@ class scale_discrete(scale):
     def limits(self, value: ScaleDiscreteLimitsRaw):
         self._limits = value
 
-    @staticmethod
-    def palette(n: int) -> Sequence[Any]:
+    def palette(self, value: int) -> AnyArrayLike | dict[Any, Any]:
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError("Not Implemented")
+        return super().palette(value)
 
-    def train(self, x, drop=False):
+    def train(self, x: AnyArrayLike, drop=False):
         """
         Train scale
 
         Parameters
         ----------
-        x: pd.Series | np.array
+        x:
             A column of data to train over
-        drop : bool
+        drop :
             Whether to drop(not include) unused categories
 
         A discrete range is stored in a list

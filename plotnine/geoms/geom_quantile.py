@@ -12,12 +12,10 @@ class geom_quantile(geom_path):
     Parameters
     ----------
     {common_parameters}
-    lineend : str (default: butt)
-        Line end style, of of *butt*, *round* or *projecting.*
-        This option is applied for solid linetypes.
-    linejoin : str (default: round)
-        Line join style, one of *round*, *miter* or *bevel*.
-        This option is applied for solid linetypes.
+    lineend : Literal["butt", "round", "projecting"], default="butt"
+        Line end style. This option is applied for solid linetypes.
+    linejoin : Literal["round", "miter", "bevel"], default="round"
+        Line join style. This option is applied for solid linetypes.
     """
 
     DEFAULT_AES = {

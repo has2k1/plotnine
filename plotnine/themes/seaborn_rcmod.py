@@ -26,6 +26,7 @@ class dummy:
     """
     No Op
     """
+
     __version__ = _mpl.__version__
     rcParams = {}
 
@@ -34,47 +35,36 @@ mpl = dummy()
 
 
 _style_keys = [
-
     "axes.facecolor",
     "axes.edgecolor",
     "axes.grid",
     "axes.axisbelow",
     "axes.labelcolor",
-
     "figure.facecolor",
-
     "grid.color",
     "grid.linestyle",
-
     "text.color",
-
     "xtick.color",
     "ytick.color",
     "xtick.direction",
     "ytick.direction",
     "lines.solid_capstyle",
-
     "patch.edgecolor",
     "patch.force_edgecolor",
-
     "image.cmap",
     "font.family",
     "font.sans-serif",
-
     "xtick.bottom",
     "xtick.top",
     "ytick.left",
     "ytick.right",
-
     "axes.spines.left",
     "axes.spines.bottom",
     "axes.spines.right",
     "axes.spines.top",
-
 ]
 
 _context_keys = [
-
     "font.size",
     "axes.labelsize",
     "axes.titlesize",
@@ -82,28 +72,31 @@ _context_keys = [
     "ytick.labelsize",
     "legend.fontsize",
     "legend.title_fontsize",
-
     "axes.linewidth",
     "grid.linewidth",
     "lines.linewidth",
     "lines.markersize",
     "patch.linewidth",
-
     "xtick.major.width",
     "ytick.major.width",
     "xtick.minor.width",
     "ytick.minor.width",
-
     "xtick.major.size",
     "ytick.major.size",
     "xtick.minor.size",
     "ytick.minor.size",
-
 ]
 
 
-def set_theme(context="notebook", style="darkgrid", palette="deep",
-              font="sans-serif", font_scale=1, color_codes=False, rc=None):
+def set_theme(
+    context="notebook",
+    style="darkgrid",
+    palette="deep",
+    font="sans-serif",
+    font_scale=1,
+    color_codes=False,
+    rc=None,
+):
     """
     Set aesthetic parameters in one step
 
@@ -120,11 +113,11 @@ def set_theme(context="notebook", style="darkgrid", palette="deep",
         Color palette, see :func:`color_palette`
     font : string
         Font family, see matplotlib font manager.
-    font_scale : float, optional
+    font_scale : float
         Separate scaling factor to independently scale the size of the
         font elements.
     color_codes : bool
-        If ``True`` and ``palette`` is a seaborn palette, remap the shorthand
+        If `True` and `palette` is a seaborn palette, remap the shorthand
         color codes (e.g. "b", "g", "r", etc.) to the colors from this palette.
     rc : dict or None
         Dictionary of rc parameter mappings to override the above.
@@ -153,14 +146,14 @@ def axes_style(style=None, rc=None):
     This affects things like the color of the axes, whether a grid is
     enabled by default, and other aesthetic elements.
 
-    This function returns an object that can be used in a ``with`` statement
+    This function returns an object that can be used in a `with` statement
     to temporarily change the style parameters.
 
     Parameters
     ----------
-    style : dict, None, or one of {darkgrid, whitegrid, dark, white, ticks}
+    style : "darkgrid" | "whitegrid" | "dark" | "white" | "ticks" | dict | None
         A dictionary of parameters or the name of a preconfigured set.
-    rc : dict, optional
+    rc : dict
         Parameter mappings to override the values in the preset seaborn
         style dictionaries. This only updates parameters that are
         considered part of the style definition.
@@ -192,7 +185,7 @@ def axes_style(style=None, rc=None):
     else:
         styles = ["white", "dark", "whitegrid", "darkgrid", "ticks"]
         if style not in styles:
-            raise ValueError("style must be one of %s" % ", ".join(styles))
+            raise ValueError(f"style must be one of {', '.join(styles)}")
 
         # Define colors here
         dark_gray = ".15"
@@ -200,100 +193,100 @@ def axes_style(style=None, rc=None):
 
         # Common parameters
         style_dict = {
-
             "figure.facecolor": "white",
             "axes.labelcolor": dark_gray,
-
             "xtick.direction": "out",
             "ytick.direction": "out",
             "xtick.color": dark_gray,
             "ytick.color": dark_gray,
-
             "axes.axisbelow": True,
             "grid.linestyle": "-",
-
-
             "text.color": dark_gray,
             "font.family": ["sans-serif"],
-            "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans",
-                                "Bitstream Vera Sans", "sans-serif"],
-
-
+            "font.sans-serif": [
+                "Arial",
+                "DejaVu Sans",
+                "Liberation Sans",
+                "Bitstream Vera Sans",
+                "sans-serif",
+            ],
             "lines.solid_capstyle": "round",
             "patch.edgecolor": "w",
             "patch.force_edgecolor": True,
-
             "image.cmap": "Greys",
-
             "xtick.top": False,
             "ytick.right": False,
-
         }
 
         # Set grid on or off
         if "grid" in style:
-            style_dict.update({
-                "axes.grid": True,
-            })
+            style_dict.update(
+                {
+                    "axes.grid": True,
+                }
+            )
         else:
-            style_dict.update({
-                "axes.grid": False,
-            })
+            style_dict.update(
+                {
+                    "axes.grid": False,
+                }
+            )
 
         # Set the color of the background, spines, and grids
         if style.startswith("dark"):
-            style_dict.update({
-
-                "axes.facecolor": "#EAEAF2",
-                "axes.edgecolor": "white",
-                "grid.color": "white",
-
-                "axes.spines.left": True,
-                "axes.spines.bottom": True,
-                "axes.spines.right": True,
-                "axes.spines.top": True,
-
-            })
+            style_dict.update(
+                {
+                    "axes.facecolor": "#EAEAF2",
+                    "axes.edgecolor": "white",
+                    "grid.color": "white",
+                    "axes.spines.left": True,
+                    "axes.spines.bottom": True,
+                    "axes.spines.right": True,
+                    "axes.spines.top": True,
+                }
+            )
 
         elif style == "whitegrid":
-            style_dict.update({
-
-                "axes.facecolor": "white",
-                "axes.edgecolor": light_gray,
-                "grid.color": light_gray,
-
-                "axes.spines.left": True,
-                "axes.spines.bottom": True,
-                "axes.spines.right": True,
-                "axes.spines.top": True,
-
-            })
+            style_dict.update(
+                {
+                    "axes.facecolor": "white",
+                    "axes.edgecolor": light_gray,
+                    "grid.color": light_gray,
+                    "axes.spines.left": True,
+                    "axes.spines.bottom": True,
+                    "axes.spines.right": True,
+                    "axes.spines.top": True,
+                }
+            )
 
         elif style in ["white", "ticks"]:
-            style_dict.update({
-
-                "axes.facecolor": "white",
-                "axes.edgecolor": dark_gray,
-                "grid.color": light_gray,
-
-                "axes.spines.left": True,
-                "axes.spines.bottom": True,
-                "axes.spines.right": True,
-                "axes.spines.top": True,
-
-            })
+            style_dict.update(
+                {
+                    "axes.facecolor": "white",
+                    "axes.edgecolor": dark_gray,
+                    "grid.color": light_gray,
+                    "axes.spines.left": True,
+                    "axes.spines.bottom": True,
+                    "axes.spines.right": True,
+                    "axes.spines.top": True,
+                }
+            )
 
         # Show or hide the axes ticks
         if style == "ticks":
-            style_dict.update({
-                "xtick.bottom": True,
-                "ytick.left": True,
-            })
+            style_dict.update(
+                {
+                    "xtick.bottom": True,
+                    "ytick.left": True,
+                }
+            )
         else:
-            style_dict.update({
-                "xtick.bottom": False,
-                "ytick.left": False,
-            })
+            style_dict.update(
+                {
+                    "xtick.bottom": False,
+                    "ytick.left": False,
+                }
+            )
 
     # Remove entries that are not defined in the base list of valid keys
     # This lets us handle matplotlib <=/> 2.0
@@ -319,9 +312,9 @@ def set_style(style=None, rc=None):
 
     Parameters
     ----------
-    style : dict, None, or one of {darkgrid, whitegrid, dark, white, ticks}
+    style : "darkgrid" | "whitegrid" | "dark" | "white" | "ticks" | dict | None
         A dictionary of parameters or the name of a preconfigured set.
-    rc : dict, optional
+    rc : dict
         Parameter mappings to override the values in the preset seaborn
         style dictionaries. This only updates parameters that are
         considered part of the style definition.
@@ -334,7 +327,7 @@ def set_style(style=None, rc=None):
 
     See Also
     --------
-    axes_style : return a dict of parameters or use in a ``with`` statement
+    axes_style : return a dict of parameters or use in a `with` statement
                  to temporarily set the style.
     set_context : set parameters to scale plot elements
     set_palette : set the default color palette for figures
@@ -354,7 +347,7 @@ def plotting_context(context=None, font_scale=1, rc=None):
     which are version of the notebook parameters scaled by .8, 1.3, and 1.6,
     respectively.
 
-    This function returns an object that can be used in a ``with`` statement
+    This function returns an object that can be used in a `with` statement
     to temporarily change the context parameters.
 
     Parameters
@@ -395,14 +388,12 @@ def plotting_context(context=None, font_scale=1, rc=None):
         context_dict = context
 
     else:
-
         contexts = ["paper", "notebook", "talk", "poster"]
         if context not in contexts:
-            raise ValueError("context must be in %s" % ", ".join(contexts))
+            raise ValueError(f"context must be in {', '.join(contexts)}")
 
         # Set up dictionary of default parameters
         texts_base_context = {
-
             "font.size": 12,
             "axes.labelsize": 12,
             "axes.titlesize": 12,
@@ -410,32 +401,29 @@ def plotting_context(context=None, font_scale=1, rc=None):
             "ytick.labelsize": 11,
             "legend.fontsize": 11,
             "legend.title_fontsize": 12,
-
         }
 
         base_context = {
-
             "axes.linewidth": 1.25,
             "grid.linewidth": 1,
             "lines.linewidth": 1.5,
             "lines.markersize": 6,
             "patch.linewidth": 1,
-
             "xtick.major.width": 1.25,
             "ytick.major.width": 1.25,
             "xtick.minor.width": 1,
             "ytick.minor.width": 1,
-
             "xtick.major.size": 6,
             "ytick.major.size": 6,
             "xtick.minor.size": 4,
             "ytick.minor.size": 4,
-
         }
         base_context.update(texts_base_context)
 
         # Scale all the parameters by the same factor depending on the context
-        scaling = {"paper": .8, "notebook": 1, "talk": 1.5, "poster": 2}[context]
+        scaling = {"paper": 0.8, "notebook": 1, "talk": 1.5, "poster": 2}[
+            context
+        ]
         context_dict = {k: v * scaling for k, v in base_context.items()}
 
         # Now independently scale the fonts
@@ -487,7 +475,7 @@ def set_context(context=None, font_scale=1, rc=None):
     See Also
     --------
     plotting_context : return a dictionary of rc parameters, or use in
-                       a ``with`` statement to temporarily set the context.
+                       a `with` statement to temporarily set the context.
     set_style : set the default parameters for figure style
     set_palette : set the default color palette for figures
 
@@ -510,16 +498,19 @@ class _RCAesthetics(dict):
         def wrapper(*args, **kwargs):
             with self:
                 return func(*args, **kwargs)
+
         return wrapper
 
 
 class _AxesStyle(_RCAesthetics):
     """Light wrapper on a dict to set style temporarily."""
+
     _keys = _style_keys
     _set = staticmethod(set_style)
 
 
 class _PlottingContext(_RCAesthetics):
     """Light wrapper on a dict to set context temporarily."""
+
     _keys = _context_keys
     _set = staticmethod(set_context)

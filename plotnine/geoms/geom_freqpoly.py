@@ -12,7 +12,7 @@ class geom_freqpoly(geom_path):
 
     {usage}
 
-    See :class:`~plotnine.geoms.geom_path` for documentation
+    See [](`~plotnine.geoms.geom_path`) for documentation
     of the parameters.
     """
 

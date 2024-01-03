@@ -7,23 +7,33 @@ kernel densities with the wider scientific python ecosystem.
 Credit: Jake VanderPlas for the original kde_* functions
 https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
 """
+from __future__ import annotations
+
+import typing
 
 import numpy as np
 
-from ..utils import array_kind
+from .._utils import array_kind
+
+if typing.TYPE_CHECKING:
+    from typing import Any, Literal
+
+    import pandas as pd
+
+    from plotnine.typing import FloatArray
 
 
-def kde_scipy(data, grid, **kwargs):
+def kde_scipy(data: FloatArray, grid: FloatArray, **kwargs: Any) -> FloatArray:
     """
     Kernel Density Estimation with Scipy
 
     Parameters
     ----------
-    data : numpy.array
+    data :
         Data points used to compute a density estimator. It
         has `n x p` dimensions, representing n points and p
         variables.
-    grid : numpy.array
+    grid :
         Data points at which the desity will be estimated. It
         has `m x p` dimensions, representing m points and p
         variables.
@@ -39,17 +49,19 @@ def kde_scipy(data, grid, **kwargs):
     return kde.evaluate(grid.T)
 
 
-def kde_statsmodels_u(data, grid, **kwargs):
+def kde_statsmodels_u(
+    data: FloatArray, grid: FloatArray, **kwargs: Any
+) -> FloatArray:
     """
     Univariate Kernel Density Estimation with Statsmodels
 
     Parameters
     ----------
-    data : numpy.array
+    data :
         Data points used to compute a density estimator. It
         has `n x 1` dimensions, representing n points and p
         variables.
-    grid : numpy.array
+    grid :
         Data points at which the desity will be estimated. It
         has `m x 1` dimensions, representing m points and p
         variables.
@@ -63,27 +75,29 @@ def kde_statsmodels_u(data, grid, **kwargs):
 
     kde = KDEUnivariate(data)
     kde.fit(**kwargs)
-    return kde.evaluate(grid)
+    return kde.evaluate(grid)  # type: ignore
 
 
-def kde_statsmodels_m(data, grid, **kwargs):
+def kde_statsmodels_m(
+    data: FloatArray, grid: FloatArray, **kwargs: Any
+) -> FloatArray:
     """
     Multivariate Kernel Density Estimation with Statsmodels
 
     Parameters
     ----------
-    data : numpy.array
+    data :
         Data points used to compute a density estimator. It
         has `n x p` dimensions, representing n points and p
         variables.
-    grid : numpy.array
+    grid :
         Data points at which the desity will be estimated. It
         has `m x p` dimensions, representing m points and p
         variables.
 
     Returns
     -------
-    out : numpy.array
+    out :
         Density estimate. Has `m x 1` dimensions
     """
     from statsmodels.nonparametric.kernel_density import KDEMultivariate
@@ -92,24 +106,26 @@ def kde_statsmodels_m(data, grid, **kwargs):
     return kde.pdf(grid)
 
 
-def kde_sklearn(data, grid, **kwargs):
+def kde_sklearn(
+    data: FloatArray, grid: FloatArray, **kwargs: Any
+) -> FloatArray:
     """
     Kernel Density Estimation with Scikit-learn
 
     Parameters
     ----------
-    data : numpy.array
+    data :
         Data points used to compute a density estimator. It
         has `n x p` dimensions, representing n points and p
         variables.
-    grid : numpy.array
+    grid :
         Data points at which the desity will be estimated. It
         has `m x p` dimensions, representing m points and p
         variables.
 
     Returns
     -------
-    out : numpy.array
+    out :
         Density estimate. Has `m x 1` dimensions
     """
     # Not core dependency
@@ -124,24 +140,24 @@ def kde_sklearn(data, grid, **kwargs):
     return np.exp(log_pdf)
 
 
-def kde_count(data, grid, **kwargs):
+def kde_count(data: FloatArray, grid: FloatArray, **kwargs: Any) -> FloatArray:
     """
     Kernel Density Estimation via count within radius
 
     Parameters
     ----------
-    data : numpy.array
+    data :
         Data points used to compute a density estimator. It
         has `n x p` dimensions, representing n points and p
         variables.
-    grid : numpy.array
+    grid :
         Data points at which the desity will be estimated. It
         has `m x p` dimensions, representing m points and p
         variables.
 
     Returns
     -------
-    out : numpy.array
+    out :
         Density estimate. Has `m x 1` dimensions
     """
     r = kwargs.get("radius", np.ptp(data) / 10)
@@ -166,21 +182,23 @@ KDE_FUNCS = {
 }
 
 
-def kde(data, grid, package, **kwargs):
+def kde(
+    data: FloatArray, grid: FloatArray, package: str, **kwargs: Any
+) -> FloatArray:
     """
     Kernel Density Estimation
 
     Parameters
     ----------
-    package : str
+    package :
         Package whose kernel density estimation to use.
         Should be one of
         `['statsmodels-u', 'statsmodels-m', 'scipy', 'sklearn']`.
-    data : numpy.array
+    data :
         Data points used to compute a density estimator. It
         has `n x p` dimensions, representing n points and p
         variables.
-    grid : numpy.array
+    grid :
         Data points at which the desity will be estimated. It
         has `m x p` dimensions, representing m points and p
         variables.
@@ -196,19 +214,21 @@ def kde(data, grid, package, **kwargs):
     return func(data, grid, **kwargs)
 
 
-def get_var_type(col):
+def get_var_type(col: pd.Series) -> Literal["c", "o", "u"]:
     """
     Return var_type (for KDEMultivariate) of the column
 
     Parameters
     ----------
-    col : pandas.Series
+    col :
         A dataframe column.
 
     Returns
     -------
-    out : str
-        One of ['c', 'o', 'u'].
+    out :
+        Character that denotes the type of column.
+        `c` for continuous, `o` for ordered categorical and
+        `u` for unordered categorical or if not sure.
 
     See Also
     --------

@@ -5,8 +5,8 @@ import typing
 import numpy as np
 import pandas as pd
 
+from .._utils import copy_missing_columns, resolution
 from ..doctools import document
-from ..utils import copy_missing_columns, resolution
 from .geom import geom
 from .geom_path import geom_path
 from .geom_segment import geom_segment
@@ -28,9 +28,8 @@ class geom_errorbarh(geom):
     Parameters
     ----------
     {common_parameters}
-    height : float or None, optional (default: 0.5)
-        Bar height. If :py:`None`, the height is set to
-        `90%` of the resolution of the data.
+    height : float, default=0.5
+        Bar height as a fraction of the resolution of the data.
     """
 
     DEFAULT_AES = {

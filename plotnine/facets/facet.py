@@ -9,9 +9,9 @@ import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 
+from .._utils import cross_join, match
 from ..exceptions import PlotnineError
 from ..scales.scales import Scales
-from ..utils import cross_join, match
 from .strips import Strips
 
 if typing.TYPE_CHECKING:
@@ -23,6 +23,7 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import layout_details, panel_view
     from plotnine.typing import (
         Axes,
+        CanBeStripLabellingFunc,
         Coord,
         EvalEnvironment,
         Figure,
@@ -40,66 +41,79 @@ class facet:
 
     Parameters
     ----------
-    scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
-        Whether ``x`` or ``y`` scales should be allowed (free)
-        to vary according to the data along the rows or the
-        columns. Default is ``'fixed'``.
-    shrink : bool
+    scales :
+        Whether `x` or `y` scales should be allowed (free)
+        to vary according to the data on each of the panel.
+    shrink :
         Whether to shrink the scales to the output of the
-        statistics instead of the raw data. Default is ``True``.
-    labeller : str | function
-        How to label the facets. If it is a ``str``, it should
-        be one of ``'label_value'`` ``'label_both'`` or
-        ``'label_context'``. Default is ``'label_value'``
-    as_table : bool
-        If ``True``, the facets are laid out like a table with
-        the highest values at the bottom-right. If ``False``
+        statistics instead of the raw data. Default is `True`.
+    labeller :
+        How to label the facets. A string value if it should be
+        one of `["label_value", "label_both", "label_context"]`{.py}.
+    as_table :
+        If `True`, the facets are laid out like a table with
+        the highest values at the bottom-right. If `False`
         the facets are laid out like a plot with the highest
-        value a the top-right. Default it ``True``.
-    drop : bool
-        If ``True``, all factor levels not used in the data
-        will automatically be dropped. If ``False``, all
+        value a the top-right
+    drop :
+        If `True`, all factor levels not used in the data
+        will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
-        or not they appear in the data. Default is ``True``.
-    dir : str in ``['h', 'v']``
-        Direction in which to layout the panels. ``h`` for
-        horizontal and ``v`` for vertical.
+        or not they appear in the data.
+    dir :
+        Direction in which to layout the panels. `h` for
+        horizontal and `v` for vertical.
     """
 
-    #: number of columns
+    # number of columns
     ncol: int
-    #: number of rows
+
+    # number of rows
     nrow: int
+
     as_table = True
     drop = True
     shrink = True
-    #: Which axis scales are free
+
+    # Which axis scales are free
     free: dict[Literal["x", "y"], bool]
-    #: A dict of parameters created depending on the data
-    #: (Intended for extensions)
+
+    # A dict of parameters created depending on the data
+    # (Intended for extensions)
     params: dict[str, Any]
+
     # Theme object, automatically updated before drawing the plot
     theme: Theme
+
     # Figure object on which the facet panels are created
     figure: Figure
+
     # coord object, automatically updated before drawing the plot
     coordinates: Coord
+
     # layout object, automatically updated before drawing the plot
     layout: Layout
+
     # Axes
     axs: list[Axes]
+
     # The first and last axes according to how MPL creates them.
     # Used for labelling the x and y axes,
     first_ax: Axes
     last_ax: Axes
+
     # Number of facet variables along the horizontal axis
     num_vars_x = 0
+
     # Number of facet variables along the vertical axis
     num_vars_y = 0
+
     # ggplot object that the facet belongs to
     plot: Ggplot
+
     # Facet strips
     strips: Strips
+
     # Control the relative size of multiple facets
     # Use a subclass to change the default.
     # See: facet_grid for an example
@@ -114,9 +128,7 @@ class facet:
         self,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         shrink: bool = True,
-        labeller: Literal[
-            "label_value", "label_both", "label_context"
-        ] = "label_value",
+        labeller: CanBeStripLabellingFunc = "label_value",
         as_table: bool = True,
         drop: bool = True,
         dir: Literal["h", "v"] = "h",
@@ -158,12 +170,12 @@ class facet:
 
         Parameters
         ----------
-        data : list of dataframes
+        data :
             Data for each of the layers
 
         Returns
         -------
-        data : list of dataframes
+        :
             Data for each of the layers
 
         Notes
@@ -179,7 +191,7 @@ class facet:
 
         Parameters
         ----------
-        data : list of dataframes
+        data :
             Plot data and data for the layers
         """
         self.params = {}
@@ -208,14 +220,14 @@ class facet:
 
         Parameters
         ----------
-        data : DataFrame
+        data :
             Data for a layer
-        layout : DataFrame
+        layout :
             As returned by self.compute_layout
 
         Returns
         -------
-        data : DataFrame
+        :
             Data with all points mapped to the panels
             on which they will be plotted.
         """
@@ -231,7 +243,7 @@ class facet:
 
         Parameters
         ----------
-        data : Dataframes
+        data :
             Dataframe for a each layer
         """
         msg = "{} should implement this method."
@@ -246,14 +258,14 @@ class facet:
 
         Parameters
         ----------
-        data : DataFrame
+        data :
             A single layer's data.
-        layout : Layout
+        layout :
             Layout
 
         Returns
         -------
-        data : DataFrame
+        :
             Modified layer data
         """
         return data
@@ -294,10 +306,10 @@ class facet:
 
         Parameters
         ----------
-        layout_info : dict-like
+        layout_info :
             Layout information. Row from the layout table
 
-        ax : axes
+        ax :
             Axes to label
         """
         return Strips()
@@ -308,15 +320,15 @@ class facet:
 
         Parameters
         ----------
-        ranges : dict-like
+        panel_params :
             range information for the axes
-        ax : Axes
+        ax :
             Axes
         """
         from .._mpl.ticker import MyFixedFormatter
 
         def _inf_to_none(
-            t: tuple[float, float]
+            t: tuple[float, float],
         ) -> tuple[float | None, float | None]:
             """
             Replace infinities with None
@@ -326,8 +338,8 @@ class facet:
             return (a, b)
 
         # limits
-        ax.set_xlim(_inf_to_none(panel_params.x.range))
-        ax.set_ylim(_inf_to_none(panel_params.y.range))
+        ax.set_xlim(*_inf_to_none(panel_params.x.range))
+        ax.set_ylim(*_inf_to_none(panel_params.y.range))
 
         if typing.TYPE_CHECKING:
             assert callable(ax.set_xticks)
@@ -371,10 +383,10 @@ class facet:
         shallow = {"figure", "axs", "first_ax", "last_ax"}
         for key, item in old.items():
             if key in shallow:
-                new[key] = old[key]
+                new[key] = item
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 
@@ -395,11 +407,9 @@ class facet:
         }
 
         if isinstance(space, str):
-            if space == "fixed":
-                space = default_space
             # TODO: Implement 'free', 'free_x' & 'free_y'
-            else:
-                space = default_space
+            # This is the value of "fixed" space
+            space = default_space
         elif isinstance(space, dict):
             if "x" not in space:
                 space["x"] = default_space["x"]
@@ -565,7 +575,7 @@ def unique_combs(df: pd.DataFrame) -> pd.DataFrame:
     # preserve the column dtypes
     for col in df:
         t = df[col].dtype
-        _df[col] = _df[col].astype(t, copy=False)  # pyright: ignore
+        _df[col] = _df[col].astype(t, copy=False)
     return _df
 
 
@@ -628,16 +638,16 @@ def eval_facet_vars(
 
     Parameters
     ----------
-    data : DataFrame
+    data :
         Factet dataframe
-    vars : list
+    vars :
         Facet variables
-    env : environment
+    env :
         Plot environment
 
     Returns
     -------
-    facet_vals : DataFrame
+    :
         Facet values that correspond to the specified
         variables.
     """

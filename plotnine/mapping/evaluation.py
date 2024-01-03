@@ -39,12 +39,12 @@ class stage:
 
     Parameters
     ----------
-    start : expression | array_like | scalar
+    start : str | array_like | scalar
         Aesthetic expression using primary variables from the layer
         data.
-    after_stat : expression
+    after_stat : str
         Aesthetic expression using variables calculated by the stat.
-    after_scale : expression
+    after_scale : str
         Aesthetic expression using aesthetics of the layer.
     """
 
@@ -83,10 +83,8 @@ def after_stat(x):
 
     See Also
     --------
-    :func:`after_scale` : For how to alter aesthetics after the data has been
-        mapped by the scale.
-    :class:`stage` : For how to map to aesthetics at more than one stage of
-        the plot building pipeline.
+    plotnine.mapping.after_scale
+    plotnine.mapping.stage
     """
     return stage(after_stat=x)
 
@@ -105,10 +103,8 @@ def after_scale(x):
 
     See Also
     --------
-    :func:`after_stat` : For how to map aesthetics to variable calculated
-        by the stat
-    :class:`stage` : For how to map to aesthetics at more than one stage of
-        the plot building pipeline.
+    plotnine.mapping.after_stat
+    plotnine.mapping.stage
     """
     return stage(after_scale=x)
 
@@ -128,12 +124,12 @@ def reorder(x, y, fun=np.median, ascending=True):
     x : list-like
         Values that will make up the categorical.
     y : list-like
-        Values by which ``c`` will be ordered.
+        Values by which `c` will be ordered.
     fun : callable
-        Summarising function to ``x`` for each category in ``c``.
+        Summarising function to `x` for each category in `c`.
         Default is the *median*.
     ascending : bool
-        If ``True``, the ``c`` is ordered in ascending order of ``x``.
+        If `True`, the `c` is ordered in ascending order of `x`.
 
     Examples
     --------
@@ -183,17 +179,17 @@ def evaluate(
 
     Parameters
     ----------
-    aesthetics : dict-like
+    aesthetics :
         Aesthetics to evaluate. They must be of the form {name: expr}
-    data : pd.DataFrame
+    data :
         Dataframe whose columns are/may-be variables in the aesthetic
         expressions i.e. it is a namespace with variables.
-    env : ~patsy.Eval.Environment
+    env :
         Environment in which the aesthetics are evaluated
 
     Returns
     -------
-    evaled : pd.DataFrame
+    pd.DataFrame
         Dataframe of the form {name: result}, where each column is the
         result from evaluating an expression.
 
@@ -227,31 +223,33 @@ def evaluate(
                 try:
                     new_val = env.eval(col, inner_namespace=data)
                 except Exception as e:
-                    raise PlotnineError(_TPL_EVAL_FAIL.format(ae, col, str(e)))
+                    msg = _TPL_EVAL_FAIL.format(ae, col, str(e))
+                    raise PlotnineError(msg) from e
 
                 try:
                     evaled[ae] = new_val
                 except Exception as e:
-                    raise PlotnineError(
-                        _TPL_BAD_EVAL_TYPE.format(
-                            ae, col, str(type(new_val)), str(e)
-                        )
+                    msg = _TPL_BAD_EVAL_TYPE.format(
+                        ae, col, str(type(new_val)), str(e)
                     )
+                    raise PlotnineError(msg) from e
+
         elif pdtypes.is_list_like(col):
             n = len(col)
             if len(data) and n != len(data) and n != 1:
-                raise PlotnineError(
+                msg = (
                     "Aesthetics must either be length one, "
                     "or the same length as the data"
                 )
+                raise PlotnineError(msg)
             evaled[ae] = col
         elif is_known_scalar(col):
             if not len(evaled):
                 col = [col]
             evaled[ae] = col
         else:
-            msg = "Do not know how to deal with aesthetic '{}'"
-            raise PlotnineError(msg.format(ae))
+            msg = f"Do not know how to deal with aesthetic '{ae}'"
+            raise PlotnineError(msg)
 
     # Using `type` preserves the subclass of pd.DataFrame
     index = data.index if len(data.index) and evaled else None

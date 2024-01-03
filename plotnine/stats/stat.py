@@ -5,19 +5,18 @@ from copy import deepcopy
 
 import pandas as pd
 
-from ..exceptions import PlotnineError
-from ..layer import layer
-from ..mapping import aes
-from ..utils import (
-    Registry,
+from .._utils import (
     check_required_aesthetics,
     copy_keys,
     data_mapping_as_kwargs,
     groupby_apply,
-    is_string,
     remove_missing,
     uniquecols,
 )
+from .._utils.registry import Register, Registry
+from ..exceptions import PlotnineError
+from ..layer import layer
+from ..mapping import aes
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -28,32 +27,43 @@ if typing.TYPE_CHECKING:
         DataLike,
         EvalEnvironment,
         Geom,
+        Ggplot,
         Layout,
     )
 
+from abc import ABC
 
-class stat(metaclass=Registry):
+
+class stat(ABC, metaclass=Register):
     """Base class of all stats"""
 
-    __base__ = True
+    DEFAULT_AES: dict[str, Any] = {}
+    """Default aesthetics for the stat"""
 
-    REQUIRED_AES = set()
-    DEFAULT_AES = {}
-    NON_MISSING_AES = set()
-    DEFAULT_PARAMS = {}
+    REQUIRED_AES: set[str] = set()
+    """Required aesthetics for the stat"""
 
-    # Stats may modify existing columns or create extra
-    # columns.
-    #
-    # Any extra columns that may be created by the stat
-    # should be specified in this set
-    # see: stat_bin
-    CREATES = set()
+    NON_MISSING_AES: set[str] = set()
+    """Required aesthetics for the stat"""
 
-    # Documentation for the aesthetics. It ie added under the
-    # documentation for mapping parameter. Use {aesthetics_table}
-    # placeholder to insert a table for all the aesthetics and
-    # their default values.
+    DEFAULT_PARAMS: dict[str, Any] = {}
+    """Required parameters for the stat"""
+
+    CREATES: set[str] = set()
+    """
+    Stats may modify existing columns or create extra
+    columns.
+
+    Any extra columns that may be created by the stat
+    should be specified in this set
+    see: stat_bin
+
+    Documentation for the aesthetics. It ie added under the
+    documentation for mapping parameter. Use {aesthetics_table}
+    placeholder to insert a table for all the aesthetics and
+    their default values.
+    """
+
     _aesthetics_doc = "{aesthetics_table}"
 
     # Plot namespace, it gets its value when the plot is being
@@ -83,17 +93,17 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        geom : geom
-            `geom`
+        geom :
+            A geom object
 
         Returns
         -------
-        out : stat
+        stat
             A stat object
 
         Raises
         ------
-        :class:`PlotnineError` if unable to create a `stat`.
+        [](`~plotnine.exceptions.PlotnineError`) if unable to create a `stat`.
         """
         name = geom.params["stat"]
         kwargs = geom._kwargs
@@ -106,7 +116,7 @@ class stat(metaclass=Registry):
             return name
         elif isinstance(name, type) and issubclass(name, stat):
             klass = name
-        elif is_string(name):
+        elif isinstance(name, str):
             if not name.startswith("stat_"):
                 name = f"stat_{name}"
             klass = Registry[name]
@@ -136,10 +146,10 @@ class stat(metaclass=Registry):
         shallow = {"_kwargs", "environment"}
         for key, item in old.items():
             if key in shallow:
-                new[key] = old[key]
+                new[key] = item
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 
@@ -164,12 +174,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data used for drawing the geom.
 
         Returns
         -------
-        out : dataframe
+        out :
             Data used for drawing the geom.
         """
         missing = (
@@ -193,12 +203,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
 
         Returns
         -------
-        out : dict
+        out :
             Parameters used by the stats.
         """
         return self.params
@@ -209,12 +219,12 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
 
         Returns
         -------
-        out : dataframe
+        out :
             Data
         """
         return data
@@ -237,14 +247,14 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data for the layer
-        params : dict
+        params :
             Paremeters
 
         Returns
         -------
-        data : dataframe
+        data :
             Modified data
         """
         return data
@@ -265,11 +275,11 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : panda.DataFrame
+        data :
             Data points for all objects in a layer.
-        params : dict
+        params :
             Stat parameters
-        layout : plotnine.layout.Layout
+        layout :
             Panel layout information
         """
         check_required_aesthetics(
@@ -314,16 +324,17 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             data for the computing
-        scales : dataclass
+        scales :
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
-            to find out the physical size of a scale. e.g::
+            to find out the physical size of a scale. e.g.
 
-                range_x = scales.x.dimension()
-
-        params : dict
+            ```python
+            range_x = scales.x.dimension()
+            ```
+        params :
             The parameters for the stat. It includes default
             values if user did not set a particular parameter.
         """
@@ -366,45 +377,46 @@ class stat(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data for a group
-        scales : types.SimpleNamespace
+        scales :
             x (``scales.x``) and y (``scales.y``) scale objects.
             The most likely reason to use scale information is
-            to find out the physical size of a scale. e.g::
+            to find out the physical size of a scale. e.g.
 
-                range_x = scales.x.dimension()
-
-        params : dict
+            ```python
+            range_x = scales.x.dimension()
+            ```
+        params :
             Parameters
         """
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(cls.__name__))
 
-    def __radd__(self, gg):
+    def __radd__(self, gg: Ggplot) -> Ggplot:
         """
         Add layer representing stat object on the right
 
         Parameters
         ----------
-        gg : ggplot
+        gg :
             ggplot object
 
         Returns
         -------
-        out : ggplot
+        out :
             ggplot object with added layer
         """
         gg += self.to_layer()  # Add layer
         return gg
 
-    def to_layer(self):
+    def to_layer(self) -> layer:
         """
         Make a layer that represents this stat
 
         Returns
         -------
-        out : layer
+        out :
             Layer
         """
         # Create, geom from stat, then layer from geom

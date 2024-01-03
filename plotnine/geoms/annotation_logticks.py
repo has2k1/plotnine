@@ -6,10 +6,10 @@ import warnings
 import numpy as np
 import pandas as pd
 
+from .._utils import log
 from ..coords import coord_flip
 from ..exceptions import PlotnineWarning
 from ..scales.scale_continuous import scale_continuous as ScaleContinuous
-from ..utils import log
 from .annotate import annotate
 from .geom_path import geom_path
 from .geom_rug import geom_rug
@@ -30,6 +30,7 @@ if typing.TYPE_CHECKING:
         Trans,
         TupleFloat2,
         TupleFloat3,
+        TupleFloat4,
     )
 
 
@@ -77,17 +78,17 @@ class _geom_logticks(geom_rug):
 
         Parameters
         ----------
-        base : float or None
+        base : float | None
             Base of the logarithm in which the ticks will be
-            calculated. If ``None``, the base of the log transform
+            calculated. If `None`, the base of the log transform
             the scale will be used.
-        sides : str (default: bl)
+        sides : str, default="bl"
             Sides onto which to draw the marks. Any combination
-            chosen from the characters ``btlr``, for *bottom*, *top*,
-            *left* or *right* side marks. If ``coord_flip()`` is used,
+            chosen from the characters `btlr`, for *bottom*, *top*,
+            *left* or *right* side marks. If `coord_flip()` is used,
             these are the sides *before* the flip.
         panel_params : panel_view
-            ``x`` and ``y`` view scale values.
+            `x` and `y` view scale values.
         coord : coord
             Coordinate (e.g. coord_cartesian) system of the geom.
 
@@ -251,25 +252,25 @@ class annotation_logticks(annotate):
 
     Parameters
     ----------
-    sides : str (default: bl)
+    sides :
         Sides onto which to draw the marks. Any combination
-        chosen from the characters ``btlr``, for *bottom*, *top*,
-        *left* or *right* side marks. If ``coord_flip()`` is used,
+        chosen from the characters `btlr`, for *bottom*, *top*,
+        *left* or *right* side marks. If `coord_flip()` is used,
         these are the sides *after* the flip.
-    alpha : float (default: 1)
+    alpha :
         Transparency of the ticks
-    color : str | tuple (default: 'black')
+    color :
         Colour of the ticks
-    size : float
+    size :
         Thickness of the ticks
-    linetype : 'solid' | 'dashed' | 'dashdot' | 'dotted' | tuple
-        Type of line. Default is *solid*.
-    lengths: tuple (default (0.036, 0.0225, 0.012))
+    linetype :
+        Type of line
+    lengths:
         length of the ticks drawn for full / half / tenth
         ticks relative to panel size
-    base : float (default: None)
+    base :
         Base of the logarithm in which the ticks will be
-        calculated. If ``None``, the base used to log transform
+        calculated. If `None`, the base used to log transform
         the scale will be used.
     """
 
@@ -277,9 +278,10 @@ class annotation_logticks(annotate):
         self,
         sides: str = "bl",
         alpha: float = 1,
-        color: str | tuple[float, ...] = "black",
+        color: str | TupleFloat3 | TupleFloat4 = "black",
         size: float = 0.5,
-        linetype: str | tuple[float, ...] = "solid",
+        linetype: Literal["solid", "dashed", "dashdot", "dotted"]
+        | Sequence[float] = "solid",
         lengths: TupleFloat3 = (0.036, 0.0225, 0.012),
         base: float | None = None,
     ):

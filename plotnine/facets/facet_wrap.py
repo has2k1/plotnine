@@ -7,8 +7,8 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import join_keys, match
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import join_keys, match
 from .facet import (
     add_missing_facets,
     combine_vars,
@@ -31,38 +31,36 @@ class facet_wrap(facet):
 
     Parameters
     ----------
-    facets : formula | tuple | list
+    facets :
         Variables to groupby and plot on different panels.
-        If a formula is used it should be right sided,
-        e.g ``'~ a + b'``, ``('a', 'b')``
-    nrow : int, optional
+        If a string formula is used it should be right sided,
+        e.g `"~ a + b"`, `("a", "b")`
+    nrow : int, default=None
         Number of rows
-    ncol : int, optional
+    ncol : int, default=None
         Number of columns
-    scales : str in ``['fixed', 'free', 'free_x', 'free_y']``
-        Whether ``x`` or ``y`` scales should be allowed (free)
+    scales :
+        Whether `x` or `y` scales should be allowed (free)
         to vary according to the data on each of the panel.
-        Default is ``'fixed'``.
-    shrink : bool
+    shrink :
         Whether to shrink the scales to the output of the
-        statistics instead of the raw data. Default is ``True``.
-    labeller : str | function
-        How to label the facets. If it is a ``str``, it should
-        be one of ``'label_value'`` ``'label_both'`` or
-        ``'label_context'``. Default is ``'label_value'``
-    as_table : bool
-        If ``True``, the facets are laid out like a table with
-        the highest values at the bottom-right. If ``False``
+        statistics instead of the raw data.
+    labeller :
+        How to label the facets. A string value if it should be
+        one of `["label_value", "label_both", "label_context"]`{.py}.
+    as_table :
+        If `True`, the facets are laid out like a table with
+        the highest values at the bottom-right. If `False`
         the facets are laid out like a plot with the highest
-        value a the top-right. Default it ``True``.
-    drop : bool
-        If ``True``, all factor levels not used in the data
-        will automatically be dropped. If ``False``, all
+        value a the top-right
+    drop :
+        If `True`, all factor levels not used in the data
+        will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
-        or not they appear in the data. Default is ``True``.
-    dir : str in ``['h', 'v']``
-        Direction in which to layout the panels. ``h`` for
-        horizontal and ``v`` for vertical.
+        or not they appear in the data.
+    dir :
+        Direction in which to layout the panels. `h` for
+        horizontal and `v` for vertical.
     """
 
     def __init__(

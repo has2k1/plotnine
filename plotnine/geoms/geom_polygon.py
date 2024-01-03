@@ -4,8 +4,8 @@ import typing
 
 import numpy as np
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
@@ -30,7 +30,7 @@ class geom_polygon(geom):
 
     Notes
     -----
-    All paths in the same ``group`` aesthetic value make up a polygon.
+    All paths in the same `group` aesthetic value make up a polygon.
     """
 
     DEFAULT_AES = {

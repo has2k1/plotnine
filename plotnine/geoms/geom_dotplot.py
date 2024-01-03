@@ -5,9 +5,9 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import groupby_apply, resolution, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import groupby_apply, resolution, to_rgba
 from .geom import geom
 
 if typing.TYPE_CHECKING:
@@ -29,16 +29,15 @@ class geom_dotplot(geom):
     Parameters
     ----------
     {common_parameters}
-    stackdir : str (default: up)
+    stackdir : Literal["up", "down", "center", "centerwhole"], default="up"
         Direction in which to stack the dots. Options are
-        :py:`['up', 'down', 'center', 'centerwhole']`
-    stackratio : float (default: 1)
+    stackratio : float, default=1
         How close to stack the dots. If value is less than 1,
         the dots overlap, if greater than 1 they are spaced.
-    dotsize : float (default: 1)
-        Diameter of dots relative to ``binwidth``.
-    stackgroups : bool (default: False)
-        If :py:`True`, the dots are stacked across groups.
+    dotsize : float, default=1
+        Diameter of dots relative to `binwidth`.
+    stackgroups : bool, default=False
+        If `True`{.py}, the dots are stacked across groups.
 
     See Also
     --------
@@ -105,14 +104,14 @@ class geom_dotplot(geom):
         elif gp["stackdir"] == "center":
 
             def stackdots(a: FloatSeries) -> FloatSeries:
-                return a - 1 - np.max(a - 1) / 2  # type: ignore
+                return a - 1 - np.max(a - 1) / 2
 
             stackaxismin = -0.5
             stackaxismax = 0.5
         elif gp["stackdir"] == "centerwhole":
 
             def stackdots(a: FloatSeries) -> FloatSeries:
-                return a - 1 - np.floor(np.max(a - 1) / 2)  # type: ignore
+                return a - 1 - np.floor(np.max(a - 1) / 2)
 
             stackaxismin = -0.5
             stackaxismax = 0.5

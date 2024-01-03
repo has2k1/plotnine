@@ -4,8 +4,8 @@ from contextlib import suppress
 import numpy as np
 import pandas as pd
 
+from .._utils import get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import get_valid_kwargs
 
 
 def predictdf(data, xseq, **params):
@@ -33,16 +33,16 @@ def predictdf(data, xseq, **params):
     if isinstance(method, str):
         try:
             method = methods[method]
-        except KeyError:
-            msg = "Method should be one of {}"
-            raise PlotnineError(msg.format(list(methods.keys())))
+        except KeyError as e:
+            msg = f"Method should be one of {list(methods.keys())}"
+            raise PlotnineError(msg) from e
 
     if not callable(method):
         msg = (
             "'method' should either be a string or a function"
             "with the signature `func(data, xseq, **params)`"
         )
-        raise PlotnineError()
+        raise PlotnineError(msg)
 
     return method(data, xseq, **params)
 
@@ -342,8 +342,9 @@ def loess(data, xseq, **params):
     """
     try:
         from skmisc.loess import loess as loess_klass
-    except ImportError:
-        raise PlotnineError("For loess smoothing, install 'scikit-misc'")
+    except ImportError as e:
+        msg = "For loess smoothing, install 'scikit-misc'"
+        raise PlotnineError(msg) from e
 
     try:
         weights = data["weight"]
@@ -416,11 +417,12 @@ def gpr(data, xseq, **params):
     """
     try:
         from sklearn import gaussian_process
-    except ImportError:
-        raise PlotnineError(
+    except ImportError as e:
+        msg = (
             "To use gaussian process smoothing, "
             "You need to install scikit-learn."
         )
+        raise PlotnineError(msg) from e
 
     kwargs = params["method_args"]
     if not kwargs:
@@ -477,24 +479,24 @@ def wls_prediction_std(
 
     Parameters
     ----------
-    res : regression result instance
+    res : regression-result
         results of WLS or OLS regression required attributes see notes
-    exog : array_like (optional)
+    exog : array_like
         exogenous variables for points to predict
-    weights : scalar or array_like (optional)
+    weights : scalar | array_like
         weights as defined for WLS (inverse of variance of observation)
-    alpha : float (default: alpha = 0.05)
+    alpha : float
         confidence level for two-sided hypothesis
     interval : str
         Type of interval to compute. One of "confidence" or "prediction"
 
     Returns
     -------
-    predstd : array_like, 1d
-        standard error of prediction
-        same length as rows of exog
+    predstd : array_like
+        Standard error of prediction. It must be the same length as rows
+        of exog.
     interval_l, interval_u : array_like
-        lower und upper confidence bounds
+        Lower und upper confidence bounds
 
     Notes
     -----

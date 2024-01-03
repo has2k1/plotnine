@@ -32,7 +32,10 @@ class SText(Text):
         }
 
         super().__init__(
-            info.x, info.y, info.label, **kwargs  # pyright: ignore
+            info.x,
+            info.y,
+            info.label,
+            **kwargs,
         )
         self.draw_info = info
         self.spatch = SFancyBboxPatch(self)

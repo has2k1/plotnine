@@ -58,9 +58,9 @@ class MyAuxTransformBox(AuxTransformBox):
         """
         dpi_cor = renderer.points_to_pixels(1.0)
         self.dpi_transform.clear()
-        self.dpi_transform.scale(dpi_cor, dpi_cor)
+        self.dpi_transform.scale(dpi_cor, dpi_cor)  # type: ignore
 
-        for c in self._children:
+        for c in self.get_children():
             c.draw(renderer)
 
         self.stale = False

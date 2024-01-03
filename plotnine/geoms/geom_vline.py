@@ -6,10 +6,10 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils import SIZE_FACTOR, order_as_data_mapping, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
-from ..utils import SIZE_FACTOR, order_as_data_mapping, to_rgba
 from .geom import geom
 from .geom_segment import geom_segment
 

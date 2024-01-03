@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
 
+from .._utils import match
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import range_view, scale_view
-from ..utils import match
 from ._expand import expand_range
 from .range import RangeContinuous
 from .scale import scale
@@ -20,7 +20,6 @@ if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, Type
 
     from plotnine.typing import (
-        AnyArrayLike,
         CoordRange,
         FloatArrayLike,
         ScaleContinuousBreaks,
@@ -44,23 +43,23 @@ class scale_continuous(scale):
     Parameters
     ----------
     {superclass_parameters}
-    trans : str | function
+    trans : str | callable
         Name of a trans function or a trans function.
         See :mod:`mizani.transforms` for possible options.
-    oob : function
+    oob : callable, default=mizani.bounds.censor
         Function to deal with out of bounds (limits)
         data points. Default is to turn them into
-        ``np.nan``, which then get dropped.
-    minor_breaks : list-like or int or callable or None
+        `np.nan`, which then get dropped.
+    minor_breaks : list | int | callable, default=None
         If a list-like, it is the minor breaks points.
         If an integer, it is the number of minor breaks between
         any set of major breaks.
         If a function, it should have the signature
-        ``func(limits)`` and return a list-like of consisting
+        `func(limits)` and return a list-like of consisting
         of the minor break points.
-        If ``None``, no minor breaks are calculated.
+        If `None`, no minor breaks are calculated.
         The default is to automatically calculate them.
-    rescaler : function, optional
+    rescaler : callable, default=mizani.bounds.rescale
         Function to rescale data points so that they can
         be handled by the palette. Default is to rescale
         them onto the [0, 1] range. Scales that inherit
@@ -74,6 +73,7 @@ class scale_continuous(scale):
 
     _range_class = RangeContinuous
     _limits: Optional[ScaleContinuousLimitsRaw]
+    range: RangeContinuous
     rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
     oob = staticmethod(censor)  # what to do with out of bounds data points
     breaks: ScaleContinuousBreaksRaw
@@ -106,17 +106,15 @@ class scale_continuous(scale):
         new_trans_name = t.__class__.__name__
         if new_trans_name.endswith("_trans"):
             new_trans_name = new_trans_name[:-6]
-        if orig_trans_name != "identity":
-            if new_trans_name != orig_trans_name:
-                warn(
-                    "You have changed the transform of a specialised scale. "
-                    "The result may not be what you expect.\n"
-                    "Original transform: {}\n"
-                    "New transform: {}".format(
-                        orig_trans_name, new_trans_name
-                    ),
-                    PlotnineWarning,
-                )
+        if orig_trans_name not in ("identity", new_trans_name):
+            warn(
+                "You have changed the transform of a specialised scale. "
+                "The result may not be what you expect.\n"
+                "Original transform: {}\n"
+                "New transform: {}".format(orig_trans_name, new_trans_name),
+                PlotnineWarning,
+                stacklevel=2,
+            )
 
     @property
     def trans(self) -> Trans:
@@ -142,19 +140,24 @@ class scale_continuous(scale):
             # stored in transformed space. The range of the scale is
             # in transformed space (i.e. with in the domain of the scale)
             _range = self.inverse(self.range.range)
-            return tuple(self.trans.transform(self._limits(_range)))
-        elif self._limits is not None and not self.range.is_empty():
+            return self.trans.transform(self._limits(_range))
+        elif (
+            self._limits is not None
+            and not self.range.is_empty()
+            and
             # Fall back to the range if the limits
             # are not set or if any is None or NaN
-            if len(self._limits) == len(self.range.range):
-                l1, l2 = self._limits
-                r1, r2 = self.range.range
-                if l1 is None:
-                    l1 = self.trans.transform([r1])[0]
-                if l2 is None:
-                    l2 = self.trans.transform([r2])[0]
-                return l1, l2
-        return tuple(self._limits)
+            len(self._limits) == len(self.range.range)
+        ):
+            l1, l2 = self._limits
+            r1, r2 = self.range.range
+            if l1 is None:
+                l1 = self.trans.transform([r1])[0]
+            if l2 is None:
+                l2 = self.trans.transform([r2])[0]
+            return l1, l2
+
+        return self._limits
 
     @limits.setter
     def limits(self, value: ScaleContinuousLimitsRaw):
@@ -163,7 +166,7 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        value : array-like | callable
+        value : array_like | callable
             Limits in the dataspace.
         """
         # Notes
@@ -186,14 +189,9 @@ class scale_continuous(scale):
 
         self._limits = a, b
 
-    def train(self, x):
+    def train(self, x: FloatArrayLike):
         """
-        Train scale
-
-        Parameters
-        ----------
-        x: pd.Series | np.array
-            A column of data to train over
+        Train continuous scale
         """
         if not len(x):
             return
@@ -228,7 +226,7 @@ class scale_continuous(scale):
         Inverse Transform dataframe
         """
         if len(df) == 0:
-            return
+            return df
 
         aesthetics = set(self.aesthetics) & set(df.columns)
         for ae in aesthetics:
@@ -324,16 +322,15 @@ class scale_continuous(scale):
         """
         return super().default_expansion(mult, add, expand)
 
-    @staticmethod
-    def palette(arr: FloatArrayLike) -> Sequence[Any]:
+    def palette(self, value: FloatArrayLike) -> Sequence[Any]:
         """
         Aesthetic mapping function
         """
-        raise NotImplementedError("Not Implemented")
+        return super().palette(value)
 
     def map(
-        self, x: AnyArrayLike, limits: Optional[ScaleContinuousLimits] = None
-    ) -> AnyArrayLike:
+        self, x: FloatArrayLike, limits: Optional[ScaleContinuousLimits] = None
+    ) -> FloatArrayLike:
         if limits is None:
             limits = self.limits
 
@@ -356,14 +353,14 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        limits : list-like | None
+        limits : list_like | None
             If None the self.limits are used
             They are expected to be in transformed
             space.
 
         Returns
         -------
-        out : array-like
+        out : array_like
 
         Notes
         -----
@@ -425,7 +422,9 @@ class scale_continuous(scale):
             )  # pyright: ignore
         elif isinstance(self.minor_breaks, int):
             minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
-                major, limits, self.minor_breaks  # pyright: ignore
+                major,
+                limits,
+                self.minor_breaks,  # pyright: ignore
             )
         elif callable(self.minor_breaks):
             breaks = self.minor_breaks(self.inverse(limits))
@@ -445,7 +444,7 @@ class scale_continuous(scale):
 
         Parameters
         ----------
-        breaks: None or array-like
+        breaks: None | array_like
             If None, use self.breaks.
         """
         if breaks is None:

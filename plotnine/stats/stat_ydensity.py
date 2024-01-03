@@ -19,53 +19,53 @@ class stat_ydensity(stat):
     Parameters
     ----------
     {common_parameters}
-    kernel : str, optional (default: 'gaussian')
-        Kernel used for density estimation. One of::
+    kernel : str, default='gaussian'
+        Kernel used for density estimation. One of:
 
-            'biweight'
-            'cosine'
-            'cosine2'
-            'epanechnikov'
-            'gaussian'
-            'triangular'
-            'triweight'
-            'uniform'
-
-    adjust : float, optional (default: 1)
-        An adjustment factor for the ``bw``. Bandwidth becomes
-        :py:`bw * adjust`.
+        ```python
+        "biweight"
+        "cosine"
+        "cosine2"
+        "epanechnikov"
+        "gaussian"
+        "triangular"
+        "triweight"
+        "uniform"
+        ```
+    adjust : float, default=1
+        An adjustment factor for the `bw`. Bandwidth becomes
+        `bw * adjust`{.py}.
         Adjustment of the bandwidth.
-    trim : bool, optional (default: False)
+    trim : bool, default=False
         This parameter only matters if you are displaying multiple
-        densities in one plot. If :py:`False`, the default, each
+        densities in one plot. If `False`{.py}, the default, each
         density is computed on the full range of the data. If
-        :py:`True`, each density is computed over the range of that
+        `True`{.py}, each density is computed over the range of that
         group; this typically means the estimated x values will not
         line-up, and hence you won't be able to stack density values.
-    n : int, optional(default: 1024)
+    n : int, default=1024
         Number of equally spaced points at which the density is to
         be estimated. For efficient computation, it should be a power
         of two.
-    bw : str or float, optional (default: 'nrd0')
+    bw : str | float, default="nrd0"
         The bandwidth to use, If a float is given, it is the bandwidth.
-        The :py:`str` choices are::
+        The `str` choices are:
 
-            'normal_reference'
-            'scott'
-            'silverman'
+        ```python
+        "nrd0"
+        "normal_reference"
+        "scott"
+        "silverman"
+        ```
 
-        ``nrd0`` is a port of ``stats::bw.nrd0`` in R; it is eqiuvalent
-        to ``silverman`` when there is more than 1 value in a group.
-    scale : (default: area)
-        How to scale the violins. The options are::
-
-            'area'   # all violins have the same area, before
-                     # trimming the tails.
-
-            'count'  # areas are scaled proportionally to the number
-                     # of observations.
-
-            'width'  # all violins have the same maximum width.
+        `nrd0` is a port of `stats::bw.nrd0` in R; it is eqiuvalent
+        to `silverman` when there is more than 1 value in a group.
+    scale : Literal["area", "count", "width"], default="area"
+        How to scale the violins. The options are:
+        If `area` all violins have the same area, before trimming the tails.
+        If `count` the areas are scaled proportionally to the number of
+        observations.
+        If `width` all violins have the same maximum width.
 
     See Also
     --------
@@ -77,15 +77,15 @@ class stat_ydensity(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-         'width'        # Maximum width of density, [0, 1] range.
-         'violinwidth'  # Shape of the violin
+    ```python
+    "width"        # Maximum width of density, [0, 1] range.
+    "violinwidth"  # Shape of the violin
+    ```
 
     Calculated aesthetics are accessed using the `after_stat` function.
-    e.g. :py:`after_stat('width')`.
+    e.g. `after_stat('width')`{.py}.
     """
     REQUIRED_AES = {"x", "y"}
     NON_MISSING_AES = {"weight"}
@@ -190,6 +190,6 @@ class stat_ydensity(stat):
 
         # Compute width if x has multiple values
         if len(np.unique(data["x"])) > 1:
-            dens["width"] = np.ptp(data["x"]) * 0.9  # type: ignore
+            dens["width"] = np.ptp(data["x"]) * 0.9
 
         return dens

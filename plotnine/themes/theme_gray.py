@@ -1,5 +1,5 @@
+from .._utils.registry import alias
 from ..options import get_option
-from ..utils import alias
 from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme
 
@@ -12,11 +12,11 @@ class theme_gray(theme):
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 11.
-    base_family : str, optional
-        Base font family.
+        the base font size.
+    base_family : str
+        Base font family. If `None`, use [](`plotnine.options.base_family`).
     """
 
     def __init__(self, base_size=11, base_family=None):
@@ -158,4 +158,5 @@ class theme_gray(theme):
         )
 
 
-alias("theme_grey", theme_gray)
+class theme_grey(theme_gray, alias):
+    pass

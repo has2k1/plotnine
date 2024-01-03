@@ -27,16 +27,13 @@ class coord_cartesian(coord):
 
     Parameters
     ----------
-    xlim : None | (float, float)
-        Limits for x axis. If None, then they are
-        automatically computed.
-    ylim : None | (float, float)
-        Limits for y axis. If None, then they are
-        automatically computed.
-    expand : bool
-        If `True`, expand the coordinate axes by
-        some factor. If `False`, use the limits
-        from the data.
+    xlim : tuple[float, float], default=None
+        Limits for x axis. If None, then they are automatically computed.
+    ylim : tuple[float, float], default=None
+        Limits for y axis. If None, then they are automatically computed.
+    expand : bool, default=True
+        If `True`, expand the coordinate axes by some factor. If `False`,
+        use the limits from the data.
     """
 
     is_linear = True

@@ -17,10 +17,9 @@ class stat_pointdensity(stat):
     Parameters
     ----------
     {common_parameters}
-    package : str in ``['statsmodels', 'scipy', 'sklearn']``
-        Package whose kernel density estimation to use. Default is
-        statsmodels.
-    kde_params : dict
+    package : Literal["statsmodels", "scipy", "sklearn"], default="statsmodels"
+        Package whose kernel density estimation to use.
+    kde_params : dict, default=None
         Keyword arguments to pass on to the kde class.
 
     See Also
@@ -33,11 +32,11 @@ class stat_pointdensity(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'density'   # Computed density at a point
+    ```python
+    "density"   # Computed density at a point
+    ```
 
     """
     REQUIRED_AES = {"x", "y"}
@@ -60,9 +59,9 @@ class stat_pointdensity(stat):
         if params["package"] == "statsmodels":
             params["package"] = "statsmodels-m"
             if "var_type" not in kde_params:
-                kde_params["var_type"] = "{}{}".format(
-                    get_var_type(data["x"]), get_var_type(data["y"])
-                )
+                x_type = get_var_type(data["x"])
+                y_type = get_var_type(data["y"])
+                kde_params["var_type"] = f"{x_type}{y_type}"
 
         return params
 

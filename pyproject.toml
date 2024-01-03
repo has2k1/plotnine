@@ -52,14 +52,15 @@ extra = [
 doc = [
     "jupyter",
     "nbsphinx",
+    "click",
     "numpydoc>=0.9.1",
-    "sphinx>=6.1.0",
+    "quartodoc>=0.7.2",
+    "pyyaml",
     # Use importlib.resources when min supported python >= 3.9.0
     "importlib_resources",
 ]
 
 lint = [
-    "black>=23.1.0",
     "ruff",
 ]
 
@@ -78,7 +79,7 @@ dev = [
 ]
 
 typing = [
-    "pyright==1.1.320",
+    "pyright==1.1.340",
     "ipython",
     "pandas-stubs",
 ]
@@ -178,7 +179,6 @@ defineConstant = { DEBUG = true }
 # typeCheckingMode = "strict"
 useLibraryCodeForTypes = true
 reportUnnecessaryTypeIgnoreComment = true
-# reportUnsupportedDunderAll = false
 
 
 # Specifies a list of execution environments (see below). Execution
@@ -192,18 +192,36 @@ stubPath = ""
 ########## Tool - Ruff ##########
 [tool.ruff]
 line-length = 79
-select = ["E", "F", "C", "TCH", "Q", "PIE", "PTH", "PD"]
+select = [
+   "E",
+   "F",
+   "I",
+   "TCH",
+   "Q",
+   "PIE",
+   "PTH",
+   "PD",
+   "PYI",
+   "RSE",
+   "SIM",
+   "TRY200",
+   "FLY",
+   "NPY",
+   "PERF102"
+]
 ignore = [
     "E741",  # Ambiguous l
     "E743",  # Ambiguous I
-    "C901",  # Too complex
     # .reset_index, .rename, .replace
     # This will remain the correct choice until we enable copy-on-write
-    "PD002"
+    "PD002",
+    # Use specific rule codes when ignoring type issues and
+    # not # type: ignore
+    "PGH003"
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "I", "TCH", "PIE"]
+fixable = ["ALL"]
 unfixable = []
 
 # Exclude a variety of commonly ignored directories.
@@ -220,13 +238,6 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 [tool.ruff.per-file-ignores]
 "plotnine/__init__.py" = ["F403", "F405"]
 "plotnine/typing.py" = ["F401"]
-
-
-########## Tool - Black ##########
-[tool.black]
-line-length = 79
-extend-exclude = '''
-(
- seaborn_rcmod\.py
-)
-'''
+"doc/_renderers/numpydoc.py" = ["F811"]
+"doc/_renderers/format.py" = ["F811"]
+"doc/_renderer.py" = ["F811"]

@@ -5,9 +5,9 @@ import typing
 import numpy as np
 import pandas as pd
 
+from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineError
-from ..utils import SIZE_FACTOR, to_rgba
 from .geom import geom
 from .geom_point import geom_point
 from .geom_polygon import geom_polygon
@@ -46,7 +46,7 @@ class geom_map(geom):
     Notes
     -----
     This geom is best suited for plotting a shapefile read into
-    geopandas dataframe. The dataframe should have a ``geometry``
+    geopandas dataframe. The dataframe should have a `geometry`
     column.
     """
 
@@ -306,7 +306,6 @@ def PolygonPatch(
 def check_geopandas():
     try:
         import geopandas  # noqa: F401
-    except ImportError:
-        raise PlotnineError(
-            "geom_map requires geopandas. Please install geopandas."
-        )
+    except ImportError as e:
+        msg = "geom_map requires geopandas. Please install geopandas."
+        raise PlotnineError(msg) from e

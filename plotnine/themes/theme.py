@@ -11,6 +11,8 @@ from .themeable import Themeables, themeable
 if typing.TYPE_CHECKING:
     from typing import Any, Type
 
+    from typing_extensions import Self
+
     from plotnine.typing import Axes, Figure, Ggplot
 
 # All complete themes are initiated with these rcparams. They
@@ -49,34 +51,37 @@ class theme:
     complete : bool
         Themes that are complete will override any existing themes.
         themes that are not complete (ie. partial) will add to or
-        override specific elements of the current theme. e.g::
+        override specific elements of the current theme. e.g:
 
-            theme_gray() + theme_xkcd()
+        ```python
+        theme_gray() + theme_xkcd()
+        ```
 
-        will be completely determined by :class:`theme_xkcd`, but::
+        will be completely determined by [](`~plotnine.themes.theme_xkcd`),
+        but:
 
-            theme_gray() + theme(axis_text_x=element_text(angle=45))
+        ```python
+        theme_gray() + theme(axis_text_x=element_text(angle=45))
+        ```
 
         will only modify the x-axis text.
-
     kwargs: dict
         kwargs are :ref:`themeables <themeables>`. The themeables are
         elements that are subclasses of `themeable`. Many themeables
         are defined using theme elements i.e
 
-            - :class:`element_line`
-            - :class:`element_rect`
-            - :class:`element_text`
+        - [](`~plotnine.themes.element_line`)
+        - [](`~plotnine.themes.element_rect`)
+        - [](`~plotnine.themes.element_text`)
 
         These simply bind together all the aspects of a themeable
-        that can be themed. See
-        :class:`~plotnine.themes.themeable.themeable`.
+        that can be themed. See [](`~plotnine.themes.themeable.themeable`).
 
     Notes
     -----
     When subclassing, make sure to call :python:`theme.__init__`.
     After which you can customise :python:`self._rcParams` within
-    the ``__init__`` method of the new theme. The ``rcParams``
+    the `__init__` method of the new theme. The `rcParams`
     should not be modified after that.
     """
 
@@ -224,18 +229,17 @@ class theme:
         for name, element in kwargs.items():
             self.themeables[name] = new(name, element)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Test if themes are equal
 
         Mostly for testing purposes
         """
-        # criteria for equality are
-        # - Equal themeables
-        # - Equal rcParams
-        c1 = self.themeables == other.themeables
-        c2 = self.rcParams == other.rcParams
-        return c1 and c2
+        return other is self or (
+            isinstance(other, type(self))
+            and other.themeables == self.themeables
+            and other.rcParams == self.rcParams
+        )
 
     def apply(self):
         """
@@ -341,12 +345,14 @@ class theme:
         """
         Add theme to ggplot object or to another theme
 
-        This will be called in one of two ways::
+        This will be called in one of two ways:
 
-             ggplot() + theme()
-             theme1() + theme2()
+        ```python
+        ggplot() + theme()
+        theme1() + theme2()
+        ```
 
-        In both cases, `self` is the :class:`theme`
+        In both cases, `self` is the [](`~plotnine.themes.theme`)
         on the right hand side.
 
         Subclasses should not override this method.
@@ -371,11 +377,12 @@ class theme:
                 # e.g. other + theme(...)
                 return other.add_theme(self)
 
-    def __iadd__(self, other: theme) -> theme:
+    def __iadd__(self, other: theme) -> Self:
         """
         Add theme to theme
         """
-        return self.add_theme(other)
+        self.add_theme(other)
+        return self
 
     def __deepcopy__(self, memo: dict) -> theme:
         """
@@ -390,10 +397,10 @@ class theme:
         shallow = {"figure", "_targets"}
         for key, item in old.items():
             if key in shallow:
-                new[key] = old[key]
+                new[key] = item
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 
@@ -402,9 +409,9 @@ def theme_get() -> theme:
     """
     Return the default theme
 
-    The default theme is the one set (using :func:`theme_set`) by
-    the user. If none has been set, then :class:`theme_gray` is
-    the default.
+    The default theme is the one set (using [](`~plotnine.themes.theme_set`))
+    by the user. If none has been set, then [](`~plotnine.themes.theme_gray`)
+    is the default.
     """
     from .theme_gray import theme_gray
 

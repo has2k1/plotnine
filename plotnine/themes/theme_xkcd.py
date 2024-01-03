@@ -11,24 +11,19 @@ class theme_xkcd(theme_gray):
 
     Parameters
     ----------
-    base_size : int, optional
+    base_size : int
         Base font size. All text sizes are a scaled versions of
-        the base font size. Default is 12.
-    scale : float, optional
-        The amplitude of the wiggle perpendicular to the line
-        (in pixels). Default is 1.
-    length : float, optional
+        the base font size.
+    scale : float
+        The amplitude of the wiggle perpendicular to the line (in pixels)
+    length : float
         The length of the wiggle along the line (in pixels).
-        Default is 100.
-    randomness : float, optional
-        The factor by which the length is randomly scaled.
-        Default is 2.
-    stroke_size : float, optional
+    randomness : float
+        The factor by which the length is randomly scaled. Default is 2.
+    stroke_size : float
         Size of the stroke to apply to the lines and text paths.
-        Default is 4.
-    stroke_color : str or tuple, optional
-        Color of the strokes. Default is ``white``.
-        For no color, use ``'none'``.
+    stroke_color : str | tuple
+        Color of the strokes. Use `"none"` for no color.
     """
 
     def __init__(
@@ -85,7 +80,7 @@ class theme_xkcd(theme_gray):
         for key, item in old.items():
             if key == "_rcParams":
                 continue
-            new[key] = deepcopy(old[key], memo)
+            new[key] = deepcopy(item, memo)
 
         result._rcParams = {}
         for k, v in self._rcParams.items():

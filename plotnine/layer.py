@@ -6,10 +6,10 @@ from typing import Iterable, List, overload
 
 import pandas as pd
 
+from ._utils import array_kind, check_required_aesthetics, ninteraction
 from .exceptions import PlotnineError
 from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes
 from .mapping.evaluation import evaluate, stage
-from .utils import array_kind, check_required_aesthetics, ninteraction
 
 if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, SupportsIndex
@@ -34,39 +34,38 @@ class layer:
     """
     Layer
 
-    When a ``geom`` or ``stat`` is added to a
-    :class:`~plotnine.ggplot` object, it creates a single layer.
-    This class is a representation of that layer.
+    When a `geom` or `stat` is added to a [](`~plotnine.ggplot`) object,
+    it creates a single layer. This class is a representation of that layer.
 
     Parameters
     ----------
-    geom : geom, optional
+    geom :
         geom to used to draw this layer.
-    stat : stat, optional
+    stat :
         stat used for the statistical transformation of
         data in this layer
-    mapping : aes, optional
+    mapping :
         Aesthetic mappings.
-    data : dataframe, optional
-        Data plotted in this layer. If ``None``, the data from
-        the :class:`~plotnine.ggplot` object will be used.
-    position : position, optional
+    data :
+        Data plotted in this layer. If `None`, the data from
+        the [](`~plotnine.ggplot`) object will be used.
+    position :
         Position object to adjust the geometries in this layer.
-    inherit_aes : bool, optional
-        If ``True`` inherit from the aesthetic mappings of
-        the :class:`~plotnine.ggplot` object. Default ``True``.
-    show_legend : bool or None, optional
+    inherit_aes :
+        If `True` inherit from the aesthetic mappings of
+        the [](`~plotnine.ggplot`) object.
+    show_legend :
         Whether to make up and show a legend for the mappings
-        of this layer. If ``None`` then an automatic/good choice
-        is made. Default is ``None``.
-    raster : bool, optional (default: False)
-        If ``True``, draw onto this layer a raster (bitmap) object
+        of this layer. If `None` then an automatic/good choice
+        is made
+    raster :
+        If `True`, draw onto this layer a raster (bitmap) object
         even if the final image format is vector.
 
     Notes
     -----
     There is no benefit to manually creating a layer. You should
-    always use a ``geom`` or ``stat``.
+    always use a `geom` or `stat`.
     """
 
     # Data for this layer
@@ -97,11 +96,11 @@ class layer:
     @staticmethod
     def from_geom(geom: Geom) -> Layer:
         """
-        Create a layer given a :class:`geom`
+        Create a layer given a [](`~plotnine.geoms.geom`)
 
         Parameters
         ----------
-        geom : geom
+        geom :
             `geom` from which a layer will be created
 
         Returns
@@ -132,9 +131,9 @@ class layer:
         """
         try:
             gg.layers.append(self)
-        except AttributeError:
-            msg = "Cannot add layer to object of type {!r}".format
-            raise PlotnineError(msg(type(gg)))
+        except AttributeError as e:
+            msg = f"Cannot add layer to object of type {type(gg)!r}"
+            raise PlotnineError(msg) from e
         return gg
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> layer:
@@ -149,9 +148,9 @@ class layer:
 
         for key, item in old.items():
             if key == "data":
-                new[key] = old[key]
+                new[key] = item
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 
@@ -171,7 +170,7 @@ class layer:
 
         Parameters
         ----------
-        plot_data : dataframe
+        plot_data :
             ggplot object data
         """
         if plot_data is None:
@@ -187,13 +186,14 @@ class layer:
         if self._data is None:
             try:
                 self.data = copy(data)
-            except AttributeError:
+            except AttributeError as e:
                 _geom_name = self.geom.__class__.__name__
                 _data_name = data.__class__.__name__
-                raise PlotnineError(
+                msg = (
                     f"{_geom_name} layer expects a dataframe, "
                     f"but it got {_data_name} instead."
                 )
+                raise PlotnineError(msg) from e
         elif callable(self._data):
             self.data = self._data(data)
             if not isinstance(self.data, pd.DataFrame):
@@ -217,7 +217,7 @@ class layer:
 
         Parameters
         ----------
-        plot_mapping : aes
+        plot_mapping :
             ggplot object mapping
         """
         if self.inherit_aes:
@@ -244,7 +244,7 @@ class layer:
 
         Parameters
         ----------
-        plot_environment : ~patsy.Eval.EvalEnvironment
+        plot_environment :
             Namespace in which to execute aesthetic expressions.
         """
         self.geom.environment = plot_environment
@@ -376,9 +376,9 @@ class layer:
 
         Parameters
         ----------
-        data : dataframe, optional
+        data :
             Data
-        aes_modifiers : dict
+        aes_modifiers :
             Expression to evaluate and replace aesthetics in
             the data.
         """

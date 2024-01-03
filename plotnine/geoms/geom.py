@@ -1,23 +1,23 @@
 from __future__ import annotations
 
 import typing
+from abc import ABC
 from copy import deepcopy
 from itertools import chain, repeat
 
+from .._utils import (
+    copy_keys,
+    data_mapping_as_kwargs,
+    is_list_like,
+    remove_missing,
+)
+from .._utils.registry import Register, Registry
 from ..exceptions import PlotnineError
 from ..layer import layer
 from ..mapping.aes import is_valid_aesthetic, rename_aesthetics
 from ..mapping.evaluation import evaluate
 from ..positions.position import position
 from ..stats.stat import stat
-from ..utils import (
-    Registry,
-    copy_keys,
-    data_mapping_as_kwargs,
-    is_list_like,
-    is_string,
-    remove_missing,
-)
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -38,28 +38,26 @@ if typing.TYPE_CHECKING:
     )
 
 
-class geom(metaclass=Registry):
+class geom(ABC, metaclass=Register):
     """Base class of all Geoms"""
 
-    __base__ = True
-
-    #: Default aesthetics for the geom
     DEFAULT_AES: dict[str, Any] = {}
+    """Default aesthetics for the geom"""
 
-    #: Required aesthetics for the geom
     REQUIRED_AES: set[str] = set()
+    """Required aesthetics for the geom"""
 
-    #: Required aesthetics for the geom
     NON_MISSING_AES: set[str] = set()
+    """Required aesthetics for the geom"""
 
-    #: Required parameters for the geom
     DEFAULT_PARAMS: dict[str, Any] = {}
+    """Required parameters for the geom"""
 
-    #: geom/layer specific dataframe
     data: DataLike
+    """Geom/layer specific dataframe"""
 
-    #: mappings i.e. :py:`aes(x='col1', fill='col2')`
     mapping: Aes
+    """Mappings i.e. `aes(x='col1', fill='col2')`{.py}"""
 
     aes_params: dict[str, Any] = {}  # setting of aesthetic
     params: dict[str, Any]  # parameter settings
@@ -106,12 +104,12 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        stat : stat
+        stat :
             `stat`
 
         Returns
         -------
-        out : geom
+        :
             A geom object
 
         Raises
@@ -126,7 +124,7 @@ class geom(metaclass=Registry):
 
         if isinstance(name, type) and issubclass(name, geom):
             klass = name
-        elif is_string(name):
+        elif isinstance(name, str):
             if not name.startswith("geom_"):
                 name = f"geom_{name}"
             klass = Registry[name]
@@ -167,10 +165,10 @@ class geom(metaclass=Registry):
         shallow = {"data", "_kwargs", "environment"}
         for key, item in old.items():
             if key in shallow:
-                new[key] = old[key]
+                new[key] = item
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(old[key], memo)
+                new[key] = deepcopy(item, memo)
 
         return result
 
@@ -183,26 +181,26 @@ class geom(metaclass=Registry):
         drawing. The base class method does nothing, geoms can override
         this method for two reasons:
 
-        1. The ``stat`` does not create all the aesthetics (usually
-           position aesthetics) required for drawing the ``geom``,
+        1. The `stat` does not create all the aesthetics (usually
+           position aesthetics) required for drawing the `geom`,
            but those aesthetics can be computed from the available
-           data. For example :class:`~plotnine.geoms.geom_boxplot`
-           and :class:`~plotnine.geoms.geom_violin`.
+           data. For example [](`~plotnine.geoms.geom_boxplot`)
+           and [](`~plotnine.geoms.geom_violin`).
 
-        2. The ``geom`` inherits from another ``geom`` (superclass) which
+        2. The `geom` inherits from another `geom` (superclass) which
            does the drawing and the superclass requires certain aesthetics
            to be present in the data. For example
-           :class:`~plotnine.geoms.geom_tile` and
-           :class:`~plotnine.geoms.geom_area`.
+           [](`~plotnine.geoms.geom_tile`) and
+           [](`~plotnine.geoms.geom_area`).
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data used for drawing the geom.
 
         Returns
         -------
-        out : dataframe
+        :
             Data used for drawing the geom.
         """
         return data
@@ -217,14 +215,14 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data used for drawing the geom.
-        aes_modifiers : dict
+        aes_modifiers :
             Aesthetics
 
         Returns
         -------
-        out : dataframe
+        :
             Data used for drawing the geom.
         """
         missing_aes = (
@@ -242,16 +240,13 @@ class geom(metaclass=Registry):
         for ae in evaled.columns.intersection(data.columns):
             data[ae] = evaled[ae]
 
-        if "PANEL" in data:
-            num_panels = len(data["PANEL"].unique())
-        else:
-            num_panels = 1
+        num_panels = len(data["PANEL"].unique()) if "PANEL" in data else 1
 
         # Aesthetics set as parameters to the geom/stat
         for ae, value in self.aes_params.items():
             try:
                 data[ae] = value
-            except ValueError:
+            except ValueError as e:
                 # sniff out the special cases, like custom
                 # tupled linetypes, shapes and colors
                 if is_valid_aesthetic(value, ae):
@@ -259,8 +254,11 @@ class geom(metaclass=Registry):
                 elif num_panels > 1 and is_list_like(value):
                     data[ae] = list(chain(*repeat(value, num_panels)))
                 else:
-                    msg = "'{}' does not look like a " "valid value for `{}`"
-                    raise PlotnineError(msg.format(value, ae))
+                    msg = (
+                        f"'{value}' does not look like a "
+                        f"valid value for `{ae}`"
+                    )
+                    raise PlotnineError(msg) from e
 
         return data
 
@@ -274,14 +272,14 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : DataFrame
+        data :
             DataFrame specific for this layer
-        layout : Layout
+        layout :
             Layout object created when the plot is getting
             built
-        coord : coord
+        coord :
             Type of coordinate axes
-        params : dict
+        params :
             Combined *geom* and *stat* parameters. Also
             includes the stacking order of the layer in
             the plot (*zorder*)
@@ -311,26 +309,26 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : panel_view
+        panel_params :
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Attributes are of interest
-            to the geom are::
+            to the geom are:
 
-                'panel_params.x.range'  # tuple
-                'panel_params.y.range'  # tuple
-
-        coord : coord
-            Coordinate (e.g. coord_cartesian) system of the
-            geom.
-        ax : axes
+            ```python
+            "panel_params.x.range"  # tuple
+            "panel_params.y.range"  # tuple
+            ```
+        coord :
+            Coordinate (e.g. coord_cartesian) system of the geom.
+        ax :
             Axes on which to plot.
-        params : dict
+        params :
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         for _, gdata in data.groupby("group"):
             gdata.reset_index(inplace=True, drop=True)
@@ -349,26 +347,26 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : panel_view
+        panel_params :
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
-            the geom are::
+            the geom are:
 
-                'x_range'  # tuple
-                'y_range'  # tuple
-
+            ```python
+            "x_range"  # tuple
+            "y_range"  # tuple
+            ```
         coord : coord
-            Coordinate (e.g. coord_cartesian) system of the
-            geom.
+            Coordinate (e.g. coord_cartesian) system of the geom.
         ax : axes
             Axes on which to plot.
         params : dict
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
@@ -393,35 +391,38 @@ class geom(metaclass=Registry):
         the lines with the same linestyle and plot them as one
         unit. In this case, draw_group calls this function to do
         the plotting. For an example see
-        :class:`~plotnine.geoms.geom_point`.
+        [](`~plotnine.geoms.geom_point`).
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data to be plotted by this geom. This is the
             dataframe created in the plot_build pipeline.
-        panel_params : panel_view
+        panel_params :
             The scale information as may be required by the
             axes. At this point, that information is about
             ranges, ticks and labels. Keys of interest to
-            the geom are::
+            the geom are:
 
-                'x_range'  # tuple
-                'y_range'  # tuple
+            ```python
+            "x_range"  # tuple
+            "y_range"  # tuple
+            ```
 
             In rare cases a geom may need access to the x or y scales.
-            Those are available at::
+            Those are available at:
 
-                'scales'   # SimpleNamespace
-
-        coord : coord
+            ```python
+            "scales"   # SimpleNamespace
+            ```
+        coord :
             Coordinate (e.g. coord_cartesian) system of the
             geom.
-        ax : axes
+        ax :
             Axes on which to plot.
-        params : dict
+        params :
             Combined parameters for the geom and stat. Also
-            includes the 'zorder'.
+            includes the `zorder`.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
@@ -432,12 +433,12 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        gg : ggplot
+        gg :
             ggplot object
 
         Returns
         -------
-        out : ggplot
+        :
             ggplot object with added layer.
         """
         gg += self.to_layer()  # Add layer
@@ -449,7 +450,7 @@ class geom(metaclass=Registry):
 
         Returns
         -------
-        out : layer
+        :
             Layer
         """
         return layer.from_geom(self)
@@ -486,16 +487,16 @@ class geom(metaclass=Registry):
 
         geoms that infer extra information from missing values
         should override this method. For example
-        :class:`~plotnine.geoms.geom_path`.
+        [](`~plotnine.geoms.geom_path`).
 
         Parameters
         ----------
-        data : dataframe
+        data :
             Data
 
         Returns
         -------
-        out : dataframe
+        :
             Data without the NaNs.
 
         Notes
@@ -520,16 +521,17 @@ class geom(metaclass=Registry):
 
         Parameters
         ----------
-        data : Series
-            Data Row
-        da : DrawingArea
-            Canvas
-        lyr : layer
-            Layer
+        data :
+            A of the data plotted to this layer
+        da :
+            Canvas on which to draw
+        lyr :
+            Layer that the geom belongs to.
 
         Returns
         -------
-        out : DrawingArea
+        :
+            The DrawingArea after a layer has been drawn onto it.
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)

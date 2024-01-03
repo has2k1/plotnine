@@ -3,15 +3,15 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
+from .._utils.registry import alias
 from ..doctools import document
 from ..exceptions import PlotnineWarning
-from ..utils import alias
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Literal
+    from typing import Literal, Optional, Sequence
 
     from mizani.typing import ColorScheme, ColorSchemeShort
 
@@ -25,22 +25,20 @@ class scale_color_hue(scale_discrete):
 
     Parameters
     ----------
-    h : float
+    h :
         first hue. Must be in the range [0, 1]
-        Default is ``0.01``
-    l : float
+    l :
         lightness. Must be in the range [0, 1]
-        Default is ``0.6``
-    s : float
+    s :
         saturation. Must be in the range [0, 1]
-        Default is ``0.65``
-    colorspace : str in ``['hls', 'husl']``
-        Color space to use.
-        `hls <https://en.wikipedia.org/wiki/HSL_and_HSV>`_
-        `husl <http://www.husl-colors.org/>`_
+    colorspace :
+        Color space to use. Should be one of
+        [hls](https://en.wikipedia.org/wiki/HSL_and_HSV)
+        or
+        [husl](http://www.husl-colors.org/).
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'#7F7F7F'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -48,15 +46,15 @@ class scale_color_hue(scale_discrete):
 
     def __init__(
         self,
-        h=0.01,
-        l=0.6,
-        s=0.65,
+        h: float = 0.01,
+        l: float = 0.6,
+        s: float = 0.65,
         color_space: Literal["hls", "husl"] = "hls",
         **kwargs,
     ):
         from mizani.palettes import hue_pal
 
-        self.palette = hue_pal(h, l, s, color_space=color_space)
+        self._palette = hue_pal(h, l, s, color_space=color_space)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -82,20 +80,19 @@ class scale_color_brewer(scale_discrete):
 
     Parameters
     ----------
-    type : str in ``['seq', 'div', 'qual']``
+    type :
         Type of data. Sequential, diverging or qualitative
-    palette : int | str
+    palette : int | str, default=1
          If a string, will use that named palette.
          If a number, will index into the list of palettes
-         of appropriate type. Default is 1
-    direction: int in ``[-1, 1]``
-         Sets the order of colors in the scale. If 1,
-         the default, colors are as output by
-         mizani.palettes.brewer_pal(). If -1,
+         of appropriate type.
+    direction: 1 | -1, default=1
+         Sets the order of colors in the scale. If 1, colors are
+         as output by [](`~mizani.palettes.brewer_pal`). If -1,
          the order of colors is reversed.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -104,13 +101,13 @@ class scale_color_brewer(scale_discrete):
     def __init__(
         self,
         type: ColorScheme | ColorSchemeShort = "seq",
-        palette=1,
+        palette: int | str = 1,
         direction: Literal[1, -1] = 1,
         **kwargs,
     ):
         from mizani.palettes import brewer_pal
 
-        self.palette = brewer_pal(type, palette, direction=direction)
+        self._palette = brewer_pal(type, palette, direction=direction)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -134,12 +131,10 @@ class scale_color_grey(scale_discrete):
 
     Parameters
     ----------
-    start : float
+    start : float, default=0.2
         grey value at low end of palette.
-        Default is 0.2
-    end : float
+    end : float, default=0.8
         grey value at high end of palette
-        Default is 0.8
     {superclass_parameters}
     """
 
@@ -148,7 +143,7 @@ class scale_color_grey(scale_discrete):
     def __init__(self, start=0.2, end=0.8, **kwargs):
         from mizani.palettes import grey_pal
 
-        self.palette = grey_pal(start, end)
+        self._palette = grey_pal(start, end)
         scale_discrete.__init__(self, **kwargs)
 
 
@@ -180,13 +175,13 @@ class scale_color_gradient(scale_continuous):
     high : str
         high color
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
 
     See Also
     --------
-    :class:`.scale_color_gradient2`
-    :class:`.scale_color_gradientn`
+    plotnine.scales.scale_color_gradient2
+    plotnine.scales.scale_color_gradientn
     """
 
     _aesthetics = ["color"]
@@ -199,8 +194,7 @@ class scale_color_gradient(scale_continuous):
         """
         from mizani.palettes import gradient_n_pal
 
-        # TODO: fix types in mizani
-        self.palette = gradient_n_pal([low, high])  # pyright: ignore
+        self._palette = gradient_n_pal([low, high])
         scale_continuous.__init__(self, **kwargs)
 
 
@@ -224,17 +218,17 @@ class scale_color_desaturate(scale_continuous):
 
     Parameters
     ----------
-    color : str, optional (Default: 'red')
+    color : str, default="red"
         Color to desaturate
-    prop : float, optional (Default: 0)
+    prop : float, default=0
         Saturation channel of color will be multiplied by
         this value.
-    reverse : bool, optional (Default: False)
+    reverse : bool, default=False
         Whether to go from color to desaturated color
         or desaturated color to color.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -269,22 +263,22 @@ class scale_color_gradient2(scale_continuous):
 
     Parameters
     ----------
-    low : str, optional
+    low : str
         low color
-    mid : str, optional
+    mid : str
         mid point color
-    high : str, optional
+    high : str
         high color
-    midpoint : float, optional (Default: 0)
+    midpoint : float, default=0
         Mid point of the input data range.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values
 
     See Also
     --------
-    :class:`.scale_color_gradient`
-    :class:`.scale_color_gradientn`
+    plotnine.scales.scale_color_gradient
+    plotnine.scales.scale_color_gradientn
     """
 
     _aesthetics = ["color"]
@@ -334,18 +328,18 @@ class scale_color_gradientn(scale_continuous):
     ----------
     colors : list
         list of colors
-    values : list, optional
+    values : list, default=None
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values
 
     See Also
     --------
-    :class:`.scale_color_gradient`
-    :class:`.scale_color_gradientn`
+    plotnine.scales.scale_color_gradient
+    plotnine.scales.scale_color_gradientn
     """
 
     _aesthetics = ["color"]
@@ -378,30 +372,31 @@ class scale_color_distiller(scale_color_gradientn):
     """
     Sequential and diverging continuous color scales
 
-    This is a convinience scale around :class:`.scale_color_gradientn`
-    with colors from `colorbrewer.org <http://colorbrewer2.org/>`_.
-    It smoothly interpolates 7 colors from a brewer palette to create
-    a continuous palette.
+    This is a convinience scale around
+    [](`~plotnine.scales.scale_color_gradientn`) with colors from
+    [colorbrewer.org](http://colorbrewer2.org). It smoothly
+    interpolates 7 colors from a brewer palette to create a
+    continuous palette.
 
     Parameters
     ----------
-    type : str in ``['seq', 'div']``
+    type :
         Type of data. Sequential, diverging or qualitative
-    palette : int | str
+    palette :
          If a string, will use that named palette.
          If a number, will index into the list of palettes
          of appropriate type. Default is 1
-    values : list, optional
+    values :
         list of points in the range [0, 1] at which to
         place each color. Must be the same size as
         `colors`. Default to evenly space the colors
-    direction: int in ``[-1, 1]``
+    direction :
         Sets the order of colors in the scale. If 1
-        colors are as output by mizani.palettes.brewer_pal().
-        If -1, the default, the order of colors is reversed.
+        colors are as output by [](`~mizani.palettes.brewer_pal`).
+        If -1, the order of colors is reversed.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
     """
 
     _aesthetics = ["color"]
@@ -411,8 +406,8 @@ class scale_color_distiller(scale_color_gradientn):
     def __init__(
         self,
         type: ColorScheme | ColorSchemeShort = "seq",
-        palette=1,
-        values=None,
+        palette: int | str = 1,
+        values: Optional[Sequence[float]] = None,
         direction: Literal[1, -1] = -1,
         **kwargs,
     ):
@@ -456,18 +451,14 @@ class scale_color_cmap(scale_continuous):
 
     Parameters
     ----------
-    cmap_name : str
+    cmap_name :
         A standard Matplotlib colormap name. The default is
         `viridis`. For the list of names checkout the output
-        of ``matplotlib.cm.cmap_d.keys()`` or see the
+        of `matplotlib.cm.cmap_d.keys()` or see the
         `documentation <http://matplotlib.org/users/colormaps.html>`_.
-    lut : None | int
-        This is the number of entries desired in the
-        lookup table. Default is `None`, leave it up
-        Matplotlib.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
 
     See Also
     --------
@@ -479,7 +470,7 @@ class scale_color_cmap(scale_continuous):
     guide = "colorbar"
     na_value = "#7F7F7F"
 
-    def __init__(self, cmap_name="viridis", **kwargs):
+    def __init__(self, cmap_name: str = "viridis", **kwargs):
         from mizani.palettes import cmap_pal
 
         # TODO: fix types in mizani
@@ -507,19 +498,15 @@ class scale_color_cmap_d(scale_discrete):
 
     Parameters
     ----------
-    cmap_name : str
+    cmap_name :
         A standard Matplotlib colormap name. It must be of type
         :class:`matplotlib.colors.ListedColormap`.
         . The default is `viridis`. For the list of names checkout
-        the output of ``matplotlib.cm.cmap_d.keys()`` or see the
+        the output of `matplotlib.cm.cmap_d.keys()` or see the
         `documentation <http://matplotlib.org/users/colormaps.html>`_.
-    lut : None | int
-        This is the number of entries desired in the
-        lookup table. Default is `None`, leave it up
-        Matplotlib.
     {superclass_parameters}
-    na_value : str
-        Color of missing values. Default is ``'None'``
+    na_value : str, default="#7F7F7F"
+        Color of missing values.
 
     See Also
     --------
@@ -530,10 +517,10 @@ class scale_color_cmap_d(scale_discrete):
     _aesthetics = ["color"]
     na_value = "#7F7F7F"
 
-    def __init__(self, cmap_name="viridis", **kwargs):
+    def __init__(self, cmap_name: str = "viridis", **kwargs):
         from mizani.palettes import cmap_d_pal
 
-        self.palette = cmap_d_pal(cmap_name)
+        self._palette = cmap_d_pal(cmap_name)
         super().__init__(**kwargs)
 
 
@@ -573,28 +560,94 @@ class scale_fill_datetime(scale_datetime, scale_fill_cmap):
 
 
 # Default scales
-alias("scale_color_discrete", scale_color_hue)
-alias("scale_color_continuous", scale_color_cmap)
-alias("scale_color_ordinal", scale_color_cmap_d)
-alias("scale_fill_discrete", scale_fill_hue)
-alias("scale_fill_continuous", scale_fill_cmap)
-alias("scale_fill_ordinal", scale_fill_cmap_d)
+class scale_color_discrete(scale_color_hue, alias):
+    pass
+
+
+class scale_color_continuous(scale_color_cmap, alias):
+    pass
+
+
+class scale_color_ordinal(scale_color_cmap_d, alias):
+    pass
+
+
+class scale_fill_discrete(scale_fill_hue, alias):
+    pass
+
+
+class scale_fill_continuous(scale_fill_cmap, alias):
+    pass
+
+
+class scale_fill_ordinal(scale_fill_cmap_d, alias):
+    pass
+
 
 # American to British spelling
-alias("scale_colour_hue", scale_color_hue)
-alias("scale_color_gray", scale_color_grey)
-alias("scale_colour_grey", scale_color_grey)
-alias("scale_colour_gray", scale_color_grey)
-alias("scale_fill_gray", scale_fill_grey)
-alias("scale_colour_brewer", scale_color_brewer)
-alias("scale_colour_desaturate", scale_color_desaturate)
-alias("scale_colour_gradient", scale_color_gradient)
-alias("scale_colour_gradient2", scale_color_gradient2)
-alias("scale_colour_gradientn", scale_color_gradientn)
-alias("scale_colour_discrete", scale_color_hue)
-alias("scale_colour_continuous", scale_color_cmap)
-alias("scale_colour_distiller", scale_color_distiller)
-alias("scale_colour_cmap", scale_color_cmap)
-alias("scale_colour_cmap_d", scale_color_cmap_d)
-alias("scale_colour_datetime", scale_color_datetime)
-alias("scale_colour_ordinal", scale_color_cmap_d)
+class scale_colour_hue(scale_color_hue, alias):
+    pass
+
+
+class scale_color_gray(scale_color_grey, alias):
+    pass
+
+
+class scale_colour_grey(scale_color_grey, alias):
+    pass
+
+
+class scale_colour_gray(scale_color_grey, alias):
+    pass
+
+
+class scale_fill_gray(scale_fill_grey, alias):
+    pass
+
+
+class scale_colour_brewer(scale_color_brewer, alias):
+    pass
+
+
+class scale_colour_desaturate(scale_color_desaturate, alias):
+    pass
+
+
+class scale_colour_gradient(scale_color_gradient, alias):
+    pass
+
+
+class scale_colour_gradient2(scale_color_gradient2, alias):
+    pass
+
+
+class scale_colour_gradientn(scale_color_gradientn, alias):
+    pass
+
+
+class scale_colour_discrete(scale_color_hue, alias):
+    pass
+
+
+class scale_colour_continuous(scale_color_cmap, alias):
+    pass
+
+
+class scale_colour_distiller(scale_color_distiller, alias):
+    pass
+
+
+class scale_colour_cmap(scale_color_cmap, alias):
+    pass
+
+
+class scale_colour_cmap_d(scale_color_cmap_d, alias):
+    pass
+
+
+class scale_colour_datetime(scale_color_datetime, alias):
+    pass
+
+
+class scale_colour_ordinal(scale_color_cmap_d, alias):
+    pass

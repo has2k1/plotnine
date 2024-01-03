@@ -16,26 +16,23 @@ class stat_density_2d(stat):
     Parameters
     ----------
     {common_parameters}
-    contour : bool
+    contour : bool, default=True
         Whether to create contours of the 2d density estimate.
-        Default is True.
-    n : int, optional(default: 64)
+    n : int, default=64
         Number of equally spaced points at which the density is to
         be estimated. For efficient computation, it should be a power
         of two.
-    levels : int or array_like
+    levels : int | array_like, default=5
         Contour levels. If an integer, it specifies the maximum number
-        of levels, if array_like it is the levels themselves. Default
-        is 5.
-    package : str in ``['statsmodels', 'scipy', 'sklearn']``
-        Package whose kernel density estimation to use. Default is
-        statsmodels.
+        of levels, if array_like it is the levels themselves.
+    package : Literal["statsmodels", "scipy", "sklearn"], default="statsmodels"
+        Package whose kernel density estimation to use.
     kde_params : dict
         Keyword arguments to pass on to the kde class.
 
     See Also
     --------
-    statsmodels.nonparametric.kde.KDEMultivariate
+    statsmodels.nonparametric.kernel_density.KDEMultivariate
     scipy.stats.gaussian_kde
     sklearn.neighbors.KernelDensity
     """
@@ -43,13 +40,13 @@ class stat_density_2d(stat):
     _aesthetics_doc = """
     {aesthetics_table}
 
-    .. rubric:: Options for computed aesthetics
+    **Options for computed aesthetics**
 
-    ::
-
-        'level'     # density level of a contour
-        'density'   # Computed density at a point
-        'piece'     # Numeric id of a contour in a given group
+    ```python
+    "level"     # density level of a contour
+    "density"   # Computed density at a point
+    "piece"     # Numeric id of a contour in a given group
+    ```
 
     `level` is only relevant when contours are computed. `density`
     is available only when no contours are computed. `piece` is
@@ -77,9 +74,9 @@ class stat_density_2d(stat):
         if params["package"] == "statsmodels":
             params["package"] = "statsmodels-m"
             if "var_type" not in kde_params:
-                kde_params["var_type"] = "{}{}".format(
-                    get_var_type(data["x"]), get_var_type(data["y"])
-                )
+                x_type = get_var_type(data["x"])
+                y_type = get_var_type(data["y"])
+                kde_params["var_type"] = f"{x_type}{y_type}"
 
         return params
 
@@ -155,7 +152,7 @@ def contour_lines(X, Y, Z, levels):
     level_values = []
     start_pid = 1
     for level in levels:
-        vertices, _ = cgen.create_contour(level)
+        vertices, *_ = cgen.create_contour(level)
         for pid, piece in enumerate(vertices, start=start_pid):
             n = len(piece)  # pyright: ignore
             segments.append(piece)

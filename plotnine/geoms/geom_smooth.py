@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import typing
 
+from .._utils import to_rgba
 from ..doctools import document
-from ..utils import to_rgba
 from .geom import geom
 from .geom_line import geom_line, geom_path
 from .geom_ribbon import geom_ribbon
@@ -27,7 +27,7 @@ class geom_smooth(geom):
     Parameters
     ----------
     {common_parameters}
-    legend_fill_ratio : float (default: 0.5)
+    legend_fill_ratio : float, default=0.5
         How much (vertically) of the legend box should be filled by
         the color that indicates the confidence intervals. Should be
         in the range [0, 1].

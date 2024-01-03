@@ -7,7 +7,7 @@ class geom_count(geom_point):
     """
     Plot overlapping points
 
-    This is a variant :class:`geom_point` that counts the number
+    This is a variant [](`~plotnine.geoms.geom_point`) that counts the number
     of observations at each location, then maps the count to point
     area. It useful when you have discrete data and overplotting.
 

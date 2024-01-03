@@ -14,7 +14,7 @@ from ..scales.scale_continuous import scale_continuous
 from .guide import guide
 
 if typing.TYPE_CHECKING:
-    from plotnine.typing import ScaleContinuous
+    from plotnine.scales.scale import scale
 
 
 class guide_colorbar(guide):
@@ -23,23 +23,26 @@ class guide_colorbar(guide):
 
     Parameters
     ----------
-    barwidth : float
-        Width (in pixels) of the colorbar.
-    barheight : float
-        Height (in pixels) of the colorbar. The height is multiplied by
-        a factor of 5.
-    nbin : int
+    barwidth : float, default=None
+        Width (in pixels) of the colorbar. If `None`, the
+        [](`~plotnine.themes.themeable.legend_key_width`) is
+        used. The value is multiplied by `1.45`.
+    barheight : float, default=None
+        Height (in pixels) of the colorbar.
+        [](`~plotnine.themes.themeable.legend_key_height`) is
+        used. The value is multiplied by `5 * 1.45`.
+    nbin : int, default=20
         Number of bins for drawing a colorbar. A larger value yields
-        a smoother colorbar. Default is 20.
-    raster : bool
+        a smoother colorbar
+    raster : bool, default=False
         Whether to render the colorbar as a raster object.
-    ticks : bool
+    ticks : bool, default=True
         Whether tick marks on colorbar should be visible.
-    draw_ulim : bool
+    draw_ulim : bool, default=True
         Whether to show the upper limit tick marks.
-    draw_llim : bool
+    draw_llim : bool, default=True
         Whether to show the lower limit tick marks.
-    direction : str in ``['horizontal', 'vertical']``
+    direction : Literal["horizontal", "vertical"], default="horizontal"
         Direction of the guide.
     kwargs : dict
         Parameters passed on to :class:`.guide`
@@ -60,17 +63,17 @@ class guide_colorbar(guide):
     # parameter
     available_aes = {"colour", "color", "fill"}
 
-    def train(self, scale: ScaleContinuous, aesthetic=None):
+    def train(self, scale: scale, aesthetic=None):
+        if not isinstance(scale, scale_continuous):
+            warn("colorbar guide needs continuous scales", PlotnineWarning)
+            return None
+
         if aesthetic is None:
             aesthetic = scale.aesthetics[0]
 
         # Do nothing if scales are inappropriate
         if set(scale.aesthetics) & self.available_aes == 0:
             warn("colorbar guide needs appropriate scales.", PlotnineWarning)
-            return None
-
-        if not isinstance(scale, scale_continuous):
-            warn("colorbar guide needs continuous scales", PlotnineWarning)
             return None
 
         # value = breaks (numeric) is used for determining the

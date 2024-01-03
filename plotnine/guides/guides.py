@@ -7,8 +7,8 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
+from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..utils import Registry, is_string
 from .guide import guide as guide_class
 
 if typing.TYPE_CHECKING:
@@ -40,14 +40,18 @@ class guides(dict):
     ----------
     kwargs : dict
         aesthetic - guide pairings. e.g
-        ``color=guide_colorbar()``
+        ```python
+        guides(color=guide_colorbar())
+        ```
     """
 
     # Determined from the theme when the guides are
     # getting built
     position: Literal["left", "right", "top", "bottom"] | TupleFloat2
     box_direction: Literal["horizontal", "vertical", "auto"]
-    box_align: Literal["left", "right", "top", "bottom", "center", "auto"]
+    box_align: Literal[
+        "left", "right", "top", "bottom", "center", "baseline", "auto"
+    ]
     box_margin: int
     spacing: float
 
@@ -215,7 +219,7 @@ class guides(dict):
         """
         Validate guide object
         """
-        if is_string(guide):
+        if isinstance(guide, str):
             guide = Registry[f"guide_{guide}"]()
 
         if not isinstance(guide, guide_class):
@@ -226,15 +230,18 @@ class guides(dict):
         """
         Merge overlapped guides
 
-        For example::
+        For example:
 
-            from plotnine import *
-            gg = ggplot(mtcars, aes(y='wt', x='mpg', colour='factor(cyl)'))
-            gg = gg + stat_smooth(aes(fill='factor(cyl)'), method='lm')
-            gg = gg + geom_point()
-            gg
+        ```python
+         from plotnine import *
+         p = (
+            ggplot(mtcars, aes(y="wt", x="mpg", colour="factor(cyl)"))
+            + stat_smooth(aes(fill="factor(cyl)"), method="lm")
+            + geom_point()
+         )
+        ```
 
-        This would create two guides with the same hash
+        would create two guides with the same hash
         """
         # group guide definitions by hash, and
         # reduce each group to a single guide
@@ -331,7 +338,7 @@ class guides(dict):
 
         box = packer(
             children=gboxes,
-            align=self.box_align,
+            align=self.box_align,  # type: ignore
             pad=self.box_margin,
             sep=self.spacing,
         )

@@ -48,12 +48,12 @@ class coord:
 
         Parameters
         ----------
-        data : list[DataFrames]
+        data :
             Data for alls Layer
 
         Returns
         -------
-        out : list[DataFrame]
+        :
             Modified layer data
         """
         return data
@@ -67,7 +67,7 @@ class coord:
 
         Parameters
         ----------
-        data : list of dataframes
+        data :
             Data for each layer before it is manipulated in
             any way.
         """
@@ -79,12 +79,12 @@ class coord:
 
         Parameters
         ----------
-        layout : dataframe
+        layout :
             Dataframe in which data is assigned to panels and scales
 
         Returns
         -------
-        out : dataframe
+        :
             layout dataframe altered to according to the requirements
             of the coordinate system.
 
@@ -99,7 +99,7 @@ class coord:
         Return desired aspect ratio for the plot
 
         If not overridden by the subclass, this method
-        returns ``None``, which means that the coordinate
+        returns `None`, which means that the coordinate
         system does not influence the aspect ratio.
         """
         return None
@@ -110,12 +110,12 @@ class coord:
 
         Parameters
         ----------
-        cur_labels : labels_view
+        cur_labels :
             Current labels. The coord can modify them as necessary.
 
         Returns
         -------
-        out : dict
+        :
             Modified labels. Same object as the input.
         """
         return cur_labels
@@ -237,7 +237,7 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     idx = np.hstack(
         [
             np.repeat(data.index[:-1], extra),
-            len(data) - 1
+            len(data) - 1,
             # data.index[-1] # TODO: Maybe not
         ]
     )

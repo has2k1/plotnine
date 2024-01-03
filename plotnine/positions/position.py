@@ -1,19 +1,16 @@
 from __future__ import annotations
 
 import typing
+from abc import ABC
 from copy import copy
 from warnings import warn
 
 import numpy as np
 
+from .._utils import check_required_aesthetics, groupby_apply
+from .._utils.registry import Register, Registry
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import X_AESTHETICS, Y_AESTHETICS
-from ..utils import (
-    Registry,
-    check_required_aesthetics,
-    groupby_apply,
-    is_string,
-)
 
 if typing.TYPE_CHECKING:
     from typing import Any, Optional
@@ -24,12 +21,13 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import Geom, Layout, TransformCol
 
 
-class position(metaclass=Registry):
+class position(ABC, metaclass=Register):
     """Base class for all positions"""
 
-    __base__ = True
-
     REQUIRED_AES: set[str] = set()
+    """
+    Aesthetics required for the positioning
+    """
     params: dict[str, Any]
 
     def __init__(self):
@@ -112,10 +110,10 @@ class position(metaclass=Registry):
         ----------
         data : dataframe
             Data to transform
-        trans_x : function
+        trans_x : callable
             Transforms x scale mappings
             Takes one argument, either a scalar or an array-type
-        trans_y : function
+        trans_y : callable
             Transforms y scale mappings
             Takes one argument, either a scalar or an array-type
         """
@@ -158,7 +156,7 @@ class position(metaclass=Registry):
 
         if isinstance(name, type) and issubclass(name, position):
             klass = name
-        elif is_string(name):
+        elif isinstance(name, str):
             if not name.startswith("position_"):
                 name = f"position_{name}"
             klass = Registry[name]

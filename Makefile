@@ -34,16 +34,13 @@ clean-test:
 ruff:
 	ruff . $(args)
 
-ruff-isort:
-	ruff --select I001 --quiet . $(args)
-
 format:
-	black . --check
+	ruff format . --check
 
 format-fix:
-	black .
+	ruff format .
 
-lint: ruff ruff-isort
+lint: ruff
 
 lint-fix:
 	make lint args="--fix"
@@ -69,9 +66,10 @@ coverage:
 	$(BROWSER) htmlcov/index.html
 
 doc:
-	$(MAKE) -C doc clean
-	$(MAKE) -C doc html
-	$(BROWSER) doc/_build/html/index.html
+	$(MAKE) -C doc doc
+
+doc-preview:
+	$(MAKE) -C doc preview
 
 release: clean
 	bash ./tools/release.sh

@@ -1,74 +1,77 @@
 from __future__ import annotations
 
 import typing
+from abc import ABC
 
+from .._utils.registry import Register
 from ..exceptions import PlotnineError
-from ..utils import Registry
 
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional
 
     import pandas as pd
 
-    from plotnine.typing import Scale, Theme
+    from plotnine.scales.scale import scale
+    from plotnine.typing import Theme
 
 
-class guide(metaclass=Registry):
+class guide(ABC, metaclass=Register):
     """
     Base class for all guides
 
     Parameters
     ----------
-    title : str | None
-        Title of the guide. If ``None``, title is not shown.
+    title : str, default=None
+        Title of the guide. If `None`, title is not shown.
         Default is the name of the aesthetic or the name
-        specified using :class:`~plotnine.components.labels.lab`
-    title_position : str in ``['top', 'bottom', 'left', 'right']``
-        Position of title
-    title_theme : element_text
+        specified using [](`~plotnine.components.labels.lab`)
+    title_position : str, default="auto"
+        Position of title. One of
+        `["top", "bottom", "left", "right"]`{.py}
+    title_theme : element_text, default=None
         Control over the title theme.
-        Default is to use ``legend_title`` in a theme.
-    title_hjust : float
+        Default is to use `legend_title` in a theme.
+    title_hjust : float, default=None
         Horizontal justification of title text.
-    title_vjust : float
+    title_vjust : float, default=None
         Vertical justification of title text.
-    title_separation : float
+    title_separation : float, default=None
         Separation between the title text and the colorbar.
         Value is in pixels.
-    label : bool
+    label : bool, default=True
         Whether to show labels
-    label_position : str in ``['top', 'bottom', 'left', 'right']``
+    label_position : str, default="auto"
         Position of the labels.
-        The defaults are ``'bottom'`` for a horizontal guide and
-        '``right``' for a vertical guide.
-    label_theme : element_text
+        One of `["top", "bottom", "left", "right"]`{.py}.
+        The default is "bottom" for a horizontal guide and
+        "right" for a vertical guide.
+    label_theme : element_text, default=None
         Control over the label theme.
-        Default is to use ``legend_text`` in a theme.
-    label_hjust : float
+        Default is to use `legend_text` in a theme.
+    label_hjust : float, default=None
         Horizontal justification of label text.
-    label_vjust : float
+    label_vjust : float, default=None
         Vertical justification of label text.
-    label_separation : float
+    label_separation : float, default=None
         Separation between the label text and the colorbar.
         Value is in pixels.
-    direction : str in ``['horizontal', 'vertical']``
-        Direction of the guide.
-    default_unit : str
-        Unit for ``keywidth`` and ``keyheight``
-    override_aes : dict
+    direction : Literal["horizontal", "vertical", "auto"], default="auto"
+        Direction of the guide. The default is depends on
+        [](`~plotnine.themes.themeable.legend_position`).
+    default_unit : str, default="lines"
+        Unit for `keywidth` and `keyheight`.
+    override_aes : dict, default={}
         Aesthetic parameters of legend key.
-    reverse : bool
+    reverse : bool, default=False
         Whether to reverse the order of the legends.
-    order : int
+    order : int, default=0
         Order of this guide among multiple guides.
-        Should be in the range [0, 99]. Default is ``0``.
+        Should be in the range [0, 99].
 
     Notes
     -----
     At the moment not all parameters have been fully implemented.
     """
-
-    __base__ = True
 
     # Must be updated before the draw method is called
     theme: Theme
@@ -90,7 +93,7 @@ class guide(metaclass=Registry):
 
     # general
     direction: Optional[Literal["horizontal", "vertical"]] = None
-    default_unit = "line"
+    default_unit = "lines"
     override_aes: dict[str, Any] = {}
     reverse = False
     order = 0
@@ -128,13 +131,14 @@ class guide(metaclass=Registry):
             self.label_position = "right"
 
         if self.label_position not in valid_locations:
-            msg = "label position '{}' is invalid"
-            raise PlotnineError(msg.format(self.label_position))
+            raise PlotnineError(
+                f"label position '{self.label_position}' is invalid"
+            )
 
         # label margin
         # legend_text_legend or legend_text_colorbar
         _legend_type = self.__class__.__name__.split("_")[-1]
-        name = "legend_text_{}".format(_legend_type)
+        name = f"legend_text_{_legend_type}"
         loc = margin_location_lookup[self.label_position[0]]
         margin = _property(name, "margin")
         self._label_margin = margin.get_as(loc, "pt")
@@ -153,8 +157,9 @@ class guide(metaclass=Registry):
             elif self.direction == "horizontal":
                 self.title_position = "left"
         if self.title_position not in valid_locations:
-            msg = "legend title position '{}' is invalid"
-            raise PlotnineError(msg.format(self.title_position))
+            raise PlotnineError(
+                f"legend title position '{self.title_position}' is invalid"
+            )
 
         # title alignment
         self._title_align = _property("legend_title_align")
@@ -165,7 +170,7 @@ class guide(metaclass=Registry):
                 self._title_align = "center"
 
         # by default, direction of each guide depends on
-        # the position all the guides
+        # the position of all the guides
         position = _property("legend_position")
         self.direction = _property("legend_direction")
         if self.direction == "auto":
@@ -216,7 +221,7 @@ class guide(metaclass=Registry):
         return matched
 
     def train(
-        self, scale: Scale, aesthetic: Optional[str] = None
+        self, scale: scale, aesthetic: Optional[str] = None
     ) -> guide | None:
         """
         Create the key for the guide

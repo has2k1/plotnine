@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import typing
 
+from .._utils import resolution
 from ..doctools import document
-from ..utils import resolution
 from .geom_rect import geom_rect
 
 if typing.TYPE_CHECKING:
@@ -20,8 +20,8 @@ class geom_bar(geom_rect):
     Parameters
     ----------
     {common_parameters}
-    width : float, optional (default None)
-        Bar width. If :py:`None`, the width is set to
+    width : float, default=None
+        Bar width. If `None`{.py}, the width is set to
         `90%` of the resolution of the data.
 
     See Also
