@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import cached_property
-from typing import Any, Literal, Optional, Sequence
+from typing import TYPE_CHECKING
 
 import yaml
-from griffe import dataclasses as dc
 from quartodoc.pandoc.blocks import (
     Block,
     BlockContent,
@@ -13,10 +11,12 @@ from quartodoc.pandoc.blocks import (
     Header,
     blockcontent_to_str,
 )
-from quartodoc.pandoc.components import Attr
-from quartodoc.pandoc.inlines import Code
 
-from ..typing import DocObjectKind  # noqa: TCH001
+if TYPE_CHECKING:
+    from typing import Any, Optional
+
+    from quartodoc.pandoc.components import Attr
+    from quartodoc.pandoc.inlines import Code
 
 
 @dataclass

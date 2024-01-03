@@ -3,31 +3,20 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from textwrap import dedent
-from typing import TypeGuard
+from typing import TYPE_CHECKING
 
 from _renderers.numpydoc import NumpyDocRenderer
-from _renderers.pandoc.blocks import RenderedDocObject
+from _renderers.render import RenderDoc, RenderDocClass, extend_base_class
 from _renderers.utils import InterLink, shortcode
-from griffe import dataclasses as dc
-from griffe import expressions as expr
-from plum import dispatch
-from quartodoc import layout
 from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Inlines, Span
 
+if TYPE_CHECKING:
+    from griffe import expressions as expr
+
 DOC_DIR = Path(__file__).parent
 EXAMPLES_DIR = DOC_DIR / "examples"
-
-DOC_SIGNATURE_TPL = """\
-::: {{.doc-signature}}
-{signature}
-:::\
-"""
-
-doc_signature_pattern = re.compile(
-    r"::: {.doc-signature}" r".+?" r":::\n", re.DOTALL
-)
 
 usage_pattern = re.compile(
     r"\n\n?\*\*Usage\*\*"
@@ -45,95 +34,84 @@ usage_pattern = re.compile(
 class Renderer(NumpyDocRenderer):
     style = "plotnine"
 
-    def render_plotnine_alias_class(self, el: dc.Class) -> str:
-        base: expr.ExprName = el.bases[0]  # type: ignore
-        res = Inlines(
-            [Span("alias of"), InterLink(base.name, base.canonical_path)]
-        )
-        return str(res)
 
-    @dispatch
-    def render(self, el: dc.Object | dc.Alias):  # type: ignore
-        """
-        Override method
+@extend_base_class
+class _RenderDoc(RenderDoc):
+    def render_body(self):
+        body = super().render_body()
+        if self.kind == "type":
+            return body
 
-        1. to embed examples notebook after the docstring
-        2. to customize text for plotnine aliases
-        """
-        if is_plotnine_alias_class(el):
-            docstring_qmd = self.render_plotnine_alias_class(el)
-        else:
-            docstring_qmd = super().render(el)  # type: ignore
-
-        notebook = EXAMPLES_DIR / f"{el.name}.ipynb"
+        notebook = EXAMPLES_DIR / f"{self.obj.name}.ipynb"
         if not notebook.exists():
-            return docstring_qmd
+            return body
 
         # path from the references directory where the qmd files
         # are placed
         relpath = Path("..") / notebook.relative_to(DOC_DIR)
         embed_notebook = shortcode("embed", f"{relpath}", echo="true")
-        header = Header(self.header_level + 1, "Examples")
-        return str(Blocks([docstring_qmd, header, embed_notebook]))
+        header = Header(self.level + 1, "Examples")
+        return str(Blocks([body, header, embed_notebook]))
 
-    @dispatch
-    def render(self, el: layout.DocClass | layout.DocModule):  # type: ignore
-        """
-        Render the docstring & make usage signature the main signature
 
-        The dynamically generated Usage signature is more complete and
-        this method grabs the "Usage signature" and makes it the
-        main signature.
-        """
-        rendered_obj: RenderedDocObject = super().render(el)  # type: ignore
-        body = str(rendered_obj.body)
-        m = usage_pattern.search(body)
-        if not m:
-            return rendered_obj
-
-        usage_signature = dedent(m.group("usage_signature"))
-        new_signature_block = str(
-            Div(
-                CodeBlock(usage_signature, Attr(classes=["py"])),
-                Attr(classes=["doc-signature"]),
-            )
+@extend_base_class
+class _RenderDocClass(RenderDocClass):
+    def _render_body_plotnine_alias(self):
+        base: expr.ExprName = self.obj.bases[0]  # type: ignore
+        return Inlines(
+            [Span("alias of"), InterLink(base.name, base.canonical_path)]
         )
 
-        body = usage_pattern.sub("", body)
-        body = doc_signature_pattern.sub(new_signature_block, body)
-        rendered_obj.body = body
-        return rendered_obj
+    def _is_plotnine_alias(self):
+        """
+        Detect plotnine alias objects
 
-    @dispatch
-    def summarize(self, obj: dc.Object | dc.Alias) -> str:
+        These are created with.
+
+            class scale_colour_blah(scale_color_blah, alias):
+                pass
+
+        scale_colour_blah is an alias of scale_color_blah
+        """
+        # Note that the alias:
+        # 1. does not have a docstring, therefore griffe does not assign
+        #    it a parser.
+        # 2. the name of its 2nd base class is "alias"
+        return (
+            self.obj.docstring
+            and self.obj.docstring.parser is None
+            and hasattr(self.obj, "bases")
+            and len(self.obj.bases) == 2
+            and self.obj.bases[1].name == "alias"  # type: ignore
+        )
+
+    def render_signature(self):
+        signature = super().render_signature()
+        docstring = self.obj.docstring.value if self.obj.docstring else ""
+        m = usage_pattern.search(docstring)
+        if not m:
+            return signature
+
+        usage_signature = dedent(m.group("usage_signature"))
+        return Div(
+            CodeBlock(usage_signature, Attr(classes=["py"])),
+            Attr(classes=["doc-signature"]),
+        )
+
+    def render_body(self):
+        if self._is_plotnine_alias():
+            body = self._render_body_plotnine_alias()
+        else:
+            body = str(super().render_body())
+            body = usage_pattern.sub("", body)
+        return Blocks([body])
+
+    def render_summary(self):
         """
         Override method to customize text for plotnine alias classes
         """
-        if is_plotnine_alias_class(obj):
-            return self.render_plotnine_alias_class(obj)
-        return super().summarize(obj)
-
-
-def is_plotnine_alias_class(el: dc.Object | dc.Alias) -> TypeGuard[dc.Class]:
-    """
-    Detect plotnine alias objects
-
-    These are created with.
-
-        class scale_colour_blah(scale_color_blah, alias):
-            pass
-
-    scale_colour_blah is an alias of scale_color_blah
-    """
-    # Note that the alias:
-    # 1. does not have a docstring, therefore griffe does not assign
-    #    it a parser.
-    # 2. the name of its 2nd base class is "alias"
-    return (
-        el.docstring
-        and el.docstring.parser is None
-        and hasattr(el, "bases")
-        and len(el.bases) == 2
-        and el.bases[1].name  # type: ignore
-        == "alias"  # type: ignore
-    )
+        summary = super().render_summary()
+        if self._is_plotnine_alias():
+            description = self._render_body_plotnine_alias()
+            summary[0] = (summary[0][0], str(description))
+        return summary

@@ -92,7 +92,7 @@ plotnine/_version.py
 
 
 # Documentation
-doc/plotnine_examples/
+doc/examples
 doc/reference/
 doc/_site/
 doc/_inv/
@@ -104,3 +104,4 @@ doc/objects.txt
 doc/.luarc.json
 doc/_environment
 doc/_variables.yml
+doc/site_libs
