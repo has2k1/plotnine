@@ -172,8 +172,7 @@ class geom_ribbon(geom):
         if outline_type == "full":
             return
 
-        x = "x"
-        y = "y"
+        x, y = "x", "y"
         if isinstance(coord, coord_flip):
             x, y = y, x
             data[x], data[y] = data[y], data[x]
@@ -184,4 +183,6 @@ class geom_ribbon(geom):
             )
 
         if outline_type in ("upper", "both"):
-            geom_path.draw_group(data, panel_params, coord, ax, **params)
+            geom_path.draw_group(
+                data.eval(f"y = {y}max"), panel_params, coord, ax, **params
+            )
