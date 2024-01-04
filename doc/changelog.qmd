@@ -63,6 +63,9 @@ title: Changelog
 
 - Fixed using `facet_grid` with a column named `key`. ({{< issue 734 >}})
 
+- Fixed using legend when using an identity scale and reordering the
+  breaks. ({{< issue 735 >}})
+
 ### Enhancements
 
 - All `__all__` variables are explicitly assigned to help static typecheckers

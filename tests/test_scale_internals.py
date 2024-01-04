@@ -6,6 +6,7 @@ import numpy.testing as npt
 import pandas as pd
 import pytest
 
+import plotnine as p9
 from plotnine import (
     aes,
     annotate,
@@ -708,6 +709,26 @@ def test_legend_ordering_added_scales():
     )
 
     assert p == "legend_ordering_added_scales"
+
+
+def test_legend_ordering_with_identity_scale():
+    data = pd.DataFrame(
+        {
+            "x": [1, 2, 3, 4],
+            "y": [1, 2, 3, 4],
+            "color": ["blue", "blue", "red", "red"],
+        }
+    )
+
+    p = (
+        ggplot(data, aes("x", "y", color="color"))
+        + geom_point()
+        + p9.scale_color_identity(
+            breaks=["red", "blue"], labels=["Red", "Blue"], guide="legend"
+        )
+    )
+
+    assert p == "test_legend_ordering_with_identity_scale"
 
 
 def test_breaks_and_labels_outside_of_limits():

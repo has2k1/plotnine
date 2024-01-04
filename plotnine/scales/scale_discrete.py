@@ -237,21 +237,20 @@ class scale_discrete(scale):
         The form is suitable for use by the guides e.g.
             ['fair', 'good', 'very good', 'premium', 'ideal']
         """
-        if limits is None:
-            limits = self.limits
-
         if self.is_empty():
             return []
 
-        if self.breaks is True:
-            breaks = list(limits)
-        elif self.breaks in (False, None):
+        if limits is None:
+            limits = self.limits
+
+        if self.breaks in (None, False):
             breaks = []
+        elif self.breaks is True:
+            breaks = list(limits)
         elif callable(self.breaks):
             breaks = self.breaks(limits)
         else:
-            _wanted_breaks = set(self.breaks)
-            breaks = [l for l in limits if l in _wanted_breaks]
+            breaks = list(self.breaks)
 
         return breaks
 
@@ -264,10 +263,8 @@ class scale_discrete(scale):
         if limits is None:
             limits = self.limits
 
-        lookup = set(limits)
-        breaks = self.get_breaks()
-        strict_breaks = [b for b in breaks if b in lookup]
-        return strict_breaks
+        lookup_limits = set(limits)
+        return [b for b in self.get_breaks() if b in lookup_limits]
 
     def get_labels(
         self, breaks: Optional[ScaleDiscreteBreaks] = None
@@ -291,13 +288,15 @@ class scale_discrete(scale):
             return self.labels(breaks)
         # if a dict is used to rename some labels
         elif isinstance(self.labels, dict):
-            labels = [
+            return [
                 str(self.labels[b]) if b in self.labels else str(b)
                 for b in breaks
             ]
-            return labels
         else:
-            return self.labels
+            # Return the labels in the order that they match with
+            # the breaks.
+            label_lookup = dict(zip(self.get_breaks(), self.labels))
+            return [label_lookup[b] for b in breaks]
 
     def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
