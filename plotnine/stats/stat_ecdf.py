@@ -19,6 +19,9 @@ class stat_ecdf(stat):
     n  : int, default=None
         This is the number of points to interpolate with.
         If :py:`None`, do not interpolate.
+    pad : bool, default=True
+        If True, pad the domain with `-inf` and `+inf` so that
+        ECDF does not have discontinuities at the extremes.
 
     See Also
     --------
@@ -42,6 +45,7 @@ class stat_ecdf(stat):
         "position": "identity",
         "na_rm": False,
         "n": None,
+        "pad": True,
     }
     DEFAULT_AES = {"y": after_stat("ecdf")}
     CREATES = {"ecdf"}
@@ -55,6 +59,9 @@ class stat_ecdf(stat):
             x = np.unique(data["x"])
         else:
             x = np.linspace(data["x"].min(), data["x"].max(), params["n"])
+
+        if params["pad"]:
+            x = np.hstack([-np.inf, x, np.inf])
 
         ecdf = ECDF(data["x"])(x)
         res = pd.DataFrame({"x": x, "ecdf": ecdf})

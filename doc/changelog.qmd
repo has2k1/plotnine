@@ -10,6 +10,10 @@ title: Changelog
 - Requires python >= 3.9
 - The name of the calculated aesthetic of
   [](:class:`~plotnine.stats.stat_function`) changed from `y` to `fx`.
+- [](:class:`~plotnine.stats.stat_ecdf`) has gained the `pad` parameter. The
+  default is set to `True`, which pads the domain with `-inf` and `inf` so
+  that the ECDF does not have discontinuities at the extremes. To get the
+  behaviour, set `pad` to `False`. ({{< issue 725 >}})
 
 ### New
 
