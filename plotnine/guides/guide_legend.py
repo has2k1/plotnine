@@ -69,7 +69,7 @@ class guide_legend(guide):
         scale name is one of the aesthetics: `x`, `y`, `color`,
         `fill`, `size`, `shape`, `alpha`, `stroke`.
 
-        Returns this guide if trainning is successful and None
+        Returns this guide if training is successful and None
         if it fails
         """
         if aesthetic is None:
