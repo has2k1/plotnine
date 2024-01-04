@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+gab5bda0 - Changelog</title>
+<title>plotnine 0.0.post1+gfd4ab67 - Changelog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gab5bda0</span>
+    <span class="navbar-title">plotnine 0.0.post1+gfd4ab67</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -295,6 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Requires python &gt;= 3.9</li>
 <li>The name of the calculated aesthetic of <a href="./reference/stat_function.html#plotnine.stats.stat_function"><code>stat_function</code></a> changed from <code>y</code> to <code>fx</code>.</li>
+<li><a href="./reference/stat_ecdf.html#plotnine.stats.stat_ecdf"><code>stat_ecdf</code></a> has gained the <code>pad</code> parameter. The default is set to <code>True</code>, which pads the domain with <code>-inf</code> and <code>inf</code> so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set <code>pad</code> to <code>False</code>. (<a href="https://github.com/has2k1/plotnine/issues/725" title="Issue: #725">#725</a>)</li>
 </ul>
 </section>
 <section id="new" class="level3">
