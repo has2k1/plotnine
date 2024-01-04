@@ -988,10 +988,7 @@ def resolution(x, zero=True):
 
 def cross_join(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
     """
-    Return a dataframe that is a cross between dataframes
-    df1 and df2
-
-    ref: https://github.com/pydata/pandas/issues/5401
+    Return a cross between df1 & df2 if each is not empty
     """
     if len(df1) == 0:
         return df2
@@ -999,12 +996,7 @@ def cross_join(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
     if len(df2) == 0:
         return df1
 
-    # Add as lists so that the new index keeps the items in
-    # the order that they are added together
-    all_columns = list(pd.Index(list(df1.columns) + list(df2.columns)))
-    df1["key"] = 1
-    df2["key"] = 1
-    return df1.merge(df2, on="key").loc[:, all_columns]
+    return df1.join(df2, how="cross")  # type: ignore
 
 
 def to_inches(value: float, units: str) -> float:

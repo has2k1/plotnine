@@ -61,6 +61,8 @@ title: Changelog
 - Fixed bug where `theme(legend_background=element_blank())`{.py} messed up
   the position of the legend, instead of only removing the background.
 
+- Fixed using `facet_grid` with a column named `key`. ({{< issue 734 >}})
+
 ### Enhancements
 
 - All `__all__` variables are explicitly assigned to help static typecheckers
