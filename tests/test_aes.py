@@ -15,6 +15,7 @@ from plotnine import (
     stat_ecdf,
     stat_function,
 )
+from plotnine.mapping.aes import make_labels
 
 data = pd.DataFrame(
     {
@@ -93,3 +94,13 @@ class TestTransScale:
             + scale_y_log10()
         )
         assert p == "geom_crossbar"
+
+
+def test_make_labels():
+    mapping = {"y": "y", "color": ["Treatment"]}
+    labels = make_labels(mapping)
+    assert labels.color == "Treatment"
+
+    mapping = {"y": "y", "color": ["Treatment", "Control"]}
+    labels = make_labels(mapping)
+    assert labels.color is None
