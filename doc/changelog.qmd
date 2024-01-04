@@ -66,6 +66,8 @@ title: Changelog
 - Fixed using legend when using an identity scale and reordering the
   breaks. ({{< issue 735 >}})
 
+- Fixed drawing the upper outline of `geom_ribbon`. ({{< issue 728 >}})
+
 ### Enhancements
 
 - All `__all__` variables are explicitly assigned to help static typecheckers
