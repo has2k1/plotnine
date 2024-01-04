@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import typing
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import fields
@@ -14,7 +14,7 @@ from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Sequence, TypeVar
+    from typing import TypeVar
 
     THasAesNames = TypeVar("THasAesNames", bound=list[str] | dict[str, Any])
 
@@ -503,10 +503,14 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
     """
 
     def _nice_label(value: Any) -> str | None:
-        if isinstance(value, pd.Series):
+        if isinstance(value, str):
+            return value
+        elif isinstance(value, pd.Series):
             return value.name  # pyright: ignore
-        elif not isinstance(value, Iterable) or isinstance(value, str):
+        elif not isinstance(value, Iterable):
             return str(value)
+        elif isinstance(value, Sequence) and len(value) == 1:
+            return str(value[0])
         else:
             return None
 
@@ -519,7 +523,6 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
             elif value.after_scale is not None:
                 return value.after_scale
             else:
-                # return ''
                 raise ValueError("Unknown mapping")
         else:
             if value.after_stat is not None:
