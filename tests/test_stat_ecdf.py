@@ -12,6 +12,12 @@ def test_ecdf():
     assert p == "ecdf"
 
 
+def test_ecdf_no_pad():
+    p = ggplot(data, aes("x")) + stat_ecdf(size=2, pad=False)
+
+    assert p == "ecdf_no_pad"
+
+
 def test_computed_y_column():
     p = (
         ggplot(data, aes("x"))
