@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+gfd4ab67</title>
+<title>plotnine 0.0.post1+g49ec85b</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gfd4ab67</span>
+    <span class="navbar-title">plotnine 0.0.post1+g49ec85b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -182,6 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#plotnine.ggplot.ggplot" id="toc-plotnine.ggplot.ggplot" class="nav-link active" data-scroll-target="#plotnine.ggplot.ggplot"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.ggplot.ggplot</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
   <li><a href="#plotnine.ggplot.ggplot.draw" id="toc-plotnine.ggplot.ggplot.draw" class="nav-link" data-scroll-target="#plotnine.ggplot.ggplot.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
@@ -203,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-signature">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ggplot(data<span class="op">=</span><span class="va">None</span>, mapping<span class="op">=</span><span class="va">None</span>, environment<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ggplot(data<span class="op">=</span><span class="va">None</span>, mapping<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Create a new ggplot object</p>
@@ -220,12 +221,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Default aesthetics mapping for the plot. These will be used by all layers unless specifically overridden.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">environment</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[EvalEnvironment]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>If a variable defined in the aesthetic mapping is not found in the data, ggplot will look for it in this namespace. It defaults to using the environment/namespace. in which <code>ggplot()</code> is called.</p>
-</dd>
 </dl>
 </div>
+</section>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
+<p>ggplot object only have partial support for pickling. The mappings used by pickled objects should not reference variables in the namespace.</p>
 </section>
 <section id="methods" class="level2 doc-methods">
 <h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
@@ -368,8 +369,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="doc-text">
 <p>Create MPL figure that will be saved</p>
 </div>
-<section id="notes" class="level4 doc-notes">
-<h4 class="doc-notes anchored" data-anchor-id="notes">Notes</h4>
+<section id="notes-1" class="level4 doc-notes">
+<h4 class="doc-notes anchored" data-anchor-id="notes-1">Notes</h4>
 <p>This method has the same arguments as :meth:<code>ggplot.save</code>. Use it to get access to the figure that will be saved.</p>
 
 
