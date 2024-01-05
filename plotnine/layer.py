@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing
 from copy import copy, deepcopy
-from typing import Iterable, List, overload
+from typing import Iterable, List, cast, overload
 
 import pandas as pd
 
@@ -14,11 +14,11 @@ from .mapping.evaluation import evaluate, stage
 if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, SupportsIndex
 
+    from plotnine.mapping import Environment
     from plotnine.typing import (
         Coord,
         DataFrameConvertible,
         DataLike,
-        EvalEnvironment,
         Geom,
         Ggplot,
         Layer,
@@ -125,16 +125,16 @@ class layer:
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
         return layer(**lkwargs)
 
-    def __radd__(self, gg: Ggplot) -> Ggplot:
+    def __radd__(self, plot: Ggplot) -> Ggplot:
         """
         Add layer to ggplot object
         """
         try:
-            gg.layers.append(self)
+            plot.layers.append(self)
         except AttributeError as e:
-            msg = f"Cannot add layer to object of type {type(gg)!r}"
+            msg = f"Cannot add layer to object of type {type(plot)!r}"
             raise PlotnineError(msg) from e
-        return gg
+        return plot
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> layer:
         """
@@ -176,9 +176,9 @@ class layer:
         if plot_data is None:
             data = pd.DataFrame()
         elif hasattr(plot_data, "to_pandas"):
-            data = typing.cast("DataFrameConvertible", plot_data).to_pandas()
+            data = cast("DataFrameConvertible", plot_data).to_pandas()
         else:
-            data = typing.cast("pd.DataFrame", plot_data)
+            data = cast("pd.DataFrame", plot_data)
 
         # Each layer that does not have data gets a copy of
         # of the ggplot.data. If it has data it is replaced
@@ -238,7 +238,7 @@ class layer:
                 group = f'"{group}"'
             self.mapping["group"] = stage(start=group)
 
-    def _make_layer_environments(self, plot_environment: EvalEnvironment):
+    def _make_layer_environments(self, plot_environment: Environment):
         """
         Create the aesthetic mappings to be used by this layer
 

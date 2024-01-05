@@ -76,12 +76,12 @@ def test_inserting_layers():
         def __init__(self, obj):
             self.obj = obj
 
-        def __radd__(self, gg):
-            gg.layers.insert(0, self.obj.to_layer())
-            return gg
+        def __radd__(self, plot):
+            plot.layers.insert(0, self.obj.to_layer())
+            return plot
 
-        def __rsub__(self, gg):
-            return self.__radd__(gg)
+        def __rsub__(self, plot):
+            return self.__radd__(plot)
 
     p = (
         ggplot(data, aes("x", "y"))

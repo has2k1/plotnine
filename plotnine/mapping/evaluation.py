@@ -12,9 +12,8 @@ from ..exceptions import PlotnineError
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from plotnine.typing import EvalEnvironment
-
     from . import aes
+    from ._env import Environment
 
 
 __all__ = ("after_stat", "after_scale", "stage")
@@ -172,7 +171,7 @@ AES_INNER_NAMESPACE = {"factor": pd.Categorical, "reorder": reorder}
 
 
 def evaluate(
-    aesthetics: aes | dict[str, Any], data: pd.DataFrame, env: EvalEnvironment
+    aesthetics: aes | dict[str, Any], data: pd.DataFrame, env: Environment
 ) -> pd.DataFrame:
     """
     Evaluate aesthetics
@@ -195,9 +194,9 @@ def evaluate(
 
     Examples
     --------
-    >>> import patsy
+    >>> from plotnine.mapping import Environment
     >>> var1 = 2
-    >>> env = patsy.eval.EvalEnvironment.capture()
+    >>> env = Environment.capture()
     >>> df = pd.DataFrame({'x': range(1, 6)})
     >>> aesthetics = {'y': 'x**var1'}
     >>> evaluate(aesthetics, df, env)

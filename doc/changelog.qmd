@@ -14,6 +14,7 @@ title: Changelog
   default is set to `True`, which pads the domain with `-inf` and `inf` so
   that the ECDF does not have discontinuities at the extremes. To get the
   behaviour, set `pad` to `False`. ({{< issue 725 >}})
+- Removed the environment parameter from `ggplot`.
 
 ### New
 
@@ -76,6 +77,8 @@ title: Changelog
 
 - All `__all__` variables are explicitly assigned to help static typecheckers
   infer module attributes. ({{< issue 685 >}})
+
+- You can now pickle the drawn matplotlib figures. ({{< issue 729 >}})
 
 ## v0.12.1
 (2023-05-09)

@@ -285,14 +285,14 @@ class aes(Dict[str, Any]):
 
         return result
 
-    def __radd__(self, gg):
+    def __radd__(self, plot):
         """
         Add aesthetic mappings to ggplot
         """
         self = deepcopy(self)
-        gg.mapping.update(self)
-        gg.labels.update(make_labels(self))
-        return gg
+        plot.mapping.update(self)
+        plot.labels.update(make_labels(self))
+        return plot
 
     def copy(self):
         return aes(**self)

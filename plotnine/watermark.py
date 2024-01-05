@@ -50,12 +50,12 @@ class watermark:
             kwargs["zorder"] = 99.9
         self.kwargs = kwargs
 
-    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, plot: p9.ggplot) -> p9.ggplot:
         """
         Add watermark to ggplot object
         """
-        gg.watermarks.append(self)
-        return gg
+        plot.watermarks.append(self)
+        return plot
 
     def draw(self, figure: matplotlib.figure.Figure):
         """

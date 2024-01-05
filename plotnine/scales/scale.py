@@ -156,12 +156,12 @@ class scale(ABC, metaclass=Register):
         # TODO: Find a way to make the type checking work
         self._aesthetics = rename_aesthetics(value)  # pyright: ignore
 
-    def __radd__(self, gg):
+    def __radd__(self, plot):
         """
         Add this scale to ggplot object
         """
-        gg.scales.append(copy(self))
-        return gg
+        plot.scales.append(copy(self))
+        return plot
 
     def palette(self, value):
         """

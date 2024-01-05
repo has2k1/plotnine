@@ -136,14 +136,14 @@ class facet_grid(facet):
             return layout_null()
 
         base_rows = combine_vars(
-            data, self.plot.environment, self.rows, drop=self.drop
+            data, self.environment, self.rows, drop=self.drop
         )
 
         if not self.as_table:
             # Reverse the order of the rows
             base_rows = base_rows[::-1]
         base_cols = combine_vars(
-            data, self.plot.environment, self.cols, drop=self.drop
+            data, self.environment, self.cols, drop=self.drop
         )
 
         base = cross_join(base_rows, base_cols)
@@ -201,7 +201,7 @@ class facet_grid(facet):
         )
         data = add_margins(data, margin_vars, self.margins)
 
-        facet_vals = eval_facet_vars(data, vars, self.plot.environment)
+        facet_vals = eval_facet_vars(data, vars, self.environment)
         data, facet_vals = add_missing_facets(data, layout, vars, facet_vals)
 
         # assign each point to a panel

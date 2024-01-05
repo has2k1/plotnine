@@ -41,7 +41,7 @@ class _lim:
         self.limits = limits
         self.limits_series = series
 
-    def get_scale(self, gg):
+    def get_scale(self, plot):
         """
         Create a scale
         """
@@ -64,7 +64,7 @@ class _lim:
         # limits data to categorical so that the right scale
         # can be choosen. This should take care of the most
         # common use cases.
-        for layer in gg.layers:
+        for layer in plot.layers:
             with suppress(KeyError):
                 value = layer.mapping[ae]
                 if isinstance(value, str):
@@ -78,10 +78,10 @@ class _lim:
             self.aesthetic, series, limits=self.limits, trans=self.trans
         )
 
-    def __radd__(self, gg):
-        scale = self.get_scale(gg)
-        gg.scales.append(scale)
-        return gg
+    def __radd__(self, plot):
+        scale = self.get_scale(plot)
+        plot.scales.append(scale)
+        return plot
 
 
 class xlim(_lim):
@@ -194,7 +194,7 @@ class lims:
     def __init__(self, **kwargs):
         self._kwargs = kwargs
 
-    def __radd__(self, gg):
+    def __radd__(self, plot):
         """
         Add limits to ggplot object
         """
@@ -206,9 +206,9 @@ class lims:
                 msg = "Cannot change limits for '{}'"
                 raise PlotnineError(msg) from e
 
-            gg += klass(value)
+            plot += klass(value)
 
-        return gg
+        return plot
 
 
 def expand_limits(**kwargs):

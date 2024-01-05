@@ -1,11 +1,19 @@
+from __future__ import annotations
+
 import warnings
 from contextlib import suppress
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 
 from .._utils import get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
+
+if TYPE_CHECKING:
+    from patsy.eval import EvalEnvironment
+
+    from plotnine.mapping import Environment
 
 
 def predictdf(data, xseq, **params):
@@ -94,8 +102,8 @@ def lm_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
+    eval_env = _to_patsy_env(params["enviroment"])
     formula = params["formula"]
-    eval_env = params["enviroment"]
     weights = data.get("weight", None)
 
     if weights is None:
@@ -169,7 +177,7 @@ def rlm_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = params["enviroment"]
+    eval_env = _to_patsy_env(params["enviroment"])
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.RLM, sm.RLM.fit
@@ -227,7 +235,7 @@ def gls_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = params["enviroment"]
+    eval_env = _to_patsy_env(params["enviroment"])
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLS, sm.GLS.fit
@@ -288,7 +296,7 @@ def glm_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = params["enviroment"]
+    eval_env = _to_patsy_env(params["enviroment"])
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )
@@ -576,3 +584,13 @@ def separate_method_kwargs(method_args, init_method, fit_method):
             f"{list(unknown_kwargs)}"
         )
     return init_kwargs, fit_kwargs
+
+
+def _to_patsy_env(environment: Environment) -> EvalEnvironment:
+    """
+    Convert a plotnine environment to a patsy environment
+    """
+    from patsy.eval import EvalEnvironment
+
+    eval_env = EvalEnvironment(environment.namespaces)
+    return eval_env
