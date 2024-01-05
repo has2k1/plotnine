@@ -39,7 +39,6 @@ if typing.TYPE_CHECKING:
         Axes,
         Coord,
         DataLike,
-        EvalEnvironment,
         Facet,
         Figure,
         Layer,
@@ -63,11 +62,11 @@ class ggplot:
     mapping :
         Default aesthetics mapping for the plot. These will be used
         by all layers unless specifically overridden.
-    environment :
-        If a variable defined in the aesthetic mapping is not
-        found in the data, ggplot will look for it in this
-        namespace. It defaults to using the environment/namespace.
-        in which `ggplot()` is called.
+
+    Notes
+    -----
+    ggplot object only have partial support for pickling. The mappings used
+    by pickled objects should not reference variables in the namespace.
     """
 
     figure: Figure
@@ -80,9 +79,8 @@ class ggplot:
         self,
         data: Optional[DataLike] = None,
         mapping: Optional[aes] = None,
-        environment: Optional[EvalEnvironment] = None,
     ):
-        from patsy.eval import EvalEnvironment
+        from .mapping._env import Environment
 
         # Allow some sloppiness
         data, mapping = order_as_data_mapping(data, mapping)
@@ -95,7 +93,7 @@ class ggplot:
         self.scales = Scales()
         self.theme = theme_get()
         self.coordinates: Coord = coord_cartesian()
-        self.environment = environment or EvalEnvironment.capture(1)
+        self.environment = Environment.capture(1)
         self.layout = Layout()
         self.watermarks: list[Watermark] = []
 
@@ -133,13 +131,8 @@ class ggplot:
         old = self.__dict__
         new = result.__dict__
 
-        # don't make a deepcopy of data, or environment
-        shallow = {
-            "data",
-            "environment",
-            "figure",
-            "_build_objs",
-        }
+        # don't make a deepcopy of data
+        shallow = {"data", "figure", "_build_objs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item

@@ -35,12 +35,12 @@ class coord:
     # if the coordinate system needs them
     params: dict[str, Any]
 
-    def __radd__(self, gg: Ggplot) -> Ggplot:
+    def __radd__(self, plot: Ggplot) -> Ggplot:
         """
         Add coordinates to ggplot object
         """
-        gg.coordinates = copy(self)
-        return gg
+        plot.coordinates = copy(self)
+        return plot
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """

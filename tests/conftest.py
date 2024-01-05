@@ -38,15 +38,15 @@ def raise_no_baseline_image(filename: str):
     raise Exception(f"Baseline image {filename} is missing")
 
 
-def ggplot_equals(gg: ggplot, name: str) -> bool:
+def ggplot_equals(plot: ggplot, name: str) -> bool:
     """
     Compare ggplot object to image determined by `right`
 
     Parameters
     ----------
-    gg : ggplot
+    plot :
         ggplot object
-    name : str
+    name :
         Identifier for the test image
 
     This function is meant to monkey patch ggplot.__eq__
@@ -57,9 +57,9 @@ def ggplot_equals(gg: ggplot, name: str) -> bool:
     # Save the figure before testing whether the original image
     # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
-    gg += test_theme
+    plot += test_theme
     with _test_cleanup():
-        gg.save(filenames.result, verbose=False)
+        plot.save(filenames.result, verbose=False)
 
     if filenames.baseline.exists():
         shutil.copyfile(filenames.baseline, filenames.expected)
@@ -71,7 +71,7 @@ def ggplot_equals(gg: ggplot, name: str) -> bool:
     err = compare_images(
         filenames.expected, filenames.result, TOLERANCE, in_decorator=True
     )
-    gg._err = err  # For the pytest error message
+    plot._err = err  # For the pytest error message
     return not err
 
 

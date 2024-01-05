@@ -72,13 +72,13 @@ class guides(dict):
             self, ((ae, kwargs[ae]) for ae in kwargs if ae in aes_names)
         )
 
-    def __radd__(self, gg):
+    def __radd__(self, plot):
         """
         Add guides to the plot
 
         Parameters
         ----------
-        gg : ggplot
+        plot : ggplot
             ggplot object being created
 
         Returns
@@ -91,8 +91,8 @@ class guides(dict):
         new_guides = {}
         for k in self:
             new_guides[k] = deepcopy(self[k])
-        gg.guides.update(new_guides)
-        return gg
+        plot.guides.update(new_guides)
+        return plot
 
     def build(self, plot):
         """

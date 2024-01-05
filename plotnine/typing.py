@@ -21,7 +21,6 @@ from matplotlib.patches import PathPatch
 from matplotlib.text import Text
 from mizani.transforms import trans
 from numpy.typing import NDArray
-from patsy.eval import EvalEnvironment
 from typing_extensions import TypeAlias  # noqa: TCH002
 
 from plotnine.coords.coord import coord
@@ -51,7 +50,7 @@ class PlotAddable(Protocol):
     Object that can be added to a ggplot object
     """
 
-    def __radd__(self, other: ggplot) -> ggplot:
+    def __radd__(self, plot: ggplot) -> ggplot:
         """
         Add to ggplot object
 

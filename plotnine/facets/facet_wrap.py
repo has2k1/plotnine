@@ -98,9 +98,7 @@ class facet_wrap(facet):
         if not self.vars:
             return layout_null()
 
-        base = combine_vars(
-            data, self.plot.environment, self.vars, drop=self.drop
-        )
+        base = combine_vars(data, self.environment, self.vars, drop=self.drop)
         n = len(base)
         dims = wrap_dims(n, self._nrow, self._ncol)
         _id = np.arange(1, n + 1)
@@ -160,7 +158,7 @@ class facet_wrap(facet):
             )
             return data
 
-        facet_vals = eval_facet_vars(data, self.vars, self.plot.environment)
+        facet_vals = eval_facet_vars(data, self.vars, self.environment)
         data, facet_vals = add_missing_facets(
             data, layout, self.vars, facet_vals
         )

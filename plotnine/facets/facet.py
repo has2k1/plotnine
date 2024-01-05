@@ -21,11 +21,11 @@ if typing.TYPE_CHECKING:
     from matplotlib.gridspec import GridSpec
 
     from plotnine.iapi import layout_details, panel_view
+    from plotnine.mapping import Environment
     from plotnine.typing import (
         Axes,
         CanBeStripLabellingFunc,
         Coord,
-        EvalEnvironment,
         Figure,
         Ggplot,
         Layers,
@@ -124,6 +124,9 @@ class facet:
 
     grid_spec: GridSpec
 
+    # The plot environment
+    environment: Environment
+
     def __init__(
         self,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
@@ -145,23 +148,23 @@ class facet:
             "y": scales in ("free_y", "free"),
         }
 
-    def __radd__(self, gg: Ggplot) -> Ggplot:
+    def __radd__(self, plot: Ggplot) -> Ggplot:
         """
         Add facet to ggplot object
         """
-        gg.facet = copy(self)
-        gg.facet.plot = gg
-        return gg
+        plot.facet = copy(self)
+        plot.facet.environment = plot.environment
+        return plot
 
-    def set_properties(self, gg: Ggplot):
+    def set_properties(self, plot: Ggplot):
         """
         Copy required properties from ggplot object
         """
-        self.axs = gg.axs
-        self.coordinates = gg.coordinates
-        self.figure = gg.figure
-        self.layout = gg.layout
-        self.theme = gg.theme
+        self.axs = plot.axs
+        self.coordinates = plot.coordinates
+        self.figure = plot.figure
+        self.layout = plot.layout
+        self.theme = plot.theme
         self.strips = Strips.from_facet(self)
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
@@ -500,7 +503,7 @@ class facet:
 
 def combine_vars(
     data: list[pd.DataFrame],
-    environment: EvalEnvironment,
+    environment: Environment,
     vars: list[str],
     drop: bool = True,
 ) -> pd.DataFrame:
@@ -631,7 +634,7 @@ def add_missing_facets(
 
 
 def eval_facet_vars(
-    data: pd.DataFrame, vars: list[str], env: EvalEnvironment
+    data: pd.DataFrame, vars: list[str], env: Environment
 ) -> pd.DataFrame:
     """
     Evaluate facet variables

@@ -123,7 +123,8 @@ def test_deepcopy():
     assert p.layers[0].geom is not p2.layers[0].geom
     assert len(p.mapping) == len(p2.mapping)
     assert p.mapping is not p2.mapping
-    assert p.environment is p2.environment
+    assert p.environment == p2.environment
+    assert p.environment is not p2.environment
 
 
 def test_aes():

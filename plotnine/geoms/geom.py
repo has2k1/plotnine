@@ -25,13 +25,13 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
+    from plotnine.mapping import Environment
     from plotnine.typing import (
         Aes,
         Axes,
         Coord,
         DataLike,
         DrawingArea,
-        EvalEnvironment,
         Ggplot,
         Layer,
         Layout,
@@ -64,7 +64,7 @@ class geom(ABC, metaclass=Register):
 
     # Plot namespace, it gets its value when the plot is being
     # built.
-    environment: EvalEnvironment
+    environment: Environment
 
     # The geom responsible for the legend if draw_legend is
     # not implemented
@@ -427,13 +427,13 @@ class geom(ABC, metaclass=Register):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
-    def __radd__(self, gg: Ggplot) -> Ggplot:
+    def __radd__(self, plot: Ggplot) -> Ggplot:
         """
         Add layer representing geom object on the right
 
         Parameters
         ----------
-        gg :
+        plot :
             ggplot object
 
         Returns
@@ -441,8 +441,8 @@ class geom(ABC, metaclass=Register):
         :
             ggplot object with added layer.
         """
-        gg += self.to_layer()  # Add layer
-        return gg
+        plot += self.to_layer()  # Add layer
+        return plot
 
     def to_layer(self) -> Layer:
         """

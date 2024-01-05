@@ -87,11 +87,11 @@ def qplot(
     :
         ggplot object
     """
-    from patsy.eval import EvalEnvironment
+    from .mapping._env import Environment
 
     # Extract all recognizable aesthetic mappings from the parameters
     # String values e.g  "I('red')", "I(4)" are not treated as mappings
-    environment = EvalEnvironment.capture(1)
+    environment = Environment.capture(1)
     aesthetics = {} if x is None else {"x": x}
     if y is not None:
         aesthetics["y"] = y
@@ -107,7 +107,7 @@ def qplot(
     def I(value: Any) -> Any:
         return value
 
-    I_env = EvalEnvironment([{"I": I}])
+    I_env = Environment([{"I": I}])
 
     for ae in kwargs.keys() & ALL_AESTHETICS:
         value = kwargs[ae]
@@ -146,7 +146,10 @@ def qplot(
 
             if isinstance(aesthetics["x"], str):
                 try:
-                    x = env.eval(aesthetics["x"], inner_namespace=data)
+                    x = env.eval(
+                        aesthetics["x"],
+                        inner_namespace=data,  # type: ignore
+                    )
                 except Exception as e:
                     msg = f"Could not evaluate aesthetic 'x={aesthetics['x']}'"
                     raise PlotnineError(msg) from e
@@ -170,7 +173,8 @@ def qplot(
                     raise PlotnineError("Cannot infer how long x should be.")
             replace_auto(geom, "point")
 
-    p: Ggplot = ggplot(data, aes(**aesthetics), environment=environment)
+    p: Ggplot = ggplot(data, aes(**aesthetics))
+    p.environment = environment
 
     def get_facet_type(facets: str) -> Literal["grid", "wrap", "null"]:
         with suppress(PlotnineError):

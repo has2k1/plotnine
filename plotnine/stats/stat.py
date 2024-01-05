@@ -22,10 +22,10 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     from plotnine.iapi import pos_scales
+    from plotnine.mapping import Environment
     from plotnine.typing import (
         Aes,
         DataLike,
-        EvalEnvironment,
         Geom,
         Ggplot,
         Layout,
@@ -68,7 +68,7 @@ class stat(ABC, metaclass=Register):
 
     # Plot namespace, it gets its value when the plot is being
     # built.
-    environment: EvalEnvironment | None = None
+    environment: Environment | None = None
 
     def __init__(
         self,
@@ -142,8 +142,8 @@ class stat(ABC, metaclass=Register):
         old = self.__dict__
         new = result.__dict__
 
-        # don't make a _kwargs and environment
-        shallow = {"_kwargs", "environment"}
+        # don't make a _kwargs
+        shallow = {"_kwargs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -393,7 +393,7 @@ class stat(ABC, metaclass=Register):
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(cls.__name__))
 
-    def __radd__(self, gg: Ggplot) -> Ggplot:
+    def __radd__(self, plot: Ggplot) -> Ggplot:
         """
         Add layer representing stat object on the right
 
@@ -407,8 +407,8 @@ class stat(ABC, metaclass=Register):
         out :
             ggplot object with added layer
         """
-        gg += self.to_layer()  # Add layer
-        return gg
+        plot += self.to_layer()  # Add layer
+        return plot
 
     def to_layer(self) -> layer:
         """

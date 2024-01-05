@@ -32,12 +32,12 @@ class labs:
             raise PlotnineError(f"Cannot deal with these labels: {unknown}")
         self.labels = labels_view(**rename_aesthetics(kwargs))
 
-    def __radd__(self, gg: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, plot: p9.ggplot) -> p9.ggplot:
         """
         Add labels to ggplot object
         """
-        gg.labels.update(self.labels)
-        return gg
+        plot.labels.update(self.labels)
+        return plot
 
 
 class xlab(labs):
