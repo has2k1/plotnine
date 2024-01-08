@@ -505,6 +505,10 @@ quartodoc:
         - theme_set
         - theme_get
         - theme_update
+
+    - package: plotnine.themes.elements
+      options: *no-members
+      contents:
         - element_line
         - element_rect
         - element_text
