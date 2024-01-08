@@ -27,6 +27,7 @@ from .qplot import *
 from .scales import *
 from .stats import *
 from .themes import *
+from .themes.elements import *
 from .watermark import *
 
 __all__ = (

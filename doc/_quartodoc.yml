@@ -498,7 +498,7 @@ quartodoc:
         - text
         - title
 
-    - subtitle: Helpfull Functions & Classes for Theming
+    - subtitle: Helpful Functions & Classes for Theming
       package: plotnine.themes
       options: *no-members
       contents:

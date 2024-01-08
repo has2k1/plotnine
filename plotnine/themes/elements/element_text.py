@@ -1,0 +1,159 @@
+"""
+Theme elements used to decorate the graph.
+"""
+from __future__ import annotations
+
+from contextlib import suppress
+from typing import TYPE_CHECKING
+
+from .element_base import element_base
+from .margin import Margin
+
+if TYPE_CHECKING:
+    from typing import Any, Literal, Optional
+
+    from plotnine.typing import Theme, TupleFloat3, TupleFloat4
+
+
+class element_text(element_base):
+    """
+    Theme element: Text
+
+    Parameters
+    ----------
+    family :
+        Font family. See :meth:`matplotlib.text.Text.set_family`
+        for supported values.
+    style :
+        Font style
+    color :
+        Text color
+    weight :
+        Should be one of `normal`, `bold`, `heavy`, `light`,
+        `ultrabold` or `ultralight`.
+    size :
+        text size
+    ha :
+        Horizontal Alignment.
+    va :
+        Vertical alignment.
+    rotation :
+        Rotation angle in the range [0, 360]
+    linespacing : float
+        Line spacing
+    backgroundcolor :
+        Background color
+    margin :
+        Margin around the text. The keys are
+        `t`, `b`, `l`, `r` and `units`.
+        The `tblr` keys are floats.
+        The `units` is one of `pt`, `lines` or `in`.
+        Not all text themeables support margin parameters and other
+        than the `units`, only some of the other keys may apply.
+    kwargs :
+        Parameters recognised by :class:`matplotlib.text.Text`
+
+    Notes
+    -----
+    [](`~plotnine.themes.element_text`) will accept parameters that
+    conform to the **ggplot2** *element_text* API, but it is preferable
+    the **Matplotlib** based API described above.
+    """
+
+    def __init__(
+        self,
+        family: Optional[str | list[str]] = None,
+        style: Optional[str] = None,
+        weight: Optional[int | str] = None,
+        color: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        size: Optional[float] = None,
+        ha: Optional[Literal["center", "left", "right"]] = None,
+        va: Optional[Literal["center", "top", "bottom", "baseline"]] = None,
+        rotation: Optional[float] = None,
+        linespacing: Optional[float] = None,
+        backgroundcolor: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        margin: Optional[
+            dict[Literal["t", "b", "l", "r", "units"], Any]
+        ] = None,
+        **kwargs: Any,
+    ):
+        # ggplot2 translation
+        with suppress(KeyError):
+            linespacing = kwargs.pop("lineheight")
+        with suppress(KeyError):
+            color = color or kwargs.pop("colour")
+        with suppress(KeyError):
+            _face = kwargs.pop("face")
+            if _face == "plain":
+                style = "normal"
+            elif _face == "italic":
+                style = "italic"
+            elif _face == "bold":
+                weight = "bold"
+            elif _face == "bold.italic":
+                style = "italic"
+                weight = "bold"
+        with suppress(KeyError):
+            ha = self._translate_hjust(kwargs.pop("hjust"))
+        with suppress(KeyError):
+            va = self._translate_vjust(kwargs.pop("vjust"))
+        with suppress(KeyError):
+            rotation = kwargs.pop("angle")
+
+        super().__init__()
+        self.properties.update(**kwargs)
+
+        if margin is not None:
+            margin = Margin(self, **margin)  # type: ignore
+
+        # Use the parameters that have been set
+        names = (
+            "backgroundcolor",
+            "color",
+            "family",
+            "ha",
+            "linespacing",
+            "rotation",
+            "size",
+            "style",
+            "va",
+            "weight",
+            "margin",
+        )
+        variables = locals()
+        for name in names:
+            if variables[name] is not None:
+                self.properties[name] = variables[name]
+
+    def setup(self, theme: Theme):
+        """
+        Setup the theme_element before drawing
+        """
+        if "margin" in self.properties:
+            self.properties["margin"].theme = theme
+
+    def _translate_hjust(
+        self, just: float
+    ) -> Literal["left", "right", "center"]:
+        """
+        Translate ggplot2 justification from [0, 1] to left, right, center.
+        """
+        if just == 0:
+            return "left"
+        elif just == 1:
+            return "right"
+        else:
+            return "center"
+
+    def _translate_vjust(
+        self, just: float
+    ) -> Literal["top", "bottom", "center"]:
+        """
+        Translate ggplot2 justification from [0, 1] to top, bottom, center.
+        """
+        if just == 0:
+            return "bottom"
+        elif just == 1:
+            return "top"
+        else:
+            return "center"
