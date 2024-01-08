@@ -95,14 +95,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-released-yet)\n\n\n\nRequires python &gt;= 3.9\nThe name of the calculated aesthetic of stat_function changed from y to fx.\nstat_ecdf has gained the pad parameter. The default is set to True, which pads the domain with -inf and inf so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set pad to False. (#725)\nRemoved the environment parameter from ggplot.\n\n\n\n\n\nAdded symmetric logarithm transformation scales scale_x_symlog and scale_y_symlog\nGained themeables\n\nplot_margin_left\nplot_margin_right\nplot_margin_top\nplot_margin_bottom\n\nto set the plot margin on each side independently.\nGained themeables\n\naxis_ticks_length_major_x\naxis_ticks_length_major_y\naxis_ticks_length_minor_x\naxis_ticks_length_minor_y\n\nto control the x & y axis ticks length.\nGained themeables\n\naxis_ticks_pad_major_x\naxis_ticks_pad_minor_y\n\nto control the x & y tick padding.\n\n\n\n\n\nFixed handling of minor breaks in scale_continuous to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. (#685)\nFixed theming of axis_ticks with the size parameter. (#703)\nFixed space handling around axis_label, axis_text and axis_ticks when the ticks are turned off.\nFixed bug in geom_path where the lineend parameter was ignored. (#727)\nFixed bug where theme(legend_background=element_blank()) messed up the position of the legend, instead of only removing the background.\nFixed using facet_grid with a column named key. (#734)\nFixed using legend when using an identity scale and reordering the breaks. (#735)\nFixed drawing the upper outline of geom_ribbon. (#728)\n\n\n\n\n\nAll __all__ variables are explicitly assigned to help static typecheckers infer module attributes. (#685)\nYou can now pickle the drawn matplotlib figures. (#729)"
+    "text": "(not-released-yet)\n\n\n\nRequires python &gt;= 3.9\nThe name of the calculated aesthetic of stat_function changed from y to fx.\nstat_ecdf has gained the pad parameter. The default is set to True, which pads the domain with -inf and inf so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set pad to False. (#725)\nRemoved the environment parameter from ggplot.\n\n\n\n\n\nAdded symmetric logarithm transformation scales scale_x_symlog and scale_y_symlog\nGained themeables\n\nplot_margin_left\nplot_margin_right\nplot_margin_top\nplot_margin_bottom\n\nto set the plot margin on each side independently.\nGained themeables\n\naxis_ticks_length_major_x\naxis_ticks_length_major_y\naxis_ticks_length_minor_x\naxis_ticks_length_minor_y\n\nto control the x & y axis ticks length.\nGained themeables\n\naxis_ticks_pad_major_x\naxis_ticks_pad_minor_y\n\nto control the x & y tick padding.\nSome parameters in can now accept lists/tuples to set the values on individual text objects. (#724)\n\n\n\n\n\nFixed handling of minor breaks in scale_continuous to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. (#685)\nFixed theming of axis_ticks with the size parameter. (#703)\nFixed space handling around axis_label, axis_text and axis_ticks when the ticks are turned off.\nFixed bug in geom_path where the lineend parameter was ignored. (#727)\nFixed bug where theme(legend_background=element_blank()) messed up the position of the legend, instead of only removing the background.\nFixed using facet_grid with a column named key. (#734)\nFixed using legend when using an identity scale and reordering the breaks. (#735)\nFixed drawing the upper outline of geom_ribbon. (#728)\n\n\n\n\n\nAll __all__ variables are explicitly assigned to help static typecheckers infer module attributes. (#685)\nYou can now pickle the drawn matplotlib figures. (#729)"
   },
   {
     "objectID": "changelog.html#v0.13.0",
     "href": "changelog.html#v0.13.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-released-yet)\n\n\n\nRequires python &gt;= 3.9\nThe name of the calculated aesthetic of stat_function changed from y to fx.\nstat_ecdf has gained the pad parameter. The default is set to True, which pads the domain with -inf and inf so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set pad to False. (#725)\nRemoved the environment parameter from ggplot.\n\n\n\n\n\nAdded symmetric logarithm transformation scales scale_x_symlog and scale_y_symlog\nGained themeables\n\nplot_margin_left\nplot_margin_right\nplot_margin_top\nplot_margin_bottom\n\nto set the plot margin on each side independently.\nGained themeables\n\naxis_ticks_length_major_x\naxis_ticks_length_major_y\naxis_ticks_length_minor_x\naxis_ticks_length_minor_y\n\nto control the x & y axis ticks length.\nGained themeables\n\naxis_ticks_pad_major_x\naxis_ticks_pad_minor_y\n\nto control the x & y tick padding.\n\n\n\n\n\nFixed handling of minor breaks in scale_continuous to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. (#685)\nFixed theming of axis_ticks with the size parameter. (#703)\nFixed space handling around axis_label, axis_text and axis_ticks when the ticks are turned off.\nFixed bug in geom_path where the lineend parameter was ignored. (#727)\nFixed bug where theme(legend_background=element_blank()) messed up the position of the legend, instead of only removing the background.\nFixed using facet_grid with a column named key. (#734)\nFixed using legend when using an identity scale and reordering the breaks. (#735)\nFixed drawing the upper outline of geom_ribbon. (#728)\n\n\n\n\n\nAll __all__ variables are explicitly assigned to help static typecheckers infer module attributes. (#685)\nYou can now pickle the drawn matplotlib figures. (#729)"
+    "text": "(not-released-yet)\n\n\n\nRequires python &gt;= 3.9\nThe name of the calculated aesthetic of stat_function changed from y to fx.\nstat_ecdf has gained the pad parameter. The default is set to True, which pads the domain with -inf and inf so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set pad to False. (#725)\nRemoved the environment parameter from ggplot.\n\n\n\n\n\nAdded symmetric logarithm transformation scales scale_x_symlog and scale_y_symlog\nGained themeables\n\nplot_margin_left\nplot_margin_right\nplot_margin_top\nplot_margin_bottom\n\nto set the plot margin on each side independently.\nGained themeables\n\naxis_ticks_length_major_x\naxis_ticks_length_major_y\naxis_ticks_length_minor_x\naxis_ticks_length_minor_y\n\nto control the x & y axis ticks length.\nGained themeables\n\naxis_ticks_pad_major_x\naxis_ticks_pad_minor_y\n\nto control the x & y tick padding.\nSome parameters in can now accept lists/tuples to set the values on individual text objects. (#724)\n\n\n\n\n\nFixed handling of minor breaks in scale_continuous to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. (#685)\nFixed theming of axis_ticks with the size parameter. (#703)\nFixed space handling around axis_label, axis_text and axis_ticks when the ticks are turned off.\nFixed bug in geom_path where the lineend parameter was ignored. (#727)\nFixed bug where theme(legend_background=element_blank()) messed up the position of the legend, instead of only removing the background.\nFixed using facet_grid with a column named key. (#734)\nFixed using legend when using an identity scale and reordering the breaks. (#735)\nFixed drawing the upper outline of geom_ribbon. (#728)\n\n\n\n\n\nAll __all__ variables are explicitly assigned to help static typecheckers infer module attributes. (#685)\nYou can now pickle the drawn matplotlib figures. (#729)"
   },
   {
     "objectID": "changelog.html#v0.12.1",
@@ -130,7 +130,7 @@
     "href": "changelog.html#v0.9.0",
     "title": "Changelog",
     "section": "v0.9.0",
-    "text": "v0.9.0\n(2022-07-01)\n\n\n\nimage\n\n\n\nAPI Changes\n\nFor the calls to ggplot, the order of the positional arguments is (data, mapping) and for calls geoms and stats the order is (mapping, data). In practice, you can still provide one/two positional arguments in any order. However, the are a few cases where old code will breaks due to duplicate parameters.\n\n\n\nNew Features\n\nAdded geom_pointdensity, a 2D density plot that does not hide the distribution of the individual data points.\nposition_dodge2 gained the ability to reverse the order of the plotted groups. (#515)\nAdded theme_tufte, a theme that reduces the distractions around plot data.\nlabs can now be used to create a caption. This caption can be styled using the plot_caption parameter to theme.\ntheme(plot_caption=element_text(size=13))\nYou can now align the plot_title horizontally to the left or right.\ntheme(plot_title=element_text(ha='left'))\nBefore, the title was always centered.\n\n\n\nBug Fixes\n\nFixed bug in facet_grid and facet_wrap where the drop parameter was ignored. (#510)\nFixed issue with annotation_logticks where the wrong range was used for the x|y axis. (#525)\nFixed bug in geom_smooth where using a coordinate transformation without computing the standard error led to a crash. (#526)\nFixed bug where you could not specific the cap/end of a dashed line when styling a plot with element_line.\nFixed legend for geom_map so that the entries have the same stroke and points on the map. (#534)\nFixed geom_histogram for some cases when it fails to automatically determine the number of bins. (#543)\nFixed facet_grid and facet_wrap when mapping to lists/arrays/series so that the rows mapped this way are not mixed up. (#548)\nFixed stat_bin_2d not to error for matplotlib &gt;= 3.5.0 so that it does not throw a Numpy error. (#567)\nFixed geom_map to be able to draw Polygons with holes in them.\nFixed geom_map to be able to draw MultiPolygons.\nFixed scale_x_discrete and scale_x_discrete to work properly with None values. (#523)\nFixed geom_point to respect not to use the fill mapping on unfilled shapes. (#100)\nFixed position_stack to work with scales that have non-linear transformations. e.g. scale_y_log10. (#580)\nFixed scales to work with limits passed as a function.\nFixed axis_ticks so you can change the colour of the axis ticks. This was probably a regression due to changes in Matplotlib.\nFixed panel_ontop so that if is set to False, then the data visualised below the grid-lines. (#585)\nFixed geom_ribbon, geom_area and geom_density to work with coord_flip. (#596)\n\n\n\nEnhancements\n\nstat_summary now has a default summary function. (#528)\nstat_density now uses a fast computation path for gaussian densities with no weights. This was probably a regression.\ngeom_map can now draw MultiPoints, MultiLineStrings and MultiPolgons.\ngeom_text with adjust_text can now be used in more than one layer with good enough results."
+    "text": "v0.9.0\n(2022-07-01)\n\n\n\nimage\n\n\n\nAPI Changes\n\nFor the calls to ggplot, the order of the positional arguments is (data, mapping) and for calls geoms and stats the order is (mapping, data). In practice, you can still provide one/two positional arguments in any order. However, the are a few cases where old code will breaks due to duplicate parameters.\n\n\n\nNew Features\n\nAdded geom_pointdensity, a 2D density plot that does not hide the distribution of the individual data points.\nposition_dodge2 gained the ability to reverse the order of the plotted groups. (#515)\nAdded theme_tufte, a theme that reduces the distractions around plot data.\nlabs can now be used to create a caption. This caption can be styled using the plot_caption parameter to theme.\ntheme(plot_caption=element_text(size=13))\nYou can now align the plot_title horizontally to the left or right.\ntheme(plot_title=element_text(ha='left'))\nBefore, the title was always centered.\n\n\n\nBug Fixes\n\nFixed bug in facet_grid and facet_wrap where the drop parameter was ignored. (#510)\nFixed issue with annotation_logticks where the wrong range was used for the x|y axis. (#525)\nFixed bug in geom_smooth where using a coordinate transformation without computing the standard error led to a crash. (#526)\nFixed bug where you could not specific the cap/end of a dashed line when styling a plot with .\nFixed legend for geom_map so that the entries have the same stroke and points on the map. (#534)\nFixed geom_histogram for some cases when it fails to automatically determine the number of bins. (#543)\nFixed facet_grid and facet_wrap when mapping to lists/arrays/series so that the rows mapped this way are not mixed up. (#548)\nFixed stat_bin_2d not to error for matplotlib &gt;= 3.5.0 so that it does not throw a Numpy error. (#567)\nFixed geom_map to be able to draw Polygons with holes in them.\nFixed geom_map to be able to draw MultiPolygons.\nFixed scale_x_discrete and scale_x_discrete to work properly with None values. (#523)\nFixed geom_point to respect not to use the fill mapping on unfilled shapes. (#100)\nFixed position_stack to work with scales that have non-linear transformations. e.g. scale_y_log10. (#580)\nFixed scales to work with limits passed as a function.\nFixed axis_ticks so you can change the colour of the axis ticks. This was probably a regression due to changes in Matplotlib.\nFixed panel_ontop so that if is set to False, then the data visualised below the grid-lines. (#585)\nFixed geom_ribbon, geom_area and geom_density to work with coord_flip. (#596)\n\n\n\nEnhancements\n\nstat_summary now has a default summary function. (#528)\nstat_density now uses a fast computation path for gaussian densities with no weights. This was probably a regression.\ngeom_map can now draw MultiPoints, MultiLineStrings and MultiPolgons.\ngeom_text with adjust_text can now be used in more than one layer with good enough results."
   },
   {
     "objectID": "changelog.html#v0.8.0",
@@ -277,7 +277,7 @@
     "href": "reference/themeable.html",
     "title": " plotnine.themes.themeable.themeable",
     "section": "",
-    "text": "themeable(theme_element=None)"
+    "text": "themeable(theme_element, rcParams)"
   },
   {
     "objectID": "reference/themeable.html#notes",
@@ -291,14 +291,14 @@
     "href": "reference/themeable.html#attributes",
     "title": " plotnine.themes.themeable.themeable",
     "section": "Attributes",
-    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\norder\nint([x]) -&gt; integer\n\n\nrcParams\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\n\n\n order\n\norder = 0\n\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\n\n\n rcParams\n\nrcParams : dict[str, Any]\n\n\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\nReturns\n\n\ndict\n\nDictionary of legal matplotlib parameters.\n\nThis method should always call super(…).rcParams and\n\n\n\nupdate the dictionary that it returns with its own value, and\n\n\n\nreturn that dictionary.\n\n\n\nThis method is called before plotting. It tends to be more\n\n\n\nuseful for general themeables. Very specific themeables\n\n\n\noften cannot be be themed until they are created as a\n\n\n\nresult of the plotting process."
+    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nrcParams\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\n\n\n rcParams\n\nrcParams : dict[str, Any]\n\n\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\nReturns\n\n\ndict\n\nDictionary of legal matplotlib parameters.\n\nThis method should always call super(…).rcParams and\n\n\n\nupdate the dictionary that it returns with its own value, and\n\n\n\nreturn that dictionary.\n\n\n\nThis method is called before plotting. It tends to be more\n\n\n\nuseful for general themeables. Very specific themeables\n\n\n\noften cannot be be themed until they are created as a\n\n\n\nresult of the plotting process."
   },
   {
     "objectID": "reference/themeable.html#methods",
     "href": "reference/themeable.html#methods",
     "title": " plotnine.themes.themeable.themeable",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\napply\nCalled by the theme to apply the themeable\n\n\napply_ax\nCalled after a chart has been plotted.\n\n\napply_figure\nApply theme to the figure\n\n\nblank_ax\nBlank out theme elements\n\n\nblank_figure\nBlank out elements on the figure\n\n\nfrom_class_name\nCreate a themeable by name\n\n\nis_blank\nReturn True if theme_element is made of element_blank\n\n\nmerge\nMerge properties of other into self\n\n\nsetup_figure\nApply theme to the figure\n\n\n\n\n apply\n\napply(theme)\n\n\nCalled by the theme to apply the themeable\nSubclasses shouldn’t have to override this method to customize.\n\n\n\n apply_ax\n\napply_ax(ax)\n\n\nCalled after a chart has been plotted.\nSubclasses can override this method to customize the plot according to the theme.\nThis method should be implemented as super().apply_ax() followed by extracting the portion of the axes specific to this themeable then applying the properties.\n\n\nParameters\n\n\nax : matplotlib.axes.Axes\n\n\n\n\n\n\n\n\n apply_figure\n\napply_figure(figure, targets)\n\n\nApply theme to the figure\nCompared to :meth:setup_figure, this method is called after plotting and all the elements are drawn onto the figure.\n\n\n\n blank_ax\n\nblank_ax(ax)\n\n\nBlank out theme elements\n\n\n\n blank_figure\n\nblank_figure(figure, targets)\n\n\nBlank out elements on the figure\n\n\n\n from_class_name \n\nfrom_class_name(name, theme_element)\n\n\nCreate a themeable by name\n\n\nParameters\n\n\nname : str\n\nClass name\n\ntheme_element : element object\n\nAn element of the type required by the theme. For lines, text and rects it should be one of: element_line, element_rect, element_text or element_blank\n\n\n\n\n\nReturns\n\n\nout : plotnine.themes.themeable.themeable\n\n\n\n\n\n\n\n\n is_blank\n\nis_blank()\n\n\nReturn True if theme_element is made of element_blank\n\n\n\n merge\n\nmerge(other)\n\n\nMerge properties of other into self\n\n\nRaises\n\n\nValueError\n\nIf any of the properties are blank\n\n\n\n\n\n\n setup_figure\n\nsetup_figure(figure)\n\n\nApply theme to the figure\nCompared to :meth:apply_figure, this method is called before any plotting is done. This is necessary in some cases where the drawing functions need(or can make use of) this information."
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\napply\nCalled by the theme to apply the themeable\n\n\napply_ax\nCalled after a chart has been plotted.\n\n\napply_figure\nApply theme to the figure\n\n\nblank_ax\nBlank out theme elements\n\n\nblank_figure\nBlank out elements on the figure\n\n\nfrom_class_name\nCreate a themeable by name\n\n\nis_blank\nReturn True if theme_element is made of element_blank\n\n\nmerge\nMerge properties of other into self\n\n\nsetup_figure\nApply theme to the figure\n\n\n\n\n apply\n\napply(theme)\n\n\nCalled by the theme to apply the themeable\nSubclasses should not have to override this method\n\n\n\n apply_ax\n\napply_ax(ax)\n\n\nCalled after a chart has been plotted.\nSubclasses can override this method to customize the plot according to the theme.\nThis method should be implemented as super().apply_ax() followed by extracting the portion of the axes specific to this themeable then applying the properties.\n\n\nParameters\n\n\nax : matplotlib.axes.Axes\n\n\n\n\n\n\n\n\n apply_figure\n\napply_figure(figure, targets)\n\n\nApply theme to the figure\nCompared to :meth:setup_figure, this method is called after plotting and all the elements are drawn onto the figure.\n\n\n\n blank_ax\n\nblank_ax(ax)\n\n\nBlank out theme elements\n\n\n\n blank_figure\n\nblank_figure(figure, targets)\n\n\nBlank out elements on the figure\n\n\n\n from_class_name \n\nfrom_class_name(name, theme_element)\n\n\nCreate a themeable by name\n\n\nParameters\n\n\nname : str\n\nClass name\n\ntheme_element : element object\n\nAn element of the type required by the theme. For lines, text and rects it should be one of: , , or \n\n\n\n\n\nReturns\n\n\nout : plotnine.themes.themeable.themeable\n\n\n\n\n\n\n\n\n is_blank\n\nis_blank()\n\n\nReturn True if theme_element is made of element_blank\n\n\n\n merge\n\nmerge(other)\n\n\nMerge properties of other into self\n\n\nRaises\n\n\nValueError\n\nIf any of the properties are blank\n\n\n\n\n\n\n setup_figure\n\nsetup_figure(figure)\n\n\nApply theme to the figure\nCompared to :meth:apply_figure, this method is called before any plotting is done. This is necessary in some cases where the drawing functions need(or can make use of) this information."
   },
   {
     "objectID": "reference/theme_void.html",
@@ -431,7 +431,7 @@
     "href": "reference/theme.html#parameters",
     "title": " plotnine.themes.theme.theme",
     "section": "Parameters",
-    "text": "Parameters\n\n\ncomplete : bool = False\n\nThemes that are complete will override any existing themes. themes that are not complete (ie. partial) will add to or override specific elements of the current theme. e.g:\ntheme_gray() + theme_xkcd()\nwill be completely determined by theme_xkcd, but:\ntheme_gray() + theme(axis_text_x=element_text(angle=45))\nwill only modify the x-axis text.\n\nkwargs = {}\n\nkwargs are :ref:themeables &lt;themeables&gt;. The themeables are elements that are subclasses of themeable. Many themeables are defined using theme elements i.e\n\nelement_line\nelement_rect\nelement_text\n\nThese simply bind together all the aspects of a themeable that can be themed. See themeable."
+    "text": "Parameters\n\n\ncomplete : bool = False\n\nThemes that are complete will override any existing themes. themes that are not complete (ie. partial) will add to or override specific elements of the current theme. e.g:\ntheme_gray() + theme_xkcd()\nwill be completely determined by theme_xkcd, but:\ntheme_gray() + theme(axis_text_x=element_text(angle=45))\nwill only modify the x-axis text.\n\nkwargs = {}\n\nkwargs are :ref:themeables &lt;themeables&gt;. The themeables are elements that are subclasses of themeable. Many themeables are defined using theme elements i.e\n\n\n\n\n\nThese simply bind together all the aspects of a themeable that can be themed. See themeable."
   },
   {
     "objectID": "reference/theme.html#notes",
@@ -459,63 +459,63 @@
     "href": "reference/subplots_adjust.html",
     "title": " plotnine.themes.themeable.subplots_adjust",
     "section": "",
-    "text": "subplots_adjust(theme_element=None)"
+    "text": "subplots_adjust()"
   },
   {
     "objectID": "reference/strip_text_x.html",
     "href": "reference/strip_text_x.html",
     "title": " plotnine.themes.themeable.strip_text_x",
     "section": "",
-    "text": "strip_text_x(theme_element=None)"
+    "text": "strip_text_x()"
   },
   {
     "objectID": "reference/strip_text_x.html#parameters",
     "href": "reference/strip_text_x.html#parameters",
     "title": " plotnine.themes.themeable.strip_text_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/strip_background_y.html",
     "href": "reference/strip_background_y.html",
     "title": " plotnine.themes.themeable.strip_background_y",
     "section": "",
-    "text": "strip_background_y(theme_element=None)"
+    "text": "strip_background_y()"
   },
   {
     "objectID": "reference/strip_background_y.html#parameters",
     "href": "reference/strip_background_y.html#parameters",
     "title": " plotnine.themes.themeable.strip_background_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/strip_background.html",
     "href": "reference/strip_background.html",
     "title": " plotnine.themes.themeable.strip_background",
     "section": "",
-    "text": "strip_background(theme_element=None)"
+    "text": "strip_background()"
   },
   {
     "objectID": "reference/strip_background.html#parameters",
     "href": "reference/strip_background.html#parameters",
     "title": " plotnine.themes.themeable.strip_background",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/strip_align_x.html",
     "href": "reference/strip_align_x.html",
     "title": " plotnine.themes.themeable.strip_align_x",
     "section": "",
-    "text": "strip_align_x(theme_element=None)"
+    "text": "strip_align_x()"
   },
   {
     "objectID": "reference/strip_align_x.html#parameters",
     "href": "reference/strip_align_x.html#parameters",
     "title": " plotnine.themes.themeable.strip_align_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue as a proportion of the strip size. A good value should be the range [-1, 0.5]. A negative value puts the strip inside the axes. A positive value creates a margin between the strip and the axes. 0 puts the strip on top of the panels."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue as a proportion of the strip size. A good value should be the range [-1, 0.5]. A negative value puts the strip inside the axes. A positive value creates a margin between the strip and the axes. 0 puts the strip on top of the panels."
   },
   {
     "objectID": "reference/stat_ydensity.html",
@@ -1446,70 +1446,70 @@
     "href": "reference/plot_subtitle.html",
     "title": " plotnine.themes.themeable.plot_subtitle",
     "section": "",
-    "text": "plot_subtitle(theme_element=None)"
+    "text": "plot_subtitle()"
   },
   {
     "objectID": "reference/plot_subtitle.html#parameters",
     "href": "reference/plot_subtitle.html#parameters",
     "title": " plotnine.themes.themeable.plot_subtitle",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/plot_margin_right.html",
     "href": "reference/plot_margin_right.html",
     "title": " plotnine.themes.themeable.plot_margin_right",
     "section": "",
-    "text": "plot_margin_right(theme_element=None)"
+    "text": "plot_margin_right()"
   },
   {
     "objectID": "reference/plot_margin_right.html#parameters",
     "href": "reference/plot_margin_right.html#parameters",
     "title": " plotnine.themes.themeable.plot_margin_right",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
+    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
     "objectID": "reference/plot_margin_bottom.html",
     "href": "reference/plot_margin_bottom.html",
     "title": " plotnine.themes.themeable.plot_margin_bottom",
     "section": "",
-    "text": "plot_margin_bottom(theme_element=None)"
+    "text": "plot_margin_bottom()"
   },
   {
     "objectID": "reference/plot_margin_bottom.html#parameters",
     "href": "reference/plot_margin_bottom.html#parameters",
     "title": " plotnine.themes.themeable.plot_margin_bottom",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
+    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
     "objectID": "reference/plot_caption.html",
     "href": "reference/plot_caption.html",
     "title": " plotnine.themes.themeable.plot_caption",
     "section": "",
-    "text": "plot_caption(theme_element=None)"
+    "text": "plot_caption()"
   },
   {
     "objectID": "reference/plot_caption.html#parameters",
     "href": "reference/plot_caption.html#parameters",
     "title": " plotnine.themes.themeable.plot_caption",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/panel_spacing_y.html",
     "href": "reference/panel_spacing_y.html",
     "title": " plotnine.themes.themeable.panel_spacing_y",
     "section": "",
-    "text": "panel_spacing_y(theme_element=None)"
+    "text": "panel_spacing_y()"
   },
   {
     "objectID": "reference/panel_spacing_y.html#parameters",
     "href": "reference/panel_spacing_y.html#parameters",
     "title": " plotnine.themes.themeable.panel_spacing_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nSize as a fraction of the figure width."
+    "text": "Parameters\n\n\ntheme_element : float\n\nSize as a fraction of the figure width."
   },
   {
     "objectID": "reference/panel_spacing_y.html#notes",
@@ -1523,84 +1523,84 @@
     "href": "reference/panel_spacing.html",
     "title": " plotnine.themes.themeable.panel_spacing",
     "section": "",
-    "text": "panel_spacing(theme_element=None)"
+    "text": "panel_spacing()"
   },
   {
     "objectID": "reference/panel_spacing.html#parameters",
     "href": "reference/panel_spacing.html#parameters",
     "title": " plotnine.themes.themeable.panel_spacing",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nSize as a fraction of the figure’s dimension."
+    "text": "Parameters\n\n\ntheme_element : float\n\nSize as a fraction of the figure’s dimension."
   },
   {
     "objectID": "reference/panel_grid_minor_y.html",
     "href": "reference/panel_grid_minor_y.html",
     "title": " plotnine.themes.themeable.panel_grid_minor_y",
     "section": "",
-    "text": "panel_grid_minor_y(theme_element=None)"
+    "text": "panel_grid_minor_y()"
   },
   {
     "objectID": "reference/panel_grid_minor_y.html#parameters",
     "href": "reference/panel_grid_minor_y.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid_minor_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_grid_minor.html",
     "href": "reference/panel_grid_minor.html",
     "title": " plotnine.themes.themeable.panel_grid_minor",
     "section": "",
-    "text": "panel_grid_minor(theme_element=None)"
+    "text": "panel_grid_minor()"
   },
   {
     "objectID": "reference/panel_grid_minor.html#parameters",
     "href": "reference/panel_grid_minor.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid_minor",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_grid_major_x.html",
     "href": "reference/panel_grid_major_x.html",
     "title": " plotnine.themes.themeable.panel_grid_major_x",
     "section": "",
-    "text": "panel_grid_major_x(theme_element=None)"
+    "text": "panel_grid_major_x()"
   },
   {
     "objectID": "reference/panel_grid_major_x.html#parameters",
     "href": "reference/panel_grid_major_x.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid_major_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_grid.html",
     "href": "reference/panel_grid.html",
     "title": " plotnine.themes.themeable.panel_grid",
     "section": "",
-    "text": "panel_grid(theme_element=None)"
+    "text": "panel_grid()"
   },
   {
     "objectID": "reference/panel_grid.html#parameters",
     "href": "reference/panel_grid.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_background.html",
     "href": "reference/panel_background.html",
     "title": " plotnine.themes.themeable.panel_background",
     "section": "",
-    "text": "panel_background(theme_element=None)"
+    "text": "panel_background()"
   },
   {
     "objectID": "reference/panel_background.html#parameters",
     "href": "reference/panel_background.html#parameters",
     "title": " plotnine.themes.themeable.panel_background",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/mtcars.html",
@@ -1628,42 +1628,42 @@
     "href": "reference/line.html",
     "title": " plotnine.themes.themeable.line",
     "section": "",
-    "text": "line(theme_element=None)"
+    "text": "line()"
   },
   {
     "objectID": "reference/line.html#parameters",
     "href": "reference/line.html#parameters",
     "title": " plotnine.themes.themeable.line",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/legend_title_align.html",
     "href": "reference/legend_title_align.html",
     "title": " plotnine.themes.themeable.legend_title_align",
     "section": "",
-    "text": "legend_title_align(theme_element=None)"
+    "text": "legend_title_align()"
   },
   {
     "objectID": "reference/legend_title_align.html#parameters",
     "href": "reference/legend_title_align.html#parameters",
     "title": " plotnine.themes.themeable.legend_title_align",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : \"right\" | \"left\" | \"center\" | \"top\" | \"bottom\" | \"auto\" = None\n\nIf auto, depends on the position of the legend."
+    "text": "Parameters\n\n\ntheme_element : \"right\" | \"left\" | \"center\" | \"top\" | \"bottom\" | \"auto\"\n\nIf auto, depends on the position of the legend."
   },
   {
     "objectID": "reference/legend_text_legend.html",
     "href": "reference/legend_text_legend.html",
     "title": " plotnine.themes.themeable.legend_text_legend",
     "section": "",
-    "text": "legend_text_legend(theme_element=None)"
+    "text": "legend_text_legend()"
   },
   {
     "objectID": "reference/legend_text_legend.html#parameters",
     "href": "reference/legend_text_legend.html#parameters",
     "title": " plotnine.themes.themeable.legend_text_legend",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/legend_text_legend.html#notes",
@@ -1677,105 +1677,105 @@
     "href": "reference/legend_text.html",
     "title": " plotnine.themes.themeable.legend_text",
     "section": "",
-    "text": "legend_text(theme_element=None)"
+    "text": "legend_text()"
   },
   {
     "objectID": "reference/legend_text.html#parameters",
     "href": "reference/legend_text.html#parameters",
     "title": " plotnine.themes.themeable.legend_text",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/legend_position.html",
     "href": "reference/legend_position.html",
     "title": " plotnine.themes.themeable.legend_position",
     "section": "",
-    "text": "legend_position(theme_element=None)"
+    "text": "legend_position()"
   },
   {
     "objectID": "reference/legend_position.html#parameters",
     "href": "reference/legend_position.html#parameters",
     "title": " plotnine.themes.themeable.legend_position",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : \"right\" | \"left\" | \"top\" | \"bottom\" | \"none\" | tuple = None\n\nIf none, no legend. If a tuple, 2-floats in the range [0, 1] for the location in screen coordinates."
+    "text": "Parameters\n\n\ntheme_element : \"right\" | \"left\" | \"top\" | \"bottom\" | \"none\" | tuple\n\nIf none, no legend. If a tuple, 2-floats in the range [0, 1] for the location in screen coordinates."
   },
   {
     "objectID": "reference/legend_key_width.html",
     "href": "reference/legend_key_width.html",
     "title": " plotnine.themes.themeable.legend_key_width",
     "section": "",
-    "text": "legend_key_width(theme_element=None)"
+    "text": "legend_key_width()"
   },
   {
     "objectID": "reference/legend_key_width.html#parameters",
     "href": "reference/legend_key_width.html#parameters",
     "title": " plotnine.themes.themeable.legend_key_width",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points"
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points"
   },
   {
     "objectID": "reference/legend_key_height.html",
     "href": "reference/legend_key_height.html",
     "title": " plotnine.themes.themeable.legend_key_height",
     "section": "",
-    "text": "legend_key_height(theme_element=None)"
+    "text": "legend_key_height()"
   },
   {
     "objectID": "reference/legend_key_height.html#parameters",
     "href": "reference/legend_key_height.html#parameters",
     "title": " plotnine.themes.themeable.legend_key_height",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/legend_entry_spacing_y.html",
     "href": "reference/legend_entry_spacing_y.html",
     "title": " plotnine.themes.themeable.legend_entry_spacing_y",
     "section": "",
-    "text": "legend_entry_spacing_y(theme_element=None)"
+    "text": "legend_entry_spacing_y()"
   },
   {
     "objectID": "reference/legend_entry_spacing_y.html#parameters",
     "href": "reference/legend_entry_spacing_y.html#parameters",
     "title": " plotnine.themes.themeable.legend_entry_spacing_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nSize in points"
+    "text": "Parameters\n\n\ntheme_element : float\n\nSize in points"
   },
   {
     "objectID": "reference/legend_entry_spacing.html",
     "href": "reference/legend_entry_spacing.html",
     "title": " plotnine.themes.themeable.legend_entry_spacing",
     "section": "",
-    "text": "legend_entry_spacing(theme_element=None)"
+    "text": "legend_entry_spacing()"
   },
   {
     "objectID": "reference/legend_entry_spacing.html#parameters",
     "href": "reference/legend_entry_spacing.html#parameters",
     "title": " plotnine.themes.themeable.legend_entry_spacing",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nSize in points"
+    "text": "Parameters\n\n\ntheme_element : float\n\nSize in points"
   },
   {
     "objectID": "reference/legend_box_spacing.html",
     "href": "reference/legend_box_spacing.html",
     "title": " plotnine.themes.themeable.legend_box_spacing",
     "section": "",
-    "text": "legend_box_spacing(theme_element=None)"
+    "text": "legend_box_spacing()"
   },
   {
     "objectID": "reference/legend_box_spacing.html#parameters",
     "href": "reference/legend_box_spacing.html#parameters",
     "title": " plotnine.themes.themeable.legend_box_spacing",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/legend_box_just.html",
     "href": "reference/legend_box_just.html",
     "title": " plotnine.themes.themeable.legend_box_just",
     "section": "",
-    "text": "legend_box_just(theme_element=None)"
+    "text": "legend_box_just()"
   },
   {
     "objectID": "reference/legend_box_just.html#parameters",
@@ -1789,14 +1789,14 @@
     "href": "reference/legend_box.html",
     "title": " plotnine.themes.themeable.legend_box",
     "section": "",
-    "text": "legend_box(theme_element=None)"
+    "text": "legend_box()"
   },
   {
     "objectID": "reference/legend_box.html#parameters",
     "href": "reference/legend_box.html#parameters",
     "title": " plotnine.themes.themeable.legend_box",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"vertical\", \"horizontal\"] = None\n\nWhether to stack up the legends vertically or horizontally."
+    "text": "Parameters\n\n\ntheme_element : Literal[\"vertical\", \"horizontal\"]\n\nWhether to stack up the legends vertically or horizontally."
   },
   {
     "objectID": "reference/layer.html",
@@ -1866,7 +1866,7 @@
     "href": "reference/index.html",
     "title": "API Reference",
     "section": "",
-    "text": "ggplot\nCreate a new ggplot object\n\n\nqplot\nQuick plot\n\n\nwatermark\nAdd watermark to plot\n\n\nlayer\nLayer\n\n\nPlotnineAnimation\nAnimation using ggplot objects\n\n\nsave_as_pdf_pages\nSave multiple objects to a PDF file, one per page.\n\n\n\n\n\n\n\nAesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.\n\n\n\n\naes\nCreate aesthetic mappings\n\n\nafter_stat\nEvaluate mapping after statistic has been calculated\n\n\nafter_scale\nEvaluate mapping after variable has been mapped to the scale\n\n\nstage\nStage allows you evaluating mapping at more than one stage\n\n\n\n\n\n\n\nGeometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.\n\n\n\n\ngeom\nBase class of all Geoms\n\n\n\n\n\n\n\n\ngeom_abline\nLines specified by slope and intercept\n\n\ngeom_area\nArea plot\n\n\ngeom_bar\nBar plot\n\n\ngeom_blank\nAn empty plot\n\n\ngeom_boxplot\nBox and whiskers plot\n\n\ngeom_col\nBar plot with base on the x-axis\n\n\ngeom_count\nPlot overlapping points\n\n\ngeom_crossbar\nVertical interval represented by a crossbar\n\n\ngeom_density\nSmooth density estimate\n\n\ngeom_density_2d\n2D density estimate\n\n\ngeom_dotplot\nDot plot\n\n\ngeom_errorbar\nVertical interval represented as an errorbar\n\n\ngeom_errorbarh\nHorizontal interval represented as an errorbar\n\n\ngeom_freqpoly\nFrequency polygon\n\n\ngeom_bin_2d\nHeatmap of 2d bin counts\n\n\ngeom_histogram\nHistogram\n\n\ngeom_hline\nHorizontal line\n\n\ngeom_jitter\nScatter plot with points jittered to reduce overplotting\n\n\ngeom_label\nTextual annotations with a background\n\n\ngeom_line\nConnected points\n\n\ngeom_linerange\nVertical interval represented by lines\n\n\ngeom_map\nDraw map feature\n\n\ngeom_path\nConnected points\n\n\ngeom_point\nPlot points (Scatter plot)\n\n\ngeom_pointdensity\nScatterplot with density estimation at each point\n\n\ngeom_pointrange\nVertical interval represented by a line with a point\n\n\ngeom_polygon\nPolygon, a filled path\n\n\ngeom_quantile\nQuantile lines from a quantile regression\n\n\ngeom_qq\nQuantile-Quantile plot\n\n\ngeom_qq_line\nQuantile-Quantile Line plot\n\n\ngeom_raster\nRasterized Rectangles specified using center points\n\n\ngeom_rect\nRectangles\n\n\ngeom_ribbon\nRibbon plot\n\n\ngeom_rug\nMarginal rug plot\n\n\ngeom_segment\nLine segments\n\n\ngeom_sina\nDraw a sina plot\n\n\ngeom_smooth\nA smoothed conditional mean\n\n\ngeom_spoke\nLine segment parameterised by location, direction and distance\n\n\ngeom_step\nStepped connected points\n\n\ngeom_text\nTextual annotations\n\n\ngeom_tile\nRectangles specified using a center points\n\n\ngeom_violin\nViolin Plot\n\n\ngeom_vline\nVertical line\n\n\n\n\n\n\n\n\n\n\nannotate\nCreate an annotation layer\n\n\nannotation_logticks\nMarginal log ticks.\n\n\nannotation_stripes\nAlternating stripes, centered around each label.\n\n\narrow\nDefine arrow (actually an arrowhead)\n\n\n\n\n\n\n\n\n\n\n\nlabs\nAdd labels for aesthetics and/or title\n\n\nxlab\nCreate x-axis label\n\n\nylab\nCreate y-axis label\n\n\nggtitle\nCreate plot title\n\n\n\n\n\n\n\n\nStatistical transformations (stats) do aggregations and other computations on data before it is drawn out. stat_* determine the type of computation done on the data. Different types of computations yield varied results, so a stat must be paired with a geom that can represent all or some of the computations.\n\n\n\n\nstat\nBase class of all stats\n\n\n\n\n\n\n\n\nstat_bin\nCount cases in each interval\n\n\nstat_bin_2d\n2 Dimensional bin counts\n\n\nstat_bindot\nBinning for a dot plot\n\n\nstat_boxplot\nCompute boxplot statistics\n\n\nstat_count\nCounts the number of cases at each x position\n\n\nstat_density\nCompute density estimate\n\n\nstat_density_2d\nCompute 2D kernel density estimation\n\n\nstat_ecdf\nEmperical Cumulative Density Function\n\n\nstat_ellipse\nCalculate normal confidence interval ellipse\n\n\nstat_function\nSuperimpose a function onto a plot\n\n\nstat_hull\n2 Dimensional Convex Hull\n\n\nstat_identity\nIdentity (do nothing) statistic\n\n\nstat_qq\nCalculation for quantile-quantile plot\n\n\nstat_qq_line\nCalculate line through quantile-quantile plot\n\n\nstat_quantile\nCompute quantile regression lines\n\n\nstat_sina\nCompute Sina plot values\n\n\nstat_smooth\nCalculate a smoothed conditional mean\n\n\nstat_sum\nSum unique values\n\n\nstat_summary\nCalculate summary statistics depending on x\n\n\nstat_summary_bin\nSummarise y values at x intervals\n\n\nstat_unique\nRemove duplicates\n\n\nstat_ydensity\nDensity estimate\n\n\n\n\n\n\n\nFaceting is a way to subset data and plot it on different panels.\n\n\n\n\nfacet\nBase class for all facets\n\n\n\n\n\n\n\n\nfacet_grid\nWrap 1D Panels onto 2D surface\n\n\nfacet_null\nA single Panel\n\n\nfacet_wrap\nWrap 1D Panels onto 2D surface\n\n\n\n\n\n\n\n\nlabeller\nFacet Strip Labelling\n\n\nas_labeller\nCoerse to labeller\n\n\nlabel_value\nKeep value as the label\n\n\nlabel_both\nConcatenate the facet variable with the value\n\n\nlabel_context\nCreate an unabiguous label string\n\n\n\n\n\n\n\nScales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e. length, colour, size and shape.\n\n\n\n\n\n\nscale\nBase class for all scales\n\n\nscale_discrete\nBase class for all discrete scales\n\n\nscale_continuous\nBase class for all continuous scales\n\n\nscale_datetime\nBase class for all date/datetime scales\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha\nContinuous Alpha Scale\n\n\nscale_alpha_discrete\nDiscrete Alpha Scale\n\n\nscale_alpha_continuous\nContinuous Alpha Scale\n\n\nscale_alpha_datetime\nDatetime Alpha Scale\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_identity\nNo alpha scaling\n\n\nscale_color_identity\nNo color scaling\n\n\nscale_colour_identity\nNo color scaling\n\n\nscale_fill_identity\nNo color scaling\n\n\nscale_linetype_identity\nNo linetype scaling\n\n\nscale_shape_identity\nNo shape scaling\n\n\nscale_size_identity\nNo size scaling\n\n\n\n\n\n\n\n\n\n\n\nscale_color_brewer\nSequential, diverging and qualitative discrete color scales\n\n\nscale_color_continuous\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_desaturate\nCreate a desaturated color gradient\n\n\nscale_color_datetime\nDatetime color scale\n\n\nscale_color_discrete\nQualitative color scale with evenly spaced hues\n\n\nscale_color_distiller\nSequential and diverging continuous color scales\n\n\nscale_color_gradient\nCreate a 2 point color gradient\n\n\nscale_color_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_color_gradientn\nCreate a n color gradient\n\n\nscale_color_gray\nSequential grey color scale.\n\n\nscale_color_grey\nSequential grey color scale.\n\n\nscale_color_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_brewer\nSequential, diverging and qualitative color scales\n\n\nscale_fill_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_continuous\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_datetime\nDatetime fill scale\n\n\nscale_fill_desaturate\nCreate a desaturated color gradient\n\n\nscale_fill_discrete\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_distiller\nSequential, diverging continuous color scales\n\n\nscale_fill_gradient\nCreate a 2 point color gradient\n\n\nscale_fill_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_fill_gradientn\nCreate a n color gradient\n\n\nscale_fill_gray\nSequential grey color scale.\n\n\nscale_fill_grey\nSequential grey color scale.\n\n\nscale_fill_hue\nQualitative color scale with evenly spaced hues\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_manual\nCustom discrete alpha scale\n\n\nscale_color_manual\nCustom discrete color scale\n\n\nscale_colour_manual\nCustom discrete color scale\n\n\nscale_fill_manual\nCustom discrete fill scale\n\n\nscale_linetype_manual\nCustom discrete linetype scale\n\n\nscale_shape_manual\nCustom discrete shape scale\n\n\nscale_size_manual\nCustom discrete size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_linetype\nScale for line patterns\n\n\nscale_linetype_discrete\nScale for line patterns\n\n\n\n\n\n\n\n\n\n\n\nscale_shape\nScale for shapes\n\n\nscale_shape_discrete\nScale for shapes\n\n\n\n\n\n\n\n\n\n\n\nscale_size\nContinuous area size scale\n\n\nscale_size_area\nContinuous area size scale\n\n\nscale_size_continuous\nContinuous area size scale\n\n\nscale_size_discrete\nDiscrete area size scale\n\n\nscale_size_radius\nContinuous radius size scale\n\n\nscale_size_datetime\nDatetime area-size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_x_continuous\nContinuous x position\n\n\nscale_x_date\nContinuous x position for datetime data points\n\n\nscale_x_datetime\nContinuous x position for datetime data points\n\n\nscale_x_discrete\nDiscrete x position\n\n\nscale_x_log10\nContinuous x position log10 transformed scale\n\n\nscale_x_reverse\nContinuous x position reverse transformed scale\n\n\nscale_x_sqrt\nContinuous x position sqrt transformed scale\n\n\nscale_x_symlog\nContinuous x position symmetric logarithm transformed scale\n\n\nscale_x_timedelta\nContinuous x position for timedelta data points\n\n\nscale_y_continuous\nContinuous y position\n\n\nscale_y_date\nContinuous y position for datetime data points\n\n\nscale_y_datetime\nContinuous y position for datetime data points\n\n\nscale_y_discrete\nDiscrete y position\n\n\nscale_y_log10\nContinuous y position log10 transformed scale\n\n\nscale_y_reverse\nContinuous y position reverse transformed scale\n\n\nscale_y_sqrt\nContinuous y position sqrt transformed scale\n\n\nscale_y_symlog\nContinuous y position symmetric logarithm transformed scale\n\n\nscale_y_timedelta\nContinuous y position for timedelta data points\n\n\n\n\n\n\n\n\n\n\n\nlims\nSet aesthetic limits\n\n\nxlim\nSet x-axis limits\n\n\nylim\nSet y-axis limits\n\n\nexpand_limits\nExpand the limits any aesthetic using data\n\n\n\n\n\n\n\n\nGuides allow you to interpret data represented on a scales. Guides include the x and y axes, legends and colorbars.\n\n\n\n\nguide\nBase class for all guides\n\n\n\n\n\n\n\n\nguides\nGuides for each scale\n\n\nguide_legend\nLegend guide\n\n\nguide_colorbar\nGuide colorbar\n\n\n\n\n\n\n\nOverlapping objects can be visualized better if their positions are adjusted. That is what the position_* class do. Each geom is associated with one position adjustment class.\n\n\n\n\nposition\nBase class for all positions\n\n\n\n\n\n\n\n\nposition_dodge\nDodge overlaps and place objects side-by-side\n\n\nposition_dodge2\nDodge overlaps and place objects side-by-side\n\n\nposition_fill\nNormalise stacked objects to unit height\n\n\nposition_identity\nDo not adjust the position\n\n\nposition_jitter\nJitter points to avoid overplotting\n\n\nposition_jitterdodge\nDodge and jitter to minimise overlap\n\n\nposition_nudge\nNudge points\n\n\nposition_stack\nStack plotted objects on top of each other\n\n\n\n\n\n\n\nThemes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\n\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_direction\naxis tick direction\n\n\naxis_ticks_direction_x\nx-axis tick direction\n\n\naxis_ticks_direction_y\ny-axis tick direction\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of legend boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_entry_spacing\nSpacing between two entries in a legend\n\n\nlegend_entry_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_entry_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_align\nAlignment of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank\n\n\n\n\n\n\n\n\nCoordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system\n\n\n\n\n\n\n\nWhen working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using theme_set().\n\n\n\n\naspect_ratio\nDefault aspect ratio used by the themes\n\n\nbase_family\nThe base font family for all text that is part of the theme.\n\n\nbase_margin\nA size that is proportional of the figure width and\n\n\nclose_all_figures\nDevelopment flag, e.g. set to True to prevent\n\n\ncurrent_theme\nTheme used when none is added to the ggplot object\n\n\ndpi\nDefault DPI used by the themes\n\n\nfigure_size\nDefault figure size inches\n\n\nget_option\nGet package option\n\n\nset_option\nSet package option\n\n\n\n\n\n\n\nThese datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\n\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
+    "text": "ggplot\nCreate a new ggplot object\n\n\nqplot\nQuick plot\n\n\nwatermark\nAdd watermark to plot\n\n\nlayer\nLayer\n\n\nPlotnineAnimation\nAnimation using ggplot objects\n\n\nsave_as_pdf_pages\nSave multiple objects to a PDF file, one per page.\n\n\n\n\n\n\n\nAesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.\n\n\n\n\naes\nCreate aesthetic mappings\n\n\nafter_stat\nEvaluate mapping after statistic has been calculated\n\n\nafter_scale\nEvaluate mapping after variable has been mapped to the scale\n\n\nstage\nStage allows you evaluating mapping at more than one stage\n\n\n\n\n\n\n\nGeometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.\n\n\n\n\ngeom\nBase class of all Geoms\n\n\n\n\n\n\n\n\ngeom_abline\nLines specified by slope and intercept\n\n\ngeom_area\nArea plot\n\n\ngeom_bar\nBar plot\n\n\ngeom_blank\nAn empty plot\n\n\ngeom_boxplot\nBox and whiskers plot\n\n\ngeom_col\nBar plot with base on the x-axis\n\n\ngeom_count\nPlot overlapping points\n\n\ngeom_crossbar\nVertical interval represented by a crossbar\n\n\ngeom_density\nSmooth density estimate\n\n\ngeom_density_2d\n2D density estimate\n\n\ngeom_dotplot\nDot plot\n\n\ngeom_errorbar\nVertical interval represented as an errorbar\n\n\ngeom_errorbarh\nHorizontal interval represented as an errorbar\n\n\ngeom_freqpoly\nFrequency polygon\n\n\ngeom_bin_2d\nHeatmap of 2d bin counts\n\n\ngeom_histogram\nHistogram\n\n\ngeom_hline\nHorizontal line\n\n\ngeom_jitter\nScatter plot with points jittered to reduce overplotting\n\n\ngeom_label\nTextual annotations with a background\n\n\ngeom_line\nConnected points\n\n\ngeom_linerange\nVertical interval represented by lines\n\n\ngeom_map\nDraw map feature\n\n\ngeom_path\nConnected points\n\n\ngeom_point\nPlot points (Scatter plot)\n\n\ngeom_pointdensity\nScatterplot with density estimation at each point\n\n\ngeom_pointrange\nVertical interval represented by a line with a point\n\n\ngeom_polygon\nPolygon, a filled path\n\n\ngeom_quantile\nQuantile lines from a quantile regression\n\n\ngeom_qq\nQuantile-Quantile plot\n\n\ngeom_qq_line\nQuantile-Quantile Line plot\n\n\ngeom_raster\nRasterized Rectangles specified using center points\n\n\ngeom_rect\nRectangles\n\n\ngeom_ribbon\nRibbon plot\n\n\ngeom_rug\nMarginal rug plot\n\n\ngeom_segment\nLine segments\n\n\ngeom_sina\nDraw a sina plot\n\n\ngeom_smooth\nA smoothed conditional mean\n\n\ngeom_spoke\nLine segment parameterised by location, direction and distance\n\n\ngeom_step\nStepped connected points\n\n\ngeom_text\nTextual annotations\n\n\ngeom_tile\nRectangles specified using a center points\n\n\ngeom_violin\nViolin Plot\n\n\ngeom_vline\nVertical line\n\n\n\n\n\n\n\n\n\n\nannotate\nCreate an annotation layer\n\n\nannotation_logticks\nMarginal log ticks.\n\n\nannotation_stripes\nAlternating stripes, centered around each label.\n\n\narrow\nDefine arrow (actually an arrowhead)\n\n\n\n\n\n\n\n\n\n\n\nlabs\nAdd labels for aesthetics and/or title\n\n\nxlab\nCreate x-axis label\n\n\nylab\nCreate y-axis label\n\n\nggtitle\nCreate plot title\n\n\n\n\n\n\n\n\nStatistical transformations (stats) do aggregations and other computations on data before it is drawn out. stat_* determine the type of computation done on the data. Different types of computations yield varied results, so a stat must be paired with a geom that can represent all or some of the computations.\n\n\n\n\nstat\nBase class of all stats\n\n\n\n\n\n\n\n\nstat_bin\nCount cases in each interval\n\n\nstat_bin_2d\n2 Dimensional bin counts\n\n\nstat_bindot\nBinning for a dot plot\n\n\nstat_boxplot\nCompute boxplot statistics\n\n\nstat_count\nCounts the number of cases at each x position\n\n\nstat_density\nCompute density estimate\n\n\nstat_density_2d\nCompute 2D kernel density estimation\n\n\nstat_ecdf\nEmperical Cumulative Density Function\n\n\nstat_ellipse\nCalculate normal confidence interval ellipse\n\n\nstat_function\nSuperimpose a function onto a plot\n\n\nstat_hull\n2 Dimensional Convex Hull\n\n\nstat_identity\nIdentity (do nothing) statistic\n\n\nstat_qq\nCalculation for quantile-quantile plot\n\n\nstat_qq_line\nCalculate line through quantile-quantile plot\n\n\nstat_quantile\nCompute quantile regression lines\n\n\nstat_sina\nCompute Sina plot values\n\n\nstat_smooth\nCalculate a smoothed conditional mean\n\n\nstat_sum\nSum unique values\n\n\nstat_summary\nCalculate summary statistics depending on x\n\n\nstat_summary_bin\nSummarise y values at x intervals\n\n\nstat_unique\nRemove duplicates\n\n\nstat_ydensity\nDensity estimate\n\n\n\n\n\n\n\nFaceting is a way to subset data and plot it on different panels.\n\n\n\n\nfacet\nBase class for all facets\n\n\n\n\n\n\n\n\nfacet_grid\nWrap 1D Panels onto 2D surface\n\n\nfacet_null\nA single Panel\n\n\nfacet_wrap\nWrap 1D Panels onto 2D surface\n\n\n\n\n\n\n\n\nlabeller\nFacet Strip Labelling\n\n\nas_labeller\nCoerse to labeller\n\n\nlabel_value\nKeep value as the label\n\n\nlabel_both\nConcatenate the facet variable with the value\n\n\nlabel_context\nCreate an unabiguous label string\n\n\n\n\n\n\n\nScales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e. length, colour, size and shape.\n\n\n\n\n\n\nscale\nBase class for all scales\n\n\nscale_discrete\nBase class for all discrete scales\n\n\nscale_continuous\nBase class for all continuous scales\n\n\nscale_datetime\nBase class for all date/datetime scales\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha\nContinuous Alpha Scale\n\n\nscale_alpha_discrete\nDiscrete Alpha Scale\n\n\nscale_alpha_continuous\nContinuous Alpha Scale\n\n\nscale_alpha_datetime\nDatetime Alpha Scale\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_identity\nNo alpha scaling\n\n\nscale_color_identity\nNo color scaling\n\n\nscale_colour_identity\nNo color scaling\n\n\nscale_fill_identity\nNo color scaling\n\n\nscale_linetype_identity\nNo linetype scaling\n\n\nscale_shape_identity\nNo shape scaling\n\n\nscale_size_identity\nNo size scaling\n\n\n\n\n\n\n\n\n\n\n\nscale_color_brewer\nSequential, diverging and qualitative discrete color scales\n\n\nscale_color_continuous\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_desaturate\nCreate a desaturated color gradient\n\n\nscale_color_datetime\nDatetime color scale\n\n\nscale_color_discrete\nQualitative color scale with evenly spaced hues\n\n\nscale_color_distiller\nSequential and diverging continuous color scales\n\n\nscale_color_gradient\nCreate a 2 point color gradient\n\n\nscale_color_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_color_gradientn\nCreate a n color gradient\n\n\nscale_color_gray\nSequential grey color scale.\n\n\nscale_color_grey\nSequential grey color scale.\n\n\nscale_color_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_brewer\nSequential, diverging and qualitative color scales\n\n\nscale_fill_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_continuous\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_datetime\nDatetime fill scale\n\n\nscale_fill_desaturate\nCreate a desaturated color gradient\n\n\nscale_fill_discrete\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_distiller\nSequential, diverging continuous color scales\n\n\nscale_fill_gradient\nCreate a 2 point color gradient\n\n\nscale_fill_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_fill_gradientn\nCreate a n color gradient\n\n\nscale_fill_gray\nSequential grey color scale.\n\n\nscale_fill_grey\nSequential grey color scale.\n\n\nscale_fill_hue\nQualitative color scale with evenly spaced hues\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_manual\nCustom discrete alpha scale\n\n\nscale_color_manual\nCustom discrete color scale\n\n\nscale_colour_manual\nCustom discrete color scale\n\n\nscale_fill_manual\nCustom discrete fill scale\n\n\nscale_linetype_manual\nCustom discrete linetype scale\n\n\nscale_shape_manual\nCustom discrete shape scale\n\n\nscale_size_manual\nCustom discrete size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_linetype\nScale for line patterns\n\n\nscale_linetype_discrete\nScale for line patterns\n\n\n\n\n\n\n\n\n\n\n\nscale_shape\nScale for shapes\n\n\nscale_shape_discrete\nScale for shapes\n\n\n\n\n\n\n\n\n\n\n\nscale_size\nContinuous area size scale\n\n\nscale_size_area\nContinuous area size scale\n\n\nscale_size_continuous\nContinuous area size scale\n\n\nscale_size_discrete\nDiscrete area size scale\n\n\nscale_size_radius\nContinuous radius size scale\n\n\nscale_size_datetime\nDatetime area-size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_x_continuous\nContinuous x position\n\n\nscale_x_date\nContinuous x position for datetime data points\n\n\nscale_x_datetime\nContinuous x position for datetime data points\n\n\nscale_x_discrete\nDiscrete x position\n\n\nscale_x_log10\nContinuous x position log10 transformed scale\n\n\nscale_x_reverse\nContinuous x position reverse transformed scale\n\n\nscale_x_sqrt\nContinuous x position sqrt transformed scale\n\n\nscale_x_symlog\nContinuous x position symmetric logarithm transformed scale\n\n\nscale_x_timedelta\nContinuous x position for timedelta data points\n\n\nscale_y_continuous\nContinuous y position\n\n\nscale_y_date\nContinuous y position for datetime data points\n\n\nscale_y_datetime\nContinuous y position for datetime data points\n\n\nscale_y_discrete\nDiscrete y position\n\n\nscale_y_log10\nContinuous y position log10 transformed scale\n\n\nscale_y_reverse\nContinuous y position reverse transformed scale\n\n\nscale_y_sqrt\nContinuous y position sqrt transformed scale\n\n\nscale_y_symlog\nContinuous y position symmetric logarithm transformed scale\n\n\nscale_y_timedelta\nContinuous y position for timedelta data points\n\n\n\n\n\n\n\n\n\n\n\nlims\nSet aesthetic limits\n\n\nxlim\nSet x-axis limits\n\n\nylim\nSet y-axis limits\n\n\nexpand_limits\nExpand the limits any aesthetic using data\n\n\n\n\n\n\n\n\nGuides allow you to interpret data represented on a scales. Guides include the x and y axes, legends and colorbars.\n\n\n\n\nguide\nBase class for all guides\n\n\n\n\n\n\n\n\nguides\nGuides for each scale\n\n\nguide_legend\nLegend guide\n\n\nguide_colorbar\nGuide colorbar\n\n\n\n\n\n\n\nOverlapping objects can be visualized better if their positions are adjusted. That is what the position_* class do. Each geom is associated with one position adjustment class.\n\n\n\n\nposition\nBase class for all positions\n\n\n\n\n\n\n\n\nposition_dodge\nDodge overlaps and place objects side-by-side\n\n\nposition_dodge2\nDodge overlaps and place objects side-by-side\n\n\nposition_fill\nNormalise stacked objects to unit height\n\n\nposition_identity\nDo not adjust the position\n\n\nposition_jitter\nJitter points to avoid overplotting\n\n\nposition_jitterdodge\nDodge and jitter to minimise overlap\n\n\nposition_nudge\nNudge points\n\n\nposition_stack\nStack plotted objects on top of each other\n\n\n\n\n\n\n\nThemes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\n\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_direction\naxis tick direction\n\n\naxis_ticks_direction_x\nx-axis tick direction\n\n\naxis_ticks_direction_y\ny-axis tick direction\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of legend boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_entry_spacing\nSpacing between two entries in a legend\n\n\nlegend_entry_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_entry_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_align\nAlignment of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank\n\n\n\n\n\n\n\n\nCoordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system\n\n\n\n\n\n\n\nWhen working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using theme_set().\n\n\n\n\naspect_ratio\nDefault aspect ratio used by the themes\n\n\nbase_family\nThe base font family for all text that is part of the theme.\n\n\nbase_margin\nA size that is proportional of the figure width and\n\n\nclose_all_figures\nDevelopment flag, e.g. set to True to prevent\n\n\ncurrent_theme\nTheme used when none is added to the ggplot object\n\n\ndpi\nDefault DPI used by the themes\n\n\nfigure_size\nDefault figure size inches\n\n\nget_option\nGet package option\n\n\nset_option\nSet package option\n\n\n\n\n\n\n\nThese datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\n\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
   },
   {
     "objectID": "reference/index.html#creating-a-plot",
@@ -1929,7 +1929,7 @@
     "href": "reference/index.html#themes",
     "title": "API Reference",
     "section": "",
-    "text": "Themes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\n\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_direction\naxis tick direction\n\n\naxis_ticks_direction_x\nx-axis tick direction\n\n\naxis_ticks_direction_y\ny-axis tick direction\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of legend boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_entry_spacing\nSpacing between two entries in a legend\n\n\nlegend_entry_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_entry_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_align\nAlignment of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank"
+    "text": "Themes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\n\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_direction\naxis tick direction\n\n\naxis_ticks_direction_x\nx-axis tick direction\n\n\naxis_ticks_direction_y\ny-axis tick direction\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of legend boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_entry_spacing\nSpacing between two entries in a legend\n\n\nlegend_entry_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_entry_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_align\nAlignment of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank"
   },
   {
     "objectID": "reference/index.html#coordinates",
@@ -2529,21 +2529,21 @@
   {
     "objectID": "reference/element_rect.html",
     "href": "reference/element_rect.html",
-    "title": " plotnine.themes.elements.element_rect",
+    "title": " plotnine.themes.elements.element_rect.element_rect",
     "section": "",
     "text": "element_rect(\n    fill=None, color=None, size=None, linetype=None, colour=None, **kwargs\n)"
   },
   {
     "objectID": "reference/element_rect.html#parameters",
     "href": "reference/element_rect.html#parameters",
-    "title": " plotnine.themes.elements.element_rect",
+    "title": " plotnine.themes.elements.element_rect.element_rect",
     "section": "Parameters",
     "text": "Parameters\n\n\nfill : str | tuple = None\n\nRectangle background color\n\ncolor : str | tuple = None\n\nLine color\n\ncolour : str | tuple = None\n\nAlias of color\n\nsize : float = None\n\nLine thickness\n\nkwargs : dict = {}\n\nParameters recognised by :class:matplotlib.patches.Rectangle. In some cases you can use the fancy parameters from :class:matplotlib.patches.FancyBboxPatch."
   },
   {
     "objectID": "reference/element_blank.html",
     "href": "reference/element_blank.html",
-    "title": " plotnine.themes.elements.element_blank",
+    "title": " plotnine.themes.elements.element_blank.element_blank",
     "section": "",
     "text": "element_blank()\n\n\nTheme element: Blank"
   },
@@ -2636,42 +2636,42 @@
     "href": "reference/axis_title_x.html",
     "title": " plotnine.themes.themeable.axis_title_x",
     "section": "",
-    "text": "axis_title_x(theme_element=None)"
+    "text": "axis_title_x()"
   },
   {
     "objectID": "reference/axis_title_x.html#parameters",
     "href": "reference/axis_title_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_title_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/axis_ticks_y.html",
     "href": "reference/axis_ticks_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_y",
     "section": "",
-    "text": "axis_ticks_y(theme_element=None)"
+    "text": "axis_ticks_y()"
   },
   {
     "objectID": "reference/axis_ticks_y.html#parameters",
     "href": "reference/axis_ticks_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor_y.html",
     "href": "reference/axis_ticks_pad_minor_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor_y",
     "section": "",
-    "text": "axis_ticks_pad_minor_y(theme_element=None)"
+    "text": "axis_ticks_pad_minor_y()"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor_y.html#parameters",
     "href": "reference/axis_ticks_pad_minor_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None"
+    "text": "Parameters\n\n\ntheme_element : float"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor_y.html#note",
@@ -2685,14 +2685,14 @@
     "href": "reference/axis_ticks_pad_minor.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor",
     "section": "",
-    "text": "axis_ticks_pad_minor(theme_element=None)"
+    "text": "axis_ticks_pad_minor()"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor.html#parameters",
     "href": "reference/axis_ticks_pad_minor.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None"
+    "text": "Parameters\n\n\ntheme_element : float"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor.html#note",
@@ -2706,28 +2706,28 @@
     "href": "reference/axis_ticks_pad_major_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major_x",
     "section": "",
-    "text": "axis_ticks_pad_major_x(theme_element=None)"
+    "text": "axis_ticks_pad_major_x()"
   },
   {
     "objectID": "reference/axis_ticks_pad_major_x.html#parameters",
     "href": "reference/axis_ticks_pad_major_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_pad.html",
     "href": "reference/axis_ticks_pad.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad",
     "section": "",
-    "text": "axis_ticks_pad(theme_element=None)"
+    "text": "axis_ticks_pad()"
   },
   {
     "objectID": "reference/axis_ticks_pad.html#parameters",
     "href": "reference/axis_ticks_pad.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_pad.html#note",
@@ -2741,154 +2741,154 @@
     "href": "reference/axis_ticks_minor_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_minor_x",
     "section": "",
-    "text": "axis_ticks_minor_x(theme_element=None)"
+    "text": "axis_ticks_minor_x()"
   },
   {
     "objectID": "reference/axis_ticks_minor_x.html#parameters",
     "href": "reference/axis_ticks_minor_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_minor_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_major_y.html",
     "href": "reference/axis_ticks_major_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_major_y",
     "section": "",
-    "text": "axis_ticks_major_y(theme_element=None)"
+    "text": "axis_ticks_major_y()"
   },
   {
     "objectID": "reference/axis_ticks_major_y.html#parameters",
     "href": "reference/axis_ticks_major_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_major_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_major.html",
     "href": "reference/axis_ticks_major.html",
     "title": " plotnine.themes.themeable.axis_ticks_major",
     "section": "",
-    "text": "axis_ticks_major(theme_element=None)"
+    "text": "axis_ticks_major()"
   },
   {
     "objectID": "reference/axis_ticks_major.html#parameters",
     "href": "reference/axis_ticks_major.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_major",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_length_minor_x.html",
     "href": "reference/axis_ticks_length_minor_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor_x",
     "section": "",
-    "text": "axis_ticks_length_minor_x(theme_element=None)"
+    "text": "axis_ticks_length_minor_x()"
   },
   {
     "objectID": "reference/axis_ticks_length_minor_x.html#parameters",
     "href": "reference/axis_ticks_length_minor_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_length_major_y.html",
     "href": "reference/axis_ticks_length_major_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_length_major_y",
     "section": "",
-    "text": "axis_ticks_length_major_y(theme_element=None)"
+    "text": "axis_ticks_length_major_y()"
   },
   {
     "objectID": "reference/axis_ticks_length_major_y.html#parameters",
     "href": "reference/axis_ticks_length_major_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_major_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_length_major.html",
     "href": "reference/axis_ticks_length_major.html",
     "title": " plotnine.themes.themeable.axis_ticks_length_major",
     "section": "",
-    "text": "axis_ticks_length_major(theme_element=None)"
+    "text": "axis_ticks_length_major()"
   },
   {
     "objectID": "reference/axis_ticks_length_major.html#parameters",
     "href": "reference/axis_ticks_length_major.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_major",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_direction_y.html",
     "href": "reference/axis_ticks_direction_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_direction_y",
     "section": "",
-    "text": "axis_ticks_direction_y(theme_element=None)"
+    "text": "axis_ticks_direction_y()"
   },
   {
     "objectID": "reference/axis_ticks_direction_y.html#parameters",
     "href": "reference/axis_ticks_direction_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_direction_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"] = None\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
+    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"]\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
   },
   {
     "objectID": "reference/axis_ticks_direction.html",
     "href": "reference/axis_ticks_direction.html",
     "title": " plotnine.themes.themeable.axis_ticks_direction",
     "section": "",
-    "text": "axis_ticks_direction(theme_element=None)"
+    "text": "axis_ticks_direction()"
   },
   {
     "objectID": "reference/axis_ticks_direction.html#parameters",
     "href": "reference/axis_ticks_direction.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_direction",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"] = None\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
+    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"]\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
   },
   {
     "objectID": "reference/axis_text_y.html",
     "href": "reference/axis_text_y.html",
     "title": " plotnine.themes.themeable.axis_text_y",
     "section": "",
-    "text": "axis_text_y(theme_element=None)"
+    "text": "axis_text_y()"
   },
   {
     "objectID": "reference/axis_text_y.html#parameters",
     "href": "reference/axis_text_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_text_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/axis_text.html",
     "href": "reference/axis_text.html",
     "title": " plotnine.themes.themeable.axis_text",
     "section": "",
-    "text": "axis_text(theme_element=None)"
+    "text": "axis_text()"
   },
   {
     "objectID": "reference/axis_text.html#parameters",
     "href": "reference/axis_text.html#parameters",
     "title": " plotnine.themes.themeable.axis_text",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/axis_line_x.html",
     "href": "reference/axis_line_x.html",
     "title": " plotnine.themes.themeable.axis_line_x",
     "section": "",
-    "text": "axis_line_x(theme_element=None)"
+    "text": "axis_line_x()"
   },
   {
     "objectID": "reference/axis_line_x.html#parameters",
     "href": "reference/axis_line_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_line_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_line_x.html#attributes",
@@ -3112,28 +3112,28 @@
     "href": "reference/axis_line.html",
     "title": " plotnine.themes.themeable.axis_line",
     "section": "",
-    "text": "axis_line(theme_element=None)"
+    "text": "axis_line()"
   },
   {
     "objectID": "reference/axis_line.html#parameters",
     "href": "reference/axis_line.html#parameters",
     "title": " plotnine.themes.themeable.axis_line",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_line_y.html",
     "href": "reference/axis_line_y.html",
     "title": " plotnine.themes.themeable.axis_line_y",
     "section": "",
-    "text": "axis_line_y(theme_element=None)"
+    "text": "axis_line_y()"
   },
   {
     "objectID": "reference/axis_line_y.html#parameters",
     "href": "reference/axis_line_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_line_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_line_y.html#attributes",
@@ -3147,154 +3147,154 @@
     "href": "reference/axis_text_x.html",
     "title": " plotnine.themes.themeable.axis_text_x",
     "section": "",
-    "text": "axis_text_x(theme_element=None)"
+    "text": "axis_text_x()"
   },
   {
     "objectID": "reference/axis_text_x.html#parameters",
     "href": "reference/axis_text_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_text_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/axis_ticks.html",
     "href": "reference/axis_ticks.html",
     "title": " plotnine.themes.themeable.axis_ticks",
     "section": "",
-    "text": "axis_ticks(theme_element=None)"
+    "text": "axis_ticks()"
   },
   {
     "objectID": "reference/axis_ticks.html#parameters",
     "href": "reference/axis_ticks.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_direction_x.html",
     "href": "reference/axis_ticks_direction_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_direction_x",
     "section": "",
-    "text": "axis_ticks_direction_x(theme_element=None)"
+    "text": "axis_ticks_direction_x()"
   },
   {
     "objectID": "reference/axis_ticks_direction_x.html#parameters",
     "href": "reference/axis_ticks_direction_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_direction_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"] = None\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
+    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"]\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
   },
   {
     "objectID": "reference/axis_ticks_length.html",
     "href": "reference/axis_ticks_length.html",
     "title": " plotnine.themes.themeable.axis_ticks_length",
     "section": "",
-    "text": "axis_ticks_length(theme_element=None)"
+    "text": "axis_ticks_length()"
   },
   {
     "objectID": "reference/axis_ticks_length.html#parameters",
     "href": "reference/axis_ticks_length.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_length_major_x.html",
     "href": "reference/axis_ticks_length_major_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_length_major_x",
     "section": "",
-    "text": "axis_ticks_length_major_x(theme_element=None)"
+    "text": "axis_ticks_length_major_x()"
   },
   {
     "objectID": "reference/axis_ticks_length_major_x.html#parameters",
     "href": "reference/axis_ticks_length_major_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_major_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_length_minor.html",
     "href": "reference/axis_ticks_length_minor.html",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor",
     "section": "",
-    "text": "axis_ticks_length_minor(theme_element=None)"
+    "text": "axis_ticks_length_minor()"
   },
   {
     "objectID": "reference/axis_ticks_length_minor.html#parameters",
     "href": "reference/axis_ticks_length_minor.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_length_minor_y.html",
     "href": "reference/axis_ticks_length_minor_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor_y",
     "section": "",
-    "text": "axis_ticks_length_minor_y(theme_element=None)"
+    "text": "axis_ticks_length_minor_y()"
   },
   {
     "objectID": "reference/axis_ticks_length_minor_y.html#parameters",
     "href": "reference/axis_ticks_length_minor_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_major_x.html",
     "href": "reference/axis_ticks_major_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_major_x",
     "section": "",
-    "text": "axis_ticks_major_x(theme_element=None)"
+    "text": "axis_ticks_major_x()"
   },
   {
     "objectID": "reference/axis_ticks_major_x.html#parameters",
     "href": "reference/axis_ticks_major_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_major_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_minor.html",
     "href": "reference/axis_ticks_minor.html",
     "title": " plotnine.themes.themeable.axis_ticks_minor",
     "section": "",
-    "text": "axis_ticks_minor(theme_element=None)"
+    "text": "axis_ticks_minor()"
   },
   {
     "objectID": "reference/axis_ticks_minor.html#parameters",
     "href": "reference/axis_ticks_minor.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_minor",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_minor_y.html",
     "href": "reference/axis_ticks_minor_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_minor_y",
     "section": "",
-    "text": "axis_ticks_minor_y(theme_element=None)"
+    "text": "axis_ticks_minor_y()"
   },
   {
     "objectID": "reference/axis_ticks_minor_y.html#parameters",
     "href": "reference/axis_ticks_minor_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_minor_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_ticks_pad_major.html",
     "href": "reference/axis_ticks_pad_major.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major",
     "section": "",
-    "text": "axis_ticks_pad_major(theme_element=None)"
+    "text": "axis_ticks_pad_major()"
   },
   {
     "objectID": "reference/axis_ticks_pad_major.html#parameters",
     "href": "reference/axis_ticks_pad_major.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_pad_major.html#note",
@@ -3308,14 +3308,14 @@
     "href": "reference/axis_ticks_pad_major_y.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major_y",
     "section": "",
-    "text": "axis_ticks_pad_major_y(theme_element=None)"
+    "text": "axis_ticks_pad_major_y()"
   },
   {
     "objectID": "reference/axis_ticks_pad_major_y.html#parameters",
     "href": "reference/axis_ticks_pad_major_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/axis_ticks_pad_major_y.html#note",
@@ -3329,14 +3329,14 @@
     "href": "reference/axis_ticks_pad_minor_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor_x",
     "section": "",
-    "text": "axis_ticks_pad_minor_x(theme_element=None)"
+    "text": "axis_ticks_pad_minor_x()"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor_x.html#parameters",
     "href": "reference/axis_ticks_pad_minor_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None"
+    "text": "Parameters\n\n\ntheme_element : float"
   },
   {
     "objectID": "reference/axis_ticks_pad_minor_x.html#note",
@@ -3350,42 +3350,42 @@
     "href": "reference/axis_ticks_x.html",
     "title": " plotnine.themes.themeable.axis_ticks_x",
     "section": "",
-    "text": "axis_ticks_x(theme_element=None)"
+    "text": "axis_ticks_x()"
   },
   {
     "objectID": "reference/axis_ticks_x.html#parameters",
     "href": "reference/axis_ticks_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/axis_title.html",
     "href": "reference/axis_title.html",
     "title": " plotnine.themes.themeable.axis_title",
     "section": "",
-    "text": "axis_title(theme_element=None)"
+    "text": "axis_title()"
   },
   {
     "objectID": "reference/axis_title.html#parameters",
     "href": "reference/axis_title.html#parameters",
     "title": " plotnine.themes.themeable.axis_title",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/axis_title_y.html",
     "href": "reference/axis_title_y.html",
     "title": " plotnine.themes.themeable.axis_title_y",
     "section": "",
-    "text": "axis_title_y(theme_element=None)"
+    "text": "axis_title_y()"
   },
   {
     "objectID": "reference/axis_title_y.html#parameters",
     "href": "reference/axis_title_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_title_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/base_margin.html",
@@ -3481,37 +3481,37 @@
   {
     "objectID": "reference/element_line.html",
     "href": "reference/element_line.html",
-    "title": " plotnine.themes.elements.element_line",
+    "title": " plotnine.themes.elements.element_line.element_line",
     "section": "",
     "text": "element_line(\n    *,\n    color=None,\n    size=None,\n    linetype=None,\n    lineend=None,\n    colour=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/element_line.html#parameters",
     "href": "reference/element_line.html#parameters",
-    "title": " plotnine.themes.elements.element_line",
+    "title": " plotnine.themes.elements.element_line.element_line",
     "section": "Parameters",
     "text": "Parameters\n\n\ncolor : str | tuple = None\n\nline color\n\ncolour : str | tuple = None\n\nalias of color\n\nlinetype : str | tuple = None\n\nline style. if a string, it should be one of solid, dashed, dashdot or dotted. you can create interesting dashed patterns using tuples, see :meth:matplotlib.lines.line2D.set_linestyle.\n\nsize : float = None\n\nline thickness\n\nkwargs : dict = {}\n\nparameters recognised by :class:matplotlib.lines.line2d."
   },
   {
     "objectID": "reference/element_text.html",
     "href": "reference/element_text.html",
-    "title": " plotnine.themes.elements.element_text",
+    "title": " plotnine.themes.elements.element_text.element_text",
     "section": "",
     "text": "element_text(\n    family=None,\n    style=None,\n    weight=None,\n    color=None,\n    size=None,\n    ha=None,\n    va=None,\n    rotation=None,\n    linespacing=None,\n    backgroundcolor=None,\n    margin=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/element_text.html#parameters",
     "href": "reference/element_text.html#parameters",
-    "title": " plotnine.themes.elements.element_text",
+    "title": " plotnine.themes.elements.element_text.element_text",
     "section": "Parameters",
-    "text": "Parameters\n\n\nfamily : Optional[str | list[str]] = None\n\nFont family. See :meth:matplotlib.text.Text.set_family for supported values.\n\nstyle : Optional[str] = None\n\nFont style\n\ncolor : Optional[str | TupleFloat3 | TupleFloat4] = None\n\nText color\n\nweight : Optional[int | str] = None\n\nShould be one of normal, bold, heavy, light, ultrabold or ultralight.\n\nsize : Optional[float] = None\n\ntext size\n\nha : Optional[Literal[\"center\", \"left\", \"right\"]] = None\n\nHorizontal Alignment.\n\nva : Optional[Literal[\"center\", \"top\", \"bottom\", \"baseline\"]] = None\n\nVertical alignment.\n\nrotation : Optional[float] = None\n\nRotation angle in the range [0, 360]\n\nlinespacing : float = None\n\nLine spacing\n\nbackgroundcolor : Optional[str | TupleFloat3 | TupleFloat4] = None\n\nBackground color\n\nmargin : Optional[dict[Literal[\"t\", \"b\", \"l\", \"r\", \"units\"], Any]] = None\n\nMargin around the text. The keys are t, b, l, r and units. The tblr keys are floats. The units is one of pt, lines or in. Not all text themeables support margin parameters and other than the units, only some of the other keys may apply.\n\nkwargs : Any = {}\n\nParameters recognised by :class:matplotlib.text.Text"
+    "text": "Parameters\n\n\nfamily : Optional[str | list[str]] = None\n\nFont family. See :meth:matplotlib.text.Text.set_family for supported values.\n\nstyle : Optional[str | Sequence[str]] = None\n\nFont style\n\ncolor : Optional[str | TupleFloat3 | TupleFloat4 | Sequence[str | TupleFloat3 | TupleFloat4]] = None\n\nText color\n\nweight : Optional[int | str | Sequence[int | str]] = None\n\nShould be one of normal, bold, heavy, light, ultrabold or ultralight.\n\nsize : Optional[float | Sequence[float]] = None\n\ntext size\n\nha : Optional[Literal[\"center\", \"left\", \"right\"]] = None\n\nHorizontal Alignment.\n\nva : Optional[Literal[\"center\", \"top\", \"bottom\", \"baseline\"]] = None\n\nVertical alignment.\n\nrotation : Optional[Literal[\"vertical\", \"horizontal\"] | float] = None\n\nRotation angle in the range [0, 360]\n\nlinespacing : float = None\n\nLine spacing\n\nbackgroundcolor : Optional[str | TupleFloat3 | TupleFloat4 | Sequence[str | TupleFloat3 | TupleFloat4]] = None\n\nBackground color\n\nmargin : Optional[dict[Literal[\"t\", \"b\", \"l\", \"r\", \"units\"], Any]] = None\n\nMargin around the text. The keys are t, b, l, r and units. The tblr keys are floats. The units is one of pt, lines or in. Not all text themeables support margin parameters and other than the units, only some of the other keys may apply.\n\nkwargs : Any = {}\n\nParameters recognised by :class:matplotlib.text.Text"
   },
   {
     "objectID": "reference/element_text.html#notes",
     "href": "reference/element_text.html#notes",
-    "title": " plotnine.themes.elements.element_text",
+    "title": " plotnine.themes.elements.element_text.element_text",
     "section": "Notes",
-    "text": "Notes\nelement_text will accept parameters that conform to the ggplot2 element_text API, but it is preferable the Matplotlib based API described above."
+    "text": "Notes\n will accept parameters that conform to the ggplot2 element_text API, but it is preferable the Matplotlib based API described above."
   },
   {
     "objectID": "reference/facet.html",
@@ -4134,28 +4134,28 @@
     "href": "reference/legend_background.html",
     "title": " plotnine.themes.themeable.legend_background",
     "section": "",
-    "text": "legend_background(theme_element=None)"
+    "text": "legend_background()"
   },
   {
     "objectID": "reference/legend_background.html#parameters",
     "href": "reference/legend_background.html#parameters",
     "title": " plotnine.themes.themeable.legend_background",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/legend_box_background.html",
     "href": "reference/legend_box_background.html",
     "title": " plotnine.themes.themeable.legend_box_background",
     "section": "",
-    "text": "legend_box_background(theme_element=None)"
+    "text": "legend_box_background()"
   },
   {
     "objectID": "reference/legend_box_background.html#parameters",
     "href": "reference/legend_box_background.html#parameters",
     "title": " plotnine.themes.themeable.legend_box_background",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/legend_box_background.html#notes",
@@ -4169,112 +4169,112 @@
     "href": "reference/legend_box_margin.html",
     "title": " plotnine.themes.themeable.legend_box_margin",
     "section": "",
-    "text": "legend_box_margin(theme_element=None)"
+    "text": "legend_box_margin()"
   },
   {
     "objectID": "reference/legend_box_margin.html#parameters",
     "href": "reference/legend_box_margin.html#parameters",
     "title": " plotnine.themes.themeable.legend_box_margin",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : int = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : int\n\nValue in points."
   },
   {
     "objectID": "reference/legend_direction.html",
     "href": "reference/legend_direction.html",
     "title": " plotnine.themes.themeable.legend_direction",
     "section": "",
-    "text": "legend_direction(theme_element=None)"
+    "text": "legend_direction()"
   },
   {
     "objectID": "reference/legend_direction.html#parameters",
     "href": "reference/legend_direction.html#parameters",
     "title": " plotnine.themes.themeable.legend_direction",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"vertical\", \"horizontal\"] = None\n\nVertically or horizontally"
+    "text": "Parameters\n\n\ntheme_element : Literal[\"vertical\", \"horizontal\"]\n\nVertically or horizontally"
   },
   {
     "objectID": "reference/legend_entry_spacing_x.html",
     "href": "reference/legend_entry_spacing_x.html",
     "title": " plotnine.themes.themeable.legend_entry_spacing_x",
     "section": "",
-    "text": "legend_entry_spacing_x(theme_element=None)"
+    "text": "legend_entry_spacing_x()"
   },
   {
     "objectID": "reference/legend_entry_spacing_x.html#parameters",
     "href": "reference/legend_entry_spacing_x.html#parameters",
     "title": " plotnine.themes.themeable.legend_entry_spacing_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nSize in points"
+    "text": "Parameters\n\n\ntheme_element : float\n\nSize in points"
   },
   {
     "objectID": "reference/legend_key.html",
     "href": "reference/legend_key.html",
     "title": " plotnine.themes.themeable.legend_key",
     "section": "",
-    "text": "legend_key(theme_element=None)"
+    "text": "legend_key()"
   },
   {
     "objectID": "reference/legend_key.html#parameters",
     "href": "reference/legend_key.html#parameters",
     "title": " plotnine.themes.themeable.legend_key",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/legend_key_size.html",
     "href": "reference/legend_key_size.html",
     "title": " plotnine.themes.themeable.legend_key_size",
     "section": "",
-    "text": "legend_key_size(theme_element=None)"
+    "text": "legend_key_size()"
   },
   {
     "objectID": "reference/legend_key_size.html#parameters",
     "href": "reference/legend_key_size.html#parameters",
     "title": " plotnine.themes.themeable.legend_key_size",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/legend_margin.html",
     "href": "reference/legend_margin.html",
     "title": " plotnine.themes.themeable.legend_margin",
     "section": "",
-    "text": "legend_margin(theme_element=None)"
+    "text": "legend_margin()"
   },
   {
     "objectID": "reference/legend_margin.html#parameters",
     "href": "reference/legend_margin.html#parameters",
     "title": " plotnine.themes.themeable.legend_margin",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points"
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points"
   },
   {
     "objectID": "reference/legend_spacing.html",
     "href": "reference/legend_spacing.html",
     "title": " plotnine.themes.themeable.legend_spacing",
     "section": "",
-    "text": "legend_spacing(theme_element=None)"
+    "text": "legend_spacing()"
   },
   {
     "objectID": "reference/legend_spacing.html#parameters",
     "href": "reference/legend_spacing.html#parameters",
     "title": " plotnine.themes.themeable.legend_spacing",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
   },
   {
     "objectID": "reference/legend_text_colorbar.html",
     "href": "reference/legend_text_colorbar.html",
     "title": " plotnine.themes.themeable.legend_text_colorbar",
     "section": "",
-    "text": "legend_text_colorbar(theme_element=None)"
+    "text": "legend_text_colorbar()"
   },
   {
     "objectID": "reference/legend_text_colorbar.html#parameters",
     "href": "reference/legend_text_colorbar.html#parameters",
     "title": " plotnine.themes.themeable.legend_text_colorbar",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/legend_text_colorbar.html#notes",
@@ -4288,14 +4288,14 @@
     "href": "reference/legend_title.html",
     "title": " plotnine.themes.themeable.legend_title",
     "section": "",
-    "text": "legend_title(theme_element=None)"
+    "text": "legend_title()"
   },
   {
     "objectID": "reference/legend_title.html#parameters",
     "href": "reference/legend_title.html#parameters",
     "title": " plotnine.themes.themeable.legend_title",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/lims.html",
@@ -4351,154 +4351,154 @@
     "href": "reference/panel_border.html",
     "title": " plotnine.themes.themeable.panel_border",
     "section": "",
-    "text": "panel_border(theme_element=None)"
+    "text": "panel_border()"
   },
   {
     "objectID": "reference/panel_border.html#parameters",
     "href": "reference/panel_border.html#parameters",
     "title": " plotnine.themes.themeable.panel_border",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/panel_grid_major.html",
     "href": "reference/panel_grid_major.html",
     "title": " plotnine.themes.themeable.panel_grid_major",
     "section": "",
-    "text": "panel_grid_major(theme_element=None)"
+    "text": "panel_grid_major()"
   },
   {
     "objectID": "reference/panel_grid_major.html#parameters",
     "href": "reference/panel_grid_major.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid_major",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_grid_major_y.html",
     "href": "reference/panel_grid_major_y.html",
     "title": " plotnine.themes.themeable.panel_grid_major_y",
     "section": "",
-    "text": "panel_grid_major_y(theme_element=None)"
+    "text": "panel_grid_major_y()"
   },
   {
     "objectID": "reference/panel_grid_major_y.html#parameters",
     "href": "reference/panel_grid_major_y.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid_major_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_grid_minor_x.html",
     "href": "reference/panel_grid_minor_x.html",
     "title": " plotnine.themes.themeable.panel_grid_minor_x",
     "section": "",
-    "text": "panel_grid_minor_x(theme_element=None)"
+    "text": "panel_grid_minor_x()"
   },
   {
     "objectID": "reference/panel_grid_minor_x.html#parameters",
     "href": "reference/panel_grid_minor_x.html#parameters",
     "title": " plotnine.themes.themeable.panel_grid_minor_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line = None"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
     "objectID": "reference/panel_ontop.html",
     "href": "reference/panel_ontop.html",
     "title": " plotnine.themes.themeable.panel_ontop",
     "section": "",
-    "text": "panel_ontop(theme_element=None)"
+    "text": "panel_ontop()"
   },
   {
     "objectID": "reference/panel_ontop.html#parameters",
     "href": "reference/panel_ontop.html#parameters",
     "title": " plotnine.themes.themeable.panel_ontop",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : bool = None\n\nDefault is False."
+    "text": "Parameters\n\n\ntheme_element : bool\n\nDefault is False."
   },
   {
     "objectID": "reference/panel_spacing_x.html",
     "href": "reference/panel_spacing_x.html",
     "title": " plotnine.themes.themeable.panel_spacing_x",
     "section": "",
-    "text": "panel_spacing_x(theme_element=None)"
+    "text": "panel_spacing_x()"
   },
   {
     "objectID": "reference/panel_spacing_x.html#parameters",
     "href": "reference/panel_spacing_x.html#parameters",
     "title": " plotnine.themes.themeable.panel_spacing_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nSize as a fraction of the figure width."
+    "text": "Parameters\n\n\ntheme_element : float\n\nSize as a fraction of the figure width."
   },
   {
     "objectID": "reference/plot_background.html",
     "href": "reference/plot_background.html",
     "title": " plotnine.themes.themeable.plot_background",
     "section": "",
-    "text": "plot_background(theme_element=None)"
+    "text": "plot_background()"
   },
   {
     "objectID": "reference/plot_background.html#parameters",
     "href": "reference/plot_background.html#parameters",
     "title": " plotnine.themes.themeable.plot_background",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/plot_margin.html",
     "href": "reference/plot_margin.html",
     "title": " plotnine.themes.themeable.plot_margin",
     "section": "",
-    "text": "plot_margin(theme_element=None)"
+    "text": "plot_margin()"
   },
   {
     "objectID": "reference/plot_margin.html#parameters",
     "href": "reference/plot_margin.html#parameters",
     "title": " plotnine.themes.themeable.plot_margin",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
+    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
     "objectID": "reference/plot_margin_left.html",
     "href": "reference/plot_margin_left.html",
     "title": " plotnine.themes.themeable.plot_margin_left",
     "section": "",
-    "text": "plot_margin_left(theme_element=None)"
+    "text": "plot_margin_left()"
   },
   {
     "objectID": "reference/plot_margin_left.html#parameters",
     "href": "reference/plot_margin_left.html#parameters",
     "title": " plotnine.themes.themeable.plot_margin_left",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
+    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
     "objectID": "reference/plot_margin_top.html",
     "href": "reference/plot_margin_top.html",
     "title": " plotnine.themes.themeable.plot_margin_top",
     "section": "",
-    "text": "plot_margin_top(theme_element=None)"
+    "text": "plot_margin_top()"
   },
   {
     "objectID": "reference/plot_margin_top.html#parameters",
     "href": "reference/plot_margin_top.html#parameters",
     "title": " plotnine.themes.themeable.plot_margin_top",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
+    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
     "objectID": "reference/plot_title.html",
     "href": "reference/plot_title.html",
     "title": " plotnine.themes.themeable.plot_title",
     "section": "",
-    "text": "plot_title(theme_element=None)"
+    "text": "plot_title()"
   },
   {
     "objectID": "reference/plot_title.html#parameters",
     "href": "reference/plot_title.html#parameters",
     "title": " plotnine.themes.themeable.plot_title",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/position_dodge.html",
@@ -4561,14 +4561,14 @@
     "href": "reference/rect.html",
     "title": " plotnine.themes.themeable.rect",
     "section": "",
-    "text": "rect(theme_element=None)"
+    "text": "rect()"
   },
   {
     "objectID": "reference/rect.html#parameters",
     "href": "reference/rect.html#parameters",
     "title": " plotnine.themes.themeable.rect",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/scale.html",
@@ -5408,84 +5408,84 @@
     "href": "reference/strip_align.html",
     "title": " plotnine.themes.themeable.strip_align",
     "section": "",
-    "text": "strip_align(theme_element=None)"
+    "text": "strip_align()"
   },
   {
     "objectID": "reference/strip_align.html#parameters",
     "href": "reference/strip_align.html#parameters",
     "title": " plotnine.themes.themeable.strip_align",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue as a proportion of the strip text size. A good value should be the range [-1, 0.5]. A negative value puts the strip inside the axes and a positive value creates a space between the strip and the axes."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue as a proportion of the strip text size. A good value should be the range [-1, 0.5]. A negative value puts the strip inside the axes and a positive value creates a space between the strip and the axes."
   },
   {
     "objectID": "reference/strip_align_y.html",
     "href": "reference/strip_align_y.html",
     "title": " plotnine.themes.themeable.strip_align_y",
     "section": "",
-    "text": "strip_align_y(theme_element=None)"
+    "text": "strip_align_y()"
   },
   {
     "objectID": "reference/strip_align_y.html#parameters",
     "href": "reference/strip_align_y.html#parameters",
     "title": " plotnine.themes.themeable.strip_align_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float = None\n\nValue as a proportion of the strip size. A good value should be the range [-1, 0.5]. A negative value puts the strip inside the axes. A positive value creates a margin between the strip and the axes. 0 puts the strip exactly beside the panels."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue as a proportion of the strip size. A good value should be the range [-1, 0.5]. A negative value puts the strip inside the axes. A positive value creates a margin between the strip and the axes. 0 puts the strip exactly beside the panels."
   },
   {
     "objectID": "reference/strip_background_x.html",
     "href": "reference/strip_background_x.html",
     "title": " plotnine.themes.themeable.strip_background_x",
     "section": "",
-    "text": "strip_background_x(theme_element=None)"
+    "text": "strip_background_x()"
   },
   {
     "objectID": "reference/strip_background_x.html#parameters",
     "href": "reference/strip_background_x.html#parameters",
     "title": " plotnine.themes.themeable.strip_background_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect = None"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
     "objectID": "reference/strip_text.html",
     "href": "reference/strip_text.html",
     "title": " plotnine.themes.themeable.strip_text",
     "section": "",
-    "text": "strip_text(theme_element=None)"
+    "text": "strip_text()"
   },
   {
     "objectID": "reference/strip_text.html#parameters",
     "href": "reference/strip_text.html#parameters",
     "title": " plotnine.themes.themeable.strip_text",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/strip_text_y.html",
     "href": "reference/strip_text_y.html",
     "title": " plotnine.themes.themeable.strip_text_y",
     "section": "",
-    "text": "strip_text_y(theme_element=None)"
+    "text": "strip_text_y()"
   },
   {
     "objectID": "reference/strip_text_y.html#parameters",
     "href": "reference/strip_text_y.html#parameters",
     "title": " plotnine.themes.themeable.strip_text_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/text.html",
     "href": "reference/text.html",
     "title": " plotnine.themes.themeable.text",
     "section": "",
-    "text": "text(theme_element=None)"
+    "text": "text()"
   },
   {
     "objectID": "reference/text.html#parameters",
     "href": "reference/text.html#parameters",
     "title": " plotnine.themes.themeable.text",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/theme_538.html",
@@ -5611,14 +5611,14 @@
     "href": "reference/title.html",
     "title": " plotnine.themes.themeable.title",
     "section": "",
-    "text": "title(theme_element=None)"
+    "text": "title()"
   },
   {
     "objectID": "reference/title.html#parameters",
     "href": "reference/title.html#parameters",
     "title": " plotnine.themes.themeable.title",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text = None"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/typing.html",
