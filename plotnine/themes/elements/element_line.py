@@ -1,0 +1,60 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from .element_base import element_base
+
+if TYPE_CHECKING:
+    from typing import Any, Literal, Optional, Sequence
+
+    from plotnine.typing import TupleFloat3, TupleFloat4
+
+
+class element_line(element_base):
+    """
+    theme element: line
+
+    used for backgrounds and borders
+
+    parameters
+    ----------
+    color : str | tuple
+        line color
+    colour : str | tuple
+        alias of color
+    linetype : str | tuple
+        line style. if a string, it should be one of *solid*, *dashed*,
+        *dashdot* or *dotted*. you can create interesting dashed patterns
+        using tuples, see :meth:`matplotlib.lines.line2D.set_linestyle`.
+    size : float
+        line thickness
+    kwargs : dict
+        parameters recognised by
+        :class:`matplotlib.lines.line2d`.
+    """
+
+    def __init__(
+        self,
+        *,
+        color: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        size: Optional[float] = None,
+        linetype: Optional[str | Sequence[int]] = None,
+        lineend: Optional[Literal["butt", "projecting", "round"]] = None,
+        colour: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        **kwargs: Any,
+    ):
+        super().__init__()
+        self.properties.update(**kwargs)
+
+        color = color if color else colour
+        if color:
+            self.properties["color"] = color
+        if size:
+            self.properties["linewidth"] = size
+        if linetype:
+            self.properties["linestyle"] = linetype
+
+        if linetype in ("solid", "-") and lineend:
+            self.properties["solid_capstyle"] = lineend
+        elif linetype and lineend:
+            self.properties["dash_capstyle"] = lineend

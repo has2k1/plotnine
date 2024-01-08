@@ -1,4 +1,3 @@
-from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme, theme_get, theme_set, theme_update
 from .theme_538 import theme_538
 from .theme_bw import theme_bw
@@ -15,10 +14,6 @@ from .theme_void import theme_void
 from .theme_xkcd import theme_xkcd
 
 __all__ = (
-    "element_blank",
-    "element_line",
-    "element_rect",
-    "element_text",
     "theme",
     "theme_538",
     "theme_bw",

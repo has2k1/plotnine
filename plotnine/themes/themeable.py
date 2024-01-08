@@ -10,16 +10,18 @@ that covers text also has to cover axis.title.
 """
 from __future__ import annotations
 
-import typing
 from contextlib import suppress
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from warnings import warn
 
 from .._utils import to_rgba
 from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError
-from .elements import element_base, element_blank
+from .elements import element_blank
+from .elements.element_base import element_base
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from collections.abc import Mapping
     from typing import Any, Type
 
@@ -28,6 +30,7 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import Axes, Figure, Theme
 
 
+@dataclass
 class themeable(metaclass=RegistryHierarchyMeta):
     """
     Abstract class of things that can be themed.
@@ -86,24 +89,16 @@ class themeable(metaclass=RegistryHierarchyMeta):
     [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
     """
 
-    order = 0
-    properties: dict[str, Any]
+    theme_element: element_base | Any
 
-    def __init__(self, theme_element: Any = None):
-        self.theme_element = theme_element
-        if isinstance(theme_element, element_base):
-            self.properties = theme_element.properties
+    def __post_init__(self):
+        if isinstance(self.theme_element, element_base):
+            self.properties = self.theme_element.properties
         else:
             # The specific themeable takes this value and
             # does stuff with rcParams or sets something
             # on some object attached to the axes/figure
-            self.properties = {"value": theme_element}
-
-        if isinstance(theme_element, element_blank):
-            # TODO: Check if pyright complains about reassigning
-            # functions too!
-            self.apply_ax = self.blank_ax
-            self.apply_figure = self.blank_figure
+            self.properties = {"value": self.theme_element}
 
     @staticmethod
     def from_class_name(name: str, theme_element: Any) -> themeable:
@@ -193,11 +188,15 @@ class themeable(metaclass=RegistryHierarchyMeta):
         """
         Called by the theme to apply the themeable
 
-        Subclasses shouldn't have to override this method to customize.
+        Subclasses should not have to override this method
         """
-        self.apply_figure(theme.figure, theme._targets)
+        blanks = (self.blank_figure, self.blank_ax)
+        applys = (self.apply_figure, self.apply_ax)
+        do_figure, do_ax = blanks if self.is_blank() else applys
+
+        do_figure(theme.figure, theme._targets)
         for ax in theme.axs:
-            self.apply_ax(ax)
+            do_ax(ax)
 
     def apply_ax(self, ax: Axes):
         """
