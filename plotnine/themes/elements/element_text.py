@@ -10,7 +10,7 @@ from .element_base import element_base
 from .margin import Margin
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Optional
+    from typing import Any, Literal, Optional, Sequence
 
     from plotnine.typing import Theme, TupleFloat3, TupleFloat4
 
@@ -63,15 +63,25 @@ class element_text(element_base):
     def __init__(
         self,
         family: Optional[str | list[str]] = None,
-        style: Optional[str] = None,
-        weight: Optional[int | str] = None,
-        color: Optional[str | TupleFloat3 | TupleFloat4] = None,
-        size: Optional[float] = None,
+        style: Optional[str | Sequence[str]] = None,
+        weight: Optional[int | str | Sequence[int | str]] = None,
+        color: Optional[
+            str
+            | TupleFloat3
+            | TupleFloat4
+            | Sequence[str | TupleFloat3 | TupleFloat4]
+        ] = None,
+        size: Optional[float | Sequence[float]] = None,
         ha: Optional[Literal["center", "left", "right"]] = None,
         va: Optional[Literal["center", "top", "bottom", "baseline"]] = None,
-        rotation: Optional[float] = None,
+        rotation: Optional[Literal["vertical", "horizontal"] | float] = None,
         linespacing: Optional[float] = None,
-        backgroundcolor: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        backgroundcolor: Optional[
+            str
+            | TupleFloat3
+            | TupleFloat4
+            | Sequence[str | TupleFloat3 | TupleFloat4]
+        ] = None,
         margin: Optional[
             dict[Literal["t", "b", "l", "r", "units"], Any]
         ] = None,

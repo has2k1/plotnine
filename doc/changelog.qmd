@@ -47,6 +47,10 @@ title: Changelog
 
   to control the x & y tick padding.
 
+- Some parameters in [](:class:`~plotnine.themes.element_text`) can now
+  accept lists/tuples to set the values on individual text objects.
+  ({{< issue 724 >}})
+
 ### Bug Fixes
 
 - Fixed handling of minor breaks in

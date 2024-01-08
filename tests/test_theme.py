@@ -153,6 +153,23 @@ def test_no_ticks():
     assert p == "no_ticks"
 
 
+def test_element_text_with_sequence_values():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + facet_grid(("am", "cyl"))
+        + theme(
+            axis_text=element_text(color="gray"),
+            axis_text_x=element_text(
+                color=("red", "green", "blue", "purple"), size=(8, 12, 16, 20)
+            ),
+            strip_text_x=element_text(color=("black", "brown", "cyan")),
+            strip_text_y=element_text(color=("teal", "orange")),
+        )
+    )
+    assert p == "element_text_with_sequence_values"
+
+
 class TestThemes:
     g = (
         ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))
