@@ -15,6 +15,8 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from warnings import warn
 
+import numpy as np
+
 from .._utils import to_rgba
 from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError
@@ -23,9 +25,10 @@ from .elements.element_base import element_base
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from typing import Any, Type
+    from typing import Any, Sequence, Type
 
     from matplotlib.patches import Patch
+    from matplotlib.text import Text
 
     from plotnine.typing import Axes, Figure, Theme
 
@@ -372,6 +375,46 @@ def _blankout_rect(rect: Patch):
     rect.set_linewidth(0)
 
 
+class texts_themeable(themeable):
+    """
+    Base class for themeables that modify lists of Text
+
+    Where possible, setting the properties with a sequence
+    of values.
+
+    e.g.
+
+        theme(axis_text_x=element_text(color=("red", "green", "blue")))
+
+    The number of values in the sequence must match the number of
+    text objects in the figure.
+    """
+
+    def set(self, texts: Sequence[Text]):
+        properties = self.properties.copy()
+        with suppress(KeyError):
+            del properties["margin"]
+
+        n = len(texts)
+        seq_properties = {}
+        for name, value in properties.items():
+            if (
+                isinstance(value, (list, tuple, np.ndarray))
+                and len(value) == n
+            ):
+                seq_properties[name] = value
+
+        for key in seq_properties:
+            del properties[key]
+
+        for t in texts:
+            t.set(**properties)
+
+        for name, values in seq_properties.items():
+            for t, value in zip(texts, values):
+                t.set(**{name: value})
+
+
 # element_text themeables
 
 
@@ -624,7 +667,7 @@ class plot_caption(themeable):
             text.set_visible(False)
 
 
-class strip_text_x(themeable):
+class strip_text_x(texts_themeable):
     """
     Facet labels along the horizontal axis
 
@@ -635,13 +678,8 @@ class strip_text_x(themeable):
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
         super().apply_figure(figure, targets)
-        properties = self.properties.copy()
         with suppress(KeyError):
-            del properties["margin"]
-        with suppress(KeyError):
-            texts = targets["strip_text_x"]
-            for text in texts:
-                text.set(**properties)
+            self.set(targets["strip_text_x"])
 
         with suppress(KeyError):
             rects = targets["strip_background_x"]
@@ -661,7 +699,7 @@ class strip_text_x(themeable):
                 rect.set_visible(False)
 
 
-class strip_text_y(themeable):
+class strip_text_y(texts_themeable):
     """
     Facet labels along the vertical axis
 
@@ -672,13 +710,8 @@ class strip_text_y(themeable):
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
         super().apply_figure(figure, targets)
-        properties = self.properties.copy()
         with suppress(KeyError):
-            del properties["margin"]
-        with suppress(KeyError):
-            texts = targets["strip_text_y"]
-            for text in texts:
-                text.set(**properties)
+            self.set(targets["strip_text_y"])
 
         with suppress(KeyError):
             rects = targets["strip_background_y"]
@@ -718,7 +751,7 @@ class title(axis_title, legend_title, plot_title, plot_subtitle, plot_caption):
     """
 
 
-class axis_text_x(themeable):
+class axis_text_x(texts_themeable):
     """
     x-axis tick labels
 
@@ -729,12 +762,7 @@ class axis_text_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        properties = self.properties.copy()
-        with suppress(KeyError):
-            del properties["margin"]
-        labels = ax.get_xticklabels()
-        for l in labels:
-            l.set(**properties)
+        self.set(ax.get_xticklabels())
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -743,7 +771,7 @@ class axis_text_x(themeable):
         )
 
 
-class axis_text_y(themeable):
+class axis_text_y(texts_themeable):
     """
     y-axis tick labels
 
@@ -754,12 +782,7 @@ class axis_text_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        properties = self.properties.copy()
-        with suppress(KeyError):
-            del properties["margin"]
-        labels = ax.get_yticklabels()
-        for l in labels:
-            l.set(**properties)
+        self.set(ax.get_yticklabels())
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -903,6 +926,7 @@ class axis_ticks_minor_x(themeable):
         # We split the properties so that set_tick_params keeps
         # record of the properties it cares about so that it does
         # not undo them. GH703
+        # https://github.com/matplotlib/matplotlib/issues/26008
         tick_params = {}
         properties = self.properties.copy()
         with suppress(KeyError):
