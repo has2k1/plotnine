@@ -404,6 +404,15 @@ class theme:
 
         return result
 
+    def to_retina(self) -> theme:
+        """
+        Return a retina-sized version of this theme
+
+        The result is a theme that has double the dpi.
+        """
+        dpi = self.themeables.property("dpi")
+        return self + theme(dpi=dpi * 2)
+
 
 def theme_get() -> theme:
     """

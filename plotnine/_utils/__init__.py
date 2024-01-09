@@ -25,7 +25,6 @@ if TYPE_CHECKING:
     from typing import Any, Callable
 
     import numpy.typing as npt
-    from IPython.core.interactiveshell import InteractiveShell
     from matplotlib.typing import ColorType
     from typing_extensions import TypeGuard
 
@@ -1184,17 +1183,6 @@ class ignore_warnings:
 
     def __exit__(self, type, value, traceback):
         return self._cm.__exit__(type, value, traceback)
-
-
-def get_ipython() -> "InteractiveShell | None":
-    """
-    Return running IPython instance or None
-    """
-    try:
-        from IPython.core.getipython import get_ipython
-    except ImportError:
-        return None
-    return get_ipython()
 
 
 def simple_table(
