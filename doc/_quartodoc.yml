@@ -548,6 +548,7 @@ quartodoc:
         - current_theme
         - dpi
         - figure_size
+        - figure_format
         - get_option
         - set_option
 

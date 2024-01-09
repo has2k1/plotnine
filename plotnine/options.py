@@ -5,7 +5,7 @@ import typing
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Type
 
-    from plotnine.typing import Theme
+    from plotnine.typing import FigureFormat, Theme
 
 close_all_figures = False
 """
@@ -36,6 +36,20 @@ Default DPI used by the themes
 figure_size: tuple[float, float] = (640 / dpi, 480 / dpi)
 """
 Default figure size inches
+"""
+
+figure_format: Optional[FigureFormat] = None
+"""
+The format for the inline figures outputed by the jupyter kernel.
+
+If `None`, it is the value of
+
+    %config InlineBackend.figure_format
+
+If that has not been set, the default is "retina".
+You can set it explicitly with:
+
+    %config InlineBackend.figure_format = "retina"
 """
 
 base_margin: float = 0.01

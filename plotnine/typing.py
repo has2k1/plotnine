@@ -136,6 +136,9 @@ ColorsLike: TypeAlias = (
 # Mizani
 Trans: TypeAlias = trans
 
+# Plotting
+FigureFormat: TypeAlias = Literal["png", "retina", "jpeg", "jpg", "svg", "pdf"]
+
 # Facet strip
 StripLabellingFuncNames: TypeAlias = Literal[
     "label_value", "label_both", "label_context"

@@ -2,22 +2,26 @@ from __future__ import annotations
 
 import typing
 from collections.abc import Sequence
-from copy import deepcopy
+from copy import copy, deepcopy
+from io import BytesIO
 from itertools import chain
 from pathlib import Path
 from types import SimpleNamespace as NS
-from typing import Any, Dict, Iterable, Optional, Union
+from typing import Any, Dict, Iterable, Optional
 from warnings import warn
-
-import pandas as pd
 
 from ._utils import (
     from_inches,
-    get_ipython,
     is_data_like,
     order_as_data_mapping,
     to_inches,
     ungroup,
+)
+from ._utils.context import plot_context
+from ._utils.ipython import (
+    get_display_function,
+    get_ipython,
+    is_inline_backend,
 )
 from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
@@ -104,22 +108,64 @@ class ggplot:
         """
         Print/show the plot
         """
-        self.draw(show=True)
-
-        # Return and empty string so that print(p) is "pretty"
+        self.show()
+        # Return and empty string so that print(p) is as clean as possible
         return ""
 
     def __repr__(self) -> str:
         """
         Print/show the plot
         """
-        figure = self.draw(show=True)
-
-        dpi = figure.get_dpi()
-        W = int(figure.get_figwidth() * dpi)
-        H = int(figure.get_figheight() * dpi)
-
+        dpi = self.theme.themeables.property("dpi")
+        width, height = self.theme.themeables.property("figure_size")
+        W, H = int(width * dpi), int(height * dpi)
+        self.show()
         return f"<Figure Size: ({W} x {H})>"
+
+    def _ipython_display_(self):
+        """
+        Display plot in the output of the cell
+
+        This method will always be called when a ggplot object is the
+        last in the cell.
+        """
+        self._display()
+
+    def show(self):
+        """
+        Show plot using the matplotlib backend set by the user
+
+        Users should prefer this method instead of printing or repring
+        the object.
+        """
+        self._display() if is_inline_backend() else self.draw(show=True)
+
+    def _display(self):
+        """
+        Display plot in the cells output
+
+        This function is called for its side-effects.
+
+        It plots the plot to an io buffer, then uses ipython display
+        methods to show the result
+        """
+        ip = get_ipython()
+        format = get_option("figure_format") or ip.config.InlineBackend.get(
+            "figure_format", "retina"
+        )
+        save_format = format
+
+        # While jpegs can be displayed as retina, we restrict the output
+        # of "retina" to png
+        if format == "retina":
+            self = copy(self)
+            self.theme = self.theme.to_retina()
+            save_format = "png"
+
+        buf = BytesIO()
+        self.save(buf, format=save_format, verbose=False)
+        display_func = get_display_function(format)
+        display_func(buf.getvalue())
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
         """
@@ -517,7 +563,7 @@ class ggplot:
 
     def save_helper(
         self: ggplot,
-        filename: Optional[Union[str, Path]] = None,
+        filename: Optional[str | Path | BytesIO] = None,
         format: Optional[str] = None,
         path: Optional[str] = None,
         width: Optional[float] = None,
@@ -543,7 +589,7 @@ class ggplot:
             ext = format if format else "pdf"
             filename = self._save_filename(ext)
 
-        if path:
+        if path and isinstance(filename, (Path, str)):
             filename = Path(path) / filename
 
         fig_kwargs["fname"] = filename
@@ -556,11 +602,8 @@ class ggplot:
             width = to_inches(width, units)
             height = to_inches(height, units)
             self += theme(figure_size=(width, height))
-        elif (
-            width is None
-            and height is not None
-            or width is not None
-            and height is None
+        elif (width is None and height is not None) or (
+            width is not None and height is None
         ):
             raise PlotnineError("You must specify both width and height")
 
@@ -590,7 +633,7 @@ class ggplot:
 
     def save(
         self,
-        filename: Optional[str | Path] = None,
+        filename: Optional[str | Path | BytesIO] = None,
         format: Optional[str] = None,
         path: str = "",
         width: Optional[float] = None,
@@ -757,97 +800,3 @@ def save_as_pdf_pages(
             fig = plot.draw()
             # Save as a page in the PDF file
             pdf.savefig(fig, **fig_kwargs)
-
-
-class plot_context:
-    """
-    Context to setup the environment within with the plot is built
-
-    Parameters
-    ----------
-    plot :
-        ggplot object to be built within the context.
-        exits.
-    show :
-        Whether to show the plot.
-    """
-
-    # Default to retina unless user chooses otherwise
-    _IPYTHON_CONFIG: dict[str, dict[str, Any]] = {
-        "InlineBackend": {
-            "figure_format": "retina",
-            "close_figures": True,
-            "print_figure_kwargs": {"bbox_inches": None},
-        }
-    }
-    _ip_config_inlinebackend: dict[str, Any] = {}
-
-    def __init__(self, plot: ggplot, show: bool = False):
-        self.plot = plot
-        self.show = show
-
-    def __enter__(self) -> Self:
-        """
-        Enclose in matplolib & pandas environments
-        """
-        import matplotlib as mpl
-
-        self.plot.theme._targets = {}
-        self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
-        # Pandas deprecated is_copy, and when we create new dataframes
-        # from slices we do not want complaints. We always uses the
-        # new frames knowing that they are separate from the original.
-        self.pd_option_context = pd.option_context(
-            "mode.chained_assignment", None
-        )
-        self.rc_context.__enter__()
-        self.pd_option_context.__enter__()
-        self._enter_ipython()
-        return self
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        """
-        Exit matplotlib & pandas environments
-        """
-        import matplotlib.pyplot as plt
-
-        if exc_type is None:
-            if self.show:
-                plt.show()
-            else:
-                plt.close(self.plot.figure)
-        else:
-            # There is an exception, close any figure
-            if hasattr(self.plot, "figure"):
-                plt.close(self.plot.figure)
-
-        self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
-        self._exit_ipython()
-        delattr(self.plot.theme, "_targets")
-
-    def _enter_ipython(self):
-        """
-        Setup ipython parameters in for the plot
-        """
-        ip = get_ipython()
-        if not ip or not hasattr(ip.config, "InlineBackend"):
-            return
-
-        for key, value in self._IPYTHON_CONFIG["InlineBackend"].items():
-            if key not in ip.config.InlineBackend:
-                self._ip_config_inlinebackend[key] = key
-                ip.run_line_magic("config", f"InlineBackend.{key} = {value!r}")
-
-    def _exit_ipython(self):
-        """
-        Undo ipython parameters in for the plot
-        """
-        ip = get_ipython()
-        if not ip or not hasattr(ip.config, "InlineBackend"):
-            return
-
-        for key in self._ip_config_inlinebackend:
-            del ip.config["InlineBackend"][key]
-
-        self._ip_config_inlinebackend = {}

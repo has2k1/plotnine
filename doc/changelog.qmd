@@ -8,13 +8,24 @@ title: Changelog
 ### API Changes
 
 - Requires python >= 3.9
+
 - The name of the calculated aesthetic of
   [](:class:`~plotnine.stats.stat_function`) changed from `y` to `fx`.
+
 - [](:class:`~plotnine.stats.stat_ecdf`) has gained the `pad` parameter. The
   default is set to `True`, which pads the domain with `-inf` and `inf` so
   that the ECDF does not have discontinuities at the extremes. To get the
   behaviour, set `pad` to `False`. ({{< issue 725 >}})
+
 - Removed the environment parameter from `ggplot`.
+
+- When a ggplot object is the last in a jupyter cell, the output image will
+  not be followed by string meta information about the figure/image.
+
+  This will happen even if the backend is set to an interactive one.
+
+  If you set the backend to an interactive one, use
+  [](:class:`~plotnine.ggplot.show`) to draw the plot.
 
 ### New
 
@@ -50,6 +61,17 @@ title: Changelog
 - Some parameters in [](:class:`~plotnine.themes.element_text`) can now
   accept lists/tuples to set the values on individual text objects.
   ({{< issue 724 >}})
+
+- Gained the option [](:attr:`~plotnine.options.figure_format`) to set the format
+  of the inline figures in an interactive session. e.g.
+
+  ```python
+  from plotnine.options import set_option
+
+  set_option("figure_format", "svg")
+  ```
+
+  will output all subsequent figures in svg format.
 
 ### Bug Fixes
 
