@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g32f491a - Custom sorting of plot series</title>
+<title>plotnine 0.0.post1+g084dd0b - Custom sorting of plot series</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -216,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="custom-sorting-of-plot-series" class="level1">
 <h1>Custom sorting of plot series</h1>
-<div id="cell-1" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;1&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:01.212728Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:01.212331Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:01.849299Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:01.848528Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;1&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:35.364703Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:35.364375Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:36.039582Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:36.038715Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas.api.types <span class="im">import</span> CategoricalDtype</span>
@@ -232,7 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="bar-plot-of-manufacturer---default-output" class="level2">
 <h2 class="anchored" data-anchor-id="bar-plot-of-manufacturer---default-output">Bar plot of manufacturer - Default Output</h2>
-<div id="cell-3" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;2&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:01.852932Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:01.852681Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:02.999275Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:02.998719Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;2&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:36.044102Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:36.043841Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:37.277642Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:37.277058Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'manufacturer'</span>) </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
@@ -251,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bar-plot-of-manufacturer---ordered-by-count-categorical" class="level2">
 <h2 class="anchored" data-anchor-id="bar-plot-of-manufacturer---ordered-by-count-categorical">Bar plot of manufacturer - Ordered by count (Categorical)</h2>
 <p>By default the discrete values along axis are ordered alphabetically. If we want a specific ordering we use a pandas.Categorical variable with categories ordered to our preference.</p>
-<div id="cell-5" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;3&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:03.042057Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:03.041441Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:03.513155Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:03.512576Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;3&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:37.315698Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:37.315353Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:37.665813Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:37.665232Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine order and create a categorical type</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that value_counts() is already sorted</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">'manufacturer'</span>].value_counts().index.tolist()</span>
@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We could also modify the <strong>existing manufacturer category</strong> to set it as ordered instead of having to create a new CategoricalDtype and apply that to the data.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:03.516531Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:03.516313Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:03.520274Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:03.519729Z&quot;}" data-execution_count="4">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:37.668598Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:37.668389Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:37.672328Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:37.671793Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpg <span class="op">=</span> mpg.assign(manufacturer_cat <span class="op">=</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  mpg[<span class="st">'manufacturer'</span>].cat.reorder_categories(manufacturer_list))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -283,7 +283,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bar-plot-of-manufacturer---ordered-by-count-limits" class="level2">
 <h2 class="anchored" data-anchor-id="bar-plot-of-manufacturer---ordered-by-count-limits">Bar plot of manufacturer - Ordered by count (limits)</h2>
 <p>Another method to quickly reorder a discrete axis without changing the data is to change it’s limits</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:03.523433Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:03.523233Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:03.892403Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:03.891815Z&quot;}" data-execution_count="5">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:37.675051Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:37.674811Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:38.018263Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:38.017711Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine order and create a categorical type</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that value_counts() is already sorted</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">'manufacturer'</span>].value_counts().index.tolist()</span>
@@ -304,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can ‘flip’ an axis (independent of limits) by reversing the order of the limits.</p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:03.895348Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:03.895123Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:04.271596Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:04.271014Z&quot;}" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:38.021052Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:38.020818Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:38.365236Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:38.364559Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine order and create a categorical type</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that value_counts() is already sorted</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">'manufacturer'</span>].value_counts().index.tolist()[::<span class="op">-</span><span class="dv">1</span>]</span>

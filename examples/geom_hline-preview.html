@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g32f491a - Horizontal line</title>
+    <title>plotnine 0.0.post1+g084dd0b - Horizontal line</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -299,7 +299,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:57.419410Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:57.418962Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:58.053571Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:58.052798Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:11.527172Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:11.526883Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:12.226301Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:12.225489Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -319,7 +319,7 @@
 <p><code>geom_hline()</code> draws a vertical line, and is useful as a guide.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:58.056889Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:58.056659Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:58.070594Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:58.070023Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:12.229776Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:12.229498Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:12.245153Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:12.244333Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -422,7 +422,7 @@
 <div id="cell-3" class="cell markdown">
 <p>It’s useful to use <code>geom_hline()</code> with some data, so we start with a basic scatter plot:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:58.112132Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:58.111871Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:59.147742Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:59.147181Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:12.290608Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:12.290329Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:13.560975Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:13.560230Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
@@ -439,7 +439,7 @@
 <div id="cell-5" class="cell markdown">
 <p>Now add a horizontal line to the scatter plot:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:59.150610Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:59.150347Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:59.443520Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:59.442912Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:13.565270Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:13.564867Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:13.924310Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:13.923622Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
@@ -457,7 +457,7 @@
 <div id="cell-7" class="cell markdown">
 <p>You can add many horizontal lines:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:59.446873Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:59.446454Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:59.807405Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:59.806811Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:13.928728Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:13.928098Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:14.223139Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:14.222632Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
@@ -475,7 +475,7 @@
 <div id="cell-9" class="cell markdown">
 <p>You can change the look of the line:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:59.810348Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:59.810136Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:52:00.099788Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:52:00.099159Z&quot;}" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:14.226095Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:14.225858Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:14.560946Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:14.560220Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
@@ -497,7 +497,7 @@
 <div id="cell-11" class="cell markdown">
 <p>And you can add horizontal lines to a facet plot:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:52:00.102604Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:52:00.102405Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:52:00.570931Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:52:00.570338Z&quot;}" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:14.564231Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:14.563976Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:15.083874Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:15.083176Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>

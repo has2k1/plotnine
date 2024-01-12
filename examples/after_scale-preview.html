@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g32f491a - after_scale</title>
+    <title>plotnine 0.0.post1+g084dd0b - after_scale</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -206,7 +206,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -297,7 +297,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:50:31.600004Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:50:31.599675Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:50:32.085567Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:50:32.084824Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:09:28.542124Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:09:28.541763Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:09:29.140226Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:09:29.139405Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -318,7 +318,7 @@
 <p>The bars in <code>geom_bar</code> have two aesthetics that control the coloring; <code>fill</code> for the interior and <code>color</code> for the boundary/edge. Using <code>after_scale</code> we can create a matching combination of these two.</p>
 <p>Start off with a mapping to the <code>color</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:50:32.089362Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:50:32.089071Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:50:33.144272Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:50:33.143693Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:09:29.143701Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:09:29.143389Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:09:30.324599Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:09:30.323673Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'var1'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>})</span>
@@ -337,7 +337,7 @@
 <div id="cell-4" class="cell markdown">
 <p>We can match the <code>color</code> with the <code>fill</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:50:33.184033Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:50:33.183688Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:50:33.521844Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:50:33.521236Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:09:30.362708Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:09:30.361849Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:09:30.680994Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:09:30.680071Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -352,7 +352,7 @@
 <div id="cell-6" class="cell markdown">
 <p>As <code>after_scale</code> takes an expression, for the <code>fill</code> aesthetic we can modify the <code>color</code> by adding to it an alpha channel i.e.&nbsp;<code>'#AABBCC'</code> to <code>'#AABBCC66'</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:50:33.524763Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:50:33.524563Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:50:33.922008Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:50:33.921459Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:09:30.683784Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:09:30.683557Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:09:30.998694Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:09:30.998100Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color + "66"'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -371,7 +371,7 @@
 <div id="cell-9" class="cell markdown">
 <p>With a fitting theme.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:50:33.924917Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:50:33.924705Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:50:34.256183Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:50:34.255525Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:09:31.001763Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:09:31.001528Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:09:31.312544Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:09:31.311890Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color + "66"'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme_classic()</span>

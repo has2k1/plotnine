@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g32f491a - Two Variable Bar Plot</title>
+    <title>plotnine 0.0.post1+g084dd0b - Two Variable Bar Plot</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -299,7 +299,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:26.927625Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:26.927314Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:27.425411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:27.424721Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:32.097863Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:32.097540Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:32.736751Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:32.736185Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -326,7 +326,7 @@
 <div id="cell-2" class="cell markdown">
 <p>Create the data</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:27.429192Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:27.428919Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:27.441698Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:27.441189Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:32.739961Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:32.739675Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:32.752701Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:32.752184Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'variable'</span>: [<span class="st">'gender'</span>, <span class="st">'gender'</span>, <span class="st">'age'</span>, <span class="st">'age'</span>, <span class="st">'age'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>],</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'category'</span>: [<span class="st">'Female'</span>, <span class="st">'Male'</span>, <span class="st">'1-24'</span>, <span class="st">'25-54'</span>, <span class="st">'55+'</span>, <span class="st">'Lo'</span>, <span class="st">'Lo-Med'</span>, <span class="st">'Med'</span>, <span class="st">'High'</span>],</span>
@@ -414,7 +414,7 @@
 <p>We want to visualise this data and at a galance get an idea to how the <code>value</code> breaks down along the <code>category</code>s for the different <code>variable</code>. Note that each <code>variable</code> has different <code>category</code>s.</p>
 <p>First we make a simple plot with all this information and see what to draw from it.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:27.480652Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:27.480420Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:28.524985Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:28.524393Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:32.793444Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:32.793166Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:34.108318Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:34.107703Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -429,7 +429,7 @@
 <div id="cell-6" class="cell markdown">
 <p>All the <code>value</code>s along each variable add up to 100, but stacked together the difference within and without the groups is not clear. The solution is to <code>dodge</code> the bars.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:28.527984Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:28.527725Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:28.820313Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:28.819746Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:34.111454Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:34.111146Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:34.392788Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:34.392071Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>))                     <span class="co"># modified</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -445,7 +445,7 @@
 <p>To do this, we create a <code>geom_text</code> with <code>position_dodge(width=0.9)</code> to match the ratio of the space taken up by each variable. If there was no spacing between the bars of different variables, we would have <code>width=1</code>.</p>
 <p>A minor quack, when text extends beyond the limits we have to manually make space or it would get clipped. Therefore we adjust the bottom <code>y</code> limits.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:28.823143Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:28.822939Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:29.244861Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:29.244310Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:34.396036Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:34.395788Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:34.770266Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:34.769552Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)                              <span class="co"># new</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
@@ -466,7 +466,7 @@
 <div id="cell-10" class="cell markdown">
 <p>Would it look too crowded if we add value labels on top of the bars?</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:29.247879Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:29.247674Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:29.720230Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:29.719665Z&quot;}" data-scrolled="false" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:34.773841Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:34.773564Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:35.224845Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:35.224184Z&quot;}" data-scrolled="false" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
@@ -490,7 +490,7 @@
 <div id="cell-12" class="cell markdown">
 <p>That looks okay. The <code>value</code>s line up with the <code>category</code>s because we used the same <code>dodge</code> parameters. For the final polish, we remove the y-axis, clear out the panel and make the <code>variable</code> and <code>category</code> labels have the same color.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:29.723181Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:29.722991Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:30.191494Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:30.190839Z&quot;}" data-scrolled="false" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:35.228085Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:35.227784Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:35.619379Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:35.618803Z&quot;}" data-scrolled="false" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ccolor <span class="op">=</span> <span class="st">'#555555'</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>

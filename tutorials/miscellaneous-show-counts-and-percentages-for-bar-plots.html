@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g32f491a - Show counts and percentages for bar plots</title>
+<title>plotnine 0.0.post1+g084dd0b - Show counts and percentages for bar plots</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="show-counts-and-percentages-for-bar-plots" class="level1">
 <h1>Show counts and percentages for bar plots</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:07.550715Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:07.550243Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:08.171169Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:08.170298Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:42.122107Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:42.121749Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:42.788688Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:42.787808Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can plot a bar graph and easily show the counts for each bar</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:08.174441Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:08.174203Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:09.288151Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:09.287550Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:42.792053Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:42.791798Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:43.945192Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:43.944475Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -246,7 +246,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>stat_count</code> also calculates proportions (as <code>prop</code>) and a proportion can be converted to a percentage.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:09.330978Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:09.330546Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:09.661503Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:09.660804Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:43.981992Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:43.981652Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:44.267703Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:44.267109Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>These are clearly wrong percentages. The system puts each bar in a separate group. We need to tell it to put all bars in the panel in single group, so that the percentage are what we expect.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:09.664478Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:09.664185Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:10.030103Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:10.029506Z&quot;}" data-execution_count="4">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:44.270384Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:44.270128Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:44.533400Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:44.532847Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Without <code>group=1</code>, you can calculate the proportion / percentage after statistics have been calculated. This works because mapping expressions are evaluated across the whole panel. It can work when you have more than 1 categorical.</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:10.033347Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:10.032904Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:10.353321Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:10.352716Z&quot;}" data-execution_count="5">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:44.536232Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:44.536006Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:44.816828Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:44.815992Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -310,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Using two <code>geom_text</code> layers.</li>
 </ol>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:10.356239Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:10.356013Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:10.709472Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:10.708903Z&quot;}" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:44.819663Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:44.819442Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:45.131756Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:45.131190Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -340,7 +340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>Using a function to combine the counts and percentages</li>
 </ol>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:10.712474Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:10.712255Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:11.016735Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:11.016117Z&quot;}" data-execution_count="7">
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:45.134369Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:45.134149Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:45.402610Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:45.402034Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> combine(counts, percentages):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    fmt <span class="op">=</span> <span class="st">'</span><span class="sc">{}</span><span class="st"> (</span><span class="sc">{:.1f}</span><span class="st">%)'</span>.<span class="bu">format</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [fmt(c, p) <span class="cf">for</span> c, p <span class="kw">in</span> <span class="bu">zip</span>(counts, percentages)]</span>
@@ -364,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>It works with facetting.</p>
-<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:11.019609Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:11.019385Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:11.511885Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:11.511215Z&quot;}" data-scrolled="false" data-execution_count="8">
+<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:45.405496Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:45.405266Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:45.784449Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:45.783887Z&quot;}" data-scrolled="false" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -388,7 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="percentages-when-you-have-more-than-one-categorical." class="level3">
 <h3 class="anchored" data-anchor-id="percentages-when-you-have-more-than-one-categorical.">Percentages when you have more than one categorical.</h3>
 <p><code>group = 1</code> does not work when you have more than one categories per <code>x</code> location.</p>
-<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:11.516173Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:11.515784Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:11.882609Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:11.881985Z&quot;}" data-execution_count="9">
+<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:45.787397Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:45.787207Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:46.068862Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:46.068212Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'dodge2'</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -411,7 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You have to calculate the percentages after statistics for the panel have been calculated.</p>
-<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:11.885722Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:11.885284Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:12.332195Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:12.331435Z&quot;}" data-execution_count="10">
+<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:46.071688Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:46.071450Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:46.418580Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:46.418070Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'dodge2'</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
@@ -434,7 +434,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>For percentages per bar at each <code>x</code> location, you have to group the counts per location can compute the proportions.</p>
-<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:12.335588Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:12.335314Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:12.794954Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:12.794235Z&quot;}" data-execution_count="11">
+<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:46.421322Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:46.421103Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:46.760199Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:46.759394Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prop_per_x(x, count):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute the proportion of the counts for each value of x</span></span>
@@ -467,7 +467,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:54:12.797986Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:54:12.797751Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:54:13.285643Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:54:13.284934Z&quot;}" data-execution_count="12">
+<div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:46.763670Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:46.763413Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:47.207015Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:47.206317Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'fill'</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_label(</span>

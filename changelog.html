@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g32f491a - Changelog</title>
+<title>plotnine 0.0.post1+g084dd0b - Changelog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -293,10 +293,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="api-changes" class="level3">
 <h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
 <ul>
-<li>Requires python &gt;= 3.9</li>
-<li>The name of the calculated aesthetic of <a href="./reference/stat_function.html#plotnine.stats.stat_function"><code>stat_function</code></a> changed from <code>y</code> to <code>fx</code>.</li>
-<li><a href="./reference/stat_ecdf.html#plotnine.stats.stat_ecdf"><code>stat_ecdf</code></a> has gained the <code>pad</code> parameter. The default is set to <code>True</code>, which pads the domain with <code>-inf</code> and <code>inf</code> so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set <code>pad</code> to <code>False</code>. (<a href="https://github.com/has2k1/plotnine/issues/725" title="Issue: #725">#725</a>)</li>
-<li>Removed the environment parameter from <code>ggplot</code>.</li>
+<li><p>Requires python &gt;= 3.9</p></li>
+<li><p>The name of the calculated aesthetic of <a href="./reference/stat_function.html#plotnine.stats.stat_function"><code>stat_function</code></a> changed from <code>y</code> to <code>fx</code>.</p></li>
+<li><p><a href="./reference/stat_ecdf.html#plotnine.stats.stat_ecdf"><code>stat_ecdf</code></a> has gained the <code>pad</code> parameter. The default is set to <code>True</code>, which pads the domain with <code>-inf</code> and <code>inf</code> so that the ECDF does not have discontinuities at the extremes. To get the behaviour, set <code>pad</code> to <code>False</code>. (<a href="https://github.com/has2k1/plotnine/issues/725" title="Issue: #725">#725</a>)</p></li>
+<li><p>Removed the environment parameter from <code>ggplot</code>.</p></li>
+<li><p>When a ggplot object is the last in a jupyter cell, the output image will not be followed by string meta information about the figure/image.</p>
+<p>This will happen even if the backend is set to an interactive one.</p>
+<p>If you set the backend to an interactive one, use to draw the plot.</p></li>
 </ul>
 </section>
 <section id="new" class="level3">
@@ -326,6 +329,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>to control the x &amp; y tick padding.</p></li>
 <li><p>Some parameters in can now accept lists/tuples to set the values on individual text objects. (<a href="https://github.com/has2k1/plotnine/issues/724" title="Issue: #724">#724</a>)</p></li>
+<li><p>Gained the option to set the format of the inline figures in an interactive session. e.g.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">"figure_format"</span>, <span class="st">"svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>will output all subsequent figures in svg format.</p></li>
 </ul>
 </section>
 <section id="bug-fixes" class="level3">
@@ -370,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>You can now also align the <code>plot_title</code>, <code>axis_title_x</code>, <code>axis_title_y</code> and <code>plot_caption</code> with respect to the panels. Set these to “left”, “right” &amp; “center” for the horizontal flowing text. And “top”, “right” &amp; “center” for the vertical flowing text.</p>
 <p>Also, the size of the figure is exactly determined by the theme setting. For example, this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>will create an <code>800px x 600px</code> image.</p></li>
 <li><p>You can create a <code>subtitle</code> using <a href="./reference/labs.html#plotnine.labels.labs"><code>labs</code></a> and style it using the <code>plot_subtitle</code> parameter to <a href="./reference/theme.html#plotnine.themes.theme"><code>theme</code></a>.</p>
 <p>```py theme(plot_subtitle=element_text(size=8))</p></li>
@@ -381,7 +389,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p> object gained a new method . It gives you access to the matplotlib figure that will be saved to file.</p></li>
 <li><p>When plotting with an ipython interactive backend (e.g.&nbsp;in a jupyter notebook). The default image output is retina. You do not need to run this command.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Plotnine still respects any values set the user.</p></li>
 <li><p>In an interactive setting, after drawing an image. The size of the figure (in pixels) is printed e.g.&nbsp;<code>&lt;Figure Size: (640 x 480)&gt;</code>. Previously, something like <code>&lt;ggplot: (336175301)&gt;</code> was printed.</p></li>
 </ul>
@@ -476,9 +484,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/position_dodge2.html#plotnine.positions.position_dodge2"><code>position_dodge2</code></a> gained the ability to reverse the order of the plotted groups. (<a href="https://github.com/has2k1/plotnine/issues/515" title="Issue: #515">#515</a>)</p></li>
 <li><p>Added <a href="./reference/theme_tufte.html#plotnine.themes.theme_tufte"><code>theme_tufte</code></a>, a theme that reduces the distractions around plot data.</p></li>
 <li><p><a href="./reference/labs.html#plotnine.labels.labs"><code>labs</code></a> can now be used to create a <code>caption</code>. This caption can be styled using the <code>plot_caption</code> parameter to <a href="./reference/theme.html#plotnine.themes.theme"><code>theme</code></a>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 <li><p>You can now align the <code>plot_title</code> horizontally to the left or right.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">'left'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">'left'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Before, the title was always centered.</p></li>
 </ul>
 </section>
@@ -559,8 +567,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Manual scales now match the values of the breaks if the breaks are given. (<a href="https://github.com/has2k1/plotnine/issues/445" title="Issue: #445">#445</a>)</p></li>
 <li><p>Using <code>print</code> to show a ggplot object will not show the hash (<code>&lt;ggplot: ...&gt;</code>) anymore. There is now a difference between <code>repr(p)</code> and <code>str(p)</code>. (<a href="https://github.com/has2k1/plotnine/issues/453" title="Issue: #453">#453</a>)</p></li>
 <li><p>Added option to for the <code>base_family</code> of a theme, now you can set it once with and have it be applied to all themes. (<a href="https://github.com/has2k1/plotnine/issues/436" title="Issue: #436">#436</a>)</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">'base_family'</span>, <span class="st">'Comic Sans MS'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">'base_family'</span>, <span class="st">'Comic Sans MS'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 <li><p>You can now add <code>None</code> to a ggplot, doing so returns a copy of the the ggplot object. (<a href="https://github.com/has2k1/plotnine/issues/474" title="Issue: #474">#474</a>)</p></li>
 <li><p>Better handling of multiline facet labels. (<a href="https://github.com/has2k1/plotnine/issues/484" title="Issue: #484">#484</a>)</p></li>
 </ul>
@@ -837,8 +845,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>When using loess smoothing, the control parameter <code>surface</code> is only set to the value <code>'direct'</code> if predictions will be made outside the data range.</li>
 </ol></li>
 <li><p>Better control of scale limits. You can now specify individual limits of a scale.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>xlim(<span class="va">None</span>, <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>xlim(<span class="va">None</span>, <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You can also use <a href="./reference/expand_limits.html#plotnine.scales.expand_limits"><code>expand_limits</code></a></p></li>
 <li><p>Low and high limits can now be expanded separately with different factors multiplicative and additive factors.</p></li>
 <li><p>The layer parameter <code>show_legend</code> can now accept a <code>dict</code> for finer grained control of which aesthetics to exclude in the legend.</p></li>
@@ -846,9 +854,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>stats</code> also gained new parameter <code>na_rm</code>, that controls whether missing values are removed before statistical computations.</p></li>
 <li><p><a href="./reference/qplot.html#plotnine.qplot"><code>qplot</code></a> can now use the name and a Pandas series to label the scales of the aesthetics.</p></li>
 <li><p>You can now put stuff to add to a ggplot object into a list and add that that instead. No need to wrap the list around the internal class <code>Layers</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lst <span class="op">=</span> [geom_point(), geom_line()]</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> ggplot(df, aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(g <span class="op">+</span> lst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lst <span class="op">=</span> [geom_point(), geom_line()]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> ggplot(df, aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(g <span class="op">+</span> lst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Using a list allows you to bundle up objects. It can be convenient when creating some complicated plots. See the Periodic Table Example.</p></li>
 <li><p>You can now use a <code>dict</code> (with manual scales) to map data values to aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/169" title="Issue: #169">#169</a>)</p></li>
 <li><p>You can now specify infinite coordinates with <a href="./reference/geom_rect.html#plotnine.geoms.geom_rect"><code>plotnine.geoms.geom_rect</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/166" title="Issue: #166">#166</a>)</p></li>

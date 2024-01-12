@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g32f491a - Density Plot</title>
+    <title>plotnine 0.0.post1+g084dd0b - Density Plot</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -301,7 +301,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:33.555371Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:33.554695Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:34.169650Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:34.168997Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:46.074339Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:46.074013Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:46.745682Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:46.744883Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -324,7 +324,7 @@
 <h3 class="anchored" data-anchor-id="density-plot">Density Plot</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:34.173255Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:34.172951Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:34.187919Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:34.187295Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:46.748993Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:46.748702Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:46.763007Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:46.762394Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -427,7 +427,7 @@
 <div id="cell-3" class="cell markdown">
 <p>The defaults are not exactly beautiful, but still quite clear.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:34.234049Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:34.233776Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:35.699296Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:35.698634Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:46.803821Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:46.803559Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:48.322003Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:48.321357Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg, aes(x<span class="op">=</span><span class="st">'cty'</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_density()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -442,7 +442,7 @@
 <div id="cell-5" class="cell markdown">
 <p>Plotting multiple groups is straightforward, but as each group is plotted as an independent PDF summing to 1, the relative size of each group will be normalized.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:35.702589Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:35.702266Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:36.119637Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:36.119048Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:48.325055Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:48.324697Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:48.737499Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:48.736896Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg, aes(x<span class="op">=</span><span class="st">'cty'</span>, color<span class="op">=</span><span class="st">'drv'</span>, fill<span class="op">=</span><span class="st">'drv'</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_density(alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -457,7 +457,7 @@
 <div id="cell-7" class="cell markdown">
 <p>To plot multiple groups and scale them by their relative size, you can map the <code>y</code> aesthetic to <code>'count'</code> (calculated by <code>stat_density</code>).</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:36.122694Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:36.122470Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:36.541017Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:36.540421Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:48.740370Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:48.740145Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:49.139975Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:49.139421Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg, aes(x<span class="op">=</span><span class="st">'cty'</span>, color<span class="op">=</span><span class="st">'drv'</span>, fill<span class="op">=</span><span class="st">'drv'</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_density(aes(y<span class="op">=</span>after_stat(<span class="st">'count'</span>)), alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -477,7 +477,7 @@
 <p>The <code>count</code> calculated by <code>stat_density</code> is <span class="math inline">\(count = density * n\)</span> where <code>n</code> is the number of points . The <code>density</code> curves have an area of 1 and have no information about the absolute frequency of the values along curve; only the relative frequencies. The <code>count</code> curve reveals the absolute frequencies. The scale of this <code>count</code> corresponds to the <code>count</code> calculated by the <code>stat_bin</code> for the histogram when the bins are 1 unit wide i.e.&nbsp;<code>binwidth=1</code>. The <code>count * binwidth</code> curve matches the scale of <code>count</code>s for the histogram for a give <code>binwidth</code>.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:36.544404Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:36.544129Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:37.072643Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:37.072015Z&quot;}" data-scrolled="false" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:49.143000Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:49.142779Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:49.698186Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:49.697530Z&quot;}" data-scrolled="false" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>binwidth <span class="op">=</span> <span class="dv">2</span>  <span class="co"># The same for geom_density and geom_histogram</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg, aes(x<span class="op">=</span><span class="st">'cty'</span>, color<span class="op">=</span><span class="st">'drv'</span>, fill<span class="op">=</span><span class="st">'drv'</span>))</span>
@@ -505,7 +505,7 @@
 <div id="cell-12" class="cell markdown">
 <p>Create some data and plot the density</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:37.075695Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:37.075451Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:37.357557Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:37.356930Z&quot;}" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:49.701188Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:49.700842Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:49.952162Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:49.951562Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">101</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: np.arange(n)})</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -523,7 +523,7 @@
 <div id="cell-14" class="cell markdown">
 <p>Suppose we want to mark a region as special e.g.&nbsp;<code>(40, 60)</code>, we can use vertical lines to <code>annotate</code> it.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:37.360588Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:37.360375Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:37.674312Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:37.673756Z&quot;}" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:49.954884Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:49.954646Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:50.239472Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:50.238851Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> (<span class="dv">40</span>, <span class="dv">60</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'x'</span>))</span>
@@ -541,7 +541,7 @@
 <div id="cell-16" class="cell markdown">
 <p>To make it standout more we can highlight. To do that, the first thought is to use a rectangle.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:37.677018Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:37.676823Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:38.000285Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:37.999712Z&quot;}" data-execution_count="9">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:50.242187Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:50.241833Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:50.544772Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:50.543930Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> (<span class="dv">40</span>, <span class="dv">60</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'x'</span>))</span>
@@ -562,7 +562,7 @@
 <p>To hightlight only within the density curve, we have to use a second density curve. We need to calculate the density as normal, but just before the curve &amp; region are plotted, we should keep only the region we want.</p>
 <p>We create our own <code>geom_density_highlight</code> and override the <code>setup_data</code> method. First, we override but do nothing, we only inspect the data to see what we have to work with.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:38.003065Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:38.002868Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:38.435587Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:38.435066Z&quot;}" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:50.547667Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:50.547279Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:50.991801Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:50.991085Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># new class</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> geom_density_highlight(geom_density):</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -580,8 +580,8 @@
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(geom_vline, xintercept<span class="op">=</span>region)</span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      PANEL     count   density  group    n    scaled           x         y   
-0         1  0.519038  0.005139     -1  101  0.519039    0.000000  0.005139  \
+<pre><code>      PANEL     count   density  group    n    scaled           x         y  \
+0         1  0.519038  0.005139     -1  101  0.519039    0.000000  0.005139   
 1         1  0.522757  0.005176     -1  101  0.522758    0.097752  0.005176   
 2         1  0.526473  0.005213     -1  101  0.526474    0.195503  0.005213   
 3         1  0.530187  0.005249     -1  101  0.530188    0.293255  0.005249   
@@ -619,7 +619,7 @@
 <div id="cell-20" class="cell markdown">
 <p>The highlight has filled the whole region, but the printed data suggests that we can limit the rows to those where <code>x</code> column is within our region.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:38.438604Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:38.438387Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:38.778570Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:38.777952Z&quot;}" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:50.994710Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:50.994459Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:51.339979Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:51.339392Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> geom_density_highlight(geom_density):</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># new method</span></span>
@@ -652,7 +652,7 @@
 <div id="cell-22" class="cell markdown">
 <p>That is it, but we can make it look better.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:51:38.781306Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:51:38.781061Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:51:39.140996Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:51:39.140420Z&quot;}" data-execution_count="12">
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:51.342667Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:51.342458Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:51.667678Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:51.666905Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> geom_density_highlight(geom_density):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>args, region<span class="op">=</span>(<span class="op">-</span>np.inf, np.inf), <span class="op">**</span>kwargs):</span>

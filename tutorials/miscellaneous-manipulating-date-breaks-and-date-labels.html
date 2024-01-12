@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g32f491a - Manipulating date breaks and date labels</title>
+<title>plotnine 0.0.post1+g084dd0b - Manipulating date breaks and date labels</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g32f491a</span>
+    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="manipulating-date-breaks-and-date-labels" class="level1">
 <h1>Manipulating date breaks and date labels</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:54.449402Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:54.448902Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:55.138145Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:55.137472Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:28.196083Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:28.195727Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:28.957857Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:28.957100Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -232,7 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>theme_set(theme_linedraw()) <span class="co"># default theme</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Using the <code>economics</code> dataset</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:55.141470Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:55.141183Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:55.153030Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:55.152412Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:28.962060Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:28.961797Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:28.975103Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:28.974380Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>economics.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -303,7 +303,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>How does the saving rate vary with time?</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:55.195531Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:55.195273Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:56.190085Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:56.189566Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:29.017112Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:29.016847Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:30.143215Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:30.142554Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(economics)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="st">'date'</span>, <span class="st">'psavert'</span>))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(y<span class="op">=</span><span class="st">'personal saving rate'</span>)</span>
@@ -318,7 +318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Yikes! the calculated breaks are awful, we need to intervene. We do so using the <a href="https://mizani.readthedocs.io/en/stable/breaks.html#mizani.breaks.date_breaks">date_breaks</a> and <a href="https://mizani.readthedocs.io/en/stable/formatters.html#mizani.formatters.date_format">date_format</a> functions from mizani.</p>
 <p>Set breaks every 10 years</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:56.194020Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:56.193794Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:56.493451Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:56.492830Z&quot;}" data-execution_count="4">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:30.146256Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:30.145955Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:30.427696Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:30.427176Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(economics)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="st">'date'</span>, <span class="st">'psavert'</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_x_datetime(breaks<span class="op">=</span>date_breaks(<span class="st">'10 years'</span>))        <span class="co"># new</span></span>
@@ -333,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>That is better. Since all the breaks are at the beginning of the year, we can omit the month and day. Using <code>date_format</code> we override the format string. For more on the options for the format string see the <a href="https://docs.python.org/library/datetime.html#strftime-strptime-behavior">strftime behavior</a>.</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:56.497131Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:56.496737Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:56.860581Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:56.860022Z&quot;}" data-execution_count="5">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:30.430515Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:30.430269Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:30.709646Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:30.709034Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(ggplot(economics)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="st">'date'</span>, <span class="st">'psavert'</span>))</span>
@@ -349,7 +349,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can achieve the same result with a custom formating function.</p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:56.863989Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:56.863763Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:57.172159Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:57.171597Z&quot;}" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:30.712507Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:30.712238Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:30.991935Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:30.991403Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> custom_date_format1(breaks):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Function to format the date</span></span>
@@ -372,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can use a custom formatting function to get results that are not obtainable with the <code>date_format</code> function. For example if we have monthly breaks over a handful of years we can mix date formats as follows; specify beginning of the year and every other month. Such tricks can be used reduce overcrowding.</p>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:57.175545Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:57.175335Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:57.485661Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:57.485026Z&quot;}" data-execution_count="7">
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:30.994802Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:30.994608Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:31.245124Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:31.244470Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> custom_date_format2(breaks):</span>
@@ -411,7 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We removed the labels but not the breaks, leaving behind dangling ticks for the skipped months. We can fix that by wrapping <code>date_breaks</code> around a filtering function.</p>
-<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-05-08T15:53:57.488725Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-05-08T15:53:57.488503Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-05-08T15:53:57.797136Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-05-08T15:53:57.796519Z&quot;}" data-execution_count="8">
+<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:31.247890Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:31.247653Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:31.530592Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:31.530066Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> custom_date_format3(breaks):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Function to format the date</span></span>
