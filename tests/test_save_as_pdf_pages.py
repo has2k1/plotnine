@@ -91,7 +91,7 @@ class TestExceptions:
         with pytest.raises(PlotnineError):
             save_as_pdf_pages(plots, fn, verbose=False)
 
-        assert_exist_and_clean(fn, "Plot exception")
+        assert not fn.exists()
 
 
 # This should be the last function in the file since it can catch
