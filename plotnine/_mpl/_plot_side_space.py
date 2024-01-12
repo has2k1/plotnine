@@ -305,21 +305,19 @@ class bottom_spaces(_side_spaces):
         self.axis_xlabels = max_xlabels_height(pack, "last_row")
 
 
+@dataclass
 class LRTBSpaces:
     """
     Space for components in all directions around the panels
     """
 
-    l: left_spaces
-    r: right_spaces
-    t: top_spaces
-    b: bottom_spaces
+    pack: LayoutPack
 
-    def __init__(self, pack):
-        self.l = left_spaces(pack)
-        self.r = right_spaces(pack)
-        self.t = top_spaces(pack)
-        self.b = bottom_spaces(pack)
+    def __post_init__(self):
+        self.l = left_spaces(self.pack)
+        self.r = right_spaces(self.pack)
+        self.t = top_spaces(self.pack)
+        self.b = bottom_spaces(self.pack)
 
     @property
     def left(self):
