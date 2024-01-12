@@ -794,7 +794,7 @@ def save_as_pdf_pages(
     if verbose:
         warn(f"Filename: {filename}", PlotnineWarning)
 
-    with PdfPages(filename) as pdf:
+    with PdfPages(filename, keep_empty=False) as pdf:
         # Re-add the first element to the iterator, if it was removed
         for plot in plots:
             fig = plot.draw()
