@@ -55,18 +55,17 @@ class TightParams:
     All parameters computed for the plotnine tight layout engine
     """
 
-    spaces: LRTBSpaces
-    grid: GridSpecParams
+    sides: LRTBSpaces
+    gullies: WHSpaceParts
 
-    def __init__(self, spaces: LRTBSpaces, wspace: float, hspace: float):
-        self.spaces = spaces
+    def __post_init__(self):
         self.grid = GridSpecParams(
-            left=spaces.left,
-            right=spaces.right,
-            top=spaces.top,
-            bottom=spaces.bottom,
-            wspace=wspace,
-            hspace=hspace,
+            left=self.sides.left,
+            right=self.sides.right,
+            top=self.sides.top,
+            bottom=self.sides.bottom,
+            wspace=self.gullies.wspace,
+            hspace=self.gullies.hspace,
         )
 
     def to_aspect_ratio(
@@ -89,7 +88,7 @@ class TightParams:
         Reduce the height of axes to get the aspect ratio
         """
         params = deepcopy(self)
-        spaces = params.spaces
+        sides = params.sides
         grid = params.grid
 
         # New height w.r.t figure height
@@ -104,8 +103,8 @@ class TightParams:
         grid.hspace = parts.sh / h1
 
         # Add more vertical plot margin
-        spaces.t.plot_margin += dh
-        spaces.b.plot_margin += dh
+        sides.t.plot_margin += dh
+        sides.b.plot_margin += dh
         return params
 
     def _reduce_width(
@@ -115,7 +114,7 @@ class TightParams:
         Reduce the width of axes to get the aspect ratio
         """
         params = deepcopy(self)
-        spaces = params.spaces
+        sides = params.sides
         grid = params.grid
 
         # New width w.r.t figure width
@@ -130,8 +129,8 @@ class TightParams:
         grid.wspace = parts.sw / w1
 
         # Add more horizontal margin
-        spaces.l.plot_margin += dw
-        spaces.r.plot_margin += dw
+        sides.l.plot_margin += dw
+        sides.r.plot_margin += dw
         return params
 
 
@@ -139,13 +138,13 @@ def get_plotnine_tight_layout(pack: LayoutPack) -> TightParams:
     """
     Compute tight layout parameters
     """
-    spaces = LRTBSpaces(pack)
-    parts = calculate_panel_spacing(pack, spaces)
-    params = TightParams(spaces, parts.wspace, parts.hspace)
+    sides = LRTBSpaces(pack)
+    gullies = calculate_panel_spacing(pack, sides)
+    tight_params = TightParams(sides, gullies)
     ratio = pack.facet._aspect_ratio()
     if ratio is not None:
-        params = params.to_aspect_ratio(pack.facet, ratio, parts)
-    return params
+        tight_params = tight_params.to_aspect_ratio(pack.facet, ratio, gullies)
+    return tight_params
 
 
 def set_figure_artist_positions(
@@ -156,7 +155,7 @@ def set_figure_artist_positions(
     Set the x,y position of the artists around the panels
     """
     _property = pack.theme.themeables.property
-    spaces = tparams.spaces
+    sides = tparams.sides
     grid = tparams.grid
 
     if pack.plot_title:
@@ -164,7 +163,7 @@ def set_figure_artist_positions(
             ha = _property("plot_title", "ha")
         except KeyError:
             ha = "center"
-        pack.plot_title.set_y(spaces.t.edge("plot_title"))
+        pack.plot_title.set_y(sides.t.edge("plot_title"))
         horizonally_align_text_with_panels(pack.plot_title, grid, ha)
 
     if pack.plot_subtitle:
@@ -172,7 +171,7 @@ def set_figure_artist_positions(
             ha = _property("plot_subtitle", "ha")
         except KeyError:
             ha = "center"
-        pack.plot_subtitle.set_y(spaces.t.edge("plot_subtitle"))
+        pack.plot_subtitle.set_y(sides.t.edge("plot_subtitle"))
         horizonally_align_text_with_panels(pack.plot_subtitle, grid, ha)
 
     if pack.plot_caption:
@@ -180,7 +179,7 @@ def set_figure_artist_positions(
             ha = _property("plot_caption", "ha")
         except KeyError:
             ha = "right"
-        pack.plot_caption.set_y(spaces.b.edge("plot_caption"))
+        pack.plot_caption.set_y(sides.b.edge("plot_caption"))
         horizonally_align_text_with_panels(pack.plot_caption, grid, ha)
 
     if pack.axis_title_x:
@@ -188,7 +187,7 @@ def set_figure_artist_positions(
             ha = _property("axis_title_x", "ha")
         except KeyError:
             ha = "center"
-        pack.axis_title_x.set_y(spaces.b.edge("axis_title_x"))
+        pack.axis_title_x.set_y(sides.b.edge("axis_title_x"))
         horizonally_align_text_with_panels(pack.axis_title_x, grid, ha)
 
     if pack.axis_title_y:
@@ -196,7 +195,7 @@ def set_figure_artist_positions(
             va = _property("axis_title_y", "va")
         except KeyError:
             va = "center"
-        pack.axis_title_y.set_x(spaces.l.edge("axis_title_y"))
+        pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))
         vertically_align_text_with_panels(pack.axis_title_y, grid, va)
 
     if pack.legend and pack.legend_position:
@@ -247,23 +246,23 @@ def set_legend_position(
     Place legend and align it centerally with respect to the panels
     """
     grid = tparams.grid
-    spaces = tparams.spaces
+    sides = tparams.sides
 
     if position in ("right", "left"):
         y = (grid.top + grid.bottom) / 2
         if position == "left":
-            x = spaces.l.edge("legend")
+            x = sides.l.edge("legend")
             loc = "center left"
         else:
-            x = spaces.r.edge("legend")
+            x = sides.r.edge("legend")
             loc = "center right"
     elif position in ("top", "bottom"):
         x = (grid.right + grid.left) / 2
         if position == "top":
-            y = spaces.t.edge("legend")
+            y = sides.t.edge("legend")
             loc = "upper center"
         else:
-            y = spaces.b.edge("legend")
+            y = sides.b.edge("legend")
             loc = "lower center"
     else:
         x, y = position

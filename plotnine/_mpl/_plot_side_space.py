@@ -10,10 +10,10 @@ such cases as when left or right margin are affected by xlabel.
 """
 from __future__ import annotations
 
-import typing
 from abc import ABC
 from dataclasses import dataclass, fields
 from itertools import chain
+from typing import TYPE_CHECKING, cast
 
 from matplotlib._tight_layout import get_subplotspec_list
 
@@ -21,7 +21,7 @@ from ..facets import facet_grid, facet_null, facet_wrap
 from .patches import SFancyBboxPatch
 from .utils import bbox_in_figure_space, tight_bbox_in_figure_space
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from dataclasses import Field
     from typing import (
         Generator,
@@ -373,6 +373,7 @@ def _calculate_panel_spacing_facet_grid(
     """
     Calculate spacing parts for facet_grid
     """
+    pack.facet = cast(facet_grid, pack.facet)
     _property = pack.theme.themeables.property
 
     ncol = pack.facet.ncol
@@ -381,6 +382,8 @@ def _calculate_panel_spacing_facet_grid(
     W, H = _property("figure_size")
 
     # Both spacings are specified as fractions of the figure width
+    # Multiply the vertical by (W/H) so that the gullies along both
+    # directions are equally spaced.
     sw = _property("panel_spacing_x")
     sh = _property("panel_spacing_y") * W / H
 
@@ -401,6 +404,7 @@ def _calculate_panel_spacing_facet_wrap(
     """
     Calculate spacing parts for facet_wrap
     """
+    pack.facet = cast(facet_wrap, pack.facet)
     _property = pack.theme.themeables.property
 
     ncol = pack.facet.ncol
@@ -426,13 +430,12 @@ def _calculate_panel_spacing_facet_wrap(
     if strip_align_x > -1:
         sh += spaces.t.top_strip_height * (1 + strip_align_x)
 
-    if isinstance(pack.facet, facet_wrap):
-        if pack.facet.free["x"]:
-            sh += max_xlabels_height(pack)
-            sh += max_xticks_height(pack)
-        if pack.facet.free["y"]:
-            sw += max_ylabels_width(pack)
-            sw += max_yticks_width(pack)
+    if pack.facet.free["x"]:
+        sh += max_xlabels_height(pack)
+        sh += max_xticks_height(pack)
+    if pack.facet.free["y"]:
+        sw += max_ylabels_width(pack)
+        sw += max_yticks_width(pack)
 
     # width and height of axes as fraction of figure width & heigt
     w = ((spaces.right - spaces.left) - sw * (ncol - 1)) / ncol
