@@ -590,7 +590,11 @@ def get_xaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     if not is_blank("axis_x_text"):
         minor = ax.xaxis.get_minor_ticks()
 
-    return (tick.label1 for tick in chain(major, minor))
+    return (
+        tick.label1
+        for tick in chain(major, minor)
+        if tick.label1._text  # type: ignore
+    )
 
 
 def get_yaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
@@ -606,7 +610,11 @@ def get_yaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     if not is_blank("axis_y_text"):
         minor = ax.yaxis.get_minor_ticks()
 
-    return (tick.label1 for tick in chain(major, minor))
+    return (
+        tick.label1
+        for tick in chain(major, minor)
+        if tick.label1._text  # type: ignore
+    )
 
 
 def max_xticks_height(
@@ -648,7 +656,7 @@ def max_yticks_width(
     axes_loc: AxesLocation = "all",
 ) -> float:
     """
-    Return maximum width[inches] of a y ticks
+    Return maximum width[inches] of y ticks
     """
     W = pack.figure.get_figwidth()
     widths = [
@@ -667,7 +675,7 @@ def max_ylabels_width(
     axes_loc: AxesLocation = "all",
 ) -> float:
     """
-    Return maximum width[inches] of a y tick labels
+    Return maximum width[inches] of y tick labels
     """
     widths = [
         tight_bbox_in_figure_space(label, pack.figure, pack.renderer).width
