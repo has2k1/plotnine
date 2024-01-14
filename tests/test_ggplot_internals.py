@@ -380,3 +380,26 @@ def test_plotnine_all_imports():
     for name in p9.__all__:
         m = getattr(p9, name).__module__
         assert m.startswith("plotnine"), f"{m} in plotnine.__all__!"
+
+
+def pickle_and_unpickle(obj):
+    import io
+    import pickle
+
+    with io.BytesIO() as f:
+        pickle.dump(obj, f)
+        f.seek(0)
+        unpickled_obj = pickle.load(f)
+
+    return unpickled_obj
+
+
+def test_pickle_ggplot():
+    p = ggplot(data, aes("x", "y")) + geom_point()
+    pickle_and_unpickle(p)
+
+
+def test_pickle_matplotlib_figure():
+    p = ggplot(data, aes("x", "y")) + geom_point()
+    fig = p.draw()
+    pickle_and_unpickle(fig)
