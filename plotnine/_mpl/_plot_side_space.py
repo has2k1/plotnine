@@ -213,7 +213,7 @@ class top_spaces(_side_spaces):
         W, H = _property("figure_size")
         F = W / H
 
-        self.plot_margin = _property("plot_margin_top")
+        self.plot_margin = _property("plot_margin_top") * F
         if pack.plot_title:
             self.plot_title = bbox_in_figure_space(
                 pack.plot_title, pack.figure, pack.renderer
