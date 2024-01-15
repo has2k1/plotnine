@@ -111,7 +111,7 @@ class theme_seaborn(theme):
             ),
             plot_title=element_text(
                 size=base_size * 1.2,
-                ha="left",
+                ha="center",
                 va="top",
                 ma="left",
                 margin={"b": m, "units": "fig"},
