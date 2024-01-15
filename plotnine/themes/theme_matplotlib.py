@@ -81,13 +81,11 @@ class theme_matplotlib(theme):
             plot_margin=m,
             plot_subtitle=element_text(
                 size=base_size * 0.9,
-                ha="left",
                 va="top",
                 ma="left",
                 margin={"b": m, "units": "fig"},
             ),
             plot_title=element_text(
-                ha="center",
                 va="top",
                 ma="left",
                 margin={"b": m, "units": "fig"},

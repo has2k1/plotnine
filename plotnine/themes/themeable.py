@@ -599,6 +599,15 @@ class plot_title(themeable):
     Parameters
     ----------
     theme_element : element_text
+
+    Notes
+    -----
+    When the `ha` property is `None`(not set) and:
+
+      - There is _no_ `plot_subtitle`, the default horizontal alignment
+        is the `center`.
+      - There is a `plot_subtitle`, the default horizontal alignment
+         is that of the `plot_subtitle` which defaults to `left`.
     """
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
@@ -624,6 +633,15 @@ class plot_subtitle(themeable):
     Parameters
     ----------
     theme_element : element_text
+
+    Notes
+    -----
+    When the `ha` property is `None`(not set) and:
+
+      - There is _no_ alignment for the `plot_title`**, the default
+        horizontal alignment is the `center`.
+      - There is an alignment for the `plot_title`, the default
+        horizontal alignment is that set for the `plot_title`.
     """
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):

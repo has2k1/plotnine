@@ -27,8 +27,18 @@ title: Changelog
   If you set the backend to an interactive one, use
   [](:class:`~plotnine.ggplot.show`) to draw the plot.
 
-- The plot title is in the center by default. This reverts the change in
-  `v0.9.0` that put it on the left.
+- The default horizontal alignment for the plot title if there is no subtitle,
+  is the center. If there is a subtitle, the default is to align both to the
+  the left. If the horizontal alignment is set for only one of them, then it
+  controls both. To control the two separately, set the alignments for each.
+  e.g.
+
+  ```
+  theme(
+      plot_title=element_text(ha="left"),
+      plot_subtitle=element_text(ha="right")
+  )
+  ```
 
 ### New
 
