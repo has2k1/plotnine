@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import typing
 
-from matplotlib.patches import FancyBboxPatch
+from matplotlib import artist
+from matplotlib.patches import FancyBboxPatch, Rectangle
 from matplotlib.text import _get_textbox  # type: ignore
 from matplotlib.transforms import Affine2D
 
@@ -70,3 +71,22 @@ class SFancyBboxPatch(FancyBboxPatch):
         if renderer:
             self.update_position_size(renderer)
         return super().get_window_extent(renderer)
+
+
+class InsideStrokedRectangle(Rectangle):
+    """
+    A rectangle whose stroked is fully contained within it
+    """
+
+    @artist.allow_rasterization
+    def draw(self, renderer):
+        """
+        Draw with the bounds of the rectangle adjusted to accomodate the stroke
+        """
+        lw = self.get_linewidth()
+        x, y = self.xy
+        w, h = self.get_width(), self.get_height()
+
+        self.set_bounds(x + lw / 2, y + lw / 2, w - lw, h - lw)
+        super().draw(renderer)
+        self.set_bounds(x, y, w, h)
