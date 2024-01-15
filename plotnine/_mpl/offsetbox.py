@@ -1,6 +1,8 @@
 import matplotlib.transforms as mtransforms
 from matplotlib.offsetbox import AuxTransformBox, DrawingArea
 
+from .patches import InsideStrokedRectangle
+
 
 class ColoredDrawingArea(DrawingArea):
     """
@@ -20,7 +22,7 @@ class ColoredDrawingArea(DrawingArea):
 
         super().__init__(width, height, xdescent, ydescent, clip=clip)
 
-        self.patch = Rectangle(
+        self.patch = InsideStrokedRectangle(
             (0, 0),
             width=width,
             height=height,

@@ -22,7 +22,7 @@ class theme_linedraw(theme_gray):
             axis_text=element_text(color="black", size=base_size * 0.8),
             axis_ticks=element_line(color="black", size=0.5),
             axis_ticks_minor=element_blank(),
-            legend_key=element_rect(color="black", size=0.5),
+            legend_key=element_rect(color="black", size=0.72),
             panel_background=element_rect(fill="white"),
             panel_border=element_rect(fill="None", color="black", size=1),
             panel_grid_major=element_line(color="black", size=0.1),
