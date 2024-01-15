@@ -146,8 +146,17 @@ class left_spaces(_side_spaces):
                 pack.axis_title_y, pack.figure, pack.renderer
             ).width
 
+        # Account for the space consumed by the axis
         self.axis_ylabels = max_ylabels_width(pack, "first_col")
         self.axis_yticks = max_yticks_width(pack, "first_col")
+
+        # Adjust plot_margin to make room for ylabels that protude well
+        # beyond the axes
+        # NOTE: This adjustment breaks down when the protrusion is large
+        protrusion = max_xlabels_left_protrusion(pack)
+        adjustment = protrusion - (self.total - self.plot_margin)
+        if adjustment > 0:
+            self.plot_margin += adjustment
 
     def edge(self, item: str) -> float:
         """
@@ -182,6 +191,14 @@ class right_spaces(_side_spaces):
 
         right_strips = get_right_strip_boxpatches_in_last_col(pack.axs)
         self.right_strip_width = max_width(pack, right_strips)
+
+        # Adjust plot_margin to make room for ylabels that protude well
+        # beyond the axes
+        # NOTE: This adjustment breaks down when the protrusion is large
+        protrusion = max_xlabels_right_protrusion(pack)
+        adjustment = protrusion - (self.total - self.plot_margin)
+        if adjustment > 0:
+            self.plot_margin += adjustment
 
     def edge(self, item: str) -> float:
         """
@@ -238,6 +255,14 @@ class top_spaces(_side_spaces):
 
         top_strips = get_top_strip_boxpatches_in_first_row(pack.axs)
         self.top_strip_height = max_height(pack, top_strips)
+
+        # Adjust plot_margin to make room for ylabels that protude well
+        # beyond the axes
+        # NOTE: This adjustment breaks down when the protrusion is large
+        protrusion = max_ylabels_top_protrusion(pack)
+        adjustment = protrusion - (self.total - self.plot_margin)
+        if adjustment > 0:
+            self.plot_margin += adjustment
 
     def edge(self, item: str) -> float:
         """
@@ -303,6 +328,14 @@ class bottom_spaces(_side_spaces):
         # Account for the space consumed by the axis
         self.axis_xticks = max_xticks_height(pack, "last_row")
         self.axis_xlabels = max_xlabels_height(pack, "last_row")
+
+        # Adjust plot_margin to make room for ylabels that protude well
+        # beyond the axes
+        # NOTE: This adjustment breaks down when the protrusion is large
+        protrusion = max_ylabels_bottom_protrusion(pack)
+        adjustment = protrusion - (self.total - self.plot_margin)
+        if adjustment > 0:
+            self.plot_margin += adjustment
 
 
 @dataclass
@@ -577,6 +610,13 @@ def get_yaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:
     return chain(major, minor)
 
 
+def _text_is_visible(text: Text) -> bool:
+    """
+    Return True if text is visible and is not empty
+    """
+    return text.get_visible() and text._text  # type: ignore
+
+
 def get_xaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     """
     Return all x-axis labels that will be shown
@@ -591,7 +631,7 @@ def get_xaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     return (
         tick.label1
         for tick in chain(major, minor)
-        if tick.label1._text  # type: ignore
+        if _text_is_visible(tick.label1)
     )
 
 
@@ -609,7 +649,7 @@ def get_yaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     return (
         tick.label1
         for tick in chain(major, minor)
-        if tick.label1._text  # type: ignore
+        if _text_is_visible(tick.label1)
     )
 
 
@@ -679,3 +719,93 @@ def max_ylabels_width(
         for label in get_yaxis_labels(pack, ax)
     ]
     return max(widths) if len(widths) else 0
+
+
+def max_ylabels_top_protrusion(
+    pack: LayoutPack,
+    axes_loc: AxesLocation = "all",
+) -> float:
+    """
+    Return maximum height[inches] above the axes of y tick labels
+    """
+
+    def get_artist_top_y(a: Artist) -> float:
+        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).max
+        return xy[1]
+
+    extras = []
+    for ax in filter_axes(pack.axs, axes_loc):
+        ax_top = get_artist_top_y(ax)
+        for label in get_yaxis_labels(pack, ax):
+            label_top = get_artist_top_y(label)
+            extras.append(max(0, label_top - ax_top))
+
+    return max(extras) if len(extras) else 0
+
+
+def max_ylabels_bottom_protrusion(
+    pack: LayoutPack,
+    axes_loc: AxesLocation = "all",
+) -> float:
+    """
+    Return maximum height[inches] below the axes of y tick labels
+    """
+
+    def get_artist_bottom_y(a: Artist) -> float:
+        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).min
+        return xy[1]
+
+    extras = []
+    for ax in filter_axes(pack.axs, axes_loc):
+        ax_bottom = get_artist_bottom_y(ax)
+        for label in get_yaxis_labels(pack, ax):
+            label_bottom = get_artist_bottom_y(label)
+            protrusion = abs(min(label_bottom - ax_bottom, 0))
+            extras.append(protrusion)
+
+    return max(extras) if len(extras) else 0
+
+
+def max_xlabels_left_protrusion(
+    pack: LayoutPack,
+    axes_loc: AxesLocation = "all",
+) -> float:
+    """
+    Return maximum width[inches] of x tick labels to the left of the axes
+    """
+
+    def get_artist_left_x(a: Artist) -> float:
+        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).min
+        return xy[0]
+
+    extras = []
+    for ax in filter_axes(pack.axs, axes_loc):
+        ax_left = get_artist_left_x(ax)
+        for label in get_xaxis_labels(pack, ax):
+            label_left = get_artist_left_x(label)
+            protrusion = abs(min(label_left - ax_left, 0))
+            extras.append(protrusion)
+
+    return max(extras) if len(extras) else 0
+
+
+def max_xlabels_right_protrusion(
+    pack: LayoutPack,
+    axes_loc: AxesLocation = "all",
+) -> float:
+    """
+    Return maximum width[inches] of x tick labels to the right of the axes
+    """
+
+    def get_artist_right_x(a: Artist) -> float:
+        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).max
+        return xy[0]
+
+    extras = []
+    for ax in filter_axes(pack.axs, axes_loc):
+        ax_right = get_artist_right_x(ax)
+        for label in get_xaxis_labels(pack, ax):
+            label_right = get_artist_right_x(label)
+            extras.append(max(0, label_right - ax_right))
+
+    return max(extras) if len(extras) else 0

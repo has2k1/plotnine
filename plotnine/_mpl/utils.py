@@ -29,7 +29,7 @@ def tight_bbox_in_figure_space(
     artist: Artist, fig: Figure, renderer: RendererBase
 ) -> Bbox:
     """
-    Bounding box of artist in figure coordinates
+    Bounding box of artist and its children in figure coordinates
     """
     box = artist.get_tightbbox(renderer) or ZEROS_BBOX
     return fig.transFigure.inverted().transform_bbox(box)
