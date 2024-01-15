@@ -74,7 +74,12 @@ class element_text(element_base):
         size: Optional[float | Sequence[float]] = None,
         ha: Optional[Literal["center", "left", "right"]] = None,
         va: Optional[Literal["center", "top", "bottom", "baseline"]] = None,
-        rotation: Optional[Literal["vertical", "horizontal"] | float] = None,
+        rotation: Optional[
+            Literal["vertical", "horizontal"]
+            | float
+            | Sequence[Literal["vertical", "horizontal"]]
+            | Sequence[float]
+        ] = None,
         linespacing: Optional[float] = None,
         backgroundcolor: Optional[
             str
