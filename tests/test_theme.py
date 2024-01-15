@@ -1,5 +1,7 @@
 import os
 
+import numpy as np
+import pandas as pd
 import pytest
 
 from plotnine import (
@@ -13,6 +15,7 @@ from plotnine import (
     geom_point,
     ggplot,
     labs,
+    scale_y_continuous,
     theme,
     theme_538,
     theme_bw,
@@ -298,3 +301,30 @@ class TestLayout:
     def test_facet_wrap_scales_free(self):
         p = self.g + facet_wrap("carb", scales="free")
         assert p == "facet_wrap_scales_free"
+
+    def test_plot_margin_aspect_ratio(self):
+        # The margin should be exact in both directions even if
+        # the figure has an aspect ratio != 1.
+        p = (
+            ggplot()
+            + geom_blank()
+            + theme(plot_margin=0.025, figure_size=(4, 3))
+        )
+        assert p == "plot_margin_aspect_ratio"
+
+    def test_plot_margin_protruding_axis_text(self):
+        data = pd.DataFrame({"x": np.arange(5), "y": np.arange(5) - 0.2})
+
+        p = (
+            ggplot(data, aes("x", "y"))
+            + geom_point()
+            + scale_y_continuous(labels="0 1 2 3 four-four".split())
+            + labs(title="Protruding Axis Text")
+            + theme(
+                axis_text_y=element_text(
+                    rotation=(0, 0, 0, 0, 90),
+                    color=("black", "black", "black", "black", "red"),
+                ),
+            )
+        )
+        assert p == "plot_margin_protruding_axis_text"
