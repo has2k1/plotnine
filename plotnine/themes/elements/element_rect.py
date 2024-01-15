@@ -53,7 +53,7 @@ class element_rect(element_base):
             self.properties["facecolor"] = fill
         if color:
             self.properties["edgecolor"] = color
-        if size:
+        if size is not None:
             self.properties["linewidth"] = size
         if linetype:
             self.properties["linestyle"] = linetype
