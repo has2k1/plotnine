@@ -515,17 +515,20 @@ class ggplot:
         )
 
         # The locations are handled by the layout manager
-        text_title = figure.text(0, 0, title)
-        text_caption = figure.text(0, 0, caption)
-        text_subtitle = figure.text(0, 0, subtitle)
-        text_x = figure.text(0, 0, labels.x or "")
-        text_y = figure.text(0, 0, labels.y or "")
+        if title:
+            _targets["plot_title"] = figure.text(0, 0, title)
 
-        _targets["plot_title"] = text_title
-        _targets["plot_caption"] = text_caption
-        _targets["plot_subtitle"] = text_subtitle
-        _targets["axis_title_x"] = text_x
-        _targets["axis_title_y"] = text_y
+        if caption:
+            _targets["plot_caption"] = figure.text(0, 0, caption)
+
+        if subtitle:
+            _targets["plot_subtitle"] = figure.text(0, 0, subtitle)
+
+        if labels.x:
+            _targets["axis_title_x"] = figure.text(0, 0, labels.x)
+
+        if labels.y:
+            _targets["axis_title_y"] = figure.text(0, 0, labels.y)
 
     def _draw_watermarks(self):
         """

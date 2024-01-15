@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+from contextlib import suppress
 from copy import copy, deepcopy
 from typing import overload
 
@@ -249,6 +250,8 @@ class theme:
         Subclasses that override this method should make sure that the
         base class method is called.
         """
+        self._add_default_themeable_properties()
+
         for th in self.themeables.values():
             th.apply(self)
 
@@ -272,6 +275,18 @@ class theme:
             th.setup_figure(self.figure)
             if isinstance(th.theme_element, element_text):
                 th.theme_element.setup(self)
+
+    def _add_default_themeable_properties(self):
+        """
+        Add default themeable properties that depend depend on the plot
+
+        Some properties may be left unset or may have "auto" values and
+        their final values are best worked out dynamically after the
+        plot has been built, but before the themeables are applied.
+
+        This is where the theme is modified to add those values.
+        """
+        smart_title_and_subtitle_ha(self)
 
     @property
     def rcParams(self):
@@ -463,3 +478,41 @@ def theme_update(**kwargs: themeable):
     """
     assert "complete" not in kwargs
     theme_set(theme_get() + theme(**kwargs))  # pyright: ignore
+
+
+def smart_title_and_subtitle_ha(plot_theme: theme):
+    """
+    Smartly add the horizontal alignment for the title and subtitle
+    """
+    from .elements import element_text
+
+    thm = plot_theme.themeables
+    has_title = "plot_title" in plot_theme._targets
+    has_subtitle = "plot_subtitle" in plot_theme._targets
+    has_title_ha = "ha" in thm["plot_title"].properties
+    has_subtitle_ha = "ha" in thm["plot_subtitle"].properties
+    default_title_ha, default_subtitle_ha = "center", "left"
+    kwargs = {}
+
+    if has_title and not has_title_ha:
+        if has_subtitle:
+            if has_subtitle_ha:
+                title_ha = thm.property("plot_subtitle", "ha")
+            else:
+                title_ha = default_subtitle_ha
+        else:
+            title_ha = default_title_ha
+        kwargs["plot_title"] = element_text(ha=title_ha)
+
+    if has_subtitle and not has_subtitle_ha:
+        if has_title:
+            if has_title_ha:
+                subtitle_ha = thm.property("plot_title", "ha")
+            else:
+                subtitle_ha = default_subtitle_ha
+        else:
+            subtitle_ha = default_subtitle_ha
+        kwargs["plot_subtitle"] = element_text(ha=subtitle_ha)
+
+    if kwargs:
+        plot_theme += theme(**kwargs)
