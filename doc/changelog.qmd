@@ -27,6 +27,9 @@ title: Changelog
   If you set the backend to an interactive one, use
   [](:class:`~plotnine.ggplot.show`) to draw the plot.
 
+- The plot title is in the center by default. This reverts the change in
+  `v0.9.0` that put it on the left.
+
 ### New
 
 - Added symmetric logarithm transformation scales
