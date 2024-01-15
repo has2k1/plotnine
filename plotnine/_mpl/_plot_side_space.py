@@ -584,10 +584,8 @@ def get_xaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     is_blank = pack.theme.themeables.is_blank
     major, minor = [], []
 
-    if not is_blank("axis_x_text"):
+    if not is_blank("axis_text_x"):
         major = ax.xaxis.get_major_ticks()
-
-    if not is_blank("axis_x_text"):
         minor = ax.xaxis.get_minor_ticks()
 
     return (
@@ -604,10 +602,8 @@ def get_yaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
     is_blank = pack.theme.themeables.is_blank
     major, minor = [], []
 
-    if not is_blank("axis_y_text"):
+    if not is_blank("axis_text_y"):
         major = ax.yaxis.get_major_ticks()
-
-    if not is_blank("axis_y_text"):
         minor = ax.yaxis.get_minor_ticks()
 
     return (
