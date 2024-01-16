@@ -215,7 +215,6 @@ class guide_legend(guide):
 
     def _set_defaults(self, theme):
         guide._set_defaults(self, theme)
-        _property = theme.themeables.property
         self.nrow, self.ncol = self._calculate_rows_and_cols()
         nbreak = len(self.key)
 
@@ -272,7 +271,7 @@ class guide_legend(guide):
 
         # keysize
         if self.keywidth is None:
-            width = determine_side_length(_property("legend_key_width"))
+            width = determine_side_length(theme.P("legend_key_width"))
             if self.direction == "vertical":
                 width[:] = width.max()
             self._keywidth = width
@@ -280,7 +279,7 @@ class guide_legend(guide):
             self._keywidth = [self.keywidth] * nbreak
 
         if self.keyheight is None:
-            height = determine_side_length(_property("legend_key_height"))
+            height = determine_side_length(theme.P("legend_key_height"))
             if self.direction == "horizontal":
                 height[:] = height.max()
             self._keyheight = height

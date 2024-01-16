@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing
 from contextlib import suppress
 from copy import copy, deepcopy
+from functools import cached_property
 from typing import overload
 
 from ..exceptions import PlotnineError
@@ -241,6 +242,31 @@ class theme:
             and other.themeables == self.themeables
             and other.rcParams == self.rcParams
         )
+
+    @cached_property
+    def T(self):
+        """
+        Convenient access to the themeables
+        """
+        return self.themeables
+
+    def P(self, name: str, key="value"):
+        """
+        Convenient access into the properties of the themeables
+
+        Parameters
+        ----------
+        name :
+            Themeable name
+        key :
+            Property name to lookup
+
+        Returns
+        -------
+        :
+            Value of themeable property
+        """
+        return self.themeables.property(name, key)
 
     def apply(self):
         """

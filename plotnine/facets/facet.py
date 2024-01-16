@@ -340,6 +340,8 @@ class facet:
             b = t[1] if np.isfinite(t[1]) else None
             return (a, b)
 
+        theme = self.theme
+
         # limits
         ax.set_xlim(*_inf_to_none(panel_params.x.range))
         ax.set_ylim(*_inf_to_none(panel_params.y.range))
@@ -362,11 +364,10 @@ class facet:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        _property = self.theme.themeables.property
-        margin = _property("axis_text_x", "margin")
+        margin = theme.P("axis_text_x", "margin")
         pad_x = margin.get_as("t", "pt")
 
-        margin = _property("axis_text_y", "margin")
+        margin = theme.P("axis_text_y", "margin")
         pad_y = margin.get_as("r", "pt")
 
         ax.tick_params(axis="x", which="major", pad=pad_x)

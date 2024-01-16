@@ -154,13 +154,13 @@ def set_figure_artist_positions(
     """
     Set the x,y position of the artists around the panels
     """
-    _property = pack.theme.themeables.property
+    theme = pack.theme
     sides = tparams.sides
     grid = tparams.grid
 
     if pack.plot_title:
         try:
-            ha = _property("plot_title", "ha")
+            ha = theme.P("plot_title", "ha")
         except KeyError:
             ha = "center"
         pack.plot_title.set_y(sides.t.edge("plot_title"))
@@ -168,7 +168,7 @@ def set_figure_artist_positions(
 
     if pack.plot_subtitle:
         try:
-            ha = _property("plot_subtitle", "ha")
+            ha = theme.P("plot_subtitle", "ha")
         except KeyError:
             ha = "center"
         pack.plot_subtitle.set_y(sides.t.edge("plot_subtitle"))
@@ -176,7 +176,7 @@ def set_figure_artist_positions(
 
     if pack.plot_caption:
         try:
-            ha = _property("plot_caption", "ha")
+            ha = theme.P("plot_caption", "ha")
         except KeyError:
             ha = "right"
         pack.plot_caption.set_y(sides.b.edge("plot_caption"))
@@ -184,7 +184,7 @@ def set_figure_artist_positions(
 
     if pack.axis_title_x:
         try:
-            ha = _property("axis_title_x", "ha")
+            ha = theme.P("axis_title_x", "ha")
         except KeyError:
             ha = "center"
         pack.axis_title_x.set_y(sides.b.edge("axis_title_x"))
@@ -192,7 +192,7 @@ def set_figure_artist_positions(
 
     if pack.axis_title_y:
         try:
-            va = _property("axis_title_y", "va")
+            va = theme.P("axis_title_y", "va")
         except KeyError:
             va = "center"
         pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))

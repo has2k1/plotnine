@@ -116,8 +116,8 @@ class ggplot:
         """
         Print/show the plot
         """
-        dpi = self.theme.themeables.property("dpi")
-        width, height = self.theme.themeables.property("figure_size")
+        dpi = self.theme.P("dpi")
+        width, height = self.theme.P("figure_size")
         W, H = int(width * dpi), int(height * dpi)
         self.show()
         return f"<Figure Size: ({W} x {H})>"
@@ -610,7 +610,7 @@ class ggplot:
         ):
             raise PlotnineError("You must specify both width and height")
 
-        width, height = self.theme.themeables.property("figure_size")
+        width, height = self.theme.P("figure_size")
         assert width is not None
         assert height is not None
 

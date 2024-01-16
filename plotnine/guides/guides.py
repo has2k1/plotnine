@@ -109,12 +109,12 @@ class guides(dict):
             A box that contains all the guides for the plot.
             If there are no guides, **None** is returned.
         """
-        _property = plot.theme.themeables.property
-        self.box_direction = _property("legend_box")
-        self.position = _property("legend_position")
-        self.box_align = _property("legend_box_just")
-        self.box_margin = _property("legend_box_margin")
-        self.spacing = _property("legend_spacing")
+        theme = plot.theme
+        self.box_direction = theme.P("legend_box")
+        self.position = theme.P("legend_position")
+        self.box_align = theme.P("legend_box_just")
+        self.box_margin = theme.P("legend_box_margin")
+        self.spacing = theme.P("legend_spacing")
 
         if self.position == "none":
             return  # No Legend
