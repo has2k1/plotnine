@@ -61,53 +61,53 @@ class strip:
             to draw the strip text and the background box
             (box_x, box_y, box_width, box_height).
         """
-        _property = self.theme.themeables.property
+        theme = self.theme
         position = self.position
         if position == "top":
             # The x & y values are just starting locations
             # The final location is determined by the layout manager.
             x, y = 0, 1
             ha, va = "center", "bottom"
-            rotation = _property("strip_text_x", "rotation")
+            rotation = theme.P("strip_text_x", "rotation")
             box_width = 1
             box_height = 0  # Determined by the text size
             # TODO: Allow two unique paddings for either side.
             # Requires implementing an mpl.patches.boxstyle that recognises
             # two padding values.
-            strip_text_margin = _property("strip_text_x", "margin").get_as(
+            strip_text_margin = theme.P("strip_text_x", "margin").get_as(
                 "b", "lines"
             )
-            strip_align = _property("strip_align_x")
+            strip_align = theme.P("strip_align_x")
 
             # x & width properties of the background slide and
             # shrink the strip horizontally.
             with suppress(KeyError):
-                x = _property("strip_text_x", "x")
+                x = theme.P("strip_text_x", "x")
             with suppress(KeyError):
-                box_width = _property("strip_background_x", "width")
+                box_width = theme.P("strip_background_x", "width")
 
         elif position == "right":
             # The x & y values are just starting locations
             # The final location is determined by the layout manager.
             x, y = 1, 0
             ha, va = "left", "center"
-            rotation = _property("strip_text_y", "rotation")
+            rotation = theme.P("strip_text_y", "rotation")
             box_width = 0  # Determine by the text height
             box_height = 1
             # TODO: Allow two unique paddings for either side.
             # Requires implementing an mpl.patches.boxstyle that recognises
             # two padding values.
-            strip_text_margin = _property("strip_text_y", "margin").get_as(
+            strip_text_margin = theme.P("strip_text_y", "margin").get_as(
                 "r", "lines"
             )
-            strip_align = _property("strip_align_y")
+            strip_align = theme.P("strip_align_y")
 
             # y & height properties of the background slide and
             # shrink the strip vertically.
             with suppress(KeyError):
-                y = _property("strip_text_y", "y")
+                y = theme.P("strip_text_y", "y")
             with suppress(KeyError):
-                box_height = _property("strip_background_y", "height")
+                box_height = theme.P("strip_background_y", "height")
         else:
             raise ValueError(f"Unknown position for strip text: {position!r}")
 

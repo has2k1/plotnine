@@ -85,15 +85,14 @@ class PlotnineLayoutEngine(LayoutEngine):
         """
         Put together objects required to do the layout
         """
-        _property = self.plot.theme.themeables.property
-        is_blank = self.plot.theme.themeables.is_blank
+        theme = self.plot.theme
         get_target = self._theme_targets.get
 
         def get(th: str) -> Any:
             """
             Return themeable target or None
             """
-            if is_blank(th):
+            if theme.T.is_blank(th):
                 return None
             else:
                 t = get_target(th, None)
@@ -101,7 +100,7 @@ class PlotnineLayoutEngine(LayoutEngine):
                     return None
                 return t
 
-        legend_position = _property("legend_position")
+        legend_position = theme.P("legend_position")
         if legend_position in ("none", "None"):
             legend_position = None
 
@@ -109,7 +108,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             axs=self.plot.axs,
             figure=self.plot.figure,
             renderer=self.plot.figure._get_renderer(),  # pyright: ignore
-            theme=self.plot.theme,
+            theme=theme,
             facet=self.plot.facet,
             axis_title_x=get("axis_title_x"),
             axis_title_y=get("axis_title_y"),

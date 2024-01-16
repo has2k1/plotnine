@@ -116,7 +116,6 @@ class guide(ABC, metaclass=Register):
         """
         self.theme = theme
         valid_locations = {"top", "bottom", "left", "right"}
-        _property = theme.themeables.property
         margin_location_lookup = {
             # Where to put the margin between the legend and
             # the axes. Depends on the location of the legend
@@ -140,7 +139,7 @@ class guide(ABC, metaclass=Register):
         _legend_type = self.__class__.__name__.split("_")[-1]
         name = f"legend_text_{_legend_type}"
         loc = margin_location_lookup[self.label_position[0]]
-        margin = _property(name, "margin")
+        margin = theme.P(name, "margin")
         self._label_margin = margin.get_as(loc, "pt")
 
         # direction of guide
@@ -162,7 +161,7 @@ class guide(ABC, metaclass=Register):
             )
 
         # title alignment
-        self._title_align = _property("legend_title_align")
+        self._title_align = theme.P("legend_title_align")
         if self._title_align == "auto":
             if self.direction == "vertical":
                 self._title_align = "left"
@@ -171,8 +170,8 @@ class guide(ABC, metaclass=Register):
 
         # by default, direction of each guide depends on
         # the position of all the guides
-        position = _property("legend_position")
-        self.direction = _property("legend_direction")
+        position = theme.P("legend_position")
+        self.direction = theme.P("legend_direction")
         if self.direction == "auto":
             if position in ("right", "left"):  # default
                 self.direction = "vertical"
@@ -181,15 +180,15 @@ class guide(ABC, metaclass=Register):
 
         # title margin
         loc = margin_location_lookup[self.title_position[0]]
-        margin = _property("legend_title", "margin")
+        margin = theme.P("legend_title", "margin")
         self._title_margin = margin.get_as(loc, "pt")
 
         # legend_margin
-        self._legend_margin = _property("legend_margin")
+        self._legend_margin = theme.P("legend_margin")
 
         # legend_entry_spacing
-        self._legend_entry_spacing_x = _property("legend_entry_spacing_x")
-        self._legend_entry_spacing_y = _property("legend_entry_spacing_y")
+        self._legend_entry_spacing_x = theme.P("legend_entry_spacing_x")
+        self._legend_entry_spacing_y = theme.P("legend_entry_spacing_y")
 
     def legend_aesthetics(self, layer, plot):
         """

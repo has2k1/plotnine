@@ -128,18 +128,18 @@ class left_spaces(_side_spaces):
     axis_yticks: float = 0
 
     def _calculate(self):
-        _property = self.pack.theme.themeables.property
+        theme = self.pack.theme
         pack = self.pack
 
-        self.plot_margin = _property("plot_margin_left")
+        self.plot_margin = theme.P("plot_margin_left")
         if pack.legend and pack.legend_position == "left":
             self.legend += bbox_in_figure_space(
                 pack.legend, pack.figure, pack.renderer
             ).width
-            self.legend_box_spacing = _property("legend_box_spacing")
+            self.legend_box_spacing = theme.P("legend_box_spacing")
 
         if pack.axis_title_y:
-            self.axis_title_y_margin_right = _property(
+            self.axis_title_y_margin_right = theme.P(
                 "axis_title_y", "margin"
             ).get_as("r", "fig")
             self.axis_title_y = bbox_in_figure_space(
@@ -180,14 +180,14 @@ class right_spaces(_side_spaces):
 
     def _calculate(self):
         pack = self.pack
-        _property = self.pack.theme.themeables.property
+        theme = self.pack.theme
 
-        self.plot_margin = _property("plot_margin_right")
+        self.plot_margin = theme.P("plot_margin_right")
         if pack.legend and pack.legend_position == "right":
             self.legend = bbox_in_figure_space(
                 pack.legend, pack.figure, pack.renderer
             ).width
-            self.legend_box_spacing = _property("legend_box_spacing")
+            self.legend_box_spacing = theme.P("legend_box_spacing")
 
         right_strips = get_right_strip_boxpatches_in_last_col(pack.axs)
         self.right_strip_width = max_width(pack, right_strips)
@@ -226,17 +226,17 @@ class top_spaces(_side_spaces):
 
     def _calculate(self):
         pack = self.pack
-        _property = self.pack.theme.themeables.property
-        W, H = _property("figure_size")
+        theme = self.pack.theme
+        W, H = theme.P("figure_size")
         F = W / H
 
-        self.plot_margin = _property("plot_margin_top") * F
+        self.plot_margin = theme.P("plot_margin_top") * F
         if pack.plot_title:
             self.plot_title = bbox_in_figure_space(
                 pack.plot_title, pack.figure, pack.renderer
             ).height
             self.plot_title_margin_bottom = (
-                _property("plot_title", "margin").get_as("b", "fig") * F
+                theme.P("plot_title", "margin").get_as("b", "fig") * F
             )
 
         if pack.plot_subtitle:
@@ -244,14 +244,14 @@ class top_spaces(_side_spaces):
                 pack.plot_subtitle, pack.figure, pack.renderer
             ).height
             self.plot_subtitle_margin_bottom = (
-                _property("plot_subtitle", "margin").get_as("b", "fig") * F
+                theme.P("plot_subtitle", "margin").get_as("b", "fig") * F
             )
 
         if pack.legend and pack.legend_position == "top":
             self.legend = bbox_in_figure_space(
                 pack.legend, pack.figure, pack.renderer
             ).height
-            self.legend_box_spacing = _property("legend_box_spacing") * F
+            self.legend_box_spacing = theme.P("legend_box_spacing") * F
 
         top_strips = get_top_strip_boxpatches_in_first_row(pack.axs)
         self.top_strip_height = max_height(pack, top_strips)
@@ -297,32 +297,32 @@ class bottom_spaces(_side_spaces):
 
     def _calculate(self):
         pack = self.pack
-        _property = self.pack.theme.themeables.property
-        W, H = _property("figure_size")
+        theme = self.pack.theme
+        W, H = theme.P("figure_size")
         F = W / H
 
-        self.plot_margin = _property("plot_margin_bottom") * F
+        self.plot_margin = theme.P("plot_margin_bottom") * F
 
         if pack.plot_caption:
             self.plot_caption = bbox_in_figure_space(
                 pack.plot_caption, pack.figure, pack.renderer
             ).height
             self.plot_caption_margin_top = (
-                _property("plot_caption", "margin").get_as("t", "fig") * F
+                theme.P("plot_caption", "margin").get_as("t", "fig") * F
             )
 
         if pack.legend and pack.legend_position == "bottom":
             self.legend = bbox_in_figure_space(
                 pack.legend, pack.figure, pack.renderer
             ).height
-            self.legend_box_spacing = _property("legend_box_spacing") * F
+            self.legend_box_spacing = theme.P("legend_box_spacing") * F
 
         if pack.axis_title_x:
             self.axis_title_x = bbox_in_figure_space(
                 pack.axis_title_x, pack.figure, pack.renderer
             ).height
             self.axis_title_x_margin_top = (
-                _property("axis_title_x", "margin").get_as("t", "fig") * F
+                theme.P("axis_title_x", "margin").get_as("t", "fig") * F
             )
 
         # Account for the space consumed by the axis
@@ -407,18 +407,18 @@ def _calculate_panel_spacing_facet_grid(
     Calculate spacing parts for facet_grid
     """
     pack.facet = cast(facet_grid, pack.facet)
-    _property = pack.theme.themeables.property
+    theme = pack.theme
 
     ncol = pack.facet.ncol
     nrow = pack.facet.nrow
 
-    W, H = _property("figure_size")
+    W, H = theme.P("figure_size")
 
     # Both spacings are specified as fractions of the figure width
     # Multiply the vertical by (W/H) so that the gullies along both
     # directions are equally spaced.
-    sw = _property("panel_spacing_x")
-    sh = _property("panel_spacing_y") * W / H
+    sw = theme.P("panel_spacing_x")
+    sh = theme.P("panel_spacing_y") * W / H
 
     # width and height of axes as fraction of figure width & heigt
     w = ((spaces.right - spaces.left) - sw * (ncol - 1)) / ncol
@@ -438,16 +438,16 @@ def _calculate_panel_spacing_facet_wrap(
     Calculate spacing parts for facet_wrap
     """
     pack.facet = cast(facet_wrap, pack.facet)
-    _property = pack.theme.themeables.property
+    theme = pack.theme
 
     ncol = pack.facet.ncol
     nrow = pack.facet.nrow
 
-    W, H = _property("figure_size")
+    W, H = theme.P("figure_size")
 
     # Both spacings are specified as fractions of the figure width
-    sw = _property("panel_spacing_x")
-    sh = _property("panel_spacing_y") * W / H
+    sw = theme.P("panel_spacing_x")
+    sh = theme.P("panel_spacing_y") * W / H
 
     # A fraction of the strip height
     # Effectively slides the strip
@@ -456,7 +456,7 @@ def _calculate_panel_spacing_facet_wrap(
     #   -ve: Into the panel
     # Where values <= -1, put the strip completly into
     # the panel. We do not worry about larger -ves.
-    strip_align_x = _property("strip_align_x")
+    strip_align_x = theme.P("strip_align_x")
 
     # Only interested in the proportion of the strip that
     # does not overlap with the panel
@@ -487,8 +487,7 @@ def _calculate_panel_spacing_facet_null(
     """
     Calculate spacing parts for facet_null
     """
-    _property = pack.theme.themeables.property
-    W, H = pack.theme.themeables.property("figure_size")
+    W, H = pack.theme.P("figure_size")
     w = spaces.right - spaces.left
     h = spaces.top - spaces.bottom
     return WHSpaceParts(W, H, w, h, 0, 0, 0, 0)
