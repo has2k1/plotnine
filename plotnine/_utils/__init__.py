@@ -9,6 +9,8 @@ import warnings
 from collections import defaultdict
 from collections.abc import Iterable, Sequence
 from contextlib import suppress
+from copy import deepcopy
+from dataclasses import field
 from typing import TYPE_CHECKING, cast, overload
 from warnings import warn
 
@@ -22,7 +24,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
 if TYPE_CHECKING:
-    from typing import Any, Callable
+    from typing import Any, Callable, TypeVar
 
     import numpy.typing as npt
     from matplotlib.typing import ColorType
@@ -35,8 +37,10 @@ if TYPE_CHECKING:
         FloatArray,
         FloatArrayLike,
         IntArray,
+        SidePosition,
     )
 
+    T = TypeVar("T")
 
 # Points and lines of equal size should give the
 # same visual diameter (for points) and thickness
@@ -1214,3 +1218,37 @@ def simple_table(
         *[format_row(*row) for row in rows],  # Ri1 Ri2 Ri3
     ]
     return "\n".join(_rows)
+
+
+def no_init(default: T) -> T:
+    """
+    Set defaut value of a dataclass field that will not be __init__ed
+    """
+    return field(init=False, default=default)
+
+
+def no_init_mutable(default: T) -> T:
+    """
+    Set defaut value of a dataclass field that will not be __init__ed
+    """
+    return field(init=False, default_factory=lambda: deepcopy(default))
+
+
+def default_field(default: T) -> T:
+    """
+    Set default value of a dataclass field using a factory
+    """
+    return field(default_factory=lambda: deepcopy(default))
+
+
+def get_opposite_side(s: SidePosition) -> SidePosition:
+    """
+    Return the opposite side
+    """
+    lookup: dict[SidePosition, SidePosition] = {
+        "right": "left",
+        "left": "right",
+        "top": "bottom",
+        "bottom": "top",
+    }
+    return lookup[s]

@@ -33,7 +33,6 @@ class plot_context:
         """
         import matplotlib as mpl
 
-        self.plot.theme._targets = {}
         self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
 
         # Pandas deprecated is_copy, and when we create new dataframes
@@ -64,4 +63,3 @@ class plot_context:
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
         self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
-        delattr(self.plot.theme, "_targets")

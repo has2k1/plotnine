@@ -140,12 +140,13 @@ class element_text(element_base):
             if variables[name] is not None:
                 self.properties[name] = variables[name]
 
-    def setup(self, theme: Theme):
+    def setup(self, theme: Theme, themeable_name: str):
         """
         Setup the theme_element before drawing
         """
-        if "margin" in self.properties:
-            self.properties["margin"].theme = theme
+        if m := self.properties.get("margin"):
+            m.theme = theme
+            m.themeable_name = themeable_name
 
     def _translate_hjust(
         self, just: float

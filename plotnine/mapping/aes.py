@@ -14,9 +14,15 @@ from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
 if typing.TYPE_CHECKING:
-    from typing import TypeVar
+    from typing import Protocol, TypeVar
 
-    THasAesNames = TypeVar("THasAesNames", bound=list[str] | dict[str, Any])
+    class ColorOrColour(Protocol):
+        color: Any
+        colour: Any
+
+    THasAesNames = TypeVar(
+        "THasAesNames", bound=Sequence[str] | dict[str, Any] | ColorOrColour
+    )
 
 __all__ = ("aes",)
 
@@ -329,7 +335,7 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
 
     Returns
     -------
-    obj : dict | list
+    :
         Object that contains aesthetics names
     """
     if isinstance(obj, dict):
@@ -337,10 +343,10 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
             new_name = name.replace("colour", "color")
             if name != new_name:
                 obj[new_name] = obj.pop(name)
-    else:
-        for i, name in enumerate(obj):
-            if "colour" in name:
-                obj[i] = name.replace("colour", "color")
+    elif isinstance(obj, Sequence):
+        return type(obj)(s.replace("colour", "color") for s in obj)
+    elif obj.color is None and obj.colour is not None:
+        obj.color, obj.colour = obj.colour, None
 
     return obj
 

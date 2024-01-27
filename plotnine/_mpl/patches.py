@@ -83,10 +83,8 @@ class InsideStrokedRectangle(Rectangle):
         """
         Draw with the bounds of the rectangle adjusted to accomodate the stroke
         """
-        lw = self.get_linewidth()
         x, y = self.xy
         w, h = self.get_width(), self.get_height()
-
-        self.set_bounds(x + lw / 2, y + lw / 2, w - lw, h - lw)
+        lw = self.get_linewidth()
+        self.set_bounds((x + lw / 2), (y + lw / 2), (w - lw), (h - lw))
         super().draw(renderer)
-        self.set_bounds(x, y, w, h)

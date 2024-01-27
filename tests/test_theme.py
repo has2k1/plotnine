@@ -8,12 +8,16 @@ from plotnine import (
     aes,
     element_blank,
     element_line,
+    element_rect,
     element_text,
     facet_grid,
     facet_wrap,
     geom_blank,
     geom_point,
     ggplot,
+    guide_colorbar,
+    guide_legend,
+    guides,
     labs,
     scale_y_continuous,
     theme,
@@ -173,6 +177,17 @@ def test_element_text_with_sequence_values():
     assert p == "element_text_with_sequence_values"
 
 
+black_frame = theme(
+    legend_frame=element_rect(color="black"),
+    legend_ticks=element_line(color="black"),
+)
+
+red_frame = theme(
+    legend_frame=element_rect(color="red"),
+    legend_ticks=element_line(color="red"),
+)
+
+
 class TestThemes:
     g = (
         ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))
@@ -328,3 +343,19 @@ class TestLayout:
             )
         )
         assert p == "plot_margin_protruding_axis_text"
+
+    def test_colorbar_frame(self):
+        p = self.g + aes(color="gear") + black_frame
+        assert p == "colorbar_frame"
+
+    def test_different_colorbar_themes(self):
+        p = (
+            self.g
+            + aes(color="gear", fill="am")
+            + guides(
+                color=guide_colorbar(theme=black_frame),
+                fill=guide_colorbar(theme=red_frame),
+            )
+        )
+
+        assert p == "different_colorbar_themes"

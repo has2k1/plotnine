@@ -33,12 +33,15 @@ title: Changelog
   controls both. To control the two separately, set the alignments for each.
   e.g.
 
-  ```
+  ```py
   theme(
       plot_title=element_text(ha="left"),
       plot_subtitle=element_text(ha="right")
   )
   ```
+- Some parameters that control the look and feel of `guide_colorbar` and
+  `guide_legend` have been removed. For their place, the `theme` parameter
+  has been introduced and it gives better control of the look and feel.
 
 ### New
 
@@ -85,6 +88,20 @@ title: Changelog
   ```
 
   will output all subsequent figures in svg format.
+
+- Improved support for customizing guides/legends.
+
+  - You can now add a frame to the colobar
+  - You can now apply themes to individual guides, e.g.
+
+    ```py
+    + guides(color=guide_colorbar(theme=theme_xkcd()))
+    ```
+    or
+
+    ```py
+    + guides(guide_legend(theme=theme_minimal())
+    ```
 
 ### Bug Fixes
 

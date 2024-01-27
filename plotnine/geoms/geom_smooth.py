@@ -50,6 +50,8 @@ class geom_smooth(geom):
         "legend_fill_ratio": 0.5,
     }
 
+    legend_key_size = staticmethod(geom_path.legend_key_size)
+
     def use_defaults(
         self, data: pd.DataFrame, aes_modifiers: dict[str, Any]
     ) -> pd.DataFrame:

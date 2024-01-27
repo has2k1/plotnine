@@ -55,6 +55,8 @@ class geom_crossbar(geom):
         "fatten": 2,
     }
 
+    legend_key_size = staticmethod(geom_segment.legend_key_size)
+
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if "width" not in data:
             if self.params["width"]:

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Callable, Literal, Optional
+    from typing import Callable, Literal
 
     from plotnine.typing import Theme
 
@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 @dataclass
 class Margin:
     element: element_base
-    theme: Optional[Theme] = None
     t: float = 0
     b: float = 0
     l: float = 0
@@ -25,6 +24,9 @@ class Margin:
     units: Literal["pt", "in", "lines", "fig"] = "pt"
 
     def __post_init__(self):
+        self.theme: Theme
+        self.themeable_name: str
+
         if self.units in ("pts", "points", "px", "pixels"):
             self.units = "pt"
         elif self.units in ("in", "inch", "inches"):
@@ -54,16 +56,13 @@ class Margin:
         """
         Return key in given units
         """
-        assert self.theme is not None
         dpi = 72
-        # TODO: Get the inherited size. We need to consider the
-        # themeables mro
-        size: float = self.element.properties.get("size", 11)
+        size: float = self.theme.getp((self.themeable_name, "size"), 11)
         from_units = self.units
         to_units = units
         W: float
         H: float
-        W, H = self.theme.themeables.property("figure_size")  # inches
+        W, H = self.theme.getp("figure_size")  # inches
         L = (W * dpi) if loc in "tb" else (H * dpi)  # pts
 
         functions: dict[str, Callable[[float], float]] = {
