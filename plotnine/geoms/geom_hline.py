@@ -51,7 +51,9 @@ class geom_hline(geom):
         "na_rm": False,
         "inherit_aes": False,
     }
+
     draw_legend = staticmethod(geom_path.draw_legend)
+    legend_key_size = staticmethod(geom_path.legend_key_size)
 
     def __init__(
         self,

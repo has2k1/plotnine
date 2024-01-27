@@ -35,6 +35,7 @@ if typing.TYPE_CHECKING:
         Ggplot,
         Layer,
         Layout,
+        TupleInt2,
     )
 
 
@@ -522,7 +523,7 @@ class geom(ABC, metaclass=Register):
         Parameters
         ----------
         data :
-            A of the data plotted to this layer
+            A row of the data plotted to this layer
         da :
             Canvas on which to draw
         lyr :
@@ -535,3 +536,21 @@ class geom(ABC, metaclass=Register):
         """
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
+
+    @staticmethod
+    def legend_key_size(
+        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
+    ) -> TupleInt2:
+        """
+        Calculate the size of key that would fit the layer contents
+
+        Parameters
+        ----------
+        data :
+            A row of the data plotted to this layer
+        min_size :
+            Initial size which should be expanded to fit the contents.
+        lyr :
+            Layer
+        """
+        return min_size

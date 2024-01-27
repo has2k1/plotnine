@@ -15,7 +15,7 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DrawingArea, Layer
+    from plotnine.typing import Axes, Coord, DrawingArea, Layer, TupleInt2
 
 
 @document
@@ -157,3 +157,17 @@ class geom_point(geom):
         )
         da.add_artist(key)
         return da
+
+    @staticmethod
+    def legend_key_size(
+        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+    ) -> TupleInt2:
+        w, h = min_size
+        pad_w, pad_h = w * 0.5, h * 0.5
+        _size = data["size"] * SIZE_FACTOR
+        _stroke = 2 * data["stroke"] * SIZE_FACTOR
+        _w = _h = _size + _stroke
+        if data["color"] is not None:
+            w = max(w, _w + pad_w)
+            h = max(h, _h + pad_h)
+        return w, h

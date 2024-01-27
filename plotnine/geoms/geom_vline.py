@@ -53,6 +53,8 @@ class geom_vline(geom):
         "inherit_aes": False,
     }
 
+    legend_key_size = staticmethod(geom_segment.legend_key_size)
+
     def __init__(
         self,
         mapping: Aes | None = None,

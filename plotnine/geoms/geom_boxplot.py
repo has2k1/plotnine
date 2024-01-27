@@ -100,6 +100,8 @@ class geom_boxplot(geom):
         "fatten": 2,
     }
 
+    legend_key_size = staticmethod(geom_crossbar.legend_key_size)
+
     def __init__(
         self,
         mapping: Aes | None = None,

@@ -80,7 +80,7 @@ class layer:
         data: Optional[LayerDataLike],
         position: Position,
         inherit_aes: bool = True,
-        show_legend: bool | None = None,
+        show_legend: bool | dict[str, bool] | None = None,
         raster: bool = False,
     ):
         self.geom = geom

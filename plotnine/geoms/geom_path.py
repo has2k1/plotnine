@@ -20,7 +20,14 @@ if typing.TYPE_CHECKING:
     from matplotlib.path import Path
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DrawingArea, Layer, TupleFloat2
+    from plotnine.typing import (
+        Axes,
+        Coord,
+        DrawingArea,
+        Layer,
+        TupleFloat2,
+        TupleInt2,
+    )
 
 
 @document
@@ -207,6 +214,18 @@ class geom_path(geom):
         )
         da.add_artist(key)
         return da
+
+    @staticmethod
+    def legend_key_size(
+        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+    ) -> TupleInt2:
+        w, h = min_size
+        pad_w, pad_h = w * 0.5, h * 0.5
+        _w = _h = data["size"] * SIZE_FACTOR
+        if data["color"] is not None:
+            w = max(w, _w + pad_w)
+            h = max(h, _h + pad_h)
+        return w, h
 
 
 class arrow:

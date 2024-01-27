@@ -265,13 +265,12 @@ class ggplot:
             # setup
             figure, _ = self._create_figure()
             self._setup_parameters()
-            self.theme.setup()
             self.facet.strips.generate()
 
             # Drawing
             self._draw_layers()
             self._draw_breaks_and_labels()
-            self._draw_legend()
+            self.guides.draw(self)
             self._draw_figure_texts()
             self._draw_watermarks()
 
@@ -306,13 +305,12 @@ class ggplot:
 
             # setup
             self._setup_parameters()
-            self.theme.setup()
             self.facet.strips.generate()
 
             # drawing
             self._draw_layers()
             self._draw_breaks_and_labels()
-            self._draw_legend()
+            self.guides.draw(self)
 
             # artist theming
             self.theme.apply()
@@ -403,13 +401,8 @@ class ggplot:
         """
         Set facet properties
         """
-        # facet
         self.facet.set_properties(self)
-        # layout
-        self.layout.axs = self.axs
-        # theme
-        self.theme.figure = self.figure
-        self.theme.axs = self.axs
+        self.theme.setup(self)
 
     def _create_figure(self) -> tuple[Figure, list[Axes]]:
         """
@@ -467,34 +460,6 @@ class ggplot:
                 ax.xaxis.set_tick_params(which="both", bottom=True)
             if layout_info.axis_y:
                 ax.yaxis.set_tick_params(which="both", left=True)
-
-    def _draw_legend(self):
-        """
-        Draw legend onto the figure
-        """
-        from matplotlib.font_manager import FontProperties
-        from matplotlib.offsetbox import AnchoredOffsetbox
-
-        legend_box = self.guides.build(self)
-        if not legend_box:
-            return
-
-        anchored_box = AnchoredOffsetbox(
-            loc="center",
-            child=legend_box,
-            pad=0.0,
-            frameon=False,
-            prop=FontProperties(size=0, stretch=0),
-            bbox_to_anchor=(0, 0),
-            bbox_transform=self.figure.transFigure,
-            borderpad=0.0,
-        )
-
-        anchored_box.set_zorder(90.1)
-        anchored_box.set_in_layout(True)
-
-        self.theme._targets["legend_background"] = anchored_box
-        self.figure.add_artist(anchored_box)
 
     def _draw_figure_texts(self):
         """

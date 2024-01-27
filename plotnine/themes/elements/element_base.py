@@ -35,7 +35,7 @@ class element_base:
         del d["visible"]
         return f"{d}"
 
-    def setup(self, theme: Theme):
+    def setup(self, theme: Theme, themeable_name: str):
         """
         Setup the theme_element before drawing
         """

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+from copy import copy
 
 from ..doctools import document
 from .geom import geom
@@ -14,7 +15,7 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DrawingArea, Layer
+    from plotnine.typing import Axes, Coord, DrawingArea, Layer, TupleInt2
 
 
 @document
@@ -88,3 +89,12 @@ class geom_pointrange(geom):
         data["stroke"] = geom_point.DEFAULT_AES["stroke"]
         geom_point.draw_legend(data, da, lyr)
         return da
+
+    @staticmethod
+    def legend_key_size(
+        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+    ) -> TupleInt2:
+        data = copy(data)
+        data["size"] = data["size"] * lyr.geom.params["fatten"]
+        data["stroke"] = geom_point.DEFAULT_AES["stroke"]
+        return geom_point.legend_key_size(data, min_size, lyr)

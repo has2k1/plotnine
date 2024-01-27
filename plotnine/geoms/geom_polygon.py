@@ -7,6 +7,7 @@ import numpy as np
 from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
 from .geom import geom
+from .geom_path import geom_path
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -46,6 +47,8 @@ class geom_polygon(geom):
         "na_rm": False,
     }
     REQUIRED_AES = {"x", "y"}
+
+    legend_key_size = staticmethod(geom_path.legend_key_size)
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
         return data

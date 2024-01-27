@@ -57,6 +57,7 @@ class geom_segment(geom):
     }
 
     draw_legend = staticmethod(geom_path.draw_legend)
+    legend_key_size = staticmethod(geom_path.legend_key_size)
 
     @staticmethod
     def draw_group(

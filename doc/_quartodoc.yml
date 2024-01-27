@@ -449,6 +449,7 @@ quartodoc:
         - legend_entry_spacing
         - legend_entry_spacing_x
         - legend_entry_spacing_y
+        - legend_frame
         - legend_key
         - legend_key_height
         - legend_key_size
@@ -459,8 +460,11 @@ quartodoc:
         - legend_text
         - legend_text_colorbar
         - legend_text_legend
+        - legend_text_position
+        - legend_ticks_length
         - legend_title
         - legend_title_align
+        - legend_title_position
         - line
         - panel_background
         - panel_border

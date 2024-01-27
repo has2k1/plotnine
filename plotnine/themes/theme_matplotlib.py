@@ -1,5 +1,5 @@
 from ..options import get_option
-from .elements import element_rect, element_text
+from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme
 
 
@@ -52,25 +52,36 @@ class theme_matplotlib(theme):
             legend_direction="auto",
             legend_entry_spacing_x=5,
             legend_entry_spacing_y=2,
+            legend_frame=element_blank(),
             legend_key=element_rect(fill="None", colour="None"),
             legend_key_size=16,
+            legend_ticks_length=0.2,
             legend_margin=0,
             legend_position="right",
             legend_spacing=10,
             legend_text=element_text(
-                margin={"t": 3, "b": 3, "l": 3, "r": 3, "units": "pt"}
+                margin={
+                    "t": m / 2,
+                    "b": m / 2,
+                    "l": m / 2,
+                    "r": m / 2,
+                    "units": "fig",
+                }
             ),
+            legend_text_position="auto",
+            legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 ha="left",
                 margin={
                     "t": m,
-                    "b": m,
-                    "l": m,
-                    "r": m,
+                    "b": m / 2,
+                    "l": m * 2,
+                    "r": m * 2,
                     "units": "fig",
                 },
             ),
             legend_title_align="auto",
+            legend_title_position="auto",
             panel_spacing=m,
             plot_caption=element_text(
                 ha="right",

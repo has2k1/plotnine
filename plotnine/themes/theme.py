@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import typing
-from contextlib import suppress
 from copy import copy, deepcopy
 from functools import cached_property
 from typing import overload
@@ -15,7 +14,8 @@ if typing.TYPE_CHECKING:
 
     from typing_extensions import Self
 
-    from plotnine.typing import Axes, Figure, Ggplot
+    from plotnine import ggplot
+    from plotnine.typing import Axes, Figure
 
 # All complete themes are initiated with these rcparams. They
 # can be overridden.
@@ -87,12 +87,14 @@ class theme:
     should not be modified after that.
     """
 
+    complete: bool
+
     # This is set when the figure is created,
     # it is useful at legend drawing time and
     # when applying the theme.
+    plot: ggplot
     figure: Figure
     axs: list[Axes]
-    complete: bool
 
     # Dictionary to collect matplotlib objects that will
     # be targeted for theming by the themeables
@@ -138,6 +140,7 @@ class theme:
         axis_ticks_x=None,
         axis_ticks_y=None,
         axis_ticks=None,
+        legend_ticks=None,
         panel_grid_major_x=None,
         panel_grid_major_y=None,
         panel_grid_minor_x=None,
@@ -147,6 +150,7 @@ class theme:
         panel_grid=None,
         line=None,
         legend_key=None,
+        legend_frame=None,
         legend_background=None,
         legend_box_background=None,
         panel_background=None,
@@ -192,11 +196,14 @@ class theme:
         legend_key_width=None,
         legend_key_height=None,
         legend_key_size=None,
+        legend_ticks_length=None,
         legend_margin=None,
         legend_box_spacing=None,
         legend_spacing=None,
         legend_position=None,
         legend_title_align=None,
+        legend_title_position=None,
+        legend_text_position=None,
         legend_entry_spacing_x=None,
         legend_entry_spacing_y=None,
         legend_entry_spacing=None,
@@ -208,6 +215,7 @@ class theme:
     ):
         self.themeables = Themeables()
         self.complete = complete
+        self._is_setup = False
 
         if complete:
             self._rcParams = deepcopy(default_rcparams)
@@ -250,6 +258,10 @@ class theme:
         """
         return self.themeables
 
+    @property
+    def getp(self):
+        return self.themeables.getp
+
     def P(self, name: str, key="value"):
         """
         Convenient access into the properties of the themeables
@@ -281,26 +293,29 @@ class theme:
         for th in self.themeables.values():
             th.apply(self)
 
-    def setup(self):
+    def setup(self, plot: ggplot):
         """
-        Setup theme & figure for before drawing
+        Setup theme for applying
 
-        1. The figure is modified with to the theme settings
-           that it are required before drawing.
-        2. Give contained objects of the theme/themeables a
-           reference to the theme.
+        This method will be called when the figure and axes have been created
+        but before any plotting or other artists have been added to the
+        figure. This method gives the theme and the elements references to
+        the figure and/or axes.
 
-        This method will be called once with a figure object
-        before any plotting has completed. Subclasses that
-        override this method should make sure that the base
-        class method is called.
+        It also initialises where the artists to be themed will be stored.
         """
-        from .elements import element_text
+        from .elements.element_base import element_base
 
-        for th in self.themeables.values():
-            th.setup_figure(self.figure)
-            if isinstance(th.theme_element, element_text):
-                th.theme_element.setup(self)
+        self.plot = plot
+        self.figure = plot.figure
+        self.axs = plot.axs
+        self._targets = {}
+
+        for name, th in self.themeables.items():
+            if isinstance(th.theme_element, element_base):
+                th.theme_element.setup(self, name)
+
+        self._is_setup = True
 
     def _add_default_themeable_properties(self):
         """
@@ -358,6 +373,9 @@ class theme:
         A complete theme will annihilate any previous themes. Partial themes
         can be added together and can be added to a complete theme.
         """
+        if self._is_setup:
+            other.setup(self.plot)
+
         if other.complete:
             return other
 
@@ -379,10 +397,10 @@ class theme:
         ...
 
     @overload
-    def __radd__(self, other: Ggplot) -> Ggplot:
+    def __radd__(self, other: ggplot) -> ggplot:
         ...
 
-    def __radd__(self, other: theme | Ggplot) -> theme | Ggplot:
+    def __radd__(self, other: theme | ggplot) -> theme | ggplot:
         """
         Add theme to ggplot object or to another theme
 
@@ -435,7 +453,7 @@ class theme:
         old = self.__dict__
         new = result.__dict__
 
-        shallow = {"figure", "_targets"}
+        shallow = {"plot", "figure", "axs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -515,8 +533,8 @@ def smart_title_and_subtitle_ha(plot_theme: theme):
     thm = plot_theme.themeables
     has_title = "plot_title" in plot_theme._targets
     has_subtitle = "plot_subtitle" in plot_theme._targets
-    has_title_ha = "ha" in thm["plot_title"].properties
-    has_subtitle_ha = "ha" in thm["plot_subtitle"].properties
+    has_title_ha = "ha" in thm["plot_title"]._properties
+    has_subtitle_ha = "ha" in thm["plot_subtitle"]._properties
     default_title_ha, default_subtitle_ha = "center", "left"
     kwargs = {}
 

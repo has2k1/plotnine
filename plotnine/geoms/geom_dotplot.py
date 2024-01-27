@@ -9,6 +9,7 @@ from .._utils import groupby_apply, resolution, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .geom import geom
+from .geom_path import geom_path
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -56,6 +57,8 @@ class geom_dotplot(geom):
         "dotsize": 1,
         "stackgroups": False,
     }
+
+    legend_key_size = staticmethod(geom_path.legend_key_size)
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         gp = self.params

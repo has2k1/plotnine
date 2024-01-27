@@ -1,61 +1,75 @@
 from __future__ import annotations
 
 import hashlib
-import types
-import typing
 from contextlib import suppress
+from dataclasses import dataclass
+from functools import cached_property
 from itertools import islice
+from types import SimpleNamespace as NS
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
 import pandas as pd
 
-from .._utils import SIZE_FACTOR, remove_missing
+from .._utils import (
+    default_field,
+    get_opposite_side,
+    no_init_mutable,
+    remove_missing,
+)
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..geoms import geom_text
 from ..mapping.aes import rename_aesthetics
-from .guide import guide
+from ..themes import theme
+from .guide import GuideElements, guide
 
-if typing.TYPE_CHECKING:
-    from typing import Optional
+if TYPE_CHECKING:
+    from typing import Any, Optional
 
-    from plotnine.typing import TupleInt2
+    from matplotlib.artist import Artist
+    from matplotlib.offsetbox import PackerBase
+
+    from plotnine import ggplot
+    from plotnine.geoms.geom import geom
+    from plotnine.layer import layer
+    from plotnine.typing import SidePosition, TupleFloat2, TupleInt2
 
 
 # See guides.py for terminology
 
 
+@dataclass
+class LayerParameters:
+    geom: geom
+    data: pd.DataFrame
+    layer: layer
+
+
+@dataclass
 class guide_legend(guide):
     """
     Legend guide
 
     Parameters
     ----------
-    nrow : int, default=None
+    nrow :
         Number of rows of legends.
-    ncol : int, default=None
+    ncol :
         Number of columns of legends.
-    byrow : bool, default=False
+    byrow :
         Whether to fill the legend row-wise or column-wise.
-    keywidth : float, default=None
-        Width of the legend key.
-    keyheight : float, default=None
-        Height of the legend key.
-    kwargs : dict
-        Parameters passed on to [](`~plotnine.guides.guide`).
+    override_aes :
+        Aesthetic parameters of legend key.
     """
 
-    # general
-    nrow: int = -1
-    ncol: int = -1
-    byrow = False
+    nrow: Optional[int] = None
+    ncol: Optional[int] = None
+    byrow: bool = False
+    override_aes: dict[str, Any] = default_field({})
 
-    # key
-    keywidth: Optional[int] = None
-    keyheight: Optional[int] = None
-
-    # parameter
-    available_aes = {"any"}
+    # Non-Parameter Attributes
+    available_aes: set[str] = no_init_mutable({"any"})
+    layer_parameters: list[LayerParameters] = no_init_mutable([])
 
     def train(self, scale, aesthetic=None):
         """
@@ -121,13 +135,14 @@ class guide_legend(guide):
         self.key = self.key.merge(other.key)
         duplicated = set(self.override_aes) & set(other.override_aes)
         if duplicated:
-            warn("Duplicated override_aes is ignored.", PlotnineWarning)
+            msg = f"Duplicated override_aes, `{duplicated}`, are  ignored."
+            warn(msg, PlotnineWarning)
         self.override_aes.update(other.override_aes)
         for ae in duplicated:
             del self.override_aes[ae]
         return self
 
-    def create_geoms(self, plot):
+    def create_geoms(self):
         """
         Make information needed to draw a legend for each of the layers.
 
@@ -137,8 +152,7 @@ class guide_legend(guide):
         """
         # A layer either contributes to the guide, or it does not. The
         # guide entries may be ploted in the layers
-        self.glayers = []
-        for l in plot.layers:
+        for l in self.plot_layers:
             exclude = set()
             if isinstance(l.show_legend, dict):
                 l.show_legend = rename_aesthetics(l.show_legend)
@@ -146,7 +160,7 @@ class guide_legend(guide):
             elif l.show_legend not in (None, True):
                 continue
 
-            matched = self.legend_aesthetics(l, plot)
+            matched = self.legend_aesthetics(l)
 
             # This layer does not contribute to the legend
             if not set(matched) - exclude:
@@ -175,116 +189,39 @@ class guide_legend(guide):
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
                 f"{l.geom.__class__.__name__} legend",
             )
-            self.glayers.append(
-                types.SimpleNamespace(geom=l.geom, data=data, layer=l)
-            )
-        if not self.glayers:
+            self.layer_parameters.append(LayerParameters(l.geom, data, l))
+
+        if not self.layer_parameters:
             return None
         return self
 
-    def _calculate_rows_and_cols(self) -> TupleInt2:
-        nrow, ncol = -1, -1
+    def _calculate_rows_and_cols(
+        self, elements: GuideElementsLegend
+    ) -> TupleInt2:
+        nrow, ncol = self.nrow, self.ncol
         nbreak = len(self.key)
 
-        if hasattr(self, "nrow"):
-            nrow = self.nrow
-
-        if hasattr(self, "ncol"):
-            ncol = self.ncol
-
-        if nrow != -1 and ncol != -1:
+        if nrow and ncol:
             if nrow * ncol < nbreak:
                 raise PlotnineError(
-                    "nrow x ncol need to be larger "
-                    "than the number of breaks"
+                    "nrow x ncol needs to be larger than the number of breaks"
                 )
             return nrow, ncol
 
-        if nrow == -1 and ncol == -1:
-            if self.direction == "horizontal":
+        if (nrow, ncol) == (None, None):
+            if elements.is_horizontal:
                 nrow = int(np.ceil(nbreak / 5))
             else:
                 ncol = int(np.ceil(nbreak / 20))
 
-        if nrow == -1:
+        if nrow is None:
+            ncol = cast(int, ncol)
             nrow = int(np.ceil(nbreak / ncol))
-        elif ncol == -1:
+        elif ncol is None:
+            nrow = cast(int, nrow)
             ncol = int(np.ceil(nbreak / nrow))
 
         return nrow, ncol
-
-    def _set_defaults(self, theme):
-        guide._set_defaults(self, theme)
-        self.nrow, self.ncol = self._calculate_rows_and_cols()
-        nbreak = len(self.key)
-
-        # key width and key height for each legend entry
-        #
-        # Take a peak into data['size'] to make sure the
-        # legend dimensions are big enough
-        """
-       (ggplot(diamonds, aes(x="cut", y="clarity"))
-        + stat_sum(aes(group="cut"))
-        + scale_size(range=(3, 25)
-       )
-
-        Note the different height sizes for the entries
-        """
-
-        # FIXME: This should be in the geom instead of having
-        # special case conditional branches
-        def determine_side_length(initial_size):
-            default_pad = initial_size * 0.5
-            # default_pad = 0
-            size = np.ones(nbreak) * initial_size
-            for i in range(nbreak):
-                for gl in self.glayers:
-                    _size = 0
-                    pad = default_pad
-                    # Full size of object to appear in the
-                    # legend key
-                    with suppress(IndexError):
-                        if "size" in gl.data:
-                            _size = gl.data["size"].iloc[i] * SIZE_FACTOR
-                            if "stroke" in gl.data:
-                                _size += (
-                                    2 * gl.data["stroke"].iloc[i] * SIZE_FACTOR
-                                )
-
-                        # special case, color does not apply to
-                        # border/linewidth
-                        if isinstance(gl.geom, geom_text):
-                            pad = 0
-                            if _size < initial_size:
-                                continue
-
-                        try:
-                            # color(edgecolor) affects size(linewidth)
-                            # When the edge is not visible, we should
-                            # not expand the size of the keys
-                            if gl.data["color"].iloc[i] is not None:
-                                size[i] = np.max([_size + pad, size[i]])
-                        except KeyError:
-                            break
-
-            return size
-
-        # keysize
-        if self.keywidth is None:
-            width = determine_side_length(theme.P("legend_key_width"))
-            if self.direction == "vertical":
-                width[:] = width.max()
-            self._keywidth = width
-        else:
-            self._keywidth = [self.keywidth] * nbreak
-
-        if self.keyheight is None:
-            height = determine_side_length(theme.P("legend_key_height"))
-            if self.direction == "horizontal":
-                height[:] = height.max()
-            self._keyheight = height
-        else:
-            self._keyheight = [self.keyheight] * nbreak
 
     def draw(self):
         """
@@ -299,104 +236,195 @@ class guide_legend(guide):
 
         from .._mpl.offsetbox import ColoredDrawingArea
 
+        self.theme = cast(theme, self.theme)
+
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
         _targets = self.theme._targets
-
-        # When there is more than one guide, we keep
-        # record of all of them using lists
-        if "legend_title" not in _targets:
-            _targets["legend_title"] = []
-        if "legend_text_legend" not in _targets:
-            _targets["legend_key"] = []
-            _targets["legend_text_legend"] = []
+        keys_order = reverse if self.reverse else obverse
+        elements = GuideElementsLegend(self.theme, self)
 
         # title
-        title_box = TextArea(self.title, textprops={"color": "black"})
-        _targets["legend_title"].append(title_box)
+        title = cast(str, self.title)
+        title_box = TextArea(title)
+        _targets["legend_title"] = title_box._text  # type: ignore
 
         # labels
-        labels = []
-        for item in self.key["label"]:
-            va = "center" if self.label_position == "top" else "baseline"
-            ta = TextArea(item, textprops={"color": "black", "va": va})
-            labels.append(ta)
-            _targets["legend_text_legend"].extend(labels)
+        props = {"ha": elements.text.ha, "va": elements.text.va}
+        labels = [TextArea(s, textprops=props) for s in self.key["label"]]
+        _texts = [l._text for l in labels]  # type: ignore
+        _targets["legend_text_legend"] = _texts
 
         # Drawings
-        drawings = []
+        drawings: list[ColoredDrawingArea] = []
         for i in range(nbreak):
             da = ColoredDrawingArea(
-                self._keywidth[i], self._keyheight[i], 0, 0, color="white"
+                elements.key_widths[i], elements.key_heights[i], 0, 0
             )
+
             # overlay geoms
-            for gl in self.glayers:
+            for params in self.layer_parameters:
                 with suppress(IndexError):
-                    data = gl.data.iloc[i]
-                    da = gl.geom.draw_legend(data, da, gl.layer)
+                    key_data = params.data.iloc[i]
+                    params.geom.draw_legend(key_data, da, params.layer)
+
             drawings.append(da)
-        _targets["legend_key"].append(drawings)
+        _targets["legend_key"] = drawings
 
         # Match Drawings with labels to create the entries
-        lookup = {
+        lookup: dict[SidePosition, tuple[type[PackerBase], slice]] = {
             "right": (HPacker, reverse),
             "left": (HPacker, obverse),
             "bottom": (VPacker, reverse),
             "top": (VPacker, obverse),
         }
-        packer, slc = lookup[self.label_position]
-        entries = []
-        for d, l in zip(drawings, labels):
-            e = packer(
+        packer, slc = lookup[elements.text_position]
+        key_boxes = [
+            packer(
                 children=[l, d][slc],
-                sep=self._label_margin,
-                align="center",
+                sep=elements.text.margin,
+                align=elements.text.align,
                 pad=0,
             )
-            entries.append(e)
+            for d, l in zip(drawings, labels)
+        ][keys_order]
 
         # Put the entries together in rows or columns
         # A chunk is either a row or a column of entries
         # for a single legend
+        nrow, ncol = self._calculate_rows_and_cols(elements)
         if self.byrow:
-            chunk_size, packers = self.ncol, [HPacker, VPacker]
-            sep1 = self._legend_entry_spacing_x
-            sep2 = self._legend_entry_spacing_y
+            chunk_size = ncol
+            packer_dim1, packer_dim2 = (HPacker, VPacker)
+            sep1 = elements.entry_spacing_x
+            sep2 = elements.entry_spacing_y
         else:
-            chunk_size, packers = self.nrow, [VPacker, HPacker]
-            sep1 = self._legend_entry_spacing_y
-            sep2 = self._legend_entry_spacing_x
+            chunk_size = nrow
+            packer_dim1, packer_dim2 = (VPacker, HPacker)
+            sep1 = elements.entry_spacing_y
+            sep2 = elements.entry_spacing_x
 
-        if self.reverse:
-            entries = entries[::-1]
         chunks = []
-        for i in range(len(entries)):
+        for i in range(len(key_boxes)):
             start = i * chunk_size
             stop = start + chunk_size
-            s = islice(entries, start, stop)
+            s = islice(key_boxes, start, stop)
             chunks.append(list(s))
-            if stop >= len(entries):
+            if stop >= len(key_boxes):
                 break
 
-        chunk_boxes = []
-        for chunk in chunks:
-            d1 = packers[0](children=chunk, align="left", sep=sep1, pad=0)
-            chunk_boxes.append(d1)
+        chunk_boxes: list[Artist] = [
+            packer_dim1(children=chunk, align="left", sep=sep1, pad=0)
+            for chunk in chunks
+        ]
 
         # Put all the entries (row & columns) together
-        entries_box = packers[1](
+        entries_box = packer_dim2(
             children=chunk_boxes, align="baseline", sep=sep2, pad=0
         )
 
         # Put the title and entries together
-        packer, slc = lookup[self.title_position]
+        packer, slc = lookup[elements.title_position]
         children = [title_box, entries_box][slc]
         box = packer(
             children=children,
-            sep=self._title_margin,
-            align=self._title_align,
-            pad=self._legend_margin,
+            sep=elements.title.margin,
+            align=elements.title.align,
+            pad=elements.margin,
         )
 
         return box
+
+
+class GuideElementsLegend(GuideElements):
+    """
+    Access & calculate theming for the legend
+    """
+
+    @cached_property
+    def text(self):
+        size = self.theme.getp(("legend_text_legend", "size"))
+        ha = self.theme.getp(("legend_text_legend", "ha"), "center")
+        va = self.theme.getp(("legend_text_legend", "va"), "center")
+        _margin = self.theme.getp(("legend_text_legend", "margin"))
+        _loc = get_opposite_side(self.text_position)[0]
+        margin = _margin.get_as(_loc, "pt")
+
+        # The original ha & va values are used by the HPacker/VPacker
+        # to align the TextArea with the DrawingArea.
+        # We set ha & va to values that combine best with the aligning
+        # for the text area.
+        align = va if self.text_position in ("left", "right") else ha
+        return NS(
+            margin=margin,
+            align=align,
+            fontsize=size,
+            ha="center",
+            va="baseline",
+        )
+
+    @cached_property
+    def entry_spacing_x(self) -> int:
+        return self.theme.P("legend_entry_spacing_x")
+
+    @cached_property
+    def entry_spacing_y(self) -> int:
+        return self.theme.P("legend_entry_spacing_y")
+
+    @cached_property
+    def _key_dimensions(self) -> list[TupleFloat2]:
+        """
+        key width and key height for each legend entry
+
+        Take a peak into data['size'] to make sure the legend key
+        dimensions are big enough.
+        """
+        #  Note the different height sizes for the entries
+        guide = cast(guide_legend, self.guide)
+        min_size = (
+            self.theme.P("legend_key_width"),
+            self.theme.P("legend_key_height"),
+        )
+
+        # Find the size that fits each key in the legend,
+        sizes: list[TupleFloat2] = []
+        for params in guide.layer_parameters:
+            get_key_size = params.geom.legend_key_size
+            for i in range(len(params.data)):
+                key_data = params.data.iloc[i]
+                sizes.append(get_key_size(key_data, min_size, params.layer))
+        return sizes
+
+    @cached_property
+    def key_widths(self) -> list[float]:
+        """
+        Widths of the keys
+
+        If legend is vertical, key widths must be equal, so we use the
+        maximum. So a plot like
+
+           (ggplot(diamonds, aes(x="cut", y="clarity"))
+            + stat_sum(aes(group="cut"))
+            + scale_size(range=(3, 25))
+           )
+
+        would have keys with variable heights, but fixed width.
+        """
+        ws = [w for w, _ in self._key_dimensions]
+        if self.is_vertical:
+            return [max(ws)] * len(ws)
+        return ws
+
+    @cached_property
+    def key_heights(self) -> list[float]:
+        """
+        Heights of the keys
+
+        If legend is horizontal, then key heights must be equal, so we
+        use the maximum
+        """
+        hs = [h for h, _ in self._key_dimensions]
+        if self.is_horizontal:
+            return [max(hs)] * len(hs)
+        return hs

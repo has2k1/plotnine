@@ -164,6 +164,7 @@ class facet:
         self.coordinates = plot.coordinates
         self.figure = plot.figure
         self.layout = plot.layout
+        self.layout.axs = plot.axs
         self.theme = plot.theme
         self.strips = Strips.from_facet(self)
 

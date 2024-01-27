@@ -31,6 +31,7 @@ from plotnine.facets.layout import Layout
 from plotnine.facets.strips import Strips
 from plotnine.geoms.geom import geom
 from plotnine.ggplot import ggplot
+from plotnine.guides import guide_colorbar, guide_legend
 from plotnine.guides.guide import guide
 from plotnine.iapi import strip_label_details
 from plotnine.layer import Layers, layer
@@ -259,7 +260,15 @@ ScaleLabels: TypeAlias = Sequence[str]
 ## Coords
 CoordRange: TypeAlias = TupleFloat2
 
-# Legend
-LegendPosition: TypeAlias = (
-    Literal["left", "right", "top", "bottom"] | tuple[float, float]
+# Guide
+SidePosition: TypeAlias = Literal["left", "right", "top", "bottom"]
+LegendPosition: TypeAlias = SidePosition | tuple[float, float]
+Orientation: TypeAlias = Literal["horizontal", "vertical"]
+GuideKind: TypeAlias = Literal["legend", "colorbar", "colourbar"]
+LegendOrColorbar: TypeAlias = (
+    guide_legend | guide_colorbar | Literal["legend", "colorbar"]
 )
+LegendOnly: TypeAlias = guide_legend | Literal["legend"]
+Justification: TypeAlias = Literal[
+    "left", "right", "top", "bottom", "center", "baseline"
+]

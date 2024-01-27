@@ -25,6 +25,7 @@ if typing.TYPE_CHECKING:
         DataLike,
         DrawingArea,
         Layer,
+        TupleInt2,
     )
 
 
@@ -308,6 +309,17 @@ class geom_text(geom):
         )
         da.add_artist(key)
         return da
+
+    @staticmethod
+    def legend_key_size(
+        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+    ) -> TupleInt2:
+        w, h = min_size
+        _w, _h = data["size"]
+        if data["color"] is not None:
+            w = max(w, _w)
+            h = max(h, _h)
+        return w, h
 
 
 def check_adjust_text():
