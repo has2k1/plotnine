@@ -45,11 +45,8 @@ class theme_matplotlib(theme):
                 ha="left",
                 margin={"r": m, "units": "fig"},
             ),
-            legend_box="auto",
-            legend_box_just="auto",
             legend_box_margin=0,
             legend_box_spacing=m * 3,
-            legend_direction="auto",
             legend_key_spacing_x=5,
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
@@ -68,7 +65,6 @@ class theme_matplotlib(theme):
                     "units": "fig",
                 }
             ),
-            legend_text_position="auto",
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 ha="left",
@@ -80,7 +76,6 @@ class theme_matplotlib(theme):
                     "units": "fig",
                 },
             ),
-            legend_title_position="auto",
             panel_spacing=m,
             plot_caption=element_text(
                 ha="right",

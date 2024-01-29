@@ -335,7 +335,7 @@ class GuidesElements:
         """
         The direction to layout the guides
         """
-        if (box := self.theme.P("legend_box")) == "auto":
+        if not (box := self.theme.getp("legend_box")):
             box = (
                 "vertical"
                 if self.position in ("right", "left")
@@ -345,12 +345,12 @@ class GuidesElements:
 
     @cached_property
     def position(self) -> Optional[SidePosition]:
-        position = self.theme.P("legend_position")
+        position = self.theme.getp("legend_position")
         return None if position == "none" else position
 
     @cached_property
     def box_just(self) -> Justification:
-        if (box_just := self.theme.P("legend_box_just")) == "auto":
+        if not (box_just := self.theme.getp("legend_box_just")):
             box_just = (
                 "left" if self.position in ("right", "left") else "right"
             )
@@ -358,8 +358,8 @@ class GuidesElements:
 
     @cached_property
     def box_margin(self) -> int:
-        return self.theme.P("legend_box_margin")
+        return self.theme.getp("legend_box_margin")
 
     @cached_property
     def spacing(self) -> float:
-        return self.theme.P("legend_spacing")
+        return self.theme.getp("legend_spacing")

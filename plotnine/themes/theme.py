@@ -320,9 +320,9 @@ class theme:
         """
         Add default themeable properties that depend depend on the plot
 
-        Some properties may be left unset or may have "auto" values and
-        their final values are best worked out dynamically after the
-        plot has been built, but before the themeables are applied.
+        Some properties may be left unset (None) and their final values are
+        best worked out dynamically after the plot has been built, but
+        before the themeables are applied.
 
         This is where the theme is modified to add those values.
         """

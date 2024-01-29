@@ -66,11 +66,8 @@ class theme_seaborn(theme):
                 ha="left",
                 margin={"r": m, "units": "fig"},
             ),
-            legend_box="auto",
-            legend_box_just="auto",
             legend_box_margin=0,
             legend_box_spacing=m * 3,  # figure units
-            legend_direction="auto",
             legend_key_spacing_x=5,
             legend_key_spacing_y=2,
             legend_key_size=base_size * 0.8 * 1.8,
@@ -88,7 +85,6 @@ class theme_seaborn(theme):
                     "units": "fig",
                 },
             ),
-            legend_text_position="auto",
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 margin={
@@ -99,7 +95,6 @@ class theme_seaborn(theme):
                     "units": "fig",
                 },
             ),
-            legend_title_position="auto",
             panel_spacing=m,
             plot_caption=element_text(
                 size=base_size * 0.8,

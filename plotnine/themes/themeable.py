@@ -2138,8 +2138,8 @@ class legend_title_position(themeable):
 
     Parameters
     ----------
-    theme_element : "top" | "bottom" | "left" | "right" | "auto"
-        Position of the legend title. If "auto", it depends on the position
+    theme_element : None | "top" | "bottom" | "left" | "right"
+        Position of the legend title. The default depends on the position
         of the legend.
     """
 
@@ -2152,8 +2152,8 @@ class legend_text_position(themeable):
 
     Parameters
     ----------
-    theme_element : "top" | "bottom" | "left" | "right" | "auto"
-        Position of the legend key text. If "auto", it depends on the
+    theme_element : None | "top" | "bottom" | "left" | "right"
+        Position of the legend key text. The default, depends on the
         position of the legend.
     """
 
