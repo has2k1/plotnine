@@ -268,7 +268,7 @@ GuideKind: TypeAlias = Literal["legend", "colorbar", "colourbar"]
 LegendOrColorbar: TypeAlias = (
     guide_legend | guide_colorbar | Literal["legend", "colorbar"]
 )
-NoGuide: TypeAlias = Literal["none"] | Literal[False]
+NoGuide: TypeAlias = Literal["none", False]
 LegendOnly: TypeAlias = guide_legend | Literal["legend"]
 Justification: TypeAlias = Literal[
     "left", "right", "top", "bottom", "center", "baseline"

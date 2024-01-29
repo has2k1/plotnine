@@ -25,7 +25,6 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import AuxTransformBox, PackerBase
     from matplotlib.text import Text
 
-    from plotnine import theme
     from plotnine.scales.scale import scale
     from plotnine.typing import SidePosition
 
@@ -68,6 +67,9 @@ class guide_colorbar(guide):
     available_aes: set[str] = no_init_mutable({"colour", "color", "fill"})
 
     def __post_init__(self):
+        self._elements_cls = GuideElementsColorbar
+        self.elements: GuideElementsColorbar
+
         if self.nbin is None:
             self.nbin = 300  # if self.display == "gradient" else 300
 
@@ -172,7 +174,7 @@ class guide_colorbar(guide):
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbars = len(self.bar)
-        elements = GuideElementsColorbar(self.theme, self)
+        elements = self.elements
         raster = self.display == "raster"
 
         colors = self.bar["color"].tolist()
