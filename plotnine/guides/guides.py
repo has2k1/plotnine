@@ -26,6 +26,7 @@ if TYPE_CHECKING:
         Justification,
         LegendOnly,
         LegendOrColorbar,
+        NoGuide,
         Orientation,
         SidePosition,
         Theme,
@@ -61,14 +62,14 @@ class guides:
         ```
     """
 
-    alpha: Optional[LegendOrColorbar] = None
-    color: Optional[LegendOrColorbar] = None
-    fill: Optional[LegendOrColorbar] = None
-    linetype: Optional[LegendOnly] = None
-    shape: Optional[LegendOnly] = None
-    size: Optional[LegendOnly] = None
-    stroke: Optional[LegendOnly] = None
-    colour: Optional[LegendOnly] = None
+    alpha: Optional[LegendOrColorbar | NoGuide] = None
+    color: Optional[LegendOrColorbar | NoGuide] = None
+    fill: Optional[LegendOrColorbar | NoGuide] = None
+    linetype: Optional[LegendOnly | NoGuide] = None
+    shape: Optional[LegendOnly | NoGuide] = None
+    size: Optional[LegendOnly | NoGuide] = None
+    stroke: Optional[LegendOnly | NoGuide] = None
+    colour: Optional[LegendOnly | NoGuide] = None
 
     def __post_init__(self):
         self.plot: ggplot
@@ -267,10 +268,14 @@ class guides:
 
         self.plot = plot
 
+        elements = GuidesElements(plot.theme)
+
+        if elements.position is None:
+            return
+
         if not (gdefs := self._build()):
             return
 
-        elements = GuidesElements(plot.theme)
         targets = plot.theme.targets
 
         # Order of guides
@@ -345,7 +350,7 @@ class GuidesElements:
 
     @cached_property
     def position(self) -> Optional[SidePosition]:
-        position = self.theme.getp("legend_position")
+        position = self.theme.getp("legend_position", "none")
         return None if position == "none" else position
 
     @cached_property
