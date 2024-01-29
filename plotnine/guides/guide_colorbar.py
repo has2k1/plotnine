@@ -177,7 +177,7 @@ class guide_colorbar(guide):
 
         colors = self.bar["color"].tolist()
         labels = self.key["label"].tolist()
-        _targets = self.theme._targets
+        targets = self.theme.targets
 
         # .5 puts the ticks in the middle of the bars when
         # raster=False. So when raster=True the ticks are
@@ -213,11 +213,11 @@ class guide_colorbar(guide):
         title = cast(str, self.title)
         props = {"ha": elements.title.ha, "va": elements.title.va}
         title_box = TextArea(title, textprops=props)
-        _targets["legend_title"] = title_box._text  # type: ignore
+        targets.legend_title = title_box._text  # type: ignore
 
         # labels
         texts = add_labels(auxbox, labels, tick_locations, elements)
-        _targets["legend_text_colorbar"] = texts
+        targets.legend_text_colorbar = texts
 
         # colorbar
         if self.display == "rectangles":
@@ -227,7 +227,7 @@ class guide_colorbar(guide):
 
         # frame
         frame = add_frame(auxbox, elements)
-        _targets["legend_frame"] = frame
+        targets.legend_frame = frame
 
         # ticks
         visible = slice(
@@ -235,7 +235,7 @@ class guide_colorbar(guide):
             None if self.draw_ulim else -1,
         )
         coll = add_ticks(auxbox, tick_locations[visible], elements)
-        _targets["legend_ticks"] = coll
+        targets.legend_ticks = coll
 
         # title + colorbar(with labels)
         lookup: dict[SidePosition, tuple[type[PackerBase], slice]] = {
