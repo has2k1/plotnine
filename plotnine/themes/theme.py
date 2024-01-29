@@ -257,27 +257,12 @@ class theme:
         """
         return self.themeables
 
-    @property
+    @cached_property
     def getp(self):
-        return self.themeables.getp
-
-    def P(self, name: str, key="value"):
         """
         Convenient access into the properties of the themeables
-
-        Parameters
-        ----------
-        name :
-            Themeable name
-        key :
-            Property name to lookup
-
-        Returns
-        -------
-        :
-            Value of themeable property
         """
-        return self.themeables.property(name, key)
+        return self.themeables.getp
 
     def apply(self):
         """
@@ -289,7 +274,7 @@ class theme:
         """
         self._add_default_themeable_properties()
 
-        for th in self.themeables.values():
+        for th in self.T.values():
             th.apply(self)
 
     def setup(self, plot: ggplot):
@@ -310,7 +295,7 @@ class theme:
         self.axs = plot.axs
         self._targets = {}
 
-        for name, th in self.themeables.items():
+        for name, th in self.T.items():
             if isinstance(th.theme_element, element_base):
                 th.theme_element.setup(self, name)
 
@@ -357,7 +342,7 @@ class theme:
             # In particular, XKCD uses matplotlib.patheffects.withStrok
             rcParams = copy(self._rcParams)
 
-        for th in self.themeables.values():
+        for th in self.T.values():
             rcParams.update(th.rcParams)
         return rcParams
 
@@ -468,7 +453,7 @@ class theme:
 
         The result is a theme that has double the dpi.
         """
-        dpi = self.themeables.property("dpi")
+        dpi = self.getp("dpi")
         return self + theme(dpi=dpi * 2)
 
 

@@ -365,10 +365,10 @@ class facet:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        margin = theme.P("axis_text_x", "margin")
+        margin = theme.getp(("axis_text_x", "margin"))
         pad_x = margin.get_as("t", "pt")
 
-        margin = theme.P("axis_text_y", "margin")
+        margin = theme.getp(("axis_text_y", "margin"))
         pad_y = margin.get_as("r", "pt")
 
         ax.tick_params(axis="x", which="major", pad=pad_x)
@@ -489,7 +489,7 @@ class facet:
         """
         Return the aspect_ratio
         """
-        aspect_ratio = self.theme.themeables.property("aspect_ratio")
+        aspect_ratio = self.theme.getp("aspect_ratio")
         if aspect_ratio == "auto":
             # If the panels have different limits the coordinates
             # cannot compute a common aspect ratio

@@ -2125,8 +2125,8 @@ class legend_position(themeable):
 
     Parameters
     ----------
-    theme_element : "right" | "left" | "top" | "bottom" | "none" | tuple
-        If `none`, no legend.
+    theme_element : "right" | "left" | "top" | "bottom" | tuple | None
+        If None, no legend.
         If a tuple, 2-floats in the range `[0, 1]` for the location
         in screen coordinates.
     """

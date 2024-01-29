@@ -100,10 +100,7 @@ class PlotnineLayoutEngine(LayoutEngine):
                     return None
                 return t
 
-        legend_position = theme.P("legend_position")
-        if legend_position in ("none", "None"):
-            legend_position = None
-
+        legend_position = theme.getp("legend_position", None)
         return LayoutPack(
             axs=self.plot.axs,
             figure=self.plot.figure,
