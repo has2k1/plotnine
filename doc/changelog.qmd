@@ -27,18 +27,10 @@ title: Changelog
   If you set the backend to an interactive one, use
   [](:class:`~plotnine.ggplot.show`) to draw the plot.
 
-- The default horizontal alignment for the plot title if there is no subtitle,
-  is the center. If there is a subtitle, the default is to align both to the
-  the left. If the horizontal alignment is set for only one of them, then it
-  controls both. To control the two separately, set the alignments for each.
-  e.g.
+- The default horizontal alignment for the plot title is center if it
+  there is no subtitle. When there is a subtitle, the default is to have
+  both aligned to the left.
 
-  ```py
-  theme(
-      plot_title=element_text(ha="left"),
-      plot_subtitle=element_text(ha="right")
-  )
-  ```
 - Some parameters that control the look and feel of `guide_colorbar` and
   `guide_legend` have been removed. For their place, the `theme` parameter
   has been introduced and it gives better control of the look and feel.

@@ -546,9 +546,8 @@ class legend_title(themeable):
 
     def blank_figure(self, figure: Figure, targets: dict[str, Any]):
         super().blank_figure(figure, targets)
-        if texts := targets.get("legend_title"):
-            for text in texts:
-                text.set_visible(False)
+        if text := targets.get("legend_title"):
+            text.set_visible(False)
 
 
 class legend_text_legend(texts_themeable):
@@ -632,12 +631,13 @@ class plot_title(text_themeable):
 
     Notes
     -----
-    When the `ha` property is `None`(not set) and:
+    The default horizontal alignment for the title is center. However the
+    title will be left aligned if and only if there is a subtitle and its
+    horizontal alignment has not been set (so it defaults to the left).
 
-      - There is _no_ `plot_subtitle`, the default horizontal alignment
-        is the `center`.
-      - There is a `plot_subtitle`, the default horizontal alignment
-         is that of the `plot_subtitle` which defaults to `left`.
+    The defaults ensure that, short titles are not awkwardly left-aligned,
+    and that a title and a subtitle will not be awkwardly mis-aligned in
+    the center or with different alignments.
     """
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
@@ -661,12 +661,10 @@ class plot_subtitle(text_themeable):
 
     Notes
     -----
-    When the `ha` property is `None`(not set) and:
-
-      - There is _no_ alignment for the `plot_title`**, the default
-        horizontal alignment is the `center`.
-      - There is an alignment for the `plot_title`, the default
-        horizontal alignment is that set for the `plot_title`.
+    The default horizontal alignment for the subtitle is left. And when
+    it is present, by default it drags the title to the left. The subtitle
+    drags the title to the left only if none of the two has their horizontal
+    alignment are set.
     """
 
     def apply_figure(self, figure: Figure, targets: dict[str, Any]):
