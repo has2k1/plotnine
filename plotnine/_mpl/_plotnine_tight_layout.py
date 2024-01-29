@@ -159,42 +159,27 @@ def set_figure_artist_positions(
     grid = tparams.grid
 
     if pack.plot_title:
-        try:
-            ha = theme.P("plot_title", "ha")
-        except KeyError:
-            ha = "center"
+        ha = theme.getp(("plot_title", "ha"))
         pack.plot_title.set_y(sides.t.edge("plot_title"))
         horizonally_align_text_with_panels(pack.plot_title, grid, ha)
 
     if pack.plot_subtitle:
-        try:
-            ha = theme.P("plot_subtitle", "ha")
-        except KeyError:
-            ha = "center"
+        ha = theme.getp(("plot_subtitle", "ha"))
         pack.plot_subtitle.set_y(sides.t.edge("plot_subtitle"))
         horizonally_align_text_with_panels(pack.plot_subtitle, grid, ha)
 
     if pack.plot_caption:
-        try:
-            ha = theme.P("plot_caption", "ha")
-        except KeyError:
-            ha = "right"
+        ha = theme.getp(("plot_caption", "ha"), "right")
         pack.plot_caption.set_y(sides.b.edge("plot_caption"))
         horizonally_align_text_with_panels(pack.plot_caption, grid, ha)
 
     if pack.axis_title_x:
-        try:
-            ha = theme.P("axis_title_x", "ha")
-        except KeyError:
-            ha = "center"
+        ha = theme.getp(("axis_title_x", "ha"), "center")
         pack.axis_title_x.set_y(sides.b.edge("axis_title_x"))
         horizonally_align_text_with_panels(pack.axis_title_x, grid, ha)
 
     if pack.axis_title_y:
-        try:
-            va = theme.P("axis_title_y", "va")
-        except KeyError:
-            va = "center"
+        va = theme.getp(("axis_title_y", "va"), "center")
         pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))
         vertically_align_text_with_panels(pack.axis_title_y, grid, va)
 

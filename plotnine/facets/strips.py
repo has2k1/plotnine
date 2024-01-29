@@ -66,48 +66,43 @@ class strip:
         if position == "top":
             # The x & y values are just starting locations
             # The final location is determined by the layout manager.
-            x, y = 0, 1
+            y = 1
             ha, va = "center", "bottom"
-            rotation = theme.P("strip_text_x", "rotation")
+            rotation = theme.getp(("strip_text_x", "rotation"))
             box_width = 1
             box_height = 0  # Determined by the text size
             # TODO: Allow two unique paddings for either side.
             # Requires implementing an mpl.patches.boxstyle that recognises
             # two padding values.
-            strip_text_margin = theme.P("strip_text_x", "margin").get_as(
+            strip_text_margin = theme.getp(("strip_text_x", "margin")).get_as(
                 "b", "lines"
             )
-            strip_align = theme.P("strip_align_x")
+            strip_align = theme.getp("strip_align_x")
 
             # x & width properties of the background slide and
             # shrink the strip horizontally.
-            with suppress(KeyError):
-                x = theme.P("strip_text_x", "x")
-            with suppress(KeyError):
-                box_width = theme.P("strip_background_x", "width")
+            x = theme.getp(("strip_text_x", "x"), 0)
+            box_width = theme.getp(("strip_background_x", "width"), 1)
 
         elif position == "right":
             # The x & y values are just starting locations
             # The final location is determined by the layout manager.
-            x, y = 1, 0
+            x = 1
             ha, va = "left", "center"
-            rotation = theme.P("strip_text_y", "rotation")
+            rotation = theme.getp(("strip_text_y", "rotation"))
             box_width = 0  # Determine by the text height
-            box_height = 1
             # TODO: Allow two unique paddings for either side.
             # Requires implementing an mpl.patches.boxstyle that recognises
             # two padding values.
-            strip_text_margin = theme.P("strip_text_y", "margin").get_as(
+            strip_text_margin = theme.getp(("strip_text_y", "margin")).get_as(
                 "r", "lines"
             )
-            strip_align = theme.P("strip_align_y")
+            strip_align = theme.getp("strip_align_y")
 
             # y & height properties of the background slide and
             # shrink the strip vertically.
-            with suppress(KeyError):
-                y = theme.P("strip_text_y", "y")
-            with suppress(KeyError):
-                box_height = theme.P("strip_background_y", "height")
+            y = theme.getp(("strip_text_y", "y"), 0)
+            box_height = theme.getp(("strip_background_y", "height"), 1)
         else:
             raise ValueError(f"Unknown position for strip text: {position!r}")
 
