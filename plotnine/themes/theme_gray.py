@@ -76,8 +76,8 @@ class theme_gray(theme):
             legend_box_margin=0,  # points
             legend_box_spacing=m * 3,  # figure units
             legend_direction="auto",
-            legend_entry_spacing_x=2,
-            legend_entry_spacing_y=2,
+            legend_key_spacing_x=2,
+            legend_key_spacing_y=2,
             legend_frame=element_blank(),
             legend_key=element_rect(fill="#F2F2F2", colour="None", size=0),
             legend_key_height=None,

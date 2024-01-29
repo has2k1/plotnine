@@ -297,13 +297,13 @@ class guide_legend(guide):
         if self.byrow:
             chunk_size = ncol
             packer_dim1, packer_dim2 = (HPacker, VPacker)
-            sep1 = elements.entry_spacing_x
-            sep2 = elements.entry_spacing_y
+            sep1 = elements.key_spacing_x
+            sep2 = elements.key_spacing_y
         else:
             chunk_size = nrow
             packer_dim1, packer_dim2 = (VPacker, HPacker)
-            sep1 = elements.entry_spacing_y
-            sep2 = elements.entry_spacing_x
+            sep1 = elements.key_spacing_y
+            sep2 = elements.key_spacing_x
 
         chunks = []
         for i in range(len(key_boxes)):
@@ -365,12 +365,12 @@ class GuideElementsLegend(GuideElements):
         )
 
     @cached_property
-    def entry_spacing_x(self) -> int:
-        return self.theme.P("legend_entry_spacing_x")
+    def key_spacing_x(self) -> int:
+        return self.theme.P("legend_key_spacing_x")
 
     @cached_property
-    def entry_spacing_y(self) -> int:
-        return self.theme.P("legend_entry_spacing_y")
+    def key_spacing_y(self) -> int:
+        return self.theme.P("legend_key_spacing_y")
 
     @cached_property
     def _key_dimensions(self) -> list[TupleFloat2]:

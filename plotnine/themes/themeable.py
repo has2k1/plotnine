@@ -18,7 +18,7 @@ import numpy as np
 
 from .._utils import to_rgba
 from .._utils.registry import RegistryHierarchyMeta
-from ..exceptions import PlotnineError
+from ..exceptions import PlotnineError, deprecated_themeable_name
 from .elements import element_blank
 from .elements.element_base import element_base
 
@@ -2169,7 +2169,7 @@ class legend_text_position(themeable):
     """
 
 
-class legend_entry_spacing_x(themeable):
+class legend_key_spacing_x(themeable):
     """
     Horizontal spacing between two entries in a legend
 
@@ -2180,7 +2180,7 @@ class legend_entry_spacing_x(themeable):
     """
 
 
-class legend_entry_spacing_y(themeable):
+class legend_key_spacing_y(themeable):
     """
     Vertical spacing between two entries in a legend
 
@@ -2191,7 +2191,7 @@ class legend_entry_spacing_y(themeable):
     """
 
 
-class legend_entry_spacing(legend_entry_spacing_x, legend_entry_spacing_y):
+class legend_key_spacing(legend_key_spacing_x, legend_key_spacing_y):
     """
     Spacing between two entries in a legend
 
@@ -2258,3 +2258,18 @@ class subplots_adjust(themeable):
             "'panel_spacing' for your other spacing needs.",
             FutureWarning,
         )
+
+
+@deprecated_themeable_name
+class legend_entry_spacing(legend_key_spacing):
+    pass
+
+
+@deprecated_themeable_name
+class legend_entry_spacing_x(legend_key_spacing_x):
+    pass
+
+
+@deprecated_themeable_name
+class legend_entry_spacing_y(legend_key_spacing_y):
+    pass
