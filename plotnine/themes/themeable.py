@@ -2132,17 +2132,6 @@ class legend_position(themeable):
     """
 
 
-class legend_title_align(themeable):
-    """
-    Alignment of legend title
-
-    Parameters
-    ----------
-    theme_element : "right" | "left" | "center" | "top" | "bottom" | "auto"
-        If `auto`, depends on the position of the legend.
-    """
-
-
 class legend_title_position(themeable):
     """
     Position of legend title
@@ -2273,3 +2262,13 @@ class legend_entry_spacing_x(legend_key_spacing_x):
 @deprecated_themeable_name
 class legend_entry_spacing_y(legend_key_spacing_y):
     pass
+
+
+class legend_title_align(themeable):
+    def __init__(self):
+        msg = (
+            "Themeable 'legend_title_align' is deprecated. Use the "
+            "horizontal and vertical alignment parameters ha & va "
+            "of 'element_text' with 'lenged_title'."
+        )
+        warn(msg, FutureWarning, stacklevel=1)

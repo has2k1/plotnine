@@ -80,7 +80,6 @@ class theme_matplotlib(theme):
                     "units": "fig",
                 },
             ),
-            legend_title_align="auto",
             legend_title_position="auto",
             panel_spacing=m,
             plot_caption=element_text(

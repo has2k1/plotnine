@@ -463,7 +463,6 @@ quartodoc:
         - legend_text_position
         - legend_ticks_length
         - legend_title
-        - legend_title_align
         - legend_title_position
         - line
         - panel_background
