@@ -128,28 +128,19 @@ class strip:
 
         from .._mpl.text import SText
 
-        _targets = self.theme._targets
+        targets = self.theme.targets
         text = SText(self.draw_info)
         rect = text.spatch
 
         self.ax.add_artist(text)
         self.ax.add_artist(rect)
 
-        for key in (
-            "strip_text_x",
-            "strip_text_y",
-            "strip_background_x",
-            "strip_background_y",
-        ):
-            if key not in _targets:
-                _targets[key] = []
-
         if self.draw_info.position == "right":
-            _targets["strip_background_y"].append(rect)
-            _targets["strip_text_y"].append(text)
+            targets.strip_background_y.append(rect)
+            targets.strip_text_y.append(text)
         else:
-            _targets["strip_background_x"].append(rect)
-            _targets["strip_text_x"].append(text)
+            targets.strip_background_x.append(rect)
+            targets.strip_text_x.append(text)
 
 
 class Strips(List[strip]):

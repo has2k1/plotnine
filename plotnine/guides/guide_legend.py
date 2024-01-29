@@ -241,20 +241,20 @@ class guide_legend(guide):
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         nbreak = len(self.key)
-        _targets = self.theme._targets
+        targets = self.theme.targets
         keys_order = reverse if self.reverse else obverse
         elements = GuideElementsLegend(self.theme, self)
 
         # title
         title = cast(str, self.title)
         title_box = TextArea(title)
-        _targets["legend_title"] = title_box._text  # type: ignore
+        targets.legend_title = title_box._text  # type: ignore
 
         # labels
         props = {"ha": elements.text.ha, "va": elements.text.va}
         labels = [TextArea(s, textprops=props) for s in self.key["label"]]
         _texts = [l._text for l in labels]  # type: ignore
-        _targets["legend_text_legend"] = _texts
+        targets.legend_text_legend = _texts
 
         # Drawings
         drawings: list[ColoredDrawingArea] = []
@@ -270,7 +270,7 @@ class guide_legend(guide):
                     params.geom.draw_legend(key_data, da, params.layer)
 
             drawings.append(da)
-        _targets["legend_key"] = drawings
+        targets.legend_key = drawings
 
         # Match Drawings with labels to create the entries
         lookup: dict[SidePosition, tuple[type[PackerBase], slice]] = {

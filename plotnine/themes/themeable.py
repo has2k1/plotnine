@@ -21,6 +21,7 @@ from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError, deprecated_themeable_name
 from .elements import element_blank
 from .elements.element_base import element_base
+from .targets import ThemeTargets
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -213,7 +214,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         applys = (self.apply_figure, self.apply_ax)
         do_figure, do_ax = blanks if self.is_blank() else applys
 
-        do_figure(theme.figure, theme._targets)
+        do_figure(theme.figure, theme.targets)
         for ax in theme.axs:
             do_ax(ax)
 
@@ -234,7 +235,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         ax : matplotlib.axes.Axes
         """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         """
         Apply theme to the figure
         """
@@ -244,7 +245,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         Blank out theme elements
         """
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         """
         Blank out elements on the figure
         """
@@ -487,14 +488,14 @@ class axis_title_x(text_themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.get("axis_title_x"):
+        if text := targets.axis_title_x:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.get("axis_title_x"):
+        if text := targets.axis_title_x:
             text.set_visible(False)
 
 
@@ -507,14 +508,14 @@ class axis_title_y(text_themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.get("axis_title_y"):
+        if text := targets.axis_title_y:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.get("axis_title_y"):
+        if text := targets.axis_title_y:
             text.set_visible(False)
 
 
@@ -539,14 +540,14 @@ class legend_title(themeable):
 
     _omit = ["margin", "ha", "va"]
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.get("legend_title"):
+        if text := targets.legend_title:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.get("legend_title"):
+        if text := targets.legend_title:
             text.set_visible(False)
 
 
@@ -567,14 +568,14 @@ class legend_text_legend(texts_themeable):
 
     _omit = ["margin", "ha", "va"]
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if texts := targets.get("legend_text_legend"):
+        if texts := targets.legend_text_legend:
             self.set(texts)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if texts := targets.get("legend_text_legend"):
+        if texts := targets.legend_text_legend:
             for text in texts:
                 text.set_visible(False)
 
@@ -596,14 +597,14 @@ class legend_text_colorbar(texts_themeable):
 
     _omit = ["margin", "ha", "va"]
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if texts := targets.get("legend_text_colorbar"):
+        if texts := targets.legend_text_colorbar:
             self.set(texts)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if texts := targets.get("legend_text_colorbar"):
+        if texts := targets.legend_text_colorbar:
             for text in texts:
                 text.set_visible(False)
 
@@ -640,14 +641,14 @@ class plot_title(text_themeable):
     the center or with different alignments.
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.get("plot_title"):
+        if text := targets.plot_title:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.get("plot_title"):
+        if text := targets.plot_title:
             text.set_visible(False)
 
 
@@ -667,14 +668,14 @@ class plot_subtitle(text_themeable):
     alignment are set.
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.get("plot_subtitle"):
+        if text := targets.plot_subtitle:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.get("plot_subtitle"):
+        if text := targets.plot_subtitle:
             text.set_visible(False)
 
 
@@ -687,14 +688,14 @@ class plot_caption(text_themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.get("plot_caption"):
+        if text := targets.plot_caption:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.get("plot_caption"):
+        if text := targets.plot_caption:
             text.set_visible(False)
 
 
@@ -707,22 +708,22 @@ class strip_text_x(texts_themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if texts := targets.get("strip_text_x"):
+        if texts := targets.strip_text_x:
             self.set(texts)
 
-        if rects := targets.get("strip_background_x"):
+        if rects := targets.strip_background_x:
             for rect in rects:
                 rect.set_visible(True)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if texts := targets.get("strip_text_x"):
+        if texts := targets.strip_text_x:
             for text in texts:
                 text.set_visible(False)
 
-        if rects := targets.get("strip_background_x"):
+        if rects := targets.strip_background_x:
             for rect in rects:
                 rect.set_visible(False)
 
@@ -736,22 +737,22 @@ class strip_text_y(texts_themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if texts := targets.get("strip_text_y"):
+        if texts := targets.strip_text_y:
             self.set(texts)
 
-        if rects := targets.get("strip_background_y"):
+        if rects := targets.strip_background_y:
             for rect in rects:
                 rect.set_visible(True)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if texts := targets.get("strip_text_y"):
+        if texts := targets.strip_text_y:
             for text in texts:
                 text.set_visible(False)
 
-        if rects := targets.get("strip_background_y"):
+        if rects := targets.strip_background_y:
             for rect in rects:
                 rect.set_visible(False)
 
@@ -1131,14 +1132,14 @@ class legend_ticks(themeable):
 
     _omit = ["solid_capstyle"]
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if coll := targets.get("legend_ticks"):
+        if coll := targets.legend_ticks:
             coll.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if coll := targets.get("legend_ticks"):
+        if coll := targets.legend_ticks:
             coll.set_visible(False)
 
 
@@ -1292,18 +1293,18 @@ class legend_key(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         properties = self.properties
         # list[DrawingArea]
-        if das := targets.get("legend_key"):
+        if das := targets.legend_key:
             for da in das:
                 da.patch.set(**properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         # list[DrawingArea]
-        if das := targets.get("legend_key"):
+        if das := targets.legend_key:
             for da in das:
                 _blankout_rect(da.patch)
 
@@ -1319,14 +1320,14 @@ class legend_frame(themeable):
 
     _omit = ["facecolor"]
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if rect := targets.get("legend_frame"):
+        if rect := targets.legend_frame:
             rect.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if rect := targets.get("legend_frame"):
+        if rect := targets.legend_frame:
             _blankout_rect(rect)
 
 
@@ -1339,21 +1340,21 @@ class legend_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         # anchored offset box
-        if aob := targets.get("legend_background"):
+        if aob := targets.legend_background:
             properties = self.properties
             aob.patch.set(**properties)
             if properties:
-                aob._drawFrame = True
+                aob._drawFrame = True  # type: ignore
                 # some small sensible padding
                 if not aob.pad:
                     aob.pad = 0.2
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if aob := targets.get("legend_background"):
+        if aob := targets.legend_background:
             _blankout_rect(aob.patch)
 
 
@@ -1433,10 +1434,10 @@ class plot_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         figure.patch.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         _blankout_rect(figure.patch)
 
@@ -1450,15 +1451,15 @@ class strip_background_x(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if bboxes := targets.get("strip_background_x"):
+        if bboxes := targets.strip_background_x:
             for bbox in bboxes:
                 bbox.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if rects := targets.get("strip_background_x"):
+        if rects := targets.strip_background_x:
             for rect in rects:
                 _blankout_rect(rect)
 
@@ -1472,16 +1473,16 @@ class strip_background_y(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         properties = self.properties
-        if bboxes := targets.get("strip_background_y"):
+        if bboxes := targets.strip_background_y:
             for bbox in bboxes:
                 bbox.set(**properties)
 
-    def blank_figure(self, figure: Figure, targets: dict[str, Any]):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if rects := targets.get("strip_background_y"):
+        if rects := targets.strip_background_y:
             for rect in rects:
                 _blankout_rect(rect)
 
@@ -1992,7 +1993,7 @@ class figure_size(themeable):
         (width, height) in inches
     """
 
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         figure.set_size_inches(self.properties["value"])
 
 
@@ -2239,7 +2240,7 @@ class strip_align(strip_align_x, strip_align_y):
 
 
 class subplots_adjust(themeable):
-    def apply_figure(self, figure: Figure, targets: dict[str, Any]):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
         warn(
             "You no longer need to use subplots_adjust to make space for "
             "the legend or text around the panels. This paramater will be "

@@ -467,11 +467,11 @@ class ggplot:
         """
         figure = self.figure
         theme = self.theme
-        _targets = theme._targets
+        targets = theme.targets
 
         title = self.labels.get("title", "")
-        caption = self.labels.get("caption", "")
         subtitle = self.labels.get("subtitle", "")
+        caption = self.labels.get("caption", "")
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -481,19 +481,19 @@ class ggplot:
 
         # The locations are handled by the layout manager
         if title:
-            _targets["plot_title"] = figure.text(0, 0, title)
-
-        if caption:
-            _targets["plot_caption"] = figure.text(0, 0, caption)
+            targets.plot_title = figure.text(0, 0, title)
 
         if subtitle:
-            _targets["plot_subtitle"] = figure.text(0, 0, subtitle)
+            targets.plot_subtitle = figure.text(0, 0, subtitle)
+
+        if caption:
+            targets.plot_caption = figure.text(0, 0, caption)
 
         if labels.x:
-            _targets["axis_title_x"] = figure.text(0, 0, labels.x)
+            targets.axis_title_x = figure.text(0, 0, labels.x)
 
         if labels.y:
-            _targets["axis_title_y"] = figure.text(0, 0, labels.y)
+            targets.axis_title_y = figure.text(0, 0, labels.y)
 
     def _draw_watermarks(self):
         """

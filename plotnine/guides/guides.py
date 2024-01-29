@@ -271,7 +271,7 @@ class guides:
             return
 
         elements = GuidesElements(plot.theme)
-        _targets = plot.theme._targets
+        targets = plot.theme.targets
 
         # Order of guides
         # 0 do not sort, any other sorts
@@ -315,7 +315,7 @@ class guides:
             borderpad=0.0,
             zorder=99.1,
         )
-        _targets["legend_background"] = anchored_box
+        targets.legend_background = anchored_box
         plot.figure.add_artist(anchored_box)
 
 

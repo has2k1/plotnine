@@ -7,15 +7,17 @@ from typing import overload
 
 from ..exceptions import PlotnineError
 from ..options import get_option, set_option
+from .targets import ThemeTargets
 from .themeable import Themeables, themeable
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Type
+    from typing import Type
 
     from typing_extensions import Self
 
     from plotnine import ggplot
     from plotnine.typing import Axes, Figure
+
 
 # All complete themes are initiated with these rcparams. They
 # can be overridden.
@@ -98,9 +100,8 @@ class theme:
 
     # Dictionary to collect matplotlib objects that will
     # be targeted for theming by the themeables
-    # It is initialised in the plot context and removed at
-    # the end of it.
-    _targets: dict[str, Any]
+    # It is initialised in the setup method.
+    targets: ThemeTargets
 
     def __init__(
         self,
@@ -293,7 +294,7 @@ class theme:
         self.plot = plot
         self.figure = plot.figure
         self.axs = plot.axs
-        self._targets = {}
+        self.targets = ThemeTargets()
 
         for name, th in self.T.items():
             if isinstance(th.theme_element, element_base):
@@ -514,12 +515,12 @@ def smart_title_and_subtitle_ha(plot_theme: theme):
     """
     from .elements import element_text
 
-    thm = plot_theme.themeables
-    has_title = "plot_title" in plot_theme._targets
-    has_subtitle = "plot_subtitle" in plot_theme._targets
+    has_title = plot_theme.targets.plot_title is not None
+    has_subtitle = plot_theme.targets.plot_subtitle is not None
 
     title_ha = plot_theme.getp(("plot_title", "ha"))
     subtitle_ha = plot_theme.getp(("plot_subtitle", "ha"))
+
     default_title_ha, default_subtitle_ha = "center", "left"
     kwargs = {}
 

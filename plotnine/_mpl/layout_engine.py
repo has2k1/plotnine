@@ -12,12 +12,13 @@ if typing.TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
     from matplotlib.offsetbox import AnchoredOffsetbox
 
+    from plotnine import ggplot
+    from plotnine.themes.targets import ThemeTargets
     from plotnine.typing import (
         Any,
         Axes,
         Facet,
         Figure,
-        Ggplot,
         LegendPosition,
         Theme,
     )
@@ -58,12 +59,9 @@ class PlotnineLayoutEngine(LayoutEngine):
     _adjust_compatible = True
     _colorbar_gridspec = False
 
-    plot: Ggplot
-    _theme_targets: dict[str, Any]
-
-    def __init__(self, plot: Ggplot):
+    def __init__(self, plot: ggplot):
         self.plot = plot
-        self._theme_targets = plot.theme._targets
+        self.theme = plot.theme
 
     def execute(self, fig: Figure):
         from contextlib import nullcontext
@@ -73,7 +71,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             set_figure_artist_positions,
         )
 
-        pack = self.pack_information()
+        pack = self.setup()
 
         with getattr(pack.renderer, "_draw_disabled", nullcontext)():
             tparams = get_plotnine_tight_layout(pack)
@@ -81,37 +79,36 @@ class PlotnineLayoutEngine(LayoutEngine):
         set_figure_artist_positions(pack, tparams)
         fig.subplots_adjust(**asdict(tparams.grid))
 
-    def pack_information(self) -> LayoutPack:
+    def setup(self) -> LayoutPack:
         """
         Put together objects required to do the layout
         """
-        theme = self.plot.theme
-        get_target = self._theme_targets.get
+        targets = self.theme.targets
 
-        def get(th: str) -> Any:
+        def get_target(name: str) -> Any:
             """
             Return themeable target or None
             """
-            if theme.T.is_blank(th):
+            if self.theme.T.is_blank(name):
                 return None
             else:
-                t = get_target(th, None)
+                t = getattr(targets, name)
                 if isinstance(t, Text) and t.get_text() == "":
                     return None
                 return t
 
-        legend_position = theme.getp("legend_position", None)
+        legend_position = self.theme.getp("legend_position", None)
         return LayoutPack(
             axs=self.plot.axs,
             figure=self.plot.figure,
             renderer=self.plot.figure._get_renderer(),  # pyright: ignore
-            theme=theme,
+            theme=self.theme,
             facet=self.plot.facet,
-            axis_title_x=get("axis_title_x"),
-            axis_title_y=get("axis_title_y"),
+            axis_title_x=get_target("axis_title_x"),
+            axis_title_y=get_target("axis_title_y"),
             legend=get_target("legend_background"),
             legend_position=legend_position,
-            plot_caption=get("plot_caption"),
-            plot_subtitle=get("plot_subtitle"),
-            plot_title=get("plot_title"),
+            plot_caption=get_target("plot_caption"),
+            plot_subtitle=get_target("plot_subtitle"),
+            plot_title=get_target("plot_title"),
         )
