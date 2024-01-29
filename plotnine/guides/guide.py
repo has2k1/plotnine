@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC
-from copy import deepcopy
 from dataclasses import dataclass, field
 from functools import cached_property
 from types import SimpleNamespace as NS
@@ -25,7 +24,6 @@ if TYPE_CHECKING:
         LegendPosition,
         Orientation,
         SidePosition,
-        Theme,
     )
 
     AlignDict: TypeAlias = dict[
@@ -75,8 +73,8 @@ class guide(ABC, metaclass=Register):
         self.key: pd.DataFrame
         self.plot_layers: Layers
         self.plot_mapping: aes
-        # if self.theme is None:
-        #     self.theme = theme()
+        self._elements_cls = GuideElements
+        self.elements: Any
 
     def legend_aesthetics(self, layer):
         """
@@ -114,6 +112,7 @@ class guide(ABC, metaclass=Register):
         self.theme = plot.theme + self.theme
         self.plot_layers = plot.layers
         self.plot_mapping = plot.mapping
+        self.elements = self._elements_cls(self.theme, self)
 
     def train(
         self, scale: scale, aesthetic: Optional[str] = None
@@ -154,6 +153,7 @@ class GuideElements:
 
     def __post_init__(self):
         self.guide_kind = type(self.guide).__name__.split("_")[-1]
+        self._elements_cls = GuideElements
 
     @cached_property
     def margin(self):
@@ -203,8 +203,10 @@ class GuideElements:
         return direction
 
     @cached_property
-    def position(self) -> LegendPosition:
-        return self.guide.position or self.theme.getp("legend_position")
+    def position(self) -> LegendPosition | None:
+        if (pos := self.theme.getp("legend_position", "none")) == "none":
+            return None
+        return self.guide.position or pos
 
     #  These do not track the themeables directly
     @cached_property

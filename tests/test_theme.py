@@ -16,7 +16,6 @@ from plotnine import (
     geom_point,
     ggplot,
     guide_colorbar,
-    guide_legend,
     guides,
     labs,
     scale_y_continuous,
@@ -304,6 +303,15 @@ class TestLayout:
     def test_legend_at_the_bottom(self):
         p = self.g + theme(legend_position="bottom")
         assert p == "legend_at_the_bottom"
+
+    def test_turn_off_guide(self):
+        p1 = self.g + theme(legend_position="none")
+        p2 = self.g + guides(color="none")
+        p3 = self.g + guides(color=False)
+
+        assert p1 == "turn_off_guide"
+        assert p2 == "turn_off_guide"
+        assert p3 == "turn_off_guide"
 
     def test_facet_grid(self):
         p = self.g + facet_grid("am ~ gear")

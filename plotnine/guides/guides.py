@@ -76,7 +76,7 @@ class guides:
         self.plot_scales: Scales
         self.plot_labels: labels_view
 
-        if self.colour and self.color:
+        if self.colour is not None and self.color is not None:
             raise ValueError("Got a guide for color and colour, choose one.")
 
     def __radd__(self, plot: ggplot):
@@ -94,17 +94,19 @@ class guides:
             ggplot object with guides.
         """
         for f in fields(self):
-            if g := getattr(self, f.name):
+            if (g := getattr(self, f.name)) is not None:
                 setattr(plot.guides, f.name, g)
 
         return plot
 
-    def _guide_lookup(self) -> dict[str, guide]:
+    def _guide_lookup(self) -> dict[str, guide | NoGuide]:
         """
         Lookup dict for guides that have been set
         """
         return {
-            f.name: g for f in fields(self) if (g := getattr(self, f.name))
+            f.name: g
+            for f in fields(self)
+            if (g := getattr(self, f.name)) is not None
         }
 
     def _build(self) -> Sequence[guide]:
@@ -142,12 +144,21 @@ class guides:
                 # 3. default(either guide_legend or guide_colorbar
                 #            depending on the scale type)
                 # ae = scale.aesthetics[0]
-                if not (g := guide_lookup.get(ae, scale.guide)):
+
+                # No guide
+                if (g := guide_lookup.get(ae)) in ("none", False) or (
+                    g is None and (g := scale.guide) is None
+                ):
                     continue
 
                 # check the validity of guide.
                 # if guide is str, then find the guide object
                 g = self._setup(g)
+
+                # Guide turned off
+                if not g.elements.position:
+                    continue
+
                 # check the consistency of the guide and scale.
                 if (
                     "any" not in g.available_aes

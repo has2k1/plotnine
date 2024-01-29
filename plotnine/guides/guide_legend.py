@@ -29,7 +29,6 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
 
-    from plotnine import ggplot
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
     from plotnine.typing import SidePosition, TupleFloat2, TupleInt2
@@ -70,6 +69,10 @@ class guide_legend(guide):
     # Non-Parameter Attributes
     available_aes: set[str] = no_init_mutable({"any"})
     layer_parameters: list[LayerParameters] = no_init_mutable([])
+
+    def __post_init__(self):
+        self._elements_cls = GuideElementsLegend
+        self.elements: GuideElementsLegend
 
     def train(self, scale, aesthetic=None):
         """
@@ -243,7 +246,7 @@ class guide_legend(guide):
         nbreak = len(self.key)
         targets = self.theme.targets
         keys_order = reverse if self.reverse else obverse
-        elements = GuideElementsLegend(self.theme, self)
+        elements = self.elements
 
         # title
         title = cast(str, self.title)
