@@ -201,7 +201,6 @@ class theme:
         legend_box_spacing=None,
         legend_spacing=None,
         legend_position=None,
-        legend_title_align=None,
         legend_title_position=None,
         legend_text_position=None,
         legend_key_spacing_x=None,
