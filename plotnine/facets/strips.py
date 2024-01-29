@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import typing
-from contextlib import suppress
 from typing import List
 
 from ..iapi import strip_draw_info, strip_label_details
