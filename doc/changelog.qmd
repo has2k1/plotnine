@@ -35,6 +35,10 @@ title: Changelog
   `guide_legend` have been removed. For their place, the `theme` parameter
   has been introduced and it gives better control of the look and feel.
 
+- Themeables `legend_entry_spacing`, `legend_entry_spacing_x` and
+  `legend_entry_spacing_y` have been renamed to `legend_key_spacing`,
+  `legend_key_spacing_x` and `legend_key_spacing_y` respectively
+
 ### New
 
 - Added symmetric logarithm transformation scales
