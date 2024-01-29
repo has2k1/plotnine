@@ -13,7 +13,6 @@ if typing.TYPE_CHECKING:
     from matplotlib.offsetbox import AnchoredOffsetbox
 
     from plotnine import ggplot
-    from plotnine.themes.targets import ThemeTargets
     from plotnine.typing import (
         Any,
         Axes,

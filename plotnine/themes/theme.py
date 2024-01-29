@@ -524,14 +524,14 @@ def smart_title_and_subtitle_ha(plot_theme: theme):
     default_title_ha, default_subtitle_ha = "center", "left"
     kwargs = {}
 
-    if not title_ha:
+    if has_title and not title_ha:
         if has_subtitle and not subtitle_ha:
             title_ha = default_subtitle_ha
         else:
             title_ha = default_title_ha
         kwargs["plot_title"] = element_text(ha=title_ha)
 
-    if not subtitle_ha:
+    if has_subtitle and not subtitle_ha:
         subtitle_ha = default_subtitle_ha
         kwargs["plot_subtitle"] = element_text(ha=subtitle_ha)
 

@@ -21,15 +21,15 @@ from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError, deprecated_themeable_name
 from .elements import element_blank
 from .elements.element_base import element_base
-from .targets import ThemeTargets
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
     from typing import Any, Sequence, Type
 
-    from matplotlib.patches import Patch, Rectangle
+    from matplotlib.patches import Patch
     from matplotlib.text import Text
 
+    from plotnine.themes.targets import ThemeTargets
     from plotnine.typing import Axes, Figure, Theme
 
 
