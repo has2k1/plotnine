@@ -179,13 +179,13 @@ class GuideElements:
 
     @cached_property
     def text_position(self) -> SidePosition:
-        if (pos := self.theme.P("legend_text_position")) == "auto":
+        if not (pos := self.theme.getp("legend_text_position")):
             pos = "right" if self.is_vertical else "bottom"
         return pos
 
     @cached_property
     def title_position(self) -> SidePosition:
-        if (pos := self.theme.P("legend_title_position")) == "auto":
+        if not (pos := self.theme.getp("legend_title_position")):
             pos = "top" if self.is_vertical else "left"
         return pos
 
@@ -194,7 +194,7 @@ class GuideElements:
         if self.guide.direction:
             return self.guide.direction
 
-        if (direction := self.theme.P("legend_direction")) == "auto":
+        if not (direction := self.theme.getp("legend_direction")):
             direction = (
                 "vertical"
                 if self.position in ("right", "left")
@@ -204,7 +204,7 @@ class GuideElements:
 
     @cached_property
     def position(self) -> LegendPosition:
-        return self.guide.position or self.theme.P("legend_position")
+        return self.guide.position or self.theme.getp("legend_position")
 
     #  These do not track the themeables directly
     @cached_property

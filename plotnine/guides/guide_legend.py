@@ -366,11 +366,11 @@ class GuideElementsLegend(GuideElements):
 
     @cached_property
     def key_spacing_x(self) -> int:
-        return self.theme.P("legend_key_spacing_x")
+        return self.theme.getp("legend_key_spacing_x")
 
     @cached_property
     def key_spacing_y(self) -> int:
-        return self.theme.P("legend_key_spacing_y")
+        return self.theme.getp("legend_key_spacing_y")
 
     @cached_property
     def _key_dimensions(self) -> list[TupleFloat2]:
@@ -383,8 +383,8 @@ class GuideElementsLegend(GuideElements):
         #  Note the different height sizes for the entries
         guide = cast(guide_legend, self.guide)
         min_size = (
-            self.theme.P("legend_key_width"),
-            self.theme.P("legend_key_height"),
+            self.theme.getp("legend_key_width"),
+            self.theme.getp("legend_key_height"),
         )
 
         # Find the size that fits each key in the legend,

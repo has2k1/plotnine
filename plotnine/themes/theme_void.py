@@ -43,11 +43,8 @@ class theme_void(theme):
             aspect_ratio=get_option("aspect_ratio"),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
-            legend_box="auto",
-            legend_box_just="auto",
             legend_box_margin=0,
             legend_box_spacing=m * 3,
-            legend_direction="auto",
             legend_key_spacing_x=5,
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
@@ -67,7 +64,6 @@ class theme_void(theme):
                     "units": "fig",
                 },
             ),
-            legend_text_position="auto",
             legend_title=element_text(
                 margin={
                     "t": m,
@@ -77,7 +73,6 @@ class theme_void(theme):
                     "units": "fig",
                 },
             ),
-            legend_title_position="auto",
             panel_spacing=m,
             plot_caption=element_text(
                 size=base_size * 0.8,

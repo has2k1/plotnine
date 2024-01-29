@@ -71,11 +71,8 @@ class theme_gray(theme):
             # drawing routines can make better decisions than
             # can be pre-determined in the theme.
             legend_background=element_rect(color="None"),
-            legend_box="auto",
-            legend_box_just="auto",
             legend_box_margin=0,  # points
             legend_box_spacing=m * 3,  # figure units
-            legend_direction="auto",
             legend_key_spacing_x=2,
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
@@ -97,7 +94,6 @@ class theme_gray(theme):
                     "units": "fig",
                 },
             ),
-            legend_text_position="auto",
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 margin={
@@ -108,7 +104,6 @@ class theme_gray(theme):
                     "units": "fig",
                 },
             ),
-            legend_title_position=None,
             panel_background=element_rect(fill="#EBEBEB"),
             panel_border=element_blank(),
             panel_grid_major=element_line(color="white", size=1),
