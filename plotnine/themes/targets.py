@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from plotnine._mpl.offsetbox import ColoredDrawingArea
     from plotnine._mpl.patches import FancyBboxPatch
     from plotnine._mpl.text import SText
+    from plotnine.iapi import grouped_legends
 
     FancyPatches: TypeAlias = list[FancyBboxPatch]
     ColoredAreas: TypeAlias = list[ColoredDrawingArea]
@@ -31,9 +32,9 @@ class ThemeTargets:
 
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
-    legend_background: Optional[AnchoredOffsetbox] = None
     legend_frame: Optional[Rectangle] = None
     legend_key: Optional[ColoredAreas] = field(default_factory=list)
+    legends: Optional[grouped_legends] = None
     legend_text_colorbar: Sequence[Text] = field(default_factory=list)
     legend_text_legend: Sequence[Text] = field(default_factory=list)
     legend_ticks: Optional[LineCollection] = None

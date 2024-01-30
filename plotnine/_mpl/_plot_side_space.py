@@ -74,8 +74,7 @@ class _side_spaces(ABC):
 
     A *_space class should track the size taken up by all the objects that
     may fall on that side of the panel. The same name may appear in multiple
-    side classes (e.g. legend), but atmost only one of those parameters will
-    have a non-zero value.
+    side classes (e.g. legend).
     """
 
     pack: LayoutPack
@@ -132,9 +131,9 @@ class left_spaces(_side_spaces):
         pack = self.pack
 
         self.plot_margin = theme.getp("plot_margin_left")
-        if pack.legend and pack.legend_position == "left":
+        if pack.legends and pack.legends.left:
             self.legend += bbox_in_figure_space(
-                pack.legend, pack.figure, pack.renderer
+                pack.legends.left, pack.figure, pack.renderer
             ).width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
@@ -183,9 +182,9 @@ class right_spaces(_side_spaces):
         theme = self.pack.theme
 
         self.plot_margin = theme.getp("plot_margin_right")
-        if pack.legend and pack.legend_position == "right":
+        if pack.legends and pack.legends.right:
             self.legend = bbox_in_figure_space(
-                pack.legend, pack.figure, pack.renderer
+                pack.legends.right, pack.figure, pack.renderer
             ).width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
@@ -247,9 +246,9 @@ class top_spaces(_side_spaces):
                 theme.getp(("plot_subtitle", "margin")).get_as("b", "fig") * F
             )
 
-        if pack.legend and pack.legend_position == "top":
+        if pack.legends and pack.legends.top:
             self.legend = bbox_in_figure_space(
-                pack.legend, pack.figure, pack.renderer
+                pack.legends.top, pack.figure, pack.renderer
             ).height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
@@ -311,9 +310,9 @@ class bottom_spaces(_side_spaces):
                 theme.getp(("plot_caption", "margin")).get_as("t", "fig") * F
             )
 
-        if pack.legend and pack.legend_position == "bottom":
+        if pack.legends and pack.legends.bottom:
             self.legend = bbox_in_figure_space(
-                pack.legend, pack.figure, pack.renderer
+                pack.legends.bottom, pack.figure, pack.renderer
             ).height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 

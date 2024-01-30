@@ -70,13 +70,13 @@ class theme_gray(theme):
             # legend, None values are for parameters where the
             # drawing routines can make better decisions than
             # can be pre-determined in the theme.
-            legend_background=element_rect(color="None"),
+            legend_background=element_rect(color="none"),
             legend_box_margin=0,  # points
             legend_box_spacing=m * 3,  # figure units
             legend_key_spacing_x=2,
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
-            legend_key=element_rect(fill="#F2F2F2", colour="None", size=0),
+            legend_key=element_rect(fill="#F2F2F2", colour="None"),
             legend_key_height=None,
             legend_key_size=base_size * 0.8 * 1.8,
             legend_key_width=None,

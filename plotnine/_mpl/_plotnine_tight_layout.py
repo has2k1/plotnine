@@ -21,11 +21,13 @@ from ._plot_side_space import LRTBSpaces, WHSpaceParts, calculate_panel_spacing
 if typing.TYPE_CHECKING:
     from typing import Literal, TypeAlias
 
+    from plotnine.iapi import grouped_legends
     from plotnine.typing import (
         Facet,
         Figure,
         LegendPosition,
         Text,
+        TupleFloat2,
     )
 
     from .layout_engine import LayoutPack
@@ -183,10 +185,8 @@ def set_figure_artist_positions(
         pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))
         vertically_align_text_with_panels(pack.axis_title_y, grid, va)
 
-    if pack.legend and pack.legend_position:
-        set_legend_position(
-            pack.legend, pack.legend_position, tparams, pack.figure
-        )
+    if pack.legends:
+        set_legends_position(pack.legends, tparams, pack.figure)
 
 
 def horizonally_align_text_with_panels(
@@ -221,38 +221,48 @@ def vertically_align_text_with_panels(
         text.set_y(grid.bottom)
 
 
-def set_legend_position(
-    legend: AnchoredOffsetbox,
-    position: LegendPosition,
+def set_legends_position(
+    legends: grouped_legends,
     tparams: TightParams,
     fig: Figure,
 ):
     """
     Place legend and align it centerally with respect to the panels
     """
+
+    def set_position(
+        aob: AnchoredOffsetbox, anchor_point: TupleFloat2, loc: str
+    ):
+        aob.loc = AnchoredOffsetbox.codes[loc]
+        aob.set_bbox_to_anchor(anchor_point, fig.transFigure)  # type: ignore
+
     grid = tparams.grid
     sides = tparams.sides
 
-    if position in ("right", "left"):
+    if legends.right:
         y = (grid.top + grid.bottom) / 2
-        if position == "left":
-            x = sides.l.edge("legend")
-            loc = "center left"
-        else:
-            x = sides.r.edge("legend")
-            loc = "center right"
-    elif position in ("top", "bottom"):
-        x = (grid.right + grid.left) / 2
-        if position == "top":
-            y = sides.t.edge("legend")
-            loc = "upper center"
-        else:
-            y = sides.b.edge("legend")
-            loc = "lower center"
-    else:
-        x, y = position
-        loc = "center"
+        x = sides.r.edge("legend")
+        loc = "center right"
+        set_position(legends.right, (x, y), loc)
 
-    anchor_point = (x, y)
-    legend.loc = AnchoredOffsetbox.codes[loc]
-    legend.set_bbox_to_anchor(anchor_point, fig.transFigure)  # type: ignore
+    if legends.left:
+        y = (grid.top + grid.bottom) / 2
+        x = sides.l.edge("legend")
+        loc = "center left"
+        set_position(legends.left, (x, y), loc)
+
+    if legends.top:
+        x = (grid.right + grid.left) / 2
+        y = sides.t.edge("legend")
+        loc = "upper center"
+        set_position(legends.top, (x, y), loc)
+
+    if legends.bottom:
+        x = (grid.right + grid.left) / 2
+        y = sides.b.edge("legend")
+        loc = "lower center"
+        set_position(legends.bottom, (x, y), loc)
+
+    if legends.xy:
+        for (x, y), _legend in legends.xy:
+            set_position(_legend, (x, y), "center")
