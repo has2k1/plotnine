@@ -114,6 +114,13 @@ class guide(ABC, metaclass=Register):
         self.plot_mapping = plot.mapping
         self.elements = self._elements_cls(self.theme, self)
 
+    @property
+    def _resolved_position(self) -> LegendPosition:
+        """
+        Return the position to draw the guide
+        """
+        return self.elements.position
+
     def train(
         self, scale: scale, aesthetic: Optional[str] = None
     ) -> Self | None:
@@ -196,9 +203,9 @@ class GuideElements:
 
         if not (direction := self.theme.getp("legend_direction")):
             direction = (
-                "vertical"
-                if self.position in ("right", "left")
-                else "horizontal"
+                "horizontal"
+                if self.position in ("bottom", "top")
+                else "vertical"
             )
         return direction
 

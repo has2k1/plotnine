@@ -1296,6 +1296,11 @@ class legend_key(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         properties = self.properties
+
+        # Prevent invisible strokes from having any effect
+        if properties.get("edgecolor") in ("none", "None"):
+            properties["linewidth"] = 0
+
         # list[DrawingArea]
         if das := targets.legend_key:
             for da in das:
@@ -1343,19 +1348,26 @@ class legend_background(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         # anchored offset box
-        if aob := targets.legend_background:
+        if legends := targets.legends:
             properties = self.properties
-            aob.patch.set(**properties)
-            if properties:
-                aob._drawFrame = True  # type: ignore
-                # some small sensible padding
-                if not aob.pad:
-                    aob.pad = 0.2
+
+            # Prevent invisible strokes from having any effect
+            if properties.get("edgecolor") in ("none", "None"):
+                properties["linewidth"] = 0
+
+            for aob in legends.boxes:
+                aob.patch.set(**properties)
+                if properties:
+                    aob._drawFrame = True  # type: ignore
+                    # some small sensible padding
+                    if not aob.pad:
+                        aob.pad = 0.2
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if aob := targets.legend_background:
-            _blankout_rect(aob.patch)
+        if legends := targets.legends:
+            for aob in legends.boxes:
+                _blankout_rect(aob.patch)
 
 
 class legend_box_background(themeable):

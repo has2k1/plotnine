@@ -96,8 +96,22 @@ title: Changelog
     or
 
     ```py
-    + guides(guide_legend(theme=theme_minimal())
+    + guides(color=guide_legend(theme=theme_minimal())
     ```
+
+  - You can now place legends at more than one position
+    around the panels. e.g.
+
+    ```py
+    + guides(
+        color=guide_colorbar(position="left"),
+        fill=guide_legend(position="bottom"),
+        size=guide_legend(position="bottom")
+    )
+    ```
+
+    Puts the `fill` and `size` guides at the bottom, and the
+    `color` guide on the left.
 
 ### Bug Fixes
 

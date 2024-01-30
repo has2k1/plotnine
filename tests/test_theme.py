@@ -16,6 +16,7 @@ from plotnine import (
     geom_point,
     ggplot,
     guide_colorbar,
+    guide_legend,
     guides,
     labs,
     scale_y_continuous,
@@ -312,6 +313,19 @@ class TestLayout:
         assert p1 == "turn_off_guide"
         assert p2 == "turn_off_guide"
         assert p3 == "turn_off_guide"
+
+    def test_legends_in_different_positions(self):
+        p = (
+            self.g
+            + aes(color="gear", fill="am", shape="factor(cyl)", alpha="vs")
+            + guides(
+                shape=guide_legend(position="bottom"),
+                color=guide_legend(position="left"),
+                alpha=guide_legend(position="left"),
+            )
+        )
+
+        assert p == "legends_in_different_positions"
 
     def test_facet_grid(self):
         p = self.g + facet_grid("am ~ gear")

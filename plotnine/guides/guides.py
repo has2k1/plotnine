@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from dataclasses import dataclass, fields
 from functools import cached_property
 from typing import TYPE_CHECKING, cast
@@ -10,6 +11,7 @@ import pandas as pd
 
 from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..iapi import grouped_legends
 from ..mapping.aes import rename_aesthetics
 from ..themes import theme
 from .guide import guide
@@ -26,6 +28,7 @@ if TYPE_CHECKING:
         Justification,
         LegendOnly,
         LegendOrColorbar,
+        LegendPosition,
         NoGuide,
         Orientation,
         SidePosition,
@@ -75,6 +78,7 @@ class guides:
         self.plot: ggplot
         self.plot_scales: Scales
         self.plot_labels: labels_view
+        self.elements: GuidesElements
 
         if self.colour is not None and self.color is not None:
             raise ValueError("Got a guide for color and colour, choose one.")
@@ -259,6 +263,66 @@ class guides:
             g.theme = cast(theme, g.theme)
             g.theme.apply()
 
+    def _assemble_guides(
+        self,
+        gdefs: list[guide],
+        boxes: list[PackerBase],
+    ) -> grouped_legends:
+        """
+        Assemble guides into Anchored Offset boxes depending on location
+        """
+        from matplotlib.font_manager import FontProperties
+        from matplotlib.offsetbox import AnchoredOffsetbox, HPacker, VPacker
+
+        elements = self.elements
+
+        # Combine all the guides into a single box
+        # The direction matters only when there is more than legend
+        lookup: dict[Orientation, type[PackerBase]] = {
+            "horizontal": HPacker,
+            "vertical": VPacker,
+        }
+
+        def _anchored_offset_box(boxes: list[PackerBase]):
+            """
+            Put a group of guides into a single box for drawing
+            """
+            packer = lookup[elements.box]
+
+            box = packer(
+                children=boxes,  # type: ignore
+                align=elements.box_just,
+                pad=elements.box_margin,
+                sep=elements.spacing,
+            )
+
+            return AnchoredOffsetbox(
+                loc="center",
+                child=box,
+                pad=1,
+                frameon=False,
+                prop=FontProperties(size=0, stretch=0),
+                bbox_to_anchor=(0, 0),
+                bbox_transform=self.plot.figure.transFigure,
+                borderpad=0.0,
+                zorder=99.1,
+            )
+
+        groups: dict[LegendPosition, list[PackerBase]] = defaultdict(list)
+        legends = grouped_legends()
+
+        for g, b in zip(gdefs, boxes):
+            groups[g._resolved_position].append(b)
+
+        for position, group in groups.items():
+            aob = _anchored_offset_box(group)
+            if isinstance(position, str):
+                setattr(legends, position, aob)
+            else:
+                legends.xy.append((position, aob))
+
+        return legends
+
     def draw(self, plot: ggplot) -> Optional[OffsetBox]:
         """
         Draw guides onto the figure
@@ -279,7 +343,8 @@ class guides:
 
         self.plot = plot
 
-        elements = GuidesElements(plot.theme)
+        self.elements = GuidesElements(plot.theme)
+        elements = self.elements
 
         if elements.position is None:
             return
@@ -294,7 +359,7 @@ class guides:
         # place the guides according to the guide.order
         default = max(g.order for g in gdefs) + 1
         orders = [default if g.order == 0 else g.order for g in gdefs]
-        idx = np.argsort(orders)
+        idx: list[int] = list(np.argsort(orders))
         gdefs = [gdefs[i] for i in idx]
 
         # Draw each guide into a box
@@ -303,36 +368,11 @@ class guides:
         guide_boxes = [g.draw() for g in gdefs]
 
         self._apply_guide_themes(gdefs)
+        legends = self._assemble_guides(gdefs, guide_boxes)
+        for aob in legends.boxes:
+            plot.figure.add_artist(aob)
 
-        # Combine all the guides into a single box
-        # Direction. It only matters when there is more than legend
-        lookup: dict[Orientation, type[PackerBase]] = {
-            "horizontal": HPacker,
-            "vertical": VPacker,
-        }
-
-        packer = lookup[elements.box]
-        guides_box = packer(
-            children=guide_boxes,
-            align=elements.box_just,
-            pad=elements.box_margin,
-            sep=elements.spacing,
-        )
-
-        # Wrap the guides for addition to the figure
-        anchored_box = AnchoredOffsetbox(
-            loc="center",
-            child=guides_box,
-            pad=1,
-            frameon=False,
-            prop=FontProperties(size=0, stretch=0),
-            bbox_to_anchor=(0, 0),
-            bbox_transform=plot.figure.transFigure,
-            borderpad=0.0,
-            zorder=99.1,
-        )
-        targets.legend_background = anchored_box
-        plot.figure.add_artist(anchored_box)
+        targets.legends = legends
 
 
 @dataclass

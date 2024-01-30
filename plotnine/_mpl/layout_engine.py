@@ -13,6 +13,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.offsetbox import AnchoredOffsetbox
 
     from plotnine import ggplot
+    from plotnine.iapi import grouped_legends
     from plotnine.typing import (
         Any,
         Axes,
@@ -36,10 +37,9 @@ class LayoutPack:
     facet: Facet
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
-    # The legend references the legend_background. That is the
-    # AnchoredOffsetbox that contains all the legends.
-    legend: Optional[AnchoredOffsetbox] = None
-    legend_position: Optional[LegendPosition] = None
+    # The legends references the structure that contains the
+    # AnchoredOffsetboxes (groups of legends)
+    legends: Optional[grouped_legends] = None
     plot_caption: Optional[Text] = None
     plot_subtitle: Optional[Text] = None
     plot_title: Optional[Text] = None
@@ -96,7 +96,6 @@ class PlotnineLayoutEngine(LayoutEngine):
                     return None
                 return t
 
-        legend_position = self.theme.getp("legend_position", None)
         return LayoutPack(
             axs=self.plot.axs,
             figure=self.plot.figure,
@@ -105,8 +104,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             facet=self.plot.facet,
             axis_title_x=get_target("axis_title_x"),
             axis_title_y=get_target("axis_title_y"),
-            legend=get_target("legend_background"),
-            legend_position=legend_position,
+            legends=get_target("legends"),
             plot_caption=get_target("plot_caption"),
             plot_subtitle=get_target("plot_subtitle"),
             plot_title=get_target("plot_title"),

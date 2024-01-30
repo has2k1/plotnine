@@ -6,12 +6,15 @@ of objects with data created when the plot is being built.
 """
 from __future__ import annotations
 
+import itertools
 import typing
 from copy import copy
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Dict, Iterator, Optional, Sequence
+    from typing import Any, Iterator, Optional, Sequence
+
+    from matplotlib.offsetbox import AnchoredOffsetbox
 
     from plotnine.typing import (
         Axes,
@@ -163,7 +166,7 @@ class mpl_save_view:
     """
 
     figure: Figure
-    kwargs: Dict[str, Any]
+    kwargs: dict[str, Any]
 
 
 @dataclass
@@ -261,3 +264,27 @@ class strip_label_details:
         result = self.copy()
         result.variables = {"value": ", ".join(result.variables.values())}
         return result
+
+
+@dataclass
+class grouped_legends:
+    """
+    Legend Artists
+    """
+
+    left: Optional[AnchoredOffsetbox] = None
+    right: Optional[AnchoredOffsetbox] = None
+    top: Optional[AnchoredOffsetbox] = None
+    bottom: Optional[AnchoredOffsetbox] = None
+    xy: list[tuple[TupleFloat2, AnchoredOffsetbox]] = field(
+        default_factory=list
+    )
+
+    @property
+    def boxes(self) -> list[AnchoredOffsetbox]:
+        """
+        Return list of all anchoredoffsetboxes for the legends
+        """
+        lrtb = (b for b in (self.left, self.right, self.top, self.bottom) if b)
+        xy = (b for _, b in self.xy)
+        return list(itertools.chain([*lrtb, *xy]))
