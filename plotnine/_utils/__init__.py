@@ -24,7 +24,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
 if TYPE_CHECKING:
-    from typing import Any, Callable, TypeVar
+    from typing import Any, Callable, Literal, TypeVar
 
     import numpy.typing as npt
     from matplotlib.typing import ColorType
@@ -38,6 +38,7 @@ if TYPE_CHECKING:
         FloatArrayLike,
         IntArray,
         SidePosition,
+        TupleFloat2,
     )
 
     T = TypeVar("T")
@@ -47,6 +48,17 @@ if TYPE_CHECKING:
 # (for lines). Given the adjustments in geom_point,
 # this factor gives us the match.
 SIZE_FACTOR = np.sqrt(np.pi)
+
+# A lookup for the coordinates of specific named positions on
+# a unit square.
+BOX_LOCATIONS: dict[str, TupleFloat2] = {
+    "left": (0, 0.5),
+    "right": (1, 0.5),
+    "top": (0.5, 1),
+    "bottom": (0.5, 0),
+    "center": (0.5, 0.5),
+    "centre": (0.5, 0.5),
+}
 
 
 def is_scalar(val):
@@ -1252,3 +1264,29 @@ def get_opposite_side(s: SidePosition) -> SidePosition:
         "bottom": "top",
     }
     return lookup[s]
+
+
+def ensure_xy_location(
+    loc: SidePosition | Literal["center"] | float | TupleFloat2,
+) -> TupleFloat2:
+    """
+    Convert input into (x, y) location
+
+    Parameters
+    ----------
+    loc:
+        A specification for a location that can be converted to
+        coordinate points on a unit-square. Note that, if the location
+        is (x, y) points, the same points are returned.
+    """
+    if loc in BOX_LOCATIONS:
+        return BOX_LOCATIONS[loc]
+    elif isinstance(loc, (float, int)):
+        return (loc, 0.5)
+    elif isinstance(loc, tuple):
+        h, v = loc
+        if isinstance(h, str) and isinstance(v, str):
+            return BOX_LOCATIONS[h][0], BOX_LOCATIONS[v][1]
+        if isinstance(h, (int, float)) and isinstance(v, (int, float)):
+            return (h, v)
+    raise ValueError(f"Cannot make a location from '{loc}'")

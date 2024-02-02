@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-from matplotlib.offsetbox import AuxTransformBox, DrawingArea
+from matplotlib.offsetbox import (
+    AnchoredOffsetbox,
+    AuxTransformBox,
+    DrawingArea,
+)
 from matplotlib.patches import bbox_artist as mbbox_artist
-from matplotlib.transforms import Affine2D
+from matplotlib.transforms import Affine2D, Bbox
 
 from .patches import InsideStrokedRectangle
 
@@ -88,3 +92,28 @@ class DPICorAuxTransformBox(AuxTransformBox):
 
         _bbox_artist(self, renderer, fill=False, props=dict(pad=0.0))
         self.stale = False
+
+
+class FlexibleAnchoredOffsetbox(AnchoredOffsetbox):
+    """
+    An AnchoredOffsetbox that accepts x, y location
+    """
+
+    def __init__(self, xy_loc: tuple[float, float] = (0.5, 0.5), **kwargs):
+        if "loc" in kwargs:
+            raise ValueError(
+                "FlexibleAnchoredOffsetbox does not use the 'loc' parameter"
+            )
+
+        super().__init__(loc="center", **kwargs)
+        self.xy_loc = xy_loc
+
+    def get_offset(self, bbox, renderer):  # type: ignore
+        pad = self.borderpad * renderer.points_to_pixels(
+            self.prop.get_size_in_points()
+        )
+        parentbbox = self.get_bbox_to_anchor()
+        _bbox = Bbox.from_bounds(0, 0, bbox.width, bbox.height)
+        container = parentbbox.padded(-pad)
+        x0, y0 = _bbox.anchored(self.xy_loc, container=container).p0
+        return x0 - bbox.x0, y0 - bbox.y0

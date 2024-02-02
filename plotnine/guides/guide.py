@@ -4,14 +4,14 @@ from abc import ABC
 from dataclasses import dataclass, field
 from functools import cached_property
 from types import SimpleNamespace as NS
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
-from .._utils import get_opposite_side, no_init_mutable
+from .._utils import ensure_xy_location, get_opposite_side, no_init_mutable
 from .._utils.registry import Register
 from ..themes.theme import theme as Theme
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Optional, TypeAlias
+    from typing import Literal, Optional, TypeAlias
 
     import pandas as pd
     from matplotlib.offsetbox import PackerBase
@@ -74,7 +74,7 @@ class guide(ABC, metaclass=Register):
         self.plot_layers: Layers
         self.plot_mapping: aes
         self._elements_cls = GuideElements
-        self.elements: Any
+        self.elements = cast(GuideElements, None)
 
     def legend_aesthetics(self, layer):
         """
@@ -118,6 +118,8 @@ class guide(ABC, metaclass=Register):
     def _resolved_position(self) -> LegendPosition:
         """
         Return the position to draw the guide
+
+        This is taken from the parameter or theme
         """
         return self.elements.position
 
@@ -210,10 +212,25 @@ class GuideElements:
         return direction
 
     @cached_property
-    def position(self) -> LegendPosition | None:
-        if (pos := self.theme.getp("legend_position", "none")) == "none":
-            return None
-        return self.guide.position or pos
+    def position(self) -> LegendPosition:
+        if (guide_pos := self.guide.position) == "inside":
+            guide_pos = self._position_inside
+
+        if guide_pos:
+            return guide_pos
+
+        if (pos := self.theme.getp("legend_position", "right")) == "inside":
+            pos = self._position_inside
+        return pos
+
+    @cached_property
+    def _position_inside(self) -> LegendPosition:
+        pos = self.theme.getp("legend_position_inside")
+        if isinstance(pos, tuple):
+            return pos
+
+        just = self.theme.getp("legend_justification_inside", (0.5, 0.5))
+        return ensure_xy_location(just)
 
     #  These do not track the themeables directly
     @cached_property

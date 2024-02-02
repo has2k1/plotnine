@@ -10,7 +10,6 @@ if typing.TYPE_CHECKING:
     from typing import Optional
 
     from matplotlib.backend_bases import RendererBase
-    from matplotlib.offsetbox import AnchoredOffsetbox
 
     from plotnine import ggplot
     from plotnine.iapi import grouped_legends
@@ -19,7 +18,6 @@ if typing.TYPE_CHECKING:
         Axes,
         Facet,
         Figure,
-        LegendPosition,
         Theme,
     )
 
@@ -75,8 +73,8 @@ class PlotnineLayoutEngine(LayoutEngine):
         with getattr(pack.renderer, "_draw_disabled", nullcontext)():
             tparams = get_plotnine_tight_layout(pack)
 
+        fig.subplots_adjust(**asdict(tparams.params))
         set_figure_artist_positions(pack, tparams)
-        fig.subplots_adjust(**asdict(tparams.grid))
 
     def setup(self) -> LayoutPack:
         """

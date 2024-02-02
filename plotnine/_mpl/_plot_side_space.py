@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass, fields
+from functools import cached_property
 from itertools import chain
 from typing import TYPE_CHECKING, cast
 
@@ -34,7 +35,7 @@ if TYPE_CHECKING:
 
     from matplotlib.axis import Tick
 
-    from plotnine.typing import Artist, Axes, Text
+    from plotnine.typing import Artist, Axes, Text, TupleFloat2
 
     from .layout_engine import LayoutPack
 
@@ -109,6 +110,31 @@ class _side_spaces(ABC):
 
         return sum(getattr(self, f.name) for f in _fields_upto(item))
 
+    @cached_property
+    def _legend_size(self) -> TupleFloat2:
+        """
+        Return size of legend in figure coordinates
+
+        We need this to accurately justify the legend by proprotional
+        values e.g. 0.2, instead of just left, right, top,  bottom &
+        center.
+        """
+        return (0, 0)
+
+    @cached_property
+    def _legend_width(self) -> float:
+        """
+        Return width of legend in figure coordinates
+        """
+        return self._legend_size[0]
+
+    @cached_property
+    def _legend_height(self) -> float:
+        """
+        Return height of legend in figure coordinates
+        """
+        return self._legend_size[1]
+
 
 @dataclass
 class left_spaces(_side_spaces):
@@ -132,9 +158,7 @@ class left_spaces(_side_spaces):
 
         self.plot_margin = theme.getp("plot_margin_left")
         if pack.legends and pack.legends.left:
-            self.legend += bbox_in_figure_space(
-                pack.legends.left, pack.figure, pack.renderer
-            ).width
+            self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
         if pack.axis_title_y:
@@ -156,6 +180,16 @@ class left_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
+
+    @cached_property
+    def _legend_size(self) -> TupleFloat2:
+        if not (self.pack.legends and self.pack.legends.left):
+            return (0, 0)
+
+        bbox = bbox_in_figure_space(
+            self.pack.legends.left.box, self.pack.figure, self.pack.renderer
+        )
+        return bbox.width, bbox.height
 
     def edge(self, item: str) -> float:
         """
@@ -183,9 +217,7 @@ class right_spaces(_side_spaces):
 
         self.plot_margin = theme.getp("plot_margin_right")
         if pack.legends and pack.legends.right:
-            self.legend = bbox_in_figure_space(
-                pack.legends.right, pack.figure, pack.renderer
-            ).width
+            self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
         right_strips = get_right_strip_boxpatches_in_last_col(pack.axs)
@@ -198,6 +230,16 @@ class right_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
+
+    @cached_property
+    def _legend_size(self) -> TupleFloat2:
+        if not (self.pack.legends and self.pack.legends.right):
+            return (0, 0)
+
+        bbox = bbox_in_figure_space(
+            self.pack.legends.right.box, self.pack.figure, self.pack.renderer
+        )
+        return bbox.width, bbox.height
 
     def edge(self, item: str) -> float:
         """
@@ -247,9 +289,7 @@ class top_spaces(_side_spaces):
             )
 
         if pack.legends and pack.legends.top:
-            self.legend = bbox_in_figure_space(
-                pack.legends.top, pack.figure, pack.renderer
-            ).height
+            self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         top_strips = get_top_strip_boxpatches_in_first_row(pack.axs)
@@ -262,6 +302,16 @@ class top_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
+
+    @cached_property
+    def _legend_size(self) -> TupleFloat2:
+        if not (self.pack.legends and self.pack.legends.top):
+            return (0, 0)
+
+        bbox = bbox_in_figure_space(
+            self.pack.legends.top.box, self.pack.figure, self.pack.renderer
+        )
+        return bbox.width, bbox.height
 
     def edge(self, item: str) -> float:
         """
@@ -288,12 +338,6 @@ class bottom_spaces(_side_spaces):
     axis_xlabels: float = 0
     axis_xticks: float = 0
 
-    def edge(self, item: str) -> float:
-        """
-        Distance w.r.t figure height from the bottom edge of the figure
-        """
-        return self.sum_upto(item)
-
     def _calculate(self):
         pack = self.pack
         theme = self.pack.theme
@@ -311,9 +355,7 @@ class bottom_spaces(_side_spaces):
             )
 
         if pack.legends and pack.legends.bottom:
-            self.legend = bbox_in_figure_space(
-                pack.legends.bottom, pack.figure, pack.renderer
-            ).height
+            self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if pack.axis_title_x:
@@ -335,6 +377,22 @@ class bottom_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
+
+    @cached_property
+    def _legend_size(self) -> TupleFloat2:
+        if not (self.pack.legends and self.pack.legends.bottom):
+            return (0, 0)
+
+        bbox = bbox_in_figure_space(
+            self.pack.legends.bottom.box, self.pack.figure, self.pack.renderer
+        )
+        return bbox.width, bbox.height
+
+    def edge(self, item: str) -> float:
+        """
+        Distance w.r.t figure height from the bottom edge of the figure
+        """
+        return self.sum_upto(item)
 
 
 @dataclass

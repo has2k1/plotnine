@@ -7,14 +7,12 @@ of objects with data created when the plot is being built.
 from __future__ import annotations
 
 import itertools
-import typing
 from copy import copy
 from dataclasses import dataclass, field, fields
+from typing import TYPE_CHECKING
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any, Iterator, Optional, Sequence
-
-    from matplotlib.offsetbox import AnchoredOffsetbox
 
     from plotnine.typing import (
         Axes,
@@ -28,6 +26,8 @@ if typing.TYPE_CHECKING:
         StripPosition,
         TupleFloat2,
     )
+
+    from ._mpl.offsetbox import FlexibleAnchoredOffsetbox
 
 
 @dataclass
@@ -267,24 +267,58 @@ class strip_label_details:
 
 
 @dataclass
+class legend_justifications_view:
+    """
+    Global holder for how the legends should be justified
+    """
+
+    left: float = 0.5
+    right: float = 0.5
+    top: float = 0.5
+    bottom: float = 0.5
+    inside: Optional[TupleFloat2] = None
+
+
+@dataclass
+class outside_legend:
+    """
+    What is required to layout an outside legend
+    """
+
+    box: FlexibleAnchoredOffsetbox
+    justification: float
+
+
+@dataclass
+class inside_legend:
+    """
+    What is required to layout an inside legend
+    """
+
+    box: FlexibleAnchoredOffsetbox
+    justification: TupleFloat2
+    position: TupleFloat2
+
+
+@dataclass
 class grouped_legends:
     """
     Legend Artists
     """
 
-    left: Optional[AnchoredOffsetbox] = None
-    right: Optional[AnchoredOffsetbox] = None
-    top: Optional[AnchoredOffsetbox] = None
-    bottom: Optional[AnchoredOffsetbox] = None
-    xy: list[tuple[TupleFloat2, AnchoredOffsetbox]] = field(
-        default_factory=list
-    )
+    left: Optional[outside_legend] = None
+    right: Optional[outside_legend] = None
+    top: Optional[outside_legend] = None
+    bottom: Optional[outside_legend] = None
+    xy: list[inside_legend] = field(default_factory=list)
 
     @property
-    def boxes(self) -> list[AnchoredOffsetbox]:
+    def boxes(self) -> list[FlexibleAnchoredOffsetbox]:
         """
-        Return list of all anchoredoffsetboxes for the legends
+        Return list of all AnchoredOffsetboxes for the legends
         """
-        lrtb = (b for b in (self.left, self.right, self.top, self.bottom) if b)
-        xy = (b for _, b in self.xy)
+        lrtb = (
+            l.box for l in (self.left, self.right, self.top, self.bottom) if l
+        )
+        xy = (l.box for l in self.xy)
         return list(itertools.chain([*lrtb, *xy]))
