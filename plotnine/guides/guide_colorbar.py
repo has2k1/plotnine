@@ -227,10 +227,6 @@ class guide_colorbar(guide):
         else:
             add_gradient_colorbar(auxbox, colors, elements, raster)
 
-        # frame
-        frame = add_frame(auxbox, elements)
-        targets.legend_frame = frame
-
         # ticks
         visible = slice(
             None if self.draw_llim else 1,
@@ -238,6 +234,10 @@ class guide_colorbar(guide):
         )
         coll = add_ticks(auxbox, tick_locations[visible], elements)
         targets.legend_ticks = coll
+
+        # frame
+        frame = add_frame(auxbox, elements)
+        targets.legend_frame = frame
 
         # title + colorbar(with labels)
         lookup: dict[SidePosition, tuple[type[PackerBase], slice]] = {
