@@ -1,23 +1,29 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass, fields
+from dataclasses import asdict, dataclass, fields
 from functools import cached_property
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Literal, cast
 from warnings import warn
 
 import numpy as np
 import pandas as pd
 
+from .._utils import ensure_xy_location
 from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..iapi import grouped_legends
+from ..iapi import (
+    grouped_legends,
+    inside_legend,
+    legend_justifications_view,
+    outside_legend,
+)
 from ..mapping.aes import rename_aesthetics
 from ..themes import theme
 from .guide import guide
 
 if TYPE_CHECKING:
-    from typing import Optional, Sequence
+    from typing import Literal, Optional, Sequence
 
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
@@ -25,15 +31,15 @@ if TYPE_CHECKING:
     from plotnine.iapi import labels_view
     from plotnine.scales.scales import Scales
     from plotnine.typing import (
-        Justification,
         LegendOnly,
         LegendOrColorbar,
         LegendPosition,
         NoGuide,
         Orientation,
-        SidePosition,
+        TextJustification,
         Theme,
     )
+
 
 # Terminology
 # -----------
@@ -272,7 +278,9 @@ class guides:
         Assemble guides into Anchored Offset boxes depending on location
         """
         from matplotlib.font_manager import FontProperties
-        from matplotlib.offsetbox import AnchoredOffsetbox, HPacker, VPacker
+        from matplotlib.offsetbox import HPacker, VPacker
+
+        from .._mpl.offsetbox import FlexibleAnchoredOffsetbox
 
         elements = self.elements
 
@@ -296,8 +304,8 @@ class guides:
                 sep=elements.spacing,
             )
 
-            return AnchoredOffsetbox(
-                loc="center",
+            return FlexibleAnchoredOffsetbox(
+                xy_loc=(0.5, 0.5),
                 child=box,
                 pad=1,
                 frameon=False,
@@ -310,6 +318,7 @@ class guides:
 
         groups: dict[LegendPosition, list[PackerBase]] = defaultdict(list)
         legends = grouped_legends()
+        just = asdict(self.elements.justification)
 
         for g, b in zip(gdefs, boxes):
             groups[g._resolved_position].append(b)
@@ -317,9 +326,11 @@ class guides:
         for position, group in groups.items():
             aob = _anchored_offset_box(group)
             if isinstance(position, str):
-                setattr(legends, position, aob)
+                setattr(legends, position, outside_legend(aob, just[position]))
             else:
-                legends.xy.append((position, aob))
+                if (just_inside := just["inside"]) is None:
+                    just_inside = position
+                legends.xy.append(inside_legend(aob, just_inside, position))
 
         return legends
 
@@ -338,21 +349,14 @@ class guides:
             A box that contains all the guides for the plot.
             If there are no guides, **None** is returned.
         """
-        from matplotlib.font_manager import FontProperties
-        from matplotlib.offsetbox import AnchoredOffsetbox, HPacker, VPacker
-
         self.plot = plot
-
         self.elements = GuidesElements(plot.theme)
-        elements = self.elements
 
-        if elements.position is None:
+        if self.elements.position == "none":
             return
 
         if not (gdefs := self._build()):
             return
-
-        targets = plot.theme.targets
 
         # Order of guides
         # 0 do not sort, any other sorts
@@ -372,7 +376,10 @@ class guides:
         for aob in legends.boxes:
             plot.figure.add_artist(aob)
 
-        targets.legends = legends
+        plot.theme.targets.legends = legends
+
+
+VALID_JUSTIFICATION_WORDS = {"left", "right", "top", "bottom", "center"}
 
 
 @dataclass
@@ -394,21 +401,40 @@ class GuidesElements:
         if not (box := self.theme.getp("legend_box")):
             box = (
                 "vertical"
-                if self.position in ("right", "left")
+                if self.position in {"left", "right"}
                 else "horizontal"
             )
         return box
 
     @cached_property
-    def position(self) -> Optional[SidePosition]:
-        position = self.theme.getp("legend_position", "none")
-        return None if position == "none" else position
+    def position(self) -> LegendPosition | Literal["none"]:
+        if (pos := self.theme.getp("legend_position", "right")) == "inside":
+            pos = self._position_inside
+        return pos
 
     @cached_property
-    def box_just(self) -> Justification:
+    def _position_inside(self) -> LegendPosition:
+        # We return the position inside the panels when it is explicitly
+        # set. Otherwise we return the justification inside the panels.
+        # We convert the string (left, right, ...) justifications into
+        # locations which justify the legend along the edges of the panel
+        # area.
+        # Overall when only the inside position is set, the same value is
+        # applied to the justification and vice-versa. Always defaulting
+        # to a center justification can have the legends close to the
+        # edge go out of bounds.
+        pos = self.theme.getp("legend_position_inside")
+        if isinstance(pos, tuple):
+            return pos
+
+        just = self.theme.getp("legend_justification_inside", (0.5, 0.5))
+        return ensure_xy_location(just)
+
+    @cached_property
+    def box_just(self) -> TextJustification:
         if not (box_just := self.theme.getp("legend_box_just")):
             box_just = (
-                "left" if self.position in ("right", "left") else "right"
+                "left" if self.position in {"left", "right"} else "right"
             )
         return box_just
 
@@ -419,3 +445,42 @@ class GuidesElements:
     @cached_property
     def spacing(self) -> float:
         return self.theme.getp("legend_spacing")
+
+    @cached_property
+    def justification(self):
+        # Don't bother, the legend has been turned off
+        if self.position == "none":
+            return legend_justifications_view()
+
+        dim_lookup = {"left": 0, "right": 0, "top": 1, "bottom": 1}
+
+        # Process justification for legend on left, right, top & bottom
+        def _lrtb(pos):
+            just = self.theme.getp(f"legend_justification_{pos}")
+            idx = dim_lookup[pos]
+            if just is None:
+                just = (0.5, 0.5)
+            elif just in VALID_JUSTIFICATION_WORDS:
+                just = ensure_xy_location(just)
+            elif isinstance(just, (float, int)):
+                just = (just, just)
+            return just[idx]
+
+        # Process justification for legend inside the panels
+        def _inside():
+            just = self.theme.getp("legend_justification_inside")
+            if just is None:
+                return None
+            return ensure_xy_location(just)
+
+        # For legends outside the panels, the default justification is
+        # the center (0.5). For legends inside the panels, the default
+        # is the position. The final value of the position comes from
+        # the guide._final_position.
+        return legend_justifications_view(
+            left=_lrtb("left"),
+            right=_lrtb("right"),
+            top=_lrtb("top"),
+            bottom=_lrtb("bottom"),
+            inside=_inside(),
+        )

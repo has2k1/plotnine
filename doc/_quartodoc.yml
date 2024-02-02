@@ -450,12 +450,19 @@ quartodoc:
         - legend_key_spacing_x
         - legend_key_spacing_y
         - legend_frame
+        - legend_justification
+        - legend_justification_bottom
+        - legend_justification_inside
+        - legend_justification_left
+        - legend_justification_right
+        - legend_justification_top
         - legend_key
         - legend_key_height
         - legend_key_size
         - legend_key_width
         - legend_margin
         - legend_position
+        - legend_position_inside
         - legend_spacing
         - legend_text
         - legend_text_colorbar

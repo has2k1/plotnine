@@ -262,7 +262,9 @@ CoordRange: TypeAlias = TupleFloat2
 
 # Guide
 SidePosition: TypeAlias = Literal["left", "right", "top", "bottom"]
-LegendPosition: TypeAlias = SidePosition | tuple[float, float]
+LegendPosition: TypeAlias = (
+    Literal["left", "right", "top", "bottom", "inside"] | tuple[float, float]
+)
 Orientation: TypeAlias = Literal["horizontal", "vertical"]
 GuideKind: TypeAlias = Literal["legend", "colorbar", "colourbar"]
 LegendOrColorbar: TypeAlias = (
@@ -270,6 +272,8 @@ LegendOrColorbar: TypeAlias = (
 )
 NoGuide: TypeAlias = Literal["none", False]
 LegendOnly: TypeAlias = guide_legend | Literal["legend"]
-Justification: TypeAlias = Literal[
-    "left", "right", "top", "bottom", "center", "baseline"
-]
+VerticalJustification: TypeAlias = Literal["bottom", "center", "top"]
+HorizontalJustification: TypeAlias = Literal["left", "center", "right"]
+TextJustification: TypeAlias = (
+    VerticalJustification | HorizontalJustification | Literal["baseline"]
+)

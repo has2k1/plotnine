@@ -2034,13 +2034,107 @@ class legend_box_margin(themeable):
 
 class legend_box_just(themeable):
     """
-    Justification of legend boxes
+    Justification of guide boxes
 
     Parameters
     ----------
-    theme_element : "left", "right", "center", "top", "bottom", "baseline", \
-                    default=None
+    theme_element : Literal["left", "right", "center", "top", "bottom", \
+                    "baseline"], default=None
         If `None`, the value that will apply depends on :class:`legend_box`.
+    """
+
+
+class legend_justification_right(themeable):
+    """
+    Justification of legends placed on the right
+
+    Parameters
+    ----------
+    theme_element : Literal["bottom", "center", "top"] | float
+        How to justify the entire group with 1 or more guides. i.e. How
+        to slide the legend along the right column.
+        If a float, it should be in the range `[0, 1]`, where
+        `0` is `"bottom"` and `1` is `"top"`.
+    """
+
+
+class legend_justification_left(themeable):
+    """
+    Justification of legends placed on the left
+
+    Parameters
+    ----------
+    theme_element : Literal["bottom", "center", "top"] | float
+        How to justify the entire group with 1 or more guides. i.e. How
+        to slide the legend along the left column.
+        If a float, it should be in the range `[0, 1]`, where
+        `0` is `"bottom"` and `1` is `"top"`.
+    """
+
+
+class legend_justification_top(themeable):
+    """
+    Justification of legends placed at the top
+
+    Parameters
+    ----------
+    theme_element : Literal["left", "center", "right"] | float
+        How to justify the entire group with 1 or more guides. i.e. How
+        to slide the legend along the top row.
+        If a float, it should be in the range `[0, 1]`, where
+        `0` is `"left"` and `1` is `"right"`.
+    """
+
+
+class legend_justification_bottom(themeable):
+    """
+    Justification of legends placed at the bottom
+
+    Parameters
+    ----------
+    theme_element : Literal["left", "center", "right"] | float
+        How to justify the entire group with 1 or more guides. i.e. How
+        to slide the legend along the bottom row.
+        If a float, it should be in the range `[0, 1]`, where
+        `0` is `"left"` and `1` is `"right"`.
+    """
+
+
+class legend_justification_inside(themeable):
+    """
+    Justification of legends placed inside the axes
+
+    Parameters
+    ----------
+    theme_element : Literal["left", "right", "center", "top", "bottom"] | \
+                    float | tuple[float, float]
+        How to justify the entire group with 1 or more guides. i.e. What
+        point of the legend box to place at the destination point in the
+        panels area.
+
+        If a float, it should be in the range `[0, 1]`, and it implies the
+        horizontal part and with the vertical part fixed at `0.5`.
+
+        Therefore a float value of `0.8` equivalent to a tuple value of
+        `(0.8, 0.5)`.
+    """
+
+
+class legend_justification(
+    legend_justification_right,
+    legend_justification_left,
+    legend_justification_top,
+    legend_justification_bottom,
+    legend_justification_inside,
+):
+    """
+    Justification of any legend
+
+    Parameters
+    ----------
+    theme_element : Literal["left", "right", "center", "top", "bottom"] | \
+                    float | tuple[float, float]
+        How to justify the entire group with 1 or more guides.
     """
 
 
@@ -2132,16 +2226,36 @@ class legend_spacing(themeable):
     """
 
 
-class legend_position(themeable):
+class legend_position_inside(themeable):
     """
     Location of legend
 
     Parameters
     ----------
-    theme_element : "right" | "left" | "top" | "bottom" | tuple | None
-        If None, no legend.
-        If a tuple, 2-floats in the range `[0, 1]` for the location
-        in screen coordinates.
+    theme_element : tuple[float, float]
+        Where to place legends that are inside the panels / facets area.
+        The values should be in the range `[0, 1]`. The default is to
+        put it in the center (`(.5, .5)`) of the panels area.
+    """
+
+
+class legend_position(legend_position_inside):
+    """
+    Location of legend
+
+    Parameters
+    ----------
+    theme_element : Literal["right", "left", "top", "bottom", "inside"] | \
+                    tuple[float, float] | Literal["none"]
+        Where to put the legend. Along the edge or inside the panels.
+
+        If "inside", the default location is
+        [](:class:`~plotnine.themes.themeable.legend_position_inside`).
+
+        A tuple of values implies "inside" the panels at those exact values,
+        which should be in the range `[0, 1]` within the panels area.
+
+        A value of `"none"` turns off the legend.
     """
 
 
@@ -2151,7 +2265,7 @@ class legend_title_position(themeable):
 
     Parameters
     ----------
-    theme_element : None | "top" | "bottom" | "left" | "right"
+    theme_element : Literal["top", "bottom", "left", "right"] | None
         Position of the legend title. The default depends on the position
         of the legend.
     """
@@ -2165,8 +2279,8 @@ class legend_text_position(themeable):
 
     Parameters
     ----------
-    theme_element : None | "top" | "bottom" | "left" | "right"
-        Position of the legend key text. The default, depends on the
+    theme_element : Literal["top", "bottom", "left", "right"] | None
+        Position of the legend key text. The default depends on the
         position of the legend.
     """
 

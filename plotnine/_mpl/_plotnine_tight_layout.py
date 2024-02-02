@@ -14,18 +14,19 @@ import typing
 from copy import deepcopy
 from dataclasses import dataclass
 
-from matplotlib.offsetbox import AnchoredOffsetbox
-
 from ._plot_side_space import LRTBSpaces, WHSpaceParts, calculate_panel_spacing
+from .utils import get_transPanels
 
 if typing.TYPE_CHECKING:
     from typing import Literal, TypeAlias
 
+    from matplotlib.transforms import Transform
+
+    from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine.iapi import grouped_legends
     from plotnine.typing import (
         Facet,
         Figure,
-        LegendPosition,
         Text,
         TupleFloat2,
     )
@@ -61,7 +62,7 @@ class TightParams:
     gullies: WHSpaceParts
 
     def __post_init__(self):
-        self.grid = GridSpecParams(
+        self.params = GridSpecParams(
             left=self.sides.left,
             right=self.sides.right,
             top=self.sides.top,
@@ -89,9 +90,7 @@ class TightParams:
         """
         Reduce the height of axes to get the aspect ratio
         """
-        params = deepcopy(self)
-        sides = params.sides
-        grid = params.grid
+        self = deepcopy(self)
 
         # New height w.r.t figure height
         h1 = ratio * parts.w * (parts.W / parts.H)
@@ -100,14 +99,14 @@ class TightParams:
         dh = (parts.h - h1) * facet.nrow / 2
 
         # Reduce plot area height
-        grid.top -= dh
-        grid.bottom += dh
-        grid.hspace = parts.sh / h1
+        self.params.top -= dh
+        self.params.bottom += dh
+        self.params.hspace = parts.sh / h1
 
         # Add more vertical plot margin
-        sides.t.plot_margin += dh
-        sides.b.plot_margin += dh
-        return params
+        self.sides.t.plot_margin += dh
+        self.sides.b.plot_margin += dh
+        return self
 
     def _reduce_width(
         self, facet: Facet, ratio: float, parts: WHSpaceParts
@@ -115,9 +114,7 @@ class TightParams:
         """
         Reduce the width of axes to get the aspect ratio
         """
-        params = deepcopy(self)
-        sides = params.sides
-        grid = params.grid
+        self = deepcopy(self)
 
         # New width w.r.t figure width
         w1 = (parts.h * parts.H) / (ratio * parts.W)
@@ -126,14 +123,14 @@ class TightParams:
         dw = (parts.w - w1) * facet.ncol / 2
 
         # Reduce width
-        grid.left += dw
-        grid.right -= dw
-        grid.wspace = parts.sw / w1
+        self.params.left += dw
+        self.params.right -= dw
+        self.params.wspace = parts.sw / w1
 
         # Add more horizontal margin
-        sides.l.plot_margin += dw
-        sides.r.plot_margin += dw
-        return params
+        self.sides.l.plot_margin += dw
+        self.sides.r.plot_margin += dw
+        return self
 
 
 def get_plotnine_tight_layout(pack: LayoutPack) -> TightParams:
@@ -158,7 +155,7 @@ def set_figure_artist_positions(
     """
     theme = pack.theme
     sides = tparams.sides
-    grid = tparams.grid
+    grid = tparams.params
 
     if pack.plot_title:
         ha = theme.getp(("plot_title", "ha"))
@@ -227,42 +224,61 @@ def set_legends_position(
     fig: Figure,
 ):
     """
-    Place legend and align it centerally with respect to the panels
+    Place legend on the figure and justify is a required
     """
 
     def set_position(
-        aob: AnchoredOffsetbox, anchor_point: TupleFloat2, loc: str
+        aob: FlexibleAnchoredOffsetbox,
+        anchor_point: TupleFloat2,
+        xy_loc: TupleFloat2,
+        transform: Transform = fig.transFigure,
     ):
-        aob.loc = AnchoredOffsetbox.codes[loc]
-        aob.set_bbox_to_anchor(anchor_point, fig.transFigure)  # type: ignore
+        """
+        Place box (by the anchor point) at given xy location
 
-    grid = tparams.grid
+        Parameters
+        ----------
+        aob :
+           Offsetbox to place
+        anchor_point :
+            Point on the Offsefbox.
+        xy_loc :
+            Point where to place the offsetbox.
+        transform :
+            Transformation
+        """
+        aob.xy_loc = xy_loc
+        aob.set_bbox_to_anchor(anchor_point, transform)  # type: ignore
+
     sides = tparams.sides
+    params = fig.subplotpars
 
     if legends.right:
-        y = (grid.top + grid.bottom) / 2
+        j = legends.right.justification
+        y = params.bottom * (1 - j) + (params.top - sides.r._legend_height) * j
         x = sides.r.edge("legend")
-        loc = "center right"
-        set_position(legends.right, (x, y), loc)
+        set_position(legends.right.box, (x, y), (1, 0))
 
     if legends.left:
-        y = (grid.top + grid.bottom) / 2
+        j = legends.left.justification
+        y = params.bottom * (1 - j) + (params.top - sides.l._legend_height) * j
         x = sides.l.edge("legend")
-        loc = "center left"
-        set_position(legends.left, (x, y), loc)
+        set_position(legends.left.box, (x, y), (0, 0))
 
     if legends.top:
-        x = (grid.right + grid.left) / 2
+        j = legends.top.justification
+        x = params.left * (1 - j) + (params.right - sides.t._legend_width) * j
         y = sides.t.edge("legend")
-        loc = "upper center"
-        set_position(legends.top, (x, y), loc)
+        set_position(legends.top.box, (x, y), (0, 1))
 
     if legends.bottom:
-        x = (grid.right + grid.left) / 2
+        j = legends.bottom.justification
+        x = params.left * (1 - j) + (params.right - sides.b._legend_width) * j
         y = sides.b.edge("legend")
-        loc = "lower center"
-        set_position(legends.bottom, (x, y), loc)
+        set_position(legends.bottom.box, (x, y), (0, 0))
 
+    # Inside legends are placed using the panels coordinate system
     if legends.xy:
-        for (x, y), _legend in legends.xy:
-            set_position(_legend, (x, y), "center")
+        transPanels = get_transPanels(fig)
+        for l in legends.xy:
+            set_position(l.box, l.position, l.justification, transPanels)

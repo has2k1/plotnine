@@ -381,3 +381,93 @@ class TestLayout:
         )
 
         assert p == "different_colorbar_themes"
+
+
+class TestLegendPositioning:
+    g = ggplot(mtcars, aes(x="wt", y="mpg", color="gear")) + geom_point()
+
+    def test_outside_legend_right_bottom(self):
+        p = self.g + theme(legend_justification=0)
+        assert p == "outside_legend_right_bottom"
+
+    def test_outside_legend_left_top(self):
+        p = self.g + theme(
+            legend_position="left",
+            legend_justification=1,
+        )
+        assert p == "outside_legend_left_top"
+
+    def test_outside_legend_bottom_left(self):
+        p = self.g + theme(
+            legend_position="bottom",
+            legend_justification=0,
+        )
+        assert p == "outside_legend_bottom_left"
+
+    def test_outside_legend_top_right(self):
+        p = self.g + theme(
+            legend_position="top",
+            legend_justification=1,
+        )
+        assert p == "outside_legend_top_right"
+
+    def test_inside_legend_left(self):
+        p = self.g + theme(
+            legend_position="inside",
+            legend_justification="left",
+        )
+        assert p == "inside_legend_left"
+
+    def test_inside_legend_left2(self):
+        p = self.g + theme(
+            legend_position="inside",
+            legend_justification=(0, 0.5),
+        )
+        assert p == "inside_legend_left"
+
+    def test_inside_legend_top(self):
+        p = self.g + theme(
+            legend_position="inside",
+            legend_justification="top",
+        )
+        assert p == "inside_legend_top"
+
+    def test_inside_legend_top2(self):
+        p = self.g + theme(legend_position=(0.5, 1))
+        assert p == "inside_legend_top"
+
+    def test_inside_legend_top_right(self):
+        p = self.g + theme(
+            legend_position="inside",
+            legend_justification=(1, 1),
+        )
+        assert p == "inside_legend_top_right"
+
+    def test_inside_legend_top_right2(self):
+        p = self.g + theme(
+            legend_position="inside",
+            legend_position_inside=(1, 1),
+        )
+        assert p == "inside_legend_top_right"
+
+    def test_inside_legend_top_right3(self):
+        p = (
+            self.g
+            + guides(color=guide_colorbar(position="inside"))
+            + theme(legend_position_inside=(1, 1))
+        )
+        assert p == "inside_legend_top_right"
+
+    def test_inside_legend_top_right4(self):
+        p = self.g + guides(color=guide_colorbar(position=(1, 1)))
+        assert p == "inside_legend_top_right"
+
+    def test_inside_legend_90pct_top_right(self):
+        # Use an equal aspect ratio to easily check that the
+        # top-right tip of the legend is at 90% along both dimensions
+        p = self.g + theme(
+            aspect_ratio=1,
+            legend_position=(0.9, 0.9),
+            legend_justification=(1, 1),
+        )
+        assert p == "inside_legend_90pct_top_right"

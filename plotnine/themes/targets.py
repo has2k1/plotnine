@@ -7,7 +7,6 @@ if TYPE_CHECKING:
     from typing import Optional, Sequence, TypeAlias
 
     from matplotlib.collections import LineCollection
-    from matplotlib.offsetbox import AnchoredOffsetbox
     from matplotlib.patches import Rectangle
     from matplotlib.text import Text
 
