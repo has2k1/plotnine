@@ -396,7 +396,7 @@ def add_ticks(auxbox, locations, elements) -> LineCollection:
                 ]
             )
 
-    coll = LineCollection(segments, antialiased=False, snap=True)
+    coll = LineCollection(segments)
     auxbox.add_artist(coll)
     return coll
 
@@ -453,9 +453,7 @@ def add_frame(auxbox, elements):
     if elements.is_horizontal:
         width, height = height, width
 
-    rect = Rectangle(
-        (0, 0), width, height, facecolor="none", antialiased=False, snap=True
-    )
+    rect = Rectangle((0, 0), width, height, facecolor="none")
     auxbox.add_artist(rect)
     return rect
 
