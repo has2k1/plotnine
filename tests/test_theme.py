@@ -355,12 +355,13 @@ class TestLayout:
         p = (
             ggplot(data, aes("x", "y"))
             + geom_point()
-            + scale_y_continuous(labels="0 1 2 3 four-four".split())
+            + scale_y_continuous(labels="0 1 2 3 four-four-four-four".split())
             + labs(title="Protruding Axis Text")
             + theme(
                 axis_text_y=element_text(
                     rotation=(0, 0, 0, 0, 90),
                     color=("black", "black", "black", "black", "red"),
+                    va="center",
                 ),
             )
         )
