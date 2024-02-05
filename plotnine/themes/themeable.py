@@ -1310,7 +1310,8 @@ class legend_key(MixinSequenceOfValues):
         if properties.get("edgecolor") in ("none", "None"):
             properties["linewidth"] = 0
 
-        self.set(targets.legend_key, properties)
+        rects = [da.patch for da in targets.legend_key]
+        self.set(rects, properties)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -1405,6 +1406,9 @@ class panel_background(themeable):
         if "facecolor" in d and "alpha" in d:
             d["facecolor"] = to_rgba(d["facecolor"], d["alpha"])
             del d["alpha"]
+
+        d["edgecolor"] = "none"
+        d["linewidth"] = 0
         ax.patch.set(**d)
 
     def blank_ax(self, ax: Axes):
@@ -1412,7 +1416,7 @@ class panel_background(themeable):
         _blankout_rect(ax.patch)
 
 
-class panel_border(themeable):
+class panel_border(MixinSequenceOfValues):
     """
     Panel border
 
@@ -1423,22 +1427,27 @@ class panel_border(themeable):
 
     _omit = ["facecolor"]
 
-    def apply_ax(self, ax: Axes):
-        super().apply_ax(ax)
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if not (rects := targets.panel_border):
+            return
+
         d = self.properties
-        # Be lenient if using element_line
+
         with suppress(KeyError):
-            d["edgecolor"] = d.pop("color")
+            if d["edgecolor"] == "none" or d["size"] == 0:
+                return
 
         if "edgecolor" in d and "alpha" in d:
             d["edgecolor"] = to_rgba(d["edgecolor"], d["alpha"])
             del d["alpha"]
 
-        ax.patch.set(**d)
+        self.set(rects, d)
 
-    def blank_ax(self, ax: Axes):
-        super().blank_ax(ax)
-        ax.patch.set_linewidth(0)
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        for rect in targets.panel_border:
+            _blankout_rect(rect)
 
 
 class plot_background(themeable):

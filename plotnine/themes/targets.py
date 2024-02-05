@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Optional, Sequence, TypeAlias
+    from typing import Optional, Sequence
 
     from matplotlib.collections import LineCollection
     from matplotlib.patches import Rectangle
@@ -13,11 +13,7 @@ if TYPE_CHECKING:
     from plotnine._mpl.offsetbox import ColoredDrawingArea
     from plotnine._mpl.patches import FancyBboxPatch
     from plotnine._mpl.text import SText
-    from plotnine.iapi import grouped_legends
-
-    FancyPatches: TypeAlias = list[FancyBboxPatch]
-    ColoredAreas: TypeAlias = list[ColoredDrawingArea]
-    STexts: TypeAlias = list[SText]
+    from plotnine.iapi import legend_artists
 
 
 @dataclass
@@ -32,16 +28,17 @@ class ThemeTargets:
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
     legend_frame: Optional[Rectangle] = None
-    legend_key: Optional[ColoredAreas] = field(default_factory=list)
-    legends: Optional[grouped_legends] = None
+    legend_key: list[ColoredDrawingArea] = field(default_factory=list)
+    legends: Optional[legend_artists] = None
     legend_text_colorbar: Sequence[Text] = field(default_factory=list)
     legend_text_legend: Sequence[Text] = field(default_factory=list)
     legend_ticks: Optional[LineCollection] = None
     legend_title: Optional[Text] = None
+    panel_border: list[Rectangle] = field(default_factory=list)
     plot_caption: Optional[Text] = None
     plot_subtitle: Optional[Text] = None
     plot_title: Optional[Text] = None
-    strip_background_x: FancyPatches = field(default_factory=list)
-    strip_background_y: FancyPatches = field(default_factory=list)
-    strip_text_x: STexts = field(default_factory=list)
-    strip_text_y: STexts = field(default_factory=list)
+    strip_background_x: list[FancyBboxPatch] = field(default_factory=list)
+    strip_background_y: list[FancyBboxPatch] = field(default_factory=list)
+    strip_text_x: list[SText] = field(default_factory=list)
+    strip_text_y: list[SText] = field(default_factory=list)

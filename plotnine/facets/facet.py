@@ -97,11 +97,6 @@ class facet:
     # Axes
     axs: list[Axes]
 
-    # The first and last axes according to how MPL creates them.
-    # Used for labelling the x and y axes,
-    first_ax: Axes
-    last_ax: Axes
-
     # Number of facet variables along the horizontal axis
     num_vars_x = 0
 
@@ -395,12 +390,11 @@ class facet:
 
         return result
 
-    def _create_subplots(
-        self, fig: Figure, layout: pd.DataFrame
-    ) -> list[Axes]:
+    def make_figure(self, layout: pd.DataFrame) -> tuple[Figure, list[Axes]]:
         """
-        Create suplots and return axs
+        Create and return Matplotlib figure and subplot axes
         """
+        import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
 
         num_panels = len(layout)
@@ -433,6 +427,8 @@ class facet:
                 "should match the number of rows."
             )
 
+        # Create figure & gridspec
+        figure: Figure = plt.figure()
         gs = GridSpec(
             self.nrow,
             self.ncol,
@@ -445,7 +441,7 @@ class facet:
         i = 1
         for row in range(self.nrow):
             for col in range(self.ncol):
-                axsarr[row, col] = fig.add_subplot(gs[i - 1])
+                axsarr[row, col] = figure.add_subplot(gs[i - 1])
                 i += 1
 
         # Rearrange axes
@@ -465,25 +461,9 @@ class facet:
 
         # Delete unused axes
         for ax in axs[num_panels:]:
-            fig.delaxes(ax)
+            figure.delaxes(ax)
         axs = axs[:num_panels]
-        return list(axs)
-
-    def make_axes(
-        self, figure: Figure, layout: pd.DataFrame, coordinates: Coord
-    ) -> list[Axes]:
-        """
-        Create and return Matplotlib axes
-        """
-        axs = self._create_subplots(figure, layout)
-
-        # Used for labelling the x and y axes, the first and
-        # last axes according to how MPL creates them.
-        self.first_ax = figure.axes[0]
-        self.last_ax = figure.axes[-1]
-        self.figure = figure
-        self.axs = axs
-        return axs
+        return figure, list(axs)
 
     def _aspect_ratio(self) -> Optional[float]:
         """
