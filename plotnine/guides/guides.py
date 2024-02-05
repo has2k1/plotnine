@@ -13,8 +13,8 @@ from .._utils import ensure_xy_location
 from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import (
-    grouped_legends,
     inside_legend,
+    legend_artists,
     legend_justifications_view,
     outside_legend,
 )
@@ -275,7 +275,7 @@ class guides:
         self,
         gdefs: list[guide],
         boxes: list[PackerBase],
-    ) -> grouped_legends:
+    ) -> legend_artists:
         """
         Assemble guides into Anchored Offset boxes depending on location
         """
@@ -327,8 +327,9 @@ class guides:
         for g, b in zip(gdefs, boxes):
             groups[g._resolved_position_justification].append(b)
 
+        legends = legend_artists()
+
         # Create an anchoredoffsetbox for each group/position
-        legends = grouped_legends()
         for (position, just), group in groups.items():
             aob = _anchored_offset_box(group)
             if isinstance(position, str) and isinstance(just, (float, int)):
@@ -336,7 +337,7 @@ class guides:
             else:
                 position = cast(tuple[float, float], position)
                 just = cast(tuple[float, float], just)
-                legends.xy.append(inside_legend(aob, just, position))
+                legends.inside.append(inside_legend(aob, just, position))
 
         return legends
 

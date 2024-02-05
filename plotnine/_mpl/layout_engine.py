@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
 
     from plotnine import ggplot
-    from plotnine.iapi import grouped_legends
+    from plotnine.iapi import legend_artists
     from plotnine.typing import (
         Any,
         Axes,
@@ -37,7 +37,7 @@ class LayoutPack:
     axis_title_y: Optional[Text] = None
     # The legends references the structure that contains the
     # AnchoredOffsetboxes (groups of legends)
-    legends: Optional[grouped_legends] = None
+    legends: Optional[legend_artists] = None
     plot_caption: Optional[Text] = None
     plot_subtitle: Optional[Text] = None
     plot_title: Optional[Text] = None
