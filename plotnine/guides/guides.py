@@ -23,7 +23,7 @@ from ..themes import theme
 from .guide import guide
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from typing import Literal, Mapping, Optional, Sequence
 
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
@@ -36,8 +36,10 @@ if TYPE_CHECKING:
         LegendPosition,
         NoGuide,
         Orientation,
+        SidePosition,
         TextJustification,
         Theme,
+        TupleFloat2,
     )
 
 
@@ -213,7 +215,7 @@ class guides:
         if not isinstance(g, guide):
             raise PlotnineError(f"Unknown guide: {g}")
 
-        g.setup(self.plot)
+        g.setup(self)
         return g
 
     def _merge(self, gdefs: Sequence[guide]) -> Sequence[guide]:
@@ -316,21 +318,25 @@ class guides:
                 zorder=99.1,
             )
 
-        groups: dict[LegendPosition, list[PackerBase]] = defaultdict(list)
-        legends = grouped_legends()
-        just = asdict(self.elements.justification)
+        # Group together guides for each position
+        groups: dict[
+            tuple[SidePosition, float] | tuple[TupleFloat2, TupleFloat2],
+            list[PackerBase],
+        ] = defaultdict(list)
 
         for g, b in zip(gdefs, boxes):
-            groups[g._resolved_position].append(b)
+            groups[g._resolved_position_justification].append(b)
 
-        for position, group in groups.items():
+        # Create an anchoredoffsetbox for each group/position
+        legends = grouped_legends()
+        for (position, just), group in groups.items():
             aob = _anchored_offset_box(group)
-            if isinstance(position, str):
-                setattr(legends, position, outside_legend(aob, just[position]))
+            if isinstance(position, str) and isinstance(just, (float, int)):
+                setattr(legends, position, outside_legend(aob, just))
             else:
-                if (just_inside := just["inside"]) is None:
-                    just_inside = position
-                legends.xy.append(inside_legend(aob, just_inside, position))
+                position = cast(tuple[float, float], position)
+                just = cast(tuple[float, float], just)
+                legends.xy.append(inside_legend(aob, just, position))
 
         return legends
 
@@ -447,7 +453,7 @@ class GuidesElements:
         return self.theme.getp("legend_spacing")
 
     @cached_property
-    def justification(self):
+    def justification(self) -> legend_justifications_view:
         # Don't bother, the legend has been turned off
         if self.position == "none":
             return legend_justifications_view()

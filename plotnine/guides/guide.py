@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from types import SimpleNamespace as NS
 from typing import TYPE_CHECKING, cast
@@ -17,14 +17,17 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import PackerBase
     from typing_extensions import Self
 
-    from plotnine import aes, ggplot, theme
+    from plotnine import aes, ggplot, guides, theme
     from plotnine.layer import Layers
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         LegendPosition,
         Orientation,
         SidePosition,
+        TupleFloat2,
     )
+
+    from .guides import GuidesElements
 
     AlignDict: TypeAlias = dict[
         Literal["ha", "va"], dict[tuple[Orientation, SidePosition], str]
@@ -75,6 +78,7 @@ class guide(ABC, metaclass=Register):
         self.plot_mapping: aes
         self._elements_cls = GuideElements
         self.elements = cast(GuideElements, None)
+        self.guides_elements: GuidesElements
 
     def legend_aesthetics(self, layer):
         """
@@ -103,25 +107,37 @@ class guide(ABC, metaclass=Register):
         matched = list(matched - set(l.geom.aes_params))
         return matched
 
-    def setup(self, plot: ggplot):
+    def setup(self, guides: guides):
         """
         Setup guide for drawing process
         """
         # guide theme has priority and its targets are tracked
         # independently.
-        self.theme = plot.theme + self.theme
-        self.plot_layers = plot.layers
-        self.plot_mapping = plot.mapping
+        self.theme = guides.plot.theme + self.theme
+        self.plot_layers = guides.plot.layers
+        self.plot_mapping = guides.plot.mapping
         self.elements = self._elements_cls(self.theme, self)
+        self.guides_elements = guides.elements
 
     @property
-    def _resolved_position(self) -> LegendPosition:
+    def _resolved_position_justification(
+        self,
+    ) -> tuple[SidePosition, float] | tuple[TupleFloat2, TupleFloat2]:
         """
-        Return the position to draw the guide
-
-        This is taken from the parameter or theme
+        Return the final position & justification to draw the guide
         """
-        return self.elements.position
+        pos = self.elements.position
+        just_view = asdict(self.guides_elements.justification)
+        if isinstance(pos, str):
+            just = cast(float, just_view[pos])
+            return (pos, just)
+        else:
+            # If no justification is given for an inside legend,
+            # we use the position of the legend
+            if (just := just_view["inside"]) is None:
+                just = pos
+            just = cast(tuple[float, float], just)
+            return (pos, just)
 
     def train(
         self, scale: scale, aesthetic: Optional[str] = None
@@ -212,7 +228,7 @@ class GuideElements:
         return direction
 
     @cached_property
-    def position(self) -> LegendPosition:
+    def position(self) -> SidePosition | TupleFloat2:
         if (guide_pos := self.guide.position) == "inside":
             guide_pos = self._position_inside
 
@@ -224,7 +240,7 @@ class GuideElements:
         return pos
 
     @cached_property
-    def _position_inside(self) -> LegendPosition:
+    def _position_inside(self) -> SidePosition | TupleFloat2:
         pos = self.theme.getp("legend_position_inside")
         if isinstance(pos, tuple):
             return pos
