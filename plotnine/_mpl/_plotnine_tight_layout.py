@@ -23,7 +23,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.transforms import Transform
 
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
-    from plotnine.iapi import grouped_legends
+    from plotnine.iapi import legend_artists
     from plotnine.typing import (
         Facet,
         Figure,
@@ -219,7 +219,7 @@ def vertically_align_text_with_panels(
 
 
 def set_legends_position(
-    legends: grouped_legends,
+    legends: legend_artists,
     tparams: TightParams,
     fig: Figure,
 ):
@@ -278,7 +278,7 @@ def set_legends_position(
         set_position(legends.bottom.box, (x, y), (0, 0))
 
     # Inside legends are placed using the panels coordinate system
-    if legends.xy:
+    if legends.inside:
         transPanels = get_transPanels(fig)
-        for l in legends.xy:
+        for l in legends.inside:
             set_position(l.box, l.position, l.justification, transPanels)

@@ -301,16 +301,16 @@ class inside_legend:
 
 
 @dataclass
-class grouped_legends:
+class legend_artists:
     """
-    Legend Artists
+    Legend artists that are drawn on the figure
     """
 
     left: Optional[outside_legend] = None
     right: Optional[outside_legend] = None
     top: Optional[outside_legend] = None
     bottom: Optional[outside_legend] = None
-    xy: list[inside_legend] = field(default_factory=list)
+    inside: list[inside_legend] = field(default_factory=list)
 
     @property
     def boxes(self) -> list[FlexibleAnchoredOffsetbox]:
@@ -320,5 +320,5 @@ class grouped_legends:
         lrtb = (
             l.box for l in (self.left, self.right, self.top, self.bottom) if l
         )
-        xy = (l.box for l in self.xy)
-        return list(itertools.chain([*lrtb, *xy]))
+        inside = (l.box for l in self.inside)
+        return list(itertools.chain([*lrtb, *inside]))
