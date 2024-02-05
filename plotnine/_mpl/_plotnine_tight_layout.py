@@ -155,39 +155,39 @@ def set_figure_artist_positions(
     """
     theme = pack.theme
     sides = tparams.sides
-    grid = tparams.params
+    params = tparams.params
 
     if pack.plot_title:
         ha = theme.getp(("plot_title", "ha"))
         pack.plot_title.set_y(sides.t.edge("plot_title"))
-        horizonally_align_text_with_panels(pack.plot_title, grid, ha)
+        horizonally_align_text_with_panels(pack.plot_title, params, ha)
 
     if pack.plot_subtitle:
         ha = theme.getp(("plot_subtitle", "ha"))
         pack.plot_subtitle.set_y(sides.t.edge("plot_subtitle"))
-        horizonally_align_text_with_panels(pack.plot_subtitle, grid, ha)
+        horizonally_align_text_with_panels(pack.plot_subtitle, params, ha)
 
     if pack.plot_caption:
         ha = theme.getp(("plot_caption", "ha"), "right")
         pack.plot_caption.set_y(sides.b.edge("plot_caption"))
-        horizonally_align_text_with_panels(pack.plot_caption, grid, ha)
+        horizonally_align_text_with_panels(pack.plot_caption, params, ha)
 
     if pack.axis_title_x:
         ha = theme.getp(("axis_title_x", "ha"), "center")
         pack.axis_title_x.set_y(sides.b.edge("axis_title_x"))
-        horizonally_align_text_with_panels(pack.axis_title_x, grid, ha)
+        horizonally_align_text_with_panels(pack.axis_title_x, params, ha)
 
     if pack.axis_title_y:
         va = theme.getp(("axis_title_y", "va"), "center")
         pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))
-        vertically_align_text_with_panels(pack.axis_title_y, grid, va)
+        vertically_align_text_with_panels(pack.axis_title_y, params, va)
 
     if pack.legends:
         set_legends_position(pack.legends, tparams, pack.figure)
 
 
 def horizonally_align_text_with_panels(
-    text: Text, grid: GridSpecParams, ha: str
+    text: Text, params: GridSpecParams, ha: str
 ):
     """
     Horizontal justification
@@ -195,15 +195,15 @@ def horizonally_align_text_with_panels(
     Reinterpret horizontal alignment to be justification about the panels.
     """
     if ha == "center":
-        text.set_x((grid.left + grid.right) / 2)
+        text.set_x((params.left + params.right) / 2)
     elif ha == "left":
-        text.set_x(grid.left)
+        text.set_x(params.left)
     elif ha == "right":
-        text.set_x(grid.right)
+        text.set_x(params.right)
 
 
 def vertically_align_text_with_panels(
-    text: Text, grid: GridSpecParams, va: str
+    text: Text, params: GridSpecParams, va: str
 ):
     """
     Vertical justification
@@ -211,11 +211,11 @@ def vertically_align_text_with_panels(
     Reinterpret vertical alignment to be justification about the panels.
     """
     if va == "center":
-        text.set_y((grid.top + grid.bottom) / 2)
+        text.set_y((params.top + params.bottom) / 2)
     elif va == "top":
-        text.set_y(grid.top)
+        text.set_y(params.top)
     elif va == "bottom":
-        text.set_y(grid.bottom)
+        text.set_y(params.bottom)
 
 
 def set_legends_position(
