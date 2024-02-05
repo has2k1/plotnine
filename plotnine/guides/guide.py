@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import PackerBase
     from typing_extensions import Self
 
-    from plotnine import aes, ggplot, guides, theme
+    from plotnine import aes, guides, theme
     from plotnine.layer import Layers
     from plotnine.scales.scale import scale
     from plotnine.typing import (

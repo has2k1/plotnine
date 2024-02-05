@@ -263,12 +263,13 @@ class ggplot:
             self._build()
 
             # setup
-            figure, _ = self._create_figure()
+            self.figure, self.axs = self.facet.make_figure(self.layout.layout)
             self._setup_parameters()
             self.facet.strips.generate()
 
             # Drawing
             self._draw_layers()
+            self._draw_panel_borders()
             self._draw_breaks_and_labels()
             self.guides.draw(self)
             self._draw_figure_texts()
@@ -276,7 +277,7 @@ class ggplot:
 
             # Artist object theming
             self.theme.apply()
-            figure.set_layout_engine(PlotnineLayoutEngine(self))
+            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return self.figure
 
@@ -314,7 +315,7 @@ class ggplot:
 
             # artist theming
             self.theme.apply()
-            figure.set_layout_engine(PlotnineLayoutEngine(self))
+            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return self
 
@@ -404,24 +405,24 @@ class ggplot:
         self.facet.set_properties(self)
         self.theme.setup(self)
 
-    def _create_figure(self) -> tuple[Figure, list[Axes]]:
+    def _draw_panel_borders(self):
         """
-        Create Matplotlib figure and axes
+        Draw Panel boders
         """
-        import matplotlib.pyplot as plt
+        # We add a patch rather than use ax.patch because want the
+        # grid lines below the borders. We leave ax.patch for the
+        # background only.
+        if self.theme.T.is_blank("panel_border"):
+            return
 
-        # Good for development
-        if get_option("close_all_figures"):
-            plt.close("all")
+        from matplotlib.patches import Rectangle
 
-        figure: Figure = plt.figure()
-        axs = self.facet.make_axes(
-            figure, self.layout.layout, self.coordinates
-        )
-
-        self.figure = figure
-        self.axs = axs
-        return figure, axs
+        for ax in self.axs:
+            rect = Rectangle(
+                (0, 0), 1, 1, facecolor="none", transform=ax.transAxes
+            )
+            self.figure.add_artist(rect)
+            self.theme.targets.panel_border.append(rect)
 
     def _draw_layers(self):
         """

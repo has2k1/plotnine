@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import asdict, dataclass, fields
+from dataclasses import dataclass, fields
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal, cast
 from warnings import warn
@@ -23,7 +23,7 @@ from ..themes import theme
 from .guide import guide
 
 if TYPE_CHECKING:
-    from typing import Literal, Mapping, Optional, Sequence
+    from typing import Literal, Optional, Sequence
 
     from matplotlib.offsetbox import OffsetBox, PackerBase
 

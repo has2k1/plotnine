@@ -145,6 +145,8 @@ title: Changelog
 
 - Fixed drawing the upper outline of `geom_ribbon`. ({{< issue 728 >}})
 
+- Fixed issue where the gridlines overlap the panel border. ({{< issue 638 >}})
+
 ### Enhancements
 
 - All `__all__` variables are explicitly assigned to help static typecheckers
