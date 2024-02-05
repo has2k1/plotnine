@@ -24,10 +24,10 @@ from .elements.element_base import element_base
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from typing import Any, Sequence, Type
+    from typing import Any, Optional, Sequence, Type
 
+    from matplotlib.artist import Artist
     from matplotlib.patches import Patch
-    from matplotlib.text import Text
 
     from plotnine.themes.targets import ThemeTargets
     from plotnine.typing import Axes, Figure, Theme
@@ -428,35 +428,27 @@ def _blankout_rect(rect: Patch):
     rect.set_linewidth(0)
 
 
-class text_themeable(themeable):
+class MixinSequenceOfValues(themeable):
     """
-    Base class for all element_text themeables
-    """
+    Make themeable also accept a sequence to values
 
-    _omit = ["margin"]
-
-
-class texts_themeable(themeable):
-    """
-    Base class for themeables that modify lists of Text
-
-    Where possible, setting the properties with a sequence
-    of values.
+    This makes it possible to apply a different style value similar artists.
 
     e.g.
 
         theme(axis_text_x=element_text(color=("red", "green", "blue")))
 
-    The number of values in the sequence must match the number of
-    text objects in the figure.
+    The number of values in the list must match the number of objects
+    targetted by the themeable..
     """
 
-    _omit = ["margin"]
+    def set(
+        self, artists: Sequence[Artist], props: Optional[dict[str, Any]] = None
+    ):
+        if props is None:
+            props = self.properties
 
-    def set(self, texts: Sequence[Text]):
-        props = self.properties
-
-        n = len(texts)
+        n = len(artists)
         sequence_props = {}
         for name, value in props.items():
             if (
@@ -468,18 +460,18 @@ class texts_themeable(themeable):
         for key in sequence_props:
             del props[key]
 
-        for t in texts:
-            t.set(**props)
+        for a in artists:
+            a.set(**props)
 
         for name, values in sequence_props.items():
-            for t, value in zip(texts, values):
-                t.set(**{name: value})
+            for a, value in zip(artists, values):
+                a.set(**{name: value})
 
 
 # element_text themeables
 
 
-class axis_title_x(text_themeable):
+class axis_title_x(themeable):
     """
     x axis label
 
@@ -487,6 +479,8 @@ class axis_title_x(text_themeable):
     ----------
     theme_element : element_text
     """
+
+    _omit = ["margin"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
@@ -499,7 +493,7 @@ class axis_title_x(text_themeable):
             text.set_visible(False)
 
 
-class axis_title_y(text_themeable):
+class axis_title_y(themeable):
     """
     y axis label
 
@@ -507,6 +501,8 @@ class axis_title_y(text_themeable):
     ----------
     theme_element : element_text
     """
+
+    _omit = ["margin"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
@@ -551,7 +547,7 @@ class legend_title(themeable):
             text.set_visible(False)
 
 
-class legend_text_legend(texts_themeable):
+class legend_text_legend(MixinSequenceOfValues):
     """
     Legend text for the common legend
 
@@ -580,7 +576,7 @@ class legend_text_legend(texts_themeable):
                 text.set_visible(False)
 
 
-class legend_text_colorbar(texts_themeable):
+class legend_text_colorbar(MixinSequenceOfValues):
     """
     Colorbar text
 
@@ -622,7 +618,7 @@ class legend_text(legend_text_legend, legend_text_colorbar):
     """
 
 
-class plot_title(text_themeable):
+class plot_title(themeable):
     """
     Plot title
 
@@ -641,6 +637,8 @@ class plot_title(text_themeable):
     the center or with different alignments.
     """
 
+    _omit = ["margin"]
+
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_title:
@@ -652,7 +650,7 @@ class plot_title(text_themeable):
             text.set_visible(False)
 
 
-class plot_subtitle(text_themeable):
+class plot_subtitle(themeable):
     """
     Plot subtitle
 
@@ -668,6 +666,8 @@ class plot_subtitle(text_themeable):
     alignment are set.
     """
 
+    _omit = ["margin"]
+
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_subtitle:
@@ -679,7 +679,7 @@ class plot_subtitle(text_themeable):
             text.set_visible(False)
 
 
-class plot_caption(text_themeable):
+class plot_caption(themeable):
     """
     Plot caption
 
@@ -688,6 +688,8 @@ class plot_caption(text_themeable):
     theme_element : element_text
     """
 
+    _omit = ["margin"]
+
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_caption:
@@ -699,7 +701,7 @@ class plot_caption(text_themeable):
             text.set_visible(False)
 
 
-class strip_text_x(texts_themeable):
+class strip_text_x(MixinSequenceOfValues):
     """
     Facet labels along the horizontal axis
 
@@ -707,6 +709,8 @@ class strip_text_x(texts_themeable):
     ----------
     theme_element : element_text
     """
+
+    _omit = ["margin"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
@@ -728,7 +732,7 @@ class strip_text_x(texts_themeable):
                 rect.set_visible(False)
 
 
-class strip_text_y(texts_themeable):
+class strip_text_y(MixinSequenceOfValues):
     """
     Facet labels along the vertical axis
 
@@ -736,6 +740,8 @@ class strip_text_y(texts_themeable):
     ----------
     theme_element : element_text
     """
+
+    _omit = ["margin"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
@@ -777,7 +783,7 @@ class title(axis_title, legend_title, plot_title, plot_subtitle, plot_caption):
     """
 
 
-class axis_text_x(texts_themeable):
+class axis_text_x(MixinSequenceOfValues):
     """
     x-axis tick labels
 
@@ -785,6 +791,8 @@ class axis_text_x(texts_themeable):
     ----------
     theme_element : element_text
     """
+
+    _omit = ["margin"]
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
@@ -797,7 +805,7 @@ class axis_text_x(texts_themeable):
         )
 
 
-class axis_text_y(texts_themeable):
+class axis_text_y(MixinSequenceOfValues):
     """
     y-axis tick labels
 
@@ -805,6 +813,8 @@ class axis_text_y(texts_themeable):
     ----------
     theme_element : element_text
     """
+
+    _omit = ["margin"]
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
@@ -923,7 +933,7 @@ class axis_line(axis_line_x, axis_line_y):
     """
 
 
-class axis_ticks_minor_x(themeable):
+class axis_ticks_minor_x(MixinSequenceOfValues):
     """
     x-axis tick lines
 
@@ -960,8 +970,8 @@ class axis_ticks_minor_x(themeable):
         if tick_params:
             ax.xaxis.set_tick_params(which="minor", **tick_params)
 
-        for tick in ax.xaxis.get_minor_ticks():
-            tick.tick1line.set(**properties)
+        lines = [t.tick1line for t in ax.xaxis.get_minor_ticks()]
+        self.set(lines, properties)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -969,7 +979,7 @@ class axis_ticks_minor_x(themeable):
             tick.tick1line.set_visible(False)
 
 
-class axis_ticks_minor_y(themeable):
+class axis_ticks_minor_y(MixinSequenceOfValues):
     """
     y-axis minor tick lines
 
@@ -994,8 +1004,8 @@ class axis_ticks_minor_y(themeable):
         if tick_params:
             ax.yaxis.set_tick_params(which="minor", **tick_params)
 
-        for tick in ax.yaxis.get_minor_ticks():
-            tick.tick1line.set(**properties)
+        lines = [t.tick1line for t in ax.yaxis.get_minor_ticks()]
+        self.set(lines, properties)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1003,7 +1013,7 @@ class axis_ticks_minor_y(themeable):
             tick.tick1line.set_visible(False)
 
 
-class axis_ticks_major_x(themeable):
+class axis_ticks_major_x(MixinSequenceOfValues):
     """
     x-axis major tick lines
 
@@ -1028,8 +1038,8 @@ class axis_ticks_major_x(themeable):
         if tick_params:
             ax.xaxis.set_tick_params(which="major", **tick_params)
 
-        for tick in ax.xaxis.get_major_ticks():
-            tick.tick1line.set(**properties)
+        lines = [t.tick1line for t in ax.xaxis.get_major_ticks()]
+        self.set(lines, properties)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1037,7 +1047,7 @@ class axis_ticks_major_x(themeable):
             tick.tick1line.set_visible(False)
 
 
-class axis_ticks_major_y(themeable):
+class axis_ticks_major_y(MixinSequenceOfValues):
     """
     y-axis major tick lines
 
@@ -1062,8 +1072,8 @@ class axis_ticks_major_y(themeable):
         if tick_params:
             ax.yaxis.set_tick_params(which="major", **tick_params)
 
-        for tick in ax.yaxis.get_major_ticks():
-            tick.tick1line.set(**properties)
+        lines = [t.tick1line for t in ax.yaxis.get_major_ticks()]
+        self.set(lines, properties)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1284,7 +1294,7 @@ class line(axis_line, axis_ticks, panel_grid, legend_ticks):
 # element_rect themeables
 
 
-class legend_key(themeable):
+class legend_key(MixinSequenceOfValues):
     """
     Legend key background
 
@@ -1296,22 +1306,16 @@ class legend_key(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         properties = self.properties
-
         # Prevent invisible strokes from having any effect
         if properties.get("edgecolor") in ("none", "None"):
             properties["linewidth"] = 0
 
-        # list[DrawingArea]
-        if das := targets.legend_key:
-            for da in das:
-                da.patch.set(**properties)
+        self.set(targets.legend_key, properties)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        # list[DrawingArea]
-        if das := targets.legend_key:
-            for da in das:
-                _blankout_rect(da.patch)
+        for da in targets.legend_key:
+            _blankout_rect(da.patch)
 
 
 class legend_frame(themeable):
@@ -1447,6 +1451,7 @@ class plot_background(themeable):
     """
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
         figure.patch.set(**self.properties)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
@@ -1454,7 +1459,7 @@ class plot_background(themeable):
         _blankout_rect(figure.patch)
 
 
-class strip_background_x(themeable):
+class strip_background_x(MixinSequenceOfValues):
     """
     Horizontal facet label background
 
@@ -1466,17 +1471,15 @@ class strip_background_x(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if bboxes := targets.strip_background_x:
-            for bbox in bboxes:
-                bbox.set(**self.properties)
+            self.set(bboxes)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if rects := targets.strip_background_x:
-            for rect in rects:
-                _blankout_rect(rect)
+        for rect in targets.strip_background_x:
+            _blankout_rect(rect)
 
 
-class strip_background_y(themeable):
+class strip_background_y(MixinSequenceOfValues):
     """
     Vertical facet label background
 
@@ -1487,16 +1490,13 @@ class strip_background_y(themeable):
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        properties = self.properties
         if bboxes := targets.strip_background_y:
-            for bbox in bboxes:
-                bbox.set(**properties)
+            self.set(bboxes)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if rects := targets.strip_background_y:
-            for rect in rects:
-                _blankout_rect(rect)
+        for rect in targets.strip_background_y:
+            _blankout_rect(rect)
 
 
 class strip_background(strip_background_x, strip_background_y):
