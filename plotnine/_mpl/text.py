@@ -4,7 +4,7 @@ import typing
 
 from matplotlib.text import Text
 
-from .patches import SFancyBboxPatch
+from .patches import StripTextPatch
 from .utils import bbox_in_axes_space
 
 if typing.TYPE_CHECKING:
@@ -19,7 +19,7 @@ class SText(Text):
     """
 
     draw_info: strip_draw_info
-    spatch: SFancyBboxPatch
+    spatch: StripTextPatch
 
     def __init__(self, info: strip_draw_info):
         kwargs = {
@@ -38,7 +38,7 @@ class SText(Text):
             **kwargs,
         )
         self.draw_info = info
-        self.spatch = SFancyBboxPatch(self)
+        self.spatch = StripTextPatch(self)
 
     def draw(self, renderer: RendererBase):
         info = self.draw_info

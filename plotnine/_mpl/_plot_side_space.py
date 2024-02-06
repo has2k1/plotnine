@@ -19,7 +19,6 @@ from typing import TYPE_CHECKING, cast
 from matplotlib._tight_layout import get_subplotspec_list
 
 from ..facets import facet_grid, facet_null, facet_wrap
-from .patches import SFancyBboxPatch
 from .utils import bbox_in_figure_space, tight_bbox_in_figure_space
 
 if TYPE_CHECKING:
@@ -30,7 +29,6 @@ if TYPE_CHECKING:
         Literal,
         Sequence,
         TypeAlias,
-        TypeGuard,
     )
 
     from matplotlib.axis import Tick
@@ -220,8 +218,7 @@ class right_spaces(_side_spaces):
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        right_strips = get_right_strip_boxpatches_in_last_col(pack.axs)
-        self.right_strip_width = max_width(pack, right_strips)
+        self.right_strip_width = get_right_strip_width(pack)
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -292,8 +289,7 @@ class top_spaces(_side_spaces):
             self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        top_strips = get_top_strip_boxpatches_in_first_row(pack.axs)
-        self.top_strip_height = max_height(pack, top_strips)
+        self.top_strip_height = get_top_strip_height(pack)
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -550,7 +546,7 @@ def _calculate_panel_spacing_facet_null(
     return WHSpaceParts(W, H, w, h, 0, 0, 0, 0)
 
 
-def filter_axes(axs, get: AxesLocation = "all"):
+def filter_axes(axs: list[Axes], get: AxesLocation = "all") -> list[Axes]:
     """
     Return subset of axes
     """
@@ -563,52 +559,6 @@ def filter_axes(axs, get: AxesLocation = "all"):
         ax
         for spec, ax in zip(get_subplotspec_list(axs), axs)
         if getattr(spec, pred_method)()
-    ]
-
-
-def is_top_strip_boxpatch(artist: Artist) -> TypeGuard[SFancyBboxPatch]:
-    """
-    Return True if artist is a patch/background of the top strip of a facet
-    """
-    if isinstance(artist, SFancyBboxPatch):
-        return artist.position == "top"
-    return False
-
-
-def is_right_strip_boxpatch(artist: Artist) -> TypeGuard[SFancyBboxPatch]:
-    """
-    Return True if artist is a patch/background of the right strip of a facet
-    """
-    if isinstance(artist, SFancyBboxPatch):
-        return artist.position == "right"
-    return False
-
-
-def get_top_strip_boxpatches_in_first_row(
-    axs: list[Axes],
-) -> list[SFancyBboxPatch]:
-    """
-    Return all box patches on the top of the first row
-    """
-    return [
-        child
-        for ax in filter_axes(axs, "first_row")
-        for child in ax.get_children()
-        if is_top_strip_boxpatch(child)
-    ]
-
-
-def get_right_strip_boxpatches_in_last_col(
-    axs: list[Axes],
-) -> list[SFancyBboxPatch]:
-    """
-    Return all box patches on the right of the last column
-    """
-    return [
-        child
-        for ax in filter_axes(axs, "last_col")
-        for child in ax.get_children()
-        if is_right_strip_boxpatch(child)
     ]
 
 
@@ -632,6 +582,26 @@ def max_height(pack: LayoutPack, artists: Sequence[Artist]) -> float:
         for a in artists
     ]
     return max(heights) if len(heights) else 0
+
+
+def get_top_strip_height(pack: LayoutPack) -> float:
+    """
+    Height taken up by the top strips
+    """
+    if not pack.strip_background_x:
+        return 0
+    patches = [p for p in pack.strip_background_x if p.position == "top"]
+    return max_height(pack, patches)
+
+
+def get_right_strip_width(pack: LayoutPack) -> float:
+    """
+    Width taken up by the right strips
+    """
+    if not pack.strip_background_y:
+        return 0
+    patches = [p for p in pack.strip_background_y if p.position == "right"]
+    return max_width(pack, patches)
 
 
 def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:

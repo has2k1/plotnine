@@ -184,6 +184,36 @@ class layout_details:
     axis_x: bool
     axis_y: bool
     variables: dict[str, Any]
+    nrow: int
+    ncol: int
+
+    @property
+    def is_left(self) -> bool:
+        """
+        Return True if panel is on the left
+        """
+        return self.col == 1
+
+    @property
+    def is_right(self) -> bool:
+        """
+        Return True if panel is on the right
+        """
+        return self.col == self.ncol
+
+    @property
+    def is_top(self) -> bool:
+        """
+        Return True if panel is at the top
+        """
+        return self.row == 1
+
+    @property
+    def is_bottom(self) -> bool:
+        """
+        Return True if Panel is at the bottom
+        """
+        return self.row == self.nrow
 
 
 @dataclass
@@ -204,6 +234,7 @@ class strip_draw_info:
     label: str
     ax: Axes
     rotation: float
+    layout: layout_details
 
 
 @dataclass

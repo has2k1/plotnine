@@ -12,6 +12,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
 
     from plotnine import ggplot
+    from plotnine._mpl.patches import StripTextPatch
     from plotnine.iapi import legend_artists
     from plotnine.typing import (
         Any,
@@ -41,6 +42,8 @@ class LayoutPack:
     plot_caption: Optional[Text] = None
     plot_subtitle: Optional[Text] = None
     plot_title: Optional[Text] = None
+    strip_background_x: Optional[list[StripTextPatch]] = None
+    strip_background_y: Optional[list[StripTextPatch]] = None
 
 
 class PlotnineLayoutEngine(LayoutEngine):
@@ -106,4 +109,6 @@ class PlotnineLayoutEngine(LayoutEngine):
             plot_caption=get_target("plot_caption"),
             plot_subtitle=get_target("plot_subtitle"),
             plot_title=get_target("plot_title"),
+            strip_background_x=get_target("strip_background_x"),
+            strip_background_y=get_target("strip_background_y"),
         )

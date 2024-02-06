@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING
 
 from matplotlib import artist
 from matplotlib.patches import FancyBboxPatch, Rectangle
 from matplotlib.text import _get_textbox  # type: ignore
 from matplotlib.transforms import Affine2D
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
 
     from plotnine.typing import StripPosition
@@ -21,7 +21,7 @@ if typing.TYPE_CHECKING:
 # dimension information at draw time.
 
 
-class SFancyBboxPatch(FancyBboxPatch):
+class StripTextPatch(FancyBboxPatch):
     """
     Strip text background box
     """
