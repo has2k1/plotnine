@@ -161,7 +161,8 @@ def multitype_sort(arr: AnyArrayLike) -> list[Any]:
 
 
 def _margins(
-    vars: tuple[list[str], list[str]], margins: bool | list[str] = True
+    vars: tuple[Sequence[str], Sequence[str]],
+    margins: bool | Sequence[str] = True,
 ):
     """
     Figure out margining variables.
@@ -215,8 +216,8 @@ def _margins(
 
 def add_margins(
     df: pd.DataFrame,
-    vars: tuple[list[str], list[str]],
-    margins: bool | list[str] = True,
+    vars: tuple[Sequence[str], Sequence[str]],
+    margins: bool | Sequence[str] = True,
 ) -> pd.DataFrame:
     """
     Add margins to a data frame.

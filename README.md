@@ -71,7 +71,7 @@ Building a complex plot piece by piece.
    (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
     + stat_smooth(method="lm")
-    + facet_wrap("~gear"))
+    + facet_wrap("gear"))
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-4.png">
@@ -84,7 +84,7 @@ Building a complex plot piece by piece.
    (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
     + stat_smooth(method="lm")
-    + facet_wrap("~gear")
+    + facet_wrap("gear")
     + theme_xkcd())
    ```
 
@@ -96,7 +96,7 @@ Building a complex plot piece by piece.
    (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
     + geom_point()
     + stat_smooth(method="lm")
-    + facet_wrap("~gear")
+    + facet_wrap("gear")
     + theme_tufte())
    ```
 

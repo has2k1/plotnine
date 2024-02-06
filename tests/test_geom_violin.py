@@ -129,6 +129,6 @@ def test_scales_free():
     p = (
         ggplot(mtcars, aes(x="factor(cyl)", y="mpg"))
         + geom_violin()
-        + facet_grid('am ~ "column"', scales="free")
+        + facet_grid("am", "'column'", scales="free")
     )
     assert p == "scales_free"

@@ -39,6 +39,33 @@ title: Changelog
   `legend_entry_spacing_y` have been renamed to `legend_key_spacing`,
   `legend_key_spacing_x` and `legend_key_spacing_y` respectively
 
+- [](:class:`~plotnine.facets.facet_grid`) now accepts two parameters,
+  `rows` and `cols`, to specify the variables along the two dimensions of
+  the panels.
+
+  The previous way of using a single parameter will still work if it is a
+  string. For cases where the value was a list, e.g.
+
+  ```python
+  facet_grid(facets=["col1", "col2"])
+  ```
+
+  can be rewritten as any one of;
+
+  ```python
+  facet_grid("col1", "col2")
+  facet_grid(["col1"], ["col2"])
+  facet_grid(rows="col1", cols="col2")
+  facet_grid(rows=["col1"], cols=["col2"])
+  ```
+
+- The `facets` parameter in [](:class:`~plotnine.facets.facet_wrap`) has
+  also changed to a more straight forward specification for the column
+  variables. It expects a single string or a list/tuple of strings.
+  ({{< issue 545 >}})
+
+  However, the R-style formula strings are still silently accepted.
+
 ### New
 
 - Added symmetric logarithm transformation scales

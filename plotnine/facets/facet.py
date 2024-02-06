@@ -15,7 +15,7 @@ from ..scales.scales import Scales
 from .strips import Strips
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional
+    from typing import Any, Literal, Optional, Sequence
 
     import numpy.typing as npt
     from matplotlib.gridspec import GridSpec
@@ -96,12 +96,6 @@ class facet:
 
     # Axes
     axs: list[Axes]
-
-    # Number of facet variables along the horizontal axis
-    num_vars_x = 0
-
-    # Number of facet variables along the vertical axis
-    num_vars_y = 0
 
     # ggplot object that the facet belongs to
     plot: Ggplot
@@ -486,7 +480,7 @@ class facet:
 def combine_vars(
     data: list[pd.DataFrame],
     environment: Environment,
-    vars: list[str],
+    vars: Sequence[str],
     drop: bool = True,
 ) -> pd.DataFrame:
     """
@@ -570,7 +564,7 @@ def layout_null() -> pd.DataFrame:
     """
     layout = pd.DataFrame(
         {
-            "PANEL": [1],
+            "PANEL": pd.Categorical([1]),
             "ROW": 1,
             "COL": 1,
             "SCALE_X": 1,
@@ -585,7 +579,7 @@ def layout_null() -> pd.DataFrame:
 def add_missing_facets(
     data: pd.DataFrame,
     layout: pd.DataFrame,
-    vars: list[str],
+    vars: Sequence[str],
     facet_vals: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
@@ -616,7 +610,7 @@ def add_missing_facets(
 
 
 def eval_facet_vars(
-    data: pd.DataFrame, vars: list[str], env: Environment
+    data: pd.DataFrame, vars: Sequence[str], env: Environment
 ) -> pd.DataFrame:
     """
     Evaluate facet variables

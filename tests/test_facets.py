@@ -34,9 +34,9 @@ g = ggplot(data, aes("x", "y")) + geom_point(
 
 
 def test_facet_wrap_one_var():
-    p = g + facet_wrap("~var1")
-    p2 = g + facet_wrap("~class")  # python keyword in formula
-    p3 = g + facet_wrap("~g")  # variable in formula
+    p = g + facet_wrap("var1")
+    p2 = g + facet_wrap("class")  # python keyword in formula
+    p3 = g + facet_wrap("g")  # variable in formula
     assert p == "facet_wrap_one_var"
     assert p2 == "facet_wrap_one_var"
     assert p3 == "facet_wrap_one_var"
@@ -48,29 +48,29 @@ def test_facet_wrap_expression():
 
 
 def test_facet_wrap_two_vars():
-    p = g + facet_wrap("~var1+var2")
-    p2 = g + facet_wrap("~class+var2")  # python keyword in formula
+    p = g + facet_wrap(["var1", "var2"])
+    p2 = g + facet_wrap(["class", "var2"])  # python keyword in formula
     assert p == "facet_wrap_two_vars"
     assert p2 == "facet_wrap_two_vars"
 
 
 def test_facet_wrap_label_both():
-    p = g + facet_wrap("~var1+var2", labeller="label_both")
+    p = g + facet_wrap(["var1", "var2"], labeller="label_both")
     assert p == "facet_wrap_label_both"
 
 
 def test_facet_wrap_not_as_table():
-    p = g + facet_wrap("~var1", as_table=False)
+    p = g + facet_wrap("var1", as_table=False)
     assert p == "facet_wrap_not_as_table"
 
 
 def test_facet_wrap_direction_v():
-    p = g + facet_wrap("~var1", dir="v")
+    p = g + facet_wrap("var1", dir="v")
     assert p == "facet_wrap_direction_v"
 
 
 def test_facet_wrap_not_as_table_direction_v():
-    p = g + facet_wrap("~var1", as_table=False, dir="v")
+    p = g + facet_wrap("var1", as_table=False, dir="v")
     assert p == "facet_wrap_not_as_table_direction_v"
 
 
@@ -78,41 +78,39 @@ def test_facet_wrap_not_as_table_direction_v():
 
 
 def test_facet_grid_one_by_one_var():
-    p = g + facet_grid("var1~var2")
-    p2 = g + facet_grid("class~var2")  # python keyword in formula
+    p = g + facet_grid("var1", "var2")
+    p2 = g + facet_grid("class", "var2")  # python keyword
     assert p == "facet_grid_one_by_one_var"
     assert p2 == "facet_grid_one_by_one_var"
 
 
 def test_facet_grid_expression():
-    p = g + facet_grid(
-        ["var2", "pd.cut(var1, (0, 2, 4), include_lowest=True)"]
-    )
+    p = g + facet_grid("var2", "pd.cut(var1, (0, 2, 4), include_lowest=True)")
     assert p == "facet_grid_expression"
 
 
 def test_facet_grid_margins():
-    p = g + facet_grid("var1~var2", margins=True)
+    p = g + facet_grid("var1", "var2", margins=True)
     assert p == "facet_grid_margins"
 
 
 def test_facet_grid_scales_free_y():
-    p = g + facet_grid("var1>2 ~ x%2", scales="free_y")
+    p = g + facet_grid("var1>2", "x%2", scales="free_y")
     assert p == "facet_grid_scales_free_y"
 
 
-def test_facet_grid_formula_with_dot():
-    p = g + facet_grid(". ~ var1>2")
-    assert p == "facet_grid_formula_with_dot"
+def test_facet_grid_formula_only_cols():
+    p = g + facet_grid(cols="var1>2")
+    assert p == "facet_grid_formula_only_cols"
 
 
-def test_facet_grid_formula_without_dot():
-    p = g + facet_grid("~var1>2")
-    assert p == "facet_grid_formula_with_dot"
+def test_facet_grid_formula_only_rows():
+    p = g + facet_grid(rows="var1>2")
+    assert p == "facet_grid_formula_only_rows"
 
 
 def test_facet_grid_scales_free_x():
-    p = g + facet_grid("var1>2 ~ x%2", scales="free_x")
+    p = g + facet_grid("var1>2", "x%2", scales="free_x")
     assert p == "facet_grid_scales_free_x"
 
 
@@ -123,7 +121,7 @@ def test_facet_grid_drop_false():
     p = (
         ggplot(data, aes(x="displ", y="hwy"))
         + geom_point()
-        + facet_grid("drv ~ .", drop=False)
+        + facet_grid("drv", drop=False)
     )
     assert p == "facet_grid_drop_false"
 
@@ -132,7 +130,7 @@ def test_facet_grid_space_ratios():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
         + geom_point()
-        + facet_grid("am ~ vs", space={"y": [1, 2], "x": [1, 2]})
+        + facet_grid("am", "vs", space={"y": [1, 2], "x": [1, 2]})
     )
     assert p == "facet_grid_space_ratios"
 
@@ -159,7 +157,7 @@ def test_variable_and_annotate():
     p = (
         g
         + annotate("point", x=4.5, y=5.5, color="cyan", size=10)
-        + facet_wrap("~g")
+        + facet_wrap("g")
     )
     assert p == "variable_and_annotate"
 
@@ -188,6 +186,6 @@ def test_array_mapping_and_evaluation():
         ggplot(data, aes("x", "y", color=data["g"]))
         + geom_point(size=4)
         + geom_path()
-        + facet_wrap("~g")
+        + facet_wrap("g")
     )
     assert p == "array_mapping_and_evaluation"

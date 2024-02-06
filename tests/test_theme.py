@@ -164,7 +164,7 @@ def test_element_text_with_sequence_values():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
         + geom_point()
-        + facet_grid(("am", "cyl"))
+        + facet_grid("am", "cyl")
         + theme(
             axis_text=element_text(color="gray"),
             axis_text_x=element_text(
@@ -192,7 +192,7 @@ class TestThemes:
     g = (
         ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))
         + geom_point()
-        + facet_grid("vs ~ am")
+        + facet_grid("vs", "am")
     )
 
     def test_theme_538(self):
@@ -328,7 +328,7 @@ class TestLayout:
         assert p == "legends_in_different_positions"
 
     def test_facet_grid(self):
-        p = self.g + facet_grid("am ~ gear")
+        p = self.g + facet_grid("am", "gear")
         assert p == "facet_grid"
 
     def test_facet_wrap(self):

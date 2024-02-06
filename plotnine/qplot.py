@@ -11,8 +11,8 @@ from ._utils import array_kind
 from ._utils.registry import Registry
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_grid, facet_null, facet_wrap
-from .facets.facet_grid import parse_grid_facets
-from .facets.facet_wrap import parse_wrap_facets
+from .facets.facet_grid import parse_grid_facets_old
+from .facets.facet_wrap import parse_wrap_facets_old
 from .ggplot import ggplot
 from .labels import labs
 from .mapping.aes import ALL_AESTHETICS, SCALED_AESTHETICS, aes
@@ -178,11 +178,11 @@ def qplot(
 
     def get_facet_type(facets: str) -> Literal["grid", "wrap", "null"]:
         with suppress(PlotnineError):
-            parse_grid_facets(facets)
+            parse_grid_facets_old(facets)
             return "grid"
 
         with suppress(PlotnineError):
-            parse_wrap_facets(facets)
+            parse_wrap_facets_old(facets)
             return "wrap"
 
         warn(

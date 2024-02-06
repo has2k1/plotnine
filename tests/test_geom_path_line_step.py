@@ -62,7 +62,7 @@ def test_arrow_facets():
     p = (
         ggplot(data, aes("x", "y"))
         + geom_path(size=2, arrow=arrow(length=0.25))
-        + facet_grid("~ z")
+        + facet_grid(cols="z")
     )
     assert p == "arrow_facets"
 
