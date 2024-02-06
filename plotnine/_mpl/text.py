@@ -63,8 +63,12 @@ class SText(Text):
         # Put text in center of patch
         self._x = l + w / 2
         self._y = b + h / 2
+
+        # "anchor" aligns before rotation so the right-strip get properly
+        # centered text
+        self.set_rotation_mode("anchor")
         self.set_horizontalalignment("center")  # right-strip
-        self.set_verticalalignment("center")  # top-strip
+        self.set_verticalalignment("center_baseline")  # top-strip
 
         # Draw spatch
         self.spatch.draw(renderer)
