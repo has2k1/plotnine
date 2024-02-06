@@ -419,7 +419,12 @@ class ggplot:
 
         for ax in self.axs:
             rect = Rectangle(
-                (0, 0), 1, 1, facecolor="none", transform=ax.transAxes
+                (0, 0),
+                1,
+                1,
+                facecolor="none",
+                transform=ax.transAxes,
+                clip_path=ax.patch,
             )
             self.figure.add_artist(rect)
             self.theme.targets.panel_border.append(rect)
