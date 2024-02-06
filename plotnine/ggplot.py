@@ -424,7 +424,11 @@ class ggplot:
                 1,
                 facecolor="none",
                 transform=ax.transAxes,
+                # Adding a clip path but defaulting to no clipping
+                # gives a fullwidth border that can perfectly overlap
+                # will with legend borders.
                 clip_path=ax.patch,
+                clip_on=False,
             )
             self.figure.add_artist(rect)
             self.theme.targets.panel_border.append(rect)
