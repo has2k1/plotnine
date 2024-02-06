@@ -296,9 +296,13 @@ class Layout:
         ]
         vcols = self.layout.columns.difference(columns)
         lst = []
+        nrow = self.layout["ROW"].max()
+        ncol = self.layout["COL"].max()
         for pidx, row in self.layout.iterrows():
             ld = layout_details(
                 panel_index=pidx,  # type: ignore
+                nrow=nrow,
+                ncol=ncol,
                 variables={name: row[name] for name in vcols},
                 **{str.lower(k): row[k] for k in columns},
             )

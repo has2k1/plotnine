@@ -208,12 +208,10 @@ class facet_grid(facet):
 
     def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         lst = []
-        toprow = layout_info.row == 1
-        rightcol = layout_info.col == self.ncol
-        if toprow and len(self.cols):
+        if layout_info.is_top and self.cols:
             s = strip(self.cols, layout_info, self, ax, "top")
             lst.append(s)
-        if rightcol and len(self.rows):
+        if layout_info.is_right and self.rows:
             s = strip(self.rows, layout_info, self, ax, "right")
             lst.append(s)
         return Strips(lst)

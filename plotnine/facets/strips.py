@@ -46,6 +46,7 @@ class strip:
         self.facet = facet
         self.figure = facet.figure
         self.theme = facet.theme
+        self.layout_info = layout_info
         label_info = strip_label_details.make(layout_info, vars, position)
         self.label_info = facet.labeller(label_info)
         self.draw_info = self.get_draw_info()
@@ -119,6 +120,7 @@ class strip:
             label=self.label_info.text(),
             ax=self.ax,
             rotation=rotation,
+            layout=self.layout_info,
         )
 
     def draw(self):
@@ -132,8 +134,7 @@ class strip:
         text = SText(self.draw_info)
         rect = text.spatch
 
-        self.ax.add_artist(text)
-        self.ax.add_artist(rect)
+        self.figure.add_artist(text)
 
         if self.draw_info.position == "right":
             targets.strip_background_y.append(rect)
