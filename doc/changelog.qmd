@@ -154,6 +154,9 @@ title: Changelog
 
 - You can now pickle the drawn matplotlib figures. ({{< issue 729 >}})
 
+- The facet titles in the `strip_text` are now better aligned are appear more
+  centered withing the `strip_background`.
+
 ## v0.12.1
 (2023-05-09)
 
