@@ -391,13 +391,19 @@ class GuideElementsLegend(GuideElements):
         )
 
         # Find the size that fits each key in the legend,
-        sizes: list[TupleFloat2] = []
+        sizes: list[list[TupleFloat2]] = []
         for params in guide.layer_parameters:
+            sizes.append([])
             get_key_size = params.geom.legend_key_size
             for i in range(len(params.data)):
                 key_data = params.data.iloc[i]
-                sizes.append(get_key_size(key_data, min_size, params.layer))
-        return sizes
+                sizes[-1].append(
+                    get_key_size(key_data, min_size, params.layer)
+                )
+
+        # The maximum size across each layer
+        arr = np.max(sizes, axis=0)
+        return [tuple(row) for row in arr]
 
     @cached_property
     def key_widths(self) -> list[float]:
