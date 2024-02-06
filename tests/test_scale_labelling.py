@@ -43,7 +43,7 @@ def test_caption_complex():
         ggplot(mtcars, aes("wt", "mpg"))
         + geom_point()
         + labs(caption=c2)
-        + facet_grid("am ~ vs")
+        + facet_grid("am", "vs")
         + theme(plot_caption=element_text(ha="left", size=12))
     )
 

@@ -19,7 +19,7 @@ from .facet import (
 from .strips import Strips, strip
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional
+    from typing import Literal, Optional, Sequence
 
     from plotnine.iapi import layout_details
     from plotnine.typing import Axes
@@ -65,7 +65,7 @@ class facet_wrap(facet):
 
     def __init__(
         self,
-        facets: str | list[str],
+        facets: Optional[str | Sequence[str]] = None,
         *,
         nrow: Optional[int] = None,
         ncol: Optional[int] = None,
@@ -88,14 +88,13 @@ class facet_wrap(facet):
         )
         self.vars = parse_wrap_facets(facets)
         self._nrow, self._ncol = check_dimensions(nrow, ncol)
-        # facet_wrap gets its labelling at the top
-        self.num_vars_x = len(self.vars)
 
     def compute_layout(
         self,
         data: list[pd.DataFrame],
     ) -> pd.DataFrame:
         if not self.vars:
+            self.nrow, self.ncol = 1, 1
             return layout_null()
 
         base = combine_vars(data, self.environment, self.vars, drop=self.drop)
@@ -164,8 +163,13 @@ class facet_wrap(facet):
         )
 
         # assign each point to a panel
-        keys = join_keys(facet_vals, layout, self.vars)
-        data["PANEL"] = match(keys["x"], keys["y"], start=1)
+        if len(facet_vals) and len(facet_vals.columns):
+            # print(type(facet_vals))
+            keys = join_keys(facet_vals, layout, self.vars)
+            data["PANEL"] = match(keys["x"], keys["y"], start=1)
+        else:
+            # Special case of no facetting
+            data["PANEL"] = 1
 
         # matching dtype
         data["PANEL"] = pd.Categorical(
@@ -178,6 +182,9 @@ class facet_wrap(facet):
         return data
 
     def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
+        if not self.vars:
+            return Strips([])
+
         s = strip(self.vars, layout_info, self, ax, "top")
         return Strips([s])
 
@@ -213,9 +220,25 @@ def check_dimensions(
     return nrow, ncol
 
 
-def parse_wrap_facets(facets: str | list[str]) -> list[str]:
+def parse_wrap_facets(facets: Optional[str | Sequence[str]]) -> Sequence[str]:
     """
     Return list of facetting variables
+    """
+    if facets is None:
+        return []
+    elif isinstance(facets, str):
+        if "~" in facets:
+            return parse_wrap_facets_old(facets)  # formala
+        else:
+            return [facets]
+    return facets
+
+
+def parse_wrap_facets_old(facets: str | Sequence[str]) -> Sequence[str]:
+    """
+    Return list of facetting variables
+
+    This handles the old & silently deprecated r-style formulas
     """
     valid_forms = ["~ var1", "~ var1 + var2"]
     error_msg = "Valid formula for 'facet_wrap' look like" f" {valid_forms}"

@@ -219,7 +219,7 @@ class strip_label_details:
     @staticmethod
     def make(
         layout_info: layout_details,
-        vars: list[str],
+        vars: Sequence[str],
         location: StripPosition,
     ) -> strip_label_details:
         variables: dict[str, Any] = {

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import typing
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from ..iapi import strip_draw_info, strip_label_details
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
+    from typing import Sequence
+
     from plotnine.iapi import layout_details
     from plotnine.typing import (
         Axes,
@@ -33,7 +34,7 @@ class strip:
 
     def __init__(
         self,
-        vars: list[str],
+        vars: Sequence[str],
         layout_info: layout_details,
         facet: Facet,
         ax: Axes,

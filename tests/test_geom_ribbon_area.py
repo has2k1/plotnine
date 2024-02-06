@@ -78,7 +78,7 @@ def test_ribbon_facetting():
     p = (
         ggplot(data, aes("x", ymin="ymin", ymax="ymax", fill="factor(z)"))
         + geom_ribbon()
-        + facet_wrap("~ z")
+        + facet_wrap("z")
     )
 
     assert p == "ribbon_facetting"

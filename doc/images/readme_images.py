@@ -23,7 +23,7 @@ p2.save("readme-image-2.png")
 p3 = p2 + stat_smooth(method="lm")
 p3.save("readme-image-3.png")
 
-p4 = p3 + facet_wrap("~gear")
+p4 = p3 + facet_wrap("gear")
 p4.save("readme-image-4.png")
 
 p5 = p4 + theme_xkcd()
