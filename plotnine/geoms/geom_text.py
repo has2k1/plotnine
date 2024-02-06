@@ -315,7 +315,7 @@ class geom_text(geom):
         data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
     ) -> TupleInt2:
         w, h = min_size
-        _w, _h = data["size"]
+        _w = _h = data["size"]
         if data["color"] is not None:
             w = max(w, _w)
             h = max(h, _h)
