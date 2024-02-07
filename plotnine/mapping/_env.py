@@ -89,7 +89,7 @@ class Environment:
         """
         import inspect
 
-        if isinstance(eval_env, cls):
+        if isinstance(eval_env, Environment):
             return eval_env
 
         frame = inspect.currentframe()
