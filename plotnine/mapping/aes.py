@@ -572,7 +572,7 @@ def is_valid_aesthetic(value: Any, ae: str) -> bool:
             "--",
             "-.",
             ":",
-            "None",
+            "none",
             " ",
             "",
         }

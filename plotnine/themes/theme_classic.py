@@ -23,6 +23,6 @@ class theme_classic(theme_bw):
             axis_line=element_line(color="black"),
             panel_grid_major=element_blank(),
             panel_grid_minor=element_blank(),
-            strip_background=element_rect(colour="black", fill="None", size=1),
+            strip_background=element_rect(colour="black", fill="none", size=1),
             legend_key=element_blank(),
         )

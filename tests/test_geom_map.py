@@ -95,7 +95,7 @@ def test_multipoint():
     p = (
         ggplot()
         + aes(fill="geometry.bounds.miny")
-        + geom_map(data, size=5, color="None")
+        + geom_map(data, size=5, color="none")
         + labs(fill="miny")
     )
     assert p == "multipoint"

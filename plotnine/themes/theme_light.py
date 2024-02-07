@@ -26,7 +26,7 @@ class theme_light(theme_gray):
             axis_ticks_minor=element_blank(),
             legend_key=element_rect(fill="white", color="#7F7F7F", size=0.72),
             panel_background=element_rect(fill="white"),
-            panel_border=element_rect(fill="None", color="#B3B3B3", size=1),
+            panel_border=element_rect(fill="none", color="#B3B3B3", size=1),
             panel_grid_major=element_line(color="#D9D9D9", size=0.5),
             panel_grid_minor=element_line(color="#EDEDED", size=0.25),
             strip_background=element_rect(

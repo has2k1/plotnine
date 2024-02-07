@@ -1,5 +1,5 @@
 from ..options import get_option
-from .elements import element_blank, element_text
+from .elements import element_blank, element_line, element_text
 from .theme import theme
 
 
@@ -31,8 +31,6 @@ class theme_void(theme):
                 color="black",
                 size=base_size,
                 linespacing=0.9,
-                ha="center",
-                va="center",
                 rotation=0,
                 margin={},
             ),
@@ -48,9 +46,8 @@ class theme_void(theme):
             legend_key_spacing_x=5,
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
-            legend_key_height=18,
-            legend_key_width=18,
-            legend_ticks_length=0,
+            legend_key_size=base_size * 0.8 * 1.8,
+            legend_ticks_length=0.2,
             legend_margin=0,
             legend_position="right",
             legend_spacing=10,
@@ -64,6 +61,7 @@ class theme_void(theme):
                     "units": "fig",
                 },
             ),
+            legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 margin={
                     "t": m,
@@ -81,7 +79,7 @@ class theme_void(theme):
                 ma="left",
                 margin={"t": m, "units": "fig"},
             ),
-            plot_margin=m,
+            plot_margin=0,
             plot_subtitle=element_text(
                 size=base_size * 1,
                 ha="left",

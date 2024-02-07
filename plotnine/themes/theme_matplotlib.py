@@ -50,7 +50,7 @@ class theme_matplotlib(theme):
             legend_key_spacing_x=5,
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
-            legend_key=element_rect(fill="None", colour="None"),
+            legend_key=element_rect(fill="none", colour="none"),
             legend_key_size=16,
             legend_ticks_length=0.2,
             legend_margin=0,

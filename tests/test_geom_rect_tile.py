@@ -63,7 +63,7 @@ def test_rect_nofill():
         + geom_rect(
             aes(ymin="ymin+2", ymax="ymax+2"),
             color="blue",
-            fill="None",
+            fill="none",
             size=2,
         )
         + geom_rect(

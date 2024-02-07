@@ -1,5 +1,3 @@
-from copy import copy, deepcopy
-
 from .elements import element_blank, element_line, element_rect, element_text
 from .theme import theme
 from .theme_gray import theme_gray
@@ -46,14 +44,14 @@ class theme_xkcd(theme_gray):
         ]
         self += theme(
             text=element_text(family=["xkcd", "Humor Sans", "Comic Sans MS"]),
-            axis_ticks=element_line(color="black", size=1.5),
+            axis_ticks=element_line(color="black", size=1),
             axis_ticks_minor=element_blank(),
             axis_ticks_direction="in",
             axis_ticks_length_major=6,
             legend_background=element_rect(color="black"),
             legend_box_margin=2,
             legend_margin=5,
-            legend_key=element_rect(fill="None"),
+            legend_key=element_rect(fill="none"),
             panel_border=element_rect(color="black", size=1),
             panel_grid=element_blank(),
             panel_background=element_rect(fill="white"),

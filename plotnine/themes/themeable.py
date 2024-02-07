@@ -423,8 +423,8 @@ def _blankout_rect(rect: Patch):
     Make rect invisible
     """
     # set_visible(False) does not clear the attributes
-    rect.set_edgecolor("None")
-    rect.set_facecolor("None")
+    rect.set_edgecolor("none")
+    rect.set_facecolor("none")
     rect.set_linewidth(0)
 
 
