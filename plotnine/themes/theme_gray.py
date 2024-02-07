@@ -77,9 +77,7 @@ class theme_gray(theme):
             legend_key_spacing_y=2,
             legend_frame=element_blank(),
             legend_key=element_rect(fill="#F2F2F2", colour="None"),
-            legend_key_height=None,
             legend_key_size=base_size * 0.8 * 1.8,
-            legend_key_width=None,
             legend_ticks_length=0.2,
             legend_margin=0,  # points
             legend_position="right",
@@ -109,8 +107,6 @@ class theme_gray(theme):
             panel_grid_major=element_line(color="white", size=1),
             panel_grid_minor=element_line(color="white", size=0.5),
             panel_spacing=m,
-            panel_spacing_x=None,
-            panel_spacing_y=None,
             plot_background=element_rect(color="white"),
             plot_caption=element_text(
                 size=base_size * 0.8,
@@ -132,8 +128,6 @@ class theme_gray(theme):
                 margin={"b": m, "units": "fig"},
             ),
             strip_align=0,
-            strip_align_x=None,
-            strip_align_y=None,
             strip_background=element_rect(color="None", fill="#D9D9D9"),
             strip_background_x=element_rect(width=1),
             strip_background_y=element_rect(height=1),
@@ -149,7 +143,6 @@ class theme_gray(theme):
                     "units": "lines",
                 },
             ),
-            strip_text_x=None,
             strip_text_y=element_text(rotation=-90),
             complete=True,
         )
