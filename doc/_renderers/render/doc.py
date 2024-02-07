@@ -400,6 +400,13 @@ class __RenderDoc(RenderBase):
         )
         return str(content)
 
+    @render_section.register
+    def _(self, el: ds.DocstringSectionAdmonition):
+        """
+        This catches unofficial numpydoc sections
+        """
+        return el.value.description
+
     def render_summary(self):
         """
         Return a line item that summarises the object
