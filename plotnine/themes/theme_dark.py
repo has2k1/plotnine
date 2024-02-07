@@ -25,10 +25,10 @@ class theme_dark(theme_gray):
             axis_ticks=element_line(color="#666666", size=0.5),
             axis_ticks_minor=element_blank(),
             legend_key=element_rect(fill="#7F7F7F", color="#666666", size=0.5),
-            panel_background=element_rect(fill="#7F7F7F", color="None"),
+            panel_background=element_rect(fill="#7F7F7F", color="none"),
             panel_grid_major=element_line(color="#666666", size=0.5),
             panel_grid_minor=element_line(color="#737373", size=0.25),
-            strip_background=element_rect(fill="#333333", color="None"),
+            strip_background=element_rect(fill="#333333", color="none"),
             strip_text_x=element_text(color="white"),
             strip_text_y=element_text(color="white", angle=-90),
         )

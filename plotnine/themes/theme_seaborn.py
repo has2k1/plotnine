@@ -117,7 +117,7 @@ class theme_seaborn(theme):
                 margin={"b": m, "units": "fig"},
             ),
             strip_align=0,
-            strip_background=element_rect(color="None", fill="#D1CDDF"),
+            strip_background=element_rect(color="none", fill="#D1CDDF"),
             strip_text=element_text(
                 size=base_size * 0.8,
                 linespacing=1.0,

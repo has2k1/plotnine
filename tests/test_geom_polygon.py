@@ -36,7 +36,7 @@ def test_no_fill():
     p = (
         ggplot(data, aes("x", group="factor(z)"))
         + geom_polygon(aes(y="y"), fill=None, color="red", size=2)
-        + geom_polygon(aes(y="y+2"), fill="None", color="green", size=2)
+        + geom_polygon(aes(y="y+2"), fill="none", color="green", size=2)
         + geom_polygon(aes(y="y+4"), fill="none", color="blue", size=2)
     )
     assert p == "no_fill"

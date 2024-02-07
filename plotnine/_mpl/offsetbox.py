@@ -40,7 +40,7 @@ class ColoredDrawingArea(DrawingArea):
             width=width,
             height=height,
             facecolor=color,
-            edgecolor="None",
+            edgecolor="none",
             linewidth=0,
             antialiased=False,
         )
