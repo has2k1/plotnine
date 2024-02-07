@@ -145,6 +145,9 @@ StripLabellingFuncNames: TypeAlias = Literal[
     "label_value", "label_both", "label_context"
 ]
 
+# Facet space
+FacetSpaceRatios: TypeAlias = dict[Literal["x", "y"], Sequence[float]]
+
 # Function that can facet strips
 StripLabellingFunc: TypeAlias = Callable[
     [strip_label_details], strip_label_details

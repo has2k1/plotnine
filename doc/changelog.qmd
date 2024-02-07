@@ -146,6 +146,11 @@ title: Changelog
   - You can now place the legend inside the panels with easily
     control its location.
 
+- The `space` parameter of [](:class:`~plotnine.facets.facet_grid`) now
+  responds to the values `free`, `free_x` and `free_y` to have panels
+  whose relative width and/or height depends on the data range.
+  ({{< issue 545 >}})
+
 ### Bug Fixes
 
 - Fixed handling of minor breaks in

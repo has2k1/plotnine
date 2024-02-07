@@ -7,6 +7,8 @@ from ..iapi import strip_draw_info, strip_label_details
 if TYPE_CHECKING:
     from typing import Sequence
 
+    from typing_extensions import Self
+
     from plotnine.iapi import layout_details
     from plotnine.typing import (
         Axes,
@@ -49,7 +51,6 @@ class strip:
         self.layout_info = layout_info
         label_info = strip_label_details.make(layout_info, vars, position)
         self.label_info = facet.labeller(label_info)
-        self.draw_info = self.get_draw_info()
 
     def get_draw_info(self) -> strip_draw_info:
         """
@@ -131,12 +132,14 @@ class strip:
         from .._mpl.text import SText
 
         targets = self.theme.targets
-        text = SText(self.draw_info)
+        draw_info = self.get_draw_info()
+
+        text = SText(draw_info)
         rect = text.spatch
 
         self.figure.add_artist(text)
 
-        if self.draw_info.position == "right":
+        if draw_info.position == "right":
             targets.strip_background_y.append(rect)
             targets.strip_text_y.append(text)
         else:
@@ -155,6 +158,7 @@ class Strips(List[strip]):
     def from_facet(facet: Facet) -> Strips:
         new = Strips()
         new.facet = facet
+        new.setup()
         return new
 
     @property
@@ -181,7 +185,7 @@ class Strips(List[strip]):
         for s in self:
             s.draw()
 
-    def generate(self):
+    def setup(self) -> Self:
         """
         Calculate the box information for all strips
 
@@ -189,5 +193,6 @@ class Strips(List[strip]):
         """
         for layout_info in self.layout.get_details():
             ax = self.axs[layout_info.panel_index]
-            lst = self.facet.make_ax_strips(layout_info, ax)
+            lst = self.facet.make_strips(layout_info, ax)
             self.extend(lst)
+        return self
