@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g084dd0b</title>
+<title>plotnine 0.0.post1+gab01b45</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
+    <span class="navbar-title">plotnine 0.0.post1+gab01b45</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -184,6 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a>
   <ul class="collapse">
+  <li><a href="#plotnine.themes.themeable.themeable.properties" id="toc-plotnine.themes.themeable.themeable.properties" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.properties"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">properties</span></a></li>
   <li><a href="#plotnine.themes.themeable.themeable.rcParams" id="toc-plotnine.themes.themeable.themeable.rcParams" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.rcParams"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">rcParams</span></a></li>
   </ul></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
@@ -196,7 +197,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.themes.themeable.themeable.from_class_name" id="toc-plotnine.themes.themeable.themeable.from_class_name" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.from_class_name"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_class_name</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
   <li><a href="#plotnine.themes.themeable.themeable.is_blank" id="toc-plotnine.themes.themeable.themeable.is_blank" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.is_blank"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">is_blank</span></a></li>
   <li><a href="#plotnine.themes.themeable.themeable.merge" id="toc-plotnine.themes.themeable.themeable.merge" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.merge"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">merge</span></a></li>
-  <li><a href="#plotnine.themes.themeable.themeable.setup_figure" id="toc-plotnine.themes.themeable.themeable.setup_figure" class="nav-link" data-scroll-target="#plotnine.themes.themeable.themeable.setup_figure"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_figure</span></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-signature">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>themeable(theme_element, rcParams)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>themeable(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Abstract class of things that can be themed.</p>
@@ -253,11 +253,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
+<td><a href="#plotnine.themes.themeable.themeable.properties">properties</a></td>
+<td>Return only the properties that can be applied</td>
+</tr>
+<tr class="even">
 <td><a href="#plotnine.themes.themeable.themeable.rcParams">rcParams</a></td>
 <td>Return themeables rcparams to an rcparam dict before plotting.</td>
 </tr>
 </tbody>
 </table>
+<section id="plotnine.themes.themeable.themeable.properties" class="level3 title doc-object doc-attribute">
+<h3 class="title doc-object doc-attribute anchored" data-anchor-id="plotnine.themes.themeable.themeable.properties"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">properties</span></h3>
+<div class="doc-signature">
+<p><code><span class="doc-parameter-name">properties</span></code></p>
+</div>
+<div class="doc-text">
+<p>Return only the properties that can be applied</p>
+</div>
+</section>
 <section id="plotnine.themes.themeable.themeable.rcParams" class="level3 title doc-object doc-attribute">
 <h3 class="title doc-object doc-attribute anchored" data-anchor-id="plotnine.themes.themeable.themeable.rcParams"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">rcParams</span></h3>
 <div class="doc-signature">
@@ -349,10 +362,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><a href="#plotnine.themes.themeable.themeable.merge">merge</a></td>
 <td>Merge properties of other into self</td>
 </tr>
-<tr class="odd">
-<td><a href="#plotnine.themes.themeable.themeable.setup_figure">setup_figure</a></td>
-<td>Apply theme to the figure</td>
-</tr>
 </tbody>
 </table>
 <section id="plotnine.themes.themeable.themeable.apply" class="level3 title doc-object doc-method">
@@ -394,7 +403,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-text">
 <p>Apply theme to the figure</p>
-<p>Compared to :meth:<code>setup_figure</code>, this method is called after plotting and all the elements are drawn onto the figure.</p>
 </div>
 </section>
 <section id="plotnine.themes.themeable.themeable.blank_ax" class="level3 title doc-object doc-method">
@@ -477,19 +485,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 </dl>
 </div>
-</section>
-</section>
-<section id="plotnine.themes.themeable.themeable.setup_figure" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.themes.themeable.themeable.setup_figure"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_figure</span></h3>
-<div class="doc-signature">
-<div class="sourceCode" id="cb11"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>setup_figure(figure)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="doc-text">
-<p>Apply theme to the figure</p>
-<p>Compared to :meth:<code>apply_figure</code>, this method is called before any plotting is done. This is necessary in some cases where the drawing functions need(or can make use of) this information.</p>
-</div>
 
 
+</section>
 </section>
 </section>
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g084dd0b</title>
+<title>plotnine 0.0.post1+gab01b45</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
+    <span class="navbar-title">plotnine 0.0.post1+gab01b45</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -180,7 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.legend_entry_spacing_x" id="toc-plotnine.themes.themeable.legend_entry_spacing_x" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.legend_entry_spacing_x"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.legend_entry_spacing_x</span></a></li>
+  <li><a href="#plotnine.themes.themeable.legend_justification_bottom" id="toc-plotnine.themes.themeable.legend_justification_bottom" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.legend_justification_bottom"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.legend_justification_bottom</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   </ul>
 </nav>
@@ -192,23 +192,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.legend_entry_spacing_x" class="level1 title doc-object doc-class quarto-title display-7">
-<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.legend_entry_spacing_x</span></h1>
+<section id="plotnine.themes.themeable.legend_justification_bottom" class="level1 title doc-object doc-class quarto-title display-7">
+<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.legend_justification_bottom</span></h1>
 </section>
 </header>
 <div class="doc-signature">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>legend_entry_spacing_x()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>legend_justification_bottom(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>Horizontal spacing between two entries in a legend</p>
+<p>Justification of legends placed at the bottom</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"left"</span>, <span class="st">"center"</span>, <span class="st">"right"</span>] | <a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
 <dd>
-<p>Size in points</p>
+<p>How to justify the entire group with 1 or more guides. i.e.&nbsp;How to slide the legend along the bottom row. If a float, it should be in the range <code>[0, 1]</code>, where <code>0</code> is <code>"left"</code> and <code>1</code> is <code>"right"</code>.</p>
 </dd>
 </dl>
 </div>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g084dd0b</title>
+<title>plotnine 0.0.post1+gab01b45</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g084dd0b</span>
+    <span class="navbar-title">plotnine 0.0.post1+gab01b45</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -182,6 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#plotnine.guides.guide_colorbar" id="toc-plotnine.guides.guide_colorbar" class="nav-link active" data-scroll-target="#plotnine.guides.guide_colorbar"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.guides.guide_colorbar.guide_colorbar</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
 </nav>
     </div>
@@ -197,7 +198,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-signature">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>guide_colorbar(<span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>guide_colorbar(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    theme<span class="op">=</span>field(default_factory<span class="op">=</span>Theme),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    direction<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    reverse<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    order<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    _resolved_position_justification,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    nbin<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    display<span class="op">=</span><span class="st">"gradient"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    draw_ulim<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    draw_llim<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    available_aes<span class="op">=</span>no_init_mutable({<span class="st">"colour"</span>, <span class="st">"color"</span>, <span class="st">"fill"</span>})</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Guide colorbar</p>
@@ -206,25 +221,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">barwidth</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Width (in pixels) of the colorbar. If <code>None</code>, the <a href="../reference/legend_key_width.html#plotnine.themes.themeable.legend_key_width"><code>legend_key_width</code></a> is used. The value is multiplied by <code>1.45</code>.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">barheight</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Height (in pixels) of the colorbar. <a href="../reference/legend_key_height.html#plotnine.themes.themeable.legend_key_height"><code>legend_key_height</code></a> is used. The value is multiplied by <code>5 * 1.45</code>.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">nbin</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">20</span></code></dt>
+<dt><code><span class="doc-parameter-name">nbin</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
 <p>Number of bins for drawing a colorbar. A larger value yields a smoother colorbar</p>
 </dd>
-<dt><code><span class="doc-parameter-name">raster</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
+<dt><code><span class="doc-parameter-name">display</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"gradient"</span>, <span class="st">"rectangles"</span>, <span class="st">"raster"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"gradient"</span></span></code></dt>
 <dd>
-<p>Whether to render the colorbar as a raster object.</p>
+<p>How to render the colorbar.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">ticks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code><span class="doc-parameter-name">alpha</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Whether tick marks on colorbar should be visible.</p>
+<p>Opacity (in the range <code>[0, 1]</code>) of the colorbar. The defualt <code>None</code>, is to use the opacity of the plot.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">draw_ulim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
@@ -234,16 +241,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Whether to show the lower limit tick marks.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">direction</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"horizontal"</span>, <span class="st">"vertical"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"horizontal"</span></span></code></dt>
-<dd>
-<p>Direction of the guide.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
+<dt><code><span class="doc-parameter-name">kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span></code></dt>
 <dd>
 <p>Parameters passed on to :class:<code>.guide</code></p>
 </dd>
 </dl>
 </div>
+</section>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
+<p>To correctly place a rasterized colorbar when saving the plot as an <code>svg</code> or <code>pdf</code>, you should set the <code>dpi</code> to 72 i.e.&nbsp;<code class="sourceCode python">theme(dpi<span class="op">=</span><span class="dv">72</span>)</code>.</p>
 
 
 </section>
