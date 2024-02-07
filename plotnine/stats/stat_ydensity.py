@@ -132,10 +132,10 @@ class stat_ydensity(stat):
 
         if params["kernel"] not in lookup.values():
             msg = (
-                "kernel should be one of {}. "
-                "You may use the abbreviations {}"
+                f"kernel should be one of {lookup.keys()}. "
+                f"You may use the abbreviations {lookup.values()}"
             )
-            raise PlotnineError(msg.format(lookup.keys(), lookup.values()))
+            raise PlotnineError(msg)
 
         missing_params = stat_density.DEFAULT_PARAMS.keys() - params.keys()
         for key in missing_params:
