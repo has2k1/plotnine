@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
@@ -10,7 +10,7 @@ from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .stat import stat
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any, Optional
 
     from plotnine.typing import FloatArray, FloatArrayLike
@@ -149,7 +149,7 @@ def cov_trob(
     out : dict
         A dictionary with with the following key-value
 
-        - `cov` : the fitted covariance matrix.
+        - `cov` : the fitted covarince matrix.
         - `center` : the estimated or specified location vector.
         - `wt` : the specified weights: only returned if the
            wt argument was given.
@@ -175,7 +175,7 @@ def cov_trob(
         if pd.isna(x).any() or np.isinf(x).any():
             raise ValueError("Missing or infinite values in 'x'")
 
-    def scale_simp(x, center, n, p):
+    def scale_simp(x: FloatArray, center: FloatArray, n: int, p: int):
         return x - np.repeat([center], n, axis=0)
 
     x = np.asarray(x)
@@ -216,17 +216,19 @@ def cov_trob(
     else:
         if len(center) != p:
             raise ValueError("'center' is not the right length")
-        loc = p
+        loc = np.asarray(center)
+
+    # Default values for the typechecker
+    iteration = 0
+    X = np.array([], ndmin=x.ndim)
 
     w = wt * (1 + p / nu)
     for iteration in range(maxit):
         w0 = w
         X = scale_simp(x, loc, n, p)
         _, s, v = linalg.svd(np.sqrt(w / np.sum(w)) * X)
-        # wX = X @ v.T @ np.diag(np.full(p, 1/s))
-        wX = np.dot(np.dot(X, v.T), np.diag(np.full(p, 1 / s)))
-        # Q = np.squeeze((wX**2) @ np.ones(p))
-        Q = np.squeeze(np.dot(wX**2, np.ones(p)))
+        wX = X @ v.T @ np.diag(np.full(p, 1 / s))
+        Q = np.squeeze((wX**2) @ np.ones(p))
         w = (wt * (nu + p)) / (nu + Q)[:, np.newaxis]
         if use_loc:
             loc = np.sum(w * x, axis=0) / w.sum()
@@ -238,9 +240,8 @@ def cov_trob(
         if _c1 and _c2:
             warn("Convergence probably failed.", PlotnineWarning)
 
-    _a = np.sqrt(w) * X  # pyright: ignore[reportUnboundVariable]
-    # cov = (_a.T @ _a) / np.sum(wt)
-    cov = np.dot(_a.T, _a) / np.sum(wt)
+    _a = np.sqrt(w) * X
+    cov = (_a.T @ _a) / np.sum(wt)
 
     if cor:
         sd = np.sqrt(np.diag(cov))
@@ -250,6 +251,6 @@ def cov_trob(
         cov=cov,
         center=loc,
         n_obs=n,
-        iter=iteration,  # pyright: ignore[reportUnboundVariable]
+        iter=iteration,
     )
     return ans
