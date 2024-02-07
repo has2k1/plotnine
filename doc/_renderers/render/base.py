@@ -155,7 +155,7 @@ class __RenderBase(Block):
         """
         Return a line(s) item that summarises the object
         """
-        ...
+        return []
 
 
 class RenderBase(__RenderBase):

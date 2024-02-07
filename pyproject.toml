@@ -206,7 +206,7 @@ select = [
    "PYI",
    "RSE",
    "SIM",
-   "TRY200",
+   "B904",
    "FLY",
    "NPY",
    "PERF102"
