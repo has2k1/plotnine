@@ -32,12 +32,18 @@ class theme_xkcd(theme_gray):
         scale=1,
         length=100,
         randomness=2,
-        stroke_size=4,
+        stroke_size=3,
         stroke_color="white",
     ):
         from matplotlib import patheffects
 
         super().__init__(base_size)
+        sketch_params = (scale, length, randomness)
+        path_effects = [
+            patheffects.withStroke(
+                linewidth=stroke_size, foreground=stroke_color
+            )
+        ]
         self += theme(
             text=element_text(family=["xkcd", "Humor Sans", "Comic Sans MS"]),
             axis_ticks=element_line(color="black", size=1.5),
@@ -45,7 +51,7 @@ class theme_xkcd(theme_gray):
             axis_ticks_direction="in",
             axis_ticks_length_major=6,
             legend_background=element_rect(color="black"),
-            legend_box_margin=5,
+            legend_box_margin=2,
             legend_margin=5,
             legend_key=element_rect(fill="None"),
             panel_border=element_rect(color="black", size=1),
@@ -57,13 +63,10 @@ class theme_xkcd(theme_gray):
             strip_align=-0.5,
         )
 
-        d = {
-            "axes.unicode_minus": False,
-            "path.sketch": (scale, length, randomness),
-            "path.effects": [
-                patheffects.withStroke(
-                    linewidth=stroke_size, foreground=stroke_color
-                )
-            ],
-        }
-        self._rcParams.update(d)
+        self._rcParams.update(
+            {
+                "axes.unicode_minus": False,
+                "path.sketch": sketch_params,
+                "path.effects": path_effects,
+            }
+        )
