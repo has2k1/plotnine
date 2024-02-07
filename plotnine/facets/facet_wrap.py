@@ -181,7 +181,7 @@ class facet_wrap(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
+    def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         if not self.vars:
             return Strips([])
 

@@ -20,6 +20,7 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
     from matplotlib.gridspec import GridSpec
 
+    from plotnine import ggplot
     from plotnine.iapi import layout_details, panel_view
     from plotnine.mapping import Environment
     from plotnine.typing import (
@@ -27,7 +28,6 @@ if typing.TYPE_CHECKING:
         CanBeStripLabellingFunc,
         Coord,
         Figure,
-        Ggplot,
         Layers,
         Layout,
         Scale,
@@ -98,18 +98,10 @@ class facet:
     axs: list[Axes]
 
     # ggplot object that the facet belongs to
-    plot: Ggplot
+    plot: ggplot
 
     # Facet strips
     strips: Strips
-
-    # Control the relative size of multiple facets
-    # Use a subclass to change the default.
-    # See: facet_grid for an example
-    space: (
-        Literal["fixed", "free", "free_x", "free_y"]
-        | dict[Literal["x", "y"], list[int]]
-    ) = "fixed"
 
     grid_spec: GridSpec
 
@@ -137,7 +129,7 @@ class facet:
             "y": scales in ("free_y", "free"),
         }
 
-    def __radd__(self, plot: Ggplot) -> Ggplot:
+    def __radd__(self, plot: ggplot) -> ggplot:
         """
         Add facet to ggplot object
         """
@@ -145,17 +137,20 @@ class facet:
         plot.facet.environment = plot.environment
         return plot
 
-    def set_properties(self, plot: Ggplot):
-        """
-        Copy required properties from ggplot object
-        """
-        self.axs = plot.axs
-        self.coordinates = plot.coordinates
-        self.figure = plot.figure
+    def setup(self, plot: ggplot):
+        self.plot = plot
         self.layout = plot.layout
-        self.layout.axs = plot.axs
+
+        if hasattr(plot, "figure"):
+            self.figure, self.axs = plot.figure, plot.axs
+        else:
+            self.figure, self.axs = self.make_figure()
+
+        self.coordinates = plot.coordinates
         self.theme = plot.theme
+        self.layout.axs = self.axs
         self.strips = Strips.from_facet(self)
+        return self.figure, self.axs
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
@@ -293,7 +288,7 @@ class facet:
 
         return self
 
-    def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
+    def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         """
         Create strips for the facet
 
@@ -384,59 +379,35 @@ class facet:
 
         return result
 
-    def make_figure(self, layout: pd.DataFrame) -> tuple[Figure, list[Axes]]:
+    def _make_figure(self) -> tuple[Figure, GridSpec]:
         """
-        Create and return Matplotlib figure and subplot axes
+        Create figure & gridspec
         """
         import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
 
-        num_panels = len(layout)
+        return plt.figure(), GridSpec(self.nrow, self.ncol)
+
+    def make_figure(self) -> tuple[Figure, list[Axes]]:
+        """
+        Create and return Matplotlib figure and subplot axes
+        """
+        num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
-        space = self.space
-        default_space: dict[Literal["x", "y"], list[int]] = {
-            "x": [1 for x in range(self.ncol)],
-            "y": [1 for x in range(self.nrow)],
-        }
-
-        if isinstance(space, str):
-            # TODO: Implement 'free', 'free_x' & 'free_y'
-            # This is the value of "fixed" space
-            space = default_space
-        elif isinstance(space, dict):
-            if "x" not in space:
-                space["x"] = default_space["x"]
-            if "y" not in space:
-                space["y"] = default_space["y"]
-
-        if len(space["x"]) != self.ncol:
-            raise ValueError(
-                "The number of x-ratios for the facet space sizes "
-                "should match the number of columns."
-            )
-
-        if len(space["y"]) != self.nrow:
-            raise ValueError(
-                "The number of y-ratios for the facet space sizes "
-                "should match the number of rows."
-            )
 
         # Create figure & gridspec
-        figure: Figure = plt.figure()
-        gs = GridSpec(
-            self.nrow,
-            self.ncol,
-            height_ratios=space["y"],
-            width_ratios=space["x"],
-        )
+        figure, gs = self._make_figure()
         self.grid_spec = gs
 
         # Create axes
-        i = 1
-        for row in range(self.nrow):
-            for col in range(self.ncol):
-                axsarr[row, col] = figure.add_subplot(gs[i - 1])
-                i += 1
+        it = itertools.product(range(self.nrow), range(self.ncol))
+        for i, (row, col) in enumerate(it):
+            axsarr[row, col] = figure.add_subplot(gs[i])
+
+        # axsarr = np.array([
+        #     figure.add_subplot(gs[i])
+        #     for i in range(self.nrow * self.ncol)
+        # ]).reshape((self.nrow, self.ncol))
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table

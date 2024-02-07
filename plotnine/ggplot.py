@@ -263,9 +263,8 @@ class ggplot:
             self._build()
 
             # setup
-            self.figure, self.axs = self.facet.make_figure(self.layout.layout)
-            self._setup_parameters()
-            self.facet.strips.generate()
+            self.figure, self.axs = self.facet.setup(self)
+            self.theme.setup(self)
 
             # Drawing
             self._draw_layers()
@@ -305,8 +304,8 @@ class ggplot:
             self._build()
 
             # setup
-            self._setup_parameters()
-            self.facet.strips.generate()
+            self.figure, self.axs = self.facet.setup(self)
+            self.theme.setup(self)
 
             # drawing
             self._draw_layers()
@@ -397,13 +396,6 @@ class ggplot:
 
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
-
-    def _setup_parameters(self):
-        """
-        Set facet properties
-        """
-        self.facet.set_properties(self)
-        self.theme.setup(self)
 
     def _draw_panel_borders(self):
         """

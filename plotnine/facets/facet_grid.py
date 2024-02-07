@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 
+import numpy as np
 import pandas as pd
 
 from .._utils import add_margins, cross_join, join_keys, match, ninteraction
@@ -19,7 +20,7 @@ if typing.TYPE_CHECKING:
     from typing import Literal, Optional, Sequence
 
     from plotnine.iapi import layout_details
-    from plotnine.typing import Axes
+    from plotnine.typing import Axes, FacetSpaceRatios
 
 
 class facet_grid(facet):
@@ -34,19 +35,17 @@ class facet_grid(facet):
     cols :
         Variable expressions along the columns of the facets/panels.
         Each expression is evaluated within the context of the dataframe.
-    margins : bool | list[str]
+    margins :
         variable names to compute margins for.
         True will compute all possible margins.
-    space : str | dict
+    space :
         Control the size of the  `x` or `y` sides of the panels.
         The size also depends to the `scales` parameter.
 
         If a string, it should be one of
         `['fixed', 'free', 'free_x', 'free_y']`{.py}.
-        Currently, only the `'fixed'` option is supported.
 
-        Alternatively if a `dict`, it indicates the relative facet
-        size ratios such as:
+        If a `dict`, it indicates the relative facet size ratios such as:
 
         ```python
         {"x": [1, 2], "y": [3, 1, 1]}
@@ -59,18 +58,18 @@ class facet_grid(facet):
 
         Note that the number of dimensions in the list must equal the
         number of facets that will be produced.
-    shrink : bool, default=True
+    shrink :
         Whether to shrink the scales to the output of the
         statistics instead of the raw data.
-    labeller : str | callable, default="label_value"
+    labeller :
         How to label the facets. A string value if it should be
         one of `["label_value", "label_both", "label_context"]`{.py}.
-    as_table : bool, default=True
+    as_table :
         If `True`, the facets are laid out like a table with
         the highest values at the bottom-right. If `False`
         the facets are laid out like a plot with the highest
         value a the top-right
-    drop : bool, default=True
+    drop :
         If `True`, all factor levels not used in the data
         will automatically be dropped. If `False`, all
         factor levels will be shown, regardless of whether
@@ -85,8 +84,7 @@ class facet_grid(facet):
         margins: bool | list[str] = False,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         space: (
-            Literal["fixed", "free", "free_x", "free_y"]
-            | dict[Literal["x", "y"], list[int]]
+            Literal["fixed", "free", "free_x", "free_y"] | FacetSpaceRatios
         ) = "fixed",
         shrink: bool = True,
         labeller: Literal[
@@ -106,10 +104,56 @@ class facet_grid(facet):
         self.rows, self.cols = parse_grid_rows_cols(rows, cols)
         self.space = space
         self.margins = margins
-        self.space_free = {
-            "x": isinstance(space, str) and space in ("free_x", "free"),
-            "y": isinstance(space, str) and space in ("free_y", "free"),
-        }
+
+    def _make_figure(self):
+        import matplotlib.pyplot as plt
+        from matplotlib.gridspec import GridSpec
+
+        layout = self.layout
+        space = self.space
+        ratios = {}
+
+        # Calculate the width (x) & height (y) ratios for space=free[xy]
+        if isinstance(space, str):
+            if space in {"free", "free_x"}:
+                pidx: list[int] = (
+                    layout.layout.sort_values("COL")
+                    .drop_duplicates("COL")
+                    .index.tolist()
+                )
+                panel_views = [layout.panel_params[i] for i in pidx]
+                ratios["width_ratios"] = [
+                    np.ptp(pv.x.range) for pv in panel_views
+                ]
+
+            if space in {"free", "free_y"}:
+                pidx = (
+                    layout.layout.sort_values("ROW")
+                    .drop_duplicates("ROW")
+                    .index.tolist()
+                )
+                panel_views = [layout.panel_params[i] for i in pidx]
+                ratios["height_ratios"] = [
+                    np.ptp(pv.y.range) for pv in panel_views
+                ]
+
+        if isinstance(self.space, dict):
+            if len(self.space["x"]) != self.ncol:
+                raise ValueError(
+                    "The number of x-ratios for the facet space sizes "
+                    "should match the number of columns."
+                )
+
+            if len(self.space["y"]) != self.nrow:
+                raise ValueError(
+                    "The number of y-ratios for the facet space sizes "
+                    "should match the number of rows."
+                )
+
+            ratios["width_ratios"] = self.space.get("x")
+            ratios["height_ratios"] = self.space.get("y")
+
+        return plt.figure(), GridSpec(self.nrow, self.ncol, **ratios)
 
     def compute_layout(self, data: list[pd.DataFrame]) -> pd.DataFrame:
         if not self.rows and not self.cols:
@@ -206,7 +250,7 @@ class facet_grid(facet):
         data.reset_index(drop=True, inplace=True)
         return data
 
-    def make_ax_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
+    def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         lst = []
         if layout_info.is_top and self.cols:
             s = strip(self.cols, layout_info, self, ax, "top")

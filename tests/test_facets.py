@@ -126,6 +126,15 @@ def test_facet_grid_drop_false():
     assert p == "facet_grid_drop_false"
 
 
+def test_facet_grid_space_free():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + facet_grid("am", "vs", space="free", scales="free")
+    )
+    assert p == "facet_grid_space_free"
+
+
 def test_facet_grid_space_ratios():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
