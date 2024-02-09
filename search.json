@@ -2048,7 +2048,7 @@
     "href": "reference/guide_colorbar.html",
     "title": " plotnine.guides.guide_colorbar.guide_colorbar",
     "section": "",
-    "text": "guide_colorbar(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    _resolved_position_justification,\n    nbin=None,\n    display=\"gradient\",\n    alpha=None,\n    draw_ulim=True,\n    draw_llim=True,\n    available_aes=no_init_mutable({\"colour\", \"color\", \"fill\"})\n)"
+    "text": "guide_colorbar(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nbin=None,\n    display=\"gradient\",\n    alpha=None,\n    draw_ulim=True,\n    draw_llim=True,\n    available_aes=no_init_mutable({\"colour\", \"color\", \"fill\"})\n)"
   },
   {
     "objectID": "reference/guide_colorbar.html#parameters",
@@ -4120,7 +4120,7 @@
     "href": "reference/guide.html",
     "title": " plotnine.guides.guide.guide",
     "section": "",
-    "text": "guide(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    available_aes=no_init_mutable(set()),\n    _resolved_position_justification\n)"
+    "text": "guide(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    available_aes=no_init_mutable(set())\n)"
   },
   {
     "objectID": "reference/guide.html#parameters",
@@ -4148,7 +4148,7 @@
     "href": "reference/guide_legend.html",
     "title": " plotnine.guides.guide_legend.guide_legend",
     "section": "",
-    "text": "guide_legend(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    _resolved_position_justification,\n    nrow=None,\n    ncol=None,\n    byrow=False,\n    override_aes=default_field({}),\n    available_aes=no_init_mutable({\"any\"}),\n    layer_parameters=no_init_mutable([])\n)"
+    "text": "guide_legend(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nrow=None,\n    ncol=None,\n    byrow=False,\n    override_aes=default_field({}),\n    available_aes=no_init_mutable({\"any\"}),\n    layer_parameters=no_init_mutable([])\n)"
   },
   {
     "objectID": "reference/guide_legend.html#parameters",
