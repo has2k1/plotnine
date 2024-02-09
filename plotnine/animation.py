@@ -11,11 +11,11 @@ from .exceptions import PlotnineError
 if typing.TYPE_CHECKING:
     from typing import Iterable
 
+    from plotnine import ggplot
     from plotnine.typing import (
         Artist,
         Axes,
         Figure,
-        Ggplot,
         Scale,
     )
 
@@ -53,7 +53,7 @@ class PlotnineAnimation(ArtistAnimation):
 
     def __init__(
         self,
-        plots: Iterable[Ggplot],
+        plots: Iterable[ggplot],
         interval: int = 200,
         repeat_delay: int | None = None,
         repeat: bool = True,
@@ -71,13 +71,13 @@ class PlotnineAnimation(ArtistAnimation):
         )
 
     def _draw_plots(
-        self, plots: Iterable[Ggplot]
+        self, plots: Iterable[ggplot]
     ) -> tuple[Figure, list[list[Artist]]]:
         with pd.option_context("mode.chained_assignment", None):
             return self.__draw_plots(plots)
 
     def __draw_plots(
-        self, plots: Iterable[Ggplot]
+        self, plots: Iterable[ggplot]
     ) -> tuple[Figure, list[list[Artist]]]:
         """
         Plot and return the figure and artists

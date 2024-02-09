@@ -17,9 +17,9 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
+    from plotnine import aes
     from plotnine.iapi import panel_view
     from plotnine.typing import (
-        Aes,
         Axes,
         Coord,
         DataLike,
@@ -57,7 +57,7 @@ class geom_hline(geom):
 
     def __init__(
         self,
-        mapping: Aes | None = None,
+        mapping: aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any,
     ):

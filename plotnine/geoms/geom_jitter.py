@@ -10,7 +10,8 @@ from .geom_point import geom_point
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from plotnine.typing import Aes, DataLike
+    from plotnine import aes
+    from plotnine.typing import DataLike
 
 
 @document
@@ -52,7 +53,7 @@ class geom_jitter(geom_point):
 
     def __init__(
         self,
-        mapping: Aes | None = None,
+        mapping: aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any,
     ):

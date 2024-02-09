@@ -17,9 +17,9 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine import aes
     from plotnine.iapi import panel_view
     from plotnine.typing import (
-        Aes,
         Axes,
         Coord,
         DataLike,
@@ -125,7 +125,7 @@ class geom_text(geom):
 
     def __init__(
         self,
-        mapping: Aes | None = None,
+        mapping: aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any,
     ):

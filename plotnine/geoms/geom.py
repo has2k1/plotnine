@@ -24,15 +24,14 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine import aes, ggplot
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
     from plotnine.typing import (
-        Aes,
         Axes,
         Coord,
         DataLike,
         DrawingArea,
-        Ggplot,
         Layer,
         Layout,
         TupleInt2,
@@ -57,7 +56,7 @@ class geom(ABC, metaclass=Register):
     data: DataLike
     """Geom/layer specific dataframe"""
 
-    mapping: Aes
+    mapping: aes
     """Mappings i.e. `aes(x='col1', fill='col2')`{.py}"""
 
     aes_params: dict[str, Any] = {}  # setting of aesthetic
@@ -79,7 +78,7 @@ class geom(ABC, metaclass=Register):
 
     def __init__(
         self,
-        mapping: Aes | None = None,
+        mapping: aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any,
     ):
@@ -428,7 +427,7 @@ class geom(ABC, metaclass=Register):
         msg = "The geom should implement this method."
         raise NotImplementedError(msg)
 
-    def __radd__(self, plot: Ggplot) -> Ggplot:
+    def __radd__(self, plot: ggplot) -> ggplot:
         """
         Add layer representing geom object on the right
 

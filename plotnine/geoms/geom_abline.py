@@ -18,8 +18,9 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
+    from plotnine import aes
     from plotnine.iapi import panel_view
-    from plotnine.typing import Aes, Axes, Coord, DataLike
+    from plotnine.typing import Axes, Coord, DataLike
 
 
 @document
@@ -51,7 +52,7 @@ class geom_abline(geom):
 
     def __init__(
         self,
-        mapping: Aes | None = None,
+        mapping: aes | None = None,
         data: DataLike | None = None,
         **kwargs: Any,
     ):

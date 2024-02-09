@@ -14,7 +14,8 @@ from ..mapping.aes import POSITION_AESTHETICS
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    from plotnine.typing import Ggplot, Layer
+    from plotnine import ggplot
+    from plotnine.typing import Layer
 
 
 class annotate:
@@ -130,7 +131,7 @@ class annotate:
             **kwargs,
         )
 
-    def __radd__(self, plot: Ggplot) -> Ggplot:
+    def __radd__(self, plot: ggplot) -> ggplot:
         """
         Add to ggplot
         """

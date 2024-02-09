@@ -12,12 +12,12 @@ from ..iapi import labels_view, layout_details, pos_scales
 if typing.TYPE_CHECKING:
     import pandas as pd
 
+    from plotnine import ggplot
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         Axes,
         Coord,
         Facet,
-        Ggplot,
         Layers,
         Scales,
     )
@@ -48,7 +48,7 @@ class Layout:
 
     axs: list[Axes]  # MPL axes
 
-    def setup(self, layers: Layers, plot: Ggplot):
+    def setup(self, layers: Layers, plot: ggplot):
         """
         Create a layout for the panels
 
