@@ -5,9 +5,8 @@ from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
-from _renderers.numpydoc import NumpyDocRenderer
-from _renderers.render import RenderDoc, RenderDocClass, extend_base_class
-from _renderers.utils import InterLink, shortcode
+from qrenderer import QRenderer, RenderDoc, RenderDocClass, extend_base_class
+from qrenderer._pandoc.inlines import InterLink, shortcode
 from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
 from quartodoc.pandoc.components import Attr
 from quartodoc.pandoc.inlines import Inlines, Span
@@ -31,8 +30,8 @@ usage_pattern = re.compile(
 )
 
 
-class Renderer(NumpyDocRenderer):
-    style = "plotnine"
+class Renderer(QRenderer):
+    pass
 
 
 @extend_base_class
@@ -51,7 +50,7 @@ class _RenderDoc(RenderDoc):
         relpath = Path("..") / notebook.relative_to(DOC_DIR)
         embed_notebook = shortcode("embed", f"{relpath}", echo="true")
         header = Header(self.level + 1, "Examples")
-        return str(Blocks([body, header, embed_notebook]))
+        return Blocks([body, header, embed_notebook])
 
 
 @extend_base_class
