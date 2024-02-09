@@ -1,5 +1,4 @@
 quartodoc:
-  style: pkgdown
   dir: reference
   title: API Reference
   package: plotnine

@@ -51,14 +51,12 @@ jobs:
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          version: "1.4.528"
 
       - name: Install Package
         shell: bash
         run: |
           pip install git+https://github.com/has2k1/mizani.git@main
-          pip install git+https://github.com/has2k1/quartodoc.git@fix-inlinecontent-type
+          pip install git+https://github.com/has2k1/quartodoc.git@main
           python -m pip install ".[doc]"
           pip install -r requirements/doc.txt
           pushd doc; quarto add --no-prompt has2k1/issuey; popd
