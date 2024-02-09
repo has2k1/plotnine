@@ -13,12 +13,12 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
     import pandas as pd
 
+    from plotnine import ggplot
     from plotnine.iapi import labels_view, panel_view
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
         FloatSeries,
-        Ggplot,
         Scale,
     )
 
@@ -35,7 +35,7 @@ class coord:
     # if the coordinate system needs them
     params: dict[str, Any]
 
-    def __radd__(self, plot: Ggplot) -> Ggplot:
+    def __radd__(self, plot: ggplot) -> ggplot:
         """
         Add coordinates to ggplot object
         """

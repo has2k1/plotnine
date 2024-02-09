@@ -22,7 +22,7 @@ from .themes import theme
 if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal, Optional
 
-    from plotnine.typing import DataLike, Ggplot, TupleFloat2
+    from plotnine.typing import DataLike, TupleFloat2
 
 __all__ = ("qplot",)
 
@@ -42,7 +42,7 @@ def qplot(
     ylab: Optional[str] = None,
     asp: Optional[float] = None,
     **kwargs: Any,
-) -> Ggplot:
+) -> ggplot:
     """
     Quick plot
 
@@ -173,7 +173,7 @@ def qplot(
                     raise PlotnineError("Cannot infer how long x should be.")
             replace_auto(geom, "point")
 
-    p: Ggplot = ggplot(data, aes(**aesthetics))
+    p: ggplot = ggplot(data, aes(**aesthetics))
     p.environment = environment
 
     def get_facet_type(facets: str) -> Literal["grid", "wrap", "null"]:

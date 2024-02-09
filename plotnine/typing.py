@@ -168,13 +168,11 @@ CanBeStripLabellingFunc: TypeAlias = (
 StripPosition: TypeAlias = Literal["top", "right"]
 
 # Plotnine Classes
-Aes: TypeAlias = aes
 Coord: TypeAlias = coord
 Facet: TypeAlias = facet
 FacetGrid: TypeAlias = facet_grid
 FacetWrap: TypeAlias = facet_wrap
 Geom: TypeAlias = geom
-Ggplot: TypeAlias = ggplot
 Guide: TypeAlias = guide
 Layer: TypeAlias = layer
 Position: TypeAlias = position
