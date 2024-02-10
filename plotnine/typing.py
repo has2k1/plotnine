@@ -12,18 +12,12 @@ from typing import (
 
 import numpy as np
 import pandas as pd
-from mizani.transforms import trans
 from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002
 
-from plotnine.facets.layout import Layout
-from plotnine.facets.strips import Strips
 from plotnine.ggplot import ggplot
 from plotnine.guides import guide_colorbar, guide_legend
 from plotnine.iapi import strip_label_details
-from plotnine.layer import Layers
-from plotnine.mapping.aes import aes
-from plotnine.scales.scales import Scales
 
 
 class PlotAddable(Protocol):
@@ -113,9 +107,6 @@ ColorLike: TypeAlias = str
 ColorsLike: TypeAlias = (
     ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray
 )
-
-# Mizani
-Trans: TypeAlias = trans
 
 # Plotting
 FigureFormat: TypeAlias = Literal["png", "retina", "jpeg", "jpg", "svg", "pdf"]

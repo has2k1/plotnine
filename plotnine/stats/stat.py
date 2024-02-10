@@ -22,13 +22,11 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     from plotnine import ggplot
+    from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
     from plotnine.iapi import pos_scales
     from plotnine.mapping import Environment
-    from plotnine.typing import (
-        DataLike,
-        Layout,
-    )
+    from plotnine.typing import DataLike
 
 from abc import ABC
 

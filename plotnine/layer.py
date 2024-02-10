@@ -16,17 +16,17 @@ if typing.TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine.coords.coord import coord
+    from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
     from plotnine.mapping import Environment
     from plotnine.positions.position import position
+    from plotnine.scales.scales import Scales
     from plotnine.stats.stat import stat
     from plotnine.typing import (
         DataFrameConvertible,
         DataLike,
         LayerDataLike,
-        Layout,
-        Scales,
     )
 
 
