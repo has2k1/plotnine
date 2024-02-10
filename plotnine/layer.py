@@ -20,13 +20,13 @@ if typing.TYPE_CHECKING:
     from plotnine.layer import layer
     from plotnine.mapping import Environment
     from plotnine.positions.position import position
+    from plotnine.stats.stat import stat
     from plotnine.typing import (
         DataFrameConvertible,
         DataLike,
         LayerDataLike,
         Layout,
         Scales,
-        Stat,
     )
 
 
@@ -74,7 +74,7 @@ class layer:
     def __init__(
         self,
         geom: geom,
-        stat: Stat,
+        stat: stat,
         *,
         mapping: aes,
         data: Optional[LayerDataLike],
