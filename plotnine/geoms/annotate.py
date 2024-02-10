@@ -15,7 +15,7 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     from plotnine import ggplot
-    from plotnine.typing import Layer
+    from plotnine.layer import layer
 
 
 class annotate:
@@ -138,7 +138,7 @@ class annotate:
         plot += self.to_layer()  # Add layer
         return plot
 
-    def to_layer(self) -> Layer:
+    def to_layer(self) -> layer:
         """
         Make a layer that represents this annotation
 

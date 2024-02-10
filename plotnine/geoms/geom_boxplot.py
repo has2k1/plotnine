@@ -29,11 +29,11 @@ if typing.TYPE_CHECKING:
     from plotnine import aes
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
+    from plotnine.layer import layer
     from plotnine.typing import (
         Axes,
         DataLike,
         DrawingArea,
-        Layer,
     )
 
 
@@ -250,7 +250,7 @@ class geom_boxplot(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle in the box

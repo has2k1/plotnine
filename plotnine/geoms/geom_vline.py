@@ -18,11 +18,11 @@ if typing.TYPE_CHECKING:
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
+    from plotnine.layer import layer
     from plotnine.typing import (
         Axes,
         DataLike,
         DrawingArea,
-        Layer,
     )
 
 
@@ -99,7 +99,7 @@ class geom_vline(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a vertical line in the box

@@ -32,7 +32,6 @@ if typing.TYPE_CHECKING:
         Axes,
         DataLike,
         DrawingArea,
-        Layer,
         Layout,
         TupleInt2,
     )
@@ -444,7 +443,7 @@ class geom(ABC, metaclass=Register):
         plot += self.to_layer()  # Add layer
         return plot
 
-    def to_layer(self) -> Layer:
+    def to_layer(self) -> layer:
         """
         Make a layer that represents this geom
 
@@ -514,7 +513,7 @@ class geom(ABC, metaclass=Register):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle in the box

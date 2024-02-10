@@ -41,11 +41,11 @@ if typing.TYPE_CHECKING:
 
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
+    from plotnine.layer import layer
     from plotnine.typing import (
         Axes,
         DataLike,
         Figure,
-        Layer,
         PlotAddable,
         Theme,
         Watermark,
@@ -516,7 +516,7 @@ class ggplot:
         hash_token = abs(self.__hash__())
         return Path(f"plotnine-save-{hash_token}.{ext}")
 
-    def _update_labels(self, layer: Layer):
+    def _update_labels(self, layer: layer):
         """
         Update label data for the ggplot
 

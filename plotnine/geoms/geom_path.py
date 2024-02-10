@@ -21,10 +21,10 @@ if typing.TYPE_CHECKING:
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
+    from plotnine.layer import layer
     from plotnine.typing import (
         Axes,
         DrawingArea,
-        Layer,
         TupleFloat2,
         TupleInt2,
     )
@@ -178,7 +178,7 @@ class geom_path(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a horizontal line in the box
@@ -217,7 +217,7 @@ class geom_path(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
     ) -> TupleInt2:
         w, h = min_size
         pad_w, pad_h = w * 0.5, h * 0.5

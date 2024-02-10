@@ -27,9 +27,8 @@ from plotnine.facets.layout import Layout
 from plotnine.facets.strips import Strips
 from plotnine.ggplot import ggplot
 from plotnine.guides import guide_colorbar, guide_legend
-from plotnine.guides.guide import guide
 from plotnine.iapi import strip_label_details
-from plotnine.layer import Layers, layer
+from plotnine.layer import Layers
 from plotnine.mapping.aes import aes
 from plotnine.positions.position import position
 from plotnine.scales.scale import scale
@@ -163,7 +162,6 @@ CanBeStripLabellingFunc: TypeAlias = (
 StripPosition: TypeAlias = Literal["top", "right"]
 
 # Plotnine Classes
-Layer: TypeAlias = layer
 Position: TypeAlias = position
 Scale: TypeAlias = scale
 ScaleContinuous: TypeAlias = scale_continuous
