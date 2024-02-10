@@ -19,12 +19,12 @@ if typing.TYPE_CHECKING:
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
     from plotnine.mapping import Environment
+    from plotnine.positions.position import position
     from plotnine.typing import (
         DataFrameConvertible,
         DataLike,
         LayerDataLike,
         Layout,
-        Position,
         Scales,
         Stat,
     )
@@ -78,7 +78,7 @@ class layer:
         *,
         mapping: aes,
         data: Optional[LayerDataLike],
-        position: Position,
+        position: position,
         inherit_aes: bool = True,
         show_legend: bool | dict[str, bool] | None = None,
         raster: bool = False,
