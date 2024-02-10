@@ -15,8 +15,9 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     from plotnine import aes
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DataLike, FloatArray
+    from plotnine.typing import Axes, DataLike, FloatArray
 
 
 @document
@@ -108,7 +109,7 @@ class geom_violin(geom):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

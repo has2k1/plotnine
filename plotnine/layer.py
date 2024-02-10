@@ -15,9 +15,9 @@ if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, SupportsIndex
 
     from plotnine import ggplot
+    from plotnine.coords.coord import coord
     from plotnine.mapping import Environment
     from plotnine.typing import (
-        Coord,
         DataFrameConvertible,
         DataLike,
         Geom,
@@ -345,7 +345,7 @@ class layer:
         data = self.position.compute_layer(data, params, layout)
         self.data = data
 
-    def draw(self, layout: Layout, coord: Coord):
+    def draw(self, layout: Layout, coord: coord):
         """
         Draw geom
 
@@ -456,7 +456,7 @@ class Layers(List[layer]):
         for l in self:
             l.setup_data()
 
-    def draw(self, layout: Layout, coord: Coord):
+    def draw(self, layout: Layout, coord: coord):
         # If zorder is 0, it is left to MPL
         for i, l in enumerate(self, start=1):
             l.zorder = i

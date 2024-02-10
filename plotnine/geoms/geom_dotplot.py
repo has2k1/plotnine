@@ -16,8 +16,9 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DrawingArea, FloatSeries, Layer
+    from plotnine.typing import Axes, DrawingArea, FloatSeries, Layer
 
 
 @document
@@ -180,7 +181,7 @@ class geom_dotplot(geom):
     def draw_group(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

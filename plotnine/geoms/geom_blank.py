@@ -10,8 +10,9 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord
+    from plotnine.typing import Axes
 
 
 @document
@@ -36,7 +37,7 @@ class geom_blank(geom):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
