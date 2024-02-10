@@ -11,7 +11,8 @@ if typing.TYPE_CHECKING:
     from typing import Any, Type, TypeVar
 
     from plotnine.geoms.geom import geom
-    from plotnine.typing import Scale, Stat
+    from plotnine.scales.scale import scale
+    from plotnine.typing import Stat
 
     T = TypeVar("T")
 
@@ -518,7 +519,7 @@ def document_stat(stat: type[Stat]) -> type[Stat]:
     return stat
 
 
-def document_scale(cls: type[Scale]) -> type[Scale]:
+def document_scale(cls: type[scale]) -> type[scale]:
     """
     Create a documentation for a scale
 

@@ -24,13 +24,13 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.iapi import layout_details, panel_view
     from plotnine.mapping import Environment
+    from plotnine.scales.scale import scale
     from plotnine.typing import (
         Axes,
         CanBeStripLabellingFunc,
         Figure,
         Layers,
         Layout,
-        Scale,
         Theme,
     )
 
@@ -187,8 +187,8 @@ class facet:
     def init_scales(
         self,
         layout: pd.DataFrame,
-        x_scale: Optional[Scale] = None,
-        y_scale: Optional[Scale] = None,
+        x_scale: Optional[scale] = None,
+        y_scale: Optional[scale] = None,
     ) -> types.SimpleNamespace:
         scales = types.SimpleNamespace()
 

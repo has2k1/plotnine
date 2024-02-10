@@ -15,10 +15,10 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import scale_view
+    from plotnine.scales.scale import scale
     from plotnine.typing import (
         FloatArray,
         FloatSeries,
-        Scale,
         TFloatArrayLike,
         Trans,
         TupleFloat2,
@@ -99,13 +99,13 @@ class coord_trans(coord):
             y=self.trans_y.inverse(panel_params.y.range),
         )
 
-    def setup_panel_params(self, scale_x: Scale, scale_y: Scale) -> panel_view:
+    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
         """
         Compute the range and break information for the panel
         """
 
         def get_scale_view(
-            scale: Scale, coord_limits: TupleFloat2, trans: Trans
+            scale: scale, coord_limits: TupleFloat2, trans: Trans
         ) -> scale_view:
             if coord_limits:
                 coord_limits = trans.transform(coord_limits)

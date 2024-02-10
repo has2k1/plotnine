@@ -13,10 +13,10 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.iapi import scale_view
+    from plotnine.scales.scale import scale
     from plotnine.typing import (
         FloatArray,
         FloatSeries,
-        Scale,
         TupleFloat2,
     )
 
@@ -60,14 +60,14 @@ class coord_cartesian(coord):
 
         return transform_position(data, squish_infinite_x, squish_infinite_y)
 
-    def setup_panel_params(self, scale_x: Scale, scale_y: Scale) -> panel_view:
+    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
         """
         Compute the range and break information for the panel
         """
         from mizani.transforms import identity_trans
 
         def get_scale_view(
-            scale: Scale, coord_limits: TupleFloat2
+            scale: scale, coord_limits: TupleFloat2
         ) -> scale_view:
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(

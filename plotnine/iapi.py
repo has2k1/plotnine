@@ -14,12 +14,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any, Iterator, Optional, Sequence
 
+    from plotnine.scales.scale import scale
     from plotnine.typing import (
         Axes,
         CoordRange,
         Figure,
         FloatArrayLike,
-        Scale,
         ScaleBreaks,
         ScaledAestheticsName,
         ScaleLimits,
@@ -36,7 +36,7 @@ class scale_view:
     Scale information after it has been trained
     """
 
-    scale: Scale
+    scale: scale
     aesthetics: list[ScaledAestheticsName]
     name: Optional[str]
     # Trainned limits of the scale
@@ -155,8 +155,8 @@ class pos_scales:
     Position Scales
     """
 
-    x: Scale
-    y: Scale
+    x: scale
+    y: scale
 
 
 @dataclass
