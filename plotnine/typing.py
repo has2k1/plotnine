@@ -163,7 +163,6 @@ CanBeStripLabellingFunc: TypeAlias = (
 StripPosition: TypeAlias = Literal["top", "right"]
 
 # Plotnine Classes
-Guide: TypeAlias = guide
 Layer: TypeAlias = layer
 Position: TypeAlias = position
 Scale: TypeAlias = scale
