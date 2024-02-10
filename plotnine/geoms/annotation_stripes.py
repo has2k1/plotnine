@@ -19,8 +19,9 @@ if typing.TYPE_CHECKING:
     from matplotlib.axes import Axes
 
     from plotnine.coords.coord import coord
+    from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
-    from plotnine.typing import Layout, TupleFloat2
+    from plotnine.typing import TupleFloat2
 
 
 class annotation_stripes(annotate):

@@ -11,9 +11,10 @@ from ..iapi import range_view
 if typing.TYPE_CHECKING:
     from typing import Type
 
+    from mizani.transforms import trans
+
     from plotnine.typing import (
         CoordRange,
-        Trans,
         TupleFloat2,
         TupleFloat4,
     )
@@ -35,7 +36,7 @@ def _expand_range_distinct(
 def expand_range(
     x: CoordRange,
     expand: TupleFloat2 | TupleFloat4,
-    trans: Trans | Type[Trans],
+    trans: trans | Type[trans],
 ) -> range_view:
     """
     Expand Coordinate Range in coordinate space

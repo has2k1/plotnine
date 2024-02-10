@@ -16,6 +16,8 @@ from .scale import scale
 if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence
 
+    from mizani.transforms import trans
+
     from plotnine.typing import (
         AnyArrayLike,
         CoordRange,
@@ -24,7 +26,6 @@ if typing.TYPE_CHECKING:
         ScaleDiscreteLimits,
         ScaleDiscreteLimitsRaw,
         ScaleLabels,
-        Trans,
         TupleFloat2,
         TupleFloat4,
     )
@@ -126,7 +127,7 @@ class scale_discrete(scale):
         limits: ScaleDiscreteLimits,
         expand: TupleFloat2 | TupleFloat4,
         coord_limits: TupleFloat2,
-        trans: Trans,
+        trans: trans,
     ) -> range_view:
         """
         Calculate the final range in coordinate space

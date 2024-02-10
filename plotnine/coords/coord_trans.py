@@ -13,6 +13,7 @@ if typing.TYPE_CHECKING:
     from typing import Optional
 
     import pandas as pd
+    from mizani.transforms import trans
 
     from plotnine.iapi import scale_view
     from plotnine.scales.scale import scale
@@ -20,7 +21,6 @@ if typing.TYPE_CHECKING:
         FloatArray,
         FloatSeries,
         TFloatArrayLike,
-        Trans,
         TupleFloat2,
     )
 
@@ -44,13 +44,13 @@ class coord_trans(coord):
         use the limits from the data.
     """
 
-    trans_x: Trans
-    trans_y: Trans
+    trans_x: trans
+    trans_y: trans
 
     def __init__(
         self,
-        x: str | Trans = "identity",
-        y: str | Trans = "identity",
+        x: str | trans = "identity",
+        y: str | trans = "identity",
         xlim: Optional[TupleFloat2] = None,
         ylim: Optional[TupleFloat2] = None,
         expand: bool = True,
@@ -105,7 +105,7 @@ class coord_trans(coord):
         """
 
         def get_scale_view(
-            scale: scale, coord_limits: TupleFloat2, trans: Trans
+            scale: scale, coord_limits: TupleFloat2, trans: trans
         ) -> scale_view:
             if coord_limits:
                 coord_limits = trans.transform(coord_limits)
@@ -150,7 +150,7 @@ class coord_trans(coord):
 
 
 def transform_value(
-    trans: Trans, value: TFloatArrayLike, range: TupleFloat2
+    trans: trans, value: TFloatArrayLike, range: TupleFloat2
 ) -> TFloatArrayLike:
     """
     Transform value

@@ -18,16 +18,16 @@ if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
     from matplotlib.axes import Axes
+    from mizani.transforms import trans
     from typing_extensions import TypeGuard
 
     from plotnine.coords.coord import coord
+    from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
     from plotnine.iapi import panel_view
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         AnyArray,
-        Layout,
-        Trans,
         TupleFloat2,
         TupleFloat3,
         TupleFloat4,
@@ -98,7 +98,7 @@ class _geom_logticks(geom_rug):
             The bases (base_x, base_y) to use when generating the ticks.
         """
 
-        def is_log_trans(t: Trans) -> bool:
+        def is_log_trans(t: trans) -> bool:
             return hasattr(t, "base") and t.__class__.__name__.startswith(
                 "log"
             )

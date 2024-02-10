@@ -17,9 +17,10 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
     from plotnine.iapi import pos_scales
-    from plotnine.typing import Layout, TransformCol
+    from plotnine.typing import TransformCol
 
 
 class position(ABC, metaclass=Register):

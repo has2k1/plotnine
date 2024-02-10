@@ -28,13 +28,10 @@ if typing.TYPE_CHECKING:
 
     from plotnine import aes, ggplot
     from plotnine.coords.coord import coord
+    from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
-    from plotnine.typing import (
-        DataLike,
-        Layout,
-        TupleInt2,
-    )
+    from plotnine.typing import DataLike, TupleInt2
 
 
 class geom(ABC, metaclass=Register):

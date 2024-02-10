@@ -17,7 +17,8 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.iapi import panel_view
-    from plotnine.typing import Layers, Scales
+    from plotnine.layer import Layers
+    from plotnine.scales.scales import Scales
 
 
 class Layout:

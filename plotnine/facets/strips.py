@@ -12,8 +12,9 @@ if TYPE_CHECKING:
 
     from plotnine import theme
     from plotnine.facets.facet import facet
+    from plotnine.facets.layout import Layout
     from plotnine.iapi import layout_details
-    from plotnine.typing import Layout, StripPosition
+    from plotnine.typing import StripPosition
 
 
 class strip:

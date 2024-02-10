@@ -19,6 +19,8 @@ from .scale import scale
 if typing.TYPE_CHECKING:
     from typing import Any, Optional, Sequence, Type
 
+    from mizani.transforms import trans
+
     from plotnine.typing import (
         CoordRange,
         FloatArrayLike,
@@ -29,7 +31,6 @@ if typing.TYPE_CHECKING:
         ScaleLabels,
         ScaleMinorBreaksRaw,
         TFloatArrayLike,
-        Trans,
         TupleFloat2,
         TupleFloat4,
     )
@@ -78,7 +79,7 @@ class scale_continuous(scale):
     oob = staticmethod(censor)  # what to do with out of bounds data points
     breaks: ScaleContinuousBreaksRaw
     minor_breaks: ScaleMinorBreaksRaw = True
-    _trans: Trans | str = "identity"  # transform class
+    _trans: trans | str = "identity"  # transform class
 
     def __init__(self, **kwargs):
         # Make sure we have a transform.
@@ -117,14 +118,14 @@ class scale_continuous(scale):
             )
 
     @property
-    def trans(self) -> Trans:
+    def trans(self) -> trans:
         return self._trans  # pyright: ignore
 
     @trans.setter
-    def trans(self, value: Trans | str | Type[Trans]):
+    def trans(self, value: trans | str | Type[trans]):
         from mizani.transforms import gettrans
 
-        t: Trans = gettrans(value)
+        t: trans = gettrans(value)
         self._check_trans(t)
         self._trans = t
 
@@ -268,7 +269,7 @@ class scale_continuous(scale):
         limits: ScaleContinuousLimits,
         expand: TupleFloat2 | TupleFloat4,
         coord_limits: CoordRange | None,
-        trans: Trans,
+        trans: trans,
     ) -> range_view:
         """
         Calculate the final range in coordinate space
