@@ -11,13 +11,12 @@ from .exceptions import PlotnineError
 if typing.TYPE_CHECKING:
     from typing import Iterable
 
+    from matplotlib.artist import Artist
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+
     from plotnine import ggplot
     from plotnine.scales.scale import scale
-    from plotnine.typing import (
-        Artist,
-        Axes,
-        Figure,
-    )
 
 __all__ = ("PlotnineAnimation",)
 

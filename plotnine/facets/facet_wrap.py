@@ -21,8 +21,9 @@ from .strips import Strips, strip
 if typing.TYPE_CHECKING:
     from typing import Literal, Optional, Sequence
 
+    from matplotlib.axes import Axes
+
     from plotnine.iapi import layout_details
-    from plotnine.typing import Axes
 
 
 class facet_wrap(facet):

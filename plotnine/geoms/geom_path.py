@@ -17,17 +17,14 @@ if typing.TYPE_CHECKING:
 
     import numpy.typing as npt
     import pandas as pd
+    from matplotlib.axes import Axes
+    from matplotlib.offsetbox import DrawingArea
     from matplotlib.path import Path
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import (
-        Axes,
-        DrawingArea,
-        TupleFloat2,
-        TupleInt2,
-    )
+    from plotnine.typing import TupleFloat2, TupleInt2
 
 
 @document

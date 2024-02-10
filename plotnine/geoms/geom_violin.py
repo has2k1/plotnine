@@ -14,10 +14,12 @@ from .geom_polygon import geom_polygon
 if typing.TYPE_CHECKING:
     from typing import Any
 
+    from matplotlib.axes import Axes
+
     from plotnine import aes
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, DataLike, FloatArray
+    from plotnine.typing import DataLike, FloatArray
 
 
 @document

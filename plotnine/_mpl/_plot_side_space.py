@@ -31,9 +31,12 @@ if TYPE_CHECKING:
         TypeAlias,
     )
 
+    from matplotlib.artist import Artist
+    from matplotlib.axes import Axes
     from matplotlib.axis import Tick
+    from matplotlib.text import Text
 
-    from plotnine.typing import Artist, Axes, Text, TupleFloat2
+    from plotnine.typing import TupleFloat2
 
     from .layout_engine import LayoutPack
 

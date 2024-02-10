@@ -25,16 +25,14 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import numpy.typing as npt
+    from matplotlib.axes import Axes
+    from matplotlib.offsetbox import DrawingArea
 
     from plotnine import aes
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import (
-        Axes,
-        DataLike,
-        DrawingArea,
-    )
+    from plotnine.typing import DataLike
 
 
 @document

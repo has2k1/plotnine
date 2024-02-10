@@ -14,10 +14,11 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
+    from matplotlib.axes import Axes
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, ColorsLike
+    from plotnine.typing import ColorsLike
 
 
 @document

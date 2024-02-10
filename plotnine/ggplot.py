@@ -37,18 +37,15 @@ from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 
 if typing.TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
     from typing_extensions import Self
 
     from plotnine import watermark
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
-    from plotnine.typing import (
-        Axes,
-        DataLike,
-        Figure,
-        PlotAddable,
-    )
+    from plotnine.typing import DataLike, PlotAddable
 
 __all__ = ("ggplot", "ggsave", "save_as_pdf_pages")
 

@@ -7,19 +7,16 @@ from matplotlib.layout_engine import LayoutEngine
 from matplotlib.text import Text
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
+    from typing import Any, Optional
 
+    from matplotlib.axes import Axes
     from matplotlib.backend_bases import RendererBase
+    from matplotlib.figure import Figure
 
     from plotnine import ggplot, theme
     from plotnine._mpl.patches import StripTextPatch
     from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
-    from plotnine.typing import (
-        Any,
-        Axes,
-        Figure,
-    )
 
 
 @dataclass

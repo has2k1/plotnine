@@ -14,11 +14,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any, Iterator, Optional, Sequence
 
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+
     from plotnine.scales.scale import scale
     from plotnine.typing import (
-        Axes,
         CoordRange,
-        Figure,
         FloatArrayLike,
         ScaleBreaks,
         ScaledAestheticsName,

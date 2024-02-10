@@ -18,6 +18,8 @@ if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
     import numpy.typing as npt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
     from matplotlib.gridspec import GridSpec
 
     from plotnine import ggplot, theme
@@ -26,9 +28,7 @@ if typing.TYPE_CHECKING:
     from plotnine.mapping import Environment
     from plotnine.scales.scale import scale
     from plotnine.typing import (
-        Axes,
         CanBeStripLabellingFunc,
-        Figure,
         Layers,
         Layout,
     )

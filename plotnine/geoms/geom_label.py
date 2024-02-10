@@ -10,9 +10,9 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
+    from matplotlib.offsetbox import DrawingArea
 
     from plotnine.layer import layer
-    from plotnine.typing import DrawingArea
 
 
 _aes = geom_text.DEFAULT_AES.copy()
