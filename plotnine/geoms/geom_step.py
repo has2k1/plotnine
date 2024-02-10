@@ -14,8 +14,9 @@ from .geom_path import geom_path
 if typing.TYPE_CHECKING:
     from typing import Any
 
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord
+    from plotnine.typing import Axes
 
 
 @document
@@ -50,7 +51,7 @@ class geom_step(geom_path):
     def draw_group(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

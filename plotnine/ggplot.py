@@ -39,9 +39,9 @@ from .themes.theme import theme, theme_get
 if typing.TYPE_CHECKING:
     from typing_extensions import Self
 
+    from plotnine.coords.coord import coord
     from plotnine.typing import (
         Axes,
-        Coord,
         DataLike,
         Facet,
         Figure,
@@ -77,7 +77,7 @@ class ggplot:
     axs: list[Axes]
     theme: Theme
     facet: Facet
-    coordinates: Coord
+    coordinates: coord
 
     def __init__(
         self,
@@ -96,7 +96,7 @@ class ggplot:
         self.guides = guides()
         self.scales = Scales()
         self.theme = theme_get()
-        self.coordinates: Coord = coord_cartesian()
+        self.coordinates: coord = coord_cartesian()
         self.environment = Environment.capture(1)
         self.layout = Layout()
         self.watermarks: list[Watermark] = []

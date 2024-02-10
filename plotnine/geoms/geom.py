@@ -25,11 +25,11 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine import aes, ggplot
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
     from plotnine.typing import (
         Axes,
-        Coord,
         DataLike,
         DrawingArea,
         Layer,
@@ -263,7 +263,7 @@ class geom(ABC, metaclass=Register):
         return data
 
     def draw_layer(
-        self, data: pd.DataFrame, layout: Layout, coord: Coord, **params: Any
+        self, data: pd.DataFrame, layout: Layout, coord: coord, **params: Any
     ):
         """
         Draw layer across all panels
@@ -296,7 +296,7 @@ class geom(ABC, metaclass=Register):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
@@ -338,7 +338,7 @@ class geom(ABC, metaclass=Register):
     def draw_group(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
@@ -375,7 +375,7 @@ class geom(ABC, metaclass=Register):
     def draw_unit(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

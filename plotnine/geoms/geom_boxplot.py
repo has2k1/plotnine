@@ -27,10 +27,10 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
 
     from plotnine import aes
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         Axes,
-        Coord,
         DataLike,
         DrawingArea,
         Layer,
@@ -178,7 +178,7 @@ class geom_boxplot(geom):
     def draw_group(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

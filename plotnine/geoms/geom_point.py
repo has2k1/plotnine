@@ -14,8 +14,9 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Coord, DrawingArea, Layer, TupleInt2
+    from plotnine.typing import Axes, DrawingArea, Layer, TupleInt2
 
 
 @document
@@ -50,7 +51,7 @@ class geom_point(geom):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
@@ -63,7 +64,7 @@ class geom_point(geom):
     def draw_group(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
@@ -77,7 +78,7 @@ class geom_point(geom):
     def draw_unit(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

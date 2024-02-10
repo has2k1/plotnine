@@ -21,12 +21,12 @@ if typing.TYPE_CHECKING:
     from matplotlib.gridspec import GridSpec
 
     from plotnine import ggplot
+    from plotnine.coords.coord import coord
     from plotnine.iapi import layout_details, panel_view
     from plotnine.mapping import Environment
     from plotnine.typing import (
         Axes,
         CanBeStripLabellingFunc,
-        Coord,
         Figure,
         Layers,
         Layout,
@@ -89,7 +89,7 @@ class facet:
     figure: Figure
 
     # coord object, automatically updated before drawing the plot
-    coordinates: Coord
+    coordinates: coord
 
     # layout object, automatically updated before drawing the plot
     layout: Layout

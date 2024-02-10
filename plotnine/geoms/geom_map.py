@@ -19,10 +19,10 @@ if typing.TYPE_CHECKING:
     from shapely.geometry.polygon import LinearRing, Polygon
 
     from plotnine import aes
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         Axes,
-        Coord,
         DataLike,
         DrawingArea,
         Layer,
@@ -119,7 +119,7 @@ class geom_map(geom):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):

@@ -19,10 +19,10 @@ if typing.TYPE_CHECKING:
     import pandas as pd
     from matplotlib.path import Path
 
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         Axes,
-        Coord,
         DrawingArea,
         Layer,
         TupleFloat2,
@@ -108,7 +108,7 @@ class geom_path(geom):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
@@ -154,7 +154,7 @@ class geom_path(geom):
     def draw_group(
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
@@ -265,7 +265,7 @@ class arrow:
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         constant: bool = True,
         **params: Any,
@@ -383,7 +383,7 @@ class arrow:
         x2: npt.ArrayLike,
         y2: npt.ArrayLike,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
     ) -> list[Path]:
         """

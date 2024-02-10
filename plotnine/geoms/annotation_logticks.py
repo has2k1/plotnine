@@ -19,11 +19,11 @@ if typing.TYPE_CHECKING:
 
     from typing_extensions import TypeGuard
 
+    from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         AnyArray,
         Axes,
-        Coord,
         Geom,
         Layout,
         Scale,
@@ -55,7 +55,7 @@ class _geom_logticks(geom_rug):
     draw_legend = staticmethod(geom_path.draw_legend)
 
     def draw_layer(
-        self, data: pd.DataFrame, layout: Layout, coord: Coord, **params: Any
+        self, data: pd.DataFrame, layout: Layout, coord: coord, **params: Any
     ):
         """
         Draw ticks on every panel
@@ -71,7 +71,7 @@ class _geom_logticks(geom_rug):
         base: Optional[float],
         sides: str,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
     ) -> TupleFloat2:
         """
         Check the log transforms
@@ -197,7 +197,7 @@ class _geom_logticks(geom_rug):
         self,
         data: pd.DataFrame,
         panel_params: panel_view,
-        coord: Coord,
+        coord: coord,
         ax: Axes,
         **params: Any,
     ):
