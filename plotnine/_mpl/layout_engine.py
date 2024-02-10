@@ -11,7 +11,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.backend_bases import RendererBase
 
-    from plotnine import ggplot
+    from plotnine import ggplot, theme
     from plotnine._mpl.patches import StripTextPatch
     from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
         Any,
         Axes,
         Figure,
-        Theme,
     )
 
 
@@ -32,7 +31,7 @@ class LayoutPack:
     axs: list[Axes]
     figure: Figure
     renderer: RendererBase
-    theme: Theme
+    theme: theme
     facet: facet
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None

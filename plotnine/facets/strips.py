@@ -9,13 +9,13 @@ if TYPE_CHECKING:
 
     from typing_extensions import Self
 
+    from plotnine import theme
     from plotnine.facets.facet import facet
     from plotnine.iapi import layout_details
     from plotnine.typing import (
         Axes,
         Layout,
         StripPosition,
-        Theme,
     )
 
 
@@ -170,7 +170,7 @@ class Strips(List[strip]):
         return self.facet.layout
 
     @property
-    def theme(self) -> Theme:
+    def theme(self) -> theme:
         return self.facet.theme
 
     @property

@@ -47,7 +47,6 @@ if typing.TYPE_CHECKING:
         DataLike,
         Figure,
         PlotAddable,
-        Theme,
         Watermark,
     )
 
@@ -75,7 +74,7 @@ class ggplot:
 
     figure: Figure
     axs: list[Axes]
-    theme: Theme
+    theme: theme
     facet: facet
     coordinates: coord
 

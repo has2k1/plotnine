@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Callable, Literal
 
-    from plotnine.typing import Theme
+    from plotnine import theme
 
     from .element_base import element_base
 
@@ -24,7 +24,7 @@ class Margin:
     units: Literal["pt", "in", "lines", "fig"] = "pt"
 
     def __post_init__(self):
-        self.theme: Theme
+        self.theme: theme
         self.themeable_name: str
 
         if self.units in ("pts", "points", "px", "pixels"):

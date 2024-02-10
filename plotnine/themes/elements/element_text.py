@@ -12,7 +12,8 @@ from .margin import Margin
 if TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
-    from plotnine.typing import Theme, TupleFloat3, TupleFloat4
+    from plotnine import theme
+    from plotnine.typing import TupleFloat3, TupleFloat4
 
 
 class element_text(element_base):
@@ -140,7 +141,7 @@ class element_text(element_base):
             if variables[name] is not None:
                 self.properties[name] = variables[name]
 
-    def setup(self, theme: Theme, themeable_name: str):
+    def setup(self, theme: theme, themeable_name: str):
         """
         Setup the theme_element before drawing
         """

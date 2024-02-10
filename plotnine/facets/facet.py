@@ -20,7 +20,7 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
     from matplotlib.gridspec import GridSpec
 
-    from plotnine import ggplot
+    from plotnine import ggplot, theme
     from plotnine.coords.coord import coord
     from plotnine.iapi import layout_details, panel_view
     from plotnine.mapping import Environment
@@ -31,7 +31,6 @@ if typing.TYPE_CHECKING:
         Figure,
         Layers,
         Layout,
-        Theme,
     )
 
 
@@ -83,7 +82,7 @@ class facet:
     params: dict[str, Any]
 
     # Theme object, automatically updated before drawing the plot
-    theme: Theme
+    theme: theme
 
     # Figure object on which the facet panels are created
     figure: Figure
