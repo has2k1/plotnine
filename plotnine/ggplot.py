@@ -39,6 +39,7 @@ from .themes.theme import theme, theme_get
 if typing.TYPE_CHECKING:
     from typing_extensions import Self
 
+    from plotnine import watermark
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
@@ -47,7 +48,6 @@ if typing.TYPE_CHECKING:
         DataLike,
         Figure,
         PlotAddable,
-        Watermark,
     )
 
 __all__ = ("ggplot", "ggsave", "save_as_pdf_pages")
@@ -98,7 +98,7 @@ class ggplot:
         self.coordinates: coord = coord_cartesian()
         self.environment = Environment.capture(1)
         self.layout = Layout()
-        self.watermarks: list[Watermark] = []
+        self.watermarks: list[watermark] = []
 
         # build artefacts
         self._build_objs = NS()
