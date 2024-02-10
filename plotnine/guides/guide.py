@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import PackerBase
     from typing_extensions import Self
 
-    from plotnine import aes, guides, theme
+    from plotnine import aes, guides
     from plotnine.layer import Layers
     from plotnine.scales.scale import scale
     from plotnine.typing import (
@@ -62,14 +62,14 @@ class guide(ABC, metaclass=Register):
     """
 
     title: Optional[str] = None
-    theme: theme = field(default_factory=Theme)
+    theme: Theme = field(default_factory=Theme)
     position: Optional[LegendPosition] = None
     direction: Optional[Orientation] = None
     reverse: bool = False
     order: int = 0
 
     # Non-Parameter Attributes
-    available_aes: set[str] = no_init_mutable(set())
+    available_aes: set[str] = field(init=False, default_factory=set)
 
     def __post_init__(self):
         self.hash: str
@@ -173,7 +173,7 @@ class GuideElements:
     Access & calculate theming for the guide
     """
 
-    theme: theme
+    theme: Theme
     guide: guide
 
     def __post_init__(self):

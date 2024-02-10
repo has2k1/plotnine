@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from contextlib import suppress
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from itertools import islice
 from types import SimpleNamespace as NS
@@ -12,12 +12,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from .._utils import (
-    default_field,
-    get_opposite_side,
-    no_init_mutable,
-    remove_missing,
-)
+from .._utils import get_opposite_side, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from ..themes import theme
@@ -64,11 +59,15 @@ class guide_legend(guide):
     nrow: Optional[int] = None
     ncol: Optional[int] = None
     byrow: bool = False
-    override_aes: dict[str, Any] = default_field({})
+    override_aes: dict[str, Any] = field(default_factory=dict)
 
     # Non-Parameter Attributes
-    available_aes: set[str] = no_init_mutable({"any"})
-    layer_parameters: list[LayerParameters] = no_init_mutable([])
+    available_aes: set[str] = field(
+        init=False, default_factory=lambda: {"any"}
+    )
+    layer_parameters: list[LayerParameters] = field(
+        init=False, default_factory=list
+    )
 
     def __post_init__(self):
         self._elements_cls = GuideElementsLegend
