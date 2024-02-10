@@ -239,7 +239,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
 "plotnine/__init__.py" = ["F403", "F405"]
-"plotnine/typing.py" = ["F401"]
+"plotnine/typing.py" = ["F401", "TCH001"]
 "doc/_renderers/numpydoc.py" = ["F811"]
 "doc/_renderers/format.py" = ["F811"]
 "doc/_renderer.py" = ["F811"]

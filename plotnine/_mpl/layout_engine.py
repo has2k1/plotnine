@@ -13,11 +13,11 @@ if typing.TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.patches import StripTextPatch
+    from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
     from plotnine.typing import (
         Any,
         Axes,
-        Facet,
         Figure,
         Theme,
     )
@@ -33,7 +33,7 @@ class LayoutPack:
     figure: Figure
     renderer: RendererBase
     theme: Theme
-    facet: Facet
+    facet: facet
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
     # The legends references the structure that contains the

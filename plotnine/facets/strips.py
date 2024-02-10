@@ -9,10 +9,10 @@ if TYPE_CHECKING:
 
     from typing_extensions import Self
 
+    from plotnine.facets.facet import facet
     from plotnine.iapi import layout_details
     from plotnine.typing import (
         Axes,
-        Facet,
         Layout,
         StripPosition,
         Theme,
@@ -38,7 +38,7 @@ class strip:
         self,
         vars: Sequence[str],
         layout_info: layout_details,
-        facet: Facet,
+        facet: facet,
         ax: Axes,
         position: StripPosition,
     ):
@@ -152,10 +152,10 @@ class Strips(List[strip]):
     List of strips for a plot
     """
 
-    facet: Facet
+    facet: facet
 
     @staticmethod
-    def from_facet(facet: Facet) -> Strips:
+    def from_facet(facet: facet) -> Strips:
         new = Strips()
         new.facet = facet
         new.setup()
