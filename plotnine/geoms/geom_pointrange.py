@@ -16,7 +16,8 @@ if typing.TYPE_CHECKING:
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, DrawingArea, Layer, TupleInt2
+    from plotnine.layer import layer
+    from plotnine.typing import Axes, DrawingArea, TupleInt2
 
 
 @document
@@ -67,7 +68,7 @@ class geom_pointrange(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a point in the box
@@ -93,7 +94,7 @@ class geom_pointrange(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
     ) -> TupleInt2:
         data = copy(data)
         data["size"] = data["size"] * lyr.geom.params["fatten"]

@@ -20,11 +20,11 @@ if typing.TYPE_CHECKING:
     from plotnine import aes
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
+    from plotnine.layer import layer
     from plotnine.typing import (
         Axes,
         DataLike,
         DrawingArea,
-        Layer,
         TupleInt2,
     )
 
@@ -274,7 +274,7 @@ class geom_text(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw letter 'a' in the box
@@ -312,7 +312,7 @@ class geom_text(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: TupleInt2, lyr: Layer
+        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
     ) -> TupleInt2:
         w, h = min_size
         _w = _h = data["size"]

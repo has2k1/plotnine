@@ -17,11 +17,11 @@ if typing.TYPE_CHECKING:
     from plotnine import ggplot
     from plotnine.coords.coord import coord
     from plotnine.geoms.geom import geom
+    from plotnine.layer import layer
     from plotnine.mapping import Environment
     from plotnine.typing import (
         DataFrameConvertible,
         DataLike,
-        Layer,
         LayerDataLike,
         Layout,
         Position,
@@ -94,7 +94,7 @@ class layer:
         self.zorder = 0
 
     @staticmethod
-    def from_geom(geom: geom) -> Layer:
+    def from_geom(geom: geom) -> layer:
         """
         Create a layer given a [](`~plotnine.geoms.geom`)
 

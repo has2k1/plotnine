@@ -11,7 +11,8 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
-    from plotnine.typing import DrawingArea, Layer
+    from plotnine.layer import layer
+    from plotnine.typing import DrawingArea
 
 
 _aes = geom_text.DEFAULT_AES.copy()
@@ -84,7 +85,7 @@ class geom_label(geom_text):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: Layer
+        data: pd.Series[Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw letter 'a' in the box
