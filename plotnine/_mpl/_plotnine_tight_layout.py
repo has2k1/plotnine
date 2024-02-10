@@ -20,16 +20,14 @@ from .utils import get_transPanels
 if typing.TYPE_CHECKING:
     from typing import Literal, TypeAlias
 
+    from matplotlib.figure import Figure
+    from matplotlib.text import Text
     from matplotlib.transforms import Transform
 
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
-    from plotnine.typing import (
-        Figure,
-        Text,
-        TupleFloat2,
-    )
+    from plotnine.typing import TupleFloat2
 
     from .layout_engine import LayoutPack
 

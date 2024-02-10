@@ -12,13 +12,6 @@ from typing import (
 
 import numpy as np
 import pandas as pd
-from matplotlib.artist import Artist
-from matplotlib.axes import Axes
-from matplotlib.axis import Axis, XAxis, XTick, YAxis, YTick
-from matplotlib.figure import Figure
-from matplotlib.offsetbox import DrawingArea
-from matplotlib.patches import PathPatch
-from matplotlib.text import Text
 from mizani.transforms import trans
 from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002

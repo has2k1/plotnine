@@ -16,17 +16,14 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
+    from matplotlib.axes import Axes
+    from matplotlib.offsetbox import DrawingArea
 
     from plotnine import aes
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import (
-        Axes,
-        DataLike,
-        DrawingArea,
-        TupleInt2,
-    )
+    from plotnine.typing import DataLike, TupleInt2
 
 
 # Note: hjust & vjust are parameters instead of aesthetics

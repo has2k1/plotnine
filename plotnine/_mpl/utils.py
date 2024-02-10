@@ -7,14 +7,11 @@ from matplotlib.transforms import Affine2D, Bbox
 from .transforms import ZEROS_BBOX
 
 if typing.TYPE_CHECKING:
+    from matplotlib.artist import Artist
+    from matplotlib.axes import Axes
     from matplotlib.backend_bases import RendererBase
+    from matplotlib.figure import Figure
     from matplotlib.transforms import Transform
-
-    from plotnine.typing import (
-        Artist,
-        Axes,
-        Figure,
-    )
 
 
 def bbox_in_figure_space(

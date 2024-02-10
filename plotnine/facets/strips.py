@@ -7,16 +7,13 @@ from ..iapi import strip_draw_info, strip_label_details
 if TYPE_CHECKING:
     from typing import Sequence
 
+    from matplotlib.axes import Axes
     from typing_extensions import Self
 
     from plotnine import theme
     from plotnine.facets.facet import facet
     from plotnine.iapi import layout_details
-    from plotnine.typing import (
-        Axes,
-        Layout,
-        StripPosition,
-    )
+    from plotnine.typing import Layout, StripPosition
 
 
 class strip:

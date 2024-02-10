@@ -17,6 +17,7 @@ from .geom_rug import geom_rug
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
+    from matplotlib.axes import Axes
     from typing_extensions import TypeGuard
 
     from plotnine.coords.coord import coord
@@ -25,7 +26,6 @@ if typing.TYPE_CHECKING:
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         AnyArray,
-        Axes,
         Layout,
         Trans,
         TupleFloat2,

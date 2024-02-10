@@ -13,10 +13,11 @@ from .themeable import Themeables, themeable
 if typing.TYPE_CHECKING:
     from typing import Type
 
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
     from typing_extensions import Self
 
     from plotnine import ggplot
-    from plotnine.typing import Axes, Figure
 
 
 # All complete themes are initiated with these rcparams. They

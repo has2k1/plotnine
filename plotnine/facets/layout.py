@@ -11,16 +11,13 @@ from ..iapi import labels_view, layout_details, pos_scales
 
 if typing.TYPE_CHECKING:
     import pandas as pd
+    from matplotlib.axes import Axes
 
     from plotnine import ggplot
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.iapi import panel_view
-    from plotnine.typing import (
-        Axes,
-        Layers,
-        Scales,
-    )
+    from plotnine.typing import Layers, Scales
 
 
 class Layout:

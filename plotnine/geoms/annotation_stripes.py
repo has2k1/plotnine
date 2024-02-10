@@ -16,9 +16,11 @@ from .geom_rect import geom_rect
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Sequence
 
+    from matplotlib.axes import Axes
+
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
-    from plotnine.typing import Axes, Layout, TupleFloat2
+    from plotnine.typing import Layout, TupleFloat2
 
 
 class annotation_stripes(annotate):

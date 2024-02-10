@@ -23,15 +23,15 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
+    from matplotlib.axes import Axes
+    from matplotlib.offsetbox import DrawingArea
 
     from plotnine import aes, ggplot
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
     from plotnine.typing import (
-        Axes,
         DataLike,
-        DrawingArea,
         Layout,
         TupleInt2,
     )

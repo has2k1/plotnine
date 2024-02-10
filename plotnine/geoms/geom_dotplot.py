@@ -15,11 +15,13 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
+    from matplotlib.axes import Axes
+    from matplotlib.offsetbox import DrawingArea
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import Axes, DrawingArea, FloatSeries
+    from plotnine.typing import FloatSeries
 
 
 @document
