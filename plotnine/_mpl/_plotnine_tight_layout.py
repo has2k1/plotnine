@@ -23,9 +23,9 @@ if typing.TYPE_CHECKING:
     from matplotlib.transforms import Transform
 
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
+    from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
     from plotnine.typing import (
-        Facet,
         Figure,
         Text,
         TupleFloat2,
@@ -72,7 +72,7 @@ class TightParams:
         )
 
     def to_aspect_ratio(
-        self, facet: Facet, ratio: float, parts: WHSpaceParts
+        self, facet: facet, ratio: float, parts: WHSpaceParts
     ) -> TightParams:
         """
         Modify TightParams to get a given aspect ratio
@@ -85,7 +85,7 @@ class TightParams:
             return self._reduce_height(facet, ratio, parts)
 
     def _reduce_height(
-        self, facet: Facet, ratio: float, parts: WHSpaceParts
+        self, facet: facet, ratio: float, parts: WHSpaceParts
     ) -> TightParams:
         """
         Reduce the height of axes to get the aspect ratio
@@ -109,7 +109,7 @@ class TightParams:
         return self
 
     def _reduce_width(
-        self, facet: Facet, ratio: float, parts: WHSpaceParts
+        self, facet: facet, ratio: float, parts: WHSpaceParts
     ) -> TightParams:
         """
         Reduce the width of axes to get the aspect ratio

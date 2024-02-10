@@ -14,10 +14,10 @@ if typing.TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine.coords.coord import coord
+    from plotnine.facets.facet import facet
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         Axes,
-        Facet,
         Layers,
         Scales,
     )
@@ -29,7 +29,7 @@ class Layout:
     """
 
     # facet
-    facet: Facet
+    facet: facet
 
     # coordinate system
     coord: coord

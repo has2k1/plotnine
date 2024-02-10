@@ -23,7 +23,6 @@ from mizani.transforms import trans
 from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002
 
-from plotnine.facets.facet import facet
 from plotnine.facets.facet_grid import facet_grid
 from plotnine.facets.facet_wrap import facet_wrap
 from plotnine.facets.layout import Layout
@@ -167,7 +166,6 @@ CanBeStripLabellingFunc: TypeAlias = (
 StripPosition: TypeAlias = Literal["top", "right"]
 
 # Plotnine Classes
-Facet: TypeAlias = facet
 FacetGrid: TypeAlias = facet_grid
 FacetWrap: TypeAlias = facet_wrap
 Geom: TypeAlias = geom

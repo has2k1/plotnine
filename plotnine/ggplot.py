@@ -40,10 +40,10 @@ if typing.TYPE_CHECKING:
     from typing_extensions import Self
 
     from plotnine.coords.coord import coord
+    from plotnine.facets.facet import facet
     from plotnine.typing import (
         Axes,
         DataLike,
-        Facet,
         Figure,
         Layer,
         PlotAddable,
@@ -76,7 +76,7 @@ class ggplot:
     figure: Figure
     axs: list[Axes]
     theme: Theme
-    facet: Facet
+    facet: facet
     coordinates: coord
 
     def __init__(
