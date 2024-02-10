@@ -22,11 +22,11 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     from plotnine import ggplot
+    from plotnine.geoms.geom import geom
     from plotnine.iapi import pos_scales
     from plotnine.mapping import Environment
     from plotnine.typing import (
         DataLike,
-        Geom,
         Layout,
     )
 
@@ -84,7 +84,7 @@ class stat(ABC, metaclass=Register):
         }
 
     @staticmethod
-    def from_geom(geom: Geom) -> stat:
+    def from_geom(geom: geom) -> stat:
         """
         Return an instantiated stat object
 

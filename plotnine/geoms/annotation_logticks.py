@@ -20,11 +20,11 @@ if typing.TYPE_CHECKING:
     from typing_extensions import TypeGuard
 
     from plotnine.coords.coord import coord
+    from plotnine.geoms.geom import geom
     from plotnine.iapi import panel_view
     from plotnine.typing import (
         AnyArray,
         Axes,
-        Geom,
         Layout,
         Scale,
         Trans,
@@ -212,7 +212,7 @@ class _geom_logticks(geom_rug):
         }
 
         def _draw(
-            geom: Geom,
+            geom: geom,
             axis: Literal["x", "y"],
             tick_positions: tuple[AnyArray, AnyArray, AnyArray],
         ):

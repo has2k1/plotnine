@@ -25,7 +25,6 @@ from typing_extensions import TypeAlias  # noqa: TCH002
 
 from plotnine.facets.layout import Layout
 from plotnine.facets.strips import Strips
-from plotnine.geoms.geom import geom
 from plotnine.ggplot import ggplot
 from plotnine.guides import guide_colorbar, guide_legend
 from plotnine.guides.guide import guide
@@ -164,7 +163,6 @@ CanBeStripLabellingFunc: TypeAlias = (
 StripPosition: TypeAlias = Literal["top", "right"]
 
 # Plotnine Classes
-Geom: TypeAlias = geom
 Guide: TypeAlias = guide
 Layer: TypeAlias = layer
 Position: TypeAlias = position

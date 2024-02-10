@@ -10,7 +10,8 @@ from textwrap import dedent, indent
 if typing.TYPE_CHECKING:
     from typing import Any, Type, TypeVar
 
-    from plotnine.typing import Geom, Scale, Stat
+    from plotnine.geoms.geom import geom
+    from plotnine.typing import Scale, Stat
 
     T = TypeVar("T")
 
@@ -421,7 +422,7 @@ def default_class_name(s: str | type | object) -> str:
     return s
 
 
-def document_geom(geom: type[Geom]) -> type[Geom]:
+def document_geom(geom: type[geom]) -> type[geom]:
     """
     Create a structured documentation for the geom
 
