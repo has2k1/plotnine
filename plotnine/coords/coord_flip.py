@@ -10,7 +10,7 @@ from .coord_cartesian import coord_cartesian
 if typing.TYPE_CHECKING:
     from typing import TypeVar
 
-    from plotnine.typing import Scale
+    from plotnine.scales.scale import scale
 
     THasLabels = TypeVar(
         "THasLabels", bound=pd.DataFrame | labels_view | panel_view
@@ -45,7 +45,7 @@ class coord_flip(coord_cartesian):
         data = flip_labels(data)
         return super().transform(data, panel_params, munch=munch)
 
-    def setup_panel_params(self, scale_x: Scale, scale_y: Scale) -> panel_view:
+    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
         panel_params = super().setup_panel_params(scale_x, scale_y)
         return flip_labels(panel_params)
 

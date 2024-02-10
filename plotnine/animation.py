@@ -12,11 +12,11 @@ if typing.TYPE_CHECKING:
     from typing import Iterable
 
     from plotnine import ggplot
+    from plotnine.scales.scale import scale
     from plotnine.typing import (
         Artist,
         Axes,
         Figure,
-        Scale,
     )
 
 __all__ = ("PlotnineAnimation",)
@@ -143,7 +143,7 @@ class PlotnineAnimation(ArtistAnimation):
                     artist_offsets[name][i] += len(new_artists)
             return frame_artists
 
-        def set_scale_limits(scales: list[Scale]):
+        def set_scale_limits(scales: list[scale]):
             """
             Set limits of all the scales in the animation
 
@@ -159,7 +159,7 @@ class PlotnineAnimation(ArtistAnimation):
                 ae = sc.aesthetics[0]
                 scale_limits[ae] = sc.limits
 
-        def check_scale_limits(scales: list[Scale], frame_no: int):
+        def check_scale_limits(scales: list[scale], frame_no: int):
             """
             Check limits of the scales of a plot in the animation
 

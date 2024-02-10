@@ -18,10 +18,7 @@ from .scale import scale
 if typing.TYPE_CHECKING:
     import pandas as pd
 
-    from plotnine.typing import (
-        Scale,
-        ScaledAestheticsName,
-    )
+    from plotnine.typing import ScaledAestheticsName
 
 
 _TPL_DUPLICATE_SCALE = """\
@@ -39,7 +36,7 @@ class Scales(List[scale]):
     the ggplot object scales
     """
 
-    def append(self, sc: Scale):
+    def append(self, sc: scale):
         """
         Add / Update scale
 
@@ -71,7 +68,7 @@ class Scales(List[scale]):
 
     def get_scales(
         self, aesthetic: ScaledAestheticsName | str
-    ) -> Scale | None:
+    ) -> scale | None:
         """
         Return the scale for the aesthetic or None if there isn't one
 
@@ -88,14 +85,14 @@ class Scales(List[scale]):
             return None
 
     @property
-    def x(self) -> Scale | None:
+    def x(self) -> scale | None:
         """
         Return x scale
         """
         return self.get_scales("x")
 
     @property
-    def y(self) -> Scale | None:
+    def y(self) -> scale | None:
         """
         Return y scale
         """

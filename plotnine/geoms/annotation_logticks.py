@@ -22,11 +22,11 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.geoms.geom import geom
     from plotnine.iapi import panel_view
+    from plotnine.scales.scale import scale
     from plotnine.typing import (
         AnyArray,
         Axes,
         Layout,
-        Scale,
         Trans,
         TupleFloat2,
         TupleFloat3,
@@ -301,5 +301,5 @@ class annotation_logticks(annotate):
         )
 
 
-def is_continuous_scale(sc: Scale) -> TypeGuard[ScaleContinuous]:
+def is_continuous_scale(sc: scale) -> TypeGuard[ScaleContinuous]:
     return isinstance(sc, ScaleContinuous)
