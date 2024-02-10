@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from types import SimpleNamespace as NS
 from typing import TYPE_CHECKING, cast
@@ -64,7 +64,9 @@ class guide_colorbar(guide):
     draw_llim: bool = True
 
     # Non-Parameter Attributes
-    available_aes: set[str] = no_init_mutable({"colour", "color", "fill"})
+    available_aes: set[str] = field(
+        init=False, default_factory=lambda: {"colour", "color", "fill"}
+    )
 
     def __post_init__(self):
         self._elements_cls = GuideElementsColorbar
