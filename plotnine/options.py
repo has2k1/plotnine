@@ -5,7 +5,8 @@ import typing
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Type
 
-    from plotnine.typing import FigureFormat, Theme
+    from plotnine import theme
+    from plotnine.typing import FigureFormat
 
 close_all_figures = False
 """
@@ -13,7 +14,7 @@ Development flag, e.g. set to `True` to prevent
 the queuing up of figures when errors happen.
 """
 
-current_theme: Optional[Theme | Type[Theme]] = None
+current_theme: Optional[theme | Type[theme]] = None
 """Theme used when none is added to the ggplot object"""
 
 base_family: str = "sans-serif"

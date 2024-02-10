@@ -31,7 +31,6 @@ from plotnine.iapi import strip_label_details
 from plotnine.layer import Layers
 from plotnine.mapping.aes import aes
 from plotnine.scales.scales import Scales
-from plotnine.themes.theme import theme
 from plotnine.watermark import watermark
 
 
@@ -157,7 +156,6 @@ CanBeStripLabellingFunc: TypeAlias = (
 StripPosition: TypeAlias = Literal["top", "right"]
 
 # Plotnine Classes
-Theme: TypeAlias = theme
 Watermark: TypeAlias = watermark
 
 ## Scales

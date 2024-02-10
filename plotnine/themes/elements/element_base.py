@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any
 
-    from plotnine.typing import Theme
+    from plotnine import theme
 
 
 class element_base:
@@ -35,7 +35,7 @@ class element_base:
         del d["visible"]
         return f"{d}"
 
-    def setup(self, theme: Theme, themeable_name: str):
+    def setup(self, theme: theme, themeable_name: str):
         """
         Setup the theme_element before drawing
         """

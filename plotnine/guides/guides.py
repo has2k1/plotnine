@@ -38,7 +38,6 @@ if TYPE_CHECKING:
         Orientation,
         SidePosition,
         TextJustification,
-        Theme,
         TupleFloat2,
     )
 
@@ -398,7 +397,7 @@ class GuidesElements:
     elements having worked out good defaults for the unspecified values.
     """
 
-    theme: Theme
+    theme: theme
 
     @cached_property
     def box(self) -> Orientation:
