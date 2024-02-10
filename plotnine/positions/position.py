@@ -17,8 +17,9 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
+    from plotnine.geoms.geom import geom
     from plotnine.iapi import pos_scales
-    from plotnine.typing import Geom, Layout, TransformCol
+    from plotnine.typing import Layout, TransformCol
 
 
 class position(ABC, metaclass=Register):
@@ -131,7 +132,7 @@ class position(ABC, metaclass=Register):
         return data
 
     @staticmethod
-    def from_geom(geom: Geom) -> position:
+    def from_geom(geom: geom) -> position:
         """
         Create and return a position object for the geom
 
