@@ -34,7 +34,7 @@ download_qrenderer_style:  ## Download qrenderer.scss
 		wget $(QRENDERER_STYLE_URL) -O $(QRENDERER_STYLE_FILE); \
 	fi
 
-interlink:  ## Gather interlinks
+interlinks:  ## Gather interlinks
 	quartodoc interlinks
 
 config:  ## Configure project for quartodoc and quarto
@@ -46,7 +46,7 @@ docstrings: config  ## Generate qmd files from the docstrings
 html: docstrings download_qrenderer_style ## Build html site
 	quarto render
 
-doc: clean interlink html  ## Build html documentation from a clean slate
+doc: clean interlinks html  ## Build html documentation from a clean slate
 
 preview:  ## Preview html website
 	quarto preview --port 42000 --no-browser
