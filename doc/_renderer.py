@@ -10,7 +10,8 @@ from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
 from quartodoc.pandoc.components import Attr
 
 DOC_DIR = Path(__file__).parent
-EXAMPLES_DIR = DOC_DIR / "examples"
+REFERENCE_DIR = DOC_DIR / "reference"
+EXAMPLES_DIR = REFERENCE_DIR / "examples"
 
 usage_pattern = re.compile(
     r"\n\n?\*\*Usage\*\*"
@@ -40,9 +41,7 @@ class _RenderDoc(RenderDoc):
         if not notebook.exists():
             return body
 
-        # path from the references directory where the qmd files
-        # are placed
-        relpath = Path("..") / notebook.relative_to(DOC_DIR)
+        relpath = notebook.relative_to(REFERENCE_DIR)
         embed_notebook = shortcode("embed", f"{relpath}", echo="true")
         header = Header(self.level + 1, "Examples")
         return Blocks([body, header, embed_notebook])

@@ -9,6 +9,8 @@ from importlib.resources import files as _files
 from pathlib import Path
 
 DOC_DIR = Path(__file__).parent
+EXAMPLES_DIR = DOC_DIR / "reference" / "examples"
+TUTORIALS_DIR = DOC_DIR / "tutorials"
 
 # The varibables file holds the version
 variables_filepath = DOC_DIR / "_variables.yml"
@@ -66,8 +68,8 @@ def copy_examples_and_tutorials():
         for dest in set(cur_dest_files).difference(new_dest_files):
             dest.unlink()
 
-    copy(_files("plotnine_examples.examples"), DOC_DIR / "examples")
-    copy(_files("plotnine_examples.tutorials"), DOC_DIR / "tutorials")
+    copy(_files("plotnine_examples.examples"), EXAMPLES_DIR)
+    copy(_files("plotnine_examples.tutorials"), TUTORIALS_DIR)
 
 
 if __name__ == "__main__":
