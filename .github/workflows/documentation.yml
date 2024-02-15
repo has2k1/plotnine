@@ -79,7 +79,7 @@ jobs:
           ls -la doc
           cat doc/_variables.yml
           ls -la doc/reference
-          ls -la doc/examples
+          ls -la doc/reference/examples
           ls -la doc/tutorials
 
       - name: Deploy to Github Pages
