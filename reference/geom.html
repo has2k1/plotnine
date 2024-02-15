@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g7159748</title>
+<title>plotnine 0.0.post1+gbc90a20</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g7159748</span>
+    <span class="navbar-title">plotnine 0.0.post1+gbc90a20</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -340,7 +340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.geoms.geom.geom.mapping" class="level3 title doc-object doc-attribute">
 <h3 class="title doc-object doc-attribute anchored" data-anchor-id="plotnine.geoms.geom.geom.mapping"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">mapping</span></h3>
 <div class="doc-signature">
-<p><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Aes">Aes</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">kwargs[<span class="st">"mapping"</span>]</span></code></p>
+<p><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">aes</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">kwargs[<span class="st">"mapping"</span>]</span></code></p>
 </div>
 <div class="doc-text">
 <p>Mappings i.e.&nbsp;<code class="sourceCode python">aes(x<span class="op">=</span><span class="st">'col1'</span>, fill<span class="op">=</span><span class="st">'col2'</span>)</code></p>
@@ -439,7 +439,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">"x_range"</span>  <span class="co"># tuple</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">"y_range"</span>  <span class="co"># tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
-<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">coord</span></code></dt>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/coord.html#plotnine.coords.coord.coord">coord</a></span></code></dt>
 <dd>
 <p>Coordinate (e.g.&nbsp;coord_cartesian) system of the geom.</p>
 </dd>
@@ -476,7 +476,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Layout object created when the plot is getting built</p>
 </dd>
-<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Coord">Coord</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/coord.html#plotnine.coords.coord.coord">coord</a></span></code></dt>
 <dd>
 <p>Type of coordinate axes</p>
 </dd>
@@ -504,11 +504,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>A row of the data plotted to this layer</p>
 </dd>
-<dt><code><span class="doc-parameter-name">da</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">DrawingArea</span></code></dt>
+<dt><code><span class="doc-parameter-name">da</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://matplotlib.org/stable/api/offsetbox_api.html#matplotlib.offsetbox.DrawingArea">DrawingArea</a></span></code></dt>
 <dd>
 <p>Canvas on which to draw</p>
 </dd>
-<dt><code><span class="doc-parameter-name">lyr</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Layer">Layer</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">lyr</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/layer.html#plotnine.layer.layer">layer</a></span></code></dt>
 <dd>
 <p>Layer that the geom belongs to.</p>
 </dd>
@@ -519,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-annotation">DrawingArea</span></code></dt>
+<dt><code><span class="doc-parameter-annotation"><a href="https://matplotlib.org/stable/api/offsetbox_api.html#matplotlib.offsetbox.DrawingArea">DrawingArea</a></span></code></dt>
 <dd>
 <p>The DrawingArea after a layer has been drawn onto it.</p>
 </dd>
@@ -550,11 +550,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">"panel_params.x.range"</span>  <span class="co"># tuple</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">"panel_params.y.range"</span>  <span class="co"># tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
-<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Coord">Coord</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/coord.html#plotnine.coords.coord.coord">coord</a></span></code></dt>
 <dd>
 <p>Coordinate (e.g.&nbsp;coord_cartesian) system of the geom.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Axes</span></code></dt>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes">Axes</a></span></code></dt>
 <dd>
 <p>Axes on which to plot.</p>
 </dd>
@@ -591,11 +591,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In rare cases a geom may need access to the x or y scales. Those are available at:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">"scales"</span>   <span class="co"># SimpleNamespace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
-<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Coord">Coord</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">coord</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/coord.html#plotnine.coords.coord.coord">coord</a></span></code></dt>
 <dd>
 <p>Coordinate (e.g.&nbsp;coord_cartesian) system of the geom.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Axes</span></code></dt>
+<dt><code><span class="doc-parameter-name">ax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes">Axes</a></span></code></dt>
 <dd>
 <p>Axes on which to plot.</p>
 </dd>
@@ -762,7 +762,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="doc-returns anchored" data-anchor-id="returns-4">Returns</h4>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.Layer">Layer</a></span></code></dt>
+<dt><code><span class="doc-parameter-annotation"><a href="../reference/layer.html#plotnine.layer.layer">layer</a></span></code></dt>
 <dd>
 <p>Layer</p>
 </dd>

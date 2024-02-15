@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g7159748</title>
+<title>plotnine 0.0.post1+gbc90a20</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -101,9 +101,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -116,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g7159748</span>
+    <span class="navbar-title">plotnine 0.0.post1+gbc90a20</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -183,11 +180,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.geoms.geom_boxplot" id="toc-plotnine.geoms.geom_boxplot" class="nav-link active" data-scroll-target="#plotnine.geoms.geom_boxplot"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom_boxplot.geom_boxplot</span></a></li>
+  <li><a href="#plotnine.geoms.geom_boxplot" id="toc-plotnine.geoms.geom_boxplot" class="nav-link active" data-scroll-target="#plotnine.geoms.geom_boxplot"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom_boxplot</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../examples/geom_boxplot-preview.html"><i class="bi bi-journal-code"></i>A box and whiskers plot</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -197,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <section id="plotnine.geoms.geom_boxplot" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom_boxplot.geom_boxplot</span></h1>
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geoms.geom_boxplot</span></h1>
 </section>
 </header>
 <div class="doc-signature">
@@ -380,140 +376,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 </dl>
 </div>
-</section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:23.384688Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:23.384316Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:24.048741Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:24.048085Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_boxplot,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_jitter,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    scale_x_discrete,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    coord_flip</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="a-box-and-whiskers-plot" class="level3">
-<h3 class="anchored" data-anchor-id="a-box-and-whiskers-plot">A box and whiskers plot</h3>
-<p><em>The boxplot compactly displays the distribution of a continuous variable.</em></p>
-<p>Read more: + <a href="https://en.wikipedia.org/wiki/Box_plot">wikipedia</a> + <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">ggplot2 docs</a></p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:24.052341Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:24.051992Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:24.065566Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:24.064980Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">'data/flights.csv'</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">year</th>
-<th data-quarto-table-cell-role="th">month</th>
-<th data-quarto-table-cell-role="th">passengers</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>1949</td>
-<td>January</td>
-<td>112</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>1949</td>
-<td>February</td>
-<td>118</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>1949</td>
-<td>March</td>
-<td>132</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>1949</td>
-<td>April</td>
-<td>129</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>1949</td>
-<td>May</td>
-<td>121</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Basic boxplot</p>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:24.108018Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:24.107751Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:24.111786Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:24.111070Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> [month[:<span class="dv">3</span>] <span class="cf">for</span> month <span class="kw">in</span> flights.month[:<span class="dv">12</span>]]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(months)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']</code></pre>
-</div>
-</div>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:24.114821Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:24.114584Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:25.878668Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:25.877794Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">'month'</span>)  <span class="co"># change ticks labels on OX</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_boxplot_files/figure-html/..-examples-geom_boxplot-cell-5-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Horizontal boxplot</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:25.882306Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:25.881889Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:26.863550Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:26.862874Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        labels<span class="op">=</span>months[::<span class="op">-</span><span class="dv">1</span>], </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        limits<span class="op">=</span>flights.month[<span class="dv">11</span>::<span class="op">-</span><span class="dv">1</span>],</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">'month'</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_boxplot_files/figure-html/..-examples-geom_boxplot-cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Boxplot with jittered points:</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:26.867426Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:26.867160Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:27.640664Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:27.639928Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>)) </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_jitter()</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">'month'</span>)  <span class="co"># change ticks labels on OX</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_boxplot_files/figure-html/..-examples-geom_boxplot-cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<a class="quarto-notebook-link" id="nblink-1" href="../examples/geom_boxplot-preview.html#cell-0">Source: A box and whiskers plot</a></div>
 
 
 </section>

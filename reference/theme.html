@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g7159748</title>
+<title>plotnine 0.0.post1+gbc90a20</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -101,9 +101,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -116,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g7159748</span>
+    <span class="navbar-title">plotnine 0.0.post1+gbc90a20</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -183,12 +180,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.theme" id="toc-plotnine.themes.theme" class="nav-link active" data-scroll-target="#plotnine.themes.theme"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.theme.theme</span></a></li>
+  <li><a href="#plotnine.themes.theme" id="toc-plotnine.themes.theme" class="nav-link active" data-scroll-target="#plotnine.themes.theme"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.theme</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#plotnine.themes.theme.add_theme" id="toc-plotnine.themes.theme.add_theme" class="nav-link" data-scroll-target="#plotnine.themes.theme.add_theme"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">add_theme</span></a></li>
+  <li><a href="#plotnine.themes.theme.apply" id="toc-plotnine.themes.theme.apply" class="nav-link" data-scroll-target="#plotnine.themes.theme.apply"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply</span></a></li>
+  <li><a href="#plotnine.themes.theme.setup" id="toc-plotnine.themes.theme.setup" class="nav-link" data-scroll-target="#plotnine.themes.theme.setup"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></a></li>
+  <li><a href="#plotnine.themes.theme.to_retina" id="toc-plotnine.themes.theme.to_retina" class="nav-link" data-scroll-target="#plotnine.themes.theme.to_retina"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_retina</span></a></li>
+  </ul></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../examples/theme-preview.html"><i class="bi bi-journal-code"></i>We use theme_void as the base theme so that the modifications</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -198,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <section id="plotnine.themes.theme" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.theme.theme</span></h1>
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.theme</span></h1>
 </section>
 </header>
 <div class="doc-signature">
@@ -347,457 +350,78 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
 <p>When subclassing, make sure to call :python:<code>theme.__init__</code>. After which you can customise :python:<code>self._rcParams</code> within the <code>__init__</code> method of the new theme. The <code>rcParams</code> should not be modified after that.</p>
 </section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:02.985911Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:02.985628Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:03.874048Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:03.873007Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    facet_grid,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    guide_legend,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    guides,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    theme,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    theme_set,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    theme_void</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># We use theme_void as the base theme so that the modifications</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># we make in the code are transparent in the output</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>theme_set(theme_void())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:03.877728Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:03.877452Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:03.892410Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:03.891787Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mtcars.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
+<table class="table">
 <thead>
 <tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">name</th>
-<th data-quarto-table-cell-role="th">mpg</th>
-<th data-quarto-table-cell-role="th">cyl</th>
-<th data-quarto-table-cell-role="th">disp</th>
-<th data-quarto-table-cell-role="th">hp</th>
-<th data-quarto-table-cell-role="th">drat</th>
-<th data-quarto-table-cell-role="th">wt</th>
-<th data-quarto-table-cell-role="th">qsec</th>
-<th data-quarto-table-cell-role="th">vs</th>
-<th data-quarto-table-cell-role="th">am</th>
-<th data-quarto-table-cell-role="th">gear</th>
-<th data-quarto-table-cell-role="th">carb</th>
+<th>Name</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Mazda RX4</td>
-<td>21.0</td>
-<td>6</td>
-<td>160.0</td>
-<td>110</td>
-<td>3.90</td>
-<td>2.620</td>
-<td>16.46</td>
-<td>0</td>
-<td>1</td>
-<td>4</td>
-<td>4</td>
+<td><a href="#plotnine.themes.theme.add_theme">add_theme</a></td>
+<td>Add themes together</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Mazda RX4 Wag</td>
-<td>21.0</td>
-<td>6</td>
-<td>160.0</td>
-<td>110</td>
-<td>3.90</td>
-<td>2.875</td>
-<td>17.02</td>
-<td>0</td>
-<td>1</td>
-<td>4</td>
-<td>4</td>
+<td><a href="#plotnine.themes.theme.apply">apply</a></td>
+<td>Apply this theme, then apply additional modifications in order.</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Datsun 710</td>
-<td>22.8</td>
-<td>4</td>
-<td>108.0</td>
-<td>93</td>
-<td>3.85</td>
-<td>2.320</td>
-<td>18.61</td>
-<td>1</td>
-<td>1</td>
-<td>4</td>
-<td>1</td>
+<td><a href="#plotnine.themes.theme.setup">setup</a></td>
+<td>Setup theme for applying</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Hornet 4 Drive</td>
-<td>21.4</td>
-<td>6</td>
-<td>258.0</td>
-<td>110</td>
-<td>3.08</td>
-<td>3.215</td>
-<td>19.44</td>
-<td>1</td>
-<td>0</td>
-<td>3</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>Hornet Sportabout</td>
-<td>18.7</td>
-<td>8</td>
-<td>360.0</td>
-<td>175</td>
-<td>3.15</td>
-<td>3.440</td>
-<td>17.02</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>2</td>
+<td><a href="#plotnine.themes.theme.to_retina">to_retina</a></td>
+<td>Return a retina-sized version of this theme</td>
 </tr>
 </tbody>
 </table>
-
+<section id="plotnine.themes.theme.add_theme" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.themes.theme.add_theme"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">add_theme</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>add_theme(other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-<p>The base plots we will use for the demonstation and some colors.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:03.941722Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:03.941353Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:03.948922Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:03.948266Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> (ggplot(mtcars, aes(<span class="st">'wt'</span>, <span class="st">'mpg'</span>, color<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="op">+</span> geom_point()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'mpg vs wt'</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     )</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> p1 <span class="op">+</span> facet_grid(<span class="st">'gear ~ am'</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>black <span class="op">=</span> <span class="st">'#222222'</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>gray <span class="op">=</span> <span class="st">'#666666'</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> <span class="st">'#FF3333'</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>green <span class="op">=</span> <span class="st">'#66CC00'</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>blue <span class="op">=</span> <span class="st">'#3333FF'</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>purple <span class="op">=</span> <span class="st">'#9933FF'</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>orange <span class="op">=</span> <span class="st">'#FF8000'</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>yellow <span class="op">=</span> <span class="st">'#FFFF33'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>What the plots look like unmodified (unthemed).</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:03.952352Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:03.952105Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:05.401091Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:05.400288Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-5-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:05.405041Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:05.404617Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:05.908338Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:05.907517Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>There are 3 main top level theming elements:</p>
-<ol type="1">
-<li><code>text</code> - controls all the text elements in the figure.</li>
-<li><code>rect</code> - controls all the rectangles in the figure.</li>
-<li><code>line</code> - controls all the lines in the figure.</li>
-</ol>
-<p>Note that none of the <code>themeables</code> control/modify the plotted data. e.g You cannot use <code>text</code> to change the appearance of objects plotted with <code>geom_text</code>.</p>
-<p><strong>text</strong></p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:05.911946Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:05.911693Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.197644Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.196894Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>rect</strong></p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.200627Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.200402Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.442399Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.441606Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">=</span>element_rect(color<span class="op">=</span>black, size<span class="op">=</span><span class="dv">3</span>, fill<span class="op">=</span><span class="st">'#EEBB0050'</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>line</strong></p>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.445597Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.445343Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.691358Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.690735Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    line<span class="op">=</span>element_line(color<span class="op">=</span>black)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-9-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="theming-specific-items" class="level2">
-<h2 class="anchored" data-anchor-id="theming-specific-items">Theming specific items</h2>
-<section id="axis_line-and-axis_text" class="level3">
-<h3 class="anchored" data-anchor-id="axis_line-and-axis_text">axis_line and axis_text</h3>
-<div id="cell-16" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.694624Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.694388Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.964951Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.964191Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    axis_line_y<span class="op">=</span>element_line(color<span class="op">=</span>blue),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    axis_text<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">'t'</span>: <span class="dv">5</span>, <span class="st">'r'</span>: <span class="dv">5</span>}),</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>black),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    axis_text_y<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-10-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.967849Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.967618Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:07.215943Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:07.215240Z&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We are focusing on the ticks, make them long</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length_minor<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length_major<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major<span class="op">=</span>element_line(color<span class="op">=</span>purple),</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major_x<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">4</span>),        <span class="co"># override size=2</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major_y<span class="op">=</span>element_line(color<span class="op">=</span>yellow),  <span class="co"># override color=purple</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor_x<span class="op">=</span>element_line(),              <span class="co"># do not override anything</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor_y<span class="op">=</span>element_line(color<span class="op">=</span>gray),    <span class="co"># override color=red</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-11-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
+<div class="doc-text">
+<p>Add themes together</p>
+<p>Subclasses should not override this method.</p>
+<p>This will be called when adding two instances of class ‘theme’ together. A complete theme will annihilate any previous themes. Partial themes can be added together and can be added to a complete theme.</p>
 </div>
 </section>
-<section id="axis_title-and-axis_ticks_pad" class="level3">
-<h3 class="anchored" data-anchor-id="axis_title-and-axis_ticks_pad">axis_title and axis_ticks_pad</h3>
-<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:07.218745Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:07.218513Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:07.518008Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:07.517429Z&quot;}" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    axis_title<span class="op">=</span>element_text(),</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    axis_title_x<span class="op">=</span>element_text(color<span class="op">=</span>blue),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    axis_title_y<span class="op">=</span>element_text(color<span class="op">=</span>red),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The gap between the title and the ticks</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad_major<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad_minor<span class="op">=</span><span class="dv">20</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-12-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<section id="plotnine.themes.theme.apply" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.themes.theme.apply"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">apply</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">apply</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<div class="doc-text">
+<p>Apply this theme, then apply additional modifications in order.</p>
+<p>This method will be called once after plot has completed. Subclasses that override this method should make sure that the base class method is called.</p>
 </div>
 </section>
-<section id="axis_ticks_direction" class="level3">
-<h3 class="anchored" data-anchor-id="axis_ticks_direction">axis_ticks_direction</h3>
-<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:07.520953Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:07.520637Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:07.760584Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:07.760007Z&quot;}" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction<span class="op">=</span><span class="st">'in'</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction_x<span class="op">=</span><span class="st">'in'</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction_y<span class="op">=</span><span class="st">'out'</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-13-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<section id="plotnine.themes.theme.setup" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.themes.theme.setup"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>setup(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<div class="doc-text">
+<p>Setup theme for applying</p>
+<p>This method will be called when the figure and axes have been created but before any plotting or other artists have been added to the figure. This method gives the theme and the elements references to the figure and/or axes.</p>
+<p>It also initialises where the artists to be themed will be stored.</p>
 </div>
 </section>
-<section id="legend_box" class="level3">
-<h3 class="anchored" data-anchor-id="legend_box">Legend_box</h3>
-<p>Not all themeables that affect the legend box are demonstrated</p>
-<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:07.763233Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:07.763026Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:08.143063Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:08.142380Z&quot;}" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(p1 <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'drat'</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    legend_position<span class="op">=</span><span class="st">'left'</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    legend_direction<span class="op">=</span><span class="st">'horizontal'</span>, <span class="co"># affected by the ncol=2</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    legend_title_align<span class="op">=</span><span class="st">'center'</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    legend_box_margin<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    legend_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, size<span class="op">=</span><span class="dv">2</span>, fill<span class="op">=</span><span class="st">'white'</span>),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    legend_box<span class="op">=</span><span class="st">'vertical'</span>,</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    legend_key<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span>element_text(color<span class="op">=</span>orange),</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    legend_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">'bold'</span>),</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    legend_key_size<span class="op">=</span><span class="dv">30</span>,            <span class="co"># overridden</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    legend_key_width<span class="op">=</span><span class="dv">30</span>,</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    legend_key_height<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    legend_entry_spacing<span class="op">=</span><span class="dv">10</span>,      <span class="co"># overridden</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    legend_entry_spacing_x<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    legend_entry_spacing_y<span class="op">=</span><span class="dv">5</span>) </span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a> <span class="co"># so we can see legend_entry_spacing in action</span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(color<span class="op">=</span>guide_legend(ncol<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-14-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<section id="plotnine.themes.theme.to_retina" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.themes.theme.to_retina"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_retina</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>to_retina()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="doc-text">
+<p>Return a retina-sized version of this theme</p>
+<p>The result is a theme that has double the dpi.</p>
 </div>
-</div>
-</section>
-<section id="plot_background-panel_background-and-panel_border" class="level3">
-<h3 class="anchored" data-anchor-id="plot_background-panel_background-and-panel_border">plot_background, panel_background and panel_border</h3>
-<div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:08.146034Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:08.145784Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:08.642065Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:08.641616Z&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">+</span> theme(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>purple, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    panel_border<span class="op">=</span>element_rect(color<span class="op">=</span>red, size<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">.025</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#panel_spacing_x=.005,</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#panel_spacing_y=.025</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-15-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="panel_grid" class="level3">
-<h3 class="anchored" data-anchor-id="panel_grid">panel_grid</h3>
-<div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:08.644737Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:08.644510Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:08.876177Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:08.875499Z&quot;}" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    panel_grid<span class="op">=</span>element_line(color<span class="op">=</span>purple),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    panel_grid_major<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">1.4</span>, alpha<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_x<span class="op">=</span>element_line(linetype<span class="op">=</span><span class="st">'dashed'</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_y<span class="op">=</span>element_line(linetype<span class="op">=</span><span class="st">'dashdot'</span>),</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor<span class="op">=</span>element_line(alpha<span class="op">=</span><span class="fl">.25</span>),</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_y<span class="op">=</span>element_line(color<span class="op">=</span>green),</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    panel_ontop<span class="op">=</span><span class="va">False</span>  <span class="co"># puts the points behind the grid</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-16-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="strip_background-strip_align-and-strip_text" class="level3">
-<h3 class="anchored" data-anchor-id="strip_background-strip_align-and-strip_text">strip_background, strip_align and strip_text</h3>
-<div id="cell-29" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:08.879598Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:08.879149Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:09.329866Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:09.329222Z&quot;}" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">+</span> theme(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">.025</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    strip_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, fill<span class="op">=</span>orange, size<span class="op">=</span><span class="fl">1.4</span>, alpha<span class="op">=</span><span class="fl">.95</span>),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    strip_background_x<span class="op">=</span>element_rect(x<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">6</span>, width<span class="op">=</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>), <span class="co"># you can get really crazy</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    strip_background_y<span class="op">=</span>element_rect(),</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    strip_align<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    strip_align_x<span class="op">=</span><span class="fl">0.2</span>,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    strip_align_y<span class="op">=</span><span class="fl">0.2</span>,</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    strip_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">'bold'</span>),</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    strip_text_x<span class="op">=</span>element_text(color<span class="op">=</span>red),</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    strip_text_y<span class="op">=</span>element_text(color<span class="op">=</span>blue)</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-17-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="aspect_ratio-and-figure_size" class="level3">
-<h3 class="anchored" data-anchor-id="aspect_ratio-and-figure_size">aspect_ratio and figure_size</h3>
-<p>The <code>aspect_ratio</code> takes precedence over the <code>figure_size</code>, and it modifies the height. The effective width and height are:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> figure_size[<span class="dv">0</span>]</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> figure_size[<span class="dv">0</span>] <span class="op">*</span> aspect_ratio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="cell-31" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:09.332548Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:09.332321Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:09.617487Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:09.616868Z&quot;}" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#dpi=120,</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), <span class="co"># inches</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    aspect_ratio<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">3</span>    <span class="co"># height:width</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="theme_files/figure-html/..-examples-theme-cell-18-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<a class="quarto-notebook-link" id="nblink-1" href="../examples/theme-preview.html#cell-0">Source: We use theme_void as the base theme so that the modifications</a></div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
