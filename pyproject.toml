@@ -18,16 +18,15 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Framework :: Matplotlib",
     "Topic :: Scientific/Engineering :: Visualization"
 ]
 dependencies = [
     "matplotlib>=3.6.0",
-    "mizani~=0.10.0",
+    "mizani==0.11.0",
     "numpy>=1.23.0",
-    "pandas>=1.5.0",
-    "patsy>=0.5.1",
-    "scipy>=1.5.0",
+    "scipy>=1.7.0",
     "statsmodels>=0.14.0",
 ]
 requires-python = ">=3.9"
@@ -46,7 +45,7 @@ extra = [
     "adjustText",
     "geopandas",
     "scikit-learn",
-    "scikit-misc>=0.2.0"
+    "scikit-misc>=0.3.0"
 ]
 
 doc = [
