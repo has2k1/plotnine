@@ -1,0 +1,2916 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.4.550">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+    <title>plotnine 0.0.post1+gf08fda4 - Ranges of Similar Variables</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = '/';
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+     <script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>  
+      </head>
+
+  <body class="floating nav-fixed quarto-notebook">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link"><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> NOTE: This notebook uses the polars package</h6>
+
+            <a href="../../reference/examples/geom_segment.ipynb" class="btn btn-primary quarto-download-embed" download="geom_segment.ipynb">Download Notebook</a>
+          </div>
+
+     <div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">plotnine 0.0.post1+gf08fda4</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../gallery/index.html"> 
+<span class="menu-text">Gallery</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pages</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
+        <li>
+    <a class="dropdown-item" href="../../installation.html">
+ <span class="dropdown-text">Installation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../changelog.html">
+ <span class="dropdown-text">Changelog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../external-resources.html">
+ <span class="dropdown-text">External Resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about.html">
+ <span class="dropdown-text">About Plotnine</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ranges-of-similar-variables" id="toc-ranges-of-similar-variables" class="nav-link active" data-scroll-target="#ranges-of-similar-variables">Ranges of Similar Variables</a></li>
+  <li><a href="#change-in-rank" id="toc-change-in-rank" class="nav-link" data-scroll-target="#change-in-rank">Change in Rank</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">      <header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Ranges of Similar Variables</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:48.285050Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:48.284717Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.094335Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.093453Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This notebook uses the polars package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas.api.types <span class="im">as</span> pdtypes</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> polars <span class="im">import</span> col</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div>
+<div id="cell-1" class="cell markdown">
+<section id="ranges-of-similar-variables" class="level3">
+<h3 class="anchored" data-anchor-id="ranges-of-similar-variables">Ranges of Similar Variables</h3>
+<p><em>Comparing the point to point difference of many similar variables</em></p>
+</section>
+</div>
+<div id="cell-2" class="cell markdown">
+<p>Read the data.</p>
+<p>Source: Pew Research Global Attitudes Spring 2015</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.098894Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.098503Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.232550Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.230124Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>head <span class="op">-</span>n <span class="dv">20</span> <span class="st">"data/survey-social-media.csv"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PSRAID,COUNTRY,Q145,Q146,Q70,Q74
+100000,Ethiopia,Female,35,No, 
+100001,Ethiopia,Female,25,No, 
+100002,Ethiopia,Male,40,Don’t know, 
+100003,Ethiopia,Female,30,Don’t know, 
+100004,Ethiopia,Male,22,No, 
+100005,Ethiopia,Male,40,No, 
+100006,Ethiopia,Female,20,No, 
+100007,Ethiopia,Female,18,No,No
+100008,Ethiopia,Male,50,No, 
+100009,Ethiopia,Male,35,No, 
+100010,Ethiopia,Female,20,No, 
+100011,Ethiopia,Female,30,Don’t know, 
+100012,Ethiopia,Male,60,No, 
+100013,Ethiopia,Male,18,No, 
+100014,Ethiopia,Male,40,No, 
+100015,Ethiopia,Male,28,Don’t know, 
+100016,Ethiopia,Female,55,Don’t know, 
+100017,Ethiopia,Male,30,Don’t know, 
+100018,Ethiopia,Female,22,No, </code></pre>
+</div>
+</div></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.237644Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.237298Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.313558Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.312940Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> <span class="bu">dict</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    COUNTRY<span class="op">=</span><span class="st">"country"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    Q145<span class="op">=</span><span class="st">"gender"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    Q146<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    Q70<span class="op">=</span><span class="st">"use_internet"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    Q74<span class="op">=</span><span class="st">"use_social_media"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pl.scan_csv(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data/survey-social-media.csv"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    dtypes<span class="op">=</span><span class="bu">dict</span>(Q146<span class="op">=</span>pl.Utf8),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>).rename(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    columns</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>).select([</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"country"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"use_social_media"</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>]).collect()</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>data.sample(<span class="dv">10</span>, seed<span class="op">=</span><span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 3)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">use_social_media</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"India"</td>
+<td>"23"</td>
+<td>" "</td>
+</tr>
+<tr class="even">
+<td>"Pakistan"</td>
+<td>"18"</td>
+<td>" "</td>
+</tr>
+<tr class="odd">
+<td>"Peru"</td>
+<td>"39"</td>
+<td>"Yes"</td>
+</tr>
+<tr class="even">
+<td>"Jordan"</td>
+<td>"56"</td>
+<td>" "</td>
+</tr>
+<tr class="odd">
+<td>"United Kingdom…</td>
+<td>"35"</td>
+<td>"Yes"</td>
+</tr>
+<tr class="even">
+<td>"Chile"</td>
+<td>"24"</td>
+<td>"Yes"</td>
+</tr>
+<tr class="odd">
+<td>"Israel"</td>
+<td>"32"</td>
+<td>"No"</td>
+</tr>
+<tr class="even">
+<td>"Pakistan"</td>
+<td>"39"</td>
+<td>"No"</td>
+</tr>
+<tr class="odd">
+<td>"Chile"</td>
+<td>"26"</td>
+<td>"Yes"</td>
+</tr>
+<tr class="even">
+<td>"Nigeria"</td>
+<td>"43"</td>
+<td>"Yes"</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-5" class="cell markdown">
+<p>Create age groups for users of social media</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.317586Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.317331Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.367745Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.367006Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>yes_no <span class="op">=</span> [<span class="st">"Yes"</span>, <span class="st">"No"</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>valid_age_groups <span class="op">=</span> [<span class="st">"18-34"</span>, <span class="st">"35-49"</span>, <span class="st">"50+"</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>rdata <span class="op">=</span> data.with_columns(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    age_group<span class="op">=</span>pl</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    .when(col(<span class="st">"age"</span>) <span class="op">&lt;=</span> <span class="st">"34"</span>).then(pl.lit(<span class="st">"18-34"</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    .when(col(<span class="st">"age"</span>) <span class="op">&lt;=</span> <span class="st">"49"</span>).then(pl.lit(<span class="st">"35-49"</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    .when(col(<span class="st">"age"</span>) <span class="op">&lt;</span> <span class="st">"98"</span>).then(pl.lit(<span class="st">"50+"</span>))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    .otherwise(pl.lit(<span class="st">""</span>)),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    country_count<span class="op">=</span>pl.count().over(<span class="st">"country"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>).<span class="bu">filter</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"age_group"</span>).is_in(valid_age_groups) <span class="op">&amp;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"use_social_media"</span>).is_in(yes_no)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>).group_by([<span class="st">"country"</span>, <span class="st">"age_group"</span>]).agg(</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># social media use percentage</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    sm_use_percent<span class="op">=</span>(col(<span class="st">"use_social_media"</span>) <span class="op">==</span> <span class="st">"Yes"</span>).<span class="bu">sum</span>() <span class="op">*</span> <span class="dv">100</span> <span class="op">/</span> pl.count(),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># social media question response rate</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    smq_response_rate<span class="op">=</span>col(<span class="st">"use_social_media"</span>).is_in(yes_no).<span class="bu">sum</span>() <span class="op">*</span> <span class="dv">100</span> <span class="op">/</span> col(<span class="st">"country_count"</span>).first()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>).sort([<span class="st">"country"</span>, <span class="st">"age_group"</span>])</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>rdata.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 4)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">age_group</th>
+<th data-quarto-table-cell-role="th">sm_use_percent</th>
+<th data-quarto-table-cell-role="th">smq_response_rate</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Argentina"</td>
+<td>"18-34"</td>
+<td>90.883191</td>
+<td>35.1</td>
+</tr>
+<tr class="even">
+<td>"Argentina"</td>
+<td>"35-49"</td>
+<td>84.40367</td>
+<td>21.8</td>
+</tr>
+<tr class="odd">
+<td>"Argentina"</td>
+<td>"50+"</td>
+<td>67.333333</td>
+<td>15.0</td>
+</tr>
+<tr class="even">
+<td>"Australia"</td>
+<td>"18-34"</td>
+<td>90.862944</td>
+<td>19.621514</td>
+</tr>
+<tr class="odd">
+<td>"Australia"</td>
+<td>"35-49"</td>
+<td>78.04878</td>
+<td>20.418327</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-7" class="cell markdown">
+<p>Top 14 countries by response rate to the social media question.</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.370934Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.370670Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.389991Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.389288Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> col_format(name, fmt):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Format useing python formating</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for more control over</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> col(name).map_elements(<span class="kw">lambda</span> x: fmt.<span class="bu">format</span>(x<span class="op">=</span>x))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> float_to_str_round(name):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> col_format(name, <span class="st">"</span><span class="sc">{x:.0f}</span><span class="st">"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">14</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>top <span class="op">=</span> rdata.group_by(<span class="st">"country"</span>).agg(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    r<span class="op">=</span>col(<span class="st">"smq_response_rate"</span>).<span class="bu">sum</span>()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>).sort(<span class="st">"r"</span>, descending<span class="op">=</span><span class="va">True</span>).head(n)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>top_countries <span class="op">=</span> top[<span class="st">"country"</span>]</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> float_to_str_round(<span class="st">"sm_use_percent"</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>expr_pct <span class="op">=</span> expr <span class="op">+</span> <span class="st">"%"</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>point_data <span class="op">=</span> rdata.<span class="bu">filter</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"country"</span>).is_in(top_countries)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>).with_columns(</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"country"</span>).cast(pl.Categorical),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    sm_use_percent_str<span class="op">=</span>pl.when(col(<span class="st">"country"</span>) <span class="op">==</span> <span class="st">"France"</span>).then(expr_pct).otherwise(expr)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>point_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 5)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">age_group</th>
+<th data-quarto-table-cell-role="th">sm_use_percent</th>
+<th data-quarto-table-cell-role="th">smq_response_rate</th>
+<th data-quarto-table-cell-role="th">sm_use_percent_str</th>
+</tr>
+<tr class="odd">
+<th>cat</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Australia"</td>
+<td>"18-34"</td>
+<td>90.862944</td>
+<td>19.621514</td>
+<td>"91"</td>
+</tr>
+<tr class="even">
+<td>"Australia"</td>
+<td>"35-49"</td>
+<td>78.04878</td>
+<td>20.418327</td>
+<td>"78"</td>
+</tr>
+<tr class="odd">
+<td>"Australia"</td>
+<td>"50+"</td>
+<td>48.479087</td>
+<td>52.390438</td>
+<td>"48"</td>
+</tr>
+<tr class="even">
+<td>"Canada"</td>
+<td>"18-34"</td>
+<td>92.063492</td>
+<td>25.099602</td>
+<td>"92"</td>
+</tr>
+<tr class="odd">
+<td>"Canada"</td>
+<td>"35-49"</td>
+<td>75.925926</td>
+<td>21.513944</td>
+<td>"76"</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.393132Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.392893Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.403307Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.402582Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>segment_data <span class="op">=</span> point_data.group_by(<span class="st">"country"</span>).agg(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">min</span><span class="op">=</span>col(<span class="st">"sm_use_percent"</span>).<span class="bu">min</span>(),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">max</span><span class="op">=</span>col(<span class="st">"sm_use_percent"</span>).<span class="bu">max</span>(),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>).with_columns(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    gap<span class="op">=</span>(col(<span class="st">"max"</span>) <span class="op">-</span> col(<span class="st">"min"</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>).sort(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gap"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>).with_columns(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    min_str<span class="op">=</span>float_to_str_round(<span class="st">"min"</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    max_str<span class="op">=</span>float_to_str_round(<span class="st">"max"</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    gap_str<span class="op">=</span>float_to_str_round(<span class="st">"gap"</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>segment_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 7)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">gap</th>
+<th data-quarto-table-cell-role="th">min_str</th>
+<th data-quarto-table-cell-role="th">max_str</th>
+<th data-quarto-table-cell-role="th">gap_str</th>
+</tr>
+<tr class="odd">
+<th>cat</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Russia"</td>
+<td>76.07362</td>
+<td>95.151515</td>
+<td>19.077896</td>
+<td>"76"</td>
+<td>"95"</td>
+<td>"19"</td>
+</tr>
+<tr class="even">
+<td>"Israel"</td>
+<td>55.405405</td>
+<td>88.311688</td>
+<td>32.906283</td>
+<td>"55"</td>
+<td>"88"</td>
+<td>"33"</td>
+</tr>
+<tr class="odd">
+<td>"United Kingdom…</td>
+<td>52.74463</td>
+<td>86.096257</td>
+<td>33.351627</td>
+<td>"53"</td>
+<td>"86"</td>
+<td>"33"</td>
+</tr>
+<tr class="even">
+<td>"United States"</td>
+<td>52.597403</td>
+<td>88.669951</td>
+<td>36.072548</td>
+<td>"53"</td>
+<td>"89"</td>
+<td>"36"</td>
+</tr>
+<tr class="odd">
+<td>"Canada"</td>
+<td>53.986333</td>
+<td>92.063492</td>
+<td>38.077159</td>
+<td>"54"</td>
+<td>"92"</td>
+<td>"38"</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-10" class="cell markdown">
+<p>Format the floating point data that will be plotted into strings</p>
+</div>
+<div id="cell-11" class="cell markdown">
+<p>First plot</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.406576Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.406335Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:51.055242Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:51.054598Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The right column (youngest-oldest gap) location</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>xgap <span class="op">=</span> <span class="dv">112</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>(ggplot()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># Range strip</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_segment(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>     segment_data,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"min"</span>, xend<span class="op">=</span><span class="st">"max"</span>, y<span class="op">=</span><span class="st">"country"</span>, yend<span class="op">=</span><span class="st">"country"</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"#a7a9ac"</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a> <span class="co"># Age group markers</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>     point_data,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>     aes(<span class="st">"sm_use_percent"</span>, <span class="st">"country"</span>, color<span class="op">=</span><span class="st">"age_group"</span>, fill<span class="op">=</span><span class="st">"age_group"</span>),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>     stroke<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a> <span class="co"># Age group percentages</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>     point_data.<span class="bu">filter</span>(col(<span class="st">"age_group"</span>)<span class="op">==</span><span class="st">"50+"</span>),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"sm_use_percent-2"</span>, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"sm_use_percent_str"</span>, color<span class="op">=</span><span class="st">"age_group"</span>),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"right"</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>     point_data.<span class="bu">filter</span>(col(<span class="st">"age_group"</span>)<span class="op">==</span><span class="st">"35-49"</span>),</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"sm_use_percent+2"</span>, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"sm_use_percent_str"</span>),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">"center"</span>,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"white"</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>     point_data.<span class="bu">filter</span>(col(<span class="st">"age_group"</span>)<span class="op">==</span><span class="st">"18-34"</span>),</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"sm_use_percent+2"</span>, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"sm_use_percent_str"</span>, color<span class="op">=</span><span class="st">"age_group"</span>),</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a> <span class="co"># gap difference</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>     segment_data,</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span>xgap, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"gap_str"</span>),</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>     fontweight<span class="op">=</span><span class="st">"bold"</span>,</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">"+</span><span class="sc">{}</span><span class="st">"</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><img src="geom_segment_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="cell-13" class="cell markdown">
+<p>Tweak it</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-14" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:51.059005Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:51.058609Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.147107Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.146498Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The right column (youngest-oldest gap) location</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>xgap <span class="op">=</span> <span class="dv">115</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>(ggplot()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a> <span class="co"># Background Strips                                     # new</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_segment(</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>     segment_data,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>     aes(y<span class="op">=</span><span class="st">"country"</span>, yend<span class="op">=</span><span class="st">"country"</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>     x<span class="op">=</span><span class="dv">0</span>, xend<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="fl">8.5</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"#edece3"</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a> <span class="co"># vertical grid lines along the strips                  # new</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>     <span class="st">"segment"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>     x<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">10</span>)) <span class="op">*</span> n,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>     xend<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">10</span>)) <span class="op">*</span> n,</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>     y<span class="op">=</span>np.tile(np.arange(<span class="dv">1</span>, n<span class="op">+</span><span class="dv">1</span>), <span class="dv">9</span>)<span class="op">-</span><span class="fl">.25</span>,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>     yend<span class="op">=</span>np.tile(np.arange(<span class="dv">1</span>, n<span class="op">+</span><span class="dv">1</span>), <span class="dv">9</span>) <span class="op">+</span> <span class="fl">.25</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"#CCCCCC"</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a> <span class="co"># Range strip</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_segment(</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>     segment_data,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"min"</span>, xend<span class="op">=</span><span class="st">"max"</span>, y<span class="op">=</span><span class="st">"country"</span>, yend<span class="op">=</span><span class="st">"country"</span>),</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"#a7a9ac"</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a> <span class="co"># Age group markers</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>     point_data,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>     aes(<span class="st">"sm_use_percent"</span>, <span class="st">"country"</span>, color<span class="op">=</span><span class="st">"age_group"</span>, fill<span class="op">=</span><span class="st">"age_group"</span>),</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>     stroke<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a> <span class="co"># Age group percentages</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>     point_data.<span class="bu">filter</span>(col(<span class="st">"age_group"</span>)<span class="op">==</span><span class="st">"50+"</span>),</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"sm_use_percent-2"</span>, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"sm_use_percent_str"</span>, color<span class="op">=</span><span class="st">"age_group"</span>),</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"right"</span>,</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>     point_data.<span class="bu">filter</span>(col(<span class="st">"age_group"</span>)<span class="op">==</span><span class="st">"35-49"</span>),</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"sm_use_percent+2"</span>, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"sm_use_percent_str"</span>),</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">"center"</span>,</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"white"</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>     point_data.<span class="bu">filter</span>(col(<span class="st">"age_group"</span>)<span class="op">==</span><span class="st">"18-34"</span>),</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span><span class="st">"sm_use_percent+2"</span>, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"sm_use_percent_str"</span>, color<span class="op">=</span><span class="st">"age_group"</span>),</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a> <span class="co"># countries right-hand-size (instead of y-axis)         # new</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>     segment_data,</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>     aes(y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"country"</span>),</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>     x<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>     ha<span class="op">=</span><span class="st">"right"</span>,</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>     fontweight<span class="op">=</span><span class="st">"bold"</span>,</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span><span class="st">"#222222"</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a> <span class="co"># gap difference</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_vline(xintercept<span class="op">=</span>xgap, color<span class="op">=</span><span class="st">"#edece3"</span>, size<span class="op">=</span><span class="dv">32</span>)  <span class="co"># new</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>     segment_data,</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>     aes(x<span class="op">=</span>xgap, y<span class="op">=</span><span class="st">"country"</span>, label<span class="op">=</span><span class="st">"gap_str"</span>),</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>     fontweight<span class="op">=</span><span class="st">"bold"</span>,</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">"+</span><span class="sc">{}</span><span class="st">"</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a> <span class="co"># Annotations                                            # new</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span><span class="dv">31</span>, y<span class="op">=</span>n<span class="op">+</span><span class="fl">1.1</span>, label<span class="op">=</span><span class="st">"50+"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">"#ea9f2f"</span>, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span><span class="dv">56</span>, y<span class="op">=</span>n<span class="op">+</span><span class="fl">1.1</span>, label<span class="op">=</span><span class="st">"35-49"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">"#6d6e71"</span>, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span><span class="dv">85</span>, y<span class="op">=</span>n<span class="op">+</span><span class="fl">1.1</span>, label<span class="op">=</span><span class="st">"18-34"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">"#939c49"</span>, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span>xgap, y<span class="op">=</span>n<span class="op">+</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">"Youngest-</span><span class="ch">\n</span><span class="st">Oldest Gap"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">"#444444"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, ha<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"point"</span>, x<span class="op">=</span>[<span class="dv">31</span>, <span class="dv">56</span>, <span class="dv">85</span>], y<span class="op">=</span>n<span class="op">+</span><span class="fl">.3</span>, alpha<span class="op">=</span><span class="fl">0.85</span>, stroke<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"segment"</span>, x<span class="op">=</span>[<span class="dv">31</span>, <span class="dv">56</span>, <span class="dv">85</span>], xend<span class="op">=</span>[<span class="dv">31</span>, <span class="dv">56</span>, <span class="dv">85</span>], y<span class="op">=</span>n<span class="op">+</span><span class="fl">.3</span>, yend<span class="op">=</span>n<span class="op">+</span><span class="fl">.8</span>, alpha<span class="op">=</span><span class="fl">0.85</span>)</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"hline"</span>, yintercept<span class="op">=</span>[x<span class="op">+</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n, <span class="dv">2</span>)], alpha<span class="op">=</span><span class="fl">.5</span>, linetype<span class="op">=</span><span class="st">"dotted"</span>, size<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a> <span class="co"># Better spacing and color                              # new</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_x_continuous(limits<span class="op">=</span>(<span class="op">-</span><span class="dv">18</span>, xgap<span class="op">+</span><span class="dv">2</span>))</span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_discrete(expand<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.1</span>, <span class="dv">0</span>))</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_fill_manual(values<span class="op">=</span>[<span class="st">"#c3ca8c"</span>, <span class="st">"#d1d3d4"</span>, <span class="st">"#f2c480"</span>])</span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_manual(values<span class="op">=</span>[<span class="st">"#939c49"</span>, <span class="st">"#6d6e71"</span>, <span class="st">"#ea9f2f"</span>])</span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(color<span class="op">=</span><span class="va">None</span>, fill<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme_void()</span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">8.5</span>))</span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><img src="geom_segment_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="cell-15" class="cell markdown">
+<p>Instead of looking at this plot as having a country variable on the <code>y-axis</code> and a percentage variable on the <code>x-axis</code>, we can view it as having vertically stacked up many <em>indepedent</em> variables, the values of which have a similar scale.</p>
+<p><strong>Protip:</strong> Save a pdf file.</p>
+</div>
+<div id="cell-16" class="cell markdown">
+<section id="change-in-rank" class="level3">
+<h3 class="anchored" data-anchor-id="change-in-rank">Change in Rank</h3>
+<p><em>Comparing a group of ranked items at two different times</em></p>
+</section>
+</div>
+<div id="cell-17" class="cell markdown">
+<p>Read the data.</p>
+<p>Source: World Bank - Infanct Mortality Rate (per 1,000 live births)b</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-18" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.151713Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.151445Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.167744Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.167018Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pl.read_csv(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data/API_SP.DYN.IMRT.IN_DS2_en_csv_v2/API_SP.DYN.IMRT.IN_DS2_en_csv_v2.csv"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    skip_rows<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    null_values<span class="op">=</span><span class="st">""</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    truncate_ragged_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns as valid python variables</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>year_columns <span class="op">=</span> {c: <span class="ss">f"y</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> c <span class="kw">in</span> data.columns <span class="cf">if</span> c[:<span class="dv">2</span>] <span class="kw">in</span> {<span class="st">"19"</span>, <span class="st">"20"</span>}}</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.rename({</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Country Name"</span>: <span class="st">"country"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Country Code"</span>: <span class="st">"code"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>year_columns</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}).drop([<span class="st">"Indicator Name"</span>, <span class="st">"Indicator Code"</span>])</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 59)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">code</th>
+<th data-quarto-table-cell-role="th">y1960</th>
+<th data-quarto-table-cell-role="th">y1961</th>
+<th data-quarto-table-cell-role="th">y1962</th>
+<th data-quarto-table-cell-role="th">y1963</th>
+<th data-quarto-table-cell-role="th">y1964</th>
+<th data-quarto-table-cell-role="th">y1965</th>
+<th data-quarto-table-cell-role="th">y1966</th>
+<th data-quarto-table-cell-role="th">y1967</th>
+<th data-quarto-table-cell-role="th">y1968</th>
+<th data-quarto-table-cell-role="th">y1969</th>
+<th data-quarto-table-cell-role="th">y1970</th>
+<th data-quarto-table-cell-role="th">y1971</th>
+<th data-quarto-table-cell-role="th">y1972</th>
+<th data-quarto-table-cell-role="th">y1973</th>
+<th data-quarto-table-cell-role="th">y1974</th>
+<th data-quarto-table-cell-role="th">y1975</th>
+<th data-quarto-table-cell-role="th">y1976</th>
+<th data-quarto-table-cell-role="th">y1977</th>
+<th data-quarto-table-cell-role="th">y1978</th>
+<th data-quarto-table-cell-role="th">y1979</th>
+<th data-quarto-table-cell-role="th">y1980</th>
+<th data-quarto-table-cell-role="th">y1981</th>
+<th data-quarto-table-cell-role="th">y1982</th>
+<th data-quarto-table-cell-role="th">y1983</th>
+<th data-quarto-table-cell-role="th">y1984</th>
+<th data-quarto-table-cell-role="th">y1985</th>
+<th data-quarto-table-cell-role="th">y1986</th>
+<th data-quarto-table-cell-role="th">y1987</th>
+<th data-quarto-table-cell-role="th">y1988</th>
+<th data-quarto-table-cell-role="th">y1989</th>
+<th data-quarto-table-cell-role="th">y1990</th>
+<th data-quarto-table-cell-role="th">y1991</th>
+<th data-quarto-table-cell-role="th">y1992</th>
+<th data-quarto-table-cell-role="th">y1993</th>
+<th data-quarto-table-cell-role="th">y1994</th>
+<th data-quarto-table-cell-role="th">y1995</th>
+<th data-quarto-table-cell-role="th">y1996</th>
+<th data-quarto-table-cell-role="th">y1997</th>
+<th data-quarto-table-cell-role="th">y1998</th>
+<th data-quarto-table-cell-role="th">y1999</th>
+<th data-quarto-table-cell-role="th">y2000</th>
+<th data-quarto-table-cell-role="th">y2001</th>
+<th data-quarto-table-cell-role="th">y2002</th>
+<th data-quarto-table-cell-role="th">y2003</th>
+<th data-quarto-table-cell-role="th">y2004</th>
+<th data-quarto-table-cell-role="th">y2005</th>
+<th data-quarto-table-cell-role="th">y2006</th>
+<th data-quarto-table-cell-role="th">y2007</th>
+<th data-quarto-table-cell-role="th">y2008</th>
+<th data-quarto-table-cell-role="th">y2009</th>
+<th data-quarto-table-cell-role="th">y2010</th>
+<th data-quarto-table-cell-role="th">y2011</th>
+<th data-quarto-table-cell-role="th">y2012</th>
+<th data-quarto-table-cell-role="th">y2013</th>
+<th data-quarto-table-cell-role="th">y2014</th>
+<th data-quarto-table-cell-role="th">y2015</th>
+<th data-quarto-table-cell-role="th">y2016</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Aruba"</td>
+<td>"ABW"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr class="even">
+<td>"Afghanistan"</td>
+<td>"AFG"</td>
+<td>null</td>
+<td>240.5</td>
+<td>236.3</td>
+<td>232.3</td>
+<td>228.5</td>
+<td>224.6</td>
+<td>220.7</td>
+<td>217.0</td>
+<td>213.3</td>
+<td>209.8</td>
+<td>206.1</td>
+<td>202.2</td>
+<td>198.2</td>
+<td>194.3</td>
+<td>190.3</td>
+<td>186.6</td>
+<td>182.6</td>
+<td>178.7</td>
+<td>174.5</td>
+<td>170.4</td>
+<td>166.1</td>
+<td>161.8</td>
+<td>157.5</td>
+<td>153.2</td>
+<td>148.7</td>
+<td>144.5</td>
+<td>140.2</td>
+<td>135.7</td>
+<td>131.3</td>
+<td>126.8</td>
+<td>122.5</td>
+<td>118.3</td>
+<td>114.4</td>
+<td>110.9</td>
+<td>107.7</td>
+<td>105.0</td>
+<td>102.7</td>
+<td>100.7</td>
+<td>98.9</td>
+<td>97.2</td>
+<td>95.4</td>
+<td>93.4</td>
+<td>91.2</td>
+<td>89.0</td>
+<td>86.7</td>
+<td>84.4</td>
+<td>82.3</td>
+<td>80.4</td>
+<td>78.6</td>
+<td>76.8</td>
+<td>75.1</td>
+<td>73.4</td>
+<td>71.7</td>
+<td>69.9</td>
+<td>68.1</td>
+<td>66.3</td>
+<td>null</td>
+</tr>
+<tr class="odd">
+<td>"Angola"</td>
+<td>"AGO"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>138.3</td>
+<td>137.5</td>
+<td>136.8</td>
+<td>136.0</td>
+<td>135.3</td>
+<td>134.9</td>
+<td>134.4</td>
+<td>134.1</td>
+<td>133.8</td>
+<td>133.6</td>
+<td>133.5</td>
+<td>133.5</td>
+<td>133.5</td>
+<td>133.4</td>
+<td>133.2</td>
+<td>132.8</td>
+<td>132.3</td>
+<td>131.5</td>
+<td>130.6</td>
+<td>129.5</td>
+<td>128.3</td>
+<td>126.9</td>
+<td>125.5</td>
+<td>124.1</td>
+<td>122.8</td>
+<td>121.2</td>
+<td>119.4</td>
+<td>117.1</td>
+<td>114.7</td>
+<td>112.2</td>
+<td>109.6</td>
+<td>106.8</td>
+<td>104.1</td>
+<td>101.4</td>
+<td>98.8</td>
+<td>96.0</td>
+<td>null</td>
+</tr>
+<tr class="even">
+<td>"Albania"</td>
+<td>"ALB"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>73.0</td>
+<td>68.4</td>
+<td>64.0</td>
+<td>59.9</td>
+<td>56.1</td>
+<td>52.4</td>
+<td>49.1</td>
+<td>45.9</td>
+<td>43.2</td>
+<td>40.8</td>
+<td>38.6</td>
+<td>36.7</td>
+<td>35.1</td>
+<td>33.7</td>
+<td>32.5</td>
+<td>31.4</td>
+<td>30.3</td>
+<td>29.1</td>
+<td>27.9</td>
+<td>26.8</td>
+<td>25.5</td>
+<td>24.4</td>
+<td>23.2</td>
+<td>22.1</td>
+<td>21.0</td>
+<td>20.0</td>
+<td>19.1</td>
+<td>18.3</td>
+<td>17.4</td>
+<td>16.7</td>
+<td>16.0</td>
+<td>15.4</td>
+<td>14.8</td>
+<td>14.3</td>
+<td>13.8</td>
+<td>13.3</td>
+<td>12.9</td>
+<td>12.5</td>
+<td>null</td>
+</tr>
+<tr class="odd">
+<td>"Andorra"</td>
+<td>"AND"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>7.5</td>
+<td>7.0</td>
+<td>6.5</td>
+<td>6.1</td>
+<td>5.6</td>
+<td>5.2</td>
+<td>5.0</td>
+<td>4.6</td>
+<td>4.3</td>
+<td>4.1</td>
+<td>3.9</td>
+<td>3.7</td>
+<td>3.5</td>
+<td>3.3</td>
+<td>3.2</td>
+<td>3.1</td>
+<td>2.9</td>
+<td>2.8</td>
+<td>2.7</td>
+<td>2.6</td>
+<td>2.5</td>
+<td>2.4</td>
+<td>2.3</td>
+<td>2.2</td>
+<td>2.1</td>
+<td>2.1</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-19" class="cell markdown">
+<p>The data includes regional aggregates. To tell apart the regional aggregates we need the metadata. Every row in the data table has a corresponding row in the metadata table. Where the row has regional aggregate data, the <code>Region</code> column in the metadata table is <code>NaN</code>.</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-20" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.171240Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.170994Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.184106Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.183485Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ordered_categorical(s, categories<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Create a categorical ordered according to the categories</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> <span class="bu">getattr</span>(s, <span class="st">"name"</span>, <span class="st">""</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> categories <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.Series(name, s).cast(pl.Categorical)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pl.StringCache():</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        pl.Series(categories).cast(pl.Categorical)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.Series(name, s).cast(pl.Categorical)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> {</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Country Code"</span>: <span class="st">"code"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Region"</span>: <span class="st">"region"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IncomeGroup"</span>: <span class="st">"income_group"</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>metadata <span class="op">=</span> pl.scan_csv(</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data/API_SP.DYN.IMRT.IN_DS2_en_csv_v2/Metadata_Country_API_SP.DYN.IMRT.IN_DS2_en_csv_v2.csv"</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>).rename(</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    columns</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>).select(</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(columns.values())</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>).<span class="bu">filter</span>(</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop the regional aggregate information</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"region"</span>) <span class="op">!=</span> <span class="st">""</span>) <span class="op">&amp;</span> (col(<span class="st">"income_group"</span>) <span class="op">!=</span> <span class="st">""</span>)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>).collect()</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>cat_order <span class="op">=</span> [<span class="st">"High income"</span>, <span class="st">"Upper middle income"</span>, <span class="st">"Lower middle income"</span>, <span class="st">"Low income"</span>]</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>metadata <span class="op">=</span> metadata.with_columns(</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    ordered_categorical(metadata[<span class="st">"income_group"</span>], cat_order)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>metadata.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 3)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">code</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">income_group</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>cat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"ABW"</td>
+<td>"Latin America …</td>
+<td>"High income"</td>
+</tr>
+<tr class="even">
+<td>"AFG"</td>
+<td>"South Asia"</td>
+<td>"Low income"</td>
+</tr>
+<tr class="odd">
+<td>"AGO"</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Lower middle i…</td>
+</tr>
+<tr class="even">
+<td>"ALB"</td>
+<td>"Europe &amp; Centr…</td>
+<td>"Upper middle i…</td>
+</tr>
+<tr class="odd">
+<td>"AND"</td>
+<td>"Europe &amp; Centr…</td>
+<td>"High income"</td>
+</tr>
+<tr class="even">
+<td>"ARE"</td>
+<td>"Middle East &amp; …</td>
+<td>"High income"</td>
+</tr>
+<tr class="odd">
+<td>"ARG"</td>
+<td>"Latin America …</td>
+<td>"Upper middle i…</td>
+</tr>
+<tr class="even">
+<td>"ARM"</td>
+<td>"Europe &amp; Centr…</td>
+<td>"Lower middle i…</td>
+</tr>
+<tr class="odd">
+<td>"ASM"</td>
+<td>"East Asia &amp; Pa…</td>
+<td>"Upper middle i…</td>
+</tr>
+<tr class="even">
+<td>"ATG"</td>
+<td>"Latin America …</td>
+<td>"High income"</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-21" class="cell markdown">
+<p>Remove the regional aggregates, to create a table with only country data</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-22" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.187440Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.187174Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.202247Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.201699Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>country_data <span class="op">=</span> data.join(metadata, on<span class="op">=</span><span class="st">"code"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>country_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 61)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">code</th>
+<th data-quarto-table-cell-role="th">y1960</th>
+<th data-quarto-table-cell-role="th">y1961</th>
+<th data-quarto-table-cell-role="th">y1962</th>
+<th data-quarto-table-cell-role="th">y1963</th>
+<th data-quarto-table-cell-role="th">y1964</th>
+<th data-quarto-table-cell-role="th">y1965</th>
+<th data-quarto-table-cell-role="th">y1966</th>
+<th data-quarto-table-cell-role="th">y1967</th>
+<th data-quarto-table-cell-role="th">y1968</th>
+<th data-quarto-table-cell-role="th">y1969</th>
+<th data-quarto-table-cell-role="th">y1970</th>
+<th data-quarto-table-cell-role="th">y1971</th>
+<th data-quarto-table-cell-role="th">y1972</th>
+<th data-quarto-table-cell-role="th">y1973</th>
+<th data-quarto-table-cell-role="th">y1974</th>
+<th data-quarto-table-cell-role="th">y1975</th>
+<th data-quarto-table-cell-role="th">y1976</th>
+<th data-quarto-table-cell-role="th">y1977</th>
+<th data-quarto-table-cell-role="th">y1978</th>
+<th data-quarto-table-cell-role="th">y1979</th>
+<th data-quarto-table-cell-role="th">y1980</th>
+<th data-quarto-table-cell-role="th">y1981</th>
+<th data-quarto-table-cell-role="th">y1982</th>
+<th data-quarto-table-cell-role="th">y1983</th>
+<th data-quarto-table-cell-role="th">y1984</th>
+<th data-quarto-table-cell-role="th">y1985</th>
+<th data-quarto-table-cell-role="th">y1986</th>
+<th data-quarto-table-cell-role="th">y1987</th>
+<th data-quarto-table-cell-role="th">y1988</th>
+<th data-quarto-table-cell-role="th">y1989</th>
+<th data-quarto-table-cell-role="th">y1990</th>
+<th data-quarto-table-cell-role="th">y1991</th>
+<th data-quarto-table-cell-role="th">y1992</th>
+<th data-quarto-table-cell-role="th">y1993</th>
+<th data-quarto-table-cell-role="th">y1994</th>
+<th data-quarto-table-cell-role="th">y1995</th>
+<th data-quarto-table-cell-role="th">y1996</th>
+<th data-quarto-table-cell-role="th">y1997</th>
+<th data-quarto-table-cell-role="th">y1998</th>
+<th data-quarto-table-cell-role="th">y1999</th>
+<th data-quarto-table-cell-role="th">y2000</th>
+<th data-quarto-table-cell-role="th">y2001</th>
+<th data-quarto-table-cell-role="th">y2002</th>
+<th data-quarto-table-cell-role="th">y2003</th>
+<th data-quarto-table-cell-role="th">y2004</th>
+<th data-quarto-table-cell-role="th">y2005</th>
+<th data-quarto-table-cell-role="th">y2006</th>
+<th data-quarto-table-cell-role="th">y2007</th>
+<th data-quarto-table-cell-role="th">y2008</th>
+<th data-quarto-table-cell-role="th">y2009</th>
+<th data-quarto-table-cell-role="th">y2010</th>
+<th data-quarto-table-cell-role="th">y2011</th>
+<th data-quarto-table-cell-role="th">y2012</th>
+<th data-quarto-table-cell-role="th">y2013</th>
+<th data-quarto-table-cell-role="th">y2014</th>
+<th data-quarto-table-cell-role="th">y2015</th>
+<th data-quarto-table-cell-role="th">y2016</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">income_group</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+<th>str</th>
+<th>cat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Aruba"</td>
+<td>"ABW"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>"Latin America …</td>
+<td>"High income"</td>
+</tr>
+<tr class="even">
+<td>"Afghanistan"</td>
+<td>"AFG"</td>
+<td>null</td>
+<td>240.5</td>
+<td>236.3</td>
+<td>232.3</td>
+<td>228.5</td>
+<td>224.6</td>
+<td>220.7</td>
+<td>217.0</td>
+<td>213.3</td>
+<td>209.8</td>
+<td>206.1</td>
+<td>202.2</td>
+<td>198.2</td>
+<td>194.3</td>
+<td>190.3</td>
+<td>186.6</td>
+<td>182.6</td>
+<td>178.7</td>
+<td>174.5</td>
+<td>170.4</td>
+<td>166.1</td>
+<td>161.8</td>
+<td>157.5</td>
+<td>153.2</td>
+<td>148.7</td>
+<td>144.5</td>
+<td>140.2</td>
+<td>135.7</td>
+<td>131.3</td>
+<td>126.8</td>
+<td>122.5</td>
+<td>118.3</td>
+<td>114.4</td>
+<td>110.9</td>
+<td>107.7</td>
+<td>105.0</td>
+<td>102.7</td>
+<td>100.7</td>
+<td>98.9</td>
+<td>97.2</td>
+<td>95.4</td>
+<td>93.4</td>
+<td>91.2</td>
+<td>89.0</td>
+<td>86.7</td>
+<td>84.4</td>
+<td>82.3</td>
+<td>80.4</td>
+<td>78.6</td>
+<td>76.8</td>
+<td>75.1</td>
+<td>73.4</td>
+<td>71.7</td>
+<td>69.9</td>
+<td>68.1</td>
+<td>66.3</td>
+<td>null</td>
+<td>"South Asia"</td>
+<td>"Low income"</td>
+</tr>
+<tr class="odd">
+<td>"Angola"</td>
+<td>"AGO"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>138.3</td>
+<td>137.5</td>
+<td>136.8</td>
+<td>136.0</td>
+<td>135.3</td>
+<td>134.9</td>
+<td>134.4</td>
+<td>134.1</td>
+<td>133.8</td>
+<td>133.6</td>
+<td>133.5</td>
+<td>133.5</td>
+<td>133.5</td>
+<td>133.4</td>
+<td>133.2</td>
+<td>132.8</td>
+<td>132.3</td>
+<td>131.5</td>
+<td>130.6</td>
+<td>129.5</td>
+<td>128.3</td>
+<td>126.9</td>
+<td>125.5</td>
+<td>124.1</td>
+<td>122.8</td>
+<td>121.2</td>
+<td>119.4</td>
+<td>117.1</td>
+<td>114.7</td>
+<td>112.2</td>
+<td>109.6</td>
+<td>106.8</td>
+<td>104.1</td>
+<td>101.4</td>
+<td>98.8</td>
+<td>96.0</td>
+<td>null</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Lower middle i…</td>
+</tr>
+<tr class="even">
+<td>"Albania"</td>
+<td>"ALB"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>73.0</td>
+<td>68.4</td>
+<td>64.0</td>
+<td>59.9</td>
+<td>56.1</td>
+<td>52.4</td>
+<td>49.1</td>
+<td>45.9</td>
+<td>43.2</td>
+<td>40.8</td>
+<td>38.6</td>
+<td>36.7</td>
+<td>35.1</td>
+<td>33.7</td>
+<td>32.5</td>
+<td>31.4</td>
+<td>30.3</td>
+<td>29.1</td>
+<td>27.9</td>
+<td>26.8</td>
+<td>25.5</td>
+<td>24.4</td>
+<td>23.2</td>
+<td>22.1</td>
+<td>21.0</td>
+<td>20.0</td>
+<td>19.1</td>
+<td>18.3</td>
+<td>17.4</td>
+<td>16.7</td>
+<td>16.0</td>
+<td>15.4</td>
+<td>14.8</td>
+<td>14.3</td>
+<td>13.8</td>
+<td>13.3</td>
+<td>12.9</td>
+<td>12.5</td>
+<td>null</td>
+<td>"Europe &amp; Centr…</td>
+<td>"Upper middle i…</td>
+</tr>
+<tr class="odd">
+<td>"Andorra"</td>
+<td>"AND"</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>7.5</td>
+<td>7.0</td>
+<td>6.5</td>
+<td>6.1</td>
+<td>5.6</td>
+<td>5.2</td>
+<td>5.0</td>
+<td>4.6</td>
+<td>4.3</td>
+<td>4.1</td>
+<td>3.9</td>
+<td>3.7</td>
+<td>3.5</td>
+<td>3.3</td>
+<td>3.2</td>
+<td>3.1</td>
+<td>2.9</td>
+<td>2.8</td>
+<td>2.7</td>
+<td>2.6</td>
+<td>2.5</td>
+<td>2.4</td>
+<td>2.3</td>
+<td>2.2</td>
+<td>2.1</td>
+<td>2.1</td>
+<td>null</td>
+<td>"Europe &amp; Centr…</td>
+<td>"High income"</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-23" class="cell markdown">
+<p>We are interested in the changes in rank between 1960 and 2015. To plot a reasonable sized graph, we randomly sample 35 countries.</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.205210Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.204989Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.220104Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.219480Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sampled_data <span class="op">=</span> country_data.drop_nulls(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    subset<span class="op">=</span>[<span class="st">"y1960"</span>, <span class="st">"y2015"</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>).sample(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    n<span class="op">=</span><span class="dv">35</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>).with_columns(</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    y1960_rank<span class="op">=</span>col(<span class="st">"y1960"</span>).rank(method<span class="op">=</span><span class="st">"ordinal"</span>).cast(pl.Int64),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    y2015_rank<span class="op">=</span>col(<span class="st">"y2015"</span>).rank(method<span class="op">=</span><span class="st">"ordinal"</span>).cast(pl.Int64)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>).sort(<span class="st">"y2015_rank"</span>, descending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>sampled_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 63)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">code</th>
+<th data-quarto-table-cell-role="th">y1960</th>
+<th data-quarto-table-cell-role="th">y1961</th>
+<th data-quarto-table-cell-role="th">y1962</th>
+<th data-quarto-table-cell-role="th">y1963</th>
+<th data-quarto-table-cell-role="th">y1964</th>
+<th data-quarto-table-cell-role="th">y1965</th>
+<th data-quarto-table-cell-role="th">y1966</th>
+<th data-quarto-table-cell-role="th">y1967</th>
+<th data-quarto-table-cell-role="th">y1968</th>
+<th data-quarto-table-cell-role="th">y1969</th>
+<th data-quarto-table-cell-role="th">y1970</th>
+<th data-quarto-table-cell-role="th">y1971</th>
+<th data-quarto-table-cell-role="th">y1972</th>
+<th data-quarto-table-cell-role="th">y1973</th>
+<th data-quarto-table-cell-role="th">y1974</th>
+<th data-quarto-table-cell-role="th">y1975</th>
+<th data-quarto-table-cell-role="th">y1976</th>
+<th data-quarto-table-cell-role="th">y1977</th>
+<th data-quarto-table-cell-role="th">y1978</th>
+<th data-quarto-table-cell-role="th">y1979</th>
+<th data-quarto-table-cell-role="th">y1980</th>
+<th data-quarto-table-cell-role="th">y1981</th>
+<th data-quarto-table-cell-role="th">y1982</th>
+<th data-quarto-table-cell-role="th">y1983</th>
+<th data-quarto-table-cell-role="th">y1984</th>
+<th data-quarto-table-cell-role="th">y1985</th>
+<th data-quarto-table-cell-role="th">y1986</th>
+<th data-quarto-table-cell-role="th">y1987</th>
+<th data-quarto-table-cell-role="th">y1988</th>
+<th data-quarto-table-cell-role="th">y1989</th>
+<th data-quarto-table-cell-role="th">y1990</th>
+<th data-quarto-table-cell-role="th">y1991</th>
+<th data-quarto-table-cell-role="th">y1992</th>
+<th data-quarto-table-cell-role="th">y1993</th>
+<th data-quarto-table-cell-role="th">y1994</th>
+<th data-quarto-table-cell-role="th">y1995</th>
+<th data-quarto-table-cell-role="th">y1996</th>
+<th data-quarto-table-cell-role="th">y1997</th>
+<th data-quarto-table-cell-role="th">y1998</th>
+<th data-quarto-table-cell-role="th">y1999</th>
+<th data-quarto-table-cell-role="th">y2000</th>
+<th data-quarto-table-cell-role="th">y2001</th>
+<th data-quarto-table-cell-role="th">y2002</th>
+<th data-quarto-table-cell-role="th">y2003</th>
+<th data-quarto-table-cell-role="th">y2004</th>
+<th data-quarto-table-cell-role="th">y2005</th>
+<th data-quarto-table-cell-role="th">y2006</th>
+<th data-quarto-table-cell-role="th">y2007</th>
+<th data-quarto-table-cell-role="th">y2008</th>
+<th data-quarto-table-cell-role="th">y2009</th>
+<th data-quarto-table-cell-role="th">y2010</th>
+<th data-quarto-table-cell-role="th">y2011</th>
+<th data-quarto-table-cell-role="th">y2012</th>
+<th data-quarto-table-cell-role="th">y2013</th>
+<th data-quarto-table-cell-role="th">y2014</th>
+<th data-quarto-table-cell-role="th">y2015</th>
+<th data-quarto-table-cell-role="th">y2016</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">income_group</th>
+<th data-quarto-table-cell-role="th">y1960_rank</th>
+<th data-quarto-table-cell-role="th">y2015_rank</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+<th>str</th>
+<th>cat</th>
+<th>i64</th>
+<th>i64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Sierra Leone"</td>
+<td>"SLE"</td>
+<td>223.6</td>
+<td>220.5</td>
+<td>217.5</td>
+<td>214.2</td>
+<td>211.0</td>
+<td>207.6</td>
+<td>204.2</td>
+<td>200.8</td>
+<td>197.3</td>
+<td>194.1</td>
+<td>191.0</td>
+<td>188.0</td>
+<td>185.2</td>
+<td>182.6</td>
+<td>180.0</td>
+<td>177.5</td>
+<td>175.3</td>
+<td>173.2</td>
+<td>171.2</td>
+<td>169.2</td>
+<td>167.3</td>
+<td>165.6</td>
+<td>164.1</td>
+<td>162.8</td>
+<td>161.5</td>
+<td>160.4</td>
+<td>159.4</td>
+<td>158.3</td>
+<td>157.6</td>
+<td>157.0</td>
+<td>156.5</td>
+<td>156.1</td>
+<td>155.7</td>
+<td>155.2</td>
+<td>154.5</td>
+<td>153.4</td>
+<td>152.0</td>
+<td>150.1</td>
+<td>148.1</td>
+<td>145.8</td>
+<td>143.3</td>
+<td>140.5</td>
+<td>137.7</td>
+<td>134.6</td>
+<td>131.4</td>
+<td>128.1</td>
+<td>124.5</td>
+<td>120.5</td>
+<td>116.2</td>
+<td>111.7</td>
+<td>107.0</td>
+<td>102.3</td>
+<td>97.9</td>
+<td>93.8</td>
+<td>90.2</td>
+<td>87.1</td>
+<td>null</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Low income"</td>
+<td>35</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td>"Cote d'Ivoire"</td>
+<td>"CIV"</td>
+<td>208.4</td>
+<td>203.0</td>
+<td>197.7</td>
+<td>192.8</td>
+<td>188.0</td>
+<td>183.3</td>
+<td>178.7</td>
+<td>174.2</td>
+<td>169.9</td>
+<td>165.4</td>
+<td>161.0</td>
+<td>156.4</td>
+<td>151.3</td>
+<td>146.1</td>
+<td>140.7</td>
+<td>135.1</td>
+<td>129.7</td>
+<td>124.7</td>
+<td>120.2</td>
+<td>116.6</td>
+<td>113.7</td>
+<td>111.4</td>
+<td>109.5</td>
+<td>108.0</td>
+<td>106.9</td>
+<td>106.1</td>
+<td>105.5</td>
+<td>105.2</td>
+<td>104.9</td>
+<td>104.9</td>
+<td>104.9</td>
+<td>104.8</td>
+<td>104.7</td>
+<td>104.7</td>
+<td>104.6</td>
+<td>104.4</td>
+<td>104.0</td>
+<td>103.3</td>
+<td>102.3</td>
+<td>101.0</td>
+<td>99.5</td>
+<td>97.7</td>
+<td>95.7</td>
+<td>93.6</td>
+<td>91.4</td>
+<td>88.9</td>
+<td>86.7</td>
+<td>84.1</td>
+<td>81.3</td>
+<td>79.0</td>
+<td>76.9</td>
+<td>75.0</td>
+<td>72.8</td>
+<td>70.6</td>
+<td>68.5</td>
+<td>66.6</td>
+<td>null</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Lower middle i…</td>
+<td>33</td>
+<td>34</td>
+</tr>
+<tr class="odd">
+<td>"Benin"</td>
+<td>"BEN"</td>
+<td>186.9</td>
+<td>183.9</td>
+<td>180.6</td>
+<td>177.1</td>
+<td>173.6</td>
+<td>170.2</td>
+<td>166.8</td>
+<td>164.0</td>
+<td>161.5</td>
+<td>159.2</td>
+<td>157.1</td>
+<td>154.9</td>
+<td>152.5</td>
+<td>149.8</td>
+<td>146.8</td>
+<td>143.5</td>
+<td>140.1</td>
+<td>136.7</td>
+<td>133.6</td>
+<td>130.9</td>
+<td>128.7</td>
+<td>126.6</td>
+<td>124.7</td>
+<td>122.8</td>
+<td>120.9</td>
+<td>118.9</td>
+<td>116.9</td>
+<td>114.8</td>
+<td>112.6</td>
+<td>110.4</td>
+<td>108.0</td>
+<td>105.6</td>
+<td>103.2</td>
+<td>100.9</td>
+<td>98.9</td>
+<td>97.2</td>
+<td>95.6</td>
+<td>94.2</td>
+<td>92.7</td>
+<td>91.1</td>
+<td>89.3</td>
+<td>87.4</td>
+<td>85.2</td>
+<td>83.0</td>
+<td>80.8</td>
+<td>78.8</td>
+<td>76.9</td>
+<td>75.2</td>
+<td>73.7</td>
+<td>72.3</td>
+<td>71.0</td>
+<td>69.8</td>
+<td>68.5</td>
+<td>67.2</td>
+<td>65.7</td>
+<td>64.2</td>
+<td>null</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Low income"</td>
+<td>32</td>
+<td>33</td>
+</tr>
+<tr class="even">
+<td>"Burkina Faso"</td>
+<td>"BFA"</td>
+<td>161.3</td>
+<td>159.4</td>
+<td>157.5</td>
+<td>155.8</td>
+<td>154.3</td>
+<td>153.0</td>
+<td>151.8</td>
+<td>150.9</td>
+<td>150.2</td>
+<td>149.7</td>
+<td>149.3</td>
+<td>148.5</td>
+<td>147.1</td>
+<td>144.6</td>
+<td>141.0</td>
+<td>136.6</td>
+<td>131.9</td>
+<td>127.4</td>
+<td>123.4</td>
+<td>120.2</td>
+<td>117.6</td>
+<td>115.6</td>
+<td>113.9</td>
+<td>112.4</td>
+<td>110.8</td>
+<td>109.0</td>
+<td>107.1</td>
+<td>105.3</td>
+<td>103.8</td>
+<td>102.9</td>
+<td>102.5</td>
+<td>102.3</td>
+<td>102.4</td>
+<td>102.4</td>
+<td>102.1</td>
+<td>101.4</td>
+<td>100.5</td>
+<td>99.4</td>
+<td>98.3</td>
+<td>97.3</td>
+<td>96.2</td>
+<td>95.0</td>
+<td>93.4</td>
+<td>91.4</td>
+<td>88.9</td>
+<td>86.0</td>
+<td>82.7</td>
+<td>79.2</td>
+<td>75.8</td>
+<td>72.5</td>
+<td>69.7</td>
+<td>67.3</td>
+<td>65.4</td>
+<td>63.7</td>
+<td>62.2</td>
+<td>60.9</td>
+<td>null</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Low income"</td>
+<td>30</td>
+<td>32</td>
+</tr>
+<tr class="odd">
+<td>"Ghana"</td>
+<td>"GHA"</td>
+<td>125.1</td>
+<td>123.8</td>
+<td>122.7</td>
+<td>121.8</td>
+<td>121.2</td>
+<td>120.8</td>
+<td>120.7</td>
+<td>120.6</td>
+<td>120.6</td>
+<td>120.5</td>
+<td>120.1</td>
+<td>119.5</td>
+<td>118.2</td>
+<td>116.5</td>
+<td>114.2</td>
+<td>111.5</td>
+<td>108.7</td>
+<td>106.0</td>
+<td>103.8</td>
+<td>102.1</td>
+<td>100.9</td>
+<td>100.1</td>
+<td>99.3</td>
+<td>98.4</td>
+<td>96.8</td>
+<td>94.7</td>
+<td>92.1</td>
+<td>89.0</td>
+<td>85.8</td>
+<td>82.7</td>
+<td>79.8</td>
+<td>77.5</td>
+<td>75.6</td>
+<td>74.1</td>
+<td>73.0</td>
+<td>72.0</td>
+<td>71.0</td>
+<td>69.8</td>
+<td>68.4</td>
+<td>66.7</td>
+<td>64.9</td>
+<td>63.0</td>
+<td>61.2</td>
+<td>59.6</td>
+<td>58.1</td>
+<td>56.8</td>
+<td>55.6</td>
+<td>54.4</td>
+<td>53.1</td>
+<td>51.7</td>
+<td>50.2</td>
+<td>48.6</td>
+<td>47.0</td>
+<td>45.5</td>
+<td>44.2</td>
+<td>42.8</td>
+<td>null</td>
+<td>"Sub-Saharan Af…</td>
+<td>"Lower middle i…</td>
+<td>25</td>
+<td>31</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></div>
+<div id="cell-25" class="cell markdown">
+<p>First graph</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-26" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.223082Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.222834Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.764005Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.763459Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(ggplot(sampled_data)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(<span class="dv">1</span>, <span class="st">"y1960_rank"</span>, label<span class="op">=</span><span class="st">"country"</span>), ha<span class="op">=</span><span class="st">"right"</span>, size<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(<span class="dv">2</span>, <span class="st">"y2015_rank"</span>, label<span class="op">=</span><span class="st">"country"</span>), ha<span class="op">=</span><span class="st">"left"</span>, size<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="dv">1</span>, <span class="st">"y1960_rank"</span>, color<span class="op">=</span><span class="st">"income_group"</span>), size<span class="op">=</span><span class="fl">2.5</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="dv">2</span>, <span class="st">"y2015_rank"</span>, color<span class="op">=</span><span class="st">"income_group"</span>), size<span class="op">=</span><span class="fl">2.5</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_segment(aes(x<span class="op">=</span><span class="dv">1</span>, y<span class="op">=</span><span class="st">"y1960_rank"</span>, xend<span class="op">=</span><span class="dv">2</span>, yend<span class="op">=</span><span class="st">"y2015_rank"</span>, color<span class="op">=</span><span class="st">"income_group"</span>))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><img src="geom_segment_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="cell-27" class="cell markdown">
+<p>It has the form we want, but we need to tweak it.</p>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-28" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.769349Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.769098Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:53.936058Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:53.935271Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Text colors</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>black1 <span class="op">=</span> <span class="st">"#252525"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>black2 <span class="op">=</span> <span class="st">"#222222"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>(ggplot(sampled_data)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a> <span class="co"># Slight modifications for the original lines,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a> <span class="co"># 1. Nudge the text to either sides of the points</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a> <span class="co"># 2. Alter the color and alpha values</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(<span class="dv">1</span>, <span class="st">"y1960_rank"</span>, label<span class="op">=</span><span class="st">"country"</span>), nudge_x<span class="op">=-</span><span class="fl">0.05</span>, ha<span class="op">=</span><span class="st">"right"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>black1)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(<span class="dv">2</span>, <span class="st">"y2015_rank"</span>, label<span class="op">=</span><span class="st">"country"</span>), nudge_x<span class="op">=</span><span class="fl">0.05</span>, ha<span class="op">=</span><span class="st">"left"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>black1)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="dv">1</span>, <span class="st">"y1960_rank"</span>, color<span class="op">=</span><span class="st">"income_group"</span>), size<span class="op">=</span><span class="fl">2.5</span>, alpha<span class="op">=</span><span class="fl">.7</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="dv">2</span>, <span class="st">"y2015_rank"</span>, color<span class="op">=</span><span class="st">"income_group"</span>), size<span class="op">=</span><span class="fl">2.5</span>, alpha<span class="op">=</span><span class="fl">.7</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_segment(aes(x<span class="op">=</span><span class="dv">1</span>, y<span class="op">=</span><span class="st">"y1960_rank"</span>, xend<span class="op">=</span><span class="dv">2</span>, yend<span class="op">=</span><span class="st">"y2015_rank"</span>, color<span class="op">=</span><span class="st">"income_group"</span>), alpha<span class="op">=</span><span class="fl">.7</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a> <span class="co"># Text Annotations</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span><span class="dv">1</span>, y<span class="op">=</span><span class="dv">0</span>, label<span class="op">=</span><span class="st">"Rank in 1960"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, ha<span class="op">=</span><span class="st">"right"</span>, size<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span>black2)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span><span class="dv">2</span>, y<span class="op">=</span><span class="dv">0</span>, label<span class="op">=</span><span class="st">"Rank in 2015"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, ha<span class="op">=</span><span class="st">"left"</span>, size<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span>black2)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span><span class="fl">1.5</span>, y<span class="op">=</span><span class="dv">0</span>, label<span class="op">=</span><span class="st">"Lines show change in rank"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>black1)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"label"</span>, x<span class="op">=</span><span class="fl">1.5</span>, y<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="st">"Lower infant</span><span class="ch">\n</span><span class="st">death rates"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>black1,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>            label_size<span class="op">=</span><span class="dv">0</span>, fontstyle<span class="op">=</span><span class="st">"italic"</span>)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> annotate(<span class="st">"label"</span>, x<span class="op">=</span><span class="fl">1.5</span>, y<span class="op">=</span><span class="dv">33</span>, label<span class="op">=</span><span class="st">"Higher infant</span><span class="ch">\n</span><span class="st">death rates"</span>, size<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>black1,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>            label_size<span class="op">=</span><span class="dv">0</span>, fontstyle<span class="op">=</span><span class="st">"italic"</span>)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a> <span class="co"># Prevent country names from being chopped off</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(x<span class="op">=</span>(<span class="fl">0.35</span>, <span class="fl">2.65</span>))</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(color<span class="op">=</span><span class="st">"Income Group"</span>)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a> <span class="co"># Countries with lower rates on top</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a> <span class="co"># Change colors</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_brewer(<span class="bu">type</span><span class="op">=</span><span class="st">"qual"</span>, palette<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a> <span class="co"># Removes all decorations</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme_void()</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a> <span class="co"># Changing the figure size prevents the country names from squishing up</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">11</span>))</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><img src="geom_segment_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div></div>
+
+
+     </main> <!-- /main -->  <script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>  </div> <!-- /content --> 
+  
+</body></html>
