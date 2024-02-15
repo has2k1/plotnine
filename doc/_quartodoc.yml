@@ -13,7 +13,6 @@ quartodoc:
       desc: ""
       contents:
         - name: ggplot
-          package: plotnine.ggplot
         - qplot
         - watermark
         - name: layer
@@ -27,7 +26,6 @@ quartodoc:
         Aesthetics are the visual properties of a plot. The following functions
         control how the data (and calculations based on the data) is mapped to
         the aesthetics.
-      package: plotnine.mapping
       contents:
         - name: aes
           members: []
@@ -46,8 +44,7 @@ quartodoc:
       contents:
         - geom
 
-    - package: plotnine.geoms
-      options: &no-members
+    - options: &no-members
         members: []
       contents:
         - geom_abline
@@ -96,18 +93,15 @@ quartodoc:
 
     - subtitle: Annotations
       desc: ""
-      package: plotnine.geoms
       options: *no-members
       contents:
         - annotate
         - annotation_logticks
         - annotation_stripes
-        - name: arrow
-          package: plotnine.geoms.geom_path
+        - arrow
 
     - subtitle: Labels
       desc: ""
-      package: plotnine.labels
       contents:
         - labs
         - xlab
@@ -122,12 +116,11 @@ quartodoc:
         yield varied results, so a `stat` must be paired with a `geom` that
         can represent all or some of the computations.
 
-    - package: plotnine.stats.stat
+    - package:  plotnine.stats.stat
       contents:
         - stat
 
-    - package: plotnine.stats
-      options: *no-members
+    - options: *no-members
       contents:
         - stat_bin
         - stat_bin_2d
@@ -161,16 +154,11 @@ quartodoc:
         - name: facet
           include_attributes: false
 
-    - package: plotnine.facets
-      options: *no-members
+    - options: *no-members
       contents:
         - facet_grid
         - facet_null
         - facet_wrap
-
-    - package: plotnine.facets.labelling
-      options: *no-members
-      contents:
         - labeller
         - as_labeller
         - label_value
@@ -184,7 +172,6 @@ quartodoc:
         colour, size and shape.
 
     - subtitle: Base Scales
-      package: plotnine.scales
       options: *no-members
       contents:
         - name: scale
@@ -197,8 +184,6 @@ quartodoc:
           package: plotnine.scales.scale_datetime
 
     - subtitle: Alpha Scales
-      desc: ""
-      package: plotnine.scales.scale_alpha
       options: *no-members
       contents:
         - scale_alpha
@@ -207,8 +192,6 @@ quartodoc:
         - scale_alpha_datetime
 
     - subtitle: Identity Scales
-      desc: ""
-      package: plotnine.scales
       options: *no-members
       contents:
         - scale_alpha_identity
@@ -220,8 +203,6 @@ quartodoc:
         - scale_size_identity
 
     - subtitle: Color and Fill Scales
-      desc: ""
-      package: plotnine.scales
       options: *no-members
       contents:
         - scale_color_brewer
@@ -252,8 +233,6 @@ quartodoc:
         - scale_fill_hue
 
     - subtitle: Manual Scales
-      desc: ""
-      package: plotnine.scales
       options: *no-members
       contents:
         - scale_alpha_manual
@@ -265,21 +244,18 @@ quartodoc:
         - scale_size_manual
 
     - subtitle: Linetype Scales
-      package: plotnine.scales
       options: *no-members
       contents:
         - scale_linetype
         - scale_linetype_discrete
 
     - subtitle: Shape Scales
-      package: plotnine.scales
       options: *no-members
       contents:
         - scale_shape
         - scale_shape_discrete
 
     - subtitle: Size Scales
-      package: plotnine.scales
       options: *no-members
       contents:
         - scale_size
@@ -290,7 +266,6 @@ quartodoc:
         - scale_size_datetime
 
     - subtitle: Position Scales
-      package: plotnine.scales
       contents:
         - scale_x_continuous
         - scale_x_date
@@ -312,7 +287,6 @@ quartodoc:
         - scale_y_timedelta
 
     - subtitle: Scale Limits
-      package: plotnine.scales
       options: *no-members
       contents:
         - lims
@@ -330,8 +304,7 @@ quartodoc:
         - name: guide
           include_attributes: false
 
-    - package: plotnine.guides
-      options: *no-members
+    - options: *no-members
       contents:
         - guides
         - guide_legend
@@ -348,8 +321,7 @@ quartodoc:
         - name: position
           include_attributes: false
 
-    - package: plotnine.positions
-      options: *no-members
+    - options: *no-members
       contents:
         - position_dodge
         - position_dodge2
@@ -365,13 +337,11 @@ quartodoc:
       desc: |
         Themes control the visual appearance of the non-data elements the plot.
 
-    - package: plotnine.themes
-      contents:
+    - contents:
         - name: theme
           include_attributes: false
 
-    - package: plotnine.themes
-      options: *no-members
+    - options: *no-members
       contents:
         - theme_538
         - theme_bw
@@ -508,15 +478,13 @@ quartodoc:
         - title
 
     - subtitle: Helpful Functions & Classes for Theming
-      package: plotnine.themes
       options: *no-members
       contents:
         - theme_set
         - theme_get
         - theme_update
 
-    - package: plotnine.themes.elements
-      options: *no-members
+    - options: *no-members
       contents:
         - element_line
         - element_rect
@@ -532,8 +500,7 @@ quartodoc:
       contents:
         - coord
 
-    - package: plotnine.coords
-      options: *no-members
+    - options: *no-members
       contents:
         - coord_cartesian
         - coord_equal
