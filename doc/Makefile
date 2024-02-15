@@ -14,6 +14,8 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
+QRENDERER_STYLE_FILE=qrenderer.scss
+QRENDERER_STYLE_URL=https://raw.githubusercontent.com/has2k1/qrenderer/main/doc/qrenderer.scss
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -26,6 +28,12 @@ clean:  ## Remove build artefacts
 	rm -rf _site/
 	rm -rf _inv/
 
+download_qrenderer_style:  ## Download qrenderer.scss
+	@if [ ! -f $(QRENDERER_STYLE_FILE) ]; then \
+		echo "Downloading $(QRENDERER_STYLE_FILE)"; \
+		wget $(QRENDERER_STYLE_URL) -O $(QRENDERER_STYLE_FILE); \
+	fi
+
 interlink:  ## Gather interlinks
 	quartodoc interlinks
 
@@ -35,7 +43,7 @@ config:  ## Configure project for quartodoc and quarto
 docstrings: config  ## Generate qmd files from the docstrings
 	quartodoc build --config _quartodoc.yml
 
-html: docstrings  ## Build html site
+html: docstrings download_qrenderer_style ## Build html site
 	quarto render
 
 doc: clean interlink html  ## Build html documentation from a clean slate

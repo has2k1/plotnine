@@ -32,6 +32,7 @@ format:
     toc: true
     theme:
       - lumen
+      - qrenderer.scss
       - custom.scss
 
 filters:
