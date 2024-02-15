@@ -255,11 +255,13 @@ class scale_y_discrete(scale_position_discrete):
 
 
 # Not part of the user API
-class scale_x_ordinal(scale_x_discrete, alias):
+@alias
+class scale_x_ordinal(scale_x_discrete):
     pass
 
 
-class scale_y_ordinal(scale_y_discrete, alias):
+@alias
+class scale_y_ordinal(scale_y_discrete):
     pass
 
 
@@ -323,11 +325,13 @@ class scale_y_datetime(scale_datetime, scale_y_continuous):
     """
 
 
-class scale_x_date(scale_x_datetime, alias):
+@alias
+class scale_x_date(scale_x_datetime):
     pass
 
 
-class scale_y_date(scale_y_datetime, alias):
+@alias
+class scale_y_date(scale_y_datetime):
     pass
 
 

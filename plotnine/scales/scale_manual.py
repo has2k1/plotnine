@@ -187,5 +187,6 @@ class scale_size_manual(_scale_manual):
 
 
 # American to British spelling
-class scale_colour_manual(scale_color_manual, alias):
+@alias
+class scale_colour_manual(scale_color_manual):
     pass

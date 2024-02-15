@@ -148,5 +148,6 @@ class theme_gray(theme):
         )
 
 
-class theme_grey(theme_gray, alias):
+@alias
+class theme_grey(theme_gray):
     pass

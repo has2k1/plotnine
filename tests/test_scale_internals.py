@@ -173,8 +173,9 @@ def test_color_aliases():
         if s.startswith("scale_color")
     )
 
-    for a, b in names:
-        assert getattr(scale_color, a) is getattr(scale_color, b)
+    for us, uk in names:
+        uk_scale = getattr(scale_color, uk)
+        assert "alias of" in uk_scale.__doc__
 
 
 def test_fill_scale_aesthetics():
