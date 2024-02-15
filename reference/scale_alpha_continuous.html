@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+gbc90a20</title>
+<title>plotnine 0.0.post1+g431c601</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gbc90a20</span>
+    <span class="navbar-title">plotnine 0.0.post1+g431c601</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -180,8 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.scales.scale_alpha.scale_alpha_continuous" id="toc-plotnine.scales.scale_alpha.scale_alpha_continuous" class="nav-link active" data-scroll-target="#plotnine.scales.scale_alpha.scale_alpha_continuous"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scales.scale_alpha.scale_alpha_continuous</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#plotnine.scale_alpha_continuous" id="toc-plotnine.scale_alpha_continuous" class="nav-link active" data-scroll-target="#plotnine.scale_alpha_continuous"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_alpha_continuous</span></a></li>
   </ul>
 </nav>
     </div>
@@ -192,90 +191,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.scales.scale_alpha.scale_alpha_continuous" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scales.scale_alpha.scale_alpha_continuous</span></h1>
+<section id="plotnine.scale_alpha_continuous" class="level1 title doc-object doc-class quarto-title display-7">
+<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_alpha_continuous</span></h1>
 </section>
 </header>
 <div class="doc-signature">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_alpha_continuous(<span class="bu">range</span><span class="op">=</span>(<span class="fl">0.1</span>, <span class="dv">1</span>), <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>Continuous Alpha Scale</p>
-</div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">range</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">(0.1, 1)</span></code></dt>
-<dd>
-<p>Range ([Minimum, Maximum]) of output alpha values. Should be between 0 and 1.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">breaks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
-<dd>
-<p>List of major break points. Or a callable that takes a tuple of limits and returns a list of breaks. If <code>True</code>, automatically calculate the breaks.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">expand</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
-<pre><code>(mul, add)
-(mul_low, add_low, mul_high, add_high)</code></pre>
-<p>For example,</p>
-<ul>
-<li><code>(0, 0)</code> - Do not expand.</li>
-<li><code>(0, 1)</code> - Expand lower and upper limits by 1 unit.</li>
-<li><code>(1, 0)</code> - Expand lower and upper limits by 100%.</li>
-<li><code>(0, 0, 0, 0)</code> - Do not expand, as <code>(0, 0)</code>.</li>
-<li><code>(0, 0, 0, 1)</code> - Expand upper limit by 1 unit.</li>
-<li><code>(0, 1, 0.1, 0)</code> - Expand lower limit by 1 unit and upper limit by 10%.</li>
-<li><code>(0, 0, 0.1, 2)</code> - Expand upper limit by 10% plus 2 units.</li>
-</ul>
-<p>If not specified, suitable defaults are chosen.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">name</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Name used as the label of the scale. This is what shows up as the axis label or legend title. Suitable defaults are chosen depending on the type of scale.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">labels</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
-<dd>
-<p>List of :py:class:<code>str</code>. Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">limits</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://numpy.org/doc/stable/glossary.html#term-array_like">array_like</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Limits of the scale. Most commonly, these are the min &amp; max values for the scales. For scales that deal with categoricals, these may be a subset or superset of the categories.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">na_value</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://numpy.org/doc/stable/glossary.html#term-scalar">scalar</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">float(<span class="st">"nan"</span>)</span></code></dt>
-<dd>
-<p>What value to assign to missing values. Default is to assign <code>np.nan</code>.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">palette</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Function to map data points onto the scale. Most scales define their own palettes.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">aesthetics</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>list of :py:class:<code>str</code>. Aesthetics covered by the scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">trans</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span></code></dt>
-<dd>
-<p>Name of a trans function or a trans function. See :mod:<code>mizani.transforms</code> for possible options.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">oob</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">mizani.bounds.censor</span></code></dt>
-<dd>
-<p>Function to deal with out of bounds (limits) data points. Default is to turn them into <code>np.nan</code>, which then get dropped.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">minor_breaks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>If a list-like, it is the minor breaks points. If an integer, it is the number of minor breaks between any set of major breaks. If a function, it should have the signature <code>func(limits)</code> and return a list-like of consisting of the minor break points. If <code>None</code>, no minor breaks are calculated. The default is to automatically calculate them.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">rescaler</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">mizani.bounds.rescale</span></code></dt>
-<dd>
-<p>Function to rescale data points so that they can be handled by the palette. Default is to rescale them onto the [0, 1] range. Scales that inherit from this class may have another default.</p>
-</dd>
-</dl>
+<p>alias of <a href="../reference/scale_alpha.html#plotnine.scale_alpha">scale_alpha</a></p>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
