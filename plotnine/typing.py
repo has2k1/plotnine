@@ -15,8 +15,7 @@ import pandas as pd
 from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002
 
-from plotnine.ggplot import ggplot
-from plotnine.guides import guide_colorbar, guide_legend
+from plotnine import ggplot, guide_colorbar, guide_legend
 from plotnine.iapi import strip_label_details
 
 
