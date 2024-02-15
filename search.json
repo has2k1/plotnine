@@ -84,6 +84,13 @@
     "text": "Development installation\nTo do any development you have to clone the Plotnine source repository and install the package in development mode. These commands do all of that:\n$ git clone https://github.com/has2k1/plotnine.git\n$ cd plotnine\n$ pip install -e .\nIf you only want to use the latest development sources and do not care about having a cloned repository, e.g. if a bug you care about has been fixed but an official release has not come out yet, then use this command:\n$ pip install git+https://github.com/has2k1/plotnine.git"
   },
   {
+    "objectID": "gallery/index.html",
+    "href": "gallery/index.html",
+    "title": "Gallery",
+    "section": "",
+    "text": "Spiral Animation\n\n\n\n\n\n\n\nTwo Variable Bar Plot\n\n\n\n\n\n\n\nShading a Region under a Density Curve\n\n\n\n\n\n\n\nThe Political Territories of Westeros\n\n\n\n\n\n\n\nRanges of Similar Variables\n\n\n\n\n\n\n\nChange in Rank\n\n\n\n\n\n\n\nSmoothed conditional means\n\n\n\n\n\n\n\nPeriodic Table of Elements\n\n\n\n\n\n\n\nAnnotated Heatmap\n\n\n\n\n\n\n\nViolins, Boxes, Points and Lines\n\n\n\n\n\n\n\nGuitar Neck"
+  },
+  {
     "objectID": "changelog.html",
     "href": "changelog.html",
     "title": "Changelog",
