@@ -32,7 +32,8 @@ class scale_alpha(scale_continuous):
         scale_continuous.__init__(self, **kwargs)
 
 
-class scale_alpha_continuous(scale_alpha, alias):
+@alias
+class scale_alpha_continuous(scale_alpha):
     pass
 
 

@@ -103,5 +103,6 @@ class scale_shape_continuous(scale_continuous):
         raise PlotnineError("A continuous variable can not be mapped to shape")
 
 
-class scale_shape_discrete(scale_shape, alias):
+@alias
+class scale_shape_discrete(scale_shape):
     pass

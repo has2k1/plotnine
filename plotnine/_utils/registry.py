@@ -2,27 +2,29 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections import defaultdict
+from typing import TYPE_CHECKING
 from weakref import WeakValueDictionary
 
 from ..exceptions import PlotnineError
 
+if TYPE_CHECKING:
+    from typing import TypeVar
 
-class alias:
+    T = TypeVar("T")
+
+
+def alias(cls: type[T]) -> type[T]:
     """
-    Mixin to create an alias of a Registry class object
-
-    This is used by the Registry metaclass to make the subclass
-    an alias of the superclass.
-
-    ```python
-    from abc import ABC
-    class A(abc.ABC, metaclass=Registry): pass
-    class B(A): pass
-    class C(B, alias): pass
-
-    C is B  # True
-    ```
+    Add docstring that class is an alias of its base class
     """
+    if cls.__doc__ is not None:
+        return cls
+
+    base = cls.__bases__[0]
+    name = base.__name__
+    qualname = f"{base.__module__}.{name}"
+    cls.__doc__ = f"alias of [{name}](`{qualname}`)"
+    return cls
 
 
 class _Registry(WeakValueDictionary):
@@ -69,10 +71,6 @@ class Register(ABCMeta):
         sub_cls = super().__new__(cls, name, bases, namespace)
         is_base_class = len(bases) and bases[0].__name__ == "ABC"
         if not is_base_class:
-            # A sub_cls is an alias of a base class if it has
-            # alias as the second base class
-            if len(bases) == 2 and bases[1] is alias:
-                sub_cls = bases[0]
             Registry[name] = sub_cls
         return sub_cls
 

@@ -66,5 +66,6 @@ class scale_linetype_continuous(scale_continuous):
         )
 
 
-class scale_linetype_discrete(scale_linetype, alias):
+@alias
+class scale_linetype_discrete(scale_linetype):
     pass
