@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g431c601</title>
+<title>plotnine 0.0.post1+g94206ad</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -101,6 +101,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -113,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g431c601</span>
+    <span class="navbar-title">plotnine 0.0.post1+g94206ad</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -183,8 +186,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.geom_path" id="toc-plotnine.geom_path" class="nav-link active" data-scroll-target="#plotnine.geom_path"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_path</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../examples/geom_path-preview.html"><i class="bi bi-journal-code"></i>Path plots</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -318,6 +322,305 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="see-also" class="level2 doc-see-also">
 <h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
 <p>plotnine.geoms.geom_path.arrow : for adding arrowhead(s) to paths.</p>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<div class="quarto-embed-nb-cell">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:33.630827Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:33.630517Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:34.315572Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:34.314818Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_path,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_line,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    labs,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    scale_color_continuous,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    theme</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> economics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="path-plots" class="level3">
+<h3 class="anchored" data-anchor-id="path-plots">Path plots</h3>
+<p><code>geom_path()</code> connects the observations in the order in which they appear in the data, this is different from <code>geom_line()</code> which connects observations in order of the variable on the x axis.</p>
+<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:34.318923Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:34.318656Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:34.331865Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:34.331176Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>economics.head(<span class="dv">10</span>) <span class="co"># notice the rows are ordered by date</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">pce</th>
+<th data-quarto-table-cell-role="th">pop</th>
+<th data-quarto-table-cell-role="th">psavert</th>
+<th data-quarto-table-cell-role="th">uempmed</th>
+<th data-quarto-table-cell-role="th">unemploy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1967-07-01</td>
+<td>507.4</td>
+<td>198712</td>
+<td>12.5</td>
+<td>4.5</td>
+<td>2944</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1967-08-01</td>
+<td>510.5</td>
+<td>198911</td>
+<td>12.5</td>
+<td>4.7</td>
+<td>2945</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1967-09-01</td>
+<td>516.3</td>
+<td>199113</td>
+<td>11.7</td>
+<td>4.6</td>
+<td>2958</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1967-10-01</td>
+<td>512.9</td>
+<td>199311</td>
+<td>12.5</td>
+<td>4.9</td>
+<td>3143</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1967-11-01</td>
+<td>518.1</td>
+<td>199498</td>
+<td>12.5</td>
+<td>4.7</td>
+<td>3066</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>1967-12-01</td>
+<td>525.8</td>
+<td>199657</td>
+<td>12.1</td>
+<td>4.8</td>
+<td>3018</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>1968-01-01</td>
+<td>531.5</td>
+<td>199808</td>
+<td>11.7</td>
+<td>5.1</td>
+<td>2878</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>1968-02-01</td>
+<td>534.2</td>
+<td>199920</td>
+<td>12.2</td>
+<td>4.5</td>
+<td>3001</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>1968-03-01</td>
+<td>544.9</td>
+<td>200056</td>
+<td>11.6</td>
+<td>4.1</td>
+<td>2877</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>1968-04-01</td>
+<td>544.6</td>
+<td>200208</td>
+<td>12.2</td>
+<td>4.6</td>
+<td>2709</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Because the data is in date order <code>geom_path()</code> (in pint) produces the same result as <code>geom_line()</code> (in black):</p>
+<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:34.373816Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:34.373549Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:35.545003Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:35.544422Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'unemploy'</span>)) </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="dv">5</span>)             <span class="co"># plot geom_line as the first layer                   </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path(colour<span class="op">=</span><span class="st">'#ff69b4'</span>,   <span class="co"># plot a path - colour pink </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               size<span class="op">=</span><span class="dv">1</span>)   </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'unemployment (,000)'</span>) <span class="co"># label x &amp; y-axis</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_path_files/figure-html/..-examples-geom_path-cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Plotting unemployment (scaled by population) versus savings rate shows how <code>geom_path()</code> differs from <code>geom_line()</code>. Because <code>geom_path()</code> connects the observations in the order in which they appear in the data, this line is like a “journey through time”:</p>
+<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:35.548510Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:35.548040Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:35.815785Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:35.815280Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'unemploy/pop'</span>, y<span class="op">=</span><span class="st">'psavert'</span>)) </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path()                                    <span class="co"># plot geom path</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'scaled unemployment'</span>, y<span class="op">=</span><span class="st">'saving rate'</span>) <span class="co"># label x &amp; y-axis</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_path_files/figure-html/..-examples-geom_path-cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Comparing <code>geom_line()</code> (black) to <code>geom_path()</code> (pink) shows how these two plots differ in what they can show: <code>geom_path()</code> shows the savings rate has gone down over time, which is not evident with <code>geom_path()</code>.</p>
+<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:35.819616Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:35.819395Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:36.122218Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:36.121699Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'unemploy/pop'</span>, y<span class="op">=</span><span class="st">'psavert'</span>)) </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path(colour<span class="op">=</span><span class="st">'#ff69b4'</span>, <span class="co"># plot geom_path as the first layer - colour pink</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.5</span>,        <span class="co"># line transparency</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                size<span class="op">=</span><span class="fl">2.5</span>)         <span class="co"># line thickness</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line()                   <span class="co"># layer geom_line </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'scaled unemployment'</span>, y<span class="op">=</span><span class="st">'saving rate'</span>) <span class="co"># label x &amp; y-axis</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_path_files/figure-html/..-examples-geom_path-cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The <code>geom_path</code> can be easier to interpret if time is coloured in. First convert time to a number, and use this number to colour the path:</p>
+<div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:36.126554Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:36.126298Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:36.130163Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:36.129447Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert date to a number </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>economics[<span class="st">'date_as_number'</span>]<span class="op">=</span>pd.to_numeric(economics[<span class="st">'date'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:36.133312Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:36.133058Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:36.141751Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:36.141189Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect new column</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>economics.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">pce</th>
+<th data-quarto-table-cell-role="th">pop</th>
+<th data-quarto-table-cell-role="th">psavert</th>
+<th data-quarto-table-cell-role="th">uempmed</th>
+<th data-quarto-table-cell-role="th">unemploy</th>
+<th data-quarto-table-cell-role="th">date_as_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1967-07-01</td>
+<td>507.4</td>
+<td>198712</td>
+<td>12.5</td>
+<td>4.5</td>
+<td>2944</td>
+<td>-79056000000000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1967-08-01</td>
+<td>510.5</td>
+<td>198911</td>
+<td>12.5</td>
+<td>4.7</td>
+<td>2945</td>
+<td>-76377600000000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1967-09-01</td>
+<td>516.3</td>
+<td>199113</td>
+<td>11.7</td>
+<td>4.6</td>
+<td>2958</td>
+<td>-73699200000000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1967-10-01</td>
+<td>512.9</td>
+<td>199311</td>
+<td>12.5</td>
+<td>4.9</td>
+<td>3143</td>
+<td>-71107200000000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1967-11-01</td>
+<td>518.1</td>
+<td>199498</td>
+<td>12.5</td>
+<td>4.7</td>
+<td>3066</td>
+<td>-68428800000000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>The path is coloured such that it changes with time using the command <code>aes(colour='date_as_number')</code> within <code>geom_path()</code>.</p>
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:36.144925Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:36.144612Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:36.476867Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:36.476352Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># input</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>legend_breaks<span class="op">=</span>[<span class="op">-</span><span class="dv">79056000000000000</span>, <span class="dv">709948800000000000</span>, <span class="dv">1401580800000000000</span>] <span class="co"># used to modify colour-graded legend</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>legend_labels<span class="op">=</span>[<span class="st">"1967-Jul"</span>, <span class="st">"1992-Jun"</span>,<span class="st">"2014-Jun"</span>]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'unemploy/pop'</span>, y<span class="op">=</span><span class="st">'psavert'</span>)) </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path(aes(colour<span class="op">=</span><span class="st">'date_as_number'</span>))       <span class="co"># colour geom_path using time variable "date_as_number"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'scaled unemployment'</span>, y<span class="op">=</span><span class="st">'saving rate'</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_color_continuous(breaks<span class="op">=</span>legend_breaks,  <span class="co"># set legend breaks (where labels will appear)</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                            labels<span class="op">=</span>legend_labels)   <span class="co"># set labels on legend</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_title<span class="op">=</span>element_text(text<span class="op">=</span><span class="st">'Date'</span>)) <span class="co"># set title of legend</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="geom_path_files/figure-html/..-examples-geom_path-cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<a class="quarto-notebook-link" id="nblink-1" href="../examples/geom_path-preview.html#cell-0">Source: Path plots</a></div>
 
 
 </section>
