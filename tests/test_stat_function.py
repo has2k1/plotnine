@@ -55,4 +55,4 @@ def test_exceptions():
     # fun not callable
     with pytest.raises(PlotnineError):
         p = ggplot(data, aes("x"))
-        print(p + stat_function(fun=1))
+        (p + stat_function(fun=1)).show()
