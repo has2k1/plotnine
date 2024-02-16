@@ -639,6 +639,36 @@ def get_yaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:
     return chain(major, minor)
 
 
+def get_xaxis_tick_pads(pack: LayoutPack, ax: Axes) -> Iterator[float]:
+    """
+    Return XTicks paddings
+    """
+    # In plotnine tick padding are specified as a margin to the
+    # the axis_text.
+    is_blank = pack.theme.T.is_blank
+    major, minor = [], []
+    if not is_blank("axis_text_y"):
+        h = pack.figure.get_figheight() * 72
+        major = [(t.get_pad() or 0) / h for t in ax.xaxis.get_major_ticks()]
+        minor = [(t.get_pad() or 0) / h for t in ax.xaxis.get_minor_ticks()]
+    return chain(major, minor)
+
+
+def get_yaxis_tick_pads(pack: LayoutPack, ax: Axes) -> Iterator[float]:
+    """
+    Return YTicks paddings
+    """
+    # In plotnine tick padding are specified as a margin to the
+    # the axis_text.
+    is_blank = pack.theme.T.is_blank
+    major, minor = [], []
+    if not is_blank("axis_text_y"):
+        w = pack.figure.get_figwidth() * 72
+        major = [(t.get_pad() or 0) / w for t in ax.yaxis.get_major_ticks()]
+        minor = [(t.get_pad() or 0) / w for t in ax.yaxis.get_minor_ticks()]
+    return chain(major, minor)
+
+
 def _text_is_visible(text: Text) -> bool:
     """
     Return True if text is visible and is not empty
@@ -689,12 +719,10 @@ def max_xticks_height(
     """
     Return maximum height[inches] of x ticks
     """
-    H = pack.figure.get_figheight()
     heights = [
         tight_bbox_in_figure_space(
             tick.tick1line, pack.figure, pack.renderer
         ).height
-        + (tick.get_pad() or 0) / (72 * H)
         for ax in filter_axes(pack.axs, axes_loc)
         for tick in get_xaxis_ticks(pack, ax)
     ]
@@ -710,8 +738,11 @@ def max_xlabels_height(
     """
     heights = [
         tight_bbox_in_figure_space(label, pack.figure, pack.renderer).height
+        + pad
         for ax in filter_axes(pack.axs, axes_loc)
-        for label in get_xaxis_labels(pack, ax)
+        for label, pad in zip(
+            get_xaxis_labels(pack, ax), get_xaxis_tick_pads(pack, ax)
+        )
     ]
     return max(heights) if len(heights) else 0
 
@@ -723,12 +754,10 @@ def max_yticks_width(
     """
     Return maximum width[inches] of y ticks
     """
-    W = pack.figure.get_figwidth()
     widths = [
         tight_bbox_in_figure_space(
             tick.tick1line, pack.figure, pack.renderer
         ).width
-        + (tick.get_pad() or 0) / (72 * W)
         for ax in filter_axes(pack.axs, axes_loc)
         for tick in get_yaxis_ticks(pack, ax)
     ]
@@ -744,8 +773,11 @@ def max_ylabels_width(
     """
     widths = [
         tight_bbox_in_figure_space(label, pack.figure, pack.renderer).width
+        + pad
         for ax in filter_axes(pack.axs, axes_loc)
-        for label in get_yaxis_labels(pack, ax)
+        for label, pad in zip(
+            get_yaxis_labels(pack, ax), get_yaxis_tick_pads(pack, ax)
+        )
     ]
     return max(widths) if len(widths) else 0
 
