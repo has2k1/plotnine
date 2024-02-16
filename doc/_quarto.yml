@@ -19,7 +19,6 @@ website:
       - file: tutorials/index.qmd
       - text: "Pages"
         menu:
-          - installation.qmd
           - changelog.qmd
           - external-resources.qmd
           - about.qmd

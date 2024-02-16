@@ -28,6 +28,9 @@ clean:  ## Remove build artefacts
 	rm -rf _site/
 	rm -rf _inv/
 
+readme-images:
+	cd images; python readme_images.py
+
 download_qrenderer_style:  ## Download qrenderer.scss
 	@if [ ! -f $(QRENDERER_STYLE_FILE) ]; then \
 		echo "Downloading $(QRENDERER_STYLE_FILE)"; \
