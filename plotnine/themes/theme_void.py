@@ -38,6 +38,7 @@ class theme_void(theme):
             axis_text_y=element_blank(),
             axis_title_x=element_blank(),
             axis_title_y=element_blank(),
+            axis_ticks_length=0,
             aspect_ratio=get_option("aspect_ratio"),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
