@@ -12,10 +12,9 @@ Plotting with a *grammar of graphics* is powerful. Custom (and otherwise
 complex) plots are easy to think about and build incremently, while
 the simple plots remain simple to create.
 
-Example
--------
+## Example
 
-```{python}
+```python
 from plotnine import ggplot, geom_point, aes, stat_smooth, facet_wrap
 from plotnine.data import mtcars
 
@@ -26,15 +25,49 @@ from plotnine.data import mtcars
 )
 ```
 
+![](images/readme-image-4){width=90% fig-align="center"}
 
-Documentation
--------------
 
-* [API Reference](reference/index.qmd)
-* [Installation](installation.qmd)
-* [Gallery](gallery/index.qmd)
-* [Changelog](changelog.qmd)
-* [About plotnine](about.qmd)
-* [Tutorials](tutorials/index.qmd)
-* [External Resources](external-resources.qmd)
+## Installation
 
+plotnine can be can be installed in a couple of ways, depending on purpose.
+
+### Installing the Official Release
+For a normal user, it is recommended to install the official release. You
+can choose one these two commands:
+
+```bash
+# Using pip
+$ pip install plotnine         # 1. should be sufficient for most
+$ pip install 'plotnine[all]'  # 2. includes extra/optional packages
+
+# Or using conda
+$ conda install -c conda-forge plotnine
+```
+
+The second pip command also installs packages that are required for some
+specific functionality that may not be frequently used. Those packages
+are:
+
+- [scikit-misc](https://has2k1.github.io/scikit-misc/) - For loess smoothing
+- [scikit-learn](http://scikit-learn.com) - For Gaussian process smoothing
+
+### Installing the Development Version
+To do any development you have to clone the
+[Plotnine source repository](https://github.com/has2k1/plotnine) and install
+the package in development mode. These commands do all of that:
+
+```bash
+$ git clone https://github.com/has2k1/plotnine.git
+$ cd plotnine
+$ pip install -e .
+```
+
+If you only want to use the latest development sources and do not
+care about having a cloned repository, e.g. if a bug you care about
+has been fixed but an official release has not come out yet, then
+use this command:
+
+```bash
+$ pip install git+https://github.com/has2k1/plotnine.git
+```
