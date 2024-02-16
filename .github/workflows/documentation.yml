@@ -59,7 +59,7 @@ jobs:
           pip install git+https://github.com/has2k1/quartodoc.git@main
           python -m pip install ".[doc]"
           pip install -r requirements/doc.txt
-          pushd doc; quarto add --no-prompt has2k1/issuey; popd
+          pushd doc; make install-filters; popd
 
       - name: Environment Information
         shell: bash
