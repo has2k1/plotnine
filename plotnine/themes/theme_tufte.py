@@ -10,7 +10,8 @@ class theme_tufte(theme_bw):
     Theme based on Chapter 6 Data-Ink Maximization and Graphical
     Design of Edward Tufte *The Visual Display of Quantitative
     Information*. No border, no axis lines, no grids. This theme
-    works best in combination with [](`~plotnine.geoms.geom_rug`).
+    works best in combination with
+    [](`~plotnine.geoms.geom_rug.geom_rug`).
 
     The default font family is set to "serif" as he uses serif
     fonts for labels in _The Visual Display of Quantitative

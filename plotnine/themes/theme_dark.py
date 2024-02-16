@@ -5,7 +5,7 @@ from .theme_gray import theme_gray
 
 class theme_dark(theme_gray):
     """
-    The dark cousin of [](`~plotnine.themes.theme_light`)
+    The dark cousin of [](`~plotnine.themes.theme_light.theme_light`)
 
     It has  similar line sizes but a dark background. Useful to
     make thin colored lines pop out.
