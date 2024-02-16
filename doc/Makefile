@@ -31,6 +31,10 @@ clean:  ## Remove build artefacts
 readme-images:
 	cd images; python readme_images.py
 
+install-filters:  ## Install required pandoc filters
+	quarto add --no-prompt has2k1/issuey
+	quarto add --no-prompt has2k1/interlinks
+
 download_qrenderer_style:  ## Download qrenderer.scss
 	@if [ ! -f $(QRENDERER_STYLE_FILE) ]; then \
 		echo "Downloading $(QRENDERER_STYLE_FILE)"; \
