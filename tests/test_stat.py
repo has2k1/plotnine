@@ -18,15 +18,15 @@ def test_stat_basics():
         REQUIRED_AES = {"weight"}
         CREATES = {"fill"}
 
-    gg = ggplot(aes(x="wt", y="mpg"), mtcars)
+    p = ggplot(mtcars, aes(x="wt", y="mpg"))
 
     # stat_abc has no _calculate method
     with pytest.raises(NotImplementedError):
-        print(gg + stat_abc())
+        (p + stat_abc()).show()
 
     # stat_efg requires 'weight' aesthetic
     with pytest.raises(PlotnineError):
-        print(gg + stat_efg())
+        (p + stat_efg()).show()
 
 
 def test_stat_parameter_sharing():

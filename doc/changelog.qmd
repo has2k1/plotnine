@@ -9,6 +9,9 @@ title: Changelog
 
 - Requires python >= 3.9
 
+- Using the `print` or `repr` functions to draw and show the plot has
+  been deprecated. Use `plot.show()`.
+
 - The name of the calculated aesthetic of
   [](:class:`~plotnine.stats.stat_function`) changed from `y` to `fx`.
 
