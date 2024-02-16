@@ -379,8 +379,6 @@ def add_ticks(auxbox, locations, elements) -> LineCollection:
     tick_stops = np.array([0.0, l, 1 - l, 1]) * elements.key_width
     if elements.is_vertical:
         x1, x2, x3, x4 = tick_stops
-        # print(elements.key_height)
-        # print(locations[0], locations[-1])
         for y in locations:
             segments.extend(
                 [
