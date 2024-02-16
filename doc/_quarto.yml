@@ -26,6 +26,14 @@ website:
     right:
       - icon: github
         href: https://github.com/has2k1/plotnine
+  page-footer:
+    left: |
+      Proudly supported by
+      [![](https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg){fig-alt="Posit" width=65px}](https://posit.co)
+
+    center: |
+      Developed by: Hassan Kibirige,
+      License: [MIT](/license.html)
 
 format:
   html:
@@ -34,6 +42,7 @@ format:
       - lumen
       - qrenderer.scss
       - custom.scss
+
 
 filters:
   - interlinks
