@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g2b3b279</title>
+<title>plotnine 0.0.post1+g9d97ca8</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g2b3b279</span>
+    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -139,10 +139,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Pages</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="../installation.html">
- <span class="dropdown-text">Installation</span></a>
-  </li>  
         <li>
     <a class="dropdown-item" href="../changelog.html">
  <span class="dropdown-text">Changelog</span></a>
@@ -185,10 +181,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
+  <li><a href="#plotnine.ggplot.__add__" id="toc-plotnine.ggplot.__add__" class="nav-link" data-scroll-target="#plotnine.ggplot.__add__"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">__add__</span></a></li>
+  <li><a href="#plotnine.ggplot.__iadd__" id="toc-plotnine.ggplot.__iadd__" class="nav-link" data-scroll-target="#plotnine.ggplot.__iadd__"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">__iadd__</span></a></li>
+  <li><a href="#plotnine.ggplot.show" id="toc-plotnine.ggplot.show" class="nav-link" data-scroll-target="#plotnine.ggplot.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></a></li>
   <li><a href="#plotnine.ggplot.draw" id="toc-plotnine.ggplot.draw" class="nav-link" data-scroll-target="#plotnine.ggplot.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
   <li><a href="#plotnine.ggplot.save" id="toc-plotnine.ggplot.save" class="nav-link" data-scroll-target="#plotnine.ggplot.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></a></li>
   <li><a href="#plotnine.ggplot.save_helper" id="toc-plotnine.ggplot.save_helper" class="nav-link" data-scroll-target="#plotnine.ggplot.save_helper"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save_helper</span></a></li>
-  <li><a href="#plotnine.ggplot.show" id="toc-plotnine.ggplot.show" class="nav-link" data-scroll-target="#plotnine.ggplot.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -240,33 +238,91 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#plotnine.ggplot.draw">draw</a></td>
-<td>Render the complete plot</td>
+<td><a href="#plotnine.ggplot.__add__">__add__</a></td>
+<td>Add to ggplot from a list</td>
 </tr>
 <tr class="even">
-<td><a href="#plotnine.ggplot.save">save</a></td>
-<td>Save a ggplot object as an image file</td>
+<td><a href="#plotnine.ggplot.__iadd__">__iadd__</a></td>
+<td>Add other to ggplot object</td>
 </tr>
 <tr class="odd">
-<td><a href="#plotnine.ggplot.save_helper">save_helper</a></td>
-<td>Create MPL figure that will be saved</td>
-</tr>
-<tr class="even">
 <td><a href="#plotnine.ggplot.show">show</a></td>
 <td>Show plot using the matplotlib backend set by the user</td>
 </tr>
+<tr class="even">
+<td><a href="#plotnine.ggplot.draw">draw</a></td>
+<td>Render the complete plot</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.ggplot.save">save</a></td>
+<td>Save a ggplot object as an image file</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.ggplot.save_helper">save_helper</a></td>
+<td>Create MPL figure that will be saved</td>
+</tr>
 </tbody>
 </table>
+<section id="plotnine.ggplot.__add__" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.__add__"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">__add__</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">__add__</span>(other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Add to ggplot from a list</p>
+</div>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">other</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.PlotAddable">PlotAddable</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="../reference/typing.html#plotnine.typing.PlotAddable">PlotAddable</a>] | None</span></code></dt>
+<dd>
+<p>Either an object that knows how to “radd” itself to a ggplot, or a list of such objects.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.ggplot.__iadd__" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.__iadd__"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">__iadd__</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">__iadd__</span>(other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Add other to ggplot object</p>
+</div>
+<section id="parameters-2" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">other</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.PlotAddable">PlotAddable</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="../reference/typing.html#plotnine.typing.PlotAddable">PlotAddable</a>] | None</span></code></dt>
+<dd>
+<p>Either an object that knows how to “radd” itself to a ggplot, or a list of such objects.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<section id="plotnine.ggplot.show" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></h3>
+<div class="doc-signature">
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Show plot using the matplotlib backend set by the user</p>
+<p>Users should prefer this method instead of printing or repring the object.</p>
+</div>
+</section>
 <section id="plotnine.ggplot.draw" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></h3>
 <div class="doc-signature">
-<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>draw(show<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>draw(show<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Render the complete plot</p>
 </div>
-<section id="parameters-1" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-3" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">show</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
@@ -291,24 +347,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.ggplot.save" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></h3>
 <div class="doc-signature">
-<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>save(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    filename<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">""</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    units<span class="op">=</span><span class="st">"in"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    limitsize<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>save(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    filename<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">""</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    units<span class="op">=</span><span class="st">"in"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    limitsize<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Save a ggplot object as an image file</p>
 </div>
-<section id="parameters-2" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-4" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">filename</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path">Path</a> | <a href="https://docs.python.org/3/library/io.html#io.BytesIO">BytesIO</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
@@ -358,18 +414,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.ggplot.save_helper" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.save_helper"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save_helper</span></h3>
 <div class="doc-signature">
-<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>save_helper(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    filename<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    units<span class="op">=</span><span class="st">"in"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    limitsize<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>save_helper(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    filename<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    units<span class="op">=</span><span class="st">"in"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    limitsize<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Create MPL figure that will be saved</p>
@@ -377,19 +433,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="notes-1" class="level4 doc-notes">
 <h4 class="doc-notes anchored" data-anchor-id="notes-1">Notes</h4>
 <p>This method has the same arguments as :meth:<code>ggplot.save</code>. Use it to get access to the figure that will be saved.</p>
-</section>
-</section>
-<section id="plotnine.ggplot.show" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.ggplot.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></h3>
-<div class="doc-signature">
-<div class="sourceCode" id="cb5"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="doc-text">
-<p>Show plot using the matplotlib backend set by the user</p>
-<p>Users should prefer this method instead of printing or repring the object.</p>
-</div>
 
 
+</section>
 </section>
 </section>
 
@@ -782,6 +828,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
+</div>   
+    <div class="nav-footer-center">
+<p>Developed by: Hassan Kibirige, License: <a href="../license.html">MIT</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g2b3b279 - A Grammar of Graphics for Python</title>
+<title>plotnine 0.0.post1+g9d97ca8 - A Grammar of Graphics for Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g2b3b279</span>
+    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -139,10 +139,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Pages</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="./installation.html">
- <span class="dropdown-text">Installation</span></a>
-  </li>  
         <li>
     <a class="dropdown-item" href="./changelog.html">
  <span class="dropdown-text">Changelog</span></a>
@@ -181,7 +177,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#example" id="toc-example" class="nav-link active" data-scroll-target="#example">Example</a></li>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a>
+  <ul class="collapse">
+  <li><a href="#installing-the-official-release" id="toc-installing-the-official-release" class="nav-link" data-scroll-target="#installing-the-official-release">Installing the Official Release</a></li>
+  <li><a href="#installing-the-development-version" id="toc-installing-the-development-version" class="nav-link" data-scroll-target="#installing-the-development-version">Installing the Development Version</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -212,8 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Plotting with a <em>grammar of graphics</em> is powerful. Custom (and otherwise complex) plots are easy to think about and build incremently, while the simple plots remain simple to create.</p>
 <section id="example" class="level2">
 <h2 class="anchored" data-anchor-id="example">Example</h2>
-<div id="06c3b95e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, geom_point, aes, stat_smooth, facet_wrap</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, geom_point, aes, stat_smooth, facet_wrap</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">"wt"</span>, <span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"factor(gear)"</span>))</span>
@@ -221,28 +220,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> stat_smooth(method<span class="op">=</span><span class="st">"lm"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> facet_wrap(<span class="st">"gear"</span>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="images/readme-image-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
-</div>
-</div>
 </section>
-<section id="documentation" class="level2">
-<h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>plotnine can be can be installed in a couple of ways, depending on purpose.</p>
+<section id="installing-the-official-release" class="level3">
+<h3 class="anchored" data-anchor-id="installing-the-official-release">Installing the Official Release</h3>
+<p>For a normal user, it is recommended to install the official release. You can choose one these two commands:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using pip</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pip install plotnine         <span class="co"># 1. should be sufficient for most</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pip install <span class="st">'plotnine[all]'</span>  <span class="co"># 2. includes extra/optional packages</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Or using conda</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> conda install <span class="at">-c</span> conda-forge plotnine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The second pip command also installs packages that are required for some specific functionality that may not be frequently used. Those packages are:</p>
 <ul>
-<li><a href="./reference/index.html">API Reference</a></li>
-<li><a href="./installation.html">Installation</a></li>
-<li><a href="./gallery/index.html">Gallery</a></li>
-<li><a href="./changelog.html">Changelog</a></li>
-<li><a href="./about.html">About plotnine</a></li>
-<li><a href="./tutorials/index.html">Tutorials</a></li>
-<li><a href="./external-resources.html">External Resources</a></li>
+<li><a href="https://has2k1.github.io/scikit-misc/">scikit-misc</a> - For loess smoothing</li>
+<li><a href="http://scikit-learn.com">scikit-learn</a> - For Gaussian process smoothing</li>
 </ul>
+</section>
+<section id="installing-the-development-version" class="level3">
+<h3 class="anchored" data-anchor-id="installing-the-development-version">Installing the Development Version</h3>
+<p>To do any development you have to clone the <a href="https://github.com/has2k1/plotnine">Plotnine source repository</a> and install the package in development mode. These commands do all of that:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git clone https://github.com/has2k1/plotnine.git</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cd plotnine</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pip install <span class="at">-e</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you only want to use the latest development sources and do not care about having a cloned repository, e.g.&nbsp;if a bug you care about has been fixed but an official release has not come out yet, then use this command:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pip install git+https://github.com/has2k1/plotnine.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -634,6 +646,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
+</div>   
+    <div class="nav-footer-center">
+<p>Developed by: Hassan Kibirige, License: <a href="./license.html">MIT</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 
 
 
