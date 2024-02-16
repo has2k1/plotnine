@@ -1,3 +1,6 @@
+interlinks:
+  fast: true
+
 quartodoc:
   dir: reference
   title: API Reference
@@ -13,6 +16,7 @@ quartodoc:
       desc: ""
       contents:
         - name: ggplot
+          members: [__add__, __iadd__, show, draw, save, save_helper]
         - qplot
         - watermark
         - name: layer

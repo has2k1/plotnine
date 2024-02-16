@@ -5,7 +5,7 @@ from .theme_gray import theme_gray
 
 class theme_light(theme_gray):
     """
-    A theme similar to [](`~plotnine.themes.theme_linedraw`)
+    A theme similar to [](`~plotnine.themes.theme_linedraw.theme_linedraw`)
 
     Has light grey lines lines and axes to direct more attention
     towards the data.
