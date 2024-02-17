@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g9d97ca8 - A box and whiskers plot</title>
+    <title>plotnine 0.0.post1+g41488ba - A box and whiskers plot</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -295,7 +295,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:23.384688Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:23.384316Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:24.048741Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:24.048085Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:13.907255Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:13.906936Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:14.579271Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:14.578467Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -315,7 +315,7 @@
 <p>Read more: + <a href="https://en.wikipedia.org/wiki/Box_plot">wikipedia</a> + <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">ggplot2 docs</a></p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:24.052341Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:24.051992Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:24.065566Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:24.064980Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:14.582736Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:14.582392Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:14.596428Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:14.595705Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">'data/flights.csv'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -373,14 +373,14 @@
 <div id="cell-3" class="cell markdown">
 <p>Basic boxplot</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:24.108018Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:24.107751Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:24.111786Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:24.111070Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:14.641954Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:14.641674Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:14.646124Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:14.645408Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> [month[:<span class="dv">3</span>] <span class="cf">for</span> month <span class="kw">in</span> flights.month[:<span class="dv">12</span>]]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(months)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:24.114821Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:24.114584Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:25.878668Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:25.877794Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:14.649344Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:14.649073Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:16.233114Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:16.232431Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
@@ -397,7 +397,7 @@
 <div id="cell-6" class="cell markdown">
 <p>Horizontal boxplot</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:25.882306Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:25.881889Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:26.863550Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:26.862874Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:16.236715Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:16.236331Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:16.979192Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:16.978609Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
@@ -419,7 +419,7 @@
 <div id="cell-8" class="cell markdown">
 <p>Boxplot with jittered points:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:10:26.867426Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:10:26.867160Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:10:27.640664Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:10:27.639928Z&quot;}" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:16.982176Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:16.981946Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:17.655553Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:17.654975Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>)) </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot()</span>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g9d97ca8</title>
+<title>plotnine 0.0.post1+g41488ba</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -310,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:19.296909Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:19.296529Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:19.997609Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:19.996849Z&quot;}" data-execution_count="1">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:12.467600Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:12.467305Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:13.237464Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:13.236435Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -326,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="line-plots" class="level3">
 <h3 class="anchored" data-anchor-id="line-plots">Line plots</h3>
 <p><code>geom_line()</code> connects the dots, and is useful for time series data.</p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:20.001156Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:20.000896Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:20.013083Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:20.012552Z&quot;}" data-execution_count="2">
+<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:13.241151Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:13.240882Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:13.255031Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:13.254354Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>economics.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -398,7 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:20.052922Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:20.052663Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:21.295433Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:21.294667Z&quot;}" data-execution_count="3">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:13.299432Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:13.299145Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:14.556054Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:14.555433Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'uempmed'</span>)) </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line() <span class="co"># line plot</span></span>
@@ -413,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can put arrows at the end of a line:</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:21.298692Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:21.298343Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:21.545127Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:21.544461Z&quot;}" data-execution_count="4">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:14.559152Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:14.558801Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:14.871572Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:14.870918Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'pop'</span>)) </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(arrow<span class="op">=</span>arrow()) <span class="co"># add an arrow to the end of the line</span></span>
@@ -428,7 +428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The arrow can be modified for a different look:</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:21.548441Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:21.548216Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:21.796818Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:21.796112Z&quot;}" data-execution_count="5">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:14.874756Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:14.874480Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:15.129740Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:15.129090Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'pop'</span>)) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(arrow<span class="op">=</span>arrow(angle<span class="op">=</span><span class="dv">35</span>,      <span class="co"># defines the shape of the arrow head</span></span>
@@ -446,7 +446,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can change the look of the line:</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:21.799745Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:21.799509Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:22.046712Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:22.046083Z&quot;}" data-execution_count="6">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:15.132576Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:15.132351Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:15.387129Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:15.386259Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics, aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'uempmed'</span>)) </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(color<span class="op">=</span><span class="st">'pink'</span>,        <span class="co"># set line colour</span></span>

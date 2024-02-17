@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g9d97ca8 - Show counts on a stacked bar plot</title>
+<title>plotnine 0.0.post1+g41488ba - Show counts on a stacked bar plot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -204,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="show-counts-on-a-stacked-bar-plot" class="level1">
 <h1>Show counts on a stacked bar plot</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:51.248396Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:51.248090Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:51.931410Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:51.930192Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:55.997852Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:55.997541Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:56.766011Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:56.765105Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    aes,</span>
@@ -215,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>A stacked bar plot.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:51.934795Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:51.934535Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:53.126757Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:53.125858Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:56.770191Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:56.769896Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:58.060940Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:58.060364Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar( position<span class="op">=</span><span class="st">'fill'</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We want to know how many items are in each of the bars, so we add a <code>geom_text</code> with the same <code>stat</code> as <code>geom_bar</code> and map the <code>label</code> aesthetic to the computed <code>count</code>.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:53.166322Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:53.165969Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:53.544550Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:53.543867Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:58.104997Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:58.104582Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:58.495307Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:58.494600Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'fill'</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>)), stat<span class="op">=</span><span class="st">'count'</span>)</span>
@@ -243,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Not what we wanted.</p>
 <p>We forgot to give <code>geom_text</code> the same position as <code>geom_bar</code>. Let us fix that.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:53.547875Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:53.547612Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:53.925058Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:53.924360Z&quot;}" data-execution_count="4">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:58.498279Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:58.498036Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:58.900728Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:58.900121Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar( position<span class="op">=</span><span class="st">'fill'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>)), stat<span class="op">=</span><span class="st">'count'</span>, position<span class="op">=</span><span class="st">'fill'</span>)</span>

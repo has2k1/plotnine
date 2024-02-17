@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g9d97ca8 - Guitar Neck ###</title>
+    <title>plotnine 0.0.post1+g41488ba - Guitar Neck ###</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -206,7 +206,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -293,7 +293,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:48.645207Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:48.644908Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:49.833818Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:49.832974Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:45.122466Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:45.122137Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:46.248537Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:46.247498Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
@@ -320,7 +320,7 @@
 <p>The x-axis is transformed to resemble the narrowing width of frets on a 25.5 inch Strat. To do that we create custom transformation.</p>
 <p>The key parts of <em>any</em> transform object are the <code>transform</code> and <code>inverse</code> functions.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:49.837510Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:49.837169Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:49.842917Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:49.842310Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:46.253289Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:46.252797Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:46.259181Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:46.258534Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> frets_trans(trans):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Frets Transformation</span></span>
@@ -358,7 +358,7 @@
 <div id="cell-5" class="cell markdown">
 <p>Some chord Data</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:49.846124Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:49.845873Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:49.851838Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:49.851157Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:46.262559Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:46.262246Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:46.269019Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:46.267814Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Notes: the 0 fret is an open strum, all other frets are played half-way between fret bars.</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The strings are 1:low E, 2: A, 3: D, 4: G, 5: B, 6: E</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>c_chord <span class="op">=</span> pd.DataFrame({</span>
@@ -378,7 +378,7 @@
 <div id="cell-7" class="cell markdown">
 <p>Visualizing the chord</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:49.854854Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:49.854606Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:50.580306Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:50.579574Z&quot;}" data-scrolled="true" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:46.272636Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:46.272364Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:47.059655Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:47.059116Z&quot;}" data-scrolled="true" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look and feel of the graphic</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>neck_color <span class="op">=</span> <span class="st">'#FFDDCC'</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fret_color <span class="op">=</span> <span class="st">'#998888'</span></span>

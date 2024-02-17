@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g9d97ca8</title>
+<title>plotnine 0.0.post1+g41488ba</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -328,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:32.395270Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:32.394936Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:33.035554Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:33.034783Z&quot;}" data-execution_count="1">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:28.004536Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:28.004172Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:28.666730Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:28.665924Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas.api.types <span class="im">as</span> pdtypes</span>
@@ -351,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Comparing repeated measurements and their summaries</em></p>
 <p>Suppose you have two sets of related data and each point in the first set maps onto a point in the second set. e.g.&nbsp;they could represent a transition from one state to another for example two measurements of the height of pupils in different years.</p>
 <p>For demonstration we shall generate data with a <code>before</code> measurement and an <code>after</code> measurement.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:33.039637Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:33.039242Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:33.055161Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:33.054446Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:28.671392Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:28.671026Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:28.688743Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:28.688063Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">20</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> (<span class="dv">1</span>, <span class="fl">2.3</span>)</span>
@@ -421,7 +421,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>A basic violin plot shows distributions of the two sets of data.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:33.098407Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:33.098148Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:34.596023Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:34.595402Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:28.733734Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:28.733469Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:30.360724Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:30.359882Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'when'</span>, <span class="st">'value'</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_violin(df)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -434,7 +434,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Add the original data in form of points.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:34.599001Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:34.598683Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:34.882211Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:34.881696Z&quot;}" data-execution_count="4">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:30.365190Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:30.364575Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:30.704844Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:30.704076Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'when'</span>, <span class="st">'value'</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_violin(df)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point()</span>
@@ -448,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The violins are symmetrical about the vertical axis and half a violin has the same information as the full violin. We cut (style) the violins in half and choose to alternate with the left half for the first one and the right half for the second.</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:34.885256Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:34.885033Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:35.167539Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:35.166743Z&quot;}" data-execution_count="5">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:30.707849Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:30.707569Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:31.041996Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:31.041391Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'when'</span>, <span class="st">'value'</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_violin(df, style<span class="op">=</span><span class="st">'left-right'</span>) <span class="co"># changed</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point()</span>
@@ -462,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Link up the points to get a sense of how the data the moves.</p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:35.170672Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:35.170425Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:35.527396Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:35.526768Z&quot;}" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:31.045106Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:31.044849Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:31.513186Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:31.512617Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'when'</span>, <span class="st">'value'</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_violin(df, style<span class="op">=</span><span class="st">'left-right'</span>) <span class="co"># changed</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point()</span>
@@ -479,7 +479,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Make gap between the points and the violions. i.e.&nbsp;shift the violins outward and the points &amp; lines inward. We used <code>stage</code> mapping to get it done. For example</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>stage(<span class="st">'when'</span>, after_scale<span class="op">=</span><span class="st">'x+shift*alt_sign(x)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>says, map the <code>x</code>aesthetic to the ‘when’ column/variable and after the scale computed the <code>x</code> locations add a <code>shift</code> to them. The calculated <code>x</code> locations of a discrete scale are consecutive numbers <code>1, 2, 3, ...</code>, so we use that move objects of adjacent groups in opposite directions i.e $(-1)^1, (-1)^2, (-1)^3 … = -1, 1, -1… $</p>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:35.530740Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:35.530499Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:35.977774Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:35.977185Z&quot;}" data-execution_count="7">
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:31.517074Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:31.516814Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:32.082861Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:32.082267Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How much to shift the violin, points and lines</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.1 is 10% of the allocated space for the category</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>shift <span class="op">=</span> <span class="fl">0.1</span></span>
@@ -505,7 +505,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Add a boxplot in the gap. The space between the flat edge of the violin and the center of the points is <code>2 * shift</code>, so we can use the <code>shift</code> to control the width of the boxplot.</p>
-<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:35.980812Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:35.980570Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:36.458946Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:36.458204Z&quot;}" data-execution_count="8">
+<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:32.087209Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:32.086937Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:32.566547Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:32.565875Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'when'</span>, <span class="st">'value'</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_violin(m1, style<span class="op">=</span><span class="st">'left-right'</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(m2)</span>
@@ -521,7 +521,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Finall, style it up.</p>
-<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:36.464466Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:36.463929Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:37.058734Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:37.058165Z&quot;}" data-execution_count="9">
+<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:32.571164Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:32.570846Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:33.290425Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:33.289722Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lsize <span class="op">=</span> <span class="fl">0.65</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fill_alpha <span class="op">=</span> <span class="fl">0.7</span></span>

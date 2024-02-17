@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g9d97ca8</title>
+<title>plotnine 0.0.post1+g41488ba</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -313,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:26.068803Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:26.068492Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:26.782662Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:26.781440Z&quot;}" data-execution_count="1">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:20.030776Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:20.030473Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:20.874072Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:20.873236Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gp</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
@@ -336,7 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="the-political-territories-of-westeros">The Political Territories of Westeros</h3>
 <p><em>Layering different features on a Map</em></p>
 <p>Read data and select features in Westeros only.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:26.786891Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:26.786535Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:27.424410Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:27.423733Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:20.877417Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:20.877106Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:21.529785Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:21.528826Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>continents <span class="op">=</span> gp.read_file(<span class="st">'data/lands-of-ice-and-fire/continents.shp'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>islands <span class="op">=</span> gp.read_file(<span class="st">'data/lands-of-ice-and-fire/islands.shp'</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lakes <span class="op">=</span> gp.read_file(<span class="st">'data/lands-of-ice-and-fire/lakes.shp'</span>)</span>
@@ -359,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Create map by placing the features in layers in an order that limits obstraction.</p>
 <p>The <code>GeoDataFrame.geometry.centroid</code> property has the center coordinates of polygons, we use these to place the labels of the political regions.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:27.427936Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:27.427528Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:29.555547Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:29.554635Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:21.532797Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:21.532561Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:23.513639Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:23.513045Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colors</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>water_color <span class="op">=</span> <span class="st">'#a3ccff'</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>wall_color <span class="op">=</span> <span class="st">'white'</span></span>

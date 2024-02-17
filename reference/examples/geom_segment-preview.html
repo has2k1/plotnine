@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g9d97ca8 - Ranges of Similar Variables</title>
+    <title>plotnine 0.0.post1+g41488ba - Ranges of Similar Variables</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -296,7 +296,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:48.285050Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:48.284717Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.094335Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.093453Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:43.125182Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:43.124885Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:43.989890Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:43.988989Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This notebook uses the polars package</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas.api.types <span class="im">as</span> pdtypes</span>
@@ -316,7 +316,7 @@
 <p>Read the data.</p>
 <p>Source: Pew Research Global Attitudes Spring 2015</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.098894Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.098503Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.232550Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.230124Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:43.994009Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:43.993646Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:44.129231Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:44.128098Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>head <span class="op">-</span>n <span class="dv">20</span> <span class="st">"data/survey-social-media.csv"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>PSRAID,COUNTRY,Q145,Q146,Q70,Q74
@@ -341,7 +341,7 @@
 100018,Ethiopia,Female,22,No, </code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.237644Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.237298Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.313558Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.312940Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:44.133453Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:44.133125Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:44.213463Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:44.212781Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> <span class="bu">dict</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    COUNTRY<span class="op">=</span><span class="st">"country"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    Q145<span class="op">=</span><span class="st">"gender"</span>,</span>
@@ -445,7 +445,7 @@
 <div id="cell-5" class="cell markdown">
 <p>Create age groups for users of social media</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.317586Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.317331Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.367745Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.367006Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:44.216604Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:44.216361Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:44.279451Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:44.278632Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>yes_no <span class="op">=</span> [<span class="st">"Yes"</span>, <span class="st">"No"</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>valid_age_groups <span class="op">=</span> [<span class="st">"18-34"</span>, <span class="st">"35-49"</span>, <span class="st">"50+"</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -533,7 +533,7 @@
 <div id="cell-7" class="cell markdown">
 <p>Top 14 countries by response rate to the social media question.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.370934Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.370670Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.389991Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.389288Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:44.282885Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:44.282613Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:44.305360Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:44.304605Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> col_format(name, fmt):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Format useing python formating</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for more control over</span></span>
@@ -629,7 +629,7 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.393132Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.392893Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:49.403307Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:49.402582Z&quot;}" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:44.308801Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:44.308519Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:44.320646Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:44.319497Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>segment_data <span class="op">=</span> point_data.group_by(<span class="st">"country"</span>).agg(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">min</span><span class="op">=</span>col(<span class="st">"sm_use_percent"</span>).<span class="bu">min</span>(),</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">max</span><span class="op">=</span>col(<span class="st">"sm_use_percent"</span>).<span class="bu">max</span>(),</span>
@@ -733,7 +733,7 @@
 <div id="cell-11" class="cell markdown">
 <p>First plot</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:49.406576Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:49.406335Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:51.055242Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:51.054598Z&quot;}" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:44.324271Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:44.323984Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:46.156933Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:46.156256Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The right column (youngest-oldest gap) location</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>xgap <span class="op">=</span> <span class="dv">112</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -793,7 +793,7 @@
 <div id="cell-13" class="cell markdown">
 <p>Tweak it</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-14" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:51.059005Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:51.058609Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.147107Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.146498Z&quot;}" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-14" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:46.160452Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:46.160058Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:47.409430Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:47.408867Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The right column (youngest-oldest gap) location</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>xgap <span class="op">=</span> <span class="dv">115</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -911,7 +911,7 @@
 <p>Read the data.</p>
 <p>Source: World Bank - Infanct Mortality Rate (per 1,000 live births)b</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-18" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.151713Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.151445Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.167744Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.167018Z&quot;}" data-execution_count="9">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-18" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:47.413523Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:47.413084Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:47.429292Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:47.428748Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pl.read_csv(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data/API_SP.DYN.IMRT.IN_DS2_en_csv_v2/API_SP.DYN.IMRT.IN_DS2_en_csv_v2.csv"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    skip_rows<span class="op">=</span><span class="dv">4</span>,</span>
@@ -1377,7 +1377,7 @@
 <div id="cell-19" class="cell markdown">
 <p>The data includes regional aggregates. To tell apart the regional aggregates we need the metadata. Every row in the data table has a corresponding row in the metadata table. Where the row has regional aggregate data, the <code>Region</code> column in the metadata table is <code>NaN</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-20" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.171240Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.170994Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.184106Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.183485Z&quot;}" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-20" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:47.432266Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:47.432024Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:47.444202Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:47.443680Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ordered_categorical(s, categories<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Create a categorical ordered according to the categories</span></span>
@@ -1496,7 +1496,7 @@
 <div id="cell-21" class="cell markdown">
 <p>Remove the regional aggregates, to create a table with only country data</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-22" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.187440Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.187174Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.202247Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.201699Z&quot;}" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-22" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:47.447425Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:47.447077Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:47.464185Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:47.463541Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>country_data <span class="op">=</span> data.join(metadata, on<span class="op">=</span><span class="st">"code"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>country_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
@@ -1963,7 +1963,7 @@
 <div id="cell-23" class="cell markdown">
 <p>We are interested in the changes in rank between 1960 and 2015. To plot a reasonable sized graph, we randomly sample 35 countries.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.205210Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.204989Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.220104Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.219480Z&quot;}" data-execution_count="12">
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:47.467412Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:47.467082Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:47.483610Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:47.483012Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sampled_data <span class="op">=</span> country_data.drop_nulls(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    subset<span class="op">=</span>[<span class="st">"y1960"</span>, <span class="st">"y2015"</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>).sample(</span>
@@ -2453,7 +2453,7 @@
 <div id="cell-25" class="cell markdown">
 <p>First graph</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-26" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.223082Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.222834Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:52.764005Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:52.763459Z&quot;}" data-execution_count="13">
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-26" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:47.487921Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:47.487642Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:48.148118Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:48.147589Z&quot;}" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(ggplot(sampled_data)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(<span class="dv">1</span>, <span class="st">"y1960_rank"</span>, label<span class="op">=</span><span class="st">"country"</span>), ha<span class="op">=</span><span class="st">"right"</span>, size<span class="op">=</span><span class="dv">9</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(<span class="dv">2</span>, <span class="st">"y2015_rank"</span>, label<span class="op">=</span><span class="st">"country"</span>), ha<span class="op">=</span><span class="st">"left"</span>, size<span class="op">=</span><span class="dv">9</span>)</span>
@@ -2473,7 +2473,7 @@
 <div id="cell-27" class="cell markdown">
 <p>It has the form we want, but we need to tweak it.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-28" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:11:52.769349Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:11:52.769098Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:11:53.936058Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:11:53.935271Z&quot;}" data-execution_count="14">
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-28" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:48.153845Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:48.153594Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:49.103656Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:49.103057Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Text colors</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>black1 <span class="op">=</span> <span class="st">"#252525"</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>black2 <span class="op">=</span> <span class="st">"#222222"</span></span>

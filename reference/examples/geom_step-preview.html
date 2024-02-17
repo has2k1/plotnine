@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g9d97ca8 - Step plots</title>
+    <title>plotnine 0.0.post1+g41488ba - Step plots</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -295,7 +295,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:06.685400Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:06.685040Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:07.371632Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:07.370807Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:01.461719Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:01.461420Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:02.325088Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:02.324232Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -316,7 +316,7 @@
 <p><code>geom_step()</code> connects points using ‘steps’ instead of a line.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:07.374950Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:07.374690Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:07.386868Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:07.386269Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:02.328903Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:02.328637Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:02.342802Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:02.342083Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>economics.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -392,7 +392,7 @@
 <div id="cell-3" class="cell markdown">
 <p>Plot a step plot using <code>geom_plot()</code>. Notice from the first point the line travels vertically then horizontally:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:07.427005Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:07.426738Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:08.701692Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:08.701023Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:02.388082Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:02.387804Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:03.784758Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:03.783958Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>],                 <span class="co"># filter for first twenty rows (dates) to make steps more visible</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           aes(<span class="st">'date'</span>, <span class="st">'unemploy'</span>)) </span>
@@ -411,7 +411,7 @@
 <div id="cell-5" class="cell markdown">
 <p>You can see how <code>geom_path()</code> (shown in pink) differs from <code>geom_line()</code> (black):</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:08.704711Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:08.704390Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:09.127502Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:09.126899Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:03.789502Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:03.789100Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:04.236611Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:04.235594Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>], </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>           aes(<span class="st">'date'</span>, <span class="st">'unemploy'</span>)) </span>
@@ -433,7 +433,7 @@
 <div id="cell-7" class="cell markdown">
 <p>Rather than a line that travels vertically then horizontally, this order can be switched by specifying <code>direction='vh'</code> within <code>geom_step()</code>. Below <code>direction='vh'</code> is shown in black with the default <code>direction='hv'</code> shown in pink:</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:12:09.130230Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:12:09.130005Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:12:09.525110Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:12:09.524447Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:04.239811Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:04.239556Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:04.660115Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:04.659577Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>], </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>           aes(<span class="st">'date'</span>, <span class="st">'unemploy'</span>)) </span>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-    <title>plotnine 0.0.post1+g9d97ca8</title>
+    <title>plotnine 0.0.post1+g41488ba</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -208,7 +208,7 @@
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9d97ca8</span>
+    <span class="navbar-title">plotnine 0.0.post1+g41488ba</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -287,7 +287,7 @@
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">      <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:02.985911Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:02.985628Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:03.874048Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:03.873007Z&quot;}" data-execution_count="1">
+<main class="content" id="quarto-document-content">      <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:01.421937Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:01.421629Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:02.323720Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:02.322960Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -312,7 +312,7 @@
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># we make in the code are transparent in the output</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>theme_set(theme_void())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:03.877728Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:03.877452Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:03.892410Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:03.891787Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:02.327232Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:02.326939Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:02.348389Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:02.347088Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mtcars.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -423,7 +423,7 @@
 <div id="cell-2" class="cell markdown">
 <p>The base plots we will use for the demonstation and some colors.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:03.941722Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:03.941353Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:03.948922Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:03.948266Z&quot;}" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:02.402274Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:02.401982Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:02.412039Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:02.411307Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> (ggplot(mtcars, aes(<span class="st">'wt'</span>, <span class="st">'mpg'</span>, color<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="op">+</span> geom_point()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'mpg vs wt'</span>)</span>
@@ -443,7 +443,7 @@
 <div id="cell-4" class="cell markdown">
 <p>What the plots look like unmodified (unthemed).</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:03.952352Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:03.952105Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:05.401091Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:05.400288Z&quot;}" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:02.417133Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:02.416747Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:03.881172Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:03.880579Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
@@ -453,7 +453,7 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:05.405041Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:05.404617Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:05.908338Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:05.907517Z&quot;}" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:03.884176Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:03.883835Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:04.620583Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:04.619753Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
@@ -475,7 +475,7 @@
 <div id="cell-8" class="cell markdown">
 <p><strong>text</strong></p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:05.911946Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:05.911693Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.197644Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.196894Z&quot;}" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:04.624557Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:04.624209Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:04.953732Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:04.953086Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -490,7 +490,7 @@
 <div id="cell-10" class="cell markdown">
 <p><strong>rect</strong></p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.200627Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.200402Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.442399Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.441606Z&quot;}" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:04.957051Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:04.956808Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:05.324350Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:05.323713Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">=</span>element_rect(color<span class="op">=</span>black, size<span class="op">=</span><span class="dv">3</span>, fill<span class="op">=</span><span class="st">'#EEBB0050'</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -505,7 +505,7 @@
 <div id="cell-12" class="cell markdown">
 <p><strong>line</strong></p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.445597Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.445343Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.691358Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.690735Z&quot;}" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:05.327392Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:05.327155Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:05.583176Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:05.582416Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    line<span class="op">=</span>element_line(color<span class="op">=</span>black)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -527,16 +527,17 @@
 <h3 class="anchored" data-anchor-id="axis_line-and-axis_text">axis_line and axis_text</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-16" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.694624Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.694388Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:06.964951Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:06.964191Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    axis_line_y<span class="op">=</span>element_line(color<span class="op">=</span>blue),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    axis_text<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">'t'</span>: <span class="dv">5</span>, <span class="st">'r'</span>: <span class="dv">5</span>}),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>black),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    axis_text_y<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-16" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:05.587271Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:05.586998Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:05.863138Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:05.862452Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    axis_line_y<span class="op">=</span>element_line(color<span class="op">=</span>blue),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    axis_text<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">'t'</span>: <span class="dv">5</span>, <span class="st">'r'</span>: <span class="dv">5</span>}),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>black),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    axis_text_y<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -545,7 +546,7 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:06.967849Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:06.967618Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:07.215943Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:07.215240Z&quot;}" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:05.866125Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:05.865886Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.130907Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.130296Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -578,7 +579,7 @@
 <h3 class="anchored" data-anchor-id="axis_title-and-axis_ticks_pad">axis_title and axis_ticks_pad</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:07.218745Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:07.218513Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:07.518008Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:07.517429Z&quot;}" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.134315Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.133869Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.386946Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.386170Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(),</span>
@@ -605,7 +606,7 @@
 <h3 class="anchored" data-anchor-id="axis_ticks_direction">axis_ticks_direction</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:07.520953Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:07.520637Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:07.760584Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:07.760007Z&quot;}" data-execution_count="12">
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.390225Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.389964Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.648415Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.647723Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(),</span>
@@ -628,32 +629,28 @@
 <p>Not all themeables that affect the legend box are demonstrated</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:07.763233Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:07.763026Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:08.143063Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:08.142380Z&quot;}" data-execution_count="13">
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.651584Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.651339Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.948775Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.948097Z&quot;}" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(p1 <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'drat'</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    legend_position<span class="op">=</span><span class="st">'left'</span>,</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    legend_direction<span class="op">=</span><span class="st">'horizontal'</span>, <span class="co"># affected by the ncol=2</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    legend_title_align<span class="op">=</span><span class="st">'center'</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    legend_box_margin<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    legend_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, size<span class="op">=</span><span class="dv">2</span>, fill<span class="op">=</span><span class="st">'white'</span>),</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    legend_box<span class="op">=</span><span class="st">'vertical'</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    legend_key<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span>element_text(color<span class="op">=</span>orange),</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    legend_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">'bold'</span>),</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    legend_key_size<span class="op">=</span><span class="dv">30</span>,            <span class="co"># overridden</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    legend_key_width<span class="op">=</span><span class="dv">30</span>,</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    legend_key_height<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    legend_entry_spacing<span class="op">=</span><span class="dv">10</span>,      <span class="co"># overridden</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    legend_entry_spacing_x<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    legend_entry_spacing_y<span class="op">=</span><span class="dv">5</span>) </span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a> <span class="co"># so we can see legend_entry_spacing in action</span></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(color<span class="op">=</span>guide_legend(ncol<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    legend_box_margin<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    legend_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, size<span class="op">=</span><span class="dv">2</span>, fill<span class="op">=</span><span class="st">'white'</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    legend_box<span class="op">=</span><span class="st">'vertical'</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    legend_key<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span>element_text(color<span class="op">=</span>orange, va<span class="op">=</span><span class="st">"top"</span>),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    legend_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">'bold'</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    legend_key_spacing<span class="op">=</span><span class="dv">10</span>,      <span class="co"># overridden</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    legend_key_spacing_x<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    legend_key_spacing_y<span class="op">=</span><span class="dv">5</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a> ) </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a> <span class="co"># so we can see legend_entry_spacing in action</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(color<span class="op">=</span>guide_legend(ncol<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -667,15 +664,13 @@
 <h3 class="anchored" data-anchor-id="plot_background-panel_background-and-panel_border">plot_background, panel_background and panel_border</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:08.146034Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:08.145784Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:08.642065Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:08.641616Z&quot;}" data-execution_count="14">
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.951845Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.951597Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:07.801192Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:07.799720Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">+</span> theme(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>purple, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    panel_border<span class="op">=</span>element_rect(color<span class="op">=</span>red, size<span class="op">=</span><span class="dv">1</span>),</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">.025</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#panel_spacing_x=.005,</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#panel_spacing_y=.025</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -689,7 +684,7 @@
 <h3 class="anchored" data-anchor-id="panel_grid">panel_grid</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:08.644737Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:08.644510Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:08.876177Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:08.875499Z&quot;}" data-execution_count="15">
+<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:07.806355Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:07.806047Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:08.157935Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:08.157124Z&quot;}" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    panel_grid<span class="op">=</span>element_line(color<span class="op">=</span>purple),</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -716,7 +711,7 @@
 <h3 class="anchored" data-anchor-id="strip_background-strip_align-and-strip_text">strip_background, strip_align and strip_text</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-29" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:08.879598Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:08.879149Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:09.329866Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:09.329222Z&quot;}" data-execution_count="16">
+<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-29" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:08.209396Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:08.209005Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:09.039956Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:09.039223Z&quot;}" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">+</span> theme(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">.025</span>,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
@@ -749,7 +744,7 @@
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> figure_size[<span class="dv">0</span>] <span class="op">*</span> aspect_ratio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-31" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-01-09T15:13:09.332548Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-01-09T15:13:09.332321Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-01-09T15:13:09.617487Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-01-09T15:13:09.616868Z&quot;}" data-execution_count="17">
+<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-31" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:09.043496Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:09.043233Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:09.550611Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:09.550007Z&quot;}" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#dpi=120,</span></span>
