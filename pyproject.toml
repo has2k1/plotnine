@@ -129,6 +129,7 @@ include = [
 omit = [
     "tests/*",
     "plotnine/typing.py",
+    "plotnine/_utils/dev.py",
 ]
 
 disable_warnings = ["include-ignored"]
@@ -140,6 +141,7 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "raise NotImplementedError('Not Implemented')",
     "if typing.TYPE_CHECKING:",
+    "if TYPE_CHECKING:",
     "except ImportError:",
     "except PackageNotFoundError:",
 ]
