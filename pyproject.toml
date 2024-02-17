@@ -24,6 +24,7 @@ classifiers = [
 ]
 dependencies = [
     "matplotlib>=3.6.0",
+    "pandas>=2.1.0",
     "mizani==0.11.0",
     "numpy>=1.23.0",
     "scipy>=1.7.0",
@@ -54,7 +55,6 @@ doc = [
     "click",
     "numpydoc>=0.9.1",
     "quartodoc>=0.7.2",
-    "pyyaml",
     # Use importlib.resources when min supported python >= 3.9.0
     "importlib_resources",
 ]
