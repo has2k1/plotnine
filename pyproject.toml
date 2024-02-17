@@ -128,6 +128,7 @@ include = [
 ]
 omit = [
     "tests/*",
+    "plotnine/typing.py",
 ]
 
 disable_warnings = ["include-ignored"]
